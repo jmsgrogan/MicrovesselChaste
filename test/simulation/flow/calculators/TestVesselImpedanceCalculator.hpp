@@ -89,7 +89,7 @@ public:
 
         units::quantity<unit::flow_impedance> expected_impedance = 8.0 * viscosity * 5.0 * nodes[0]->GetReferenceLengthScale() / (M_PI * boost::units::pow<4>(radius));
 
-        TS_ASSERT_DELTA(p_vessel->GetFlowProperties()->GetImpedance(p_vessel->GetSegments())/expected_impedance, 1.0, 1e-6);
+        TS_ASSERT_DELTA(p_vessel->GetFlowProperties()->GetImpedance()/expected_impedance, 1.0, 1e-6);
         TS_ASSERT_DELTA(p_segment->GetFlowProperties()->GetImpedance()/expected_impedance, 1.0, 1e-6);
     }
 };

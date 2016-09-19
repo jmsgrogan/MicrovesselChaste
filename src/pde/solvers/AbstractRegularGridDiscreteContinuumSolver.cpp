@@ -40,7 +40,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkProbeFilter.h>
 #include <vtkImageData.h>
 #include <vtkSmartPointer.h>
-#include "ImageWriter.hpp"
+#include "RegularGridWriter.hpp"
 
 #include "AbstractRegularGridDiscreteContinuumSolver.hpp"
 
@@ -335,7 +335,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Write()
         EXCEPTION("An output file handler has not been set for the DiscreteContinuum solver.");
     }
 
-    ImageWriter writer;
+    RegularGridWriter writer;
     if(!this->mFilename.empty())
     {
         writer.SetFilename((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/" + this->mFilename));

@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -13,7 +13,7 @@
  modification, are permitted provided that the following conditions are met:
  * Redistributions of source code must retain the above copyright notice,
  this list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice,
+ * Redistributions in binary form must reproduce the abovea copyright notice,
  this list of conditions and the following disclaimer in the documentation
  and/or other materials provided with the distribution.
  * Neither the name of the University of Oxford nor the names of its
@@ -33,67 +33,42 @@
 
  */
 
-#ifndef ImageWriter_HPP_
-#define ImageWriter_HPP_
+#ifndef TESTGEOMETRYWRITER_HPP_
+#define TESTGEOMETRYWRITER_HPP_
 
+#include <cxxtest/TestSuite.h>
+#include <vector>
 #include "SmartPointers.hpp"
-#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
-#include <vtkImageData.h>
-#include <vtkSmartPointer.h>
+#include "Polygon.hpp"
+#include "Part.hpp"
+#include "OutputFileHandler.hpp"
+#include "GeometryWriter.hpp"
 
-/**
- *  This class that manages output of vtk images (regular structured grids). It is also used for
- *  outputting solutions on regular grids.
- */
-class ImageWriter
+#include "PetscSetupAndFinalize.hpp"
+
+class TestGeometryWriter : public CxxTest::TestSuite
 {
-
-private:
-
-    /**
-     * The image to be written
-     */
-    vtkSmartPointer<vtkImageData> mpVtkImage;
-
-    /**
-     * The output path
-     */
-    std::string mFilepath;
 
 public:
 
-    /**
-     * Constructor
-     */
-    ImageWriter();
+    void TestWriteCuboid()
+    {
+        Part<3> part = Part<3>();
+        part.AddCuboid(1.e-6*unit::metres, 1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
 
-    /**
-     * Destructor
-     */
-    ~ImageWriter();
+        OutputFileHandler output_file_handler("TestGeometryWriter/TestWriteCuboid");
 
-    /**
-     * Factory constructor method
-     * @return a shared pointer to a instance of this class
-     */
-    static boost::shared_ptr<ImageWriter> Create();
+        GeometryWriter writer;
+        writer.SetInput(part.GetVtk());
+        writer.SetFileName(output_file_handler.GetOutputDirectoryFullPath() + "cube.vtp");
+        writer.SetOutputFormat(GeometryFormat::VTP);
+        writer.Write();
 
-    /**
-     * Set the filename for the writer
-     * @param rFilename the file name
-     */
-    void SetFilename(const std::string& rFilename);
+        writer.SetFileName(output_file_handler.GetOutputDirectoryFullPath() + "cube.stl");
+        writer.SetOutputFormat(GeometryFormat::STL);
+        writer.Write();
+    }
 
-    /**
-     * Set the image in vti format
-     * @param pImage
-     */
-    void SetImage(vtkSmartPointer<vtkImageData> pImage);
-
-    /**
-     * Write the image in VTK format
-     */
-    void Write();
 };
 
-#endif /*ImageWriter_HPP_*/
+#endif /*TESTGEOMETRYWRITER_HPP_*/

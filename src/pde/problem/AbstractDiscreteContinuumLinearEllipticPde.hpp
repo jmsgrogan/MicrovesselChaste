@@ -191,7 +191,7 @@ public:
     /**
      * Update the discrete source strengths
      */
-    void UpdateDiscreteSourceStrengths();
+    virtual void UpdateDiscreteSourceStrengths();
 
 };
 
