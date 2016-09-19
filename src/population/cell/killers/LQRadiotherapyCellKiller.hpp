@@ -49,15 +49,23 @@ template<unsigned DIM>
 class LQRadiotherapyCellKiller : public AbstractCellKiller<DIM>
 {
     /**
-     * Radiosensitivity of a cancerous cell.
+     * Linear component of radiosensitivity of a cancerous cell.
      */
     double cancerousLinearRadiosensitivity;
+
+    /**
+     * Quadratic component of radiosensitivity of a cancerous cell.
+     */
     double cancerousQuadraticRadiosensitivity;
 
     /**
-     * Radiosensitivity of a normal cell
+     * Linear component of radiosensitivity of a normal cell.
      */
     double normalLinearRadiosensitivity;
+
+    /**
+     * Quadratic component of radiosensitivity of a normal cell.
+     */
     double normalQuadraticRadiosensitivity;
 
     /**
@@ -66,24 +74,48 @@ class LQRadiotherapyCellKiller : public AbstractCellKiller<DIM>
     double mDose;
 
     /**
-     * Time at which radiotherapy is used
+     * Times at which radiotherapy is used
      */
     std::vector<double> mRadiationTimes;
 
+    /**
+     * alpha_max OER term
+     */
     double mOerAlphaMax;
 
+    /**
+     * alpha_min OER term
+     */
     double mOerAlphaMin;
 
+    /**
+     * beta_max OER term
+     */
     double mOerBetaMax;
 
+    /**
+     * beta_min OER term
+     */
     double mOerBetaMin;
 
+    /**
+     * Oer constant K term
+     */
     double mKOer;
 
+    /**
+     * Radiotherapy alpha_max term
+     */
     double mAlphaMax;
 
+    /**
+     * Radiotherapy beta_max term
+     */
     double mBetaMax;
 
+    /**
+     * Whether to use an oxygen enhancement ratio
+     */
     bool mUseOer;
 
 private:
@@ -102,8 +134,7 @@ private:
         archive & boost::serialization::base_object<AbstractCellKiller<DIM> >(*this);
 
         // Make sure the random number generator is also archived
-        SerializableSingleton<RandomNumberGenerator>* p_rng_wrapper =
-                RandomNumberGenerator::Instance()->GetSerializationWrapper();
+        SerializableSingleton<RandomNumberGenerator>* p_rng_wrapper = RandomNumberGenerator::Instance()->GetSerializationWrapper();
         archive & p_rng_wrapper;
     }
 
@@ -113,55 +144,8 @@ public:
      * Default constructor.
      *
      * @param pCellPopulation pointer to the cell population
-     * @param probabilityOfDeath
      */
     LQRadiotherapyCellKiller(AbstractCellPopulation<DIM>* pCellPopulation);
-
-    /**
-     * Sets doseInjected, the radiation dose injected
-     */
-    void SetDoseInjected(double d);
-
-    /**
-     * Sets timeOfRadiation, the time at which radiation occurs
-     */
-    void SetTimeOfRadiation(std::vector<double> t);
-
-    /**
-     * Sets cancerousLinearRadiosensitivity and cancerousQuadraticRadiosensitivity to specified concentration.
-     *
-     * @param alpha and beta to which cancerousLinearRadiosensitivity and cancerousQuadraticRadiosensitivity should be set.
-     */
-    void SetCancerousRadiosensitivity(double alpha, double beta);
-
-    /**
-     * Sets normalLinearRadiosensitivity and normalQuadraticRadiosensitivity to specified concentration.
-     *
-     * @param alpha and beta to which normalLinearRadiosensitivity and normalQuadraticRadiosensitivity should be set.
-     */
-    void SetNormalRadiosensitivity(double alpha, double beta);
-
-    double GetNormalLinearRadiosensitivity();
-    double GetNormalQuadraticRadiosensitivity();
-    double GetCancerousLinearRadiosensitivity();
-    double GetCancerousQuadraticRadiosensitivity();
-    double GetDoseInjected();
-
-    void SetOerAlphaMax(double value);
-
-    void SetOerAlphaMin(double value);
-
-    void SetOerBetaMax(double value);
-
-    void SetOerBetaMin(double value);
-
-    void SetOerConstant(double value);
-
-    void SetAlphaMax(double value);
-
-    void SetBetaMax(double value);
-
-    void UseOer(bool useOer);
 
     /**
      * Overridden method to test a given cell for apoptosis.
@@ -176,12 +160,96 @@ public:
      */
     void CheckAndLabelCellsForApoptosisOrDeath();
 
+
+    double GetNormalLinearRadiosensitivity();
+    double GetNormalQuadraticRadiosensitivity();
+    double GetCancerousLinearRadiosensitivity();
+    double GetCancerousQuadraticRadiosensitivity();
+    double GetDoseInjected();
+
     /**
      * Overridden OutputCellKillerParameters() method.
      *
      * @param rParamsFile the file stream to which the parameters are output
      */
     void OutputCellKillerParameters(out_stream& rParamsFile);
+
+    /**
+     * Sets doseInjected, the radiation dose injected
+     * @param d dose delivered
+     */
+    void SetDoseInjected(double d);
+
+    /**
+     * Sets timeOfRadiation, the time at which radiation occurs
+     * @param t the radiation times
+     */
+    void SetTimeOfRadiation(std::vector<double> t);
+
+    /**
+     * Sets cancerousLinearRadiosensitivity and cancerousQuadraticRadiosensitivity to specified concentration.
+     *
+     * @param alpha linear radiosensitivity for cancer cells
+     * @param beta quadratic radiosensitivity for cancer cells
+     */
+    void SetCancerousRadiosensitivity(double alpha, double beta);
+
+    /**
+     * Sets normalLinearRadiosensitivity and normalQuadraticRadiosensitivity to specified concentration.
+     *
+     * @param alpha linear radiosensitivity for normal cells
+     * @param beta quadratic radiosensitivity for normal cells
+     */
+    void SetNormalRadiosensitivity(double alpha, double beta);
+
+    /**
+     * Sets alpha_max OER value
+     * @param value alpha_max OER value
+     */
+    void SetOerAlphaMax(double value);
+
+    /**
+     * Sets alpha_min OER value
+     * @param value alpha_min OER value
+     */
+    void SetOerAlphaMin(double value);
+
+    /**
+     * Sets beta_max OER value
+     * @param value beta_max OER value
+     */
+    void SetOerBetaMax(double value);
+
+    /**
+     * Sets beta_min OER value
+     * @param value beta_min OER value
+     */
+    void SetOerBetaMin(double value);
+
+    /**
+     * Sets K OER value
+     * @param value K OER value
+     */
+    void SetOerConstant(double value);
+
+    /**
+     * Sets alpha_max radiotherapy value
+     * @param value alpha_max radiotherapy value
+     */
+    void SetAlphaMax(double value);
+
+    /**
+     * Sets beta_max radiotherapy value
+     * @param value beta_max radiotherapy value
+     */
+    void SetBetaMax(double value);
+
+    /**
+     * Whether to use OER
+     * @param useOer Whether to use OER
+     */
+    void UseOer(bool useOer);
+
 };
 
 #include "SerializationExportWrapper.hpp"

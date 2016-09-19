@@ -44,7 +44,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "ReplicatableVector.hpp"
 #include "UblasMatrixInclude.hpp"
 #include "UnitCollection.hpp"
-#include "ImageWriter.hpp"
+#include "RegularGridWriter.hpp"
 #include "GeometryWriter.hpp"
 #include "GreensFunctionSolver.hpp"
 #include "BaseUnits.hpp"
@@ -438,7 +438,7 @@ template<unsigned DIM>
 void GreensFunctionSolver<DIM>::WriteSolution(std::map<std::string, std::vector<units::quantity<unit::concentration> > >& segmentPointData)
 {
     // Write the tissue point data
-    ImageWriter writer;
+    RegularGridWriter writer;
     writer.SetFilename(this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/solution.vti");
     writer.SetImage(this->mpVtkSolution);
     writer.Write();

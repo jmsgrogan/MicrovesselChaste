@@ -28,9 +28,11 @@ geometry/TestGeometryTools.hpp
 geometry/generators/TestMappableGridGenerator.hpp
 geometry/generators/TestVesselSurfaceGenerator.hpp
 geometry/generators/TestVoronoiGenerator.hpp
+geometry/writers/TestGeometryWriter.hpp
 mesh/TestDimensionalChastePoint.hpp
 mesh/TestDiscreteContinuumMesh.hpp
 mesh/TestRegularGrid.hpp
+mesh/TestRegularGridWriter.hpp
 mesh/utilities/TestDistanceMap.hpp
 mesh/utilities/TestDensityMap.hpp
 pde/TestFiniteDifferenceSolver.hpp

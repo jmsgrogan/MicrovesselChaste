@@ -39,37 +39,37 @@
 #include <vtkXMLImageDataWriter.h>
 #include <vtkVersion.h>
 #include "PetscTools.hpp"
-#include "ImageWriter.hpp"
+#include "RegularGridWriter.hpp"
 
-ImageWriter::ImageWriter()
+RegularGridWriter::RegularGridWriter()
     : mpVtkImage(vtkSmartPointer<vtkImageData>::New()),
       mFilepath()
 {
 
 }
 
-boost::shared_ptr<ImageWriter> ImageWriter::Create()
+boost::shared_ptr<RegularGridWriter> RegularGridWriter::Create()
 {
-    MAKE_PTR(ImageWriter, pSelf);
+    MAKE_PTR(RegularGridWriter, pSelf);
     return pSelf;
 }
 
-ImageWriter::~ImageWriter()
+RegularGridWriter::~RegularGridWriter()
 {
 
 }
 
-void ImageWriter::SetImage(vtkSmartPointer<vtkImageData> pImage)
+void RegularGridWriter::SetImage(vtkSmartPointer<vtkImageData> pImage)
 {
     mpVtkImage = pImage;
 }
 
-void ImageWriter::SetFilename(const std::string& filename)
+void RegularGridWriter::SetFilename(const std::string& filename)
 {
     mFilepath = filename;
 }
 
-void ImageWriter::Write()
+void RegularGridWriter::Write()
 {
     if(mFilepath == "")
     {

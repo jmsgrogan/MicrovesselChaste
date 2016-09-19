@@ -77,8 +77,8 @@ public:
         p_haematocrit_calculator->SetVesselNetwork(p_network);
         p_haematocrit_calculator->Calculate();
 
-        TS_ASSERT_DELTA(p_vessel1->GetFlowProperties()->GetHaematocrit(p_vessel1->GetSegments()),0.45, 1e-6);
-        TS_ASSERT_DELTA(p_vessel2->GetFlowProperties()->GetHaematocrit(p_vessel2->GetSegments()),0.45, 1e-6);
+        TS_ASSERT_DELTA(p_vessel1->GetFlowProperties()->GetHaematocrit(),0.45, 1e-6);
+        TS_ASSERT_DELTA(p_vessel2->GetFlowProperties()->GetHaematocrit(),0.45, 1e-6);
     }
 
     void TestBifurcationInflowNetwork() throw(Exception)
@@ -93,9 +93,9 @@ public:
         boost::shared_ptr<Vessel<2> > p_vessel1(Vessel<2>::Create(p_node1, p_node3));
         boost::shared_ptr<Vessel<2> > p_vessel2(Vessel<2>::Create(p_node2, p_node3));
         boost::shared_ptr<Vessel<2> > p_vessel3(Vessel<2>::Create(p_node3, p_node4));
-        p_vessel1->GetFlowProperties()->SetFlowRate(1.0*unit::metre_cubed_per_second, p_vessel1->GetSegments());
-        p_vessel2->GetFlowProperties()->SetFlowRate(1.0*unit::metre_cubed_per_second, p_vessel2->GetSegments());
-        p_vessel3->GetFlowProperties()->SetFlowRate(1.0*unit::metre_cubed_per_second, p_vessel3->GetSegments() );
+        p_vessel1->GetFlowProperties()->SetFlowRate(1.0*unit::metre_cubed_per_second);
+        p_vessel2->GetFlowProperties()->SetFlowRate(1.0*unit::metre_cubed_per_second);
+        p_vessel3->GetFlowProperties()->SetFlowRate(1.0*unit::metre_cubed_per_second);
 
         boost::shared_ptr<VesselNetwork<2> > p_network = boost::shared_ptr<VesselNetwork<2> >(new VesselNetwork<2>);
         p_network->AddVessel(p_vessel1);
@@ -106,9 +106,9 @@ public:
         p_haematocrit_calculator->SetVesselNetwork(p_network);
         p_haematocrit_calculator->Calculate();
 
-        TS_ASSERT_DELTA(p_vessel1->GetFlowProperties()->GetHaematocrit(p_vessel1->GetSegments()),0.45, 1e-6);
-        TS_ASSERT_DELTA(p_vessel2->GetFlowProperties()->GetHaematocrit(p_vessel2->GetSegments()),0.45, 1e-6);
-        TS_ASSERT_DELTA(p_vessel3->GetFlowProperties()->GetHaematocrit(p_vessel3->GetSegments()),0.9, 1e-6);
+        TS_ASSERT_DELTA(p_vessel1->GetFlowProperties()->GetHaematocrit(), 0.45, 1e-6);
+        TS_ASSERT_DELTA(p_vessel2->GetFlowProperties()->GetHaematocrit(), 0.45, 1e-6);
+        TS_ASSERT_DELTA(p_vessel3->GetFlowProperties()->GetHaematocrit(), 0.9, 1e-6);
     }
 
     void TestBifurcationOutflowNetwork() throw(Exception)
@@ -126,9 +126,9 @@ public:
         boost::shared_ptr<Vessel<2> > p_vessel1(Vessel<2>::Create(p_segment1));
         boost::shared_ptr<Vessel<2> > p_vessel2(Vessel<2>::Create(p_segment2));
         boost::shared_ptr<Vessel<2> > p_vessel3(Vessel<2>::Create(p_segment3));
-        p_vessel1->GetFlowProperties()->SetFlowRate(-1.0*unit::metre_cubed_per_second, p_vessel1->GetSegments());
-        p_vessel2->GetFlowProperties()->SetFlowRate(-1.0*unit::metre_cubed_per_second, p_vessel2->GetSegments());
-        p_vessel3->GetFlowProperties()->SetFlowRate(-1.0*unit::metre_cubed_per_second, p_vessel3->GetSegments());
+        p_vessel1->GetFlowProperties()->SetFlowRate(-1.0*unit::metre_cubed_per_second);
+        p_vessel2->GetFlowProperties()->SetFlowRate(-1.0*unit::metre_cubed_per_second);
+        p_vessel3->GetFlowProperties()->SetFlowRate(-1.0*unit::metre_cubed_per_second);
 
         boost::shared_ptr<VesselNetwork<2> > p_network = boost::shared_ptr<VesselNetwork<2> >(new VesselNetwork<2>);
         p_network->AddVessel(p_vessel1);
@@ -139,9 +139,9 @@ public:
         p_haematocrit_calculator->SetVesselNetwork(p_network);
         p_haematocrit_calculator->Calculate();
 
-        TS_ASSERT_DELTA(p_vessel1->GetFlowProperties()->GetHaematocrit(p_vessel1->GetSegments()),0.15, 1e-6);
-        TS_ASSERT_DELTA(p_vessel2->GetFlowProperties()->GetHaematocrit(p_vessel2->GetSegments()),0.3, 1e-6);
-        TS_ASSERT_DELTA(p_vessel3->GetFlowProperties()->GetHaematocrit(p_vessel3->GetSegments()),0.45, 1e-6);
+        TS_ASSERT_DELTA(p_vessel1->GetFlowProperties()->GetHaematocrit(),0.15, 1e-6);
+        TS_ASSERT_DELTA(p_vessel2->GetFlowProperties()->GetHaematocrit(),0.3, 1e-6);
+        TS_ASSERT_DELTA(p_vessel3->GetFlowProperties()->GetHaematocrit(),0.45, 1e-6);
     }
 
     void TestBifurcationOutflowNetworkBiasedFlow() throw(Exception)
@@ -159,9 +159,9 @@ public:
         boost::shared_ptr<Vessel<2> > p_vessel1(Vessel<2>::Create(p_segment1));
         boost::shared_ptr<Vessel<2> > p_vessel2(Vessel<2>::Create(p_segment2));
         boost::shared_ptr<Vessel<2> > p_vessel3(Vessel<2>::Create(p_segment3));
-        p_vessel1->GetFlowProperties()->SetFlowRate(-1.0*unit::metre_cubed_per_second, p_vessel1->GetSegments());
-        p_vessel2->GetFlowProperties()->SetFlowRate(-3.0*unit::metre_cubed_per_second, p_vessel2->GetSegments());
-        p_vessel3->GetFlowProperties()->SetFlowRate(-1.0*unit::metre_cubed_per_second, p_vessel3->GetSegments());
+        p_vessel1->GetFlowProperties()->SetFlowRate(-1.0*unit::metre_cubed_per_second);
+        p_vessel2->GetFlowProperties()->SetFlowRate(-3.0*unit::metre_cubed_per_second);
+        p_vessel3->GetFlowProperties()->SetFlowRate(-1.0*unit::metre_cubed_per_second);
 
         boost::shared_ptr<VesselNetwork<2> > p_network = boost::shared_ptr<VesselNetwork<2> >(new VesselNetwork<2>);
         p_network->AddVessel(p_vessel1);
@@ -172,9 +172,9 @@ public:
         p_haematocrit_calculator->SetVesselNetwork(p_network);
         p_haematocrit_calculator->Calculate();
 
-        TS_ASSERT_DELTA(p_vessel1->GetFlowProperties()->GetHaematocrit(p_vessel1->GetSegments()),0.0, 1e-6);
-        TS_ASSERT_DELTA(p_vessel2->GetFlowProperties()->GetHaematocrit(p_vessel2->GetSegments()),0.45, 1e-6);
-        TS_ASSERT_DELTA(p_vessel3->GetFlowProperties()->GetHaematocrit(p_vessel3->GetSegments()),0.45, 1e-6);
+        TS_ASSERT_DELTA(p_vessel1->GetFlowProperties()->GetHaematocrit(),0.0, 1e-6);
+        TS_ASSERT_DELTA(p_vessel2->GetFlowProperties()->GetHaematocrit(),0.45, 1e-6);
+        TS_ASSERT_DELTA(p_vessel3->GetFlowProperties()->GetHaematocrit(),0.45, 1e-6);
     }
 
     void TestHexagonalNetwork() throw(Exception)

@@ -41,6 +41,8 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UblasVectorInclude.hpp"
 #include "Vertex.hpp"
 
+#include "PetscSetupAndFinalize.hpp"
+
 class TestVertex : public CxxTest::TestSuite
 {
 public:
