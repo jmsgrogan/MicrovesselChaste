@@ -13,8 +13,10 @@ population/vessel/TestVesselSegment.hpp
 population/vessel/TestVessel.hpp
 population/vessel/TestVesselNetwork.hpp
 population/vessel/calculators/TestVesselNetworkGraphCalculator.hpp
+population/vessel/calculators/TestVesselNetworkGeometryCalculator.hpp
 population/vessel/generators/TestVesselNetworkGenerator.hpp
 population/vessel/readers/TestVesselNetworkReader.hpp
+population/vessel/writers/TestVesselNetworkWriter.hpp
 population/TestVesselNetworkCellPopulationInteractor.hpp
 population/cell/TestOwen2011OxygenBasedCellCycleModelWithOde.hpp
 population/cell/TestOwen2011OxygenBasedCellCycleOdeSystem.hpp
@@ -26,6 +28,7 @@ geometry/TestGeometryTools.hpp
 geometry/generators/TestMappableGridGenerator.hpp
 geometry/generators/TestVesselSurfaceGenerator.hpp
 geometry/generators/TestVoronoiGenerator.hpp
+mesh/TestDimensionalChastePoint.hpp
 mesh/TestDiscreteContinuumMesh.hpp
 mesh/TestRegularGrid.hpp
 mesh/utilities/TestDistanceMap.hpp

@@ -181,14 +181,14 @@ public:
                                                       double distanceTolerance = 1.e-6);
 
     /**
-     *  Return the dimensionless distance to the vessel end node closest to the input location
-     *  @param rLocation the location to probe
+     * Return the dimensionless distance to the vessel end node closest to the input location
+     * @param rLocation the location to probe
      */
     units::quantity<unit::length> GetClosestEndNodeDistance(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
-     *  Return the distance from the vessel to the input location
-     *  @param rLocation the location to probe
+     * Return the distance from the vessel to the input location
+     * @param rLocation the location to probe
      */
     units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation) const;
 
@@ -216,23 +216,23 @@ public:
     boost::shared_ptr<VesselNode<DIM> > GetNodeAtOppositeEnd(boost::shared_ptr<VesselNode<DIM> > pQueryNode);
 
     /**
-     *  Return the length
+     * Return the length
      *
-     *  @return the length
+     * @return the length
      */
     units::quantity<unit::length> GetLength() const;
 
     /**
-     *  Return the radius
+     * Return the radius
      *
-     *  @return the radius
+     * @return the radius
      */
     units::quantity<unit::length> GetRadius() const;
 
     /**
-     *  Return the vessel's nodes
+     * Return the vessel's nodes
      *
-     *  @return the vessel nodes
+     * @return the vessel nodes
      */
     std::vector<boost::shared_ptr<VesselNode<DIM> > > GetNodes();
 
@@ -287,7 +287,7 @@ public:
     void RemoveSegments(SegmentLocation::Value location);
 
     /**
-     *  Set the  radius
+     * Set the  radius
      */
     void SetRadius(units::quantity<unit::length>  radius);
 
@@ -299,7 +299,7 @@ public:
     void SetFlowProperties(const VesselFlowProperties<DIM>& rFlowProperties);
 
     /**
-     *  Update the data in mNodes
+     * Update the data in mNodes
      */
     void UpdateNodes();
 
@@ -307,7 +307,7 @@ public:
 private:
 
     /**
-     @return boost::shared_ptr<Vessel<DIM> >
+     * @return boost::shared_ptr<Vessel<DIM> >
      */
     boost::shared_ptr<Vessel<DIM> > Shared();
 };

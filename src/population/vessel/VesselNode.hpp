@@ -67,7 +67,8 @@ class VesselNode : public boost::enable_shared_from_this<VesselNode<DIM> >, publ
 private:
 
     /**
-     * Archiving
+     * Archiving. Note that mSegments is not serialized here. Segments should add or remove themselves
+     * from nodes when serializing/de-serializing. It is not managed by nodes.
      */
     friend class boost::serialization::access;
     template<class Archive>
@@ -75,7 +76,6 @@ private:
     {
         ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
         ar & mLocation;
-        ar & mSegments;
         ar & mIsMigrating;
         ar & mpFlowProperties;
         ar & mPtrComparisonId;

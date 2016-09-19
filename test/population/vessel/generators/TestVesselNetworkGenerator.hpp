@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,18 +33,20 @@
 
  */
 
-#ifndef TESTVesselNetworkGENERATOR_HPP_
-#define TESTVesselNetworkGENERATOR_HPP_
+#ifndef TESTVESSELNETWORKGENERATOR_HPP_
+#define TESTVESSELNETWORKGENERATOR_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include "FileFinder.hpp"
 #include "OutputFileHandler.hpp"
 #include "SmartPointers.hpp"
 #include "VesselNetworkGenerator.hpp"
-#include "FakePetscSetup.hpp"
+
+#include "PetscSetupAndFinalize.hpp"
 
 class TestVesselNetworkGenerator : public CxxTest::TestSuite
 {
+
 public:
 
     void TestGenerateAndWriteHexagonalNetwork() throw (Exception)
@@ -202,4 +204,4 @@ public:
     }
 };
 
-#endif /*TESTVesselNetworkGENERATOR_HPP_*/
+#endif /*TESTVESSELNETWORKGENERATOR_HPP_*/

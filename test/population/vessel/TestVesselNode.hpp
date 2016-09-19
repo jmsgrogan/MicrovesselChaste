@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,9 +33,12 @@
 
  */
 
-#ifndef TESTVesselNode_HPP_
-#define TESTVesselNode_HPP_
+#ifndef TESTVESSELNODE_HPP_
+#define TESTVESSELNODE_HPP_
 
+#include "CheckpointArchiveTypes.hpp"
+#include "ArchiveLocationInfo.hpp"
+#include <boost/serialization/shared_ptr.hpp>
 #include "Exception.hpp"
 #include "AbstractCellBasedTestSuite.hpp"
 #include "ChastePoint.hpp"
@@ -45,7 +48,9 @@
 #include "VesselNode.hpp"
 #include "NodeFlowProperties.hpp"
 #include "UnitCollection.hpp"
-#include "FakePetscSetup.hpp"
+#include "OutputFileHandler.hpp"
+
+#include "PetscSetupAndFinalize.hpp"
 
 class TestVesselNode : public AbstractCellBasedTestSuite
 {
@@ -146,6 +151,46 @@ public:
         // Check that a node can't be replaced with one that's already there
         TS_ASSERT_THROWS_THIS(p_segment2->ReplaceNode(0, p_node_1), "This segment is already attached to this node.");
     }
+
+    void TestArchiving() throw (Exception)
+    {
+        // Test Archiving
+        OutputFileHandler handler("archive", false);
+        ArchiveLocationInfo::SetArchiveDirectory(handler.FindFile(""));
+        std::string archive_filename = ArchiveLocationInfo::GetProcessUniqueFilePath("VesselNode.arch");
+
+        // Save archive
+        {
+            boost::shared_ptr<VesselNode<3> > p_node = boost::shared_ptr<VesselNode<3> >(new VesselNode<3>(1.0, 2.0, 3.0, 5.0*unit::metres));
+
+            boost::shared_ptr<AbstractVesselNetworkComponent<3> > p_cast_node = boost::static_pointer_cast<AbstractVesselNetworkComponent<3> >(p_node);
+            TS_ASSERT_DELTA(p_node->rGetLocation().rGetLocation()[0], 1.0, 1.e-6);
+            TS_ASSERT_DELTA(p_node->rGetLocation().rGetLocation()[1], 2.0, 1.e-6);
+            TS_ASSERT_DELTA(p_node->rGetLocation().rGetLocation()[2], 3.0, 1.e-6);
+
+            std::ofstream ofs(archive_filename.c_str());
+            boost::archive::text_oarchive output_arch(ofs);
+            output_arch << p_cast_node;
+        }
+
+        // Load archive
+        {
+            boost::shared_ptr<AbstractVesselNetworkComponent<3> > p_node_from_archive;
+
+            // Read from this input file
+            std::ifstream ifs(archive_filename.c_str(), std::ios::binary);
+            boost::archive::text_iarchive input_arch(ifs);
+
+            // restore from the archive
+            input_arch >> p_node_from_archive;
+            boost::shared_ptr<VesselNode<3> > p_cast_node = boost::static_pointer_cast<VesselNode<3> >(p_node_from_archive);
+
+            std::cout << p_cast_node->rGetLocation().rGetLocation() << std::endl;
+            TS_ASSERT_DELTA(p_cast_node->rGetLocation().rGetLocation()[0], 1.0, 1.e-6);
+            TS_ASSERT_DELTA(p_cast_node->rGetLocation().rGetLocation()[1], 2.0, 1.e-6);
+            TS_ASSERT_DELTA(p_cast_node->rGetLocation().rGetLocation()[2], 3.0, 1.e-6);
+        }
+    }
 };
 
-#endif /*TESTVesselNode_HPP_*/
+#endif /*TESTVESSELNODE_HPP_*/

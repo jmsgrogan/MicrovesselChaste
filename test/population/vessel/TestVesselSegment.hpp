@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2014, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,8 +33,8 @@
 
  */
 
-#ifndef TESTVASCULARSEGMENT_HPP_
-#define TESTVASCULARSEGMENT_HPP_
+#ifndef TESTVESSELSEGMENT_HPP_
+#define TESTVESSELSEGMENT_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include <math.h>
@@ -44,6 +44,8 @@
 #include "VesselSegment.hpp"
 #include "Vessel.hpp"
 #include "UnitCollection.hpp"
+
+#include "PetscSetupAndFinalize.hpp"
 
 class TestVesselSegment : public CxxTest::TestSuite
 {
@@ -172,4 +174,4 @@ public:
     }
 };
 
-#endif /*TESTVASCULARSEGMENT_HPP_*/
+#endif /*TESTVESSELSEGMENT_HPP_*/

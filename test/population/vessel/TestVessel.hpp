@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,8 +33,8 @@
 
  */
 
-#ifndef TESTVessel_HPP_
-#define TESTVessel__HPP_
+#ifndef TESTVESSEL_HPP_
+#define TESTVESSEL_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include "SmartPointers.hpp"
@@ -42,6 +42,8 @@
 #include "VesselSegment.hpp"
 #include "Vessel.hpp"
 #include "ChastePoint.hpp"
+
+#include "PetscSetupAndFinalize.hpp"
 
 class TestVessel : public CxxTest::TestSuite
 {
@@ -92,11 +94,11 @@ public:
         TS_ASSERT_EQUALS(pVessel1->GetId(), 5u);
 
         pVessel1->SetRadius(5.0 * 1.e-6 * unit::metres);
-        pVessel1->GetFlowProperties()->SetHaematocrit(10.0, pVessel1->GetSegments());
-        pVessel1->GetFlowProperties()->SetFlowRate(15.0 * unit::metre_cubed_per_second, pVessel1->GetSegments());
+        pVessel1->GetFlowProperties()->SetHaematocrit(10.0);
+        pVessel1->GetFlowProperties()->SetFlowRate(15.0 * unit::metre_cubed_per_second);
         TS_ASSERT_DELTA(pVessel1->GetRadius()/ (1.e-6 * unit::metres), 5.0, 1.e-6);
-        TS_ASSERT_DELTA(pVessel1->GetFlowProperties()->GetHaematocrit(pVessel1->GetSegments()), 10.0, 1.e-6);
-        TS_ASSERT_DELTA(pVessel1->GetFlowProperties()->GetFlowRate(pVessel1->GetSegments())/unit::metre_cubed_per_second, 15.0, 1.e-6);
+        TS_ASSERT_DELTA(pVessel1->GetFlowProperties()->GetHaematocrit(), 10.0, 1.e-6);
+        TS_ASSERT_DELTA(pVessel1->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 15.0, 1.e-6);
     }
 
     void TestAddingAndRemovingSegments() throw (Exception)
