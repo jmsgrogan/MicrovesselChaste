@@ -535,13 +535,19 @@ std::vector<unsigned> RegularGrid<ELEMENT_DIM, SPACE_DIM>::GetExtents()
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-DimensionalChastePoint<SPACE_DIM> RegularGrid<ELEMENT_DIM, SPACE_DIM>::GetLocation(unsigned x_index, unsigned y_index,
-                                                                             unsigned z_index)
+DimensionalChastePoint<SPACE_DIM> RegularGrid<ELEMENT_DIM, SPACE_DIM>::GetLocation(unsigned x_index, unsigned y_index, unsigned z_index)
 {
-    DimensionalChastePoint<SPACE_DIM> location((double(x_index) * mSpacing + mOrigin[0]*mReferenceLength)/mReferenceLength,
-                                               (double(y_index) * mSpacing + mOrigin[1]*mReferenceLength)/mReferenceLength,
-                                               (double(z_index) * mSpacing + mOrigin[2]*mReferenceLength)/mReferenceLength);
-    return location;
+    if(SPACE_DIM == 2)
+    {
+        return DimensionalChastePoint<SPACE_DIM>((double(x_index) * mSpacing + mOrigin[0]*mReferenceLength)/mReferenceLength,
+                                                              (double(y_index) * mSpacing + mOrigin[1]*mReferenceLength)/mReferenceLength);
+    }
+    else
+    {
+        return DimensionalChastePoint<SPACE_DIM>((double(x_index) * mSpacing + mOrigin[0]*mReferenceLength)/mReferenceLength,
+                                                              (double(y_index) * mSpacing + mOrigin[1]*mReferenceLength)/mReferenceLength,
+                                                              (double(z_index) * mSpacing + mOrigin[2]*mReferenceLength)/mReferenceLength);
+    }
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

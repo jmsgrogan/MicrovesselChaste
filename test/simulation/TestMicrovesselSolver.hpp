@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef TESTMicrovesselSolver_HPP
-#define TESTMicrovesselSolver_HPP
+#ifndef TESTMICROVESSELSOLVER_HPP
+#define TESTMICROVESSELSOLVER_HPP
 
 #include <cxxtest/TestSuite.h>
 #include "LatticeBasedMigrationRule.hpp"
@@ -88,4 +88,4 @@ public:
     }
 };
 
-#endif //TESTMicrovesselSolver_HPP
+#endif //TESTMICROVESSELSOLVER_HPP

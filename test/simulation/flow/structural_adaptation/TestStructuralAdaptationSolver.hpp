@@ -48,7 +48,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UnitCollection.hpp"
 #include "VesselImpedanceCalculator.hpp"
 
-#include "FakePetscSetup.hpp"
+#include "PetscSetupAndFinalize.hpp"
 
 class TestStructuralAdaptationSolver : public CxxTest::TestSuite
 {
@@ -95,7 +95,7 @@ public:
         std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("MultiVesselNetwork.vtp");
         std::string progress_output_filename = output_file_handler.GetOutputDirectoryFullPath().append("MultiVesselNetwork_SAAProgress.dat");
 
-        boost::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = boost::shared_ptr<VesselImpedanceCalculator<2> >(new VesselImpedanceCalculator<2>);
+        boost::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
 
         StructuralAdaptationSolver<2> solver;
         solver.SetVesselNetwork(p_network);
@@ -114,6 +114,7 @@ public:
         TS_ASSERT_DELTA(boost::units::fabs(segments[0]->GetFlowProperties()->GetFlowRate())/unit::metre_cubed_per_second,
                         boost::units::fabs(segments[1]->GetFlowProperties()->GetFlowRate())/unit::metre_cubed_per_second, 1e-6);
 
+        SimulationTime::Destroy();
     }
 
     void TestOneVesselNetwork() throw(Exception)
@@ -136,6 +137,7 @@ public:
         p_segment1->SetRadius(radius*1.e-6*unit::metres);
         double haematocrit = 0.45;
         p_segment1->GetFlowProperties()->SetHaematocrit(haematocrit);
+        p_segment1->GetFlowProperties()->SetViscosity(1.e-3 * unit::poiseuille);
         p_network->SetSegmentProperties(p_segment1);
 
         SimulationTime::Instance()->SetStartTime(0.0);
@@ -146,16 +148,21 @@ public:
         std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("OneVesselNetwork.vtp");
         std::string progress_output_filename = output_file_handler.GetOutputDirectoryFullPath().append("OneVesselNetwork_SAAProgress.dat");
 
+        boost::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+
         StructuralAdaptationSolver<2> solver;
         solver.SetVesselNetwork(p_network);
         solver.SetWriteOutput(true);
         solver.SetOutputFileName(progress_output_filename);
         solver.SetTolerance(0.0001);
+        solver.AddPreFlowSolveCalculator(p_impedance_calculator);
         solver.SetTimeIncrement(0.0001*unit::seconds);
         solver.Solve();
 
         // Write the network to file
         p_network->Write(output_filename);
+
+        SimulationTime::Destroy();
     }
 
     void TestHexagonalNetwork() throw(Exception)
@@ -185,6 +192,7 @@ public:
         p_segment->SetRadius(radius*1.e-6*unit::metres);
         double haematocrit = 0.45;
         p_segment->GetFlowProperties()->SetHaematocrit(haematocrit);
+        p_segment->GetFlowProperties()->SetViscosity(1.e-3 * unit::poiseuille);
         vascular_network->SetSegmentProperties(p_segment);
 
         std::pair<DimensionalChastePoint<2>, DimensionalChastePoint<2> > network_extents = vascular_network->GetExtents();
@@ -252,17 +260,22 @@ public:
         std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("HexagonalVesselNetwork.vtp");
         std::string progress_output_filename = output_file_handler.GetOutputDirectoryFullPath().append("HexagonalVesselNetwork_SAAProgress.dat");
 
+        boost::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+
         StructuralAdaptationSolver<2> solver;
         solver.SetVesselNetwork(vascular_network);
         solver.SetWriteOutput(true);
         solver.SetOutputFileName(progress_output_filename);
         solver.SetTolerance(0.0001);
+        solver.AddPreFlowSolveCalculator(p_impedance_calculator);
         solver.SetTimeIncrement(0.001*unit::seconds);
         solver.SetMaxIterations(10000);
         solver.Solve();
 
         // Write the network to file
         vascular_network->Write(output_filename);
+
+        SimulationTime::Destroy();
 	}
 };
 

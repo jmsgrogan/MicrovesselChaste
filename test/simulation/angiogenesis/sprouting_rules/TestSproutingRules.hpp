@@ -114,7 +114,8 @@ public:
         // Set up a vegf field, 0.15 nM
         boost::shared_ptr<FunctionMap<2> > p_funciton_map = FunctionMap<2>::Create();
         p_funciton_map->SetGrid(p_grid);
-        std::vector<double> vegf_field = std::vector<double>(extents[0]*extents[1], 0.15);
+        std::vector<units::quantity<unit::concentration> > vegf_field =
+                std::vector<units::quantity<unit::concentration> >(extents[0]*extents[1], 0.15*unit::mole_per_metre_cubed);
         p_funciton_map->UpdateSolution(vegf_field);
 
         // Set up a sprouting rule

@@ -71,7 +71,9 @@ public:
      */
     ~VesselImpedanceCalculator();
 
-
+    /**
+     * Do the calculation.
+     */
     void Calculate();
 
 };

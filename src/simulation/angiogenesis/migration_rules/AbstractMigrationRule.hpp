@@ -42,6 +42,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "SmartPointers.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
 #include "AbstractCellPopulation.hpp"
+#include "RegularGrid.hpp"
 
 /**
  * Abstract class for implementing a vessel tip cell migration rule. On and off-lattice specializations
