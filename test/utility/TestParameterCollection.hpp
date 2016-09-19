@@ -78,20 +78,6 @@ public:
 
     void TestArchiving()
     {
-        boost::shared_ptr<BaseParameterInstance> my_parameter = BaseParameterInstance::Create();
-        my_parameter->SetShortDescription("My Description");
-        my_parameter->SetName("Base");
-
-        boost::shared_ptr<ParameterInstance<unit::time> > my_time_parameter = ParameterInstance<unit::time>:: Create();
-        units::quantity<unit::time> few_seconds = 5.0*unit::seconds;
-        my_time_parameter->SetShortDescription("My Description For Time Parameter");
-        my_time_parameter->SetValue(few_seconds);
-        my_time_parameter->SetName("Derived");
-
-        boost::shared_ptr<ParameterCollection> p_my_params = ParameterCollection::SharedInstance();
-        OutputFileHandler file_handler("TestMixedParameterCollection", true);
-        p_my_params->AddParameter(my_parameter, "Test");
-        p_my_params->AddParameter(my_time_parameter, "Test");
 
         // Test Archiving
         OutputFileHandler handler("archive", false);
@@ -100,15 +86,29 @@ public:
 
         // Save archive
         {
+            boost::shared_ptr<BaseParameterInstance> my_parameter = BaseParameterInstance::Create();
+            my_parameter->SetShortDescription("My Description");
+            my_parameter->SetName("Base");
+
+            boost::shared_ptr<ParameterInstance<unit::time> > my_time_parameter = ParameterInstance<unit::time>:: Create();
+            units::quantity<unit::time> few_seconds = 5.0*unit::seconds;
+            my_time_parameter->SetShortDescription("My Description For Time Parameter");
+            my_time_parameter->SetValue(few_seconds);
+            my_time_parameter->SetName("Derived");
+
+            ParameterCollection* p_my_params = ParameterCollection::Instance();
+            OutputFileHandler file_handler("TestMixedParameterCollection", true);
+            p_my_params->AddParameter(my_parameter, "Test");
+            p_my_params->AddParameter(my_time_parameter, "Test");
+
             std::ofstream ofs(archive_filename.c_str());
             boost::archive::text_oarchive output_arch(ofs);
-            output_arch << p_my_params;
 
             SerializableSingleton<ParameterCollection>* const p_wrapper = p_my_params->GetSerializationWrapper();
             output_arch << p_wrapper;
-        }
 
-        ParameterCollection::Destroy();
+            ParameterCollection::Destroy();
+        }
 
         // Load archive
         {

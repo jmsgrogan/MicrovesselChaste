@@ -37,7 +37,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #define TESTLATTICEBASEDANGIOGENESISLITERATEPAPER_HPP_
 
 /* = Introduction =
- * This tutorial is designed to introduce...
+ * This tutorial is designed to introduce on lattice angiogenesis.
  *
  */
 #include <cxxtest/TestSuite.h>

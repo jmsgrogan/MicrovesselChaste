@@ -37,7 +37,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #define TESOFFLATTICEANGIOGENESISLITERATEPAPER_HPP_
 
 /* = An Off Lattice Angiogenesis Tutorial =
- * This tutorial demonstrates most features of the Angiogenesis Project code. It can be used
+ * This tutorial demonstrates most features of the Microvessel Project code. It can be used
  * to get a rough idea of how the code works, and then individual components can
  * be looked at in more detailed, dedicated tutorials.
  *
@@ -281,20 +281,20 @@ public:
          * Set up the `MicrovesselSolver` which coordinates all solves. Note that for sequentially
          * coupled PDE solves, the solution propagates in the order that the PDE solvers are added to the `MicrovesselSolver`.
          */
-        boost::shared_ptr<MicrovesselSolver<3> > p_vascular_tumour_solver = MicrovesselSolver<3>::Create();
-        p_vascular_tumour_solver->SetVesselNetwork(p_network);
-        p_vascular_tumour_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
-        p_vascular_tumour_solver->AddDiscreteContinuumSolver(p_vegf_solver);
-        p_vascular_tumour_solver->SetOutputFileHandler(p_handler);
-        p_vascular_tumour_solver->SetOutputFrequency(1);
-        p_vascular_tumour_solver->SetDiscreteContinuumSolversHaveCompatibleGridIndexing(true);
+        boost::shared_ptr<MicrovesselSolver<3> > p_microvessel_solver = MicrovesselSolver<3>::Create();
+        p_microvessel_solver->SetVesselNetwork(p_network);
+        p_microvessel_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
+        p_microvessel_solver->AddDiscreteContinuumSolver(p_vegf_solver);
+        p_microvessel_solver->SetOutputFileHandler(p_handler);
+        p_microvessel_solver->SetOutputFrequency(1);
+        p_microvessel_solver->SetDiscreteContinuumSolversHaveCompatibleGridIndexing(true);
         /*
          * Reset the simulation time and run the solver.
          */
         SimulationTime::Instance()->Destroy();
         SimulationTime::Instance()->SetStartTime(0.0);
         SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(30.0, 1);
-        p_vascular_tumour_solver->Run();
+        p_microvessel_solver->Run();
     }
 };
 

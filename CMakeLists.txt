@@ -30,20 +30,15 @@
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # 
 
-# This file covers two different build options depending on the value of BUILD_ANGIOGENESIS_EXTENDED
-# in the cmake cache. If it is OFF the component is built as a Chaste subproject, with Chaste-only
-# dependencies. If it is ON the component is built using a standalone build system with Chaste
-# as an external project and with an extra set of dependencies.
-
 find_package(Chaste COMPONENTS cell_based)
-chaste_do_project(Angiogenesis)
+chaste_do_project(Microvessel)
     
-set(BUILD_ANGIOGENESIS_PYTHON ON CACHE BOOL "Build Python Bindings for Angiogenesis component")
-if(${BUILD_ANGIOGENESIS_PYTHON})
+set(BUILD_MICROVESSEL_PYTHON ON CACHE BOOL "Build Python Bindings for Microvessel component")
+if(${BUILD_MICROVESSEL_PYTHON})
     include(${CMAKE_CURRENT_SOURCE_DIR}/WrapPython.cmake)
-endif(${BUILD_ANGIOGENESIS_PYTHON})
+endif(${BUILD_MICROVESSEL_PYTHON})
 
-# Add some custom test targets so we can just run on Angiogenesis code
+# Add some custom test targets so we can just run on Microvessel code
 if (Chaste_PROFILE_GPROF OR Chaste_PROFILE_GPERFTOOLS)
     if (Chaste_PROFILE_GPERFTOOLS)
         set(extension gif)
@@ -52,8 +47,8 @@ if (Chaste_PROFILE_GPROF OR Chaste_PROFILE_GPERFTOOLS)
     endif()
     
     set(CTEST_COMMAND ctest)
-    add_custom_target(profile_project_Angiogenesis
-        COMMAND ${CTEST_COMMAND} "-L" "project_Angiogenesis" "--output-on-failure"
+    add_custom_target(profile_project_Microvessel
+        COMMAND ${CTEST_COMMAND} "-L" "project_Microvessel" "--output-on-failure"
         COMMAND ${PYTHON_EXECUTABLE} "${Chaste_SOURCE_DIR}/cmake/process_profile.py" "${Chaste_PROFILE_OUTPUT_DIR}" ${extension}
         DEPENDS Profile 
         WORKING_DIRECTORY ${Chaste_BINARY_DIR}

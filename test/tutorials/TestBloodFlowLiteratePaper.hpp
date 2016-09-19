@@ -100,7 +100,7 @@ class TestBloodFlowLiteratePaper : public AbstractCellBasedWithTimingsTestSuite
 public:
     /*
      * = Test 1 - Simulating 1d Flow in a Bifurcating Network =
-     * [[Image(source:/chaste/projects/Angiogenesis/test/tutorials/images/bifurcation_network_flow.png, 45%, align=center, border=1)]]
+     * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/bifurcation_network_flow.png, 45%, align=center, border=1)]]
      *
      * In the first test we will simulate blood flow in a simple bifurcating vessel network. Subsequent tests will add detail in the form of
      * more complex networks, structural adaptation and vessel regression.
@@ -190,7 +190,7 @@ public:
     }
     /*
      * = Test 2 - Simulating Haematocrit Transport in 3D =
-     * [[Image(source:/chaste/projects/Angiogenesis/test/tutorials/images/haematocrit.png, 25%, align=center, border=1)]]
+     * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/haematocrit.png, 25%, align=center, border=1)]]
      *
      * In this test we will simulate haematocrit transport in a 3d vessel network.
      */
@@ -270,7 +270,7 @@ public:
     }
     /*
      * = Test 3 - Simulating Flow With Structural Adaptation =
-     * [[Image(source:/chaste/projects/Angiogenesis/test/tutorials/images/structural_adaptation.png, 25%, align=center, border=1)]]
+     * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/structural_adaptation.png, 25%, align=center, border=1)]]
      *
      * In this test the vessel network will adapt over time as a result of flow conditions.
      */

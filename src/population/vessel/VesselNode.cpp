@@ -287,5 +287,9 @@ void VesselNode<DIM>::SetReferenceLengthScale(units::quantity<unit::length> leng
 }
 
 // Explicit instantiation
-template class VesselNode<2> ;
-template class VesselNode<3> ;
+template class VesselNode<2>;
+template class VesselNode<3>;
+
+#include "SerializationExportWrapperForCpp.hpp"
+EXPORT_TEMPLATE_CLASS1(VesselNode, 2)
+EXPORT_TEMPLATE_CLASS1(VesselNode, 3)

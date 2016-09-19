@@ -95,7 +95,7 @@ class TestBuildVesselNetworkLiteratePaper : public AbstractCellBasedWithTimingsT
 public:
     /*
      * = Test 1 - Building a vessel network manually, writing it to file and visualizing it =
-     * [[Image(source:/chaste/projects/Angiogenesis/test/tutorials/images/bifurcating_network.png, 15%, align=center, border=1)]]
+     * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/bifurcating_network.png, 15%, align=center, border=1)]]
      *
      * In the first test build a vessel network from its constituent components; nodes, segments and vessels. Do some
      * simple tests to make sure the network has been formed as expected. Then write the network to file and visualize it in Paraview. The
@@ -189,7 +189,7 @@ public:
 
     /*
      * = Test 2 - Building a vessel network using a generator and reading from file =
-     * [[Image(source:/chaste/projects/Angiogenesis/test/tutorials/images/hexagonal_network.png, 25%, align=center, border=1)]]
+     * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/hexagonal_network.png, 25%, align=center, border=1)]]
      *
      * It is usually tedious to build a vessel network from scratch. In this test we use a generator to automatically construct a network.
      * We then write it to file, read it back in and check that it is restored as expected.
@@ -243,7 +243,7 @@ public:
         TS_ASSERT_EQUALS(p_network_from_file->GetNumberOfVessels(), number_of_vessels);
     }
     /*
-     * It is suggested that the tutorial [wiki:PaperTutorials/Angiogenesis/BloodFlow on flow modelling] is covered next.
+     * It is suggested that the tutorial [wiki:PaperTutorials/Microvessel/BloodFlow on flow modelling] is covered next.
      */
 };
 #endif /*TESTBUILDVESSELNETWORKLITERATEPAPER_HPP_*/
