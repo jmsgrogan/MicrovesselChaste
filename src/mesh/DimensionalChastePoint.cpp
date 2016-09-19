@@ -291,5 +291,9 @@ void DimensionalChastePoint<DIM>::Translate(DimensionalChastePoint<DIM> rVector)
 }
 
 // Explicit instantiation
-template class DimensionalChastePoint<2> ;
-template class DimensionalChastePoint<3> ;
+template class DimensionalChastePoint<2>;
+template class DimensionalChastePoint<3>;
+
+#include "SerializationExportWrapperForCpp.hpp"
+EXPORT_TEMPLATE_CLASS1(DimensionalChastePoint, 2)
+EXPORT_TEMPLATE_CLASS1(DimensionalChastePoint, 3)

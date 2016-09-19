@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2005-2014, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
 All rights reserved.
 
 University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
 
-#ifndef TESTVESSELNETWORKGraphCalculator_HPP_
-#define TESTVESSELNETWORKGraphCalculator_HPP_
+#ifndef TESTVESSELNETWORKGRAPHCALCULATOR_HPP_
+#define TESTVESSELNETWORKGRAPHCALCULATOR_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include "VesselNode.hpp"
@@ -140,4 +140,4 @@ public:
     }
 };
 
-#endif /*TESTVESSELNETWORKGraphCalculator_HPP_*/
+#endif /*TESTVESSELNETWORKGRAPHCALCULATOR_HPP_*/

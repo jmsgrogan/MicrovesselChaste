@@ -38,6 +38,7 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include <vector>
 #include <boost/enable_shared_from_this.hpp>
+#include "ChasteSerialization.hpp"
 #include "ChastePoint.hpp"
 #include "SmartPointers.hpp"
 #include "UblasVectorInclude.hpp"
@@ -52,6 +53,17 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned DIM>
 class DimensionalChastePoint : public ChastePoint<DIM>, public boost::enable_shared_from_this<DimensionalChastePoint<DIM> >
 {
+    /**
+     * Archiving
+     */
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & boost::serialization::base_object<ChastePoint<DIM> >(*this);
+        ar & mReferenceLength;
+    }
+
     /**
      * The reference length scale for the point, default in microns. This is needed as units can't be combined
      * with c_vectors, which hold the point's location. If the length scale is changed the
@@ -126,6 +138,14 @@ public:
      */
     units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation, bool checkDimensions = true) const;
 
+    /**
+     * Get the distance between the line defined by the start and end locations and the probe location.
+     * @param rStartLocation the start location on the line
+     * @param rStartLocation the end location on the line
+     * @param rProbeLocation the probe location
+     * @param checkDimensions check if the dimensions of the input point need to be scaled
+     * @return the distance between the line and probe point
+     */
     static units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rStartLocation,
                                                      const DimensionalChastePoint<DIM>& rEndLocation,
                                                      const DimensionalChastePoint<DIM>& rProbeLocation,
@@ -139,6 +159,14 @@ public:
      */
     DimensionalChastePoint<DIM> GetMidPoint(const DimensionalChastePoint<DIM>& rLocation, bool checkDimensions = true) const;
 
+    /**
+     * Return the projection of a point onto the line defined by the start and end locations
+     * @param rStartLocation the start location on the line
+     * @param rStartLocation the end location on the line
+     * @param rProbeLocation the probe location
+     * @param checkDimensions check if the dimensions of the input point need to be scaled
+     * @return the projection of the probe point onto a line
+     */
     static DimensionalChastePoint<DIM> GetPointProjection(const DimensionalChastePoint<DIM>& rStartLocation,
                                                           const DimensionalChastePoint<DIM>& rEndLocation,
                                                           const DimensionalChastePoint<DIM>& rProbeLocation,
@@ -161,9 +189,14 @@ public:
      */
     bool IsCoincident(const DimensionalChastePoint<DIM>& rLocation, bool checkDimensions = true) const;
 
+    /**
+     * Translate the point along the supplied vector
+     * @param rVector the translation vector
+     */
     void Translate(DimensionalChastePoint<DIM> rVector);
-
-
 };
 
+#include "SerializationExportWrapper.hpp"
+EXPORT_TEMPLATE_CLASS1(DimensionalChastePoint, 2)
+EXPORT_TEMPLATE_CLASS1(DimensionalChastePoint, 3)
 #endif /*DIMENSIONALCHASTEPOINT_HPP_*/

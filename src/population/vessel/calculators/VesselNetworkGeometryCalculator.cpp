@@ -209,6 +209,12 @@ std::vector<unsigned> VesselNetworkGeometryCalculator<DIM>::GetVesselLengthDistr
     return bins;
 }
 
+template <unsigned DIM>
+void VesselNetworkGeometryCalculator<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork)
+{
+    mpVesselNetwork = pVesselNetwork;
+}
+
 // Explicit instantiation
 template class VesselNetworkGeometryCalculator<2>;
 template class VesselNetworkGeometryCalculator<3>;

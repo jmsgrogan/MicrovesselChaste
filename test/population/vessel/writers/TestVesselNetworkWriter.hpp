@@ -33,22 +33,23 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef TESTVESSELNETWORKREADER_HPP_
-#define TESTVESSELNETWORKREADER_HPP_
+#ifndef TESTVESSELNETWORKWRITER_HPP_
+#define TESTVESSELNETWORKWRITER_HPP_
 
 #include <cxxtest/TestSuite.h>
+#include "VesselNetworkWriter.hpp"
 #include "VesselNetworkReader.hpp"
-#include "FileFinder.hpp"
 #include "OutputFileHandler.hpp"
+#include "FileFinder.hpp"
 #include "SmartPointers.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
-class TestVesselNetworkReader : public CxxTest::TestSuite
+class TestVesselNetworkWriter : public CxxTest::TestSuite
 {
 public:
 
-    void TestReadNetworkFromFile() throw(Exception)
+    void TestWriteNetworkToFile() throw(Exception)
     {
         // Locate the input file
         FileFinder fileFinder("projects/Microvessel/test/data/tapmeier_network.vtp", RelativeTo::ChasteSourceRoot);
@@ -61,31 +62,15 @@ public:
         boost::shared_ptr<VesselNetwork<3> > p_network = p_network_reader->Read();
 
         // Write the network to file
-        OutputFileHandler output_file_handler("TestVesselNetworkReaders", false);
+        OutputFileHandler output_file_handler("TestVesselNetworkWriter", false);
         std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("VtkVesselNetwork.vtp");
-        p_network->MergeCoincidentNodes();
-        p_network->Write(output_filename);
-    }
 
-    void TestReadBioNetworkFromFile() throw(Exception)
-    {
-        // Locate the input file
-        FileFinder fileFinder("projects/Microvessel/test/data/retinal.vtp", RelativeTo::ChasteSourceRoot);
-        TS_ASSERT(fileFinder.Exists());
-        TS_ASSERT(fileFinder.IsFile());
-
-        // Generate the network
-        boost::shared_ptr<VesselNetworkReader<3> > p_network_reader = VesselNetworkReader<3>::Create();
-        p_network_reader->SetFileName(fileFinder.GetAbsolutePath());
-        p_network_reader->SetRadiusArrayName("Distance");
-        boost::shared_ptr<VesselNetwork<3> > p_network = p_network_reader->Read();
-
-        // Write the network to file
-        OutputFileHandler output_file_handler("TestVesselNetworkReaders", false);
-        std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("VtkRetinalNetwork.vtp");
-        p_network->MergeCoincidentNodes();
-        p_network->Write(output_filename);
+        VesselNetworkWriter<3> writer;
+        writer.SetVesselNetwork(p_network);
+        writer.SetReferenceLengthScale(1.0*unit::metres);
+        writer.SetFileName(output_filename);
+        writer.Write();
     }
 };
 
-#endif /*TESTVESSELNETWORKREADER_HPP_*/
+#endif /*TESTVESSELNETWORKWRITER_HPP_*/
