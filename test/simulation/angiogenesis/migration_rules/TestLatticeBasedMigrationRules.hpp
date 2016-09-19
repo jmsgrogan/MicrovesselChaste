@@ -67,7 +67,7 @@ public:
     {
         // Set the grid to move on
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        double spacing = 100.0; //um
+        double spacing = 100.0;
         p_grid->SetSpacing(spacing * 1.e-6*unit::metres);
         std::vector<unsigned> extents(3, 1);
         extents[0] = 7; // num x
@@ -135,8 +135,10 @@ public:
         // Set up a vegf field
         boost::shared_ptr<FunctionMap<2> > p_funciton_map = FunctionMap<2>::Create();
         p_funciton_map->SetGrid(p_grid);
-        std::vector<double> vegf_field = std::vector<double>(extents[0]*extents[1], 0.0);
-        double max_vegf = 0.2; //nM
+        std::vector<units::quantity<unit::concentration> > vegf_field =
+                std::vector<units::quantity<unit::concentration> >(extents[0]*extents[1], 0.0*unit::mole_per_metre_cubed);
+
+        units::quantity<unit::concentration> max_vegf(0.2*1.e-9*unit::mole_per_metre_cubed);
         for(unsigned idx=0; idx<p_grid->GetNumberOfPoints(); idx++)
         {
             vegf_field[idx] = max_vegf * p_grid->GetLocationOf1dIndex(idx)[0] / (float(extents[0]) * spacing);

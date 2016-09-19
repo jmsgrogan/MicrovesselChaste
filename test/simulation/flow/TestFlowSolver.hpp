@@ -47,7 +47,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselNetworkReader.hpp"
 #include "VesselImpedanceCalculator.hpp"
 
-#include "FakePetscSetup.hpp"
+#include "PetscSetupAndFinalize.hpp"
 
 class TestFlowSolver : public CxxTest::TestSuite
 {
@@ -495,7 +495,8 @@ public:
         vascular_network->Write(output_filename);
     }
 
-    void TestFlowThroughRetinalNetwork() throw (Exception)
+    // Slow, move to long running test pack
+    void DontTestFlowThroughRetinalNetwork() throw (Exception)
     {
         // Specify the network dimensions
         FileFinder fileFinder("projects/Microvessel/test/data/retinal.vtp", RelativeTo::ChasteSourceRoot);

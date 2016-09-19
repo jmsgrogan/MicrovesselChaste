@@ -99,6 +99,7 @@ std::vector<double> Owen2011MigrationRule<DIM>::GetNeighbourMovementProbabilitie
         // make sure that tip cell does not try to move into a location already occupied by the vessel that it comes from
         // i.e. that it doesn't loop back around
         DimensionalChastePoint<DIM> neighbour_location = this->mpGrid->GetLocationOf1dIndex(neighbourIndices[jdx]);
+
         bool sprout_already_attached_to_vessel_at_location = false;
 
         for (unsigned seg_index = 0; seg_index < pNode->GetNumberOfSegments(); seg_index++)
@@ -115,7 +116,7 @@ std::vector<double> Owen2011MigrationRule<DIM>::GetNeighbourMovementProbabilitie
 
         if (!vessel_crosses_line_segment && !sprout_already_attached_to_vessel_at_location)
         {
-            units::quantity<unit::concentration> VEGF_diff = (mVegfField[neighbourIndices[jdx]] - mVegfField[gridIndex]);
+            units::quantity<unit::concentration> VEGF_diff = mVegfField[neighbourIndices[jdx]] - mVegfField[gridIndex];
             units::quantity<unit::time> dt = SimulationTime::Instance()->GetTimeStep() * BaseUnits::Instance()->GetReferenceTimeScale();
             units::quantity<unit::length> dij = pNode->rGetLocation().GetDistance(neighbour_location);
             probability_of_moving[jdx] = ((mCellMotility * dt)/(2.0*dij*dij))*(1.0 + mCellChemotacticParameter*VEGF_diff/(2.0*mCellMotility));

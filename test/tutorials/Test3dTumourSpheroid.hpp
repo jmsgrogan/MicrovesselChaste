@@ -168,125 +168,125 @@ public:
 
     void TestOnLattice3dTumourSpheroid() throw (Exception)
     {
-        // Set up simulation domain
-        double domain_x = 40.0;
-        double domain_y = 40.0;
-        double domain_z = 6.0;
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(domain_x*1.e6*unit::metres,
-                            domain_y*1.e6*unit::metres,
-                            domain_z*1.e6*unit::metres,
-                            DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+//        // Set up simulation domain
+//        double domain_x = 40.0;
+//        double domain_y = 40.0;
+//        double domain_z = 6.0;
+//        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
+//        p_domain->AddCuboid(domain_x*1.e6*unit::metres,
+//                            domain_y*1.e6*unit::metres,
+//                            domain_z*1.e6*unit::metres,
+//                            DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+//
+//        // Create a lattice for the cell population
+//        double spacing = 1.0;
+//        unsigned num_x = unsigned(p_domain->GetBoundingBox()[1] / spacing);
+//        unsigned num_y = unsigned(p_domain->GetBoundingBox()[3] / spacing);
+//        unsigned num_z = unsigned(p_domain->GetBoundingBox()[5] / spacing);
+//        PottsMeshGenerator<3> generator(num_x, 0, 0, num_y, 0, 0, num_z, 0, 0);
+//        PottsMesh<3>* p_mesh = generator.GetMesh();
+//        p_mesh->Scale(spacing, spacing);
+//
+//        // Get initial tumour cell region
+//        double radius = 3.0;
+//        c_vector<double, 3> origin;
+//        origin[0] = 20.0;
+//        origin[1] = 20.0;
+//        origin[2] = 3.0;
+//        boost::shared_ptr<Part<3> > p_sub_domain = Part<3>::Create();
+//        boost::shared_ptr<Polygon> circle = p_sub_domain->AddCircle(radius*1.e6*unit::metres,
+//                                                                    DimensionalChastePoint<3>(20.0, 20.0, 3.0));
+//        std::vector<unsigned> location_indices;
+//        for (unsigned ind = 0; ind < p_mesh->GetNumNodes(); ind++)
+//        {
+//            if (p_sub_domain->IsPointInPart(p_mesh->GetNode(ind)->rGetLocation()))
+//            {
+//                location_indices.push_back(ind);
+//            }
+//        }
+//
+//        // Make the cells and set up the state and type
+//        std::vector<CellPtr> cells;
+//        MAKE_PTR(CancerCellMutationState, p_state);
+//        MAKE_PTR(StemCellProliferativeType, p_stem_type);
+//
+//        double oxygen_concentration = 30.0;
+//        for (unsigned i = 0; i < location_indices.size(); i++)
+//        {
+//            // Assign an oxygen based cell cycle model, which requires a dimension to be set.
+//            Owen2011OxygenBasedCellCycleModel* const p_model = new Owen2011OxygenBasedCellCycleModel;
+//            p_model->SetDimension(3);
+//            CellPtr p_cell(new Cell(p_state, p_model));
+//            p_cell->SetCellProliferativeType(p_stem_type);
+//            p_cell->SetApoptosisTime(30);
+//            cells.push_back(p_cell);
+//            p_cell->GetCellData()->SetItem("oxygen", oxygen_concentration);
+//        }
+//
+//        // Create cell population
+//        CaBasedCellPopulation<3> cell_population(*p_mesh, cells, location_indices);
+//        cell_population.SetOutputResultsForChasteVisualizer(false);
+//        cell_population.AddCellWriter<CellLabelWriter>();
+//        cell_population.AddCellPopulationCountWriter<CellProliferativePhasesCountWriter>();
+//        cell_population.AddCellWriter<CellMutationStatesWriter>();
+//        cell_population.AddCellWriter<CellProliferativeTypesWriter>();
+//        cell_population.AddCellWriter<CellProliferativePhasesWriter>();
 
-        // Create a lattice for the cell population
-        double spacing = 1.0;
-        unsigned num_x = unsigned(p_domain->GetBoundingBox()[1] / spacing);
-        unsigned num_y = unsigned(p_domain->GetBoundingBox()[3] / spacing);
-        unsigned num_z = unsigned(p_domain->GetBoundingBox()[5] / spacing);
-        PottsMeshGenerator<3> generator(num_x, 0, 0, num_y, 0, 0, num_z, 0, 0);
-        PottsMesh<3>* p_mesh = generator.GetMesh();
-        p_mesh->Scale(spacing, spacing);
-
-        // Get initial tumour cell region
-        double radius = 3.0;
-        c_vector<double, 3> origin;
-        origin[0] = 20.0;
-        origin[1] = 20.0;
-        origin[2] = 3.0;
-        boost::shared_ptr<Part<3> > p_sub_domain = Part<3>::Create();
-        boost::shared_ptr<Polygon> circle = p_sub_domain->AddCircle(radius*1.e6*unit::metres,
-                                                                    DimensionalChastePoint<3>(20.0, 20.0, 3.0));
-        std::vector<unsigned> location_indices;
-        for (unsigned ind = 0; ind < p_mesh->GetNumNodes(); ind++)
-        {
-            if (p_sub_domain->IsPointInPart(p_mesh->GetNode(ind)->rGetLocation()))
-            {
-                location_indices.push_back(ind);
-            }
-        }
-
-        // Make the cells and set up the state and type
-        std::vector<CellPtr> cells;
-        MAKE_PTR(CancerCellMutationState, p_state);
-        MAKE_PTR(StemCellProliferativeType, p_stem_type);
-
-        double oxygen_concentration = 30.0;
-        for (unsigned i = 0; i < location_indices.size(); i++)
-        {
-            // Assign an oxygen based cell cycle model, which requires a dimension to be set.
-            Owen2011OxygenBasedCellCycleModel* const p_model = new Owen2011OxygenBasedCellCycleModel;
-            p_model->SetDimension(3);
-            CellPtr p_cell(new Cell(p_state, p_model));
-            p_cell->SetCellProliferativeType(p_stem_type);
-            p_cell->SetApoptosisTime(30);
-            cells.push_back(p_cell);
-            p_cell->GetCellData()->SetItem("oxygen", oxygen_concentration);
-        }
-
-        // Create cell population
-        CaBasedCellPopulation<3> cell_population(*p_mesh, cells, location_indices);
-        cell_population.SetOutputResultsForChasteVisualizer(false);
-        cell_population.AddCellWriter<CellLabelWriter>();
-        cell_population.AddCellPopulationCountWriter<CellProliferativePhasesCountWriter>();
-        cell_population.AddCellWriter<CellMutationStatesWriter>();
-        cell_population.AddCellWriter<CellProliferativeTypesWriter>();
-        cell_population.AddCellWriter<CellProliferativePhasesWriter>();
-
-        // Create a grid to solve PDEs on
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        p_grid->SetSpacing(1.e-6 * unit::metres);
-        std::vector<unsigned> extents;
-        extents.push_back(41); //
-        extents.push_back(41); //
-        extents.push_back(7); //
-        p_grid->SetExtents(extents);
-
-        // Create the oxygen pde solver
-        boost::shared_ptr<FiniteDifferenceSolver<3> > p_oxygen_solver = FiniteDifferenceSolver<3>::Create();
-        p_oxygen_solver->SetGrid(p_grid);
-        p_oxygen_solver->SetPde(GetOxygenPde());
-        p_oxygen_solver->SetLabel("oxygen");
-
-        // Add a dirichlet boundary condition for oxygen on the outer walls of the domain
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_domain_ox_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
-        units::quantity<unit::concentration> boundary_concentration(40.0 * unit::mole_per_metre_cubed);
-        p_domain_ox_boundary_condition->SetValue(boundary_concentration);
-        p_oxygen_solver->AddBoundaryCondition(p_domain_ox_boundary_condition);
-
-        // Create the vegf pde solver
-        boost::shared_ptr<FiniteDifferenceSolver<3> > p_vegf_solver = FiniteDifferenceSolver<3>::Create();
-        p_vegf_solver->SetGrid(p_grid);
-        p_vegf_solver->SetPde(GetVegfPde());
-
-        // Add a 0.0 dirichlet boundary condition for vegf on the outer walls of the domain
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_domain_vegf_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
-        p_vegf_solver->AddBoundaryCondition(p_domain_vegf_boundary_condition);
-        p_vegf_solver->SetLabel("VEGF");
-
-        // Create the vascular tumour solver, which manages all pde solves
-        boost::shared_ptr<MicrovesselSolver<3> > p_vascular_tumour_solver = MicrovesselSolver<3>::Create();
-        p_vascular_tumour_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
-        p_vascular_tumour_solver->AddDiscreteContinuumSolver(p_vegf_solver);
-        p_vascular_tumour_solver->SetOutputFrequency(10);
-
-        OnLatticeSimulation<3> simulator(cell_population);
-
-        // Create the vascular tumour modifier which integrates with cell based Chaste
-        boost::shared_ptr<MicrovesselSimulationModifier<3> > p_vascular_tumour_modifier = MicrovesselSimulationModifier<3>::Create();
-        p_vascular_tumour_modifier->SetMicrovesselSolver(p_vascular_tumour_solver);
-        simulator.AddSimulationModifier(p_vascular_tumour_modifier);
-
-        // Create a Cell Concentration tracking modifier and add it to the simulation
-        MAKE_PTR(Owen2011TrackingModifier<3>, p_modifier);
-        simulator.AddSimulationModifier(p_modifier);
-
-        std::string resultsDirectoryName = "Test3dTumourSpheroid/OnLattice";
-        simulator.SetOutputDirectory(resultsDirectoryName);
-        simulator.SetSamplingTimestepMultiple(10);
-        simulator.SetDt(1);
-        simulator.SetEndTime(30);
-
-        simulator.Solve();
+//        // Create a grid to solve PDEs on
+//        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+//        p_grid->SetSpacing(1.e-6 * unit::metres);
+//        std::vector<unsigned> extents;
+//        extents.push_back(41); //
+//        extents.push_back(41); //
+//        extents.push_back(7); //
+//        p_grid->SetExtents(extents);
+//
+//        // Create the oxygen pde solver
+//        boost::shared_ptr<FiniteDifferenceSolver<3> > p_oxygen_solver = FiniteDifferenceSolver<3>::Create();
+//        p_oxygen_solver->SetGrid(p_grid);
+//        p_oxygen_solver->SetPde(GetOxygenPde());
+//        p_oxygen_solver->SetLabel("oxygen");
+//
+//        // Add a dirichlet boundary condition for oxygen on the outer walls of the domain
+//        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_domain_ox_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
+//        units::quantity<unit::concentration> boundary_concentration(40.0 * unit::mole_per_metre_cubed);
+//        p_domain_ox_boundary_condition->SetValue(boundary_concentration);
+//        p_oxygen_solver->AddBoundaryCondition(p_domain_ox_boundary_condition);
+//
+//        // Create the vegf pde solver
+//        boost::shared_ptr<FiniteDifferenceSolver<3> > p_vegf_solver = FiniteDifferenceSolver<3>::Create();
+//        p_vegf_solver->SetGrid(p_grid);
+//        p_vegf_solver->SetPde(GetVegfPde());
+//
+//        // Add a 0.0 dirichlet boundary condition for vegf on the outer walls of the domain
+//        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_domain_vegf_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
+//        p_vegf_solver->AddBoundaryCondition(p_domain_vegf_boundary_condition);
+//        p_vegf_solver->SetLabel("VEGF");
+//
+//        // Create the vascular tumour solver, which manages all pde solves
+//        boost::shared_ptr<MicrovesselSolver<3> > p_vascular_tumour_solver = MicrovesselSolver<3>::Create();
+//        p_vascular_tumour_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
+//        p_vascular_tumour_solver->AddDiscreteContinuumSolver(p_vegf_solver);
+//        p_vascular_tumour_solver->SetOutputFrequency(10);
+//
+//        OnLatticeSimulation<3> simulator(cell_population);
+//
+//        // Create the vascular tumour modifier which integrates with cell based Chaste
+//        boost::shared_ptr<MicrovesselSimulationModifier<3> > p_vascular_tumour_modifier = MicrovesselSimulationModifier<3>::Create();
+//        p_vascular_tumour_modifier->SetMicrovesselSolver(p_vascular_tumour_solver);
+//        simulator.AddSimulationModifier(p_vascular_tumour_modifier);
+//
+//        // Create a Cell Concentration tracking modifier and add it to the simulation
+//        MAKE_PTR(Owen2011TrackingModifier<3>, p_modifier);
+//        simulator.AddSimulationModifier(p_modifier);
+//
+//        std::string resultsDirectoryName = "Test3dTumourSpheroid/OnLattice";
+//        simulator.SetOutputDirectory(resultsDirectoryName);
+//        simulator.SetSamplingTimestepMultiple(10);
+//        simulator.SetDt(1);
+//        simulator.SetEndTime(30);
+//
+//        simulator.Solve();
     }
 };
 
