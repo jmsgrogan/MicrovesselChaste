@@ -40,6 +40,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <string>
 #include <map>
 #include <boost/enable_shared_from_this.hpp>
+#include "ChasteSerialization.hpp"
 #include "SmartPointers.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "AbstractVesselNetworkComponent.hpp"
@@ -55,15 +56,30 @@ template<unsigned DIM>
 class VesselSegment;
 
 /**
- * This is a class for vascular nodes, which are vessel network components.
+ * This is a class for vessel nodes, which are vessel network components.
  *
  * Nodes are point locations along a vessel. They are used for describing the end positions of
- * straight line vessel segments. Default length unit is micron.
+ * straight line vessel segments.
  */
 template<unsigned DIM>
 class VesselNode : public boost::enable_shared_from_this<VesselNode<DIM> >, public AbstractVesselNetworkComponent<DIM>
 {
 private:
+
+    /**
+     * Archiving
+     */
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
+        ar & mLocation;
+        ar & mSegments;
+        ar & mIsMigrating;
+        ar & mpFlowProperties;
+        ar & mPtrComparisonId;
+    }
 
     /**
      * Allow segments to manage adding and removing themselves from nodes.
@@ -336,4 +352,7 @@ private:
     void RemoveSegment(boost::shared_ptr<VesselSegment<DIM> > pVesselSegment);
 };
 
+#include "SerializationExportWrapper.hpp"
+EXPORT_TEMPLATE_CLASS1(VesselNode, 2)
+EXPORT_TEMPLATE_CLASS1(VesselNode, 3)
 #endif /* VESSELNODE_HPP_ */

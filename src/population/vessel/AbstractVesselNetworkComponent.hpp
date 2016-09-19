@@ -53,6 +53,15 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned DIM>
 class AbstractVesselNetworkComponent
 {
+    /**
+     * Archiving
+     */
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+
+    }
 
 protected:
 
@@ -139,5 +148,7 @@ public:
     virtual void SetRadius(units::quantity<unit::length> radius);
 
 };
+
+TEMPLATED_CLASS_IS_ABSTRACT_1_UNSIGNED(AbstractVesselNetworkComponent);
 
 #endif /* ABSTRACTVESSELNETWORKCOMPONENT_HPP_ */

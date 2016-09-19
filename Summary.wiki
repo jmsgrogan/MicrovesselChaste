@@ -1,8 +1,10 @@
 = Microvessel Project =
 
-The Microvessel project is a Chaste add-on with functionality for modelling blood flow, angiogenesis and nutrient and drug transport in micro-vessels as described in the paper here source:chaste/projects/Microvessel/paper/chaste_angiogeneis_plos_cb.pdf. Click on the images below to see some example applications. Detailed installation instructions are below.
+The Microvessel project is a Chaste add-on with functionality for modelling blood flow, angiogenesis and nutrient and drug transport in micro-vessels 
+as described in the paper here source:chaste/projects/Microvessel/paper/chaste_microvessel_plos_cb.pdf. Click on the images below to see some example applications. 
+Detailed installation instructions are below.
 
-*[[Image(source:/chaste/projects/Microvessel/test/tutorials/images/haematocrit.png, 20%, align=centre, border=1, link=PaperTutorials/Microvessel/BloodFlow)]]
+[[Image(source:/chaste/projects/Microvessel/test/tutorials/images/haematocrit.png, 20%, align=centre, border=1, link=PaperTutorials/Microvessel/BloodFlow)]]
 
 
 = Installation =
@@ -24,7 +26,7 @@ The Microvessel project code needs to be included in the main Chaste source. Thi
 
 {{{
 cd $CHASTE_SOURCE_DIR/projects
-ln -s $ANGIOGENESIS_PROJECT_SOURCE_DIR
+ln -s $MICROVESSEL_PROJECT_SOURCE_DIR
 }}}
 
 The C++ libraries can be built using either the standard Chaste Scons build system (see [wiki:ChasteGuides/DeveloperBuildGuide Chaste Developer Build Guide]) or the new [wiki:ChasteGuides/CmakeBuildGuide CMake build system] (preffered). 
@@ -45,15 +47,15 @@ make chaste_project_Microvessel
 as the final command. 
 
 == Python Package ==
-A [http://conda.pydata.org/docs/intro.html conda] Python package for Linux is currently under development. In the meantime this package needs to be built from source as a PyChaste module. First, build PyChaste following the instructions [wiki:PaperTutorials/PyChaste here]. Then, follow the above C++ instructions to build the Microvessel project, but with the additional CMake flag `-DBUILD_ANGIOGENESIS_PYTHON=ON`. The final steps should look like:
+A [http://conda.pydata.org/docs/intro.html conda] Python package for Linux is currently under development. In the meantime this package needs to be built from source as a PyChaste module. First, build PyChaste following the instructions [wiki:PaperTutorials/PyChaste here]. Then, follow the above C++ instructions to build the Microvessel project, but with the additional CMake flag `-DBUILD_MICROVESSEL_PYTHON=ON`. The final steps should look like:
 
 {{{
-cmake -DBUILD_ANGIOGENESIS_PYTHON=ON $CHASTE_SOURCE_DIR
+cmake -DBUILD_MICROVESSEL_PYTHON=ON $CHASTE_SOURCE_DIR
 make project_Microvessel
 make project_Microvessel_Python
 }}}
 
-The Python package `angiogenesis` will be in `$BUILD_DIR` under `Chaste/projects/Microvessel/python`. The finished package should be copied into the `chaste/projects` module of PyChaste. 
+The Python package `microvessel` will be in `$BUILD_DIR` under `Chaste/projects/Microvessel/python`. The finished package should be copied into the `chaste/projects` module of PyChaste. 
 
 == C++ Usage ==
 The source and test code are in the `src` and `test` folders respectively.  Unit tests can be built and run using the Chaste CMake framework [wiki:ChasteGuides/CmakeBuildGuide as detailed here]. It is recommended that the [wiki:PaperTutorials/Microvessel/BuildVesselNetwork tutorials] are followed. To run the first tutorial do:
