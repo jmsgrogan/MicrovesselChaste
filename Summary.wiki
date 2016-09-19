@@ -1,8 +1,8 @@
-= Angiogenesis Project =
+= Microvessel Project =
 
-The Angiogenesis project is a Chaste add-on with functionality for modelling blood flow, angiogenesis and nutrient and drug transport in micro-vessels as described in the paper here source:chaste/projects/Angiogenesis/paper/chaste_angiogeneis_plos_cb.pdf. Click on the images below to see some example applications. Detailed installation instructions are below.
+The Microvessel project is a Chaste add-on with functionality for modelling blood flow, angiogenesis and nutrient and drug transport in micro-vessels as described in the paper here source:chaste/projects/Microvessel/paper/chaste_angiogeneis_plos_cb.pdf. Click on the images below to see some example applications. Detailed installation instructions are below.
 
-*[[Image(source:/chaste/projects/Angiogenesis/test/tutorials/images/haematocrit.png, 20%, align=centre, border=1, link=PaperTutorials/Angiogenesis/BloodFlow)]]
+*[[Image(source:/chaste/projects/Microvessel/test/tutorials/images/haematocrit.png, 20%, align=centre, border=1, link=PaperTutorials/Microvessel/BloodFlow)]]
 
 
 = Installation =
@@ -17,10 +17,10 @@ svn --username anonymous checkout https://chaste.cs.ox.ac.uk/svn/chaste/trunk/ C
 using subversion. The project code itself can be obtained by doing: 
 
 {{{
-svn co "https://chaste.cs.ox.ac.uk/svn/chaste/projects/Angiogenesis"
+svn co "https://chaste.cs.ox.ac.uk/svn/chaste/projects/Microvessel"
 }}}
 
-The Angiogenesis project code needs to be included in the main Chaste source. This can be done with a symbolic link:
+The Microvessel project code needs to be included in the main Chaste source. This can be done with a symbolic link:
 
 {{{
 cd $CHASTE_SOURCE_DIR/projects
@@ -33,30 +33,30 @@ For CMake, first create a build directory outside the source tree and proceed as
 {{{
 cd $BUILD_DIR
 cmake $CHASTE_SOURCE_DIR
-make project_Angiogenesis
+make project_Microvessel
 }}}
 
 The will build the C++ library and all tests. To avoid building tests do:
 
 {{{
-make chaste_project_Angiogenesis
+make chaste_project_Microvessel
 }}}
 
 as the final command. 
 
 == Python Package ==
-A [http://conda.pydata.org/docs/intro.html conda] Python package for Linux is currently under development. In the meantime this package needs to be built from source as a PyChaste module. First, build PyChaste following the instructions [wiki:PaperTutorials/PyChaste here]. Then, follow the above C++ instructions to build the Angiogenesis project, but with the additional CMake flag `-DBUILD_ANGIOGENESIS_PYTHON=ON`. The final steps should look like:
+A [http://conda.pydata.org/docs/intro.html conda] Python package for Linux is currently under development. In the meantime this package needs to be built from source as a PyChaste module. First, build PyChaste following the instructions [wiki:PaperTutorials/PyChaste here]. Then, follow the above C++ instructions to build the Microvessel project, but with the additional CMake flag `-DBUILD_ANGIOGENESIS_PYTHON=ON`. The final steps should look like:
 
 {{{
 cmake -DBUILD_ANGIOGENESIS_PYTHON=ON $CHASTE_SOURCE_DIR
-make project_Angiogenesis
-make project_Angiogenesis_Python
+make project_Microvessel
+make project_Microvessel_Python
 }}}
 
-The Python package `angiogenesis` will be in `$BUILD_DIR` under `Chaste/projects/Angiogenesis/python`. The finished package should be copied into the `chaste/projects` module of PyChaste. 
+The Python package `angiogenesis` will be in `$BUILD_DIR` under `Chaste/projects/Microvessel/python`. The finished package should be copied into the `chaste/projects` module of PyChaste. 
 
 == C++ Usage ==
-The source and test code are in the `src` and `test` folders respectively.  Unit tests can be built and run using the Chaste CMake framework [wiki:ChasteGuides/CmakeBuildGuide as detailed here]. It is recommended that the [wiki:PaperTutorials/Angiogenesis/BuildVesselNetwork tutorials] are followed. To run the first tutorial do:
+The source and test code are in the `src` and `test` folders respectively.  Unit tests can be built and run using the Chaste CMake framework [wiki:ChasteGuides/CmakeBuildGuide as detailed here]. It is recommended that the [wiki:PaperTutorials/Microvessel/BuildVesselNetwork tutorials] are followed. To run the first tutorial do:
 
 {{{
 ctest -R TestBuildVesselNetworkLiteratePaper
@@ -65,11 +65,11 @@ ctest -R TestBuildVesselNetworkLiteratePaper
 To run all C++ tests and tutorials do:
 
 {{{
-ctest -L project_Angiogenesis
+ctest -L project_Microvessel
 }}}
 
 == Python Usage ==
-The Python source and tests are in the `src/python` and `test/python` folders. The [wiki:PaperTutorials/Angiogenesis/PythonBuildVesselNetwork Python tutorials] should be followed next.
+The Python source and tests are in the `src/python` and `test/python` folders. The [wiki:PaperTutorials/Microvessel/PythonBuildVesselNetwork Python tutorials] should be followed next.
 
 To run the Python tutorial do:
 
@@ -80,7 +80,7 @@ ctest -R TestPythonBuildVesselNetworkLiteratePaper.py
 To run all Python tests do:
 
 {{{
-ctest -L project_Angiogenesis
+ctest -L project_Microvessel
 }}}
 
 A full list of tutorials is given at the bottom of this page.
