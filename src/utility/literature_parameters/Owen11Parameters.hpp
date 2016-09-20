@@ -60,6 +60,161 @@ struct Owen11Parameters
      */
     static const boost::shared_ptr<ParameterInstance<unit::dynamic_viscosity> > mpPlasmaViscosity;
 
+    /**
+     * Minimum cell cycle period T_{min}_{normal}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::time> > mpMinimumCellCyclePeriodNormal;
+
+    /**
+     * Minimum cell cycle period T_{min}_{cancer}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::time> > mpMinimumCellCyclePeriodCancer;
+
+    /**
+     * Time for death due to sustained quiescence T_{death}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::time> > mpTimeToDeathDueToQuiescence;
+
+    /**
+     * Oxygen partial pressure at half max cell cycle rate C_{\phi}_{normal}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenPartialPressureAtHalfMaxCycleRateNormal;
+
+    /**
+     * Oxygen partial pressure at half max cell cycle rate C_{\phi}_{cancer}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenPartialPressureAtHalfMaxCycleRateCancer;
+
+    /**
+     * Oxygen partial pressure at quiescence C^{enter}_{quiesc}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenPartialPressureAtQuiescence;
+
+    /**
+     * Oxygen partial pressure to leave quiescence C^{leave}_{quiesc}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenPartialPressureLeaveQuiescence;
+
+    /**
+     * Chemotactic sensitivity \chi
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::diffusivity_per_concentration> > mpChemotacticSensitivity;
+
+    /**
+     * Maximum cell motility D_{normal}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::diffusivity> > mpCellMotilityNormal;
+
+    /**
+     * Maximum cell motility D_{cancer}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::diffusivity> > mpCellMotilityCancer;
+
+    /**
+     * Maximum cell motility D_{endo}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::diffusivity> > mpCellMotilityEndothelial;
+
+//    /**
+//     * p53 concentration for apoptosis p53_{THR}
+//     */
+//    static const boost::shared_ptr<ParameterInstance<unit::concentration> > mpP53ConcentrationForApoptosis;
+
+    /**
+     * Vessel permeability to oxygen \psi_{c}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::membrane_permeability> > mpVesselOxygenPermeability;
+
+    /**
+     * Vessel permeability to vegf \psi_{v}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::membrane_permeability> > mpVesselVegfPermeability;
+
+    /**
+     * Cell oxygen consumption rate \k_c^{cell}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpCellOxygenConsumptionRate;
+
+//    /**
+//     * Cell vegf secretion rate \k_v^{cell}
+//     */
+//    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpCellVegfSecretionRate;
+
+    /**
+     * Maximum rate of sprouting P^{max}_{sprout}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpMaximumSproutingRate;
+
+    /**
+     * VEGF concentration at half maximal vessel sprouting probability V_{sprout}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::concentration> > mpVegfConventrationAtHalfMaxProbSprouting;
+
+    /**
+     * Sprouting exclusion radius (R_{ex})
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::length> > mpSproutingExclusionRadius;
+
+    /**
+     * Maximum vessel survivial time with low wall shear stress T_{prune}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::time> > mpMaxTimeWithLowWallShearStress;
+
+    /**
+     * Critical wall shear stress for vessel pruning \tau_{wall}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpCriticalWallShearStress;
+
+    /**
+     * Master step time \delta t
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::time> > mpMasterStepTime;
+
+    /**
+     * Simulation duration T_{final}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::time> > mpSimulationDuration;
+
+    /**
+     * Lattice spacing \delta x
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::length> > mpLatticeSpacing;
+
+    /**
+     * Oxygen diffusivity D_{c}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::diffusivity> > mpOxygenDiffusivity;
+
+    /**
+     * Vegf diffusivity D_{v}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::diffusivity> > mpVegfDiffusivity;
+
+    /**
+     * Vegf decay rate \delta_{v}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpVegfDecayRate;
+
+    /**
+     * Inflow haematocrit H_{in}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::dimensionless> > mpInflowHaematocrit;
+
+    /**
+     * Vessel radius update timestep \epsilon_t
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::time> > mpVesselRadiusUpdateTimestep;
+
+//    /**
+//     * Minimum possible radius R_{MIN}
+//     */
+//    static const boost::shared_ptr<ParameterInstance<unit::length> > mpMinimumRadius;
+//
+//    /**
+//     * Maximum possible radius R_{MAX}
+//     */
+//    static const boost::shared_ptr<ParameterInstance<unit::length> > mpMaximumRadius;
+
 };
 
 #endif /*OWEN11PARAMETERS_HPP_*/

@@ -41,6 +41,7 @@ std::string bib_info = "@article{Owen2011, \n author = {Owen, Markus R and Stamp
         "\n title = {{Mathematical modeling predicts synergistic antitumor effects of combining a macrophage-based, hypoxia-targeted gene therapy with chemotherapy.}},"
         "\n volume = {71}, \n year = {2011}}";
 
+units::quantity<unit::pressure> mmHg(1.0*unit::mmHg);
 units::quantity<unit::pressure> inlet_pressure(25.0 * unit::mmHg);
 const boost::shared_ptr<ParameterInstance<unit::pressure> > Owen11Parameters::mpInletPressure =
         boost::shared_ptr<ParameterInstance<unit::pressure> >(new ParameterInstance<unit::pressure> (inlet_pressure,
@@ -66,3 +67,200 @@ const boost::shared_ptr<ParameterInstance<unit::dynamic_viscosity> > Owen11Param
                                                                                    "Blood plasma viscosity",
                                                                                    "\\mu_{plasma}",
                                                                                    bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::time> > Owen11Parameters::mpMinimumCellCyclePeriodNormal =
+        boost::shared_ptr<ParameterInstance<unit::time> >(new ParameterInstance<unit::time> (300.0*min,
+                                                                                   "Owen11_MinCellCycleNormal",
+                                                                                   "Minimum cell cycle period normal",
+                                                                                   "T_{min}_{normal}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::time> > Owen11Parameters::mpMinimumCellCyclePeriodCancer =
+        boost::shared_ptr<ParameterInstance<unit::time> >(new ParameterInstance<unit::time> (1600.0*min,
+                                                                                   "Owen11_MinCellCycleCancer",
+                                                                                   "Minimum cell cycle period cancer",
+                                                                                   "T_{min}_{cancer}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::time> > Owen11Parameters::mpTimeToDeathDueToQuiescence =
+        boost::shared_ptr<ParameterInstance<unit::time> >(new ParameterInstance<unit::time> (4000.0*min,
+                                                                                   "Owen11_TimeDeathQuiescence",
+                                                                                   "Time for death due to sustained quiescence",
+                                                                                   "T_{death}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::pressure> > Owen11Parameters::mpOxygenPartialPressureAtHalfMaxCycleRateNormal =
+        boost::shared_ptr<ParameterInstance<unit::pressure> >(new ParameterInstance<unit::pressure> (3.0*mmHg,
+                                                                                   "Owen11_OxygenAtHalfMaxCycleRateNormal",
+                                                                                   "Oxygen partial pressure at half max cell cycle rate normal",
+                                                                                   "C_{\\phi}_{normal}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::pressure> > Owen11Parameters::mpOxygenPartialPressureAtHalfMaxCycleRateCancer =
+        boost::shared_ptr<ParameterInstance<unit::pressure> >(new ParameterInstance<unit::pressure> (1.4*mmHg,
+                                                                                   "Owen11_OxygenAtHalfMaxCycleRateCancer",
+                                                                                   "Oxygen partial pressure at half max cell cycle rate cancer",
+                                                                                   "C_{\\phi}_{cancer}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::pressure> > Owen11Parameters::mpOxygenPartialPressureAtQuiescence =
+        boost::shared_ptr<ParameterInstance<unit::pressure> >(new ParameterInstance<unit::pressure> (8.9*mmHg,
+                                                                                   "Owen11_OxygenAtQuiescence",
+                                                                                   "Oxygen partial pressure at quiescence",
+                                                                                   "C^{enter}_{quiesc}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::pressure> > Owen11Parameters::mpOxygenPartialPressureLeaveQuiescence =
+        boost::shared_ptr<ParameterInstance<unit::pressure> >(new ParameterInstance<unit::pressure> (9.8*mmHg,
+                                                                                   "Owen11_OxygenLeaveQuiescence",
+                                                                                   "Oxygen partial pressure to leave quiescence",
+                                                                                   "C^{leave}_{quiesc}",
+                                                                                   bib_info));
+
+units::quantity<unit::area> micron_sq(1.e-6*unit::metres*1.e-6*unit::metres);
+units::quantity<unit::concentration> nano_molar(1.e-9 *unit::mole_per_metre_cubed);
+units::quantity<unit::diffusivity_per_concentration> chemotactic_sensitivty(2.e4*micron_sq/(min*nano_molar));
+const boost::shared_ptr<ParameterInstance<unit::diffusivity_per_concentration> > Owen11Parameters::mpChemotacticSensitivity =
+        boost::shared_ptr<ParameterInstance<unit::diffusivity_per_concentration> >(new ParameterInstance<unit::diffusivity_per_concentration> (chemotactic_sensitivty,
+                                                                                   "Owen11_ChemotacticSensitivity",
+                                                                                   "Chemotactic sensitivity",
+                                                                                   "\\Chi",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::diffusivity> > Owen11Parameters::mpCellMotilityNormal =
+        boost::shared_ptr<ParameterInstance<unit::diffusivity> >(new ParameterInstance<unit::diffusivity> (0.0*micron_sq/min,
+                                                                                   "Owen11_CellMotilityNormal",
+                                                                                   "Maximum cell motility normal",
+                                                                                   "D_{normal}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::diffusivity> > Owen11Parameters::mpCellMotilityCancer =
+        boost::shared_ptr<ParameterInstance<unit::diffusivity> >(new ParameterInstance<unit::diffusivity> (0.5*micron_sq/min,
+                                                                                   "Owen11_CellMotilityCancer",
+                                                                                   "Maximum cell motility cancer",
+                                                                                   "D_{cancer}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::diffusivity> > Owen11Parameters::mpCellMotilityEndothelial =
+        boost::shared_ptr<ParameterInstance<unit::diffusivity> >(new ParameterInstance<unit::diffusivity> (1.0*micron_sq/min,
+                                                                                   "Owen11_CellMotilityEndothelial",
+                                                                                   "Maximum cell motility endothelial",
+                                                                                   "D_{endo}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::membrane_permeability> > Owen11Parameters::mpVesselOxygenPermeability =
+        boost::shared_ptr<ParameterInstance<unit::membrane_permeability> >(new ParameterInstance<unit::membrane_permeability> (6.0*cm/min,
+                                                                                   "Owen11_VesselOxygenPermeability",
+                                                                                   "Vessel permeability to oxygen",
+                                                                                   "\\psi_{c}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::membrane_permeability> > Owen11Parameters::mpVesselVegfPermeability =
+        boost::shared_ptr<ParameterInstance<unit::membrane_permeability> >(new ParameterInstance<unit::membrane_permeability> (1.e-5*cm/min,
+                                                                                   "Owen11_VesselVegfPermeability",
+                                                                                   "Vessel permeability to vegf",
+                                                                                   "\\psi_{v}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::rate> > Owen11Parameters::mpCellOxygenConsumptionRate =
+        boost::shared_ptr<ParameterInstance<unit::rate> >(new ParameterInstance<unit::rate> (13.0/min,
+                                                                                   "Owen11_CellOxygenConsumptionRate",
+                                                                                   "Cell oxygen consumption rate",
+                                                                                   "k_c^{cell}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::rate> > Owen11Parameters::mpMaximumSproutingRate =
+        boost::shared_ptr<ParameterInstance<unit::rate> >(new ParameterInstance<unit::rate> (0.00025/min,
+                                                                                   "Owen11_MaximumSproutingRate",
+                                                                                   "Maximum rate of sprouting",
+                                                                                   "P^{max}_{sprout}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::concentration> > Owen11Parameters::mpVegfConventrationAtHalfMaxProbSprouting =
+        boost::shared_ptr<ParameterInstance<unit::concentration> >(new ParameterInstance<unit::concentration> (0.5*nano_molar,
+                                                                                   "Owen11_VegfConventrationAtHalfMaxProbSprouting",
+                                                                                   "VEGF concentration at half maximal vessel sprouting probability",
+                                                                                   "V_{sprout}",
+                                                                                   bib_info));
+
+units::quantity<unit::length> um(1.e-6*unit::metres);
+const boost::shared_ptr<ParameterInstance<unit::length> > Owen11Parameters::mpSproutingExclusionRadius =
+        boost::shared_ptr<ParameterInstance<unit::length> >(new ParameterInstance<unit::length> (80.0 * um,
+                                                                                   "Owen11_SproutingExclusionRadius",
+                                                                                   "Sprouting exclusion radius",
+                                                                                   "R_{ex}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::time> > Owen11Parameters::mpMaxTimeWithLowWallShearStress =
+        boost::shared_ptr<ParameterInstance<unit::time> >(new ParameterInstance<unit::time> (4000.0 * min,
+                                                                                   "Owen11_MaxTimeWithLowWallShearStress",
+                                                                                   "Maximum vessel survivial time with low wall shear stress",
+                                                                                   "T_{prune}",
+                                                                                   bib_info));
+
+units::quantity<unit::force> dyne(g*cm/(unit::seconds*unit::seconds));
+const boost::shared_ptr<ParameterInstance<unit::pressure> > Owen11Parameters::mpCriticalWallShearStress =
+        boost::shared_ptr<ParameterInstance<unit::pressure> >(new ParameterInstance<unit::pressure> (8.0 * dyne/(cm*cm),
+                                                                                   "Owen11_CriticalWallShearStress",
+                                                                                   "Critical wall shear stress for vessel pruning",
+                                                                                   "\\tau_{wall}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::time> > Owen11Parameters::mpMasterStepTime =
+        boost::shared_ptr<ParameterInstance<unit::time> >(new ParameterInstance<unit::time> (30.0 * min,
+                                                                                   "Owen11_MasterStepTime",
+                                                                                   "Master step time",
+                                                                                   "\\Delta t",
+                                                                                   bib_info));
+
+units::quantity<unit::time> day(60.0*60.0*24.0*unit::seconds);
+const boost::shared_ptr<ParameterInstance<unit::time> > Owen11Parameters::mpSimulationDuration =
+        boost::shared_ptr<ParameterInstance<unit::time> >(new ParameterInstance<unit::time> (200.0 * day,
+                                                                                   "Owen11_SimulationDuration",
+                                                                                   "Simulation duration",
+                                                                                   "T_{final}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::length> > Owen11Parameters::mpLatticeSpacing =
+        boost::shared_ptr<ParameterInstance<unit::length> >(new ParameterInstance<unit::length> (40.0*um,
+                                                                                   "Owen11_LatticeSpacing",
+                                                                                   "Lattice spacing",
+                                                                                   "\\Delta x",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::diffusivity> > Owen11Parameters::mpOxygenDiffusivity =
+        boost::shared_ptr<ParameterInstance<unit::diffusivity> >(new ParameterInstance<unit::diffusivity> (0.00145*cm*cm/min,
+                                                                                   "Owen11_OxygenDiffusivity",
+                                                                                   "Oxygen diffusivity ",
+                                                                                   "D_{c}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::diffusivity> > Owen11Parameters::mpVegfDiffusivity =
+        boost::shared_ptr<ParameterInstance<unit::diffusivity> >(new ParameterInstance<unit::diffusivity> (1.e-5*cm*cm/min,
+                                                                                   "Owen11_VegfDiffusivity",
+                                                                                   "Vegf diffusivity ",
+                                                                                   "D_{v}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::rate> > Owen11Parameters::mpVegfDecayRate =
+        boost::shared_ptr<ParameterInstance<unit::rate> >(new ParameterInstance<unit::rate> (0.01/min,
+                                                                                   "Owen11_VegfDecayRate",
+                                                                                   "Vegf decay rate ",
+                                                                                   "\\delta_{v}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::dimensionless> > Owen11Parameters::mpInflowHaematocrit =
+        boost::shared_ptr<ParameterInstance<unit::dimensionless> >(new ParameterInstance<unit::dimensionless> (0.45,
+                                                                                   "Owen11_InflowHaematocrit",
+                                                                                   "Inflow haematocrit",
+                                                                                   "H_{in}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::time> > Owen11Parameters::mpVesselRadiusUpdateTimestep =
+        boost::shared_ptr<ParameterInstance<unit::time> >(new ParameterInstance<unit::time> (0.1*unit::seconds,
+                                                                                   "Owen11_VesselRadiusUpdateTimestep",
+                                                                                   "Vessel radius update timestep",
+                                                                                   "\\epsilon_t",
+                                                                                   bib_info));
+
+
