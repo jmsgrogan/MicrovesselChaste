@@ -50,6 +50,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselNetworkGenerator.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
 #include "DiscreteContinuumMesh.hpp"
+#include "DiscreteContinuumMeshGenerator.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
@@ -71,10 +72,10 @@ public:
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(vessel_length, vessel_length, vessel_length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         p_domain->AddVesselNetwork(p_network);
-        boost::shared_ptr<DiscreteContinuumMesh<3, 3> > p_mesh = DiscreteContinuumMesh<3, 3>::Create();
-        p_mesh->SetDomain(p_domain);
-        p_mesh->SetMaxElementArea(500.0);
-        p_mesh->Update();
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<3, 3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3, 3>::Create();
+        p_mesh_generator->SetDomain(p_domain);
+        p_mesh_generator->SetMaxElementArea(500.0);
+        p_mesh_generator->Update();
 
         // Choose the PDE
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
@@ -93,7 +94,7 @@ public:
 
         // Set up and run the solver
         FiniteElementSolver<3> solver;
-        solver.SetMesh(p_mesh);
+        solver.SetMesh(p_mesh_generator->GetMesh());
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_vessel_ox_boundary_condition);
 
@@ -115,10 +116,10 @@ public:
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(vessel_length, vessel_length, vessel_length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         p_domain->AddVesselNetwork(p_network, true);
-        boost::shared_ptr<DiscreteContinuumMesh<3, 3> > p_mesh = DiscreteContinuumMesh<3, 3>::Create();
-        p_mesh->SetDomain(p_domain);
-        p_mesh->SetMaxElementArea(500.0);
-        p_mesh->Update();
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<3, 3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3, 3>::Create();
+        p_mesh_generator->SetDomain(p_domain);
+        p_mesh_generator->SetMaxElementArea(500.0);
+        p_mesh_generator->Update();
 
         // Choose the PDE
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
@@ -137,7 +138,7 @@ public:
 
         // Set up and run the solver
         FiniteElementSolver<3> solver;
-        solver.SetMesh(p_mesh);
+        solver.SetMesh(p_mesh_generator->GetMesh());
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_vessel_ox_boundary_condition);
 

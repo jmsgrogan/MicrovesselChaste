@@ -72,11 +72,18 @@ double AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::Compu
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::concentration_flow_rate> AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeConstantInUSourceTerm(unsigned gridIndex)
 {
-    if(gridIndex >= mDiscreteConstantSourceStrengths.size())
+    if(mDiscreteConstantSourceStrengths.size()>0)
     {
-        EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
+        if(gridIndex >= mDiscreteConstantSourceStrengths.size())
+        {
+            EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
+        }
+        return mConstantInUTerm + mDiscreteConstantSourceStrengths[gridIndex];
     }
-    return mConstantInUTerm + mDiscreteConstantSourceStrengths[gridIndex];
+    else
+    {
+        return mConstantInUTerm;
+    }
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

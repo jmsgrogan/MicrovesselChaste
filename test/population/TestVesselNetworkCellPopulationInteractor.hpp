@@ -58,15 +58,11 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "SimulationTime.hpp"
 #include "PottsMesh.hpp"
 #include "PottsMeshGenerator.hpp"
-#include "FakePetscSetup.hpp"
-#include "CellwiseSourcePde.hpp"
 #include "ConstBoundaryCondition.hpp"
-#include "BoundaryConditionsContainer.hpp"
-#include "PdeAndBoundaryConditions.hpp"
-#include "CellBasedPdeHandler.hpp"
-#include "AveragedSourcePde.hpp"
 #include "DefaultCellProliferativeType.hpp"
 #include "VesselNetworkCellPopulationInteractor.hpp"
+
+#include "FakePetscSetup.hpp"
 
 class TestVesselNetworkCellPopulationInteractor : public AbstractCellBasedWithTimingsTestSuite
 {

@@ -41,61 +41,37 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "ChastePoint.hpp"
 #include "TetrahedralMesh.hpp"
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
-#include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
 #include <vtkUnstructuredGrid.h>
 #include "Part.hpp"
 #include "Cell.hpp"
 #include "DimensionalChastePoint.hpp"
+#include "DiscreteContinuumMeshGenerator.hpp"
 
 // Jonathan Shewchuk's triangle and Hang Si's tetgen.
-#define REAL double
-#define VOID void
-#include "triangle.h"
-#include "tetgen.h"
-#undef REAL
-#undef VOID
+//#define REAL double
+//#define VOID void
+//#include "triangle.h"
+//#include "tetgen.h"
+//#undef REAL
+//#undef VOID
 
-struct triangulateio;
+// Forward declaration
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+class DiscreteContinuumMeshGenerator;
 
 /**
- * This class is for generating 2d and 3d finite element meshes using triangle and tetgen. It inherits from
- * TetrahedralMesh mesh as it needs to use functionality that is protected in that class. Some functionality from
- * TetrahedralMesh (ImportFromTetgen, InitialiseTriangulateIo, FreeTriangulateIo) is duplicated here, the possibility of
- * removing it and just using the TetrahedralMesh versions should be looked at.
+ * This is a TetrahedralMesh with some extra functions for point locating, output of node locations
+ * and connectivity and attribute storage. It uses its own version of ImportFromTetgen with fewer template arguements. There is
+ * scope for merging this versions with the one in TetrahedralMesh.
  */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM = ELEMENT_DIM>
 class DiscreteContinuumMesh : public TetrahedralMesh<ELEMENT_DIM, SPACE_DIM>
 {
     /**
-     * Max area argument used in mesh generation.
+     * For access to ImportFromMesher
      */
-    double mMaxElementArea;
-
-    /**
-     * A part to be meshed. This may not be the final mesh geometry if extra vtk polydata is included.
-     */
-    boost::shared_ptr<Part<SPACE_DIM> > mpDomain;
-
-    /**
-     * A vtk surface to be meshed
-     */
-    vtkSmartPointer<vtkPolyData> mpVtkDomain;
-
-    /**
-     * A path to an stl surface to be meshed
-     */
-    std::string mStlFilePath;
-
-    /**
-     * A collection of hole location markers
-     */
-    std::vector<DimensionalChastePoint<SPACE_DIM> > mHoles;
-
-    /**
-     * A collection of region markers
-     */
-    std::vector<DimensionalChastePoint<SPACE_DIM> > mRegions;
+    friend class DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>;
 
     /**
      * Store element-wise region markers
@@ -161,72 +137,16 @@ public:
     vtkSmartPointer<vtkUnstructuredGrid> GetAsVtkUnstructuredGrid();
 
     /**
-     * Set the domain for meshing
-     * @param pDomain the domain for meshing
+     * Set element attributes
      */
-    void SetDomain(boost::shared_ptr<Part<SPACE_DIM> > pDomain);
+    void SetAttributes(std::vector<unsigned> attributes);
 
     /**
-     * Set the domain for meshing
-     * @param pDomain the domain for meshing
+     * This is the same as the TetrahedralMesh implementation of ImportFromMesher but avoids some templating
      */
-    void SetDomain(vtkSmartPointer<vtkPolyData> pDomain);
-
-    /**
-     * Set the domain for meshing
-     * @param rPathToStl the path to the stl for meshing
-     */
-    void SetDomain(const std::string& rPathToStl);
-
-    /**
-     * Set the max element area
-     * @param maxElementArea the max element area
-     */
-    void SetMaxElementArea(double maxElementArea);
-
-    /**
-    * Set the hole locations
-    * @param holes hole locations
-    */
-    void SetHoles(std::vector<DimensionalChastePoint<SPACE_DIM> > holes);
-
-    /**
-    * Set the region marker locations
-    * @param regionMarkers region marker locations
-    */
-    void SetRegionMarkers(std::vector<DimensionalChastePoint<SPACE_DIM> > regionMarkers);
-
-    /**
-     * Do the meshing
-     */
-    void Update();
-
-private:
-
-    /**
-     * Use triangle for 2-D meshing
-     */
-    void Mesh2d();
-
-    /**
-     * Use tetgen for 3-D meshing
-     */
-    void Mesh3d();
-
-    /**
-     * Use tetgen for 3-D meshing of an stl
-     */
-    void MeshStl3d();
-
-    // This is the same as the TetrahedralMesh implementation of ImportFromMesher but avoids some templating
-    void ImportFromTetgen(tetgen::tetgenio& mesherOutput, unsigned numberOfElements, int *elementList,
+    void ImportDiscreteContinuumMeshFromTetgen(tetgen::tetgenio& mesherOutput, unsigned numberOfElements, int *elementList,
                           unsigned numberOfFaces, int *faceList, int *edgeMarkerList);
 
-    // This is the same as the TetrahedralMesh implementation of InitialiseTriangulateIo but avoids some templating
-    void InitialiseTriangulateIo(triangulateio& mesherIo);
-
-    // This is the same as the TetrahedralMesh implementation of FreeTriangulateIo but avoids some templating
-    void FreeTriangulateIo(triangulateio& mesherIo);
 };
 
 #endif /* DISCRETECONTINUUMMESH_HPP_*/
