@@ -43,8 +43,10 @@ Copyright (c) 2005-2016, University of Oxford.
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
 #include <vtkUnstructuredGrid.h>
+#include <vtkCellLocator.h>
 #include "Part.hpp"
 #include "Cell.hpp"
+#include "Element.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
 
@@ -89,9 +91,19 @@ class DiscreteContinuumMesh : public TetrahedralMesh<ELEMENT_DIM, SPACE_DIM>
     vtkSmartPointer<vtkUnstructuredGrid> mpVtkMesh;
 
     /**
+     * A vtk cell locator
+     */
+    vtkSmartPointer<vtkCellLocator> mpVtkCellLocator;
+
+    /**
      * Is the vtk representation up to date
      */
     bool mVtkRepresentationUpToDate;
+
+    /**
+     * The point element map
+     */
+    std::vector<std::vector<unsigned> > mPointElementMap;
 
 public:
 
@@ -130,6 +142,11 @@ public:
      * Return the element-wise region markers
      */
     std::vector<unsigned> GetElementRegionMarkers();
+
+    /**
+     * Return a map of element indices corresponding to the input points
+     */
+    std::vector<std::vector<unsigned> > GetPointElementMap(std::vector<DimensionalChastePoint<SPACE_DIM> > points);
 
     /**
      * Return the mesh as a vtk unstructured grid

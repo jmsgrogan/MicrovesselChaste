@@ -45,7 +45,7 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned DIM>
 AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::AbstractUnstructuredGridDiscreteContinuumSolver()
     :   AbstractDiscreteContinuumSolver<DIM>(),
-        mpVtkSolution(vtkSmartPointer<vtkUnstructuredGrid>::New()),
+        mpVtkSolution(),
         mpMesh()
 {
     this->mHasUnstructuredGrid = true;
@@ -242,6 +242,25 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateSolution(const 
     {
         this->mSolution[i] = data[i];
     }
+}
+
+template<unsigned DIM>
+void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateElementSolution(const std::vector<double>& data)
+{
+    if(!this->mpVtkSolution)
+    {
+        this->Setup();
+    }
+
+    vtkSmartPointer<vtkDoubleArray> pPointData = vtkSmartPointer<vtkDoubleArray>::New();
+    pPointData->SetNumberOfComponents(1);
+    pPointData->SetNumberOfTuples(data.size());
+    pPointData->SetName(this->GetLabel().c_str());
+    for (unsigned i = 0; i < data.size(); i++)
+    {
+        pPointData->SetValue(i, data[i]);
+    }
+    this->mpVtkSolution->GetCellData()->AddArray(pPointData);
 }
 
 template<unsigned DIM>

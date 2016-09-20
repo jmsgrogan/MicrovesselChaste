@@ -149,6 +149,8 @@ public:
 
     virtual void UpdateSolution(const std::vector<double>& data);
 
+    virtual void UpdateElementSolution(const std::vector<double>& data);
+
     virtual void UpdateSolution(const std::vector<units::quantity<unit::concentration> >& data);
 
     /**

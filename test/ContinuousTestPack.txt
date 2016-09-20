@@ -41,6 +41,9 @@ pde/TestGreensFunctionSolver.hpp
 pde/TestFiniteElementSolver.hpp
 pde/TestNonLinearFiniteElementSolver.hpp
 pde/TestDiscreteSource.hpp
+pde/TestCellBasedDiscreteSource.hpp
+pde/TestVesselBasedDiscreteSource.hpp
+pde/TestSolutionDependentDiscreteSource.hpp
 simulation/flow/TestFlowSolver.hpp
 simulation/flow/structural_adaptation/TestStructuralAdaptationSolver.hpp
 simulation/flow/haematocrit/TestAlarcon03HaematocritSolver.hpp

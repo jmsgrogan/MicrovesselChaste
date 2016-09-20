@@ -42,6 +42,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkTriangle.h>
 #include <vtkPoints.h>
 #include <vtkTetra.h>
+#include <vtkGenericCell.h>
 #include "Exception.hpp"
 #include "Warnings.hpp"
 #include "Facet.hpp"
@@ -57,7 +58,9 @@ DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::DiscreteContinuumMesh() :
     mAttributes(),
     mReferenceLength(1.e-6 * unit::metres),
     mpVtkMesh(vtkSmartPointer<vtkUnstructuredGrid>::New()),
-    mVtkRepresentationUpToDate(false)
+    mpVtkCellLocator(vtkSmartPointer<vtkCellLocator>::New()),
+    mVtkRepresentationUpToDate(false),
+    mPointElementMap()
 {
 
 }
@@ -125,6 +128,10 @@ vtkSmartPointer<vtkUnstructuredGrid> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DI
                 mpVtkMesh->InsertNextCell(p_vtk_element->GetCellType(), p_vtk_element->GetPointIds());
             }
         }
+        mpVtkCellLocator = vtkSmartPointer<vtkCellLocator>::New();
+        mpVtkCellLocator->SetDataSet(mpVtkMesh);
+        mpVtkCellLocator->BuildLocator();
+
         mVtkRepresentationUpToDate = true;
     }
     return mpVtkMesh;
@@ -134,6 +141,44 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 std::vector<unsigned> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetElementRegionMarkers()
 {
     return mAttributes;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+std::vector<std::vector<unsigned> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetPointElementMap(std::vector<DimensionalChastePoint<SPACE_DIM> > points)
+{
+    if(!mVtkRepresentationUpToDate)
+    {
+        GetAsVtkUnstructuredGrid();
+    }
+
+    mPointElementMap.clear();
+    mPointElementMap = std::vector<std::vector<unsigned> >(this->GetNumElements());
+
+    std::vector<int> cell_indices(points.size());
+    for(unsigned idx=0; idx<points.size(); idx++)
+    {
+        double x_coords[3];
+        x_coords[0] = points[idx][0];
+        x_coords[1] = points[idx][1];
+        if(SPACE_DIM == 3)
+        {
+            x_coords[2] = points[idx][2];
+        }
+        else
+        {
+            x_coords[2] = 0.0;
+        }
+
+        int cell_id=-1;
+//        vtkSmartPointer<vtkGenericCell> p_cell = vtkSmartPointer<vtkGenericCell>::New();
+        cell_id = mpVtkCellLocator->FindCell(x_coords);
+
+        if(cell_id>=0)
+        {
+            mPointElementMap[cell_id].push_back(idx);
+        }
+    }
+    return mPointElementMap;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

@@ -47,7 +47,7 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned DIM>
 AbstractRegularGridDiscreteContinuumSolver<DIM>::AbstractRegularGridDiscreteContinuumSolver()
     :   AbstractDiscreteContinuumSolver<DIM>(),
-        mpVtkSolution(vtkSmartPointer<vtkImageData>::New()),
+        mpVtkSolution(),
         mpRegularGrid()
 {
     this->mHasRegularGrid = true;
