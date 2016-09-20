@@ -59,58 +59,7 @@ public:
 
     void TestGridFunction() throw(Exception)
     {
-        // Set up the vessel network
-        units::quantity<unit::length> vessel_length = 100 * 1.e-6 * unit::metres;
-        VesselNetworkGenerator<3> generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
-                                                                                        DimensionalChastePoint<3>(0.0, 0.0, 0.0));
 
-        // Set up the grid
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(vessel_length,
-                            vessel_length,
-                            vessel_length,
-                            DimensionalChastePoint<3>(0.0, 0.0, 0.0));
-        c_vector<double, 3> translation_vector;
-        translation_vector[0] = -vessel_length/(2.0* 1.e-6 * unit::metres);
-        translation_vector[1] = -vessel_length/(2.0* 1.e-6 * unit::metres);
-        translation_vector[2] = 0.0;
-
-        p_domain->Translate(translation_vector);
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        p_grid->GenerateFromPart(p_domain, 10.0 * 1.e-6 * unit::metres);
-
-        // Choose the PDE
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
-        units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
-        units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e-7 * unit::mole_per_metre_cubed_per_second);
-        p_pde->SetIsotropicDiffusionConstant(diffusivity);
-        p_pde->SetContinuumConstantInUTerm(consumption_rate);
-
-        // Set up the discrete source
-        boost::shared_ptr<DiscreteSource<3> > p_vessel_source_lin = DiscreteSource<3>::Create();
-//        p_vessel_source_lin->SetValue(-1.e3);
-//        p_vessel_source_lin->SetType(SourceType::VESSEL);
-        p_vessel_source_lin->SetSource(SourceStrength::PRESCRIBED);
-
-        boost::shared_ptr<DiscreteSource<3> > p_vessel_source_const = DiscreteSource<3>::Create();
-//        p_vessel_source_const->SetValue(40.e3);
-//        p_vessel_source_const->SetType(SourceType::VESSEL);
-        p_vessel_source_const->SetSource(SourceStrength::PRESCRIBED);
-
-        p_pde->AddDiscreteSource(p_vessel_source_lin);
-        p_pde->AddDiscreteSource(p_vessel_source_const);
-
-        // Set up and run the solver
-        FiniteDifferenceSolver<3> solver;
-        solver.SetGrid(p_grid);
-        solver.SetPde(p_pde);
-        solver.SetVesselNetwork(p_network);
-
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteSource/TestWithVessels", false));
-        solver.SetFileHandler(p_output_file_handler);
-        solver.SetWriteSolution(true);
-        solver.Solve();
     }
 };
 

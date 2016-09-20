@@ -37,7 +37,6 @@
 #include "DiscreteContinuumBoundaryCondition.hpp"
 #include "VesselSegment.hpp"
 #include "UnitCollection.hpp"
-#include "Debug.hpp"
 
 template<unsigned DIM>
 DiscreteContinuumBoundaryCondition<DIM>::DiscreteContinuumBoundaryCondition()
@@ -192,10 +191,6 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
                     {
                         return std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
                     }
-//                    else
-//                    {
-//                        return std::pair<bool, double>(true, segments[jdx]->template GetData<double>(mLabel));
-//                    }
                 }
             }
         }
@@ -225,19 +220,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
 
     else if(mType == BoundaryConditionType::CELL)
     {
-//        if(!mpCellPopulation)
-//        {
-//            EXCEPTION("A simple cell population is required for this type of boundary condition");
-//        }
-//
-//        std::vector<boost::shared_ptr<SimpleCell<DIM> > > cells = mpCellPopulation->GetCells();
-//        for(unsigned idx=0; idx<cells.size(); idx++)
-//        {
-//            if (norm_2(cells[idx]->rGetLocation()-location)<tolerance)
-//            {
-//                return std::pair<bool, double>(true, mValue);
-//            }
-//        }
+        EXCEPTION("Cell based boundary conditions are not yet supported.");
     }
     else if(mType == BoundaryConditionType::IN_PART)
     {
@@ -327,10 +310,6 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateRegularGridSegmentBoundaryCo
             {
                 (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
             }
-//            else
-//            {
-//                (*pBoundaryConditions)[idx] = std::pair<bool, double>(true, point_segment_map[idx][0]->template GetData<double>(mLabel));
-//            }
         }
     }
 }
@@ -338,12 +317,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateRegularGridSegmentBoundaryCo
 template<unsigned DIM>
 void DiscreteContinuumBoundaryCondition<DIM>::UpdateRegularGridCellBoundaryConditions(boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > >pBoundaryConditions)
 {
-//    std::vector<boost::shared_ptr<SimpleCell<DIM> > > cells = mpCellPopulation->GetCells();
-//    std::vector<std::vector<CellPtr> > point_cell_map = mpRegularGrid->GetPointCellMap();
-//    for(unsigned idx=0; idx<point_cell_map.size(); idx++)
-//    {
-//        (*pBoundaryConditions)[idx] = std::pair<bool, double>(true, mValue);
-//    }
+    EXCEPTION("Cell based boundary conditions are not yet supported.");
 }
 
 template<unsigned DIM>
