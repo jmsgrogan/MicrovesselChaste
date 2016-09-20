@@ -60,7 +60,11 @@ DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::DiscreteContinuumMesh() :
     mpVtkMesh(vtkSmartPointer<vtkUnstructuredGrid>::New()),
     mpVtkCellLocator(vtkSmartPointer<vtkCellLocator>::New()),
     mVtkRepresentationUpToDate(false),
-    mPointElementMap()
+    mPointElementMap(),
+    mSegmentElementMap(),
+    mCellElementMap(),
+    mpNetwork(),
+    mpCellPopulation()
 {
 
 }
@@ -76,6 +80,12 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::~DiscreteContinuumMesh()
 {
 
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+units::quantity<unit::length> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetReferenceLengthScale()
+{
+    return mReferenceLength;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -144,6 +154,17 @@ std::vector<unsigned> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetElementR
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+std::vector<c_vector<double, SPACE_DIM> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetElementCentroids()
+{
+    std::vector<c_vector<double, SPACE_DIM> > centroids(this->GetNumElements());
+    for(unsigned idx=0; idx<this->GetNumElements(); idx++)
+    {
+        centroids[idx] = this->GetElement(idx)->CalculateCentroid();
+    }
+    return centroids;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 std::vector<std::vector<unsigned> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetPointElementMap(std::vector<DimensionalChastePoint<SPACE_DIM> > points)
 {
     if(!mVtkRepresentationUpToDate)
@@ -170,7 +191,6 @@ std::vector<std::vector<unsigned> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM
         }
 
         int cell_id=-1;
-//        vtkSmartPointer<vtkGenericCell> p_cell = vtkSmartPointer<vtkGenericCell>::New();
         cell_id = mpVtkCellLocator->FindCell(x_coords);
 
         if(cell_id>=0)
@@ -179,6 +199,113 @@ std::vector<std::vector<unsigned> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM
         }
     }
     return mPointElementMap;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+const std::vector<std::vector<CellPtr> >& DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetElementCellMap(bool update)
+{
+    if (!update)
+    {
+        return mCellElementMap;
+    }
+
+    if(!mVtkRepresentationUpToDate)
+    {
+        GetAsVtkUnstructuredGrid();
+    }
+
+    if (!mpCellPopulation)
+    {
+        EXCEPTION("A cell population has not been set. Can not create a cell element map.");
+    }
+
+    // Loop over all cells and associate cells with the points
+    mCellElementMap.clear();
+    mCellElementMap = std::vector<std::vector<CellPtr> >(this->GetNumElements());
+
+    for (typename AbstractCellPopulation<SPACE_DIM>::Iterator cell_iter = mpCellPopulation->Begin();
+            cell_iter != mpCellPopulation->End(); ++cell_iter)
+    {
+        c_vector<double, SPACE_DIM> location = mpCellPopulation->GetLocationOfCellCentre(*cell_iter);
+        double x_coords[3];
+        x_coords[0] = location[0];
+        x_coords[1] = location[1];
+        if(SPACE_DIM == 3)
+        {
+            x_coords[2] = location[2];
+        }
+        else
+        {
+            x_coords[2] = 0.0;
+        }
+        int cell_id=-1;
+        cell_id = mpVtkCellLocator->FindCell(x_coords);
+
+        if(cell_id>=0)
+        {
+            mCellElementMap[cell_id].push_back(*cell_iter);
+        }
+    }
+    return mCellElementMap;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetElementSegmentMap(bool update,
+                                                                                                        bool useVesselSurface)
+{
+    if (!update)
+    {
+        return mSegmentElementMap;
+    }
+
+    if (!mpNetwork)
+    {
+        EXCEPTION("A vessel network has not been set. Can not create a vessel element map.");
+    }
+
+    mSegmentElementMap.clear();
+    unsigned num_elements = this->GetNumElements();
+    mSegmentElementMap = std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > >(num_elements);
+
+    std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > segments = mpNetwork->GetVesselSegments();
+
+    for (unsigned jdx = 0; jdx < segments.size(); jdx++)
+    {
+        DimensionalChastePoint<SPACE_DIM> loc1 = segments[jdx]->GetNode(0)->rGetLocation();
+        DimensionalChastePoint<SPACE_DIM> loc2 = segments[jdx]->GetNode(1)->rGetLocation();
+        double x_coords1[3];
+        x_coords1[0] = loc1[0];
+        x_coords1[1] = loc1[1];
+        if(SPACE_DIM == 3)
+        {
+            x_coords1[2] = loc1[2];
+        }
+        else
+        {
+            x_coords1[2] = 0.0;
+        }
+        double x_coords2[3];
+        x_coords2[0] = loc2[0];
+        x_coords2[1] = loc2[1];
+        if(SPACE_DIM == 3)
+        {
+            x_coords2[2] = loc2[2];
+        }
+        else
+        {
+            x_coords2[2] = 0.0;
+        }
+
+        vtkSmartPointer<vtkIdList> p_id_list = vtkSmartPointer<vtkIdList>::New();
+        mpVtkCellLocator->FindCellsAlongLine(x_coords1, x_coords2, 1.e-8, p_id_list);
+        unsigned num_intersections = p_id_list->GetNumberOfIds();
+        for(unsigned idx=0; idx<num_intersections; idx++)
+        {
+            mSegmentElementMap[p_id_list->GetId(idx)].push_back(segments[jdx]);
+        }
+    }
+
+    return mSegmentElementMap;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -364,6 +491,18 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetAttributes(std::vector<unsigned> attributes)
 {
     mAttributes = attributes;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetCellPopulation(AbstractCellPopulation<SPACE_DIM>& rCellPopulation)
+{
+    mpCellPopulation = &rCellPopulation;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<SPACE_DIM> > pNetwork)
+{
+    mpNetwork = pNetwork;
 }
 
 // Explicit instantiation

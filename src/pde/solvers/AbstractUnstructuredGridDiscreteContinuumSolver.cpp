@@ -68,6 +68,48 @@ boost::shared_ptr<DiscreteContinuumMesh<DIM> > AbstractUnstructuredGridDiscreteC
 }
 
 template<unsigned DIM>
+std::vector<units::quantity<unit::concentration> > AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetConcentrationsAtCentroids()
+{
+    if(!this->mpVtkSolution)
+    {
+        this->Setup();
+    }
+
+    std::vector<c_vector<double, DIM> > centroids = mpMesh->GetElementCentroids();
+    std::vector<units::quantity<unit::concentration> > sampled_solution(centroids.size(), 0.0*unit::mole_per_metre_cubed);
+
+    // Sample the field at these locations
+    vtkSmartPointer<vtkPolyData> p_polydata = vtkSmartPointer<vtkPolyData>::New();
+    vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
+    p_points->SetNumberOfPoints(centroids.size());
+    for(unsigned idx=0; idx< centroids.size(); idx++)
+    {
+        if(DIM==3)
+        {
+            p_points->SetPoint(idx, centroids[idx][0], centroids[idx][1], centroids[idx][2]);
+        }
+        else
+        {
+            p_points->SetPoint(idx, centroids[idx][0], centroids[idx][1], 0.0);
+        }
+    }
+    p_polydata->SetPoints(p_points);
+
+    vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
+    p_probe_filter->SetInputData(p_polydata);
+    p_probe_filter->SetSourceData(this->mpVtkSolution);
+    p_probe_filter->Update();
+    vtkSmartPointer<vtkPointData> p_point_data = p_probe_filter->GetOutput()->GetPointData();
+
+    unsigned num_points = p_point_data->GetArray(this->mLabel.c_str())->GetNumberOfTuples();
+    for(unsigned idx=0; idx<num_points; idx++)
+    {
+        sampled_solution[idx] = p_point_data->GetArray(this->mLabel.c_str())->GetTuple1(idx)*unit::mole_per_metre_cubed;
+    }
+    return sampled_solution;
+}
+
+template<unsigned DIM>
 std::vector<units::quantity<unit::concentration> > AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetConcentrations(const std::vector<DimensionalChastePoint<DIM> >& samplePoints)
 {
     if(!this->mpVtkSolution)
