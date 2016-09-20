@@ -68,11 +68,18 @@ double LinearSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeLin
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::rate> LinearSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex)
 {
-    if(gridIndex >= mDiscreteLinearSourceStrengths.size())
+    if(mDiscreteLinearSourceStrengths.size()>0)
     {
-        EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
+        if(gridIndex >= mDiscreteLinearSourceStrengths.size())
+        {
+            EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
+        }
+        return mLinearInUTerm + mDiscreteLinearSourceStrengths[gridIndex];
     }
-    return mLinearInUTerm + mDiscreteLinearSourceStrengths[gridIndex];
+    else
+    {
+        return mLinearInUTerm;
+    }
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

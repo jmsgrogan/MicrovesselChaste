@@ -69,9 +69,9 @@ public:
         // Choose the PDE
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
         units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
-        units::quantity<unit::rate> consumption_rate(-2.e-7 * unit::per_second);
+        units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e-7 * unit::mole_per_metre_cubed_per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
-        p_pde->SetContinuumLinearInUTerm(consumption_rate);
+        p_pde->SetContinuumConstantInUTerm(consumption_rate);
 
         GreensFunctionSolver<3> solver;
         solver.SetVesselNetwork(p_network);

@@ -42,6 +42,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "Polygon.hpp"
 #include "Part.hpp"
 #include "DiscreteContinuumMesh.hpp"
+#include "DiscreteContinuumMeshGenerator.hpp"
 #include "VtkMeshWriter.hpp"
 #include "OutputFileHandler.hpp"
 #include "VesselNetworkGenerator.hpp"
@@ -97,13 +98,13 @@ public:
         boost::shared_ptr<Polygon> p_circle = p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
         p_part->Extrude(p_circle, 1.e-6 * unit::metres);
 
-        boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = DiscreteContinuumMesh<3>::Create();
-        p_mesh->SetDomain(p_part);
-        p_mesh->SetMaxElementArea(20.0);
-        p_mesh->Update();
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        p_mesh_generator->SetDomain(p_part);
+        p_mesh_generator->SetMaxElementArea(20.0);
+        p_mesh_generator->Update();
 
         VtkMeshWriter<3, 3> mesh_writer("TestDiscreteContinuumMesh", "Cylinder", false);
-        mesh_writer.WriteFilesUsingMesh(*p_mesh);
+        mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
     }
 
     // Not Supported With Tetgen <1.5
@@ -121,13 +122,13 @@ public:
         p_part->Extrude(p_circle, 100.0*1.e-6*unit::metres);
         p_part->AddVesselNetwork(p_network);
 
-        boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = DiscreteContinuumMesh<3>::Create();
-        p_mesh->SetDomain(p_part);
-        p_mesh->SetMaxElementArea(100.0);
-        p_mesh->Update();
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        p_mesh_generator->SetDomain(p_part);
+        p_mesh_generator->SetMaxElementArea(100.0);
+        p_mesh_generator->Update();
 
         VtkMeshWriter<3, 3> mesh_writer("TestDiscreteContinuumMesh", "CylinderWithVesselLine", false);
-        mesh_writer.WriteFilesUsingMesh(*p_mesh);
+        mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
     }
 
     void TestMeshCylinderWithVesselSurface()
@@ -144,13 +145,13 @@ public:
         p_part->Extrude(p_circle, 100.0*1.e-6*unit::metres);
         p_part->AddVesselNetwork(p_network, true);
 
-        boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = DiscreteContinuumMesh<3>::Create();
-        p_mesh->SetDomain(p_part);
-        p_mesh->SetMaxElementArea(100.0);
-        p_mesh->Update();
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        p_mesh_generator->SetDomain(p_part);
+        p_mesh_generator->SetMaxElementArea(100.0);
+        p_mesh_generator->Update();
 
         VtkMeshWriter < 3, 3 > mesh_writer("TestDiscreteContinuumMesh", "CylinderWithVesselSurface", false);
-        mesh_writer.WriteFilesUsingMesh(*p_mesh);
+        mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
     }
 
     // Not Supported With Tetgen <1.5
@@ -167,12 +168,13 @@ public:
         p_part->AddCuboid(vessel_length, vessel_length, vessel_length, DimensionalChastePoint<3>(0.0, 0.0));
         p_part->AddVesselNetwork(p_network);
 
-        boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = DiscreteContinuumMesh<3>::Create();
-        p_mesh->SetDomain(p_part);
-        p_mesh->SetMaxElementArea(100.0);
-        p_mesh->Update();
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        p_mesh_generator->SetDomain(p_part);
+        p_mesh_generator->SetMaxElementArea(100.0);
+        p_mesh_generator->Update();
+
         VtkMeshWriter <3, 3> mesh_writer("TestDiscreteContinuumMesh", "CubeWithVesselLine", false);
-        mesh_writer.WriteFilesUsingMesh(*p_mesh);
+        mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
     }
 
     void TestMeshCubeWithVesselSurface()
@@ -189,12 +191,13 @@ public:
         p_part->AddCuboid(2.0 * vessel_length, 2.0 * vessel_length, vessel_length, DimensionalChastePoint<3>(0.0, 0.0));
         p_part->AddVesselNetwork(p_network, true);
 
-        boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = DiscreteContinuumMesh<3>::Create();
-        p_mesh->SetDomain(p_part);
-        p_mesh->SetMaxElementArea(100.0);
-        p_mesh->Update();
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        p_mesh_generator->SetDomain(p_part);
+        p_mesh_generator->SetMaxElementArea(100.0);
+        p_mesh_generator->Update();
+
         VtkMeshWriter<3, 3> mesh_writer("TestDiscreteContinuumMesh", "CubeWithVesselSurface", false);
-        mesh_writer.WriteFilesUsingMesh(*p_mesh);
+        mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
     }
 
     void TestMeshCubeWithVesselSurfaceInternal()
@@ -214,12 +217,13 @@ public:
         p_part->Translate(translate);
         p_part->AddVesselNetwork(p_network, true);
 
-        boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = DiscreteContinuumMesh<3>::Create();
-        p_mesh->SetDomain(p_part);
-        p_mesh->SetMaxElementArea(100.0);
-        p_mesh->Update();
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        p_mesh_generator->SetDomain(p_part);
+        p_mesh_generator->SetMaxElementArea(100.0);
+        p_mesh_generator->Update();
+
         VtkMeshWriter<3, 3> mesh_writer("TestDiscreteContinuumMesh", "CubeWithVesselSurface", false);
-        mesh_writer.WriteFilesUsingMesh(*p_mesh);
+        mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
     }
 
     void TestParrallelVesselSurfaceCube()
@@ -235,12 +239,13 @@ public:
         p_part->AddCuboid(domain_width* 1.e-6 * unit::metres, domain_height* 1.e-6 * unit::metres, vessel_length, DimensionalChastePoint<3>(0.0, 0.0));
         p_part->AddVesselNetwork(SetUpNetwork(), true);
 
-        boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = DiscreteContinuumMesh<3>::Create();
-        p_mesh->SetDomain(p_part);
-        p_mesh->SetMaxElementArea(1000.0);
-        p_mesh->Update();
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        p_mesh_generator->SetDomain(p_part);
+        p_mesh_generator->SetMaxElementArea(100.0);
+        p_mesh_generator->Update();
+
         VtkMeshWriter < 3, 3 > mesh_writer("TestDiscreteContinuumMesh", "ParrallelVesselSurface", false);
-        mesh_writer.WriteFilesUsingMesh(*p_mesh);
+        mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
     }
 };
 

@@ -1,7 +1,9 @@
 = Microvessel Project =
 
-The Microvessel project is a Chaste add-on with functionality for modelling blood flow, angiogenesis and nutrient and drug transport in micro-vessels 
-as described in the paper here source:chaste/projects/Microvessel/paper/chaste_microvessel_plos_cb.pdf. Click on the images below to see some example applications. 
+The Microvessel project is a Chaste add-on library with functionality for modelling blood flow, angiogenesis and nutrient transport in micro-vessels. 
+It is overviewed in the [source:chaste/projects/Microvessel/paper/chaste_microvessel_plos_cb.pdf pre-print here].
+
+Click on the images below to see some example applications. 
 Detailed installation instructions are below.
 
 [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/haematocrit.png, 20%, align=centre, border=1, link=PaperTutorials/Microvessel/BloodFlow)]]

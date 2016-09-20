@@ -74,21 +74,35 @@ units::quantity<unit::diffusivity> AbstractDiscreteContinuumNonLinearEllipticPde
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::concentration_flow_rate> AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeConstantInUSourceTerm(unsigned gridIndex)
 {
-    if(gridIndex >= mDiscreteLinearSourceStrengths.size())
+    if(mDiscreteConstantSourceStrengths.size()>0)
     {
-        EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
+        if(gridIndex >= mDiscreteConstantSourceStrengths.size())
+        {
+            EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
+        }
+        return mConstantInUTerm + mDiscreteConstantSourceStrengths[gridIndex];
     }
-    return mConstantInUTerm + mDiscreteConstantSourceStrengths[gridIndex];
+    else
+    {
+        return mConstantInUTerm;
+    }
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::rate> AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex)
 {
-    if(gridIndex >= mDiscreteLinearSourceStrengths.size())
+    if(mDiscreteLinearSourceStrengths.size()>0)
     {
-        EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
+        if(gridIndex >= mDiscreteLinearSourceStrengths.size())
+        {
+            EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
+        }
+        return mLinearInUTerm + mDiscreteLinearSourceStrengths[gridIndex];
     }
-    return mLinearInUTerm + mDiscreteLinearSourceStrengths[gridIndex];
+    else
+    {
+        return mLinearInUTerm;
+    }
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

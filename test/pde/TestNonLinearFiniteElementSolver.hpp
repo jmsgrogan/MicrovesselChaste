@@ -53,6 +53,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "DiscreteContinuumMesh.hpp"
 #include "PetscSetupAndFinalize.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
+#include "DiscreteContinuumMeshGenerator.hpp"
 
 class TestNonLinearFiniteElementSolver : public AbstractCellBasedWithTimingsTestSuite
 {
@@ -63,21 +64,21 @@ public:
         // Set up the mesh
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(4.0e-6*unit::metres, 4.0e-6*unit::metres, 4.0e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
-        boost::shared_ptr<DiscreteContinuumMesh<3, 3> > p_mesh = DiscreteContinuumMesh<3, 3>::Create();
-        p_mesh->SetDomain(p_domain);
-        p_mesh->SetMaxElementArea(1.0);
-        p_mesh->Update();
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<3, 3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3, 3>::Create();
+        p_mesh_generator->SetDomain(p_domain);
+        p_mesh_generator->SetMaxElementArea(1.0);
+        p_mesh_generator->Update();
 
         // Choose the PDE
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_linear_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
         units::quantity<unit::diffusivity> diffusivity(1.e-6 * unit::metre_squared_per_second);
         units::quantity<unit::rate> consumption_rate(-2.e-5 * unit::per_second);
         p_linear_pde->SetIsotropicDiffusionConstant(diffusivity);
-        p_linear_pde->SetContinuumLinearInUTerm(-consumption_rate);
+        p_linear_pde->SetContinuumLinearInUTerm(consumption_rate);
 
         boost::shared_ptr<MichaelisMentenSteadyStateDiffusionReactionPde<3> > p_non_linear_pde = MichaelisMentenSteadyStateDiffusionReactionPde<3>::Create();
         p_non_linear_pde->SetIsotropicDiffusionConstant(diffusivity);
-        p_non_linear_pde->SetContinuumLinearInUTerm(-consumption_rate);
+        p_non_linear_pde->SetContinuumLinearInUTerm(consumption_rate);
 
         // Choose the Boundary conditions
         boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_outer_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
@@ -85,7 +86,7 @@ public:
         p_outer_boundary_condition->SetValue(boundary_concentration);
 
         FiniteElementSolver<3> solver;
-        solver.SetMesh(p_mesh);
+        solver.SetMesh(p_mesh_generator->GetMesh());
         solver.SetPde(p_linear_pde);
         solver.SetNonLinearPde(p_non_linear_pde);
         solver.AddBoundaryCondition(p_outer_boundary_condition);

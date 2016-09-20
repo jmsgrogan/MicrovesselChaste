@@ -53,6 +53,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
 #include "SimulationTime.hpp"
+
 #include "PetscSetupAndFinalize.hpp"
 
 class TestMicrovesselSolver : public AbstractCellBasedWithTimingsTestSuite
