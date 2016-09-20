@@ -39,7 +39,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselNode.hpp"
 #include "MicrovesselSolver.hpp"
 #include "VesselNetworkWriter.hpp"
-#include "Debug.hpp"
+#include "SolutionDependentDiscreteSource.hpp"
 
 template<unsigned DIM>
 MicrovesselSolver<DIM>::MicrovesselSolver() :
@@ -111,11 +111,13 @@ void MicrovesselSolver<DIM>::Increment()
             {
                 for(unsigned jdx=0; jdx<mDiscreteContinuumSolvers[idx]->GetPde()->GetDiscreteSources().size(); jdx++)
                 {
-                    if(mDiscreteContinuumSolvers[idx]->GetPde()->GetDiscreteSources()[jdx]->GetType()==SourceType::SOLUTION)
+                    boost::shared_ptr<SolutionDependentDiscreteSource<DIM> > p_solution_dep_source =
+                            boost::dynamic_pointer_cast<SolutionDependentDiscreteSource<DIM> >(mDiscreteContinuumSolvers[idx]->GetPde()->GetDiscreteSources()[jdx]);
+                    if(p_solution_dep_source)
                     {
                         if(mDiscreteContinuumSolversHaveCompatibleGridIndexing)
                         {
-                            mDiscreteContinuumSolvers[idx]->GetPde()->GetDiscreteSources()[jdx]->SetSolution(mDiscreteContinuumSolvers[idx-1]->GetConcentrations());
+                            p_solution_dep_source->SetSolution(mDiscreteContinuumSolvers[idx-1]->GetConcentrations());
                         }
                         else
                         {

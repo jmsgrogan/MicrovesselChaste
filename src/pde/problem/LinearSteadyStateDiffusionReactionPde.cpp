@@ -62,7 +62,18 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 double LinearSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm(const ChastePoint<SPACE_DIM>& rX,
                                                                                                         Element<ELEMENT_DIM, SPACE_DIM>* pElement)
 {
-    return mLinearInUTerm/unit::per_second;
+    if(mDiscreteLinearSourceStrengths.size()>0)
+    {
+        if(pElement->GetIndex() >= mDiscreteLinearSourceStrengths.size())
+        {
+            EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
+        }
+        return (mLinearInUTerm + mDiscreteLinearSourceStrengths[pElement->GetIndex()])/unit::per_second;
+    }
+    else
+    {
+        return mLinearInUTerm/unit::per_second;
+    }
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -112,6 +123,14 @@ void LinearSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscre
         if(!this->mpMesh)
         {
             EXCEPTION("A mesh has not been set for the determination of source strengths.");
+        }
+        mDiscreteLinearSourceStrengths = std::vector<units::quantity<unit::rate> >(this->mpMesh->GetNumElements(), 0.0*unit::per_second);
+        for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
+        {
+            this->mDiscreteSources[idx]->SetMesh(this->mpMesh);
+            std::vector<units::quantity<unit::rate> > result = this->mDiscreteSources[idx]->GetLinearInUMeshValues();
+            std::transform(mDiscreteLinearSourceStrengths.begin( ), mDiscreteLinearSourceStrengths.end( ),
+                           result.begin( ), mDiscreteLinearSourceStrengths.begin( ),std::plus<units::quantity<unit::rate> >( ));
         }
     }
 }

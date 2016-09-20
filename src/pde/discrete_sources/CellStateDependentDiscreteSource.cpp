@@ -120,7 +120,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > CellStateDependentD
 
                     if (it != mStateRateMap.end())
                     {
-                        if(this->mSourceStrength == SourceStrength::LABEL)
+                        if(!this->mLabel.empty())
                         {
                             // Get a threshold value if it has been set, use the label to determine the field from which the label
                             // value is obtained.

@@ -66,7 +66,18 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 double AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeConstantInUSourceTerm(const ChastePoint<SPACE_DIM>& rX,
                                                                                                         Element<ELEMENT_DIM, SPACE_DIM>* pElement)
 {
-    return mConstantInUTerm/unit::mole_per_metre_cubed_per_second;
+    if(mDiscreteConstantSourceStrengths.size()>0)
+    {
+        if(pElement->GetIndex() >= mDiscreteConstantSourceStrengths.size())
+        {
+            EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
+        }
+        return (mConstantInUTerm + mDiscreteConstantSourceStrengths[pElement->GetIndex()])/unit::mole_per_metre_cubed_per_second;
+    }
+    else
+    {
+        return mConstantInUTerm/unit::mole_per_metre_cubed_per_second;
+    }
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -124,7 +135,7 @@ void AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetRegu
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetMesh(boost::shared_ptr<TetrahedralMesh<ELEMENT_DIM, SPACE_DIM> > pMesh)
+void AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetMesh(boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > pMesh)
 {
     mpMesh = pMesh;
 }
@@ -158,6 +169,15 @@ void AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::UpdateD
         if(!mpMesh)
         {
             EXCEPTION("A mesh has not been set for the determination of source strengths.");
+        }
+
+        mDiscreteConstantSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(mpMesh->GetNumElements(), 0.0*unit::mole_per_metre_cubed_per_second);
+        for(unsigned idx=0; idx<mDiscreteSources.size(); idx++)
+        {
+            mDiscreteSources[idx]->SetMesh(mpMesh);
+            std::vector<units::quantity<unit::concentration_flow_rate> > result = mDiscreteSources[idx]->GetConstantInUMeshValues();
+            std::transform(mDiscreteConstantSourceStrengths.begin( ), mDiscreteConstantSourceStrengths.end( ),
+                           result.begin( ), mDiscreteConstantSourceStrengths.begin( ),std::plus<units::quantity<unit::concentration_flow_rate> >( ));
         }
     }
 }

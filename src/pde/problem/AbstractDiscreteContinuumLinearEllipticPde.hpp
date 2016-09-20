@@ -45,7 +45,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "DiscreteSource.hpp"
 #include "GeometryTools.hpp"
 #include "RegularGrid.hpp"
-#include "TetrahedralMesh.hpp"
+#include "DiscreteContinuumMesh.hpp"
 #include "UnitCollection.hpp"
 
 /**
@@ -88,7 +88,7 @@ protected:
     /**
      * The mesh for solvers using finite element meshes
      */
-    boost::shared_ptr<TetrahedralMesh<ELEMENT_DIM, SPACE_DIM> > mpMesh;
+    boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > mpMesh;
 
     /**
      * Whether to use a regular grid or mesh for discrete source calculations
@@ -180,7 +180,7 @@ public:
      * Set the finite element mesh
      * @param pMesh the finite element mesh
      */
-    void SetMesh(boost::shared_ptr<TetrahedralMesh<ELEMENT_DIM, SPACE_DIM> > pMesh);
+    void SetMesh(boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > pMesh);
 
     /**
      * Set whether to use a regular grid

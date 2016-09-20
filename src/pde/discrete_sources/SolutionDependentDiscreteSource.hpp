@@ -33,8 +33,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef DISCRETESOURCE_HPP_
-#define DISCRETESOURCE_HPP_
+#ifndef SOLUTIONDEPENDENTDISCRETESOURCE_HPP_
+#define SOLUTIONDEPENDENTDISCRETESOURCE_HPP_
 
 #include <vector>
 #include <string>
@@ -43,66 +43,50 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "RegularGrid.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "UnitCollection.hpp"
+#include "DiscreteSource.hpp"
 
 /**
- * This class calculates the value of discrete sources at grid/mesh locations in continuum problems.
- * A grid or mesh is set and the source values are calculated at each grid point or in each element.
- * Child classes can be used to customize the way source strengths are calculated.
+ * This class calculates the value of discrete sources based on a solution interpolated on
+ * another grid or mesh.
  */
 template<unsigned DIM>
-class DiscreteSource
+class SolutionDependentDiscreteSource : public DiscreteSource<DIM>
 {
 
 protected:
 
     /**
-     * The grid for solvers using regular grids
+     * An amount field sampled on the regular grid points or mesh nodes
      */
-    boost::shared_ptr<RegularGrid<DIM, DIM> > mpRegularGrid;
-
-    /**
-     * The mesh for the finite element solver
-     */
-    boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > mpMesh;
-
-    /**
-     * Locations for POINT type sources
-     */
-    std::vector<DimensionalChastePoint<DIM> > mPoints;
-
-    /**
-     * A label specifying the array name from which to obtain the source strength. Used for LABEL
-     * source strengths.
-     */
-    std::string mLabel;
+    std::vector<units::quantity<unit::concentration> > mpSolution;
 
     /**
      * The prescribed value of the source strength. Used for PRESCRIBED source strengths.
      */
-    units::quantity<unit::concentration_flow_rate> mConstantInUValue;
+    units::quantity<unit::rate> mConstantInUSinkRatePerSolutionQuantity;
 
     /**
      * The prescribed value of the source strength. Used for PRESCRIBED source strengths.
      */
-    units::quantity<unit::rate> mLinearInUValue;
+    units::quantity<unit::rate_per_concentration> mLinearInUSinkRatePerSolutionQuantity;
 
 public:
 
     /**
      *  Constructor
      */
-    DiscreteSource();
+    SolutionDependentDiscreteSource();
 
     /**
      * Destructor
      */
-    virtual ~DiscreteSource();
+    virtual ~SolutionDependentDiscreteSource();
 
     /**
      * Factory constructor method
      * @return a pointer to an instance of the class
      */
-    static boost::shared_ptr<DiscreteSource<DIM> > Create();
+    static boost::shared_ptr<SolutionDependentDiscreteSource<DIM> > Create();
 
     /**
      * Return the values of the source strengths sampled on the mesh elements
@@ -129,40 +113,22 @@ public:
     virtual std::vector<units::quantity<unit::rate> > GetLinearInURegularGridValues();
 
     /**
-     * Set the name of the label used in LABEL type sources
-     * @param rLabel the label for the source strength value
+     * Set the sampled field from which to obtain a solution for SOLUTION type sources
+     * @param pSolution the field from which to use solution values
      */
-    void SetLabelName(const std::string& rLabel);
-
-    /**
-     * Set the points for POINT type sources
-     * @param points the point locations for POINT type sources
-     */
-    void SetPoints(std::vector<DimensionalChastePoint<DIM> > points);
-
-    /**
-     * Set the regular grid
-     * @param pRegularGrid the regular grid
-     */
-    void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM, DIM> > pRegularGrid);
-
-    /**
-     * Set the finite element mesh
-     * @param pMesh the finite element mesh
-     */
-    void SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > pMesh);
+    void SetSolution(std::vector<units::quantity<unit::concentration> > solution);
 
     /**
      * Set the value of the source for PRESCRIBED type sources
      * @param value the value of the source
      */
-    void SetConstantInUValue(units::quantity<unit::concentration_flow_rate> value);
+    void SetConstantInUSinkRatePerSolutionQuantity(units::quantity<unit::rate> value);
 
     /**
      * Set the value of the source for PRESCRIBED type sources
      * @param value the value of the source
      */
-    void SetLinearInUValue(units::quantity<unit::rate> value);
+    void SetLinearInUSinkRatePerSolutionQuantity(units::quantity<unit::rate_per_concentration> value);
 };
 
-#endif /* DISCRETESOURCE_HPP_ */
+#endif /* SolutionDependentDiscreteSource_HPP_ */
