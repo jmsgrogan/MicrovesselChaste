@@ -37,6 +37,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "AbstractCellPopulation.hpp"
 #include "VesselNetwork.hpp"
 #include "GeometryTools.hpp"
+#include "Element.hpp"
 
 template<unsigned DIM>
 VesselBasedDiscreteSource<DIM>::VesselBasedDiscreteSource()
@@ -67,7 +68,44 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
     {
         EXCEPTION("A mesh is required for this type of source");
     }
-    return std::vector<units::quantity<unit::concentration_flow_rate> >();
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpMesh->GetNumElements(), 0.0*unit::mole_per_metre_cubed_per_second);
+    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > element_segment_map = this->mpMesh->GetElementSegmentMap();
+
+    for(unsigned idx=0; idx<element_segment_map.size(); idx++)
+    {
+        if(element_segment_map[idx].size()>0)
+        {
+            // Get the element nodal locations and element volume
+            Element<DIM, DIM>* p_element = this->mpMesh->GetElement(idx);
+            std::vector<c_vector<double, DIM> > element_vertices(4);
+            double determinant = 0.0;
+            c_matrix<double, DIM, DIM> jacobian;
+            p_element->CalculateJacobian(jacobian, determinant);
+            units::quantity<unit::volume> element_volume = p_element->GetVolume(determinant) * units::pow<3>(this->mpMesh->GetReferenceLengthScale());
+            if(p_element->GetNumNodes() != 4)
+            {
+                EXCEPTION("Vessel mesh mapping only supported for linear tetrahedral elements.");
+            }
+            for (unsigned jdx = 0; jdx < 4; jdx++)
+            {
+                element_vertices[jdx] = p_element->GetNodeLocation(jdx);
+            }
+
+            for (unsigned jdx = 0; jdx < element_segment_map[idx].size(); jdx++)
+            {
+
+                double length_in_box = LengthOfLineInTetra<DIM>(element_segment_map[idx][jdx]->GetNode(0)->rGetLocation().rGetLocation(),
+                                                                element_segment_map[idx][jdx]->GetNode(1)->rGetLocation().rGetLocation(), element_vertices);
+
+                units::quantity<unit::area> surface_area = 2.0*M_PI*element_segment_map[idx][jdx]->GetRadius()*length_in_box*this->mpMesh->GetReferenceLengthScale();
+
+                double haematocrit = element_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit();
+                values[idx] += mVesselPermeability * (surface_area/element_volume) * mOxygenConcentrationPerUnitHaematocrit * haematocrit;
+            }
+        }
+    }
+
+    return values;
 }
 
 template<unsigned DIM>
@@ -77,7 +115,43 @@ std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLin
     {
         EXCEPTION("A mesh is required for this type of source");
     }
-    return std::vector<units::quantity<unit::rate> >();
+    std::vector<units::quantity<unit::rate> > values(this->mpMesh->GetNumElements(), 0.0*unit::per_second);
+    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > element_segment_map = this->mpMesh->GetElementSegmentMap();
+
+    for(unsigned idx=0; idx<element_segment_map.size(); idx++)
+    {
+        if(element_segment_map[idx].size()>0)
+        {
+            // Get the element nodal locations and element volume
+            Element<DIM, DIM>* p_element = this->mpMesh->GetElement(idx);
+            std::vector<c_vector<double, DIM> > element_vertices(4);
+            double determinant = 0.0;
+            c_matrix<double, DIM, DIM> jacobian;
+            p_element->CalculateJacobian(jacobian, determinant);
+            units::quantity<unit::volume> element_volume = p_element->GetVolume(determinant) * units::pow<3>(this->mpMesh->GetReferenceLengthScale());
+            if(p_element->GetNumNodes() != 4)
+            {
+                EXCEPTION("Vessel mesh mapping only supported for linear tetrahedral elements.");
+            }
+            for (unsigned jdx = 0; jdx < 4; jdx++)
+            {
+                element_vertices[jdx] = p_element->GetNodeLocation(jdx);
+            }
+
+            for (unsigned jdx = 0; jdx < element_segment_map[idx].size(); jdx++)
+            {
+
+                double length_in_box = LengthOfLineInTetra<DIM>(element_segment_map[idx][jdx]->GetNode(0)->rGetLocation().rGetLocation(),
+                                                                element_segment_map[idx][jdx]->GetNode(1)->rGetLocation().rGetLocation(), element_vertices);
+
+                units::quantity<unit::area> surface_area = 2.0*M_PI*element_segment_map[idx][jdx]->GetRadius()*length_in_box*this->mpMesh->GetReferenceLengthScale();
+
+                values[idx] += mVesselPermeability * (surface_area/element_volume);
+            }
+        }
+    }
+
+    return values;
 }
 
 template<unsigned DIM>

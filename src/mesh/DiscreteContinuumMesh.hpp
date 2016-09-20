@@ -49,14 +49,9 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "Element.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
-
-// Jonathan Shewchuk's triangle and Hang Si's tetgen.
-//#define REAL double
-//#define VOID void
-//#include "triangle.h"
-//#include "tetgen.h"
-//#undef REAL
-//#undef VOID
+#include "VesselSegment.hpp"
+#include "VesselNetwork.hpp"
+#include "AbstractCellPopulation.hpp"
 
 // Forward declaration
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -105,6 +100,26 @@ class DiscreteContinuumMesh : public TetrahedralMesh<ELEMENT_DIM, SPACE_DIM>
      */
     std::vector<std::vector<unsigned> > mPointElementMap;
 
+    /**
+     * The segment element map
+     */
+    std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > mSegmentElementMap;
+
+    /**
+     * The cell element map
+     */
+    std::vector<std::vector<CellPtr > > mCellElementMap;
+
+    /**
+     * The vessel network
+     */
+    boost::shared_ptr<VesselNetwork<SPACE_DIM> > mpNetwork;
+
+    /**
+     * The cell population. This memory pointed to is not managed in this class.
+     */
+    AbstractCellPopulation<SPACE_DIM>* mpCellPopulation;
+
 public:
 
     /**
@@ -134,6 +149,11 @@ public:
     std::vector<std::vector<double> > GetNodeLocations();
 
     /**
+     * Return the element centroids
+     */
+    std::vector<c_vector<double, SPACE_DIM> > GetElementCentroids();
+
+    /**
      * Return the node locations
      */
     std::vector<DimensionalChastePoint<SPACE_DIM> > GetNodeLocationsAsPoints();
@@ -143,10 +163,27 @@ public:
      */
     std::vector<unsigned> GetElementRegionMarkers();
 
+    units::quantity<unit::length> GetReferenceLengthScale();
+
     /**
      * Return a map of element indices corresponding to the input points
      */
     std::vector<std::vector<unsigned> > GetPointElementMap(std::vector<DimensionalChastePoint<SPACE_DIM> > points);
+
+    /**
+     * Return the point cell map
+     * @bool update update the map
+     * @return the point cell map
+     */
+    const std::vector<std::vector<CellPtr> >& GetElementCellMap(bool update = true);
+
+    /**
+     * Return the point segments map
+     * @bool update update the map
+     * @return the point segment map
+     */
+    std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > GetElementSegmentMap(bool update = true,
+                                                                                                  bool useVesselSurface = false);
 
     /**
      * Return the mesh as a vtk unstructured grid
@@ -157,6 +194,18 @@ public:
      * Set element attributes
      */
     void SetAttributes(std::vector<unsigned> attributes);
+
+    /**
+     * Set the cell population
+     * @param rCellPopulation a reference to the cell population
+     */
+    void SetCellPopulation(AbstractCellPopulation<SPACE_DIM>& rCellPopulation);
+
+    /**
+     * Set the vessel network
+     * @param pNetwork the vessel network
+     */
+    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<SPACE_DIM> > pNetwork);
 
     /**
      * This is the same as the TetrahedralMesh implementation of ImportFromMesher but avoids some templating

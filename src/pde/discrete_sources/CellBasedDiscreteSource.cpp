@@ -37,6 +37,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "AbstractCellPopulation.hpp"
 #include "VesselNetwork.hpp"
 #include "GeometryTools.hpp"
+#include "Element.hpp"
 
 template<unsigned DIM>
 CellBasedDiscreteSource<DIM>::CellBasedDiscreteSource()
@@ -67,7 +68,19 @@ std::vector<units::quantity<unit::concentration_flow_rate> > CellBasedDiscreteSo
     {
         EXCEPTION("A mesh is required for this type of source");
     }
-    return std::vector<units::quantity<unit::concentration_flow_rate> >();
+
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpMesh->GetNumElements(), 0.0*unit::mole_per_metre_cubed_per_second);
+    std::vector<std::vector<CellPtr> > element_cell_map = this->mpMesh->GetElementCellMap();
+    for(unsigned idx=0; idx<element_cell_map.size(); idx++)
+    {
+        Element<DIM, DIM>* p_element = this->mpMesh->GetElement(idx);
+        double determinant = 0.0;
+        c_matrix<double, DIM, DIM> jacobian;
+        p_element->CalculateJacobian(jacobian, determinant);
+        units::quantity<unit::volume> element_volume = p_element->GetVolume(determinant) * units::pow<3>(this->mpMesh->GetReferenceLengthScale());
+        values[idx] += mCellConstantInUValue * double(element_cell_map[idx].size())/element_volume;
+    }
+    return values;
 }
 
 template<unsigned DIM>
@@ -77,7 +90,14 @@ std::vector<units::quantity<unit::rate> > CellBasedDiscreteSource<DIM>::GetLinea
     {
         EXCEPTION("A mesh is required for this type of source");
     }
-    return std::vector<units::quantity<unit::rate> >();
+    std::vector<units::quantity<unit::rate> > values(this->mpMesh->GetNumElements(), 0.0*unit::per_second);
+    std::vector<std::vector<CellPtr> > element_cell_map = this->mpMesh->GetElementCellMap();
+
+    for(unsigned idx=0; idx<element_cell_map.size(); idx++)
+    {
+        values[idx] += mCellLinearInUValue * double(element_cell_map[idx].size());
+    }
+    return values;
 }
 
 template<unsigned DIM>

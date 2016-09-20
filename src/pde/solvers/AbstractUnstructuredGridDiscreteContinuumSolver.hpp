@@ -111,6 +111,12 @@ public:
     virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh);
 
     /**
+     * Return the value of the field at the mesh centroids
+     * @return the value of the field ordered according to element order
+     */
+    virtual std::vector<units::quantity<unit::concentration> > GetConcentrationsAtCentroids();
+
+    /**
      * Return the value of the field at the requested points
      * @param rSamplePoints the points for sampling
      * @return the value of the field ordered according to input point order

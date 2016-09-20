@@ -69,12 +69,14 @@ std::vector<units::quantity<unit::concentration_flow_rate> > SolutionDependentDi
         EXCEPTION("A mesh is required for this type of source");
     }
 
-    // Loop through all points
     std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpMesh->GetNumElements(), 0.0*unit::mole_per_metre_cubed_per_second);
-    std::vector<std::vector<unsigned> > point_element_map = this->mpMesh->GetPointElementMap(this->mPoints);
-    for(unsigned idx=0; idx<point_element_map.size(); idx++)
+    if(mpSolution.size() != this->mpMesh->GetNumElements())
     {
-        values[idx] += this->mConstantInUValue * double(point_element_map[idx].size());
+        EXCEPTION("A solution sampled on the mesh is required for this type of source");
+    }
+    for(unsigned idx=0; idx<this->mpMesh->GetNumElements(); idx++)
+    {
+        values[idx] = mpSolution[idx]*mConstantInUSinkRatePerSolutionQuantity;
     }
     return values;
 }
@@ -87,12 +89,14 @@ std::vector<units::quantity<unit::rate> > SolutionDependentDiscreteSource<DIM>::
         EXCEPTION("A mesh is required for this type of source");
     }
 
-    // Loop through all points
     std::vector<units::quantity<unit::rate> > values(this->mpMesh->GetNumElements(), 0.0*unit::per_second);
-    std::vector<std::vector<unsigned> > point_element_map = this->mpMesh->GetPointElementMap(this->mPoints);
-    for(unsigned idx=0; idx<point_element_map.size(); idx++)
+    if(mpSolution.size() != this->mpMesh->GetNumElements())
     {
-        values[idx] += this->mLinearInUValue * double(point_element_map[idx].size());
+        EXCEPTION("A solution sampled on the mesh is required for this type of source");
+    }
+    for(unsigned idx=0; idx<this->mpMesh->GetNumElements(); idx++)
+    {
+        values[idx] = mpSolution[idx]*mLinearInUSinkRatePerSolutionQuantity;
     }
     return values;
 }
