@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,12 +33,13 @@
 
  */
 
+#include "Owen11Parameters.hpp"
 #include "ViscosityCalculator.hpp"
 #include "UnitCollection.hpp"
 
 template<unsigned DIM>
 ViscosityCalculator<DIM>::ViscosityCalculator() : AbstractVesselNetworkCalculator<DIM>(),
-    mPlasmaViscosity(3.5e-3 * unit::poiseuille)
+    mPlasmaViscosity(Owen11Parameters::mpPlasmaViscosity->GetValue("ViscosityCalculator"))
 {
 
 }
@@ -49,16 +50,17 @@ ViscosityCalculator<DIM>::~ViscosityCalculator()
 
 }
 
-template<unsigned DIM>
-void ViscosityCalculator<DIM>::SetDimensionalPlasmaViscosity(units::quantity<unit::dynamic_viscosity> visocity)
+template <unsigned DIM>
+boost::shared_ptr<ViscosityCalculator<DIM> > ViscosityCalculator<DIM>::Create()
 {
-    mPlasmaViscosity = visocity;
+    MAKE_PTR(ViscosityCalculator<DIM>, pSelf);
+    return pSelf;
 }
 
 template<unsigned DIM>
-void ViscosityCalculator<DIM>::SetPlasmaViscositySI(double visocity)
+void ViscosityCalculator<DIM>::SetPlasmaViscosity(units::quantity<unit::dynamic_viscosity> visocity)
 {
-    mPlasmaViscosity = visocity * unit::poiseuille;
+    mPlasmaViscosity = visocity;
 }
 
 template<unsigned DIM>
@@ -74,6 +76,7 @@ void ViscosityCalculator<DIM>::Calculate()
         // even be possible for this equation.
         double micron_radius = (radius/unit::metres)*1.e6;
         double power_term_1 = 1.0 / (1.0 + pow(10.0, -11.0) * pow(2.0 * micron_radius, 12));
+
         double c = (0.8 + exp(-0.15 * micron_radius)) * (power_term_1 - 1) + power_term_1;
         double mu_45 = 6.0 * exp(-0.17 * micron_radius) + 3.2 - 2.44 * exp(-0.06 * pow(2 * micron_radius, 0.645));
 

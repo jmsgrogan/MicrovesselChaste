@@ -69,6 +69,10 @@ Copyright (c) 2005-2016, University of Oxford.
 /*
  * Cells.
  */
+#include "CancerCellMutationState.hpp"
+#include "StalkCellMutationState.hpp"
+#include "QuiescentCancerCellMutationState.hpp"
+#include "WildTypeCellMutationState.hpp"
 #include "Owen11CellPopulationGenerator.hpp"
 #include "Owen2011TrackingModifier.hpp"
 #include "CaBasedCellPopulation.hpp"
@@ -83,6 +87,8 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "StructuralAdaptationSolver.hpp"
 #include "WallShearStressCalculator.hpp"
 #include "MechanicalStimulusCalculator.hpp"
+#include "ShrinkingStimulusCalculator.hpp"
+#include "ViscosityCalculator.hpp"
 /*
  * Grids and PDEs.
  */
@@ -90,14 +96,16 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "FiniteDifferenceSolver.hpp"
 #include "CellBasedDiscreteSource.hpp"
 #include "VesselBasedDiscreteSource.hpp"
+#include "CellStateDependentDiscreteSource.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
 #include "LinearSteadyStateDiffusionReactionPde.hpp"
 /*
- * Angiogenesis.
+ * Angiogenesis and regression
  */
 #include "Owen2011SproutingRule.hpp"
 #include "Owen2011MigrationRule.hpp"
 #include "AngiogenesisSolver.hpp"
+#include "WallShearStressBasedRegressionSolver.hpp"
 /*
  * Runs the full simulation.
  */
@@ -122,7 +130,7 @@ public:
          * Set up the base units. These are microns and seconds.
          */
         units::quantity<unit::length> reference_length(1.0 * unit::microns);
-        units::quantity<unit::time> reference_time(1.0 * unit::seconds);
+        units::quantity<unit::time> reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         /*
@@ -167,8 +175,6 @@ public:
         boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel1);
         p_network->AddVessel(p_vessel2);
-        units::quantity<unit::length> large_vessel_radius(25.0 * unit::microns);
-        p_network->SetSegmentRadii(large_vessel_radius);
         /*
          * We can write the network to file for quick visualization with Paraview.
          *
@@ -199,7 +205,6 @@ public:
         boost::shared_ptr<CellBasedDiscreteSource<2> > p_cell_oxygen_sink = CellBasedDiscreteSource<2>::Create();
         p_cell_oxygen_sink->SetLinearInUConsumptionRatePerCell(Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
         p_oxygen_pde->AddDiscreteSource(p_cell_oxygen_sink);
-
         boost::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_ox_boundary = DiscreteContinuumBoundaryCondition<2>::Create();
         p_ox_boundary->SetType(BoundaryConditionType::VESSEL_LINE);
         p_ox_boundary->SetSource(BoundaryConditionSource::PRESCRIBED);
@@ -209,12 +214,80 @@ public:
                 GenericParameters::mpGasConcentrationAtStp->GetValue("User") * vessel_oxygen_partial_pressure;
         p_ox_boundary->SetValue(vessel_oxygen_concentration);
         p_ox_boundary->SetNetwork(p_network);
-
         boost::shared_ptr<FiniteDifferenceSolver<2> > p_oxygen_solver = FiniteDifferenceSolver<2>::Create();
         p_oxygen_solver->SetPde(p_oxygen_pde);
         p_oxygen_solver->AddBoundaryCondition(p_ox_boundary);
         p_oxygen_solver->SetLabel("oxygen");
         p_oxygen_solver->SetGrid(p_grid);
+        /*
+        * The rate of VEGF release depends on the cell type and intracellular VEGF levels, so we need a more detailed
+        * type of discrete source.
+        */
+        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_vegf_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
+        p_vegf_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpVegfDiffusivity->GetValue("User"));
+        p_vegf_pde->SetContinuumLinearInUTerm(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
+        // VEGF release for normal cells and quiescent cancer cells:
+        // normal cells release only when intracellular vegf reaches a certain value
+        // quiescent cancer cells always release vegf
+        boost::shared_ptr<CellStateDependentDiscreteSource<2> > p_normal_and_quiescent_cell_source = CellStateDependentDiscreteSource<2>::Create();
+        std::map<unsigned, units::quantity<unit::concentration_flow_rate> > normal_and_quiescent_cell_rates;
+        std::map<unsigned, units::quantity<unit::concentration> > normal_and_quiescent_cell_rate_thresholds;
+        MAKE_PTR(QuiescentCancerCellMutationState, p_quiescent_cancer_state);
+        MAKE_PTR(WildTypeCellMutationState, p_normal_cell_state);
+        normal_and_quiescent_cell_rates[p_normal_cell_state->GetColour()] = Owen11Parameters::mpCellVegfSecretionRate->GetValue("User");
+        normal_and_quiescent_cell_rate_thresholds[p_normal_cell_state->GetColour()] = 0.27*unit::mole_per_metre_cubed;
+        normal_and_quiescent_cell_rates[p_quiescent_cancer_state->GetColour()] = Owen11Parameters::mpCellVegfSecretionRate->GetValue("User");
+        normal_and_quiescent_cell_rate_thresholds[p_quiescent_cancer_state->GetColour()] = 0.0*unit::mole_per_metre_cubed;
+        p_normal_and_quiescent_cell_source->SetStateRateMap(normal_and_quiescent_cell_rates);
+        p_normal_and_quiescent_cell_source->SetLabelName("VEGF");
+        p_normal_and_quiescent_cell_source->SetStateRateThresholdMap(normal_and_quiescent_cell_rate_thresholds);
+        p_vegf_pde->AddDiscreteSource(p_normal_and_quiescent_cell_source);
+        boost::shared_ptr<FiniteDifferenceSolver<2> > p_vegf_solver = FiniteDifferenceSolver<2>::Create();
+        p_vegf_solver->SetPde(p_vegf_pde);
+        p_vegf_solver->SetLabel("VEGF_Extracellular");
+        p_vegf_solver->SetGrid(p_grid);
+        /*
+         * Next set up the flow problem. Assign a blood plasma viscosity to the vessels. The actual viscosity will
+         * depend on haematocrit and diameter.
+         */
+        units::quantity<unit::length> large_vessel_radius(25.0 * unit::microns);
+        p_network->SetSegmentRadii(large_vessel_radius);
+        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
+        p_network->SetSegmentViscosity(viscosity);
+        boost::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+        boost::shared_ptr<ConstantHaematocritSolver<2> > p_haematocrit_calculator = ConstantHaematocritSolver<2>::Create();
+        p_haematocrit_calculator->SetHaematocrit(Owen11Parameters::mpInflowHaematocrit->GetValue("User"));
+        boost::shared_ptr<WallShearStressCalculator<2> > p_wss_calculator = WallShearStressCalculator<2>::Create();
+        boost::shared_ptr<MechanicalStimulusCalculator<2> > p_mech_stimulus_calculator = MechanicalStimulusCalculator<2>::Create();
+        boost::shared_ptr<ShrinkingStimulusCalculator<2> > p_shrinking_stimulus_calculator = ShrinkingStimulusCalculator<2>::Create();
+        boost::shared_ptr<ViscosityCalculator<2> > p_viscosity_calculator = ViscosityCalculator<2>::Create();
+
+        boost::shared_ptr<StructuralAdaptationSolver<2> > p_structural_adaptation_solver = StructuralAdaptationSolver<2>::Create();
+        p_structural_adaptation_solver->SetTolerance(0.0001);
+        p_structural_adaptation_solver->SetMaxIterations(100);
+        p_structural_adaptation_solver->SetTimeIncrement(Owen11Parameters::mpVesselRadiusUpdateTimestep->GetValue("User"));
+        p_structural_adaptation_solver->AddPreFlowSolveCalculator(p_impedance_calculator);
+        p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_haematocrit_calculator);
+        p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_wss_calculator);
+        p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_mech_stimulus_calculator);
+//        p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_shrinking_stimulus_calculator);
+        p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_viscosity_calculator);
+        /*
+         * Set up a regression solver
+         */
+        boost::shared_ptr<WallShearStressBasedRegressionSolver<2> > p_regression_solver = WallShearStressBasedRegressionSolver<2>::Create();
+        /*
+         * Set up an angiogenesis solver
+         */
+        boost::shared_ptr<AngiogenesisSolver<2> > p_angiogenesis_solver = AngiogenesisSolver<2>::Create();
+        boost::shared_ptr<Owen2011SproutingRule<2> > p_sprouting_rule = Owen2011SproutingRule<2>::Create();
+        boost::shared_ptr<Owen2011MigrationRule<2> > p_migration_rule = Owen2011MigrationRule<2>::Create();
+        p_angiogenesis_solver->SetMigrationRule(p_migration_rule);
+        p_angiogenesis_solver->SetSproutingRule(p_sprouting_rule);
+        p_sprouting_rule->SetDiscreteContinuumSolver(p_vegf_solver);
+        p_migration_rule->SetDiscreteContinuumSolver(p_vegf_solver);
+        p_angiogenesis_solver->SetVesselGrid(p_grid);
+        p_angiogenesis_solver->SetVesselNetwork(p_network);
          /*
          * The microvessel solver will manage all aspects of the vessel solve
          */
@@ -222,6 +295,10 @@ public:
         p_microvessel_solver->SetVesselNetwork(p_network);
         p_microvessel_solver->SetOutputFrequency(5);
         p_microvessel_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
+        p_microvessel_solver->AddDiscreteContinuumSolver(p_vegf_solver);
+        p_microvessel_solver->SetStructuralAdaptationSolver(p_structural_adaptation_solver);
+        p_microvessel_solver->SetRegressionSolver(p_regression_solver);
+        p_microvessel_solver->SetAngiogenesisSolver(p_angiogenesis_solver);
         /*
          * The microvessel solution modifier will link the vessel and cell solvers
          */
@@ -229,6 +306,7 @@ public:
         p_microvessel_modifier->SetMicrovesselSolver(p_microvessel_solver);
         std::vector<std::string> update_labels;
         update_labels.push_back("oxygen");
+        update_labels.push_back("VEGF_Extracellular");
         p_microvessel_modifier->SetCellDataUpdateLabels(update_labels);
         /*
          * The full simulation is run as a typical Cell Based Chaste simulation
@@ -251,7 +329,7 @@ public:
         simulator.SetOutputDirectory("TestLatticeBasedAngiogenesisLiteratePaper");
         simulator.SetSamplingTimestepMultiple(5);
         simulator.SetDt(0.5);
-        simulator.SetEndTime(200);
+        simulator.SetEndTime(2000);
         /*
          * Do the solve
          */

@@ -58,7 +58,7 @@ private:
     /**
      * Cells of different 'color' (i.e. mutation state label) can have different sink rates.
      */
-    std::map<unsigned, units::quantity<unit::molar_flow_rate> > mStateRateMap;
+    std::map<unsigned, units::quantity<unit::concentration_flow_rate> > mStateRateMap;
 
     /**
      * Cells of different 'color' (i.e. mutation state label) can have different sink rate thresholds.
@@ -120,7 +120,7 @@ public:
      *
      * @param stateRateMap the label for the source strength value
      */
-    void SetStateRateMap(std::map<unsigned, units::quantity<unit::molar_flow_rate> > stateRateMap);
+    void SetStateRateMap(std::map<unsigned, units::quantity<unit::concentration_flow_rate> > stateRateMap);
 
     /**
      * Set cell 'color' specific consumption rate thresholds.

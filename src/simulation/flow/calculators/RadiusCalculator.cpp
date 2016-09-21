@@ -34,12 +34,13 @@
  */
 
 #include "RadiusCalculator.hpp"
+#include "Owen11Parameters.hpp"
 
 template<unsigned DIM>
 RadiusCalculator<DIM>::RadiusCalculator() : AbstractVesselNetworkCalculator<DIM>(),
-        mMinRadius(1.0* unit::microns),
-        mMaxRadius(100.0 * unit::microns),
-        mTimeStep(0.0001 * unit::seconds)
+        mMinRadius(Owen11Parameters::mpMinimumRadius->GetValue("RadiusCalculator")),
+        mMaxRadius(Owen11Parameters::mpMaximumRadius->GetValue("RadiusCalculator")),
+        mTimeStep(Owen11Parameters::mpVesselRadiusUpdateTimestep->GetValue("RadiusCalculator"))
 {
 
 }

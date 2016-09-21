@@ -61,10 +61,12 @@ private:
     /**
      * The level of wall shear stress expected from the actual intravascular pressure, according
      * to a parametric description of experimental data obtained in the rat mesentry (exhibiting a
-     * sigmoidal increase of wall shear stress with increasing pressure.
+     * sigmoidal increase of wall shear stress with increasing pressure).
      */
     units::quantity<unit::pressure> mTauP;
     
+    units::quantity<unit::rate> mkp;
+
 public:
     
     /**

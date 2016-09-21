@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
 All rights reserved.
 
 University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
 
-#ifndef _ViscosityCalculator_hpp
-#define _ViscosityCalculator_hpp
+#ifndef _VISCOSITYCALCULATOR_HPP
+#define _VISCOSITYCALCULATOR_HPP
 
 #include <boost/shared_ptr.hpp>
 #include "AbstractVesselNetworkCalculator.hpp"
@@ -62,14 +62,17 @@ public:
     ~ViscosityCalculator();
     
     /**
+     * Construct a new instance of the class and return a shared pointer to it.
+     * @return a pointer to a new class instance
+     */
+    static boost::shared_ptr<ViscosityCalculator<DIM> > Create();
+
+    /**
      * Do the calculation.
      */
     void Calculate();
 
-    void SetDimensionalPlasmaViscosity(units::quantity<unit::dynamic_viscosity> visocity);
-
-    void SetPlasmaViscositySI(double visocity);
-
+    void SetPlasmaViscosity(units::quantity<unit::dynamic_viscosity> visocity);
 };
 
 #endif

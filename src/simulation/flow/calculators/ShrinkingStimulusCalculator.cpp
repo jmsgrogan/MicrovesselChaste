@@ -33,11 +33,12 @@
 
  */
 
+#include "Owen11Parameters.hpp"
 #include "ShrinkingStimulusCalculator.hpp"
 
 template<unsigned DIM>
 ShrinkingStimulusCalculator<DIM>::ShrinkingStimulusCalculator() :  AbstractVesselNetworkCalculator<DIM>(),
-    mDefaultStimulus(1.79*unit::per_second)
+    mDefaultStimulus(Owen11Parameters::mpShrinkingTendency->GetValue("ShrinkingStimulusCalculator"))
 {
 
 }

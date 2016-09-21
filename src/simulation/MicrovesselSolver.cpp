@@ -93,7 +93,6 @@ void MicrovesselSolver<DIM>::Increment()
     // If there is a structural adaptation or flow problem solve it
     if(mpStructuralAdaptationSolver)
     {
-        mpStructuralAdaptationSolver->UpdateFlowSolver();
         mpStructuralAdaptationSolver->Solve();
     }
 
@@ -209,7 +208,7 @@ template<unsigned DIM>
 void MicrovesselSolver<DIM>::SetupFromModifier(AbstractCellPopulation<DIM,DIM>& rCellPopulation, const std::string& rDirectory)
 {
     // Set up an output file handler
-    mpOutputFileHandler = boost::shared_ptr<OutputFileHandler>(new OutputFileHandler(rDirectory));
+    mpOutputFileHandler = boost::shared_ptr<OutputFileHandler>(new OutputFileHandler(rDirectory, false));
 
     // Set up all the DiscreteContinuum solvers
     for(unsigned idx=0; idx<mDiscreteContinuumSolvers.size(); idx++)

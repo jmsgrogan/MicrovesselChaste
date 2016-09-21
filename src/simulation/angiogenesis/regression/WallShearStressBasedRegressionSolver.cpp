@@ -34,13 +34,14 @@ Copyright (c) 2005-2016, University of Oxford.
  */
 
 #include "WallShearStressBasedRegressionSolver.hpp"
+#include "Owen11Parameters.hpp"
 #include <vector>
 
 template<unsigned DIM>
 WallShearStressBasedRegressionSolver<DIM>::WallShearStressBasedRegressionSolver() :
     RegressionSolver<DIM>(),
-    mThresholdWss(9.0*unit::pascals),
-    mMaxTimeWithLowWss(60*unit::seconds)
+    mThresholdWss(Owen11Parameters::mpCriticalWallShearStress->GetValue("WallShearStressBasedRegressionSolver")),
+    mMaxTimeWithLowWss(Owen11Parameters::mpMaxTimeWithLowWallShearStress->GetValue("WallShearStressBasedRegressionSolver"))
 {
 
 }

@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,13 +33,14 @@
 
  */
 
+#include "Owen11Parameters.hpp"
 #include "MetabolicStimulusCalculator.hpp"
 
 template<unsigned DIM>
 MetabolicStimulusCalculator<DIM>::MetabolicStimulusCalculator() : AbstractVesselNetworkCalculator<DIM>(),
-        mQRef(6.666 * pow(10.0, -10) * unit::metre_cubed_per_second),
-        mKm(0.83 * unit::per_second),
-        mMaxStimulus(1 * pow(10.0, 10.0) * unit::per_second)
+        mQRef(Owen11Parameters::mpReferenceFlowRateForMetabolicStimulus->GetValue("MetabolicStimulusCalculator")),
+        mKm(Owen11Parameters::mpBasalMetabolicStimulus->GetValue("MetabolicStimulusCalculator")),
+        mMaxStimulus(1.e12 * unit::per_second)
 {
 
 }
@@ -103,7 +104,7 @@ void MetabolicStimulusCalculator<DIM>::Calculate()
             }
             else
             {
-                metabolic_stimulus = mMaxStimulus;
+                metabolic_stimulus = mKm;
             }
         }
         else

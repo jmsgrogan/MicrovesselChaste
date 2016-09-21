@@ -189,7 +189,7 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
         (*it)->GetCellData()->SetItem("p53", 0.0);
         (*it)->GetCellData()->SetItem("Number_of_cancerous_neighbours", 0.0);
         (*it)->GetCellData()->SetItem("Number_of_normal_neighbours", 0.0);
-        (*it)->SetApoptosisTime(3); //hours [jg: check]
+        (*it)->SetApoptosisTime(24); //hours
     }
     p_cell_population->SetOutputResultsForChasteVisualizer(false);
     p_cell_population->template AddCellWriter<CellLabelWriter>();
