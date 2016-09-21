@@ -38,6 +38,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "GeometryTools.hpp"
 #include "UblasIncludes.hpp"
 #include "UblasCustomFunctions.hpp"
+#include "BaseUnits.hpp"
 
 template<unsigned DIM>
 OffLatticeSproutingRule<DIM>::OffLatticeSproutingRule()
@@ -104,7 +105,7 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::
             }
         }
 
-        double prob_tip_selection = this->mSproutingProbability*SimulationTime::Instance()->GetTimeStep();
+        double prob_tip_selection = this->mSproutingProbability*SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
 
         if (RandomNumberGenerator::Instance()->ranf() < prob_tip_selection)
         {

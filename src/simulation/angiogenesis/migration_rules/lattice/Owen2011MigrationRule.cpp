@@ -39,12 +39,13 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "Owen2011MigrationRule.hpp"
 #include "AbstractRegularGridDiscreteContinuumSolver.hpp"
 #include "BaseUnits.hpp"
+#include "Owen11Parameters.hpp"
 
 template<unsigned DIM>
 Owen2011MigrationRule<DIM>::Owen2011MigrationRule()
     : LatticeBasedMigrationRule<DIM>(),
-      mCellMotility(60.0 * 1.e-6 * 1.e-6 *(1.0/3600.0) * unit::metre_squared_per_second), // um^2/hour
-      mCellChemotacticParameter(2.0e4 * 60.0 * 1.e-6 *(1.0/3600.0) * (1.e9)* unit::metre_pow5_per_second_per_mole), // um^2/hour/nM
+      mCellMotility(Owen11Parameters::mpCellMotilityEndothelial->GetValue("Owen2011MigrationRule")),
+      mCellChemotacticParameter(0.1*Owen11Parameters::mpChemotacticSensitivity->GetValue("Owen2011MigrationRule")),
       mVegfField()
 {
 

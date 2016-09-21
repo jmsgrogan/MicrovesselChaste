@@ -37,6 +37,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselSegment.hpp"
 #include "Vessel.hpp"
 #include "LatticeBasedSproutingRule.hpp"
+#include "BaseUnits.hpp"
 
 template<unsigned DIM>
 LatticeBasedSproutingRule<DIM>::LatticeBasedSproutingRule()
@@ -115,8 +116,7 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > LatticeBasedSproutingRule<DIM>
             }
         }
 
-        double prob_tip_selection = this->mSproutingProbability*SimulationTime::Instance()->GetTimeStep();
-
+        double prob_tip_selection = this->mSproutingProbability*SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
         if (RandomNumberGenerator::Instance()->ranf() < prob_tip_selection)
         {
             sprouts.push_back(rNodes[idx]);

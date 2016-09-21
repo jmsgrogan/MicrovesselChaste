@@ -41,7 +41,7 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned DIM>
 AbstractSproutingRule<DIM>::AbstractSproutingRule()
     :mpSolver(),
-     mSproutingProbability(0.00025 * 60.0),
+     mSproutingProbability(0.00025 /(60.0*unit::seconds)),
      mpVesselNetwork(),
      mVesselEndCutoff(0.0 * unit::metres)
 {
@@ -62,7 +62,7 @@ void AbstractSproutingRule<DIM>::SetDiscreteContinuumSolver(boost::shared_ptr<Ab
 
 
 template<unsigned DIM>
-void AbstractSproutingRule<DIM>::SetSproutingProbability(double probability)
+void AbstractSproutingRule<DIM>::SetSproutingProbability(units::quantity<unit::rate> probability)
 {
     mSproutingProbability = probability;
 }

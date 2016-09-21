@@ -150,12 +150,19 @@ void StructuralAdaptationSolver<DIM>::Iterate()
 }
 
 template<unsigned DIM>
-void StructuralAdaptationSolver<DIM>::UpdateFlowSolver()
+void StructuralAdaptationSolver<DIM>::UpdateFlowSolver(bool doFullReset)
 {
     if(mpFlowSolver)
     {
         mpFlowSolver->SetVesselNetwork(this->mpVesselNetwork);
-        mpFlowSolver->SetUp();
+        if(doFullReset && !SimulationTime::Instance()->GetTimeStepsElapsed()==0)
+        {
+            for(unsigned idx=0; idx<mPreFlowSolveCalculators.size();idx++)
+            {
+                mPreFlowSolveCalculators[idx]->Calculate();
+            }
+            mpFlowSolver->SetUp();
+        }
     }
 }
 

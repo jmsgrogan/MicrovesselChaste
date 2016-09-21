@@ -131,8 +131,7 @@ template<unsigned DIM>
 void AngiogenesisSolver<DIM>::DoSprouting()
 {
     // Get the candidate sprouts and set them as migrating
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > candidate_sprouts = mpSproutingRule->GetSprouts(
-            mpNetwork->GetNodes());
+    std::vector<boost::shared_ptr<VesselNode<DIM> > > candidate_sprouts = mpSproutingRule->GetSprouts(mpNetwork->GetNodes());
     for (unsigned idx = 0; idx < candidate_sprouts.size(); idx++)
     {
         candidate_sprouts[idx]->SetIsMigrating(true);

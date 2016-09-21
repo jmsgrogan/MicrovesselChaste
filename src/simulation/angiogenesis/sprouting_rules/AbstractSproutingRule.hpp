@@ -63,7 +63,7 @@ protected:
     /**
      * The probability that a sprout will form per unit time
      */
-    double mSproutingProbability;
+    units::quantity<unit::rate> mSproutingProbability;
 
     /**
      * Vessel network, useful if sprouting depends on neighbouring nodes
@@ -103,7 +103,7 @@ public:
      * Set the sprouting probability
      * @param probability probability of sprouting per unit time
      */
-    void SetSproutingProbability(double probability);
+    void SetSproutingProbability(units::quantity<unit::rate> probability);
 
     /**
      * Set the minimum distance to a vessel end at which sprouting can occur
