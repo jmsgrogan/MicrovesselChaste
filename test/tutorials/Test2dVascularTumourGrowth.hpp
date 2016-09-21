@@ -169,87 +169,11 @@ class Test2dVascularTumourGrowth : public AbstractCellBasedWithTimingsTestSuite
         return p_pde;
     }
 
-    boost::shared_ptr<VesselNetwork<2> > GetHexagonalNetwork(double domain_x, double domain_y)
-    {
-        VesselNetworkGenerator<2> network_generator;
-        boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(domain_x*1.e-6*unit::metres,
-                                                                                                    domain_y*1.e-6*unit::metres,
-                                                                                                    7.0*1.e-6*unit::metres);
-
-        std::vector<boost::shared_ptr<VesselNode<2> > > nodes;
-        nodes.push_back(VesselNode<2>::Create(0, 0));
-        nodes.push_back(VesselNode<2>::Create(1, 0));
-        boost::shared_ptr<VesselSegment<2> > p_segment(VesselSegment<2>::Create(nodes[0], nodes[1]));
-
-        double initial_vessel_radius = 10.0e-6;
-        p_segment->SetRadius(initial_vessel_radius * unit::metres);
-        double haematocrit = 0.45;
-        p_segment->GetFlowProperties()->SetHaematocrit(haematocrit);
-        double viscosity = 2e-3;
-        p_segment->GetFlowProperties()->SetViscosity(viscosity * unit::poiseuille);
-        p_network->SetSegmentProperties(p_segment);
-
-        std::pair<DimensionalChastePoint<2>, DimensionalChastePoint<2> > network_extents = p_network->GetExtents();
-        double y_middle = (network_extents.first[1] + network_extents.second[1]) / 2.0;
-        double x_middle = (network_extents.first[0] + network_extents.second[0]) / 2.0;
-
-        std::vector<boost::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
-        std::vector<boost::shared_ptr<Vessel<2> > > vessels = p_network->GetVessels();
-        for (vessel_iterator = vessels.begin(); vessel_iterator != vessels.end(); vessel_iterator++)
-        {
-            if ((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
-            {
-                if ((*vessel_iterator)->GetStartNode()->rGetLocation()[1] > y_middle)
-                {
-                    if ((*vessel_iterator)->GetStartNode()->rGetLocation()[0] > x_middle)
-                    {
-                        (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
-                        (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(3320 * unit::pascals);
-                    }
-                }
-            }
-            if ((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
-            {
-                if ((*vessel_iterator)->GetEndNode()->rGetLocation()[1] > y_middle)
-                {
-                    if ((*vessel_iterator)->GetStartNode()->rGetLocation()[0] > x_middle)
-                    {
-                        (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
-                        (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3320 * unit::pascals);
-                    }
-                }
-            }
-            if ((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
-            {
-                if ((*vessel_iterator)->GetStartNode()->rGetLocation()[1] <= y_middle)
-                {
-                    if ((*vessel_iterator)->GetStartNode()->rGetLocation()[0] < x_middle)
-                    {
-                        (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsOutputNode(true);
-                        (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(2090 * unit::pascals);
-                    }
-                }
-            }
-            if ((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
-            {
-                if ((*vessel_iterator)->GetEndNode()->rGetLocation()[1] <= y_middle)
-                {
-                    if ((*vessel_iterator)->GetStartNode()->rGetLocation()[0] < x_middle)
-                    {
-                        (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
-                        (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090 * unit::pascals);
-                    }
-                }
-            }
-        }
-        return p_network;
-    }
 
 public:
 
     void TestOnLattice2dVascularTumourGrowth() throw (Exception)
     {
-
 //
 //        // set volume fractions occupied by each cell
 //        boost::shared_ptr<WildTypeCellMutationState> wild_mutation_state(new WildTypeCellMutationState);
@@ -257,73 +181,13 @@ public:
 //        boost::shared_ptr<QuiescentCancerCellMutationState> quiescent_cancer_mutation_state(new QuiescentCancerCellMutationState);
 //        boost::shared_ptr<StalkCellMutationState> stalk_mutation_state(new StalkCellMutationState);
 //        boost::shared_ptr<TipCellMutationState> tip_mutation_state(new TipCellMutationState);
-//
-//
-//// Move to ca rule
+
 ////        cell_population.SetVolumeFraction(wild_mutation_state, 0.6);
 ////        cell_population.SetVolumeFraction(cancer_mutation_state, 0.6);
 ////        cell_population.SetVolumeFraction(quiescent_cancer_mutation_state, 0.6);
 ////        cell_population.SetVolumeFraction(stalk_mutation_state, 0.4);
 ////        cell_population.SetVolumeFraction(tip_mutation_state, 0.4);
 //
-//        // Create a grid to solve PDEs on
-//        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-//        p_grid->SetSpacing(1.0);
-//        std::vector<unsigned> extents;
-//        extents.push_back(domain_x + 1); // num_x
-//        extents.push_back(domain_y + 1); // num_y
-//        extents.push_back(1); // num_z
-//        p_grid->SetExtents(extents);
-//
-//        // Create the oxygen pde solver
-//        boost::shared_ptr<FiniteDifferenceSolver<2> > p_oxygen_solver = FiniteDifferenceSolver<2>::Create();
-//        p_oxygen_solver->SetGrid(p_grid);
-//        p_oxygen_solver->SetPde(GetOxygenPde());
-//        p_oxygen_solver->SetLabel("oxygen");
-//
-//        // Create the vegf pde solver
-//        boost::shared_ptr<FiniteDifferenceSolver<2> > p_vegf_solver = FiniteDifferenceSolver<2>::Create();
-//        p_vegf_solver->SetGrid(p_grid);
-//        p_vegf_solver->SetPde(GetVegfPde());
-//        p_vegf_solver->SetLabel("VEGF");
-//        cell_population.AddPdeHandler(p_vegf_solver);
-//
-//        // add angiogenesis solver to vascular tumour solver
-//        boost::shared_ptr<AngiogenesisSolver<2> > p_angiogenesis_solver = AngiogenesisSolver<2>::Create();
-//        p_angiogenesis_solver->SetCellPopulation(cell_population);
-//        p_angiogenesis_solver->SetVesselNetwork(p_network);
-//        p_vascular_tumour_solver->SetAngiogenesisSolver(p_angiogenesis_solver);
-//
-//        // todo currently there is an issue with the flow calculation - some blunt-ended vessels contain flow (they shouldn't)
-//        // this is an angiogenesis issue, sprouts take properties (including flow props) from parent vessels
-////        boost::shared_ptr<FlowSolver<2> > flow_solver = FlowSolver<2>::Create();
-////        p_vascular_tumour_solver->SetFlowSolver(flow_solver);
-//
-//        OnLatticeSimulation<2> simulator(*(cell_population));
-//
-//        // Create the vascular tumour modifier which integrates with cell based Chaste
-//        boost::shared_ptr<MicrovesselSimulationModifier<2> > p_vascular_tumour_modifier = MicrovesselSimulationModifier<2>::Create();
-//        p_vascular_tumour_modifier->SetMicrovesselSolver(p_vascular_tumour_solver);
-//
-//        simulator.AddSimulationModifier(p_vascular_tumour_modifier);
-//
-//        // Create a Cell Concentration tracking modifier and add it to the simulation
-//        MAKE_PTR(Owen2011TrackingModifier<2>, p_modifier);
-//        simulator.AddSimulationModifier(p_modifier);
-//
-//        //Create cell killer to remove apoptotic cell from simulation
-//        boost::shared_ptr<ApoptoticCellKiller<2> > apoptotic_cell_killer(new ApoptoticCellKiller<2>(cell_population));
-//        simulator.AddCellKiller(apoptotic_cell_killer);
-//
-//        std::string resultsDirectoryName = "Test2dVascularTumourGrowth/OnLatticeLarge";
-//        simulator.SetOutputDirectory(resultsDirectoryName);
-//        simulator.SetSamplingTimestepMultiple(5);
-//        // todo this seems to break simulations if dt is set to 1 - causes a CVode error:
-//        //          *CVODE Error -27 in module CVODE function CVode: tout too close to t0 to start integration.
-//        //          CVODE failed to solve system: CV_TOO_CLOSE
-//        simulator.SetDt(0.5);
-//        simulator.SetEndTime(200);
-//        simulator.Solve();
 
     }
 };

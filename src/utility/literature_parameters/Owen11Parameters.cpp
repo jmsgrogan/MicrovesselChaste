@@ -319,4 +319,51 @@ const boost::shared_ptr<ParameterInstance<unit::time> > Owen11Parameters::mpVess
                                                                                    "\\epsilon_t",
                                                                                    bib_info));
 
+const boost::shared_ptr<ParameterInstance<unit::concentration_flow_rate> > Owen11Parameters::mpCellVegfSecretionRate =
+        boost::shared_ptr<ParameterInstance<unit::concentration_flow_rate> >(new ParameterInstance<unit::concentration_flow_rate> (0.01*nano_molar/min,
+                                                                                   "Owen11_CellVegfSecretionRate",
+                                                                                   "Cell vegf secretion rate",
+                                                                                   "k_v^{cell}",
+                                                                                   bib_info));
 
+const boost::shared_ptr<ParameterInstance<unit::length> > Owen11Parameters::mpMinimumRadius =
+        boost::shared_ptr<ParameterInstance<unit::length> >(new ParameterInstance<unit::length> (1.e-6*unit::metres,
+                                                                                   "Owen11_MinimumRadius",
+                                                                                   "Minimum possible radius",
+                                                                                   "R_{MIN}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::length> > Owen11Parameters::mpMaximumRadius =
+        boost::shared_ptr<ParameterInstance<unit::length> >(new ParameterInstance<unit::length> (50.e-6*unit::metres,
+                                                                                   "Owen11_MaximumRadius",
+                                                                                   "Maximum possible radius",
+                                                                                   "R_{MAX}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::flow_rate> > Owen11Parameters::mpReferenceFlowRateForMetabolicStimulus =
+        boost::shared_ptr<ParameterInstance<unit::flow_rate> >(new ParameterInstance<unit::flow_rate> (4.e-5*cm*cm*cm/min,
+                                                                                   "Owen11_ReferenceFlowRateForMetabolicStimulus",
+                                                                                   "Reference flow rate for metabolic stimulus",
+                                                                                   "Q_{ref}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::rate> > Owen11Parameters::mpShrinkingTendency =
+        boost::shared_ptr<ParameterInstance<unit::rate> >(new ParameterInstance<unit::rate> (1.7/unit::seconds,
+                                                                                   "Owen11_ShrinkingTendency",
+                                                                                   "Shrinking tendency",
+                                                                                   "k_s",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::rate> > Owen11Parameters::mpSensitivityToIntravascularPressure =
+        boost::shared_ptr<ParameterInstance<unit::rate> >(new ParameterInstance<unit::rate> (0.5/unit::seconds,
+                                                                                   "Owen11_SensitivityToIntravascularPressure",
+                                                                                   "Shrinking to intravascaulr pressure",
+                                                                                   "k_p",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::rate> > Owen11Parameters::mpBasalMetabolicStimulus =
+        boost::shared_ptr<ParameterInstance<unit::rate> >(new ParameterInstance<unit::rate> (1.7/unit::seconds,
+                                                                                   "Owen11_BasalMetabolicStimulus",
+                                                                                   "Basal metabolic stimulus",
+                                                                                   "k^0_m",
+                                                                                   bib_info));

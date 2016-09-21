@@ -131,6 +131,12 @@ void StructuralAdaptationSolver<DIM>::Iterate()
 
     mpFlowSolver->Update(false);
     mpFlowSolver->Solve();
+
+    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpVesselNetwork->GetVesselSegments();
+    for (unsigned idx = 0; idx < segments.size(); idx++)
+    {
+        segments[idx]->GetFlowProperties()->SetGrowthStimulus(0.0*(1.0/(unit::seconds)));
+    }
     for(unsigned idx=0; idx<mPostFlowSolveCalculators.size();idx++)
     {
         mPostFlowSolveCalculators[idx]->Calculate();

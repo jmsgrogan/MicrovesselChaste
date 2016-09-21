@@ -135,10 +135,10 @@ struct Owen11Parameters
      */
     static const boost::shared_ptr<ParameterInstance<unit::rate> > mpCellOxygenConsumptionRate;
 
-//    /**
-//     * Cell vegf secretion rate \k_v^{cell}
-//     */
-//    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpCellVegfSecretionRate;
+    /**
+     * Cell vegf secretion rate \k_v^{cell}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::concentration_flow_rate> > mpCellVegfSecretionRate;
 
     /**
      * Maximum rate of sprouting P^{max}_{sprout}
@@ -245,15 +245,35 @@ struct Owen11Parameters
      */
     static const boost::shared_ptr<ParameterInstance<unit::time> > mpVesselRadiusUpdateTimestep;
 
-//    /**
-//     * Minimum possible radius R_{MIN}
-//     */
-//    static const boost::shared_ptr<ParameterInstance<unit::length> > mpMinimumRadius;
-//
-//    /**
-//     * Maximum possible radius R_{MAX}
-//     */
-//    static const boost::shared_ptr<ParameterInstance<unit::length> > mpMaximumRadius;
+    /**
+     * Minimum possible radius R_{MIN}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::length> > mpMinimumRadius;
+
+    /**
+     * Maximum possible radius R_{MAX}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::length> > mpMaximumRadius;
+
+    /**
+     * Reference flow rate for metabolic stimulus Q_{ref}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::flow_rate> > mpReferenceFlowRateForMetabolicStimulus;
+
+    /**
+     * Shrinking tendency k_s
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpShrinkingTendency;
+
+    /**
+     * Shrinking to intravascaulr pressure k_p
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpSensitivityToIntravascularPressure;
+
+    /**
+     * Basal metabolic stimulus k^0_m
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpBasalMetabolicStimulus;
 
 };
 

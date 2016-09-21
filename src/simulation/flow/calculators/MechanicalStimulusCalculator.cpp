@@ -33,12 +33,14 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
+#include "Owen11Parameters.hpp"
 #include "MechanicalStimulusCalculator.hpp"
 
 template<unsigned DIM>
 MechanicalStimulusCalculator<DIM>::MechanicalStimulusCalculator() : AbstractVesselNetworkCalculator<DIM>(),
-    mTauRef(0.05 * unit::pascals),
-    mTauP(0.0 * unit::pascals)
+    mTauRef(1.e-6 * unit::pascals),
+    mTauP(0.05 * unit::pascals),
+    mkp(Owen11Parameters::mpSensitivityToIntravascularPressure->GetValue("MechanicalStimulusCalculator"))
 {
 
 }
@@ -83,7 +85,6 @@ void MechanicalStimulusCalculator<DIM>::SetTauP(units::quantity<unit::pressure> 
 template<unsigned DIM>
 void MechanicalStimulusCalculator<DIM>::Calculate()
 {
-
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
 
     for (unsigned idx = 0; idx < segments.size(); idx++)
@@ -92,7 +93,8 @@ void MechanicalStimulusCalculator<DIM>::Calculate()
         units::quantity<unit::pressure> node0_pressure = segments[idx]->GetNode(0)->GetFlowProperties()->GetPressure();
         units::quantity<unit::pressure> node1_pressure = segments[idx]->GetNode(1)->GetFlowProperties()->GetPressure();
 
-        // Conversion to mmHg. // DANGER: Stepping out of boost units framework
+        // Conversion to mmHg. // DANGER: Stepping out of boost units framework as governing equations are dimensionally
+        // inconsistent.
         units::quantity<unit::pressure> conversion_pressure(1.0*unit::mmHg);
         double average_pressure = (node0_pressure + node1_pressure)/conversion_pressure;
 
@@ -106,10 +108,10 @@ void MechanicalStimulusCalculator<DIM>::Calculate()
         {
             // tau_p calculated in pascals
             // factor of 0.1 introduced in order to convert original expression (calculated in units of dyne/cm^2) to pascals
-            mTauP = 0.1 * (100.0 - 86.0 * pow(exp(-5.0 * log10(log10(average_pressure))), 5.4)) * unit::pascals;
+            double inside_exponent = -5000.0*pow(log10(log10(average_pressure)), 5.4);
+            mTauP = 0.1 * (100.0 - 86.0 * exp(inside_exponent)) * unit::pascals;
         }
-
-        units::quantity<unit::rate> mechanical_stimulus = log10((segments[idx]->GetFlowProperties()->GetWallShearStress() + mTauRef) / mTauP) * unit::per_second;
+        units::quantity<unit::rate> mechanical_stimulus = log10((segments[idx]->GetFlowProperties()->GetWallShearStress() + mTauRef)/ mTauP) * unit::per_second;
         segments[idx]->GetFlowProperties()->SetGrowthStimulus(segments[idx]->GetFlowProperties()->GetGrowthStimulus() + mechanical_stimulus);
     }
 }
