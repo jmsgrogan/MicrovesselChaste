@@ -102,7 +102,6 @@ void MicrovesselSolver<DIM>::Increment()
     {
         for(unsigned idx=0; idx<mDiscreteContinuumSolvers.size(); idx++)
         {
-
             mDiscreteContinuumSolvers[idx]->Update();
             mDiscreteContinuumSolvers[idx]->SetFileName("/" + mDiscreteContinuumSolvers[idx]->GetLabel() +"_solution_" + boost::lexical_cast<std::string>(num_steps));
 
@@ -135,7 +134,6 @@ void MicrovesselSolver<DIM>::Increment()
             {
                 mDiscreteContinuumSolvers[idx]->SetWriteSolution(false);
             }
-
             mDiscreteContinuumSolvers[idx]->Solve();
         }
     }

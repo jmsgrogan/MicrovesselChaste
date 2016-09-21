@@ -33,20 +33,23 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "UnitCollection.hpp"
-#include "GenericParameters.hpp"
+#ifndef SECOMB04PARAMETERS_HPP_
+#define SECOMB04PARAMETERS_HPP_
 
-units::quantity<unit::length> radius(5.0*unit::microns);
-const boost::shared_ptr<ParameterInstance<unit::length> > GenericParameters::mpCapillaryRadius =
-        boost::shared_ptr<ParameterInstance<unit::length> >(new ParameterInstance<unit::length> (radius,
-                                                                                   "Generic_CapillaryRadius",
-                                                                                   "Rough Capillary Radius",
-                                                                                   "R",
-                                                                                   "-"));
+#include "SmartPointers.hpp"
+#include "BaseParameterInstance.hpp"
+#include "ParameterInstance.hpp"
 
-const boost::shared_ptr<ParameterInstance<unit::concentration> > GenericParameters::mpGasConcentrationAtStp =
-        boost::shared_ptr<ParameterInstance<unit::concentration> >(new ParameterInstance<unit::concentration> ((1.0*unit::moles)/(22.4e-3*(units::pow<3>(1.0*unit::metres))),
-                                                                                   "Generic_GasConcentrationAtStp",
-                                                                                   "Gas concentration at STP",
-                                                                                   "C_{stp}",
-                                                                                   "-"));
+/**
+ * This struct stores parameter values used in the paper Secomb et al. (2004)
+ */
+struct Secomb04Parameters
+{
+    /**
+     * Oxygen solubility: \alpha_{eff}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::volumetric_solubility> > mpOxygenVolumetricSolubility;
+
+};
+
+#endif /*SECOMB04PARAMETERS_HPP_*/

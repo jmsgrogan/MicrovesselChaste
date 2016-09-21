@@ -34,19 +34,18 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include "UnitCollection.hpp"
-#include "GenericParameters.hpp"
+#include "Secomb04Parameters.hpp"
 
-units::quantity<unit::length> radius(5.0*unit::microns);
-const boost::shared_ptr<ParameterInstance<unit::length> > GenericParameters::mpCapillaryRadius =
-        boost::shared_ptr<ParameterInstance<unit::length> >(new ParameterInstance<unit::length> (radius,
-                                                                                   "Generic_CapillaryRadius",
-                                                                                   "Rough Capillary Radius",
-                                                                                   "R",
-                                                                                   "-"));
+std::string SECOMBO4_BIB_INFO = "@article{Secomb04, \n author = {Secomb, Timothy W and Hsu, Richard and Park, Eric Y H and DeWhirst, Mark W},"
+        "\n journal = {Annals of Biomedical Engineering}, \n month = {nov}, \n number = {11}, \n pages = {1519--29},"
+        "\n title = {{Green’s function methods for analysis of oxygen delivery to tissue by microvascular networks.}},"
+        "\n volume = {32}, \n year = {2004}}";
 
-const boost::shared_ptr<ParameterInstance<unit::concentration> > GenericParameters::mpGasConcentrationAtStp =
-        boost::shared_ptr<ParameterInstance<unit::concentration> >(new ParameterInstance<unit::concentration> ((1.0*unit::moles)/(22.4e-3*(units::pow<3>(1.0*unit::metres))),
-                                                                                   "Generic_GasConcentrationAtStp",
-                                                                                   "Gas concentration at STP",
-                                                                                   "C_{stp}",
-                                                                                   "-"));
+units::quantity<unit::pressure> SECOMB04_MMHG(1.0*unit::mmHg);
+const boost::shared_ptr<ParameterInstance<unit::volumetric_solubility> > Secomb04Parameters::mpOxygenVolumetricSolubility =
+        boost::shared_ptr<ParameterInstance<unit::volumetric_solubility> >(new ParameterInstance<unit::volumetric_solubility> (3.1e-5/SECOMB04_MMHG,
+                                                                                   "Secomb04_OxygenVolumetricSolubility",
+                                                                                   "Oxygen solubility",
+                                                                                   "\\alpha_{eff}",
+                                                                                   SECOMBO4_BIB_INFO));
+

@@ -288,13 +288,6 @@ public:
 //        p_vegf_solver->SetLabel("VEGF");
 //        cell_population.AddPdeHandler(p_vegf_solver);
 //
-//        // Create the vascular tumour solver, which manages all pde solves
-//        boost::shared_ptr<MicrovesselSolver<2> > p_vascular_tumour_solver = MicrovesselSolver<2>::Create();
-//        p_vascular_tumour_solver->SetVesselNetwork(p_network);
-//        p_vascular_tumour_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
-//        p_vascular_tumour_solver->AddDiscreteContinuumSolver(p_vegf_solver);
-//        p_vascular_tumour_solver->SetOutputFrequency(1);
-//
 //        // add angiogenesis solver to vascular tumour solver
 //        boost::shared_ptr<AngiogenesisSolver<2> > p_angiogenesis_solver = AngiogenesisSolver<2>::Create();
 //        p_angiogenesis_solver->SetCellPopulation(cell_population);
