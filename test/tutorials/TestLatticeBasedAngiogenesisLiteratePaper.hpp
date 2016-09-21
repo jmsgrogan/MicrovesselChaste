@@ -293,7 +293,7 @@ public:
          */
         boost::shared_ptr<MicrovesselSolver<2> > p_microvessel_solver = MicrovesselSolver<2>::Create();
         p_microvessel_solver->SetVesselNetwork(p_network);
-        p_microvessel_solver->SetOutputFrequency(5);
+        p_microvessel_solver->SetOutputFrequency(1);
         p_microvessel_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
         p_microvessel_solver->AddDiscreteContinuumSolver(p_vegf_solver);
         p_microvessel_solver->SetStructuralAdaptationSolver(p_structural_adaptation_solver);
@@ -327,9 +327,9 @@ public:
          * Set up the remainder of the simulation
          */
         simulator.SetOutputDirectory("TestLatticeBasedAngiogenesisLiteratePaper");
-        simulator.SetSamplingTimestepMultiple(5);
+        simulator.SetSamplingTimestepMultiple(1);
         simulator.SetDt(0.5);
-        simulator.SetEndTime(2000);
+        simulator.SetEndTime(6.0);
         /*
          * Do the solve
          */

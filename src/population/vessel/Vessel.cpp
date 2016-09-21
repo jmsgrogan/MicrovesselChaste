@@ -354,6 +354,8 @@ boost::shared_ptr<VesselNode<DIM> > Vessel<DIM>::DivideSegment(const Dimensional
     // Make a copy of the closest node
     boost::shared_ptr<VesselNode<DIM> > p_new_node = VesselNode<DIM>::Create(*pVesselSegment->GetNode(closest_index));
     p_new_node->SetLocation(location);
+    p_new_node->GetFlowProperties()->SetIsInputNode(false);
+    p_new_node->GetFlowProperties()->SetIsOutputNode(false);
 
     // Make two new segments
     boost::shared_ptr<VesselSegment<DIM> > p_new_segment0 = VesselSegment<DIM>::Create(pVesselSegment->GetNode(0), p_new_node);

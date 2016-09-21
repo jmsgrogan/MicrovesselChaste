@@ -130,7 +130,7 @@ public:
     /**
      * To be called if the vessel network changes between solves
      */
-    void UpdateFlowSolver();
+    void UpdateFlowSolver(bool doFullReset=false);
 
 };
 

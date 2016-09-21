@@ -37,14 +37,20 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselSegment.hpp"
 #include "Vessel.hpp"
 #include "Owen2011SproutingRule.hpp"
+#include "Owen11Parameters.hpp"
 
 template<unsigned DIM>
 Owen2011SproutingRule<DIM>::Owen2011SproutingRule()
     : LatticeBasedSproutingRule<DIM>(),
-      mHalfMaxVegf(0.1 * unit::mole_per_metre_cubed),
+      mHalfMaxVegf(Owen11Parameters::mpVegfConventrationAtHalfMaxProbSprouting->GetValue("Owen2011SproutingRule")),
       mVegfField()
 {
-
+    // Owen11 equation is dimensionally inconsistent as it includes an extra vessel surface area term. In order to
+    // have a similar magnitude multiply this value by a typical vessel surface area = 2*pi*R*L
+    // = 2*pi*15*40
+    this->mSproutingProbability = Owen11Parameters::mpMaximumSproutingRate->GetValue("Owen2011SproutingRule")*2.0*M_PI*15.0*40.0;
+    this->mTipExclusionRadius = 80.0*1.e-6*unit::metres;
+    this->mVesselEndCutoff = 80.0*1.e-6* unit::metres;
 }
 
 template <unsigned DIM>
@@ -126,7 +132,9 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > Owen2011SproutingRule<DIM>::Ge
         // Get the grid index of the node
         unsigned grid_index = this->mpGrid->GetNearestGridIndex(rNodes[idx]->rGetLocation());
         units::quantity<unit::concentration> vegf_conc = this->mVegfField[grid_index];
-        double prob_tip_selection = this->mSproutingProbability*SimulationTime::Instance()->GetTimeStep()*vegf_conc/(vegf_conc + mHalfMaxVegf);
+        double vegf_fraction = vegf_conc/(vegf_conc + mHalfMaxVegf);
+        double max_prob_per_time_step = this->mSproutingProbability*SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
+        double prob_tip_selection = max_prob_per_time_step*vegf_fraction;
 
         if (RandomNumberGenerator::Instance()->ranf() < prob_tip_selection)
         {
