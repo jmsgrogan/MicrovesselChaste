@@ -57,35 +57,23 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "DimensionalChastePoint.hpp"
 #include "UnitCollection.hpp"
 #include "Owen11Parameters.hpp"
+#include "Secomb04Parameters.hpp"
 #include "GenericParameters.hpp"
 #include "ParameterCollection.hpp"
 #include "BaseUnits.hpp"
-/*
- * Geometry tools.
- */
-#include "MappableGridGenerator.hpp"
-#include "Part.hpp"
 /*
  * Vessel networks.
  */
 #include "VesselNode.hpp"
 #include "VesselNetwork.hpp"
-#include "VesselNetworkGenerator.hpp"
 /*
  * Cells.
  */
-#include "Cell.hpp"
+#include "Owen11CellPopulationGenerator.hpp"
+#include "Owen2011TrackingModifier.hpp"
 #include "CaBasedCellPopulation.hpp"
-#include "DefaultCellProliferativeType.hpp"
-#include "Owen2011OxygenBasedCellCycleModel.hpp"
-#include "VesselNetworkCellPopulationInteractor.hpp"
-#include "CancerCellMutationState.hpp"
-#include "StalkCellMutationState.hpp"
-#include "CellLabelWriter.hpp"
-#include "CellMutationStatesWriter.hpp"
 #include "OnLatticeSimulation.hpp"
 #include "ApoptoticCellKiller.hpp"
-#include "CellsGenerator.hpp"
 /*
  * Flow.
  */
@@ -99,12 +87,11 @@ Copyright (c) 2005-2016, University of Oxford.
  * Grids and PDEs.
  */
 #include "RegularGrid.hpp"
-#include "PottsMesh.hpp"
-#include "PottsMeshGenerator.hpp"
 #include "FiniteDifferenceSolver.hpp"
 #include "CellBasedDiscreteSource.hpp"
 #include "VesselBasedDiscreteSource.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
+#include "LinearSteadyStateDiffusionReactionPde.hpp"
 /*
  * Angiogenesis.
  */
@@ -190,97 +177,74 @@ public:
          */
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "initial_network.vtp");
         /*
-         * Next, set up the cell populations. First, fill the domain with 'normal' cells. We use Cell Based Chaste for cell modelling. It has
-         * its own lattice representation, `PottsMesh` which we must first generate. Location indices donate which lattice indices have cells.
+         * Next, set up the cell populations. We will setup up a population similar to that used in the Owen et al., 2011 paper. That is, a grid
+         * filled with normal cells and a tumour spheroid in the middle. We can use a generator for this purpose. The generator simply sets up
+         * the population using conventional Cell Based Chaste methods.
          */
-        PottsMeshGenerator<2> generator(p_grid->GetExtents()[0], 0, 0, p_grid->GetExtents()[1], 0, 0);
-        PottsMesh<2>* p_mesh = generator.GetMesh();
-        p_mesh->Scale(grid_spacing/reference_length, grid_spacing/reference_length);
-        std::vector<unsigned> location_indices;
-        for (unsigned index=0; index < p_mesh->GetNumNodes(); index++)
-        {
-            location_indices.push_back(index);
-        }
-        std::vector<CellPtr> cells;
-        MAKE_PTR(DefaultCellProliferativeType, p_diff_type);
-        CellsGenerator<Owen2011OxygenBasedCellCycleModel, 2> cells_generator;
-        cells_generator.GenerateBasicRandom(cells, p_mesh->GetNumNodes(), p_diff_type);
-        boost::shared_ptr<CaBasedCellPopulation<2> > p_cell_population =
-                boost::shared_ptr<CaBasedCellPopulation<2> >(new CaBasedCellPopulation<2> (*p_mesh, cells, location_indices));
-        /*
-         * We need to do some boolean operations between the vessel network and cell population. This will create 'stalk' cells
-         * at every grid point overlapping a vessel.
-         */
-        VesselNetworkCellPopulationInteractor<2> interactor = VesselNetworkCellPopulationInteractor<2>();
-        interactor.SetVesselNetwork(p_network);
-        interactor.PartitionNetworkOverCells(*p_cell_population);
-        MAKE_PTR(StalkCellMutationState, p_EC_state);
-        interactor.LabelVesselsInCellPopulation(*p_cell_population, p_EC_state, p_EC_state);
-        p_network->Write(p_handler->GetOutputDirectoryFullPath() + "initial_partitioned_network.vtp");
-        /*
-         * Define a tumour cell region in the centre of the domain. Use some geometry tools to help with this. Mutate the
-         * cells in the tumour region.
-         */
-        MAKE_PTR(CancerCellMutationState, p_cancerous_state);
-        units::quantity<unit::length> initial_tumour_radius(200.0*unit::microns);
-        DimensionalChastePoint<2> origin(double(p_grid->GetExtents()[0])*grid_spacing/(2.0*reference_length),
-                                         double(p_grid->GetExtents()[1])*grid_spacing/(2.0*reference_length), 0.0, reference_length);
-        boost::shared_ptr<Part<2> > p_sub_domain = Part<2>::Create();
-        boost::shared_ptr<Polygon> circle = p_sub_domain->AddCircle(initial_tumour_radius, origin);
-        for (unsigned ind = 0; ind < p_mesh->GetNumNodes(); ind++)
-        {
-            if (p_sub_domain->IsPointInPart(p_mesh->GetNode(ind)->rGetLocation()))
-            {
-                p_cell_population->GetCellUsingLocationIndex(ind)->SetMutationState(p_cancerous_state);
-            }
-        }
+        boost::shared_ptr<Owen11CellPopulationGenerator<2> > p_cell_population_genenerator = Owen11CellPopulationGenerator<2>::Create();
+        p_cell_population_genenerator->SetRegularGrid(p_grid);
+        p_cell_population_genenerator->SetVesselNetwork(p_network);
+        units::quantity<unit::length> tumour_radius(200.0 * unit::microns);
+        p_cell_population_genenerator->SetTumourRadius(tumour_radius);
+        boost::shared_ptr<CaBasedCellPopulation<2> > p_cell_population = p_cell_population_genenerator->Update();
         /*
          * At this point the simulation domain will look as follows:
          *
          * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/Lattice_Based_Tutorial_Cell_Setup.png, 20%, align=center, border=1)]]
          *
-         * We need to initialize the cell data containers. Note that Cell Based Chaste does not use dimensional
-         * analysis so we need to be careful with units. These quantities are used in the cell cycle model
-         * `Owen2011OxygenBasedCellCycleModel`.
+         * Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources
          */
-        std::list<CellPtr> cells_updated = p_cell_population->rGetCells();
-        std::list<CellPtr>::iterator it;
-        for (it = cells_updated.begin(); it != cells_updated.end(); ++it)
-        {
-            (*it)->GetCellData()->SetItem("oxygen", 0.0);
-            (*it)->GetCellData()->SetItem("VEGF", 0.0);
-            (*it)->GetCellData()->SetItem("p53", 0.0);
-            (*it)->GetCellData()->SetItem("Number_of_cancerous_neighbours", 0.0);
-            (*it)->GetCellData()->SetItem("Number_of_normal_neighbours", 0.0);
-            (*it)->SetApoptosisTime(3); //hours [jg: check]
-        }
-        /*
-         * Be specific regarding the cell information to be output to file.
-         */
-        p_cell_population->SetOutputResultsForChasteVisualizer(false);
-        p_cell_population->AddCellWriter<CellLabelWriter>();
-        p_cell_population->AddCellWriter<CellMutationStatesWriter>();
-        /*
+        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_oxygen_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
+        p_oxygen_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpOxygenDiffusivity->GetValue("User"));
+        boost::shared_ptr<CellBasedDiscreteSource<2> > p_cell_oxygen_sink = CellBasedDiscreteSource<2>::Create();
+        p_cell_oxygen_sink->SetLinearInUConsumptionRatePerCell(Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
+        p_oxygen_pde->AddDiscreteSource(p_cell_oxygen_sink);
+
+        boost::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_ox_boundary = DiscreteContinuumBoundaryCondition<2>::Create();
+        p_ox_boundary->SetType(BoundaryConditionType::VESSEL_LINE);
+        p_ox_boundary->SetSource(BoundaryConditionSource::PRESCRIBED);
+        units::quantity<unit::pressure> vessel_oxygen_partial_pressure(20.0*unit::mmHg);
+        units::quantity<unit::concentration> vessel_oxygen_concentration =
+                Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
+                GenericParameters::mpGasConcentrationAtStp->GetValue("User") * vessel_oxygen_partial_pressure;
+        p_ox_boundary->SetValue(vessel_oxygen_concentration);
+        p_ox_boundary->SetNetwork(p_network);
+
+        boost::shared_ptr<FiniteDifferenceSolver<2> > p_oxygen_solver = FiniteDifferenceSolver<2>::Create();
+        p_oxygen_solver->SetPde(p_oxygen_pde);
+        p_oxygen_solver->AddBoundaryCondition(p_ox_boundary);
+        p_oxygen_solver->SetLabel("oxygen");
+        p_oxygen_solver->SetGrid(p_grid);
+         /*
          * The microvessel solver will manage all aspects of the vessel solve
          */
         boost::shared_ptr<MicrovesselSolver<2> > p_microvessel_solver = MicrovesselSolver<2>::Create();
         p_microvessel_solver->SetVesselNetwork(p_network);
         p_microvessel_solver->SetOutputFrequency(5);
+        p_microvessel_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
         /*
          * The microvessel solution modifier will link the vessel and cell solvers
          */
         boost::shared_ptr<MicrovesselSimulationModifier<2> > p_microvessel_modifier = MicrovesselSimulationModifier<2>::Create();
         p_microvessel_modifier->SetMicrovesselSolver(p_microvessel_solver);
+        std::vector<std::string> update_labels;
+        update_labels.push_back("oxygen");
+        p_microvessel_modifier->SetCellDataUpdateLabels(update_labels);
         /*
          * The full simulation is run as a typical Cell Based Chaste simulation
          */
         OnLatticeSimulation<2> simulator(*p_cell_population);
         simulator.AddSimulationModifier(p_microvessel_modifier);
         /*
-         * A a killer to remove apoptotic cells
+         * Add a killer to remove apoptotic cells
          */
-        boost::shared_ptr<ApoptoticCellKiller<2> > apoptotic_cell_killer(new ApoptoticCellKiller<2>(p_cell_population.get()));
-        simulator.AddCellKiller(apoptotic_cell_killer);
+        boost::shared_ptr<ApoptoticCellKiller<2> > p_apoptotic_cell_killer(new ApoptoticCellKiller<2>(p_cell_population.get()));
+        simulator.AddCellKiller(p_apoptotic_cell_killer);
+        /*
+         * Another modifier for updating cell cycle quantities
+         */
+        boost::shared_ptr<Owen2011TrackingModifier<2> > p_owen11_tracking_modifier(new Owen2011TrackingModifier<2>);
+        simulator.AddSimulationModifier(p_owen11_tracking_modifier);
         /*
          * Set up the remainder of the simulation
          */
@@ -288,7 +252,14 @@ public:
         simulator.SetSamplingTimestepMultiple(5);
         simulator.SetDt(0.5);
         simulator.SetEndTime(200);
+        /*
+         * Do the solve
+         */
         simulator.Solve();
+        /*
+         * Dump the parameters to file
+         */
+        ParameterCollection::Instance()->DumpToFile(p_handler->GetOutputDirectoryFullPath()+"parameter_collection.xml");
     }
 };
 

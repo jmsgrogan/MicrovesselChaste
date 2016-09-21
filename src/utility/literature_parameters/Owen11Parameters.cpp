@@ -256,6 +256,62 @@ const boost::shared_ptr<ParameterInstance<unit::dimensionless> > Owen11Parameter
                                                                                    "H_{in}",
                                                                                    bib_info));
 
+const boost::shared_ptr<ParameterInstance<unit::rate> > Owen11Parameters::mpP53ProductionRateConstant =
+        boost::shared_ptr<ParameterInstance<unit::rate> >(new ParameterInstance<unit::rate> (0.002/min,
+                                                                                   "Owen11_P53ProductionRateConstant",
+                                                                                   "Intracellular p53 production rate constant",
+                                                                                   "k_7",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::rate> > Owen11Parameters::mpP53MaxDegradationRate =
+        boost::shared_ptr<ParameterInstance<unit::rate> >(new ParameterInstance<unit::rate> (0.01/min,
+                                                                                   "Owen11_P53MaxDegradationRate",
+                                                                                   "Max p53 degradation rate",
+                                                                                   "k_dash_7",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::pressure> > Owen11Parameters::mpOxygenTensionForHalfMaxP53Degradation =
+        boost::shared_ptr<ParameterInstance<unit::pressure> >(new ParameterInstance<unit::pressure> (4.44*mmHg,
+                                                                                   "Owen11_OxygenTensionForHalfMaxP53Degradation",
+                                                                                   "Tissue oxygen tension for half-max p53 degradation",
+                                                                                   "C_{p53}",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::rate> > Owen11Parameters::mpCellVegfProductionRate =
+        boost::shared_ptr<ParameterInstance<unit::rate> >(new ParameterInstance<unit::rate> (0.002/min,
+                                                                                   "Owen11_CellVegfProductionRate",
+                                                                                   "Basal VEGF production rate in cell",
+                                                                                   "k_8",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::rate> > Owen11Parameters::mpMaxCellVegfProductionRate =
+        boost::shared_ptr<ParameterInstance<unit::rate> >(new ParameterInstance<unit::rate> (0.01/min,
+                                                                                   "Owen11_MaxCellVegfProductionRate",
+                                                                                   "Max VEGF production rate in cell",
+                                                                                   "k_8_dash",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::rate> > Owen11Parameters::mpP53EffectOnVegfProduction =
+        boost::shared_ptr<ParameterInstance<unit::rate> >(new ParameterInstance<unit::rate> (-0.002/min,
+                                                                                   "Owen11_P53EffectOnVegfProduction",
+                                                                                   "Effect of P53 on VEGF production",
+                                                                                   "k_8_dash_dash",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::dimensionless> > Owen11Parameters::mpVegfEffectOnVegfProduction =
+        boost::shared_ptr<ParameterInstance<unit::dimensionless> >(new ParameterInstance<unit::dimensionless> (0.04,
+                                                                                   "Owen11_VegfEffectOnVegfProduction",
+                                                                                   "Effect of VEGF on VEGF production",
+                                                                                   "j_5",
+                                                                                   bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::pressure> > Owen11Parameters::mpOxygenTensionForHalfMaxVegfDegradation =
+        boost::shared_ptr<ParameterInstance<unit::pressure> >(new ParameterInstance<unit::pressure> (4.44*mmHg,
+                                                                                   "Owen11_OxygenTensionForHalfMaxVegfDegradation",
+                                                                                   "Tissue oxygen tension for half-max vegf degradation",
+                                                                                   "C_{VEGF}",
+                                                                                   bib_info));
+
 const boost::shared_ptr<ParameterInstance<unit::time> > Owen11Parameters::mpVesselRadiusUpdateTimestep =
         boost::shared_ptr<ParameterInstance<unit::time> >(new ParameterInstance<unit::time> (0.1*unit::seconds,
                                                                                    "Owen11_VesselRadiusUpdateTimestep",

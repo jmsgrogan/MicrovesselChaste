@@ -141,13 +141,13 @@ std::vector<units::quantity<unit::rate> > CellBasedDiscreteSource<DIM>::GetLinea
 template<unsigned DIM>
 void CellBasedDiscreteSource<DIM>::SetConstantInUConsumptionRatePerCell(units::quantity<unit::molar_flow_rate> value)
 {
-    mCellConstantInUValue = value;
+    mCellConstantInUValue = -value;
 }
 
 template<unsigned DIM>
 void CellBasedDiscreteSource<DIM>::SetLinearInUConsumptionRatePerCell(units::quantity<unit::rate> value)
 {
-    mCellLinearInUValue = value;
+    mCellLinearInUValue = -value;
 }
 
 // Explicit instantiation

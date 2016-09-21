@@ -201,6 +201,46 @@ struct Owen11Parameters
     static const boost::shared_ptr<ParameterInstance<unit::dimensionless> > mpInflowHaematocrit;
 
     /**
+     * Intracellular p53 production rate constant k_7
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpP53ProductionRateConstant;
+
+    /**
+     * Max p53 degradation rate k_dash_7
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpP53MaxDegradationRate;
+
+    /**
+     * Tissue oxygen tension for half-max p53 degradation C_{p53}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenTensionForHalfMaxP53Degradation;
+
+    /**
+     * Basal VEGF production rate in cell k_8
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpCellVegfProductionRate;
+
+    /**
+     * Max VEGF production rate in cell k_8_dash
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpMaxCellVegfProductionRate;
+
+    /**
+     * Effect of P53 on vegf production k_8_dash_dash
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpP53EffectOnVegfProduction;
+
+    /**
+     * Effect of VEGF on VEGF production j_5
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::dimensionless> > mpVegfEffectOnVegfProduction;
+
+    /**
+     * Tissue oxygen tension for half-max vegf degradation C_{VEGF}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenTensionForHalfMaxVegfDegradation;
+
+    /**
      * Vessel radius update timestep \epsilon_t
      */
     static const boost::shared_ptr<ParameterInstance<unit::time> > mpVesselRadiusUpdateTimestep;

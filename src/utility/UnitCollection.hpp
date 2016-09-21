@@ -177,6 +177,10 @@ namespace unit{
     typedef units::derived_dimension<units::amount_base_dimension, 1, units::mass_base_dimension, -1, units::length_base_dimension, -2, units::time_base_dimension, 2>::type solubility_dimension;
     typedef units::unit<solubility_dimension, units::si::system> solubility;
     BOOST_UNITS_STATIC_CONSTANT(mole_per_metre_cubed_per_pascal, solubility);
+    typedef units::derived_dimension<units::mass_base_dimension, -1, units::length_base_dimension, 1, units::time_base_dimension, 2>::type volumetric_solubility_dimension;
+    typedef units::unit<volumetric_solubility_dimension, units::si::system> volumetric_solubility;
+    BOOST_UNITS_STATIC_CONSTANT(per_pascal, volumetric_solubility);
+
     typedef units::derived_dimension<units::length_base_dimension, 1, units::time_base_dimension, -1>::type membrane_permeability_dimension;
     typedef units::unit<membrane_permeability_dimension, units::si::system> membrane_permeability;
     BOOST_UNITS_STATIC_CONSTANT(metre_per_second, membrane_permeability);

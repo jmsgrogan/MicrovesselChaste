@@ -264,6 +264,12 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector
     {
         this->mSolution[i] = data[i];
     }
+
+    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*unit::mole_per_metre_cubed);
+    for (unsigned i = 0; i < data.size(); i++)
+    {
+        this->mConcentrations[i] = data[i]*this->mReferenceConcentration;
+    }
 }
 
 template<unsigned DIM>
@@ -277,7 +283,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector
     vtkSmartPointer<vtkDoubleArray> pPointData = vtkSmartPointer<vtkDoubleArray>::New();
     pPointData->SetNumberOfComponents(1);
     pPointData->SetNumberOfTuples(data.size());
-    pPointData->SetName(this->GetLabel().c_str());
+    pPointData->SetName((this->GetLabel()+" mole m^-3").c_str());
     for (unsigned i = 0; i < data.size(); i++)
     {
         pPointData->SetValue(i, data[i]/unit::mole_per_metre_cubed);
@@ -311,7 +317,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateCellData()
     {
         for(unsigned jdx=0; jdx<point_cell_map[idx].size(); jdx++)
         {
-            point_cell_map[idx][jdx]->GetCellData()->SetItem(this->mLabel, this->mSolution[idx]);
+            point_cell_map[idx][jdx]->GetCellData()->SetItem(this->mLabel, this->mConcentrations[idx]/this->mReferenceConcentration);
         }
     }
 }
@@ -338,7 +344,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Write()
     RegularGridWriter writer;
     if(!this->mFilename.empty())
     {
-        writer.SetFilename((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/" + this->mFilename));
+        writer.SetFilename((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/" + this->mFilename+".vti"));
     }
     else
     {

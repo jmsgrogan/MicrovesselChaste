@@ -35,7 +35,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "AbstractCellPopulation.hpp"
 #include "boost/lexical_cast.hpp"
-#include "Debug.hpp"
 #include "MicrovesselSimulationModifier.hpp"
 
 template<unsigned DIM>

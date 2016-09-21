@@ -121,6 +121,7 @@ template class ParameterInstance<unit::diffusivity>;
 template class ParameterInstance<unit::solubility>;
 template class ParameterInstance<unit::membrane_permeability>;
 template class ParameterInstance<unit::diffusivity_per_concentration>;
+template class ParameterInstance<unit::volumetric_solubility>;
 
 #include "SerializationExportWrapperForCpp.hpp"
 EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::dimensionless)
@@ -149,3 +150,4 @@ EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::diffusivity)
 EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::solubility)
 EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::membrane_permeability)
 EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::diffusivity_per_concentration)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::volumetric_solubility)
