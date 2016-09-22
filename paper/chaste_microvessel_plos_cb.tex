@@ -198,61 +198,37 @@ Joe Pitt-Francis\textsuperscript{2}
 \\
 \bigskip
 
-% Insert additional author notes using the symbols described below. Insert symbol callouts after author names as necessary.
-% 
-% Remove or comment out the author notes below if they aren't used.
-%
-% Primary Equal Contribution Note
-%\Yinyang These authors contributed equally to this work.
-
-% Additional Equal Contribution Note
-% Also use this double-dagger symbol for special authorship notes, such as senior authorship.
-%\ddag These authors also contributed equally to this work.
-
-% Current address notes
-%\textcurrency Current Address: Dept/Program/Center, Institution Name, %City, State, Country % change symbol to "\textcurrency a" if more than one current address note
-% \textcurrency b Insert second current address 
-% \textcurrency c Insert third current address
-
-% Deceased author note
-%\dag Deceased
-
-% Group/Consortium Author Note
-%\textpilcrow Membership list can be found in the Acknowledgments section.
-
-% Use the asterisk to denote corresponding authorship and provide email address in note below.
 * grogan@maths.ox.ac.uk
 
 \end{flushleft}
-% Please keep the abstract below 300 words
+
 \section*{Abstract}
-Microvessel Chaste is an open-source software library for multi-scale agent-based modelling of tissues with microvessels. Development has focused on applications in spatial modelling of vascular tumours and wound healing. Problems of interest in these areas involve modelling blood flow, temporally evolving vessel network geometries and topologies and vessel interactions with diffusible chemicals. This library integrates discrete representations of microvessels with already re-usable components for agent-based modelling in Chaste, such as discrete cells, meshes and ordinary and partial differential equation (ODE/PDE) solvers. The aims of the library are to facilitate i) rapid model composition from a range of interchangeable sub-models, ii) management of a large number of input parameters from heterogenous literature sources and iii) integration of modelling with experimental observations. These aims are pertinent in the area of discrete vascular tissue modelling, where model cross-comparison and experimental validation are still in early stages. This article includes simple example applications of the library which can be run on a desktop computer. The source code is available to download under an open source Berkeley Software Distribution (BSD) licence at \url{https://chaste.cs.ox.ac.uk/trac/wiki/PaperTutorials/Microvessel}, together with details of a mailing list [JG: add mailing list info to landing page] and links to documentation and tutorials.
+Microvessel Chaste is an open-source software library for multi-scale agent-based modelling of tissues with microvessels. Development has focused on applications in spatial modelling of vascular tumours and wound healing. Problems of interest in these areas involve modelling blood flow, temporally evolving vessel network geometries and topologies and vessel interactions with diffusible chemicals. This library integrates discrete representations of microvessels with already re-usable components for agent-based modelling in Chaste, such as discrete cells, meshes and ordinary and partial differential equation (ODE/PDE) solvers. The aims of the library are to facilitate i) rapid model composition from a range of interchangeable sub-models, ii) management of a large number of input parameters from various literature sources and iii) integration of modelling with experimental observations. These aims are pertinent in the area of discrete vascular tissue modelling, where model cross-comparison and experimental validation are still in early stages. This article includes simple example applications of the library, which can be run on a desktop computer. The source code is available to download under an open source Berkeley Software Distribution (BSD) licence at \url{https://chaste.cs.ox.ac.uk/trac/wiki/PaperTutorials/Microvessel}, together with details of a mailing list and links to documentation and tutorials.
 
 \linenumbers
 
 % Use "Eq" instead of "Equation" for equation citations.
 \section*{Introduction}
-Cancer, Heart And Soft Tissue Environment (Chaste) is an open-source C++ library which has been developed to enable the study of problems in computational physiology and biology. As discussed in a dedicated article~\cite{Mirams2013}, the library has been designed with a focus on: i) facilitating the rapid development of computational models and methods through code re-use and documentation and ii) overcoming challenges related to the reliability and reproducbility of computational results. Chaste has been widely used in cardiac electrophysiology~\cite{Cooper2015}, developmental biology~\cite{Tetley2016} and cancer applications~\cite{Dunn2016}. While some applications have focused on tumour modelling~\cite{Figueredo2013}, the library does not have functionality for modelling microvessels. Chaste allows for the development of 'add-on' projects which share the same build system and documentation tools. Microvessel Chaste is an add-on project with functionality for discrete modelling of microvessels.
+Cancer, Heart And Soft Tissue Environment (Chaste) is an open-source C++ library for problems in computational physiology and biology. Chaste has been widely used in cardiac electrophysiology~\cite{Cooper2015} problems and in developing multi-scale agent based tissue models for developmental biology~\cite{Tetley2016} and cancer~\cite{Dunn2016} problems. Microvessel Chaste is an `add-on' project for Chaste, with functionality for including discrete microvessels in agent-based tissue models.
 
-Multi-scale agent-based modelling of tissue with microvessels, as applied in studying vascular tumours~\cite{Owen2011}, introduces several requirements beyond those faced by dedicated cell modelling software, notible examples of which are CompuCell3D~\cite{Swat2012}, EPISIM~\cite{Sutterlin2013} and PhysiCell~\cite{Macklin2012}. For example, i) line or surface based representations of vessels are needed in place of point or centre-based representations of cells, ii) blood flow and chemical transport problems are solved in vessel networks with constantly evolving vessel geometry and connectivity and iii) new vessels may form and migrate based on mechanical and chemical cues. These requirements are additional to those of cell-only frameworks, such as cell-cycling, migration, proliferation and interaction with diffusible chemicals. Models of this type typically use a relatively large number of input parameters (over 100 in Owen et al.~\cite{Owen2011}) from heterogeneous literature sources. In addition, there is a variety of ways in which a model can be composed from interchangeable sub-models, with interchangeable solution ordering. Development of Microvessel Chaste aims to implement the additional requirements for multi-scale agent-based modelling of tissue with microvessels, while adhering to the original Chaste Project design goals. This is done by focusing on i) \emph{extensibility}, ii) \emph{documentation}, iii) \emph{reproducibility} and iv) \emph{efficiency} of both models and code through the use of object oriented design, C++ for computational efficiency, and Boost Units~\cite{boost161} for compile-time dimensional analysis. 
+There are many dedicated software frameworks for agent-based cell modelling, including Chaste, CompuCell3D~\cite{Swat2012}, EPISIM~\cite{Sutterlin2013} and PhysiCell~\cite{Macklin2012}, however to the authors' knowledge, there is currently no similar framework for agent-based modelling of tissue with microvessels. Such computational models are widely used in studying vascular tumour and wound healing~\cite{Owen2011}, skeletal muscle~\cite{Secomb2004} and orthopaedic [JG add ref] problems. Multi-scale agent-based modelling of tissue with microvessels introduces several requirements in addition to those of cell modelling software. For example, i) line or surface based representations of vessels are needed in place of point or centre-based representations of cells, ii) blood flow and chemical transport problems are solved in vessel networks with constantly evolving vessel geometry and connectivity and iii) new vessels may form and migrate based on mechanical and chemical cues. 
 
-To the authors' knowledge there is currently no dedicated software framework for composing multi-scale agent-based models of tissue microvascaulture of the type in~\cite{Owen2011}. While the are many notable bespoke computational models of tissue microvascaulture, including Secomb et al.~\cite{Secomb2013}, Anderson and Chaplain~\cite{Anderson1998}, Friboes et al.~\cite{Frieboes2007}, Shirinifard et al.~\cite{Shirinifard2009} and Welter and Rieger~\cite{Welter2013}, the resulting software does not meet all of the following desirable attributes, i) availability under a permissive open source license, ii) API documentation and user tutorials, iii) capability for on- and off-lattice modelling of vessels in arbitary geometries in two and three dimensions and iv) use of object-oreinted design. These attributes are the focus of Microvessel Chaste.
+While the are many notable bespoke computational models of tissue microvascaulture, including Secomb \emph{et al.}~\cite{Secomb2013}, Anderson and Chaplain~\cite{Anderson1998}, Friboes \emph{et al.}~\cite{Frieboes2007}, Shirinifard \emph{et al.}~\cite{Shirinifard2009} and Welter and Rieger~\cite{Welter2013}, the resulting software does not meet all of the following desirable attributes, i) availability under a permissive open source license, ii) API documentation and user tutorials, iii) capability for on- and off-lattice modelling of vessels in arbitrary geometries in two and three dimensions and iv) use of object-oriented design. These attributes are the focus of Microvessel Chaste development, which uses object oriented design for \emph{extensibility}, C++ for computational \emph{efficiency}, and Boost Units~\cite{boost161} for compile-time dimensional analysis and improved \emph{reliability}. 
 
-The mentioned attributes allow utilization of the library in addressing two outstanding challenges in tissue microvascaulture modelling. \emph{First}, the importance of rapidly constructing and cross-comparing multi-scale agent-based models of tissue microvascaulture is well recognized, as are the challenges in developeing software for such an endeavour~\cite{Rieger2015, Connor2012}. One hurdle which the library helps overcome is the lack of open-source, documented software in the field. This has previously made it neccessary to re-implement each computational model before application, delaying comparison studies. While the present authors have previously developed and applied a range of multi-scale agent-based microvessel models in the areas of cancer~\cite{Alarcon2005, Perfahl2011} and angiogenesis~\cite{Connor2015}, their incorporation in Microvessel Chaste is the first time such models have been made available open-source, with documentation and tutorials. \emph{Second}, there is now a wealth of high resolution three-dimensional experimental imaging data against which model predictions can be compared~\cite{Tozer2004}. To fully exploit this data it is neccessary that three-dimensional tissue regions of resonable volume with realistic geometries can be simulated, as per~\cite{Grogan2016}. There are few approaches developed for this purpose in the literature. Such functionality is availble in the Microvessel Chaste library, including previously unpublished methods for three-dimensional off-lattice modelling of sprouting angiogenesis.  
+The mentioned attributes allow future utilization of the library in addressing two outstanding challenges in tissue microvascaulture modelling. \emph{First}, the importance of rapidly constructing and cross-comparing multi-scale agent-based models of tissue microvascaulture is well recognized, as are the challenges in developing software for such an endeavour~\cite{Rieger2015, Connor2012}. Due to a lack of open-source, documented software, it is currently necessary to re-implement each computational model before application, delaying comparison studies and reducing reproducibility. \emph{Second}, there is now a wealth of high resolution three-dimensional experimental imaging data against which model predictions can be compared~\cite{Tozer2004}. To fully exploit this data it is necessary that three-dimensional tissue regions of resonable volume with realistic geometries can be simulated, as per Grogan \emph{et al.}~\cite{Grogan2016}. There are few approaches developed for this purpose in the literature. This functionality is available in the Microvessel Chaste library, including previously unpublished methods for three-dimensional (3D) off-lattice modelling of sprouting angiogenesis.  
 
-This article accompanies the first release of the Microvessel Chaste library, although some elements have been used in previous studies~\cite{Connor2015, Grogan2016}. Code design and implementation are discussed in the next section, followed by a collection of simple sample applications. The sample applications are design to be quickly run on a desktop PC, in practice more expensive simulations are usually performed. Examples can be run and figures re-created by downloading the project from \url{https://chaste.cs.ox.ac.uk/trac/wiki/PaperTutorials/Microvessel}. 
+While the authors have previously developed and applied a range of multi-scale agent-based microvessel models in the areas of cancer~\cite{Alarcon2005, Perfahl2011, Grogan2016} and angiogenesis~\cite{Connor2015}, their incorporation in Microvessel Chaste is the first time such models have been made available open-source, with documentation and tutorials. Code design and implementation are discussed in the next section, followed by two sample applications. The sample applications are designed to be quickly run on a desktop PC, in practice more expensive simulations are usually performed. Examples can be run by downloading the project from \url{https://chaste.cs.ox.ac.uk/trac/wiki/PaperTutorials/Microvessel} and following the installation instructions. 
 
 \section*{Design and Implementation}
 
-This section briefly summarizes available algorithms by demonstrating how the library may be used to construct and solve a typical multi-scale agent-based microvessel problem. A dedicated article should be consulted for further details on algorithms related to core Chaste functionality, such as linear algebra, input/output, and discrete cell modelling~\cite{Mirams2013}. It is noted that development of the MicroVessel Chaste library has not strictly followed the Test-Driven Development and Agile-Programming practices adopted by the Chaste Project, although it aims for full unit-test and API documentation code coverage. The library can be used with Linux only, with virtual machines required for use on Microsoft Windows and Mac OS X. The C++ interface requires building from source after downloading and setting up dependencies, which can up to an hour the first time.
+This section briefly summarizes available algorithms by demonstrating how the library can be used to construct and solve a typical multi-scale agent-based microvessel problem. A dedicated article should be consulted for further details on algorithms related to core Chaste functionality, including discrete cell modelling~\cite{Mirams2013}. The library can be used with Linux only, with virtual machines required for use on Microsoft Windows and Mac OS X. To install Microvessel Chaste it is necessary to build from source after downloading and setting up dependencies. This can take up to an hour the first time.
 
 \subsection*{Algorithm Overivew}
 
-The library is designed for composing multi-scale agent-based problems for tissue with microvessels using on- and off-lattice representations of cells and vessels. While the library attempts to minimize the imposition of a definitive model structure on the user, it is helpful when introducing algorithms to consider a concentre use case. 
+The library is designed for composing multi-scale agent-based tissue problems with microvessels using on- and off-lattice representations of cells and vessels. While the library attempts to minimize the imposition of a definitive model structure on the user, it is helpful when introducing algorithms to consider a concrete use case. 
 
-Fig~\ref{fig1} shows how the library can be used to \emph{compose} a problem of interest in vascular tumour modelling. For further details on models of this type the reader can refer to Alarcon et al.~\cite{Alarcon2005} and Owen et al.~\cite{Owen2011}. In this example, an initial vessel network and cell population are constructed, transport PDEs for diffusible chemicals defined, rules for vessel growth or shrinkage due to blood flow defined, along with rules for vessel sprouting and endothelial tip cell migration in a stimulus field. The ability to compose a model from a collection of sub-models and sub-sub models is noted. Models and sub-models can be over-ridden by the user with both C++ and Python frameworks, which is useful for implenting custom migration and sprouting rules, for example. It is noted that there is a high degree of interaction between components. Once a domain, which is a geometrical feature in 2D or 3D, is defined it can be used in the construction of vessel networks and cell populations through multiple space-filling or boolean operations, and in the generation of a computational grid (mesh) for use in the solution of PDEs. Similarly, once vessel networks and cell populations have been defined they can be passed as objects (via shared pointers) to other components, allowing the definition of boundary conditions or PDE sinks and sources which depend on vessel and cell locations. Sub-models can be collected in hierarchical structures, for example a `Structural Adaptation Solver' can manage a `Flow Solver' and is itself managed by a `Microvessel Solver'. Alternatively, sub-models can be executed in isolation, for example to, i) simply solve a PDE with cell location dependent sink terms, or ii) assume cells are a continuum rather than agents by just using a `Microvessel Solver'.
+Fig~\ref{fig1} shows how the library can be used to \emph{compose} a problem of interest in vascular tumour modelling. For further details on models of this type the reader can refer to Owen \emph{et al.}~\cite{Owen2011}. Here, an initial vessel network and cell population are constructed, transport PDEs for diffusible chemicals configured and rules for vessel growth or shrinkage due to blood flow defined, along with rules for vessel sprouting and endothelial tip cell migration in a stimulus field. The ability to compose a model from a collection of sub-models and sub-sub models is noted. There is a high degree of interaction between components. Once a domain, which is a geometrical feature in two-dimensions (2D) or 3D, is defined it can be used in the construction of vessel networks and cell populations through multiple space-filling or boolean operations, and in the generation of a computational grid (mesh) for use in the solution of partial differential equations (PDEs). Sub-models can be collected in hierarchical structures, for example a `Structural Adaptation Solver' can manage a `Flow Solver' and is itself managed by a `Microvessel Solver'. Alternatively, sub-models can be executed in isolation, for example to simply solve a PDE with cell location dependent sink terms.
 
-% Place figure captions after the first paragraph in which they are cited.
 \begin{figure}[!h]
 \centering
 \includegraphics[width=0.9\textwidth]{Fig1.png}
@@ -261,9 +237,8 @@ A schematic showing the composition of a vascular tumour growth model using Micr
 \label{fig1}
 \end{figure}
 
-Fig~\ref{fig2} shows how the library can be used to \emph{solve} a problem of interest in vascular tumour modelling. Again, it is emphasised that the user need not follow the shown solution ordering, but can decide on ordering themselves by suitably over-riding `Solve()' and `Increment()' methods. It is noted that steps on the left-hand side of Fig~\ref{fig2} are already implemented as part of the agent-based cell modelling funcitonality in Chaste~\cite{Mirams2013}. The Microvessel Chaste library interacts with the cell based solution as a plug-in (called a `SimulationModifier') in Chaste, by modifying the contents of a cell population once per time step. This loose coupling gives some flexibility in model compposition, in that Microvessel Chaste can remain reasonably agnostic regarding the details of the cell solution procedure. However, since the `Microvessel Solver' has direct access to a cell population (via a pointer), as shown in Fig~\ref{fig1}, there is still scope for implementing detailed cell-vessel interactions if needed. In the example problem shown in Fig~\ref{fig2} vessels interact with (non-vessel) cells only via their shared influence on the solutions of chemical transport problems. Cell birth, death and cell-cycle progression can be affected by the PDE solution, which is sampled by each cell during the `CellDataUpdate' step. More detailed interactions such as cell-vessel spatial occlusion, or forming vessels from collections of discrete cells are also implemented in the library.
+Fig~\ref{fig2} shows how the library can be used to \emph{solve} a problem of interest in vascular tumour modelling. Again, it is emphasised that the user need not follow the shown solution ordering, but can decide on ordering themselves by suitably over-riding `Solve()' and `Increment()' methods. The steps on the left-hand side of Fig~\ref{fig2} are already implemented as part of the agent-based cell modelling funcitonality in Chaste~\cite{Mirams2013}. The Microvessel Chaste library interacts with the cell based solver as a plug-in (called a `SimulationModifier' in Chaste), by modifying the contents of a cell population once per time step. In the example problem shown in Fig~\ref{fig2} vessels interact with (non-vessel) cells only via their shared influence on the solutions of chemical transport problems. Cell birth, death and cell-cycle progression can be affected by the PDE solution, which is sampled by each cell during the `CellDataUpdate' step. More detailed interactions, such as cell-vessel spatial occlusion, or forming vessels from collections of discrete cells, are also possible.
 
-% Place figure captions after the first paragraph in which they are cited.
 \begin{figure}[!h]
 \centering
 \includegraphics[width=0.8\textwidth]{Fig2.png}
@@ -277,95 +252,65 @@ A schematic showing the solution of a vascular tumour growth model using Microve
 The components of the library are as follows:
 
 \begin{itemize}
-	\item geometry -- code for generating and describing 2D and 3D geometries using piece-wise linear complex (PLC) descriptions for direct use in Triangle and Tetgen meshing software.
-	\item mesh -- code for automated finite element meshing of 2D and 3D geometries and interpolation of vessel and cell locations onto meshes and regular grids. 
-	\item ode -- ode models for cell-cycling in vascular tumour problems.
+	\item geometry -- code for generating and describing 2D and 3D geometries using piece-wise linear complex (PLC) descriptions for direct use in Triangle [JG add ref] and Tetgen [JG add ref] meshing software,
+	\item mesh -- code for automated finite element meshing of 2D and 3D geometries and interpolation of vessel and cell locations onto meshes and regular grids,
+	\item ode -- ode models for cell-cycling in vascular tumour problems,
 	\item pde -- descriptions and solvers for steady state linear and non-linear PDEs with discrete sinks and sources for vessels and cells. Solvers use finite differences, finite element methods and Green's function methods~\cite{Secomb2013} based on Boost uBLAS and PETSc for vector and matrix operations.
-	\item population -- code for describing, reading, writing and generating vessel networks.
+	\item population -- Code for describing, reading, writing and generating vessel networks,
 	\item simulation -- flow, structural adaptation and angiogenesis solvers. Also code for managing integration of discrete vessel simulations with discrete cell populations from Chaste.
-	\item utility -- dimensional analysis and collection of literature parameters of interest for tissue microvascualture simulations.	
+	\item utility -- Dimensional analysis and collection of literature parameters of interest for tissue microvascualture simulations.	
 \end{itemize}
 
-As per the remainder of Chaste, object oriented programming, including templating in C++ are heavily utilized. Distinct from Chaste, shared pointers are used throughout to ease memory management. Input and output of vessel networks, regular grids, meshes and PDE results are in VTK (Paraview) format, which offer standard methods for visualization and post-processing. 
+As per the remainder of Chaste, object oriented programming, including templating in C++ are heavily utilized. Input and output of vessel networks, grids and PDE results are in VTK (Paraview) format, which allows use of standard tools for visualization and post-processing. Python bindings are generated automatically using Py++ with a CASTXML back-end. Pre-compiled C++ classes can be overloaded in Python, without the need to re-compile the full framework. This allows for automated, dynamic model (or sub-model) generation, for example based on the contents of a mark-up language based input file. Given the variety of modelling paradigms and large number of input parameters used in problems of interest, there is much potential for miss-use of units. Microvessel Chaste uses low-cost compile-time unit checking to ensure dimensional consistency and automatic solver-specific non-dimensionalisation through the Boost Units framework. The latter is useful for minimizing floating pointer errors during the solution of PDEs and flow problems.
 
-Python bindings are generated automatically using Py++ with a CASTXML backend. Automated generation is neccessary to account for the high degree of templating used in Chaste and Boost libraries and greatly eases code maintenance. A significant advantage of the provision of Python bindings for multi-scale agent-based models of this type is that compiled C++ classes can be overloaded in Python, without the need to re-compile the code. This gives allows for rapid and automatic model (or sub-model) generation based on mark-up language descriptions (for example, over-riding a cell cycle model based on an SBML description scraped from a web database).
-
-During the development of the library it became apparent that there was potential for mis-use of units when quantities are passed into solvers which a modeller may not be familiar with, but would like to use none-the-less. As a simple example, oxygen consumption rates are often quoted as amount per cell per time (e.g. moles per second). If one is solving an oxygen reaction-diffusion PDE with oxygen partial pressure as the solution quantity (e.g. mmHg) it may be tempting to insert the literature oxygen consumption rate as a discrete sink term, per cell. A result will be produced, but the inputs have had dimensional incompatibilities. How did we convert from a partial pressure (mmHg) to an amount (moles)? A solubility term (mole per mmHg per metre cubed) is needed to convert partial pressure to concentration and a volume term to convert concentration to amount. Where does the volume term come from? It is from a volume integral over a point source (or delta function) with a value depending on the chosen numerical method for solving the PDE (e.g. the cube of the grid spacing in a 3D finite difference method). With compile-time dimensional analysis the code will not compile in C++ (or throw a type conversion exception in Python) if the user attempts to use incompatible dimensions, forcing a re-think regarding what they are actually modelling. A second advantage of the dimensional analysis functionality is that it allows automatic solver-specific non-dimensionalisation, which saves the user from performing this step and can help to ensure sufficient floating point accuracy.
-
-% Results and Discussion can be combined.
 \section*{Results}
 
-In this section two example multi-scale agent-based problems are demonstrated, and are available for reproduction following wiki-based tutorials at \url{https://chaste.cs.ox.ac.uk/trac/wiki/PaperTutorials/Microvessel}.
+In this section two sample multi-scale agent-based problems are demonstrated, and are available for reproduction following wiki-based tutorials at \url{https://chaste.cs.ox.ac.uk/trac/wiki/PaperTutorials/Microvessel}.
 
 \subsection*{A 2D Lattice Based Vascular Tumour Simulation}
 
-The first example is a 2D lattice-based vascular tumour growth simulation following from Owen et al.~\cite{Owen2011}, but with some simplifications to reduce the computational expense of the tutorial. This example is to demonstrate the feasibility of replicating a well known vascular tumour growth simulation, which typifies many others in the literature (JG: add some model refs). It also demonstrates how the library interfaces with the functionality of well-known discrete cell modelling software, Chaste.
+The first example is a 2D lattice-based vascular tumour growth simulation following from Owen et al.~\cite{Owen2011}, but with some simplifications to reduce computational expense. This example demonstrates the feasibility of replicating a well known vascular tumour growth simulation, which typifies many others in the literature (JG: add some model refs). It also demonstrates how the library interfaces with the functionality of the Chaste discrete cell modelling software.
 
-The problem is initialized with two large, parallel, counterflowing vessels, positioned on a regular lattice. A cellullar automaton based cell population is used to fill all lattice sites, with `cancer' cell types assigned to a central circular region and `normal' types to the remainder, as shon in Fig~\ref{fig3}. Due to their distance from the large vessels the tumour cells will become hypoxic and release growth factor (VEGF). This stimulates the growth of new vessels, which  migrate preferentially towards the tumour due to growth factor gradients. As shown in Fig~\ref{fig3}A the sprouts can merge if they meet. Vessel diameters can change over time due to flow induced stimuli, with low flow vessels eventually pruned. As shown in Fig~\ref{fig3}B, new vessels allow for increased oxygenation of the domain and eventual tumour growth. The tumour cells grow at the expense of immediately surrounding `normal' cells.
+The problem is initialized with two large, parallel, counter-flowing vessels, positioned on a regular lattice. A cellular automaton based cell population is used to fill all lattice sites, with `cancer' cell types assigned to a central circular region and `normal' types to the remainder, as shown in Fig~\ref{fig3}. Due to their distance from the large vessels, the tumour cells will become hypoxic and release growth factor (VEGF). This stimulates the growth of new vessels, which migrate preferentially towards the tumour due to growth factor gradients. As shown in Fig~\ref{fig3}, the sprouts can merge if they meet. Vessel diameters can change over time due to flow induced stimuli, with low flow vessels eventually pruned. New vessels allow for increased oxygenation of the tissue and eventual tumour growth at the expense of immediately surrounding `normal' cells.
 
-There are many potential additions to models of this type which have been explored in the literature, including ....
+There are many potential additions to models of this type which have been explored in the literature, including chemo-therapeutic and anti-angiogeneic drugs[], radiotherapy[] and use of 3D domains[].
 
 % Place figure captions after the first paragraph in which they are cited.
 \begin{figure}[!h]
 \centering
 \includegraphics[width=0.99\textwidth]{Fig3.png}
-\caption{{\bf An example of how a microvessel model can be solved using Microvessel Chaste.}
-A schematic showing the solution of a vascular tumour growth model using Microvessel Chaste. It is noted that solution ordering can be readily changed by the user.}
+\caption{{\bf A 2D lattice based vascular tumour simulation performed using the Microvessel Chaste library.}
+(A) Top is a sample in-vivo image of tumour cells (green) surrounded by tumour promoted microvascaulture (red), obtained by multi-photon imaging. Bottom is a corresponding computational model of vascular tumour growth showing discrete vessels, cells labelled by mutation state and a corresponding oxygen map. (B) A snapshot of the predicted vessel growth stimulus field in response to blood flow. [JG: Scale bars, re-color bottom right to match experimental image. Maybe more specific that not actually modelling the experiment here.]}
 \label{fig3}
 \end{figure}
 
 \subsection*{A 3D Off-Lattice Angiogenesis Simulation}
 
-The second example is a 3D off-lattice simulation of angiogenesis on a curved surface. This example demonstrates more advanced features of the library in terms of 3D off-lattice angiogenesis and the solution of PDEs on arbitary domains. The application is in modelling the widely used corneal micropocket assay in the study of angiogenesis~\cite{Connor2015}. The authors are not aware of a previous study of angiogenesis on a curved surface in 3D. Discrete cells are excluded, which both reduces computational expense for the purposes of generating a tutorial and corresponds to a widely used modelling paradigm in which cells are treated as a continuum but vessels are modelled discretely~\cite{Secomb2013}.
+The second example is a 3D off-lattice simulation of angiogenesis on a curved surface, shown in Fig~\ref{fig4}. This example demonstrates more advanced features of the library in terms of geometry manipulation, 3D off-lattice angiogenesis and the solution of PDEs on arbitary 3D domains. The application is in modelling the widely used corneal micropocket assay in the study of angiogenesis~\cite{Connor2015}. In this assay a pellet containing a vessel growth stimulus (for example, VEGF) is implanted in the cornea. New vessels sprout from an existing limbal vessel at the base of the cornea and migrate toward the pellet along VEGF gradients. In the computational model discrete cells are excluded. This reduces computational expense for the purposes of generating a tutorial, and corresponds to a widely used modelling paradigm in which cells are treated as a continuum but vessels are modelled discretely~\cite{Secomb2013}. Extensions to this simple model include addition of discrete cells, and multiple vessel growth factors, as per the 2D model in Connor~\emph{et al.}~\cite{Connor2015}.
 
 % Place figure captions after the first paragraph in which they are cited.
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.6\textwidth]{Fig4.png}
-\caption{{\bf An example of how a microvessel model can be solved using Microvessel Chaste.}
-A schematic showing the solution of a vascular tumour growth model using Microvessel Chaste. It is noted that solution ordering can be readily changed by the user.}
+\includegraphics[width=0.99\textwidth]{Fig4.png}
+\caption{{\bf A 3D lattice based vascular tumour simulation performed using the Microvessel Chaste library.}
+(A) An example of a corneal micropocket assay highlighting the pellet (green) and growing microvessels (dark red). (B) A corresponding computational simulation showing a predicted VEGF concentration field (nM) and growth of new vessels towards the pellet. [JG add scale bars, fill top right gap with another figure?]}
 \label{fig4}
 \end{figure}
 
 \section*{Availability and Future Directions}
 
-Microvessel Chaste is available to download from the Chaste website  \url{https://chaste.cs.ox.ac.uk/trac/wiki/PaperTutorials/Microvessel}. The software is available under an open source Berkeley Software Distribution (BSD) licence. 
-
-Additional functionality for semi-automated 2D and 3D image segmentation and meshing is under development to aid integration with experimental studies. Porting to Windows and Mac OS X are of interest, with future availbaility of Python packages for each likely. At present, alrogithms operate in serial only, however there is scope for distributed memory parallelisation for both C++ and Python interfaces. All PDE, Green's function and flow solvers are based on PETSc structures and vessel network components may be communicated using existing serialization functionality in Chaste~\cite{Harvey} or through VTK based serialization.
+Microvessel Chaste is available to download from \url{https://chaste.cs.ox.ac.uk/trac/wiki/PaperTutorials/Microvessel} under an open source Berkeley Software Distribution (BSD) licence. Additional functionality for semi-automated 2D and 3D image segmentation and meshing is under development, to aid integration with experimental studies. Porting to Windows and Mac OS X are of interest, with future availability of Python packages for each likely. At present, algorithms operate in serial only, however there is scope for distributed memory parallelisation for both C++ and Python interfaces. All PDE and flow solvers are based on PETSc [] structures and vessel network components may be communicated using existing serialization functionality in Chaste~\cite{Harvey} or through VTK based serialization.
 
 \subsection*{How to Become an Active Developer}
 
-As discussed in Mirams et al.~\cite{Mirams2013}, contributions are welcome via the main Chaste website, which includes a developer wiki, mailing list details and the ability to open and comment on work tickets. A new git based version control system has recently been introduced for Chaste, which may further aid contribution in future.
-
-
-\section*{Supporting Information}
-
-% Include only the SI item label in the paragraph heading. Use the \nameref{label} command to cite SI items in the text.
-\paragraph*{S1 Fig.}
-\label{S1_Fig}
-{\bf Bold the title sentence.} Add descriptive text after the title of the item (optional).
-
-\paragraph*{S1 File.}
-\label{S1_File}
-{\bf Lorem Ipsum.}  Maecenas convallis mauris sit amet sem ultrices gravida. Etiam eget sapien nibh. Sed ac ipsum eget enim egestas ullamcorper nec euismod ligula. Curabitur fringilla pulvinar lectus consectetur pellentesque.
+As discussed in Mirams et al.~\cite{Mirams2013}, contributions are welcome via the main Chaste website, which includes a developer wiki, mailing list details and the ability to open and comment on work tickets. 
 
 \section*{Acknowledgments}
-Chaste team. Possibly contributors of vessel networks (e.g. Bostjan and co). Secomb for Greens Function code (our code has a re-write but maybe should also contact for general feedback).
+
+[JG Add acknowledgements and funding. Chaste team. Need to ask Bostjan for image permission, then acknowledge. Discuss image permissions with AJ.]
 
 \nolinenumbers
 
-% Either type in your references using
-% \begin{thebibliography}{}
-% \bibitem{}
-% Text
-% \end{thebibliography}
-%
-% or
-%
-% Compile your BiBTeX database using our plos2015.bst
-% style file and paste the contents of your .bbl file
-% here.
-% 
 \begin{thebibliography}{10}
 
 \bibitem{Mirams2013}
