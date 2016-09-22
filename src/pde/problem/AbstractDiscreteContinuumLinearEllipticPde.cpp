@@ -35,6 +35,7 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include <algorithm>
 #include "AbstractDiscreteContinuumLinearEllipticPde.hpp"
+#include "BaseUnits.hpp"
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::AbstractDiscreteContinuumLinearEllipticPde() :
@@ -46,7 +47,8 @@ AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::AbstractDisc
             mpRegularGrid(),
             mpMesh(),
             mUseRegularGrid(true),
-            mDiscreteConstantSourceStrengths()
+            mDiscreteConstantSourceStrengths(),
+            mReferenceConcentration(1.e-9 * unit::mole_per_metre_cubed)
 {
     mDiffusionTensor *= mDiffusivity.value();
 }
@@ -72,11 +74,13 @@ double AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::Compu
         {
             EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
         }
-        return (mConstantInUTerm + mDiscreteConstantSourceStrengths[pElement->GetIndex()])/unit::mole_per_metre_cubed_per_second;
+        units::quantity<unit::concentration_flow_rate> scaling_factor = mReferenceConcentration/BaseUnits::Instance()->GetReferenceTimeScale();
+        return (mConstantInUTerm + mDiscreteConstantSourceStrengths[pElement->GetIndex()]) / scaling_factor;
     }
     else
     {
-        return mConstantInUTerm/unit::mole_per_metre_cubed_per_second;
+        units::quantity<unit::concentration_flow_rate> scaling_factor = mReferenceConcentration/BaseUnits::Instance()->GetReferenceTimeScale();
+        return mConstantInUTerm/scaling_factor;
     }
 }
 
@@ -125,7 +129,8 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetIsotropicDiffusionConstant(units::quantity<unit::diffusivity> diffusivity)
 {
     mDiffusivity = diffusivity;
-    mDiffusionTensor = identity_matrix<double>(SPACE_DIM)* (mDiffusivity/unit::metre_squared_per_second);
+    units::quantity<unit::diffusivity> scaling_factor = (BaseUnits::Instance()->GetReferenceLengthScale()*BaseUnits::Instance()->GetReferenceLengthScale())/BaseUnits::Instance()->GetReferenceTimeScale();
+    mDiffusionTensor = identity_matrix<double>(SPACE_DIM)*(mDiffusivity/scaling_factor);
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -144,6 +149,12 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetUseRegularGrid(bool useRegularGrid)
 {
     mUseRegularGrid = useRegularGrid;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+void AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetReferenceConcentration(units::quantity<unit::concentration> referenceConcentration)
+{
+    mReferenceConcentration = referenceConcentration;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

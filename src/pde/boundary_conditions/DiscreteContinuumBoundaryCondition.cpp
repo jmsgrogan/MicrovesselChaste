@@ -48,7 +48,8 @@ DiscreteContinuumBoundaryCondition<DIM>::DiscreteContinuumBoundaryCondition()
         mValue(),
         mpRegularGrid(),
         mpMesh(),
-        mpNetwork()
+        mpNetwork(),
+        mReferenceConcentration(1.e-9*unit::mole_per_metre_cubed)
 {
 
 }
@@ -93,7 +94,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditionContainer(b
 
     if(mType == BoundaryConditionType::OUTER)
     {
-        pContainer->DefineConstantDirichletOnMeshBoundary(mpMesh.get(), mValue/unit::mole_per_metre_cubed);
+        pContainer->DefineConstantDirichletOnMeshBoundary(mpMesh.get(), mValue/mReferenceConcentration);
         apply_boundary = false;
     }
     else if(mType == BoundaryConditionType::FACET || mType == BoundaryConditionType::VESSEL_VOLUME)
@@ -111,7 +112,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditionContainer(b
                 std::pair<bool,units::quantity<unit::concentration> > result = GetValue((*iter).GetPoint().rGetLocation(), node_distance_tolerance);
                 if(result.first)
                 {
-                    ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result.second/unit::mole_per_metre_cubed);
+                    ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result.second/mReferenceConcentration);
                     pContainer->AddDirichletBoundaryCondition(&(*iter), p_fixed_boundary_condition, 0, false);
                 }
                 ++iter;
@@ -125,7 +126,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditionContainer(b
                 std::pair<bool,units::quantity<unit::concentration> > result = GetValue((*iter)->GetPoint().rGetLocation(), node_distance_tolerance);
                 if(result.first)
                 {
-                    ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result.second/unit::mole_per_metre_cubed);
+                    ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result.second/mReferenceConcentration);
                     pContainer->AddDirichletBoundaryCondition(*iter, p_fixed_boundary_condition);
                 }
                 ++iter;

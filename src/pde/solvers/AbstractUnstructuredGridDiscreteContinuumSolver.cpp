@@ -380,7 +380,7 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::Write()
         vtkSmartPointer<vtkXMLUnstructuredGridWriter> p_writer1 = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
         if(!this->mFilename.empty())
         {
-            p_writer1->SetFileName((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/" + this->mFilename).c_str());
+            p_writer1->SetFileName((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/" + this->mFilename+".vtu").c_str());
         }
         else
         {

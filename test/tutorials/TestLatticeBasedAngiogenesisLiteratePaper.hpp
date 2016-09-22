@@ -36,14 +36,14 @@ Copyright (c) 2005-2016, University of Oxford.
 #ifndef TESTLATTICEBASEDANGIOGENESISLITERATEPAPER_HPP_
 #define TESTLATTICEBASEDANGIOGENESISLITERATEPAPER_HPP_
 
-/* = Introduction =
+/* = A Lattice Based Angiogenesis Tutorial =
  * This tutorial is designed to introduce a lattice based angiogenesis problem based on a simplified version of the
  * vascular tumour application described in
  * [http://www.ncbi.nlm.nih.gov/pubmed/21363914 Owen et al. 2011]. It is a 2D simulation using cellular automaton
  * for cells, a regular grid for vessel movement and the same grid for the solution of partial differential equations
  * for oxygen and VEGF transport using the finite difference method.
  *
- * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/LatticeTurortialEndSample.tif, 20%, align=center, border=1)]]
+ * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/LatticeTurortialEndSample.png, 20%, align=center, border=1)]]
  *
  * = The Test =
  * Start by introducing the necessary header files. The first contain functionality for setting up unit tests,
@@ -125,11 +125,14 @@ public:
     void Test2dLatticeBased() throw (Exception)
     {
         /*
-         * Set up output file management
+         * Set up output file management.
          */
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestLatticeBasedAngiogenesisLiteratePaper"));
         /*
-         * Set up the base units. These are microns and seconds.
+         * This component uses explicit dimensions for all quantities, but interfaces with solvers which take
+         * non-dimensional inputs. The `BaseUnits` singleton takes time, length and mass reference scales to
+         * allow non-dimensionalisation when sending quantities to external solvers and re-dimensionalisation of
+         * results. For our purposes microns for length and hours for time are suitable base units.
          */
         units::quantity<unit::length> reference_length(1.0 * unit::microns);
         units::quantity<unit::time> reference_time(1.0* unit::hours);
@@ -137,9 +140,10 @@ public:
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         /*
          * Set up the lattice (grid), we will use the same dimensions as [http://www.ncbi.nlm.nih.gov/pubmed/21363914 Owen et al. 2011].
-         * Note that we are using hard-coded parameters from that paper. We will see how to dump these to file for inspection later.
-         * We annotate the parameter with "User" so we know we have instantiated it ourselves. Some solvers use parameter defaults
-         * and will annotate the parameter with their own name.
+         * Note that we are using hard-coded parameters from that paper. You can see the values by inspecting `Owen11Parameters.cpp`.
+         * Alternatively each parameter supports the `<<` operator for streaming. When we get the value of the parameter by doing
+         * `Owen11Parameters::mpLatticeSpacing->GetValue("User")` a record is kept that this parameter has been used in the simulation.
+         * A record of all parameters used in a simulation can be dumped to file on completion, as will be shown below.
          */
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         units::quantity<unit::length> grid_spacing = Owen11Parameters::mpLatticeSpacing->GetValue("User");
@@ -149,7 +153,8 @@ public:
         extents[1] = 51; // num_y
         p_grid->SetExtents(extents);
         /*
-         * We can write the lattice to file for quick visualization with Paraview.
+         * We can write the lattice to file for quick visualization with Paraview. Rendering of this and subsequent images is performed
+         * using standard Paraview operations, not detailed here.
          *
          * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/Lattice_Tutorial_Initial_Grid.png, 20%, align=center, border=1)]]
          *
@@ -157,7 +162,7 @@ public:
         p_grid->Write(p_handler);
         /*
          * Next, set up the vessel network, this will initially consist of two, large counter-flowing vessels. Also set the inlet
-         * and outlet pressures and flags and vessel (segment) radii.
+         * and outlet pressures and flags.
          */
         boost::shared_ptr<VesselNode<2> > p_node11 = VesselNode<2>::Create(0.0, 400.0, 0.0, reference_length);
         boost::shared_ptr<VesselNode<2> > p_node12 = VesselNode<2>::Create(2000.0, 400.0, 0.0, reference_length);
@@ -177,7 +182,7 @@ public:
         p_network->AddVessel(p_vessel1);
         p_network->AddVessel(p_vessel2);
         /*
-         * We can write the network to file for quick visualization with Paraview.
+         * Again, we can write the network to file for quick visualization with Paraview.
          *
          * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/Lattice_Angiogenesis_Tutorial_Grid_Vessels.png, 20%, align=center, border=1)]]
          *
@@ -209,6 +214,9 @@ public:
         boost::shared_ptr<CellBasedDiscreteSource<2> > p_cell_oxygen_sink = CellBasedDiscreteSource<2>::Create();
         p_cell_oxygen_sink->SetLinearInUConsumptionRatePerCell(Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
         p_oxygen_pde->AddDiscreteSource(p_cell_oxygen_sink);
+        /*
+        * Add a boundary condition for vessel oxygen release.
+        */
         boost::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_ox_boundary = DiscreteContinuumBoundaryCondition<2>::Create();
         p_ox_boundary->SetType(BoundaryConditionType::VESSEL_LINE);
         p_ox_boundary->SetSource(BoundaryConditionSource::PRESCRIBED);
@@ -218,6 +226,9 @@ public:
                 GenericParameters::mpGasConcentrationAtStp->GetValue("User") * vessel_oxygen_partial_pressure;
         p_ox_boundary->SetValue(vessel_oxygen_concentration);
         p_ox_boundary->SetNetwork(p_network);
+        /*
+        * Set up a finite difference solver and pass it the pde, boundary conditions and grid.
+        */
         boost::shared_ptr<FiniteDifferenceSolver<2> > p_oxygen_solver = FiniteDifferenceSolver<2>::Create();
         p_oxygen_solver->SetPde(p_oxygen_pde);
         p_oxygen_solver->AddBoundaryCondition(p_ox_boundary);
@@ -232,9 +243,10 @@ public:
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_vegf_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
         p_vegf_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpVegfDiffusivity->GetValue("User"));
         p_vegf_pde->SetContinuumLinearInUTerm(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
-        // VEGF release for normal cells and quiescent cancer cells:
-        // normal cells release only when intracellular vegf reaches a certain value
-        // quiescent cancer cells always release vegf
+        /*
+        * Set up a map for different release rates depending on cell type. Also include a threshold intracellular VEGF below which
+        * there is no release.
+        */
         boost::shared_ptr<CellStateDependentDiscreteSource<2> > p_normal_and_quiescent_cell_source = CellStateDependentDiscreteSource<2>::Create();
         std::map<unsigned, units::quantity<unit::concentration_flow_rate> > normal_and_quiescent_cell_rates;
         std::map<unsigned, units::quantity<unit::concentration> > normal_and_quiescent_cell_rate_thresholds;
@@ -248,6 +260,9 @@ public:
         p_normal_and_quiescent_cell_source->SetLabelName("VEGF");
         p_normal_and_quiescent_cell_source->SetStateRateThresholdMap(normal_and_quiescent_cell_rate_thresholds);
         p_vegf_pde->AddDiscreteSource(p_normal_and_quiescent_cell_source);
+        /*
+        * Set up a finite difference solver as before.
+        */
         boost::shared_ptr<FiniteDifferenceSolver<2> > p_vegf_solver = FiniteDifferenceSolver<2>::Create();
         p_vegf_solver->SetPde(p_vegf_pde);
         p_vegf_solver->SetLabel("VEGF_Extracellular");
@@ -263,6 +278,9 @@ public:
         p_network->SetSegmentRadii(large_vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
         p_network->SetSegmentViscosity(viscosity);
+        /*
+        * Set up the pre- and post flow calculators.
+        */
         boost::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
         boost::shared_ptr<ConstantHaematocritSolver<2> > p_haematocrit_calculator = ConstantHaematocritSolver<2>::Create();
         p_haematocrit_calculator->SetHaematocrit(Owen11Parameters::mpInflowHaematocrit->GetValue("User"));
@@ -270,6 +288,9 @@ public:
         boost::shared_ptr<MechanicalStimulusCalculator<2> > p_mech_stimulus_calculator = MechanicalStimulusCalculator<2>::Create();
         boost::shared_ptr<ShrinkingStimulusCalculator<2> > p_shrinking_stimulus_calculator = ShrinkingStimulusCalculator<2>::Create();
         boost::shared_ptr<ViscosityCalculator<2> > p_viscosity_calculator = ViscosityCalculator<2>::Create();
+        /*
+        * Set up and configure the structural adaptation solver.
+        */
         boost::shared_ptr<StructuralAdaptationSolver<2> > p_structural_adaptation_solver = StructuralAdaptationSolver<2>::Create();
         p_structural_adaptation_solver->SetTolerance(0.0001);
         p_structural_adaptation_solver->SetMaxIterations(100);
@@ -281,11 +302,12 @@ public:
 //        p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_shrinking_stimulus_calculator);
         p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_viscosity_calculator);
         /*
-         * Set up a regression solver
+         * Set up a regression solver.
          */
-        boost::shared_ptr<WallShearStressBasedRegressionSolver<2> > p_regression_solver = WallShearStressBasedRegressionSolver<2>::Create();
+        boost::shared_ptr<WallShearStressBasedRegressionSolver<2> > p_regression_solver =
+                WallShearStressBasedRegressionSolver<2>::Create();
         /*
-         * Set up an angiogenesis solver
+         * Set up an angiogenesis solver and add sprouting and migration rules.
          */
         boost::shared_ptr<AngiogenesisSolver<2> > p_angiogenesis_solver = AngiogenesisSolver<2>::Create();
         boost::shared_ptr<Owen2011SproutingRule<2> > p_sprouting_rule = Owen2011SproutingRule<2>::Create();
@@ -297,7 +319,7 @@ public:
         p_angiogenesis_solver->SetVesselGrid(p_grid);
         p_angiogenesis_solver->SetVesselNetwork(p_network);
          /*
-         * The microvessel solver will manage all aspects of the vessel solve
+         * The microvessel solver will manage all aspects of the vessel solve.
          */
         boost::shared_ptr<MicrovesselSolver<2> > p_microvessel_solver = MicrovesselSolver<2>::Create();
         p_microvessel_solver->SetVesselNetwork(p_network);
@@ -308,7 +330,8 @@ public:
         p_microvessel_solver->SetRegressionSolver(p_regression_solver);
         p_microvessel_solver->SetAngiogenesisSolver(p_angiogenesis_solver);
         /*
-         * The microvessel solution modifier will link the vessel and cell solvers
+         * The microvessel solution modifier will link the vessel and cell solvers. We need to explicitly tell is
+         * which extracellular fields to update based on PDE solutions.
          */
         boost::shared_ptr<MicrovesselSimulationModifier<2> > p_microvessel_modifier = MicrovesselSimulationModifier<2>::Create();
         p_microvessel_modifier->SetMicrovesselSolver(p_microvessel_solver);
@@ -327,7 +350,7 @@ public:
         boost::shared_ptr<ApoptoticCellKiller<2> > p_apoptotic_cell_killer(new ApoptoticCellKiller<2>(p_cell_population.get()));
         simulator.AddCellKiller(p_apoptotic_cell_killer);
         /*
-         * Another modifier for updating cell cycle quantities
+         * Add another modifier for updating cell cycle quantities.
          */
         boost::shared_ptr<Owen2011TrackingModifier<2> > p_owen11_tracking_modifier(new Owen2011TrackingModifier<2>);
         simulator.AddSimulationModifier(p_owen11_tracking_modifier);
@@ -347,7 +370,7 @@ public:
          */
         simulator.Solve();
         /*
-         * Dump the parameters to file
+         * Dump the parameters to file for inspection.
          */
         ParameterCollection::Instance()->DumpToFile(p_handler->GetOutputDirectoryFullPath()+"parameter_collection.xml");
     }

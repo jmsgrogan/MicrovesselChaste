@@ -46,7 +46,7 @@ OffLatticeMigrationRule<DIM>::OffLatticeMigrationRule()
       mGlobalZ(zero_vector<double>(DIM)),
       mMeanAngles(std::vector<double>(DIM, 0.0)),
       mSdvAngles(std::vector<double>(DIM, M_PI/18.0)),
-      mVelocity(20.0 *(3600/1.e-6) * unit::metre_per_second), // um/hr
+      mVelocity(20.0 *(1.e-6/3600.0) * unit::metre_per_second), // um/hr
       mChemotacticStrength(1.0),
       mAttractionStrength(1.0),
       mProbeLength(5.0 * 1.e-6 * unit::metres),
@@ -107,7 +107,6 @@ std::vector<c_vector<double, DIM> > OffLatticeMigrationRule<DIM>::GetDirections(
         std::vector<c_vector<double, DIM> > movement_vectors(rNodes.size(), zero_vector<double>(DIM));
         for(unsigned idx=0; idx<rNodes.size(); idx++)
         {
-
             double angle_x = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0], mSdvAngles[0]);
             double angle_y = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[1], mSdvAngles[1]);
             double angle_z = 0.0;
@@ -249,7 +248,6 @@ std::vector<c_vector<double, DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsF
             // parallel segments, chose any normal to the first tangent
             c_vector<double, DIM> normal;
             c_vector<double, DIM> tangent = rNodes[idx]->GetSegments()[0]->GetUnitTangent();
-
             if(DIM==2 or tangent[2]==0.0)
             {
                 if(tangent[1] == 0.0)

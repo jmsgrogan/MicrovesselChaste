@@ -7,7 +7,7 @@ Click on the images below to see some example applications.
 
 [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/haematocrit.png, 20%, align=centre, border=1, link=PaperTutorials/Microvessel/BloodFlow)]]
 [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/LatticeTutorialSampleGrowth.png, 20%, align=centre, border=1, link=PaperTutorials/Microvessel/LatticeBasedAngiogenesis)]]
-
+[[Image(source:/chaste/projects/Microvessel/test/tutorials/images/OffLatticeMidPoint.png, 20%, align=centre, border=1, link=PaperTutorials/Microvessel/OffLatticeAngiogenesis)]]
 
 = Installation = #Installation
 The project can be used directly as a typical C++ Chaste project. First, Chaste dependencies need to be built following the [wiki:InstallGuides/InstallGuide Chaste Install Guide]. 
@@ -38,7 +38,7 @@ cmake $CHASTE_SOURCE_DIR
 make project_Microvessel -j $NUM_AVAILABLE_CPUS
 }}}
 
-The will build the C++ library and all tests. To avoid building tests do:
+This will build the C++ library and all tests. To avoid building tests do:
 
 {{{
 make chaste_project_Microvessel -j $NUM_AVAILABLE_CPUS
