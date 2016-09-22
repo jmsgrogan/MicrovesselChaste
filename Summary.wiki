@@ -1,27 +1,26 @@
 = Microvessel Project =
 
 The Microvessel project is a Chaste add-on library with functionality for modelling blood flow, angiogenesis and nutrient transport in micro-vessels. 
-It is overviewed in the [source:chaste/projects/Microvessel/paper/chaste_microvessel_plos_cb.pdf pre-print here].
+It is overviewed in the [source:chaste/projects/Microvessel/paper/chaste_microvessel_plos_cb.pdf pre-print here]. Detailed [#Installation installation instructions] are below.
 
 Click on the images below to see some example applications. 
-Detailed installation instructions are below.
 
 [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/haematocrit.png, 20%, align=centre, border=1, link=PaperTutorials/Microvessel/BloodFlow)]]
+[[Image(source:/chaste/projects/Microvessel/test/tutorials/images/LatticeTutorialSampleGrowth.png, 20%, align=centre, border=1, link=PaperTutorials/Microvessel/LatticeBasedAngiogenesis)]]
 
 
-= Installation =
-The project can be used directly as a typical C++ Chaste project or else as a Python package (with some extra dependencies).
-First, Chaste dependencies need to be built from source following the [wiki:InstallGuides/InstallGuide Chaste Install Guide]. 
+= Installation = #Installation
+The project can be used directly as a typical C++ Chaste project. First, Chaste dependencies need to be built following the [wiki:InstallGuides/InstallGuide Chaste Install Guide]. 
 The project only supports the development version of Chaste. This can be obtained by doing:
 
 {{{
-svn --username anonymous checkout https://chaste.cs.ox.ac.uk/svn/chaste/trunk/ Chaste
+git clone https://chaste.cs.ox.ac.uk/git/chaste.git $CHASTE_SOURCE_DIR
 }}}
 
-using subversion. The project code itself can be obtained by doing: 
+The project code itself can be obtained by doing: 
 
 {{{
-svn co "https://chaste.cs.ox.ac.uk/svn/chaste/projects/Microvessel"
+svn co "https://chaste.cs.ox.ac.uk/svn/chaste/projects/Microvessel" $MICROVESSEL_PROJECT_SOURCE_DIR
 }}}
 
 The Microvessel project code needs to be included in the main Chaste source. This can be done with a symbolic link:
@@ -31,33 +30,22 @@ cd $CHASTE_SOURCE_DIR/projects
 ln -s $MICROVESSEL_PROJECT_SOURCE_DIR
 }}}
 
-The C++ libraries can be built using either the standard Chaste Scons build system (see [wiki:ChasteGuides/DeveloperBuildGuide Chaste Developer Build Guide]) or the new [wiki:ChasteGuides/CmakeBuildGuide CMake build system] (preffered). 
-For CMake, first create a build directory outside the source tree and proceed as:
+The C++ libraries can be built using the [wiki:ChasteGuides/CmakeBuildGuide Chaste CMake build system]. First, create a build directory outside the source tree and proceed as:
 
 {{{
-cd $BUILD_DIR
+cd $CHASTE_BUILD_DIR
 cmake $CHASTE_SOURCE_DIR
-make project_Microvessel
+make project_Microvessel -j $NUM_AVAILABLE_CPUS
 }}}
 
 The will build the C++ library and all tests. To avoid building tests do:
 
 {{{
-make chaste_project_Microvessel
+make chaste_project_Microvessel -j $NUM_AVAILABLE_CPUS
 }}}
 
-as the final command. 
-
-== Python Package ==
-A [http://conda.pydata.org/docs/intro.html conda] Python package for Linux is currently under development. In the meantime this package needs to be built from source as a PyChaste module. First, build PyChaste following the instructions [wiki:PaperTutorials/PyChaste here]. Then, follow the above C++ instructions to build the Microvessel project, but with the additional CMake flag `-DBUILD_MICROVESSEL_PYTHON=ON`. The final steps should look like:
-
-{{{
-cmake -DBUILD_MICROVESSEL_PYTHON=ON $CHASTE_SOURCE_DIR
-make project_Microvessel
-make project_Microvessel_Python
-}}}
-
-The Python package `microvessel` will be in `$BUILD_DIR` under `Chaste/projects/Microvessel/python`. The finished package should be copied into the `chaste/projects` module of PyChaste. 
+as the final command. The [wiki:ChasteGuides/CmakeBuildGuide Chaste CMake build system guide] should be consulted for options related to generating optimized builds, running
+other types of test and installation as a system library.
 
 == C++ Usage ==
 The source and test code are in the `src` and `test` folders respectively.  Unit tests can be built and run using the Chaste CMake framework [wiki:ChasteGuides/CmakeBuildGuide as detailed here]. It is recommended that the [wiki:PaperTutorials/Microvessel/BuildVesselNetwork tutorials] are followed. To run the first tutorial do:
@@ -71,6 +59,18 @@ To run all C++ tests and tutorials do:
 {{{
 ctest -L project_Microvessel
 }}}
+
+== Python Package (Under Development) ==
+A [http://conda.pydata.org/docs/intro.html conda] Python package for Linux is currently under development. In the meantime this package needs to be built from source as a PyChaste module. First, build PyChaste following the instructions [wiki:PaperTutorials/PyChaste here]. 
+Then, follow the above C++ instructions to build the Microvessel project, but with the additional CMake flag `-DBUILD_MICROVESSEL_PYTHON=ON`. The final steps should look like:
+
+{{{
+cmake -DBUILD_MICROVESSEL_PYTHON=ON $CHASTE_SOURCE_DIR
+make project_Microvessel
+make project_Microvessel_Python
+}}}
+
+The Python package `microvessel` will be in `$BUILD_DIR` under `Chaste/projects/Microvessel/python`. The finished package should be copied into the `chaste/projects` module of PyChaste. 
 
 == Python Usage ==
 The Python source and tests are in the `src/python` and `test/python` folders. The [wiki:PaperTutorials/Microvessel/PythonBuildVesselNetwork Python tutorials] should be followed next.
