@@ -50,7 +50,8 @@ MicrovesselSolver<DIM>::MicrovesselSolver() :
         mpStructuralAdaptationSolver(),
         mpAngiogenesisSolver(),
         mpRegressionSolver(),
-        mDiscreteContinuumSolversHaveCompatibleGridIndexing(false)
+        mDiscreteContinuumSolversHaveCompatibleGridIndexing(false),
+        mUpdatePdeEachSolve(true)
 {
 
 }
@@ -72,6 +73,12 @@ template<unsigned DIM>
 void MicrovesselSolver<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpNetwork = pNetwork;
+}
+
+template<unsigned DIM>
+void MicrovesselSolver<DIM>::SetUpdatePdeEachSolve(bool doUpdate)
+{
+    mUpdatePdeEachSolve = doUpdate;
 }
 
 template<unsigned DIM>
@@ -102,6 +109,11 @@ void MicrovesselSolver<DIM>::Increment()
     {
         for(unsigned idx=0; idx<mDiscreteContinuumSolvers.size(); idx++)
         {
+            if(num_steps>0 and !mUpdatePdeEachSolve)
+            {
+                break;
+            }
+
             mDiscreteContinuumSolvers[idx]->Update();
             mDiscreteContinuumSolvers[idx]->SetFileName("/" + mDiscreteContinuumSolvers[idx]->GetLabel() +"_solution_" + boost::lexical_cast<std::string>(num_steps));
 

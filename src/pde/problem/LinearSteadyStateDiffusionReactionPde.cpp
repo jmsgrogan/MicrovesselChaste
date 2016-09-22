@@ -35,6 +35,7 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include <algorithm>
 #include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "BaseUnits.hpp"
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 LinearSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::LinearSteadyStateDiffusionReactionPde() :
@@ -68,11 +69,13 @@ double LinearSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeLin
         {
             EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
         }
-        return (mLinearInUTerm + mDiscreteLinearSourceStrengths[pElement->GetIndex()])/unit::per_second;
+        units::quantity<unit::rate> scaling_factor = (1.0/BaseUnits::Instance()->GetReferenceTimeScale());
+        return (mLinearInUTerm + mDiscreteLinearSourceStrengths[pElement->GetIndex()])/scaling_factor;
     }
     else
     {
-        return mLinearInUTerm/unit::per_second;
+        units::quantity<unit::rate> scaling_factor = (1.0/BaseUnits::Instance()->GetReferenceTimeScale());
+        return mLinearInUTerm/scaling_factor;
     }
 }
 

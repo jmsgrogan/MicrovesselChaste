@@ -37,30 +37,24 @@ Copyright (c) 2005-2016, University of Oxford.
 #define TESOFFLATTICEANGIOGENESISLITERATEPAPER_HPP_
 
 /* = An Off Lattice Angiogenesis Tutorial =
- * This tutorial demonstrates most features of the Microvessel Project code. It can be used
- * to get a rough idea of how the code works, and then individual components can
- * be looked at in more detailed, dedicated tutorials.
+ * This tutorial demonstrates functionality for modelling 3D off-lattice angiogenesis in a corneal micro
+ * pocket application, similar to that described in [http://rsif.royalsocietypublishing.org/content/12/110/20150546.abstract Connor et al. 2015].
+ * It is a 3D simulation modelling VEGF diffusion and decay from an implanted pellet using finite element methods and lattice-free angiogenesis
+ * from a large limbal vessel towards the pellet.
  *
- * The following is covered:
- * * Defining domains using geometry primitives
- * * Setting up vessel networks and cell populations
- * * Setting up PDEs and flow problems
- * * Setting up an angiogenesis solver
- * * Interacting with Cell Based Chaste
+ * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/OffLatticeMidPoint.png, 20%, align=center, border=1)]]
  *
  * = The Test =
  * Start by introducing the necessary header files. The first contain functionality for setting up unit tests,
- * smart pointer tools and output management.
+ * smart pointer tools and output management,
  */
 #include <cxxtest/TestSuite.h>
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
-#include "AbstractCellBasedWithTimingsTestSuite.hpp"
 #include "SmartPointers.hpp"
 #include "OutputFileHandler.hpp"
 #include "FileFinder.hpp"
 #include "RandomNumberGenerator.hpp"
 /*
- * Dimensional analysis.
+ * dimensional analysis,
  */
 #include "DimensionalChastePoint.hpp"
 #include "UnitCollection.hpp"
@@ -69,18 +63,18 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "ParameterCollection.hpp"
 #include "BaseUnits.hpp"
 /*
- * Geometry tools.
+ * geometry tools,
  */
 #include "MappableGridGenerator.hpp"
 #include "Part.hpp"
 /*
- * Vessel networks.
+ * vessel networks,
  */
 #include "VesselNode.hpp"
 #include "VesselNetwork.hpp"
 #include "VesselNetworkGenerator.hpp"
 /*
- * Flow.
+ * flow,
  */
 #include "VesselImpedanceCalculator.hpp"
 #include "FlowSolver.hpp"
@@ -89,22 +83,25 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "WallShearStressCalculator.hpp"
 #include "MechanicalStimulusCalculator.hpp"
 /*
- * Grids and PDEs.
+ * grids and PDEs,
  */
 #include "DiscreteContinuumMesh.hpp"
+#include "DiscreteContinuumMeshGenerator.hpp"
 #include "VtkMeshWriter.hpp"
 #include "FiniteElementSolver.hpp"
 #include "DiscreteSource.hpp"
 #include "VesselBasedDiscreteSource.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
+#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "AbstractCellBasedWithTimingsTestSuite.hpp"
 /*
- * Angiogenesis
+ * angiogenesis and regression,
  */
 #include "OffLatticeSproutingRule.hpp"
 #include "OffLatticeMigrationRule.hpp"
 #include "AngiogenesisSolver.hpp"
 /*
- * Runs the full simulation
+ * and classes for managing the simulation.
  */
 #include "MicrovesselSolver.hpp"
 /*
@@ -114,186 +111,180 @@ Copyright (c) 2005-2016, University of Oxford.
 class TestOffLatticeAngiogenesisLiteratePaper : public AbstractCellBasedWithTimingsTestSuite
 {
 public:
-    /*
-     * = Test 1 - Angiogenesis With No Cells =
-     * In the first example angiogenesis is simulated without interaction with a cell population.
-     */
-    void TestVesselsOnly() throw(Exception)
+
+    void Test3dLatticeFree() throw(Exception)
     {
         /*
-         * We will work in microns
+         * Set up output file management.
+         */
+        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestOffLatticeAngiogenesisLiteratePaper"));
+        /*
+         * This component uses explicit dimensions for all quantities, but interfaces with solvers which take
+         * non-dimensional inputs. The `BaseUnits` singleton takes time, length and mass reference scales to
+         * allow non-dimensionalisation when sending quantities to external solvers and re-dimensionalisation of
+         * results. For our purposes microns for length and hours for time are suitable base units.
          */
         units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        units::quantity<unit::time> reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
+        BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         /*
-         * Create  a cylindrical domain, outside of which no vessels can move. Write it to
-         * file for visualization.
+         * Set up the domain representing the cornea. This is a thin hemispherical shell. We assume some symmetry to
+         * reduce computational expense.
          */
-        units::quantity<unit::length> domain_radius(0.005 * unit::metres);
-        units::quantity<unit::length> domain_height(0.001 * unit::metres);
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCylinder(domain_radius, domain_height, DimensionalChastePoint<3>(domain_radius/reference_length,
-                                                                                      domain_radius/reference_length, 0.0));
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestOffLatticeAngiogenesisLiteratePaper/TestVesselsOnly"));
-        p_domain->Write(p_handler->GetOutputDirectoryFullPath()+"domain.vtp");
+        MappableGridGenerator hemisphere_generator;
+        units::quantity<unit::length> radius(1400.0 * unit::microns);
+        units::quantity<unit::length> thickness(100.0 * unit::microns);
+        unsigned num_divisions_x = 10;
+        unsigned num_divisions_y = 10;
+        double azimuth_angle = 1.0 * M_PI;
+        double polar_angle = 0.5 * M_PI;
+        boost::shared_ptr<Part<3> > p_domain = hemisphere_generator.GenerateHemisphere(radius/reference_length,
+                                                                                         thickness/reference_length,
+                                                                                         num_divisions_x,
+                                                                                         num_divisions_y,
+                                                                                         azimuth_angle,
+                                                                                         polar_angle);
         /*
-         * Set up a vessel network, which will span the base of the domain.
+         * Set up a vessel network, with divisions roughly every 'cell length'. Initially it is straight. We will map it onto the hemisphere.
          */
-        units::quantity<unit::length> target_width = 2.2*domain_radius;
-        units::quantity<unit::length> target_height = 2.2*domain_radius;
-        units::quantity<unit::length> vessel_length(300.0*unit::microns);
         VesselNetworkGenerator<3> network_generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
-                                                                                                    target_height,
-                                                                                                    vessel_length);
-        DimensionalChastePoint<3> translation_vector(0.0, 0.0, 100.0, reference_length);
-        p_network->Translate(translation_vector);
-        /*
-         * Remove any vessel with both nodes outside the domain.
-         */
-        p_domain->BooleanWithNetwork(p_network);
-        /*
-         * Set a random selection of nodes as inlets and outlets
-         */
-        RandomNumberGenerator::Instance()->Reseed(1101001);
+        units::quantity<unit::length> vessel_length = M_PI * radius;
+        units::quantity<unit::length> cell_length(40.0 * unit::microns);
+        boost::shared_ptr<VesselNetwork<3> > p_network  = network_generator.GenerateSingleVessel(vessel_length,
+                                                                                                 DimensionalChastePoint<3>(0.0, 4000.0, 0.0),
+                                                                                                 unsigned(vessel_length/cell_length) + 1, 0);
+
+        p_network->GetNode(0)->GetFlowProperties()->SetIsInputNode(true);
+        p_network->GetNode(0)->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue("User"));
+        p_network->GetNode(p_network->GetNumberOfNodes()-1)->GetFlowProperties()->SetIsOutputNode(true);
+        p_network->GetNode(p_network->GetNumberOfNodes()-1)->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue("User"));
         std::vector<boost::shared_ptr<VesselNode<3> > > nodes = p_network->GetNodes();
-        units::quantity<unit::pressure> inlet_pressure = Owen11Parameters::mpInletPressure->GetValue();
-        units::quantity<unit::pressure> outlet_pressure = Owen11Parameters::mpOutletPressure->GetValue();
-        for(unsigned idx=0;idx<nodes.size();idx++)
+        for(unsigned idx =0; idx<nodes.size(); idx++)
         {
-            if(nodes[idx]->GetNumberOfSegments()==1)
-            {
-                unsigned rand_num = RandomNumberGenerator::Instance()->randMod(10);
-                if(rand_num==0)
-                {
-                    nodes[idx]->GetFlowProperties()->SetIsInputNode(true);
-                    nodes[idx]->GetFlowProperties()->SetPressure(inlet_pressure);
-                }
-                else if(rand_num<=1)
-                {
-                    nodes[idx]->GetFlowProperties()->SetIsOutputNode(true);
-                    nodes[idx]->GetFlowProperties()->SetPressure(outlet_pressure);
-                }
-            }
+            double node_azimuth_angle = azimuth_angle * nodes[idx]->rGetLocation()[0]*reference_length/vessel_length;
+            double node_polar_angle = polar_angle*nodes[idx]->rGetLocation()[1]*reference_length/vessel_length;
+            double dimless_radius = (radius-0.5*thickness)/reference_length;
+            DimensionalChastePoint<3>new_position(dimless_radius * std::cos(node_azimuth_angle) * std::sin(node_polar_angle),
+                                                  dimless_radius * std::cos(node_polar_angle),
+                                                  dimless_radius * std::sin(node_azimuth_angle) * std::sin(node_polar_angle),
+                                                  reference_length);
+            nodes[idx]->SetLocation(new_position);
         }
-        /*
-         * Use the structural adaptation solver to iterate until the flow reaches steady state
+        /* The initial domain and vessel network now look as follows:
+         *
+         * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/OffLatticeTurorialHemisphere.png, 20%, align=center, border=1)]]
+         *
+         * In the experimental assay a pellet containing VEGF is implanted near the top of the cornea. We model this
+         * as a fixed concentration of VEGF in a cuboidal region. First set up the vegf sub domain.
          */
-        units::quantity<unit::length> vessel_radius(40.0*unit::microns);
-        p_network->SetSegmentRadii(vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
-        p_network->SetSegmentViscosity(viscosity);
-        p_network->Write(p_handler->GetOutputDirectoryFullPath()+"initial_network.vtp");
-
-        BaseUnits::Instance()->SetReferenceTimeScale(60.0*unit::seconds);
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(30, 1);
-        boost::shared_ptr<VesselImpedanceCalculator<3> > p_impedance_calculator = VesselImpedanceCalculator<3>::Create();
-        boost::shared_ptr<ConstantHaematocritSolver<3> > p_haematocrit_calculator = ConstantHaematocritSolver<3>::Create();
-        p_haematocrit_calculator->SetHaematocrit(0.45);
-        boost::shared_ptr<WallShearStressCalculator<3> > p_wss_calculator = WallShearStressCalculator<3>::Create();
-        boost::shared_ptr<MechanicalStimulusCalculator<3> > p_mech_stimulus_calculator = MechanicalStimulusCalculator<3>::Create();
-
-        StructuralAdaptationSolver<3> structural_adaptation_solver;
-        structural_adaptation_solver.SetVesselNetwork(p_network);
-        structural_adaptation_solver.SetWriteOutput(true);
-        structural_adaptation_solver.SetOutputFileName(p_handler->GetOutputDirectoryFullPath()+"adaptation_data.dat");
-        structural_adaptation_solver.SetTolerance(0.0001);
-        structural_adaptation_solver.SetMaxIterations(10);
-        structural_adaptation_solver.AddPreFlowSolveCalculator(p_impedance_calculator);
-        structural_adaptation_solver.AddPostFlowSolveCalculator(p_haematocrit_calculator);
-        structural_adaptation_solver.AddPostFlowSolveCalculator(p_wss_calculator);
-        structural_adaptation_solver.AddPostFlowSolveCalculator(p_mech_stimulus_calculator);
-        structural_adaptation_solver.SetTimeIncrement(0.01 * unit::seconds);
-        structural_adaptation_solver.Solve();
-        p_network->Write(p_handler->GetOutputDirectoryFullPath()+"network_initial_sa.vtp");
+        boost::shared_ptr<Part<3> > p_vegf_domain = Part<3> ::Create();
+        units::quantity<unit::length> pellet_side_length(300.0*unit::microns);
+        p_vegf_domain->AddCuboid(pellet_side_length, pellet_side_length, 5.0*pellet_side_length, DimensionalChastePoint<3>(-150.0,
+                                                                                                                           900.0,
+                                                                                                                           0.0));
+        p_vegf_domain->Write(p_handler->GetOutputDirectoryFullPath()+"initial_vegf_domain.vtp");
         /*
-         * Vessels Release Oxygen, Depending on the amount of haematocrit. Continuum Cells consume oxygen.
-         * Set up the oxygen field.
+         * Now make a finite element mesh on the cornea.
          */
-        boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = DiscreteContinuumMesh<3>::Create();
-        p_mesh->SetDomain(p_domain);
-        p_mesh->SetMaxElementArea(1.e12);
-        p_mesh->Update();
-        /*
-         * Set up the oxygen pde
-         */
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_oxygen_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
-        units::quantity<unit::diffusivity> oxygen_diffusivity(1.e-6*unit::metre_squared_per_second);
-        p_oxygen_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity);
-        /*
-         * Add continuum sink term for cells
-         */
-        units::quantity<unit::rate> oxygen_consumption_rate(1.e-6*unit::per_second);
-        p_oxygen_pde->SetContinuumLinearInUTerm(oxygen_consumption_rate);
-        /*
-         * Add discrete source terms for vessels
-         */
-        boost::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_oxygen_source = VesselBasedDiscreteSource<3>::Create();
-        p_vessel_oxygen_source->SetVesselPermeability(1.0 * unit::metre_per_second);
-        p_vessel_oxygen_source->SetOxygenConcentrationPerUnitHaematocrit(1.0*unit::mole_per_metre_cubed);
-        p_oxygen_pde->AddDiscreteSource(p_vessel_oxygen_source);
+        DiscreteContinuumMeshGenerator<3> mesh_generator;
+        mesh_generator.SetDomain(p_domain);
+        mesh_generator.SetMaxElementArea(100000.0);
+        mesh_generator.Update();
+        boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = mesh_generator.GetMesh();
         /*
          * Set up the vegf pde
          */
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_vegf_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
-        units::quantity<unit::diffusivity> vegf_diffusivity(1.e-6*unit::metre_squared_per_second);
-        p_vegf_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
-        units::quantity<unit::rate> vegf_decay_rate(1.e-6*unit::per_second);
-        p_vegf_pde->SetContinuumLinearInUTerm(vegf_decay_rate);
+        p_vegf_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpVegfDiffusivity->GetValue("User"));
+        p_vegf_pde->SetContinuumLinearInUTerm(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
+        p_vegf_pde->SetMesh(p_mesh);
+        p_vegf_pde->SetUseRegularGrid(false);
+        p_vegf_pde->SetReferenceConcentration(1.e-9*unit::mole_per_metre_cubed);
         /*
-         * Add a continuum source term with rate dependent on the oxygen concentration
-         */
-        boost::shared_ptr<DiscreteSource<3> > p_oxygen_dependent_vegf_source = DiscreteSource<3>::Create();
-        p_oxygen_dependent_vegf_source->SetType(SourceType::SOLUTION);
-        p_oxygen_dependent_vegf_source->SetLinearInUSinkRatePerSolutionQuantity(-1.0*unit::metre_cubed_per_mole_per_second);
-        p_vegf_pde->AddDiscreteSource(p_oxygen_dependent_vegf_source);
+        * Add a boundary condition to fix the VEGF concentration in the vegf subdomain.
+        */
+        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_vegf_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
+        p_vegf_boundary->SetType(BoundaryConditionType::IN_PART);
+        p_vegf_boundary->SetSource(BoundaryConditionSource::PRESCRIBED);
+        p_vegf_boundary->SetValue(3.e-9*unit::mole_per_metre_cubed);
+        p_vegf_boundary->SetDomain(p_vegf_domain);
         /*
-         * Add a perfect sink at the bottom of the domain by means of a zero Dirichlet boundary condition. We can apply this
-         * directly on the domain geometry using a Facet locator to manually label the boundary. We then set the boundary condition
-         * using this label.
+         * Set up the PDE solvers for the vegf problem. Note the scaling of the concentration to nM to avoid numerical
+         * precision problems.
          */
-        p_domain->GetFacet(DimensionalChastePoint<3>(domain_radius/reference_length,
-                                                     domain_radius/reference_length, 0.0))->SetLabel("vegf_boundary");
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_vegf_perfect_sink = DiscreteContinuumBoundaryCondition<3>::Create();
-        p_vegf_perfect_sink->SetType(BoundaryConditionType::FACET);
-        p_vegf_perfect_sink->SetDomain(p_domain);
-        p_vegf_perfect_sink->SetValue(0.0*unit::mole_per_metre_cubed);
-        p_vegf_perfect_sink->SetLabelName("vegf_boundary");
-        /*
-         * Set up the PDE solvers for the oxygen and vegf problems
-         */
-        boost::shared_ptr<FiniteElementSolver<3> > p_oxygen_solver = FiniteElementSolver<3>::Create();
-        p_oxygen_solver->SetPde(p_oxygen_pde);
-        p_oxygen_solver->SetLabel("oxygen");
-        p_oxygen_solver->SetMesh(p_mesh);
         boost::shared_ptr<FiniteElementSolver<3> > p_vegf_solver = FiniteElementSolver<3>::Create();
         p_vegf_solver->SetPde(p_vegf_pde);
         p_vegf_solver->SetLabel("vegf");
         p_vegf_solver->SetMesh(p_mesh);
-        p_vegf_solver->AddBoundaryCondition(p_vegf_perfect_sink);
+        p_vegf_solver->AddBoundaryCondition(p_vegf_boundary);
+        p_vegf_solver->SetReferenceConcentration(1.e-9*unit::mole_per_metre_cubed);
         /*
-         * Set up the `AngiogenesisSolver`
+         * An example of the VEGF solution is shown here:
+         *
+         * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/OffLatticeTutorialVegf.png, 20%, align=center, border=1)]]
+         *
          */
-//        boost::shared_ptr<AngiogenesisSolver<3> > p_angiogenesis_solver = AngiogenesisSolver<3>::Create();
-//        p_angiogenesis_solver->SetVesselNetwork(p_network);
-//        p_angiogenesis_solver->a
+        //        /*
+        //         * Use the structural adaptation solver to iterate until the flow reaches steady state
+        //         */
+        //        units::quantity<unit::length> vessel_radius(40.0*unit::microns);
+        //        p_network->SetSegmentRadii(vessel_radius);
+        //        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
+        //        p_network->SetSegmentViscosity(viscosity);
+        //        p_network->Write(p_handler->GetOutputDirectoryFullPath()+"initial_network.vtp");
+        //
+        //        BaseUnits::Instance()->SetReferenceTimeScale(60.0*unit::seconds);
+        //        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(30, 1);
+        //        boost::shared_ptr<VesselImpedanceCalculator<3> > p_impedance_calculator = VesselImpedanceCalculator<3>::Create();
+        //        boost::shared_ptr<ConstantHaematocritSolver<3> > p_haematocrit_calculator = ConstantHaematocritSolver<3>::Create();
+        //        p_haematocrit_calculator->SetHaematocrit(0.45);
+        //        boost::shared_ptr<WallShearStressCalculator<3> > p_wss_calculator = WallShearStressCalculator<3>::Create();
+        //        boost::shared_ptr<MechanicalStimulusCalculator<3> > p_mech_stimulus_calculator = MechanicalStimulusCalculator<3>::Create();
+        //
+        //        StructuralAdaptationSolver<3> structural_adaptation_solver;
+        //        structural_adaptation_solver.SetVesselNetwork(p_network);
+        //        structural_adaptation_solver.SetWriteOutput(true);
+        //        structural_adaptation_solver.SetOutputFileName(p_handler->GetOutputDirectoryFullPath()+"adaptation_data.dat");
+        //        structural_adaptation_solver.SetTolerance(0.0001);
+        //        structural_adaptation_solver.SetMaxIterations(10);
+        //        structural_adaptation_solver.AddPreFlowSolveCalculator(p_impedance_calculator);
+        //        structural_adaptation_solver.AddPostFlowSolveCalculator(p_haematocrit_calculator);
+        //        structural_adaptation_solver.AddPostFlowSolveCalculator(p_wss_calculator);
+        //        structural_adaptation_solver.AddPostFlowSolveCalculator(p_mech_stimulus_calculator);
+        //        structural_adaptation_solver.SetTimeIncrement(0.01 * unit::seconds);
+        //        structural_adaptation_solver.Solve();
+        /*
+         * Set up an angiogenesis solver and add sprouting and migration rules.
+         */
+        boost::shared_ptr<AngiogenesisSolver<3> > p_angiogenesis_solver = AngiogenesisSolver<3>::Create();
+        boost::shared_ptr<OffLatticeSproutingRule<3> > p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
+        p_sprouting_rule->SetSproutingProbability(0.001* unit::per_second);
+        boost::shared_ptr<OffLatticeMigrationRule<3> > p_migration_rule = OffLatticeMigrationRule<3>::Create();
+        units::quantity<unit::velocity> sprout_velocity(20.0*unit::microns/(1.0*unit::hours));
+        p_migration_rule->SetSproutingVelocity(sprout_velocity);
+
+        p_angiogenesis_solver->SetMigrationRule(p_migration_rule);
+        p_angiogenesis_solver->SetSproutingRule(p_sprouting_rule);
+        p_sprouting_rule->SetDiscreteContinuumSolver(p_vegf_solver);
+        p_migration_rule->SetDiscreteContinuumSolver(p_vegf_solver);
+        p_angiogenesis_solver->SetVesselNetwork(p_network);
+        p_angiogenesis_solver->SetBoundingDomain(p_domain);
         /*
          * Set up the `MicrovesselSolver` which coordinates all solves. Note that for sequentially
          * coupled PDE solves, the solution propagates in the order that the PDE solvers are added to the `MicrovesselSolver`.
          */
         boost::shared_ptr<MicrovesselSolver<3> > p_microvessel_solver = MicrovesselSolver<3>::Create();
         p_microvessel_solver->SetVesselNetwork(p_network);
-        p_microvessel_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
         p_microvessel_solver->AddDiscreteContinuumSolver(p_vegf_solver);
         p_microvessel_solver->SetOutputFileHandler(p_handler);
         p_microvessel_solver->SetOutputFrequency(1);
-        p_microvessel_solver->SetDiscreteContinuumSolversHaveCompatibleGridIndexing(true);
+        p_microvessel_solver->SetAngiogenesisSolver(p_angiogenesis_solver);
+        p_microvessel_solver->SetUpdatePdeEachSolve(false);
         /*
-         * Reset the simulation time and run the solver.
+         * Set the simulation time and run the solver. The result is shown at the top of the tutorial.
          */
-        SimulationTime::Instance()->Destroy();
-        SimulationTime::Instance()->SetStartTime(0.0);
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(30.0, 1);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(100.0, 100);
         p_microvessel_solver->Run();
     }
 };

@@ -96,6 +96,8 @@ class MicrovesselSolver
      */
     bool mDiscreteContinuumSolversHaveCompatibleGridIndexing;
 
+    bool mUpdatePdeEachSolve;
+
 public:
 
     /**
@@ -153,6 +155,8 @@ public:
      * @param frequency the frequency of simulaiton output
      */
     void SetOutputFrequency(unsigned frequency);
+
+    void SetUpdatePdeEachSolve(bool doUpdate);
 
     /**
      * Set the structural adaptation solver for the network

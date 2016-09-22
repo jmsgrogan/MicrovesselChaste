@@ -51,6 +51,8 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "DiscreteContinuumBoundaryCondition.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
+#include "Owen11Parameters.hpp"
+#include "BaseUnits.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
@@ -107,6 +109,9 @@ public:
     {
         // Set up the vessel network
         units::quantity<unit::length> micron_length_scale = 1.e-6*unit::metres;
+        BaseUnits::Instance()->SetReferenceLengthScale(micron_length_scale);
+        BaseUnits::Instance()->SetReferenceTimeScale(3600.0*unit::seconds);
+
         units::quantity<unit::length> vessel_length = 100.0 * micron_length_scale;
         VesselNetworkGenerator<3> generator;
         DimensionalChastePoint<3> centre(vessel_length/(2.0*micron_length_scale), vessel_length/(2.0*micron_length_scale), 0.0, micron_length_scale);
@@ -123,14 +128,15 @@ public:
 
         // Choose the PDE
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
-        units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
-        units::quantity<unit::rate> consumption_rate(-2.e-7 * unit::per_second);
+        units::quantity<unit::diffusivity> diffusivity(Owen11Parameters::mpVegfDiffusivity->GetValue());
+        units::quantity<unit::rate> consumption_rate(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
         p_pde->SetContinuumLinearInUTerm(consumption_rate);
+        p_pde->SetReferenceConcentration(1.e-9*unit::mole_per_metre_cubed);
 
         // Choose the Boundary conditions
         boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_vessel_ox_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
-        units::quantity<unit::concentration> boundary_concentration(40.0 * unit::mole_per_metre_cubed);
+        units::quantity<unit::concentration> boundary_concentration(300.e-9*unit::mole_per_metre_cubed);
         p_vessel_ox_boundary_condition->SetValue(boundary_concentration);
         p_vessel_ox_boundary_condition->SetType(BoundaryConditionType::VESSEL_VOLUME);
         p_vessel_ox_boundary_condition->SetSource(BoundaryConditionSource::PRESCRIBED);
@@ -141,9 +147,11 @@ public:
         solver.SetMesh(p_mesh_generator->GetMesh());
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_vessel_ox_boundary_condition);
+        solver.SetReferenceConcentration(1.e-9*unit::mole_per_metre_cubed);
 
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestFiniteElementSolver/KroghCylinder3dSurface", false));
         solver.SetFileHandler(p_output_file_handler);
+        solver.SetWriteSolution(true);
         solver.Solve();
     }
 };

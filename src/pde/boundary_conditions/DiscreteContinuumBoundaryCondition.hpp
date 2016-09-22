@@ -120,6 +120,8 @@ protected:
 
     boost::shared_ptr<VesselNetwork <DIM> > mpNetwork;
 
+    units::quantity<unit::concentration> mReferenceConcentration;
+
 public:
 
     /**

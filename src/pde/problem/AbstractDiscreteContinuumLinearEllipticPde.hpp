@@ -100,6 +100,13 @@ protected:
      */
     std::vector<units::quantity<unit::concentration_flow_rate> > mDiscreteConstantSourceStrengths;
 
+    /**
+     * This is used internally to scale concentrations before and after linear system solves, reads and writes.
+     * Since those functions don't use Boost Units. It should not affect the solution, but can be judiciously chosen
+     * to avoid precision problems.
+     */
+    units::quantity<unit::concentration> mReferenceConcentration;
+
 public:
 
     /**
@@ -181,6 +188,12 @@ public:
      * @param pMesh the finite element mesh
      */
     void SetMesh(boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > pMesh);
+
+    /**
+     * Set the reference concentration
+     * @param referenceConcentration the reference concentration
+     */
+    void SetReferenceConcentration(units::quantity<unit::concentration> referenceConcentration);
 
     /**
      * Set whether to use a regular grid
