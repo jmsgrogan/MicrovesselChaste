@@ -37,22 +37,24 @@ Copyright (c) 2005-2016, University of Oxford.
 #define TESTLATTICEBASEDANGIOGENESISLITERATEPAPER_HPP_
 
 /* = Introduction =
- * This tutorial is designed to introduce a lattice based angiogenesis problem similar to
- * vascular tumour models described in [http://epubs.siam.org/doi/abs/10.1137/040603760 Alarcon et al., 2005] and
+ * This tutorial is designed to introduce a lattice based angiogenesis problem based on a simplified version of the
+ * vascular tumour application described in
  * [http://www.ncbi.nlm.nih.gov/pubmed/21363914 Owen et al. 2011]. It is a 2D simulation using cellular automaton
  * for cells, a regular grid for vessel movement and the same grid for the solution of partial differential equations
- * using the finite difference method.
+ * for oxygen and VEGF transport using the finite difference method.
+ *
+ * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/LatticeTurortialEndSample.tif, 20%, align=center, border=1)]]
  *
  * = The Test =
  * Start by introducing the necessary header files. The first contain functionality for setting up unit tests,
- * smart pointer tools and output management.
+ * smart pointer tools and output management,
  */
 #include <vector>
 #include "SmartPointers.hpp"
 #include "OutputFileHandler.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
 /*
- * Dimensional analysis.
+ * dimensional analysis,
  */
 #include "DimensionalChastePoint.hpp"
 #include "UnitCollection.hpp"
@@ -62,12 +64,12 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "ParameterCollection.hpp"
 #include "BaseUnits.hpp"
 /*
- * Vessel networks.
+ * vessel networks,
  */
 #include "VesselNode.hpp"
 #include "VesselNetwork.hpp"
 /*
- * Cells.
+ * cells,
  */
 #include "CancerCellMutationState.hpp"
 #include "StalkCellMutationState.hpp"
@@ -76,10 +78,9 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "Owen11CellPopulationGenerator.hpp"
 #include "Owen2011TrackingModifier.hpp"
 #include "CaBasedCellPopulation.hpp"
-#include "OnLatticeSimulation.hpp"
 #include "ApoptoticCellKiller.hpp"
 /*
- * Flow.
+ * flow,
  */
 #include "VesselImpedanceCalculator.hpp"
 #include "FlowSolver.hpp"
@@ -90,7 +91,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "ShrinkingStimulusCalculator.hpp"
 #include "ViscosityCalculator.hpp"
 /*
- * Grids and PDEs.
+ * grids and PDEs,
  */
 #include "RegularGrid.hpp"
 #include "FiniteDifferenceSolver.hpp"
@@ -100,17 +101,18 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "DiscreteContinuumBoundaryCondition.hpp"
 #include "LinearSteadyStateDiffusionReactionPde.hpp"
 /*
- * Angiogenesis and regression
+ * angiogenesis and regression,
  */
 #include "Owen2011SproutingRule.hpp"
 #include "Owen2011MigrationRule.hpp"
 #include "AngiogenesisSolver.hpp"
 #include "WallShearStressBasedRegressionSolver.hpp"
 /*
- * Runs the full simulation.
+ * and classes for managing the simulation.
  */
 #include "MicrovesselSolver.hpp"
 #include "MicrovesselSimulationModifier.hpp"
+#include "OnLatticeSimulation.hpp"
 /*
  * This should appear last.
  */
@@ -138,7 +140,6 @@ public:
          * Note that we are using hard-coded parameters from that paper. We will see how to dump these to file for inspection later.
          * We annotate the parameter with "User" so we know we have instantiated it ourselves. Some solvers use parameter defaults
          * and will annotate the parameter with their own name.
-         * We can write the lattice to file for quick visualization with Paraview.
          */
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         units::quantity<unit::length> grid_spacing = Owen11Parameters::mpLatticeSpacing->GetValue("User");
@@ -198,7 +199,10 @@ public:
          *
          * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/Lattice_Based_Tutorial_Cell_Setup.png, 20%, align=center, border=1)]]
          *
-         * Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources
+         * Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources. A sample PDE solution for
+         * oxygen is shown below:
+         *
+         * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/LatticeTutorialSampleOxygen.png, 20%, align=center, border=1)]]
          */
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_oxygen_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
         p_oxygen_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpOxygenDiffusivity->GetValue("User"));
@@ -221,7 +225,9 @@ public:
         p_oxygen_solver->SetGrid(p_grid);
         /*
         * The rate of VEGF release depends on the cell type and intracellular VEGF levels, so we need a more detailed
-        * type of discrete source.
+        * type of discrete source. A sample PDE solution for VEGF is shown below.
+        *
+        * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/LatticeTutorialSampleVegf.png, 20%, align=center, border=1)]]
         */
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_vegf_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
         p_vegf_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpVegfDiffusivity->GetValue("User"));
@@ -248,7 +254,10 @@ public:
         p_vegf_solver->SetGrid(p_grid);
         /*
          * Next set up the flow problem. Assign a blood plasma viscosity to the vessels. The actual viscosity will
-         * depend on haematocrit and diameter.
+         * depend on haematocrit and diameter. This solver manages growth and shrinkage of vessels in response to
+         * flow related stimuli. A sample plot of the stimulus distrbution during a simulation is shown below:
+         *
+         * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/LatticeTutorialSampleGrowth.png, 20%, align=center, border=1)]]
          */
         units::quantity<unit::length> large_vessel_radius(25.0 * unit::microns);
         p_network->SetSegmentRadii(large_vessel_radius);
@@ -261,7 +270,6 @@ public:
         boost::shared_ptr<MechanicalStimulusCalculator<2> > p_mech_stimulus_calculator = MechanicalStimulusCalculator<2>::Create();
         boost::shared_ptr<ShrinkingStimulusCalculator<2> > p_shrinking_stimulus_calculator = ShrinkingStimulusCalculator<2>::Create();
         boost::shared_ptr<ViscosityCalculator<2> > p_viscosity_calculator = ViscosityCalculator<2>::Create();
-
         boost::shared_ptr<StructuralAdaptationSolver<2> > p_structural_adaptation_solver = StructuralAdaptationSolver<2>::Create();
         p_structural_adaptation_solver->SetTolerance(0.0001);
         p_structural_adaptation_solver->SetMaxIterations(100);
@@ -293,7 +301,7 @@ public:
          */
         boost::shared_ptr<MicrovesselSolver<2> > p_microvessel_solver = MicrovesselSolver<2>::Create();
         p_microvessel_solver->SetVesselNetwork(p_network);
-        p_microvessel_solver->SetOutputFrequency(1);
+        p_microvessel_solver->SetOutputFrequency(5);
         p_microvessel_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
         p_microvessel_solver->AddDiscreteContinuumSolver(p_vegf_solver);
         p_microvessel_solver->SetStructuralAdaptationSolver(p_structural_adaptation_solver);
@@ -327,11 +335,15 @@ public:
          * Set up the remainder of the simulation
          */
         simulator.SetOutputDirectory("TestLatticeBasedAngiogenesisLiteratePaper");
-        simulator.SetSamplingTimestepMultiple(1);
+        simulator.SetSamplingTimestepMultiple(5);
         simulator.SetDt(0.5);
-        simulator.SetEndTime(6.0);
         /*
-         * Do the solve
+         * This end time corresponds to roughly 10 minutes run-time on a desktop PC using a standard Debug build. Increase it or decrease as
+         * preferred. The end time used in Owen et al. 2011 is 4800 hours.
+         */
+        simulator.SetEndTime(20.0);
+        /*
+         * Do the solve. A sample solution is shown at the top of this test.
          */
         simulator.Solve();
         /*
