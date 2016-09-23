@@ -78,7 +78,7 @@ public:
         // Create the vessel network: single vessel in middle of domain
         VesselNetworkGenerator<3> network_generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateSingleVessel(20*1.e-6*unit::metres,
-                                                                                                DimensionalChastePoint<3>(10.0, 20.0, 0.0));
+                                                                                                DimensionalChastePoint<3>(10.0, 10.0, 0.0));
 
         // Write the initial network to file
         std::string output_directory = "TestVesselNetworkCellPopulationInteractor";

@@ -134,6 +134,41 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
     std::vector<CellPtr> cells;
     MAKE_PTR(DefaultCellProliferativeType, p_diff_type);
     CellsGenerator<Owen2011OxygenBasedCellCycleModel, DIM> cells_generator;
+
+//    MAKE_PTR(StemCellProliferativeType, p_stem_type);
+//
+//    double oxygen_concentration = 30.0;
+//    for (unsigned i = 0; i < location_indices.size(); i++)
+//    {
+//        // Assign an oxygen based cell cycle model, which requires a dimension to be set.
+//        Owen2011OxygenBasedCellCycleModel* const p_model = new Owen2011OxygenBasedCellCycleModel;
+//        p_model->SetDimension(2);
+//        CellPtr p_cell(new Cell(p_state, p_model));
+//        p_cell->SetCellProliferativeType(p_stem_type);
+//        p_cell->SetApoptosisTime(30);
+//        cells.push_back(p_cell);
+//        p_cell->GetCellData()->SetItem("oxygen", oxygen_concentration);
+//    }
+
+    //            // Create a tumour cells in a cylinder in the middle of the domain
+    //            boost::shared_ptr<Part<3> > p_tumour_cell_region = GetInitialTumourCellRegion();
+    //            std::vector<unsigned> location_indices = p_tumour_cell_region->GetContainingGridIndices(num_x, num_y, num_z, spacing);
+    //
+    //            std::vector<Node<3>*> nodes;
+    //            for(unsigned idx=0; idx<location_indices.size(); idx++)
+    //            {
+    //                c_vector<double, 3> location = Grid::GetLocationOf1dIndex(location_indices[idx], num_x, num_y, spacing);
+    //                nodes.push_back(new Node<3>(idx, location, false));
+    //            }
+    //            NodesOnlyMesh<3> mesh;
+    //            mesh.ConstructNodesWithoutMesh(nodes, 1.5 * spacing);
+    //            std::vector<CellPtr> cells;
+    //            CellsGenerator<SimpleOxygenBasedCellCycleModel, 3> cells_generator;
+    //            cells_generator.GenerateBasic(cells, mesh.GetNumNodes());
+    //            NodeBasedCellPopulation<3> cell_population(mesh, cells);
+    //            cell_population.SetAbsoluteMovementThreshold(2.0 * spacing);
+    //            cell_population.AddCellWriter<CellLabelWriter>();
+
     cells_generator.GenerateBasicRandom(cells, p_mesh->GetNumNodes(), p_diff_type);
     boost::shared_ptr<CaBasedCellPopulation<DIM> > p_cell_population =
             boost::shared_ptr<CaBasedCellPopulation<DIM> >(new CaBasedCellPopulation<DIM> (*p_mesh, cells, location_indices));

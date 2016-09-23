@@ -60,23 +60,25 @@ public:
         std::vector<boost::shared_ptr<VesselNode<3> > > nodes;
         nodes.push_back(VesselNode<3>::Create(1.0, 2.0, 6.0));
         nodes.push_back(VesselNode<3>::Create(3.0, 4.0, 7.0));
-        nodes.push_back(VesselNode<3>::Create(3.0, 4.0, 7.0));
         nodes.push_back(VesselNode<3>::Create(3.0, 4.0, 8.0));
         nodes.push_back(VesselNode<3>::Create(3.0, 4.0, 9.0));
 
         // Make some vessels
         boost::shared_ptr<Vessel<3> > pVessel1(Vessel<3>::Create(nodes[0], nodes[1]));
-        boost::shared_ptr<Vessel<3> > pVessel2(Vessel<3>::Create(nodes[2], nodes[3]));
-        boost::shared_ptr<Vessel<3> > pVessel3(Vessel<3>::Create(nodes[3], nodes[4]));
+        boost::shared_ptr<Vessel<3> > pVessel2(Vessel<3>::Create(nodes[1], nodes[2]));
+        boost::shared_ptr<Vessel<3> > pVessel3(Vessel<3>::Create(nodes[2], nodes[3]));
+        boost::shared_ptr<Vessel<3> > pVessel4(Vessel<3>::Create(nodes[3], nodes[4]));
 
         std::vector<boost::shared_ptr<Vessel<3> > > vessels;
+        vessels.push_back(pVessel1);
         vessels.push_back(pVessel2);
         vessels.push_back(pVessel3);
+        vessels.push_back(pVessel4);
 
         // Make a network
         boost::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
-        p_network->AddVessel(pVessel1);
         p_network->AddVessels(vessels);
+        p_network->SetSegmentRadii(10.0*1.e-6*unit::metres);
 
         boost::shared_ptr<VesselNetworkGeometryCalculator<3> > p_calculator = VesselNetworkGeometryCalculator<3>::Create();
         p_calculator->SetVesselNetwork(p_network);

@@ -45,6 +45,7 @@
 #include "MappableGridGenerator.hpp"
 #include "Part.hpp"
 #include "DiscreteContinuumMesh.hpp"
+#include "DiscreteContinuumMeshGenerator.hpp"
 #include "Vertex.hpp"
 #include "VtkMeshWriter.hpp"
 
@@ -66,11 +67,12 @@ public:
         TS_ASSERT_EQUALS(p_part_no_caps->GetPolygons().size(), 180u);
 
         // Make sure the resulting part can be meshed
-        boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = DiscreteContinuumMesh<3>::Create();
-        p_mesh->SetDomain(p_part);
-        p_mesh->Update();
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        p_mesh_generator->SetDomain(p_part);
+        p_mesh_generator->Update();
+
         VtkMeshWriter<3, 3> mesh_writer("TestMappableGridGenerator", "Plane", false);
-        mesh_writer.WriteFilesUsingMesh(*p_mesh);
+        mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
     }
 
     void TestMakeCylinder() throw(Exception)
@@ -93,11 +95,11 @@ public:
         }
 
         // Make sure the part can be meshed
-        boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = DiscreteContinuumMesh<3>::Create();
-        p_mesh->SetDomain(p_part);
-        p_mesh->Update();
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        p_mesh_generator->SetDomain(p_part);
+        p_mesh_generator->Update();
         VtkMeshWriter<3, 3> mesh_writer("TestMappableGridGenerator", "Closed_Cylinder", false);
-        mesh_writer.WriteFilesUsingMesh(*p_mesh);
+        mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
     }
 
 
@@ -118,11 +120,11 @@ public:
         }
 
         // Make sure the part can be meshed
-        boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = DiscreteContinuumMesh<3>::Create();
-        p_mesh->SetDomain(p_part);
-        p_mesh->Update();
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        p_mesh_generator->SetDomain(p_part);
+        p_mesh_generator->Update();
         VtkMeshWriter<3, 3> mesh_writer("TestMappableGridGenerator", "Hemisphere", false);
-        mesh_writer.WriteFilesUsingMesh(*p_mesh);
+        mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
     }
 };
 

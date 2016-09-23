@@ -108,7 +108,7 @@ public:
 
         boost::shared_ptr<OffLatticeSproutingRule<3> > p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
         p_sprouting_rule->SetDiscreteContinuumSolver(p_funciton_map); // This contains the vegf field
-        p_sprouting_rule->SetSproutingProbability(0.01);
+        p_sprouting_rule->SetSproutingProbability(0.01*(1.0/unit::seconds));
         p_sprouting_rule->SetVesselNetwork(p_network);
 
         AngiogenesisSolver<3> angiogenesis_solver;

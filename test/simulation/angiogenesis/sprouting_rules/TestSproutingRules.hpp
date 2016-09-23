@@ -69,7 +69,7 @@ public:
 
         // Set up a sprouting rule
         boost::shared_ptr<LatticeBasedSproutingRule<3> > p_sprouting_rule = LatticeBasedSproutingRule<3>::Create();
-        p_sprouting_rule->SetSproutingProbability(0.2);
+        p_sprouting_rule->SetSproutingProbability(0.2*(1.0/unit::seconds));
         p_sprouting_rule->SetVesselNetwork(p_network);
 
         // Test that we get some, but not all, sprouts
@@ -120,7 +120,7 @@ public:
 
         // Set up a sprouting rule
         boost::shared_ptr<Owen2011SproutingRule<2> > p_sprouting_rule = Owen2011SproutingRule<2>::Create();
-        p_sprouting_rule->SetSproutingProbability(0.2);
+        p_sprouting_rule->SetSproutingProbability(0.2*(1.0/unit::seconds));
         p_sprouting_rule->SetGrid(p_grid);
         p_sprouting_rule->SetVesselNetwork(p_network);
         p_sprouting_rule->SetDiscreteContinuumSolver(p_funciton_map);

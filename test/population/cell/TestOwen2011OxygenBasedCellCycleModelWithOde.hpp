@@ -399,25 +399,25 @@ public:
         p_cell1->InitialiseCellCycleModel();
 
         p_model1->ReadyToDivide();
-        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration(), 0.0, 1e-12);
-        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime(), 0.0, 1e-12);
+        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration().value(), 0.0, 1e-12);
+        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime().value(), 0.0, 1e-12);
 
         p_simulation_time->IncrementTimeOneStep(); // t=1.0
         p_model1->ReadyToDivide();
-        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration(), 1.0, 1e-12);
-        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime(), 0.0, 1e-12);
+        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration().value(), 1.0, 1e-12);
+        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime().value(), 0.0, 1e-12);
 
         p_cell1->GetCellData()->SetItem("oxygen", hi_oxygen);
         p_simulation_time->IncrementTimeOneStep(); // t=2.0
         p_model1->ReadyToDivide();
-        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration(), 0.0, 1e-12);
-        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime(), 0.0, 1e-12);
+        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration().value(), 0.0, 1e-12);
+        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime().value(), 0.0, 1e-12);
 
         p_cell1->GetCellData()->SetItem("oxygen", lo_oxygen);
         p_simulation_time->IncrementTimeOneStep(); // t=3.0
         p_model1->ReadyToDivide();
-        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration(), 0.0, 1e-12);
-        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime(), 3.0, 1e-12);
+        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration().value(), 0.0, 1e-12);
+        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime().value(), 3.0, 1e-12);
 
         // Set up SimulationTime
         SimulationTime::Destroy();
