@@ -33,11 +33,11 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef TESTSOLVINGPDES_HPP_
-#define TESTSOLVINGPDES_HPP_
+#ifndef TESTSOLVINGPDESLITERATEPAPER_HPP_
+#define TESTSOLVINGPDESLITERATEPAPER_HPP_
 
-/* = Solving PDEs in the Angiogenesis Project =
- * This tutorial demonstrates methods for solving PDEs in the Angiogenesis Project. It is noted
+/* = Solving PDEs in the Microvessel Project =
+ * This tutorial demonstrates methods for solving PDEs in the Microvessel Project. It is noted
  * that the way to set up PDEs differs from that of Cell Based Chaste, although the same solver
  * can be used behind the scenes.
  *
@@ -159,4 +159,4 @@ public:
     }
 };
 
-#endif /*TESTSOLVINGPDES_HPP_*/
+#endif /*TESTSOLVINGPDESLITERATEPAPER_HPP_*/

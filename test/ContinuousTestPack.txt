@@ -60,9 +60,6 @@ simulation/angiogenesis/TestRegressionSolver.hpp
 simulation/angiogenesis/TestAngiogenesisWithCaPopulation.hpp
 simulation/TestMicrovesselSimulationModifier.hpp
 simulation/TestMicrovesselSolver.hpp
-tutorials/Test2dTumourSpheroid.hpp
-tutorials/Test2dVascularTumourGrowth.hpp
-tutorials/Test3dTumourSpheroid.hpp
 tutorials/TestLatticeBasedAngiogenesisLiteratePaper.hpp
 tutorials/TestOffLatticeAngiogenesisLiteratePaper.hpp
 tutorials/TestBuildVesselNetworkLiteratePaper.hpp

@@ -48,9 +48,9 @@ public:
 
     void TestAllParameters()
     {
-        TS_ASSERT_DELTA(Owen11Parameters::mpInletPressure->GetValue("TEST").value(), 3333.05, 1.e-6);
-        TS_ASSERT_DELTA(Owen11Parameters::mpOutletPressure->GetValue("TEST").value(), 1999.8, 1.e-6);
-        TS_ASSERT_DELTA(Owen11Parameters::mpPlasmaViscosity->GetValue("TEST").value(), 0.0011, 1.e-6);
+        TS_ASSERT_DELTA(Owen11Parameters::mpInletPressure->GetValue("TEST").value(), 3333.05, 1.e-2);
+        TS_ASSERT_DELTA(Owen11Parameters::mpOutletPressure->GetValue("TEST").value(), 1999.83, 1.e-2);
+        TS_ASSERT_DELTA(Owen11Parameters::mpPlasmaViscosity->GetValue("TEST").value(), 0.0011, 1.e-4);
     }
 };
 
