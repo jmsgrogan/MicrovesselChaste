@@ -1025,43 +1025,35 @@ void VesselNetwork<DIM>::UpdateAll(bool merge)
 }
 
 template<unsigned DIM>
-struct NodePtrComp
-{
-  bool operator()( const boost::shared_ptr<VesselNode<DIM> >  & a, const boost::shared_ptr<VesselNode<DIM> >  & b )
-    { return a->GetComparisonId() > b->GetComparisonId(); }
-};
-
-template<unsigned DIM>
 void VesselNetwork<DIM>::UpdateNodes()
 {
-      mNodes = std::vector<boost::shared_ptr<VesselNode<DIM> > >();
-      std::set<boost::shared_ptr<VesselNode<DIM> >, NodePtrComp<DIM> >  nodes;
-//      std::set<boost::shared_ptr<VesselNode<DIM> > >  nodes;
-      std::vector<boost::shared_ptr<VesselNode<DIM> > > temp_nodes;
-
-      typename std::vector<boost::shared_ptr<Vessel<DIM> > >::iterator it;
-
-      unsigned counter = 0;
-      for(it = mVessels.begin(); it != mVessels.end(); it++)
-      {
-          std::vector<boost::shared_ptr<VesselNode<DIM> > > vessel_nodes = (*it)->GetNodes();
-          for (unsigned idx=0; idx<vessel_nodes.size(); idx++)
-          {
-              vessel_nodes[idx]->SetComparisonId(counter);
-              temp_nodes.push_back(vessel_nodes[idx]);
-              counter ++;
-          }
-      }
-      std::copy(temp_nodes.begin(), temp_nodes.end(), std::inserter(nodes, nodes.begin()));
-
-      std::copy(nodes.begin(), nodes.end(), std::back_inserter(mNodes));
-      mNodesUpToDate = true;
+    mNodes.clear();
+    typename std::vector<boost::shared_ptr<Vessel<DIM> > >::iterator it;
+    for(it = mVessels.begin(); it != mVessels.end(); it++)
+    {
+        for (unsigned idx=0; idx<(*it)->GetNumberOfNodes(); idx++)
+        {
+            (*it)->GetNode(idx)->SetComparisonId(0);
+        }
+    }
+    for(it = mVessels.begin(); it != mVessels.end(); it++)
+    {
+        for (unsigned idx=0; idx<(*it)->GetNumberOfNodes(); idx++)
+        {
+            if((*it)->GetNode(idx)->GetComparisonId()==0)
+            {
+                mNodes.push_back((*it)->GetNode(idx));
+                (*it)->GetNode(idx)->SetComparisonId(1);
+            }
+        }
+    }
+    mNodesUpToDate = true;
 }
 
 template<unsigned DIM>
 void VesselNetwork<DIM>::UpdateSegments()
 {
-    mSegments = std::vector<boost::shared_ptr<VesselSegment<DIM> > >();
+    mSegments.clear();
     typename std::vector<boost::shared_ptr<Vessel<DIM> > >::iterator it;
     for(it = mVessels.begin(); it != mVessels.end(); it++)
     {
@@ -1074,19 +1066,27 @@ void VesselNetwork<DIM>::UpdateSegments()
 template<unsigned DIM>
 void VesselNetwork<DIM>::UpdateVesselNodes()
 {
-    mVesselNodes = std::vector<boost::shared_ptr<VesselNode<DIM> > >();
-    std::set<boost::shared_ptr<VesselNode<DIM> > >  nodes;
-
+    mVesselNodes.clear();
     typename std::vector<boost::shared_ptr<Vessel<DIM> > >::iterator it;
     for(it = mVessels.begin(); it != mVessels.end(); it++)
     {
         (*it)->UpdateNodes();
-        boost::shared_ptr<VesselNode<DIM> > vessel_node1 = (*it)->GetStartNode();
-        nodes.insert(vessel_node1);
-        boost::shared_ptr<VesselNode<DIM> > vessel_node2 = (*it)->GetEndNode();
-        nodes.insert(vessel_node2);
+        (*it)->GetStartNode()->SetComparisonId(0);
+        (*it)->GetEndNode()->SetComparisonId(0);
     }
-    std::copy(nodes.begin(), nodes.end(), std::back_inserter(mVesselNodes));
+    for(it = mVessels.begin(); it != mVessels.end(); it++)
+    {
+        if((*it)->GetStartNode()->GetComparisonId()==0)
+        {
+            mVesselNodes.push_back((*it)->GetStartNode());
+            (*it)->GetStartNode()->SetComparisonId(1);
+        }
+        if((*it)->GetEndNode()->GetComparisonId()==0)
+        {
+            mVesselNodes.push_back((*it)->GetEndNode());
+            (*it)->GetEndNode()->SetComparisonId(1);
+        }
+    }
     mVesselNodesUpToDate = true;
 }
 

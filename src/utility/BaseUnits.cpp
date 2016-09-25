@@ -63,7 +63,7 @@ BaseUnits* BaseUnits::Instance()
 BaseUnits::BaseUnits()
     : mTime(60.0 * unit::seconds),
       mLength(1.e-6 * unit::metres),
-      mMass(1.0 * unit::kg)
+      mConcentration(1.e-6 * unit::mole_per_metre_cubed)
 {
     // Make sure there's only one instance - enforces correct serialization
     assert(bool(mpInstance) == false);
@@ -89,14 +89,14 @@ void BaseUnits::SetReferenceLengthScale(units::quantity<unit::length> referenceL
     mLength = referenceLengthScale;
 }
 
-units::quantity<unit::mass> BaseUnits::GetReferenceMassScale()
+units::quantity<unit::concentration> BaseUnits::GetReferenceConcentrationScale()
 {
-    return mMass;
+    return mConcentration;
 }
 
-void BaseUnits::SetReferenceMassScale(units::quantity<unit::mass> referenceMassScale)
+void BaseUnits::SetReferenceConcentrationScale(units::quantity<unit::concentration> referenceConcentrationScale)
 {
-    mMass = referenceMassScale;
+    mConcentration = referenceConcentrationScale;
 }
 
 void BaseUnits::Destroy()

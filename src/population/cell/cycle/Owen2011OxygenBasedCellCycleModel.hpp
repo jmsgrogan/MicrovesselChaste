@@ -323,6 +323,12 @@ public:
 
     void SetMOnset(units::quantity<unit::dimensionless> value);
 
+    void SetOdeSolverTimeStep(units::quantity<unit::time> timeStep);
+
+    void SetReferenceTimeScale(units::quantity<unit::time> referenceTimeScale);
+
+    void SetReferenceConcentrationScale(units::quantity<unit::concentration> referenceConcentrationScale);
+
     /**
      * Set method for mthresholdFractionOfNormalCellNeighbours.
      *

@@ -106,21 +106,59 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditionContainer(b
     {
         if(!use_boundry_nodes)
         {
-            typename DiscreteContinuumMesh<DIM, DIM>::NodeIterator iter = mpMesh->GetNodeIteratorBegin();
-            while (iter != mpMesh->GetNodeIteratorEnd())
+            // Collect the node locations
+
+            if(mType == BoundaryConditionType::IN_PART)
             {
-                std::pair<bool,units::quantity<unit::concentration> > result = GetValue((*iter).GetPoint().rGetLocation(), node_distance_tolerance);
-                if(result.first)
+                if(!mpDomain)
                 {
-                    ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result.second/mReferenceConcentration);
-                    pContainer->AddDirichletBoundaryCondition(&(*iter), p_fixed_boundary_condition, 0, false);
+                    EXCEPTION("A part is required for this type of boundary condition");
                 }
-                ++iter;
+                else
+                {
+                    std::vector<DimensionalChastePoint<DIM> > locations(mpMesh->GetNumNodes());
+                    std::vector<unsigned> mesh_nodes(mpMesh->GetNumNodes());
+
+                    typename DiscreteContinuumMesh<DIM, DIM>::NodeIterator iter = mpMesh->GetNodeIteratorBegin();
+                    unsigned counter=0;
+                    while (iter != mpMesh->GetNodeIteratorEnd())
+                     {
+                         locations[counter] = DimensionalChastePoint<DIM>((*iter).GetPoint().rGetLocation());
+                         mesh_nodes[counter] = (*iter).GetIndex();
+                         counter++;
+                         ++iter;
+                     }
+                    std::vector<bool> inside_flags = mpDomain->IsPointInPart(locations);
+                    for(unsigned idx=0; idx<inside_flags.size(); idx++)
+                    {
+                        if(inside_flags[idx])
+                        {
+                            ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(mValue/mReferenceConcentration);
+                            pContainer->AddDirichletBoundaryCondition(mpMesh->GetNode(mesh_nodes[idx]), p_fixed_boundary_condition, 0, false);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                typename DiscreteContinuumMesh<DIM, DIM>::NodeIterator iter = mpMesh->GetNodeIteratorBegin();
+
+                 while (iter != mpMesh->GetNodeIteratorEnd())
+                 {
+                     std::pair<bool,units::quantity<unit::concentration> > result = GetValue((*iter).GetPoint().rGetLocation(), node_distance_tolerance);
+                     if(result.first)
+                     {
+                         ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result.second/mReferenceConcentration);
+                         pContainer->AddDirichletBoundaryCondition(&(*iter), p_fixed_boundary_condition, 0, false);
+                     }
+                     ++iter;
+                 }
             }
         }
         else
         {
             typename DiscreteContinuumMesh<DIM, DIM>::BoundaryNodeIterator iter = mpMesh->GetBoundaryNodeIteratorBegin();
+
             while (iter < mpMesh->GetBoundaryNodeIteratorEnd())
             {
                 std::pair<bool,units::quantity<unit::concentration> > result = GetValue((*iter)->GetPoint().rGetLocation(), node_distance_tolerance);

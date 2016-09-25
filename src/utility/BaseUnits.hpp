@@ -46,11 +46,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
  * This singleton manages base units of time and length. Its use needs some care.
  *
- * The default values are Length: microns, Time: minutes, Mass: kg
+ * The default values are Length: microns, Time: minutes, Concentration: micro Molar
  *
  * After a length unit is set any features (Dimensional Chaste Point, Readers, Writers, Solvers) created
  * after that point will use the length base unit as their reference length scale. Any already
- * existing features won't be changed. It is better to explicitly set reference length scales in a feature
+ * existing features won't be changed. It is better to explicitly set reference scales in a feature
  * rather than changing this value often in a simulation.
  *
  * After a time unit is set any timers depending on SimulationTime will use it as the reference time scale. Extra care should be taken if
@@ -74,9 +74,9 @@ class BaseUnits : public SerializableSingleton<BaseUnits>
     units::quantity<unit::length> mLength;
 
     /**
-     * The mass unit
+     * The concentration unit
      */
-    units::quantity<unit::mass> mMass;
+    units::quantity<unit::concentration> mConcentration;
 
 public:
 
@@ -106,7 +106,7 @@ public:
     /**
      * @return the reference time scale
      */
-    units::quantity<unit::mass> GetReferenceMassScale();
+    units::quantity<unit::concentration> GetReferenceConcentrationScale();
 
     /**
      * Sets reference time scale
@@ -119,9 +119,9 @@ public:
     void SetReferenceLengthScale(units::quantity<unit::length> referenceLengthScale);
 
     /**
-     * Sets reference mass scale
+     * Sets reference concentration scale
      */
-    void SetReferenceMassScale(units::quantity<unit::mass> referenceMassScale);
+    void SetReferenceConcentrationScale(units::quantity<unit::concentration> referenceConcentrationScale);
 
     /**
      * Destroy the current BaseUnits instance
@@ -153,7 +153,7 @@ private:
     {
         archive & mTime;
         archive & mLength;
-        archive & mMass;
+        archive & mConcentration;
     }
 
 };

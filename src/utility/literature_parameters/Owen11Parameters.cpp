@@ -69,7 +69,7 @@ const boost::shared_ptr<ParameterInstance<unit::dynamic_viscosity> > Owen11Param
                                                                                    bib_info));
 
 const boost::shared_ptr<ParameterInstance<unit::time> > Owen11Parameters::mpMinimumCellCyclePeriodNormal =
-        boost::shared_ptr<ParameterInstance<unit::time> >(new ParameterInstance<unit::time> (300.0*min,
+        boost::shared_ptr<ParameterInstance<unit::time> >(new ParameterInstance<unit::time> (3000.0*min,
                                                                                    "Owen11_MinCellCycleNormal",
                                                                                    "Minimum cell cycle period normal",
                                                                                    "T_{min}_{normal}",

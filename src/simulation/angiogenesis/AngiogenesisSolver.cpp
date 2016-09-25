@@ -172,7 +172,13 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
 
         for (unsigned idx = 0; idx < tips.size(); idx++)
         {
-            if (indices[idx] >= 0)
+            if(tips[idx]->GetFlowProperties()->IsInputNode() or tips[idx]->GetFlowProperties()->IsOutputNode())
+            {
+                tips[idx]->SetIsMigrating(false);
+                continue;
+            }
+
+            if (indices[idx] >= 0 )
             {
                 if (sprouting)
                 {
@@ -192,7 +198,7 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
             }
             else
             {
-                if (sprouting && nodes[idx]->GetNumberOfSegments() == 2)
+                if (sprouting && tips[idx]->GetNumberOfSegments() == 2)
                 {
                     tips[idx]->SetIsMigrating(false);
                 }
@@ -203,42 +209,53 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
     {
         mpMigrationRule->SetIsSprouting(sprouting);
         std::vector<c_vector<double, DIM> > movement_vectors = mpMigrationRule->GetDirections(tips);
+        std::vector<DimensionalChastePoint<DIM> > candidate_tip_locations(tips.size());
+        std::vector<bool> candidate_tips_inside_domain(tips.size(), true);
         for (unsigned idx = 0; idx < tips.size(); idx++)
         {
+            candidate_tip_locations[idx] = DimensionalChastePoint<DIM>(tips[idx]->rGetLocation().rGetLocation() + movement_vectors[idx]);
+        }
+
+        if (mpBoundingDomain)
+        {
+            candidate_tips_inside_domain = mpBoundingDomain->IsPointInPart(candidate_tip_locations);
+        }
+
+        for (unsigned idx = 0; idx < tips.size(); idx++)
+        {
+            if(tips[idx]->GetFlowProperties()->IsInputNode() or tips[idx]->GetFlowProperties()->IsOutputNode())
+            {
+                tips[idx]->SetIsMigrating(false);
+                continue;
+            }
+
             if (norm_2(movement_vectors[idx]) > 0.0)
             {
-                bool do_move = true;
-                if (mpBoundingDomain)
-                {
-                    if (!mpBoundingDomain->IsPointInPart(DimensionalChastePoint<DIM>(tips[idx]->rGetLocation().rGetLocation() + movement_vectors[idx])))
-                    {
-                        do_move = false;
-                        tips[idx]->SetIsMigrating(false);
-                    }
-                }
-
-                if (do_move)
+                if (candidate_tips_inside_domain[idx])
                 {
                     if (sprouting)
                     {
-                        mpNetwork->FormSprout(tips[idx]->rGetLocation(),
-                                              DimensionalChastePoint<DIM>(tips[idx]->rGetLocation().rGetLocation() + movement_vectors[idx]));
-                        tips[idx]->SetIsMigrating(false);
+                        mpNetwork->FormSprout(tips[idx]->rGetLocation(), candidate_tip_locations[idx]);
                         mpNetwork->UpdateAll();
+                        tips[idx]->SetIsMigrating(false);
                     }
                     else
                     {
                         boost::shared_ptr<VesselNode<DIM> > p_new_node = VesselNode<DIM>::Create(tips[idx]);
-                        p_new_node->SetLocation(DimensionalChastePoint<DIM>(tips[idx]->rGetLocation().rGetLocation() + movement_vectors[idx]));
+                        p_new_node->SetLocation(candidate_tip_locations[idx]);
                         mpNetwork->ExtendVessel(tips[idx]->GetSegment(0)->GetVessel(), tips[idx], p_new_node);
                         tips[idx]->SetIsMigrating(false);
                         p_new_node->SetIsMigrating(true);
                     }
                 }
+                else
+                {
+                    tips[idx]->SetIsMigrating(false);
+                }
             }
             else
             {
-                if (sprouting && nodes[idx]->GetNumberOfSegments() == 2)
+                if (sprouting && tips[idx]->GetNumberOfSegments() == 2)
                 {
                     tips[idx]->SetIsMigrating(false);
                 }

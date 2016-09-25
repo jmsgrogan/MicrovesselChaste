@@ -145,7 +145,6 @@ void SimpleCellPopulation<DIM>::GenerateCellsOnGrid(boost::shared_ptr<Part<DIM> 
         num_z = double(bbox[5] - bbox[4]) * mReferenceLength  / spacing + 1;
     }
 
-    bool first_loop = true;
     for (unsigned idx = 0; idx < num_z;idx++)
     {
         for (unsigned jdx = 0; jdx < num_y ;jdx++)
@@ -160,11 +159,10 @@ void SimpleCellPopulation<DIM>::GenerateCellsOnGrid(boost::shared_ptr<Part<DIM> 
                     location[2] = (bbox[4] * mReferenceLength + double(idx) * spacing)/mReferenceLength;
                 }
 
-                if(pPart->IsPointInPart(location, first_loop))
+                if(pPart->IsPointInPart(location))
                 {
                     cells.push_back(SimpleCell<DIM>::Create(location));
                 }
-                first_loop = false;
             }
         }
     }

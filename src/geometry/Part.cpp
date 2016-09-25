@@ -52,7 +52,8 @@ Part<DIM>::Part() :
         mVtkPart(vtkSmartPointer<vtkPolyData>()),
         mHoleMarkers(),
         mRegionMarkers(),
-        mReferenceLength(1.e-6 * unit::metres)
+        mReferenceLength(1.e-6 * unit::metres),
+        mVtkIsUpToDate(false)
 {
 }
 
@@ -89,6 +90,7 @@ boost::shared_ptr<Polygon> Part<DIM>::AddCircle(units::quantity<unit::length> ra
             vertices.push_back(Vertex::Create(x, y, 0.0, mReferenceLength));
         }
     }
+    mVtkIsUpToDate = false;
     return AddPolygon(vertices);
 }
 
@@ -100,6 +102,7 @@ void Part<DIM>::AddCylinder(units::quantity<unit::length> radius,
 {
     boost::shared_ptr<Polygon> p_circle = AddCircle(radius, centre, numSegments);
     Extrude(p_circle, depth);
+    mVtkIsUpToDate = false;
 }
 
 template<unsigned DIM>
@@ -110,6 +113,7 @@ void Part<DIM>::AddCuboid(units::quantity<unit::length> sizeX,
 {
     boost::shared_ptr<Polygon> p_rectangle = AddRectangle(sizeX, sizeY, origin);
     Extrude(p_rectangle, sizeZ);
+    mVtkIsUpToDate = false;
 }
 
 template<unsigned DIM>
@@ -124,6 +128,7 @@ boost::shared_ptr<Polygon> Part<DIM>::AddPolygon(std::vector<boost::shared_ptr<V
 {
     boost::shared_ptr<Polygon> p_polygon = Polygon::Create(vertices);
     AddPolygon(p_polygon, newFacet, pFacet);
+    mVtkIsUpToDate = false;
     return p_polygon;
 }
 
@@ -146,7 +151,7 @@ boost::shared_ptr<Polygon> Part<DIM>::AddPolygon(boost::shared_ptr<Polygon> pPol
     {
         pFacet->AddPolygon(pPolygon);
     }
-
+    mVtkIsUpToDate = false;
     return pPolygon;
 }
 
@@ -172,6 +177,7 @@ boost::shared_ptr<Polygon> Part<DIM>::AddRectangle(units::quantity<unit::length>
         vertices.push_back(Vertex::Create(origin[0] + sizeX/mReferenceLength, origin[1] + sizeY/mReferenceLength, 0.0, mReferenceLength));
         vertices.push_back(Vertex::Create(origin[0], origin[1] + sizeY/mReferenceLength, 0.0, mReferenceLength));
     }
+    mVtkIsUpToDate = false;
     return AddPolygon(vertices);
 }
 
@@ -256,7 +262,7 @@ void Part<DIM>::AddVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselN
             AddHoleMarker(hole_locations[idx]);
         }
     }
-
+    mVtkIsUpToDate = false;
 }
 
 template<unsigned DIM>
@@ -272,8 +278,16 @@ void Part<DIM>::Extrude(boost::shared_ptr<Polygon> pPolygon, units::quantity<uni
     for (unsigned idx = 0; idx < original_vertices.size(); idx++)
     {
         c_vector<double, DIM> location = original_vertices[idx]->rGetLocation();
-        new_vertices.push_back(Vertex::Create(location[0], location[1], location[2] + depth/original_vertices[idx]->GetReferenceLengthScale(),
-                                              original_vertices[idx]->GetReferenceLengthScale()));
+        if(DIM==2)
+        {
+            new_vertices.push_back(Vertex::Create(location[0], location[1], depth/original_vertices[idx]->GetReferenceLengthScale(),
+                                                  original_vertices[idx]->GetReferenceLengthScale()));
+        }
+        else
+        {
+            new_vertices.push_back(Vertex::Create(location[0], location[1], location[2] + depth/original_vertices[idx]->GetReferenceLengthScale(),
+                                                  original_vertices[idx]->GetReferenceLengthScale()));
+        }
     }
 
     // Every straight edge is now a planar face, with 3 new edges ordered in CCW
@@ -298,6 +312,7 @@ void Part<DIM>::Extrude(boost::shared_ptr<Polygon> pPolygon, units::quantity<uni
     // Close the lid
     boost::shared_ptr<Polygon> p_polygon = Polygon::Create(new_vertices);
     mFacets.push_back(Facet::Create(p_polygon));
+    mVtkIsUpToDate = false;
 }
 
 template <unsigned DIM>
@@ -307,8 +322,8 @@ void Part<DIM>::BooleanWithNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesse
     std::vector<boost::shared_ptr<Vessel<DIM> > > vessels = pVesselNetwork->GetVessels();
     for(unsigned idx=0;idx<vessels.size();idx++)
     {
-        if(!IsPointInPart(vessels[idx]->GetStartNode()->rGetLocation(), idx==0) &&
-                !IsPointInPart(vessels[idx]->GetEndNode()->rGetLocation(), idx==0))
+        if(!IsPointInPart(vessels[idx]->GetStartNode()->rGetLocation()) &&
+                !IsPointInPart(vessels[idx]->GetEndNode()->rGetLocation()))
         {
             pVesselNetwork->RemoveVessel(vessels[idx], true);
         }
@@ -375,12 +390,7 @@ std::vector<unsigned> Part<DIM>::GetContainingGridIndices(unsigned num_x, unsign
             {
                 DimensionalChastePoint<DIM> location(double(idx) * spacing, double(jdx) * spacing, double(kdx) * spacing);
                 unsigned index = idx + num_x * jdx + num_x * num_y * kdx;
-                bool update = false;
-                if(index==0)
-                {
-                    update = true;
-                }
-                if(IsPointInPart(location, update))
+                if(IsPointInPart(location))
                 {
                     location_indices.push_back(index);
                 }
@@ -492,8 +502,13 @@ std::vector<std::pair<unsigned, unsigned> > Part<DIM>::GetSegmentIndices()
 }
 
 template<unsigned DIM>
-vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool update)
+vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk()
 {
+    if(mVtkIsUpToDate)
+    {
+        return mVtkPart;
+    }
+
     vtkSmartPointer<vtkPolyData> p_part_data = vtkSmartPointer<vtkPolyData>::New();
     vtkSmartPointer<vtkPoints> p_vertices = vtkSmartPointer<vtkPoints>::New();
 
@@ -531,13 +546,14 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool update)
     p_clean_data->Update();
 
     mVtkPart = p_clean_data->GetOutput();
+    mVtkIsUpToDate = true;
     return mVtkPart;
 }
 
 template<unsigned DIM>
-bool Part<DIM>::IsPointInPart(DimensionalChastePoint<DIM> location, bool update)
+bool Part<DIM>::IsPointInPart(DimensionalChastePoint<DIM> location)
 {
-    vtkSmartPointer<vtkPolyData> p_part = GetVtk(update);
+    vtkSmartPointer<vtkPolyData> p_part = GetVtk();
     vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
 
     if(DIM==3)
@@ -567,6 +583,49 @@ bool Part<DIM>::IsPointInPart(DimensionalChastePoint<DIM> location, bool update)
     selectEnclosedPoints->Update();
 
     return selectEnclosedPoints->IsInside(0);
+}
+
+template<unsigned DIM>
+std::vector<bool> Part<DIM>::IsPointInPart(const std::vector<DimensionalChastePoint<DIM> >& rLocations)
+{
+    vtkSmartPointer<vtkPolyData> p_part = GetVtk();
+    vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
+
+    for(unsigned idx=0; idx<rLocations.size(); idx++)
+    {
+        if(DIM==3)
+        {
+            p_points->InsertNextPoint(rLocations[idx][0], rLocations[idx][1], rLocations[idx][2]);
+        }
+        else
+        {
+            p_points->InsertNextPoint(rLocations[idx][0], rLocations[idx][1], 0.0);
+        }
+    }
+
+    vtkSmartPointer<vtkPolyData> p_point_data = vtkSmartPointer<vtkPolyData>::New();
+    p_point_data->SetPoints(p_points);
+
+    //Points inside test
+    vtkSmartPointer<vtkSelectEnclosedPoints> selectEnclosedPoints = vtkSmartPointer<vtkSelectEnclosedPoints>::New();
+    #if VTK_MAJOR_VERSION <= 5
+        selectEnclosedPoints->SetInput(p_point_data);
+    #else
+        selectEnclosedPoints->SetInputData(p_point_data);
+    #endif
+    #if VTK_MAJOR_VERSION <= 5
+        selectEnclosedPoints->SetSurface(p_part);
+    #else
+        selectEnclosedPoints->SetSurfaceData(p_part);
+    #endif
+    selectEnclosedPoints->Update();
+
+    std::vector<bool> is_inside(rLocations.size());
+    for(unsigned idx=0; idx<rLocations.size(); idx++)
+    {
+        is_inside[idx] = selectEnclosedPoints->IsInside(idx);
+    }
+    return is_inside;
 }
 
 template<unsigned DIM>
@@ -600,12 +659,14 @@ void Part<DIM>::MergeCoincidentVertices()
     {
         mFacets[idx]->UpdateVertices();
     }
+    mVtkIsUpToDate = false;
 }
 
 template<unsigned DIM>
 void Part<DIM>::SetReferenceLengthScale(units::quantity<unit::length> referenceLength)
 {
     mReferenceLength = referenceLength;
+    mVtkIsUpToDate = false;
 }
 
 template<unsigned DIM>
@@ -618,16 +679,15 @@ void Part<DIM>::Translate(c_vector<double, DIM> vector)
             vertices[idx]->Translate(vector);
         }
     }
+    mVtkIsUpToDate = false;
 }
 
 template<unsigned DIM>
 void Part<DIM>::Write(const std::string& fileName, GeometryFormat::Value format)
 {
-    mVtkPart = GetVtk(true);
-
     GeometryWriter writer;
     writer.SetFileName(fileName);
-    writer.SetInput(mVtkPart);
+    writer.SetInput(GetVtk());
     writer.SetOutputFormat(format);
     writer.Write();
 }

@@ -107,7 +107,7 @@ private:
     boost::shared_ptr<NodeFlowProperties<DIM> > mpFlowProperties;
 
     /**
-     * This is used for comparing node pointers in some VesselNetwork methods.
+     * This is used for comparing nodes in some VesselNetwork methods.
      * It should not be used otherwise.
      */
     unsigned mPtrComparisonId;

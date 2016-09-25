@@ -105,6 +105,41 @@ std::vector<c_vector<double, DIM> > OffLatticeMigrationRule<DIM>::GetDirections(
     else
     {
         std::vector<c_vector<double, DIM> > movement_vectors(rNodes.size(), zero_vector<double>(DIM));
+
+        // We want to probe the PDE solution all at once first if needed, as this is an expensive operation if done node-by-node.
+        // Every node has 5 probes in 2D and 7 in 3D.
+        std::vector<units::quantity<unit::concentration> > probed_solutions;
+        unsigned probes_per_node = 2*DIM+1;
+        std::vector<DimensionalChastePoint<DIM> > probe_locations(probes_per_node*rNodes.size());
+
+        if(this->mpSolver)
+        {
+            double normalized_probe_length = mProbeLength/BaseUnits::Instance()->GetReferenceLengthScale();
+            for(unsigned idx=0; idx<rNodes.size(); idx++)
+            {
+                probe_locations[idx*probes_per_node] = rNodes[idx]->rGetLocation();
+                probe_locations[idx*probes_per_node+1] = DimensionalChastePoint<DIM>(rNodes[idx]->rGetLocation().rGetLocation() +
+                                                                                   normalized_probe_length * unit_vector<double>(DIM,0));
+                probe_locations[idx*probes_per_node+2] = DimensionalChastePoint<DIM>(rNodes[idx]->rGetLocation().rGetLocation() -
+                                                                                   normalized_probe_length * unit_vector<double>(DIM,0));
+                probe_locations[idx*probes_per_node+3] = DimensionalChastePoint<DIM>(rNodes[idx]->rGetLocation().rGetLocation() +
+                                                                                   normalized_probe_length * unit_vector<double>(DIM,1));
+                probe_locations[idx*probes_per_node+4] = DimensionalChastePoint<DIM>(rNodes[idx]->rGetLocation().rGetLocation() -
+                                                                                   normalized_probe_length * unit_vector<double>(DIM,1));
+                if(DIM==3)
+                {
+                    probe_locations[idx*probes_per_node+5] = DimensionalChastePoint<DIM>(rNodes[idx]->rGetLocation().rGetLocation() +
+                                                                                       normalized_probe_length * unit_vector<double>(DIM,2));
+                    probe_locations[idx*probes_per_node+6] = DimensionalChastePoint<DIM>(rNodes[idx]->rGetLocation().rGetLocation() -
+                                                                                       normalized_probe_length * unit_vector<double>(DIM,2));
+                }
+            }
+            if(probe_locations.size()>0)
+            {
+                probed_solutions = this->mpSolver->GetConcentrations(probe_locations);
+            }
+        }
+
         for(unsigned idx=0; idx<rNodes.size(); idx++)
         {
             double angle_x = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0], mSdvAngles[0]);
@@ -126,41 +161,26 @@ std::vector<c_vector<double, DIM> > OffLatticeMigrationRule<DIM>::GetDirections(
             // Solution dependent contribution
             if(this->mpSolver)
             {
-                // Make points
-                double normalized_probe_length = mProbeLength/BaseUnits::Instance()->GetReferenceLengthScale();
-
-                std::vector<DimensionalChastePoint<DIM> > probe_locations;
-                probe_locations.push_back(rNodes[idx]->rGetLocation());
-                probe_locations.push_back(DimensionalChastePoint<DIM>(probe_locations[0].rGetLocation() + normalized_probe_length * unit_vector<double>(DIM,0)));
-                probe_locations.push_back(DimensionalChastePoint<DIM>(probe_locations[0].rGetLocation() - normalized_probe_length * unit_vector<double>(DIM,0)));
-                probe_locations.push_back(DimensionalChastePoint<DIM>(probe_locations[0].rGetLocation() + normalized_probe_length * unit_vector<double>(DIM,1)));
-                probe_locations.push_back(DimensionalChastePoint<DIM>(probe_locations[0].rGetLocation() - normalized_probe_length * unit_vector<double>(DIM,1)));
-                if(DIM==3)
-                {
-                    probe_locations.push_back(DimensionalChastePoint<DIM>(probe_locations[0].rGetLocation() + normalized_probe_length * unit_vector<double>(DIM,2)));
-                    probe_locations.push_back(DimensionalChastePoint<DIM>(probe_locations[0].rGetLocation() - normalized_probe_length * unit_vector<double>(DIM,2)));
-                }
-
-                // Get the solution
-                std::vector<units::quantity<unit::concentration> > solutions = this->mpSolver->GetConcentrations(probe_locations);
-
                 // Get the gradients
-                std::vector<units::quantity<unit::concentration_gradient> > gradients;
-                for(unsigned idx=1; idx<solutions.size();idx++)
+                std::vector<units::quantity<unit::concentration_gradient> > gradients(probes_per_node-1, 0.0*unit::mole_per_metre_pow_4);
+                if(probed_solutions.size()>=idx*probes_per_node+probes_per_node)
                 {
-                    gradients.push_back((solutions[idx] - solutions[0]) / mProbeLength);
+                    for(unsigned jdx=1; jdx<probes_per_node; jdx++)
+                    {
+                        gradients.push_back((probed_solutions[idx*probes_per_node+jdx] - probed_solutions[idx*probes_per_node]) / mProbeLength);
+                    }
                 }
 
                 // Get the index of the max gradient
                 units::quantity<unit::concentration_gradient> max_grad = 0.0 * unit::mole_per_metre_pow_4;
                 int index = -1;
 
-                for(unsigned idx = 0; idx<gradients.size(); idx++)
+                for(unsigned jdx = 0; jdx<gradients.size(); jdx++)
                 {
-                    if(gradients[idx]>max_grad)
+                    if(gradients[jdx]>max_grad)
                     {
-                        max_grad = gradients[idx];
-                        index = idx;
+                        max_grad = gradients[jdx];
+                        index = jdx;
                     }
                 }
 

@@ -52,10 +52,10 @@ Owen2011OxygenBasedCellCycleOdeSystem::Owen2011OxygenBasedCellCycleOdeSystem(uni
   mOxygenConcentration(oxygenConcentration),
   pmMutationState(mutation_state),
   mReferenceTimeScale(BaseUnits::Instance()->GetReferenceTimeScale()),
-  mReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed)
+  mReferenceConcentrationScale(BaseUnits::Instance()->GetReferenceConcentrationScale())
 {
     mpSystemInfo.reset(new CellwiseOdeSystemInformation<Owen2011OxygenBasedCellCycleOdeSystem>);
-    mpSystemInfo->SetDefaultInitialCondition(3, mOxygenConcentration.value());
+    mpSystemInfo->SetDefaultInitialCondition(3, mOxygenConcentration/mReferenceConcentrationScale);
 
     mk7 = Owen11Parameters::mpP53ProductionRateConstant->GetValue("Owen2011OxygenBasedCellCycleOdeSystem");
     mk7dash = Owen11Parameters::mpP53MaxDegradationRate->GetValue("Owen2011OxygenBasedCellCycleOdeSystem");

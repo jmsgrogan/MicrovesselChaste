@@ -55,12 +55,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Owen2011OxygenBasedCellCycleModel::Owen2011OxygenBasedCellCycleModel(boost::shared_ptr<AbstractCellCycleModelOdeSolver> pOdeSolver)
 : AbstractOdeBasedPhaseBasedCellCycleModel(SimulationTime::Instance()->GetTime(), pOdeSolver),
-  mOdeIntegrationTimeStep(30.0*unit::seconds),
+  mOdeIntegrationTimeStep(30.0*unit::minutes),
   sOnset(0.4),
   g2Onset(0.6),
   mOnset(0.9),
   mReferenceTimeScale(BaseUnits::Instance()->GetReferenceTimeScale()),
-  mReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed),
+  mReferenceConcentrationScale(BaseUnits::Instance()->GetReferenceConcentrationScale()),
   mMaxRandInitialPhase(0.99),
   mCurrentQuiescentDuration(0.0*unit::seconds),
   mCurrentQuiescenceOnsetTime(0.0*unit::seconds),
@@ -117,7 +117,6 @@ void Owen2011OxygenBasedCellCycleModel::CheckAndLabelCell()
         unsigned number_of_normal_neighbours = mpCell->GetCellData()->GetItem("Number_of_normal_neighbours");
         unsigned number_of_cancerous_neighbours = mpCell->GetCellData()->GetItem("Number_of_cancerous_neighbours");
         double normal_neighbour_fraction = double(number_of_normal_neighbours)/double(number_of_cancerous_neighbours+number_of_normal_neighbours);
-
         if (normal_neighbour_fraction > mthresholdFractionOfNormalCellNeighbours)
         {
             p53threshold = mp53ThresholdForApoptosisOfNormalCellsInHealthyMicroenvironment;
@@ -165,6 +164,9 @@ AbstractCellCycleModel* Owen2011OxygenBasedCellCycleModel::CreateCellCycleModel(
     p_model->SetLeaveQuiescenceOxygenConcentration(mLeaveQuiescenceOxygenConcentration);
     p_model->SetCriticalQuiescentDuration(mCriticalQuiescentDuration);
     p_model->SetCurrentQuiescenceOnsetTime(mCurrentQuiescenceOnsetTime);
+    p_model->SetReferenceTimeScale(mReferenceTimeScale);
+    p_model->SetReferenceConcentrationScale(mReferenceConcentrationScale);
+
     /*
      * Create the new cell-cycle model's ODE system and use the current values
      * of the state variables in mpOdeSystem as an initial condition.
@@ -330,6 +332,22 @@ void Owen2011OxygenBasedCellCycleModel::SetG2Onset(units::quantity<unit::dimensi
 void Owen2011OxygenBasedCellCycleModel::SetMOnset(units::quantity<unit::dimensionless> value)
 {
     mOnset = value;
+}
+
+void Owen2011OxygenBasedCellCycleModel::SetOdeSolverTimeStep(units::quantity<unit::time> timeStep)
+{
+    mOdeIntegrationTimeStep = timeStep;
+    SetDt(mOdeIntegrationTimeStep/mReferenceTimeScale);
+}
+
+void Owen2011OxygenBasedCellCycleModel::SetReferenceTimeScale(units::quantity<unit::time> referenceTimeScale)
+{
+    mReferenceTimeScale = referenceTimeScale;
+}
+
+void Owen2011OxygenBasedCellCycleModel::SetReferenceConcentrationScale(units::quantity<unit::concentration> referenceConcentrationScale)
+{
+    mReferenceConcentrationScale = referenceConcentrationScale;
 }
 
 void Owen2011OxygenBasedCellCycleModel::SetMaxRandInitialPhase(units::quantity<unit::dimensionless> rand_max_phase)

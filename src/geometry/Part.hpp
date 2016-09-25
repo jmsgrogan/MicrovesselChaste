@@ -81,6 +81,8 @@ class Part
 
     units::quantity<unit::length> mReferenceLength;
 
+    bool mVtkIsUpToDate;
+
 public:
 
     /**
@@ -240,14 +242,21 @@ public:
      * Return the a vtk polydata representation of the part
      * @return a vtk representation of the part
      */
-    vtkSmartPointer<vtkPolyData> GetVtk(bool update=true);
+    vtkSmartPointer<vtkPolyData> GetVtk();
 
     /**
      * Is the point inside the part
      * @param location the location of the point
      * @return bool true if the point is inside the part
      */
-    bool IsPointInPart(DimensionalChastePoint<DIM> location, bool update=true);
+    bool IsPointInPart(DimensionalChastePoint<DIM> location);
+
+    /**
+     * Is the point inside the part
+     * @param location the location of the point
+     * @return bool true if the point is inside the part
+     */
+    std::vector<bool> IsPointInPart(const std::vector<DimensionalChastePoint<DIM> >& location);
 
     /**
      * Merge vertices that overlap in polygons and facets
