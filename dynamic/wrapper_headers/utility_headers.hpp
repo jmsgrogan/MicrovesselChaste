@@ -1,8 +1,8 @@
 #include "BaseUnits.hpp"
-#include "ParameterInstance.hpp"
 #include "UnitCollection.hpp"
 #include "ParameterCollection.hpp"
 #include "BaseParameterInstance.hpp"
+#include "ChastePoint.hpp"
 
 //// Typdef in this namespace so that pyplusplus uses the nicer typedef'd name for the class
 //namespace pyplusplus{
@@ -18,8 +18,10 @@
 //
 
 //namespace chaste{
-template class ParameterInstance<unit::mass>;
+//template class ParameterInstance<unit::mass>;
 //}
+
+//template class ChastePoint<3>;
 
 //inline int Instantiation()
 //{

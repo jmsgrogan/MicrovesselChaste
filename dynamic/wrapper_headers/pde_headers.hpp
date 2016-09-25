@@ -1,4 +1,4 @@
-#include "../../src/pde/problem/LinearSteadyStateDiffusionReactionPde.hpp"
+#include "LinearSteadyStateDiffusionReactionPde.hpp"
 #include "DiscreteSource.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
 #include "AbstractDiscreteContinuumNonLinearEllipticPde.hpp"

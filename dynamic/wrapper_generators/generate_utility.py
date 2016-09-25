@@ -11,19 +11,14 @@ from pygccxml import parser
 def update_builder(builder):
     
 
-#     include_classes = ["UnitTester", 
-# #                       "ParameterCollection", 
-# #                       "BaseParameterInstance", 
-# #                       "DimensionalSimulationTime",
-# #                        "LengthParameterInstance",
-# #                       "MassParameterInstance",
-# #                       "TimeParameterInstance",
-# #                       "PressureParameterInstance",
-# #                       "ViscosityParameterInstance"
-#                        ]
-#      
-#     for eachClass in include_classes:
-#         builder.class_(eachClass).include()
+    include_classes = [ 
+                       "ParameterCollection", 
+                       "BaseParameterInstance", 
+                       "BaseUnits"
+                       ]
+      
+    for eachClass in include_classes:
+        builder.class_(eachClass).include()
 
 #     helpers = builder.classes(lambda decl: decl.name.startswith('UnitTester'))
 #     for eachClass in helpers:
@@ -32,12 +27,12 @@ def update_builder(builder):
 
 #     chaste_ns = builder.global_ns.namespace('chaste')
 #     helpers = chaste_ns.classes()
-    print module_builder.__file__
-    helpers = builder.classes(lambda decl: decl.name.startswith('ParameterInstance'))
-    for eachClass in helpers:
-        eachClass.include()
-        eachClass.rename("SomethingElse")
-        print eachClass.alias
+#     print module_builder.__file__
+#     helpers = builder.classes(lambda decl: decl.name.startswith('ParameterInstance'))
+#     for eachClass in helpers:
+#         eachClass.include()
+#         eachClass.rename("SomethingElse")
+#         print eachClass.alias
 
 #    builder.variable("kg").include()
 #     helpers = builder.classes(lambda decl: decl.name.startswith('ParameterInstance'))
@@ -121,7 +116,6 @@ def update_builder(builder):
     
 #     helpers = builder.classes(lambda decl: decl.name.startswith('quantity'))
 #     helpers.include()
-    
     
 #     PressureUnit@::pyplusplus::aliases::PressureUnit
 #     builder.print_declarations()
