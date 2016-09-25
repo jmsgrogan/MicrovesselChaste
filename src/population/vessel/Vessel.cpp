@@ -571,7 +571,31 @@ units::quantity<unit::length> Vessel<DIM>::GetRadius() const
 }
 
 template<unsigned DIM>
+boost::shared_ptr<VesselNode<DIM> > Vessel<DIM>::GetNode(unsigned index)
+{
+    if (!mNodesUpToDate)
+    {
+        UpdateNodes();
+    }
+    if(index >= mNodes.size())
+    {
+        EXCEPTION("Out of bounds node index requested");
+    }
+    return mNodes[index];
+}
+
+template<unsigned DIM>
 std::vector<boost::shared_ptr<VesselNode<DIM> > > Vessel<DIM>::GetNodes()
+{
+    if (!mNodesUpToDate)
+    {
+        UpdateNodes();
+    }
+    return mNodes;
+}
+
+template<unsigned DIM>
+const std::vector<boost::shared_ptr<VesselNode<DIM> > >& Vessel<DIM>::rGetNodes()
 {
     if (!mNodesUpToDate)
     {
@@ -698,7 +722,7 @@ boost::shared_ptr<Vessel<DIM> > Vessel<DIM>::Shared()
 template<unsigned DIM>
 void Vessel<DIM>::UpdateNodes()
 {
-    mNodes = std::vector<boost::shared_ptr<VesselNode<DIM> > >();
+    mNodes.clear();
 
     if (mSegments.size() == 1)
     {
@@ -719,7 +743,6 @@ void Vessel<DIM>::UpdateNodes()
         {
             mNodes.push_back(mSegments[0]->GetNode(1));
             mNodes.push_back(mSegments[0]->GetNode(0));
-
         }
 
         for (unsigned idx = 1; idx < mSegments.size(); idx++)

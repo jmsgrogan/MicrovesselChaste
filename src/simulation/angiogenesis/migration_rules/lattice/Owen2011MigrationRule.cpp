@@ -112,8 +112,10 @@ std::vector<double> Owen2011MigrationRule<DIM>::GetNeighbourMovementProbabilitie
             }
         }
 
-        //ensure that the new sprout would not try to cross a vessel which is oriented diagonally
-        bool vessel_crosses_line_segment = this->mpVesselNetwork->VesselCrossesLineSegment(neighbour_location, pNode->rGetLocation());
+        //ensure that the new sprout would not try to cross a vessel which is oriented diagonally.
+        // todo bottleneck, dont think it is even needed for current neighbourhood
+//        bool vessel_crosses_line_segment = this->mpVesselNetwork->VesselCrossesLineSegment(neighbour_location, pNode->rGetLocation());
+        bool vessel_crosses_line_segment = false;
 
         if (!vessel_crosses_line_segment && !sprout_already_attached_to_vessel_at_location)
         {

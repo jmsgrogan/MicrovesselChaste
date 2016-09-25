@@ -114,8 +114,16 @@ std::vector<std::vector<boost::shared_ptr<Polygon> > > VesselSurfaceGenerator<DI
         {
             c_vector<double, DIM> node_location = p_start_node->rGetLocation().rGetLocation();
             vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
-            p_plane->SetOrigin(node_location[0], node_location[1], node_location[2]);
-            p_plane->SetNormal(segment_tangent[0], segment_tangent[1], segment_tangent[2]);
+            if(DIM==2)
+            {
+                p_plane->SetOrigin(node_location[0], node_location[1], node_location[2]);
+                p_plane->SetNormal(segment_tangent[0], segment_tangent[1], segment_tangent[2]);
+            }
+            else
+            {
+                p_plane->SetOrigin(node_location[0], node_location[1], 0.0);
+                p_plane->SetNormal(segment_tangent[0], segment_tangent[1], 0.0);
+            }
             start_planes.push_back(p_plane);
         }
         else
@@ -134,11 +142,25 @@ std::vector<std::vector<boost::shared_ptr<Polygon> > > VesselSurfaceGenerator<DI
                     average_start_normal += VectorProduct(segment_tangent, other_segment_tangent);
                     c_vector<double, DIM> node_location = p_start_node->rGetLocation().rGetLocation();
                     vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
-                    p_plane->SetOrigin(node_location[0], node_location[1], node_location[2]);
+                    if(DIM==2)
+                    {
+                        p_plane->SetOrigin(node_location[0], node_location[1], 0.0);
+                    }
+                    else
+                    {
+                        p_plane->SetOrigin(node_location[0], node_location[1], node_location[2]);
+                    }
 
                     c_vector<double, DIM> bisection_vector = segment_tangent + other_segment_tangent;
                     bisection_vector /= norm_2(bisection_vector);
-                    p_plane->SetNormal(bisection_vector[0], bisection_vector[1], bisection_vector[2]);
+                    if(DIM==2)
+                    {
+                        p_plane->SetNormal(bisection_vector[0], bisection_vector[1], 0.0);
+                    }
+                    else
+                    {
+                        p_plane->SetNormal(bisection_vector[0], bisection_vector[1], bisection_vector[2]);
+                    }
                     start_planes.push_back(p_plane);
                 }
             }
@@ -168,11 +190,25 @@ std::vector<std::vector<boost::shared_ptr<Polygon> > > VesselSurfaceGenerator<DI
 
                     c_vector<double, DIM> node_location = p_end_node->rGetLocation().rGetLocation();
                     vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
-                    p_plane->SetOrigin(node_location[0], node_location[1], node_location[2]);
+                    if(DIM==2)
+                    {
+                        p_plane->SetOrigin(node_location[0], node_location[1], 0.0);
+                    }
+                    else
+                    {
+                        p_plane->SetOrigin(node_location[0], node_location[1], node_location[2]);
+                    }
 
                     c_vector<double, DIM> bisection_vector = segment_tangent + other_segment_tangent;
                     bisection_vector /= norm_2(bisection_vector);
-                    p_plane->SetNormal(bisection_vector[0], bisection_vector[1], bisection_vector[2]);
+                    if(DIM==2)
+                    {
+                        p_plane->SetNormal(bisection_vector[0], bisection_vector[1], 0.0);
+                    }
+                    else
+                    {
+                        p_plane->SetNormal(bisection_vector[0], bisection_vector[1], bisection_vector[2]);
+                    }
                     end_planes.push_back(p_plane);
                 }
             }

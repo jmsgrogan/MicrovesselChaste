@@ -230,11 +230,25 @@ public:
     units::quantity<unit::length> GetRadius() const;
 
     /**
+     * Return the vessel node
+     *
+     * @return the vessel node
+     */
+    boost::shared_ptr<VesselNode<DIM> > GetNode(unsigned index);
+
+    /**
      * Return the vessel's nodes
      *
      * @return the vessel nodes
      */
     std::vector<boost::shared_ptr<VesselNode<DIM> > > GetNodes();
+
+    /**
+     * Return a reference to the vessel node vector, avoids a copy
+     *
+     * @return a reference to the vessel node vector
+     */
+    const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rGetNodes();
 
     /**
      * Return the number of nodes in the vessel

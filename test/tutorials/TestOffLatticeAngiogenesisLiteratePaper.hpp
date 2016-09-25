@@ -278,13 +278,13 @@ public:
         p_microvessel_solver->SetVesselNetwork(p_network);
         p_microvessel_solver->AddDiscreteContinuumSolver(p_vegf_solver);
         p_microvessel_solver->SetOutputFileHandler(p_handler);
-        p_microvessel_solver->SetOutputFrequency(1);
+        p_microvessel_solver->SetOutputFrequency(5);
         p_microvessel_solver->SetAngiogenesisSolver(p_angiogenesis_solver);
         p_microvessel_solver->SetUpdatePdeEachSolve(false);
         /*
          * Set the simulation time and run the solver. The result is shown at the top of the tutorial.
          */
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(5.0, 5);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(200.0, 200);
         p_microvessel_solver->Run();
     }
 };
