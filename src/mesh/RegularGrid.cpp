@@ -43,6 +43,7 @@
 #include <vtkPolyData.h>
 #include <vtkPoints.h>
 #include <vtkSmartPointer.h>
+#include <vtkLine.h>
 #include "RegularGridWriter.hpp"
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -500,24 +501,68 @@ std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > Regular
         std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > empty_seg_pointers;
         mPointSegmentMap.push_back(empty_seg_pointers);
     }
-    std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > segments = mpNetwork->GetVesselSegments();
 
+    std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > segments = mpNetwork->GetVesselSegments();
+    unsigned num_points = GetNumberOfPoints();
+    units::quantity<unit::length> cut_off_length = sqrt(1.0 / 2.0) * mSpacing;
     for (unsigned jdx = 0; jdx < segments.size(); jdx++)
     {
-        for (unsigned idx = 0; idx < GetNumberOfPoints(); idx++)
+        double start_point[3];
+        double end_point[3];
+        c_vector<double ,SPACE_DIM> start_location = segments[jdx]->GetNode(0)->rGetLocation().rGetLocation();
+        start_point[0] = start_location[0];
+        start_point[1] = start_location[1];
+        if(SPACE_DIM==3)
         {
+            start_point[2] = start_location[2];
+        }
+        else
+        {
+            start_point[2] = 0.0;
+        }
+        c_vector<double ,SPACE_DIM> end_location = segments[jdx]->GetNode(1)->rGetLocation().rGetLocation();
+        end_point[0] = end_location[0];
+        end_point[1] = end_location[1];
+        if(SPACE_DIM==3)
+        {
+            end_point[2] = end_location[2];
+        }
+        else
+        {
+            end_point[2] = 0.0;
+        }
 
+        for (unsigned idx = 0; idx < num_points; idx++)
+        {
             if (!useVesselSurface)
             {
-                if (segments[jdx]->GetDistance(GetLocationOf1dIndex(idx)) < sqrt(1.0 / 2.0) * mSpacing)
+                double parametric_distance = 0.0;
+                double closest_point[3];
+                double grid_point[3];
+                c_vector<double ,SPACE_DIM> grid_location = GetLocationOf1dIndex(idx).rGetLocation();
+                grid_point[0] = grid_location[0];
+                grid_point[1] = grid_location[1];
+                if(SPACE_DIM==3)
+                {
+                    grid_point[2] = grid_location[2];
+                }
+                else
+                {
+                    grid_point[2] = 0.0;
+                }
+
+                double distance = vtkLine::DistanceToLine(grid_point,
+                                                          start_point,
+                                                          end_point,
+                                                          parametric_distance, closest_point);
+                if (distance*mReferenceLength < cut_off_length)
                 {
                     mPointSegmentMap[idx].push_back(segments[jdx]);
                 }
             }
             else
             {
-                if (segments[jdx]->GetDistance(GetLocationOf1dIndex(idx))
-                        < (segments[jdx]->GetRadius() + sqrt(1.0 / 2.0) * mSpacing))
+                if (segments[jdx]->GetDistance(GetLocationOf1dIndex(idx))< (segments[jdx]->GetRadius() + cut_off_length))
                 {
                     mPointSegmentMap[idx].push_back(segments[jdx]);
                 }
@@ -558,7 +603,18 @@ DimensionalChastePoint<SPACE_DIM> RegularGrid<ELEMENT_DIM, SPACE_DIM>::GetLocati
     unsigned mod_y = mod_z % mExtents[0];
     unsigned y_index = (mod_z - mod_y) / mExtents[0];
     unsigned x_index = mod_y;
-    return GetLocation(x_index, y_index, z_index);
+    unsigned dimless_spacing = mSpacing/mReferenceLength;
+    if(SPACE_DIM == 2)
+    {
+        return DimensionalChastePoint<SPACE_DIM>(double(x_index) * dimless_spacing + mOrigin[0],
+                                                              double(y_index) * dimless_spacing + mOrigin[1]);
+    }
+    else
+    {
+        return DimensionalChastePoint<SPACE_DIM>(double(x_index) * dimless_spacing + mOrigin[0],
+                                                              double(y_index) * dimless_spacing + mOrigin[1],
+                                                              double(z_index) * dimless_spacing + mOrigin[2]);
+    }
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

@@ -49,6 +49,11 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UniformCellCycleModel.hpp"
 #include "MeshBasedCellPopulation.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
+#include "VesselNetwork.hpp"
+#include "VesselSegment.hpp"
+#include "VesselNetworkGenerator.hpp"
+#include "OutputFileHandler.hpp"
+
 #include "PetscSetupAndFinalize.hpp"
 
 class TestRegularGrid : public AbstractCellBasedWithTimingsTestSuite
@@ -56,7 +61,7 @@ class TestRegularGrid : public AbstractCellBasedWithTimingsTestSuite
 
 public:
 
-    void TestIndexing() throw(Exception)
+    void DontTestIndexing() throw(Exception)
     {
         // Set up a 2d grid
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
@@ -83,7 +88,7 @@ public:
         TS_ASSERT_EQUALS(p_grid_3d->Get1dGridIndex(0,3,3), 120u)
     }
 
-    void TestNeighbourCalculation()
+    void DontTestNeighbourCalculation()
     {
         // Set up a grid
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
@@ -125,7 +130,7 @@ public:
          }
     }
 
-    void TestPointPointMapGeneration()
+    void DontTestPointPointMapGeneration()
     {
         // Set up a grid
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
@@ -158,7 +163,7 @@ public:
         TS_ASSERT_EQUALS(sum, 10000u);
     }
 
-    void TestPointCellMapGeneration()
+    void DontTestPointCellMapGeneration()
     {
         // Set up a grid
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
@@ -192,7 +197,35 @@ public:
         TS_ASSERT_EQUALS(sum, 100u);
     }
 
-    void TestInterpolateGridValues() throw (Exception)
+    void TestPointSegmentMapGeneration()
+    {
+        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestRegularGrid"));
+        // Set up a grid
+        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::vector<unsigned> extents(3);
+        extents[0] = 101;
+        extents[1] = 101;
+        extents[2] = 1;
+        p_grid->SetExtents(extents);
+        units::quantity<unit::length> spacing(2.0*unit::microns);
+        p_grid->SetSpacing(spacing);
+
+        // Set up vessel network
+        VesselNetworkGenerator<2> network_generator;
+        units::quantity<unit::length> width(100.0*unit::microns);
+        units::quantity<unit::length> height(100.0*unit::microns);
+        boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(width,
+                                                                                                    height,
+                                                                                                    spacing);
+        // Get a point-segment map
+        p_grid->SetVesselNetwork(p_network);
+        p_grid->Write(p_handler);
+        std::vector<std::vector<boost::shared_ptr<VesselSegment<2> > > > map = p_grid->GetPointSegmentMap();
+
+        p_network->Write(p_handler->GetOutputDirectoryFullPath() + "/network.vtp");
+    }
+
+    void DontTestInterpolateGridValues() throw (Exception)
     {
         // Set up a grid
         RandomNumberGenerator::Instance()->Reseed(1000);
@@ -249,7 +282,7 @@ public:
         std::cout << "Max Error: " << max_error << std::endl;
     }
 
-    void TestInterpolateGridValuesWithVtk() throw (Exception)
+    void DontTestInterpolateGridValuesWithVtk() throw (Exception)
     {
         // Set up a grid
         RandomNumberGenerator::Instance()->Reseed(1000);
