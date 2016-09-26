@@ -186,7 +186,7 @@ void FiniteElementSolver<DIM>::Solve()
         }
         else
         {
-            Vec initial_guess = PetscTools::CreateAndSetVec(this->mpMesh->GetNumNodes(), this->mBoundaryConditions[0]->GetValue()/unit::mole_per_metre_cubed);
+            Vec initial_guess = PetscTools::CreateAndSetVec(this->mpMesh->GetNumNodes(), this->mBoundaryConditions[0]->GetValue()/this->mReferenceConcentration);
             SimpleNonlinearEllipticSolver<DIM, DIM> solver(this->mpMesh.get(), this->mpNonLinearPde.get(), p_bcc.get());
             SimpleNewtonNonlinearSolver newton_solver;
             if(mUseNewton)

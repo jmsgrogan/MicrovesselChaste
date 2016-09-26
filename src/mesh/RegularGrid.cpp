@@ -481,6 +481,21 @@ const std::vector<std::vector<CellPtr> >& RegularGrid<ELEMENT_DIM, SPACE_DIM>::G
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+bool RegularGrid<ELEMENT_DIM, SPACE_DIM>::IsSegmentAtLatticeSite(unsigned index, bool update)
+{
+    if(update)
+    {
+        GetPointSegmentMap(update);
+    }
+
+    if(index>=mPointSegmentMap.size())
+    {
+        EXCEPTION("Out of range index requested for point-segment map");
+    }
+    return mPointSegmentMap[index].size()>0;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > RegularGrid<ELEMENT_DIM, SPACE_DIM>::GetPointSegmentMap(
         bool update, bool useVesselSurface)
 {

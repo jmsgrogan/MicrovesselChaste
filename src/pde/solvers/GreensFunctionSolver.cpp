@@ -102,7 +102,7 @@ void GreensFunctionSolver<DIM>::Solve()
     // Get the sink substance demand on each vessel subsegment
     unsigned number_of_subsegments = mSubSegmentCoordinates.size();
     units::quantity<unit::diffusivity> diffusivity = this->mpPde->ComputeIsotropicDiffusionTerm();
-    std::vector<units::quantity<unit::concentration> > sink_demand_per_subsegment(number_of_subsegments, 0.0*unit::mole_per_metre_cubed);
+    std::vector<units::quantity<unit::concentration> > sink_demand_per_subsegment(number_of_subsegments, 0.0*this->mReferenceConcentration);
     for (unsigned idx = 0; idx < number_of_subsegments; idx++)
     {
         for (unsigned jdx = 0; jdx < number_of_sinks; jdx++)
@@ -111,16 +111,16 @@ void GreensFunctionSolver<DIM>::Solve()
         }
     }
 
-    mSegmentConcentration = std::vector<units::quantity<unit::concentration> >(number_of_subsegments, 1.0*unit::mole_per_metre_cubed);
-    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(number_of_sinks, 0.0*unit::mole_per_metre_cubed);
+    mSegmentConcentration = std::vector<units::quantity<unit::concentration> >(number_of_subsegments, 1.0*this->mReferenceConcentration);
+    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(number_of_sinks, 0.0*this->mReferenceConcentration);
 
     // Solve for the subsegment source rates required to meet the sink substance demand
     double tolerance = 1.e-10;
-    units::quantity<unit::concentration> g0 = 0.0 * unit::mole_per_metre_cubed;
+    units::quantity<unit::concentration> g0 = 0.0 * this->mReferenceConcentration;
     mSourceRates = std::vector<units::quantity<unit::molar_flow_rate> >(number_of_subsegments, 0.0*unit::mole_per_second);
 
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
-    units::quantity<unit::concentration> reference_concentration(1.0*unit::mole_per_metre_cubed);
+    units::quantity<unit::concentration> reference_concentration = this->mReferenceConcentration;
     units::quantity<unit::amount> reference_amount(1.0*unit::moles);
     LinearSystem linear_system(number_of_subsegments + 1, number_of_subsegments + 1);
     linear_system.SetKspType("bcgs");
@@ -192,7 +192,7 @@ void GreensFunctionSolver<DIM>::Solve()
     // Get the tissue concentration and write the solution
     for (unsigned i = 0; i < number_of_sinks; i++)
     {
-        this->mConcentrations[i] = 0.0 * unit::mole_per_metre_cubed;
+        this->mConcentrations[i] = 0.0 * this->mReferenceConcentration;
         for (unsigned j = 0; j < number_of_sinks; j++)
         {
             this->mConcentrations[i] += (*mGtt)[i][j] * mSinkRates[j] / diffusivity;
@@ -464,7 +464,7 @@ void GreensFunctionSolver<DIM>::WriteSolution(std::map<std::string, std::vector<
 
         for (unsigned i = 0; i < mSubSegmentCoordinates.size(); i++)
         {
-            pInfo->SetValue(i, segmentPointData[segment_iter->first][i]/unit::mole_per_metre_cubed);
+            pInfo->SetValue(i, segmentPointData[segment_iter->first][i]/this->mReferenceConcentration);
         }
         pPolyData->GetPointData()->AddArray(pInfo);
     }

@@ -34,6 +34,7 @@ Copyright (c) 2005-2016, University of Oxford.
  */
 
 #include "AbstractDiscreteContinuumSolver.hpp"
+#include "BaseUnits.hpp"
 
 template<unsigned DIM>
 AbstractDiscreteContinuumSolver<DIM>::AbstractDiscreteContinuumSolver()
@@ -47,7 +48,7 @@ AbstractDiscreteContinuumSolver<DIM>::AbstractDiscreteContinuumSolver()
         mpPde(),
         mpNonLinearPde(),
         mBoundaryConditions(),
-        mReferenceConcentration(1.0*unit::mole_per_metre_cubed),
+        mReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale()),
         mSolution(),
         mConcentrations(),
         mHasRegularGrid(false),

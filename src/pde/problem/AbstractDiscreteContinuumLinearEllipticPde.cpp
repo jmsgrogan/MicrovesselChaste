@@ -48,7 +48,7 @@ AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::AbstractDisc
             mpMesh(),
             mUseRegularGrid(true),
             mDiscreteConstantSourceStrengths(),
-            mReferenceConcentration(1.e-9 * unit::mole_per_metre_cubed)
+            mReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale())
 {
     mDiffusionTensor *= mDiffusivity.value();
 }

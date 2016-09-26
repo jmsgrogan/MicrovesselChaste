@@ -246,8 +246,9 @@ public:
      * @bool update update the map
      * @return the point segment map
      */
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > GetPointSegmentMap(
-            bool update = true, bool useVesselSurface = false);
+    std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > GetPointSegmentMap(bool update = true, bool useVesselSurface = false);
+
+    bool IsSegmentAtLatticeSite(unsigned index, bool update);
 
     /**
      * Return the grid spacing
