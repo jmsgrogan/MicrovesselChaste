@@ -88,6 +88,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "StructuralAdaptationSolver.hpp"
 #include "WallShearStressCalculator.hpp"
 #include "MechanicalStimulusCalculator.hpp"
+#include "MetabolicStimulusCalculator.hpp"
 #include "ShrinkingStimulusCalculator.hpp"
 #include "ViscosityCalculator.hpp"
 /*
@@ -215,23 +216,22 @@ public:
         p_cell_oxygen_sink->SetLinearInUConsumptionRatePerCell(Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
         p_oxygen_pde->AddDiscreteSource(p_cell_oxygen_sink);
         /*
-        * Add a boundary condition for vessel oxygen release.
+        * Vessels release oxygen depending on their haematocrit levels
         */
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_ox_boundary = DiscreteContinuumBoundaryCondition<2>::Create();
-        p_ox_boundary->SetType(BoundaryConditionType::VESSEL_LINE);
-        p_ox_boundary->SetSource(BoundaryConditionSource::PRESCRIBED);
-        units::quantity<unit::pressure> vessel_oxygen_partial_pressure(40.0*unit::mmHg);
-        units::quantity<unit::concentration> vessel_oxygen_concentration =
-                Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
-                GenericParameters::mpGasConcentrationAtStp->GetValue("User") * vessel_oxygen_partial_pressure;
-        p_ox_boundary->SetValue(vessel_oxygen_concentration);
-        p_ox_boundary->SetNetwork(p_network);
+        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_oxygen_source = VesselBasedDiscreteSource<2>::Create();
+        units::quantity<unit::solubility> oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
+                GenericParameters::mpGasConcentrationAtStp->GetValue("User");
+        units::quantity<unit::concentration> vessel_oxygen_concentration = oxygen_solubility_at_stp *
+                Owen11Parameters::mpReferencePartialPressure->GetValue("User");
+        p_vessel_oxygen_source->SetReferenceConcentration(vessel_oxygen_concentration);
+        p_vessel_oxygen_source->SetVesselPermeability(Owen11Parameters::mpVesselOxygenPermeability->GetValue("User"));
+        p_vessel_oxygen_source->SetReferenceHaematocrit(Owen11Parameters::mpInflowHaematocrit->GetValue("User"));
+        p_oxygen_pde->AddDiscreteSource(p_vessel_oxygen_source);
         /*
-        * Set up a finite difference solver and pass it the pde, boundary conditions and grid.
+        * Set up a finite difference solver and pass it the pde and grid.
         */
         boost::shared_ptr<FiniteDifferenceSolver<2> > p_oxygen_solver = FiniteDifferenceSolver<2>::Create();
         p_oxygen_solver->SetPde(p_oxygen_pde);
-        p_oxygen_solver->AddBoundaryCondition(p_ox_boundary);
         p_oxygen_solver->SetLabel("oxygen");
         p_oxygen_solver->SetGrid(p_grid);
         /*
@@ -261,6 +261,13 @@ public:
         p_normal_and_quiescent_cell_source->SetStateRateThresholdMap(normal_and_quiescent_cell_rate_thresholds);
         p_vegf_pde->AddDiscreteSource(p_normal_and_quiescent_cell_source);
         /*
+        * Add a vessel related VEGF sink
+        */
+        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_vegf_sink = VesselBasedDiscreteSource<2>::Create();
+        p_vessel_vegf_sink->SetReferenceConcentration(0.0*unit::mole_per_metre_cubed);
+        p_vessel_vegf_sink->SetVesselPermeability(Owen11Parameters::mpVesselVegfPermeability->GetValue("User"));
+        p_vegf_pde->AddDiscreteSource(p_vessel_vegf_sink);
+        /*
         * Set up a finite difference solver as before.
         */
         boost::shared_ptr<FiniteDifferenceSolver<2> > p_vegf_solver = FiniteDifferenceSolver<2>::Create();
@@ -286,6 +293,7 @@ public:
         p_haematocrit_calculator->SetHaematocrit(Owen11Parameters::mpInflowHaematocrit->GetValue("User"));
         boost::shared_ptr<WallShearStressCalculator<2> > p_wss_calculator = WallShearStressCalculator<2>::Create();
         boost::shared_ptr<MechanicalStimulusCalculator<2> > p_mech_stimulus_calculator = MechanicalStimulusCalculator<2>::Create();
+        boost::shared_ptr<MetabolicStimulusCalculator<2> > p_metabolic_stim_calculator = MetabolicStimulusCalculator<2>::Create();
         boost::shared_ptr<ShrinkingStimulusCalculator<2> > p_shrinking_stimulus_calculator = ShrinkingStimulusCalculator<2>::Create();
         boost::shared_ptr<ViscosityCalculator<2> > p_viscosity_calculator = ViscosityCalculator<2>::Create();
         /*
@@ -298,6 +306,7 @@ public:
         p_structural_adaptation_solver->AddPreFlowSolveCalculator(p_impedance_calculator);
         p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_haematocrit_calculator);
         p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_wss_calculator);
+        p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_metabolic_stim_calculator);
         p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_mech_stimulus_calculator);
 //        p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_shrinking_stimulus_calculator);
         p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_viscosity_calculator);
@@ -359,12 +368,12 @@ public:
          */
         simulator.SetOutputDirectory("TestLatticeBasedAngiogenesisLiteratePaper");
         simulator.SetSamplingTimestepMultiple(5);
-        simulator.SetDt(0.4);
+        simulator.SetDt(0.5);
         /*
          * This end time corresponds to roughly 10 minutes run-time on a desktop PC using a standard Debug build. Increase it or decrease as
          * preferred. The end time used in Owen et al. 2011 is 4800 hours.
          */
-        simulator.SetEndTime(400.0);
+        simulator.SetEndTime(4800.0);
         /*
          * Do the solve. A sample solution is shown at the top of this test.
          */

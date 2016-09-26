@@ -367,3 +367,10 @@ const boost::shared_ptr<ParameterInstance<unit::rate> > Owen11Parameters::mpBasa
                                                                                    "Basal metabolic stimulus",
                                                                                    "k^0_m",
                                                                                    bib_info));
+
+const boost::shared_ptr<ParameterInstance<unit::pressure> > Owen11Parameters::mpReferencePartialPressure =
+        boost::shared_ptr<ParameterInstance<unit::pressure> >(new ParameterInstance<unit::pressure> (20.0*mmHg,
+                                                                                   "Owen11_ReferencePartialPressure",
+                                                                                   "Reference partial pressure of inlet haematocrit vessels",
+                                                                                   "C_{Ref}",
+                                                                                   bib_info));

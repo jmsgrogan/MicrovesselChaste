@@ -60,9 +60,14 @@ protected:
     units::quantity<unit::membrane_permeability> mVesselPermeability;
 
     /**
-     * The oxygen concentration per unit haematocrit
+     * The reference concentration, supplied by well perfused vessels
      */
-    units::quantity<unit::concentration> mOxygenConcentrationPerUnitHaematocrit;
+    units::quantity<unit::concentration> mReferenceConcentration;
+
+    /**
+     * The reference haematocrit, used as a proxy for vessel perfusion
+     */
+    units::quantity<unit::dimensionless> mReferenceHaematocrit;
 
 public:
 
@@ -116,7 +121,13 @@ public:
      * Set the value of the source for PRESCRIBED type sources
      * @param value the value of the source
      */
-    void SetOxygenConcentrationPerUnitHaematocrit(units::quantity<unit::concentration> value);
+    void SetReferenceConcentration(units::quantity<unit::concentration> value);
+
+    /**
+     * Set the value of the source for PRESCRIBED type sources
+     * @param value the value of the source
+     */
+    void SetReferenceHaematocrit(units::quantity<unit::dimensionless> value);
 
 };
 
