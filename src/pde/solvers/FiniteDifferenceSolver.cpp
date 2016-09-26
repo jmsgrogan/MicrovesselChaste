@@ -124,7 +124,7 @@ void FiniteDifferenceSolver<DIM>::Setup()
     mpBoundaryConditions = boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > (new std::vector<std::pair<bool, units::quantity<unit::concentration> > >(this->mpRegularGrid->GetNumberOfPoints()));
     for(unsigned idx=0; idx<this->mpRegularGrid->GetNumberOfPoints(); idx++)
     {
-        (*mpBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(false, 0.0*unit::mole_per_metre_cubed);
+        (*mpBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(false, 0.0*this->mReferenceConcentration);
     }
     for(unsigned bound_index=0; bound_index<this->mBoundaryConditions.size(); bound_index++)
     {
@@ -279,7 +279,8 @@ void FiniteDifferenceSolver<DIM>::DoLinearSolve()
     ReplicatableVector soln_repl(linear_system.Solve());
 
     // Populate the solution vector
-    std::vector<units::quantity<unit::concentration> > concs = std::vector<units::quantity<unit::concentration> >(number_of_points, 0.0*unit::mole_per_metre_cubed);
+    std::vector<units::quantity<unit::concentration> > concs = std::vector<units::quantity<unit::concentration> >(number_of_points,
+                                                                                                                  0.0*this->mReferenceConcentration);
     for (unsigned row = 0; row < number_of_points; row++)
     {
         concs[row] = soln_repl[row]*this->mReferenceConcentration;
@@ -319,7 +320,8 @@ void FiniteDifferenceSolver<DIM>::Solve()
         ReplicatableVector soln_repl(answer_petsc);
 
         // Populate the solution vector
-        this->mConcentrations = std::vector<units::quantity<unit::concentration> >(number_of_points, 0.0*unit::mole_per_metre_cubed);
+        this->mConcentrations = std::vector<units::quantity<unit::concentration> >(number_of_points,
+                                                                                   0.0*this->mReferenceConcentration);
         for (unsigned row = 0; row < number_of_points; row++)
         {
            this->mConcentrations[row] = soln_repl[row]*this->mReferenceConcentration;

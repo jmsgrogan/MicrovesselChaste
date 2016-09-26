@@ -77,7 +77,7 @@ std::vector<units::quantity<unit::concentration> > AbstractRegularGridDiscreteCo
         this->Setup();
     }
 
-    std::vector<units::quantity<unit::concentration> > sampled_solution(samplePoints.size(), 0.0*unit::mole_per_metre_cubed);
+    std::vector<units::quantity<unit::concentration> > sampled_solution(samplePoints.size(), 0.0*this->mReferenceConcentration);
 
     // Sample the field at these locations
     vtkSmartPointer<vtkPolyData> p_polydata = vtkSmartPointer<vtkPolyData>::New();
@@ -105,7 +105,7 @@ std::vector<units::quantity<unit::concentration> > AbstractRegularGridDiscreteCo
     unsigned num_points = p_point_data->GetArray(this->mLabel.c_str())->GetNumberOfTuples();
     for(unsigned idx=0; idx<num_points; idx++)
     {
-        sampled_solution[idx] = p_point_data->GetArray(this->mLabel.c_str())->GetTuple1(idx)*unit::mole_per_metre_cubed;
+        sampled_solution[idx] = p_point_data->GetArray(this->mLabel.c_str())->GetTuple1(idx)*this->mReferenceConcentration;
     }
     return sampled_solution;
 }
@@ -265,7 +265,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector
         this->mSolution[i] = data[i];
     }
 
-    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*unit::mole_per_metre_cubed);
+    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*this->mReferenceConcentration);
     for (unsigned i = 0; i < data.size(); i++)
     {
         this->mConcentrations[i] = data[i]*this->mReferenceConcentration;
@@ -283,15 +283,15 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector
     vtkSmartPointer<vtkDoubleArray> pPointData = vtkSmartPointer<vtkDoubleArray>::New();
     pPointData->SetNumberOfComponents(1);
     pPointData->SetNumberOfTuples(data.size());
-    pPointData->SetName((this->GetLabel()+" mole m^-3").c_str());
+    pPointData->SetName((this->GetLabel()).c_str());
     for (unsigned i = 0; i < data.size(); i++)
     {
-        pPointData->SetValue(i, data[i]/unit::mole_per_metre_cubed);
+        pPointData->SetValue(i, data[i]/this->mReferenceConcentration);
     }
     this->mpVtkSolution->GetPointData()->AddArray(pPointData);
 
     // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
-    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*unit::mole_per_metre_cubed);
+    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*this->mReferenceConcentration);
     for (unsigned i = 0; i < data.size(); i++)
     {
         this->mConcentrations[i] = data[i];

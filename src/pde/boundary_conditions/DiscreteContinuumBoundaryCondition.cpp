@@ -37,6 +37,7 @@
 #include "DiscreteContinuumBoundaryCondition.hpp"
 #include "VesselSegment.hpp"
 #include "UnitCollection.hpp"
+#include "BaseUnits.hpp"
 
 template<unsigned DIM>
 DiscreteContinuumBoundaryCondition<DIM>::DiscreteContinuumBoundaryCondition()
@@ -49,7 +50,7 @@ DiscreteContinuumBoundaryCondition<DIM>::DiscreteContinuumBoundaryCondition()
         mpRegularGrid(),
         mpMesh(),
         mpNetwork(),
-        mReferenceConcentration(1.e-9*unit::mole_per_metre_cubed)
+        mReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale())
 {
 
 }

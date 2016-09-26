@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
 All rights reserved.
 
 University of Oxford means the Chancellor, Masters and Scholars of the
@@ -97,7 +97,6 @@ void Owen2011TrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DIM,DI
         std::set<unsigned>::iterator node_it;
         for (node_it = neighbouring_node_indices.begin(); node_it != neighbouring_node_indices.end(); node_it++)
         {
-
             if (rCellPopulation.IsCellAttachedToLocationIndex(*node_it))
             {
                 std::set<CellPtr> neighbour_cells = rCellPopulation.GetCellsUsingLocationIndex(*node_it);

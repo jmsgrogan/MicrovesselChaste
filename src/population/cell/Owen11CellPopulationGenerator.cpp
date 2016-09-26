@@ -49,6 +49,13 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "CellsGenerator.hpp"
 #include "PottsMesh.hpp"
 #include "Exception.hpp"
+#include "Owen11CaUpdateRule.hpp"
+#include "Owen11CaBasedDivisionRule.hpp"
+#include "Owen11Parameters.hpp"
+#include "Secomb04Parameters.hpp"
+#include "GenericParameters.hpp"
+#include "BaseUnits.hpp"
+#include "RandomNumberGenerator.hpp"
 
 template<unsigned DIM>
 Owen11CellPopulationGenerator<DIM>::Owen11CellPopulationGenerator() :
@@ -171,7 +178,7 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
 
     cells_generator.GenerateBasicRandom(cells, p_mesh->GetNumNodes(), p_diff_type);
     boost::shared_ptr<CaBasedCellPopulation<DIM> > p_cell_population =
-            boost::shared_ptr<CaBasedCellPopulation<DIM> >(new CaBasedCellPopulation<DIM> (*p_mesh, cells, location_indices));
+            boost::shared_ptr<CaBasedCellPopulation<DIM> >(new CaBasedCellPopulation<DIM> (*p_mesh, cells, location_indices, 2));
 
     // Label stalk cells if the is a vessel network
     if(mpVesselNetwork)
@@ -179,7 +186,7 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
         VesselNetworkCellPopulationInteractor<DIM> interactor = VesselNetworkCellPopulationInteractor<DIM>();
         interactor.SetVesselNetwork(mpVesselNetwork);
         interactor.PartitionNetworkOverCells(*p_cell_population);
-        interactor.LabelVesselsInCellPopulation(*p_cell_population, mpStalkCellMutationState, mpStalkCellMutationState);
+//        interactor.LabelVesselsInCellPopulation(*p_cell_population, mpStalkCellMutationState, mpStalkCellMutationState);
     }
 
     // Set up tumour cells in the centre of the domain
@@ -215,23 +222,37 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
     }
 
     // Set up the cell cycle model . Note that Cell Based Chaste does not use dimensional analysis so we need to be careful with units.
+    units::quantity<unit::pressure> initial_oxygen_tension(30.0*unit::mmHg);
+    units::quantity<unit::solubility>  solubility =
+            Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("Owen11CellPopulationGenerator") *
+            GenericParameters::mpGasConcentrationAtStp->GetValue("Owen11CellPopulationGenerator");
+    units::quantity<unit::concentration>  initial_oxygen_concentration = initial_oxygen_tension*solubility;
+
     std::list<CellPtr> cells_updated = p_cell_population->rGetCells();
     std::list<CellPtr>::iterator it;
     for (it = cells_updated.begin(); it != cells_updated.end(); ++it)
     {
-        (*it)->GetCellData()->SetItem("oxygen", 0.0);
+        (*it)->GetCellData()->SetItem("Phi", 0.99*RandomNumberGenerator::Instance()->ranf());
+        (*it)->GetCellData()->SetItem("oxygen", initial_oxygen_concentration/BaseUnits::Instance()->GetReferenceConcentrationScale());
         (*it)->GetCellData()->SetItem("VEGF", 0.0);
         (*it)->GetCellData()->SetItem("p53", 0.0);
         (*it)->GetCellData()->SetItem("Number_of_cancerous_neighbours", 0.0);
         (*it)->GetCellData()->SetItem("Number_of_normal_neighbours", 0.0);
-        (*it)->SetApoptosisTime(24); //hours
+//        (*it)->SetApoptosisTime(24); //hours
     }
-    p_cell_population->SetOutputResultsForChasteVisualizer(false);
-    p_cell_population->template AddCellWriter<CellLabelWriter>();
-    p_cell_population->template AddCellWriter<CellMutationStatesWriter>();
-    p_cell_population->template AddCellPopulationCountWriter<CellProliferativePhasesCountWriter>();
-    p_cell_population->template AddCellWriter<CellProliferativeTypesWriter>();
-    p_cell_population->template AddCellWriter<CellProliferativePhasesWriter>();
+
+    // Specify an update rule
+    MAKE_PTR(Owen11CaUpdateRule<DIM>, p_update_rule);
+    p_update_rule->SetVesselNetwork(mpVesselNetwork);
+    p_update_rule->SetRegularGrid(mpRegularGrid);
+
+    MAKE_PTR(Owen11CaBasedDivisionRule<DIM>, p_division_rule);
+    p_division_rule->SetVesselNetwork(mpVesselNetwork);
+    p_division_rule->SetRegularGrid(mpRegularGrid);
+
+    p_cell_population->RemoveAllUpdateRules();
+    p_cell_population->AddUpdateRule(p_update_rule);
+    p_cell_population->SetCaBasedDivisionRule(p_division_rule);
 
     return p_cell_population;
 }

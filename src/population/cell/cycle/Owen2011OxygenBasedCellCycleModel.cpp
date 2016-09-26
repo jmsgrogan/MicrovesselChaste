@@ -128,8 +128,6 @@ void Owen2011OxygenBasedCellCycleModel::CheckAndLabelCell()
         if(p53_concentration > p53threshold)
         {
             assert(mpCell->GetMutationState()->IsType<WildTypeCellMutationState>());
-            assert(!mpCell->GetMutationState()->IsType<QuiescentCancerCellMutationState>());
-            assert(!(mpCell->GetMutationState()->IsType<CancerCellMutationState>()));
             mpCell->AddCellProperty(CellPropertyRegistry::Instance()->Get<ApoptoticCellProperty>());
         }
     }

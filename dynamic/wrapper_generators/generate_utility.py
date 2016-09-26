@@ -14,7 +14,7 @@ def update_builder(builder):
     include_classes = [ 
                        "ParameterCollection", 
                        "BaseParameterInstance", 
-                       "BaseUnits"
+                       "BaseUnits
                        ]
       
     for eachClass in include_classes:

@@ -220,7 +220,7 @@ public:
         boost::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_ox_boundary = DiscreteContinuumBoundaryCondition<2>::Create();
         p_ox_boundary->SetType(BoundaryConditionType::VESSEL_LINE);
         p_ox_boundary->SetSource(BoundaryConditionSource::PRESCRIBED);
-        units::quantity<unit::pressure> vessel_oxygen_partial_pressure(20.0*unit::mmHg);
+        units::quantity<unit::pressure> vessel_oxygen_partial_pressure(40.0*unit::mmHg);
         units::quantity<unit::concentration> vessel_oxygen_concentration =
                 Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
                 GenericParameters::mpGasConcentrationAtStp->GetValue("User") * vessel_oxygen_partial_pressure;
@@ -359,12 +359,12 @@ public:
          */
         simulator.SetOutputDirectory("TestLatticeBasedAngiogenesisLiteratePaper");
         simulator.SetSamplingTimestepMultiple(5);
-        simulator.SetDt(0.5);
+        simulator.SetDt(0.4);
         /*
          * This end time corresponds to roughly 10 minutes run-time on a desktop PC using a standard Debug build. Increase it or decrease as
          * preferred. The end time used in Owen et al. 2011 is 4800 hours.
          */
-        simulator.SetEndTime(20.0);
+        simulator.SetEndTime(400.0);
         /*
          * Do the solve. A sample solution is shown at the top of this test.
          */
