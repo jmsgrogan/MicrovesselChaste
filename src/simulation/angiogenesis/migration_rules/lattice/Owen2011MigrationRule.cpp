@@ -45,7 +45,7 @@ template<unsigned DIM>
 Owen2011MigrationRule<DIM>::Owen2011MigrationRule()
     : LatticeBasedMigrationRule<DIM>(),
       mCellMotility(Owen11Parameters::mpCellMotilityEndothelial->GetValue("Owen2011MigrationRule")),
-      mCellChemotacticParameter(0.2*Owen11Parameters::mpChemotacticSensitivity->GetValue("Owen2011MigrationRule")),
+      mCellChemotacticParameter(0.05*Owen11Parameters::mpChemotacticSensitivity->GetValue("Owen2011MigrationRule")),
       mVegfField()
 {
 

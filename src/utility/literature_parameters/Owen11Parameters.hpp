@@ -275,6 +275,11 @@ struct Owen11Parameters
      */
     static const boost::shared_ptr<ParameterInstance<unit::rate> > mpBasalMetabolicStimulus;
 
+    /**
+     * Reference partial pressure of inlet haematocrit vessels C_{Ref}
+     */
+    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpReferencePartialPressure;
+
 };
 
 #endif /*OWEN11PARAMETERS_HPP_*/

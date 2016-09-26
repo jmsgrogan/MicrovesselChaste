@@ -43,7 +43,8 @@ template<unsigned DIM>
 VesselBasedDiscreteSource<DIM>::VesselBasedDiscreteSource()
     :   DiscreteSource<DIM>(),
         mVesselPermeability(0.0*unit::metre_per_second),
-        mOxygenConcentrationPerUnitHaematocrit(0.0*unit::mole_per_metre_cubed)
+        mReferenceConcentration(0.0*unit::mole_per_metre_cubed),
+        mReferenceHaematocrit(1.0)
 {
 
 }
@@ -99,8 +100,8 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
 
                 units::quantity<unit::area> surface_area = 2.0*M_PI*element_segment_map[idx][jdx]->GetRadius()*length_in_box*this->mpMesh->GetReferenceLengthScale();
 
-                double haematocrit = element_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit();
-                values[idx] += mVesselPermeability * (surface_area/element_volume) * mOxygenConcentrationPerUnitHaematocrit * haematocrit;
+                double haematocrit_Ratio = element_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit()/mReferenceHaematocrit;
+                values[idx] += mVesselPermeability * (surface_area/element_volume) * mReferenceConcentration * haematocrit_Ratio;
             }
         }
     }
@@ -145,8 +146,11 @@ std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLin
                                                                 element_segment_map[idx][jdx]->GetNode(1)->rGetLocation().rGetLocation(), element_vertices);
 
                 units::quantity<unit::area> surface_area = 2.0*M_PI*element_segment_map[idx][jdx]->GetRadius()*length_in_box*this->mpMesh->GetReferenceLengthScale();
-
-                values[idx] += mVesselPermeability * (surface_area/element_volume);
+                double haematocrit = element_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit();
+                if(haematocrit>0.0)
+                {
+                    values[idx] += mVesselPermeability * (surface_area/element_volume);
+                }
             }
         }
     }
@@ -172,8 +176,8 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
 
             units::quantity<unit::area> surface_area = 2.0*M_PI*point_segment_map[idx][jdx]->GetRadius()*length_in_box*this->mpRegularGrid->GetReferenceLengthScale();
 
-            double haematocrit = point_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit();
-            values[idx] += mVesselPermeability * (surface_area/grid_volume) * mOxygenConcentrationPerUnitHaematocrit * haematocrit;
+            double haematocrit_ratio = point_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit()/mReferenceHaematocrit;
+            values[idx] += mVesselPermeability * (surface_area/grid_volume) * mReferenceConcentration * haematocrit_ratio;
         }
     }
     return values;
@@ -196,7 +200,11 @@ std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLin
                                                                          this->mpRegularGrid->GetLocationOf1dIndex(idx).rGetLocation(), dimensionless_spacing);
 
             units::quantity<unit::area> surface_area = 2.0*M_PI*point_segment_map[idx][jdx]->GetRadius()*length_in_box*this->mpRegularGrid->GetReferenceLengthScale();
-            values[idx] -= mVesselPermeability * (surface_area/grid_volume);
+            double haematocrit = point_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit();
+            if(haematocrit>0.0)
+            {
+                values[idx] -= mVesselPermeability * (surface_area/grid_volume);
+            }
         }
     }
     return values;
@@ -209,9 +217,15 @@ void VesselBasedDiscreteSource<DIM>::SetVesselPermeability(units::quantity<unit:
 }
 
 template<unsigned DIM>
-void VesselBasedDiscreteSource<DIM>::SetOxygenConcentrationPerUnitHaematocrit(units::quantity<unit::concentration> value)
+void VesselBasedDiscreteSource<DIM>::SetReferenceConcentration(units::quantity<unit::concentration> value)
 {
-    mOxygenConcentrationPerUnitHaematocrit = value;
+    mReferenceConcentration = value;
+}
+
+template<unsigned DIM>
+void VesselBasedDiscreteSource<DIM>::SetReferenceHaematocrit(units::quantity<unit::dimensionless> value)
+{
+    mReferenceHaematocrit = value;
 }
 
 // Explicit instantiation

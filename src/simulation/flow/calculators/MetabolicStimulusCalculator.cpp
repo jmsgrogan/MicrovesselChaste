@@ -51,6 +51,14 @@ MetabolicStimulusCalculator<DIM>::~MetabolicStimulusCalculator()
 
 }
 
+template <unsigned DIM>
+boost::shared_ptr<MetabolicStimulusCalculator<DIM> > MetabolicStimulusCalculator<DIM>::Create()
+{
+    MAKE_PTR(MetabolicStimulusCalculator<DIM>, pSelf);
+    return pSelf;
+}
+
+
 template<unsigned DIM>
 units::quantity<unit::flow_rate> MetabolicStimulusCalculator<DIM>::GetQRef()
 {
@@ -116,5 +124,5 @@ void MetabolicStimulusCalculator<DIM>::Calculate()
 }
 
 // Explicit instantiation
-template class MetabolicStimulusCalculator<2> ;
-template class MetabolicStimulusCalculator<3> ;
+template class MetabolicStimulusCalculator<2>;
+template class MetabolicStimulusCalculator<3>;
