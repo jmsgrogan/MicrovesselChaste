@@ -203,14 +203,14 @@ double Owen2011OxygenBasedCellCycleModel::GetPhi()
 double Owen2011OxygenBasedCellCycleModel::GetVEGF()
 {
     assert(mpOdeSystem != NULL);
-    double VEGF = mpOdeSystem->rGetStateVariables()[1];
+    double VEGF = mpOdeSystem->rGetStateVariables()[2];
     return VEGF;
 }
 
 double Owen2011OxygenBasedCellCycleModel::GetP53()
 {
     assert(mpOdeSystem != NULL);
-    double p53 = mpOdeSystem->rGetStateVariables()[2];
+    double p53 = mpOdeSystem->rGetStateVariables()[1];
     return p53;
 }
 

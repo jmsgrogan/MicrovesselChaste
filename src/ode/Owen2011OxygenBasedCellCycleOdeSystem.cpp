@@ -153,7 +153,6 @@ units::quantity<unit::concentration> Owen2011OxygenBasedCellCycleOdeSystem::GetO
     return mOxygenConcentration;
 }
 
-
 template<>
 void CellwiseOdeSystemInformation<Owen2011OxygenBasedCellCycleOdeSystem>::Initialise()
 {

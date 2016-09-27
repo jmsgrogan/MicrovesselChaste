@@ -147,7 +147,14 @@ std::map<std::string, double> VesselFlowProperties<DIM>::GetOutputData() const
     output_data["Vessel Viscosity Pa.s"] = this->GetViscosity() / unit::poiseuille;
     output_data["Vessel Wall Shear Stress Pa"] = this->GetWallShearStress()  / unit::pascals;
     output_data["Vessel Growth Stimulus s^-1"] = this->GetGrowthStimulus() / unit::per_second;
+    output_data["Vessel Time Until Regression s"] = this->mRegressionTime / unit::seconds;
     return output_data;
+}
+
+template<unsigned DIM>
+units::quantity<unit::time> VesselFlowProperties<DIM>::GetRegressionTime() const
+{
+    return mRegressionTime;
 }
 
 template<unsigned DIM>
@@ -245,6 +252,16 @@ void VesselFlowProperties<DIM>::SetTimeUntilRegression(units::quantity<unit::tim
 
     mUndergoingRegression = true;
     this->mRegressionTime = SimulationTime::Instance()->GetTime()*simulationReferenceTime + time;
+}
+
+template<unsigned DIM>
+void VesselFlowProperties<DIM>::SetRegressionTime(units::quantity<unit::time> time)
+{
+    this->mRegressionTime = time;
+    if(time<DBL_MAX*unit::seconds)
+    {
+        mUndergoingRegression = true;
+    }
 }
 
 template<unsigned DIM>

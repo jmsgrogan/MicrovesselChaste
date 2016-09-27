@@ -149,6 +149,8 @@ public:
      */
     std::map<std::string, double> GetOutputData() const;
 
+    units::quantity<unit::time> GetRegressionTime() const;
+
     /**
      * @return whether regression timer has started.
      */
@@ -207,10 +209,16 @@ public:
     void SetGrowthStimulus(units::quantity<unit::rate> stimulus);
 
     /**
-     * Set dimensional time until removal of vessel from network.
-     * @param time the time until vessel removal
+     * Set dimensional amount of time until removal of vessel from network.
+     * @param time the amount of time until vessel removal
      */
     void SetTimeUntilRegression(units::quantity<unit::time> time, units::quantity<unit::time> simulationReferenceTime);
+
+    /**
+     * Set dimensional time at removal of vessel from network.
+     * @param time the time at vessel removal
+     */
+    void SetRegressionTime(units::quantity<unit::time> time);
 
     /**
      * Update the vessel segments

@@ -34,11 +34,12 @@ Copyright (c) 2005-2016, University of Oxford.
  */
 
 #include "RegressionSolver.hpp"
+#include "BaseUnits.hpp"
 
 template<unsigned DIM>
 RegressionSolver<DIM>::RegressionSolver() :
     mpNetwork(),
-    mReferenceTime(60.0 * unit::seconds)
+    mReferenceTime(BaseUnits::Instance()->GetReferenceTimeScale())
 {
 
 }
