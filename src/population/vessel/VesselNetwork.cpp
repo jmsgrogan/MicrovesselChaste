@@ -194,6 +194,8 @@ boost::shared_ptr<VesselNode<DIM> > VesselNetwork<DIM>::DivideVessel(boost::shar
     boost::shared_ptr<Vessel<DIM> > p_new_vessel2 = Vessel<DIM>::Create(end_segments);
     p_new_vessel1->CopyDataFromExistingVessel(pVessel);
     p_new_vessel2->CopyDataFromExistingVessel(pVessel);
+    p_new_vessel1->GetFlowProperties()->SetRegressionTime(pVessel->GetFlowProperties()->GetRegressionTime());
+    p_new_vessel2->GetFlowProperties()->SetRegressionTime(pVessel->GetFlowProperties()->GetRegressionTime());
 
     AddVessel(p_new_vessel1);
     AddVessel(p_new_vessel2);
@@ -257,6 +259,8 @@ boost::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::FormSprout(const Dimensional
     p_new_segment->GetFlowProperties()->SetGrowthStimulus(0.0*unit::per_second);
 
     boost::shared_ptr<Vessel<DIM> > p_new_vessel = Vessel<DIM>::Create(p_new_segment);
+    // Sprouting won't save you.
+    p_new_vessel->GetFlowProperties()->SetRegressionTime(nearest_segment.first->GetVessel()->GetFlowProperties()->GetRegressionTime());
     AddVessel(p_new_vessel);
     return p_new_vessel;
 }

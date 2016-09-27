@@ -197,7 +197,7 @@ public:
         boost::shared_ptr<Owen11CellPopulationGenerator<2> > p_cell_population_genenerator = Owen11CellPopulationGenerator<2>::Create();
         p_cell_population_genenerator->SetRegularGrid(p_grid);
         p_cell_population_genenerator->SetVesselNetwork(p_network);
-        units::quantity<unit::length> tumour_radius(200.0 * unit::microns);
+        units::quantity<unit::length> tumour_radius(300.0 * unit::microns);
         p_cell_population_genenerator->SetTumourRadius(tumour_radius);
         boost::shared_ptr<CaBasedCellPopulation<2> > p_cell_population = p_cell_population_genenerator->Update();
         /*
@@ -370,7 +370,7 @@ public:
         simulator.SetSamplingTimestepMultiple(5);
         simulator.SetDt(0.5);
         /*
-         * This end time corresponds to roughly 10 minutes run-time on a desktop PC using a standard Debug build. Increase it or decrease as
+         * This end time corresponds to roughly 10 minutes run-time on a desktop PC. Increase it or decrease as
          * preferred. The end time used in Owen et al. 2011 is 4800 hours.
          */
         simulator.SetEndTime(4800.0);
