@@ -259,7 +259,7 @@ public:
          */
         boost::shared_ptr<AngiogenesisSolver<3> > p_angiogenesis_solver = AngiogenesisSolver<3>::Create();
         boost::shared_ptr<OffLatticeSproutingRule<3> > p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
-        p_sprouting_rule->SetSproutingProbability(0.001* unit::per_second);
+        p_sprouting_rule->SetSproutingProbability(0.0001* unit::per_second);
         boost::shared_ptr<OffLatticeMigrationRule<3> > p_migration_rule = OffLatticeMigrationRule<3>::Create();
         units::quantity<unit::velocity> sprout_velocity(20.0*unit::microns/(1.0*unit::hours));
         p_migration_rule->SetSproutingVelocity(sprout_velocity);
@@ -278,13 +278,13 @@ public:
         p_microvessel_solver->SetVesselNetwork(p_network);
         p_microvessel_solver->AddDiscreteContinuumSolver(p_vegf_solver);
         p_microvessel_solver->SetOutputFileHandler(p_handler);
-        p_microvessel_solver->SetOutputFrequency(5);
+        p_microvessel_solver->SetOutputFrequency(1);
         p_microvessel_solver->SetAngiogenesisSolver(p_angiogenesis_solver);
         p_microvessel_solver->SetUpdatePdeEachSolve(false);
         /*
          * Set the simulation time and run the solver. The result is shown at the top of the tutorial.
          */
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(200.0, 200);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(10.0, 20);
         p_microvessel_solver->Run();
     }
 };
