@@ -36,16 +36,16 @@ Copyright (c) 2005-2016, University of Oxford.
 #ifndef TESTLATTICEBASEDANGIOGENESISLITERATEPAPER_HPP_
 #define TESTLATTICEBASEDANGIOGENESISLITERATEPAPER_HPP_
 
-/* = A Lattice Based Angiogenesis Tutorial =
+/* # A Lattice Based Angiogenesis Tutorial
  * This tutorial is designed to introduce a lattice based angiogenesis problem based on a simplified version of the
  * vascular tumour application described in
- * [http://www.ncbi.nlm.nih.gov/pubmed/21363914 Owen et al. 2011]. It is a 2D simulation using cellular automaton
+ *  [Owen et al. 2011](http://www.ncbi.nlm.nih.gov/pubmed/21363914). It is a 2D simulation using cellular automaton
  * for cells, a regular grid for vessel movement and the same grid for the solution of partial differential equations
  * for oxygen and VEGF transport using the finite difference method.
  *
- * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/LatticeTurortialEndSample.png, 20%, align=center, border=1)]]
+ * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/blob/master/test/tutorials/images/Lattice_Tutorial_Initial_Grid.png "Lattice Based Angiogenesis Image")
  *
- * = The Test =
+ * ## The Test
  * Start by introducing the necessary header files. The first contain functionality for setting up unit tests,
  * smart pointer tools and output management,
  */
@@ -142,7 +142,7 @@ public:
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         /*
-         * Set up the lattice (grid), we will use the same dimensions as [http://www.ncbi.nlm.nih.gov/pubmed/21363914 Owen et al. 2011].
+         * Set up the lattice (grid), we will use the same dimensions as [Owen et al. 2011](http://www.ncbi.nlm.nih.gov/pubmed/21363914).
          * Note that we are using hard-coded parameters from that paper. You can see the values by inspecting `Owen11Parameters.cpp`.
          * Alternatively each parameter supports the `<<` operator for streaming. When we get the value of the parameter by doing
          * `Owen11Parameters::mpLatticeSpacing->GetValue("User")` a record is kept that this parameter has been used in the simulation.
