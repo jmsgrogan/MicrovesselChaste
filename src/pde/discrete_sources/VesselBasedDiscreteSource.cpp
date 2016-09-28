@@ -187,7 +187,7 @@ template<unsigned DIM>
 std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLinearInURegularGridValues()
 {
     std::vector<units::quantity<unit::rate> > values(this->mpRegularGrid->GetNumberOfPoints(), 0.0*unit::per_second);
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = this->mpRegularGrid->GetPointSegmentMap();
+    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = this->mpRegularGrid->GetPointSegmentMap(false);
     units::quantity<unit::length> grid_spacing = this->mpRegularGrid->GetSpacing();
     double dimensionless_spacing = this->mpRegularGrid->GetSpacing()/this->mpRegularGrid->GetReferenceLengthScale();
     units::quantity<unit::volume> grid_volume = units::pow<3>(grid_spacing);
