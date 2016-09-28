@@ -53,6 +53,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "SmartPointers.hpp"
 #include "OutputFileHandler.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
+#include "RandomNumberGenerator.hpp"
 /*
  * dimensional analysis,
  */
@@ -126,9 +127,10 @@ public:
     void Test2dLatticeBased() throw (Exception)
     {
         /*
-         * Set up output file management.
+         * Set up output file management and seed the random number generator.
          */
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestLatticeBasedAngiogenesisLiteratePaper"));
+        RandomNumberGenerator::Instance()->Reseed(12345);
         /*
          * This component uses explicit dimensions for all quantities, but interfaces with solvers which take
          * non-dimensional inputs. The `BaseUnits` singleton takes time, length and mass reference scales to

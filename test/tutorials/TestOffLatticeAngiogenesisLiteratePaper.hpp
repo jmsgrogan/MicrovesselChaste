@@ -118,6 +118,7 @@ public:
          * Set up output file management.
          */
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestOffLatticeAngiogenesisLiteratePaper"));
+        RandomNumberGenerator::Instance()->Reseed(12345);
         /*
          * This component uses explicit dimensions for all quantities, but interfaces with solvers which take
          * non-dimensional inputs. The `BaseUnits` singleton takes time, length and mass reference scales to
@@ -259,8 +260,10 @@ public:
          */
         boost::shared_ptr<AngiogenesisSolver<3> > p_angiogenesis_solver = AngiogenesisSolver<3>::Create();
         boost::shared_ptr<OffLatticeSproutingRule<3> > p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
-        p_sprouting_rule->SetSproutingProbability(0.0001* unit::per_second);
+        p_sprouting_rule->SetSproutingProbability(0.000001* unit::per_second);
         boost::shared_ptr<OffLatticeMigrationRule<3> > p_migration_rule = OffLatticeMigrationRule<3>::Create();
+        p_migration_rule->SetChemotacticStrength(50.0);
+
         units::quantity<unit::velocity> sprout_velocity(20.0*unit::microns/(1.0*unit::hours));
         p_migration_rule->SetSproutingVelocity(sprout_velocity);
 
@@ -284,7 +287,7 @@ public:
         /*
          * Set the simulation time and run the solver. The result is shown at the top of the tutorial.
          */
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(10.0, 20);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(100.0, 200);
         p_microvessel_solver->Run();
     }
 };

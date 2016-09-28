@@ -93,11 +93,6 @@ class OffLatticeMigrationRule : public AbstractMigrationRule<DIM>
      */
     units::quantity<unit::length> mProbeLength;
 
-    /**
-     * Is this a sprouting event
-     */
-    bool mIsSprouting;
-
 public:
 
     /**
@@ -125,8 +120,6 @@ public:
 
 
     std::vector<c_vector<double, DIM> > GetDirectionsForSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
-
-    void SetIsSprouting(bool isSprouting = true);
 
     void SetSproutingVelocity(units::quantity<unit::velocity> velocity);
 

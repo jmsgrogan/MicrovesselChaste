@@ -207,8 +207,6 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
     }
     else
     {
-        std::cout << "********"  << std::endl;
-        std::cout << SimulationTime::Instance()->GetTimeStepsElapsed() << std::endl;
         mpMigrationRule->SetIsSprouting(sprouting);
         std::vector<c_vector<double, DIM> > movement_vectors = mpMigrationRule->GetDirections(tips);
         std::vector<DimensionalChastePoint<DIM> > candidate_tip_locations(tips.size());
@@ -237,9 +235,6 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
                 {
                     if (sprouting)
                     {
-                        std::cout << "loc" << tips[idx]->rGetLocation().rGetLocation() << std::endl;
-                        std::cout << "mov" << movement_vectors[idx] << std::endl;
-                        std::cout << "cand" << candidate_tip_locations[idx].rGetLocation() << std::endl;
                         mpNetwork->FormSprout(tips[idx]->rGetLocation(), candidate_tip_locations[idx]);
                         mpNetwork->UpdateAll();
                         tips[idx]->SetIsMigrating(false);
