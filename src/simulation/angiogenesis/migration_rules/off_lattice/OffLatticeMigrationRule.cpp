@@ -49,8 +49,7 @@ OffLatticeMigrationRule<DIM>::OffLatticeMigrationRule()
       mVelocity(20.0 *(1.e-6/3600.0) * unit::metre_per_second), // um/hr
       mChemotacticStrength(1.0),
       mAttractionStrength(1.0),
-      mProbeLength(5.0 * 1.e-6 * unit::metres),
-      mIsSprouting(false)
+      mProbeLength(5.0 * 1.e-6 * unit::metres)
 {
     if(DIM==3)
     {
@@ -87,12 +86,6 @@ template<unsigned DIM>
 void OffLatticeMigrationRule<DIM>::SetAttractionStrength(double strength)
 {
     mAttractionStrength = strength;
-}
-
-template<unsigned DIM>
-void OffLatticeMigrationRule<DIM>::SetIsSprouting(bool isSprouting)
-{
-    this->mIsSprouting = isSprouting;
 }
 
 template<unsigned DIM>
@@ -258,14 +251,15 @@ std::vector<c_vector<double, DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsF
         c_vector<double, DIM> sprout_direction;
         c_vector<double, DIM> cross_product = VectorProduct(rNodes[idx]->GetSegments()[0]->GetUnitTangent(),
                                                             rNodes[idx]->GetSegments()[1]->GetUnitTangent());
+
         double sum = 0.0;
         for(unsigned jdx=0; jdx<DIM; jdx++)
         {
-            sum += cross_product[jdx];
+            sum += abs(cross_product[jdx]);
         }
         if (sum<=1.e-6)
         {
-            // parallel segments, chose any normal to the first tangent
+            // more or less parallel segments, chose any normal to the first tangent
             c_vector<double, DIM> normal;
             c_vector<double, DIM> tangent = rNodes[idx]->GetSegments()[0]->GetUnitTangent();
             if(DIM==2 or tangent[2]==0.0)
@@ -316,6 +310,7 @@ std::vector<c_vector<double, DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsF
                 sprout_direction = -cross_product/norm_2(cross_product);
             }
         }
+
         double angle = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0], mSdvAngles[0]);
         c_vector<double, DIM> new_direction = RotateAboutAxis<DIM>(sprout_direction, rNodes[idx]->GetSegments()[0]->GetUnitTangent(), angle);
         new_direction /= norm_2(new_direction);

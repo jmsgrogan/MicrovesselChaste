@@ -43,7 +43,7 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned DIM>
 OffLatticeSproutingRule<DIM>::OffLatticeSproutingRule()
     : AbstractSproutingRule<DIM>(),
-      mTipExclusionRadius(0.0 * unit::metres)
+      mTipExclusionRadius(80.0 * 1.e-6 * unit::metres)
 {
 
 }
