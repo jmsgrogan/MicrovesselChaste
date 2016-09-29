@@ -1,1 +1,4 @@
 .pydevproject
+.cproject
+.project
+doc/wiki
