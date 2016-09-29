@@ -3,7 +3,7 @@ Note that the code is given in full at the bottom of the page.
 
 
 
-= Building A Vessel Network Tutorial =
+# Building A Vessel Network Tutorial
 This tutorial is designed to introduce the C++ interface for modelling vessel networks.
 
 The following is covered:
@@ -12,7 +12,7 @@ The following is covered:
  * Reading, writing and visualizing vessel networks
  * Vessel network generators
  
-= The Test =
+# The Test
 Start by introducing the necessary header files. The first contain functionality for setting up unit tests.
 
 ```cpp
@@ -79,8 +79,9 @@ class TestBuildVesselNetworkLiteratePaper : public AbstractCellBasedWithTimingsT
 public:
 ```
 
-= Test 1 - Building a vessel network manually, writing it to file and visualizing it =
-[[Image(source:/chaste/projects/Microvessel/test/tutorials/images/bifurcating_network.png, 15%, align=center, border=1)]]
+## Test 1 - Building a vessel network manually, writing it to file and visualizing it =
+
+![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/bifurcating_network.png)
 
 In the first test build a vessel network from its constituent components; nodes, segments and vessels. Do some
 simple tests to make sure the network has been formed as expected. Then write the network to file and visualize it in Paraview. The
@@ -188,11 +189,12 @@ which will have a .vtp extension.
     }
 ```
 
-Now we can visualize then network in Paraview. See the tutorial [wiki:UserTutorials/VisualizingWithParaview here], to get started. To view the network import the file
+Now we can visualize then network in Paraview. To view the network import the file
 `TestBuildVesselNetworkLiteratePaper\bifurcating_network.vtp` into Paraview. For a nicer rendering you can do `Filters->Alphabetical->Tube`.
 
-= Test 2 - Building a vessel network using a generator and reading from file =
-[[Image(source:/chaste/projects/Microvessel/test/tutorials/images/hexagonal_network.png, 25%, align=center, border=1)]]
+# Test 2 - Building a vessel network using a generator and reading from file
+
+![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/hexagonal_network.png)
 
 It is usually tedious to build a vessel network from scratch. In this test we use a generator to automatically construct a network.
 We then write it to file, read it back in and check that it is restored as expected.
@@ -256,20 +258,15 @@ Finally we check that the network has been correctly read back in using our unit
         TS_ASSERT_EQUALS(p_network_from_file->GetNumberOfNodes(), number_of_nodes);
         TS_ASSERT_EQUALS(p_network_from_file->GetNumberOfVessels(), number_of_vessels);
     }
-```
-
-It is suggested that the tutorial [wiki:PaperTutorials/Microvessel/BloodFlow on flow modelling] is covered next.
-
-```cpp
 };
 ```
 
 
-= Code =
+# Code 
 The full code is given below
 
 
-== File name `TestBuildVesselNetworkLiteratePaper.hpp` ==
+## File name `TestBuildVesselNetworkLiteratePaper.hpp` 
 
 ```cpp
 #include <cxxtest/TestSuite.h>

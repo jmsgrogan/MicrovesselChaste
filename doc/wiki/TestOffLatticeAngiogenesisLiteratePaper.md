@@ -3,15 +3,16 @@ Note that the code is given in full at the bottom of the page.
 
 
 
-= An Off Lattice Angiogenesis Tutorial =
+# An Off Lattice Angiogenesis Tutorial
 This tutorial demonstrates functionality for modelling 3D off-lattice angiogenesis in a corneal micro
-pocket application, similar to that described in [http://rsif.royalsocietypublishing.org/content/12/110/20150546.abstract Connor et al. 2015].
+pocket application, similar to that described in [Connor et al. 2015](http://rsif.royalsocietypublishing.org/content/12/110/20150546.abstract).
+
 It is a 3D simulation modelling VEGF diffusion and decay from an implanted pellet using finite element methods and lattice-free angiogenesis
 from a large limbal vessel towards the pellet.
 
-[[Image(source:/chaste/projects/Microvessel/test/tutorials/images/OffLatticeMidPoint.png, 20%, align=center, border=1)]]
+![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/OffLatticeMidPoint.png)
 
-= The Test =
+# The Test
 Start by introducing the necessary header files. The first contain functionality for setting up unit tests,
 smart pointer tools and output management,
 
@@ -167,7 +168,7 @@ Set up a vessel network, with divisions roughly every 'cell length'. Initially i
 ```
 The initial domain and vessel network now look as follows:
 
-[[Image(source:/chaste/projects/Microvessel/test/tutorials/images/OffLatticeTurorialHemisphere.png, 20%, align=center, border=1)]]
+![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/OffLatticeTurorialHemisphere.png)
 
 In the experimental assay a pellet containing VEGF is implanted near the top of the cornea. We model this
 as a fixed concentration of VEGF in a cuboidal region. First set up the vegf sub domain.
@@ -228,38 +229,6 @@ An example of the VEGF solution is shown here:
 
 [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/OffLatticeTutorialVegf.png, 20%, align=center, border=1)]]
 
-```cpp
-        //        /*
-        //         * Use the structural adaptation solver to iterate until the flow reaches steady state
-        //         */
-        //        units::quantity<unit::length> vessel_radius(40.0*unit::microns);
-        //        p_network->SetSegmentRadii(vessel_radius);
-        //        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
-        //        p_network->SetSegmentViscosity(viscosity);
-        //        p_network->Write(p_handler->GetOutputDirectoryFullPath()+"initial_network.vtp");
-        //
-        //        BaseUnits::Instance()->SetReferenceTimeScale(60.0*unit::seconds);
-        //        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(30, 1);
-        //        boost::shared_ptr<VesselImpedanceCalculator<3> > p_impedance_calculator = VesselImpedanceCalculator<3>::Create();
-        //        boost::shared_ptr<ConstantHaematocritSolver<3> > p_haematocrit_calculator = ConstantHaematocritSolver<3>::Create();
-        //        p_haematocrit_calculator->SetHaematocrit(0.45);
-        //        boost::shared_ptr<WallShearStressCalculator<3> > p_wss_calculator = WallShearStressCalculator<3>::Create();
-        //        boost::shared_ptr<MechanicalStimulusCalculator<3> > p_mech_stimulus_calculator = MechanicalStimulusCalculator<3>::Create();
-        //
-        //        StructuralAdaptationSolver<3> structural_adaptation_solver;
-        //        structural_adaptation_solver.SetVesselNetwork(p_network);
-        //        structural_adaptation_solver.SetWriteOutput(true);
-        //        structural_adaptation_solver.SetOutputFileName(p_handler->GetOutputDirectoryFullPath()+"adaptation_data.dat");
-        //        structural_adaptation_solver.SetTolerance(0.0001);
-        //        structural_adaptation_solver.SetMaxIterations(10);
-        //        structural_adaptation_solver.AddPreFlowSolveCalculator(p_impedance_calculator);
-        //        structural_adaptation_solver.AddPostFlowSolveCalculator(p_haematocrit_calculator);
-        //        structural_adaptation_solver.AddPostFlowSolveCalculator(p_wss_calculator);
-        //        structural_adaptation_solver.AddPostFlowSolveCalculator(p_mech_stimulus_calculator);
-        //        structural_adaptation_solver.SetTimeIncrement(0.01 * unit::seconds);
-        //        structural_adaptation_solver.Solve();
-```
-
 Set up an angiogenesis solver and add sprouting and migration rules.
 
 ```cpp
@@ -304,11 +273,11 @@ Set the simulation time and run the solver. The result is shown at the top of th
 ```
 
 
-= Code =
+# Code 
 The full code is given below
 
 
-== File name `TestOffLatticeAngiogenesisLiteratePaper.hpp` ==
+## File name `TestOffLatticeAngiogenesisLiteratePaper.hpp` 
 
 ```cpp
 #include <cxxtest/TestSuite.h>
@@ -423,35 +392,6 @@ public:
         p_vegf_solver->SetMesh(p_mesh);
         p_vegf_solver->AddBoundaryCondition(p_vegf_boundary);
         p_vegf_solver->SetReferenceConcentration(1.e-9*unit::mole_per_metre_cubed);
-        //        /*
-        //         * Use the structural adaptation solver to iterate until the flow reaches steady state
-        //         */
-        //        units::quantity<unit::length> vessel_radius(40.0*unit::microns);
-        //        p_network->SetSegmentRadii(vessel_radius);
-        //        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
-        //        p_network->SetSegmentViscosity(viscosity);
-        //        p_network->Write(p_handler->GetOutputDirectoryFullPath()+"initial_network.vtp");
-        //
-        //        BaseUnits::Instance()->SetReferenceTimeScale(60.0*unit::seconds);
-        //        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(30, 1);
-        //        boost::shared_ptr<VesselImpedanceCalculator<3> > p_impedance_calculator = VesselImpedanceCalculator<3>::Create();
-        //        boost::shared_ptr<ConstantHaematocritSolver<3> > p_haematocrit_calculator = ConstantHaematocritSolver<3>::Create();
-        //        p_haematocrit_calculator->SetHaematocrit(0.45);
-        //        boost::shared_ptr<WallShearStressCalculator<3> > p_wss_calculator = WallShearStressCalculator<3>::Create();
-        //        boost::shared_ptr<MechanicalStimulusCalculator<3> > p_mech_stimulus_calculator = MechanicalStimulusCalculator<3>::Create();
-        //
-        //        StructuralAdaptationSolver<3> structural_adaptation_solver;
-        //        structural_adaptation_solver.SetVesselNetwork(p_network);
-        //        structural_adaptation_solver.SetWriteOutput(true);
-        //        structural_adaptation_solver.SetOutputFileName(p_handler->GetOutputDirectoryFullPath()+"adaptation_data.dat");
-        //        structural_adaptation_solver.SetTolerance(0.0001);
-        //        structural_adaptation_solver.SetMaxIterations(10);
-        //        structural_adaptation_solver.AddPreFlowSolveCalculator(p_impedance_calculator);
-        //        structural_adaptation_solver.AddPostFlowSolveCalculator(p_haematocrit_calculator);
-        //        structural_adaptation_solver.AddPostFlowSolveCalculator(p_wss_calculator);
-        //        structural_adaptation_solver.AddPostFlowSolveCalculator(p_mech_stimulus_calculator);
-        //        structural_adaptation_solver.SetTimeIncrement(0.01 * unit::seconds);
-        //        structural_adaptation_solver.Solve();
         boost::shared_ptr<AngiogenesisSolver<3> > p_angiogenesis_solver = AngiogenesisSolver<3>::Create();
         boost::shared_ptr<OffLatticeSproutingRule<3> > p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
         p_sprouting_rule->SetSproutingProbability(0.000001* unit::per_second);

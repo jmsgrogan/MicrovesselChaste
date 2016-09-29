@@ -36,7 +36,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #ifndef TESTBLOODFLOWLITERATEPAPER_HPP_
 #define TESTBLOODFLOWLITERATEPAPER_HPP_
 
-/*  = Modelling Blood Flow Tutorial =
+/*  # Modelling Blood Flow Tutorial
  * This tutorial demonstrates functionality for modelling blood flow, structural adaptation and vessel
  * regression in a vessel network.
  *
@@ -47,7 +47,7 @@ Copyright (c) 2005-2016, University of Oxford.
  * * Adding structural adaptation in response to flow
  * * Adding vessel regression in low flow regions
  *
- * = The Test =
+ * # The Test
  * Start by introducing the necessary header files, explained in previous tutorials.
  */
 #include <vector>
@@ -99,8 +99,9 @@ class TestBloodFlowLiteratePaper : public AbstractCellBasedWithTimingsTestSuite
 {
 public:
     /*
-     * = Test 1 - Simulating 1d Flow in a Bifurcating Network =
-     * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/bifurcation_network_flow.png, 45%, align=center, border=1)]]
+     * ## Test 1 - Simulating 1d Flow in a Bifurcating Network =
+     *
+     * ![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/bifurcation_network_flow.png)
      *
      * In the first test we will simulate blood flow in a simple bifurcating vessel network. Subsequent tests will add detail in the form of
      * more complex networks, structural adaptation and vessel regression.
@@ -180,7 +181,7 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestBloodFlowLiteratePaper/TestSimpleFlowProblem"));
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "bifurcating_network_results.vtp");
         /*
-         * Now we can visualize the results in Paraview. See [wiki:UserTutorials/VisualizingWithParaview here] to get started. To view the network import the file
+         * Now we can visualize the results in Paraview. To view the network import the file
          * `TestBloodFlowLiteratePaper\bifurcating_network.vtp` into Paraview. For a nicer rendering you can do `Filters->Alphabetical->Tube`.
          * Finally, dump our parameter collection to an xml file and, importantly, clear it for the next test.
          */
@@ -189,8 +190,9 @@ public:
         BaseUnits::Instance()->Destroy();
     }
     /*
-     * = Test 2 - Simulating Haematocrit Transport in 3D =
-     * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/haematocrit.png, 25%, align=center, border=1)]]
+     * ## Test 2 - Simulating Haematocrit Transport in 3
+     *
+     * ![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/haematocrit.png)
      *
      * In this test we will simulate haematocrit transport in a 3d vessel network.
      */
@@ -262,15 +264,16 @@ public:
         BaseUnits::Instance()->SetReferenceLengthScale(1.e-6*unit::metres);
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "network_haematocrit.vtp");
         /*
-         * Now we can visualize the results in Paraview. See [wiki:UserTutorials/VisualizingWithParaview here] to get started. To view the network import the file
+         * Now we can visualize the results in Paraview. To view the network import the file
          * `TestBloodFlowLiteratePaper\bifurcating_network.vtp` into Paraview. For a nicer rendering you can do `Filters->Alphabetical->Tube`.
          */
         ParameterCollection::Instance()->DumpToFile(p_handler->GetOutputDirectoryFullPath() + "parameter_collection.xml");
         ParameterCollection::Instance()->Destroy();
     }
     /*
-     * = Test 3 - Simulating Flow With Structural Adaptation =
-     * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/structural_adaptation.png, 25%, align=center, border=1)]]
+     * ## Test 3 - Simulating Flow With Structural Adaptation
+     *
+     * ![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/structural_adaptation.png)
      *
      * In this test the vessel network will adapt over time as a result of flow conditions.
      */
@@ -344,7 +347,7 @@ public:
         p_network->Write(p_handler->GetOutputDirectoryFullPath()+"network_initial_sa.vtp");
     }
     /*
-     * = Test 4 - Simulating Flow With Regression =
+     * # Test 4 - Simulating Flow With Regression
      *
      * In this test the vessel network will adapt over time as a result of flow conditions and also vessels will be removed
      * to regression in low wall shear stress regions.
@@ -406,18 +409,18 @@ public:
         p_regression_solver->SetLowWallShearStressThreshold(1.e-06*unit::pascals);
         p_regression_solver->SetVesselNetwork(p_network);
         /*
-         * Set up a `VascalarTumourSolver` to manage all solves.
+         * Set up a `MicrovesselSolver` to manage all solves.
          */
-        MicrovesselSolver<3> vascular_tumour_solver;
-        vascular_tumour_solver.SetRegressionSolver(p_regression_solver);
-        vascular_tumour_solver.SetStructuralAdaptationSolver(p_structural_adaptation_solver);
-        vascular_tumour_solver.SetVesselNetwork(p_network);
-        vascular_tumour_solver.SetOutputFileHandler(p_handler);
-        vascular_tumour_solver.SetOutputFrequency(1);
+        MicrovesselSolver<3> microvessel_solver;
+        microvessel_solver.SetRegressionSolver(p_regression_solver);
+        microvessel_solver.SetStructuralAdaptationSolver(p_structural_adaptation_solver);
+        microvessel_solver.SetVesselNetwork(p_network);
+        microvessel_solver.SetOutputFileHandler(p_handler);
+        microvessel_solver.SetOutputFrequency(1);
         /*
          * Run the solver
          */
-        vascular_tumour_solver.Run();
+        microvessel_solver.Run();
     }
 };
 #endif /*TESTBLOODFLOWLITERATEPAPER_HPP_*/

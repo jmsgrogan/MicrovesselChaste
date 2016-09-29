@@ -39,11 +39,13 @@ Copyright (c) 2005-2016, University of Oxford.
 /* # A Lattice Based Angiogenesis Tutorial
  * This tutorial is designed to introduce a lattice based angiogenesis problem based on a simplified version of the
  * vascular tumour application described in
- *  [Owen et al. 2011](http://www.ncbi.nlm.nih.gov/pubmed/21363914). It is a 2D simulation using cellular automaton
+ *  [Owen et al. 2011](http://www.ncbi.nlm.nih.gov/pubmed/21363914).
+ *
+ * It is a 2D simulation using cellular automaton
  * for cells, a regular grid for vessel movement and the same grid for the solution of partial differential equations
  * for oxygen and VEGF transport using the finite difference method.
  *
- * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/blob/master/test/tutorials/images/Lattice_Tutorial_Initial_Grid.png "Lattice Based Angiogenesis Image")
+ * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/landing.png)
  *
  * ## The Test
  * Start by introducing the necessary header files. The first contain functionality for setting up unit tests,
@@ -159,7 +161,7 @@ public:
          * We can write the lattice to file for quick visualization with Paraview. Rendering of this and subsequent images is performed
          * using standard Paraview operations, not detailed here.
          *
-         * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/Lattice_Tutorial_Initial_Grid.png, 20%, align=center, border=1)]]
+         * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/Lattice_Tutorial_Initial_Grid.png)
          *
          */
         p_grid->Write(p_handler);
@@ -187,7 +189,7 @@ public:
         /*
          * Again, we can write the network to file for quick visualization with Paraview.
          *
-         * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/Lattice_Angiogenesis_Tutorial_Grid_Vessels.png, 20%, align=center, border=1)]]
+         * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/Lattice_Angiogenesis_Tutorial_Grid_Vessels.png)
          *
          */
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "initial_network.vtp");
@@ -205,12 +207,12 @@ public:
         /*
          * At this point the simulation domain will look as follows:
          *
-         * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/Lattice_Based_Tutorial_Cell_Setup.png, 20%, align=center, border=1)]]
+         * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/Lattice_Based_Tutorial_Cell_Setup.png)
          *
          * Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources. A sample PDE solution for
          * oxygen is shown below:
          *
-         * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/LatticeTutorialSampleOxygen.png, 20%, align=center, border=1)]]
+         * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/LatticeTutorialSampleOxygen.png)
          */
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_oxygen_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
         p_oxygen_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpOxygenDiffusivity->GetValue("User"));
@@ -240,7 +242,7 @@ public:
         * The rate of VEGF release depends on the cell type and intracellular VEGF levels, so we need a more detailed
         * type of discrete source. A sample PDE solution for VEGF is shown below.
         *
-        * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/LatticeTutorialSampleVegf.png, 20%, align=center, border=1)]]
+        * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/LatticeTutorialSampleVegf.png)
         */
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_vegf_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
         p_vegf_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpVegfDiffusivity->GetValue("User"));
@@ -281,7 +283,7 @@ public:
          * depend on haematocrit and diameter. This solver manages growth and shrinkage of vessels in response to
          * flow related stimuli. A sample plot of the stimulus distrbution during a simulation is shown below:
          *
-         * [[Image(source:/chaste/projects/Microvessel/test/tutorials/images/LatticeTutorialSampleGrowth.png, 20%, align=center, border=1)]]
+         * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/LatticeTutorialSampleGrowth.png)
          */
         units::quantity<unit::length> large_vessel_radius(25.0 * unit::microns);
         p_network->SetSegmentRadii(large_vessel_radius);
@@ -310,7 +312,6 @@ public:
         p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_wss_calculator);
         p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_metabolic_stim_calculator);
         p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_mech_stimulus_calculator);
-//        p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_shrinking_stimulus_calculator);
         p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_viscosity_calculator);
         /*
          * Set up a regression solver.
