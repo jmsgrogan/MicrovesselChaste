@@ -31,14 +31,14 @@
 # 
 
 find_package(Chaste COMPONENTS cell_based)
-chaste_do_project(Microvessel)
+chaste_do_project(MicrovesselChaste)
     
-set(BUILD_MICROVESSEL_PYTHON ON CACHE BOOL "Build Python Bindings for Microvessel component")
-if(${BUILD_MICROVESSEL_PYTHON})
+set(BUILD_MicrovesselChaste_PYTHON ON CACHE BOOL "Build Python Bindings for MicrovesselChaste component")
+if(${BUILD_MicrovesselChaste_PYTHON})
     include(${CMAKE_CURRENT_SOURCE_DIR}/WrapPython.cmake)
-endif(${BUILD_MICROVESSEL_PYTHON})
+endif(${BUILD_MicrovesselChaste_PYTHON})
 
-# Add some custom test targets so we can just run on Microvessel code
+# Add some custom test targets so we can just run on MicrovesselChaste code
 if (Chaste_PROFILE_GPROF OR Chaste_PROFILE_GPERFTOOLS)
     if (Chaste_PROFILE_GPERFTOOLS)
         set(extension gif)
@@ -47,8 +47,8 @@ if (Chaste_PROFILE_GPROF OR Chaste_PROFILE_GPERFTOOLS)
     endif()
     
     set(CTEST_COMMAND ctest)
-    add_custom_target(profile_project_Microvessel
-        COMMAND ${CTEST_COMMAND} "-L" "project_Microvessel" "--output-on-failure"
+    add_custom_target(profile_project_MicrovesselChaste
+        COMMAND ${CTEST_COMMAND} "-L" "project_MicrovesselChaste" "--output-on-failure"
         COMMAND ${PYTHON_EXECUTABLE} "${Chaste_SOURCE_DIR}/cmake/process_profile.py" "${Chaste_PROFILE_OUTPUT_DIR}" ${extension}
         DEPENDS Profile 
         WORKING_DIRECTORY ${Chaste_BINARY_DIR}
