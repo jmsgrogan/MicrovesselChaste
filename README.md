@@ -1,6 +1,16 @@
 # MicrovesselChaste - Multi-Scale Agent-Based Modelling with Microvessels
 
-This is a mirror of the MicrovesselChaste project hosted on <http://www.cs.ox.ac.uk/chaste/>. See [the official project page](https://chaste.cs.ox.ac.uk/trac/wiki/PaperTutorials/Microvessel) for further details. Installation instructions specific to this Github version are below.
+This is an add-on for agent-based modelling of microvessels with [Chaste](http://www.cs.ox.ac.uk/chaste/). 
+
+# Features 
+
+* 2D and 3D on- and off-lattice agent based models of cells and microvessels
+* Integration with [Chaste](http://www.cs.ox.ac.uk/chaste/)
+* Blood flow with haematocrit partitioning, structural adaptation and regression
+* Sprouting angiogenesis
+* Nutrient transport PDEs solves using finite difference or finite element methods
+
+See the [project wiki](https://github.com/jmsgrogan/MicrovesselChaste/wiki) for some example problems.
 
 # Installation 
 

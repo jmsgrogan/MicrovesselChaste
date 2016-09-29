@@ -3,7 +3,7 @@ Note that the code is given in full at the bottom of the page.
 
 
 
-= Solving PDEs in the Microvessel Project =
+# Solving PDEs in the Microvessel Project
 This tutorial demonstrates methods for solving PDEs in the Microvessel Project. It is noted
 that the way to set up PDEs differs from that of Cell Based Chaste, although the same solver
 can be used behind the scenes.
@@ -15,7 +15,7 @@ The following is covered:
  * Solving a linear reaction-diffusion PDE using Green's functions.
  * Interacting with regular grids and finite element meshes.
  
-= The Test =
+# The Test
 Start by introducing the necessary header files. The first contain functionality for setting up unit tests,
 smart pointer tools and output management.
 
@@ -75,7 +75,7 @@ class TestSolvingPdesLiteratePaper : public AbstractCellBasedWithTimingsTestSuit
 public:
 ```
 
-= Test 1 - Linear Reaction Diffusion With Finite Differences =
+## Test 1 - Linear Reaction Diffusion With Finite Differences =
 In the first example we will solve a steady-state linear reaction diffusion
 PDE with finite differences.
 
@@ -156,11 +156,11 @@ Set up the PDE solvers for the oxygen problem
 ```
 
 
-= Code =
+# Code 
 The full code is given below
 
 
-== File name `TestSolvingPdesLiteratePaper.hpp` ==
+## File name `TestSolvingPdesLiteratePaper.hpp` 
 
 ```cpp
 #include <cxxtest/TestSuite.h>
