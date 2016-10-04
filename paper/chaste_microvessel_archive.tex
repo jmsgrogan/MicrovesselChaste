@@ -1,79 +1,5 @@
-% Template for PLoS
-% Version 3.3 June 2016
-%
-% % % % % % % % % % % % % % % % % % % % % %
-%
-% -- IMPORTANT NOTE
-%
-% This template contains comments intended 
-% to minimize problems and delays during our production 
-% process. Please follow the template instructions
-% whenever possible.
-%
-% % % % % % % % % % % % % % % % % % % % % % % 
-%
-% Once your paper is accepted for publication, 
-% PLEASE REMOVE ALL TRACKED CHANGES in this file 
-% and leave only the final text of your manuscript. 
-% PLOS recommends the use of latexdiff to track changes during review, as this will help to maintain a clean tex file.
-% Visit https://www.ctan.org/pkg/latexdiff?lang=en for info or contact us at latex@plos.org.
-%
-%
-% There are no restrictions on package use within the LaTeX files except that 
-% no packages listed in the template may be deleted.
-%
-% Please do not include colors or graphics in the text.
-%
-% The manuscript LaTeX source should be contained within a single file (do not use \input, \externaldocument, or similar commands).
-%
-% % % % % % % % % % % % % % % % % % % % % % %
-%
-% -- FIGURES AND TABLES
-%
-% Please include tables/figure captions directly after the paragraph where they are first cited in the text.
-%
-% DO NOT INCLUDE GRAPHICS IN YOUR MANUSCRIPT
-% - Figures should be uploaded separately from your manuscript file. 
-% - Figures generated using LaTeX should be extracted and removed from the PDF before submission. 
-% - Figures containing multiple panels/subfigures must be combined into one image file before submission.
-% For figure citations, please use "Fig" instead of "Figure".
-% See http://journals.plos.org/plosone/s/figures for PLOS figure guidelines.
-%
-% Tables should be cell-based and may not contain:
-% - spacing/line breaks within cells to alter layout or alignment
-% - do not nest tabular environments (no tabular environments within tabular environments)
-% - no graphics or colored text (cell background color/shading OK)
-% See http://journals.plos.org/plosone/s/tables for table guidelines.
-%
-% For tables that exceed the width of the text column, use the adjustwidth environment as illustrated in the example table in text below.
-%
-% % % % % % % % % % % % % % % % % % % % % % % %
-%
-% -- EQUATIONS, MATH SYMBOLS, SUBSCRIPTS, AND SUPERSCRIPTS
-%
-% IMPORTANT
-% Below are a few tips to help format your equations and other special characters according to our specifications. For more tips to help reduce the possibility of formatting errors during conversion, please see our LaTeX guidelines at http://journals.plos.org/plosone/s/latex
-%
-% For inline equations, please be sure to include all portions of an equation in the math environment.  For example, x$^2$ is incorrect; this should be formatted as $x^2$ (or $\mathrm{x}^2$ if the romanized font is desired).
-%
-% Do not include text that is not math in the math environment. For example, CO2 should be written as CO\textsubscript{2} instead of CO$_2$.
-%
-% Please add line breaks to long display equations when possible in order to fit size of the column. 
-%
-% For inline equations, please do not include punctuation (commas, etc) within the math environment unless this is part of the equation.
-%
-% When adding superscript or subscripts outside of brackets/braces, please group using {}.  For example, change "[U(D,E,\gamma)]^2" to "{[U(D,E,\gamma)]}^2". 
-%
-% Do not use \cal for caligraphic font.  Instead, use \mathcal{}
-%
-% % % % % % % % % % % % % % % % % % % % % % % % 
-%
-% Please contact latex@plos.org with any questions.
-%
-% % % % % % % % % % % % % % % % % % % % % % % %
-
 \documentclass[10pt,letterpaper]{article}
-\usepackage[top=0.85in,left=2.75in,footskip=0.75in]{geometry}
+\usepackage[top=0.85in,left=1.0in,footskip=0.75in]{geometry}
 
 % amsmath and amssymb packages, useful for mathematical formulas and symbols
 \usepackage{amsmath,amssymb}
@@ -133,7 +59,7 @@
 % Text layout
 \raggedright
 \setlength{\parindent}{0.5cm}
-\textwidth 5.25in 
+\textwidth 6.5in 
 \textheight 8.75in
 
 % Bold the 'Figure #' in the caption and separate it from the title/caption with a period
@@ -159,12 +85,12 @@
 \pagestyle{fancy}
 \fancyhf{}
 \setlength{\headheight}{27.023pt}
-\lhead{\includegraphics[width=2.0in]{PLOS-submission.eps}}
+%\lhead{\includegraphics[width=2.0in]{PLOS-submission.eps}}
 \rfoot{\thepage/\pageref{LastPage}}
 \renewcommand{\footrule}{\hrule height 2pt \vspace{2mm}}
 \fancyheadoffset[L]{2.25in}
 \fancyfootoffset[L]{2.25in}
-\lfoot{\sf PLOS}
+%\lfoot{\sf PLOS}
 
 %% Include all macros below
 
@@ -187,8 +113,8 @@
 \\
 James A. Grogan\textsuperscript{1*},
 Anthony J. Connor\textsuperscript{1, 2},
-B. Markelc\textsuperscript{3},
-R.J. Muschel\textsuperscript{3},
+%B. Markelc\textsuperscript{3},
+%R.J. Muschel\textsuperscript{3},
 Philip K. Maini\textsuperscript{1},
 Helen M. Byrne\textsuperscript{1},
 Joe M. Pitt-Francis\textsuperscript{2}
@@ -198,7 +124,7 @@ Joe M. Pitt-Francis\textsuperscript{2}
 \\
 \textbf{2} Department of Computer Science, University of Oxford, Oxford, \mbox{OX1 3QD}, UK.
 \\
-\textbf{3} CRUK/MRC Oxford Institute for Radiation Oncology, University of Oxford, Oxford, \mbox{OX3 7DQ}, UK.
+%\textbf{3} CRUK/MRC Oxford Institute for Radiation Oncology, University of Oxford, Oxford, \mbox{OX3 7DQ}, UK.
 \bigskip
 
 %\textcurrency Current Address: [JG Add current address for AJ].
@@ -208,7 +134,7 @@ Joe M. Pitt-Francis\textsuperscript{2}
 \end{flushleft}
 
 \section*{Abstract}
-Microvessel Chaste is an open-source software library for multi-scale agent-based modelling of tissues with microvessels. Development has focused on applications in spatial modelling of tumours and wound healing. Problems of interest in these areas include modelling blood flow, angiogenesis, and diffusible chemicals. This library integrates discrete representations of microvessels with re-usable components for agent-based modelling in the open-source Chaste library, such as discrete cells, meshes and ordinary and partial differential equation (ODE/PDE) solvers. The aims of the library are to facilitate i) rapid model composition from a range of interchangeable sub-models, ii) management of a large number of input parameters from various literature sources and iii) integration of modelling with experimental observations. These aims are pertinent in the area of discrete vascular tissue modelling, where model cross-comparison and experimental validation are still in their early stages. This article includes simple example applications of the library, which can be run on a desktop computer. The source code is available to download under an open-source Berkeley Software Distribution (BSD) licence at \url{https://jmsgrogan.github.io/MicrovesselChaste/}\footnote{Github login required. Username: MicrovesselChasteReviewer. Password: MicrovesselChasteReviewerPaper}, together with details of a mailing list and links to documentation and tutorials.
+Microvessel Chaste is an open-source software library for multi-scale agent-based modelling of tissues with microvessels. Development has focused on applications in spatial modelling of tumours and wound healing. Problems of interest in these areas include modelling blood flow, angiogenesis, and diffusible chemicals. This library integrates discrete representations of microvessels with re-usable components for agent-based modelling in the open-source Chaste library, such as discrete cells, meshes and ordinary and partial differential equation (ODE/PDE) solvers. The aims of the library are to facilitate i) rapid model composition from a range of interchangeable sub-models, ii) management of a large number of input parameters from various literature sources and iii) integration of modelling with experimental observations. These aims are pertinent in the area of discrete vascular tissue modelling, where model cross-comparison and experimental validation are still in their early stages. This article includes simple example applications of the library, which can be run on a desktop computer. The source code is available to download under an open-source Berkeley Software Distribution (BSD) licence at \url{https://jmsgrogan.github.io/MicrovesselChaste/}, together with details of a mailing list and links to documentation and tutorials.
 
 \linenumbers
 
@@ -236,7 +162,7 @@ Fig~\ref{fig1} shows how the library can be used to \emph{compose} a problem of 
 
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.9\textwidth]{Fig1.png}
+\includegraphics[width=0.7\textwidth]{Fig1.png}
 \caption{{\bf An example of how a microvessel model can be composed using Microvessel Chaste.}
 A schematic showing the composition of a tumour growth model using Microvessel Chaste. The ability to compose a model from a collection of sub-models is shown.}
 \label{fig1}
@@ -270,7 +196,7 @@ Object-oriented programming, including templating in C++, are utilized throughou
 
 \section*{Results}
 
-In this section two sample multi-scale agent-based problems are demonstrated, and are available for reproduction following wiki-based tutorials at \url{https://jmsgrogan.github.io/MicrovesselChaste/}\footnote{Github login required. Username: MicrovesselChasteReviewer. Password: MicrovesselChasteReviewerPaper}.
+In this section two sample multi-scale agent-based problems are demonstrated, and are available for reproduction following wiki-based tutorials at \url{https://jmsgrogan.github.io/MicrovesselChaste/}.
 
 \subsection*{A 2D Lattice-Based Tumour Simulation}
 
@@ -279,7 +205,7 @@ The first example is a 2D lattice-based tumour growth simulation following from 
 % Place figure captions after the first paragraph in which they are cited.
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.99\textwidth]{Fig3.png}
+\includegraphics[width=0.8\textwidth]{Fig3.png}
 \caption{{\bf A 2D lattice-based tumour simulation performed using the Microvessel Chaste library.}
 (a) An experimental image of a tumour microvessel network (red) following administration of a Hoescht stain (blue), which stains DNA in tumour cells~\cite{Grogan2016}. This demonstrates the ability to image biological features at the same size-scale as the computational models. (b) A computational model of tumour growth over a period of 16 days using the Microvessel Chaste library. A planned application of the library is studying vascular patterning for comparison with observations from imaging data.}
 \label{fig3}
@@ -296,7 +222,7 @@ The second example is a 3D off-lattice simulation of angiogenesis on a curved su
 % Place figure captions after the first paragraph in which they are cited.
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.99\textwidth]{Fig4.png}
+\includegraphics[width=0.8\textwidth]{Fig4.png}
 \caption{{\bf A 3D off-lattice angiogenesis simulation performed using the Microvessel Chaste library.}
 (a) Images from a cornea micropocket experiment showing microvessels (dark red) at 3-5 days post pellet implantation~\cite{Connor2015}. (b) Application of the Microvessel Chaste library in modelling a similar experiment, but with a number of simplifications for the purposes of the tutorial. The reader is referred to Connor \emph{et al.}~\cite{Connor2015} for a more detailed model.}
 \label{fig4}
@@ -311,9 +237,7 @@ Possible extensions to this simple model could include the addition of discrete 
 Additional functionality for semi-automated 2D and 3D image segmentation and meshing is under development, to aid integration with experimental studies such as those shown in Fig~\ref{fig3}(a). Porting to Windows and Mac OS X are of interest. At present, algorithms operate in serial only, however there is scope for distributed memory parallelisation. All PDE and flow solvers are based on PETSc~\cite{Balay2014} structures and vessel network components may be communicated using existing serialization functionality in Chaste~\cite{Harvey2015} or through serialization of VTK objects~\cite{Schroeder2003}. As discussed in Mirams et al.~\cite{Mirams2013}, contributions are welcome via the main Chaste website, which includes a developer wiki, mailing list details and the ability to open and comment on work tickets. 
 
 \section*{Acknowledgments}
-The research leading to these results has received funding from the People Programme (Marie Curie Actions) of the European Unions Seventh Framework Programme (FP7/2007-2013) under REA grant agreement No 625631 (BM) and the European Union's Seventh Framework Programme for research, technological development and demonstration under grant agreement No 600841 (JAG, AJC, HMN, PKM, JMPF). BM and RJM acknowledge that this work was also supported by Cancer Research UK (CRUK) grant number C5255/A18085, through the CRUK Oxford Centre, by CRUK grant number C5255/A15935 and by CRUK/EPSRC Oxford Cancer Imaging Centre (grant number C5255/A16466).The authors acknowledge helpful inputs from the Chaste development team, in particular Jonathan Cooper, Alex Fletcher, James Osborne, Gary Mirams and Martin Robinson.
-
-%We thank Bostjan Markelc and Ruth Muschel of the CRUK/MRC Oxford Institute for Radiation Oncology for providing the multi-photon image presented in Fig~\ref{fig3} and for useful discussions.
+The research leading to these results has received funding from the European Union's Seventh Framework Programme for research, technological development and demonstration under grant agreement No 600841. The authors acknowledge helpful inputs from the Chaste development team, in particular Jonathan Cooper, Alex Fletcher, James Osborne, Gary Mirams and Martin Robinson. We thank Bostjan Markelc and Ruth Muschel of the CRUK/MRC Oxford Institute for Radiation Oncology for providing the multi-photon image presented in Fig~\ref{fig3} and for useful discussions.
 
 \nolinenumbers
 

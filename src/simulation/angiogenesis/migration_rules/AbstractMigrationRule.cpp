@@ -41,7 +41,8 @@ AbstractMigrationRule<DIM>::AbstractMigrationRule()
       mpVesselNetwork(),
       mIsSprouting(false),
       mpCellPopulation(),
-      mpGrid()
+      mpGrid(),
+      mpBoundingDomain()
 {
 
 }
@@ -69,6 +70,12 @@ template <unsigned DIM>
 std::vector<int> AbstractMigrationRule<DIM>::GetIndices(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     return std::vector<int>();
+}
+
+template<unsigned DIM>
+void AbstractMigrationRule<DIM>::SetBoundingDomain(boost::shared_ptr<Part<DIM> > pPart)
+{
+    mpBoundingDomain = pPart;
 }
 
 template<unsigned DIM>

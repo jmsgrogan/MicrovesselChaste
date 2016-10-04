@@ -43,6 +43,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "AbstractDiscreteContinuumSolver.hpp"
 #include "AbstractCellPopulation.hpp"
 #include "RegularGrid.hpp"
+#include "Part.hpp"
 
 /**
  * Abstract class for implementing a vessel tip cell migration rule. On and off-lattice specializations
@@ -78,6 +79,9 @@ protected:
      * A regular grid, used in some lattice based simulations
      */
     boost::shared_ptr<RegularGrid<DIM> > mpGrid;
+
+    boost::shared_ptr<Part<DIM> > mpBoundingDomain;
+
 
 public:
 
@@ -118,6 +122,10 @@ public:
      * @param pNetwork the vessel network
      */
     void SetNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+
+    /**
+     */
+    void SetBoundingDomain(boost::shared_ptr<Part<DIM> > pPart);
 
     /**
      * Set the lattice/grid for the vessel network

@@ -87,31 +87,37 @@ void MechanicalStimulusCalculator<DIM>::Calculate()
 {
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
 
+    units::quantity<unit::length> cm(0.01*unit::metres);
+    units::quantity<unit::mass> g(1.e-3*unit::kg);
+    units::quantity<unit::force> dyne(g*cm/(unit::seconds*unit::seconds));
+    units::quantity<unit::pressure> dyne_per_centi_metre_squared(dyne/(cm*cm));
     for (unsigned idx = 0; idx < segments.size(); idx++)
     {
-        // get average pressure in a segment. It is stored in pascal, so is converted to mmHg for the calculation.
+        // Get average pressure in a segment
         units::quantity<unit::pressure> node0_pressure = segments[idx]->GetNode(0)->GetFlowProperties()->GetPressure();
         units::quantity<unit::pressure> node1_pressure = segments[idx]->GetNode(1)->GetFlowProperties()->GetPressure();
 
-        // Conversion to mmHg. // DANGER: Stepping out of boost units framework as governing equations are dimensionally
-        // inconsistent.
+        // Empirical Equation. Pressure in mmHg, WSS in dyne/cm2.
         units::quantity<unit::pressure> conversion_pressure(1.0*unit::mmHg);
-        double average_pressure = (node0_pressure + node1_pressure)/conversion_pressure;
+        double average_pressure_in_mmHg = (node0_pressure + node1_pressure)/conversion_pressure;
 
-        // The calculation does not work for pressures less than 1 mmHg, so we specify a cut-off value of TauP for lower
-        // pressures.
-        if (log10(average_pressure) < 1.0)
+        // The calculation does not work for low pressures, so we need to specify a cut-off value.
+        if (log10(average_pressure_in_mmHg) < 1.0)
         {
-            mTauP = 1.4 * unit::pascals;
+            mTauP = 1.4 * dyne_per_centi_metre_squared;
         }
         else
         {
-            // tau_p calculated in pascals
-            // factor of 0.1 introduced in order to convert original expression (calculated in units of dyne/cm^2) to pascals
-            double inside_exponent = -5000.0*pow(log10(log10(average_pressure)), 5.4);
-            mTauP = 0.1 * (100.0 - 86.0 * exp(inside_exponent)) * unit::pascals;
+            double inside_exponent = -5000.0*pow(log10(log10(average_pressure_in_mmHg)), 5.4);
+            mTauP = (100.0 - 86.0 * exp(inside_exponent)) * dyne_per_centi_metre_squared;
         }
-        units::quantity<unit::rate> mechanical_stimulus = log10((segments[idx]->GetFlowProperties()->GetWallShearStress() + mTauRef)/ mTauP) * unit::per_second;
+
+        // The equation is dimensionally inconsistent. Drop out of the units framework.
+        double log_term_1 = log10((segments[idx]->GetFlowProperties()->GetWallShearStress()/dyne_per_centi_metre_squared +
+                mTauRef/dyne_per_centi_metre_squared));
+        double log_term_2 = log10(mTauP/dyne_per_centi_metre_squared);
+
+        units::quantity<unit::rate> mechanical_stimulus = (log_term_1 - 0.5*log_term_2) * unit::per_second;
         segments[idx]->GetFlowProperties()->SetGrowthStimulus(segments[idx]->GetFlowProperties()->GetGrowthStimulus() + mechanical_stimulus);
     }
 }
