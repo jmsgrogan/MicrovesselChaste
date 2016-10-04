@@ -58,15 +58,15 @@ public:
     void TestSetupAndDestroy()
     {
         BaseUnits::Instance()->SetReferenceLengthScale(10.0*unit::metres);
-        BaseUnits::Instance()->SetReferenceMassScale(15.0*unit::kg);
+        BaseUnits::Instance()->SetReferenceConcentrationScale(15.0*unit::mole_per_metre_cubed);
         BaseUnits::Instance()->SetReferenceTimeScale(20.0*unit::seconds);
         TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceLengthScale().value(), 10.0, 1.e-6);
-        TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceMassScale().value(), 15.0, 1.e-6);
+        TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceConcentrationScale().value(), 15.0, 1.e-6);
         TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceTimeScale().value(), 20.0, 1.e-6);
 
         BaseUnits::Instance()->Destroy();
         TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceLengthScale().value(), 1.e-6, 1.e-8);
-        TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceMassScale().value(), 1.0, 1.e-6);
+        TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceConcentrationScale().value(), 1.0, 1.e-6);
         TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceTimeScale().value(), 60.0, 1.e-6);
     }
 
@@ -79,7 +79,7 @@ public:
         {
             BaseUnits* p_base_units = BaseUnits::Instance();
             BaseUnits::Instance()->SetReferenceLengthScale(10.0*unit::metres);
-            BaseUnits::Instance()->SetReferenceMassScale(15.0*unit::kg);
+            BaseUnits::Instance()->SetReferenceConcentrationScale(15.0*unit::mole_per_metre_cubed);
             BaseUnits::Instance()->SetReferenceTimeScale(20.0*unit::seconds);
 
             std::ofstream ofs(archive_filename.c_str());
@@ -102,7 +102,7 @@ public:
             input_arch >> p_wrapper;
 
             TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceLengthScale().value(), 10.0, 1.e-6);
-            TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceMassScale().value(), 15.0, 1.e-6);
+            TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceConcentrationScale().value(), 15.0, 1.e-6);
             TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceTimeScale().value(), 20.0, 1.e-6);
         }
     }

@@ -2,3 +2,5 @@
 .cproject
 .project
 doc/wiki
+*.pyc
+*.so

@@ -118,6 +118,7 @@ results. For our purposes microns for length and hours for time are suitable bas
         units::quantity<unit::time> reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
+        BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
 ```
 
 Set up the domain representing the cornea. This is a thin hemispherical shell. We assume some symmetry to
@@ -222,23 +223,23 @@ precision problems.
         p_vegf_solver->SetLabel("vegf");
         p_vegf_solver->SetMesh(p_mesh);
         p_vegf_solver->AddBoundaryCondition(p_vegf_boundary);
-        p_vegf_solver->SetReferenceConcentration(1.e-9*unit::mole_per_metre_cubed);
 ```
 
 An example of the VEGF solution is shown here:
 
-[[Image(source:/chaste/projects/Microvessel/test/tutorials/images/OffLatticeTutorialVegf.png, 20%, align=center, border=1)]]
+![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/OffLatticeTutorialVegf.png)
 
 Set up an angiogenesis solver and add sprouting and migration rules.
 
 ```cpp
         boost::shared_ptr<AngiogenesisSolver<3> > p_angiogenesis_solver = AngiogenesisSolver<3>::Create();
         boost::shared_ptr<OffLatticeSproutingRule<3> > p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
-        p_sprouting_rule->SetSproutingProbability(0.000001* unit::per_second);
+        p_sprouting_rule->SetSproutingProbability(1.e6* unit::per_second);
         boost::shared_ptr<OffLatticeMigrationRule<3> > p_migration_rule = OffLatticeMigrationRule<3>::Create();
-        p_migration_rule->SetChemotacticStrength(50.0);
+        p_migration_rule->SetChemotacticStrength(0.1);
+        p_migration_rule->SetAttractionStrength(0.5);
 
-        units::quantity<unit::velocity> sprout_velocity(20.0*unit::microns/(1.0*unit::hours));
+        units::quantity<unit::velocity> sprout_velocity(50.0*unit::microns/(24.0*unit::hours)); //Secomb13
         p_migration_rule->SetSproutingVelocity(sprout_velocity);
 
         p_angiogenesis_solver->SetMigrationRule(p_migration_rule);
@@ -257,7 +258,7 @@ coupled PDE solves, the solution propagates in the order that the PDE solvers ar
         p_microvessel_solver->SetVesselNetwork(p_network);
         p_microvessel_solver->AddDiscreteContinuumSolver(p_vegf_solver);
         p_microvessel_solver->SetOutputFileHandler(p_handler);
-        p_microvessel_solver->SetOutputFrequency(1);
+        p_microvessel_solver->SetOutputFrequency(5);
         p_microvessel_solver->SetAngiogenesisSolver(p_angiogenesis_solver);
         p_microvessel_solver->SetUpdatePdeEachSolve(false);
 ```
@@ -265,7 +266,7 @@ coupled PDE solves, the solution propagates in the order that the PDE solvers ar
 Set the simulation time and run the solver. The result is shown at the top of the tutorial.
 
 ```cpp
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(100.0, 200);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(1000.0, 100);
         p_microvessel_solver->Run();
     }
 };
@@ -328,6 +329,7 @@ public:
         units::quantity<unit::time> reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
+        BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
         MappableGridGenerator hemisphere_generator;
         units::quantity<unit::length> radius(1400.0 * unit::microns);
         units::quantity<unit::length> thickness(100.0 * unit::microns);
@@ -391,14 +393,14 @@ public:
         p_vegf_solver->SetLabel("vegf");
         p_vegf_solver->SetMesh(p_mesh);
         p_vegf_solver->AddBoundaryCondition(p_vegf_boundary);
-        p_vegf_solver->SetReferenceConcentration(1.e-9*unit::mole_per_metre_cubed);
         boost::shared_ptr<AngiogenesisSolver<3> > p_angiogenesis_solver = AngiogenesisSolver<3>::Create();
         boost::shared_ptr<OffLatticeSproutingRule<3> > p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
-        p_sprouting_rule->SetSproutingProbability(0.000001* unit::per_second);
+        p_sprouting_rule->SetSproutingProbability(1.e6* unit::per_second);
         boost::shared_ptr<OffLatticeMigrationRule<3> > p_migration_rule = OffLatticeMigrationRule<3>::Create();
-        p_migration_rule->SetChemotacticStrength(50.0);
+        p_migration_rule->SetChemotacticStrength(0.1);
+        p_migration_rule->SetAttractionStrength(0.5);
 
-        units::quantity<unit::velocity> sprout_velocity(20.0*unit::microns/(1.0*unit::hours));
+        units::quantity<unit::velocity> sprout_velocity(50.0*unit::microns/(24.0*unit::hours)); //Secomb13
         p_migration_rule->SetSproutingVelocity(sprout_velocity);
 
         p_angiogenesis_solver->SetMigrationRule(p_migration_rule);
@@ -411,10 +413,10 @@ public:
         p_microvessel_solver->SetVesselNetwork(p_network);
         p_microvessel_solver->AddDiscreteContinuumSolver(p_vegf_solver);
         p_microvessel_solver->SetOutputFileHandler(p_handler);
-        p_microvessel_solver->SetOutputFrequency(1);
+        p_microvessel_solver->SetOutputFrequency(5);
         p_microvessel_solver->SetAngiogenesisSolver(p_angiogenesis_solver);
         p_microvessel_solver->SetUpdatePdeEachSolve(false);
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(100.0, 200);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(1000.0, 100);
         p_microvessel_solver->Run();
     }
 };
