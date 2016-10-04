@@ -77,7 +77,7 @@ private:
     units::quantity<unit::dimensionless> mHaematocrit;
 
     /**
-     * blood flow rate in the vessel at this segment
+     * Blood flow rate in the vessel at this segment
      */
     units::quantity<unit::flow_rate> mFlowRate;
 

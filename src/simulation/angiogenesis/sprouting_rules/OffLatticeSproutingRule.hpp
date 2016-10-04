@@ -55,6 +55,16 @@ class OffLatticeSproutingRule : public AbstractSproutingRule<DIM>
      */
     units::quantity<unit::length> mTipExclusionRadius;
 
+    /**
+     * The half maximum vegf
+     */
+    units::quantity<unit::concentration> mHalfMaxVegf;
+
+    /**
+     * The vegf field sampled at the vessel lattice sites
+     */
+    std::vector<units::quantity<unit::concentration> > mVegfField;
+
 public:
 
     /**

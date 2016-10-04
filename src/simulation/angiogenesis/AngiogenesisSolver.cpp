@@ -207,6 +207,11 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
     }
     else
     {
+        if (mpBoundingDomain)
+        {
+            mpMigrationRule->SetBoundingDomain(mpBoundingDomain);
+        }
+
         mpMigrationRule->SetIsSprouting(sprouting);
         std::vector<c_vector<double, DIM> > movement_vectors = mpMigrationRule->GetDirections(tips);
         std::vector<DimensionalChastePoint<DIM> > candidate_tip_locations(tips.size());
@@ -248,10 +253,6 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
                         p_new_node->SetIsMigrating(true);
                     }
                 }
-                else
-                {
-                    tips[idx]->SetIsMigrating(false);
-                }
             }
             else
             {
@@ -262,7 +263,6 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
             }
         }
     }
-
     mpNetwork->UpdateAll();
 }
 
@@ -279,14 +279,11 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
         {
             if (mpVesselGrid)
             {
-                std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > point_node_map =
-                        mpVesselGrid->GetPointNodeMap();
+                std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > point_node_map = mpVesselGrid->GetPointNodeMap();
                 unsigned grid_index = mpVesselGrid->GetNearestGridIndex(nodes[idx]->rGetLocation());
-
                 if (point_node_map[grid_index].size() >= 2)
                 {
                     boost::shared_ptr<VesselNode<DIM> > p_merge_node = VesselNode<DIM>::Create(nodes[idx]);
-
                     if (point_node_map[grid_index][0] == nodes[idx])
                     {
                         p_merge_node = mpNetwork->DivideVessel(
@@ -308,10 +305,8 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
                     {
                         nodes[idx]->GetSegment(0)->ReplaceNode(1, p_merge_node);
                     }
-
                     mpNetwork->UpdateAll();
                 }
-
             }
             else
             {

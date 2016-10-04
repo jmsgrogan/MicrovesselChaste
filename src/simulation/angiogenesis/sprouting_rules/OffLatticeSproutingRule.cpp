@@ -39,13 +39,20 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UblasIncludes.hpp"
 #include "UblasCustomFunctions.hpp"
 #include "BaseUnits.hpp"
+#include "Owen11Parameters.hpp"
 
 template<unsigned DIM>
 OffLatticeSproutingRule<DIM>::OffLatticeSproutingRule()
     : AbstractSproutingRule<DIM>(),
-      mTipExclusionRadius(80.0 * 1.e-6 * unit::metres)
+      mTipExclusionRadius(80.0 * 1.e-6 * unit::metres),
+      mHalfMaxVegf(Owen11Parameters::mpVegfConventrationAtHalfMaxProbSprouting->GetValue("Owen2011SproutingRule")),
+      mVegfField()
 {
-
+    // Owen11 equation is dimensionally inconsistent as it includes an extra vessel surface area term. In order to
+    // have a similar magnitude multiply this value by a typical vessel surface area = 2*pi*R*L
+    // = 2*pi*15*40
+    this->mSproutingProbability = Owen11Parameters::mpMaximumSproutingRate->GetValue("Owen2011SproutingRule")*2.0*M_PI*15.0*40.0;
+    this->mTipExclusionRadius = 80.0*1.e-6*unit::metres;
 }
 
 template<unsigned DIM>
@@ -67,6 +74,21 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::
     if(!this->mpVesselNetwork)
     {
         EXCEPTION("A vessel network is required for this type of sprouting rule.");
+    }
+
+    std::vector<units::quantity<unit::concentration> > probed_solutions(rNodes.size(), 0.0*unit::mole_per_metre_cubed);
+    std::vector<DimensionalChastePoint<DIM> > probe_locations(rNodes.size());
+
+    if(this->mpSolver)
+    {
+        for(unsigned idx=0; idx<rNodes.size(); idx++)
+        {
+            probe_locations[idx] = rNodes[idx]->rGetLocation();
+        }
+        if(probe_locations.size()>0)
+        {
+            probed_solutions = this->mpSolver->GetConcentrations(probe_locations);
+        }
     }
 
     // Set up the output sprouts vector
@@ -104,8 +126,15 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::
                 continue;
             }
         }
+        units::quantity<unit::concentration> vegf_conc = 0.0*unit::mole_per_metre_cubed;
+        if(this->mpSolver)
+        {
+            vegf_conc = probed_solutions[idx];
+        }
 
-        double prob_tip_selection = this->mSproutingProbability*SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
+        double vegf_fraction = vegf_conc/(vegf_conc + mHalfMaxVegf);
+        double max_prob_per_time_step = this->mSproutingProbability*SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
+        double prob_tip_selection = max_prob_per_time_step*vegf_fraction;
 
         if (RandomNumberGenerator::Instance()->ranf() < prob_tip_selection)
         {
