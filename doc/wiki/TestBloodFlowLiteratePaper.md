@@ -78,7 +78,7 @@ class TestBloodFlowLiteratePaper : public AbstractCellBasedWithTimingsTestSuite
 public:
 ```
 
-## Test 1 - Simulating 1d Flow in a Bifurcating Network =
+## Test 1 - Simulating 1d Flow in a Bifurcating Network
 
 ![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/bifurcation_network_flow.png)
 
