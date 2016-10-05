@@ -58,6 +58,12 @@ class DimensionalChastePoint : public ChastePoint<DIM>, public boost::enable_sha
      */
     friend class boost::serialization::access;
     template<class Archive>
+
+    /**
+     * Do the serialization
+     * @param ar the archive
+     * @param version the archive version
+     */
     void serialize(Archive & ar, const unsigned int version)
     {
         ar & boost::serialization::base_object<ChastePoint<DIM> >(*this);
@@ -79,12 +85,14 @@ public:
      * @param x x position of vertex
      * @param y y position of vertex
      * @param z z position of vertex
+     * @param referenceLength the reference length
      */
     DimensionalChastePoint(double x, double y, double z, units::quantity<unit::length> referenceLength);
 
     /**
      * Constructor
-     * @param a vector of x, y, z coordinates
+     * @param coords a vector of x, y, z coordinates
+     * @param referenceLength the reference length
      */
     DimensionalChastePoint(c_vector<double, DIM> coords, units::quantity<unit::length> referenceLength);
 
@@ -98,7 +106,7 @@ public:
 
     /**
      * Constructor
-     * @param a vector of x, y, z coordinates
+     * @param coords a vector of x, y, z coordinates
      */
     DimensionalChastePoint(c_vector<double, DIM> coords);
 
@@ -109,14 +117,12 @@ public:
 
     /**
      * Return the reference length scale for the point, default is micron
-     *
-     * @return a the reference length scale
+     * @return the reference length scale
      */
     units::quantity<unit::length> GetReferenceLengthScale() const;
 
     /**
-     * Set the length scale used to dimensionalize the point location as stored in mLocation.
-     * If you want locations to be in metres, for example, set it to 1.0*unit::metres. The point
+     * Set the length scale used to dimensionalize the point location as stored in mLocation. The point
      * location values are changed accordingly when this value is changed.
      *
      * @param lenthScale the reference length scale for point locations
@@ -141,7 +147,7 @@ public:
     /**
      * Get the distance between the line defined by the start and end locations and the probe location.
      * @param rStartLocation the start location on the line
-     * @param rStartLocation the end location on the line
+     * @param rEndLocation the end location on the line
      * @param rProbeLocation the probe location
      * @param checkDimensions check if the dimensions of the input point need to be scaled
      * @return the distance between the line and probe point
@@ -162,8 +168,9 @@ public:
     /**
      * Return the projection of a point onto the line defined by the start and end locations
      * @param rStartLocation the start location on the line
-     * @param rStartLocation the end location on the line
+     * @param rEndLocation the end location on the line
      * @param rProbeLocation the probe location
+     * @param projectToEnds whether to project onto the end points
      * @param checkDimensions check if the dimensions of the input point need to be scaled
      * @return the projection of the probe point onto a line
      */

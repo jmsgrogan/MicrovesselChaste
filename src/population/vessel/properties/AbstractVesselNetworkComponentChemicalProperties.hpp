@@ -72,16 +72,16 @@ public:
     virtual ~AbstractVesselNetworkComponentChemicalProperties();
 
     /**
-     * Return the pressure in the component
+     * Return the permeability in the component
      *
-     * @return the pressure in the component
+     * @return the permeability in the component
      */
     units::quantity<unit::membrane_permeability> GetPermeability() const;
 
     /**
-     * Set the pressure in the component
+     * Set the permeability in the component
      *
-     * @param pressure the component pressure
+     * @param permeability the component permeability
      */
     virtual void SetPermeability(units::quantity<unit::membrane_permeability> permeability);
 

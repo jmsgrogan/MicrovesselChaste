@@ -104,14 +104,14 @@ public:
 
     /**
      * Whether to update the boundary conditions on each solve
-     * @doUpdate update the boundary conditions on each solve
+     * @param doUpdate update the boundary conditions on each solve
      */
     void UpdateBoundaryConditionsEachSolve(bool doUpdate);
 
 private:
 
     /**
-     *  Do a linear PDE solve
+     * Do a linear PDE solve
      */
     void DoLinearSolve();
 };

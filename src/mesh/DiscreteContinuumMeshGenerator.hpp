@@ -194,10 +194,16 @@ private:
      */
     void MeshStl3d();
 
-    // This is the same as the TetrahedralMesh implementation of InitialiseTriangulateIo but avoids some templating
+    /**
+     * This is the same as the TetrahedralMesh implementation of InitialiseTriangulateIo but avoids some templating
+     * @param mesherIo the mesher input
+     */
     void InitialiseTriangulateIo(triangulateio& mesherIo);
 
-    // This is the same as the TetrahedralMesh implementation of FreeTriangulateIo but avoids some templating
+    /**
+     * This is the same as the TetrahedralMesh implementation of InitialiseTriangulateIo but avoids some templating
+     * @param mesherIo the mesher input
+     */
     void FreeTriangulateIo(triangulateio& mesherIo);
 };
 

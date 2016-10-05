@@ -99,6 +99,16 @@ double Owen11CaUpdateRule<DIM>::EvaluateProbability(unsigned currentNodeIndex,
    }
 }
 
+/**
+ * Specialization to allow used with 1D classes
+ * @param currentNodeIndex the current index
+ * @param targetNodeIndex the target index
+ * @param rCellPopulation the cell population
+ * @param dt the time increment
+ * @param deltaX the grid spacing
+ * @param pCell the cell
+ * @return the movement probability
+ */
 template<>
 double Owen11CaUpdateRule<1>::EvaluateProbability(unsigned currentNodeIndex,
                                                                unsigned targetNodeIndex,

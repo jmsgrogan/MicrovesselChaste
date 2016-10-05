@@ -65,6 +65,9 @@ private:
      */
     units::quantity<unit::pressure> mTauP;
     
+    /**
+     * Correction factor for TauP
+     */
     units::quantity<unit::rate> mkp;
 
 public:

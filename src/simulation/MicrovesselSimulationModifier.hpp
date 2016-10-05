@@ -91,6 +91,7 @@ public:
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
+     * @return a shared pointer to the class instance
      */
     static boost::shared_ptr<MicrovesselSimulationModifier<DIM> > Create();
 
@@ -105,7 +106,7 @@ public:
     /**
      * Set the labels which will be used to update cell data
      *
-     * @param the labels which will be used to update cell data
+     * @param labels the labels which will be used to update cell data
      */
     void SetCellDataUpdateLabels(std::vector<std::string> labels);
 

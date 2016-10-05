@@ -157,6 +157,7 @@ public:
     /**
      * Abstract method to return the non linear contribution to the regular grid solvers
      * @param gridIndex grid index
+     * @param u the concentration
      * @return source strength
      */
     virtual units::quantity<unit::concentration_flow_rate> ComputeNonlinearSourceTerm(unsigned gridIndex, units::quantity<unit::concentration> u)=0;
@@ -164,6 +165,7 @@ public:
     /**
      * Abstract method to return the non linear prime contribution to the regular grid solvers
      * @param gridIndex grid index
+     * @param u the concentration
      * @return source strength
      */
     virtual units::quantity<unit::rate> ComputeNonlinearSourceTermPrime(unsigned gridIndex, units::quantity<unit::concentration> u)=0;

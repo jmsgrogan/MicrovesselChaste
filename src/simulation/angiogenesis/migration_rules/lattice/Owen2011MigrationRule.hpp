@@ -115,6 +115,7 @@ private:
      * can be over-written for custom movement rules.
      * @param pNode the sprouting node
      * @param neighbourIndices the grid indices of the neighbour nodes
+     * @param gridIndex the grid index
      * @return a vector of movement probabilities corresponding to each neighbour index
      */
     std::vector<double> GetNeighbourMovementProbabilities(boost::shared_ptr<VesselNode<DIM> > pNode,

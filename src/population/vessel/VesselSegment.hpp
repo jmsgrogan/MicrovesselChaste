@@ -46,9 +46,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "AbstractVesselNetworkComponent.hpp"
 #include "DimensionalChastePoint.hpp"
 
-/**
- *  Forward declaration to allow vessels to manage adding and removing themselves from segments. and segment management by vessels.
- */
+ // Forward declaration to allow vessels to manage adding and removing themselves from segments and segment management by vessels.
 template<unsigned DIM>
 class Vessel;
 
@@ -56,9 +54,7 @@ template<unsigned DIM>
 class VesselNode;
 
 /**
- * This is a class for vessel segments. They are components of a vessel network.
- * .
- * Vessel segments are straight sub-units of vessels, defined by the positions of
+ * This is a class for vessel segments. They are components of a vessel network. Vessel segments are straight sub-units of vessels, defined by the positions of
  * their end nodes. Nodes cannot be created by the vessel segment class, they are
  * instead managed by the VesselNetwork class. Segments must always have two nodes.
  */
@@ -177,7 +173,7 @@ public:
 
     /**
      * Return a pointer to the node specified by the index
-     *
+     * @param index the node index
      * @return a pointer to the node specified by the index
      */
     boost::shared_ptr<VesselNode<DIM> > GetNode(unsigned index) const;
@@ -202,6 +198,7 @@ public:
      * Exception is thrown.
      *
      * @param location the location to be projected
+     * @param projectToEnds use end projection
      * @return the location of the projected point
      */
     DimensionalChastePoint<DIM> GetPointProjection(const DimensionalChastePoint<DIM>& location, bool projectToEnds = false) const;
@@ -222,7 +219,7 @@ public:
 
     /**
      * Return whether the node is in the segment.
-     *
+     * @param pNode the query node
      * @return whether the node is in the segment
      */
     bool HasNode(boost::shared_ptr<VesselNode<DIM> > pNode) const;

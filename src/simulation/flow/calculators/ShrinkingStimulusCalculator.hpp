@@ -64,7 +64,7 @@ public:
      */
     ~ShrinkingStimulusCalculator();
     
-    /*
+    /**
      * Factor constructor. Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to a new instance of the class.
      */
@@ -78,6 +78,7 @@ public:
 
     /**
      * Set the default value of the shrinking stimulus
+     * @param stimulus the stimulus
      */
     void SetStimulus(units::quantity<unit::rate> stimulus);
 

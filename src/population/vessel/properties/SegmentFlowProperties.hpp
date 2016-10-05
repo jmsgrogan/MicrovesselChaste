@@ -59,6 +59,12 @@ private:
      * Archiving
      */
     friend class boost::serialization::access;
+
+    /**
+     * Do the serialize
+     * @param ar the archive
+     * @param version the archive version number
+     */
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
@@ -194,7 +200,7 @@ public:
     /**
      * Set the growth stimulus of this vessel segment
      *
-     * @param mechStimulus the growth stimulus in the segment
+     * @param stimulus the growth stimulus in the segment
      */
     void SetGrowthStimulus(units::quantity<unit::rate> stimulus);
 

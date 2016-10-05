@@ -95,7 +95,7 @@ public:
      * @param rSamplePoints a vector of sample points
      * @return the value of the field ordered according to input point order
      */
-    virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(const std::vector<DimensionalChastePoint<DIM> >& samplePoints);
+    virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(const std::vector<DimensionalChastePoint<DIM> >& rSamplePoints);
     /**
      * Return the value of the field at the requested points
      * @param pGrid the sampling grid
@@ -139,6 +139,7 @@ public:
 
     /**
      * Return the solution as vtk image data
+     * @return the solution in vtk format
      */
     virtual vtkSmartPointer<vtkUnstructuredGrid> GetVtkSolution();
 
@@ -153,11 +154,23 @@ public:
      */
     virtual void Setup();
 
-    virtual void UpdateSolution(const std::vector<double>& data);
+    /**
+     * Update the solution using dimensionless data
+     * @param rData the data
+     */
+    virtual void UpdateSolution(const std::vector<double>& rData);
 
-    virtual void UpdateElementSolution(const std::vector<double>& data);
+    /**
+     * Update the element solution using dimensionless data
+     * @param rData the data
+     */
+    virtual void UpdateElementSolution(const std::vector<double>& rData);
 
-    virtual void UpdateSolution(const std::vector<units::quantity<unit::concentration> >& data);
+    /**
+     * Update the solution using concentration data
+     * @param rData the data
+     */
+    virtual void UpdateSolution(const std::vector<units::quantity<unit::concentration> >& rData);
 
     /**
      * Update the cell data as passed in

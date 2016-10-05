@@ -115,8 +115,8 @@ public:
      * Generate cells on a regular grid
      *
      * @param xDim number of lattice points in x
-     * @param xDim number of lattice points in y
-     * @param xDim number of lattice points in z
+     * @param yDim number of lattice points in y
+     * @param zDim number of lattice points in z
      * @param spacing the grid spacing
      * @param origin the origin in the same units as the spacing
      */

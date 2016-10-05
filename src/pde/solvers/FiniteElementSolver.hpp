@@ -78,7 +78,7 @@ public:
      */
     virtual ~FiniteElementSolver();
 
-    /*
+    /**
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a shared pointer to a class instance.
      */
@@ -103,7 +103,7 @@ public:
 
     /**
      * Use the solution from a linear solver as the initial guess
-     * @param useNewton use the solution from a linear solver as the initial guess
+     * @param useLinearSolve use the solution from a linear solver as the initial guess
      */
     void SetUseLinearSolveForGuess(bool useLinearSolve);
 

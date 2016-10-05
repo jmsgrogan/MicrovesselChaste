@@ -45,15 +45,27 @@ template<unsigned DIM>
 class ExistsInVector
 {
 
+    /**
+     * the vector
+     */
     std::vector<boost::shared_ptr<SimpleCell<DIM> > > m_vec;
 
 public:
 
+    /**
+     * Does it exist in vector
+     * @param vec the test vector
+     */
     ExistsInVector(std::vector<boost::shared_ptr<SimpleCell<DIM> > > vec)
         : m_vec(vec)
     {
 
     }
+    /**
+     * Overloaded operator
+     * @param i each entry
+     * @return is it in the vector
+     */
     bool operator() (boost::shared_ptr<SimpleCell<DIM> > i)
     {
         return (std::find(m_vec.begin(), m_vec.end(), i) != m_vec.end());

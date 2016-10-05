@@ -47,122 +47,149 @@
 #include "Vertex.hpp"
 #include "UnitCollection.hpp"
 
-/** A collection of planar vertices, joined in the order they are added.
+/**
+ * A collection of planar vertices, joined in the order they are added.
  */
 
 class Polygon
 {
-    /* The vertices of the polygon. They should be co-planar.
+    /**
+     * The vertices of the polygon. They should be co-planar.
      * Vertices should be unique, this is not ensured in the class.
-    */
+     */
     std::vector<boost::shared_ptr<Vertex> > mVertices;
 
 public:
 
-    /* Constructor
+    /**
+     * Constructor
      * @param vertices a vector of planar vertices, to be joined in the order they are added.
      */
     Polygon(std::vector<boost::shared_ptr<Vertex> > vertices);
 
-    /* Constructor
+    /**
+     * Constructor
      * @param pVertex a vertex
      */
     Polygon(boost::shared_ptr<Vertex> pVertex);
 
-    /* Factory constructor method
+    /**
+     * Factory constructor method
      * @param vertices a vector of planar vertices, to be joined in the order they are added.
      * @return a shared pointer to a new polygon
      */
     static boost::shared_ptr<Polygon> Create(std::vector<boost::shared_ptr<Vertex> > vertices);
 
-    /* Factory constructor method
+    /**
+     * Factory constructor method
      * @param pVertex a vertex
      * @return a shared pointer to a new polygon
      */
     static boost::shared_ptr<Polygon> Create(boost::shared_ptr<Vertex> pVertex);
 
-    /* Desctructor
+    /**
+     * Desctructor
      */
     ~Polygon();
 
-    /* Add vertices
+    /**
+     * Add vertices
      * @param vertices a vector of planar vertices, to be joined in the order they are added.
      */
     void AddVertices(std::vector<boost::shared_ptr<Vertex> > vertices);
 
-    /* Add vertex
+    /**
+     * Add vertex
      * @param pVertex a vertex to be added. It is best to add multiple vertices at once.
      */
     void AddVertex(boost::shared_ptr<Vertex> pVertex);
 
-    /* Return true if the specified location is in the polygon, uses vtk point in polygon.
-     * @param location the location to be tested
+    /**
+     * Return true if the specified location is in the polygon, uses vtk point in polygon.
+     * @param rLocation the location to be tested
      * @return true if the location is in the polygon
      */
-    bool ContainsPoint(const DimensionalChastePoint<3>& location);
+    bool ContainsPoint(const DimensionalChastePoint<3>& rLocation);
 
-    /* Return the bounding box of the polygon
+    /**
+     * Return the bounding box of the polygon
      * @return the bounding box (xmin, xmax, ymin, ymax, zmin, zmax)
      */
     c_vector<double, 6> GetBoundingBox();
 
-    /* Return the centroid of the polygon
+    /**
+     * Return the centroid of the polygon
      * @return the centroid of the polygon
      */
     DimensionalChastePoint<3> GetCentroid();
 
-    /* Return the distance to the polygon's plane
-     * @param location the location of the point to get the distance from
+    /**
+     * Return the distance to the polygon's plane
+     * @param rLocation the location of the point to get the distance from
      * @return the distance to the plane containing the polygon
      */
-    units::quantity<unit::length> GetDistance(const DimensionalChastePoint<3>& location);
+    units::quantity<unit::length> GetDistance(const DimensionalChastePoint<3>& rLocation);
 
-    units::quantity<unit::length> GetDistanceToEdges(const DimensionalChastePoint<3>& location);
+    /**
+     * Return the shortest distance to the polygon's edges
+     * @param rLocation the location of the point to get the distance from
+     * @return the shortest distance to the polygon edges
+     */
+    units::quantity<unit::length> GetDistanceToEdges(const DimensionalChastePoint<3>& rLocation);
 
-    /* Return the polygon's plane
+    /**
+     * Return the polygon's plane
      * @return a vtk plane on the polygon's plane
      */
     vtkSmartPointer<vtkPlane> GetPlane();
 
-    /* Return the normal to the polygon, must have 3 or more points
+    /**
+     * Return the normal to the polygon, must have 3 or more points
      * @return the normal to the polygon's plane
      */
     c_vector<double, 3> GetNormal();
 
-    /* Return the vertices
+    /**
+     * Return the vertices
      * @param idx index of the vertex to return
      * @return pointer to the indexed vertex
      */
     boost::shared_ptr<Vertex > GetVertex(unsigned idx);
 
-    /* Return the vertices
+    /**
+     * Return the vertices
      * @return the polygon's vertices
      */
     std::vector<boost::shared_ptr<Vertex> > GetVertices();
 
-    /* Return a pointer to a VtkPolygon representation.
+    /**
+     * Return a pointer to a VtkPolygon representation.
      * @return a vtk polygon representation of the polygon
      */
     vtkSmartPointer<vtkPolygon> GetVtkPolygon();
 
-    /* Return the polygon vertices as a set of VtkPoints.
+    /**
+     * Return the polygon vertices as a set of VtkPoints.
      * @return a pair consisting of vtk representation of the vertices and corresponding ids
      */
     std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > GetVtkVertices();
 
-    /* Replace an exiting vertex with the passed in one.
+    /**
+     * Replace an exiting vertex with the passed in one.
      * @param idx the index of the vertex to be replaced
      * @param pVertex the new vertex
      */
     void ReplaceVertex(unsigned idx, boost::shared_ptr<Vertex > pVertex);
 
-    /* Rotate about the specified axis by the specified angle
+    /**
+     * Rotate about the specified axis by the specified angle
      * @param axis the rotation axis
      * @param angle the rotation angle
      */
     void RotateAboutAxis(c_vector<double, 3> axis, double angle);
 
-    /* Move the polygon along the translation vector
+    /**
+     * Move the polygon along the translation vector
      * @param translationVector the new location is the original + the translationVector
      */
     void Translate(c_vector<double, 3> translationVector);

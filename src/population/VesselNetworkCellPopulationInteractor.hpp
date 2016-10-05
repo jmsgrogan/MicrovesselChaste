@@ -86,6 +86,7 @@ public:
      * Divide vessels in the network between cell locations in the cell population by adding new nodes at locations
      * coincident with cells.
      * @param rCellPopulation the cell population
+     * @param threshold tolerance for point to vessel calculation
      */
     void PartitionNetworkOverCells(AbstractCellPopulation<DIM>& rCellPopulation, double threshold = 1.25e-6);
 

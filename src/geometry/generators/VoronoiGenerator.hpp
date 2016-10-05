@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -52,15 +52,18 @@ class VoronoiGenerator
 
 public:
 
-    /* Constructor
+    /**
+     * Constructor
      */
     VoronoiGenerator();
 
-    /* Destructor
+    /**
+     * Destructor
      */
     ~VoronoiGenerator();
 
-    /* Generate a voronoi tesselation in the bounding box of the part
+    /**
+     * Generate a voronoi tesselation in the bounding box of the part
      * @param pPart the part to generate in
      * @param seeds an optional collection of initial point seeds
      * @param numSeeds the number of seed points, if initial seeds are not given.

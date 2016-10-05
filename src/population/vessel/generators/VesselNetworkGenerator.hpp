@@ -56,6 +56,9 @@ Copyright (c) 2005-2016, University of Oxford.
  */
 struct VesselDistribution
 {
+    /**
+     * Values for different distributions
+     */
     enum Value
     {
         REGULAR, UNIFORM, TWO_LAYER, CUSTOM

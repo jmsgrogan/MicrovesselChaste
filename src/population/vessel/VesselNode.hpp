@@ -71,6 +71,12 @@ private:
      * from nodes when serializing/de-serializing. It is not managed by nodes.
      */
     friend class boost::serialization::access;
+
+    /**
+     * Do the serialize
+     * @param ar the archive
+     * @param version the archive version number
+     */
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
@@ -170,6 +176,7 @@ public:
      * @param v1  the node's x-coordinate (defaults to 0 micron)
      * @param v2  the node's y-coordinate (defaults to 0 micron)
      * @param v3  the node's z-coordinate (defaults to 0 micron)
+     * @param referenceLength the reference length scale
      * @return a pointer to the newly created node
      */
     static boost::shared_ptr<VesselNode<DIM> > Create(double v1, double v2, double v3, units::quantity<unit::length> referenceLength);
@@ -323,6 +330,7 @@ public:
      * @param x the x location
      * @param y the y location
      * @param z the z location
+     * @param referenceLength the reference length scale
      */
     void SetLocation(double x, double y, double z=0.0, units::quantity<unit::length> referenceLength = 1.e-6*unit::metres);
 

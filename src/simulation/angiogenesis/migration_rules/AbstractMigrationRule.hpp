@@ -80,6 +80,9 @@ protected:
      */
     boost::shared_ptr<RegularGrid<DIM> > mpGrid;
 
+    /**
+     * The bounding domain, optional
+     */
     boost::shared_ptr<Part<DIM> > mpBoundingDomain;
 
 
@@ -101,8 +104,18 @@ public:
      */
     static boost::shared_ptr<AbstractMigrationRule<DIM> > Create();
 
+    /**
+     * Get the sprout directions
+     * @param rNodes candidate sprout nodes
+     * @return the sprout directions
+     */
     virtual std::vector<c_vector<double, DIM> > GetDirections(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
 
+    /**
+     * Get the sprout indices
+     * @param rNodes candidate sprout nodes
+     * @return the sprout indices
+     */
     virtual std::vector<int> GetIndices(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
 
     /**
@@ -124,6 +137,8 @@ public:
     void SetNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
+     * Set the bounding domain
+     * @param pPart the bounding domain
      */
     void SetBoundingDomain(boost::shared_ptr<Part<DIM> > pPart);
 

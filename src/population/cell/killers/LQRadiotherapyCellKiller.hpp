@@ -160,11 +160,34 @@ public:
      */
     void CheckAndLabelCellsForApoptosisOrDeath();
 
-
+    /**
+     * Get the radiosensitivity of normal cells
+     * @return the radiosensitivity of normal cells
+     */
     double GetNormalLinearRadiosensitivity();
+
+    /**
+     * Get the quad radiosensitivity of normal cells
+     * @return the quad radiosensitivity of normal cells
+     */
     double GetNormalQuadraticRadiosensitivity();
+
+    /**
+     * Get the radiosensitivity of cancer cells
+     * @return the radiosensitivity of cancer cells
+     */
     double GetCancerousLinearRadiosensitivity();
+
+    /**
+     * Get the quad radiosensitivity of cancer cells
+     * @return the quad radiosensitivity of cancer cells
+     */
     double GetCancerousQuadraticRadiosensitivity();
+
+    /**
+     * Get the injected dose
+     * @return the injected dose
+     */
     double GetDoseInjected();
 
     /**

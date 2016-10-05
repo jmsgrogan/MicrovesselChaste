@@ -72,7 +72,6 @@ public:
 
     /**
      * Destructor
-     * @param pVesselNetwork the vessel network to generate the surface on
      */
     ~VesselSurfaceGenerator();
 
@@ -91,7 +90,7 @@ public:
     /**
      * Return the locations of PLC holes in the network. Holes are points that are situated on the
      * 'inside' of vessel segments. They are useful for meshing.
-     * @ return the locations of PLC holes in the network
+     * @return the locations of PLC holes in the network
      */
     std::vector<DimensionalChastePoint<DIM> > GetHoles();
 
@@ -101,27 +100,38 @@ public:
      */
     vtkSmartPointer<vtkPolyData> GetVtkSurface();
 
-
 private:
 
     /**
      * Return a vector of locations on a circle centred at x=0, y=0 with specified radius.
+     * @param radius the radius
+     * @param numberOfSegments number of line segments around the circle
+     * @return locations on the circle
      */
     std::vector<c_vector<double, DIM> > MakeCircle(double radius, unsigned numberOfSegments = 16);
 
     /**
      * Project the input points onto the specified plane
+     * @param rPoints the points for projection
+     * @param directionVector the direction vector
+     * @param length the point distant to plane
+     * @param pPlane the plane
      */
     void ProjectOnPlane(std::vector<c_vector<double, DIM> >& rPoints, c_vector<double, DIM> directionVector, double length,
-                        vtkSmartPointer<vtkPlane> plane);
+                        vtkSmartPointer<vtkPlane> pPlane);
 
     /**
      * Rotate the input points about the specified axis by the specified angle
+     * @param rPoints the points for projection
+     * @param axis the rotation axis
+     * @param angle the rotation angle
      */
     void RotateAboutAxis(std::vector<c_vector<double, DIM> >& rPoints, c_vector<double, DIM> axis, double angle);
 
     /**
      * Translate the input points along the specified vector
+     * @param rPoints the points for translation
+     * @param translationVector the translation vector
      */
     void Translate(std::vector<c_vector<double, DIM> >& rPoints, c_vector<double, DIM> translationVector);
 };

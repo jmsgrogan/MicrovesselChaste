@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
 All rights reserved.
 
 University of Oxford means the Chancellor, Masters and Scholars of the
@@ -65,16 +65,19 @@ protected:
      */
     units::quantity<unit::time> mTimeIncrement;
 
+    /**
+     * The reference time scale
+     */
     units::quantity<unit::time> mReferenceTimeScale;
 
     /**
-     *  Whether to output the progress of the structural adaptation algorithm to a file.
+     * Whether to output the progress of the structural adaptation algorithm to a file.
      */
     bool mWriteOutput;
 
     /**
-     *  Name of file to which the progress of the structural adaptation algorithm may be
-     *  output.
+     * Name of file to which the progress of the structural adaptation algorithm may be
+     * output.
      */
     std::string mOutputFileName;
 
@@ -146,7 +149,7 @@ public:
 
     /**
      *  Setter for maximum number of iterations.
-     *  @param the maximum number of iterations.
+     *  @param iterations the maximum number of iterations.
      */
     void SetMaxIterations(unsigned iterations);
 

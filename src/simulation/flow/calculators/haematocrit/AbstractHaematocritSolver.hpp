@@ -62,7 +62,6 @@ public:
 
     /**
      *  Pure virtual method to do the solve, to be overwritten in concrete classes
-     *  @param pNetwork the vessel network to do the solve on
      */
     virtual void Calculate() = 0;
 

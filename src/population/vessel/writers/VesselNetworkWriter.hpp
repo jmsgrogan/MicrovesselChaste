@@ -115,13 +115,14 @@ public:
 
     /**
      * Return a vtk representation of the network
+     * @return the network in vtk form
      */
     vtkSmartPointer<vtkPolyData> GetOutput();
 
     /**
      * Set the reference length scale
      *
-     * @param rLengthScale the reference length scale
+     * @param rReferenceLength the reference length scale
      */
     void SetReferenceLengthScale(units::quantity<unit::length> rReferenceLength);
 

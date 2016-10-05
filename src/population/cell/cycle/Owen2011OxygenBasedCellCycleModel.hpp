@@ -175,6 +175,7 @@ public:
     /**
      * Overridden builder method to create new copies of
      * this cell-cycle model.
+     * @return a cell cycle model
      */
     AbstractCellCycleModel* CreateCellCycleModel();
 
@@ -206,31 +207,37 @@ public:
 
     /**
      * Get the duration of the cell's S phase.
+     * @return the duration of the cell's S phase.
      */
     double GetSDuration() const;
 
     /**
      * Get the duration of the cell's G2 phase.
+     * @return the duration of the cell's G2 phase.
      */
     double GetG2Duration() const;
 
     /**
      * Get the duration of the cell's M phase.
+     * @return the duration of the cell's M phase.
      */
     double GetMDuration() const;
 
     /**
      * Get the value of phi.
+     * @return the value of phi.
      */
     double GetPhi();
 
     /**
      * Get the value of VEGF.
+     * @return the value of VEGF.
      */
     double GetVEGF();
 
     /**
      * Get the value of p53.
+     * @return the value of p53.
      */
     double GetP53();
 
@@ -286,6 +293,7 @@ public:
 
     /**
      * Set maximum phase of cell upon initialisation.
+     * @param rand_max_phase the maximum phase value at initialization
      */
     void SetMaxRandInitialPhase(units::quantity<unit::dimensionless> rand_max_phase);
 
@@ -317,16 +325,46 @@ public:
      */
     void SetCurrentQuiescenceOnsetTime(units::quantity<unit::time> currentQuiescenceOnsetTime);
 
+    /**
+     * Set the G2 onset time
+     *
+     * @param value the G2 onset time
+     */
     void SetG2Onset(units::quantity<unit::dimensionless> value);
 
+    /**
+     * Set the S2 onset time
+     *
+     * @param value the S2 onset time
+     */
     void SetSOnset(units::quantity<unit::dimensionless> value);
 
+    /**
+     * Set the M onset time
+     *
+     * @param value the M onset time
+     */
     void SetMOnset(units::quantity<unit::dimensionless> value);
 
+    /**
+     * Set the ODE solver time step
+     *
+     * @param timeStep the ODE solver time step
+     */
     void SetOdeSolverTimeStep(units::quantity<unit::time> timeStep);
 
+    /**
+     * Set the reference timescale
+     *
+     * @param referenceTimeScale the reference timescale
+     */
     void SetReferenceTimeScale(units::quantity<unit::time> referenceTimeScale);
 
+    /**
+     * Set the reference concentration scale
+     *
+     * @param referenceConcentrationScale the reference concentration scale
+     */
     void SetReferenceConcentrationScale(units::quantity<unit::concentration> referenceConcentrationScale);
 
     /**

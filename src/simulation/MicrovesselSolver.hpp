@@ -96,6 +96,9 @@ class MicrovesselSolver
      */
     bool mDiscreteContinuumSolversHaveCompatibleGridIndexing;
 
+    /**
+     * Whether to update the PDE for each solve
+     */
     bool mUpdatePdeEachSolve;
 
 public:
@@ -156,6 +159,10 @@ public:
      */
     void SetOutputFrequency(unsigned frequency);
 
+    /**
+     * Set whether to update the pde at each solve
+     * @param doUpdate update the pde at each solve
+     */
     void SetUpdatePdeEachSolve(bool doUpdate);
 
     /**
@@ -178,6 +185,7 @@ public:
 
     /**
      * Set to true if we know that our discrete continuum solvers all have the same grid
+     * @param compatibleIndexing doe the grids have compatible indexing
      */
     void SetDiscreteContinuumSolversHaveCompatibleGridIndexing(bool compatibleIndexing);
 
@@ -189,7 +197,7 @@ public:
 
     /**
      * Set the regression solver
-     * @pRegressionSolver the regression solver for the network
+     * @param pRegressionSolver the regression solver for the network
      */
     void SetRegressionSolver(boost::shared_ptr<RegressionSolver<DIM> > pRegressionSolver);
 

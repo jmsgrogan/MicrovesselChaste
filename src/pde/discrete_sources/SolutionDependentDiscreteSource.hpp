@@ -114,7 +114,7 @@ public:
 
     /**
      * Set the sampled field from which to obtain a solution for SOLUTION type sources
-     * @param pSolution the field from which to use solution values
+     * @param solution the field from which to use solution values
      */
     void SetSolution(std::vector<units::quantity<unit::concentration> > solution);
 

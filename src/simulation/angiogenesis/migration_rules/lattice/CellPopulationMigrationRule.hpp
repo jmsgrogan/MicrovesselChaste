@@ -91,11 +91,15 @@ public:
 
     /**
      * Method to set volume fraction for particular type of cell.
+     * @param mutation_state the cell muatation state
+     * @param volume_fraction the occupying fraction
      */
     void SetVolumeFraction(boost::shared_ptr<AbstractCellMutationState> mutation_state, double volume_fraction);
 
     /**
      * Return occupying volume fraction for particular type of cell.
+     * @param mutation_state the cell muatation state
+     * @return the occupying fraction
      */
     double GetOccupyingVolumeFraction(boost::shared_ptr<AbstractCellMutationState> mutation_state);
 
@@ -106,6 +110,7 @@ protected:
      * can be over-written for custom movement rules.
      * @param pNode the sprouting node
      * @param neighbourIndices the grid indices of the neighbour nodes
+     * @param gridIndex the current grid index
      * @return a vector of movement probabilities corresponding to each neighbour index
      */
     virtual std::vector<double> GetNeighbourMovementProbabilities(boost::shared_ptr<VesselNode<DIM> > pNode,

@@ -107,7 +107,7 @@ public:
 
     /**
      * Set the minimum distance to a vessel end at which sprouting can occur
-     * @param probability probability of sprouting per unit time
+     * @param cutoff the vessel end cutoff
      */
     void SetVesselEndCutoff(units::quantity<unit::length> cutoff);
 
@@ -120,6 +120,7 @@ public:
 
     /**
      * Set a grid for the vessel network, implemented in some, but not all, child classes.
+     * @param pGrid the grid for the vessel network
      */
     virtual void SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
 };
