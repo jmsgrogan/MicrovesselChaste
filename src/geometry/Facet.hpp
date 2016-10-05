@@ -84,13 +84,13 @@ public:
 
     /**
      * Constructor
-     * @param planar polygons
+     * @param polygons a facet is made from these polygons
      */
     Facet(std::vector<boost::shared_ptr<Polygon> > polygons);
 
     /**
      * Constructor
-     * @param a single polygon
+     * @param pPolygon a single polygon for the facet
      */
     Facet(boost::shared_ptr<Polygon> pPolygon);
 
@@ -153,9 +153,10 @@ public:
 
     /**
      * Return the distance to the facet
+     * @param rLocation reference to the location of the point for distance calculation
      * @return the distance to the facet
      */
-    double GetDistance(const DimensionalChastePoint<3>& location);
+    double GetDistance(const DimensionalChastePoint<3>& rLocation);
 
     /**
      * Get the label for boundary conditions

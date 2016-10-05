@@ -155,7 +155,7 @@ public:
      * Constructor.
      *
      * @param oxygenConcentration the oxygen concentration
-     * @param isLabelled whether the cell associated with this cell cycle ODE system is labelled (this affects the ODE system)
+     * @param mutation_state the cell mutation state
      * @param stateVariables optional initial conditions for state variables (only used in archiving)
      */
     Owen2011OxygenBasedCellCycleOdeSystem(units::quantity<unit::concentration> oxygenConcentration,
@@ -190,12 +190,14 @@ public:
     bool CalculateStoppingEvent(double time, const std::vector<double>& rY);
 
     /**
+     * Return the oxygen concentration
      * @return #mOxygenConcentration.
      */
     units::quantity<unit::concentration> GetOxygenConcentration() const;
 
     /**
      * Get the cell's mutation state.
+     * @return the cell's mutation state.
      */
     boost::shared_ptr<AbstractCellMutationState> GetMutationState() const;
 

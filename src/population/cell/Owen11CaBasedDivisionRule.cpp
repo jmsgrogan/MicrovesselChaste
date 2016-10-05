@@ -135,6 +135,12 @@ bool Owen11CaBasedDivisionRule<SPACE_DIM>::IsRoomToDivide(CellPtr pParentCell, C
     return is_room;
 }
 
+/**
+ * Specialization to allow used with 1D classes
+ * @param pParentCell the parent cell
+ * @param rCellPopulation the cell population
+ * @return is there room to divide
+ */
 template<>
 bool Owen11CaBasedDivisionRule<1>::IsRoomToDivide(CellPtr pParentCell, CaBasedCellPopulation<1>& rCellPopulation)
 {
@@ -267,6 +273,13 @@ unsigned Owen11CaBasedDivisionRule<SPACE_DIM>::CalculateDaughterNodeIndex(CellPt
     return daughter_node_index;
 }
 
+/**
+ * Specialization to allow used with 1D classes
+ * @param pNewCell the new cell
+ * @param pParentCell the parent cell
+ * @param rCellPopulation the cell population
+ * @return the daughter node index
+ */
 template<>
 unsigned Owen11CaBasedDivisionRule<1>::CalculateDaughterNodeIndex(CellPtr pNewCell,
                                                                           CellPtr pParentCell,

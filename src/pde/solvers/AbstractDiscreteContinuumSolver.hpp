@@ -266,7 +266,7 @@ public:
 
     /**
      * Set the file name for output
-     * @param filename the file name
+     * @param rFilename the file name
      */
     void SetFileName(const std::string& rFilename);
 
@@ -328,13 +328,15 @@ public:
 
     /**
      * Update the solution manually
+     * @param rData solution data map
      */
-    virtual void UpdateSolution(const std::vector<double>& data);
+    virtual void UpdateSolution(const std::vector<double>& rData);
 
     /**
      * Update the solution manually
+     * @param rData solution data map
      */
-    virtual void UpdateSolution(const std::vector<units::quantity<unit::concentration> >& data);
+    virtual void UpdateSolution(const std::vector<units::quantity<unit::concentration> >& rData);
 
     /**
      * Write the solution to file

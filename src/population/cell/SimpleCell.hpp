@@ -126,7 +126,7 @@ public:
 
     /**
      * Return the reference length scale for the cell, default is micron
-     *
+     * @return the reference length scale
      */
     units::quantity<unit::length> GetReferenceLengthScale() const;
 

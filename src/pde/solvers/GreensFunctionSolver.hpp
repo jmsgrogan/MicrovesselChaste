@@ -145,6 +145,7 @@ public:
 
     /**
      * Set the minimum subsegment length
+     * @param value the minimum subsegment length
      */
     void SetSubSegmentCutoff(units::quantity<unit::length> value);
 
@@ -176,27 +177,31 @@ private:
 
     /**
      * Update Gvv
+     * @return Gvv
      */
     boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetVesselVesselInteractionMatrix();
 
     /**
      * Update Gtt
+     * @return Gtt
      */
     boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetTissueTissueInteractionMatrix();
 
     /**
      * Update Gtv
+     * @return Gtv
      */
     boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetTissueVesselInteractionMatrix();
 
     /**
      * Update Gvt
+     * @return Gvt
      */
     boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetVesselTissueInteractionMatrix();
 
     /**
      * Over-ridden method for writing solution to file
-     * @segmentPointData the concentrations in each segment
+     * @param segmentPointData the concentrations in each segment
      */
     void WriteSolution(std::map<std::string, std::vector<units::quantity<unit::concentration> > >& segmentPointData);
 };

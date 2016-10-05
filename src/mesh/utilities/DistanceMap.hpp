@@ -58,7 +58,8 @@ public:
      */
     DistanceMap();
 
-    /* Factory constructor method
+    /**
+     * Factory constructor method
      * @return a shared pointer to a new solver
      */
     static boost::shared_ptr<DistanceMap<DIM> > Create();
@@ -70,7 +71,7 @@ public:
 
     /**
      * Set whether to use segment radii. Otherwise use centrelines.
-     * @bool useRadii use segment radii
+     * @param useRadii use segment radii
      */
     void SetUseSegmentRadii(bool useRadii);
 

@@ -55,6 +55,12 @@ class BaseParameterInstance : public boost::enable_shared_from_this<BaseParamete
      * Archiving
      */
     friend class boost::serialization::access;
+
+    /**
+     * Do the serialize
+     * @param ar the archive
+     * @param version the archive version number
+     */
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
@@ -162,7 +168,7 @@ public:
 
     /**
      * Set the parameter name, this is used to distinguish it in the ParameterCollection map
-     * @param rShortDescription the short description
+     * @param rName the short description
      */
     void SetName(const std::string& rName);
 
@@ -181,7 +187,7 @@ public:
     /**
      * Override for nicer printing
      * @param stream the input stream
-     * @param the class instance
+     * @param rParameter the class instance
      * @return the output stream
      */
     friend std::ostream& operator<< (std::ostream& stream, const boost::shared_ptr<BaseParameterInstance>& rParameter);

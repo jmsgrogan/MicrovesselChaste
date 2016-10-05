@@ -111,7 +111,7 @@ public:
     /**
      * Set the reference length scale
      *
-     * @param rLengthScale the reference length scale
+     * @param rReferenceLength the reference length scale
      */
     void SetReferenceLengthScale(units::quantity<unit::length> rReferenceLength);
 };

@@ -47,6 +47,9 @@ template<unsigned DIM>
 class ViscosityCalculator : public AbstractVesselNetworkCalculator<DIM>
 {
     
+    /**
+     * The plasma viscosity.
+     */
     units::quantity<unit::dynamic_viscosity> mPlasmaViscosity;
 
 public:
@@ -72,7 +75,11 @@ public:
      */
     void Calculate();
 
-    void SetPlasmaViscosity(units::quantity<unit::dynamic_viscosity> visocity);
+    /**
+     * Set the plasma viscosity
+     * @param viscosity the plasma viscosity
+     */
+    void SetPlasmaViscosity(units::quantity<unit::dynamic_viscosity> viscosity);
 };
 
 #endif

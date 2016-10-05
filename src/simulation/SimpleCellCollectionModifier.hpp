@@ -68,6 +68,9 @@ class SimpleCellCollectionModifier : public AbstractCellBasedSimulationModifier<
 
 private:
 
+    /**
+     * Collection of populations for each time-step
+     */
     std::vector<boost::shared_ptr<SimpleCellPopulation<DIM> > > mPopulations;
 
 public:

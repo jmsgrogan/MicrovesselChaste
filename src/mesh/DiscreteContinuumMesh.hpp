@@ -133,53 +133,65 @@ public:
     ~DiscreteContinuumMesh();
 
     /**
-     *  Factory constructor method
+     * Factory constructor method
      * @return a shared pointer to a new mesh
      */
     static boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > Create();
 
     /**
      * Return the element connectivity
+     * @return the element connectivity
      */
     std::vector<std::vector<unsigned> > GetConnectivity();
 
     /**
      * Return the node locations
+     * @return the node locations
      */
     std::vector<std::vector<double> > GetNodeLocations();
 
     /**
      * Return the element centroids
+     * @return the element centroids
      */
     std::vector<c_vector<double, SPACE_DIM> > GetElementCentroids();
 
     /**
      * Return the node locations
+     * @return the node locations as chaste points
      */
     std::vector<DimensionalChastePoint<SPACE_DIM> > GetNodeLocationsAsPoints();
 
     /**
      * Return the element-wise region markers
+     * @return the element-wise region markers
      */
     std::vector<unsigned> GetElementRegionMarkers();
 
+    /**
+     * Return the reference length scale
+     * @return the reference length scale
+     */
     units::quantity<unit::length> GetReferenceLengthScale();
 
     /**
      * Return a map of element indices corresponding to the input points
+     * @param points the input points
+     * @return a map of element indices corresponding to the input points
      */
     std::vector<std::vector<unsigned> > GetPointElementMap(std::vector<DimensionalChastePoint<SPACE_DIM> > points);
 
     /**
      * Return the point cell map
-     * @bool update update the map
+     * @param update update the map
      * @return the point cell map
      */
     const std::vector<std::vector<CellPtr> >& GetElementCellMap(bool update = true);
 
     /**
      * Return the point segments map
-     * @bool update update the map
+     * @param update update the map
+     * @param useVesselSurface use a surface based representation for vessels
      * @return the point segment map
      */
     std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > GetElementSegmentMap(bool update = true,
@@ -187,11 +199,13 @@ public:
 
     /**
      * Return the mesh as a vtk unstructured grid
+     * @return the mesh as a vtk unstructured grid
      */
     vtkSmartPointer<vtkUnstructuredGrid> GetAsVtkUnstructuredGrid();
 
     /**
      * Set element attributes
+     * @param attributes the element attributes
      */
     void SetAttributes(std::vector<unsigned> attributes);
 
@@ -209,6 +223,12 @@ public:
 
     /**
      * This is the same as the TetrahedralMesh implementation of ImportFromMesher but avoids some templating
+     * @param mesherOutput tetgen output
+     * @param numberOfElements the number of elements
+     * @param elementList the element list
+     * @param numberOfFaces the number of faces
+     * @param faceList the face list
+     * @param edgeMarkerList an edge marker list
      */
     void ImportDiscreteContinuumMeshFromTetgen(tetgen::tetgenio& mesherOutput, unsigned numberOfElements, int *elementList,
                           unsigned numberOfFaces, int *faceList, int *edgeMarkerList);

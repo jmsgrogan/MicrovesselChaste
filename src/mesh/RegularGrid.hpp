@@ -59,17 +59,17 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM = ELEMENT_DIM>
 class RegularGrid
 {
     /**
-     *  The spacing between grid points
+     * The spacing between grid points
      */
     units::quantity<unit::length> mSpacing;
 
     /**
-     *  The number of grid points in each direction
+     * The number of grid points in each direction
      */
     std::vector<unsigned> mExtents;
 
     /**
-     *  The origin of the grid in x,y,z. Corresponds to location of front, bottom, left corner.
+     * The origin of the grid in x,y,z. Corresponds to location of front, bottom, left corner.
      */
     DimensionalChastePoint<SPACE_DIM> mOrigin;
 
@@ -104,22 +104,22 @@ class RegularGrid
     std::vector<double> mPointSolution;
 
     /**
-     *  The grid in the form of vtk image data
+     * The grid in the form of vtk image data
      */
     vtkSmartPointer<vtkImageData> mpVtkGrid;
 
     /**
-     *  Is the VTK grid set up
+     * Is the VTK grid set up
      */
     bool mVtkGridIsSetUp;
 
     /**
-     *  A vector of neighbour indices
+     * A vector of neighbour indices
      */
     std::vector<std::vector<unsigned> > mNeighbourData;
 
     /**
-     *  Has a cell population
+     * Has a cell population
      */
     bool mHasCellPopulation;
 
@@ -160,16 +160,16 @@ public:
 
     /**
      * Get the 1-D grid index for given x,y,z indices
-     * @param x_index the grid x index
-     * @param y_index the grid y index
-     * @param z_index the grid z index
+     * @param xIndex the grid x index
+     * @param yIndex the grid y index
+     * @param zIndex the grid z index
      * @return the grid 1-d index
      */
     unsigned Get1dGridIndex(unsigned xIndex, unsigned yIndex, unsigned zIndex);
 
     /**
      * Get the 1-D grid index for given x,y,z indices
-     * @param location the point to get the nearest index to
+     * @param rLocation the point to get the nearest index to
      * @return the 1-d index of the nearest grid point
      */
     unsigned GetNearestGridIndex(const DimensionalChastePoint<SPACE_DIM>& rLocation);
@@ -188,14 +188,14 @@ public:
 
     /**
      * Get the location of a point on the grid for given x, y ,z indices
-     * @param x_index the grid x index
-     * @param y_index the grid y index
-     * @param z_index the grid z index
+     * @param xIndex the grid x index
+     * @param yIndex the grid y index
+     * @param zIndex the grid z index
      * @return the location of the point
      */
     DimensionalChastePoint<SPACE_DIM> GetLocation(unsigned xIndex, unsigned yIndex, unsigned zIndex);
 
-    /*
+    /**
      * Get the location of a point on the grid for given 1-d grid index
      * @param gridIndex the 1d grid index
      * @return the location of the point
@@ -222,32 +222,39 @@ public:
 
     /**
      * Return a vector of input point indices which in the bounding boxes of each grid point
-     * @bool inputPoints a vector of point locations
+     * @param inputPoints a vector of point locations
      * @return the indices of input points in the bounding box of each grid point
      */
     std::vector<std::vector<unsigned> > GetPointPointMap(std::vector<DimensionalChastePoint<SPACE_DIM> > inputPoints);
 
     /**
      * Return the point cell map
-     * @bool update update the map
+     * @param update update the map
      * @return the point cell map
      */
     const std::vector<std::vector<CellPtr> >& GetPointCellMap(bool update = true);
 
     /**
      * Return the point node map
-     * @bool update update the map
+     * @param update update the map
      * @return the point node map
      */
     const std::vector<std::vector<boost::shared_ptr<VesselNode<SPACE_DIM> > > >& GetPointNodeMap(bool update = true);
 
     /**
      * Return the point segments map
-     * @bool update update the map
+     * @param update update the map
+     * @param useVesselSurface use the vessel surface for distance calculations
      * @return the point segment map
      */
     std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > GetPointSegmentMap(bool update = true, bool useVesselSurface = false);
 
+    /**
+     * Return true if the segment is at a lattice site
+     * @param index the lattice index
+     * @param update update the segment-grid map
+     * @return true if the segment is at a lattice site
+     */
     bool IsSegmentAtLatticeSite(unsigned index, bool update);
 
     /**
@@ -257,9 +264,18 @@ public:
      */
     units::quantity<unit::length> GetSpacing();
 
-
+    /**
+     * Return the reference length scale
+     *
+     * @return the reference length scale
+     */
     units::quantity<unit::length> GetReferenceLengthScale();
 
+    /**
+     * Return the grid in vtk format
+     *
+     * @return the grid in vtk format
+     */
     vtkSmartPointer<vtkImageData> GetVtkGrid();
 
     /**
@@ -282,7 +298,7 @@ public:
 
     /**
      * Is the point on the outer boundary of the domain
-     * @param the 1d grid index gridIndex
+     * @param gridIndex the 1d grid index gridIndex
      * @return is the point on the outer boundary of the domain
      */
     bool IsOnBoundary(unsigned gridIndex);
@@ -302,6 +318,10 @@ public:
      */
     void SetCellPopulation(AbstractCellPopulation<SPACE_DIM>& rCellPopulation);
 
+    /**
+     * Set the a ca based population
+     * @param pPopulation a pointer to the cell population
+     */
     void SetCaBasedPopulation(boost::shared_ptr<CaBasedCellPopulation<SPACE_DIM> > pPopulation);
 
     /**

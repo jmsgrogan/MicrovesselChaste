@@ -50,6 +50,9 @@ Copyright (c) 2005-2016, University of Oxford.
  */
 struct BoundaryConditionType
 {
+    /**
+     * The different types of boundary condition
+     */
     enum Value
     {
         POINT, FACET, OUTER, VESSEL_LINE, VESSEL_VOLUME, CELL, IN_PART

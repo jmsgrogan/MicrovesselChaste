@@ -41,11 +41,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
 /**
  * Calculate impedance, Z, of all vessel segments and vessels in network using Poiseuille flow
- * approximation:
- *
- *          Z = \frac{8 \mu L}{\pi R^4},
- *
- *  where \mu is viscosity, L is length and R is radius. Length is calculated within this method.
+ * approximation.
+ *  where mu is viscosity, L is length and R is radius. Length is calculated within this method.
  *  VascularData entries "Radius" and "Viscosity" must be previously set on each segment before this
  *  calculation can be implemented.
  */

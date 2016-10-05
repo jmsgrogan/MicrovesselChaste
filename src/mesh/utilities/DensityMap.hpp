@@ -53,7 +53,8 @@ public:
      */
     DensityMap();
 
-    /* Factory constructor method
+    /**
+     * Factory constructor method
      * @return a shared pointer to a new solver
      */
     static boost::shared_ptr<DensityMap<DIM> > Create();
@@ -72,11 +73,20 @@ private:
 
     /**
      * Replace with geometry tools method
+     * @param start_point the start point
+     * @param end_point the end point
+     * @param location the box location
+     * @param spacing the box spacing
+     * @return the length of line in the box
      */
     double LengthOfLineInBox(c_vector<double, DIM> start_point, c_vector<double, DIM> end_point, c_vector<double, DIM> location, double spacing);
 
     /**
      * Replace with geometry tools method
+     * @param point the probe point
+     * @param location the box location
+     * @param spacing the box spacing
+     * @return is the point in the box
      */
     bool IsPointInBox(c_vector<double, DIM> point, c_vector<double, DIM> location, double spacing);
 

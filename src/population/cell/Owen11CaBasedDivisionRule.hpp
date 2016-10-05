@@ -111,10 +111,25 @@ public:
     virtual bool IsRoomToDivide(CellPtr pParentCell,
                                 CaBasedCellPopulation<SPACE_DIM>& rCellPopulation);
 
+    /**
+     * Set the vessel network
+     *
+     * @param pVesselNetwork The vessel network
+     */
     void SetVesselNetwork(boost::shared_ptr<VesselNetwork<SPACE_DIM> > pVesselNetwork);
 
+    /**
+     * Set the regular grid
+     *
+     * @param mpRegularGrid The regular grid
+     */
     void SetRegularGrid(boost::shared_ptr<RegularGrid<SPACE_DIM> > mpRegularGrid);
 
+    /**
+     * Set the reference length scale
+     *
+     * @param referenceLengthScale the reference length scale
+     */
     void SetReferenceLengthScale(units::quantity<unit::length> referenceLengthScale);
 
     /**

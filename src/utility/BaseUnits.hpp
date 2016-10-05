@@ -110,16 +110,19 @@ public:
 
     /**
      * Sets reference time scale
+     * @param referenceTimeScale the reference time scale
      */
     void SetReferenceTimeScale(units::quantity<unit::time> referenceTimeScale);
 
     /**
      * Sets reference length scale
+     * @param referenceLengthScale the reference length scale
      */
     void SetReferenceLengthScale(units::quantity<unit::length> referenceLengthScale);
 
     /**
      * Sets reference concentration scale
+     * @param referenceConcentrationScale the reference concentration scale
      */
     void SetReferenceConcentrationScale(units::quantity<unit::concentration> referenceConcentrationScale);
 

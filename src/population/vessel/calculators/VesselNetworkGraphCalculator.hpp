@@ -63,6 +63,7 @@ public:
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
+     * @return a pointer to the class instance
      */
     static boost::shared_ptr<VesselNetworkGraphCalculator<DIM> > Create();
 
@@ -79,27 +80,36 @@ public:
 
     /**
      * Return the indices of each node attached to a node
+     * @return the node-node connectivity
      */
     std::vector<std::vector<unsigned> > GetNodeNodeConnectivity();
 
     /**
      * Return the indices of each vessel attached to a node
+     * @return the indices of each vessel attached to a node
      */
     std::vector<std::vector<unsigned> > GetNodeVesselConnectivity();
 
     /**
      * Return whether a node is connected to a source node.
+     * @param pSourceNode the source node
+     * @param pQueryNode the query node
+     * @return whether a node is connected to a source node.
      */
     bool IsConnected(boost::shared_ptr<VesselNode<DIM> > pSourceNode, boost::shared_ptr<VesselNode<DIM> > pQueryNode);
 
     /**
      * Return whether a vector of nodes is connected to a vector of source nodes.
+     * @param sourceNodes the source nodes
+     * @param queryNodes the query nodes
+     * @return whether a node is connected to a source node.
      */
     std::vector<bool> IsConnected(std::vector<boost::shared_ptr<VesselNode<DIM> > > sourceNodes,
                                   std::vector<boost::shared_ptr<VesselNode<DIM> > > queryNodes);
 
     /**
      * Outputs connectivity of vessels to file in graphviz format (.gv).
+     * @param rFilename the output filename
      */
     void WriteConnectivity(const std::string& rFilename);
 

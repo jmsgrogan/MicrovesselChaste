@@ -105,7 +105,7 @@ public:
      */
     virtual ~OffLatticeMigrationRule();
 
-    /*
+    /**
      * Construct a new instance of the class and return a shared pointer to it.
      * @return pointer to a new class instance
      */
@@ -118,13 +118,29 @@ public:
      */
     std::vector<c_vector<double, DIM> > GetDirections(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
 
-
+    /**
+     * Get the sprout directions
+     * @param rNodes nodes to calculate directions
+     * @return a vector of movement vectors
+     */
     std::vector<c_vector<double, DIM> > GetDirectionsForSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
 
+    /**
+     * Set the sprout velocity
+     * @param velocity the sprout velocity
+     */
     void SetSproutingVelocity(units::quantity<unit::velocity> velocity);
 
+    /**
+     * Set the chemotactic strength
+     * @param strength the chemotactic strength
+     */
     void SetChemotacticStrength(double strength);
 
+    /**
+     * Set the mutual attraction strength
+     * @param strength the mutual attraction strength
+     */
     void SetAttractionStrength(double strength);
 
 };

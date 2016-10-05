@@ -84,10 +84,6 @@ public:
 
     /**
      * Constructor
-     *
-     * @param pressure the pressure in the vessel at the node
-     * @param isInputNode whether the node is an input node
-     * @param isOutputNode whether the node is an output node
      */
     VesselFlowProperties();
 
@@ -149,6 +145,11 @@ public:
      */
     std::map<std::string, double> GetOutputData() const;
 
+    /**
+     * Return the regression time
+     *
+     * @return the regression time
+     */
     units::quantity<unit::time> GetRegressionTime() const;
 
     /**
@@ -157,6 +158,7 @@ public:
     bool HasRegressionTimerStarted();
 
     /**
+     * @param simulationReferenceTime the reference time for the simulation
      * @return whether the vessel should regress (be removed).
      */
     bool HasVesselRegressed(units::quantity<unit::time> simulationReferenceTime);
@@ -204,12 +206,13 @@ public:
     /**
      * Set the growth stimulus of this vessel segment
      *
-     * @param mechStimulus the growth stimulus in the segment
+     * @param stimulus the growth stimulus in the segment
      */
     void SetGrowthStimulus(units::quantity<unit::rate> stimulus);
 
     /**
      * Set dimensional amount of time until removal of vessel from network.
+     * @param simulationReferenceTime the simulation reference time
      * @param time the amount of time until vessel removal
      */
     void SetTimeUntilRegression(units::quantity<unit::time> time, units::quantity<unit::time> simulationReferenceTime);

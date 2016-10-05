@@ -46,6 +46,9 @@
  */
 struct GeometryFormat
 {
+    /**
+     * Can be vtk polydata (VTP) or STL format
+     */
     enum Value
     {
         VTP, STL

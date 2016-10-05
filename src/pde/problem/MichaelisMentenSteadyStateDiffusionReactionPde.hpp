@@ -88,12 +88,16 @@ public:
 
     /**
      * Over-ridden method to return the diffusion term to the Chaste FE solver
+     * @param rX the grid location
+     * @param u the solution value
      * @return the diffusion matrix
      */
-    c_matrix<double, SPACE_DIM, SPACE_DIM> ComputeDiffusionTerm(const ChastePoint<SPACE_DIM>&, double u);
+    c_matrix<double, SPACE_DIM, SPACE_DIM> ComputeDiffusionTerm(const ChastePoint<SPACE_DIM>& rX, double u);
 
     /**
      * Return the derivative of the diffusion term
+     * @param rX the grid location
+     * @param u the solution value
      * @return the derivative of the diffusion term
      */
     c_matrix<double, SPACE_DIM, SPACE_DIM> ComputeDiffusionTermPrime(const ChastePoint<SPACE_DIM>& rX, double u);
@@ -101,7 +105,6 @@ public:
     /**
      * Over-ridden method to return the linear in U contribution to the Chaste FE solver
      * @param rX grid location
-     * @param pElement pointer to containing element
      * @return source strength
      */
     double ComputeLinearSourceTerm(const ChastePoint<SPACE_DIM>& rX);
@@ -124,7 +127,7 @@ public:
     /**
      * Over-ridden method to return the nonlinear in U contribution to the Chaste FE solver
      * @param rX grid location
-     * @param pElement pointer to containing element
+     * @param u the solution value
      * @return source strength
      */
     double ComputeNonlinearSourceTerm(const ChastePoint<SPACE_DIM>& rX, double u);
@@ -132,6 +135,7 @@ public:
     /**
      * Over-ridden method to return the nonlinear in U contribution to the regular grid solvers
      * @param gridIndex grid index
+     * @param u the solution value
      * @return source strength
      */
     units::quantity<unit::concentration_flow_rate> ComputeNonlinearSourceTerm(unsigned gridIndex, units::quantity<unit::concentration> u);
@@ -139,7 +143,7 @@ public:
     /**
      * Over-ridden method to return the nonlinear in U contribution prime to the Chaste FE solver
      * @param rX grid location
-     * @param pElement pointer to containing element
+     * @param u the solution value
      * @return source strength
      */
     double ComputeNonlinearSourceTermPrime(const ChastePoint<SPACE_DIM>& rX, double u);
@@ -147,6 +151,7 @@ public:
     /**
      * Over-ridden method to return the nonlinear in U contribution prime to the regular grid solvers
      * @param gridIndex grid index
+     * @param u the solution value
      * @return source strength
      */
     units::quantity<unit::rate> ComputeNonlinearSourceTermPrime(unsigned gridIndex, units::quantity<unit::concentration> u);

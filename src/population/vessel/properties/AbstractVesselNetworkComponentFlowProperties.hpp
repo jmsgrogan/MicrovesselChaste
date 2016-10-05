@@ -57,6 +57,12 @@ private:
      * Archiving
      */
     friend class boost::serialization::access;
+
+    /**
+     * Do the serialize
+     * @param ar the archive
+     * @param version the archive version number
+     */
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {

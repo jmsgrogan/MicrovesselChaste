@@ -48,7 +48,7 @@ Copyright (c) 2005-2016, University of Oxford.
 class Vertex : public DimensionalChastePoint<3>, public boost::enable_shared_from_this<Vertex>
 {
     /**
-     *  An optional index
+     * An optional index
      */
     unsigned mIndex;
 
@@ -59,12 +59,14 @@ public:
      * @param x x position of vertex
      * @param y y position of vertex
      * @param z z position of vertex
+     * @param referenceLength the reference length
      */
     Vertex(double x, double y, double z, units::quantity<unit::length> referenceLength);
 
     /**
      * Constructor
-     * @param a vector of x, y, z coordinates
+     * @param coords a vector of x, y, z coordinates
+     * @param referenceLength the reference length
      */
     Vertex(c_vector<double, 3> coords, units::quantity<unit::length> referenceLength);
 
@@ -78,7 +80,7 @@ public:
 
     /**
      * Constructor
-     * @param a vector of x, y, z coordinates
+     * @param coords a vector of x, y, z coordinates
      */
     Vertex(c_vector<double, 3> coords);
 
@@ -87,13 +89,15 @@ public:
      * @param x x position of vertex
      * @param y y position of vertex
      * @param z z position of vertex
+     * @param referenceLength the reference length
      * @return a shared pointer to a new vertex
      */
     static boost::shared_ptr<Vertex> Create(double x, double y, double z, units::quantity<unit::length> referenceLength);
 
     /**
      * Factory constructor method
-     * @param a vector of x, y, z coordinates
+     * @param coords a vector of x, y, z coordinates
+     * @param referenceLength the reference length
      * @return a shared pointer to a new vertex
      */
     static boost::shared_ptr<Vertex> Create(c_vector<double, 3> coords, units::quantity<unit::length> referenceLength);
@@ -109,13 +113,13 @@ public:
 
     /**
      * Factory constructor method
-     * @param a vector of x, y, z coordinates
+     * @param coords a vector of x, y, z coordinates
      * @return a shared pointer to a new vertex
      */
     static boost::shared_ptr<Vertex> Create(c_vector<double, 3> coords);
 
     /**
-     * Desctructor
+     * Destructor
      */
     ~Vertex();
 

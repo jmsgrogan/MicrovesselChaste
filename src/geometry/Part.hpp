@@ -79,8 +79,14 @@ class Part
      */
     std::vector<DimensionalChastePoint<DIM> > mRegionMarkers;
 
+    /**
+     * The reference length scale
+     */
     units::quantity<unit::length> mReferenceLength;
 
+    /**
+     * Is the vtk representation up-to-date
+     */
     bool mVtkIsUpToDate;
 
 public:
@@ -105,16 +111,21 @@ public:
      * Add a circle to the part. If a target facet is not specified the default position is normal to the z-axis.
      * @param radius the circle radius
      * @param centre the centre of the circle
-     * @param numSegments, the number of linear segments the circle is described with
-     * @return the polygon corresponding to the circle, useful for further operations, such as extrusion.
+     * @param numSegments the number of linear segments the circle is described with
+     * @return polygon corresponding to the circle, useful for further operations, such as extrusion.
      */
     boost::shared_ptr<Polygon> AddCircle(units::quantity<unit::length> radius,
                                          DimensionalChastePoint<DIM> centre,
                                          unsigned numSegments = 24);
 
-    void AddCylinder(units::quantity<unit::length> radius,
-                     units::quantity<unit::length> depth,
-                     DimensionalChastePoint<DIM>,
+    /**
+     * Add a cylinder to the part.
+     * @param radius the radius
+     * @param depth the depth
+     * @param centre the centre of the base
+     * @param numSegments the number of line segments the base is described with
+     */
+    void AddCylinder(units::quantity<unit::length> radius, units::quantity<unit::length> depth, DimensionalChastePoint<DIM> centre,
                      unsigned numSegments = 24);
 
     /**
@@ -139,6 +150,7 @@ public:
      * Add a polygon described by a vector or vertices. The vertices should be planar. This is not
      * checked.
      * @param vertices a vector of vertices making up the polygon
+     * @param newFacet whether to add a new facet
      * @param pFacet an optional facet that the circle can be generated on
      * @return the new polygon, useful for further operations, such as extrusion.
      */
@@ -149,6 +161,7 @@ public:
     /**
      * Add a polygon
      * @param pPolygon a polygon to add to the part
+     * @param newFacet whether to add a new facet
      * @param pFacet an optional facet that the polygon can be generated on
      * @return the new polygon, useful for further operations, such as extrusion.
      */
@@ -174,7 +187,10 @@ public:
      */
     void AddVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork, bool surface = false);
 
-
+    /**
+     * Remove vessels outside the part
+     * @param pVesselNetwork the vessel network to be pruned
+     */
     void BooleanWithNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
 
     /**
@@ -190,9 +206,15 @@ public:
      */
     c_vector<double, 2*DIM> GetBoundingBox();
 
-
+    /**
+     * Return the indices of the grid that are inside the part
+     * @param num_x number of grid points in x
+     * @param num_y number of grid points in y
+     * @param num_z number of grid points in z
+     * @param spacing the grid spacing
+     * @return a vector of grid indices
+     */
     std::vector<unsigned> GetContainingGridIndices(unsigned num_x, unsigned num_y = 1, unsigned num_z = 1, double spacing = 1.0);
-
 
     /**
      * Return the hole marker locations
@@ -208,9 +230,10 @@ public:
 
     /**
      * Return the FIRST facet found on the point. Strict method, returns exception if there is no facet at the point.
+     * @param rLocation the probe point
      * @return the FIRST found facet on the point.
      */
-    boost::shared_ptr<Facet> GetFacet(const DimensionalChastePoint<3>& location);
+    boost::shared_ptr<Facet> GetFacet(const DimensionalChastePoint<3>& rLocation);
 
     /**
      * Return the polygons
@@ -218,6 +241,10 @@ public:
      */
     std::vector<boost::shared_ptr<Polygon> > GetPolygons();
 
+    /**
+     * Return the reference length scale
+     * @return the reference length scale
+     */
     units::quantity<unit::length> GetReferenceLengthScale();
 
     /**
@@ -263,6 +290,10 @@ public:
      */
     void MergeCoincidentVertices();
 
+    /**
+     * Set the reference length scale
+     * @param referenceLength the reference length scale
+     */
     void SetReferenceLengthScale(units::quantity<unit::length> referenceLength);
 
     /**

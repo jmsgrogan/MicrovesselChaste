@@ -100,6 +100,7 @@ public:
      * Return a parameter, note it is returned as a base class pointer. It may need to be
      * cast to an expected class type.
      * @param rName the name of the parameter to return.
+     * @return the parameter instance, as a base class pointer
      */
     boost::shared_ptr<BaseParameterInstance> GetParameter(const std::string& rName);
 

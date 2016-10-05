@@ -47,10 +47,13 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselFlowProperties.hpp"
 
 /**
- *  Struct to denote segment locations on the vessel
+ * Struct to denote segment locations on the vessel
  */
 struct SegmentLocation
 {
+    /**
+     * Values are start and end of segment
+     */
     enum Value
     {
         Start, End
@@ -58,11 +61,9 @@ struct SegmentLocation
 };
 
 /**
- * This is a class for vessels. A vessel is a component of a vessel network
- * .
- * Vessel are a collection of connected straight-line segments, i.e. a poly-line.
- * Vessel data and properties are derived from averaging or summing over their
- * segments as required.
+ * This is a class for vessels. A vessel is a component of a vessel network.
+ * Vessels are a collection of connected straight-line segments, such as a polyline.
+ * Vessel data and properties are derived from averaging or summing over their segments as required.
  */
 template<unsigned DIM>
 class Vessel : public boost::enable_shared_from_this<Vessel<DIM> >, public AbstractVesselNetworkComponent<DIM>
@@ -70,17 +71,17 @@ class Vessel : public boost::enable_shared_from_this<Vessel<DIM> >, public Abstr
 private:
 
     /**
-     *  Vessel segments
+     * Vessel segments
      */
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > mSegments;
 
     /**
-     *  Nodes
+     * Nodes
      */
     std::vector<boost::shared_ptr<VesselNode<DIM> > > mNodes;
 
     /**
-     *  Is the data in mNodes up to date.
+     * Is the data in mNodes up to date.
      */
     bool mNodesUpToDate;
 
@@ -123,28 +124,32 @@ private:
 
 public:
 
-    /*
+    /**
      * Construct a new instance of the class and return a shared pointer to it.
      * @param pSegment the input segment
+     * @return a pointer to the vessel
      */
     static boost::shared_ptr<Vessel<DIM> > Create(boost::shared_ptr<VesselSegment<DIM> > pSegment);
 
-    /*
+    /**
      * Construct a new instance of the class and return a shared pointer to it.
      * @param segments a collection of segments, should be joined end to tip
+     * @return a pointer to the vessel
      */
     static boost::shared_ptr<Vessel<DIM> > Create(std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments);
 
-    /*
+    /**
      * Construct a new instance of the class and return a shared pointer to it.
      * @param nodes these nodes will be joined to form the vessel
+     * @return a pointer to the vessel
      */
     static boost::shared_ptr<Vessel<DIM> > Create(std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes);
 
-    /*
+    /**
      * Construct a new instance of the class and return a shared pointer to it.
      * @param pStartNode the start node
      * @param pEndNode the end node
+     * @return a pointer to the vessel
      */
     static boost::shared_ptr<Vessel<DIM> > Create(boost::shared_ptr<VesselNode<DIM> > pStartNode,
                                                   boost::shared_ptr<VesselNode<DIM> > pEndNode);
@@ -166,7 +171,7 @@ public:
      */
     void AddSegments(std::vector<boost::shared_ptr<VesselSegment<DIM> > > pSegments);
 
-    /*
+    /**
      * Copy the member data from the input vessel.
      * @param pTargetVessel the vessel to be copied from
      */
@@ -176,6 +181,7 @@ public:
      * Divide the vessel at the specified location
      * @param rLocation the location of the division
      * @param distanceTolerance how far from a segment should the probe point be
+     * @return the node at the division
      */
     boost::shared_ptr<VesselNode<DIM> > DivideSegment(const DimensionalChastePoint<DIM>& rLocation,
                                                       double distanceTolerance = 1.e-6);
@@ -183,12 +189,14 @@ public:
     /**
      * Return the dimensionless distance to the vessel end node closest to the input location
      * @param rLocation the location to probe
+     * @return the distance to the closest end node
      */
     units::quantity<unit::length> GetClosestEndNodeDistance(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Return the distance from the vessel to the input location
      * @param rLocation the location to probe
+     * @return the distance from the vessel to the input location
      */
     units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation) const;
 
@@ -210,6 +218,7 @@ public:
     boost::shared_ptr<VesselFlowProperties<DIM> > GetFlowProperties() const;
 
     /**
+     * @param pQueryNode the query node
      * @return shared pointer to the node at the opposite end of the vessel
      * to the supplied one.
      */
@@ -231,7 +240,7 @@ public:
 
     /**
      * Return the vessel node
-     *
+     * @param index the query index
      * @return the vessel node
      */
     boost::shared_ptr<VesselNode<DIM> > GetNode(unsigned index);
@@ -301,7 +310,8 @@ public:
     void RemoveSegments(SegmentLocation::Value location);
 
     /**
-     * Set the  radius
+     * Set the radius
+     * @param radius the radius
      */
     void SetRadius(units::quantity<unit::length>  radius);
 

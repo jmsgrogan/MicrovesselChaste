@@ -99,6 +99,7 @@ public:
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
+     * @return share pointer to the network
      */
     static boost::shared_ptr<VesselNetwork<DIM> > Create();
 
@@ -109,37 +110,47 @@ public:
 
     /**
      * Adds a vessel to the VesselNetwork.
+     * @param pVessel the vessel
      */
     void AddVessel(boost::shared_ptr<Vessel<DIM> > pVessel);
 
     /**
      * Adds a collection of vessels to the VesselNetwork
+     * @param vessels the vessels
      */
     void AddVessels(std::vector<boost::shared_ptr<Vessel<DIM> > > vessels);
 
     /**
      * Copy flow properties from the specified segment to all other segments
+     * @param index the segment index to be copied
      */
     void CopySegmentFlowProperties(unsigned index=0);
 
     /**
      * Make a copy of all vessels, but with new nodes and segments in each copy. Return the new vessels.
+     * @return the new vessels
      */
     std::vector<boost::shared_ptr<Vessel<DIM> > > CopyVessels();
 
     /**
      * Make a copy of the selected vessels, but with new nodes and segments in each copy. Return the new vessels.
+     * @param vessels the vessels to be copied
+     * @return the new vessels
      */
     std::vector<boost::shared_ptr<Vessel<DIM> > > CopyVessels(std::vector<boost::shared_ptr<Vessel<DIM> > > vessels);
 
     /**
      * Divides a vessel into two at the specified location.
+     * @param pVessel the vessel to be divided
+     * @param rLocation the division location
+     * @return the node at the division location
      */
     boost::shared_ptr<VesselNode<DIM> > DivideVessel(boost::shared_ptr<Vessel<DIM> > pVessel,
-                                                     const DimensionalChastePoint<DIM>& location);
+                                                     const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Add a new node to the end of the vessel
+     * @param pVessel the vessel to be extended
      * @param pEndNode the node that the new segment will start on, should already be on the end of the vessel
      * @param pNewNode the new node to be added to the end of the vessel
      */
@@ -148,88 +159,121 @@ public:
 
     /**
      * Forms a sprout at the specified locations.
+     * @param sproutBaseLocation the sprout base
+     * @param sproutTipLocation the sprout tip
+     * @return the new sprout
      */
     boost::shared_ptr<Vessel<DIM> > FormSprout(const DimensionalChastePoint<DIM>& sproutBaseLocation,
                                                const DimensionalChastePoint<DIM>& sproutTipLocation);
 
     /**
      * Get distance to nearest node
+     * @param rLocation the probe point
+     * @return the distance to the node
      */
     units::quantity<unit::length> GetDistanceToNearestNode(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Get the node nearest to the specified location
+     * @param rLocation the probe point
+     * @return the nearest node
      */
     boost::shared_ptr<VesselNode<DIM> > GetNearestNode(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Get the node nearest to the specified node
+     * @param pInputNode the probe point
+     * @return the nearest node
      */
     boost::shared_ptr<VesselNode<DIM> > GetNearestNode(boost::shared_ptr<VesselNode<DIM> > pInputNode);
 
     /**
      * Get the segment nearest to the specified segment and the distance to it
+     * @param pSegment the probe segment
+     * @return the segment nearest to the specified segment and the distance to it
      */
     std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > GetNearestSegment(boost::shared_ptr<VesselSegment<DIM> > pSegment);
 
     /**
      * Get the segment nearest to the specified node and the distance to it
+     * @param pNode the probe node
+     * @param sameVessel can it be on the same vessel
+     * @return the segment nearest to the specified segment and the distance to it
      */
-    std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > GetNearestSegment(boost::shared_ptr<VesselNode<DIM> > pNode, bool sameVessel = true);
+    std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > GetNearestSegment(boost::shared_ptr<VesselNode<DIM> > pNode,
+                                                                                                        bool sameVessel = true);
 
     /**
      * Get the segment nearest to the specified location and the distance to it
+     * @param rLocation the probe location
+     * @return the segment nearest to the specified segment and the distance to it
      */
-    std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > GetNearestSegment(const DimensionalChastePoint<DIM>& location);
+    std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > GetNearestSegment(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
-     * Get the segment nearest to the specified location
+     * Get the vessel nearest to the specified location
+     * @param rLocation the probe location
+     * @return the vessel nearest to the specified segment and the distance to it
      */
-    boost::shared_ptr<Vessel<DIM> > GetNearestVessel(const DimensionalChastePoint<DIM>& location);
+    boost::shared_ptr<Vessel<DIM> > GetNearestVessel(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
-     * Get index of nearest node
+     * Get index of the node
+     * @param pNode the probe node
+     * @return index of the node
      */
-    unsigned GetNodeIndex(boost::shared_ptr<VesselNode<DIM> > node);
+    unsigned GetNodeIndex(boost::shared_ptr<VesselNode<DIM> > pNode);
 
     /**
      * Get the number of nodes near to a specified point
+     * @param rLocation the probe point
+     * @param tolerance the tolerance for proximty calculation
+     * @return the number of nodes
      */
     unsigned NumberOfNodesNearLocation(const DimensionalChastePoint<DIM>&  rLocation, double tolerance = 0.0);
 
     /**
      * Return the extents of the vessel network in the form ((xmin, xmax), (ymin, ymax), (zmin, zmax))
+     * @param useRadii use the vessel radii in calculations
+     * @return the extents of the vessel network in the form ((xmin, xmax), (ymin, ymax), (zmin, zmax))
      */
     std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > GetExtents(bool useRadii = false);
 
     /**
      * Return the indexed node in the network
      * This is dangerous as the node member array can be updated and this index will be out of date, use GetNodes instead.
+     * @param index the node index
+     * @return the node
      */
     boost::shared_ptr<VesselNode<DIM> > GetNode(unsigned index);
 
     /**
      * Return the nodes in the network
+     * @return all the network nodes
      */
     std::vector<boost::shared_ptr<VesselNode<DIM> > > GetNodes();
 
     /**
      * Return the number of nodes in the network.
+     * @return the number of nodes in the network.
      */
     unsigned GetNumberOfNodes();
 
     /**
      * Return the number of vessel nodes in the network.
+     * @return  the number of vessel nodes in the network.
      */
     unsigned GetNumberOfVesselNodes();
 
     /**
      * Return the number of vessels in the network.
+     * @return the number of vessels in the network.
      */
     unsigned GetNumberOfVessels();
 
     /**
      * Return the number of branches on the most highly connected node
+     * @return the number of branches on the most highly connected node
      */
     unsigned GetMaxBranchesOnNode();
 
@@ -241,31 +285,40 @@ public:
 
     /**
      * Return the only the nodes at the ends of vessels in the network
+     * @return the nodes at the ends of vessels in the network
      */
     std::vector<boost::shared_ptr<VesselNode<DIM> > > GetVesselEndNodes();
 
     /**
      * Return the Index of the specified vessel
+     * @param pVessel the query vessel
+     * @return the Index of the specified vessel
      */
     unsigned GetVesselIndex(boost::shared_ptr<Vessel<DIM> > pVessel);
 
     /**
      * Return the Index of the specified vessel segment
+     * @param pVesselSegment the query segment
+     * @return the Index of the specified vessel segment
      */
     unsigned GetVesselSegmentIndex(boost::shared_ptr<VesselSegment<DIM> > pVesselSegment);
 
     /**
      * Return the vessel segments in the network
+     * @return the vessel segments in the network
      */
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > GetVesselSegments();
 
     /**
      * Return the indexed vessel
+     * @param index the query index
+     * @return the indexed vessel
      */
     boost::shared_ptr<Vessel<DIM> > GetVessel(unsigned index);
 
     /**
      * Return the vessels in the network
+     * @return the vessels in the network
      */
     std::vector<boost::shared_ptr<Vessel<DIM> > > GetVessels();
 
@@ -392,7 +445,7 @@ public:
      * @param rCoord1 the start of the line segment
      * @param rCoord2 the end of the line segment
      * @param tolerance how close to crossing is considered crossing
-     * @return
+     * @return whether a vessel crosses a line segment.
      */
     bool VesselCrossesLineSegment(const DimensionalChastePoint<DIM>& rCoord1, const DimensionalChastePoint<DIM>& rCoord2, double tolerance = 1e-6);
 

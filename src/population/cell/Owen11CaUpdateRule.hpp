@@ -147,10 +147,25 @@ public:
       */
     units::quantity<unit::diffusivity> GetDiffusionParameter();
 
+    /**
+     * Set the vessel network
+     *
+     * @param pVesselNetwork The vessel network
+     */
     void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
 
+    /**
+     * Set the regular grid
+     *
+     * @param pRegularGrid The regular grid
+     */
     void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pRegularGrid);
 
+    /**
+     * Set the reference length scale
+     *
+     * @param referenceLengthScale the reference length scale
+     */
     void SetReferenceLengthScale(units::quantity<unit::length> referenceLengthScale);
 
     /**

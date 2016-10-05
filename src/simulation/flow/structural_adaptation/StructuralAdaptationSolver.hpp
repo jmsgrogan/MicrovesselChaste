@@ -129,6 +129,7 @@ public:
 
     /**
      * To be called if the vessel network changes between solves
+     * @param doFullReset fully reset all the solvers
      */
     void UpdateFlowSolver(bool doFullReset=false);
 

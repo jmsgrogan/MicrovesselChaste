@@ -47,19 +47,39 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 template<typename TimeMap> class bfs_time_visitor : public boost::default_bfs_visitor
 {
+    /**
+     * Value typedef
+     */
     typedef typename boost::property_traits<TimeMap>::value_type T;
 
 public:
 
+    /**
+     * A time map
+     */
     TimeMap m_timemap;
+
+    /**
+     * Discover time
+     */
     T& m_time;
 
+    /**
+     * BFS search visitor
+     * @param tmap the time map
+     * @param t the discovery time.
+     */
     bfs_time_visitor(TimeMap tmap, T& t)
     :m_timemap(tmap),
      m_time(t)
     {
     }
 
+    /**
+     * Vertex discovery
+     * @param u the vertex
+     * @param g the graph
+     */
     template<typename Vertex, typename Graph>
     void discover_vertex(Vertex u, const Graph& g) const
     {
