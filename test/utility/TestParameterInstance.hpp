@@ -107,16 +107,16 @@ public:
     void TestAlternateConstructor()
     {
         units::quantity<unit::time> few_seconds = 5.0*unit::seconds;
-        ParameterInstance<unit::time> my_parameter = ParameterInstance<unit::time>(few_seconds,
+        boost::shared_ptr<ParameterInstance<unit::time> > p_my_parameter = ParameterInstance<unit::time>::Create(few_seconds,
                                                                                      "Derived",
                                                                                      "My Description For Time Parameter",
                                                                                      "P",
                                                                                      "J. Smith et al., (2003).");
 
-        TS_ASSERT_EQUALS("Derived", my_parameter.GetName());
-        TS_ASSERT_EQUALS("My Description For Time Parameter", my_parameter.GetShortDescription());
-        TS_ASSERT_DELTA(my_parameter.GetValue().value(), 5.0, 1.e-6);
-        TS_ASSERT_EQUALS("J. Smith et al., (2003).", my_parameter.GetBibliographicInformation());
+        TS_ASSERT_EQUALS("Derived", p_my_parameter->GetName());
+        TS_ASSERT_EQUALS("My Description For Time Parameter", p_my_parameter->GetShortDescription());
+        TS_ASSERT_DELTA(p_my_parameter->GetValue().value(), 5.0, 1.e-6);
+        TS_ASSERT_EQUALS("J. Smith et al., (2003).", p_my_parameter->GetBibliographicInformation());
     }
 
 };

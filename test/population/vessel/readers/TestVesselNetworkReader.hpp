@@ -51,7 +51,7 @@ public:
     void TestReadNetworkFromFile() throw(Exception)
     {
         // Locate the input file
-        FileFinder fileFinder("projects/Microvessel/test/data/tapmeier_network.vtp", RelativeTo::ChasteSourceRoot);
+        FileFinder fileFinder("projects/MicrovesselChaste/test/data/tapmeier_network.vtp", RelativeTo::ChasteSourceRoot);
         TS_ASSERT(fileFinder.Exists());
         TS_ASSERT(fileFinder.IsFile());
 
@@ -70,7 +70,7 @@ public:
     void TestReadBioNetworkFromFile() throw(Exception)
     {
         // Locate the input file
-        FileFinder fileFinder("projects/Microvessel/test/data/retinal.vtp", RelativeTo::ChasteSourceRoot);
+        FileFinder fileFinder("projects/MicrovesselChaste/test/data/retinal.vtp", RelativeTo::ChasteSourceRoot);
         TS_ASSERT(fileFinder.Exists());
         TS_ASSERT(fileFinder.IsFile());
 

@@ -13,7 +13,6 @@ def update_builder(builder):
 
     include_classes = ["RegularGrid<3,3>", 
                        "DiscreteContinuumMesh<3,3>", 
-                       "SharedPottsMeshGenerator<3>", 
                        "DimensionalChastePoint<3>",
                        "DimensionalChastePoint<2>" ]
     

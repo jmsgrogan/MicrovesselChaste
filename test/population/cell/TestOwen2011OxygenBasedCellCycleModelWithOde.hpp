@@ -413,21 +413,20 @@ public:
         TS_ASSERT_EQUALS(p_cell_model3->ReadyToDivide(), false);
         p_simulation_time->IncrementTimeOneStep();
         TS_ASSERT_EQUALS(p_cell_model3->ReadyToDivide(), false);
-            }
+    }
 
     void TestOwen2011OxygenBasedCellCycleModelWithOdeForQuiescentCancerCells() throw(Exception)
-            {
+    {
         // Set up SimulationTime
         BaseUnits::Instance()->SetReferenceTimeScale(60.0*unit::seconds);
         SimulationTime* p_simulation_time = SimulationTime::Instance();
         units::quantity<unit::time> total_time(12000.0*unit::minutes); // 8 days
         unsigned num_increments = 400; // 30 min per step
-        units::quantity<unit::time> dt = total_time/double(num_increments);
         p_simulation_time->SetEndTimeAndNumberOfTimeSteps(total_time/BaseUnits::Instance()->GetReferenceTimeScale(), num_increments);
 
         // Set up oxygen_concentration
         BaseUnits::SharedInstance()->SetReferenceConcentrationScale(1.e-3*unit::mole_per_metre_cubed);
-        units::quantity<unit::pressure> low_oxygen_partial_pressure(10.0*unit::mmHg);
+        units::quantity<unit::pressure> low_oxygen_partial_pressure(1.0*unit::mmHg);
         units::quantity<unit::pressure> hi_oxygen_partial_pressure(10.0*unit::mmHg);
         units::quantity<unit::solubility> oxygen_solubility = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("Test") *
                 GenericParameters::mpGasConcentrationAtStp->GetValue("Test");
@@ -451,22 +450,22 @@ public:
         TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration().value(), 0.0, 1e-12);
         TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime().value(), 0.0, 1e-12);
 
-        p_simulation_time->IncrementTimeOneStep(); // t=1.0
+        p_simulation_time->IncrementTimeOneStep(); // t=30.0
         p_model1->ReadyToDivide();
-        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration()/BaseUnits::Instance()->GetReferenceTimeScale(), 1.0, 1e-12);
+        TS_ASSERT_DELTA(double(p_model1->GetCurrentQuiescentDuration()/BaseUnits::Instance()->GetReferenceTimeScale()), 30.0, 1e-12);
         TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime().value(), 0.0, 1e-12);
 
         p_cell1->GetCellData()->SetItem("oxygen", hi_oxygen_concentration/BaseUnits::Instance()->GetReferenceConcentrationScale());
-        p_simulation_time->IncrementTimeOneStep(); // t=2.0
+        p_simulation_time->IncrementTimeOneStep(); // t=60.0
         p_model1->ReadyToDivide();
         TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration().value(), 0.0, 1e-12);
         TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime().value(), 0.0, 1e-12);
 
         p_cell1->GetCellData()->SetItem("oxygen", low_oxygen_concentration/BaseUnits::Instance()->GetReferenceConcentrationScale());
-        p_simulation_time->IncrementTimeOneStep(); // t=3.0
+        p_simulation_time->IncrementTimeOneStep(); // t=90.0
         p_model1->ReadyToDivide();
         TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration().value(), 0.0, 1e-12);
-        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime()/BaseUnits::Instance()->GetReferenceTimeScale(), 3.0, 1e-12);
+        TS_ASSERT_DELTA(double(p_model1->GetCurrentQuiescenceOnsetTime()/BaseUnits::Instance()->GetReferenceTimeScale()), 90.0, 1e-12);
 
         // Set up SimulationTime
         SimulationTime::Destroy();
@@ -546,11 +545,9 @@ public:
         TS_ASSERT_EQUALS(p_model3->GetCurrentCellCyclePhase(), G_ONE_PHASE);
 
         // For coverage, create a 1D model
-
         Owen2011OxygenBasedCellCycleModel* p_cell_model1d = new Owen2011OxygenBasedCellCycleModel();
         p_cell_model1d->SetDimension(1);
         p_cell_model1d->SetMaxRandInitialPhase(0);
-
 
         CellPtr p_cell1d(new Cell(p_state, p_cell_model1d));
         p_cell1d->GetCellData()->SetItem("oxygen", hi_oxygen_concentration/BaseUnits::Instance()->GetReferenceConcentrationScale());
@@ -560,7 +557,6 @@ public:
         TS_ASSERT_EQUALS(p_cell_model1d->ReadyToDivide(), false);
 
         // For coverage, create a 3D model
-
         Owen2011OxygenBasedCellCycleModel* p_cell_model3d = new Owen2011OxygenBasedCellCycleModel();
         p_cell_model3d->SetDimension(3);
         p_cell_model3d->SetMaxRandInitialPhase(0);
@@ -571,7 +567,7 @@ public:
         p_cell3d->InitialiseCellCycleModel();
 
         TS_ASSERT_EQUALS(p_cell_model3d->ReadyToDivide(), false);
-            }
+    }
 };
 
 #endif /*TESTODEBASEDCELLCYCLEMODELS_HPP_*/
