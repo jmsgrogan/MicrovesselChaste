@@ -162,6 +162,31 @@ public:
         c_vector<double, 3> rotation_axis = unit_vector<double>(3, 2);
         p_facet->RotateAboutAxis(rotation_axis, M_PI/2.0);
     }
+
+    void TestGeometryAndLabelMethods()
+    {
+        std::vector<boost::shared_ptr<Vertex> > vertices;
+        vertices.push_back(Vertex::Create(0.0, 0.0, 0.0));
+        vertices.push_back(Vertex::Create(1.0, 0.0, 0.0));
+        vertices.push_back(Vertex::Create(1.0, 1.0, 0.0));
+        vertices.push_back(Vertex::Create(0.0, 1.0, 0.0));
+        boost::shared_ptr<Polygon> p_polygon = Polygon::Create(vertices);
+        boost::shared_ptr<Facet> p_facet = Facet::Create(p_polygon);
+
+        c_vector<double, 6> bbox = p_facet->GetBoundingBox();
+
+
+
+        c_vector<double, 3> translation_vector;
+        translation_vector[0] = 2.0;
+        translation_vector[1] = 2.0;
+        translation_vector[2] = 0.0;
+        c_vector<double, 3> new_position = vertices[1]->rGetLocation() + translation_vector;
+
+        p_facet->Translate(translation_vector);
+        c_vector<double, 3> rotation_axis = unit_vector<double>(3, 2);
+        p_facet->RotateAboutAxis(rotation_axis, M_PI/2.0);
+    }
 };
 
 #endif /*TESTPLCFACET_HPP_*/

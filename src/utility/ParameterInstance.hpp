@@ -107,6 +107,22 @@ public:
     static boost::shared_ptr<ParameterInstance<UNIT> > Create();
 
     /**
+     * Factory constructor method
+     * @param value the quantity form the parameter
+     * @param rName the named by which it will be keyed in the ParameterCollection
+     * @param rShortDescription a short description of the parameter
+     * @param rSymbol a symbol, as it may appear in the literature
+     * @param rBibliographicInfromation a Bibtex formatted literature source.
+     * @return a shared pointer to a new instance
+     */
+    static boost::shared_ptr<ParameterInstance<UNIT> > Create(units::quantity<UNIT> value,
+                                                              const std::string& rName,
+                                                              const std::string& rShortDescription,
+                                                              const std::string& rSymbol,
+                                                              const std::string& rBibliographicInfromation);
+
+
+    /**
      * Over-ridden method to get the value of the parameter as a "Value Unit" string (e.g. "2.0 kg"). It is used in the
      * ParameterCollection which only stores BaseParameterInstance pointers.
      * @return the values as a string.

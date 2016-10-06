@@ -37,25 +37,23 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define TESTOWEN2011OXYGENBASEDCELLCYCLEODESYSTEM_HPP_
 
 #include <cxxtest/TestSuite.h>
-
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
-
 #include <stdio.h>
 #include <ctime>
 #include <vector>
 #include <iostream>
-
 #include "OutputFileHandler.hpp"
-
 #include "WildTypeCellMutationState.hpp"
 #include "CancerCellMutationState.hpp"
-
 #include "Owen2011OxygenBasedCellCycleOdeSystem.hpp"
 #include "RungeKutta4IvpOdeSolver.hpp"
 #include "RungeKuttaFehlbergIvpOdeSolver.hpp"
 #include "CvodeAdaptor.hpp"
 #include "UnitCollection.hpp"
+#include "BaseUnits.hpp"
+#include "Secomb04Parameters.hpp"
+#include "GenericParameters.hpp"
 
 /**
  * This class contains tests for Owen2011OxygenBasedCellCycleOdeSystem,
@@ -72,17 +70,26 @@ public:
      */
     void TestOwen2011EquationsForNormalCells()
     {
+        BaseUnits::SharedInstance()->SetReferenceConcentrationScale(1.e-3*unit::mole_per_metre_cubed);
+        BaseUnits::SharedInstance()->SetReferenceTimeScale(1.0*unit::seconds);
+        units::quantity<unit::pressure> low_oxygen_partial_pressure(0.1*unit::mmHg);
+        units::quantity<unit::pressure> hi_oxygen_partial_pressure(1.0*unit::mmHg);
+        units::quantity<unit::solubility> oxygen_solubility = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("Test") *
+                GenericParameters::mpGasConcentrationAtStp->GetValue("Test");
+
+        units::quantity<unit::concentration> low_oxygen_concentration = low_oxygen_partial_pressure*oxygen_solubility;
+        units::quantity<unit::concentration> hi_oxygen_concentration = hi_oxygen_partial_pressure*oxygen_solubility;
+
         // Set up
         double time = 0.0;
-        units::quantity<unit::concentration> oxygen_concentration = 1.0 * unit::mole_per_metre_cubed;
         boost::shared_ptr<WildTypeCellMutationState> mutation_state(new WildTypeCellMutationState);
-        Owen2011OxygenBasedCellCycleOdeSystem normal_system(oxygen_concentration, mutation_state);
+        Owen2011OxygenBasedCellCycleOdeSystem normal_system(hi_oxygen_concentration, mutation_state);
 
         std::vector<double> initial_conditions = normal_system.GetInitialConditions();
-        TS_ASSERT_DELTA(initial_conditions[0],0,1e-5);
-        TS_ASSERT_DELTA(initial_conditions[1],0,1e-5);
-        TS_ASSERT_DELTA(initial_conditions[2],0,1e-5);
-        TS_ASSERT_DELTA(initial_conditions[3],oxygen_concentration.value(),1e-5);
+        TS_ASSERT_DELTA(initial_conditions[0],0.0,1e-5);
+        TS_ASSERT_DELTA(initial_conditions[1],0.0,1e-5);
+        TS_ASSERT_DELTA(initial_conditions[2],0.0,1e-5);
+        TS_ASSERT_DELTA(initial_conditions[3],double(hi_oxygen_concentration/(1.e-3*unit::mole_per_metre_cubed)),1e-5);
 
         std::vector<double> normal_derivs(initial_conditions.size());
         normal_system.EvaluateYDerivatives(time, initial_conditions, normal_derivs);
@@ -103,9 +110,7 @@ public:
          * oxygen concentration). The usual initial condition for
          * z is zero, so we need to change it to see any difference.
          */
-        oxygen_concentration = 0.1*unit::mole_per_metre_cubed;
-
-        Owen2011OxygenBasedCellCycleOdeSystem normal_system2(oxygen_concentration, mutation_state);
+        Owen2011OxygenBasedCellCycleOdeSystem normal_system2(low_oxygen_concentration, mutation_state);
         std::vector<double> normal_derivs2(initial_conditions.size());
         normal_system2.SetDefaultInitialCondition(1, 0.1);
         std::vector<double> initial_conditions2 = normal_system2.GetInitialConditions();

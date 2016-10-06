@@ -66,7 +66,7 @@ public:
 
         BaseUnits::Instance()->Destroy();
         TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceLengthScale().value(), 1.e-6, 1.e-8);
-        TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceConcentrationScale().value(), 1.0, 1.e-6);
+        TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceConcentrationScale().value(), 1.e-6, 1.e-8);
         TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceTimeScale().value(), 60.0, 1.e-6);
     }
 

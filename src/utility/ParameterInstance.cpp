@@ -69,6 +69,17 @@ boost::shared_ptr<ParameterInstance<UNIT> > ParameterInstance<UNIT>::Create()
 }
 
 template<class UNIT>
+boost::shared_ptr<ParameterInstance<UNIT> > ParameterInstance<UNIT>::Create(units::quantity<UNIT> value,
+                                                                            const std::string& rName,
+                                                                            const std::string& rShortDescription,
+                                                                            const std::string& rSymbol,
+                                                                            const std::string& rBibliographicInfromation)
+{
+    MAKE_PTR_ARGS(ParameterInstance<UNIT>, pSelf, (value,rName,rShortDescription,rSymbol, rBibliographicInfromation));
+    return pSelf;
+}
+
+template<class UNIT>
 units::quantity<UNIT> ParameterInstance<UNIT>::GetValue(const std::string& rCallingClass, bool addToCollection)
 {
     if(addToCollection)
