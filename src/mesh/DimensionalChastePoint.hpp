@@ -37,9 +37,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #define DIMENSIONALCHASTEPOINT_HPP_
 
 #include <vector>
-#include <boost/enable_shared_from_this.hpp>
 #include "ChasteSerialization.hpp"
-#include "ChastePoint.hpp"
 #include "SmartPointers.hpp"
 #include "UblasVectorInclude.hpp"
 #include "UnitCollection.hpp"
@@ -51,24 +49,29 @@ Copyright (c) 2005-2016, University of Oxford.
  * class for storing locations with units and calculating point distances.
  */
 template<unsigned DIM>
-class DimensionalChastePoint : public ChastePoint<DIM>, public boost::enable_shared_from_this<DimensionalChastePoint<DIM> >
+class DimensionalChastePoint
 {
     /**
      * Archiving
      */
     friend class boost::serialization::access;
-    template<class Archive>
 
     /**
      * Do the serialization
      * @param ar the archive
      * @param version the archive version
      */
+    template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
-        ar & boost::serialization::base_object<ChastePoint<DIM> >(*this);
         ar & mReferenceLength;
+        ar & mLocation;
     }
+
+protected:
+
+    /** The location of the Point. */
+    c_vector<double, DIM> mLocation;
 
     /**
      * The reference length scale for the point, default in microns. This is needed as units can't be combined
@@ -122,12 +125,14 @@ public:
     units::quantity<unit::length> GetReferenceLengthScale() const;
 
     /**
-     * Set the length scale used to dimensionalize the point location as stored in mLocation. The point
-     * location values are changed accordingly when this value is changed.
-     *
-     * @param lenthScale the reference length scale for point locations
+     * @return the location of the Point.
      */
-    void SetReferenceLengthScale(units::quantity<unit::length> lenthScale);
+    c_vector<double, DIM>& rGetLocation();
+
+    /**
+     * @return the location of the Point.  Constant non-liberal variety.
+     */
+    const c_vector<double, DIM>& rGetLocation() const;
 
     /**
      * Get the ratio of length scales between this point and the input point
@@ -139,31 +144,53 @@ public:
     /**
      * Get the distance between this point and the input point
      * @param rLocation the input point
-     * @param checkDimensions check if the dimensions of the input point need to be scaled
      * @return the distance between this point and the input point
      */
-    units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation, bool checkDimensions = true) const;
+    units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation) const;
+
+    /**
+     * Get the distance between two points
+     * @param rLocation1 the input point 1
+     * @param rLocation2 the input point 2
+     * @return the distance between this point and the input point
+     */
+    static units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation1,
+                                                     const DimensionalChastePoint<DIM>& rLocation2);
 
     /**
      * Get the distance between the line defined by the start and end locations and the probe location.
      * @param rStartLocation the start location on the line
      * @param rEndLocation the end location on the line
      * @param rProbeLocation the probe location
-     * @param checkDimensions check if the dimensions of the input point need to be scaled
      * @return the distance between the line and probe point
      */
-    static units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rStartLocation,
+    static units::quantity<unit::length> GetDistanceToLineSegment(const DimensionalChastePoint<DIM>& rStartLocation,
                                                      const DimensionalChastePoint<DIM>& rEndLocation,
-                                                     const DimensionalChastePoint<DIM>& rProbeLocation,
-                                                     bool checkDimensions = true);
+                                                     const DimensionalChastePoint<DIM>& rProbeLocation);
+
+    /**
+     * Get the dot product of the vectors between each point and the origin
+     * @param rLocation1 the input point 1
+     * @param rLocation2 the input point 2
+     * @return the dot product of the vectors between each point and the origin
+     */
+    static units::quantity<unit::length> GetDotProduct(const DimensionalChastePoint<DIM>& rLocation1,
+                                                     const DimensionalChastePoint<DIM>& rLocation2);
 
     /**
      * Return a point midway between this point and the input point
      * @param rLocation the input point
-     * @param checkDimensions check if the dimensions of the input point need to be scaled
      * @return a point midway between this point and the input point
      */
-    DimensionalChastePoint<DIM> GetMidPoint(const DimensionalChastePoint<DIM>& rLocation, bool checkDimensions = true) const;
+    DimensionalChastePoint<DIM> GetMidPoint(const DimensionalChastePoint<DIM>& rLocation) const;
+
+    /**
+     * Return the length of the vector between this point and the origin
+     * @return the length of the vector between this point and the origin
+     */
+    units::quantity<unit::length> GetNorm2();
+
+
 
     /**
      * Return the projection of a point onto the line defined by the start and end locations
@@ -174,36 +201,134 @@ public:
      * @param checkDimensions check if the dimensions of the input point need to be scaled
      * @return the projection of the probe point onto a line
      */
-    static DimensionalChastePoint<DIM> GetPointProjection(const DimensionalChastePoint<DIM>& rStartLocation,
+    static DimensionalChastePoint<DIM> GetPointProjectionOnLineSegment(const DimensionalChastePoint<DIM>& rStartLocation,
                                                           const DimensionalChastePoint<DIM>& rEndLocation,
                                                           const DimensionalChastePoint<DIM>& rProbeLocation,
                                                           bool projectToEnds = false,
                                                           bool checkDimensions = true);
 
     /**
+     * Return a point one unit from the origin in the direction along the vector between this point and the origin
+     * @return a point one unit from the origin in the direction along the vector between this point and the origin
+     */
+    DimensionalChastePoint<DIM> GetUnitVector();
+
+    /**
      * Return the unit tangent to the segment formed by this point and the input point
      * @param rLocation the input point
-     * @param checkDimensions check if the dimensions of the input point need to be scaled
      * @return the unit tangent to the segment formed by this point and the input point
      */
-    c_vector<double, DIM> GetUnitTangent(const DimensionalChastePoint<DIM>& rLocation, bool checkDimensions = true) const;
+    c_vector<double, DIM> GetUnitTangent(const DimensionalChastePoint<DIM>& rLocation) const;
 
     /**
      * Return true if the input point is coincident with this point
      * @param rLocation the input point
-     * @param checkDimensions check if the dimensions of the input point need to be scaled
      * @return true if the input point is coincident with this point
      */
-    bool IsCoincident(const DimensionalChastePoint<DIM>& rLocation, bool checkDimensions = true) const;
+    bool IsCoincident(const DimensionalChastePoint<DIM>& rLocation) const;
+
+    /**
+     * @return the vector mLocation.
+     *
+     * @param i the index of the vector to return
+     */
+    double operator[] (unsigned i) const;
+
+    /**
+     * Overload division from self
+     * @return the resultant point
+     *
+     * @param rLocation the vector to be added to
+     */
+    DimensionalChastePoint<DIM>& operator/=(double factor);
+
+    /**
+     * Overload multiplication with self
+     * @return the resultant point
+     *
+     * @param factor the scalar to be multiplied
+     */
+    DimensionalChastePoint<DIM>& operator*=(double factor);
+
+    /**
+     * Overload addition to SELF
+     * @return the resultant point
+     *
+     * @param rLocation the vector to add
+     */
+    DimensionalChastePoint<DIM>& operator+=(const DimensionalChastePoint<DIM>& rLocation);
+
+    /**
+     * Overload subraction from self
+     * @return the resultant point
+     *
+     * @param rLocation the vector to subtract
+     */
+    DimensionalChastePoint<DIM>& operator-=(const DimensionalChastePoint<DIM>& rLocation);
+
+    /**
+     * Set the length scale used to dimensionalize the point location as stored in mLocation. The point
+     * location values are changed accordingly when this value is changed.
+     *
+     * @param lenthScale the reference length scale for point locations
+     */
+    void SetReferenceLengthScale(units::quantity<unit::length> lenthScale);
+
+    /**
+     * Set one of the coordinates of the Point.
+     *
+     * @param i the index of the coordinate
+     * @param value the value of the coordinate
+     */
+    void SetCoordinate(unsigned i, double value);
 
     /**
      * Translate the point along the supplied vector
      * @param rVector the translation vector
      */
     void Translate(DimensionalChastePoint<DIM> rVector);
+
+    /**
+     * Translate the point to the new point
+     * @param rPoint the new point
+     */
+    void TranslateTo(DimensionalChastePoint<DIM> rPoint);
 };
 
-#include "SerializationExportWrapper.hpp"
-EXPORT_TEMPLATE_CLASS1(DimensionalChastePoint, 2)
-EXPORT_TEMPLATE_CLASS1(DimensionalChastePoint, 3)
+/**
+ * Overload division
+ * @return the resultant point
+ * @param lhs the left hand part of the division operation
+ * @param rLocation the right hand part of the division operation
+ */
+template<unsigned DIM>
+inline DimensionalChastePoint<DIM> operator/(DimensionalChastePoint<DIM> lhs, double factor);
+
+/**
+ * Overload multiplication
+ * @return the resultant point
+ * @param lhs the left hand part of the multiplication operation
+ * @param factor the right hand part of the multiplication operation
+ */
+template<unsigned DIM>
+inline DimensionalChastePoint<DIM> operator*(DimensionalChastePoint<DIM> lhs, double factor);
+
+/**
+ * Overload addition
+ * @return the resultant point
+ * @param lhs the left hand part of the addition operation
+ * @param rLocation the right hand part of the addition operation
+ */
+template<unsigned DIM>
+inline DimensionalChastePoint<DIM> operator+(DimensionalChastePoint<DIM> lhs, const DimensionalChastePoint<DIM>& rLocation);
+
+/**
+ * Overload subtract
+ * @return the resultant point
+ * @param lhs the left hand part of the subtract operation
+ * @param rLocation the right hand part of the subtract operation
+ */
+template<unsigned DIM>
+inline DimensionalChastePoint<DIM> operator-(DimensionalChastePoint<DIM> lhs, const DimensionalChastePoint<DIM>& rLocation);
+
 #endif /*DIMENSIONALCHASTEPOINT_HPP_*/

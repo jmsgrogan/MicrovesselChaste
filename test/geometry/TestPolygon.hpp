@@ -99,6 +99,9 @@ public:
         boost::shared_ptr<Polygon> p_polygon2 = Polygon::Create(vertices);
         p_polygon2->AddVertex(new_vertices[0]);
         TS_ASSERT_EQUALS(p_polygon2->GetVertices().size(), 4u);
+
+        TS_ASSERT_THROWS_THIS(p_polygon2->GetVertex(100), "Requested vertex index out of range");
+        TS_ASSERT_THROWS_THIS(p_polygon2->ReplaceVertex(100, vertices[0]), "Requested vertex index out of range");
     }
 
     void TestVtkMethods()
@@ -108,7 +111,14 @@ public:
         vertices.push_back(Vertex::Create(1.0, 0.0, 0.0));
         vertices.push_back(Vertex::Create(1.0, 1.0, 0.0));
         vertices.push_back(Vertex::Create(0.0, 1.0, 0.0));
+
+        std::vector<boost::shared_ptr<Vertex> > short_vertices;
+        short_vertices.push_back(Vertex::Create(0.0, 0.0, 0.0));
+        short_vertices.push_back(Vertex::Create(1.0, 0.0, 0.0));
+
         boost::shared_ptr<Polygon> p_polygon = Polygon::Create(vertices);
+        boost::shared_ptr<Polygon> p_short_polygon = Polygon::Create(short_vertices);
+        TS_ASSERT_THROWS_THIS(p_short_polygon->GetNormal(), "At least 3 vertices are required to generate a normal.");
 
         DimensionalChastePoint<3> centroid = p_polygon->GetCentroid();
         TS_ASSERT_DELTA(centroid[0], 0.5, 1.e-6);
@@ -153,6 +163,32 @@ public:
         c_vector<double, 3> rotation_axis = unit_vector<double>(3, 2);
         p_polygon->RotateAboutAxis(rotation_axis, M_PI/2.0);
         TS_ASSERT_DELTA(p_polygon->GetVertices()[1]->rGetLocation()[0], -new_position[1], 1.e-6);
+    }
+
+    void TestGeometryOperations()
+    {
+        std::vector<boost::shared_ptr<Vertex> > vertices;
+        vertices.push_back(Vertex::Create(0.0, 0.0, 0.0));
+        vertices.push_back(Vertex::Create(1.0, 0.0, 0.0));
+        vertices.push_back(Vertex::Create(1.0, 1.0, 0.0));
+        vertices.push_back(Vertex::Create(0.0, 1.0, 0.0));
+        boost::shared_ptr<Polygon> p_polygon = Polygon::Create(vertices);
+
+        c_vector<double, 6> bbox = p_polygon->GetBoundingBox();
+        TS_ASSERT_DELTA(bbox[0], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[1], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[2], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[3], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[4], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[5], 0.0, 1.e-6);
+
+        TS_ASSERT_DELTA(p_polygon->GetDistance(DimensionalChastePoint<3>(0.5, 0.5, 0.5)), 0.5, 1.e-6);
+
+        TS_ASSERT_DELTA(p_polygon->GetPlane()->GetNormal()[0], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(p_polygon->GetPlane()->GetNormal()[1], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(p_polygon->GetPlane()->GetNormal()[2], 1.0, 1.e-6);
+
+        TS_ASSERT_DELTA(p_polygon->GetDistanceToEdges(DimensionalChastePoint<3>(0.5, 0.5, 0.0)), 0.5, 1.e-6);
     }
 };
 
