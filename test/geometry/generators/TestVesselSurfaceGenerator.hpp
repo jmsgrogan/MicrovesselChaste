@@ -194,6 +194,20 @@ public:
         writer.SetFileName(output_filename);
         writer.Write();
     }
+
+    void Test2dFails()
+    {
+        units::quantity<unit::length> vessel_length = 100.0 * 1.e-6 * unit::metres;
+        VesselNetworkGenerator<2> generator;
+        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        p_network->GetVessels()[0]->GetStartNode()->SetRadius(10.0e-6 * unit::metres);
+        p_network->GetVessels()[0]->GetEndNode()->SetRadius(10.0e-6 * unit::metres);
+
+        // Set up the surface generator
+        VesselSurfaceGenerator<2> surface_generator(p_network);
+
+        TS_ASSERT_THROWS_THIS(surface_generator.GetSurface(), "The surface generator currently only works in 3D");
+    }
 };
 
 #endif /*TESTVESSELSURFACEGENERATOR_HPP_*/

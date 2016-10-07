@@ -145,11 +145,6 @@ DimensionalChastePoint<3> Facet::GetCentroid()
     return DimensionalChastePoint<3>(return_centroid);
 }
 
-double Facet::GetData(const std::string& label)
-{
-    return mData[label];
-}
-
 std::string Facet::GetLabel()
 {
     return mLabel;
@@ -236,11 +231,6 @@ void Facet::RotateAboutAxis(c_vector<double, 3> axis, double angle)
     {
         vertices[idx]->RotateAboutAxis(axis, angle);
     }
-}
-
-void Facet::SetData(const std::string& label, double value)
-{
-    mData[label] = value;
 }
 
 void Facet::SetLabel(const std::string& label)

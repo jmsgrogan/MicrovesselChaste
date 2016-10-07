@@ -174,18 +174,21 @@ public:
         boost::shared_ptr<Facet> p_facet = Facet::Create(p_polygon);
 
         c_vector<double, 6> bbox = p_facet->GetBoundingBox();
+        TS_ASSERT_DELTA(bbox[0], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[1], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[2], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[3], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[4], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[5], 0.0, 1.e-6);
 
+        TS_ASSERT_DELTA(p_facet->GetDistance(DimensionalChastePoint<3>(0.5, 0.5, 0.5)), 0.5, 1.e-6);
 
+        p_facet->SetLabel("MyLabel");
+        TS_ASSERT_EQUALS(p_facet->GetLabel(), "MyLabel");
 
-        c_vector<double, 3> translation_vector;
-        translation_vector[0] = 2.0;
-        translation_vector[1] = 2.0;
-        translation_vector[2] = 0.0;
-        c_vector<double, 3> new_position = vertices[1]->rGetLocation() + translation_vector;
-
-        p_facet->Translate(translation_vector);
-        c_vector<double, 3> rotation_axis = unit_vector<double>(3, 2);
-        p_facet->RotateAboutAxis(rotation_axis, M_PI/2.0);
+        TS_ASSERT_DELTA(p_facet->GetPlane()->GetNormal()[0], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(p_facet->GetPlane()->GetNormal()[1], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(p_facet->GetPlane()->GetNormal()[2], 1.0, 1.e-6);
     }
 };
 

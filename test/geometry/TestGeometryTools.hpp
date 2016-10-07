@@ -194,8 +194,27 @@ public:
         point2[1] = 0.5;
         point2[2] = 0.5;
 
+        c_vector<double,3> point3;
+        point1[0] = 0.5;
+        point1[1] = 0.5;
+        point1[2] = 0.5;
+
+        c_vector<double,3> point4;
+        point2[0] = 0.5;
+        point2[1] = 0.5;
+        point2[2] = 0.6;
+
         double length = LengthOfLineInTetra<3>(point1, point2, tetra_points);
         TS_ASSERT_DELTA(length, 0.25, 1.e-6);
+
+        double length2 = LengthOfLineInTetra<3>(point3, point4, tetra_points);
+        TS_ASSERT_DELTA(length2, 0.1, 1.e-6);
+
+        double length3 = LengthOfLineInTetra<3>(point1, point3, tetra_points);
+        TS_ASSERT_DELTA(length3, 0.125, 1.e-6);
+
+        double length4 = LengthOfLineInTetra<3>(point3, point1, tetra_points);
+        TS_ASSERT_DELTA(length4, 0.125, 1.e-6);
     }
 };
 

@@ -73,6 +73,9 @@ public:
         coords[2] = 12.0;
         boost::shared_ptr<Vertex> p_vertex2 = Vertex::Create(coords);
 
+        units::quantity<unit::length> reference_length(10.0*unit::microns);
+        boost::shared_ptr<Vertex> p_vertex3 = Vertex::Create(coords, reference_length);
+
         TS_ASSERT_DELTA(p_vertex1->rGetLocation()[0], 7.0, 1.e-6);
         TS_ASSERT_DELTA(p_vertex2->rGetLocation()[1], 11.0, 1.e-6);
     }

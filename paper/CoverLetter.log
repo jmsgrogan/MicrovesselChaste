@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.7.3)  6 OCT 2016 14:02
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.7.3)  7 OCT 2016 11:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -470,24 +470,23 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]pdfTeX warning (ext4): dest
-ination with the same identifier (name{page.}) has been already used, duplicate
- ignored
-<to be read again> 
-                   \relax 
-l.53 \subsubsection
-                   *{Downloadable anonymously in source code form} [2 <./Fig3.p
-ng> <./Fig4.png>]
-LaTeX Font Info:    Try loading font information for U+msa on input line 54.
- (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+LaTeX Font Info:    Try loading font information for U+msa on input line 52.
+
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 54.
+LaTeX Font Info:    Try loading font information for U+msb on input line 52.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-Underfull \hbox (badness 10000) in paragraph at lines 58--59
+)pdfTeX warning (ext4): destination with the same identifier (name{page.}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.53 
+      [2 <./Fig3.png> <./Fig4.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 56--57
 
  []
 
@@ -495,36 +494,35 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.}) has b
 een already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.89 [
-      11] Owen MR, Stamper J, Muthana M, Richardshon GW, Dobson J, Lewis CE,...
-[3]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 100.
+l.90 
+      [3]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 97.
 pdfTeX warning (ext4): destination with the same identifier (name{page.}) has b
 een already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.100 \end{document}
-                     [4]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 100.
+l.97 \end{document}
+                    [4]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 97.
  (./CoverLetter.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 100.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 100.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 97.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 97.
 Package rerunfilecheck Info: File `CoverLetter.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 100.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 97.
  ) 
 Here is how much of TeX's memory you used:
  8122 strings out of 493029
  119247 string characters out of 6136235
- 219475 words of memory out of 5000000
+ 219585 words of memory out of 5000000
  11559 multiletter control sequences out of 15000+600000
  9654 words of font info for 37 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,6n,39p,817b,371s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,6n,39p,880b,371s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/sh
 are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on CoverLetter.pdf (4 pages, 581185 bytes).
+Output written on CoverLetter.pdf (4 pages, 581528 bytes).
 PDF statistics:
  47 PDF objects out of 1000 (max. 8388607)
  35 compressed objects within 1 object stream

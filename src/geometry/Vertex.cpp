@@ -100,7 +100,7 @@ void Vertex::RotateAboutAxis(c_vector<double, 3> axis, double angle)
     double cos_a = std::cos(angle);
     c_vector<double, 3> unit_axis = axis / norm_2(axis);
 
-    c_vector<double, 3> old_location = ChastePoint<3>::rGetLocation();
+    c_vector<double, 3> old_location = this->mLocation;
     double dot_product = inner_prod(old_location, unit_axis);
     c_vector<double, 3> new_location;
     new_location[0] = (unit_axis[0] * dot_product * (1.0 - cos_a) + old_location[0] * cos_a
@@ -109,11 +109,7 @@ void Vertex::RotateAboutAxis(c_vector<double, 3> axis, double angle)
                 + (unit_axis[2] * old_location[0] - unit_axis[0] * old_location[2]) * sin_a);
     new_location[2] = (unit_axis[2] * dot_product * (1.0 - cos_a) + old_location[2] * cos_a
                 + (-unit_axis[1] * old_location[0] + unit_axis[0] * old_location[1]) * sin_a);
-
-    for (unsigned idx=0; idx<3; idx++)
-    {
-        ChastePoint<3>::SetCoordinate(idx, new_location[idx]);
-    }
+    this->mLocation = new_location;
 }
 
 void Vertex::SetIndex(unsigned index)
@@ -123,9 +119,5 @@ void Vertex::SetIndex(unsigned index)
 
 void Vertex::Translate(c_vector<double, 3> translationVector)
 {
-    c_vector<double, 3> new_location = ChastePoint<3>::rGetLocation()+translationVector;
-    for (unsigned idx=0; idx<3; idx++)
-    {
-        ChastePoint<3>::SetCoordinate(idx, new_location[idx]);
-    }
+    this->mLocation += translationVector;
 }

@@ -58,15 +58,18 @@ public:
 
         OutputFileHandler output_file_handler("TestGeometryWriter/TestWriteCuboid");
 
-        GeometryWriter writer;
-        writer.SetInput(part.GetVtk());
-        writer.SetFileName(output_file_handler.GetOutputDirectoryFullPath() + "cube.vtp");
-        writer.SetOutputFormat(GeometryFormat::VTP);
-        writer.Write();
+        boost::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
+        TS_ASSERT_THROWS_THIS(p_writer->Write(), "An input geometry is not set.");
 
-        writer.SetFileName(output_file_handler.GetOutputDirectoryFullPath() + "cube.stl");
-        writer.SetOutputFormat(GeometryFormat::STL);
-        writer.Write();
+        p_writer->SetInput(part.GetVtk());
+        TS_ASSERT_THROWS_THIS(p_writer->Write(), "No file name set for the GeometryWriter.");
+        p_writer->SetFileName(output_file_handler.GetOutputDirectoryFullPath() + "cube.vtp");
+        p_writer->SetOutputFormat(GeometryFormat::VTP);
+        p_writer->Write();
+
+        p_writer->SetFileName(output_file_handler.GetOutputDirectoryFullPath() + "cube.stl");
+        p_writer->SetOutputFormat(GeometryFormat::STL);
+        p_writer->Write();
     }
 
 };

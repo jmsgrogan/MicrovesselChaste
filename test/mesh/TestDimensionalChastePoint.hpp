@@ -90,23 +90,23 @@ public:
 
         // Save archive
         {
+            units::quantity<unit::length> reference_length(10.0*unit::microns);
             boost::shared_ptr<DimensionalChastePoint<3> > p_point =
-                    boost::shared_ptr<DimensionalChastePoint<3> >(new DimensionalChastePoint<3>(1.0, 2.0, 3.0));
-            p_point->SetReferenceLengthScale(5.0*1.e-6*unit::metres);
+                    boost::shared_ptr<DimensionalChastePoint<3> >(new DimensionalChastePoint<3>(1.0, 2.0, 3.0, reference_length));
 
-            boost::shared_ptr<ChastePoint<3> > p_cast_point = boost::static_pointer_cast<ChastePoint<3> >(p_point);
-            TS_ASSERT_DELTA(p_cast_point->rGetLocation()[0], 1.0/5.0, 1.e-6);
-            TS_ASSERT_DELTA(p_cast_point->rGetLocation()[1], 2.0/5.0, 1.e-6);
-            TS_ASSERT_DELTA(p_cast_point->rGetLocation()[2], 3.0/5.0, 1.e-6);
+            TS_ASSERT_DELTA(p_point->rGetLocation()[0], 1.0/10.0, 1.e-6);
+            TS_ASSERT_DELTA(p_point->rGetLocation()[1], 2.0/10.0, 1.e-6);
+            TS_ASSERT_DELTA(p_point->rGetLocation()[2], 3.0/10.0, 1.e-6);
 
             std::ofstream ofs(archive_filename.c_str());
+            ofs << std::scientific;
             boost::archive::text_oarchive output_arch(ofs);
-            output_arch << p_cast_point;
+            output_arch << p_point;
         }
 
         // Load archive
         {
-            boost::shared_ptr<ChastePoint<3> > p_point_from_archive;
+            boost::shared_ptr<DimensionalChastePoint<3> > p_point_from_archive;
 
             // Read from this input file
             std::ifstream ifs(archive_filename.c_str(), std::ios::binary);
@@ -114,11 +114,10 @@ public:
 
             // restore from the archive
             input_arch >> p_point_from_archive;
-            boost::shared_ptr<DimensionalChastePoint<3> > p_cast_point = boost::static_pointer_cast<DimensionalChastePoint<3> >(p_point_from_archive);
-
-            TS_ASSERT_DELTA(p_cast_point->rGetLocation()[0], 1.0/5.0, 1.e-6);
-            TS_ASSERT_DELTA(p_cast_point->rGetLocation()[1], 2.0/5.0, 1.e-6);
-            TS_ASSERT_DELTA(p_cast_point->rGetLocation()[2], 3.0/5.0, 1.e-6);
+            TS_ASSERT_DELTA(p_point_from_archive->GetReferenceLengthScale().value(), 10.e-6, 1.e-8);
+            TS_ASSERT_DELTA(p_point_from_archive->rGetLocation()[0], 1.0/10.0, 1.e-6);
+            TS_ASSERT_DELTA(p_point_from_archive->rGetLocation()[1], 2.0/10.0, 1.e-6);
+            TS_ASSERT_DELTA(p_point_from_archive->rGetLocation()[2], 3.0/10.0, 1.e-6);
         }
     }
 };
