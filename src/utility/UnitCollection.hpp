@@ -61,6 +61,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <boost/units/systems/si/pressure.hpp>
 #include <boost/units/systems/si/mass.hpp>
 #include <boost/units/systems/si/amount.hpp>
+#include <boost/units/systems/si/plane_angle.hpp>
 
 #include <boost/units/base_units/metric/minute.hpp>
 #include <boost/units/base_units/metric/hour.hpp>
@@ -78,6 +79,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace units = boost::units;
 namespace unit{
     typedef units::si::dimensionless dimensionless;
+
+    // angle
+    typedef units::si::plane_angle plane_angle;
+    BOOST_UNITS_STATIC_CONSTANT(radians, units::si::plane_angle);
 
     // Time
     typedef units::si::time time;

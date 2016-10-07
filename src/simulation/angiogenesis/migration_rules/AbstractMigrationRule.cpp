@@ -61,9 +61,9 @@ boost::shared_ptr<AbstractMigrationRule<DIM> > AbstractMigrationRule<DIM>::Creat
 }
 
 template <unsigned DIM>
-std::vector<c_vector<double, DIM> > AbstractMigrationRule<DIM>::GetDirections(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<DimensionalChastePoint<DIM> > AbstractMigrationRule<DIM>::GetDirections(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
-    return std::vector<c_vector<double, DIM> >();
+    return std::vector<DimensionalChastePoint<DIM> >();
 }
 
 template <unsigned DIM>

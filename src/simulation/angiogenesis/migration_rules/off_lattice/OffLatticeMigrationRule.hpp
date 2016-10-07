@@ -66,12 +66,12 @@ class OffLatticeMigrationRule : public AbstractMigrationRule<DIM>
     /**
      * Mean angle between current and new directions about global axes
      */
-    std::vector<double> mMeanAngles;
+    std::vector<units::quantity<unit::plane_angle> > mMeanAngles;
 
     /**
      * Deviation in angle between current and new directions about global axes
      */
-    std::vector<double> mSdvAngles;
+    std::vector<units::quantity<unit::plane_angle> > mSdvAngles;
 
     /**
      * Tip cell velocity
@@ -92,6 +92,11 @@ class OffLatticeMigrationRule : public AbstractMigrationRule<DIM>
      * Length of probe into solution
      */
     units::quantity<unit::length> mProbeLength;
+
+    /**
+     * Length beyond which there is no mutual attraction
+     */
+    units::quantity<unit::length> mCriticalMutualAttractionLength;
 
 public:
 
@@ -116,14 +121,14 @@ public:
      * @param rNodes nodes to calculate indices
      * @return a vector of movement vectors
      */
-    std::vector<c_vector<double, DIM> > GetDirections(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
+    std::vector<DimensionalChastePoint<DIM> > GetDirections(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
 
     /**
      * Get the sprout directions
      * @param rNodes nodes to calculate directions
      * @return a vector of movement vectors
      */
-    std::vector<c_vector<double, DIM> > GetDirectionsForSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
+    std::vector<DimensionalChastePoint<DIM> > GetDirectionsForSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
 
     /**
      * Set the sprout velocity

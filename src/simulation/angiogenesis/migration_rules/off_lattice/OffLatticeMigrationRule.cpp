@@ -42,14 +42,15 @@ template<unsigned DIM>
 OffLatticeMigrationRule<DIM>::OffLatticeMigrationRule()
     : AbstractMigrationRule<DIM>(),
       mGlobalX(unit_vector<double>(DIM,0)),
-      mGlobalY(unit_vector<double>(DIM,0)),
+      mGlobalY(unit_vector<double>(DIM,1)),
       mGlobalZ(zero_vector<double>(DIM)),
-      mMeanAngles(std::vector<double>(DIM, 0.0)),
-      mSdvAngles(std::vector<double>(DIM, M_PI/18.0)),
-      mVelocity(20.0 *(1.e-6/3600.0) * unit::metre_per_second), // um/hr
+      mMeanAngles(std::vector<units::quantity<unit::plane_angle> >(DIM, 0.0*unit::radians)),
+      mSdvAngles(std::vector<units::quantity<unit::plane_angle> >(DIM, M_PI/18.0*unit::radians)),
+      mVelocity(20.0 *(1.e-6/3600.0) * unit::metre_per_second),
       mChemotacticStrength(1.0),
       mAttractionStrength(1.0),
-      mProbeLength(5.0 * 1.e-6 * unit::metres)
+      mProbeLength(5.0 * 1.e-6 * unit::metres),
+      mCriticalMutualAttractionLength(100.0 * 1.e-6 *unit::metres)
 {
     if(DIM==3)
     {
@@ -89,7 +90,7 @@ void OffLatticeMigrationRule<DIM>::SetAttractionStrength(double strength)
 }
 
 template<unsigned DIM>
-std::vector<c_vector<double, DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     if (this->mIsSprouting)
     {
@@ -97,7 +98,7 @@ std::vector<c_vector<double, DIM> > OffLatticeMigrationRule<DIM>::GetDirections(
     }
     else
     {
-        std::vector<c_vector<double, DIM> > movement_vectors(rNodes.size(), zero_vector<double>(DIM));
+        std::vector<DimensionalChastePoint<DIM> > movement_vectors(rNodes.size());
 
         // We want to probe the PDE solution all at once first if needed, as this is an expensive operation if done node-by-node.
         // Every node has 5 probes in 2D and 7 in 3D.
@@ -108,24 +109,12 @@ std::vector<c_vector<double, DIM> > OffLatticeMigrationRule<DIM>::GetDirections(
 
         if(this->mpSolver)
         {
-            double normalized_probe_length = mProbeLength/BaseUnits::Instance()->GetReferenceLengthScale();
             for(unsigned idx=0; idx<rNodes.size(); idx++)
             {
-                probe_locations[idx*probes_per_node] = rNodes[idx]->rGetLocation();
-                probe_locations[idx*probes_per_node+1] = DimensionalChastePoint<DIM>(rNodes[idx]->rGetLocation().rGetLocation() +
-                                                                                   normalized_probe_length * unit_vector<double>(DIM,0));
-                probe_locations[idx*probes_per_node+2] = DimensionalChastePoint<DIM>(rNodes[idx]->rGetLocation().rGetLocation() -
-                                                                                   normalized_probe_length * unit_vector<double>(DIM,0));
-                probe_locations[idx*probes_per_node+3] = DimensionalChastePoint<DIM>(rNodes[idx]->rGetLocation().rGetLocation() +
-                                                                                   normalized_probe_length * unit_vector<double>(DIM,1));
-                probe_locations[idx*probes_per_node+4] = DimensionalChastePoint<DIM>(rNodes[idx]->rGetLocation().rGetLocation() -
-                                                                                   normalized_probe_length * unit_vector<double>(DIM,1));
-                if(DIM==3)
+                std::vector<DimensionalChastePoint<DIM> > local_probe_locations = GetProbeLocationsExternalPoint<DIM>(rNodes[idx]->rGetLocation(), mProbeLength);
+                for(unsigned jdx=0;jdx<probes_per_node; jdx++)
                 {
-                    probe_locations[idx*probes_per_node+5] = DimensionalChastePoint<DIM>(rNodes[idx]->rGetLocation().rGetLocation() +
-                                                                                       normalized_probe_length * unit_vector<double>(DIM,2));
-                    probe_locations[idx*probes_per_node+6] = DimensionalChastePoint<DIM>(rNodes[idx]->rGetLocation().rGetLocation() -
-                                                                                       normalized_probe_length * unit_vector<double>(DIM,2));
+                    probe_locations[idx*probes_per_node + jdx] = local_probe_locations[jdx];
                 }
             }
             if(probe_locations.size()>0)
@@ -141,23 +130,23 @@ std::vector<c_vector<double, DIM> > OffLatticeMigrationRule<DIM>::GetDirections(
 
         for(unsigned idx=0; idx<rNodes.size(); idx++)
         {
-            double angle_x = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0], mSdvAngles[0]);
-            double angle_y = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[1], mSdvAngles[1]);
-            double angle_z = 0.0;
+            // Persistent random walk
+            units::quantity<unit::plane_angle> angle_x =
+                    RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0]/unit::radians, mSdvAngles[0]/unit::radians)*unit::radians;
+            units::quantity<unit::plane_angle> angle_y =
+                    RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[1]/unit::radians, mSdvAngles[1]/unit::radians)*unit::radians;
+            units::quantity<unit::plane_angle> angle_z = 0.0*unit::radians;
             if(DIM==3)
             {
-                angle_z = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[2], mSdvAngles[2]);
+                angle_z = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[2]/unit::radians, mSdvAngles[2]/unit::radians)*unit::radians;
             }
-            c_vector<double, DIM> currentDirection  =
-                    -rNodes[idx]->GetSegments()[0]->GetOppositeNode(rNodes[idx])->rGetLocation().rGetLocation() + rNodes[idx]->rGetLocation().rGetLocation();
-            currentDirection /= norm_2(currentDirection);
-
-            c_vector<double, DIM> new_direction_z = RotateAboutAxis<DIM>(currentDirection, mGlobalZ, angle_z);
+            DimensionalChastePoint<DIM> currentDirection = rNodes[idx]->rGetLocation()-rNodes[idx]->GetSegments()[0]->GetOppositeNode(rNodes[idx])->rGetLocation();
+            c_vector<double, DIM> new_direction_z = RotateAboutAxis<DIM>(currentDirection.GetUnitVector(), mGlobalZ, angle_z);
             c_vector<double, DIM> new_direction_y = RotateAboutAxis<DIM>(new_direction_z, mGlobalY, angle_y);
             c_vector<double, DIM> new_direction = RotateAboutAxis<DIM>(new_direction_y, mGlobalX, angle_x);
             new_direction /= norm_2(new_direction);
 
-            // Solution dependent contribution
+            // Chemotaxis
             if(this->mpSolver)
             {
                 // Get the gradients
@@ -212,49 +201,49 @@ std::vector<c_vector<double, DIM> > OffLatticeMigrationRule<DIM>::GetDirections(
                     new_direction += mChemotacticStrength*-unit_vector<double>(DIM,2);
                 }
             }
-
             new_direction /= norm_2(new_direction);
 
-            // Get the closest node in the search cone
+            // Mutual Attraction
             std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = this->mpVesselNetwork->GetNodes();
-
             units::quantity<unit::length> min_distance = 1.e12*unit::metres;
             c_vector<double, DIM> min_direction = zero_vector<double>(DIM);
-            double crictical_distance = 100.0; // micron
+            units::quantity<unit::length> reference_length = currentDirection.GetReferenceLengthScale();
             for(unsigned jdx=0; jdx<nodes.size(); jdx++)
             {
-                if(IsPointInCone<DIM>(nodes[jdx]->rGetLocation().rGetLocation(), rNodes[idx]->rGetLocation().rGetLocation(),
-                                      rNodes[idx]->rGetLocation().rGetLocation() + currentDirection * crictical_distance, M_PI/3.0))
+                if(IsPointInCone<DIM>(nodes[jdx]->rGetLocation(), rNodes[idx]->rGetLocation(), rNodes[idx]->rGetLocation() +
+                                      DimensionalChastePoint<DIM>(currentDirection.rGetLocation(reference_length) * double(mCriticalMutualAttractionLength/reference_length), reference_length), M_PI/3.0))
                 {
                     units::quantity<unit::length> distance = rNodes[idx]->rGetLocation().GetDistance(nodes[jdx]->rGetLocation());
                     if(distance < min_distance)
                     {
                         min_distance = distance;
-                        min_direction = nodes[jdx]->rGetLocation().rGetLocation() - rNodes[idx]->rGetLocation().rGetLocation();
-                        min_direction /= norm_2(min_direction);
+                        DimensionalChastePoint<DIM> dim_min_direction = nodes[jdx]->rGetLocation() - rNodes[idx]->rGetLocation();
+                        min_direction = dim_min_direction.GetUnitVector();
                     }
                 }
             }
 
             double strength = 0.0;
-            units::quantity<unit::length> dimensional_critical_distance = 1.e-6*unit::metres*crictical_distance;
-            if(min_distance < dimensional_critical_distance)
+            if(min_distance < mCriticalMutualAttractionLength)
             {
-                strength = mAttractionStrength *  (1.0 - (min_distance * min_distance) / (dimensional_critical_distance * dimensional_critical_distance));
+                strength = mAttractionStrength *  (1.0 - (min_distance * min_distance) / (mCriticalMutualAttractionLength * mCriticalMutualAttractionLength));
             }
             new_direction += strength * min_direction;
             new_direction /= norm_2(new_direction);
-            double time_increment = SimulationTime::Instance()->GetTimeStep();
-            movement_vectors[idx] = new_direction * time_increment* double(mVelocity*(BaseUnits::Instance()->GetReferenceTimeScale()/BaseUnits::Instance()->GetReferenceLengthScale()));
+
+            // Get the movement increment
+            units::quantity<unit::time> time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
+            units::quantity<unit::length> increment_length = time_increment* mVelocity;
+            movement_vectors[idx] = OffsetAlongVector<DIM>(DimensionalChastePoint<DIM>(new_direction), increment_length);
         }
         return movement_vectors;
     }
 }
 
 template<unsigned DIM>
-std::vector<c_vector<double, DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
-    std::vector<c_vector<double, DIM> > movement_vectors(rNodes.size(), zero_vector<double>(DIM));
+    std::vector<DimensionalChastePoint<DIM> > movement_vectors(rNodes.size());
 
     // Collect the probe locations for each node
     std::vector<units::quantity<unit::concentration> > probed_solutions;
@@ -265,7 +254,8 @@ std::vector<c_vector<double, DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsF
     }
     std::vector<DimensionalChastePoint<DIM> > probe_locations(probes_per_node*rNodes.size());
     std::vector<bool> candidate_locations_inside_domain(probes_per_node*rNodes.size(), false);
-    double normalized_probe_length = mProbeLength/BaseUnits::Instance()->GetReferenceLengthScale();
+
+    // Get a normal to the segments, will depend on whether they are parallel
     for(unsigned idx = 0; idx < rNodes.size(); idx++)
     {
         c_vector<double, DIM> sprout_direction;
@@ -330,23 +320,17 @@ std::vector<c_vector<double, DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsF
                 sprout_direction = -cross_product/norm_2(cross_product);
             }
         }
-        probe_locations[idx*probes_per_node] = rNodes[idx]->rGetLocation();
 
-        double angle = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0], mSdvAngles[0]);
-        c_vector<double, DIM> new_direction = RotateAboutAxis<DIM>(sprout_direction, rNodes[idx]->GetSegments()[0]->GetUnitTangent(), angle);
-        new_direction /= norm_2(new_direction);
-        probe_locations[idx*probes_per_node+1] = DimensionalChastePoint<DIM>(rNodes[idx]->rGetLocation().rGetLocation() + new_direction*normalized_probe_length);
-        c_vector<double, DIM> new_direction_r1 = RotateAboutAxis<DIM>(new_direction, rNodes[idx]->GetSegments()[0]->GetUnitTangent(), M_PI);
-        new_direction_r1 /= norm_2(new_direction_r1);
-        probe_locations[idx*probes_per_node+2] = DimensionalChastePoint<DIM>(rNodes[idx]->rGetLocation().rGetLocation() + new_direction_r1*normalized_probe_length);
-        if(DIM==3)
+        units::quantity<unit::plane_angle> angle = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0]/unit::radians,
+                                                                                                          mSdvAngles[0]/unit::radians)*unit::radians;
+        std::vector<DimensionalChastePoint<DIM> > local_probes = GetProbeLocationsInternalPoint<DIM>(DimensionalChastePoint<DIM>(sprout_direction),
+                                                                                                rNodes[idx]->rGetLocation(),
+                                                                                                DimensionalChastePoint<DIM>(rNodes[idx]->GetSegments()[0]->GetUnitTangent()),
+                                                                                                mProbeLength,
+                                                                                                angle);
+        for(unsigned jdx=0;jdx<probes_per_node; jdx++)
         {
-            c_vector<double, DIM> new_direction_r2 = RotateAboutAxis<DIM>(new_direction, rNodes[idx]->GetSegments()[0]->GetUnitTangent(), M_PI/2.0);
-            new_direction_r2 /= norm_2(new_direction_r2);
-            probe_locations[idx*probes_per_node+3] = DimensionalChastePoint<DIM>(rNodes[idx]->rGetLocation().rGetLocation() + new_direction_r2*normalized_probe_length);
-            c_vector<double, DIM> new_direction_r3 = RotateAboutAxis<DIM>(new_direction, rNodes[idx]->GetSegments()[0]->GetUnitTangent(), 3.0*M_PI/2.0);
-            new_direction_r3 /= norm_2(new_direction_r3);
-            probe_locations[idx*probes_per_node+4] = DimensionalChastePoint<DIM>(rNodes[idx]->rGetLocation().rGetLocation() + new_direction_r3*normalized_probe_length);
+            probe_locations[idx*probes_per_node + jdx] = local_probes[jdx];
         }
     }
 
@@ -366,7 +350,7 @@ std::vector<c_vector<double, DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsF
     // Decide on the sprout directions
     for(unsigned idx=0; idx<rNodes.size(); idx++)
     {
-        c_vector<double, DIM> new_direction = zero_vector<double>(DIM);
+        DimensionalChastePoint<DIM> new_direction(0.0, 0.0, 0.0, BaseUnits::Instance()->GetReferenceLengthScale());
 
         // Solution dependent contribution
         if(this->mpSolver)
@@ -399,25 +383,25 @@ std::vector<c_vector<double, DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsF
             }
             if(my_index == 0)
             {
-                new_direction = probe_locations[idx*probes_per_node+1].rGetLocation()-rNodes[idx]->rGetLocation().rGetLocation();
+                new_direction = probe_locations[idx*probes_per_node+1]-rNodes[idx]->rGetLocation();
             }
             else if(my_index == 1)
             {
-                new_direction = probe_locations[idx*probes_per_node+2].rGetLocation()-rNodes[idx]->rGetLocation().rGetLocation();
+                new_direction = probe_locations[idx*probes_per_node+2]-rNodes[idx]->rGetLocation();
             }
             else if(my_index == 2)
             {
-                new_direction = probe_locations[idx*probes_per_node+3].rGetLocation()-rNodes[idx]->rGetLocation().rGetLocation();
+                new_direction = probe_locations[idx*probes_per_node+3]-rNodes[idx]->rGetLocation();
             }
             else if(my_index == 3)
             {
-                new_direction = probe_locations[idx*probes_per_node+4].rGetLocation()-rNodes[idx]->rGetLocation().rGetLocation();
+                new_direction = probe_locations[idx*probes_per_node+4]-rNodes[idx]->rGetLocation();
             }
         }
-        movement_vectors[idx] = (new_direction/normalized_probe_length) * SimulationTime::Instance()->GetTimeStep() *
-                double(mVelocity * (BaseUnits::Instance()->GetReferenceTimeScale()/BaseUnits::Instance()->GetReferenceLengthScale()));
+        units::quantity<unit::time> time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
+        units::quantity<unit::length> increment_length = time_increment* mVelocity;
+        movement_vectors[idx] = OffsetAlongVector<DIM>(new_direction, increment_length);
     }
-
     return movement_vectors;
 }
 
