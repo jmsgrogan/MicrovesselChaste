@@ -44,6 +44,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "AbstractCellPopulation.hpp"
 #include "RegularGrid.hpp"
 #include "Part.hpp"
+#include "DimensionalChastePoint.hpp"
 
 /**
  * Abstract class for implementing a vessel tip cell migration rule. On and off-lattice specializations
@@ -109,7 +110,7 @@ public:
      * @param rNodes candidate sprout nodes
      * @return the sprout directions
      */
-    virtual std::vector<c_vector<double, DIM> > GetDirections(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
+    virtual std::vector<DimensionalChastePoint<DIM> > GetDirections(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
 
     /**
      * Get the sprout indices

@@ -38,6 +38,7 @@
 #include "VesselSegment.hpp"
 #include "UnitCollection.hpp"
 #include "BaseUnits.hpp"
+#include "GeometryTools.hpp"
 
 template<unsigned DIM>
 DiscreteContinuumBoundaryCondition<DIM>::DiscreteContinuumBoundaryCondition()
@@ -188,7 +189,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
         {
             for(unsigned jdx=0; jdx<mPoints.size(); jdx++)
             {
-                if(norm_2(location.rGetLocation()-mPoints[jdx].rGetLocation()) < tolerance)
+                if(GetDistance<DIM>(location, mPoints[jdx]) < tolerance*location.GetReferenceLengthScale())
                 {
                     return std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
                 }
@@ -320,7 +321,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateRegularGridFacetBoundaryCond
             std::vector<boost::shared_ptr<Facet> > facets =  mpDomain->GetFacets();
             for(unsigned jdx=0; jdx<facets.size();jdx++)
             {
-                if(facets[jdx]->ContainsPoint(DimensionalChastePoint<3>(mpRegularGrid->GetLocationOf1dIndex(idx).rGetLocation())))
+                if(facets[jdx]->ContainsPoint(mpRegularGrid->GetLocationOf1dIndex(idx)))
                 {
                     if(BoundaryConditionSource::PRESCRIBED)
                     {

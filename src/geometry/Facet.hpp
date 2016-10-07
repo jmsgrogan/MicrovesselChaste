@@ -50,7 +50,6 @@ Copyright (c) 2005-2016, University of Oxford.
 /**
  * A collection of planar polygons
  */
-
 class Facet
 {
     /**

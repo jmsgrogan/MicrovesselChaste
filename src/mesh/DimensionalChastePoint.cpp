@@ -119,15 +119,15 @@ DimensionalChastePoint<DIM>::~DimensionalChastePoint()
 }
 
 template<unsigned DIM>
-c_vector<double, DIM>& DimensionalChastePoint<DIM>::rGetLocation()
+c_vector<double, DIM>& DimensionalChastePoint<DIM>::rGetLocation(units::quantity<unit::length> scale)
 {
-    return mLocation;
+    return mLocation*(scale/mReferenceLength);
 }
 
 template<unsigned DIM>
-const c_vector<double, DIM>& DimensionalChastePoint<DIM>::rGetLocation() const
+const c_vector<double, DIM>& DimensionalChastePoint<DIM>::rGetLocation(units::quantity<unit::length> scale) const
 {
-    return mLocation;
+    return mLocation*(scale/mReferenceLength);
 }
 
 template<unsigned DIM>
@@ -144,44 +144,9 @@ units::quantity<unit::length> DimensionalChastePoint<DIM>::GetReferenceLengthSca
 }
 
 template<unsigned DIM>
-double DimensionalChastePoint<DIM>::GetScalingFactor(const DimensionalChastePoint<DIM>& rLocation) const
-{
-    return rLocation.GetReferenceLengthScale()/mReferenceLength;
-}
-
-template<unsigned DIM>
 units::quantity<unit::length> DimensionalChastePoint<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation) const
 {
-    return norm_2(rLocation.rGetLocation()*GetScalingFactor(rLocation) - mLocation)*mReferenceLength;
-}
-
-template<unsigned DIM>
-units::quantity<unit::length> DimensionalChastePoint<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation1,
-                                                                       const DimensionalChastePoint<DIM>& rLocation2)
-{
-    units::quantity<unit::length> reference_length_1 = rLocation1.GetReferenceLengthScale();
-    units::quantity<unit::length> reference_length_2 = rLocation2.GetReferenceLengthScale();
-
-    if(reference_length_1 == 0.0*unit::metres)
-    {
-        EXCEPTION("Point one has zero reference length");
-    }
-
-    return norm_2(rLocation2.rGetLocation()*(reference_length_2/reference_length_1) - rLocation1.rGetLocation())*reference_length_1;
-}
-
-template<unsigned DIM>
-units::quantity<unit::length> DimensionalChastePoint<DIM>::GetDotProduct(const DimensionalChastePoint<DIM>& rLocation1,
-                                                                       const DimensionalChastePoint<DIM>& rLocation2)
-{
-    units::quantity<unit::length> reference_length_1 = rLocation1.GetReferenceLengthScale();
-    units::quantity<unit::length> reference_length_2 = rLocation2.GetReferenceLengthScale();
-    if(reference_length_1 == 0.0*unit::metres)
-    {
-        EXCEPTION("Point one has zero reference length");
-    }
-
-    return inner_prod(rLocation2.rGetLocation()*(reference_length_2/reference_length_1) , rLocation1.rGetLocation())*reference_length_1;
+    return norm_2(rLocation.rGetLocation(mReferenceLength) - mLocation)*mReferenceLength;
 }
 
 template<unsigned DIM>
@@ -191,83 +156,21 @@ units::quantity<unit::length> DimensionalChastePoint<DIM>::GetNorm2()
 }
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM> DimensionalChastePoint<DIM>::GetUnitVector()
+c_vector<double, DIM> DimensionalChastePoint<DIM>::GetUnitVector()
 {
-    return DimensionalChastePoint<DIM>(mLocation/norm_2(mLocation), mReferenceLength);
-}
-
-template<unsigned DIM>
-DimensionalChastePoint<DIM> DimensionalChastePoint<DIM>::GetPointProjectionOnLineSegment(const DimensionalChastePoint<DIM>& rStartLocation,
-                                                      const DimensionalChastePoint<DIM>& rEndLocation,
-                                                      const DimensionalChastePoint<DIM>& rProbeLocation,
-                                                      bool projectToEnds,
-                                                      bool checkDimensions)
-{
-    DimensionalChastePoint<DIM> segment_vector = rEndLocation - rStartLocation;
-    DimensionalChastePoint<DIM> point_vector = rProbeLocation - rStartLocation;
-    units::quantity<unit::length> dp_segment_point = GetDotProduct(segment_vector, point_vector);
-    units::quantity<unit::length> dp_segment_segment = GetDotProduct(segment_vector, segment_vector);
-
-    if (dp_segment_point <= 0.0*unit::metres || dp_segment_segment <= dp_segment_point)
-    {
-        if(!projectToEnds)
-        {
-            EXCEPTION("Projection of point is outside segment.");
-        }
-        else
-        {
-            units::quantity<unit::length> dist1 = (rStartLocation - rEndLocation).GetNorm2();
-            units::quantity<unit::length> dist2 = (rEndLocation - rProbeLocation).GetNorm2();
-            if(dist1 <= dist2)
-            {
-                return rStartLocation;
-            }
-            else
-            {
-                return rEndLocation;
-            }
-        }
-    }
-    // Point projection is inside segment, get distance to point projection
-    return rStartLocation + (dp_segment_point / dp_segment_segment) * segment_vector;
-}
-
-template<unsigned DIM>
-units::quantity<unit::length> DimensionalChastePoint<DIM>::GetDistanceToLineSegment(const DimensionalChastePoint<DIM>& rStartLocation,
-                                                 const DimensionalChastePoint<DIM>& rEndLocation,
-                                                 const DimensionalChastePoint<DIM>& rProbeLocation)
-{
-    DimensionalChastePoint<DIM> segment_vector = rEndLocation - rStartLocation;
-    units::quantity<unit::length> dp_segment_point = GetDotProduct(segment_vector, rProbeLocation - rStartLocation);
-    // Point projection is outside segment, return node0 distance
-    if (dp_segment_point <= 0.0*unit::metres)
-    {
-        return rStartLocation.GetDistance(rProbeLocation);
-    }
-
-    units::quantity<unit::length> dp_segment_segment = GetDotProduct(segment_vector, segment_vector);
-    // Point projection is outside segment, return node1 distance
-    if (dp_segment_segment <= dp_segment_point)
-    {
-        return rEndLocation.GetDistance(rProbeLocation);
-    }
-
-    // Point projection is inside segment, get distance to point projection
-    double projection_ratio = dp_segment_point / dp_segment_segment;
-    DimensionalChastePoint<DIM> projected_location = rStartLocation + projection_ratio * segment_vector - rProbeLocation;
-    return projected_location.GetNorm2();
+    return mLocation/norm_2(mLocation);
 }
 
 template<unsigned DIM>
 DimensionalChastePoint<DIM> DimensionalChastePoint<DIM>::GetMidPoint(const DimensionalChastePoint<DIM>& rLocation) const
 {
-    return DimensionalChastePoint<DIM>((rLocation.rGetLocation()*GetScalingFactor(rLocation) + mLocation) / 2.0, mReferenceLength);
+    return DimensionalChastePoint<DIM>((rLocation.rGetLocation(mReferenceLength) + mLocation) / 2.0, mReferenceLength);
 }
 
 template<unsigned DIM>
 c_vector<double, DIM> DimensionalChastePoint<DIM>::GetUnitTangent(const DimensionalChastePoint<DIM>& rLocation) const
 {
-    return (rLocation.rGetLocation()*GetScalingFactor(rLocation) - mLocation) / (GetDistance(rLocation)/mReferenceLength);
+    return (rLocation.rGetLocation(mReferenceLength)- mLocation) / (GetDistance(rLocation)/mReferenceLength);
 }
 
 template<unsigned DIM>
@@ -278,13 +181,6 @@ DimensionalChastePoint<DIM>& DimensionalChastePoint<DIM>::operator/=(double fact
 }
 
 template<unsigned DIM>
-inline DimensionalChastePoint<DIM> operator/(DimensionalChastePoint<DIM> lhs, double factor)
-{
-    lhs /= factor;
-    return lhs;
-}
-
-template<unsigned DIM>
 DimensionalChastePoint<DIM>& DimensionalChastePoint<DIM>::operator*=(double factor)
 {
     mLocation *= factor;
@@ -292,45 +188,23 @@ DimensionalChastePoint<DIM>& DimensionalChastePoint<DIM>::operator*=(double fact
 }
 
 template<unsigned DIM>
-inline DimensionalChastePoint<DIM> operator*(DimensionalChastePoint<DIM> lhs, double factor)
-{
-    lhs *= factor;
-    return lhs;
-}
-
-template<unsigned DIM>
 DimensionalChastePoint<DIM>& DimensionalChastePoint<DIM>::operator+=(const DimensionalChastePoint<DIM>& rLocation)
 {
-    mLocation += rLocation.rGetLocation()*rLocation.GetReferenceLengthScale()/mReferenceLength;
+    mLocation += rLocation.rGetLocation(mReferenceLength);
     return *this;
-}
-
-template<unsigned DIM>
-inline DimensionalChastePoint<DIM> operator+(DimensionalChastePoint<DIM> lhs, const DimensionalChastePoint<DIM>& rLocation)
-{
-    lhs += rLocation;
-    return lhs;
 }
 
 template<unsigned DIM>
 DimensionalChastePoint<DIM>& DimensionalChastePoint<DIM>::operator-=(const DimensionalChastePoint<DIM>& rLocation)
 {
-    mLocation -= rLocation.rGetLocation()*rLocation.GetReferenceLengthScale()/mReferenceLength;
+    mLocation -= rLocation.rGetLocation(mReferenceLength);
     return *this;
-}
-
-template<unsigned DIM>
-inline DimensionalChastePoint<DIM> operator-(DimensionalChastePoint<DIM> lhs, const DimensionalChastePoint<DIM>& rLocation)
-{
-    lhs -= rLocation;
-    return lhs;
 }
 
 template<unsigned DIM>
 bool DimensionalChastePoint<DIM>::IsCoincident(const DimensionalChastePoint<DIM>& rLocation) const
 {
-    double scaling_length = GetScalingFactor(rLocation);
-
+    double scaling_length = rLocation.GetReferenceLengthScale()/mReferenceLength;
     bool returned_value = true;
     for (unsigned dim=0; dim<DIM; dim++)
     {
@@ -364,13 +238,13 @@ void DimensionalChastePoint<DIM>::SetReferenceLengthScale(units::quantity<unit::
 template<unsigned DIM>
 void DimensionalChastePoint<DIM>::Translate(DimensionalChastePoint<DIM> rVector)
 {
-    mLocation += rVector.rGetLocation()*GetScalingFactor(rVector);
+    mLocation += rVector.rGetLocation(mReferenceLength);
 }
 
 template<unsigned DIM>
 void DimensionalChastePoint<DIM>::TranslateTo(DimensionalChastePoint<DIM> rPoint)
 {
-    mLocation = rPoint.rGetLocation()*GetScalingFactor(rPoint);
+    mLocation = rPoint.rGetLocation(mReferenceLength);
 }
 
 // Explicit instantiation
