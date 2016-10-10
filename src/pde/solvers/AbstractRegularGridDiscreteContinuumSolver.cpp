@@ -97,8 +97,13 @@ std::vector<units::quantity<unit::concentration> > AbstractRegularGridDiscreteCo
     p_polydata->SetPoints(p_points);
 
     vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
-    p_probe_filter->SetInputData(p_polydata);
-    p_probe_filter->SetSourceData(this->mpVtkSolution);
+    #if VTK_MAJOR_VERSION <= 5
+        p_probe_filter->SetInput(p_polydata);
+        p_probe_filter->SetSource(this->mpVtkSolution);
+    #else
+        p_probe_filter->SetInputData(p_polydata);
+        p_probe_filter->SetSourceData(this->mpVtkSolution);
+    #endif
     p_probe_filter->Update();
     vtkSmartPointer<vtkPointData> p_point_data = p_probe_filter->GetOutput()->GetPointData();
 
@@ -157,8 +162,13 @@ std::vector<double> AbstractRegularGridDiscreteContinuumSolver<DIM>::GetSolution
     p_polydata->SetPoints(p_points);
 
     vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
-    p_probe_filter->SetInputData(p_polydata);
-    p_probe_filter->SetSourceData(this->mpVtkSolution);
+    #if VTK_MAJOR_VERSION <= 5
+        p_probe_filter->SetInput(p_polydata);
+        p_probe_filter->SetSource(this->mpVtkSolution);
+    #else
+        p_probe_filter->SetInputData(p_polydata);
+        p_probe_filter->SetSourceData(this->mpVtkSolution);
+    #endif
     p_probe_filter->Update();
     vtkSmartPointer<vtkPointData> p_point_data = p_probe_filter->GetOutput()->GetPointData();
 

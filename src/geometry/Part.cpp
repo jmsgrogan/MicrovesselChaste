@@ -537,7 +537,11 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk()
     p_part_data->SetPoints(p_vertices);
 
     vtkSmartPointer<vtkCleanPolyData> p_clean_data = vtkSmartPointer<vtkCleanPolyData>::New();
-    p_clean_data->SetInputData(p_part_data);
+    #if VTK_MAJOR_VERSION <= 5
+        p_clean_data->SetInput(p_part_data);
+    #else
+        p_clean_data->SetInputData(p_part_data);
+    #endif
     p_clean_data->Update();
 
     mVtkPart = p_clean_data->GetOutput();
