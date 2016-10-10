@@ -192,7 +192,7 @@ void Part<DIM>::AddVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselN
         for (unsigned idx = 0; idx < nodes.size(); idx++)
         {
             units::quantity<unit::length> length_Scale = nodes[idx]->rGetLocation().GetReferenceLengthScale();
-            vertices.push_back(DimensionalChastePoint<DIM>::Create(nodes[idx]->rGetLocation().rGetLocation(length_Scale), length_Scale));
+            vertices.push_back(DimensionalChastePoint<DIM>::Create(nodes[idx]->rGetLocation().GetLocation(length_Scale), length_Scale));
         }
 
         // If vertices lie on any existing facets add the vertex to the facet

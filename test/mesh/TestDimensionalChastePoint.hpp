@@ -59,26 +59,25 @@ public:
         point2_location[1] = 3.0;
         DimensionalChastePoint<2> point2 = DimensionalChastePoint<2>(point2_location);
 
-        TS_ASSERT_DELTA(point1.rGetLocation()[0], 1.0, 1.e-6);
-        TS_ASSERT_DELTA(point2.rGetLocation()[1], 3.0, 1.e-6);
+        TS_ASSERT_DELTA(point1[0], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(point2[1], 3.0, 1.e-6);
 
         units::quantity<unit::length> reference_scale1(5.0 * unit::metres);
         units::quantity<unit::length> reference_scale2(10.0 * unit::metres);
         DimensionalChastePoint<2> point3 = DimensionalChastePoint<2>(1.0/5.0, 2.0/5.0, 0.0, reference_scale1);
-        TS_ASSERT_DELTA(point3.rGetLocation()[0], 0.2, 1.e-6);
-        TS_ASSERT_DELTA(point3.rGetLocation()[1], 0.4, 1.e-6);
+        TS_ASSERT_DELTA(point3[0], 0.2, 1.e-6);
+        TS_ASSERT_DELTA(point3[1], 0.4, 1.e-6);
         c_vector<double, 2> point4_location;
         point4_location[0] = 2.0/10.0;
         point4_location[1] = 3.0/10.0;
         DimensionalChastePoint<2> point4 = DimensionalChastePoint<2>(point4_location, reference_scale2);
 
-        TS_ASSERT_DELTA(point4.GetScalingFactor(point3), 0.5, 1.e-6);
         point3.SetReferenceLengthScale(point4.GetReferenceLengthScale());
-        TS_ASSERT_DELTA(point3.rGetLocation()[0], 0.1, 1.e-6);
-        TS_ASSERT_DELTA(point3.rGetLocation()[1], 0.2, 1.e-6);
+        TS_ASSERT_DELTA(point3[0], 0.1, 1.e-6);
+        TS_ASSERT_DELTA(point3[1], 0.2, 1.e-6);
 
         point4.Translate(point3);
-        TS_ASSERT_DELTA(point4.rGetLocation()[0], 3.0/10.0, 1.e-6);
+        TS_ASSERT_DELTA(point4[0], 3.0/10.0, 1.e-6);
     }
 
     void TestArchiving() throw (Exception)

@@ -211,7 +211,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             for(unsigned jdx=0; jdx<nodes.size(); jdx++)
             {
                 if(IsPointInCone<DIM>(nodes[jdx]->rGetLocation(), rNodes[idx]->rGetLocation(), rNodes[idx]->rGetLocation() +
-                                      DimensionalChastePoint<DIM>(currentDirection.rGetLocation(reference_length) * double(mCriticalMutualAttractionLength/reference_length), reference_length), M_PI/3.0))
+                                      DimensionalChastePoint<DIM>(currentDirection.GetLocation(reference_length) * double(mCriticalMutualAttractionLength/reference_length), reference_length), M_PI/3.0))
                 {
                     units::quantity<unit::length> distance = rNodes[idx]->rGetLocation().GetDistance(nodes[jdx]->rGetLocation());
                     if(distance < min_distance)

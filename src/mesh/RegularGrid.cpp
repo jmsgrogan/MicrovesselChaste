@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -217,162 +217,49 @@ std::vector<double> RegularGrid<ELEMENT_DIM, SPACE_DIM>::InterpolateGridValues(
 {
     std::vector<double> sampled_values(locations.size(), 0.0);
 
-    if (!useVtk)
+    if (!mVtkGridIsSetUp)
     {
-        double origin_x = mOrigin[0];
-        double origin_y = mOrigin[1];
-        double origin_z = 0.0;
+        SetUpVtkGrid();
+    }
+
+    vtkSmartPointer<vtkDoubleArray> pPointData = vtkSmartPointer<vtkDoubleArray>::New();
+    pPointData->SetNumberOfComponents(1);
+    pPointData->SetNumberOfTuples(GetNumberOfPoints());
+    const std::string ny_name = "test";
+    pPointData->SetName(ny_name.c_str());
+    for (unsigned idx = 0; idx < GetNumberOfPoints(); idx++)
+    {
+        pPointData->SetValue(idx, values[idx]);
+    }
+    mpVtkGrid->GetPointData()->AddArray(pPointData);
+
+    // Sample the field at these locations
+    vtkSmartPointer<vtkPolyData> p_polydata = vtkSmartPointer<vtkPolyData>::New();
+    vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
+    p_points->SetNumberOfPoints(locations.size());
+    for (unsigned idx = 0; idx < locations.size(); idx++)
+    {
         if (SPACE_DIM == 3)
         {
-            origin_z = mOrigin[2];
+            p_points->SetPoint(idx, locations[idx][0], locations[idx][1], locations[idx][2]);
         }
-
-        // Use a simple version
-        for (unsigned idx = 0; idx < locations.size(); idx++)
+        else
         {
-            // Get the nearest front bottom left point and distances
-            unsigned x_index = unsigned((locations[idx][0] - origin_x)*mReferenceLength / mSpacing);
-            double del_x = locations[idx][0] - (double(x_index) * mSpacing/mReferenceLength + origin_x);
-            unsigned y_index = unsigned((locations[idx][1] - origin_y)*mReferenceLength / mSpacing);
-            double del_y = locations[idx][1] - (double(y_index) * mSpacing/mReferenceLength + origin_y);
-            unsigned z_index = 0;
-            double del_z = 0.0;
-            if (SPACE_DIM == 3)
-            {
-                z_index = unsigned((locations[idx][2] - origin_z)*mReferenceLength / mSpacing);
-                del_z = locations[idx][2] - (double(z_index) * mSpacing/mReferenceLength + origin_z);
-            }
-
-            if (x_index < mExtents[0] && y_index < mExtents[1] && z_index < mExtents[2])
-            {
-                double p000 = values[x_index + y_index * mExtents[0] + z_index * mExtents[0] * mExtents[1]];
-                double p100 =
-                        x_index < (mExtents[0] - 1) ?
-                                values[(x_index + 1) + y_index * mExtents[0] + z_index * mExtents[0] * mExtents[1]] :
-                                p000;
-                double p010 =
-                        y_index < (mExtents[1] - 1) ?
-                                values[x_index + (y_index + 1) * mExtents[0] + z_index * mExtents[0] * mExtents[1]] :
-                                p000;
-                double p110 = 0.0;
-                if (x_index == mExtents[0] - 1 && y_index == mExtents[1] - 1)
-                {
-                    p110 = p000;
-                }
-                else if (x_index == mExtents[0] - 1)
-                {
-                    p110 = p010;
-                }
-                else if (y_index == mExtents[1] - 1)
-                {
-                    p110 = p100;
-                }
-                else
-                {
-                    p110 = values[(x_index + 1) + (y_index + 1) * mExtents[0] + z_index * mExtents[0] * mExtents[1]];
-                }
-                double p001 = 0.0;
-                double p101 = 0.0;
-                double p111 = 0.0;
-                double p011 = 0.0;
-                if (z_index < mExtents[2] - 1)
-                {
-                    p001 = values[x_index + y_index * mExtents[0] + (z_index + 1) * mExtents[0] * mExtents[1]];
-                    p101 = x_index < (mExtents[0] - 1) ?
-                            values[(x_index + 1) + y_index * mExtents[0] + (z_index + 1) * mExtents[0] * mExtents[1]] :
-                            p001;
-                    p011 = y_index < (mExtents[1] - 1) ?
-                            values[x_index + (y_index + 1) * mExtents[0] + (z_index + 1) * mExtents[0] * mExtents[1]] :
-                            p001;
-                    if (x_index == mExtents[0] - 1 && y_index == mExtents[1] - 1)
-                    {
-                        p111 = p001;
-                    }
-                    else if (x_index == mExtents[0] - 1)
-                    {
-                        p111 = p011;
-                    }
-                    else if (y_index == mExtents[1] - 1)
-                    {
-                        p111 = p101;
-                    }
-                    else
-                    {
-                        p111 = values[(x_index + 1) + (y_index + 1) * mExtents[0]
-                                + (z_index + 1) * mExtents[0] * mExtents[1]];
-                    }
-                }
-                else
-                {
-                    p001 = p000;
-                    p101 = p100;
-                    p111 = p110;
-                    p011 = p010;
-                }
-                double c0 = p000;
-                double c1 = p100 - p000;
-                double c2 = p010 - p000;
-                double c3 = p001 - p000;
-                double c4 = p110 - (p010 + p100) + p000;
-                double c5 = p011 - p001 - p010 + p000;
-                double c6 = p101 - p001 - p100 + p000;
-                double c7 = p111 - p011 - p101 - p110 + p100 + p001 + p010 - p000;
-                sampled_values[idx] = c0 + c1 * del_x + c2 * del_y + c3 * del_z + c4 * del_x * del_y
-                        + c5 * del_y * del_z + c6 * del_z * del_x + c7 * del_x * del_y * del_z;
-            }
-            else
-            {
-                EXCEPTION("Sample point is outside grid.");
-            }
+            p_points->SetPoint(idx, locations[idx][0], locations[idx][1], 0.0);
         }
-
     }
-    else
+    p_polydata->SetPoints(p_points);
+
+    vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
+    p_probe_filter->SetInputData(p_polydata);
+    p_probe_filter->SetSourceData(mpVtkGrid);
+    p_probe_filter->Update();
+    vtkSmartPointer<vtkPointData> p_point_data = p_probe_filter->GetPolyDataOutput()->GetPointData();
+
+    unsigned num_points = p_point_data->GetArray("test")->GetNumberOfTuples();
+    for (unsigned idx = 0; idx < num_points; idx++)
     {
-        if (!mVtkGridIsSetUp)
-        {
-            SetUpVtkGrid();
-        }
-
-        vtkSmartPointer<vtkDoubleArray> pPointData = vtkSmartPointer<vtkDoubleArray>::New();
-        pPointData->SetNumberOfComponents(1);
-        pPointData->SetNumberOfTuples(GetNumberOfPoints());
-        const std::string ny_name = "test";
-        pPointData->SetName(ny_name.c_str());
-        for (unsigned idx = 0; idx < GetNumberOfPoints(); idx++)
-        {
-            pPointData->SetValue(idx, values[idx]);
-        }
-        mpVtkGrid->GetPointData()->AddArray(pPointData);
-
-        // Sample the field at these locations
-        vtkSmartPointer<vtkPolyData> p_polydata = vtkSmartPointer<vtkPolyData>::New();
-        vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
-        p_points->SetNumberOfPoints(locations.size());
-        for (unsigned idx = 0; idx < locations.size(); idx++)
-        {
-            if (SPACE_DIM == 3)
-            {
-                p_points->SetPoint(idx, locations[idx][0], locations[idx][1], locations[idx][2]);
-            }
-            else
-            {
-                p_points->SetPoint(idx, locations[idx][0], locations[idx][1], 0.0);
-            }
-        }
-        p_polydata->SetPoints(p_points);
-
-        vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
-        p_probe_filter->SetInputData(p_polydata);
-        p_probe_filter->SetSourceData(mpVtkGrid);
-        p_probe_filter->Update();
-        vtkSmartPointer<vtkPointData> p_point_data = p_probe_filter->GetPolyDataOutput()->GetPointData();
-
-        unsigned num_points = p_point_data->GetArray("test")->GetNumberOfTuples();
-        for (unsigned idx = 0; idx < num_points; idx++)
-        {
-            sampled_values[idx] = p_point_data->GetArray("test")->GetTuple1(idx);
-        }
+        sampled_values[idx] = p_point_data->GetArray("test")->GetTuple1(idx);
     }
     return sampled_values;
 }
@@ -524,7 +411,7 @@ std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > Regular
     {
         double start_point[3];
         double end_point[3];
-        c_vector<double ,SPACE_DIM> start_location = segments[jdx]->GetNode(0)->rGetLocation().rGetLocation();
+        DimensionalChastePoint<SPACE_DIM> start_location = segments[jdx]->GetNode(0)->rGetLocation();
         start_point[0] = start_location[0];
         start_point[1] = start_location[1];
         if(SPACE_DIM==3)
@@ -535,7 +422,7 @@ std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > Regular
         {
             start_point[2] = 0.0;
         }
-        c_vector<double ,SPACE_DIM> end_location = segments[jdx]->GetNode(1)->rGetLocation().rGetLocation();
+        DimensionalChastePoint<SPACE_DIM> end_location = segments[jdx]->GetNode(1)->rGetLocation();
         end_point[0] = end_location[0];
         end_point[1] = end_location[1];
         if(SPACE_DIM==3)
@@ -554,7 +441,7 @@ std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > Regular
                 double parametric_distance = 0.0;
                 double closest_point[3];
                 double grid_point[3];
-                c_vector<double ,SPACE_DIM> grid_location = GetLocationOf1dIndex(idx).rGetLocation();
+                DimensionalChastePoint<SPACE_DIM> grid_location = GetLocationOf1dIndex(idx);
                 grid_point[0] = grid_location[0];
                 grid_point[1] = grid_location[1];
                 if(SPACE_DIM==3)

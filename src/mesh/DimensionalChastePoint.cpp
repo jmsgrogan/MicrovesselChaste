@@ -178,7 +178,7 @@ units::quantity<unit::length> DimensionalChastePoint<DIM>::GetReferenceLengthSca
 template<unsigned DIM>
 units::quantity<unit::length> DimensionalChastePoint<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation) const
 {
-    return norm_2(rLocation.rGetLocation(mReferenceLength) - mLocation)*mReferenceLength;
+    return norm_2(rLocation.GetLocation(mReferenceLength) - mLocation)*mReferenceLength;
 }
 
 template<unsigned DIM>
@@ -188,7 +188,7 @@ units::quantity<unit::length> DimensionalChastePoint<DIM>::GetNorm2()
 }
 
 template<unsigned DIM>
-c_vector<double, DIM> DimensionalChastePoint<DIM>::GetUnitVector()
+c_vector<double, DIM> DimensionalChastePoint<DIM>::GetUnitVector() const
 {
     return mLocation/norm_2(mLocation);
 }
@@ -196,13 +196,13 @@ c_vector<double, DIM> DimensionalChastePoint<DIM>::GetUnitVector()
 template<unsigned DIM>
 DimensionalChastePoint<DIM> DimensionalChastePoint<DIM>::GetMidPoint(const DimensionalChastePoint<DIM>& rLocation) const
 {
-    return DimensionalChastePoint<DIM>((rLocation.rGetLocation(mReferenceLength) + mLocation) / 2.0, mReferenceLength);
+    return DimensionalChastePoint<DIM>((rLocation.GetLocation(mReferenceLength) + mLocation) / 2.0, mReferenceLength);
 }
 
 template<unsigned DIM>
 c_vector<double, DIM> DimensionalChastePoint<DIM>::GetUnitTangent(const DimensionalChastePoint<DIM>& rLocation) const
 {
-    return (rLocation.rGetLocation(mReferenceLength)- mLocation) / (GetDistance(rLocation)/mReferenceLength);
+    return (rLocation.GetLocation(mReferenceLength)- mLocation) / (GetDistance(rLocation)/mReferenceLength);
 }
 
 template<unsigned DIM>
@@ -222,14 +222,14 @@ DimensionalChastePoint<DIM>& DimensionalChastePoint<DIM>::operator*=(double fact
 template<unsigned DIM>
 DimensionalChastePoint<DIM>& DimensionalChastePoint<DIM>::operator+=(const DimensionalChastePoint<DIM>& rLocation)
 {
-    mLocation += rLocation.rGetLocation(mReferenceLength);
+    mLocation += rLocation.GetLocation(mReferenceLength);
     return *this;
 }
 
 template<unsigned DIM>
 DimensionalChastePoint<DIM>& DimensionalChastePoint<DIM>::operator-=(const DimensionalChastePoint<DIM>& rLocation)
 {
-    mLocation -= rLocation.rGetLocation(mReferenceLength);
+    mLocation -= rLocation.GetLocation(mReferenceLength);
     return *this;
 }
 
@@ -298,13 +298,25 @@ void DimensionalChastePoint<DIM>::RotateAboutAxis(c_vector<double, DIM> axis, do
 template<unsigned DIM>
 void DimensionalChastePoint<DIM>::Translate(DimensionalChastePoint<DIM> rVector)
 {
-    mLocation += rVector.rGetLocation(mReferenceLength);
+    mLocation += rVector.GetLocation(mReferenceLength);
 }
 
 template<unsigned DIM>
 void DimensionalChastePoint<DIM>::TranslateTo(DimensionalChastePoint<DIM> rPoint)
 {
-    mLocation = rPoint.rGetLocation(mReferenceLength);
+    mLocation = rPoint.GetLocation(mReferenceLength);
+}
+
+template<unsigned DIM>
+unsigned DimensionalChastePoint<DIM>::GetIndex()
+{
+    return mIndex;
+}
+
+template<unsigned DIM>
+void DimensionalChastePoint<DIM>::SetIndex(unsigned index)
+{
+    mIndex = index;
 }
 
 // Explicit instantiation

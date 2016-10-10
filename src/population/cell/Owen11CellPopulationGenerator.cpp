@@ -196,7 +196,7 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
                                          double(mpRegularGrid->GetExtents()[1])*mpRegularGrid->GetSpacing()/(2.0*mReferenceLength),
                                          0.0, mReferenceLength);
         boost::shared_ptr<Part<DIM> > p_sub_domain = Part<DIM>::Create();
-        boost::shared_ptr<Polygon> circle = p_sub_domain->AddCircle(mTumourRadius, origin);
+        boost::shared_ptr<Polygon<DIM> > circle = p_sub_domain->AddCircle(mTumourRadius, origin);
         for (unsigned ind = 0; ind < p_mesh->GetNumNodes(); ind++)
         {
             if (p_sub_domain->IsPointInPart(p_mesh->GetNode(ind)->rGetLocation()))
