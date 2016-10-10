@@ -40,7 +40,6 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VoronoiGenerator.hpp"
 #include "Polygon.hpp"
 #include "Exception.hpp"
-#include "Vertex.hpp"
 #include "VesselNetworkGenerator.hpp"
 
 template<unsigned DIM>
@@ -146,7 +145,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParr
                                                                     VesselDistribution::Value distributionType,
                                                                     double exclusionDistance,
                                                                     bool useBbox,
-                                                                    std::vector<boost::shared_ptr<Vertex> > seeds)
+                                                                    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > seeds)
 {
     // Get the bounding box of the domain and the volume of the bbox
     c_vector<double, 2*DIM> bbox = domain->GetBoundingBox();
@@ -348,7 +347,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
                                                                     VesselDistribution::Value distributionType,
                                                                     double exclusionDistance,
                                                                     bool useBbox,
-                                                                    std::vector<boost::shared_ptr<Vertex> > seeds)
+                                                                    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > seeds)
 {
     if(DIM!=3)
     {
@@ -468,7 +467,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
 
     else if(distributionType == VesselDistribution::UNIFORM)
     {
-        std::vector<boost::shared_ptr<Vertex> > seeds;
+        std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > seeds;
         unsigned attempts = 0;
         for(unsigned idx=0; idx<1.e9; idx++)
         {
@@ -492,9 +491,8 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
            {
                for(unsigned kdx=0; kdx<seeds.size();kdx++)
                {
-                   double sq_distance = pow((seeds[kdx]->rGetLocation()[1]- location_y),2) +
-                           pow((seeds[kdx]->rGetLocation()[0]- location_x),2) +
-                           pow((seeds[kdx]->rGetLocation()[2]- location_z),2);
+                   double sq_distance = pow(((*seeds[kdx])[1]- location_y),2) + pow(((*seeds[kdx])[0]- location_x),2) +
+                           pow(((*seeds[kdx])[2]- location_z),2);
                    if(sq_distance < (exclusionDistance * exclusionDistance))
                    {
                        free_space = false;
@@ -506,7 +504,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
 
            if(free_space)
            {
-               seeds.push_back(Vertex::Create(location_x, location_y, location_z));
+               seeds.push_back(DimensionalChastePoint<DIM>::Create(location_x, location_y, location_z));
                attempts = 0;
            }
            if(seeds.size() == num_x * num_y * num_z)
@@ -526,7 +524,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
     }
     else if(distributionType == VesselDistribution::TWO_LAYER)
     {
-        std::vector<boost::shared_ptr<Vertex> > seeds;
+        std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > seeds;
         unsigned attempts = 0;
 
         // Uniformly distribute kernels
@@ -568,9 +566,8 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
             {
                 for(unsigned kdx=0; kdx<seeds.size();kdx++)
                 {
-                    double sq_distance = pow((seeds[kdx]->rGetLocation()[1]- location_y),2) +
-                            pow((seeds[kdx]->rGetLocation()[0]- location_x),2)
-                            + pow((seeds[kdx]->rGetLocation()[2]- location_z),2);
+                    double sq_distance = pow(((*seeds[kdx])[1]- location_y),2) + pow(((*seeds[kdx])[0]- location_x),2)
+                            + pow(((*seeds[kdx])[2]- location_z),2);
                     if(sq_distance < (exclusionDistance * exclusionDistance))
                     {
                         free_space = false;
@@ -582,7 +579,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
 
             if(free_space)
             {
-                seeds.push_back(Vertex::Create(location_x, location_y, location_z));
+                seeds.push_back(DimensionalChastePoint<DIM>::Create(location_x, location_y, location_z));
                 attempts = 0;
             }
             if(seeds.size() == num_x * num_y * num_z)
@@ -607,7 +604,6 @@ template<unsigned DIM>
 void VesselNetworkGenerator<DIM>::PatternUnitByTranslation(boost::shared_ptr<VesselNetwork<DIM> > input_unit,
                                                          std::vector<unsigned> numberOfUnits)
 {
-
     // Get unit dimensions
     std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = input_unit->GetExtents();
 
@@ -789,16 +785,15 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateFrom
     boost::shared_ptr<VesselNetwork<DIM> > p_network = VesselNetwork<DIM>::Create();
 
     // Get the polygons
-    std::vector<boost::shared_ptr<Polygon> > polygons = part->GetPolygons();
+    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = part->GetPolygons();
     std::vector<boost::shared_ptr<Vessel<DIM> > > vessels;
     for (unsigned idx = 0; idx < polygons.size(); idx++)
     {
         std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments;
-        std::vector<boost::shared_ptr<Vertex> > vertices = polygons[idx]->GetVertices();
+        std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = polygons[idx]->GetVertices();
         for (unsigned jdx = 1; jdx < vertices.size(); jdx++)
         {
-            segments.push_back(VesselSegment<DIM>::Create(VesselNode<DIM>::Create(DimensionalChastePoint<DIM>(vertices[jdx-1]->rGetLocation())),
-                                                                                                  VesselNode<DIM>::Create(DimensionalChastePoint<DIM>(vertices[jdx]->rGetLocation()))));
+            segments.push_back(VesselSegment<DIM>::Create(VesselNode<DIM>::Create(*vertices[jdx-1]), VesselNode<DIM>::Create(*vertices[jdx])));
         }
         vessels.push_back(Vessel<DIM>::Create(segments));
     }
@@ -821,7 +816,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateVoro
     boost::shared_ptr<Part<DIM> > p_part = Part<DIM>::Create();
     p_part->AddCuboid(cubeX, cubeY, cubeZ, DimensionalChastePoint<DIM>(0.0, 0.0, 0.0));
     VoronoiGenerator<DIM> generator;
-    boost::shared_ptr<Part<DIM> > p_tesselation = generator.Generate(p_part, std::vector<boost::shared_ptr<Vertex> >(), numPoints);
+    boost::shared_ptr<Part<DIM> > p_tesselation = generator.Generate(p_part, std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > >(), numPoints);
     boost::shared_ptr<VesselNetwork<DIM> > p_network =  GenerateFromPart(p_tesselation);
     return p_network;
 }

@@ -196,7 +196,7 @@ public:
      * Return a point one unit from the origin in the direction along the vector between this point and the origin
      * @return a point one unit from the origin in the direction along the vector between this point and the origin
      */
-    c_vector<double, DIM> GetUnitVector();
+    c_vector<double, DIM> GetUnitVector() const;
 
     /**
      * Return the unit tangent to the segment formed by this point and the input point

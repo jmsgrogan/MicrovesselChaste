@@ -42,13 +42,16 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkCellLocator.h>
 #include "Exception.hpp"
 #include "GeometryTools.hpp"
+#include "UblasVectorInclude.hpp"
+#include "UblasIncludes.hpp"
+#include "UblasCustomFunctions.hpp"
 
 template<unsigned DIM>
 units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation1,
                                                                        const DimensionalChastePoint<DIM>& rLocation2)
 {
     units::quantity<unit::length> reference_length = rLocation1.GetReferenceLengthScale();
-    return norm_2(rLocation2.rGetLocation(reference_length) - rLocation1.rGetLocation(reference_length))*reference_length;
+    return norm_2(rLocation2.GetLocation(reference_length) - rLocation1.GetLocation(reference_length))*reference_length;
 }
 
 template<unsigned DIM>
@@ -56,7 +59,7 @@ units::quantity<unit::area> GetDotProduct(const DimensionalChastePoint<DIM>& rLo
                                           const DimensionalChastePoint<DIM>& rLocation2)
 {
     units::quantity<unit::length> reference_length = rLocation1.GetReferenceLengthScale();
-    return inner_prod(rLocation2.rGetLocation(reference_length), rLocation1.rGetLocation(reference_length))*reference_length;
+    return inner_prod(rLocation2.GetLocation(reference_length), rLocation1.GetLocation(reference_length))*reference_length*reference_length;
 }
 
 template<unsigned DIM>
@@ -64,7 +67,7 @@ units::quantity<unit::length> GetDotProduct(const DimensionalChastePoint<DIM>& r
                                           const c_vector<double, DIM>& rLocation2)
 {
     units::quantity<unit::length> reference_length_1 = rLocation1.GetReferenceLengthScale();
-    return inner_prod(rLocation2 , rLocation1.rGetLocation(reference_length_1))*reference_length_1;
+    return inner_prod(rLocation2 , rLocation1.GetLocation(reference_length_1))*reference_length_1;
 }
 
 template<unsigned DIM>
@@ -100,7 +103,7 @@ DimensionalChastePoint<DIM> GetPointProjectionOnLineSegment(const DimensionalCha
         }
     }
     // Point projection is inside segment, get distance to point projection
-    return rStartLocation + (dp_segment_point / dp_segment_segment) * segment_vector;
+    return rStartLocation + segment_vector*(dp_segment_point / dp_segment_segment);
 }
 
 template<unsigned DIM>
@@ -125,7 +128,7 @@ units::quantity<unit::length> GetDistanceToLineSegment(const DimensionalChastePo
 
     // Point projection is inside segment, get distance to point projection
     double projection_ratio = dp_segment_point / dp_segment_segment;
-    DimensionalChastePoint<DIM> projected_location = rStartLocation + projection_ratio * segment_vector - rProbeLocation;
+    DimensionalChastePoint<DIM> projected_location = rStartLocation + segment_vector*projection_ratio - rProbeLocation;
     return projected_location.GetNorm2();
 }
 
@@ -135,7 +138,7 @@ std::vector<DimensionalChastePoint<DIM> > GetProbeLocationsExternalPoint(Dimensi
 {
     unsigned num_probes = (2*DIM)+1;
     std::vector<DimensionalChastePoint<DIM> > probe_locations(num_probes);
-    units::quantity<unit::concentration> length_scale = rCentrePoint->GetReferenceLengthScale();
+    units::quantity<unit::length> length_scale = rCentrePoint.GetReferenceLengthScale();
 
     double normalized_probe_length = probeLength/length_scale;
     probe_locations[0] = rCentrePoint;
@@ -158,34 +161,29 @@ std::vector<DimensionalChastePoint<DIM> > GetProbeLocationsInternalPoint(Dimensi
                                                                          units::quantity<unit::length> probeLength,
                                                                          units::quantity<unit::plane_angle> angle)
 {
-    unsigned num_probes = 3;
-    if(DIM==3)
-    {
-        num_probes = 5;
-    }
+    unsigned num_probes = 2*DIM - 1;
     std::vector<DimensionalChastePoint<DIM> > probe_locations(num_probes);
     probe_locations[0] = rCentralPoint;
     c_vector<double, DIM> unit_axis = rRotationAxis.GetUnitVector();
+    units::quantity<unit::length> length_scale = rCentralPoint.GetReferenceLengthScale();
+    double normalized_probe_length = probeLength/length_scale;
 
     c_vector<double, DIM> new_direction = RotateAboutAxis<DIM>(rInitialDirection.GetUnitVector(), unit_axis, angle);
     new_direction /= norm_2(new_direction);
-
-    units::quantity<unit::length> length_scale = rCentralPoint.GetReferenceLengthScale();
-    probe_locations[1] = rCentralPoint + DimensionalChastePoint<DIM>(new_direction*probeLength/length_scale, length_scale);
+    probe_locations[1] = rCentralPoint + DimensionalChastePoint<DIM>(new_direction*normalized_probe_length, length_scale);
 
     c_vector<double, DIM> new_direction_r1 = RotateAboutAxis<DIM>(new_direction, unit_axis, M_PI*unit::radians);
     new_direction_r1 /= norm_2(new_direction_r1);
-    probe_locations[2] = rCentralPoint + DimensionalChastePoint<DIM>(new_direction_r1*probeLength/length_scale, length_scale);
-
+    probe_locations[2] = rCentralPoint + DimensionalChastePoint<DIM>(new_direction_r1*normalized_probe_length, length_scale);
     if(DIM==3)
     {
-        c_vector<double, DIM> new_direction_r2 = RotateAboutAxis<DIM>(new_direction, unit_axis, M_PI/2.0);
+        c_vector<double, DIM> new_direction_r2 = RotateAboutAxis<DIM>(new_direction, unit_axis, M_PI/2.0*unit::radians);
         new_direction_r2 /= norm_2(new_direction_r2);
-        probe_locations[3] = rCentralPoint + DimensionalChastePoint<DIM>(new_direction_r2*probeLength/length_scale, length_scale);
+        probe_locations[3] = rCentralPoint + DimensionalChastePoint<DIM>(new_direction_r2*normalized_probe_length, length_scale);
 
-        c_vector<double, DIM> new_direction_r3 = RotateAboutAxis<DIM>(new_direction, unit_axis, 3.0*M_PI/2.0);
+        c_vector<double, DIM> new_direction_r3 = RotateAboutAxis<DIM>(new_direction, unit_axis, 3.0*M_PI/2.0*unit::radians);
         new_direction_r3 /= norm_2(new_direction_r3);
-        probe_locations[4] = rCentralPoint + DimensionalChastePoint<DIM>(new_direction_r3*probeLength/length_scale, length_scale);
+        probe_locations[4] = rCentralPoint + DimensionalChastePoint<DIM>(new_direction_r3*normalized_probe_length, length_scale);
     }
 
     return probe_locations;
@@ -215,7 +213,7 @@ bool IsPointInBox(const DimensionalChastePoint<DIM>& rPoint,
 {
     bool point_in_box = false;
     units::quantity<unit::length> point_length_scale = rPoint.GetReferenceLengthScale();
-    c_vector<double, DIM> location_in_point_scale = rLocation.rGetLocation(point_length_scale);
+    c_vector<double, DIM> location_in_point_scale = rLocation.GetLocation(point_length_scale);
     double dimensionless_spacing = spacing/point_length_scale;
 
     bool inside_left = rPoint[0] >= location_in_point_scale[0] -dimensionless_spacing/2.0;
@@ -247,23 +245,23 @@ bool IsPointInTetra(const DimensionalChastePoint<DIM>& rPoint, const std::vector
 {
     units::quantity<unit::length> scale_factor = rPoint.GetReferenceLengthScale();
     vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints> :: New();
-    c_vector<double, DIM> loc0 = locations[0].rGetLocation(scale_factor);
-    c_vector<double, DIM> loc1 = locations[1].rGetLocation(scale_factor);
-    c_vector<double, DIM> loc2 = locations[2].rGetLocation(scale_factor);
-    c_vector<double, DIM> loc3 = locations[3].rGetLocation(scale_factor);
+    c_vector<double, DIM> loc0 = locations[0].GetLocation(scale_factor);
+    c_vector<double, DIM> loc1 = locations[1].GetLocation(scale_factor);
+    c_vector<double, DIM> loc2 = locations[2].GetLocation(scale_factor);
+    c_vector<double, DIM> loc3 = locations[3].GetLocation(scale_factor);
     if(DIM==3)
     {
         points->InsertNextPoint(&loc0[0]);
-        points->InsertNextPoint(&loc1[1]);
-        points->InsertNextPoint(&loc2[2]);
-        points->InsertNextPoint(&loc3[3]);
+        points->InsertNextPoint(&loc1[0]);
+        points->InsertNextPoint(&loc2[0]);
+        points->InsertNextPoint(&loc3[0]);
     }
     else
     {
-        points->InsertNextPoint(loc0[0][0], loc0[0][1], 0.0);
-        points->InsertNextPoint(loc1[1][0], loc1[1][1], 0.0);
-        points->InsertNextPoint(loc2[2][0], loc2[2][1], 0.0);
-        points->InsertNextPoint(loc3[3][0], loc3[3][1], 0.0);
+        points->InsertNextPoint(loc0[0], loc0[1], 0.0);
+        points->InsertNextPoint(loc1[0], loc1[1], 0.0);
+        points->InsertNextPoint(loc2[0], loc2[1], 0.0);
+        points->InsertNextPoint(loc3[0], loc3[1], 0.0);
     }
 
     vtkSmartPointer<vtkUnstructuredGrid> p_grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
@@ -274,7 +272,8 @@ bool IsPointInTetra(const DimensionalChastePoint<DIM>& rPoint, const std::vector
     vtkSmartPointer<vtkCellLocator> p_locator = vtkSmartPointer<vtkCellLocator>::New();
     p_locator->SetDataSet(p_grid);
     p_locator->Update();
-    int in_tetra = p_locator->FindCell(&rPoint.rGetLocation(scale_factor)[0]);
+    c_vector<double, DIM> probe_location = rPoint.GetLocation(scale_factor);
+    int in_tetra = p_locator->FindCell(&probe_location[0]);
     if(in_tetra == -1)
     {
         return false;
@@ -325,8 +324,8 @@ units::quantity<unit::length> LengthOfLineInBox(const DimensionalChastePoint<DIM
         c_vector<double,DIM> intercept_1;
         c_vector<double,DIM> intercept_2;
 
-        c_vector<double,3> dimensionless_start = rStartPoint.rGetLocation(scale_factor);
-        c_vector<double,3> dimensionless_end = rEndPoint.rGetLocation(scale_factor);
+        c_vector<double,3> dimensionless_start = rStartPoint.GetLocation(scale_factor);
+        c_vector<double,3> dimensionless_end = rEndPoint.GetLocation(scale_factor);
         int in_box = vtkBox::IntersectWithLine(&dimensionless_bounds[0], &dimensionless_start[0], &dimensionless_end[0],
                                                t1, t2, &intercept_1[0], &intercept_2[0], plane1, plane2);
 
@@ -368,10 +367,10 @@ units::quantity<unit::length> LengthOfLineInTetra(const DimensionalChastePoint<D
         int line_crosses;
 
         units::quantity<unit::length> scale_factor = rStartPoint.GetReferenceLengthScale();
-        c_vector<double, DIM> loc0 = locations[0].rGetLocation(scale_factor);
-        c_vector<double, DIM> loc1 = locations[1].rGetLocation(scale_factor);
-        c_vector<double, DIM> loc2 = locations[2].rGetLocation(scale_factor);
-        c_vector<double, DIM> loc3 = locations[3].rGetLocation(scale_factor);
+        c_vector<double, DIM> loc0 = locations[0].GetLocation(scale_factor);
+        c_vector<double, DIM> loc1 = locations[1].GetLocation(scale_factor);
+        c_vector<double, DIM> loc2 = locations[2].GetLocation(scale_factor);
+        c_vector<double, DIM> loc3 = locations[3].GetLocation(scale_factor);
 
         vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints> :: New();
         points->InsertNextPoint(&loc0[0]);
@@ -390,8 +389,8 @@ units::quantity<unit::length> LengthOfLineInTetra(const DimensionalChastePoint<D
         c_vector<double,DIM> parametric_intersection;
         int subId;
 
-        c_vector<double,3> dimensionless_start = rStartPoint.rGetLocation(scale_factor);
-        c_vector<double,3> dimensionless_end = rEndPoint.rGetLocation(scale_factor);
+        c_vector<double,3> dimensionless_start = rStartPoint.GetLocation(scale_factor);
+        c_vector<double,3> dimensionless_end = rEndPoint.GetLocation(scale_factor);
 
         if(point1_in_tetra)
         {
@@ -468,7 +467,7 @@ c_vector<double, DIM> RotateAboutAxis(const c_vector<double, DIM>& rDirection,
     double sin_a = units::sin(angle);
     double cos_a = units::cos(angle);
     c_vector<double, DIM> unit_axis = rAxis/norm_2(rAxis);
-    double dot_product = inner_product(rDirection, unit_axis);
+    double dot_product = inner_prod(rDirection, unit_axis);
     c_vector<double, DIM> new_direction = zero_vector<double>(DIM);
 
     if(DIM==3)

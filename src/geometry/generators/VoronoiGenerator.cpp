@@ -130,8 +130,8 @@ boost::shared_ptr<Part<DIM> > VoronoiGenerator<DIM>::Generate(boost::shared_ptr<
       int plane2;
       c_vector<double,DIM> intercept_1;
       c_vector<double,DIM> intercept_2;
-      int in_box = vtkBox::IntersectWithLine(&extents[0], &p_vertex1->rGetLocation(length_scale)[0],
-                                             &p_vertex2->rGetLocation(length_scale)[0], t1, t2, &intercept_1[0], &intercept_2[0], plane1, plane2);
+      int in_box = vtkBox::IntersectWithLine(&extents[0], &p_vertex1->GetLocation(length_scale)[0],
+                                             &p_vertex2->GetLocation(length_scale)[0], t1, t2, &intercept_1[0], &intercept_2[0], plane1, plane2);
 
       // If the line is not outside the box
       if(in_box!=0)
@@ -140,9 +140,9 @@ boost::shared_ptr<Part<DIM> > VoronoiGenerator<DIM>::Generate(boost::shared_ptr<
           if(in_box==-1)
           {
               // Check that we haven't hit the zero location and remove very short edges
-              if((norm_2(p_vertex1->rGetLocation(length_scale)) > zero_location_tol) && (norm_2(p_vertex2->rGetLocation(length_scale)) > zero_location_tol))
+              if((norm_2(p_vertex1->GetLocation(length_scale)) > zero_location_tol) && (norm_2(p_vertex2->GetLocation(length_scale)) > zero_location_tol))
               {
-                  if(norm_2(p_vertex1->rGetLocation(length_scale) - p_vertex2->rGetLocation(length_scale)) > 2.0 * zero_location_tol)
+                  if(norm_2(p_vertex1->GetLocation(length_scale) - p_vertex2->GetLocation(length_scale)) > 2.0 * zero_location_tol)
                   {
                       boost::shared_ptr<Polygon<DIM> > p_polygon = Polygon<DIM>::Create(p_vertex1);
                                 p_polygon->AddVertex(p_vertex2);
@@ -155,29 +155,29 @@ boost::shared_ptr<Part<DIM> > VoronoiGenerator<DIM>::Generate(boost::shared_ptr<
               // Find where the points are
               bool vert1_inside = true;
               bool vert2_inside = true;
-              if(p_vertex1->rGetLocation(length_scale)[0] < extents[0] || p_vertex1->rGetLocation(length_scale)[0] > extents[1])
+              if(p_vertex1->GetLocation(length_scale)[0] < extents[0] || p_vertex1->GetLocation(length_scale)[0] > extents[1])
               {
                   vert1_inside = false;
               }
-              if(p_vertex1->rGetLocation(length_scale)[1] < extents[2] || p_vertex1->rGetLocation(length_scale)[1] > extents[3])
+              if(p_vertex1->GetLocation(length_scale)[1] < extents[2] || p_vertex1->GetLocation(length_scale)[1] > extents[3])
               {
                   vert1_inside = false;
               }
-              if(p_vertex2->rGetLocation(length_scale)[0] < extents[0] || p_vertex2->rGetLocation(length_scale)[0] > extents[1])
+              if(p_vertex2->GetLocation(length_scale)[0] < extents[0] || p_vertex2->GetLocation(length_scale)[0] > extents[1])
               {
                   vert2_inside = false;
               }
-              if(p_vertex2->rGetLocation(length_scale)[1] < extents[2] || p_vertex2->rGetLocation(length_scale)[1] > extents[3])
+              if(p_vertex2->GetLocation(length_scale)[1] < extents[2] || p_vertex2->GetLocation(length_scale)[1] > extents[3])
               {
                   vert2_inside = false;
               }
               if(DIM==3)
               {
-                  if(p_vertex1->rGetLocation(length_scale)[2] < extents[4] || p_vertex1->rGetLocation(length_scale)[2] > extents[5])
+                  if(p_vertex1->GetLocation(length_scale)[2] < extents[4] || p_vertex1->GetLocation(length_scale)[2] > extents[5])
                   {
                       vert1_inside = false;
                   }
-                  if(p_vertex2->rGetLocation(length_scale)[2] < extents[4] || p_vertex2->rGetLocation(length_scale)[2] > extents[5])
+                  if(p_vertex2->GetLocation(length_scale)[2] < extents[4] || p_vertex2->GetLocation(length_scale)[2] > extents[5])
                   {
                       vert2_inside = false;
                   }
@@ -186,20 +186,20 @@ boost::shared_ptr<Part<DIM> > VoronoiGenerator<DIM>::Generate(boost::shared_ptr<
               if(vert1_inside && !vert2_inside)
               {
                   // move vert 2 to intsersection point
-                  c_vector<double,DIM> gap = intercept_1-p_vertex2->rGetLocation(length_scale);
+                  c_vector<double,DIM> gap = intercept_1-p_vertex2->GetLocation(length_scale);
                   p_vertex2->Translate(gap);
               }
               else if(vert2_inside && !vert1_inside)
               {
                   // move vert 1 to intersection point
-                  c_vector<double,DIM> gap = intercept_1-p_vertex1->rGetLocation(length_scale);
+                  c_vector<double,DIM> gap = intercept_1-p_vertex1->GetLocation(length_scale);
                   p_vertex1->Translate(gap);
               }
               else
               {
                   // Otherwise both points are either on or outside
-                  c_vector<double,DIM> tv1 = intercept_1-p_vertex1->rGetLocation(length_scale);
-                  c_vector<double,DIM> tv2 = intercept_2-p_vertex2->rGetLocation(length_scale);
+                  c_vector<double,DIM> tv1 = intercept_1-p_vertex1->GetLocation(length_scale);
+                  c_vector<double,DIM> tv2 = intercept_2-p_vertex2->GetLocation(length_scale);
                   if(norm_2(tv1) > zero_location_tol)
                   {
                       p_vertex1->Translate(tv1);
@@ -211,9 +211,9 @@ boost::shared_ptr<Part<DIM> > VoronoiGenerator<DIM>::Generate(boost::shared_ptr<
               }
 
               // Check that we haven't hit the zero location and remove very short edges
-              if((norm_2(p_vertex1->rGetLocation(length_scale)) > zero_location_tol) && (norm_2(p_vertex2->rGetLocation(length_scale)) > zero_location_tol))
+              if((norm_2(p_vertex1->GetLocation(length_scale)) > zero_location_tol) && (norm_2(p_vertex2->GetLocation(length_scale)) > zero_location_tol))
               {
-                  if(norm_2(p_vertex1->rGetLocation(length_scale) - p_vertex2->rGetLocation(length_scale)) > 2.0 * zero_location_tol)
+                  if(norm_2(p_vertex1->GetLocation(length_scale) - p_vertex2->GetLocation(length_scale)) > 2.0 * zero_location_tol)
                   {
                       boost::shared_ptr<Polygon<DIM> > p_polygon = Polygon<DIM>::Create(p_vertex1);
                                 p_polygon->AddVertex(p_vertex2);

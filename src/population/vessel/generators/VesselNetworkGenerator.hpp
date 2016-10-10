@@ -100,8 +100,8 @@ public:
                                                                         VesselDistribution::Value distrbutionType,
                                                                         double exclusionDistance = 0.0,
                                                                         bool useBbox = false,
-                                                                        std::vector<boost::shared_ptr<Vertex> > seeds =
-                                                                                std::vector<boost::shared_ptr<Vertex> >());
+                                                                        std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > seeds =
+                                                                                std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > >());
 
     /*
      * Create a 3d vessel network
@@ -116,8 +116,8 @@ public:
                                                                         VesselDistribution::Value distrbutionType,
                                                                         double exclusionDistance = 0.0,
                                                                         bool useBbox = false,
-                                                                        std::vector<boost::shared_ptr<Vertex> > seeds =
-                                                                                std::vector<boost::shared_ptr<Vertex> >());
+                                                                        std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > seeds =
+                                                                                std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > >());
 
     /*
      * Creates a hexagonal network corresponding to that of Alarcon et al. (2006)

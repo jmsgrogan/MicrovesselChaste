@@ -38,6 +38,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselNode.hpp"
 #include "Vessel.hpp"
 #include "VesselSegment.hpp"
+#include "GeometryTools.hpp"
 
 template<unsigned DIM>
 VesselSegment<DIM>::VesselSegment(boost::shared_ptr<VesselNode<DIM> > pNode1, boost::shared_ptr<VesselNode<DIM> > pNode2) :
@@ -112,7 +113,7 @@ void VesselSegment<DIM>::CopyDataFromExistingSegment(const boost::shared_ptr<Ves
 template<unsigned DIM>
 units::quantity<unit::length> VesselSegment<DIM>::GetDistance(const DimensionalChastePoint<DIM>& location) const
 {
-    return DimensionalChastePoint<DIM>::GetDistance(mNodes.first->rGetLocation(), mNodes.second->rGetLocation(), location);
+    return GetDistanceToLineSegment(mNodes.first->rGetLocation(), mNodes.second->rGetLocation(), location);
 }
 
 template<unsigned DIM>
@@ -187,7 +188,7 @@ std::pair<boost::shared_ptr<VesselNode<DIM> >, boost::shared_ptr<VesselNode<DIM>
 template<unsigned DIM>
 DimensionalChastePoint<DIM> VesselSegment<DIM>::GetPointProjection(const  DimensionalChastePoint<DIM>& location, bool projectToEnds) const
 {
-    return DimensionalChastePoint<DIM>::GetPointProjection(mNodes.first->rGetLocation(), mNodes.second->rGetLocation(), location, projectToEnds);
+    return GetPointProjectionOnLineSegment(mNodes.first->rGetLocation(), mNodes.second->rGetLocation(), location, projectToEnds);
 }
 
 template<unsigned DIM>

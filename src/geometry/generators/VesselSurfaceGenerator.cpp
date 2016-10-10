@@ -215,8 +215,8 @@ std::vector<std::vector<boost::shared_ptr<Polygon<DIM> > > > VesselSurfaceGenera
         }
 
         // Project the precursor points onto the first plane they hit
-        Translate(start_points, segments[idx]->GetMidPoint().rGetLocation(segments[idx]->GetMidPoint().GetReferenceLengthScale()));
-        Translate(end_points, segments[idx]->GetMidPoint().rGetLocation(segments[idx]->GetMidPoint().GetReferenceLengthScale()));
+        Translate(start_points, segments[idx]->GetMidPoint().GetLocation(segments[idx]->GetMidPoint().GetReferenceLengthScale()));
+        Translate(end_points, segments[idx]->GetMidPoint().GetLocation(segments[idx]->GetMidPoint().GetReferenceLengthScale()));
 
         std::vector<c_vector<double, DIM> > projected_start_points = start_points;
         std::vector<c_vector<double, DIM> > projected_end_points = end_points;

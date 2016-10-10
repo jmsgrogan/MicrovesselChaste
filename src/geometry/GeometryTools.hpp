@@ -213,4 +213,5 @@ template<unsigned DIM>
 c_vector<double, DIM> RotateAboutAxis(const c_vector<double, DIM>& rDirection,
                                       const c_vector<double, DIM>& rAxis, units::quantity<unit::plane_angle> angle);
 
+#include "GeometryToolsImpl.hpp"
 #endif /*GEOMETRYTOOLS_HPP_*/

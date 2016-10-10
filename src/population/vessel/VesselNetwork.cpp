@@ -441,6 +441,7 @@ std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> 
 {
     boost::shared_ptr<VesselSegment<DIM> > nearest_segment;
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = GetVesselSegments();
+    units::quantity<unit::length> length_scale = segments[0]->GetNode(0)->GetReferenceLengthScale();
 
     double min_distance = DBL_MAX;
     typename std::vector<boost::shared_ptr<VesselSegment<DIM> > >::iterator segment_iter;
@@ -449,9 +450,12 @@ std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> 
         if(!pSegment->IsConnectedTo((*segment_iter)))
         {
             // Get the segment to segment distance (http://geomalgorithms.com/a07-_distance.html#dist3D_Segment_to_Segment())
-            c_vector<double, DIM> u = (*segment_iter)->GetNode(1)->rGetLocation().rGetLocation() - (*segment_iter)->GetNode(0)->rGetLocation().rGetLocation();
-            c_vector<double, DIM> v = pSegment->GetNode(1)->rGetLocation().rGetLocation() - pSegment->GetNode(0)->rGetLocation().rGetLocation();
-            c_vector<double, DIM> w = (*segment_iter)->GetNode(0)->rGetLocation().rGetLocation() - pSegment->GetNode(0)->rGetLocation().rGetLocation();
+            c_vector<double, DIM> u = (*segment_iter)->GetNode(1)->rGetLocation().GetLocation(length_scale) -
+                    (*segment_iter)->GetNode(0)->rGetLocation().GetLocation(length_scale);
+            c_vector<double, DIM> v = pSegment->GetNode(1)->rGetLocation().GetLocation(length_scale) -
+                    pSegment->GetNode(0)->rGetLocation().GetLocation(length_scale);
+            c_vector<double, DIM> w = (*segment_iter)->GetNode(0)->rGetLocation().GetLocation(length_scale) -
+                    pSegment->GetNode(0)->rGetLocation().GetLocation(length_scale);
 
             double a = inner_prod(u,u);
             double b = inner_prod(u,v);
@@ -537,7 +541,7 @@ std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> 
 
     }
     std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > return_pair =
-            std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> >(nearest_segment, min_distance * segments[0]->GetNode(0)->GetReferenceLengthScale());
+            std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> >(nearest_segment, min_distance * length_scale);
     return return_pair;
 }
 

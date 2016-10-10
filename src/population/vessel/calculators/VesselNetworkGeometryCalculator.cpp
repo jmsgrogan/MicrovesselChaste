@@ -35,6 +35,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "Exception.hpp"
 #include "VesselNetworkGeometryCalculator.hpp"
+#include "GeometryTools.hpp"
 
 template <unsigned DIM>
 VesselNetworkGeometryCalculator<DIM>::VesselNetworkGeometryCalculator() :
@@ -157,19 +158,19 @@ units::quantity<unit::length>  VesselNetworkGeometryCalculator<DIM>::GetAverageI
     units::quantity<unit::length>  av_dist = 0.0 * unit::metres;
     for(unsigned idx=0; idx<segments.size(); idx++)
     {
-        double min_dist = 1.e6;
+        units::quantity<unit::length> min_dist = 1.e6 * unit::metres;
         for(unsigned jdx=0; jdx<segments.size(); jdx++)
         {
             if(segments[idx] != segments[jdx] && segments[idx]->GetVessel() != segments[jdx]->GetVessel())
             {
-                double dist = norm_2(midpoints[idx].rGetLocation() - midpoints[jdx].rGetLocation() );
+                units::quantity<unit::length> dist = GetDistance(midpoints[idx], midpoints[jdx]);
                 if(dist < min_dist)
                 {
                     min_dist = dist;
                 }
             }
         }
-        av_dist += min_dist * unit::metres ;
+        av_dist += min_dist;
     }
     return av_dist / double(segments.size());
 }

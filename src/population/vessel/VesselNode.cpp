@@ -152,7 +152,7 @@ unsigned VesselNode<DIM>::GetComparisonId()
 template<unsigned DIM>
 units::quantity<unit::length> VesselNode<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation) const
 {
-    return mLocation.GetDistance(rLocation, true);
+    return mLocation.GetDistance(rLocation);
 }
 
 template<unsigned DIM>
@@ -227,7 +227,7 @@ bool VesselNode<DIM>::IsAttachedTo(const boost::shared_ptr<VesselSegment<DIM> > 
 template<unsigned DIM>
 bool VesselNode<DIM>::IsCoincident(const DimensionalChastePoint<DIM>& rLocation) const
 {
-    return this->mLocation.IsCoincident(rLocation, true);
+    return this->mLocation.IsCoincident(rLocation);
 }
 
 template<unsigned DIM>
