@@ -96,14 +96,14 @@ public:
         Part<3> part = Part<3>();
         part.AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
 
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[0]->rGetLocation()[0], 0.0, 1.e-6);
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[0]->rGetLocation()[1], 0.0, 1.e-6);
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[1]->rGetLocation()[0], 1.0, 1.e-6);
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[1]->rGetLocation()[1], 0.0, 1.e-6);
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[2]->rGetLocation()[0], 1.0, 1.e-6);
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[2]->rGetLocation()[1], 1.0, 1.e-6);
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[3]->rGetLocation()[0], 0.0, 1.e-6);
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[3]->rGetLocation()[1], 1.0, 1.e-6);
+        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[0])[0], 0.0, 1.e-6);
+        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[0])[1], 0.0, 1.e-6);
+        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[1])[0], 1.0, 1.e-6);
+        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[1])[1], 0.0, 1.e-6);
+        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[2])[0], 1.0, 1.e-6);
+        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[2])[1], 1.0, 1.e-6);
+        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[3])[0], 0.0, 1.e-6);
+        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[3])[1], 1.0, 1.e-6);
 
         TS_ASSERT_DELTA(part.GetReferenceLengthScale().value(), 1.e-6, 1.e-8);
         TS_ASSERT_THROWS_THIS(part.GetFacet(DimensionalChastePoint<3>(4.0, 0.0, 0.0)), "No facet found at input location");
@@ -140,13 +140,13 @@ public:
     void TestExtrudePart()
     {
         boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        boost::shared_ptr<Polygon> p_circle = p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
+        boost::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
         p_part->Extrude(p_circle, 1.e-6*unit::metres);
         OutputFileHandler output_file_handler("TestPart", false);
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath().append("ExtrudePart.vtp"));
 
         boost::shared_ptr<Part<2> > p_part2 = Part<2>::Create();
-        boost::shared_ptr<Polygon> p_circle = p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
+        boost::shared_ptr<Polygon<2> > p_circle2 = p_part2->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<2>(0.5, 0.5));
         TS_ASSERT_THROWS_THIS(p_part->Extrude(p_circle, 1.e-6*unit::metres), "Only parts in 3D space can be extruded.");
     }
 
@@ -203,7 +203,7 @@ public:
         p_network->GetVessels()[0]->GetEndNode()->SetRadius(5.0e-6 * unit::metres);
 
         Part<3> part = Part<3>();
-        boost::shared_ptr<Polygon> p_circle = part.AddCircle(vessel_length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        boost::shared_ptr<Polygon<3> > p_circle = part.AddCircle(vessel_length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         part.Extrude(p_circle, vessel_length);
         part.AddVesselNetwork(p_network, true);
 
@@ -272,7 +272,7 @@ public:
         translation_vector[2] = 10.0;
         part.Translate(translation_vector);
 
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[0]->rGetLocation()[0], 10.0, 1.e-6);
+        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[0])[0], 10.0, 1.e-6);
     }
 };
 

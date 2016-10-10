@@ -93,9 +93,9 @@ public:
             boost::shared_ptr<DimensionalChastePoint<3> > p_point =
                     boost::shared_ptr<DimensionalChastePoint<3> >(new DimensionalChastePoint<3>(1.0, 2.0, 3.0, reference_length));
 
-            TS_ASSERT_DELTA(p_point->rGetLocation()[0], 1.0/10.0, 1.e-6);
-            TS_ASSERT_DELTA(p_point->rGetLocation()[1], 2.0/10.0, 1.e-6);
-            TS_ASSERT_DELTA(p_point->rGetLocation()[2], 3.0/10.0, 1.e-6);
+            TS_ASSERT_DELTA((*p_point)[0], 1.0/10.0, 1.e-6);
+            TS_ASSERT_DELTA((*p_point)[1], 2.0/10.0, 1.e-6);
+            TS_ASSERT_DELTA((*p_point)[2], 3.0/10.0, 1.e-6);
 
             std::ofstream ofs(archive_filename.c_str());
             ofs << std::scientific;
@@ -114,9 +114,9 @@ public:
             // restore from the archive
             input_arch >> p_point_from_archive;
             TS_ASSERT_DELTA(p_point_from_archive->GetReferenceLengthScale().value(), 10.e-6, 1.e-8);
-            TS_ASSERT_DELTA(p_point_from_archive->rGetLocation()[0], 1.0/10.0, 1.e-6);
-            TS_ASSERT_DELTA(p_point_from_archive->rGetLocation()[1], 2.0/10.0, 1.e-6);
-            TS_ASSERT_DELTA(p_point_from_archive->rGetLocation()[2], 3.0/10.0, 1.e-6);
+            TS_ASSERT_DELTA((*p_point_from_archive)[0], 1.0/10.0, 1.e-6);
+            TS_ASSERT_DELTA((*p_point_from_archive)[1], 2.0/10.0, 1.e-6);
+            TS_ASSERT_DELTA((*p_point_from_archive)[2], 3.0/10.0, 1.e-6);
         }
     }
 };

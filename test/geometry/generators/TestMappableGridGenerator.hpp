@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -46,7 +46,7 @@
 #include "Part.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
-#include "Vertex.hpp"
+#include "DimensionalChastePoint.hpp"
 #include "VtkMeshWriter.hpp"
 
 class TestMappableGridGenerator : public CxxTest::TestSuite
@@ -84,11 +84,11 @@ public:
         TS_ASSERT_THROWS_ANYTHING(generator.GenerateCylinder(1.5, 0.1 , 5.0, 10, 10, 2.1*M_PI));
 
         // Make sure the vertices are in the expected locations
-        std::vector<boost::shared_ptr<Vertex> > vertices = p_part->GetVertices();
+        std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices = p_part->GetVertices();
         for(unsigned idx=0; idx<vertices.size(); idx++)
         {
-            double loc_x = vertices[idx]->rGetLocation()[0];
-            double loc_z = vertices[idx]->rGetLocation()[2];
+            double loc_x = (*vertices[idx])[0];
+            double loc_z = (*vertices[idx])[2];
             double distance = std::sqrt(loc_x*loc_x + loc_z*loc_z);
             bool is_inside = (distance < 1.5  + 1.e-6) && (distance > 1.4  - 1.e-6);
             TS_ASSERT(is_inside);
@@ -112,10 +112,11 @@ public:
         TS_ASSERT_THROWS_ANYTHING(generator.GenerateHemisphere(1.5, 0.1 , 10, 10, M_PI, 1.0*M_PI));
 
         // Make sure the vertices are in the expected locations
-        std::vector<boost::shared_ptr<Vertex> > vertices = p_part->GetVertices();
+        std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices = p_part->GetVertices();
         for(unsigned idx=0; idx<vertices.size(); idx++)
         {
-            bool is_inside = (norm_2(vertices[idx]->rGetLocation()) < 1.5  + 1.e-6) && (norm_2(vertices[idx]->rGetLocation()) > 1.4  - 1.e-6);
+            bool is_inside = (vertices[idx]->GetNorm2()/(1.0*unit::metres) < 1.5  + 1.e-6) &&
+                    (vertices[idx]->GetNorm2()/(1.0*unit::metres) > 1.4  - 1.e-6);
             TS_ASSERT(is_inside);
         }
 
