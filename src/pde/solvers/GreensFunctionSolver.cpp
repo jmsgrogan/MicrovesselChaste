@@ -253,11 +253,10 @@ void GreensFunctionSolver<DIM>::GenerateSubSegments()
                 units::quantity<unit::length> subsegment_length = segment_length / double(num_subsegments);
                 units::quantity<unit::length> node_length_scale = (*segment_iter)->GetNode(0)->GetReferenceLengthScale();
 
-                c_vector<double, DIM> increment = (end_point.rGetLocation() - start_point.rGetLocation()) / (segment_length/node_length_scale);
-
+                c_vector<double, DIM> increment = (end_point.rGetLocation(node_length_scale) - start_point.rGetLocation(node_length_scale)) / (segment_length/node_length_scale);
                 for (unsigned i = 0; i < num_subsegments; i++)
                 {
-                    c_vector<double, DIM> location = start_point.rGetLocation() + (double(i) + 0.5) * increment * (subsegment_length/node_length_scale);
+                    c_vector<double, DIM> location = start_point.rGetLocation(node_length_scale) + (double(i) + 0.5) * increment * (subsegment_length/node_length_scale);
                     mSubSegmentCoordinates.push_back(DimensionalChastePoint<DIM>(location));
                     mSubSegmentLengths.push_back(subsegment_length);
                     mSegmentPointMap[mSubSegmentCoordinates.size() - 1] = (*segment_iter);

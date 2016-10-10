@@ -109,7 +109,7 @@ units::quantity<unit::length> GetDistanceToLineSegment(const DimensionalChastePo
                                                  const DimensionalChastePoint<DIM>& rProbeLocation)
 {
     DimensionalChastePoint<DIM> segment_vector = rEndLocation - rStartLocation;
-    units::quantity<unit::length> dp_segment_point = GetDotProduct(segment_vector, rProbeLocation - rStartLocation);
+    units::quantity<unit::area> dp_segment_point = GetDotProduct(segment_vector, rProbeLocation - rStartLocation);
     // Point projection is outside segment, return node0 distance
     if (dp_segment_point <= 0.0*unit::metres*unit::metres)
     {
@@ -442,8 +442,8 @@ DimensionalChastePoint<DIM> RotateAboutAxis(const DimensionalChastePoint<DIM>& r
     units::quantity<unit::length> dot_product = GetDotProduct(rDirection, unit_axis);
     units::quantity<unit::length> length_scale = rDirection.GetReferenceLengthScale();
     double dimensionless_dot_product = dot_product/length_scale;
-    DimensionalChastePoint<DIM> new_direction(zero_vector<double>(DIM), length_scale);
-
+    c_vector<double, DIM> initial_direction = zero_vector<double>(DIM);
+    DimensionalChastePoint<DIM> new_direction(initial_direction, length_scale);
     if(DIM==3)
     {
         new_direction[0] = (unit_axis[0] * dimensionless_dot_product * (1.0 - cos_a) + rDirection[0] * cos_a

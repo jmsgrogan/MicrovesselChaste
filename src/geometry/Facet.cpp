@@ -42,7 +42,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include "Facet.hpp"
 
-Facet::Facet(std::vector<boost::shared_ptr<Polygon> > polygons) :
+template<unsigned DIM>
+Facet<DIM>::Facet(std::vector<boost::shared_ptr<Polygon<DIM> > > polygons) :
         mPolygons(polygons),
         mVertices(),
         mVerticesUpToDate(false),
@@ -52,7 +53,8 @@ Facet::Facet(std::vector<boost::shared_ptr<Polygon> > polygons) :
 
 }
 
-Facet::Facet(boost::shared_ptr<Polygon> pPolygon) :
+template<unsigned DIM>
+Facet<DIM>::Facet(boost::shared_ptr<Polygon<DIM> > pPolygon) :
         mPolygons(),
         mVertices(),
         mVerticesUpToDate(false),
@@ -61,34 +63,41 @@ Facet::Facet(boost::shared_ptr<Polygon> pPolygon) :
     mPolygons.push_back(pPolygon);
 }
 
-boost::shared_ptr<Facet> Facet::Create(std::vector<boost::shared_ptr<Polygon> > polygons)
+template<unsigned DIM>
+boost::shared_ptr<Facet<DIM> > Facet<DIM>::Create(std::vector<boost::shared_ptr<Polygon<DIM> > > polygons)
 {
-    MAKE_PTR_ARGS(Facet, pSelf, (polygons));
+    MAKE_PTR_ARGS(Facet<DIM>, pSelf, (polygons));
     return pSelf;
 }
 
-boost::shared_ptr<Facet> Facet::Create(boost::shared_ptr<Polygon> pPolygon)
+template<unsigned DIM>
+boost::shared_ptr<Facet<DIM> > Facet<DIM>::Create(boost::shared_ptr<Polygon<DIM> > pPolygon)
 {
-    MAKE_PTR_ARGS(Facet, pSelf, (pPolygon));
+    MAKE_PTR_ARGS(Facet<DIM>, pSelf, (pPolygon));
     return pSelf;
 }
 
-Facet::~Facet()
+template<unsigned DIM>
+Facet<DIM>::~Facet()
 {
 }
 
-void Facet::AddPolygons(std::vector<boost::shared_ptr<Polygon> > polygons)
+template<unsigned DIM>
+void Facet<DIM>::AddPolygons(std::vector<boost::shared_ptr<Polygon<DIM> > > polygons)
 {
     mPolygons.insert(mPolygons.end(), polygons.begin(), polygons.end());
     mVerticesUpToDate = false;
 }
 
-void Facet::AddPolygon(boost::shared_ptr<Polygon> pPolygon)
+template<unsigned DIM>
+void Facet<DIM>::AddPolygon(boost::shared_ptr<Polygon<DIM> > pPolygon)
 {
     mPolygons.push_back(pPolygon);
     mVerticesUpToDate = false;
 }
-bool Facet::ContainsPoint(const DimensionalChastePoint<3>& location)
+
+template<unsigned DIM>
+bool Facet<DIM>::ContainsPoint(const DimensionalChastePoint<DIM>& location)
 {
     bool contains_point = false;
     for (unsigned idx = 0; idx < mPolygons.size(); idx++)
@@ -102,29 +111,30 @@ bool Facet::ContainsPoint(const DimensionalChastePoint<3>& location)
     return contains_point;
 }
 
-c_vector<double, 6> Facet::GetBoundingBox()
+template<unsigned DIM>
+c_vector<double, 6> Facet<DIM>::GetBoundingBox()
 {
-    std::vector<boost::shared_ptr<Vertex> > vertices = GetVertices();
+    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     c_vector<double, 6> box;
 
     for (unsigned idx = 0; idx < vertices.size(); idx++)
     {
-        for (unsigned jdx = 0; jdx < 3; jdx++)
+        for (unsigned jdx = 0; jdx < DIM; jdx++)
         {
             if (idx == 0)
             {
-                box[2 * jdx] = vertices[idx]->rGetLocation()[jdx];
-                box[2 * jdx + 1] = vertices[idx]->rGetLocation()[jdx];
+                box[2 * jdx] = (*vertices[idx])[jdx];
+                box[2 * jdx + 1] = (*vertices[idx])[jdx];
             }
             else
             {
-                if (vertices[idx]->rGetLocation()[jdx] < box[2 * jdx])
+                if ((*vertices[idx])[jdx] < box[2 * jdx])
                 {
-                    box[2 * jdx] = vertices[idx]->rGetLocation()[jdx];
+                    box[2 * jdx] = (*vertices[idx])[jdx];
                 }
-                if (vertices[idx]->rGetLocation()[jdx] > box[2 * jdx + 1])
+                if ((*vertices[idx])[jdx] > box[2 * jdx + 1])
                 {
-                    box[2 * jdx + 1] = vertices[idx]->rGetLocation()[jdx];
+                    box[2 * jdx + 1] = (*vertices[idx])[jdx];
                 }
             }
         }
@@ -132,30 +142,45 @@ c_vector<double, 6> Facet::GetBoundingBox()
     return box;
 }
 
-DimensionalChastePoint<3> Facet::GetCentroid()
+template<unsigned DIM>
+DimensionalChastePoint<DIM> Facet<DIM>::GetCentroid()
 {
     double centroid[3];
     std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > vertex_data = GetVtkVertices();
     vtkPolygon::ComputeCentroid(vertex_data.second, vertex_data.first, centroid);
-    c_vector<double, 3> return_centroid;
-    for (unsigned idx = 0; idx < 3; idx++)
+    c_vector<double, DIM> return_centroid;
+    for (unsigned idx = 0; idx < DIM; idx++)
     {
         return_centroid[idx] = centroid[idx];
     }
-    return DimensionalChastePoint<3>(return_centroid);
+    if(DIM==3)
+    {
+        return DimensionalChastePoint<DIM>(return_centroid);
+    }
+    else
+    {
+
+        return DimensionalChastePoint<DIM>(return_centroid[0], return_centroid[1]);
+    }
 }
 
-std::string Facet::GetLabel()
+template<unsigned DIM>
+std::string Facet<DIM>::GetLabel()
 {
     return mLabel;
 }
 
-double Facet::GetDistance(const DimensionalChastePoint<3>& location)
+template<unsigned DIM>
+double Facet<DIM>::GetDistance(const DimensionalChastePoint<DIM>& location)
 {
     double location_array[3];
-    for(unsigned idx=0; idx<3;idx++)
+    for(unsigned idx=0; idx<DIM;idx++)
     {
         location_array[idx] = location[idx];
+    }
+    if(DIM==2)
+    {
+        location_array[2] = 0.0;
     }
 
     vtkSmartPointer<vtkPlane> p_plane = GetPlane();
@@ -163,9 +188,10 @@ double Facet::GetDistance(const DimensionalChastePoint<3>& location)
     return distance;
 }
 
-c_vector<double, 3> Facet::GetNormal()
+template<unsigned DIM>
+c_vector<double, DIM> Facet<DIM>::GetNormal()
 {
-    std::vector<boost::shared_ptr<Vertex> > vertices = GetVertices();
+    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     if (vertices.size() < 3)
     {
         EXCEPTION("At least 3 vertices are required to generate a normal.");
@@ -180,26 +206,46 @@ c_vector<double, 3> Facet::GetNormal()
     vertex_data.first->GetPoint(2, loc3);
     c_vector<double, 3> normal;
     vtkTriangle::ComputeNormal(loc1, loc2, loc3, &normal[0]);
-    return normal;
+    if(DIM==3)
+    {
+        return normal;
+    }
+    else
+    {
+        c_vector<double, 2> normal_2d;
+        normal_2d[0] = normal[0];
+        normal_2d[1] = normal[1];
+        return normal_2d;
+    }
 }
 
-vtkSmartPointer<vtkPlane> Facet::GetPlane()
+template<unsigned DIM>
+vtkSmartPointer<vtkPlane> Facet<DIM>::GetPlane()
 {
     vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
-    DimensionalChastePoint<3> centroid = GetCentroid();
-    p_plane->SetOrigin(centroid[0], centroid[1], centroid[2]);
-
-    c_vector<double, 3> normal = GetNormal();
-    p_plane->SetNormal(normal[0], normal[1], normal[2]);
+    DimensionalChastePoint<DIM> centroid = GetCentroid();
+    c_vector<double, DIM> normal = GetNormal();
+    if(DIM==3)
+    {
+        p_plane->SetOrigin(centroid[0], centroid[1], centroid[2]);
+        p_plane->SetNormal(normal[0], normal[1], normal[2]);
+    }
+    else
+    {
+        p_plane->SetOrigin(centroid[0], centroid[1], 0.0);
+        p_plane->SetNormal(normal[0], normal[1], 0.0);
+    }
     return p_plane;
 }
 
-std::vector<boost::shared_ptr<Polygon> > Facet::GetPolygons()
+template<unsigned DIM>
+std::vector<boost::shared_ptr<Polygon<DIM> > > Facet<DIM>::GetPolygons()
 {
     return mPolygons;
 }
 
-std::vector<boost::shared_ptr<Vertex> > Facet::GetVertices()
+template<unsigned DIM>
+std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > Facet<DIM>::GetVertices()
 {
     if (!mVerticesUpToDate)
     {
@@ -208,55 +254,66 @@ std::vector<boost::shared_ptr<Vertex> > Facet::GetVertices()
     return mVertices;
 }
 
-std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > Facet::GetVtkVertices()
+template<unsigned DIM>
+std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > Facet<DIM>::GetVtkVertices()
 {
     vtkSmartPointer<vtkIdTypeArray> p_vertexIds = vtkSmartPointer<vtkIdTypeArray>::New();
     vtkSmartPointer<vtkPoints> p_vertices = vtkSmartPointer<vtkPoints>::New();
-    std::vector<boost::shared_ptr<Vertex> > vertices = GetVertices();
+    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
 
     p_vertices->SetNumberOfPoints(vertices.size());
     for (vtkIdType idx = 0; idx < vtkIdType(vertices.size()); idx++)
     {
-        c_vector<double, 3> location = vertices[idx]->rGetLocation();
-        p_vertices->SetPoint(idx, location[0], location[1], location[2]);
+        if(DIM==3)
+        {
+            p_vertices->SetPoint(idx, (*vertices[idx])[0], (*vertices[idx])[1], (*vertices[idx])[2]);
+        }
+        else
+        {
+            p_vertices->SetPoint(idx, (*vertices[idx])[0], (*vertices[idx])[1], 0.0);
+        }
         p_vertexIds->InsertNextValue(idx);
     }
     return std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> >(p_vertices, p_vertexIds);
 }
 
-void Facet::RotateAboutAxis(c_vector<double, 3> axis, double angle)
+template<unsigned DIM>
+void Facet<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 {
-    std::vector<boost::shared_ptr<Vertex> > vertices = GetVertices();
+    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     for(unsigned idx=0; idx<vertices.size(); idx++)
     {
         vertices[idx]->RotateAboutAxis(axis, angle);
     }
 }
 
-void Facet::SetLabel(const std::string& label)
+template<unsigned DIM>
+void Facet<DIM>::SetLabel(const std::string& label)
 {
     mLabel= label;
 }
 
-void Facet::Translate(c_vector<double, 3> translationVector)
+template<unsigned DIM>
+void Facet<DIM>::Translate(c_vector<double, DIM> translationVector)
 {
-    std::vector<boost::shared_ptr<Vertex> > vertices = GetVertices();
+    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     for(unsigned idx=0; idx<vertices.size(); idx++)
     {
         vertices[idx]->Translate(translationVector);
     }
 }
 
-void Facet::UpdateVertices()
+template<unsigned DIM>
+void Facet<DIM>::UpdateVertices()
 {
-    std::set<boost::shared_ptr<Vertex> > unique_vertices;
+    std::set<boost::shared_ptr<DimensionalChastePoint<DIM> > > unique_vertices;
     for (unsigned idx = 0; idx < mPolygons.size(); idx++)
     {
-        std::vector<boost::shared_ptr<Vertex> > polygon_vertices = mPolygons[idx]->GetVertices();
+        std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > polygon_vertices = mPolygons[idx]->GetVertices();
         std::copy(polygon_vertices.begin(), polygon_vertices.end(),
                   std::inserter(unique_vertices, unique_vertices.end()));
     }
-    mVertices = std::vector<boost::shared_ptr<Vertex> >();
+    mVertices = std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > >();
     mVertices.insert(mVertices.end(), unique_vertices.begin(), unique_vertices.end());
 
     for (unsigned idx = 0; idx < mVertices.size(); idx++)
@@ -265,3 +322,7 @@ void Facet::UpdateVertices()
     }
     mVerticesUpToDate = true;
 }
+
+// Explicit instantiation
+template class Facet<2>;
+template class Facet<3>;

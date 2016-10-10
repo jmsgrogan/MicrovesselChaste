@@ -33,11 +33,10 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
-#include <vtkBox.h>
 #include "VesselSegment.hpp"
-#include "ChastePoint.hpp"
 #include "DensityMap.hpp"
+#include "GeometryTools.hpp"
+#include "UnitCollection.hpp"
 
 template<unsigned DIM>
 DensityMap<DIM>::DensityMap()
@@ -60,88 +59,6 @@ DensityMap<DIM>::~DensityMap()
 }
 
 template<unsigned DIM>
-bool DensityMap<DIM>::IsPointInBox(c_vector<double, DIM> point, c_vector<double, DIM> location, double spacing)
-{
-    bool point_in_box = false;
-    if(point[0] >= location[0] -spacing/2.0 && point[0] <= location [0] + spacing/2.0)
-    {
-        if(point[1] >= location[1] -spacing/2.0 && point[1] <= location [1] + spacing/2.0)
-        {
-            if(DIM == 3)
-            {
-                if(point[2] >= location[2] -spacing/2.0 && point[2] <= location [2] + spacing/2.0)
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                return true;
-            }
-        }
-    }
-    return point_in_box;
-}
-
-template<unsigned DIM>
-double DensityMap<DIM>::LengthOfLineInBox(c_vector<double, DIM> start_point, c_vector<double, DIM> end_point, c_vector<double, DIM> location, double spacing)
-{
-    if(DIM==2)
-    {
-        EXCEPTION("Line in box method is currently 3D only");
-    }
-
-    // If the line is fully in the box return its length
-    bool point1_in_box = IsPointInBox(start_point, location, spacing);
-    bool point2_in_box = IsPointInBox(end_point, location, spacing);
-    if(point1_in_box && point2_in_box)
-    {
-        return norm_2(end_point - start_point);
-    }
-    else
-    {
-        c_vector<double,2*DIM> bounds;
-        bounds[0] = location[0] - spacing/2.0;
-        bounds[1] = location[0] + spacing/2.0;
-        bounds[2] = location[1] - spacing/2.0;
-        bounds[3] = location[1] + spacing/2.0;
-        if(DIM==3)
-        {
-            bounds[4] = location[2] - spacing/2.0;
-            bounds[5] = location[2] + spacing/2.0;
-        }
-
-        double t1;
-        double t2;
-        int plane1;
-        int plane2;
-        c_vector<double,DIM> intercept_1;
-        c_vector<double,DIM> intercept_2;
-
-        int in_box = vtkBox::IntersectWithLine(&bounds[0], &start_point[0], &end_point[0], t1, t2, &intercept_1[0], &intercept_2[0], plane1, plane2);
-
-        if(point1_in_box)
-        {
-            return norm_2(intercept_2 - start_point);
-        }
-
-        if(point2_in_box)
-        {
-            return norm_2(intercept_1 - end_point);
-        }
-
-        if(in_box)
-        {
-            return norm_2(intercept_2 - intercept_1);
-        }
-        else
-        {
-            return 0.0;
-        }
-    }
-}
-
-template<unsigned DIM>
 void DensityMap<DIM>::Solve()
 {
     if(!this->mpVtkSolution)
@@ -153,7 +70,8 @@ void DensityMap<DIM>::Solve()
     unsigned extents_x = this->mpRegularGrid->GetExtents()[0];
     unsigned extents_y = this->mpRegularGrid->GetExtents()[1];
     unsigned extents_z = this->mpRegularGrid->GetExtents()[2];
-    double spacing = this->mpRegularGrid->GetSpacing()/this->mpRegularGrid->GetReferenceLengthScale();
+    units::quantity<unit::length> spacing = this->mpRegularGrid->GetSpacing();
+    double dimensionless_spacing = spacing/this->mpRegularGrid->GetReferenceLengthScale();
 
     std::vector<double> vessel_solution(number_of_points, 0.0);
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments;
@@ -167,15 +85,13 @@ void DensityMap<DIM>::Solve()
                 for (unsigned k = 0; k < extents_x; k++) // X
                 {
                     unsigned grid_index = this->mpRegularGrid->Get1dGridIndex(k, j, i);
-                    c_vector<double, DIM> location = this->mpRegularGrid->GetLocation(k ,j, i).rGetLocation();
-
                     for (unsigned idx = 0; idx <  segments.size(); idx++)
                     {
-                        vessel_solution[grid_index] += LengthOfLineInBox(segments[idx]->GetNode(0)->rGetLocation().rGetLocation(),
-                                                                         segments[idx]->GetNode(1)->rGetLocation().rGetLocation(),
-                                                                         location, spacing);
+                        vessel_solution[grid_index] += LengthOfLineInBox(segments[idx]->GetNode(0)->rGetLocation(),
+                                                                         segments[idx]->GetNode(1)->rGetLocation(),
+                                                                         this->mpRegularGrid->GetLocation(k ,j, i), spacing)/this->mpRegularGrid->GetReferenceLengthScale();
                     }
-                    vessel_solution[grid_index] /= (std::pow(spacing,3));
+                    vessel_solution[grid_index] /= std::pow(dimensionless_spacing,3);
                 }
             }
         }
