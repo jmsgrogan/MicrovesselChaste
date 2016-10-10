@@ -294,7 +294,7 @@ void Facet<DIM>::SetLabel(const std::string& label)
 }
 
 template<unsigned DIM>
-void Facet<DIM>::Translate(c_vector<double, DIM> translationVector)
+void Facet<DIM>::Translate(DimensionalChastePoint<DIM> translationVector)
 {
     std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     for(unsigned idx=0; idx<vertices.size(); idx++)

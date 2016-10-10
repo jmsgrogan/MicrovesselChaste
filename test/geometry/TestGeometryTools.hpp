@@ -39,6 +39,8 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <cxxtest/TestSuite.h>
 #include "SmartPointers.hpp"
 #include "GeometryTools.hpp"
+#include "DimensionalChastePoint.hpp"
+#include "UnitCollection.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
@@ -49,172 +51,85 @@ public:
 
     void TestLineInBoxBothOutside()
     {
-        double spacing = 1.0;
-        c_vector<double,3> centre;
-        centre[0] = 0.5;
-        centre[1] = 0.5;
-        centre[2] = 0.5;
-
-        c_vector<double,3> point1;
-        point1[0] = -1.5;
-        point1[1] = 0.5;
-        point1[2] = 0.5;
-
-        c_vector<double,3> point2;
-        point2[0] = 1.5;
-        point2[1] = 0.5;
-        point2[2] = 0.5;
-
-        double length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
-        TS_ASSERT_DELTA(length, 1.0, 1.e-6);
+        units::quantity<unit::length> spacing = 1.0 * unit::metres;
+        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5);
+        DimensionalChastePoint<3> point1(-1.5, 0.5, 0.5);
+        DimensionalChastePoint<3> point2(1.5, 0.5, 0.5);
+        units::quantity<unit::length> length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
+        TS_ASSERT_DELTA(length.value(), 1.0, 1.e-6);
     }
 
     void TestLineInBoxBothOutsideNotCrossing()
     {
-        double spacing = 1.0;
-        c_vector<double,3> centre;
-        centre[0] = 0.5;
-        centre[1] = 0.5;
-        centre[2] = 0.5;
-
-        c_vector<double,3> point1;
-        point1[0] = -1.5;
-        point1[1] = 1.5;
-        point1[2] = 0.5;
-
-        c_vector<double,3> point2;
-        point2[0] = 1.5;
-        point2[1] = 1.5;
-        point2[2] = 0.5;
-
-        double length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
-        TS_ASSERT_DELTA(length, 0.0, 1.e-6);
+        units::quantity<unit::length> spacing = 1.0 * unit::metres;
+        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5);
+        DimensionalChastePoint<3> point1(-1.5, 1.5, 0.5);
+        DimensionalChastePoint<3> point2(1.5, 1.5, 0.5);
+        units::quantity<unit::length> length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
+        TS_ASSERT_DELTA(length.value(), 0.0, 1.e-6);
     }
 
     void TestLineInBoxInside()
     {
-        double spacing = 1.0;
-        c_vector<double,3> centre;
-        centre[0] = 0.5;
-        centre[1] = 0.5;
-        centre[2] = 0.5;
-
-        c_vector<double,3> point1;
-        point1[0] = 0.25;
-        point1[1] = 0.5;
-        point1[2] = 0.5;
-
-        c_vector<double,3> point2;
-        point2[0] = 0.75;
-        point2[1] = 0.5;
-        point2[2] = 0.5;
-
-        double length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
-        TS_ASSERT_DELTA(length, 0.5, 1.e-6);
+        units::quantity<unit::length> spacing = 1.0 * unit::metres;
+        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5);
+        DimensionalChastePoint<3> point1(0.25, 0.5, 0.5);
+        DimensionalChastePoint<3> point2(0.75, 0.5, 0.5);
+        units::quantity<unit::length> length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
+        TS_ASSERT_DELTA(length.value(), 0.5, 1.e-6);
     }
 
     void TestLineInBoxStartInside()
     {
-        double spacing = 1.0;
-        c_vector<double,3> centre;
-        centre[0] = 0.5;
-        centre[1] = 0.5;
-        centre[2] = 0.5;
-
-        c_vector<double,3> point1;
-        point1[0] = 0.25;
-        point1[1] = 0.5;
-        point1[2] = 0.5;
-
-        c_vector<double,3> point2;
-        point2[0] = 1.5;
-        point2[1] = 0.5;
-        point2[2] = 0.5;
-
-        double length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
-        TS_ASSERT_DELTA(length, 0.75, 1.e-6);
+        units::quantity<unit::length> spacing = 1.0 * unit::metres;
+        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5);
+        DimensionalChastePoint<3> point1(0.25, 0.5, 0.5);
+        DimensionalChastePoint<3> point2(1.5, 0.5, 0.5);
+        units::quantity<unit::length> length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
+        TS_ASSERT_DELTA(length.value(), 0.75, 1.e-6);
     }
 
     void TestLineInBoxEndInside()
     {
-        double spacing = 1.0;
-        c_vector<double,3> centre;
-        centre[0] = 0.5;
-        centre[1] = 0.5;
-        centre[2] = 0.5;
-
-        c_vector<double,3> point1;
-        point1[0] = -1.5;
-        point1[1] = 0.5;
-        point1[2] = 0.5;
-
-        c_vector<double,3> point2;
-        point2[0] = 0.75;
-        point2[1] = 0.5;
-        point2[2] = 0.5;
-
-        double length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
-        TS_ASSERT_DELTA(length, 0.75, 1.e-6);
+        units::quantity<unit::length> spacing = 1.0 * unit::metres;
+        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5);
+        DimensionalChastePoint<3> point1(-1.5, 0.5, 0.5);
+        DimensionalChastePoint<3> point2(0.75, 0.5, 0.5);
+        units::quantity<unit::length> length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
+        TS_ASSERT_DELTA(length.value(), 0.75, 1.e-6);
     }
 
     void TestLineInTetra()
     {
-        std::vector<c_vector<double,3> > tetra_points;
-        c_vector<double,3> tetra1;
-        tetra1[0] = 0.0;
-        tetra1[1] = 0.0;
-        tetra1[2] = 0.0;
+        std::vector<DimensionalChastePoint<3> > tetra_points;
+        DimensionalChastePoint<3> tetra1(0.0, 0.0, 0.0);
         tetra_points.push_back(tetra1);
 
-        c_vector<double,3> tetra2;
-        tetra2[0] = 1.0;
-        tetra2[1] = 0.0;
-        tetra2[2] = 0.0;
+        DimensionalChastePoint<3> tetra2(1.0, 0.0,0.0);
         tetra_points.push_back(tetra2);
 
-        c_vector<double,3> tetra3;
-        tetra3[0] = 0.5;
-        tetra3[1] = 1.0;
-        tetra3[2] = 0.0;
+        DimensionalChastePoint<3> tetra3(0.5,1.0, 0.0);
         tetra_points.push_back(tetra3);
 
-        c_vector<double,3> tetra4;
-        tetra4[0] = 0.5;
-        tetra4[1] = 0.5;
-        tetra4[2] = 1.0;
+        DimensionalChastePoint<3> tetra4(0.5, 0.5, 1.0);
         tetra_points.push_back(tetra4);
 
-        c_vector<double,3> point1;
-        point1[0] = -0.5;
-        point1[1] = 0.5;
-        point1[2] = 0.5;
+        DimensionalChastePoint<3> point1(-0.5, 0.5, 0.5);
+        DimensionalChastePoint<3> point2(1.5, 0.5, 0.5);
+        DimensionalChastePoint<3> point3(0.5, 0.5, 0.5);
+        DimensionalChastePoint<3> point4(0.5, 0.5, 0.6);
 
-        c_vector<double,3> point2;
-        point2[0] = 1.5;
-        point2[1] = 0.5;
-        point2[2] = 0.5;
+        units::quantity<unit::length> length = LengthOfLineInTetra<3>(point1, point2, tetra_points);
+        TS_ASSERT_DELTA(length.value(), 0.25, 1.e-6);
 
-        c_vector<double,3> point3;
-        point1[0] = 0.5;
-        point1[1] = 0.5;
-        point1[2] = 0.5;
+        units::quantity<unit::length> length2 = LengthOfLineInTetra<3>(point3, point4, tetra_points);
+        TS_ASSERT_DELTA(length2.value(), 0.1, 1.e-6);
 
-        c_vector<double,3> point4;
-        point2[0] = 0.5;
-        point2[1] = 0.5;
-        point2[2] = 0.6;
+        units::quantity<unit::length> length3 = LengthOfLineInTetra<3>(point1, point3, tetra_points);
+        TS_ASSERT_DELTA(length3.value(), 0.125, 1.e-6);
 
-        double length = LengthOfLineInTetra<3>(point1, point2, tetra_points);
-        TS_ASSERT_DELTA(length, 0.25, 1.e-6);
-
-        double length2 = LengthOfLineInTetra<3>(point3, point4, tetra_points);
-        TS_ASSERT_DELTA(length2, 0.1, 1.e-6);
-
-        double length3 = LengthOfLineInTetra<3>(point1, point3, tetra_points);
-        TS_ASSERT_DELTA(length3, 0.125, 1.e-6);
-
-        double length4 = LengthOfLineInTetra<3>(point3, point1, tetra_points);
-        TS_ASSERT_DELTA(length4, 0.125, 1.e-6);
+        units::quantity<unit::length> length4 = LengthOfLineInTetra<3>(point3, point1, tetra_points);
+        TS_ASSERT_DELTA(length4.value(), 0.125, 1.e-6);
     }
 };
 

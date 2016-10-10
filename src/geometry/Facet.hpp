@@ -204,7 +204,7 @@ public:
      * Move the facet along the translation vector
      * @param translationVector the new location is the original + the translationVector
      */
-    void Translate(c_vector<double, DIM> translationVector);
+    void Translate(DimensionalChastePoint<DIM> translationVector);
 
     /**
      * Update the mVertices member

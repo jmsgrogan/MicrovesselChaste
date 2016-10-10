@@ -319,7 +319,7 @@ void Polygon<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 }
 
 template<unsigned DIM>
-void Polygon<DIM>::Translate(c_vector<double, DIM> translationVector)
+void Polygon<DIM>::Translate(DimensionalChastePoint<DIM> translationVector)
 {
     for(unsigned idx=0; idx<mVertices.size(); idx++)
     {
