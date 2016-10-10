@@ -101,7 +101,11 @@ void GeometryWriter::Write()
         if(PetscTools::AmMaster())
         {
             vtkSmartPointer<vtkTriangleFilter> p_tri_filter = vtkSmartPointer<vtkTriangleFilter>::New();
-            p_tri_filter->SetInputData(mpInputGeometry);
+            #if VTK_MAJOR_VERSION <= 5
+                p_tri_filter->SetInput(mpInputGeometry);
+            #else
+                p_tri_filter->SetInputData(mpInputGeometry);
+            #endif
 
             vtkSmartPointer<vtkCleanPolyData> p_clean_filter = vtkSmartPointer<vtkCleanPolyData>::New();
             p_clean_filter->SetInputConnection(p_tri_filter->GetOutputPort());

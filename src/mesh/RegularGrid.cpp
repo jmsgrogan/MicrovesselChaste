@@ -251,8 +251,13 @@ std::vector<double> RegularGrid<ELEMENT_DIM, SPACE_DIM>::InterpolateGridValues(
     p_polydata->SetPoints(p_points);
 
     vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
-    p_probe_filter->SetInputData(p_polydata);
-    p_probe_filter->SetSourceData(mpVtkGrid);
+    #if VTK_MAJOR_VERSION <= 5
+        p_probe_filter->SetInput(p_polydata);
+        p_probe_filter->SetSource(mpVtkGrid);
+    #else
+        p_probe_filter->SetInputData(p_polydata);
+        p_probe_filter->SetSourceData(mpVtkGrid);
+    #endif
     p_probe_filter->Update();
     vtkSmartPointer<vtkPointData> p_point_data = p_probe_filter->GetPolyDataOutput()->GetPointData();
 

@@ -217,7 +217,6 @@ vtkSmartPointer<vtkPoints> SimpleCellPopulation<DIM>::GetVtk()
             p_vertices->SetPoint(idx, location[0], location[1], 0.0);
         }
     }
-
     return p_vertices;
 }
 
@@ -234,7 +233,11 @@ void SimpleCellPopulation<DIM>::Write(const std::string& rFileName)
     p_part_data->SetPoints(GetVtk());
     vtkSmartPointer<vtkXMLPolyDataWriter> writer = vtkSmartPointer<vtkXMLPolyDataWriter>::New();
     writer->SetFileName(rFileName.c_str());
-    writer->SetInputData(p_part_data);
+    #if VTK_MAJOR_VERSION <= 5
+        writer->SetInput(p_part_data);
+    #else
+        writer->SetInputData(p_part_data);
+    #endif
     writer->Write();
 }
 
