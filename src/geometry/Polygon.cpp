@@ -40,46 +40,54 @@
 #include "Exception.hpp"
 #include "Polygon.hpp"
 
-Polygon::Polygon(std::vector<boost::shared_ptr<Vertex> > vertices) :
+template<unsigned DIM>
+Polygon<DIM>::Polygon(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices) :
         mVertices(vertices)
 {
 
 }
 
-Polygon::Polygon(boost::shared_ptr<Vertex> pVertex) :
+template<unsigned DIM>
+Polygon<DIM>::Polygon(boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex) :
         mVertices()
 {
     mVertices.push_back(pVertex);
 }
 
-boost::shared_ptr<Polygon> Polygon::Create(std::vector<boost::shared_ptr<Vertex> > vertices)
+template<unsigned DIM>
+boost::shared_ptr<Polygon<DIM> > Polygon<DIM>::Create(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices)
 {
-    MAKE_PTR_ARGS(Polygon, pSelf, (vertices));
+    MAKE_PTR_ARGS(Polygon<DIM> , pSelf, (vertices));
     return pSelf;
 }
 
-boost::shared_ptr<Polygon> Polygon::Create(boost::shared_ptr<Vertex> pVertex)
+template<unsigned DIM>
+boost::shared_ptr<Polygon<DIM> > Polygon<DIM>::Create(boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex)
 {
-    MAKE_PTR_ARGS(Polygon, pSelf, (pVertex));
+    MAKE_PTR_ARGS(Polygon<DIM> , pSelf, (pVertex));
     return pSelf;
 }
 
-Polygon::~Polygon()
+template<unsigned DIM>
+Polygon<DIM>::~Polygon()
 {
 }
 
-void Polygon::AddVertices(std::vector<boost::shared_ptr<Vertex> > vertices)
+template<unsigned DIM>
+void Polygon<DIM>::AddVertices(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices)
 {
     // Add the new vertices
     mVertices.insert(mVertices.end(), vertices.begin(), vertices.end());
 }
 
-void Polygon::AddVertex(boost::shared_ptr<Vertex> pVertex)
+template<unsigned DIM>
+void Polygon<DIM>::AddVertex(boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex)
 {
     mVertices.push_back(pVertex);
 }
 
-boost::shared_ptr<Vertex> Polygon::GetVertex(unsigned idx)
+template<unsigned DIM>
+boost::shared_ptr<DimensionalChastePoint<DIM> > Polygon<DIM>::GetVertex(unsigned idx)
 {
     if(idx >= mVertices.size())
     {
@@ -91,12 +99,14 @@ boost::shared_ptr<Vertex> Polygon::GetVertex(unsigned idx)
     }
 }
 
-std::vector<boost::shared_ptr<Vertex> > Polygon::GetVertices()
+template<unsigned DIM>
+std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > Polygon<DIM>::GetVertices()
 {
     return mVertices;
 }
 
-std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > Polygon::GetVtkVertices()
+template<unsigned DIM>
+std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > Polygon<DIM>::GetVtkVertices()
 {
     vtkSmartPointer<vtkIdTypeArray> p_vertexIds = vtkSmartPointer<vtkIdTypeArray>::New();
     vtkSmartPointer<vtkPoints> p_vertices = vtkSmartPointer<vtkPoints>::New();
@@ -104,14 +114,21 @@ std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > Polygon:
     p_vertexIds->SetNumberOfTuples(mVertices.size());
     for (vtkIdType idx = 0; idx < vtkIdType(mVertices.size()); idx++)
     {
-        c_vector<double, 3> location = mVertices[idx]->rGetLocation();
-        p_vertices->SetPoint(idx, location[0], location[1], location[2]);
+        if(DIM==3)
+        {
+            p_vertices->SetPoint(idx, (*mVertices[idx])[0], (*mVertices[idx])[1], (*mVertices[idx])[2]);
+        }
+        else
+        {
+            p_vertices->SetPoint(idx, (*mVertices[idx])[0], (*mVertices[idx])[1], 0.0);
+        }
         p_vertexIds->SetValue(idx, idx);
     }
     return std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> >(p_vertices, p_vertexIds);
 }
 
-vtkSmartPointer<vtkPolygon> Polygon::GetVtkPolygon()
+template<unsigned DIM>
+vtkSmartPointer<vtkPolygon> Polygon<DIM>::GetVtkPolygon()
 {
     vtkSmartPointer<vtkPoints> p_vertices = GetVtkVertices().first;
     vtkSmartPointer<vtkPolygon> p_polygon = vtkSmartPointer<vtkPolygon>::New();
@@ -123,15 +140,26 @@ vtkSmartPointer<vtkPolygon> Polygon::GetVtkPolygon()
     return p_polygon;
 }
 
-DimensionalChastePoint<3> Polygon::GetCentroid()
+template<unsigned DIM>
+DimensionalChastePoint<DIM> Polygon<DIM>::GetCentroid()
 {
     c_vector<double, 3> centroid;
     std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > vertex_data = GetVtkVertices();
     vtkPolygon::ComputeCentroid(vertex_data.second, vertex_data.first, &centroid[0]);
-    return DimensionalChastePoint<3>(centroid);
+
+    if(DIM==3)
+    {
+        return DimensionalChastePoint<DIM>(centroid);
+    }
+    else
+    {
+        return DimensionalChastePoint<DIM>(centroid[0], centroid[1]);
+    }
+
 }
 
-c_vector<double, 6> Polygon::GetBoundingBox()
+template<unsigned DIM>
+c_vector<double, 6> Polygon<DIM>::GetBoundingBox()
 {
     vtkSmartPointer<vtkPolygon> p_polygon = GetVtkPolygon();
     c_vector<double, 6> box;
@@ -139,12 +167,17 @@ c_vector<double, 6> Polygon::GetBoundingBox()
     return box;
 }
 
-units::quantity<unit::length> Polygon::GetDistance(const DimensionalChastePoint<3>& location)
+template<unsigned DIM>
+units::quantity<unit::length> Polygon<DIM>::GetDistance(const DimensionalChastePoint<DIM>& location)
 {
     double point[3];
-    for (unsigned idx = 0; idx < 3; idx++)
+    for (unsigned idx = 0; idx < DIM; idx++)
     {
         point[idx] = location[idx];
+    }
+    if(DIM==2)
+    {
+        point[2] = 0.0;
     }
 
     vtkSmartPointer<vtkPlane> p_plane = GetPlane();
@@ -152,12 +185,17 @@ units::quantity<unit::length> Polygon::GetDistance(const DimensionalChastePoint<
     return distance * location.GetReferenceLengthScale();
 }
 
-units::quantity<unit::length> Polygon::GetDistanceToEdges(const DimensionalChastePoint<3>& location)
+template<unsigned DIM>
+units::quantity<unit::length> Polygon<DIM>::GetDistanceToEdges(const DimensionalChastePoint<DIM>& location)
 {
     double point[3];
-    for (unsigned idx = 0; idx < 3; idx++)
+    for (unsigned idx = 0; idx < DIM; idx++)
     {
         point[idx] = location[idx];
+    }
+    if(DIM==2)
+    {
+        point[2] = 0.0;
     }
 
     vtkSmartPointer<vtkPolygon> p_polygon = GetVtkPolygon();
@@ -171,21 +209,29 @@ units::quantity<unit::length> Polygon::GetDistanceToEdges(const DimensionalChast
             static_cast<double*>(p_polygon->GetPoints()->GetData()->GetVoidPointer(0)), bounds, closest);
 
     return distance * location.GetReferenceLengthScale();
-
 }
 
-vtkSmartPointer<vtkPlane> Polygon::GetPlane()
+template<unsigned DIM>
+vtkSmartPointer<vtkPlane> Polygon<DIM>::GetPlane()
 {
     vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
-    DimensionalChastePoint<3> centroid = GetCentroid();
-    p_plane->SetOrigin(centroid[0], centroid[1], centroid[2]);
-
-    c_vector<double, 3> normal = GetNormal();
-    p_plane->SetNormal(normal[0], normal[1], normal[2]);
+    DimensionalChastePoint<DIM> centroid = GetCentroid();
+    c_vector<double, DIM> normal = GetNormal();
+    if(DIM==3)
+    {
+        p_plane->SetOrigin(centroid[0], centroid[1], centroid[2]);
+        p_plane->SetNormal(normal[0], normal[1], normal[2]);
+    }
+    else
+    {
+        p_plane->SetOrigin(centroid[0], centroid[1], 0.0);
+        p_plane->SetNormal(normal[0], normal[1], 0.0);
+    }
     return p_plane;
 }
 
-c_vector<double, 3> Polygon::GetNormal()
+template<unsigned DIM>
+c_vector<double, DIM> Polygon<DIM>::GetNormal()
 {
     if (mVertices.size() < 3)
     {
@@ -199,20 +245,35 @@ c_vector<double, 3> Polygon::GetNormal()
     vertex_data.first->GetPoint(0, loc1);
     vertex_data.first->GetPoint(1, loc2);
     vertex_data.first->GetPoint(2, loc3);
-    c_vector<double, 3> normal;
-    vtkTriangle::ComputeNormal(loc1, loc2, loc3, &normal[0]);
-    return normal;
+    c_vector<double, 3> in_normal;
+    vtkTriangle::ComputeNormal(loc1, loc2, loc3, &in_normal[0]);
+    if(DIM==3)
+    {
+        return in_normal;
+    }
+    else
+    {
+        c_vector<double, 2> normal;
+        normal[0] = in_normal[0];
+        normal[1] = in_normal[1];
+        return normal;
+    }
 }
 
-bool Polygon::ContainsPoint(const DimensionalChastePoint<3>& location)
+template<unsigned DIM>
+bool Polygon<DIM>::ContainsPoint(const DimensionalChastePoint<DIM>& location)
 {
     bool contains_point = false;
     if (mVertices.size() >= 3)
     {
         double point[3];
-        for (unsigned idx = 0; idx < 3; idx++)
+        for (unsigned idx = 0; idx < DIM; idx++)
         {
             point[idx] = location[idx];
+        }
+        if(DIM==2)
+        {
+            point[2] = 0.0;
         }
 
         vtkSmartPointer<vtkPolygon> p_polygon = GetVtkPolygon();
@@ -235,7 +296,8 @@ bool Polygon::ContainsPoint(const DimensionalChastePoint<3>& location)
     return contains_point;
 }
 
-void Polygon::ReplaceVertex(unsigned idx, boost::shared_ptr<Vertex > pVertex)
+template<unsigned DIM>
+void Polygon<DIM>::ReplaceVertex(unsigned idx, boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex)
 {
     if(idx >= mVertices.size())
     {
@@ -247,7 +309,8 @@ void Polygon::ReplaceVertex(unsigned idx, boost::shared_ptr<Vertex > pVertex)
     }
 }
 
-void Polygon::RotateAboutAxis(c_vector<double, 3> axis, double angle)
+template<unsigned DIM>
+void Polygon<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 {
     for(unsigned idx=0; idx<mVertices.size(); idx++)
     {
@@ -255,11 +318,16 @@ void Polygon::RotateAboutAxis(c_vector<double, 3> axis, double angle)
     }
 }
 
-
-void Polygon::Translate(c_vector<double, 3> translationVector)
+template<unsigned DIM>
+void Polygon<DIM>::Translate(c_vector<double, DIM> translationVector)
 {
     for(unsigned idx=0; idx<mVertices.size(); idx++)
     {
         mVertices[idx]->Translate(translationVector);
     }
 }
+
+// Explicit instantiation
+template class Polygon<2>;
+template class Polygon<3>;
+

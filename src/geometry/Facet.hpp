@@ -45,23 +45,24 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "SmartPointers.hpp"
 #include "UblasVectorInclude.hpp"
 #include "Polygon.hpp"
-#include "Vertex.hpp"
+#include "DimensionalChastePoint.hpp"
 
 /**
  * A collection of planar polygons
  */
+template<unsigned DIM>
 class Facet
 {
     /**
      * The polygons making up the facet
      */
-    std::vector<boost::shared_ptr<Polygon> > mPolygons;
+    std::vector<boost::shared_ptr<Polygon<DIM> > > mPolygons;
 
     /**
      * Unique vertices in the facet. This is not always up-to-date.
      * Use GetVertices() to ensure up-to-date vertices are used.
      */
-    std::vector<boost::shared_ptr<Vertex> > mVertices;
+    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > mVertices;
 
     /**
      * Whether mVertices is up-to-date. This should be set false when new
@@ -85,27 +86,27 @@ public:
      * Constructor
      * @param polygons a facet is made from these polygons
      */
-    Facet(std::vector<boost::shared_ptr<Polygon> > polygons);
+    Facet(std::vector<boost::shared_ptr<Polygon<DIM> > > polygons);
 
     /**
      * Constructor
      * @param pPolygon a single polygon for the facet
      */
-    Facet(boost::shared_ptr<Polygon> pPolygon);
+    Facet(boost::shared_ptr<Polygon<DIM> > pPolygon);
 
     /**
      * Factory constructor method
      * @param polygons planar polygons
      * @return a shared pointer to a new facet
      */
-    static boost::shared_ptr<Facet> Create(std::vector<boost::shared_ptr<Polygon> > polygons);
+    static boost::shared_ptr<Facet<DIM> > Create(std::vector<boost::shared_ptr<Polygon<DIM> > > polygons);
 
     /**
      * Factory constructor method
      * @param pPolygon a polygon
      * @return a smart pointer to a new facet
      */
-    static boost::shared_ptr<Facet> Create(boost::shared_ptr<Polygon> pPolygon);
+    static boost::shared_ptr<Facet<DIM> > Create(boost::shared_ptr<Polygon<DIM> > pPolygon);
 
     /**
      * Desctructor
@@ -116,20 +117,20 @@ public:
      * Add polygons
      * @param polygons planar polygons
      */
-    void AddPolygons(std::vector<boost::shared_ptr<Polygon> > polygons);
+    void AddPolygons(std::vector<boost::shared_ptr<Polygon<DIM> > > polygons);
 
     /**
      * Add polygon
      * @param pPolygon a polygon
      */
-    void AddPolygon(boost::shared_ptr<Polygon> pPolygon);
+    void AddPolygon(boost::shared_ptr<Polygon<DIM> > pPolygon);
 
     /**
      * Return true if the specified location is in the facet
      * @param location the location to be tested
      * @return true if the location is in the facet
      */
-    bool ContainsPoint(const DimensionalChastePoint<3>& location);
+    bool ContainsPoint(const DimensionalChastePoint<DIM>& location);
 
     /**
      * Return the bounding box of the facet
@@ -141,14 +142,14 @@ public:
      * Return the centroid of the facet
      * @return the centroid of the facet
      */
-    DimensionalChastePoint<3> GetCentroid();
+    DimensionalChastePoint<DIM> GetCentroid();
 
     /**
      * Return the distance to the facet
      * @param rLocation reference to the location of the point for distance calculation
      * @return the distance to the facet
      */
-    double GetDistance(const DimensionalChastePoint<3>& rLocation);
+    double GetDistance(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Get the label for boundary conditions
@@ -166,19 +167,19 @@ public:
      * Return the normal to the facet
      * @return the normal to the facet
      */
-    c_vector<double, 3> GetNormal();
+    c_vector<double, DIM> GetNormal();
 
     /**
      * Return the polygons
      * @return the polygons making up the facet
      */
-    std::vector<boost::shared_ptr<Polygon> > GetPolygons();
+    std::vector<boost::shared_ptr<Polygon<DIM> > > GetPolygons();
 
     /**
      * Return the vertices
      * @return the unique vertices in the facet
      */
-    std::vector<boost::shared_ptr<Vertex> > GetVertices();
+    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > GetVertices();
 
     /**
      * Return the facet vertices as a set of VtkPoints.
@@ -203,7 +204,7 @@ public:
      * Move the facet along the translation vector
      * @param translationVector the new location is the original + the translationVector
      */
-    void Translate(c_vector<double, 3> translationVector);
+    void Translate(c_vector<double, DIM> translationVector);
 
     /**
      * Update the mVertices member

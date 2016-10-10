@@ -42,7 +42,7 @@
 #include "VesselSegment.hpp"
 #include "UblasCustomFunctions.hpp"
 #include "UblasIncludes.hpp"
-#include "Vertex.hpp"
+#include "DimensionalChastePoint.hpp"
 #include "Part.hpp"
 
 #include "VesselSurfaceGenerator.hpp"
@@ -72,7 +72,7 @@ std::vector<DimensionalChastePoint<DIM> > VesselSurfaceGenerator<DIM>::GetHoles(
 }
 
 template<unsigned DIM>
-std::vector<std::vector<boost::shared_ptr<Polygon> > > VesselSurfaceGenerator<DIM>::GetSurface()
+std::vector<std::vector<boost::shared_ptr<Polygon<DIM> > > > VesselSurfaceGenerator<DIM>::GetSurface()
 {
     if(DIM==2)
     {
@@ -83,7 +83,7 @@ std::vector<std::vector<boost::shared_ptr<Polygon> > > VesselSurfaceGenerator<DI
     c_vector<double, DIM> y_axis = unit_vector<double>(DIM,1);
 
     // Generate a surface for each segment
-    std::vector<std::vector<boost::shared_ptr<Polygon> > > segment_polygons;
+    std::vector<std::vector<boost::shared_ptr<Polygon<DIM> > > > segment_polygons;
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = mpVesselNetwork->GetVesselSegments();
 
     for (unsigned idx = 0; idx < segments.size(); idx++)
@@ -112,7 +112,7 @@ std::vector<std::vector<boost::shared_ptr<Polygon> > > VesselSurfaceGenerator<DI
 
         if (p_start_node->GetNumberOfSegments() == 1)
         {
-            c_vector<double, DIM> node_location = p_start_node->rGetLocation().rGetLocation();
+            DimensionalChastePoint<DIM> node_location = p_start_node->rGetLocation();
             vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
             if(DIM==2)
             {
@@ -140,7 +140,7 @@ std::vector<std::vector<boost::shared_ptr<Polygon> > > VesselSurfaceGenerator<DI
                     }
 
                     average_start_normal += VectorProduct(segment_tangent, other_segment_tangent);
-                    c_vector<double, DIM> node_location = p_start_node->rGetLocation().rGetLocation();
+                    DimensionalChastePoint<DIM> node_location = p_start_node->rGetLocation();
                     vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
                     if(DIM==2)
                     {
@@ -168,7 +168,7 @@ std::vector<std::vector<boost::shared_ptr<Polygon> > > VesselSurfaceGenerator<DI
 
         if (p_end_node->GetNumberOfSegments() == 1)
         {
-            c_vector<double, DIM> node_location = p_end_node->rGetLocation().rGetLocation();
+            DimensionalChastePoint<DIM> node_location = p_end_node->rGetLocation();
             vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
             p_plane->SetOrigin(node_location[0], node_location[1], node_location[2]);
             p_plane->SetNormal(segment_tangent[0], segment_tangent[1], segment_tangent[2]);
@@ -188,7 +188,7 @@ std::vector<std::vector<boost::shared_ptr<Polygon> > > VesselSurfaceGenerator<DI
                     }
                     average_end_normal += VectorProduct(segment_tangent, other_segment_tangent);
 
-                    c_vector<double, DIM> node_location = p_end_node->rGetLocation().rGetLocation();
+                    DimensionalChastePoint<DIM> node_location = p_end_node->rGetLocation();
                     vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
                     if(DIM==2)
                     {
@@ -215,8 +215,8 @@ std::vector<std::vector<boost::shared_ptr<Polygon> > > VesselSurfaceGenerator<DI
         }
 
         // Project the precursor points onto the first plane they hit
-        Translate(start_points, segments[idx]->GetMidPoint().rGetLocation());
-        Translate(end_points, segments[idx]->GetMidPoint().rGetLocation());
+        Translate(start_points, segments[idx]->GetMidPoint().rGetLocation(segments[idx]->GetMidPoint().GetReferenceLengthScale()));
+        Translate(end_points, segments[idx]->GetMidPoint().rGetLocation(segments[idx]->GetMidPoint().GetReferenceLengthScale()));
 
         std::vector<c_vector<double, DIM> > projected_start_points = start_points;
         std::vector<c_vector<double, DIM> > projected_end_points = end_points;
@@ -265,20 +265,20 @@ std::vector<std::vector<boost::shared_ptr<Polygon> > > VesselSurfaceGenerator<DI
         }
 
         // Create the vertices and polygons
-        std::vector<boost::shared_ptr<Vertex> > start_vertices;
-        std::vector<boost::shared_ptr<Vertex> > end_vertices;
+        std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > start_vertices;
+        std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > end_vertices;
 
         for (unsigned jdx = 0; jdx < projected_start_points.size(); jdx++)
         {
-            start_vertices.push_back(Vertex::Create(projected_start_points[jdx]));
+            start_vertices.push_back(DimensionalChastePoint<DIM>::Create(projected_start_points[jdx]));
         }
         for (unsigned jdx = 0; jdx < projected_end_points.size(); jdx++)
         {
-            end_vertices.push_back(Vertex::Create(projected_end_points[jdx]));
+            end_vertices.push_back(DimensionalChastePoint<DIM>::Create(projected_end_points[jdx]));
         }
 
         //
-        std::vector<boost::shared_ptr<Polygon> > polygons;
+        std::vector<boost::shared_ptr<Polygon<DIM> > > polygons;
         for (unsigned jdx = 0; jdx < start_vertices.size(); jdx++)
         {
             unsigned index2;
@@ -290,7 +290,7 @@ std::vector<std::vector<boost::shared_ptr<Polygon> > > VesselSurfaceGenerator<DI
             {
                 index2 = 0;
             }
-            boost::shared_ptr<Polygon> p_polygon = Polygon::Create(start_vertices[jdx]);
+            boost::shared_ptr<Polygon<DIM> > p_polygon = Polygon<DIM>::Create(start_vertices[jdx]);
             p_polygon->AddVertex(start_vertices[index2]);
             p_polygon->AddVertex(end_vertices[index2]);
             p_polygon->AddVertex(end_vertices[jdx]);
@@ -299,12 +299,12 @@ std::vector<std::vector<boost::shared_ptr<Polygon> > > VesselSurfaceGenerator<DI
         // If a node has connectivity one add an end-cap
         if (segments[idx]->GetNode(0)->GetNumberOfSegments() == 1)
         {
-            polygons.push_back(Polygon::Create(start_vertices));
+            polygons.push_back(Polygon<DIM>::Create(start_vertices));
         }
 
         if (segments[idx]->GetNode(1)->GetNumberOfSegments() == 1)
         {
-            polygons.push_back(Polygon::Create(end_vertices));
+            polygons.push_back(Polygon<DIM>::Create(end_vertices));
         }
         segment_polygons.push_back(polygons);
     }
@@ -312,10 +312,10 @@ std::vector<std::vector<boost::shared_ptr<Polygon> > > VesselSurfaceGenerator<DI
 }
 
 template<unsigned DIM>
-std::vector<boost::shared_ptr<Polygon> > VesselSurfaceGenerator<DIM>::GetSurfacePolygons()
+std::vector<boost::shared_ptr<Polygon<DIM> > > VesselSurfaceGenerator<DIM>::GetSurfacePolygons()
 {
-    std::vector<std::vector<boost::shared_ptr<Polygon> > > segment_polygons = GetSurface();
-    std::vector<boost::shared_ptr<Polygon> > polygons;
+    std::vector<std::vector<boost::shared_ptr<Polygon<DIM> > > > segment_polygons = GetSurface();
+    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons;
     for (unsigned idx = 0; idx < segment_polygons.size(); idx++)
     {
         for (unsigned jdx = 0; jdx < segment_polygons[idx].size(); jdx++)
@@ -329,7 +329,7 @@ std::vector<boost::shared_ptr<Polygon> > VesselSurfaceGenerator<DIM>::GetSurface
 template<unsigned DIM>
 vtkSmartPointer<vtkPolyData> VesselSurfaceGenerator<DIM>::GetVtkSurface()
 {
-    std::vector<std::vector<boost::shared_ptr<Polygon> > > segment_polygons = GetSurface();
+    std::vector<std::vector<boost::shared_ptr<Polygon<DIM> > > > segment_polygons = GetSurface();
 
     // Add the polygons to a part
     Part<DIM> part;

@@ -67,7 +67,7 @@ VoronoiGenerator<DIM>::~VoronoiGenerator()
 
 template<unsigned DIM>
 boost::shared_ptr<Part<DIM> > VoronoiGenerator<DIM>::Generate(boost::shared_ptr<Part<DIM> > pPart,
-                                                              std::vector<boost::shared_ptr<Vertex> > seeds,
+                                                              std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > seeds,
                                                               unsigned numSeeds)
 {
     if(DIM==2)
@@ -77,6 +77,7 @@ boost::shared_ptr<Part<DIM> > VoronoiGenerator<DIM>::Generate(boost::shared_ptr<
 
     boost::shared_ptr<Part<DIM> > p_tesselation = Part<DIM>::Create();
     c_vector<double, 2*DIM> extents = pPart->GetBoundingBox();
+    units::quantity<unit::length> length_scale = pPart->GetReferenceLengthScale();
 
     // If no seeds have been provided generate some random ones
     if(seeds.size() == 0)
@@ -88,7 +89,7 @@ boost::shared_ptr<Part<DIM> > VoronoiGenerator<DIM>::Generate(boost::shared_ptr<
             {
                 location[jdx] = extents[2*jdx] + (extents[2*jdx + 1] - extents[2*jdx])*RandomNumberGenerator::Instance()->ranf();
             }
-            seeds.push_back(Vertex::Create(location));
+            seeds.push_back(DimensionalChastePoint<DIM>::Create(location, length_scale));
         }
     }
 
@@ -99,23 +100,18 @@ boost::shared_ptr<Part<DIM> > VoronoiGenerator<DIM>::Generate(boost::shared_ptr<
     mesher_output.initialize();
     mesher_input.numberofpoints = seeds.size();
     mesher_input.pointlist = new double[mesher_input.numberofpoints * DIM];
-
     for (unsigned idx=0; idx<seeds.size(); idx++)
     {
         for (unsigned jdx=0; jdx < DIM; jdx++)
         {
-            if(seeds[idx]->rGetLocation()[jdx]<=0.0)
-            {
-                std::cout << "LTZ" << std::endl;
-            }
-            mesher_input.pointlist[DIM*idx + jdx] = double(seeds[idx]->rGetLocation()[jdx]);
+            mesher_input.pointlist[DIM*idx + jdx] = double((*seeds[idx])[jdx]);
         }
     }
 
     tetgen::tetrahedralize((char*)"veeQ", &mesher_input, &mesher_output);
 
     // Create 2-point polygons corresponding to each edge
-    std::vector<boost::shared_ptr<Polygon> > polygons;
+    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons;
     for (int n=0; n<mesher_output.numberofvedges; ++n)
     {
       tetgen::tetgenio::voroedge e =  mesher_output.vedgelist[n];
@@ -123,8 +119,8 @@ boost::shared_ptr<Part<DIM> > VoronoiGenerator<DIM>::Generate(boost::shared_ptr<
       int n1 = e.v2;
       double* u = &mesher_output.vpointlist[DIM*n0];
       double* v = n1 == -1 ? e.vnormal : &mesher_output.vpointlist[DIM*n1]; // -1 indicates ray
-      boost::shared_ptr<Vertex> p_vertex1 = Vertex::Create(u[0], u[1], u[2]);
-      boost::shared_ptr<Vertex> p_vertex2 = Vertex::Create(v[0], v[1], v[2]);
+      boost::shared_ptr<DimensionalChastePoint<DIM> > p_vertex1 = DimensionalChastePoint<DIM>::Create(u[0], u[1], u[2], length_scale);
+      boost::shared_ptr<DimensionalChastePoint<DIM> > p_vertex2 = DimensionalChastePoint<DIM>::Create(v[0], v[1], v[2], length_scale);
 
       // Only include edges that are inside the domain - use the bounding box.
       double zero_location_tol = 20.0;
@@ -134,8 +130,8 @@ boost::shared_ptr<Part<DIM> > VoronoiGenerator<DIM>::Generate(boost::shared_ptr<
       int plane2;
       c_vector<double,DIM> intercept_1;
       c_vector<double,DIM> intercept_2;
-      int in_box = vtkBox::IntersectWithLine(&extents[0], &p_vertex1->rGetLocation()[0],
-                                             &p_vertex2->rGetLocation()[0], t1, t2, &intercept_1[0], &intercept_2[0], plane1, plane2);
+      int in_box = vtkBox::IntersectWithLine(&extents[0], &p_vertex1->rGetLocation(length_scale)[0],
+                                             &p_vertex2->rGetLocation(length_scale)[0], t1, t2, &intercept_1[0], &intercept_2[0], plane1, plane2);
 
       // If the line is not outside the box
       if(in_box!=0)
@@ -144,11 +140,11 @@ boost::shared_ptr<Part<DIM> > VoronoiGenerator<DIM>::Generate(boost::shared_ptr<
           if(in_box==-1)
           {
               // Check that we haven't hit the zero location and remove very short edges
-              if((norm_2(p_vertex1->rGetLocation()) > zero_location_tol) && (norm_2(p_vertex2->rGetLocation()) > zero_location_tol))
+              if((norm_2(p_vertex1->rGetLocation(length_scale)) > zero_location_tol) && (norm_2(p_vertex2->rGetLocation(length_scale)) > zero_location_tol))
               {
-                  if(norm_2(p_vertex1->rGetLocation() - p_vertex2->rGetLocation()) > 2.0 * zero_location_tol)
+                  if(norm_2(p_vertex1->rGetLocation(length_scale) - p_vertex2->rGetLocation(length_scale)) > 2.0 * zero_location_tol)
                   {
-                      boost::shared_ptr<Polygon> p_polygon = Polygon::Create(p_vertex1);
+                      boost::shared_ptr<Polygon<DIM> > p_polygon = Polygon<DIM>::Create(p_vertex1);
                                 p_polygon->AddVertex(p_vertex2);
                                 polygons.push_back(p_polygon);
                   }
@@ -159,29 +155,29 @@ boost::shared_ptr<Part<DIM> > VoronoiGenerator<DIM>::Generate(boost::shared_ptr<
               // Find where the points are
               bool vert1_inside = true;
               bool vert2_inside = true;
-              if(p_vertex1->rGetLocation()[0] < extents[0] || p_vertex1->rGetLocation()[0] > extents[1])
+              if(p_vertex1->rGetLocation(length_scale)[0] < extents[0] || p_vertex1->rGetLocation(length_scale)[0] > extents[1])
               {
                   vert1_inside = false;
               }
-              if(p_vertex1->rGetLocation()[1] < extents[2] || p_vertex1->rGetLocation()[1] > extents[3])
+              if(p_vertex1->rGetLocation(length_scale)[1] < extents[2] || p_vertex1->rGetLocation(length_scale)[1] > extents[3])
               {
                   vert1_inside = false;
               }
-              if(p_vertex2->rGetLocation()[0] < extents[0] || p_vertex2->rGetLocation()[0] > extents[1])
+              if(p_vertex2->rGetLocation(length_scale)[0] < extents[0] || p_vertex2->rGetLocation(length_scale)[0] > extents[1])
               {
                   vert2_inside = false;
               }
-              if(p_vertex2->rGetLocation()[1] < extents[2] || p_vertex2->rGetLocation()[1] > extents[3])
+              if(p_vertex2->rGetLocation(length_scale)[1] < extents[2] || p_vertex2->rGetLocation(length_scale)[1] > extents[3])
               {
                   vert2_inside = false;
               }
               if(DIM==3)
               {
-                  if(p_vertex1->rGetLocation()[2] < extents[4] || p_vertex1->rGetLocation()[2] > extents[5])
+                  if(p_vertex1->rGetLocation(length_scale)[2] < extents[4] || p_vertex1->rGetLocation(length_scale)[2] > extents[5])
                   {
                       vert1_inside = false;
                   }
-                  if(p_vertex2->rGetLocation()[2] < extents[4] || p_vertex2->rGetLocation()[2] > extents[5])
+                  if(p_vertex2->rGetLocation(length_scale)[2] < extents[4] || p_vertex2->rGetLocation(length_scale)[2] > extents[5])
                   {
                       vert2_inside = false;
                   }
@@ -190,18 +186,20 @@ boost::shared_ptr<Part<DIM> > VoronoiGenerator<DIM>::Generate(boost::shared_ptr<
               if(vert1_inside && !vert2_inside)
               {
                   // move vert 2 to intsersection point
-                  p_vertex2->Translate(intercept_1-p_vertex2->rGetLocation());
+                  c_vector<double,DIM> gap = intercept_1-p_vertex2->rGetLocation(length_scale);
+                  p_vertex2->Translate(gap);
               }
               else if(vert2_inside && !vert1_inside)
               {
                   // move vert 1 to intersection point
-                  p_vertex1->Translate(intercept_1-p_vertex1->rGetLocation());
+                  c_vector<double,DIM> gap = intercept_1-p_vertex1->rGetLocation(length_scale);
+                  p_vertex1->Translate(gap);
               }
               else
               {
                   // Otherwise both points are either on or outside
-                  c_vector<double,DIM> tv1 = intercept_1-p_vertex1->rGetLocation();
-                  c_vector<double,DIM> tv2 = intercept_2-p_vertex2->rGetLocation();
+                  c_vector<double,DIM> tv1 = intercept_1-p_vertex1->rGetLocation(length_scale);
+                  c_vector<double,DIM> tv2 = intercept_2-p_vertex2->rGetLocation(length_scale);
                   if(norm_2(tv1) > zero_location_tol)
                   {
                       p_vertex1->Translate(tv1);
@@ -213,11 +211,11 @@ boost::shared_ptr<Part<DIM> > VoronoiGenerator<DIM>::Generate(boost::shared_ptr<
               }
 
               // Check that we haven't hit the zero location and remove very short edges
-              if((norm_2(p_vertex1->rGetLocation()) > zero_location_tol) && (norm_2(p_vertex2->rGetLocation()) > zero_location_tol))
+              if((norm_2(p_vertex1->rGetLocation(length_scale)) > zero_location_tol) && (norm_2(p_vertex2->rGetLocation(length_scale)) > zero_location_tol))
               {
-                  if(norm_2(p_vertex1->rGetLocation() - p_vertex2->rGetLocation()) > 2.0 * zero_location_tol)
+                  if(norm_2(p_vertex1->rGetLocation(length_scale) - p_vertex2->rGetLocation(length_scale)) > 2.0 * zero_location_tol)
                   {
-                      boost::shared_ptr<Polygon> p_polygon = Polygon::Create(p_vertex1);
+                      boost::shared_ptr<Polygon<DIM> > p_polygon = Polygon<DIM>::Create(p_vertex1);
                                 p_polygon->AddVertex(p_vertex2);
                                 polygons.push_back(p_polygon);
                   }

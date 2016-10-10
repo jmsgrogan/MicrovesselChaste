@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -84,13 +84,11 @@ void LacunarityCalculator<DIM>::Solve()
     if (output_file.is_open())
     {
         output_file << "Lacunarity, Box\n";
-
     }
 
     for (unsigned width_index = 0; width_index < width_factors.size(); width_index++)
     {
-        double box_size = double(extents_x - 1) / double(width_factors[width_index])
-                * this->mpRegularGrid->GetSpacing()/this->mpRegularGrid->GetReferenceLengthScale();
+        double box_size = (double(extents_x - 1) / double(width_factors[width_index]));
         double q1 = 0.0;
         double q2 = 0.0;
 
@@ -111,9 +109,9 @@ void LacunarityCalculator<DIM>::Solve()
                     double vessel_length = 0.0;
                     for (unsigned seg_index = 0; seg_index < segments.size(); seg_index++)
                     {
-                        vessel_length += LengthOfLineInBox<DIM>(segments[seg_index]->GetNode(0)->rGetLocation().rGetLocation(),
-                                                                segments[seg_index]->GetNode(1)->rGetLocation().rGetLocation(),
-                                                                box_location, box_size);
+                        vessel_length += LengthOfLineInBox<DIM>(segments[seg_index]->GetNode(0)->rGetLocation(),
+                                                                segments[seg_index]->GetNode(1)->rGetLocation(),
+                                                                DimensionalChastePoint<DIM>(box_location), box_size* this->mpRegularGrid->GetSpacing())/this->mpRegularGrid->GetReferenceLengthScale();
                     }
                     q1 += vessel_length;
                     q2 += vessel_length * vessel_length;

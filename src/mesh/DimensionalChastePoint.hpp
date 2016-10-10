@@ -66,6 +66,7 @@ class DimensionalChastePoint
     {
         ar & mReferenceLength;
         ar & mLocation;
+        ar & mIndex;
     }
 
 protected:
@@ -80,6 +81,11 @@ protected:
      * from 1 micron to 40 micron, the value in mLocation will be divided by 40.
      */
     units::quantity<unit::length> mReferenceLength;
+
+    /**
+     * An optional index
+     */
+    unsigned mIndex;
 
 public:
 
@@ -112,6 +118,36 @@ public:
      * @param coords a vector of x, y, z coordinates
      */
     DimensionalChastePoint(c_vector<double, DIM> coords);
+
+    /**
+     * Factory Constructor
+     * @param x x position of vertex
+     * @param y y position of vertex
+     * @param z z position of vertex
+     * @param referenceLength the reference length
+     */
+    static boost::shared_ptr<DimensionalChastePoint<DIM> > Create(double x, double y, double z, units::quantity<unit::length> referenceLength);
+
+    /**
+     * Factory Constructor
+     * @param coords a vector of x, y, z coordinates
+     * @param referenceLength the reference length
+     */
+    static boost::shared_ptr<DimensionalChastePoint<DIM> > Create(c_vector<double, DIM> coords, units::quantity<unit::length> referenceLength);
+
+    /**
+     * Factory Constructor
+     * @param x x position of vertex
+     * @param y y position of vertex
+     * @param z z position of vertex
+     */
+    static boost::shared_ptr<DimensionalChastePoint<DIM> > Create(double x = 0.0, double y = 0.0, double z = 0.0);
+
+    /**
+     * Factory Constructor
+     * @param coords a vector of x, y, z coordinates
+     */
+    static boost::shared_ptr<DimensionalChastePoint<DIM> > Create(c_vector<double, DIM> coords);
 
     /**
      * Destructor
@@ -148,13 +184,13 @@ public:
      * @param scale the length scale for the point
      * @return the location of the Point.
      */
-    c_vector<double, DIM>& rGetLocation(units::quantity<unit::length> scale);
+    c_vector<double, DIM> GetLocation(units::quantity<unit::length> scale);
 
     /**
      * @param scale the length scale for the point
      * @return the location of the Point.  Constant non-liberal variety.
      */
-    const c_vector<double, DIM>& rGetLocation(units::quantity<unit::length> scale) const;
+    const c_vector<double, DIM> GetLocation(units::quantity<unit::length> scale) const;
 
     /**
      * Return a point one unit from the origin in the direction along the vector between this point and the origin
@@ -216,6 +252,14 @@ public:
     DimensionalChastePoint<DIM>& operator-=(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
+     * Rotate about the axis by the supplied angle
+     *
+     * @param axis the axis
+     * @param angle the rotation ange
+     */
+    void RotateAboutAxis(c_vector<double, DIM> axis, double angle);
+
+    /**
      * Set the length scale used to dimensionalize the point location as stored in mLocation. The point
      * location values are changed accordingly when this value is changed.
      *
@@ -242,6 +286,18 @@ public:
      * @param rPoint the new point
      */
     void TranslateTo(DimensionalChastePoint<DIM> rPoint);
+
+    /**
+     * Return the index
+     * @return the point index
+     */
+    unsigned GetIndex();
+
+    /**
+     * Set the index
+     * @param index the point index
+     */
+    void SetIndex(unsigned index);
 };
 
 /**

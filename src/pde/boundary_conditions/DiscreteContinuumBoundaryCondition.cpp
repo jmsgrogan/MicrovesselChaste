@@ -204,7 +204,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
         }
         else
         {
-            std::vector<boost::shared_ptr<Facet> > facets =  mpDomain->GetFacets();
+            std::vector<boost::shared_ptr<Facet<DIM> > > facets =  mpDomain->GetFacets();
             for(unsigned jdx=0; jdx<facets.size();jdx++)
             {
 //                if(facets[jdx]->ContainsPoint(location) && (facets[jdx]->GetData("Boundary")>0.0))
@@ -318,7 +318,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateRegularGridFacetBoundaryCond
     {
         for(unsigned idx=0; idx<mpRegularGrid->GetNumberOfPoints(); idx++)
         {
-            std::vector<boost::shared_ptr<Facet> > facets =  mpDomain->GetFacets();
+            std::vector<boost::shared_ptr<Facet<DIM> > > facets =  mpDomain->GetFacets();
             for(unsigned jdx=0; jdx<facets.size();jdx++)
             {
                 if(facets[jdx]->ContainsPoint(mpRegularGrid->GetLocationOf1dIndex(idx)))

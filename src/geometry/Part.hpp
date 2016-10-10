@@ -43,7 +43,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "SmartPointers.hpp"
 #include "ChastePoint.hpp"
 #include "UblasVectorInclude.hpp"
-#include "Vertex.hpp"
+#include "DimensionalChastePoint.hpp"
 #include "Polygon.hpp"
 #include "Facet.hpp"
 #include "VesselNetwork.hpp"
@@ -62,7 +62,7 @@ class Part
     /**
      * Planar collections of polygons
      */
-    std::vector<boost::shared_ptr<Facet> > mFacets;
+    std::vector<boost::shared_ptr<Facet<DIM> > > mFacets;
 
     /**
      * A vtk representation of the part
@@ -114,7 +114,7 @@ public:
      * @param numSegments the number of linear segments the circle is described with
      * @return polygon corresponding to the circle, useful for further operations, such as extrusion.
      */
-    boost::shared_ptr<Polygon> AddCircle(units::quantity<unit::length> radius,
+    boost::shared_ptr<Polygon<DIM> > AddCircle(units::quantity<unit::length> radius,
                                          DimensionalChastePoint<DIM> centre,
                                          unsigned numSegments = 24);
 
@@ -154,9 +154,9 @@ public:
      * @param pFacet an optional facet that the circle can be generated on
      * @return the new polygon, useful for further operations, such as extrusion.
      */
-    boost::shared_ptr<Polygon> AddPolygon(std::vector<boost::shared_ptr<Vertex> > vertices,
+    boost::shared_ptr<Polygon<DIM> > AddPolygon(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices,
                                           bool newFacet = false,
-                                          boost::shared_ptr<Facet> pFacet = boost::shared_ptr<Facet>());
+                                          boost::shared_ptr<Facet<DIM> > pFacet = boost::shared_ptr<Facet<DIM> >());
 
     /**
      * Add a polygon
@@ -165,9 +165,9 @@ public:
      * @param pFacet an optional facet that the polygon can be generated on
      * @return the new polygon, useful for further operations, such as extrusion.
      */
-    boost::shared_ptr<Polygon> AddPolygon(boost::shared_ptr<Polygon> pPolygon,
+    boost::shared_ptr<Polygon<DIM> > AddPolygon(boost::shared_ptr<Polygon<DIM> > pPolygon,
                                           bool newFacet = false,
-                                          boost::shared_ptr<Facet> pFacet = boost::shared_ptr<Facet>());
+                                          boost::shared_ptr<Facet<DIM> > pFacet = boost::shared_ptr<Facet<DIM> >());
 
     /**
      * Add a rectangle to the part, oriented by default with out of plane direction along the z-axis.
@@ -176,7 +176,7 @@ public:
      * @param origin the bottom left corner
      * @return the new polygon, useful for further operations, such as extrusion.
      */
-    boost::shared_ptr<Polygon> AddRectangle(units::quantity<unit::length> sizeX,
+    boost::shared_ptr<Polygon<DIM> > AddRectangle(units::quantity<unit::length> sizeX,
                                             units::quantity<unit::length> sizeY,
                                             DimensionalChastePoint<DIM> origin);
 
@@ -198,7 +198,7 @@ public:
      * @param pPolygon the polygon to extrude
      * @param distance the extrusion distance
      */
-    void Extrude(boost::shared_ptr<Polygon> pPolygon, units::quantity<unit::length> distance);
+    void Extrude(boost::shared_ptr<Polygon<DIM> > pPolygon, units::quantity<unit::length> distance);
 
     /**
      * Return the bounding box
@@ -226,20 +226,20 @@ public:
      * Return the facets
      * @return the facets
      */
-    std::vector<boost::shared_ptr<Facet> > GetFacets();
+    std::vector<boost::shared_ptr<Facet<DIM> > > GetFacets();
 
     /**
      * Return the FIRST facet found on the point. Strict method, returns exception if there is no facet at the point.
      * @param rLocation the probe point
      * @return the FIRST found facet on the point.
      */
-    boost::shared_ptr<Facet> GetFacet(const DimensionalChastePoint<3>& rLocation);
+    boost::shared_ptr<Facet<DIM> > GetFacet(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Return the polygons
      * @return the polygons
      */
-    std::vector<boost::shared_ptr<Polygon> > GetPolygons();
+    std::vector<boost::shared_ptr<Polygon<DIM> > > GetPolygons();
 
     /**
      * Return the reference length scale
@@ -257,13 +257,13 @@ public:
      * Return the unique vertices
      * @return the unique vertices
      */
-    std::vector<boost::shared_ptr<Vertex> > GetVertices();
+    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > GetVertices();
 
     /**
      * Return the vertex locations
      * @return the vertex locations
      */
-    std::vector<c_vector<double, DIM> > GetVertexLocations();
+    std::vector<DimensionalChastePoint<DIM> > GetVertexLocations();
 
     /**
      * Return the a vtk polydata representation of the part

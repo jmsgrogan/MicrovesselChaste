@@ -44,20 +44,20 @@
 #include <vtkPlane.h>
 #include "UblasVectorInclude.hpp"
 #include "SmartPointers.hpp"
-#include "Vertex.hpp"
+#include "DimensionalChastePoint.hpp"
 #include "UnitCollection.hpp"
 
 /**
  * A collection of planar vertices, joined in the order they are added.
  */
-
+template<unsigned DIM>
 class Polygon
 {
     /**
      * The vertices of the polygon. They should be co-planar.
      * Vertices should be unique, this is not ensured in the class.
      */
-    std::vector<boost::shared_ptr<Vertex> > mVertices;
+    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > mVertices;
 
 public:
 
@@ -65,27 +65,27 @@ public:
      * Constructor
      * @param vertices a vector of planar vertices, to be joined in the order they are added.
      */
-    Polygon(std::vector<boost::shared_ptr<Vertex> > vertices);
+    Polygon(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices);
 
     /**
      * Constructor
      * @param pVertex a vertex
      */
-    Polygon(boost::shared_ptr<Vertex> pVertex);
+    Polygon(boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex);
 
     /**
      * Factory constructor method
      * @param vertices a vector of planar vertices, to be joined in the order they are added.
      * @return a shared pointer to a new polygon
      */
-    static boost::shared_ptr<Polygon> Create(std::vector<boost::shared_ptr<Vertex> > vertices);
+    static boost::shared_ptr<Polygon> Create(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices);
 
     /**
      * Factory constructor method
      * @param pVertex a vertex
      * @return a shared pointer to a new polygon
      */
-    static boost::shared_ptr<Polygon> Create(boost::shared_ptr<Vertex> pVertex);
+    static boost::shared_ptr<Polygon> Create(boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex);
 
     /**
      * Desctructor
@@ -96,20 +96,20 @@ public:
      * Add vertices
      * @param vertices a vector of planar vertices, to be joined in the order they are added.
      */
-    void AddVertices(std::vector<boost::shared_ptr<Vertex> > vertices);
+    void AddVertices(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices);
 
     /**
      * Add vertex
      * @param pVertex a vertex to be added. It is best to add multiple vertices at once.
      */
-    void AddVertex(boost::shared_ptr<Vertex> pVertex);
+    void AddVertex(boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex);
 
     /**
      * Return true if the specified location is in the polygon, uses vtk point in polygon.
      * @param rLocation the location to be tested
      * @return true if the location is in the polygon
      */
-    bool ContainsPoint(const DimensionalChastePoint<3>& rLocation);
+    bool ContainsPoint(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Return the bounding box of the polygon
@@ -121,21 +121,21 @@ public:
      * Return the centroid of the polygon
      * @return the centroid of the polygon
      */
-    DimensionalChastePoint<3> GetCentroid();
+    DimensionalChastePoint<DIM> GetCentroid();
 
     /**
      * Return the distance to the polygon's plane
      * @param rLocation the location of the point to get the distance from
      * @return the distance to the plane containing the polygon
      */
-    units::quantity<unit::length> GetDistance(const DimensionalChastePoint<3>& rLocation);
+    units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Return the shortest distance to the polygon's edges
      * @param rLocation the location of the point to get the distance from
      * @return the shortest distance to the polygon edges
      */
-    units::quantity<unit::length> GetDistanceToEdges(const DimensionalChastePoint<3>& rLocation);
+    units::quantity<unit::length> GetDistanceToEdges(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Return the polygon's plane
@@ -147,20 +147,20 @@ public:
      * Return the normal to the polygon, must have 3 or more points
      * @return the normal to the polygon's plane
      */
-    c_vector<double, 3> GetNormal();
+    c_vector<double, DIM> GetNormal();
 
     /**
      * Return the vertices
      * @param idx index of the vertex to return
      * @return pointer to the indexed vertex
      */
-    boost::shared_ptr<Vertex > GetVertex(unsigned idx);
+    boost::shared_ptr<DimensionalChastePoint<DIM> > GetVertex(unsigned idx);
 
     /**
      * Return the vertices
      * @return the polygon's vertices
      */
-    std::vector<boost::shared_ptr<Vertex> > GetVertices();
+    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > GetVertices();
 
     /**
      * Return a pointer to a VtkPolygon representation.
@@ -179,7 +179,7 @@ public:
      * @param idx the index of the vertex to be replaced
      * @param pVertex the new vertex
      */
-    void ReplaceVertex(unsigned idx, boost::shared_ptr<Vertex > pVertex);
+    void ReplaceVertex(unsigned idx, boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex);
 
     /**
      * Rotate about the specified axis by the specified angle
@@ -192,7 +192,7 @@ public:
      * Move the polygon along the translation vector
      * @param translationVector the new location is the original + the translationVector
      */
-    void Translate(c_vector<double, 3> translationVector);
+    void Translate(c_vector<double, DIM> translationVector);
 };
 
 #endif /* POLYGON_HPP_*/

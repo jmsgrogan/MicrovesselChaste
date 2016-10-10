@@ -17,7 +17,6 @@ population/vessel/generators/TestVesselNetworkGenerator.hpp
 population/vessel/readers/TestVesselNetworkReader.hpp
 population/vessel/writers/TestVesselNetworkWriter.hpp
 population/TestVesselNetworkCellPopulationInteractor.hpp
-geometry/TestVertex.hpp
 geometry/TestPolygon.hpp
 geometry/TestFacet.hpp
 geometry/TestPart.hpp

@@ -39,7 +39,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vector>
 #include "SmartPointers.hpp"
 #include "UblasVectorInclude.hpp"
-#include "Vertex.hpp"
+#include "DimensionalChastePoint.hpp"
 #include "Part.hpp"
 
 /**
@@ -70,7 +70,7 @@ public:
      * @return a new part corresponding to the voronoi tessellation
      */
     boost::shared_ptr<Part<DIM> > Generate(boost::shared_ptr<Part<DIM> > pPart,
-                                           std::vector<boost::shared_ptr<Vertex> > seeds = std::vector<boost::shared_ptr<Vertex> >(),
+                                           std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > seeds = std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > >(),
                                            unsigned numSeeds = 100);
 };
 

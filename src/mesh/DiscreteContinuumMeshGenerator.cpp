@@ -197,7 +197,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
     // Cases: have just domain, have just vtk domain, have vtk domain and domain
     if(mpDomain and !mpVtkDomain)
     {
-        std::vector<c_vector<double, SPACE_DIM> > vertex_locations = mpDomain->GetVertexLocations();
+        std::vector<DimensionalChastePoint<SPACE_DIM> > vertex_locations = mpDomain->GetVertexLocations();
         unsigned num_vertices = vertex_locations.size();
         mesher_input.pointlist = (double *) malloc(num_vertices * 2 * sizeof(double));
         mesher_input.numberofpoints = int(num_vertices);
@@ -247,7 +247,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
     else if(mpDomain and mpVtkDomain)
     {
         unsigned num_points = mpVtkDomain->GetNumberOfPoints();
-        std::vector<c_vector<double, SPACE_DIM> > vertex_locations = mpDomain->GetVertexLocations();
+        std::vector<DimensionalChastePoint<SPACE_DIM> > vertex_locations = mpDomain->GetVertexLocations();
         unsigned num_vertices = vertex_locations.size();
 
         mesher_input.pointlist = (double *) malloc((num_points+num_vertices) * 2 * sizeof(double));
@@ -358,11 +358,11 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
 {
-    std::vector<c_vector<double, SPACE_DIM> > vertex_locations = mpDomain->GetVertexLocations();
+    std::vector<DimensionalChastePoint<SPACE_DIM> > vertex_locations = mpDomain->GetVertexLocations();
     std::vector<DimensionalChastePoint<SPACE_DIM> > hole_locations = mpDomain->GetHoleMarkers();
     unsigned num_vertices = vertex_locations.size();
     unsigned num_holes = hole_locations.size();
-    std::vector<boost::shared_ptr<Facet> > facets = mpDomain->GetFacets();
+    std::vector<boost::shared_ptr<Facet<SPACE_DIM> > > facets = mpDomain->GetFacets();
     unsigned num_facets = facets.size();
 
     class tetgen::tetgenio mesher_input, mesher_output;
@@ -398,7 +398,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
     {
         mesher_input.facetmarkerlist[idx] = 0;
         f = &mesher_input.facetlist[idx];
-        std::vector<boost::shared_ptr<Polygon> > polygons = facets[idx]->GetPolygons();
+        std::vector<boost::shared_ptr<Polygon<SPACE_DIM> > > polygons = facets[idx]->GetPolygons();
         f->numberofpolygons = polygons.size();
         f->polygonlist = new tetgen::tetgenio::polygon[f->numberofpolygons];
         f->numberofholes = 0;

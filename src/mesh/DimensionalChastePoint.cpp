@@ -38,7 +38,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
 template<unsigned DIM>
 DimensionalChastePoint<DIM>::DimensionalChastePoint(double x, double y, double z, units::quantity<unit::length> referenceLength) :
-        mReferenceLength(referenceLength)
+        mReferenceLength(referenceLength),
+        mIndex(0)
 {
     if(mReferenceLength == 0.0*unit::metres)
     {
@@ -61,7 +62,8 @@ DimensionalChastePoint<DIM>::DimensionalChastePoint(double x, double y, double z
 
 template<unsigned DIM>
 DimensionalChastePoint<DIM>::DimensionalChastePoint(c_vector<double, DIM> coords, units::quantity<unit::length> referenceLength) :
-        mReferenceLength(referenceLength)
+        mReferenceLength(referenceLength),
+        mIndex(0)
 {
     if(mReferenceLength == 0.0*unit::metres)
     {
@@ -70,13 +72,14 @@ DimensionalChastePoint<DIM>::DimensionalChastePoint(c_vector<double, DIM> coords
 
     for (unsigned i=0; i<DIM; i++)
     {
-        mLocation(i) = coords.at(i);
+        mLocation(i) = coords[i];
     }
 }
 
 template<unsigned DIM>
 DimensionalChastePoint<DIM>::DimensionalChastePoint(double x, double y, double z) :
-        mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
+        mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
+        mIndex(0)
 {
     if(mReferenceLength == 0.0*unit::metres)
     {
@@ -99,7 +102,8 @@ DimensionalChastePoint<DIM>::DimensionalChastePoint(double x, double y, double z
 
 template<unsigned DIM>
 DimensionalChastePoint<DIM>::DimensionalChastePoint(c_vector<double, DIM> coords) :
-        mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
+        mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
+        mIndex(0)
 {
     if(mReferenceLength == 0.0*unit::metres)
     {
@@ -108,8 +112,36 @@ DimensionalChastePoint<DIM>::DimensionalChastePoint(c_vector<double, DIM> coords
 
     for (unsigned i=0; i<DIM; i++)
     {
-        mLocation(i) = coords.at(i);
+        mLocation(i) = coords[i];
     }
+}
+
+template<unsigned DIM>
+boost::shared_ptr<DimensionalChastePoint<DIM> > DimensionalChastePoint<DIM>::Create(double x, double y, double z, units::quantity<unit::length> referenceLength)
+{
+    MAKE_PTR_ARGS(DimensionalChastePoint<DIM>, p_point, (x, y, z, referenceLength));
+    return p_point;
+}
+
+template<unsigned DIM>
+boost::shared_ptr<DimensionalChastePoint<DIM> > DimensionalChastePoint<DIM>::Create(c_vector<double, DIM> coords, units::quantity<unit::length> referenceLength)
+{
+    MAKE_PTR_ARGS(DimensionalChastePoint<DIM>, p_point, (coords, referenceLength));
+    return p_point;
+}
+
+template<unsigned DIM>
+boost::shared_ptr<DimensionalChastePoint<DIM> > DimensionalChastePoint<DIM>::Create(double x, double y, double z)
+{
+    MAKE_PTR_ARGS(DimensionalChastePoint<DIM>, p_point, (x, y, z));
+    return p_point;
+}
+
+template<unsigned DIM>
+boost::shared_ptr<DimensionalChastePoint<DIM> > DimensionalChastePoint<DIM>::Create(c_vector<double, DIM> coords)
+{
+    MAKE_PTR_ARGS(DimensionalChastePoint<DIM>, p_point, (coords));
+    return p_point;
 }
 
 template<unsigned DIM>
@@ -119,13 +151,13 @@ DimensionalChastePoint<DIM>::~DimensionalChastePoint()
 }
 
 template<unsigned DIM>
-c_vector<double, DIM>& DimensionalChastePoint<DIM>::rGetLocation(units::quantity<unit::length> scale)
+c_vector<double, DIM> DimensionalChastePoint<DIM>::GetLocation(units::quantity<unit::length> scale)
 {
     return mLocation*(scale/mReferenceLength);
 }
 
 template<unsigned DIM>
-const c_vector<double, DIM>& DimensionalChastePoint<DIM>::rGetLocation(units::quantity<unit::length> scale) const
+const c_vector<double, DIM> DimensionalChastePoint<DIM>::GetLocation(units::quantity<unit::length> scale) const
 {
     return mLocation*(scale/mReferenceLength);
 }
@@ -233,6 +265,34 @@ void DimensionalChastePoint<DIM>::SetReferenceLengthScale(units::quantity<unit::
     }
     mLocation *= (mReferenceLength/lenthScale);
     mReferenceLength = lenthScale;
+}
+
+template<unsigned DIM>
+void DimensionalChastePoint<DIM>::RotateAboutAxis(c_vector<double, DIM> axis, double angle)
+{
+    double sin_a = std::sin(angle);
+    double cos_a = std::cos(angle);
+    c_vector<double, DIM> unit_axis = axis / norm_2(axis);
+
+    c_vector<double, DIM> old_location = this->mLocation;
+    double dot_product = inner_prod(old_location, unit_axis);
+    c_vector<double, DIM> new_location;
+    if(DIM==3)
+    {
+        new_location[0] = (unit_axis[0] * dot_product * (1.0 - cos_a) + old_location[0] * cos_a
+                    + (-unit_axis[2] * old_location[1] + unit_axis[1] * old_location[2]) * sin_a);
+        new_location[1] = (unit_axis[1] * dot_product * (1.0 - cos_a) + old_location[1] * cos_a
+                    + (unit_axis[2] * old_location[0] - unit_axis[0] * old_location[2]) * sin_a);
+        new_location[2] = (unit_axis[2] * dot_product * (1.0 - cos_a) + old_location[2] * cos_a
+                    + (-unit_axis[1] * old_location[0] + unit_axis[0] * old_location[1]) * sin_a);
+    }
+    else
+    {
+        new_location[0] = (unit_axis[0] * dot_product * (1.0 - cos_a) + old_location[0] * cos_a);
+        new_location[1] = (unit_axis[1] * dot_product * (1.0 - cos_a) + old_location[1] * cos_a);
+    }
+
+    this->mLocation = new_location;
 }
 
 template<unsigned DIM>
