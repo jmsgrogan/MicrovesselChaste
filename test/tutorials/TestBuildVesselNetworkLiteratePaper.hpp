@@ -125,8 +125,8 @@ public:
          */
         units::quantity<unit::length> cell_width(25.0 * unit::microns);
         my_point.SetReferenceLengthScale(cell_width);
-        TS_ASSERT_DELTA(my_point.GetLocation(reference_length)[0], 1.0, 1.e-6);
-        TS_ASSERT_DELTA(my_point.GetLocation(reference_length)[1], 2.0, 1.e-6);
+        TS_ASSERT_DELTA(my_point.GetLocation(cell_width)[0], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(my_point.GetLocation(cell_width)[1], 2.0, 1.e-6);
         /*
          * It is tedious to keep supplying a reference length, mass, time when setting up simulations. To avoid this a `BaseUnits` singleton is
          * used to set these values. Any geometrical features, readers, writers, solvers etc. created after a base unit has been set will take

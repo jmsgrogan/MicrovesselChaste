@@ -115,8 +115,8 @@ public:
         std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices = p_part->GetVertices();
         for(unsigned idx=0; idx<vertices.size(); idx++)
         {
-            bool is_inside = (vertices[idx]->GetNorm2()/(1.0*unit::metres) < 1.5  + 1.e-6) &&
-                    (vertices[idx]->GetNorm2()/(1.0*unit::metres) > 1.4  - 1.e-6);
+            bool is_inside = (vertices[idx]->GetNorm2()/(1.e-6*unit::metres) < 1.5  + 1.e-6) &&
+                    (vertices[idx]->GetNorm2()/(1.e-6*unit::metres) > 1.4  - 1.e-6);
             TS_ASSERT(is_inside);
         }
 

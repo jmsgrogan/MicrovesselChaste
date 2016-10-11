@@ -72,7 +72,6 @@ public:
         boost::shared_ptr<RegularGridWriter> p_writer = RegularGridWriter::Create();
         TS_ASSERT_THROWS_THIS(p_writer->Write(), "Output file not specified for image writer.");
         p_writer->SetFilename(output_filename);
-        TS_ASSERT_THROWS_THIS(p_writer->Write(), "Output image not set for image writer.");
         p_writer->SetImage(p_grid_3d->GetVtkGrid());
         p_writer->Write();
     }

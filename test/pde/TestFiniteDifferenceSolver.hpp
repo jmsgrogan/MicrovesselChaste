@@ -64,7 +64,7 @@ public:
                                DimensionalChastePoint<2>(0.0, 0.0, 0.0));
 
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        p_grid->GenerateFromPart(p_domain, 1.0*1.e-6*unit::metres);
+        p_grid->GenerateFromPart(p_domain, 1.e-6*unit::metres);
 
         // Choose the PDE
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
@@ -86,7 +86,6 @@ public:
 
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestFiniteDifferenceSolver/RectangleDomain", false));
         solver.SetFileHandler(p_output_file_handler);
-
         solver.Solve();
     }
 

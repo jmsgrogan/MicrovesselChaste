@@ -81,7 +81,7 @@ public:
         boost::shared_ptr<VesselNetworkGeometryCalculator<3> > p_calculator = VesselNetworkGeometryCalculator<3>::Create();
         p_calculator->SetVesselNetwork(p_network);
 
-        TS_ASSERT_DELTA(p_calculator->GetAverageInterSegmentDistance().value(), 1.244, 1.e-3);
+        TS_ASSERT_DELTA(p_calculator->GetAverageInterSegmentDistance().value(), 1.24402e-06, 1.e-3);
         TS_ASSERT_DELTA(p_calculator->GetAverageVesselLength().value(), 1.66667e-06, 1.e-8);
         TS_ASSERT_DELTA(p_calculator->GetTotalLength().value(), 5.e-6, 1.e-8);
         TS_ASSERT_DELTA(p_calculator->GetTotalSurfaceArea().value(), 3.14159e-10, 1.e-12);

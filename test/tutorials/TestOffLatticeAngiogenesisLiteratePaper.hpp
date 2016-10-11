@@ -192,9 +192,10 @@ public:
          */
         DiscreteContinuumMeshGenerator<3> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-        mesh_generator.SetMaxElementArea(100000.0*(units::pow<3>(1.e-6*unit::metres)));
+//        mesh_generator.SetMaxElementArea(100000.0*(units::pow<3>(1.e-6*unit::metres)));
         mesh_generator.Update();
         boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = mesh_generator.GetMesh();
+        std::cout << p_mesh->GetNumElements() << std::endl;
         /*
          * Set up the vegf pde
          */

@@ -432,7 +432,7 @@ template<unsigned DIM>
 std::vector<units::quantity<unit::length> > Part<DIM>::GetBoundingBox()
 {
     std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
-    c_vector<double, 2*DIM> box;
+    c_vector<double, 6> box;
 
     for (unsigned idx = 0; idx < vertices.size(); idx++)
     {
@@ -458,7 +458,7 @@ std::vector<units::quantity<unit::length> > Part<DIM>::GetBoundingBox()
         }
     }
 
-    std::vector<units::quantity<unit::length> > box_vector(6);
+    std::vector<units::quantity<unit::length> > box_vector(6, 0.0*unit::metres);
     for(unsigned idx=0; idx<6; idx++)
     {
         box_vector[idx] = box[idx] * mReferenceLength;
