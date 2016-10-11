@@ -49,6 +49,20 @@ class TestGeometryTools : public CxxTest::TestSuite
 
 public:
 
+    void TestGeometryOperations()
+    {
+        units::quantity<unit::length> reference_length = 1.0 * unit::metres;
+        DimensionalChastePoint<3> point1(1.0, 2.0, 0.5);
+        DimensionalChastePoint<3> point2(2.0, 4.0, 0.5);
+        DimensionalChastePoint<3> point3(1.5, 3.0, 0.5);
+
+        TS_ASSERT_DELTA(GetDistance(point1, point2).value(), std::sqrt(5.0), 1.e-6);
+        TS_ASSERT_DELTA(GetDistanceToLineSegment(point1, point2, point3).value(), 1.0, 1.e-6);
+
+
+
+    }
+
     void TestLineInBoxBothOutside()
     {
         units::quantity<unit::length> spacing = 1.0 * unit::metres;
@@ -101,33 +115,29 @@ public:
 
     void TestLineInTetra()
     {
+        units::quantity<unit::length> spacing = 1.0 * unit::metres;
+
         std::vector<DimensionalChastePoint<3> > tetra_points;
-        DimensionalChastePoint<3> tetra1(0.0, 0.0, 0.0);
+        DimensionalChastePoint<3> tetra1(0.0, 0.0, 0.0, spacing);
         tetra_points.push_back(tetra1);
-
-        DimensionalChastePoint<3> tetra2(1.0, 0.0,0.0);
+        DimensionalChastePoint<3> tetra2(1.0, 0.0, 0.0, spacing);
         tetra_points.push_back(tetra2);
-
-        DimensionalChastePoint<3> tetra3(0.5,1.0, 0.0);
+        DimensionalChastePoint<3> tetra3(0.5, 1.0, 0.0, spacing);
         tetra_points.push_back(tetra3);
-
-        DimensionalChastePoint<3> tetra4(0.5, 0.5, 1.0);
+        DimensionalChastePoint<3> tetra4(0.5, 0.5, 1.0, spacing);
         tetra_points.push_back(tetra4);
 
-        DimensionalChastePoint<3> point1(-0.5, 0.5, 0.5);
-        DimensionalChastePoint<3> point2(1.5, 0.5, 0.5);
-        DimensionalChastePoint<3> point3(0.5, 0.5, 0.5);
-        DimensionalChastePoint<3> point4(0.5, 0.5, 0.6);
+        DimensionalChastePoint<3> point1(-0.5, 0.5, 0.5, spacing);
+        DimensionalChastePoint<3> point2(1.5, 0.5, 0.5, spacing);
+        DimensionalChastePoint<3> point3(0.5, 0.5, 0.5, spacing);
+        DimensionalChastePoint<3> point4(0.5, 0.5, 0.6, spacing);
 
         units::quantity<unit::length> length = LengthOfLineInTetra<3>(point1, point2, tetra_points);
         TS_ASSERT_DELTA(length.value(), 0.25, 1.e-6);
-
         units::quantity<unit::length> length2 = LengthOfLineInTetra<3>(point3, point4, tetra_points);
         TS_ASSERT_DELTA(length2.value(), 0.1, 1.e-6);
-
         units::quantity<unit::length> length3 = LengthOfLineInTetra<3>(point1, point3, tetra_points);
         TS_ASSERT_DELTA(length3.value(), 0.125, 1.e-6);
-
         units::quantity<unit::length> length4 = LengthOfLineInTetra<3>(point3, point1, tetra_points);
         TS_ASSERT_DELTA(length4.value(), 0.125, 1.e-6);
     }

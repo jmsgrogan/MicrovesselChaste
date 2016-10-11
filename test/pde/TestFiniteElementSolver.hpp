@@ -45,7 +45,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "FiniteElementSolver.hpp"
 #include "UblasIncludes.hpp"
 #include "Part.hpp"
-#include "Vertex.hpp"
+#include "DimensionalChastePoint.hpp"
 #include "VesselNetwork.hpp"
 #include "VesselNetworkGenerator.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"

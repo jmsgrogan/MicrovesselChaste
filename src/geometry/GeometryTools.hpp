@@ -183,13 +183,25 @@ units::quantity<unit::length> LengthOfLineInTetra(const DimensionalChastePoint<D
                                                   const DimensionalChastePoint<DIM>& rEndPoint,
                            const std::vector<DimensionalChastePoint<DIM> >& locations);
 
+/**
+ * Return a point offset a prescribed distance along the unit vector of the input vector. Used by sprouting rules
+ * @param rVector the direction
+ * @param offset the offset along the direction
+ * @return a point offset a prescribed distance along the direction
+ */
 template<unsigned DIM>
 DimensionalChastePoint<DIM> OffsetAlongVector(const DimensionalChastePoint<DIM>& rVector, units::quantity<unit::length> offset);
 
+/**
+ * Return a point offset a prescribed distance along the unit vector of the input vector. Used by sprouting rules
+ * @param rVector the direction
+ * @param offset the offset along the direction
+ * @param referenceLength the reference length for the vector
+ * @return a point offset a prescribed distance along the direction
+ */
 template<unsigned DIM>
 DimensionalChastePoint<DIM> OffsetAlongVector(const c_vector<double, DIM>& rVector, units::quantity<unit::length> offset,
                                               units::quantity<unit::length> referenceLength);
-
 
 /**
  * Rotate the supplied vector about the axis by the specified angle.

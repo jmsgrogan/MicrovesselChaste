@@ -43,7 +43,6 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "FiniteElementSolver.hpp"
 #include "UblasIncludes.hpp"
 #include "Part.hpp"
-#include "Vertex.hpp"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
 #include "LinearSteadyStateDiffusionReactionPde.hpp"
 #include "VesselNetwork.hpp"

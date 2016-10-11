@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -93,6 +93,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditionContainer(b
     double node_distance_tolerance = 1.e-3;
     bool apply_boundary = true;
     bool use_boundry_nodes = false;
+    units::quantity<unit::length> length_scale = mpMesh->GetReferenceLengthScale();
 
     if(mType == BoundaryConditionType::OUTER)
     {
@@ -125,7 +126,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditionContainer(b
                     unsigned counter=0;
                     while (iter != mpMesh->GetNodeIteratorEnd())
                      {
-                         locations[counter] = DimensionalChastePoint<DIM>((*iter).GetPoint().rGetLocation());
+                         locations[counter] = DimensionalChastePoint<DIM>((*iter).GetPoint().rGetLocation(), length_scale);
                          mesh_nodes[counter] = (*iter).GetIndex();
                          counter++;
                          ++iter;
@@ -147,7 +148,8 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditionContainer(b
 
                  while (iter != mpMesh->GetNodeIteratorEnd())
                  {
-                     std::pair<bool,units::quantity<unit::concentration> > result = GetValue((*iter).GetPoint().rGetLocation(), node_distance_tolerance);
+                     DimensionalChastePoint<DIM> probe_location((*iter).GetPoint().rGetLocation(), length_scale);
+                     std::pair<bool,units::quantity<unit::concentration> > result = GetValue(probe_location, node_distance_tolerance);
                      if(result.first)
                      {
                          ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result.second/mReferenceConcentration);
@@ -163,7 +165,8 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditionContainer(b
 
             while (iter < mpMesh->GetBoundaryNodeIteratorEnd())
             {
-                std::pair<bool,units::quantity<unit::concentration> > result = GetValue((*iter)->GetPoint().rGetLocation(), node_distance_tolerance);
+                DimensionalChastePoint<DIM> probe_location((*iter)->GetPoint().rGetLocation(), length_scale);
+                std::pair<bool,units::quantity<unit::concentration> > result = GetValue(probe_location, node_distance_tolerance);
                 if(result.first)
                 {
                     ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result.second/mReferenceConcentration);
@@ -178,6 +181,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditionContainer(b
 template<unsigned DIM>
 std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundaryCondition<DIM>::GetValue(DimensionalChastePoint<DIM> location, double tolerance)
 {
+    units::quantity<unit::length> length_scale = location.GetReferenceLengthScale();
     std::pair<bool, units::quantity<unit::concentration> > result(false, 0.0*unit::mole_per_metre_cubed);
     if(mType == BoundaryConditionType::POINT)
     {
@@ -189,7 +193,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
         {
             for(unsigned jdx=0; jdx<mPoints.size(); jdx++)
             {
-                if(GetDistance<DIM>(location, mPoints[jdx]) < tolerance*location.GetReferenceLengthScale())
+                if(GetDistance<DIM>(location, mPoints[jdx]) < tolerance*length_scale)
                 {
                     return std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
                 }
@@ -226,7 +230,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
             std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
             for (unsigned jdx = 0; jdx <  segments.size(); jdx++)
             {
-                if (segments[jdx]->GetDistance(location)/segments[jdx]->GetNode(0)->GetReferenceLengthScale()  <= tolerance)
+                if (segments[jdx]->GetDistance(location) <= tolerance*length_scale)
                 {
                     if(BoundaryConditionSource::PRESCRIBED)
                     {
@@ -248,7 +252,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
             std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
             for (unsigned jdx = 0; jdx <  segments.size(); jdx++)
             {
-                if (segments[jdx]->GetDistance(location)/segments[jdx]->GetNode(0)->GetReferenceLengthScale()  <= segments[jdx]->GetRadius()/segments[jdx]->GetNode(0)->GetReferenceLengthScale() + tolerance)
+                if (segments[jdx]->GetDistance(location) <= segments[jdx]->GetRadius() + tolerance*length_scale)
                 {
                     if(BoundaryConditionSource::PRESCRIBED)
                     {

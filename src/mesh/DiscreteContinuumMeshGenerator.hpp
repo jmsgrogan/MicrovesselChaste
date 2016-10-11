@@ -70,7 +70,7 @@ class DiscreteContinuumMeshGenerator
     /**
      * Max area argument used in mesh generation.
      */
-    double mMaxElementArea;
+    units::quantity<unit::volume> mMaxElementArea;
 
     /**
      * The mesh
@@ -158,7 +158,7 @@ public:
      * Set the max element area
      * @param maxElementArea the max element area
      */
-    void SetMaxElementArea(double maxElementArea);
+    void SetMaxElementArea(units::quantity<unit::volume> maxElementArea);
 
     /**
     * Set the hole locations

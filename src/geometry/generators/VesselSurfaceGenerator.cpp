@@ -44,13 +44,15 @@
 #include "UblasIncludes.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "Part.hpp"
+#include "BaseUnits.hpp"
 
 #include "VesselSurfaceGenerator.hpp"
 
 template<unsigned DIM>
 VesselSurfaceGenerator<DIM>::VesselSurfaceGenerator(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork) :
         mpVesselNetwork(pVesselNetwork),
-        mpSurface(vtkSmartPointer<vtkPolyData>::New())
+        mpSurface(vtkSmartPointer<vtkPolyData>::New()),
+        mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
 {
 }
 
@@ -93,8 +95,8 @@ std::vector<std::vector<boost::shared_ptr<Polygon<DIM> > > > VesselSurfaceGenera
         c_vector<double, DIM> segment_tangent = segments[idx]->GetUnitTangent();
 
         // Create the precursor points
-        std::vector<c_vector<double, DIM> > start_points = MakeCircle(p_start_node->GetRadius()/p_start_node->GetReferenceLengthScale());
-        std::vector<c_vector<double, DIM> > end_points = MakeCircle(p_end_node->GetRadius()/p_start_node->GetReferenceLengthScale());
+        std::vector<c_vector<double, DIM> > start_points = MakeCircle(p_start_node->GetRadius()/mReferenceLength);
+        std::vector<c_vector<double, DIM> > end_points = MakeCircle(p_end_node->GetRadius()/mReferenceLength);
 
         double angle = std::acos(inner_prod(z_axis, segment_tangent));
         if (std::abs(inner_prod(z_axis, segment_tangent)) < 1.0 - 1.e-6)
@@ -112,7 +114,7 @@ std::vector<std::vector<boost::shared_ptr<Polygon<DIM> > > > VesselSurfaceGenera
 
         if (p_start_node->GetNumberOfSegments() == 1)
         {
-            DimensionalChastePoint<DIM> node_location = p_start_node->rGetLocation();
+            c_vector<double, DIM> node_location = p_start_node->rGetLocation().GetLocation(mReferenceLength);
             vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
             if(DIM==2)
             {
@@ -140,7 +142,7 @@ std::vector<std::vector<boost::shared_ptr<Polygon<DIM> > > > VesselSurfaceGenera
                     }
 
                     average_start_normal += VectorProduct(segment_tangent, other_segment_tangent);
-                    DimensionalChastePoint<DIM> node_location = p_start_node->rGetLocation();
+                    c_vector<double, DIM> node_location = p_start_node->rGetLocation().GetLocation(mReferenceLength);
                     vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
                     if(DIM==2)
                     {
@@ -168,7 +170,7 @@ std::vector<std::vector<boost::shared_ptr<Polygon<DIM> > > > VesselSurfaceGenera
 
         if (p_end_node->GetNumberOfSegments() == 1)
         {
-            DimensionalChastePoint<DIM> node_location = p_end_node->rGetLocation();
+            c_vector<double, DIM> node_location = p_end_node->rGetLocation().GetLocation(mReferenceLength);
             vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
             p_plane->SetOrigin(node_location[0], node_location[1], node_location[2]);
             p_plane->SetNormal(segment_tangent[0], segment_tangent[1], segment_tangent[2]);
@@ -188,7 +190,7 @@ std::vector<std::vector<boost::shared_ptr<Polygon<DIM> > > > VesselSurfaceGenera
                     }
                     average_end_normal += VectorProduct(segment_tangent, other_segment_tangent);
 
-                    DimensionalChastePoint<DIM> node_location = p_end_node->rGetLocation();
+                    c_vector<double, DIM> node_location = p_end_node->rGetLocation().GetLocation(mReferenceLength);
                     vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
                     if(DIM==2)
                     {
@@ -215,8 +217,8 @@ std::vector<std::vector<boost::shared_ptr<Polygon<DIM> > > > VesselSurfaceGenera
         }
 
         // Project the precursor points onto the first plane they hit
-        Translate(start_points, segments[idx]->GetMidPoint().GetLocation(segments[idx]->GetMidPoint().GetReferenceLengthScale()));
-        Translate(end_points, segments[idx]->GetMidPoint().GetLocation(segments[idx]->GetMidPoint().GetReferenceLengthScale()));
+        Translate(start_points, segments[idx]->GetMidPoint().GetLocation(mReferenceLength));
+        Translate(end_points, segments[idx]->GetMidPoint().GetLocation(mReferenceLength));
 
         std::vector<c_vector<double, DIM> > projected_start_points = start_points;
         std::vector<c_vector<double, DIM> > projected_end_points = end_points;
@@ -225,13 +227,12 @@ std::vector<std::vector<boost::shared_ptr<Polygon<DIM> > > > VesselSurfaceGenera
         {
             if (jdx == 0)
             {
-                ProjectOnPlane(projected_start_points, -segment_tangent, 2.0 * (segments[idx]->GetLength()/segments[idx]->GetNode(0)->GetReferenceLengthScale()),
-                               start_planes[jdx]);
+                ProjectOnPlane(projected_start_points, -segment_tangent, 2.0 * (segments[idx]->GetLength()/mReferenceLength), start_planes[jdx]);
             }
             else
             {
                 std::vector<c_vector<double, DIM> > candidate_points = start_points;
-                ProjectOnPlane(candidate_points, -segment_tangent, 2.0 * (segments[idx]->GetLength()/segments[idx]->GetNode(0)->GetReferenceLengthScale()), start_planes[jdx]);
+                ProjectOnPlane(candidate_points, -segment_tangent, 2.0 * (segments[idx]->GetLength()/mReferenceLength), start_planes[jdx]);
                 for (unsigned mdx = 0; mdx < projected_start_points.size(); mdx++)
                 {
                     if (norm_2(candidate_points[mdx] - start_points[mdx])
@@ -247,12 +248,12 @@ std::vector<std::vector<boost::shared_ptr<Polygon<DIM> > > > VesselSurfaceGenera
         {
             if (jdx == 0)
             {
-                ProjectOnPlane(projected_end_points, -segment_tangent, 2.0 * (segments[idx]->GetLength()/segments[idx]->GetNode(0)->GetReferenceLengthScale()),end_planes[jdx]);
+                ProjectOnPlane(projected_end_points, -segment_tangent, 2.0 * (segments[idx]->GetLength()/mReferenceLength),end_planes[jdx]);
             }
             else
             {
                 std::vector<c_vector<double, DIM> > candidate_points = end_points;
-                ProjectOnPlane(candidate_points, -segment_tangent, 2.0 * (segments[idx]->GetLength()/segments[idx]->GetNode(0)->GetReferenceLengthScale()), end_planes[jdx]);
+                ProjectOnPlane(candidate_points, -segment_tangent, 2.0 * (segments[idx]->GetLength()/mReferenceLength), end_planes[jdx]);
                 for (unsigned mdx = 0; mdx < projected_end_points.size(); mdx++)
                 {
                     if (norm_2(candidate_points[mdx] - end_points[mdx])
@@ -270,11 +271,11 @@ std::vector<std::vector<boost::shared_ptr<Polygon<DIM> > > > VesselSurfaceGenera
 
         for (unsigned jdx = 0; jdx < projected_start_points.size(); jdx++)
         {
-            start_vertices.push_back(DimensionalChastePoint<DIM>::Create(projected_start_points[jdx]));
+            start_vertices.push_back(DimensionalChastePoint<DIM>::Create(projected_start_points[jdx], mReferenceLength));
         }
         for (unsigned jdx = 0; jdx < projected_end_points.size(); jdx++)
         {
-            end_vertices.push_back(DimensionalChastePoint<DIM>::Create(projected_end_points[jdx]));
+            end_vertices.push_back(DimensionalChastePoint<DIM>::Create(projected_end_points[jdx], mReferenceLength));
         }
 
         //

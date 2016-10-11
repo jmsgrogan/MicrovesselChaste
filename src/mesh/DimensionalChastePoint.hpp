@@ -44,9 +44,8 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "BaseUnits.hpp"
 
 /**
- * This class is used in place of ChastePoint when units are important. It is needed as it is difficult to
- * interface Boost Units with c_vectors. As a result most point based classes (e.g. Vertex, VesselNode) use this
- * class for storing locations with units and calculating point distances.
+ * This class is used in place of ChastePoint when units are important. It is needed to
+ * interface Boost Units with c_vectors. It is a fundamental geometric feature for storing locations.
  */
 template<unsigned DIM>
 class DimensionalChastePoint
@@ -71,7 +70,9 @@ class DimensionalChastePoint
 
 protected:
 
-    /** The location of the Point. */
+    /**
+     * The location of the Point.
+     */
     c_vector<double, DIM> mLocation;
 
     /**
@@ -90,13 +91,14 @@ protected:
 public:
 
     /**
-     * Constructor
+     * Constructor. Be careful with the units of the default constructor. It should only be used for pre-allocating
+     * vectors.
      * @param x x position of vertex
      * @param y y position of vertex
      * @param z z position of vertex
      * @param referenceLength the reference length
      */
-    DimensionalChastePoint(double x, double y, double z, units::quantity<unit::length> referenceLength);
+    DimensionalChastePoint(double x= 0.0, double y = 0.0, double z = 0.0, units::quantity<unit::length> referenceLength = 1.e-6*unit::metres);
 
     /**
      * Constructor
@@ -104,20 +106,6 @@ public:
      * @param referenceLength the reference length
      */
     DimensionalChastePoint(c_vector<double, DIM> coords, units::quantity<unit::length> referenceLength);
-
-    /**
-     * Constructor
-     * @param x x position of vertex
-     * @param y y position of vertex
-     * @param z z position of vertex
-     */
-    DimensionalChastePoint(double x = 0.0, double y = 0.0, double z = 0.0);
-
-    /**
-     * Constructor
-     * @param coords a vector of x, y, z coordinates
-     */
-    DimensionalChastePoint(c_vector<double, DIM> coords);
 
     /**
      * Factory Constructor
@@ -136,20 +124,6 @@ public:
     static boost::shared_ptr<DimensionalChastePoint<DIM> > Create(c_vector<double, DIM> coords, units::quantity<unit::length> referenceLength);
 
     /**
-     * Factory Constructor
-     * @param x x position of vertex
-     * @param y y position of vertex
-     * @param z z position of vertex
-     */
-    static boost::shared_ptr<DimensionalChastePoint<DIM> > Create(double x = 0.0, double y = 0.0, double z = 0.0);
-
-    /**
-     * Factory Constructor
-     * @param coords a vector of x, y, z coordinates
-     */
-    static boost::shared_ptr<DimensionalChastePoint<DIM> > Create(c_vector<double, DIM> coords);
-
-    /**
      * Destructor
      */
     virtual ~DimensionalChastePoint();
@@ -160,6 +134,12 @@ public:
      * @return the distance between this point and the input point
      */
     units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation) const;
+
+    /**
+     * Return the index
+     * @return the point index
+     */
+    unsigned GetIndex();
 
     /**
      * Return a point midway between this point and the input point
@@ -181,12 +161,14 @@ public:
     units::quantity<unit::length> GetReferenceLengthScale() const;
 
     /**
+     * Return a non-dimensional location, normalized by the supplied length scale
      * @param scale the length scale for the point
      * @return the location of the Point.
      */
     c_vector<double, DIM> GetLocation(units::quantity<unit::length> scale);
 
     /**
+     * Return a non-dimensional location, normalized by the supplied length scale
      * @param scale the length scale for the point
      * @return the location of the Point.  Constant non-liberal variety.
      */
@@ -211,13 +193,6 @@ public:
      * @return true if the input point is coincident with this point
      */
     bool IsCoincident(const DimensionalChastePoint<DIM>& rLocation) const;
-
-    /**
-     * @return the vector mLocation.
-     *
-     * @param i the index of the vector to return
-     */
-    double operator[] (unsigned i) const;
 
     /**
      * Overload division from self
@@ -257,7 +232,7 @@ public:
      * @param axis the axis
      * @param angle the rotation ange
      */
-    void RotateAboutAxis(c_vector<double, DIM> axis, double angle);
+    void RotateAboutAxis(c_vector<double, 3> axis, double angle);
 
     /**
      * Set the length scale used to dimensionalize the point location as stored in mLocation. The point
@@ -268,12 +243,10 @@ public:
     void SetReferenceLengthScale(units::quantity<unit::length> lenthScale);
 
     /**
-     * Set one of the coordinates of the Point.
-     *
-     * @param i the index of the coordinate
-     * @param value the value of the coordinate
+     * Set the index
+     * @param index the point index
      */
-    void SetCoordinate(unsigned i, double value);
+    void SetIndex(unsigned index);
 
     /**
      * Translate the point along the supplied vector
@@ -287,17 +260,6 @@ public:
      */
     void TranslateTo(DimensionalChastePoint<DIM> rPoint);
 
-    /**
-     * Return the index
-     * @return the point index
-     */
-    unsigned GetIndex();
-
-    /**
-     * Set the index
-     * @param index the point index
-     */
-    void SetIndex(unsigned index);
 };
 
 /**
@@ -305,6 +267,7 @@ public:
  * @return the resultant point
  * @param lhs the left hand part of the division operation
  * @param rLocation the right hand part of the division operation
+ * @return return the division result
  */
 template<unsigned DIM>
 inline DimensionalChastePoint<DIM> operator/(DimensionalChastePoint<DIM> lhs, double factor)
@@ -318,6 +281,7 @@ inline DimensionalChastePoint<DIM> operator/(DimensionalChastePoint<DIM> lhs, do
  * @return the resultant point
  * @param lhs the left hand part of the multiplication operation
  * @param factor the right hand part of the multiplication operation
+ * @return return the multiplication result
  */
 template<unsigned DIM>
 inline DimensionalChastePoint<DIM> operator*(DimensionalChastePoint<DIM> lhs, double factor)
@@ -331,6 +295,7 @@ inline DimensionalChastePoint<DIM> operator*(DimensionalChastePoint<DIM> lhs, do
  * @return the resultant point
  * @param lhs the left hand part of the addition operation
  * @param rLocation the right hand part of the addition operation
+ * @return return the addition result
  */
 template<unsigned DIM>
 inline DimensionalChastePoint<DIM> operator+(DimensionalChastePoint<DIM> lhs, const DimensionalChastePoint<DIM>& rLocation)
@@ -344,6 +309,7 @@ inline DimensionalChastePoint<DIM> operator+(DimensionalChastePoint<DIM> lhs, co
  * @return the resultant point
  * @param lhs the left hand part of the subtract operation
  * @param rLocation the right hand part of the subtract operation
+ * @return return the subtraction result
  */
 template<unsigned DIM>
 inline DimensionalChastePoint<DIM> operator-(DimensionalChastePoint<DIM> lhs, const DimensionalChastePoint<DIM>& rLocation)

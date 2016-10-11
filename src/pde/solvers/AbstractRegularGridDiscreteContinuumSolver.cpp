@@ -85,13 +85,14 @@ std::vector<units::quantity<unit::concentration> > AbstractRegularGridDiscreteCo
     p_points->SetNumberOfPoints(samplePoints.size());
     for(unsigned idx=0; idx< samplePoints.size(); idx++)
     {
+        c_vector<double, DIM> location = samplePoints[idx].GetLocation(this->mpRegularGrid->GetReferenceLengthScale());
         if(DIM==3)
         {
-            p_points->SetPoint(idx, samplePoints[idx][0], samplePoints[idx][1], samplePoints[idx][2]);
+            p_points->SetPoint(idx, location[0], location[1], location[2]);
         }
         else
         {
-            p_points->SetPoint(idx, samplePoints[idx][0], samplePoints[idx][1], 0.0);
+            p_points->SetPoint(idx, location[0], location[1], 0.0);
         }
     }
     p_polydata->SetPoints(p_points);
@@ -150,13 +151,14 @@ std::vector<double> AbstractRegularGridDiscreteContinuumSolver<DIM>::GetSolution
     p_points->SetNumberOfPoints(rSamplePoints.size());
     for(unsigned idx=0; idx< rSamplePoints.size(); idx++)
     {
+        c_vector<double, DIM> location = rSamplePoints[idx].GetLocation(this->mpRegularGrid->GetReferenceLengthScale());
         if(DIM==3)
         {
-            p_points->SetPoint(idx, rSamplePoints[idx][0], rSamplePoints[idx][1], rSamplePoints[idx][2]);
+            p_points->SetPoint(idx, location[0], location[1], location[2]);
         }
         else
         {
-            p_points->SetPoint(idx, rSamplePoints[idx][0], rSamplePoints[idx][1], 0.0);
+            p_points->SetPoint(idx, location[0], location[1], 0.0);
         }
     }
     p_polydata->SetPoints(p_points);
@@ -238,13 +240,14 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Setup()
     double spacing = this->mpRegularGrid->GetSpacing()/this->mpRegularGrid->GetReferenceLengthScale();
     this->mpVtkSolution->SetSpacing(spacing, spacing, spacing);
 
+    c_vector<double,DIM> origin = this->mpRegularGrid->GetOrigin().GetLocation(this->mpRegularGrid->GetReferenceLengthScale());
     if(DIM==3)
     {
-        this->mpVtkSolution->SetOrigin(this->mpRegularGrid->GetOrigin()[0], this->mpRegularGrid->GetOrigin()[1], this->mpRegularGrid->GetOrigin()[2]);
+        this->mpVtkSolution->SetOrigin(origin[0], origin[1], origin[2]);
     }
     else
     {
-        this->mpVtkSolution->SetOrigin(this->mpRegularGrid->GetOrigin()[0], this->mpRegularGrid->GetOrigin()[1], 0.0);
+        this->mpVtkSolution->SetOrigin(origin[0], origin[1], 0.0);
     }
 
     this->mSolution = std::vector<double>(0.0, this->mpRegularGrid->GetNumberOfPoints());

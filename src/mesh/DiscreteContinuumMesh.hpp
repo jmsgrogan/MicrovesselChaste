@@ -120,6 +120,11 @@ class DiscreteContinuumMesh : public TetrahedralMesh<ELEMENT_DIM, SPACE_DIM>
      */
     AbstractCellPopulation<SPACE_DIM>* mpCellPopulation;
 
+    /**
+     * The reference length scale for the mesh
+     */
+    units::quantity<unit::length> mCellPopulationReferenceLength;
+
 public:
 
     /**
@@ -148,7 +153,7 @@ public:
      * Return the node locations
      * @return the node locations
      */
-    std::vector<std::vector<double> > GetNodeLocations();
+    std::vector<c_vector<double, SPACE_DIM> > GetNodeLocations();
 
     /**
      * Return the element centroids
@@ -213,7 +218,7 @@ public:
      * Set the cell population
      * @param rCellPopulation a reference to the cell population
      */
-    void SetCellPopulation(AbstractCellPopulation<SPACE_DIM>& rCellPopulation);
+    void SetCellPopulation(AbstractCellPopulation<SPACE_DIM>& rCellPopulation, units::quantity<unit::length> cellLengthScale);
 
     /**
      * Set the vessel network

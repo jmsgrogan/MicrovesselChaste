@@ -46,6 +46,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselSurfaceGenerator.hpp"
 #include "Part.hpp"
 #include "GeometryTools.hpp"
+#include "BaseUnits.hpp"
 
 template<unsigned DIM>
 Part<DIM>::Part() :
@@ -53,7 +54,7 @@ Part<DIM>::Part() :
         mVtkPart(vtkSmartPointer<vtkPolyData>()),
         mHoleMarkers(),
         mRegionMarkers(),
-        mReferenceLength(1.e-6 * unit::metres),
+        mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
         mVtkIsUpToDate(false)
 {
 }
@@ -80,11 +81,11 @@ boost::shared_ptr<Polygon<DIM> > Part<DIM>::AddCircle(units::quantity<unit::leng
     for (unsigned idx = 0; idx < numSegments; idx++)
     {
         double angle = seg_angle * double(idx);
-        double x = (radius * std::cos(angle) + centre[0]*centre.GetReferenceLengthScale())/mReferenceLength;
-        double y = (radius * std::sin(angle) + centre[1]*centre.GetReferenceLengthScale())/mReferenceLength;
+        double x = (radius * std::cos(angle) + centre.GetLocation(mReferenceLength)[0]*centre.GetReferenceLengthScale())/mReferenceLength;
+        double y = (radius * std::sin(angle) + centre.GetLocation(mReferenceLength)[1]*centre.GetReferenceLengthScale())/mReferenceLength;
         if(DIM==3)
         {
-            vertices.push_back(DimensionalChastePoint<DIM>::Create(x, y, centre[2], mReferenceLength));
+            vertices.push_back(DimensionalChastePoint<DIM>::Create(x, y, centre.GetLocation(mReferenceLength)[2], mReferenceLength));
         }
         else
         {
@@ -161,22 +162,24 @@ boost::shared_ptr<Polygon<DIM> > Part<DIM>::AddRectangle(units::quantity<unit::l
                                                    units::quantity<unit::length> sizeY,
                                                    DimensionalChastePoint<DIM> origin)
 {
-    origin.SetReferenceLengthScale(mReferenceLength);
-
+    c_vector<double, DIM> dimensionless_origin = origin.GetLocation(mReferenceLength);
     std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices;
     if(DIM==3)
     {
-        vertices.push_back(DimensionalChastePoint<DIM>::Create(origin[0], origin[1], origin[2], mReferenceLength));
-        vertices.push_back(DimensionalChastePoint<DIM>::Create(origin[0] + sizeX/mReferenceLength, origin[1], origin[2],mReferenceLength));
-        vertices.push_back(DimensionalChastePoint<DIM>::Create(origin[0] + sizeX/mReferenceLength, origin[1] + sizeY/mReferenceLength, origin[2], mReferenceLength));
-        vertices.push_back(DimensionalChastePoint<DIM>::Create(origin[0], origin[1] + sizeY/mReferenceLength, origin[2],mReferenceLength));
+        vertices.push_back(DimensionalChastePoint<DIM>::Create(dimensionless_origin[0], dimensionless_origin[1], dimensionless_origin[2], mReferenceLength));
+        vertices.push_back(DimensionalChastePoint<DIM>::Create(dimensionless_origin[0] + sizeX/mReferenceLength,
+                                                               dimensionless_origin[1], dimensionless_origin[2],mReferenceLength));
+        vertices.push_back(DimensionalChastePoint<DIM>::Create(dimensionless_origin[0] + sizeX/mReferenceLength,
+                                                               dimensionless_origin[1] + sizeY/mReferenceLength, dimensionless_origin[2], mReferenceLength));
+        vertices.push_back(DimensionalChastePoint<DIM>::Create(dimensionless_origin[0], dimensionless_origin[1] + sizeY/mReferenceLength, dimensionless_origin[2],mReferenceLength));
     }
     else
     {
-        vertices.push_back(DimensionalChastePoint<DIM>::Create(origin[0], origin[1], 0.0, mReferenceLength));
-        vertices.push_back(DimensionalChastePoint<DIM>::Create(origin[0] + sizeX/mReferenceLength, origin[1], 0.0, mReferenceLength));
-        vertices.push_back(DimensionalChastePoint<DIM>::Create(origin[0] + sizeX/mReferenceLength, origin[1] + sizeY/mReferenceLength, 0.0, mReferenceLength));
-        vertices.push_back(DimensionalChastePoint<DIM>::Create(origin[0], origin[1] + sizeY/mReferenceLength, 0.0, mReferenceLength));
+        vertices.push_back(DimensionalChastePoint<DIM>::Create(dimensionless_origin[0], dimensionless_origin[1], 0.0, mReferenceLength));
+        vertices.push_back(DimensionalChastePoint<DIM>::Create(dimensionless_origin[0] + sizeX/mReferenceLength, dimensionless_origin[1], 0.0, mReferenceLength));
+        vertices.push_back(DimensionalChastePoint<DIM>::Create(dimensionless_origin[0] + sizeX/mReferenceLength,
+                                                               dimensionless_origin[1] + sizeY/mReferenceLength, 0.0, mReferenceLength));
+        vertices.push_back(DimensionalChastePoint<DIM>::Create(dimensionless_origin[0], dimensionless_origin[1] + sizeY/mReferenceLength, 0.0, mReferenceLength));
     }
     mVtkIsUpToDate = false;
     return AddPolygon(vertices);
@@ -279,17 +282,15 @@ void Part<DIM>::Extrude(boost::shared_ptr<Polygon<DIM> > pPolygon, units::quanti
     std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > new_vertices;
     for (unsigned idx = 0; idx < original_vertices.size(); idx++)
     {
+        c_vector<double, DIM> vertex_location = original_vertices[idx]->GetLocation(mReferenceLength);
         if(DIM==2)
         {
-            new_vertices.push_back(DimensionalChastePoint<DIM>::Create((*original_vertices[idx])[0], (*original_vertices[idx])[1],
-                                                                       depth/original_vertices[idx]->GetReferenceLengthScale(),
-                                                  original_vertices[idx]->GetReferenceLengthScale()));
+            new_vertices.push_back(DimensionalChastePoint<DIM>::Create(vertex_location[0], vertex_location[1], depth/mReferenceLength, mReferenceLength));
         }
         else
         {
-            new_vertices.push_back(DimensionalChastePoint<DIM>::Create((*original_vertices[idx])[0], (*original_vertices[idx])[1],
-                                                                       (*original_vertices[idx])[2] + depth/original_vertices[idx]->GetReferenceLengthScale(),
-                                                  original_vertices[idx]->GetReferenceLengthScale()));
+            new_vertices.push_back(DimensionalChastePoint<DIM>::Create(vertex_location[0], vertex_location[1],
+                                                                       vertex_location[2] + depth/mReferenceLength, mReferenceLength));
         }
     }
 
@@ -428,34 +429,42 @@ std::vector<boost::shared_ptr<Polygon<DIM> > > Part<DIM>::GetPolygons()
 }
 
 template<unsigned DIM>
-c_vector<double, 2*DIM> Part<DIM>::GetBoundingBox()
+std::vector<units::quantity<unit::length> > Part<DIM>::GetBoundingBox()
 {
     std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     c_vector<double, 2*DIM> box;
 
     for (unsigned idx = 0; idx < vertices.size(); idx++)
     {
+        c_vector<double, DIM> vertex_location = vertices[idx]->GetLocation(mReferenceLength);
         for (unsigned jdx = 0; jdx < DIM; jdx++)
         {
             if (idx == 0)
             {
-                box[2 * jdx] = (*vertices[idx])[jdx];
-                box[2 * jdx + 1] = (*vertices[idx])[jdx];
+                box[2 * jdx] = vertex_location[jdx];
+                box[2 * jdx + 1] = vertex_location[jdx];
             }
             else
             {
-                if ((*vertices[idx])[jdx] < box[2 * jdx])
+                if (vertex_location[jdx] < box[2 * jdx])
                 {
-                    box[2 * jdx] = (*vertices[idx])[jdx];
+                    box[2 * jdx] = vertex_location[jdx];
                 }
-                if ((*vertices[idx])[jdx] > box[2 * jdx + 1])
+                if (vertex_location[jdx] > box[2 * jdx + 1])
                 {
-                    box[2 * jdx + 1] = (*vertices[idx])[jdx];
+                    box[2 * jdx + 1] = vertex_location[jdx];
                 }
             }
         }
     }
-    return box;
+
+    std::vector<units::quantity<unit::length> > box_vector(6);
+    for(unsigned idx=0; idx<6; idx++)
+    {
+        box_vector[idx] = box[idx] * mReferenceLength;
+    }
+
+    return box_vector;
 }
 
 template<unsigned DIM>
@@ -520,13 +529,14 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk()
         p_polygon->GetPointIds()->SetNumberOfIds(vertices.size());
         for (vtkIdType jdx = 0; jdx < vtkIdType(vertices.size()); jdx++)
         {
+            c_vector<double, DIM> vertex_location = vertices[jdx]->GetLocation(mReferenceLength);
             if(DIM==3)
             {
-                p_vertices->InsertNextPoint((*vertices[jdx])[0], (*vertices[jdx])[1], (*vertices[jdx])[2]);
+                p_vertices->InsertNextPoint(vertex_location[0], vertex_location[1], vertex_location[2]);
             }
             else
             {
-                p_vertices->InsertNextPoint((*vertices[jdx])[0], (*vertices[jdx])[1], 0.0);
+                p_vertices->InsertNextPoint(vertex_location[0], vertex_location[1], 0.0);
             }
 
             p_polygon->GetPointIds()->SetId(jdx, vert_counter);
@@ -557,11 +567,11 @@ bool Part<DIM>::IsPointInPart(DimensionalChastePoint<DIM> location)
 
     if(DIM==3)
     {
-        p_points->InsertNextPoint(location[0], location[1], location[2]);
+        p_points->InsertNextPoint(location.GetLocation(mReferenceLength)[0], location.GetLocation(mReferenceLength)[1], location.GetLocation(mReferenceLength)[2]);
     }
     else
     {
-        p_points->InsertNextPoint(location[0], location[1], 0.0);
+        p_points->InsertNextPoint(location.GetLocation(mReferenceLength)[0], location.GetLocation(mReferenceLength)[1], 0.0);
     }
 
     vtkSmartPointer<vtkPolyData> p_point_data = vtkSmartPointer<vtkPolyData>::New();
@@ -594,11 +604,13 @@ std::vector<bool> Part<DIM>::IsPointInPart(const std::vector<DimensionalChastePo
     {
         if(DIM==3)
         {
-            p_points->InsertNextPoint(rLocations[idx][0], rLocations[idx][1], rLocations[idx][2]);
+            p_points->InsertNextPoint(rLocations[idx].GetLocation(mReferenceLength)[0],
+                                      rLocations[idx].GetLocation(mReferenceLength)[1], rLocations[idx].GetLocation(mReferenceLength)[2]);
         }
         else
         {
-            p_points->InsertNextPoint(rLocations[idx][0], rLocations[idx][1], 0.0);
+            p_points->InsertNextPoint(rLocations[idx].GetLocation(mReferenceLength)[0],
+                                      rLocations[idx].GetLocation(mReferenceLength)[1], 0.0);
         }
     }
 
@@ -669,7 +681,7 @@ void Part<DIM>::SetReferenceLengthScale(units::quantity<unit::length> referenceL
 }
 
 template<unsigned DIM>
-void Part<DIM>::Translate(c_vector<double, DIM> vector)
+void Part<DIM>::Translate(DimensionalChastePoint<DIM> vector)
 {
     std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     {

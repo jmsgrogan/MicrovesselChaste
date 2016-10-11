@@ -55,7 +55,7 @@ Copyright (c) 2005-2016, University of Oxford.
  * A class for describing regular grids, calculating point and line to grid point relationships and
  * storing cell and vessel to grid point maps.
  */
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM = ELEMENT_DIM>
+template<unsigned DIM>
 class RegularGrid
 {
     /**
@@ -71,17 +71,17 @@ class RegularGrid
     /**
      * The origin of the grid in x,y,z. Corresponds to location of front, bottom, left corner.
      */
-    DimensionalChastePoint<SPACE_DIM> mOrigin;
+    DimensionalChastePoint<DIM> mOrigin;
 
     /**
      * The vessel network
      */
-    boost::shared_ptr<VesselNetwork<SPACE_DIM> > mpNetwork;
+    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
 
     /**
      * The cell population. This memory pointed to is not managed in this class.
      */
-    AbstractCellPopulation<SPACE_DIM>* mpCellPopulation;
+    AbstractCellPopulation<DIM>* mpCellPopulation;
 
     /**
      * A map of cells corresponding to a point on the grid
@@ -91,12 +91,12 @@ class RegularGrid
     /**
      * A map of vessel nodes corresponding to a point on the grid
      */
-    std::vector<std::vector<boost::shared_ptr<VesselNode<SPACE_DIM> > > > mPointNodeMap;
+    std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > mPointNodeMap;
 
     /**
      * A map of vessel segments corresponding to a point on the grid
      */
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > mPointSegmentMap;
+    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > mPointSegmentMap;
 
     /**
      * A field with specified value at each point in the grid
@@ -139,7 +139,7 @@ public:
      * Factory constructor method
      * @return a shared pointer to a new grid
      */
-    static boost::shared_ptr<RegularGrid<ELEMENT_DIM, SPACE_DIM> > Create();
+    static boost::shared_ptr<RegularGrid<DIM> > Create();
 
     /**
      * Desctructor
@@ -156,7 +156,7 @@ public:
      * @param pPart the part from which to get the bounding box
      * @param gridSize the grid spacing
      */
-    void GenerateFromPart(boost::shared_ptr<Part<SPACE_DIM> > pPart, units::quantity<unit::length> gridSize);
+    void GenerateFromPart(boost::shared_ptr<Part<DIM> > pPart, units::quantity<unit::length> gridSize);
 
     /**
      * Get the 1-D grid index for given x,y,z indices
@@ -172,7 +172,7 @@ public:
      * @param rLocation the point to get the nearest index to
      * @return the 1-d index of the nearest grid point
      */
-    unsigned GetNearestGridIndex(const DimensionalChastePoint<SPACE_DIM>& rLocation);
+    unsigned GetNearestGridIndex(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Calculate neighbour indices for each grid point
@@ -193,20 +193,20 @@ public:
      * @param zIndex the grid z index
      * @return the location of the point
      */
-    DimensionalChastePoint<SPACE_DIM> GetLocation(unsigned xIndex, unsigned yIndex, unsigned zIndex);
+    DimensionalChastePoint<DIM> GetLocation(unsigned xIndex, unsigned yIndex, unsigned zIndex);
 
     /**
      * Get the location of a point on the grid for given 1-d grid index
      * @param gridIndex the 1d grid index
      * @return the location of the point
      */
-    DimensionalChastePoint<SPACE_DIM> GetLocationOf1dIndex(unsigned gridIndex);
+    DimensionalChastePoint<DIM> GetLocationOf1dIndex(unsigned gridIndex);
 
     /**
      * Get all of the grid locations
      * @return a vector containing all grid locations in grid order
      */
-    std::vector<DimensionalChastePoint<SPACE_DIM> > GetLocations();
+    std::vector<DimensionalChastePoint<DIM> > GetLocations();
 
     /**
      * Return the number of points in the grid
@@ -218,14 +218,14 @@ public:
      * Return the origin in x, y, z
      * @return the grid origin
      */
-    DimensionalChastePoint<SPACE_DIM> GetOrigin();
+    DimensionalChastePoint<DIM> GetOrigin();
 
     /**
      * Return a vector of input point indices which in the bounding boxes of each grid point
      * @param inputPoints a vector of point locations
      * @return the indices of input points in the bounding box of each grid point
      */
-    std::vector<std::vector<unsigned> > GetPointPointMap(std::vector<DimensionalChastePoint<SPACE_DIM> > inputPoints);
+    std::vector<std::vector<unsigned> > GetPointPointMap(std::vector<DimensionalChastePoint<DIM> > inputPoints);
 
     /**
      * Return the point cell map
@@ -239,7 +239,7 @@ public:
      * @param update update the map
      * @return the point node map
      */
-    const std::vector<std::vector<boost::shared_ptr<VesselNode<SPACE_DIM> > > >& GetPointNodeMap(bool update = true);
+    const std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >& GetPointNodeMap(bool update = true);
 
     /**
      * Return the point segments map
@@ -247,7 +247,7 @@ public:
      * @param useVesselSurface use the vessel surface for distance calculations
      * @return the point segment map
      */
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > GetPointSegmentMap(bool update = true, bool useVesselSurface = false);
+    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > GetPointSegmentMap(bool update = true, bool useVesselSurface = false);
 
     /**
      * Return true if the segment is at a lattice site
@@ -285,7 +285,7 @@ public:
      * @param useVtk use VTK to do the sampling, faster but algorithm not clearly documented
      * @return the grid spacing
      */
-    std::vector<double> InterpolateGridValues(std::vector<DimensionalChastePoint<SPACE_DIM> > locations,
+    std::vector<double> InterpolateGridValues(std::vector<DimensionalChastePoint<DIM> > locations,
                                               std::vector<double> values, bool useVtk = false);
 
     /**
@@ -294,7 +294,7 @@ public:
      * @param gridIndex the grid point of interest
      * @return is the input location in the bounding box of the grid point
      */
-    bool IsLocationInPointVolume(DimensionalChastePoint<SPACE_DIM> point, unsigned gridIndex);
+    bool IsLocationInPointVolume(DimensionalChastePoint<DIM> point, unsigned gridIndex);
 
     /**
      * Is the point on the outer boundary of the domain
@@ -316,13 +316,13 @@ public:
      * Set the cell population
      * @param rCellPopulation a reference to the cell population
      */
-    void SetCellPopulation(AbstractCellPopulation<SPACE_DIM>& rCellPopulation);
+    void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation);
 
     /**
      * Set the a ca based population
      * @param pPopulation a pointer to the cell population
      */
-    void SetCaBasedPopulation(boost::shared_ptr<CaBasedCellPopulation<SPACE_DIM> > pPopulation);
+    void SetCaBasedPopulation(boost::shared_ptr<CaBasedCellPopulation<DIM> > pPopulation);
 
     /**
      * Set the grid extents in x, y, z
@@ -334,7 +334,7 @@ public:
      * Set the origin in x, y, z
      * @param origin the grid origin
      */
-    void SetOrigin(DimensionalChastePoint<SPACE_DIM> origin);
+    void SetOrigin(DimensionalChastePoint<DIM> origin);
 
     /**
      * Set the values of a field at all points on the grid
@@ -357,7 +357,7 @@ public:
      * Set the vessel network
      * @param pNetwork the vessel network
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<SPACE_DIM> > pNetwork);
+    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Write the grid and any field to file as a VTI file

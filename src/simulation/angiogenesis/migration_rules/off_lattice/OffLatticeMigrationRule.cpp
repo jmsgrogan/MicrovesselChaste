@@ -98,13 +98,13 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
     }
     else
     {
-        std::vector<DimensionalChastePoint<DIM> > movement_vectors(rNodes.size());
+        std::vector<DimensionalChastePoint<DIM> > movement_vectors;
 
         // We want to probe the PDE solution all at once first if needed, as this is an expensive operation if done node-by-node.
         // Every node has 5 probes in 2D and 7 in 3D.
         std::vector<units::quantity<unit::concentration> > probed_solutions;
         unsigned probes_per_node = (2*DIM)+1;
-        std::vector<DimensionalChastePoint<DIM> > probe_locations(probes_per_node*rNodes.size());
+        std::vector<DimensionalChastePoint<DIM> > probe_locations(probes_per_node*rNodes.size(), DimensionalChastePoint<DIM>(0.0, 0.0, 0.0, 1.e-6*unit::metres));
         std::vector<bool> candidate_locations_inside_domain(probes_per_node*rNodes.size(), false);
 
         if(this->mpSolver)
@@ -234,7 +234,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             // Get the movement increment
             units::quantity<unit::time> time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
             units::quantity<unit::length> increment_length = time_increment* mVelocity;
-            movement_vectors[idx] = OffsetAlongVector<DIM>(DimensionalChastePoint<DIM>(new_direction), increment_length);
+            movement_vectors.push_back(OffsetAlongVector<DIM>(new_direction, increment_length, reference_length));
         }
         return movement_vectors;
     }
@@ -243,7 +243,8 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
 template<unsigned DIM>
 std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
-    std::vector<DimensionalChastePoint<DIM> > movement_vectors(rNodes.size());
+    std::vector<DimensionalChastePoint<DIM> > movement_vectors;
+    units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
 
     // Collect the probe locations for each node
     std::vector<units::quantity<unit::concentration> > probed_solutions;
@@ -252,7 +253,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
     {
         probes_per_node = 5;
     }
-    std::vector<DimensionalChastePoint<DIM> > probe_locations(probes_per_node*rNodes.size());
+    std::vector<DimensionalChastePoint<DIM> > probe_locations(probes_per_node*rNodes.size(), DimensionalChastePoint<DIM>(0.0, 0.0, 0.0, reference_length));
     std::vector<bool> candidate_locations_inside_domain(probes_per_node*rNodes.size(), false);
 
     // Get a normal to the segments, will depend on whether they are parallel
@@ -323,9 +324,9 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
 
         units::quantity<unit::plane_angle> angle = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0]/unit::radians,
                                                                                                           mSdvAngles[0]/unit::radians)*unit::radians;
-        std::vector<DimensionalChastePoint<DIM> > local_probes = GetProbeLocationsInternalPoint<DIM>(DimensionalChastePoint<DIM>(sprout_direction),
+        std::vector<DimensionalChastePoint<DIM> > local_probes = GetProbeLocationsInternalPoint<DIM>(DimensionalChastePoint<DIM>(sprout_direction, reference_length),
                                                                                                 rNodes[idx]->rGetLocation(),
-                                                                                                DimensionalChastePoint<DIM>(rNodes[idx]->GetSegments()[0]->GetUnitTangent()),
+                                                                                                DimensionalChastePoint<DIM>(rNodes[idx]->GetSegments()[0]->GetUnitTangent(), reference_length),
                                                                                                 mProbeLength,
                                                                                                 angle);
         for(unsigned jdx=0;jdx<probes_per_node; jdx++)
@@ -350,7 +351,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
     // Decide on the sprout directions
     for(unsigned idx=0; idx<rNodes.size(); idx++)
     {
-        DimensionalChastePoint<DIM> new_direction(0.0, 0.0, 0.0, BaseUnits::Instance()->GetReferenceLengthScale());
+        DimensionalChastePoint<DIM> new_direction(0.0, 0.0, 0.0, reference_length);
 
         // Solution dependent contribution
         if(this->mpSolver)
@@ -400,7 +401,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
         }
         units::quantity<unit::time> time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
         units::quantity<unit::length> increment_length = time_increment* mVelocity;
-        movement_vectors[idx] = OffsetAlongVector<DIM>(new_direction, increment_length);
+        movement_vectors.push_back(OffsetAlongVector<DIM>(new_direction, increment_length));
     }
     return movement_vectors;
 }

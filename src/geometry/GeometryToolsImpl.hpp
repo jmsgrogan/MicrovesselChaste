@@ -137,8 +137,8 @@ std::vector<DimensionalChastePoint<DIM> > GetProbeLocationsExternalPoint(Dimensi
                                                                          units::quantity<unit::length> probeLength)
 {
     unsigned num_probes = (2*DIM)+1;
-    std::vector<DimensionalChastePoint<DIM> > probe_locations(num_probes);
     units::quantity<unit::length> length_scale = rCentrePoint.GetReferenceLengthScale();
+    std::vector<DimensionalChastePoint<DIM> > probe_locations(num_probes, DimensionalChastePoint<DIM>(0.0, 0.0, 0.0, length_scale));
 
     double normalized_probe_length = probeLength/length_scale;
     probe_locations[0] = rCentrePoint;
@@ -162,10 +162,11 @@ std::vector<DimensionalChastePoint<DIM> > GetProbeLocationsInternalPoint(Dimensi
                                                                          units::quantity<unit::plane_angle> angle)
 {
     unsigned num_probes = 2*DIM - 1;
-    std::vector<DimensionalChastePoint<DIM> > probe_locations(num_probes);
+    units::quantity<unit::length> length_scale = rCentralPoint.GetReferenceLengthScale();
+    std::vector<DimensionalChastePoint<DIM> > probe_locations(num_probes, DimensionalChastePoint<DIM>(0.0, 0.0, 0.0, length_scale));
     probe_locations[0] = rCentralPoint;
     c_vector<double, DIM> unit_axis = rRotationAxis.GetUnitVector();
-    units::quantity<unit::length> length_scale = rCentralPoint.GetReferenceLengthScale();
+
     double normalized_probe_length = probeLength/length_scale;
 
     c_vector<double, DIM> new_direction = RotateAboutAxis<DIM>(rInitialDirection.GetUnitVector(), unit_axis, angle);
@@ -214,18 +215,19 @@ bool IsPointInBox(const DimensionalChastePoint<DIM>& rPoint,
     bool point_in_box = false;
     units::quantity<unit::length> point_length_scale = rPoint.GetReferenceLengthScale();
     c_vector<double, DIM> location_in_point_scale = rLocation.GetLocation(point_length_scale);
+    c_vector<double, DIM> dimensionless_point = rPoint.GetLocation(point_length_scale);
     double dimensionless_spacing = spacing/point_length_scale;
 
-    bool inside_left = rPoint[0] >= location_in_point_scale[0] -dimensionless_spacing/2.0;
-    bool inside_right = rPoint[0] <= location_in_point_scale[0] + dimensionless_spacing/2.0;
+    bool inside_left = dimensionless_point[0] >= location_in_point_scale[0] -dimensionless_spacing/2.0;
+    bool inside_right = dimensionless_point[0] <= location_in_point_scale[0] + dimensionless_spacing/2.0;
     if(inside_left && inside_right)
     {
-        if(rPoint[1] >= location_in_point_scale[1] -dimensionless_spacing/2.0 && rPoint[1] <=
+        if(dimensionless_point[1] >= location_in_point_scale[1] -dimensionless_spacing/2.0 && dimensionless_point[1] <=
                 location_in_point_scale[1] + dimensionless_spacing/2.0)
         {
             if(DIM==3)
             {
-                if(rPoint[2] >= location_in_point_scale[2] -dimensionless_spacing/2.0 && rPoint[2] <=
+                if(dimensionless_point[2] >= location_in_point_scale[2] -dimensionless_spacing/2.0 && dimensionless_point[2] <=
                         location_in_point_scale[2] + dimensionless_spacing/2.0)
                 {
                     return true;
@@ -258,10 +260,7 @@ bool IsPointInTetra(const DimensionalChastePoint<DIM>& rPoint, const std::vector
     }
     else
     {
-        points->InsertNextPoint(loc0[0], loc0[1], 0.0);
-        points->InsertNextPoint(loc1[0], loc1[1], 0.0);
-        points->InsertNextPoint(loc2[0], loc2[1], 0.0);
-        points->InsertNextPoint(loc3[0], loc3[1], 0.0);
+        EXCEPTION("PointInTetra only works in 3d");
     }
 
     vtkSmartPointer<vtkUnstructuredGrid> p_grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
@@ -302,14 +301,15 @@ units::quantity<unit::length> LengthOfLineInBox(const DimensionalChastePoint<DIM
         double dimensionless_spacing = spacing/scale_factor;
 
         c_vector<double,6> dimensionless_bounds;
-        dimensionless_bounds[0] = rLocation[0] - dimensionless_spacing/2.0;
-        dimensionless_bounds[1] = rLocation[0] + dimensionless_spacing/2.0;
-        dimensionless_bounds[2] = rLocation[1] - dimensionless_spacing/2.0;
-        dimensionless_bounds[3] = rLocation[1] + dimensionless_spacing/2.0;
+        c_vector<double, DIM> dimensionless_location = rLocation.GetLocation(scale_factor);
+        dimensionless_bounds[0] = dimensionless_location[0] - dimensionless_spacing/2.0;
+        dimensionless_bounds[1] = dimensionless_location[0] + dimensionless_spacing/2.0;
+        dimensionless_bounds[2] = dimensionless_location[1] - dimensionless_spacing/2.0;
+        dimensionless_bounds[3] = dimensionless_location[1] + dimensionless_spacing/2.0;
         if(DIM==3)
         {
-            dimensionless_bounds[4] = rLocation[2] - dimensionless_spacing/2.0;
-            dimensionless_bounds[5] = rLocation[2] + dimensionless_spacing/2.0;
+            dimensionless_bounds[4] = dimensionless_location[2] - dimensionless_spacing/2.0;
+            dimensionless_bounds[5] = dimensionless_location[2] + dimensionless_spacing/2.0;
         }
         else
         {
@@ -440,24 +440,26 @@ DimensionalChastePoint<DIM> RotateAboutAxis(const DimensionalChastePoint<DIM>& r
     c_vector<double, DIM> unit_axis = rAxis.GetUnitVector();
     units::quantity<unit::length> dot_product = GetDotProduct(rDirection, unit_axis);
     units::quantity<unit::length> length_scale = rDirection.GetReferenceLengthScale();
+    c_vector<double, DIM> dimensionless_direction = rDirection.GetLocation(length_scale);
+
     double dimensionless_dot_product = dot_product/length_scale;
-    c_vector<double, DIM> initial_direction = zero_vector<double>(DIM);
-    DimensionalChastePoint<DIM> new_direction(initial_direction, length_scale);
+    c_vector<double, DIM> new_direction;
+
     if(DIM==3)
     {
-        new_direction[0] = (unit_axis[0] * dimensionless_dot_product * (1.0 - cos_a) + rDirection[0] * cos_a
-                    + (-unit_axis[2] * rDirection[1] + unit_axis[1] * rDirection[2]) * sin_a);
-        new_direction[1] = (unit_axis[1] * dimensionless_dot_product * (1.0 - cos_a) + rDirection[1] * cos_a
-                    + (unit_axis[2] * rDirection[0] - unit_axis[0] * rDirection[2]) * sin_a);
-        new_direction[2] = (unit_axis[2] * dimensionless_dot_product * (1.0 - cos_a) + rDirection[2] * cos_a
-                    + (-unit_axis[1] * rDirection[0] + unit_axis[0] * rDirection[1]) * sin_a);
+        new_direction[0] = (unit_axis[0] * dimensionless_dot_product * (1.0 - cos_a) + dimensionless_direction[0] * cos_a
+                    + (-unit_axis[2] * dimensionless_direction[1] + unit_axis[1] * dimensionless_direction[2]) * sin_a);
+        new_direction[1] = (unit_axis[1] * dimensionless_dot_product * (1.0 - cos_a) + dimensionless_direction[1] * cos_a
+                    + (unit_axis[2] * dimensionless_direction[0] - unit_axis[0] * dimensionless_direction[2]) * sin_a);
+        new_direction[2] = (unit_axis[2] * dimensionless_dot_product * (1.0 - cos_a) + dimensionless_direction[2] * cos_a
+                    + (-unit_axis[1] * dimensionless_direction[0] + unit_axis[0] * dimensionless_direction[1]) * sin_a);
     }
     else
     {
-        new_direction[0] = unit_axis[0] * dimensionless_dot_product * (1.0 - cos_a) + rDirection[0] * cos_a;
-        new_direction[1] = unit_axis[1] * dimensionless_dot_product * (1.0 - cos_a) + rDirection[1] * cos_a;
+        new_direction[0] = unit_axis[0] * dimensionless_dot_product * (1.0 - cos_a) + dimensionless_direction[0] * cos_a;
+        new_direction[1] = unit_axis[1] * dimensionless_dot_product * (1.0 - cos_a) + dimensionless_direction[1] * cos_a;
     }
-    return new_direction;
+    return DimensionalChastePoint<DIM>(new_direction, length_scale);
 }
 
 template<unsigned DIM>

@@ -186,6 +186,14 @@ public:
         TS_ASSERT_DELTA(p_facet->GetPlane()->GetNormal()[0], 0.0, 1.e-6);
         TS_ASSERT_DELTA(p_facet->GetPlane()->GetNormal()[1], 0.0, 1.e-6);
         TS_ASSERT_DELTA(p_facet->GetPlane()->GetNormal()[2], 1.0, 1.e-6);
+
+        std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > short_vertices;
+        short_vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0));
+        short_vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0));
+        boost::shared_ptr<Polygon<3> > p_short_polygon = Polygon<3>::Create(short_vertices);
+        boost::shared_ptr<Facet<3> > p_short_facet = Facet<3>::Create(p_short_polygon);
+        TS_ASSERT_THROWS_THIS(p_short_facet->GetNormal(), "At least 3 vertices are required to generate a normal.");
+
     }
 };
 

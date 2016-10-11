@@ -69,7 +69,7 @@ public:
         OutputFileHandler output_file_handler("TestRegularGridWriter", false);
         std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("SimpleGrid.vti");
 
-        boost::shared_ptr<RegularGridWriter> p_writer = GeometryWriter::Create();
+        boost::shared_ptr<RegularGridWriter> p_writer = RegularGridWriter::Create();
         TS_ASSERT_THROWS_THIS(p_writer->Write(), "Output file not specified for image writer.");
         p_writer->SetFilename(output_filename);
         TS_ASSERT_THROWS_THIS(p_writer->Write(), "Output image not set for image writer.");

@@ -77,7 +77,7 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::
     }
 
     std::vector<units::quantity<unit::concentration> > probed_solutions(rNodes.size(), 0.0*unit::mole_per_metre_cubed);
-    std::vector<DimensionalChastePoint<DIM> > probe_locations(rNodes.size());
+    std::vector<DimensionalChastePoint<DIM> > probe_locations(rNodes.size(), DimensionalChastePoint<DIM>(0.0, 0.0, 0.0, 1.e-6*unit::metres));
 
     if(this->mpSolver)
     {
