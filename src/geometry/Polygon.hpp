@@ -59,6 +59,11 @@ class Polygon
      */
     std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > mVertices;
 
+    /**
+     * The reference length scale
+     */
+    units::quantity<unit::length> mReferenceLength;
+
 public:
 
     /**
@@ -115,7 +120,7 @@ public:
      * Return the bounding box of the polygon
      * @return the bounding box (xmin, xmax, ymin, ymax, zmin, zmax)
      */
-    c_vector<double, 6> GetBoundingBox();
+    std::vector<units::quantity<unit::length> > GetBoundingBox();
 
     /**
      * Return the centroid of the polygon

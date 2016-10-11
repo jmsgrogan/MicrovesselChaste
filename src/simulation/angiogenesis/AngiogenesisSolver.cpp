@@ -214,11 +214,11 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
 
         mpMigrationRule->SetIsSprouting(sprouting);
         std::vector<DimensionalChastePoint<DIM> > movement_vectors = mpMigrationRule->GetDirections(tips);
-        std::vector<DimensionalChastePoint<DIM> > candidate_tip_locations(tips.size());
+        std::vector<DimensionalChastePoint<DIM> > candidate_tip_locations;
         std::vector<bool> candidate_tips_inside_domain(tips.size(), true);
         for (unsigned idx = 0; idx < tips.size(); idx++)
         {
-            candidate_tip_locations[idx] = tips[idx]->rGetLocation() + movement_vectors[idx];
+            candidate_tip_locations.push_back(tips[idx]->rGetLocation() + movement_vectors[idx]);
         }
 
         if (mpBoundingDomain)

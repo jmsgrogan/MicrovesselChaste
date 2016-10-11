@@ -204,7 +204,7 @@ public:
      * Return the bounding box
      * @return the bounding box of the part (xmin, xmax, ymin, ymax, zmin, zmax)
      */
-    c_vector<double, 2*DIM> GetBoundingBox();
+    std::vector<units::quantity<unit::length> > GetBoundingBox();
 
     /**
      * Return the indices of the grid that are inside the part
@@ -300,7 +300,7 @@ public:
      * Move the part along the translation vector
      * @param vector the vector to move the part along
      */
-    void Translate(c_vector<double, DIM> vector);
+    void Translate(DimensionalChastePoint<DIM> vector);
 
     /**
      * Write the part to file in vtk format

@@ -52,11 +52,12 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UblasVectorInclude.hpp"
 #include "AbstractTetrahedralMesh.hpp"
 #include "VtkMeshWriter.hpp"
+#include "BaseUnits.hpp"
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::DiscreteContinuumMesh() :
     mAttributes(),
-    mReferenceLength(1.e-6 * unit::metres),
+    mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
     mpVtkMesh(vtkSmartPointer<vtkUnstructuredGrid>::New()),
     mpVtkCellLocator(vtkSmartPointer<vtkCellLocator>::New()),
     mVtkRepresentationUpToDate(false),
@@ -64,7 +65,8 @@ DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::DiscreteContinuumMesh() :
     mSegmentElementMap(),
     mCellElementMap(),
     mpNetwork(),
-    mpCellPopulation()
+    mpCellPopulation(),
+    mCellPopulationReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
 {
 
 }
@@ -95,7 +97,7 @@ vtkSmartPointer<vtkUnstructuredGrid> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DI
     {
         mpVtkMesh = vtkSmartPointer<vtkUnstructuredGrid>::New();
         vtkSmartPointer<vtkPoints> p_vtk_points = vtkSmartPointer<vtkPoints>::New();
-        std::vector<std::vector<double> > node_locations = GetNodeLocations();
+        std::vector<c_vector<double, SPACE_DIM> > node_locations = GetNodeLocations();
         p_vtk_points->SetNumberOfPoints(node_locations.size());
         for(unsigned idx=0; idx<node_locations.size(); idx++)
         {
@@ -179,11 +181,11 @@ std::vector<std::vector<unsigned> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM
     for(unsigned idx=0; idx<points.size(); idx++)
     {
         double x_coords[3];
-        x_coords[0] = points[idx][0];
-        x_coords[1] = points[idx][1];
+        x_coords[0] = points[idx].GetLocation(mReferenceLength)[0];
+        x_coords[1] = points[idx].GetLocation(mReferenceLength)[1];
         if(SPACE_DIM == 3)
         {
-            x_coords[2] = points[idx][2];
+            x_coords[2] = points[idx].GetLocation(mReferenceLength)[2];
         }
         else
         {
@@ -223,16 +225,17 @@ const std::vector<std::vector<CellPtr> >& DiscreteContinuumMesh<ELEMENT_DIM, SPA
     mCellElementMap.clear();
     mCellElementMap = std::vector<std::vector<CellPtr> >(this->GetNumElements());
 
+    double cell_mesh_length_scaling = mCellPopulationReferenceLength/mReferenceLength;
     for (typename AbstractCellPopulation<SPACE_DIM>::Iterator cell_iter = mpCellPopulation->Begin();
             cell_iter != mpCellPopulation->End(); ++cell_iter)
     {
         c_vector<double, SPACE_DIM> location = mpCellPopulation->GetLocationOfCellCentre(*cell_iter);
         double x_coords[3];
-        x_coords[0] = location[0];
-        x_coords[1] = location[1];
+        x_coords[0] = location[0]*cell_mesh_length_scaling;
+        x_coords[1] = location[1]*cell_mesh_length_scaling;
         if(SPACE_DIM == 3)
         {
-            x_coords[2] = location[2];
+            x_coords[2] = location[2]*cell_mesh_length_scaling;
         }
         else
         {
@@ -274,22 +277,22 @@ std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > Discret
         DimensionalChastePoint<SPACE_DIM> loc1 = segments[jdx]->GetNode(0)->rGetLocation();
         DimensionalChastePoint<SPACE_DIM> loc2 = segments[jdx]->GetNode(1)->rGetLocation();
         double x_coords1[3];
-        x_coords1[0] = loc1[0];
-        x_coords1[1] = loc1[1];
+        x_coords1[0] = loc1.GetLocation(mReferenceLength)[0];
+        x_coords1[1] = loc1.GetLocation(mReferenceLength)[1];
         if(SPACE_DIM == 3)
         {
-            x_coords1[2] = loc1[2];
+            x_coords1[2] = loc1.GetLocation(mReferenceLength)[2];
         }
         else
         {
             x_coords1[2] = 0.0;
         }
         double x_coords2[3];
-        x_coords2[0] = loc2[0];
-        x_coords2[1] = loc2[1];
+        x_coords2[0] = loc2.GetLocation(mReferenceLength)[0];
+        x_coords2[1] = loc2.GetLocation(mReferenceLength)[1];
         if(SPACE_DIM == 3)
         {
-            x_coords2[2] = loc2[2];
+            x_coords2[2] = loc2.GetLocation(mReferenceLength)[2];
         }
         else
         {
@@ -328,20 +331,13 @@ std::vector<std::vector<unsigned> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-std::vector<std::vector<double> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetNodeLocations()
+std::vector<c_vector<double, SPACE_DIM> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetNodeLocations()
 {
-    std::vector<std::vector<double> > locations;
     unsigned num_nodes = AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetNumNodes();
+    std::vector<c_vector<double, SPACE_DIM> > locations(num_nodes);
     for (unsigned idx = 0; idx < num_nodes; idx++)
     {
-        c_vector<double, SPACE_DIM> location =
-                AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetNode(idx)->rGetLocation();
-        std::vector<double> vec_location;
-        for (unsigned jdx = 0; jdx < SPACE_DIM; jdx++)
-        {
-            vec_location.push_back(location[jdx]);
-        }
-        locations.push_back(vec_location);
+        locations.push_back(AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetNode(idx)->rGetLocation());
     }
     return locations;
 }
@@ -494,9 +490,11 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetAttributes(std::vector<un
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetCellPopulation(AbstractCellPopulation<SPACE_DIM>& rCellPopulation)
+void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetCellPopulation(AbstractCellPopulation<SPACE_DIM>& rCellPopulation,
+                                                                      units::quantity<unit::length> cellLengthScale)
 {
     mpCellPopulation = &rCellPopulation;
+    mCellPopulationReferenceLength = cellLengthScale;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

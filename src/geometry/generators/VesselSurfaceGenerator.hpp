@@ -62,6 +62,11 @@ class VesselSurfaceGenerator
      */
     vtkSmartPointer<vtkPolyData> mpSurface;
 
+    /**
+     * The reference length scale
+     */
+    units::quantity<unit::length> mReferenceLength;
+
 public:
 
     /**

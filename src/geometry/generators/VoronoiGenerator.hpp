@@ -49,6 +49,10 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned DIM>
 class VoronoiGenerator
 {
+    /**
+     * The reference length scale
+     */
+    units::quantity<unit::length> mReferenceLength;
 
 public:
 

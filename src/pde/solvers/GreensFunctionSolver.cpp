@@ -251,13 +251,10 @@ void GreensFunctionSolver<DIM>::GenerateSubSegments()
                 double subsegment_length_factor = segment_length / max_subsegment_length;
                 unsigned num_subsegments = std::floor(subsegment_length_factor) + 1;
                 units::quantity<unit::length> subsegment_length = segment_length / double(num_subsegments);
-                units::quantity<unit::length> node_length_scale = (*segment_iter)->GetNode(0)->GetReferenceLengthScale();
-
-                c_vector<double, DIM> increment = (end_point.GetLocation(node_length_scale) - start_point.GetLocation(node_length_scale)) / (segment_length/node_length_scale);
+                DimensionalChastePoint<DIM> increment = (end_point - start_point);
                 for (unsigned i = 0; i < num_subsegments; i++)
                 {
-                    c_vector<double, DIM> location = start_point.GetLocation(node_length_scale) + (double(i) + 0.5) * increment * (subsegment_length/node_length_scale);
-                    mSubSegmentCoordinates.push_back(DimensionalChastePoint<DIM>(location));
+                    mSubSegmentCoordinates.push_back(start_point +  (increment*(double(i) + 0.5)));
                     mSubSegmentLengths.push_back(subsegment_length);
                     mSegmentPointMap[mSubSegmentCoordinates.size() - 1] = (*segment_iter);
                 }
@@ -447,7 +444,7 @@ void GreensFunctionSolver<DIM>::WriteSolution(std::map<std::string, std::vector<
     vtkSmartPointer<vtkPoints> pPoints = vtkSmartPointer<vtkPoints>::New();
     for (unsigned i = 0; i < mSubSegmentCoordinates.size(); i++)
     {
-        DimensionalChastePoint<DIM> location = mSubSegmentCoordinates[i];
+        c_vector<double, DIM> location = mSubSegmentCoordinates[i].GetLocation(this->mpRegularGrid->GetReferenceLengthScale());
         pPoints->InsertNextPoint(location[0], location[1], location[2]);
     }
     pPolyData->SetPoints(pPoints);

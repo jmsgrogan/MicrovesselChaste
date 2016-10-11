@@ -187,7 +187,8 @@ void OnLatticeSimulationWrapper::Solve(boost::shared_ptr<MicrovesselSimulationMo
     {
         for (unsigned index=0; index < mpInputCellPopulation->rGetMesh().GetNumNodes(); index++)
         {
-            c_vector<double, 3> grid_location = mpInputCellPopulation->rGetMesh().GetNode(index)->rGetLocation();
+            DimensionalChastePoint<3> grid_location = DimensionalChastePoint<3>(mpInputCellPopulation->rGetMesh().GetNode(index)->rGetLocation(),
+                                                                                BaseUnits::Instance()->GetReferenceLengthScale());
             std::pair<boost::shared_ptr<VesselSegment<3> >, units::quantity<unit::length> > segment_distance_pair = mpNetwork->GetNearestSegment(grid_location);
             if (segment_distance_pair.second < mVesselDistanceTolerance || mpNetwork->GetDistanceToNearestNode(grid_location) < mVesselDistanceTolerance)
             {

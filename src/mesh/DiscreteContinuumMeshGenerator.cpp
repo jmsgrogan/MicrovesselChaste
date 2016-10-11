@@ -49,10 +49,11 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VtkMeshWriter.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
+#include "BaseUnits.hpp"
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::DiscreteContinuumMeshGenerator() :
-    mMaxElementArea(0.0),
+    mMaxElementArea(0.0 * unit::metres * unit::metres* unit::metres),
     mpMesh(),
     mpDomain(),
     mpVtkDomain(),
@@ -60,7 +61,7 @@ DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::DiscreteContinuumMeshGen
     mHoles(),
     mRegions(),
     mAttributes(),
-    mReferenceLength(1.e-6 * unit::metres)
+    mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
 {
 
 }
@@ -141,8 +142,8 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Update()
         {
             if(mpDomain)
             {
-                c_vector<double, 2 * ELEMENT_DIM> bounding_box = mpDomain->GetBoundingBox();
-                if (std::abs(bounding_box[4]) < 1.e-6 && std::abs(bounding_box[5]) < 1.e-6)
+                std::vector<units::quantity<unit::length> > bounding_box = mpDomain->GetBoundingBox();
+                if (units::abs(bounding_box[4]) < 1.e-12*unit::metres && units::abs(bounding_box[5]) < 1.e-12*unit::metres)
                 {
                    Mesh2d();
                 }
@@ -166,8 +167,8 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Update()
     {
         if(mpDomain)
         {
-            c_vector<double, 2 * ELEMENT_DIM> bounding_box = mpDomain->GetBoundingBox();
-            if (std::abs(bounding_box[4]) < 1.e-6 && std::abs(bounding_box[5]) < 1.e-6)
+            std::vector<units::quantity<unit::length> > bounding_box = mpDomain->GetBoundingBox();
+            if (units::abs(bounding_box[4]) < 1.e-12*unit::metres && units::abs(bounding_box[5]) < 1.e-12*unit::metres)
             {
                 EXCEPTION("The part is two-dimensional, use the 2D meshing functionality.");
             }
@@ -203,9 +204,10 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
         mesher_input.numberofpoints = int(num_vertices);
         for (unsigned idx = 0; idx < num_vertices; idx++)
         {
+            c_vector<double, SPACE_DIM> vertex_location = vertex_locations[idx].GetLocation(mReferenceLength);
             for (unsigned jdx = 0; jdx < 2; jdx++)
             {
-                mesher_input.pointlist[2 * idx + jdx] = vertex_locations[idx][jdx];
+                mesher_input.pointlist[2 * idx + jdx] = vertex_location[jdx];
             }
         }
 
@@ -261,9 +263,10 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
         }
         for (unsigned idx = 0; idx < num_vertices; idx++)
         {
+            c_vector<double, SPACE_DIM> vertex_location = vertex_locations[idx].GetLocation(mReferenceLength);
             for (unsigned jdx = 0; jdx < 2; jdx++)
             {
-                mesher_input.pointlist[2 * idx + jdx + 2*num_points] = vertex_locations[idx][jdx];
+                mesher_input.pointlist[2 * idx + jdx + 2*num_points] = vertex_location[jdx];
             }
         }
 
@@ -299,9 +302,10 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
         mesher_input.numberofholes = int(mHoles.size());
         for (unsigned idx = 0; idx < mHoles.size(); idx++)
         {
+            c_vector<double, SPACE_DIM> hole_location = mHoles[idx].GetLocation(mReferenceLength);
             for (unsigned jdx = 0; jdx < 2; jdx++)
             {
-                mesher_input.holelist[2 * idx + jdx] = mHoles[idx][jdx];
+                mesher_input.holelist[2 * idx + jdx] = hole_location[jdx];
             }
         }
     }
@@ -312,9 +316,10 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
         mesher_input.numberofregions = int(mRegions.size());
         for (unsigned idx = 0; idx < mRegions.size(); idx++)
         {
+            c_vector<double, SPACE_DIM> region_location = mRegions[idx].GetLocation(mReferenceLength);
             for (unsigned jdx = 0; jdx < 2; jdx++)
             {
-                mesher_input.regionlist[4 * idx + jdx] = mRegions[idx][jdx];
+                mesher_input.regionlist[4 * idx + jdx] = region_location[jdx];
             }
             mesher_input.regionlist[4 * idx + 2] = 1.0;
             mesher_input.regionlist[4 * idx + 3] = mMaxElementArea;
@@ -322,9 +327,9 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
     }
 
     std::string mesher_command = "pqQze";
-    if (mMaxElementArea > 0.0)
+    if (mMaxElementArea > 0.0*unit::metres*unit::metres*unit::metres)
     {
-        mesher_command += "a" + boost::lexical_cast<std::string>(mMaxElementArea);
+        mesher_command += "a" + boost::lexical_cast<std::string>(mMaxElementArea/(units::pow<3>(mReferenceLength)));
     }
     if(mRegions.size()>0)
     {
@@ -374,9 +379,10 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
 
     for (unsigned idx = 0; idx < num_vertices; idx++)
     {
+        c_vector<double, SPACE_DIM> vertex_location = vertex_locations[idx].GetLocation(mReferenceLength);
         for (unsigned jdx = 0; jdx < 3; jdx++)
         {
-            mesher_input.pointlist[3 * idx + jdx] = vertex_locations[idx][jdx];
+            mesher_input.pointlist[3 * idx + jdx] = vertex_location[jdx];
         }
     }
 
@@ -385,9 +391,10 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
     mesher_input.numberofholes = num_holes;
     for (unsigned idx = 0; idx < num_holes; idx++)
     {
+        c_vector<double, SPACE_DIM> hole_location = hole_locations[idx].GetLocation(mReferenceLength);
         for (unsigned jdx = 0; jdx < 3; jdx++)
         {
-            mesher_input.holelist[3 * idx + jdx] = hole_locations[idx][jdx];
+            mesher_input.holelist[3 * idx + jdx] = hole_location[jdx];
         }
     }
 
@@ -422,17 +429,18 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
         mesher_input.numberofholes = num_holes;
         for (unsigned idx = 0; idx < num_holes; idx++)
         {
+            c_vector<double, SPACE_DIM> hole_location = mHoles[idx].GetLocation(mReferenceLength);
             for (unsigned jdx = 0; jdx < 3; jdx++)
             {
-                mesher_input.holelist[3 * idx + jdx] = mHoles[idx][jdx];
+                mesher_input.holelist[3 * idx + jdx] = hole_location[jdx];
             }
         }
     }
 
     std::string mesher_command = "pqQz";
-    if (mMaxElementArea > 0.0)
+    if (mMaxElementArea > 0.0*unit::metres*unit::metres*unit::metres)
     {
-        mesher_command += "a" + boost::lexical_cast<std::string>(mMaxElementArea);
+        mesher_command += "a" + boost::lexical_cast<std::string>(mMaxElementArea/units::pow<3>(mReferenceLength));
     }
 
     // Library call
@@ -458,17 +466,18 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::MeshStl3d()
         mesher_input.numberofholes = num_holes;
         for (unsigned idx = 0; idx < num_holes; idx++)
         {
+            c_vector<double, SPACE_DIM> hole_location = mHoles[idx].GetLocation(mReferenceLength);
             for (unsigned jdx = 0; jdx < 3; jdx++)
             {
-                mesher_input.holelist[3 * idx + jdx] = mHoles[idx][jdx];
+                mesher_input.holelist[3 * idx + jdx] = hole_location[jdx];
             }
         }
     }
 
     std::string mesher_command = "pqQz";
-    if (mMaxElementArea > 0.0)
+    if (mMaxElementArea >  0.0*unit::metres*unit::metres*unit::metres)
     {
-        mesher_command += "a" + boost::lexical_cast<std::string>(mMaxElementArea);
+        mesher_command += "a" + boost::lexical_cast<std::string>(mMaxElementArea/units::pow<3>(mReferenceLength));
     }
 
     // Library call

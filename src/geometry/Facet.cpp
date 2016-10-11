@@ -48,7 +48,8 @@ Facet<DIM>::Facet(std::vector<boost::shared_ptr<Polygon<DIM> > > polygons) :
         mVertices(),
         mVerticesUpToDate(false),
         mData(),
-        mLabel()
+        mLabel(),
+        mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
 {
 
 }
@@ -112,34 +113,42 @@ bool Facet<DIM>::ContainsPoint(const DimensionalChastePoint<DIM>& location)
 }
 
 template<unsigned DIM>
-c_vector<double, 6> Facet<DIM>::GetBoundingBox()
+std::vector<units::quantity<unit::length> > Facet<DIM>::GetBoundingBox()
 {
     std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     c_vector<double, 6> box;
 
     for (unsigned idx = 0; idx < vertices.size(); idx++)
     {
+        c_vector<double, DIM> vertex_location = vertices[idx]->GetLocation(mReferenceLength);
         for (unsigned jdx = 0; jdx < DIM; jdx++)
         {
             if (idx == 0)
             {
-                box[2 * jdx] = (*vertices[idx])[jdx];
-                box[2 * jdx + 1] = (*vertices[idx])[jdx];
+                box[2 * jdx] = vertex_location[jdx];
+                box[2 * jdx + 1] = vertex_location[jdx];
             }
             else
             {
-                if ((*vertices[idx])[jdx] < box[2 * jdx])
+                if (vertex_location[jdx] < box[2 * jdx])
                 {
-                    box[2 * jdx] = (*vertices[idx])[jdx];
+                    box[2 * jdx] = vertex_location[jdx];
                 }
-                if ((*vertices[idx])[jdx] > box[2 * jdx + 1])
+                if (vertex_location[jdx] > box[2 * jdx + 1])
                 {
-                    box[2 * jdx + 1] = (*vertices[idx])[jdx];
+                    box[2 * jdx + 1] = vertex_location[jdx];
                 }
             }
         }
     }
-    return box;
+
+    std::vector<units::quantity<unit::length> > box_vector(6);
+    for(unsigned idx=0; idx<6; idx++)
+    {
+        box_vector[idx] = box[idx] * mReferenceLength;
+    }
+
+    return box_vector;
 }
 
 template<unsigned DIM>
@@ -155,12 +164,12 @@ DimensionalChastePoint<DIM> Facet<DIM>::GetCentroid()
     }
     if(DIM==3)
     {
-        return DimensionalChastePoint<DIM>(return_centroid);
+        return DimensionalChastePoint<DIM>(return_centroid, mReferenceLength);
     }
     else
     {
 
-        return DimensionalChastePoint<DIM>(return_centroid[0], return_centroid[1]);
+        return DimensionalChastePoint<DIM>(return_centroid[0], return_centroid[1], 0.0, mReferenceLength);
     }
 }
 
@@ -171,12 +180,12 @@ std::string Facet<DIM>::GetLabel()
 }
 
 template<unsigned DIM>
-double Facet<DIM>::GetDistance(const DimensionalChastePoint<DIM>& location)
+units::quantity<unit::length> Facet<DIM>::GetDistance(const DimensionalChastePoint<DIM>& location)
 {
     double location_array[3];
     for(unsigned idx=0; idx<DIM;idx++)
     {
-        location_array[idx] = location[idx];
+        location_array[idx] = location.GetLocation(mReferenceLength)[idx];
     }
     if(DIM==2)
     {
@@ -185,7 +194,7 @@ double Facet<DIM>::GetDistance(const DimensionalChastePoint<DIM>& location)
 
     vtkSmartPointer<vtkPlane> p_plane = GetPlane();
     double distance = p_plane->DistanceToPlane(&location_array[0]);
-    return distance;
+    return distance*mReferenceLength;
 }
 
 template<unsigned DIM>
@@ -223,7 +232,7 @@ template<unsigned DIM>
 vtkSmartPointer<vtkPlane> Facet<DIM>::GetPlane()
 {
     vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
-    DimensionalChastePoint<DIM> centroid = GetCentroid();
+    c_vector<double, DIM> centroid = GetCentroid().GetLocation(mReferenceLength);
     c_vector<double, DIM> normal = GetNormal();
     if(DIM==3)
     {
@@ -264,13 +273,14 @@ std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > Facet<DI
     p_vertices->SetNumberOfPoints(vertices.size());
     for (vtkIdType idx = 0; idx < vtkIdType(vertices.size()); idx++)
     {
+        c_vector<double, DIM> vertex_location = vertices[idx]->GetLocation(mReferenceLength);
         if(DIM==3)
         {
-            p_vertices->SetPoint(idx, (*vertices[idx])[0], (*vertices[idx])[1], (*vertices[idx])[2]);
+            p_vertices->SetPoint(idx, vertex_location[0], vertex_location[1], vertex_location[2]);
         }
         else
         {
-            p_vertices->SetPoint(idx, (*vertices[idx])[0], (*vertices[idx])[1], 0.0);
+            p_vertices->SetPoint(idx, vertex_location[0], vertex_location[1], 0.0);
         }
         p_vertexIds->InsertNextValue(idx);
     }

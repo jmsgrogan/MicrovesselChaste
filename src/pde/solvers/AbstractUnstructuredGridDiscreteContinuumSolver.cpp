@@ -127,16 +127,18 @@ std::vector<units::quantity<unit::concentration> > AbstractUnstructuredGridDiscr
     // Sample the field at these locations
     vtkSmartPointer<vtkPolyData> p_polydata = vtkSmartPointer<vtkPolyData>::New();
     vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
+
     p_points->SetNumberOfPoints(samplePoints.size());
     for(unsigned idx=0; idx< samplePoints.size(); idx++)
     {
+        c_vector<double, DIM> location = samplePoints[idx].GetLocation(this->mpMesh->GetReferenceLengthScale());
         if(DIM==3)
         {
-            p_points->SetPoint(idx, samplePoints[idx][0], samplePoints[idx][1], samplePoints[idx][2]);
+            p_points->SetPoint(idx, location[0], location[1], location[2]);
         }
         else
         {
-            p_points->SetPoint(idx, samplePoints[idx][0], samplePoints[idx][1], 0.0);
+            p_points->SetPoint(idx, location[0], location[1], 0.0);
         }
     }
     p_polydata->SetPoints(p_points);
@@ -195,13 +197,14 @@ std::vector<double> AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetSol
     p_points->SetNumberOfPoints(rSamplePoints.size());
     for(unsigned idx=0; idx< rSamplePoints.size(); idx++)
     {
+        c_vector<double, DIM> location = rSamplePoints[idx].GetLocation(this->mpMesh->GetReferenceLengthScale());
         if(DIM==3)
         {
-            p_points->SetPoint(idx, rSamplePoints[idx][0], rSamplePoints[idx][1], rSamplePoints[idx][2]);
+            p_points->SetPoint(idx, location[0], location[1], location[2]);
         }
         else
         {
-            p_points->SetPoint(idx, rSamplePoints[idx][0], rSamplePoints[idx][1], 0.0);
+            p_points->SetPoint(idx, location[0], location[1], 0.0);
         }
     }
     p_polydata->SetPoints(p_points);

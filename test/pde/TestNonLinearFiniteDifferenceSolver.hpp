@@ -43,7 +43,6 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "Part.hpp"
-#include "Vertex.hpp"
 #include "UnitCollection.hpp"
 #include "LinearSteadyStateDiffusionReactionPde.hpp"
 #include "FiniteDifferenceSolver.hpp"

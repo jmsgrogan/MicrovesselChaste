@@ -42,7 +42,8 @@
 
 template<unsigned DIM>
 Polygon<DIM>::Polygon(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices) :
-        mVertices(vertices)
+        mVertices(vertices),
+        mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
 {
 
 }
@@ -114,13 +115,14 @@ std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > Polygon<
     p_vertexIds->SetNumberOfTuples(mVertices.size());
     for (vtkIdType idx = 0; idx < vtkIdType(mVertices.size()); idx++)
     {
+        c_vector<double, DIM> vertex_location = mVertices[idx]->GetLocation(mReferenceLength);
         if(DIM==3)
         {
-            p_vertices->SetPoint(idx, (*mVertices[idx])[0], (*mVertices[idx])[1], (*mVertices[idx])[2]);
+            p_vertices->SetPoint(idx, vertex_location[0], vertex_location[1], vertex_location[2]);
         }
         else
         {
-            p_vertices->SetPoint(idx, (*mVertices[idx])[0], (*mVertices[idx])[1], 0.0);
+            p_vertices->SetPoint(idx, vertex_location[0], vertex_location[1], 0.0);
         }
         p_vertexIds->SetValue(idx, idx);
     }
@@ -149,22 +151,28 @@ DimensionalChastePoint<DIM> Polygon<DIM>::GetCentroid()
 
     if(DIM==3)
     {
-        return DimensionalChastePoint<DIM>(centroid);
+        return DimensionalChastePoint<DIM>(centroid, mReferenceLength);
     }
     else
     {
-        return DimensionalChastePoint<DIM>(centroid[0], centroid[1]);
+        return DimensionalChastePoint<DIM>(centroid[0], centroid[1], 0.0, mReferenceLength);
     }
 
 }
 
 template<unsigned DIM>
-c_vector<double, 6> Polygon<DIM>::GetBoundingBox()
+std::vector<units::quantity<unit::length> > Polygon<DIM>::GetBoundingBox()
 {
     vtkSmartPointer<vtkPolygon> p_polygon = GetVtkPolygon();
     c_vector<double, 6> box;
     p_polygon->GetPoints()->GetBounds(&box[0]);
-    return box;
+
+    std::vector<units::quantity<unit::length> > box_vector(6);
+    for(unsigned idx=0; idx<6; idx++)
+    {
+        box_vector[idx] = box[idx] * mReferenceLength;
+    }
+    return box_vector;
 }
 
 template<unsigned DIM>
@@ -173,7 +181,7 @@ units::quantity<unit::length> Polygon<DIM>::GetDistance(const DimensionalChasteP
     double point[3];
     for (unsigned idx = 0; idx < DIM; idx++)
     {
-        point[idx] = location[idx];
+        point[idx] = location.GetLocation(mReferenceLength)[idx];
     }
     if(DIM==2)
     {
@@ -182,7 +190,7 @@ units::quantity<unit::length> Polygon<DIM>::GetDistance(const DimensionalChasteP
 
     vtkSmartPointer<vtkPlane> p_plane = GetPlane();
     double distance = p_plane->DistanceToPlane(&point[0]);
-    return distance * location.GetReferenceLengthScale();
+    return distance * mReferenceLength;
 }
 
 template<unsigned DIM>
@@ -191,7 +199,7 @@ units::quantity<unit::length> Polygon<DIM>::GetDistanceToEdges(const Dimensional
     double point[3];
     for (unsigned idx = 0; idx < DIM; idx++)
     {
-        point[idx] = location[idx];
+        point[idx] = location.GetLocation(mReferenceLength)[idx];
     }
     if(DIM==2)
     {
@@ -208,14 +216,14 @@ units::quantity<unit::length> Polygon<DIM>::GetDistanceToEdges(const Dimensional
             point, p_polygon->GetPoints()->GetNumberOfPoints(),
             static_cast<double*>(p_polygon->GetPoints()->GetData()->GetVoidPointer(0)), bounds, closest);
 
-    return distance * location.GetReferenceLengthScale();
+    return distance * mReferenceLength;
 }
 
 template<unsigned DIM>
 vtkSmartPointer<vtkPlane> Polygon<DIM>::GetPlane()
 {
     vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
-    DimensionalChastePoint<DIM> centroid = GetCentroid();
+    c_vector<double, DIM> centroid = GetCentroid().GetLocation(mReferenceLength);
     c_vector<double, DIM> normal = GetNormal();
     if(DIM==3)
     {
@@ -266,10 +274,11 @@ bool Polygon<DIM>::ContainsPoint(const DimensionalChastePoint<DIM>& location)
     bool contains_point = false;
     if (mVertices.size() >= 3)
     {
+        c_vector<double, DIM> vertex_location = location.GetLocation(mReferenceLength);
         double point[3];
         for (unsigned idx = 0; idx < DIM; idx++)
         {
-            point[idx] = location[idx];
+            point[idx] = vertex_location[idx];
         }
         if(DIM==2)
         {

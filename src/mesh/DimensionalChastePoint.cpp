@@ -77,46 +77,6 @@ DimensionalChastePoint<DIM>::DimensionalChastePoint(c_vector<double, DIM> coords
 }
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM>::DimensionalChastePoint(double x, double y, double z) :
-        mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
-        mIndex(0)
-{
-    if(mReferenceLength == 0.0*unit::metres)
-    {
-        EXCEPTION("Point has zero reference length");
-    }
-
-    if (DIM > 0)
-    {
-        mLocation[0] = x;
-    }
-    if (DIM > 1)
-    {
-        mLocation[1] = y;
-    }
-    if (DIM > 2)
-    {
-        mLocation[2] = z;
-    }
-}
-
-template<unsigned DIM>
-DimensionalChastePoint<DIM>::DimensionalChastePoint(c_vector<double, DIM> coords) :
-        mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
-        mIndex(0)
-{
-    if(mReferenceLength == 0.0*unit::metres)
-    {
-        EXCEPTION("Point has zero reference length");
-    }
-
-    for (unsigned i=0; i<DIM; i++)
-    {
-        mLocation(i) = coords[i];
-    }
-}
-
-template<unsigned DIM>
 boost::shared_ptr<DimensionalChastePoint<DIM> > DimensionalChastePoint<DIM>::Create(double x, double y, double z, units::quantity<unit::length> referenceLength)
 {
     MAKE_PTR_ARGS(DimensionalChastePoint<DIM>, p_point, (x, y, z, referenceLength));
@@ -131,20 +91,6 @@ boost::shared_ptr<DimensionalChastePoint<DIM> > DimensionalChastePoint<DIM>::Cre
 }
 
 template<unsigned DIM>
-boost::shared_ptr<DimensionalChastePoint<DIM> > DimensionalChastePoint<DIM>::Create(double x, double y, double z)
-{
-    MAKE_PTR_ARGS(DimensionalChastePoint<DIM>, p_point, (x, y, z));
-    return p_point;
-}
-
-template<unsigned DIM>
-boost::shared_ptr<DimensionalChastePoint<DIM> > DimensionalChastePoint<DIM>::Create(c_vector<double, DIM> coords)
-{
-    MAKE_PTR_ARGS(DimensionalChastePoint<DIM>, p_point, (coords));
-    return p_point;
-}
-
-template<unsigned DIM>
 DimensionalChastePoint<DIM>::~DimensionalChastePoint()
 {
 
@@ -153,13 +99,13 @@ DimensionalChastePoint<DIM>::~DimensionalChastePoint()
 template<unsigned DIM>
 c_vector<double, DIM> DimensionalChastePoint<DIM>::GetLocation(units::quantity<unit::length> scale)
 {
-    return mLocation*(scale/mReferenceLength);
+    return mLocation*(mReferenceLength/scale);
 }
 
 template<unsigned DIM>
 const c_vector<double, DIM> DimensionalChastePoint<DIM>::GetLocation(units::quantity<unit::length> scale) const
 {
-    return mLocation*(scale/mReferenceLength);
+    return mLocation*(mReferenceLength/scale);
 }
 
 template<unsigned DIM>
@@ -268,7 +214,7 @@ void DimensionalChastePoint<DIM>::SetReferenceLengthScale(units::quantity<unit::
 }
 
 template<unsigned DIM>
-void DimensionalChastePoint<DIM>::RotateAboutAxis(c_vector<double, DIM> axis, double angle)
+void DimensionalChastePoint<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 {
     double sin_a = std::sin(angle);
     double cos_a = std::cos(angle);

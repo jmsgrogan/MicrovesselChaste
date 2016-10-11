@@ -80,6 +80,11 @@ class Facet
      */
     std::string mLabel;
 
+    /**
+     * The reference length scale
+     */
+    units::quantity<unit::length> mReferenceLength;
+
 public:
 
     /**
@@ -136,7 +141,7 @@ public:
      * Return the bounding box of the facet
      * @return the bounding box (xmin, xmax, ymin, ymax, zmin, zmax)
      */
-    c_vector<double, 6> GetBoundingBox();
+    std::vector<units::quantity<unit::length> > GetBoundingBox();
 
     /**
      * Return the centroid of the facet
@@ -149,7 +154,7 @@ public:
      * @param rLocation reference to the location of the point for distance calculation
      * @return the distance to the facet
      */
-    double GetDistance(const DimensionalChastePoint<DIM>& rLocation);
+    units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Get the label for boundary conditions

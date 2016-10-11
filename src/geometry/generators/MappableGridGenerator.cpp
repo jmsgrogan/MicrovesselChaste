@@ -39,8 +39,10 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "Polygon.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "MappableGridGenerator.hpp"
+#include "BaseUnits.hpp"
 
-MappableGridGenerator::MappableGridGenerator()
+MappableGridGenerator::MappableGridGenerator() :
+    mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
 {
 }
 
@@ -63,7 +65,7 @@ boost::shared_ptr<Part<3> > MappableGridGenerator::GeneratePlane(unsigned numX, 
             double z_location = 0.0;
 
             // Create the vertices
-            vertices.push_back(DimensionalChastePoint<3>::Create(x_location, y_location, z_location));
+            vertices.push_back(DimensionalChastePoint<3>::Create(x_location, y_location, z_location, mReferenceLength));
         }
     }
 
@@ -77,7 +79,7 @@ boost::shared_ptr<Part<3> > MappableGridGenerator::GeneratePlane(unsigned numX, 
             double z_location = 1.0;
 
             // Create the vertices
-            vertices.push_back(DimensionalChastePoint<3>::Create(x_location, y_location, z_location));
+            vertices.push_back(DimensionalChastePoint<3>::Create(x_location, y_location, z_location, mReferenceLength));
 
         }
     }
@@ -213,19 +215,20 @@ boost::shared_ptr<Part<3> > MappableGridGenerator::GenerateCylinder(double cylin
     boost::shared_ptr<Part<3> > p_part = GeneratePlane(numX, numY, !(cylinderAngle == 2.0 * M_PI));
 
     // Get the part extents
-    c_vector<double, 6> bbox = p_part->GetBoundingBox();
+    std::vector<units::quantity<unit::length> > bbox = p_part->GetBoundingBox();
 
     // Get the vertices
     std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices = p_part->GetVertices();
     for(unsigned idx =0; idx<vertices.size(); idx++)
     {
-        double x_frac = (*vertices[idx])[0] / (bbox[1] - bbox[0]);
+        c_vector<double, 3> vertex_location = vertices[idx]->GetLocation(mReferenceLength);
+        double x_frac = vertex_location[0]*mReferenceLength / (bbox[1] - bbox[0]);
         double angle = x_frac * cylinderAngle;
 
-        double y_frac = (*vertices[idx])[1] / (bbox[3] - bbox[2]);
+        double y_frac = vertex_location[1]*mReferenceLength / (bbox[3] - bbox[2]);
         double height = y_frac * cylinderHeight;
 
-        double z_frac = (*vertices[idx])[2] / (bbox[5] - bbox[4]);
+        double z_frac = vertex_location[2]*mReferenceLength / (bbox[5] - bbox[4]);
         double radius = cylinderRadius - cylinderThickness * z_frac;
 
         // Get the new x
@@ -237,7 +240,7 @@ boost::shared_ptr<Part<3> > MappableGridGenerator::GenerateCylinder(double cylin
 
         // Get the new z
         new_position[2] = radius * std::sin(angle);
-        vertices[idx]->TranslateTo(DimensionalChastePoint<3>(new_position, vertices[idx]->GetReferenceLengthScale()));
+        vertices[idx]->TranslateTo(DimensionalChastePoint<3>(new_position, mReferenceLength));
     }
 
     p_part->MergeCoincidentVertices();
@@ -264,19 +267,20 @@ boost::shared_ptr<Part<3> > MappableGridGenerator::GenerateHemisphere(double sph
     boost::shared_ptr<Part<3> > p_part = GeneratePlane(numX, numY);
 
     // The part extents
-    c_vector<double, 6> bbox = p_part->GetBoundingBox();
+    std::vector<units::quantity<unit::length> > bbox = p_part->GetBoundingBox();
 
     // Get the vertices
     std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices = p_part->GetVertices();
     for(unsigned idx =0; idx<vertices.size(); idx++)
     {
-        double x_frac = (*vertices[idx])[0] / (bbox[1] - bbox[0]);
+        c_vector<double, 3> vertex_location = vertices[idx]->GetLocation(mReferenceLength);
+        double x_frac = vertex_location[0]*mReferenceLength / (bbox[1] - bbox[0]);
         double azimuth_angle = x_frac * sphereAzimuthAngle;
 
-        double y_frac = (*vertices[idx])[1] / (bbox[3] - bbox[2]);
+        double y_frac = vertex_location[1]*mReferenceLength / (bbox[3] - bbox[2]);
         double polar_angle = y_frac * spherePolarAngle;
 
-        double z_frac = (*vertices[idx])[2] / (bbox[5] - bbox[4]);
+        double z_frac = vertex_location[2]*mReferenceLength / (bbox[5] - bbox[4]);
         double radius = sphereRadius - sphereThickness * z_frac;
 
         // Get the new x
@@ -289,7 +293,7 @@ boost::shared_ptr<Part<3> > MappableGridGenerator::GenerateHemisphere(double sph
         // Get the new z
         new_position[2] = radius * std::sin(azimuth_angle) * std::sin(polar_angle);
 
-        vertices[idx]->TranslateTo(DimensionalChastePoint<3>(new_position, vertices[idx]->GetReferenceLengthScale()));
+        vertices[idx]->TranslateTo(DimensionalChastePoint<3>(new_position, mReferenceLength));
     }
 
     p_part->MergeCoincidentVertices();
