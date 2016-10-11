@@ -149,7 +149,7 @@ public:
         TS_ASSERT_THROWS_THIS(p_part->Extrude(p_circle, 1.e-6*unit::metres), "Only parts in 3D space can be extruded.");
     }
 
-    void TestAddParrallelVessels3d()
+    void DontTestAddParrallelVessels3d()
     {
         boost::shared_ptr<VesselNetwork<3> > p_network = SetUpNetwork();
 
@@ -171,7 +171,7 @@ public:
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVessels3d.vtp"));
     }
 
-    void TestAddParrallelVesselSurfaces3d()
+    void DontTestAddParrallelVesselSurfaces3d()
     {
         boost::shared_ptr<VesselNetwork<3> > p_network = SetUpNetwork();
 
@@ -193,7 +193,7 @@ public:
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselSurfaces3d.vtp"));
     }
 
-    void TestAddVesselsSurface3dCylinder()
+    void DontTestAddVesselsSurface3dCylinder()
     {
         units::quantity<unit::length> vessel_length = 100.0 * 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
@@ -210,7 +210,7 @@ public:
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Vessels3dCylinderSurface.vtp"));
     }
 
-    void TestBooleanWithNetwork()
+    void DontTestBooleanWithNetwork()
     {
         boost::shared_ptr<VesselNetwork<3> > p_network = SetUpNetwork();
 

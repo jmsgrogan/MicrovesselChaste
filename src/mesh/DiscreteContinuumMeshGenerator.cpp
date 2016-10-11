@@ -329,7 +329,8 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
     std::string mesher_command = "pqQze";
     if (mMaxElementArea > 0.0*unit::metres*unit::metres*unit::metres)
     {
-        mesher_command += "a" + boost::lexical_cast<std::string>(mMaxElementArea/units::pow<3>(mReferenceLength));
+        double mesh_size = mMaxElementArea/units::pow<3>(mReferenceLength);
+        mesher_command += "a" + boost::lexical_cast<std::string>(mesh_size);
     }
     if(mRegions.size()>0)
     {
@@ -440,7 +441,8 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
     std::string mesher_command = "pqQz";
     if (mMaxElementArea > 0.0*unit::metres*unit::metres*unit::metres)
     {
-        mesher_command += "a" + boost::lexical_cast<std::string>(mMaxElementArea/units::pow<3>(mReferenceLength));
+        double mesh_size = mMaxElementArea/units::pow<3>(mReferenceLength);
+        mesher_command += "a" + boost::lexical_cast<std::string>(mesh_size);
     }
 
     // Library call
@@ -477,7 +479,8 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::MeshStl3d()
     std::string mesher_command = "pqQz";
     if (mMaxElementArea >  0.0*unit::metres*unit::metres*unit::metres)
     {
-        mesher_command += "a" + boost::lexical_cast<std::string>(mMaxElementArea/units::pow<3>(mReferenceLength));
+        double mesh_size = mMaxElementArea/units::pow<3>(mReferenceLength);
+        mesher_command += "a" + boost::lexical_cast<std::string>(mesh_size);
     }
 
     // Library call

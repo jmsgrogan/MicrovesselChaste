@@ -173,18 +173,18 @@ public:
 
         std::vector<units::quantity<unit::length> > bbox = p_polygon->GetBoundingBox();
         TS_ASSERT_DELTA(bbox[0].value(), 0.0, 1.e-6);
-        TS_ASSERT_DELTA(bbox[1].value(), 1.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[1].value(), 1.e-6, 1.e-8);
         TS_ASSERT_DELTA(bbox[2].value(), 0.0, 1.e-6);
-        TS_ASSERT_DELTA(bbox[3].value(), 1.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[3].value(), 1.e-6, 1.e-8);
         TS_ASSERT_DELTA(bbox[4].value(), 0.0, 1.e-6);
         TS_ASSERT_DELTA(bbox[5].value(), 0.0, 1.e-6);
 
-        TS_ASSERT_DELTA(p_polygon->GetDistance(DimensionalChastePoint<3>(0.5, 0.5, 0.5, 1.e-6*unit::metres)).value(), 0.5, 1.e-6);
+        TS_ASSERT_DELTA(p_polygon->GetDistance(DimensionalChastePoint<3>(0.5, 0.5, 0.5, 1.e-6*unit::metres)).value(), 0.5e-6, 1.e-8);
         TS_ASSERT_DELTA(p_polygon->GetPlane()->GetNormal()[0], 0.0, 1.e-6);
         TS_ASSERT_DELTA(p_polygon->GetPlane()->GetNormal()[1], 0.0, 1.e-6);
         TS_ASSERT_DELTA(p_polygon->GetPlane()->GetNormal()[2], 1.0, 1.e-6);
 
-        TS_ASSERT_DELTA(p_polygon->GetDistanceToEdges(DimensionalChastePoint<3>(0.5, 0.5, 0.0, 1.e-6*unit::metres)).value(), 0.5, 1.e-6);
+        TS_ASSERT_DELTA(p_polygon->GetDistanceToEdges(DimensionalChastePoint<3>(0.5, 0.5, 0.0, 1.e-6*unit::metres)).value(), 0.5e-6, 1.e-8);
     }
 };
 
