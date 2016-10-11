@@ -66,7 +66,8 @@ Owen11CellPopulationGenerator<DIM>::Owen11CellPopulationGenerator() :
     mpNormalCellMutationState(),
     mpStalkCellMutationState(boost::shared_ptr<StalkCellMutationState>(new StalkCellMutationState)),
     mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
-    mTumourRadius(0.0*unit::metres)
+    mTumourRadius(0.0*unit::metres),
+    mCellPopulationReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
 {
 
 }
@@ -130,7 +131,7 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
 
     // There is a bug in Chaste causing index out of bounds for large grid spacing. It may be better to use a scaling here
     // so grid spacing is always one.
-    p_mesh->Scale(mpRegularGrid->GetSpacing()/mReferenceLength, mpRegularGrid->GetSpacing()/mReferenceLength);
+    p_mesh->Scale(mpRegularGrid->GetSpacing()/mCellPopulationReferenceLength, mpRegularGrid->GetSpacing()/mCellPopulationReferenceLength);
     std::vector<unsigned> location_indices;
     for (unsigned index=0; index < p_mesh->GetNumNodes(); index++)
     {
@@ -185,7 +186,7 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
     {
         VesselNetworkCellPopulationInteractor<DIM> interactor = VesselNetworkCellPopulationInteractor<DIM>();
         interactor.SetVesselNetwork(mpVesselNetwork);
-        interactor.PartitionNetworkOverCells(*p_cell_population);
+        interactor.PartitionNetworkOverCells(*p_cell_population, mCellPopulationReferenceLength);
 //        interactor.LabelVesselsInCellPopulation(*p_cell_population, mpStalkCellMutationState, mpStalkCellMutationState);
     }
 
@@ -199,7 +200,7 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
         boost::shared_ptr<Polygon<DIM> > circle = p_sub_domain->AddCircle(mTumourRadius, origin);
         for (unsigned ind = 0; ind < p_mesh->GetNumNodes(); ind++)
         {
-            if (p_sub_domain->IsPointInPart(p_mesh->GetNode(ind)->rGetLocation()))
+            if (p_sub_domain->IsPointInPart(DimensionalChastePoint<DIM>(p_mesh->GetNode(ind)->rGetLocation(), mCellPopulationReferenceLength)))
             {
                 p_cell_population->GetCellUsingLocationIndex(ind)->SetMutationState(mpCancerCellMutationState);
             }

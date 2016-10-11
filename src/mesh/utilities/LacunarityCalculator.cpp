@@ -86,11 +86,12 @@ void LacunarityCalculator<DIM>::Solve()
         output_file << "Lacunarity, Box\n";
     }
 
+    units::quantity<unit::length> length_scale = this->mpRegularGrid->GetReferenceLengthScale();
     for (unsigned width_index = 0; width_index < width_factors.size(); width_index++)
     {
         double box_size = (double(extents_x - 1) / double(width_factors[width_index]));
-        double q1 = 0.0;
-        double q2 = 0.0;
+        units::quantity<unit::length> q1 = 0.0* unit::metres;
+        units::quantity<unit::area> q2 = 0.0* unit::metres*unit::metres;
 
         unsigned z_extent = width_factors[width_index];
         z_extent = 1;
@@ -106,12 +107,12 @@ void LacunarityCalculator<DIM>::Solve()
                     box_location[1] = double(jdx) * box_size + box_size / 2.0;
                     box_location[2] = double(kdx) * box_size + box_size / 2.0;
 
-                    double vessel_length = 0.0;
+                    units::quantity<unit::length> vessel_length = 0.0 * unit::metres;
                     for (unsigned seg_index = 0; seg_index < segments.size(); seg_index++)
                     {
                         vessel_length += LengthOfLineInBox<DIM>(segments[seg_index]->GetNode(0)->rGetLocation(),
                                                                 segments[seg_index]->GetNode(1)->rGetLocation(),
-                                                                DimensionalChastePoint<DIM>(box_location), box_size* this->mpRegularGrid->GetSpacing())/this->mpRegularGrid->GetReferenceLengthScale();
+                                                                DimensionalChastePoint<DIM>(box_location, length_scale), box_size*length_scale);
                     }
                     q1 += vessel_length;
                     q2 += vessel_length * vessel_length;

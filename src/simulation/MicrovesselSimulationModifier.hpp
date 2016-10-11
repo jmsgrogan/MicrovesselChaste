@@ -77,6 +77,16 @@ private:
      */
     std::vector<std::string> mUpdateLabels;
 
+    /**
+     * The reference length scale for the cellpopulation.
+     */
+    units::quantity<unit::length> mCellPopulationReferenceLength;
+
+    /**
+     * The reference concentration scale for the cellpopulation.
+     */
+    units::quantity<unit::concentration> mCellPopulationReferenceConcentration;
+
 public:
 
     /**
@@ -125,6 +135,20 @@ public:
      * @param outputDirectory the output directory, relative to where Chaste output is stored
      */
     virtual void SetupSolve(AbstractCellPopulation<DIM,DIM>& rCellPopulation, std::string outputDirectory);
+
+    /**
+     * Set the length scale for the cell population
+     *
+     * @param cellLengthScale  the length scale for the cell population
+     */
+    void SetCellPopulationLengthScale(units::quantity<unit::length> cellLengthScale);
+
+    /**
+     * Set the concentration scale for the cell population
+     *
+     * @param cellConcentrationScale the concentration scale for the cell population
+     */
+    void SetCellPopulationConcentrationScale(units::quantity<unit::concentration> cellConcentrationScale);
 
     /**
      * Overridden UpdateAtEndOfTimeStep() method.

@@ -100,7 +100,8 @@ void SimpleCellPopulation<DIM>::BooleanWithVesselNetwork(boost::shared_ptr<Vesse
     double tolerance = 1.e-6;
     for(unsigned idx=0; idx<mCells.size();idx++)
     {
-        std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > seg_pair = pNetwork->GetNearestSegment(mCells[idx]->rGetLocation());
+        DimensionalChastePoint<DIM> loc(mCells[idx]->rGetLocation(), 1.e-6*unit::metres);
+        std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > seg_pair = pNetwork->GetNearestSegment(loc);
         if(seg_pair.second / seg_pair.first->GetNode(0)->GetReferenceLengthScale() < tolerance)
         {
             remove_cells.push_back(mCells[idx]);
@@ -148,13 +149,13 @@ void SimpleCellPopulation<DIM>::GenerateCellsOnGrid(boost::shared_ptr<Part<DIM> 
     std::vector<boost::shared_ptr<SimpleCell<DIM> > > cells;
 
     // Get the bounding box of the part
-    c_vector<double,2*DIM> bbox = pPart->GetBoundingBox();
-    unsigned num_x = double(bbox[1] - bbox[0]) * mReferenceLength  / spacing + 1;
-    unsigned num_y = double(bbox[3] - bbox[2]) * mReferenceLength  / spacing + 1;
+    std::vector<units::quantity<unit::length> > bbox = pPart->GetBoundingBox();
+    unsigned num_x = (bbox[1] - bbox[0])  / spacing + 1;
+    unsigned num_y = (bbox[3] - bbox[2])  / spacing + 1;
     unsigned num_z = 1;
     if(DIM==3)
     {
-        num_z = double(bbox[5] - bbox[4]) * mReferenceLength  / spacing + 1;
+        num_z = (bbox[5] - bbox[4]) / spacing + 1;
     }
 
     for (unsigned idx = 0; idx < num_z;idx++)
@@ -164,14 +165,14 @@ void SimpleCellPopulation<DIM>::GenerateCellsOnGrid(boost::shared_ptr<Part<DIM> 
             for (unsigned kdx = 0; kdx < num_x;kdx++)
             {
                 c_vector<double, DIM> location;
-                location[0] = (bbox[0] * mReferenceLength + double(kdx) * spacing)/mReferenceLength;
-                location[1] = (bbox[2] * mReferenceLength + double(jdx) * spacing)/mReferenceLength;
+                location[0] = (bbox[0] + double(kdx) * spacing)/mReferenceLength;
+                location[1] = (bbox[2] + double(jdx) * spacing)/mReferenceLength;
                 if(DIM==3)
                 {
-                    location[2] = (bbox[4] * mReferenceLength + double(idx) * spacing)/mReferenceLength;
+                    location[2] = (bbox[4] + double(idx) * spacing)/mReferenceLength;
                 }
 
-                if(pPart->IsPointInPart(location))
+                if(pPart->IsPointInPart(DimensionalChastePoint<DIM>(location, mReferenceLength)))
                 {
                     cells.push_back(SimpleCell<DIM>::Create(location));
                 }

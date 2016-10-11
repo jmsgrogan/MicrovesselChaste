@@ -292,8 +292,8 @@ std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > VesselNetwo
     typename std::vector<boost::shared_ptr<VesselNode<DIM> > >::iterator it;
     for(it = nodes.begin(); it != nodes.end(); it++)
     {
-        DimensionalChastePoint<DIM> location = (*it)->rGetLocation();
-        units::quantity<unit::length> length_scale = location.GetReferenceLengthScale();
+        units::quantity<unit::length> length_scale = (*it)->rGetLocation().GetReferenceLengthScale();
+        c_vector<double, DIM> location = (*it)->rGetLocation().GetLocation(length_scale);
         if(location[0]*length_scale > x_max)
         {
             x_max = location[0]*length_scale;
@@ -328,8 +328,8 @@ std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > VesselNetwo
     units::quantity<unit::length> z_min = z_max;
     for(it = nodes.begin(); it != nodes.end(); it++)
     {
-        DimensionalChastePoint<DIM> location = (*it)->rGetLocation();
-        units::quantity<unit::length> length_scale = location.GetReferenceLengthScale();
+        units::quantity<unit::length> length_scale = (*it)->rGetLocation().GetReferenceLengthScale();
+        c_vector<double, DIM> location = (*it)->rGetLocation().GetLocation(length_scale);
         if(location[0]*length_scale < x_min)
         {
             x_min = location[0]*length_scale;

@@ -456,7 +456,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::SetType(BoundaryConditionType::Val
 }
 
 template<unsigned DIM>
-void DiscreteContinuumBoundaryCondition<DIM>::SetRegularGrid(boost::shared_ptr<RegularGrid<DIM, DIM> > pRegularGrid)
+void DiscreteContinuumBoundaryCondition<DIM>::SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pRegularGrid)
 {
     mpRegularGrid = pRegularGrid;
 }

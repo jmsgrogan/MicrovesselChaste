@@ -164,7 +164,7 @@ void DiscreteSource<DIM>::SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM, D
 }
 
 template<unsigned DIM>
-void DiscreteSource<DIM>::SetRegularGrid(boost::shared_ptr<RegularGrid<DIM, DIM> > pRegularGrid)
+void DiscreteSource<DIM>::SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pRegularGrid)
 {
     mpRegularGrid = pRegularGrid;
 }

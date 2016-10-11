@@ -109,13 +109,6 @@ const c_vector<double, DIM> DimensionalChastePoint<DIM>::GetLocation(units::quan
 }
 
 template<unsigned DIM>
-double DimensionalChastePoint<DIM>::operator[] (unsigned i) const
-{
-    assert(i<DIM);
-    return mLocation(i);
-}
-
-template<unsigned DIM>
 units::quantity<unit::length> DimensionalChastePoint<DIM>::GetReferenceLengthScale() const
 {
     return mReferenceLength;
@@ -182,24 +175,17 @@ DimensionalChastePoint<DIM>& DimensionalChastePoint<DIM>::operator-=(const Dimen
 template<unsigned DIM>
 bool DimensionalChastePoint<DIM>::IsCoincident(const DimensionalChastePoint<DIM>& rLocation) const
 {
-    double scaling_length = rLocation.GetReferenceLengthScale()/mReferenceLength;
     bool returned_value = true;
+    c_vector<double, DIM> comparison_loc = rLocation.GetLocation(mReferenceLength);
     for (unsigned dim=0; dim<DIM; dim++)
     {
-        if (rLocation[dim]*scaling_length != mLocation[dim])
+        if (comparison_loc[dim] != mLocation[dim])
         {
             returned_value = false;
             break;
         }
     }
     return returned_value;
-}
-
-template<unsigned DIM>
-void DimensionalChastePoint<DIM>::SetCoordinate(unsigned i, double value)
-{
-    assert(i < DIM);
-    mLocation(i) = value;
 }
 
 template<unsigned DIM>

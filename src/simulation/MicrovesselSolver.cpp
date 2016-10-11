@@ -218,7 +218,10 @@ void MicrovesselSolver<DIM>::SetOutputFrequency(unsigned frequency)
 }
 
 template<unsigned DIM>
-void MicrovesselSolver<DIM>::SetupFromModifier(AbstractCellPopulation<DIM,DIM>& rCellPopulation, const std::string& rDirectory)
+void MicrovesselSolver<DIM>::SetupFromModifier(AbstractCellPopulation<DIM,DIM>& rCellPopulation,
+                                               units::quantity<unit::length> cellReferenceLength,
+                                               units::quantity<unit::concentration> cellReferenceConcentration,
+                                               const std::string& rDirectory)
 {
     // Set up an output file handler
     mpOutputFileHandler = boost::shared_ptr<OutputFileHandler>(new OutputFileHandler(rDirectory, false));
@@ -226,7 +229,7 @@ void MicrovesselSolver<DIM>::SetupFromModifier(AbstractCellPopulation<DIM,DIM>& 
     // Set up all the DiscreteContinuum solvers
     for(unsigned idx=0; idx<mDiscreteContinuumSolvers.size(); idx++)
     {
-        mDiscreteContinuumSolvers[idx]->SetCellPopulation(rCellPopulation);
+        mDiscreteContinuumSolvers[idx]->SetCellPopulation(rCellPopulation, cellReferenceLength, cellReferenceConcentration);
         mDiscreteContinuumSolvers[idx]->SetFileHandler(mpOutputFileHandler);
         if(mpNetwork)
         {

@@ -36,12 +36,15 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "AbstractCellPopulation.hpp"
 #include "boost/lexical_cast.hpp"
 #include "MicrovesselSimulationModifier.hpp"
+#include "BaseUnits.hpp"
 
 template<unsigned DIM>
 MicrovesselSimulationModifier<DIM>::MicrovesselSimulationModifier()
     : AbstractCellBasedSimulationModifier<DIM>(),
       mpSolver(),
-      mUpdateLabels()
+      mUpdateLabels(),
+      mCellPopulationReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
+      mCellPopulationReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale())
 {
 }
 
@@ -63,7 +66,7 @@ void MicrovesselSimulationModifier<DIM>::SetupSolve(AbstractCellPopulation<DIM,D
     // Do set-up on the vascular tumour modifier
     if(mpSolver)
     {
-        mpSolver->SetupFromModifier(rCellPopulation, outputDirectory);
+        mpSolver->SetupFromModifier(rCellPopulation, mCellPopulationReferenceLength, mCellPopulationReferenceConcentration, outputDirectory);
 
         // Do the first solver increment
         mpSolver->Increment();
@@ -97,6 +100,18 @@ template<unsigned DIM>
 void MicrovesselSimulationModifier<DIM>::SetMicrovesselSolver(boost::shared_ptr<MicrovesselSolver<DIM> > pSolver)
 {
     mpSolver = pSolver;
+}
+
+template<unsigned DIM>
+void MicrovesselSimulationModifier<DIM>::SetCellPopulationLengthScale(units::quantity<unit::length> cellLengthScale)
+{
+    mCellPopulationReferenceLength = cellLengthScale;
+}
+
+template<unsigned DIM>
+void MicrovesselSimulationModifier<DIM>::SetCellPopulationConcentrationScale(units::quantity<unit::concentration> cellConcentrationScale)
+{
+    mCellPopulationReferenceConcentration = cellConcentrationScale;
 }
 
 template<unsigned DIM>

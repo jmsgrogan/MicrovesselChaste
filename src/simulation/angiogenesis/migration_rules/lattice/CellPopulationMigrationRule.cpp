@@ -170,7 +170,6 @@ std::vector<int> CellPopulationMigrationRule<DIM>::GetIndices(const std::vector<
         EXCEPTION("A cell population is required for this type of migration rule.");
     }
 
-    this->mpGrid->SetCellPopulation(*this->mpCellPopulation);
     mPointCellMap = this->mpGrid->GetPointCellMap();
 
     // Set up the output indices vector

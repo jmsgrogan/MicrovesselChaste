@@ -137,18 +137,16 @@ vtkSmartPointer<vtkPolyData> VesselNetworkWriter<DIM>::GetOutput()
         for(unsigned idx=0; idx<nodes.size(); idx++)
         {
             nodes[idx]->SetId(idx);
-            double scale_factor = nodes[idx]->GetReferenceLengthScale()/mReferenceLength;
-
             if(DIM == 2)
             {
-                pPoints->InsertNextPoint(nodes[idx]->rGetLocation()[0]*scale_factor,
-                                         nodes[idx]->rGetLocation()[1]*scale_factor, 0.0);
+                pPoints->InsertNextPoint(nodes[idx]->rGetLocation().GetLocation(mReferenceLength)[0],
+                                         nodes[idx]->rGetLocation().GetLocation(mReferenceLength)[1], 0.0);
             }
             else
             {
-                pPoints->InsertNextPoint(nodes[idx]->rGetLocation()[0]*scale_factor,
-                                         nodes[idx]->rGetLocation()[1]*scale_factor,
-                                         nodes[idx]->rGetLocation()[2]*scale_factor);
+                pPoints->InsertNextPoint(nodes[idx]->rGetLocation().GetLocation(mReferenceLength)[0],
+                                         nodes[idx]->rGetLocation().GetLocation(mReferenceLength)[1],
+                                         nodes[idx]->rGetLocation().GetLocation(mReferenceLength)[2]);
             }
 
             std::map<std::string, double> vtk_node_data = nodes[idx]->GetOutputData();

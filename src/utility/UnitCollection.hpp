@@ -107,6 +107,9 @@ namespace unit{
     typedef units::derived_dimension<units::length_base_dimension, -1>::type per_length_dimension;
     typedef units::unit<per_length_dimension, units::si::system> per_length;
     BOOST_UNITS_STATIC_CONSTANT(per_metre, per_length);
+    typedef units::derived_dimension<units::length_base_dimension, -2>::type per_area_dimension;
+    typedef units::unit<per_area_dimension, units::si::system> per_area;
+    BOOST_UNITS_STATIC_CONSTANT(per_metre_squared, per_area);
 
     // Mass
     typedef units::derived_dimension<units::mass_base_dimension, 1>::type mass_dimension;

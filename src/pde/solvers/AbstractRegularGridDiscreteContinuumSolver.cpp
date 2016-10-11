@@ -324,13 +324,13 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateCellData()
         EXCEPTION("The DiscreteContinuum solver needs a cell population for this operation.");
     }
 
-    this->mpRegularGrid->SetCellPopulation(*(this->mpCellPopulation));
+    this->mpRegularGrid->SetCellPopulation(*(this->mpCellPopulation), this->mCellPopulationReferenceLength);
     std::vector<std::vector<CellPtr> > point_cell_map = this->mpRegularGrid->GetPointCellMap();
     for(unsigned idx=0; idx<point_cell_map.size(); idx++)
     {
         for(unsigned jdx=0; jdx<point_cell_map[idx].size(); jdx++)
         {
-            point_cell_map[idx][jdx]->GetCellData()->SetItem(this->mLabel, this->mConcentrations[idx]/this->mReferenceConcentration);
+            point_cell_map[idx][jdx]->GetCellData()->SetItem(this->mLabel, this->mConcentrations[idx]/this->mCellPopulationReferenceConcentration);
         }
     }
 }
