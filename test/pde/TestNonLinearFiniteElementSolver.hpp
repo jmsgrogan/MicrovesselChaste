@@ -65,7 +65,7 @@ public:
         p_domain->AddCuboid(4.0e-6*unit::metres, 4.0e-6*unit::metres, 4.0e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         boost::shared_ptr<DiscreteContinuumMeshGenerator<3, 3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3, 3>::Create();
         p_mesh_generator->SetDomain(p_domain);
-        p_mesh_generator->SetMaxElementArea(1.0);
+        p_mesh_generator->SetMaxElementArea(1.0*units::pow<3>(1.e-6*unit::metres));
         p_mesh_generator->Update();
 
         // Choose the PDE

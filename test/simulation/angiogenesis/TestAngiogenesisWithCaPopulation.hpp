@@ -114,9 +114,9 @@ public:
 
         VesselNetworkCellPopulationInteractor<2> interactor = VesselNetworkCellPopulationInteractor<2>();
         interactor.SetVesselNetwork(p_network);
-        interactor.PartitionNetworkOverCells(*p_cell_population);
-        interactor.KillNonVesselOverlappingCells(*p_cell_population);
-        interactor.LabelVesselsInCellPopulation(*p_cell_population, p_EC_Tip_state, p_EC_state);
+        interactor.PartitionNetworkOverCells(*p_cell_population, 1.e-6*unit::metres);
+        interactor.KillNonVesselOverlappingCells(*p_cell_population, 1.e-6*unit::metres);
+        interactor.LabelVesselsInCellPopulation(*p_cell_population, 1.e-6*unit::metres, p_EC_Tip_state, p_EC_state);
 
         std::string output_filename2 = p_file_handler->GetOutputDirectoryFullPath().append("AssociatedVesselNetwork.vtp");
         p_network->Write(output_filename2);
@@ -127,7 +127,7 @@ public:
         SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(10.0, 10);
         AngiogenesisSolver<2> angiogenesis_solver;
         angiogenesis_solver.SetMigrationRule(CellPopulationMigrationRule<2>::Create());
-        angiogenesis_solver.SetCellPopulation(p_cell_population);
+        angiogenesis_solver.SetCellPopulation(p_cell_population, 1.e-6*unit::metres);
         angiogenesis_solver.SetVesselNetwork(p_network);
         angiogenesis_solver.SetOutputFileHandler(p_file_handler);
         angiogenesis_solver.SetVesselGrid(p_grid);

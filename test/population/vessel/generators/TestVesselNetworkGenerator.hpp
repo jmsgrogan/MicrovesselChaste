@@ -105,44 +105,47 @@ public:
     void TestParallelNetworks() throw (Exception)
     {
         boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
+        units::quantity<unit::per_area> target_density(1.e-4/(1.e-6 * unit::metres*1.e-6 * unit::metres));
+        units::quantity<unit::length> exclusion_distance(20.0*unit::microns);
+
         p_part->AddCuboid(1000.0* 1.e-6 * unit::metres,
                           1000.0* 1.e-6 * unit::metres,
                           50.0* 1.e-6 * unit::metres,
                           DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         VesselNetworkGenerator<3> network_generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateParrallelNetwork(p_part,
-                                                                                                        1.e-4,
+                                                                                                    target_density,
                                                                                                         VesselDistribution::REGULAR);
         OutputFileHandler output_file_handler("TestVesselNetworkGenerator/Parallel", false);
         std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("RegularNetwork.vtp");
         p_network->Write(output_filename);
 
         boost::shared_ptr<VesselNetwork<3> > p_network2 = network_generator.GenerateParrallelNetwork(p_part,
-                                                                                                        1.e-4,
+                                                                                                     target_density,
                                                                                                         VesselDistribution::UNIFORM);
 
         std::string output_filename2 = output_file_handler.GetOutputDirectoryFullPath().append("UniformNetwork.vtp");
         p_network2->Write(output_filename2);
 
         boost::shared_ptr<VesselNetwork<3> > p_network3 = network_generator.GenerateParrallelNetwork(p_part,
-                                                                                                        1.e-4,
+                                                                                                     target_density,
                                                                                                         VesselDistribution::UNIFORM,
-                                                                                                        20.0);
+                                                                                                        exclusion_distance);
 
         std::string output_filename3 = output_file_handler.GetOutputDirectoryFullPath().append("UniformExclusionNetwork.vtp");
         p_network3->Write(output_filename3);
 
         boost::shared_ptr<VesselNetwork<3> > p_network4 = network_generator.GenerateParrallelNetwork(p_part,
-                                                                                                        1.e-4,
+                                                                                                     target_density,
                                                                                                         VesselDistribution::TWO_LAYER);
 
         std::string output_filename4 = output_file_handler.GetOutputDirectoryFullPath().append("TwoLayerNetwork.vtp");
         p_network3->Write(output_filename4);
 
         boost::shared_ptr<VesselNetwork<3> > p_network5 = network_generator.GenerateParrallelNetwork(p_part,
-                                                                                                        1.e-4,
+                                                                                                     target_density,
                                                                                                         VesselDistribution::TWO_LAYER,
-                                                                                                        20.0);
+                                                                                                        exclusion_distance);
 
         std::string output_filename5 = output_file_handler.GetOutputDirectoryFullPath().append("TwoLayerExclusionNetwork.vtp");
         p_network3->Write(output_filename5);
@@ -156,10 +159,14 @@ public:
                           2000.0* 1.e-6 * unit::metres,
                           2000.0* 1.e-6 * unit::metres,
                           DimensionalChastePoint<3>(0.0, 0.0, 0.0));
-        std::vector<double> density;
-        density.push_back(8.e-5);
-        density.push_back(8.e-5);
-        density.push_back(1.e-5);
+        units::quantity<unit::length> exclusion_distance(20.0*unit::microns);
+
+        units::quantity<unit::per_area> target_density1(8.e-5/(1.e-6 * unit::metres*1.e-6 * unit::metres));
+        units::quantity<unit::per_area> target_density2(1.e-5/(1.e-6 * unit::metres*1.e-6 * unit::metres));
+        std::vector<units::quantity<unit::per_area> > density;
+        density.push_back(target_density1);
+        density.push_back(target_density1);
+        density.push_back(target_density2);
         VesselNetworkGenerator<3> network_generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.Generate3dNetwork(p_part,
                                                                                                         density,
@@ -168,10 +175,11 @@ public:
         std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("RegularNetwork.vtp");
         p_network->Write(output_filename);
 
-        std::vector<double> density2;
-        density2.push_back(3.e-5);
-        density2.push_back(3.e-5);
-        density2.push_back(3.e-5);
+        units::quantity<unit::per_area> target_density3(3.e-5/(1.e-6 * unit::metres*1.e-6 * unit::metres));
+        std::vector<units::quantity<unit::per_area> > density2;
+        density2.push_back(target_density3);
+        density2.push_back(target_density3);
+        density2.push_back(target_density3);
         boost::shared_ptr<VesselNetwork<3> > p_network2 = network_generator.Generate3dNetwork(p_part,
                                                                                                   density2,
                                                                                                         VesselDistribution::UNIFORM);
@@ -182,7 +190,7 @@ public:
         boost::shared_ptr<VesselNetwork<3> > p_network3 = network_generator.Generate3dNetwork(p_part,
                                                                                                          density2,
                                                                                                         VesselDistribution::UNIFORM,
-                                                                                                        20.0);
+                                                                                                        exclusion_distance);
 
         std::string output_filename3 = output_file_handler.GetOutputDirectoryFullPath().append("UniformExclusionNetwork.vtp");
         p_network3->Write(output_filename3);
@@ -197,7 +205,7 @@ public:
         boost::shared_ptr<VesselNetwork<3> > p_network5 = network_generator.Generate3dNetwork(p_part,
                                                                                                          density2,
                                                                                                         VesselDistribution::TWO_LAYER,
-                                                                                                        20.0);
+                                                                                                        exclusion_distance);
 
         std::string output_filename5 = output_file_handler.GetOutputDirectoryFullPath().append("TwoLayerExclusionNetwork.vtp");
         p_network3->Write(output_filename5);
