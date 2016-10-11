@@ -40,6 +40,8 @@ template<unsigned DIM>
 AbstractDiscreteContinuumSolver<DIM>::AbstractDiscreteContinuumSolver()
     :   mpNetwork(),
         mpCellPopulation(NULL),
+        mCellPopulationReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
+        mCellPopulationReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale()),
         mpOutputFileHandler(),
         mFilename(),
         mLabel("Default"),
@@ -132,9 +134,13 @@ bool AbstractDiscreteContinuumSolver<DIM>::HasUnstructuredGrid()
 }
 
 template<unsigned DIM>
-void AbstractDiscreteContinuumSolver<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation)
+void AbstractDiscreteContinuumSolver<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
+                                                             units::quantity<unit::length> cellPopulationReferenceLength,
+                                                             units::quantity<unit::concentration> cellPopulationReferenceConcentration)
 {
     mpCellPopulation = &rCellPopulation;
+    mCellPopulationReferenceLength = cellPopulationReferenceLength;
+    mCellPopulationReferenceConcentration = cellPopulationReferenceConcentration;
 }
 
 template<unsigned DIM>

@@ -93,6 +93,11 @@ class AngiogenesisSolver
     boost::shared_ptr<AbstractCellPopulation<DIM> > mpCellPopulation;
 
     /**
+     * The reference length scale for the cellpopulation.
+     */
+    units::quantity<unit::length> mCellPopulationReferenceLength;
+
+    /**
      * Tip cell collection for discrete cell angiogenesis models
      */
     std::vector<boost::shared_ptr<Cell> > mTipCells;
@@ -153,7 +158,7 @@ public:
      * Set a cell population for discrete cell solves
      * @param pCellPopulation the cell population for discrete cell solves
      */
-    void SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation);
+    void SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation, units::quantity<unit::length> cellPopulationReferenceLength);
 
     /**
      * Add a migration rule for tip cells

@@ -49,18 +49,18 @@ VesselNetworkCellPopulationInteractor<DIM>::~VesselNetworkCellPopulationInteract
 }
 
 template<unsigned DIM>
-void VesselNetworkCellPopulationInteractor<DIM>::LabelVesselsInCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
+void VesselNetworkCellPopulationInteractor<DIM>::LabelVesselsInCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,  units::quantity<unit::length> cellLengthScale,
                                   boost::shared_ptr<AbstractCellMutationState> pTipMutationState,
                                   boost::shared_ptr<AbstractCellMutationState> pStalkState,
                                   double threshold)
 {
     for (typename AbstractCellPopulation<DIM>::Iterator cell_iter = rCellPopulation.Begin();cell_iter != rCellPopulation.End();++cell_iter)
     {
-        DimensionalChastePoint<DIM> cell_location = DimensionalChastePoint<DIM>(rCellPopulation.GetLocationOfCellCentre(*cell_iter));
+        DimensionalChastePoint<DIM> cell_location = DimensionalChastePoint<DIM>(rCellPopulation.GetLocationOfCellCentre(*cell_iter), cellLengthScale);
         boost::shared_ptr<VesselNode<DIM> > p_nearest_node = mpNetwork->GetNearestNode(cell_location);
-        double node_distance = p_nearest_node->GetDistance(cell_location)/p_nearest_node->GetReferenceLengthScale();
+        units::quantity<unit::length> node_distance = p_nearest_node->GetDistance(cell_location);
         std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > segment_distance_pair = mpNetwork->GetNearestSegment(cell_location);
-        if (segment_distance_pair.second/segment_distance_pair.first->GetNode(0)->GetReferenceLengthScale() < threshold || node_distance < threshold)
+        if (segment_distance_pair.second < threshold * cellLengthScale || node_distance < threshold * cellLengthScale)
         {
             if(p_nearest_node->IsMigrating())
             {
@@ -75,21 +75,21 @@ void VesselNetworkCellPopulationInteractor<DIM>::LabelVesselsInCellPopulation(Ab
 }
 
 template<unsigned DIM>
-void VesselNetworkCellPopulationInteractor<DIM>::PartitionNetworkOverCells(AbstractCellPopulation<DIM>& rCellPopulation,
+void VesselNetworkCellPopulationInteractor<DIM>::PartitionNetworkOverCells(AbstractCellPopulation<DIM>& rCellPopulation,  units::quantity<unit::length> cellLengthScale,
                                                                            double threshold)
 {
     // Loop through each cell add get its location. If the centre falls along a vessel, split the vessel at that location
 
     for (typename AbstractCellPopulation<DIM>::Iterator cell_iter = rCellPopulation.Begin();cell_iter != rCellPopulation.End();++cell_iter)
     {
-        DimensionalChastePoint<DIM> cell_location = DimensionalChastePoint<DIM>(rCellPopulation.GetLocationOfCellCentre(*cell_iter));
+        DimensionalChastePoint<DIM> cell_location = DimensionalChastePoint<DIM>(rCellPopulation.GetLocationOfCellCentre(*cell_iter), cellLengthScale);
         boost::shared_ptr<VesselNode<DIM> > p_nearest_node = mpNetwork->GetNearestNode(cell_location);
-        double node_distance = p_nearest_node->GetDistance(cell_location)/p_nearest_node->GetReferenceLengthScale();
+        units::quantity<unit::length> node_distance = p_nearest_node->GetDistance(cell_location);
 
         std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > segment_distance_pair = mpNetwork->GetNearestSegment(cell_location);
-        if (segment_distance_pair.second/segment_distance_pair.first->GetNode(0)->GetReferenceLengthScale() < threshold || node_distance < threshold)
+        if (segment_distance_pair.second < threshold*cellLengthScale || node_distance < threshold*cellLengthScale)
         {
-            if (node_distance >= threshold)
+            if (node_distance >= threshold*cellLengthScale)
             {
                 boost::shared_ptr<Vessel<DIM> > pVessel = segment_distance_pair.first->GetVessel();
                 pVessel->DivideSegment(cell_location);
@@ -103,17 +103,17 @@ void VesselNetworkCellPopulationInteractor<DIM>::PartitionNetworkOverCells(Abstr
 }
 
 template<unsigned DIM>
-void VesselNetworkCellPopulationInteractor<DIM>::KillNonVesselOverlappingCells(AbstractCellPopulation<DIM>& rCellPopulation,
+void VesselNetworkCellPopulationInteractor<DIM>::KillNonVesselOverlappingCells(AbstractCellPopulation<DIM>& rCellPopulation,  units::quantity<unit::length> cellLengthScale,
                                                                                double threshold)
 {
     for (typename AbstractCellPopulation<DIM>::Iterator cell_iter = rCellPopulation.Begin();cell_iter != rCellPopulation.End();++cell_iter)
     {
-        DimensionalChastePoint<DIM> cell_location = DimensionalChastePoint<DIM>(rCellPopulation.GetLocationOfCellCentre(*cell_iter));
+        DimensionalChastePoint<DIM> cell_location = DimensionalChastePoint<DIM>(rCellPopulation.GetLocationOfCellCentre(*cell_iter), cellLengthScale);
         boost::shared_ptr<VesselNode<DIM> > p_nearest_node = mpNetwork->GetNearestNode(cell_location);
-        double node_distance = p_nearest_node->GetDistance(cell_location)/p_nearest_node->GetReferenceLengthScale();
+        units::quantity<unit::length> node_distance = p_nearest_node->GetDistance(cell_location);
 
         std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > segment_distance_pair = mpNetwork->GetNearestSegment(cell_location);
-        if (segment_distance_pair.second/segment_distance_pair.first->GetNode(0)->GetReferenceLengthScale() > threshold and node_distance > threshold)
+        if (segment_distance_pair.second > threshold*cellLengthScale and node_distance > threshold*cellLengthScale)
         {
             cell_iter->Kill();
         }
@@ -122,17 +122,17 @@ void VesselNetworkCellPopulationInteractor<DIM>::KillNonVesselOverlappingCells(A
 }
 
 template<unsigned DIM>
-void VesselNetworkCellPopulationInteractor<DIM>::KillOverlappingVesselCells(AbstractCellPopulation<DIM>& rCellPopulation,
+void VesselNetworkCellPopulationInteractor<DIM>::KillOverlappingVesselCells(AbstractCellPopulation<DIM>& rCellPopulation,  units::quantity<unit::length> cellLengthScale,
                                                                             double threshold)
 {
     for (typename AbstractCellPopulation<DIM>::Iterator cell_iter = rCellPopulation.Begin();cell_iter != rCellPopulation.End();++cell_iter)
     {
-        DimensionalChastePoint<DIM> cell_location = DimensionalChastePoint<DIM>(rCellPopulation.GetLocationOfCellCentre(*cell_iter));
+        DimensionalChastePoint<DIM> cell_location = DimensionalChastePoint<DIM>(rCellPopulation.GetLocationOfCellCentre(*cell_iter), cellLengthScale);
         boost::shared_ptr<VesselNode<DIM> > p_nearest_node = mpNetwork->GetNearestNode(cell_location);
-        double node_distance = p_nearest_node->GetDistance(cell_location)/p_nearest_node->GetReferenceLengthScale();
+        units::quantity<unit::length> node_distance = p_nearest_node->GetDistance(cell_location);
 
         std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > segment_distance_pair = mpNetwork->GetNearestSegment(cell_location);
-        if (segment_distance_pair.second/segment_distance_pair.first->GetNode(0)->GetReferenceLengthScale() < threshold or node_distance < threshold)
+        if (segment_distance_pair.second < threshold*cellLengthScale or node_distance < threshold*cellLengthScale)
         {
             cell_iter->Kill();
         }

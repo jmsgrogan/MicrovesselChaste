@@ -114,7 +114,7 @@ protected:
     /**
      * The grid for solvers using regular grids
      */
-    boost::shared_ptr<RegularGrid<DIM, DIM> > mpRegularGrid;
+    boost::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
 
     /**
      * The mesh for solvers using finite element meshes
@@ -215,7 +215,7 @@ public:
      * Set the regular grid
      * @param pRegularGrid the regular grid
      */
-    void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM, DIM> > pRegularGrid);
+    void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pRegularGrid);
 
     /**
      * Set where the value of the boundary condition is obtained, e.g. LABEL, PRESCRIBED

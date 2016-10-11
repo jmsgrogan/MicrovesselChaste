@@ -103,7 +103,7 @@ void FiniteDifferenceSolver<DIM>::Setup()
 
     if(this->CellPopulationIsSet())
     {
-        this->mpRegularGrid->SetCellPopulation(*(this->mpCellPopulation));
+        this->mpRegularGrid->SetCellPopulation(*(this->mpCellPopulation), this->mCellPopulationReferenceLength);
     }
 
     if(this->mpNetwork)

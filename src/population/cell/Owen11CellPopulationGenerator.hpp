@@ -96,6 +96,11 @@ class Owen11CellPopulationGenerator
      */
     units::quantity<unit::length> mTumourRadius;
 
+    /**
+     * The reference length scale for the cellpopulation.
+     */
+    units::quantity<unit::length> mCellPopulationReferenceLength;
+
 
 public:
 

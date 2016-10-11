@@ -58,7 +58,7 @@ protected:
     /**
      * The grid for solvers using regular grids
      */
-    boost::shared_ptr<RegularGrid<DIM, DIM> > mpRegularGrid;
+    boost::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
 
     /**
      * The mesh for the finite element solver
@@ -144,7 +144,7 @@ public:
      * Set the regular grid
      * @param pRegularGrid the regular grid
      */
-    void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM, DIM> > pRegularGrid);
+    void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pRegularGrid);
 
     /**
      * Set the finite element mesh

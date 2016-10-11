@@ -72,6 +72,16 @@ protected:
     AbstractCellPopulation<DIM>* mpCellPopulation;
 
     /**
+     * The reference length scale for the cellpopulation.
+     */
+    units::quantity<unit::length> mCellPopulationReferenceLength;
+
+    /**
+     * The reference concentration scale for the cellpopulation.
+     */
+    units::quantity<unit::concentration> mCellPopulationReferenceConcentration;
+
+    /**
      * File handler containing the output directory
      */
     boost::shared_ptr<OutputFileHandler> mpOutputFileHandler;
@@ -255,8 +265,12 @@ public:
     /**
      * Set the cell population
      * @param rCellPopulation a reference to the cell population
+     * @param cellPopulationReferenceLength the length scale for the cell population
+     * @param cellPopulationReferenceConcentration the concentration scale for the cell population
      */
-    void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation);
+    void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
+                           units::quantity<unit::length> cellPopulationReferenceLength,
+                           units::quantity<unit::concentration> cellPopulationReferenceConcentration);
 
     /**
      * Set the file handler containing the working directory

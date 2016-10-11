@@ -45,14 +45,16 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkSmartPointer.h>
 #include <vtkLine.h>
 #include "RegularGridWriter.hpp"
+#include "BaseUnits.hpp"
 
 template<unsigned DIM>
 RegularGrid<DIM>::RegularGrid() :
-        mSpacing(1.e-6 * unit::metres),
+        mSpacing(BaseUnits::Instance()->GetReferenceLengthScale()),
         mExtents(std::vector<unsigned>(3, 10)),
-        mOrigin(DimensionalChastePoint<DIM>(zero_vector<double>(DIM))),
+        mOrigin(DimensionalChastePoint<DIM>(zero_vector<double>(DIM), BaseUnits::Instance()->GetReferenceLengthScale())),
         mpNetwork(),
         mpCellPopulation(),
+        mCellPopulationReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
         mPointCellMap(),
         mPointNodeMap(),
         mPointSegmentMap(),
@@ -60,7 +62,7 @@ RegularGrid<DIM>::RegularGrid() :
         mVtkGridIsSetUp(false),
         mNeighbourData(),
         mHasCellPopulation(false),
-        mReferenceLength(1.e-6 * unit::metres)
+        mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
 {
 
 }
@@ -132,12 +134,15 @@ const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::GetNeighbourData()
 template<unsigned DIM>
 unsigned RegularGrid<DIM>::GetNearestGridIndex(const DimensionalChastePoint<DIM>& rLocation)
 {
-    unsigned x_index = round((rLocation[0] - mOrigin[0])*mReferenceLength / mSpacing);
-    unsigned y_index = round((rLocation[1] - mOrigin[1])*mReferenceLength / mSpacing);
+    c_vector<double, DIM> offsets = (rLocation - mOrigin).GetLocation(mReferenceLength);
+    double scale_factor = mReferenceLength / mSpacing;
+
+    unsigned x_index = round(offsets[0]*scale_factor);
+    unsigned y_index = round(offsets[1]*scale_factor);
     unsigned z_index = 0;
     if (DIM == 3)
     {
-        z_index = round((rLocation[2] - mOrigin[2])*mReferenceLength / mSpacing);
+        z_index = round(offsets[2]*scale_factor);
     }
     return Get1dGridIndex(x_index, y_index, z_index);
 }
@@ -146,18 +151,18 @@ template<unsigned DIM>
 void RegularGrid<DIM>::GenerateFromPart(boost::shared_ptr<Part<DIM> > pPart, units::quantity<unit::length> gridSize)
 {
     mSpacing = gridSize;
-    c_vector<double, 2 * DIM> spatial_extents = pPart->GetBoundingBox();
-    mExtents[0] = unsigned((spatial_extents[1] - spatial_extents[0])*mReferenceLength / gridSize) + 1u;
-    mExtents[1] = unsigned((spatial_extents[3] - spatial_extents[2])*mReferenceLength / gridSize) + 1u;
+    std::vector<units::quantity<unit::length> > spatial_extents = pPart->GetBoundingBox();
+    mExtents[0] = unsigned((spatial_extents[1] - spatial_extents[0]) / gridSize) + 1u;
+    mExtents[1] = unsigned((spatial_extents[3] - spatial_extents[2]) / gridSize) + 1u;
     if (DIM == 3)
     {
-        mExtents[2] = unsigned((spatial_extents[5] - spatial_extents[4])*mReferenceLength / gridSize) + 1u;
-        mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0], spatial_extents[2], spatial_extents[4]);
+        mExtents[2] = unsigned((spatial_extents[5] - spatial_extents[4]) / gridSize) + 1u;
+        mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0]/mReferenceLength, spatial_extents[2]/mReferenceLength, spatial_extents[4]/mReferenceLength, mReferenceLength);
     }
     else
     {
         mExtents[2] = 1;
-        mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0], spatial_extents[2], 0.0);
+        mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0]/mReferenceLength, spatial_extents[2]/mReferenceLength, 0.0, mReferenceLength);
     }
 }
 
@@ -183,23 +188,17 @@ template<unsigned DIM>
 std::vector<std::vector<unsigned> > RegularGrid<DIM>::GetPointPointMap(
         std::vector<DimensionalChastePoint<DIM> > inputPoints)
 {
-    double origin_x = mOrigin[0];
-    double origin_y = mOrigin[1];
-    double origin_z = 0.0;
-    if (DIM == 3)
-    {
-        origin_z = mOrigin[2];
-    }
-
+    double scale_factor = mReferenceLength / mSpacing;
     std::vector<std::vector<unsigned> > point_point_map(GetNumberOfPoints());
     for (unsigned idx = 0; idx < inputPoints.size(); idx++)
     {
-        unsigned x_index = round((inputPoints[idx][0] - origin_x)*mReferenceLength / mSpacing);
-        unsigned y_index = round((inputPoints[idx][1] - origin_y)*mReferenceLength / mSpacing);
+        c_vector<double, DIM> offsets = (inputPoints[idx] - mOrigin).GetLocation(mReferenceLength);
+        unsigned x_index = round(offsets[0]*scale_factor);
+        unsigned y_index = round(offsets[1]*scale_factor);
         unsigned z_index = 0;
         if (DIM == 3)
         {
-            z_index = round((inputPoints[idx][2] - origin_z)*mReferenceLength / mSpacing);
+            z_index = round(offsets[2]*scale_factor);
         }
 
         if (x_index <= mExtents[0] && y_index <= mExtents[1] && z_index <= mExtents[2])
@@ -239,13 +238,14 @@ std::vector<double> RegularGrid<DIM>::InterpolateGridValues(
     p_points->SetNumberOfPoints(locations.size());
     for (unsigned idx = 0; idx < locations.size(); idx++)
     {
+        c_vector<double, DIM> scaled_location = locations[idx].GetLocation(mReferenceLength);
         if (DIM == 3)
         {
-            p_points->SetPoint(idx, locations[idx][0], locations[idx][1], locations[idx][2]);
+            p_points->SetPoint(idx, scaled_location[0], scaled_location[1], scaled_location[2]);
         }
         else
         {
-            p_points->SetPoint(idx, locations[idx][0], locations[idx][1], 0.0);
+            p_points->SetPoint(idx, scaled_location[0], scaled_location[1], 0.0);
         }
     }
     p_polydata->SetPoints(p_points);
@@ -283,14 +283,6 @@ const std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >& RegularGr
     }
 
     // Loop over all nodes and associate cells with the points
-    double origin_x = mOrigin[0];
-    double origin_y = mOrigin[1];
-    double origin_z = 0.0;
-    if (DIM == 3)
-    {
-        origin_z = mOrigin[2];
-    }
-
     mPointNodeMap.clear();
     for (unsigned idx = 0; idx < GetNumberOfPoints(); idx++)
     {
@@ -299,16 +291,17 @@ const std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >& RegularGr
     }
 
     std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
+    double scale_factor = mReferenceLength / mSpacing;
 
     for (unsigned idx = 0; idx < nodes.size(); idx++)
     {
-        DimensionalChastePoint<DIM> location = nodes[idx]->rGetLocation();
-        unsigned x_index = round((location[0] - origin_x)*mReferenceLength / mSpacing);
-        unsigned y_index = round((location[1] - origin_y)*mReferenceLength / mSpacing);
+        c_vector<double, DIM> offsets = (nodes[idx]->rGetLocation()-mOrigin).GetLocation(mReferenceLength);
+        unsigned x_index = round(offsets[0]*scale_factor);
+        unsigned y_index = round(offsets[1]*scale_factor);
         unsigned z_index = 0;
         if (DIM == 3)
         {
-            z_index = round((location[2] - origin_z)*mReferenceLength / mSpacing);
+            z_index = round(offsets[2]*scale_factor);
         }
 
         if (x_index <= mExtents[0] && y_index <= mExtents[1] && z_index <= mExtents[2])
@@ -334,13 +327,8 @@ const std::vector<std::vector<CellPtr> >& RegularGrid<DIM>::GetPointCellMap(bool
     }
 
     // Loop over all cells and associate cells with the points
-    double origin_x = mOrigin[0];
-    double origin_y = mOrigin[1];
-    double origin_z = 0.0;
-    if (DIM == 3)
-    {
-        origin_z = mOrigin[2];
-    }
+    double scale_factor = mReferenceLength / mSpacing;
+    double cell_scale_factor = mCellPopulationReferenceLength / mReferenceLength;
 
     mPointCellMap.clear();
     for (unsigned idx = 0; idx < GetNumberOfPoints(); idx++)
@@ -354,12 +342,13 @@ const std::vector<std::vector<CellPtr> >& RegularGrid<DIM>::GetPointCellMap(bool
             cell_iter != mpCellPopulation->End(); ++cell_iter)
     {
         c_vector<double, DIM> location = mpCellPopulation->GetLocationOfCellCentre(*cell_iter);
-        unsigned x_index = round((location[0] - origin_x)*mReferenceLength / mSpacing);
-        unsigned y_index = round((location[1] - origin_y)*mReferenceLength / mSpacing);
+        c_vector<double, DIM> offsets = location*cell_scale_factor - mOrigin.GetLocation(mReferenceLength);
+        unsigned x_index = round(offsets[0]*scale_factor);
+        unsigned y_index = round(offsets[1]*scale_factor);
         unsigned z_index = 0;
         if (DIM == 3)
         {
-            z_index = round((location[2] - origin_z)*mReferenceLength/ mSpacing);
+            z_index = round(offsets[2]*scale_factor);
         }
 
         if (x_index <= mExtents[0] && y_index <= mExtents[1] && z_index <= mExtents[2])
@@ -416,7 +405,7 @@ std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > RegularGrid<D
     {
         double start_point[3];
         double end_point[3];
-        DimensionalChastePoint<DIM> start_location = segments[jdx]->GetNode(0)->rGetLocation();
+        c_vector<double,DIM> start_location = segments[jdx]->GetNode(0)->rGetLocation().GetLocation(mReferenceLength);
         start_point[0] = start_location[0];
         start_point[1] = start_location[1];
         if(DIM==3)
@@ -427,7 +416,7 @@ std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > RegularGrid<D
         {
             start_point[2] = 0.0;
         }
-        DimensionalChastePoint<DIM> end_location = segments[jdx]->GetNode(1)->rGetLocation();
+        c_vector<double,DIM> end_location = segments[jdx]->GetNode(1)->rGetLocation().GetLocation(mReferenceLength);
         end_point[0] = end_location[0];
         end_point[1] = end_location[1];
         if(DIM==3)
@@ -446,7 +435,7 @@ std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > RegularGrid<D
                 double parametric_distance = 0.0;
                 double closest_point[3];
                 double grid_point[3];
-                DimensionalChastePoint<DIM> grid_location = GetLocationOf1dIndex(idx);
+                c_vector<double,DIM> grid_location = GetLocationOf1dIndex(idx).GetLocation(mReferenceLength);
                 grid_point[0] = grid_location[0];
                 grid_point[1] = grid_location[1];
                 if(DIM==3)
@@ -489,16 +478,18 @@ std::vector<unsigned> RegularGrid<DIM>::GetExtents()
 template<unsigned DIM>
 DimensionalChastePoint<DIM> RegularGrid<DIM>::GetLocation(unsigned x_index, unsigned y_index, unsigned z_index)
 {
+    double scale_factor = mSpacing/mReferenceLength;
+    c_vector<double, DIM> dimensionless_origin = mOrigin.GetLocation(mReferenceLength);
     if(DIM == 2)
     {
-        return DimensionalChastePoint<DIM>((double(x_index) * mSpacing + mOrigin[0]*mReferenceLength)/mReferenceLength,
-                                                              (double(y_index) * mSpacing + mOrigin[1]*mReferenceLength)/mReferenceLength);
+        return DimensionalChastePoint<DIM>(double(x_index) * scale_factor + dimensionless_origin[0],
+                                           double(y_index) * scale_factor + dimensionless_origin[1], 0.0, mReferenceLength);
     }
     else
     {
-        return DimensionalChastePoint<DIM>((double(x_index) * mSpacing + mOrigin[0]*mReferenceLength)/mReferenceLength,
-                                                              (double(y_index) * mSpacing + mOrigin[1]*mReferenceLength)/mReferenceLength,
-                                                              (double(z_index) * mSpacing + mOrigin[2]*mReferenceLength)/mReferenceLength);
+        return DimensionalChastePoint<DIM>(double(x_index) * scale_factor + dimensionless_origin[0],
+                                                              double(y_index) * scale_factor + dimensionless_origin[1],
+                                                              double(z_index) * scale_factor + dimensionless_origin[2], mReferenceLength);
     }
 }
 
@@ -511,16 +502,17 @@ DimensionalChastePoint<DIM> RegularGrid<DIM>::GetLocationOf1dIndex(unsigned grid
     unsigned y_index = (mod_z - mod_y) / mExtents[0];
     unsigned x_index = mod_y;
     unsigned dimless_spacing = mSpacing/mReferenceLength;
+    c_vector<double, DIM> dimensionless_origin = mOrigin.GetLocation(mReferenceLength);
     if(DIM == 2)
     {
-        return DimensionalChastePoint<DIM>(double(x_index) * dimless_spacing + mOrigin[0],
-                                                              double(y_index) * dimless_spacing + mOrigin[1]);
+        return DimensionalChastePoint<DIM>(double(x_index) * dimless_spacing + dimensionless_origin[0],
+                                                              double(y_index) * dimless_spacing + dimensionless_origin[1], 0.0, mReferenceLength);
     }
     else
     {
-        return DimensionalChastePoint<DIM>(double(x_index) * dimless_spacing + mOrigin[0],
-                                                              double(y_index) * dimless_spacing + mOrigin[1],
-                                                              double(z_index) * dimless_spacing + mOrigin[2]);
+        return DimensionalChastePoint<DIM>(double(x_index) * dimless_spacing + dimensionless_origin[0],
+                                                              double(y_index) * dimless_spacing + dimensionless_origin[1],
+                                                              double(z_index) * dimless_spacing + dimensionless_origin[2], mReferenceLength);
     }
 }
 
@@ -595,21 +587,25 @@ bool RegularGrid<DIM>::IsLocationInPointVolume(DimensionalChastePoint<DIM> point
     unsigned y_index = (mod_z - mod_y) / mExtents[0];
     unsigned x_index = mod_y;
 
-    double loc_x = (double(x_index) * mSpacing + mOrigin[0]*mReferenceLength)/ mReferenceLength;
-    double loc_y = (double(y_index) * mSpacing + mOrigin[1]*mReferenceLength)/ mReferenceLength;
+    double dimensionless_spacing = mSpacing/mReferenceLength;
+    c_vector<double, DIM> dimensionless_origin = mOrigin.GetLocation(mReferenceLength);
+
+    double loc_x = (double(x_index) * dimensionless_spacing + dimensionless_origin[0]);
+    double loc_y = (double(y_index) * dimensionless_spacing + dimensionless_origin[1]);
     double loc_z = 0.0;
     if (DIM == 3)
     {
-        loc_z = (double(z_index) * mSpacing + mOrigin[2]*mReferenceLength)/ mReferenceLength;
+        loc_z = (double(z_index) * dimensionless_spacing + dimensionless_origin[2]);
     }
 
-    if (point[0] >= loc_x - (mSpacing/mReferenceLength) / 2.0 && point[0] <= loc_x + (mSpacing/mReferenceLength)  / 2.0)
+    c_vector<double, DIM> dimensionless_point = point.GetLocation(mReferenceLength);
+    if (dimensionless_point[0] >= loc_x - dimensionless_spacing / 2.0 && dimensionless_point[0] <= loc_x + dimensionless_spacing / 2.0)
     {
-        if (point[1] >= loc_y - (mSpacing/mReferenceLength)  / 2.0 && point[1] <= loc_y + (mSpacing/mReferenceLength)  / 2.0)
+        if (dimensionless_point[1] >= loc_y - dimensionless_spacing / 2.0 && dimensionless_point[1] <= loc_y +dimensionless_spacing / 2.0)
         {
             if (DIM == 3)
             {
-                if (point[2] >= loc_z - (mSpacing/mReferenceLength)  / 2.0 && point[2] <= loc_z + (mSpacing/mReferenceLength)  / 2.0)
+                if (dimensionless_point[2] >= loc_z - dimensionless_spacing / 2.0 && dimensionless_point[2] <= loc_z + dimensionless_spacing / 2.0)
                 {
                     return true;
                 }
@@ -624,15 +620,10 @@ bool RegularGrid<DIM>::IsLocationInPointVolume(DimensionalChastePoint<DIM> point
 }
 
 template<unsigned DIM>
-void RegularGrid<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation)
+void RegularGrid<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation, units::quantity<unit::length> cellPopulationLengthScale)
 {
     mpCellPopulation = &rCellPopulation;
-}
-
-template<unsigned DIM>
-void RegularGrid<DIM>::SetCaBasedPopulation(boost::shared_ptr<CaBasedCellPopulation<DIM> > pPopulation)
-{
-    mpCellPopulation = pPopulation.get();
+    mCellPopulationReferenceLength = cellPopulationLengthScale;
 }
 
 template<unsigned DIM>
@@ -672,13 +663,14 @@ void RegularGrid<DIM>::SetUpVtkGrid()
     }
     mpVtkGrid->SetSpacing(mSpacing/mReferenceLength, mSpacing/mReferenceLength, mSpacing/mReferenceLength);
 
+    c_vector<double, DIM> dimless_origin = mOrigin.GetLocation(mReferenceLength);
     if (DIM == 3)
     {
-        mpVtkGrid->SetOrigin(mOrigin[0], mOrigin[1], mOrigin[2]);
+        mpVtkGrid->SetOrigin(dimless_origin[0], dimless_origin[1], dimless_origin[2]);
     }
     else
     {
-        mpVtkGrid->SetOrigin(mOrigin[0], mOrigin[1], 0.0);
+        mpVtkGrid->SetOrigin(dimless_origin[0], dimless_origin[1], 0.0);
     }
     mVtkGridIsSetUp = true;
 }

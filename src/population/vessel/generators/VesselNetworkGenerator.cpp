@@ -141,34 +141,34 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateOval
 
 template<unsigned DIM>
 boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParrallelNetwork(boost::shared_ptr<Part<DIM> > domain,
-                                                                    double targetDensity,
+                                                                                             units::quantity<unit::per_area> targetDensity,
                                                                     VesselDistribution::Value distributionType,
-                                                                    double exclusionDistance,
+                                                                    units::quantity<unit::length> exclusionDistance,
                                                                     bool useBbox,
                                                                     std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > seeds)
 {
     // Get the bounding box of the domain and the volume of the bbox
-    c_vector<double, 2*DIM> bbox = domain->GetBoundingBox();
-    double delta_x = bbox[1] - bbox[0];
-    double delta_y = bbox[3] - bbox[2];
-    double delta_z = 0.0;
+    std::vector<units::quantity<unit::length> > bbox = domain->GetBoundingBox();
+    units::quantity<unit::length> delta_x = bbox[1] - bbox[0];
+    units::quantity<unit::length> delta_y = bbox[3] - bbox[2];
+    units::quantity<unit::length> delta_z = 0.0*unit::metres;
     if(DIM==3)
     {
         delta_z = bbox[5] - bbox[4];
     }
-    if(delta_x == 0.0 || delta_y == 0.0)
+    if(delta_x == 0.0*unit::metres || delta_y == 0.0*unit::metres)
     {
         EXCEPTION("The domain must be at least two-dimensional.");
     }
 
-    unsigned num_x = unsigned(std::sqrt(targetDensity) * delta_x);
-    unsigned num_y = unsigned(std::sqrt(targetDensity) * delta_y);
+    unsigned num_x = unsigned(units::sqrt(targetDensity) * delta_x);
+    unsigned num_y = unsigned(units::sqrt(targetDensity) * delta_y);
     if(num_x == 0 || num_y == 0)
     {
         EXCEPTION("The domain is not large enough to contain any vessels at the requested density.");
     }
-    double spacing_x = delta_x / double(num_x);
-    double spacing_y = delta_y / double(num_y);
+    units::quantity<unit::length> spacing_x = delta_x / double(num_x);
+    units::quantity<unit::length> spacing_y = delta_y / double(num_y);
 
     // Generate the start and end nodes
     std::vector<boost::shared_ptr<VesselNode<DIM> > > start_nodes;
@@ -179,17 +179,17 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParr
         {
            for(unsigned jdx=0; jdx<num_x; jdx++)
            {
-               double location_x = bbox[0] + spacing_x / 2.0 + double(jdx) * spacing_x;
-               double location_y = bbox[2] + spacing_y / 2.0 + double(idx) * spacing_y;
+               units::quantity<unit::length> location_x = bbox[0] + spacing_x / 2.0 + double(jdx) * spacing_x;
+               units::quantity<unit::length> location_y = bbox[2] + spacing_y / 2.0 + double(idx) * spacing_y;
                if(DIM==2)
                {
-                   start_nodes.push_back(VesselNode<DIM>::Create(location_x, location_y));
-                   end_nodes.push_back(VesselNode<DIM>::Create(location_x, location_y));
+                   start_nodes.push_back(VesselNode<DIM>::Create(location_x/mReferenceLength, location_y/mReferenceLength, 0.0, mReferenceLength));
+                   end_nodes.push_back(VesselNode<DIM>::Create(location_x/mReferenceLength, location_y/mReferenceLength, 0.0, mReferenceLength));
                }
                else
                {
-                   start_nodes.push_back(VesselNode<DIM>::Create(location_x, location_y, bbox[4]));
-                   end_nodes.push_back(VesselNode<DIM>::Create(location_x, location_y, bbox[4] + delta_z));
+                   start_nodes.push_back(VesselNode<DIM>::Create(location_x/mReferenceLength, location_y/mReferenceLength, bbox[4]/mReferenceLength, mReferenceLength));
+                   end_nodes.push_back(VesselNode<DIM>::Create(location_x/mReferenceLength, location_y/mReferenceLength, (bbox[4] + delta_z)/mReferenceLength, mReferenceLength));
                }
            }
         }
@@ -200,8 +200,8 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParr
         for(unsigned idx=0; idx<1.e9; idx++)
         {
            // Generate with uniform random positions
-           double location_x = bbox[0] + RandomNumberGenerator::Instance()->ranf() * delta_x;
-           double location_y = bbox[2] + RandomNumberGenerator::Instance()->ranf() * delta_y;
+           units::quantity<unit::length> location_x = bbox[0] + RandomNumberGenerator::Instance()->ranf() * delta_x;
+           units::quantity<unit::length> location_y = bbox[2] + RandomNumberGenerator::Instance()->ranf() * delta_y;
 
            // Get the distance to existing vessels and the boundaries
            bool free_space = true;
@@ -217,9 +217,9 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParr
            {
                for(unsigned kdx=0; kdx<start_nodes.size();kdx++)
                {
-                   double sq_distance = pow((start_nodes[kdx]->rGetLocation()[1]- location_y),2) +
-                           pow((start_nodes[kdx]->rGetLocation()[0]- location_x),2);
-                   if(sq_distance < (exclusionDistance * exclusionDistance))
+                   double sq_distance = pow((start_nodes[kdx]->rGetLocation().GetLocation(mReferenceLength)[1]- location_y/mReferenceLength),2) +
+                           pow((start_nodes[kdx]->rGetLocation().GetLocation(mReferenceLength)[0]- location_x/mReferenceLength),2);
+                   if(sq_distance*mReferenceLength*mReferenceLength < (exclusionDistance * exclusionDistance))
                    {
                        free_space = false;
                        attempts++;
@@ -232,13 +232,13 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParr
            {
                if(DIM==2)
                {
-                   start_nodes.push_back(VesselNode<DIM>::Create(location_x, location_y));
-                   end_nodes.push_back(VesselNode<DIM>::Create(location_x, location_y));
+                   start_nodes.push_back(VesselNode<DIM>::Create(location_x/mReferenceLength, location_y/mReferenceLength ,0.0, mReferenceLength));
+                   end_nodes.push_back(VesselNode<DIM>::Create(location_x/mReferenceLength, location_y/mReferenceLength, 0.0, mReferenceLength));
                }
                else
                {
-                   start_nodes.push_back(VesselNode<DIM>::Create(location_x, location_y, bbox[4]));
-                   end_nodes.push_back(VesselNode<DIM>::Create(location_x, location_y, bbox[4] + delta_z));
+                   start_nodes.push_back(VesselNode<DIM>::Create(location_x/mReferenceLength, location_y/mReferenceLength, bbox[4]/mReferenceLength, mReferenceLength));
+                   end_nodes.push_back(VesselNode<DIM>::Create(location_x/mReferenceLength, location_y/mReferenceLength, (bbox[4] + delta_z)/mReferenceLength, mReferenceLength));
                }
                attempts = 0;
            }
@@ -258,10 +258,10 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParr
 
         // Uniformly distribute kernels
         unsigned num_kernels = 8;
-        std::vector<std::vector<double> > kernel_locations;
+        std::vector<std::vector<units::quantity<unit::length> > > kernel_locations;
         for(unsigned kdx=0; kdx<num_kernels; kdx++)
         {
-            std::vector<double> location;
+            std::vector<units::quantity<unit::length> > location;
             location.push_back(bbox[0] + RandomNumberGenerator::Instance()->ranf() * delta_x);
             location.push_back(bbox[2] + RandomNumberGenerator::Instance()->ranf() * delta_y);
             kernel_locations.push_back(location);
@@ -270,9 +270,9 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParr
         // Pick locations randomly from the kernels
         for(unsigned jdx=0;jdx<1.e9;jdx++)
         {
-            double deviation = 100.0; //micron
-            double location_x = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, deviation);
-            double location_y = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, deviation);
+            units::quantity<unit::length> deviation = 100.0* 1.e-6*unit::metres;
+            units::quantity<unit::length> location_x = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, deviation/mReferenceLength)*mReferenceLength;
+            units::quantity<unit::length> location_y = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, deviation/mReferenceLength)*mReferenceLength;
             unsigned kernel_index = RandomNumberGenerator::Instance()->randMod(num_kernels);
             location_x += kernel_locations[kernel_index][0];
             location_y += kernel_locations[kernel_index][1];
@@ -291,9 +291,9 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParr
             {
                 for(unsigned kdx=0; kdx<start_nodes.size();kdx++)
                 {
-                    double sq_distance = pow((start_nodes[kdx]->rGetLocation()[1]- location_y),2) +
-                            pow((start_nodes[kdx]->rGetLocation()[0]- location_x),2);
-                    if(sq_distance < (exclusionDistance * exclusionDistance))
+                    double sq_distance = pow((start_nodes[kdx]->rGetLocation().GetLocation(mReferenceLength)[1]- location_y/mReferenceLength),2) +
+                            pow((start_nodes[kdx]->rGetLocation().GetLocation(mReferenceLength)[0]- location_x/mReferenceLength),2);
+                    if(sq_distance*mReferenceLength*mReferenceLength < (exclusionDistance * exclusionDistance))
                     {
                         free_space = false;
                         attempts++;
@@ -306,13 +306,13 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParr
             {
                 if(DIM==2)
                 {
-                    start_nodes.push_back(VesselNode<DIM>::Create(location_x, location_y));
-                    end_nodes.push_back(VesselNode<DIM>::Create(location_x, location_y));
+                    start_nodes.push_back(VesselNode<DIM>::Create(location_x/mReferenceLength, location_y/mReferenceLength, 0.0, mReferenceLength));
+                    end_nodes.push_back(VesselNode<DIM>::Create(location_x/mReferenceLength, location_y/mReferenceLength, 0.0, mReferenceLength));
                 }
                 else
                 {
-                    start_nodes.push_back(VesselNode<DIM>::Create(location_x, location_y, bbox[4]));
-                    end_nodes.push_back(VesselNode<DIM>::Create(location_x, location_y, bbox[4] + delta_z));
+                    start_nodes.push_back(VesselNode<DIM>::Create(location_x/mReferenceLength, location_y/mReferenceLength, bbox[4]/mReferenceLength, mReferenceLength));
+                    end_nodes.push_back(VesselNode<DIM>::Create(location_x/mReferenceLength, location_y/mReferenceLength, (bbox[4] + delta_z)/mReferenceLength, mReferenceLength));
                 }
                 attempts = 0;
             }
@@ -343,9 +343,9 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParr
 
 template<unsigned DIM>
 boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNetwork(boost::shared_ptr<Part<DIM> > domain,
-                                                                                        std::vector<double> targetDensity,
+                                                                                        std::vector<units::quantity<unit::per_area> > targetDensity,
                                                                     VesselDistribution::Value distributionType,
-                                                                    double exclusionDistance,
+                                                                    units::quantity<unit::length> exclusionDistance,
                                                                     bool useBbox,
                                                                     std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > seeds)
 {
@@ -363,21 +363,21 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
     boost::shared_ptr<VesselNetwork<DIM> > p_network = VesselNetwork<DIM>::Create();
 
     // Get the bounding box of the domain and the volume of the bbox
-    c_vector<double, 2*DIM> bbox = domain->GetBoundingBox();
-    double delta_x = bbox[1] - bbox[0];
-    double delta_y = bbox[3] - bbox[2];
-    double delta_z = bbox[5] - bbox[4];
+    std::vector<units::quantity<unit::length> > bbox = domain->GetBoundingBox();
+    units::quantity<unit::length> delta_x = bbox[1] - bbox[0];
+    units::quantity<unit::length> delta_y = bbox[3] - bbox[2];
+    units::quantity<unit::length> delta_z = bbox[5] - bbox[4];
 
-    unsigned num_x = unsigned(std::sqrt(targetDensity[0]) * delta_x);
-    unsigned num_y = unsigned(std::sqrt(targetDensity[1]) * delta_y);
-    unsigned num_z = unsigned(std::sqrt(targetDensity[2]) * delta_z);
+    unsigned num_x = unsigned(units::sqrt(targetDensity[0]) * delta_x);
+    unsigned num_y = unsigned(units::sqrt(targetDensity[1]) * delta_y);
+    unsigned num_z = unsigned(units::sqrt(targetDensity[2]) * delta_z);
     if(num_x == 0 || num_y == 0 || num_z == 0)
     {
         EXCEPTION("The domain is not large enough to contain any vessels at the requested density.");
     }
-    double spacing_x = delta_x / double(num_x);
-    double spacing_y = delta_y / double(num_y);
-    double spacing_z = delta_z / double(num_z);
+    units::quantity<unit::length> spacing_x = delta_x / double(num_x);
+    units::quantity<unit::length> spacing_y = delta_y / double(num_y);
+    units::quantity<unit::length> spacing_z = delta_z / double(num_z);
 
     // Generate the nodes
     std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes;
@@ -390,7 +390,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
                for(unsigned jdx=0; jdx<num_x+2; jdx++)
                {
 
-                   double location_x = bbox[0] + spacing_x / 2.0 + double(jdx) * spacing_x -spacing_x;
+                   units::quantity<unit::length> location_x = bbox[0] + spacing_x / 2.0 + double(jdx) * spacing_x -spacing_x;
                    if(jdx==0 || jdx == num_x+1)
                    {
                        location_x -= spacing_x / 2.0;
@@ -400,7 +400,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
                        location_x += spacing_x;
                    }
 
-                   double location_y = bbox[2] + spacing_y / 2.0 + double(idx) * spacing_y - spacing_y;
+                   units::quantity<unit::length> location_y = bbox[2] + spacing_y / 2.0 + double(idx) * spacing_y - spacing_y;
                    if(idx==0 || idx == num_y+1)
                    {
                        location_y -= spacing_y / 2.0;
@@ -410,7 +410,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
                        location_y += spacing_y;
                    }
 
-                   double location_z = bbox[4] + spacing_z / 2.0 + double(kdx) * spacing_z - spacing_z;
+                   units::quantity<unit::length> location_z = bbox[4] + spacing_z / 2.0 + double(kdx) * spacing_z - spacing_z;
                    if(kdx==0 || kdx == num_z+1)
                    {
                        location_z -= spacing_z / 2.0;
@@ -420,7 +420,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
                        location_z += spacing_z;
                    }
 
-                   nodes.push_back(VesselNode<DIM>::Create(location_x, location_y, location_z));
+                   nodes.push_back(VesselNode<DIM>::Create(location_x/mReferenceLength, location_y/mReferenceLength, location_z/mReferenceLength, mReferenceLength));
                }
             }
         }
@@ -472,9 +472,9 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
         for(unsigned idx=0; idx<1.e9; idx++)
         {
            // Generate with uniform random positions
-           double location_x = bbox[0] + RandomNumberGenerator::Instance()->ranf() * delta_x;
-           double location_y = bbox[2] + RandomNumberGenerator::Instance()->ranf() * delta_y;
-           double location_z = bbox[4] + RandomNumberGenerator::Instance()->ranf() * delta_z;
+            units::quantity<unit::length> location_x = bbox[0] + RandomNumberGenerator::Instance()->ranf() * delta_x;
+            units::quantity<unit::length> location_y = bbox[2] + RandomNumberGenerator::Instance()->ranf() * delta_y;
+            units::quantity<unit::length> location_z = bbox[4] + RandomNumberGenerator::Instance()->ranf() * delta_z;
 
            // Get the distance to existing vessels and the boundaries
            bool free_space = true;
@@ -491,9 +491,10 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
            {
                for(unsigned kdx=0; kdx<seeds.size();kdx++)
                {
-                   double sq_distance = pow(((*seeds[kdx])[1]- location_y),2) + pow(((*seeds[kdx])[0]- location_x),2) +
-                           pow(((*seeds[kdx])[2]- location_z),2);
-                   if(sq_distance < (exclusionDistance * exclusionDistance))
+                   double sq_distance = pow((seeds[kdx]->GetLocation(mReferenceLength)[1]- location_y/mReferenceLength),2) +
+                           pow((seeds[kdx]->GetLocation(mReferenceLength)[0]- location_x/mReferenceLength),2) +
+                           pow((seeds[kdx]->GetLocation(mReferenceLength)[2]- location_z/mReferenceLength),2);
+                   if(sq_distance*mReferenceLength*mReferenceLength < (exclusionDistance * exclusionDistance))
                    {
                        free_space = false;
                        attempts++;
@@ -504,7 +505,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
 
            if(free_space)
            {
-               seeds.push_back(DimensionalChastePoint<DIM>::Create(location_x, location_y, location_z));
+               seeds.push_back(DimensionalChastePoint<DIM>::Create(location_x/mReferenceLength, location_y/mReferenceLength, location_z/mReferenceLength, mReferenceLength));
                attempts = 0;
            }
            if(seeds.size() == num_x * num_y * num_z)
@@ -529,10 +530,10 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
 
         // Uniformly distribute kernels
         unsigned num_kernels = 8;
-        std::vector<std::vector<double> > kernel_locations;
+        std::vector<std::vector<units::quantity<unit::length> > > kernel_locations;
         for(unsigned kdx=0; kdx<num_kernels; kdx++)
         {
-            std::vector<double> location;
+            std::vector<units::quantity<unit::length> > location;
             location.push_back(bbox[0] + RandomNumberGenerator::Instance()->ranf() * delta_x);
             location.push_back(bbox[2] + RandomNumberGenerator::Instance()->ranf() * delta_y);
             location.push_back(bbox[3] + RandomNumberGenerator::Instance()->ranf() * delta_z);
@@ -542,10 +543,10 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
         // Pick locations randomly from the kernels
         for(unsigned jdx=0;jdx<1.e9;jdx++)
         {
-            double deviation = 100.0; //micron
-            double location_x = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, deviation);
-            double location_y = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, deviation);
-            double location_z = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, deviation);
+            units::quantity<unit::length> deviation = 100.0 * 1.e-6 * unit::metres;
+            units::quantity<unit::length> location_x = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, deviation/mReferenceLength)*mReferenceLength;
+            units::quantity<unit::length> location_y = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, deviation/mReferenceLength)*mReferenceLength;
+            units::quantity<unit::length> location_z = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, deviation/mReferenceLength)*mReferenceLength;
             unsigned kernel_index = RandomNumberGenerator::Instance()->randMod(num_kernels);
             location_x += kernel_locations[kernel_index][0];
             location_y += kernel_locations[kernel_index][1];
@@ -566,9 +567,10 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
             {
                 for(unsigned kdx=0; kdx<seeds.size();kdx++)
                 {
-                    double sq_distance = pow(((*seeds[kdx])[1]- location_y),2) + pow(((*seeds[kdx])[0]- location_x),2)
-                            + pow(((*seeds[kdx])[2]- location_z),2);
-                    if(sq_distance < (exclusionDistance * exclusionDistance))
+                    double sq_distance = pow((seeds[kdx]->GetLocation(mReferenceLength)[1]- location_y/mReferenceLength),2) +
+                            pow((seeds[kdx]->GetLocation(mReferenceLength)[0]- location_x/mReferenceLength),2) +
+                            pow((seeds[kdx]->GetLocation(mReferenceLength)[2]- location_z/mReferenceLength),2);
+                    if(sq_distance*mReferenceLength*mReferenceLength < (exclusionDistance * exclusionDistance))
                     {
                         free_space = false;
                         attempts++;
@@ -579,7 +581,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::Generate3dNe
 
             if(free_space)
             {
-                seeds.push_back(DimensionalChastePoint<DIM>::Create(location_x, location_y, location_z));
+                seeds.push_back(DimensionalChastePoint<DIM>::Create(location_x/mReferenceLength, location_y/mReferenceLength, location_z/mReferenceLength, mReferenceLength));
                 attempts = 0;
             }
             if(seeds.size() == num_x * num_y * num_z)
@@ -628,7 +630,7 @@ void VesselNetworkGenerator<DIM>::PatternUnitByTranslation(boost::shared_ptr<Ves
     std::vector<boost::shared_ptr<Vessel<DIM> > > original_vessels = input_unit->GetVessels();
     for(unsigned idx =0; idx < num_x; idx++)
     {
-        DimensionalChastePoint<DIM>translation_vector(double(idx+1) * (extents.second[0] - extents.first[0]), 0.0, 0.0, extents.first.GetReferenceLengthScale());
+        DimensionalChastePoint<DIM>translation_vector(double(idx+1) * (extents.second.GetLocation(mReferenceLength)[0] - extents.first.GetLocation(mReferenceLength)[0]), 0.0, 0.0, mReferenceLength);
         std::vector<boost::shared_ptr<Vessel<DIM> > > copied_vessels = input_unit->CopyVessels(original_vessels);
         input_unit->Translate(translation_vector, copied_vessels);
     }
@@ -637,7 +639,7 @@ void VesselNetworkGenerator<DIM>::PatternUnitByTranslation(boost::shared_ptr<Ves
     std::vector<boost::shared_ptr<Vessel<DIM> > > x_transform_vessels = input_unit->GetVessels();
     for(unsigned idx =0; idx < num_y; idx++)
     {
-        DimensionalChastePoint<DIM>translation_vector(0.0, double(idx+1) * (extents.second[1] - extents.first[1]), 0.0, extents.first.GetReferenceLengthScale());
+        DimensionalChastePoint<DIM>translation_vector(0.0, double(idx+1) * (extents.second.GetLocation(mReferenceLength)[1] - extents.first.GetLocation(mReferenceLength)[1]), 0.0, mReferenceLength);
         std::vector<boost::shared_ptr<Vessel<DIM> > > copied_vessels = input_unit->CopyVessels(x_transform_vessels);
         input_unit->Translate(translation_vector, copied_vessels);
     }
@@ -646,7 +648,7 @@ void VesselNetworkGenerator<DIM>::PatternUnitByTranslation(boost::shared_ptr<Ves
 
     for(unsigned idx =0; idx < num_z; idx++)
     {
-        DimensionalChastePoint<DIM>translation_vector(0.0, 0.0, double(idx+1) * (extents.second[2] - extents.first[2]), extents.first.GetReferenceLengthScale());
+        DimensionalChastePoint<DIM>translation_vector(0.0, 0.0, double(idx+1) * (extents.second.GetLocation(mReferenceLength)[2] - extents.first.GetLocation(mReferenceLength)[2]), mReferenceLength);
         std::vector<boost::shared_ptr<Vessel<DIM> > > copied_vessels = input_unit->CopyVessels(y_transform_vessels);
         input_unit->Translate(translation_vector, copied_vessels);
     }
@@ -735,21 +737,21 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateSing
 {
     double dimensionless_vessel_length = vesselLength/mReferenceLength;
     std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes;
-    startPosition.SetReferenceLengthScale(mReferenceLength);
     nodes.push_back(VesselNode<DIM>::Create(startPosition)); //0
     double interval = dimensionless_vessel_length/double(divisions + 1);
 
     for(unsigned idx=0;idx<divisions+1;idx++)
     {
+        c_vector<double, DIM> dimless_position = startPosition.GetLocation(mReferenceLength);
         if(DIM==2)
         {
             if(axis==0)
             {
-                nodes.push_back(VesselNode<DIM>::Create(startPosition[0] + interval*double(idx+1), startPosition[1], 0.0, mReferenceLength)); //1
+                nodes.push_back(VesselNode<DIM>::Create(dimless_position[0] + interval*double(idx+1), dimless_position[1], 0.0, mReferenceLength)); //1
             }
             else
             {
-                nodes.push_back(VesselNode<DIM>::Create(startPosition[0], startPosition[1] + interval*double(idx+1), 0.0, mReferenceLength)); //1
+                nodes.push_back(VesselNode<DIM>::Create(dimless_position[0], dimless_position[1] + interval*double(idx+1), 0.0, mReferenceLength)); //1
             }
 
         }
@@ -757,15 +759,15 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateSing
         {
             if(axis==0)
             {
-                nodes.push_back(VesselNode<DIM>::Create(startPosition[0] + interval*double(idx+1), startPosition[1], startPosition[2], mReferenceLength)); //1
+                nodes.push_back(VesselNode<DIM>::Create(dimless_position[0] + interval*double(idx+1), dimless_position[1], dimless_position[2], mReferenceLength)); //1
             }
             else if(axis==1)
             {
-                nodes.push_back(VesselNode<DIM>::Create(startPosition[0], startPosition[1] + interval*double(idx+1), startPosition[2], mReferenceLength)); //2
+                nodes.push_back(VesselNode<DIM>::Create(dimless_position[0], dimless_position[1] + interval*double(idx+1), dimless_position[2], mReferenceLength)); //2
             }
             else
             {
-                nodes.push_back(VesselNode<DIM>::Create(startPosition[0], startPosition[1], startPosition[2] + interval*double(idx+1), mReferenceLength)); //3
+                nodes.push_back(VesselNode<DIM>::Create(dimless_position[0], dimless_position[1], dimless_position[2] + interval*double(idx+1), mReferenceLength)); //3
             }
         }
     }
@@ -830,18 +832,19 @@ void VesselNetworkGenerator<DIM>::MapToSphere(boost::shared_ptr<VesselNetwork<DI
     std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = pInputUnit->GetNodes();
     for(unsigned idx =0; idx<nodes.size(); idx++)
     {
-        units::quantity<unit::length> node_length_scale = nodes[idx]->rGetLocation().GetReferenceLengthScale();
-        units::quantity<unit::length> network_length_scale = extents.first.GetReferenceLengthScale();
-        double x_frac = (nodes[idx]->rGetLocation()[0]*node_length_scale) / ((extents.second[0] - extents.first[0])*network_length_scale);
+        c_vector<double, DIM> node_loc = nodes[idx]->rGetLocation().GetLocation(mReferenceLength);
+        c_vector<double, DIM> offset = (extents.second - extents.first).GetLocation(mReferenceLength);
+
+        double x_frac = node_loc[0] / offset[0];
         double azimuth_angle = x_frac * azimuthExtent;
 
-        double y_frac = (nodes[idx]->rGetLocation()[1] + 3.0)*node_length_scale / ((extents.second[1] - extents.first[1])*network_length_scale);
+        double y_frac = (node_loc[1] + 3.0) / offset[1];
         double polar_angle = y_frac * polarExtent;
 
         double dimless_radius = radius/mReferenceLength;
-        if(extents.second[2] - extents.first[2]>0.0)
+        if(offset[2]>0.0)
         {
-            double z_frac = nodes[idx]->rGetLocation()[2]*node_length_scale / ((extents.second[2] - extents.first[2])*network_length_scale);
+            double z_frac = node_loc[2]  / offset[2];
             dimless_radius = dimless_radius - (thickess/mReferenceLength) * z_frac;
         }
         DimensionalChastePoint<DIM>new_position(dimless_radius * std::cos(azimuth_angle) * std::sin(polar_angle),

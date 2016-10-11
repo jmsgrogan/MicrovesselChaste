@@ -84,6 +84,11 @@ class RegularGrid
     AbstractCellPopulation<DIM>* mpCellPopulation;
 
     /**
+     * The reference length scale for the cellpopulation.
+     */
+    units::quantity<unit::length> mCellPopulationReferenceLength;
+
+    /**
      * A map of cells corresponding to a point on the grid
      */
     std::vector<std::vector<CellPtr> > mPointCellMap;
@@ -316,13 +321,7 @@ public:
      * Set the cell population
      * @param rCellPopulation a reference to the cell population
      */
-    void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation);
-
-    /**
-     * Set the a ca based population
-     * @param pPopulation a pointer to the cell population
-     */
-    void SetCaBasedPopulation(boost::shared_ptr<CaBasedCellPopulation<DIM> > pPopulation);
+    void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation, units::quantity<unit::length> cellPopulationLengthScale);
 
     /**
      * Set the grid extents in x, y, z

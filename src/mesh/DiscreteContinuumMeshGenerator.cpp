@@ -108,7 +108,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::SetDomain(const std
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::SetMaxElementArea(double maxElementArea)
+void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::SetMaxElementArea(units::quantity<unit::volume> maxElementArea)
 {
     mMaxElementArea = maxElementArea;
 }
@@ -322,14 +322,14 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
                 mesher_input.regionlist[4 * idx + jdx] = region_location[jdx];
             }
             mesher_input.regionlist[4 * idx + 2] = 1.0;
-            mesher_input.regionlist[4 * idx + 3] = mMaxElementArea;
+            mesher_input.regionlist[4 * idx + 3] = mMaxElementArea/units::pow<3>(mReferenceLength);
         }
     }
 
     std::string mesher_command = "pqQze";
     if (mMaxElementArea > 0.0*unit::metres*unit::metres*unit::metres)
     {
-        mesher_command += "a" + boost::lexical_cast<std::string>(mMaxElementArea/(units::pow<3>(mReferenceLength)));
+        mesher_command += "a" + boost::lexical_cast<std::string>(mMaxElementArea/units::pow<3>(mReferenceLength));
     }
     if(mRegions.size()>0)
     {

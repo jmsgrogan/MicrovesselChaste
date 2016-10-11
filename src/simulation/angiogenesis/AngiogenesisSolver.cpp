@@ -54,6 +54,7 @@ AngiogenesisSolver<DIM>::AngiogenesisSolver() :
         mpFileHandler(),
         mpVesselGrid(),
         mpCellPopulation(),
+        mCellPopulationReferenceLength(5.0 * unit::microns),
         mTipCells(),
         mCellNodeMap()
 {
@@ -92,9 +93,10 @@ void AngiogenesisSolver<DIM>::SetBoundingDomain(boost::shared_ptr<Part<DIM> > pD
 }
 
 template<unsigned DIM>
-void AngiogenesisSolver<DIM>::SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > cell_population)
+void AngiogenesisSolver<DIM>::SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > cell_population, units::quantity<unit::length> cellPopulationReferenceLength)
 {
     mpCellPopulation = cell_population;
+    mCellPopulationReferenceLength = cellPopulationReferenceLength;
 }
 
 template<unsigned DIM>
@@ -366,7 +368,7 @@ void AngiogenesisSolver<DIM>::Increment()
         mpVesselGrid->SetVesselNetwork(mpNetwork);
         if (mpCellPopulation)
         {
-            mpVesselGrid->SetCellPopulation(*mpCellPopulation);
+            mpVesselGrid->SetCellPopulation(*mpCellPopulation, mCellPopulationReferenceLength);
         }
     }
 

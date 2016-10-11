@@ -174,9 +174,14 @@ public:
     /**
      * This is called by the MicrovesselSimulationModifier to set up the simulation
      * @param rCellPopulation the cell population
+     * @param cellReferenceLength the cell length scale
+     * @param cellReferenceConcentration the cell concentration scale
      * @param rDirectory the output directory for writing to
      */
-    void SetupFromModifier(AbstractCellPopulation<DIM,DIM>& rCellPopulation, const std::string& rDirectory);
+    void SetupFromModifier(AbstractCellPopulation<DIM,DIM>& rCellPopulation,
+                           units::quantity<unit::length> cellReferenceLength,
+                           units::quantity<unit::concentration> cellReferenceConcentration,
+                           const std::string& rDirectory);
 
     /**
      * This should be called before running in standalone mode
