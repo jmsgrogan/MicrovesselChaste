@@ -204,13 +204,17 @@ void DimensionalChastePoint<DIM>::RotateAboutAxis(c_vector<double, 3> axis, doub
 {
     double sin_a = std::sin(angle);
     double cos_a = std::cos(angle);
-    c_vector<double, DIM> unit_axis = axis / norm_2(axis);
+    c_vector<double, 3> unit_axis = axis / norm_2(axis);
+    if(DIM==2 and unit_axis[2]!= 1.0)
+    {
+        EXCEPTION("2D rotation is about z axis only");
+    }
 
     c_vector<double, DIM> old_location = this->mLocation;
-    double dot_product = inner_prod(old_location, unit_axis);
     c_vector<double, DIM> new_location;
     if(DIM==3)
     {
+        double dot_product = inner_prod(old_location, unit_axis);
         new_location[0] = (unit_axis[0] * dot_product * (1.0 - cos_a) + old_location[0] * cos_a
                     + (-unit_axis[2] * old_location[1] + unit_axis[1] * old_location[2]) * sin_a);
         new_location[1] = (unit_axis[1] * dot_product * (1.0 - cos_a) + old_location[1] * cos_a
@@ -220,8 +224,8 @@ void DimensionalChastePoint<DIM>::RotateAboutAxis(c_vector<double, 3> axis, doub
     }
     else
     {
-        new_location[0] = (unit_axis[0] * dot_product * (1.0 - cos_a) + old_location[0] * cos_a);
-        new_location[1] = (unit_axis[1] * dot_product * (1.0 - cos_a) + old_location[1] * cos_a);
+        new_location[0] = old_location[0] * cos_a;
+        new_location[1] = old_location[1] * cos_a;
     }
 
     this->mLocation = new_location;

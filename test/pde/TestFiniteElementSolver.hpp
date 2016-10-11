@@ -76,7 +76,7 @@ public:
         p_domain->AddVesselNetwork(p_network);
         boost::shared_ptr<DiscreteContinuumMeshGenerator<3, 3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3, 3>::Create();
         p_mesh_generator->SetDomain(p_domain);
-        p_mesh_generator->SetMaxElementArea(500.0);
+        p_mesh_generator->SetMaxElementArea(500.0*units::pow<3>(micron_length_scale));
         p_mesh_generator->Update();
 
         // Choose the PDE
@@ -123,7 +123,7 @@ public:
         p_domain->AddVesselNetwork(p_network, true);
         boost::shared_ptr<DiscreteContinuumMeshGenerator<3, 3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3, 3>::Create();
         p_mesh_generator->SetDomain(p_domain);
-        p_mesh_generator->SetMaxElementArea(500.0);
+        p_mesh_generator->SetMaxElementArea(500.0*units::pow<3>(micron_length_scale));
         p_mesh_generator->Update();
 
         // Choose the PDE

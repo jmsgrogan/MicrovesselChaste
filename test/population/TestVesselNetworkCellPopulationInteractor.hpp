@@ -106,8 +106,8 @@ public:
 
         VesselNetworkCellPopulationInteractor<3> interactor = VesselNetworkCellPopulationInteractor<3>();
         interactor.SetVesselNetwork(p_network);
-        interactor.PartitionNetworkOverCells(cell_population);
-        interactor.LabelVesselsInCellPopulation(cell_population, p_EC_state, p_EC_state);
+        interactor.PartitionNetworkOverCells(cell_population, 1.e-6*unit::metres);
+        interactor.LabelVesselsInCellPopulation(cell_population, 1.e-6*unit::metres, p_EC_state, p_EC_state);
 
         TS_ASSERT_EQUALS(p_network->GetNumberOfNodes(), 21u);
         TS_ASSERT_EQUALS(p_network->GetNumberOfVessels(), 1u);

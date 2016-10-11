@@ -94,33 +94,32 @@ public:
     void TestAddRectangle()
     {
         Part<3> part = Part<3>();
-        part.AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
+        part.AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1.e-6*unit::metres));
 
-        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[0])[0], 0.0, 1.e-6);
-        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[0])[1], 0.0, 1.e-6);
-        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[1])[0], 1.0, 1.e-6);
-        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[1])[1], 0.0, 1.e-6);
-        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[2])[0], 1.0, 1.e-6);
-        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[2])[1], 1.0, 1.e-6);
-        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[3])[0], 0.0, 1.e-6);
-        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[3])[1], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[0]->GetLocation(1.e-6*unit::metres)[0], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[0]->GetLocation(1.e-6*unit::metres)[1], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[1]->GetLocation(1.e-6*unit::metres)[0], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[1]->GetLocation(1.e-6*unit::metres)[1], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[2]->GetLocation(1.e-6*unit::metres)[0], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[2]->GetLocation(1.e-6*unit::metres)[1], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[3]->GetLocation(1.e-6*unit::metres)[0], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[3]->GetLocation(1.e-6*unit::metres)[1], 1.0, 1.e-6);
 
         TS_ASSERT_DELTA(part.GetReferenceLengthScale().value(), 1.e-6, 1.e-8);
-        TS_ASSERT_THROWS_THIS(part.GetFacet(DimensionalChastePoint<3>(4.0, 0.0, 0.0)), "No facet found at input location");
-
+        TS_ASSERT_THROWS_THIS(part.GetFacet(DimensionalChastePoint<3>(4.0, 0.0, 0.0, 1.e-6*unit::metres)), "No facet found at input location");
         part.SetReferenceLengthScale(10.e-6*unit::metres);
     }
 
     void TestAddCuboid()
     {
         Part<3> part = Part<3>();
-        part.AddCuboid(1.e-6*unit::metres, 1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        part.AddCuboid(1.e-6*unit::metres, 1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1.e-6*unit::metres));
     }
 
     void TestAddCylinder()
     {
         Part<3> part = Part<3>();
-        part.AddCylinder(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0), 24);
+        part.AddCylinder(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1.e-6*unit::metres), 24);
     }
 
     void TestComposite2DPart()
@@ -237,7 +236,7 @@ public:
         part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
 
         std::vector<unsigned> containing_indices = part.GetContainingGridIndices(20, 20, 20, 1.0);
-        TS_ASSERT_EQUALS(containing_indices.size(), 11*11*11);
+        TS_ASSERT_EQUALS(containing_indices.size(), 11u*11u*11u);
     }
 
     void TestGetSegmentIndices()
@@ -266,13 +265,10 @@ public:
         Part<3> part = Part<3>();
         part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
 
-        c_vector<double, 3> translation_vector;
-        translation_vector[0] = 10.0;
-        translation_vector[1] = 10.0;
-        translation_vector[2] = 10.0;
+        DimensionalChastePoint<3> translation_vector(10.0, 10.0, 10.0, 1e-6*unit::metres);
         part.Translate(translation_vector);
 
-        TS_ASSERT_DELTA((*part.GetPolygons()[0]->GetVertices()[0])[0], 10.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[0]->GetLocation(1e-6*unit::metres)[0], 10.0, 1.e-6);
     }
 };
 

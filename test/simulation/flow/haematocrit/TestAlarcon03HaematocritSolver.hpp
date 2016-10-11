@@ -199,8 +199,8 @@ public:
         vascular_network->SetSegmentProperties(p_segment);
 
         std::pair<DimensionalChastePoint<2>, DimensionalChastePoint<2> > network_extents = vascular_network->GetExtents();
-        double y_middle = (network_extents.first[1] + network_extents.second[1]) / 2.0;
-        double x_middle = (network_extents.first[0] + network_extents.second[0]) / 2.0;
+        double y_middle = (network_extents.first.GetLocation(1.e-6*unit::metres)[1] + network_extents.second.GetLocation(1.e-6*unit::metres)[1]) / 2.0;
+        double x_middle = (network_extents.first.GetLocation(1.e-6*unit::metres)[0] + network_extents.second.GetLocation(1.e-6*unit::metres)[0]) / 2.0;
 
         std::vector<boost::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
 
@@ -210,9 +210,9 @@ public:
         {
             if((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
             {
-                if((*vessel_iterator)->GetStartNode()->rGetLocation()[1] >  y_middle)
+                if((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1.e-6*unit::metres)[1] >  y_middle)
                 {
-                    if((*vessel_iterator)->GetStartNode()->rGetLocation()[0] >  x_middle)
+                    if((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1.e-6*unit::metres)[0] >  x_middle)
                     {
                         (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
                         (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(3320*unit::pascals);
@@ -221,9 +221,9 @@ public:
             }
             if((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
             {
-                if((*vessel_iterator)->GetEndNode()->rGetLocation()[1] >  y_middle)
+                if((*vessel_iterator)->GetEndNode()->rGetLocation().GetLocation(1.e-6*unit::metres)[1] >  y_middle)
                 {
-                    if((*vessel_iterator)->GetStartNode()->rGetLocation()[0] >  x_middle)
+                    if((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1.e-6*unit::metres)[0] >  x_middle)
                     {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3320*unit::pascals);
@@ -232,9 +232,9 @@ public:
             }
             if((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
             {
-                if((*vessel_iterator)->GetStartNode()->rGetLocation()[1] <=  y_middle)
+                if((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1.e-6*unit::metres)[1] <=  y_middle)
                 {
-                    if((*vessel_iterator)->GetStartNode()->rGetLocation()[0] <  x_middle)
+                    if((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1.e-6*unit::metres)[0] <  x_middle)
                     {
                         (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsOutputNode(true);
                         (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(2090*unit::pascals);
@@ -243,9 +243,9 @@ public:
             }
             if((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
             {
-                if((*vessel_iterator)->GetEndNode()->rGetLocation()[1] <=  y_middle)
+                if((*vessel_iterator)->GetEndNode()->rGetLocation().GetLocation(1.e-6*unit::metres)[1] <=  y_middle)
                 {
-                    if((*vessel_iterator)->GetStartNode()->rGetLocation()[0] <  x_middle)
+                    if((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1.e-6*unit::metres)[0] <  x_middle)
                     {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090*unit::pascals);

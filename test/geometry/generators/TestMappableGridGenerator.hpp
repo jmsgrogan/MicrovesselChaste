@@ -87,8 +87,8 @@ public:
         std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices = p_part->GetVertices();
         for(unsigned idx=0; idx<vertices.size(); idx++)
         {
-            double loc_x = (*vertices[idx])[0];
-            double loc_z = (*vertices[idx])[2];
+            double loc_x = vertices[idx]->GetLocation(1.e-6*unit::metres)[0];
+            double loc_z = vertices[idx]->GetLocation(1.e-6*unit::metres)[2];
             double distance = std::sqrt(loc_x*loc_x + loc_z*loc_z);
             bool is_inside = (distance < 1.5  + 1.e-6) && (distance > 1.4  - 1.e-6);
             TS_ASSERT(is_inside);

@@ -68,8 +68,8 @@ public:
 
         // Set up the grid
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        double spacing = 40.0; //um
-        p_grid->SetSpacing(spacing*1.e-6*unit::metres);
+        units::quantity<unit::length> spacing(40.0*unit::microns); //um
+        p_grid->SetSpacing(spacing);
 
         std::vector<unsigned> extents(3, 1);
         extents[0] = 25; // num x
@@ -80,10 +80,10 @@ public:
         // Prescribe a linearly increasing vegf field using a function map
         boost::shared_ptr<FunctionMap<3> > p_funciton_map = FunctionMap<3>::Create();
         p_funciton_map->SetGrid(p_grid);
-        std::vector<double> vegf_field = std::vector<double>(extents[0] * extents[1] * extents[2], 0.0);
+        std::vector<units::quantity<unit::concentration> > vegf_field = std::vector<units::quantity<unit::concentration> >(extents[0] * extents[1] * extents[2], 0.0*unit::mole_per_metre_cubed);
         for (unsigned idx = 0; idx < extents[0] * extents[1] * extents[2]; idx++)
         {
-            vegf_field[idx] = 0.2*p_grid->GetLocationOf1dIndex(idx)[0] / (spacing * extents[0]);
+            vegf_field[idx] = 2.0*p_grid->GetLocationOf1dIndex(idx).GetLocation(spacing)[0] / (double(extents[0]))*1.e-9*unit::mole_per_metre_cubed;
         }
 
         p_grid->Write(p_handler);
@@ -95,20 +95,20 @@ public:
 
         //Set up the limbal vessel
         VesselNetworkGenerator<3> generator;
-        double length = spacing * (extents[1] - 3); // full domain in y direction
+        units::quantity<unit::length> length = spacing * double(extents[1] - 3); // full domain in y direction
         unsigned divisions = extents[1] - 2; // divide the vessel to coincide with grid
         unsigned alignment_axis = 1; // pointing y direction
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(length*1.e-6*unit::metres,
-                                                                                        DimensionalChastePoint<3>(2.0*spacing, 2.0*spacing, 10.0*spacing),
+        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(length,
+                                                                                        DimensionalChastePoint<3>(2.0, 2.0, 10.0, spacing),
                                                                                             divisions, alignment_axis);
 
         boost::shared_ptr<OffLatticeMigrationRule<3> > p_migration_rule = OffLatticeMigrationRule<3>::Create();
-        p_migration_rule->SetDiscreteContinuumSolver(p_funciton_map); // This contains the vegf field
+        p_migration_rule->SetDiscreteContinuumSolver(p_funciton_map);
         p_migration_rule->SetNetwork(p_network);
 
         boost::shared_ptr<OffLatticeSproutingRule<3> > p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
-        p_sprouting_rule->SetDiscreteContinuumSolver(p_funciton_map); // This contains the vegf field
-        p_sprouting_rule->SetSproutingProbability(0.01*(1.0/unit::seconds));
+        p_sprouting_rule->SetDiscreteContinuumSolver(p_funciton_map);
+        p_sprouting_rule->SetSproutingProbability(0.01/unit::seconds);
         p_sprouting_rule->SetVesselNetwork(p_network);
 
         AngiogenesisSolver<3> angiogenesis_solver;

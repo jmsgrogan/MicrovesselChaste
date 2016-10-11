@@ -165,8 +165,8 @@ public:
         std::vector<boost::shared_ptr<VesselNode<3> > > nodes = p_network->GetNodes();
         for(unsigned idx =0; idx<nodes.size(); idx++)
         {
-            double node_azimuth_angle = azimuth_angle * nodes[idx]->rGetLocation()[0]*reference_length/vessel_length;
-            double node_polar_angle = polar_angle*nodes[idx]->rGetLocation()[1]*reference_length/vessel_length;
+            double node_azimuth_angle = azimuth_angle * nodes[idx]->rGetLocation().GetLocation(reference_length)[0]*reference_length/vessel_length;
+            double node_polar_angle = polar_angle*nodes[idx]->rGetLocation().GetLocation(reference_length)[1]*reference_length/vessel_length;
             double dimless_radius = (radius-0.5*thickness)/reference_length;
             DimensionalChastePoint<3>new_position(dimless_radius * std::cos(node_azimuth_angle) * std::sin(node_polar_angle),
                                                   dimless_radius * std::cos(node_polar_angle),
@@ -192,7 +192,7 @@ public:
          */
         DiscreteContinuumMeshGenerator<3> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-        mesh_generator.SetMaxElementArea(100000.0);
+        mesh_generator.SetMaxElementArea(100000.0*(units::pow<3>(1.e-6*unit::metres)));
         mesh_generator.Update();
         boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = mesh_generator.GetMesh();
         /*

@@ -52,23 +52,20 @@ public:
     void TestGeometryOperations()
     {
         units::quantity<unit::length> reference_length = 1.0 * unit::metres;
-        DimensionalChastePoint<3> point1(1.0, 2.0, 0.5);
-        DimensionalChastePoint<3> point2(2.0, 4.0, 0.5);
-        DimensionalChastePoint<3> point3(1.5, 3.0, 0.5);
+        DimensionalChastePoint<3> point1(1.0, 2.0, 0.5, reference_length);
+        DimensionalChastePoint<3> point2(2.0, 4.0, 0.5, reference_length);
+        DimensionalChastePoint<3> point3(1.5, 3.0, 0.5, reference_length);
 
         TS_ASSERT_DELTA(GetDistance(point1, point2).value(), std::sqrt(5.0), 1.e-6);
         TS_ASSERT_DELTA(GetDistanceToLineSegment(point1, point2, point3).value(), 1.0, 1.e-6);
-
-
-
     }
 
     void TestLineInBoxBothOutside()
     {
         units::quantity<unit::length> spacing = 1.0 * unit::metres;
-        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5);
-        DimensionalChastePoint<3> point1(-1.5, 0.5, 0.5);
-        DimensionalChastePoint<3> point2(1.5, 0.5, 0.5);
+        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5, spacing);
+        DimensionalChastePoint<3> point1(-1.5, 0.5, 0.5, spacing);
+        DimensionalChastePoint<3> point2(1.5, 0.5, 0.5, spacing);
         units::quantity<unit::length> length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
         TS_ASSERT_DELTA(length.value(), 1.0, 1.e-6);
     }
@@ -76,9 +73,9 @@ public:
     void TestLineInBoxBothOutsideNotCrossing()
     {
         units::quantity<unit::length> spacing = 1.0 * unit::metres;
-        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5);
-        DimensionalChastePoint<3> point1(-1.5, 1.5, 0.5);
-        DimensionalChastePoint<3> point2(1.5, 1.5, 0.5);
+        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5, spacing);
+        DimensionalChastePoint<3> point1(-1.5, 1.5, 0.5, spacing);
+        DimensionalChastePoint<3> point2(1.5, 1.5, 0.5, spacing);
         units::quantity<unit::length> length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
         TS_ASSERT_DELTA(length.value(), 0.0, 1.e-6);
     }
@@ -86,9 +83,9 @@ public:
     void TestLineInBoxInside()
     {
         units::quantity<unit::length> spacing = 1.0 * unit::metres;
-        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5);
-        DimensionalChastePoint<3> point1(0.25, 0.5, 0.5);
-        DimensionalChastePoint<3> point2(0.75, 0.5, 0.5);
+        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5, spacing);
+        DimensionalChastePoint<3> point1(0.25, 0.5, 0.5, spacing);
+        DimensionalChastePoint<3> point2(0.75, 0.5, 0.5, spacing);
         units::quantity<unit::length> length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
         TS_ASSERT_DELTA(length.value(), 0.5, 1.e-6);
     }
@@ -96,9 +93,9 @@ public:
     void TestLineInBoxStartInside()
     {
         units::quantity<unit::length> spacing = 1.0 * unit::metres;
-        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5);
-        DimensionalChastePoint<3> point1(0.25, 0.5, 0.5);
-        DimensionalChastePoint<3> point2(1.5, 0.5, 0.5);
+        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5, spacing);
+        DimensionalChastePoint<3> point1(0.25, 0.5, 0.5, spacing);
+        DimensionalChastePoint<3> point2(1.5, 0.5, 0.5, spacing);
         units::quantity<unit::length> length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
         TS_ASSERT_DELTA(length.value(), 0.75, 1.e-6);
     }
@@ -106,9 +103,9 @@ public:
     void TestLineInBoxEndInside()
     {
         units::quantity<unit::length> spacing = 1.0 * unit::metres;
-        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5);
-        DimensionalChastePoint<3> point1(-1.5, 0.5, 0.5);
-        DimensionalChastePoint<3> point2(0.75, 0.5, 0.5);
+        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5, spacing);
+        DimensionalChastePoint<3> point1(-1.5, 0.5, 0.5, spacing);
+        DimensionalChastePoint<3> point2(0.75, 0.5, 0.5, spacing);
         units::quantity<unit::length> length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
         TS_ASSERT_DELTA(length.value(), 0.75, 1.e-6);
     }
