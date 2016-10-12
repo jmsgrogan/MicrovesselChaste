@@ -141,7 +141,7 @@ public:
         units::quantity<unit::concentration> max_vegf(0.2*1.e-9*unit::mole_per_metre_cubed);
         for(unsigned idx=0; idx<p_grid->GetNumberOfPoints(); idx++)
         {
-            vegf_field[idx] = max_vegf * p_grid->GetLocationOf1dIndex(idx)[0] / (float(extents[0]) * spacing);
+            vegf_field[idx] = max_vegf * p_grid->GetLocationOf1dIndex(idx).GetLocation(1.e-6*unit::metres)[0] / (float(extents[0]) * spacing);
         }
         p_funciton_map->UpdateSolution(vegf_field);
 

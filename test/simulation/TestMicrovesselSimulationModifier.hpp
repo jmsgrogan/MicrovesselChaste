@@ -138,7 +138,7 @@ class TestSpheroidWithAngiogenesis : public AbstractCellBasedTestSuite
         double radius = 100.0;
         double depth = 200.0;
         boost::shared_ptr<Part<3> > p_domain = Part<3> ::Create();
-        boost::shared_ptr<Polygon> circle = p_domain->AddCircle(radius*1.e-6*unit::metres, DimensionalChastePoint<3>(400.0, 400.0, 0.0));
+        boost::shared_ptr<Polygon<3> > circle = p_domain->AddCircle(radius*1.e-6*unit::metres, DimensionalChastePoint<3>(400.0, 400.0, 0.0));
         p_domain->Extrude(circle, depth*1.e-6*unit::metres);
         return p_domain;
     }
@@ -204,13 +204,14 @@ public:
         boost::shared_ptr<Part<3> > p_domain = GetSimulationDomain();
 
         // Create a lattice for the cell population
-        double spacing = 40.0;
+        units::quantity<unit::length> spacing(40.0*unit::microns);
+        units::quantity<unit::length> cell_lenth_scale(1.0*unit::microns);
         unsigned num_x = unsigned(p_domain->GetBoundingBox()[1]/spacing) + 1;
         unsigned num_y = unsigned(p_domain->GetBoundingBox()[3]/spacing) + 1;
         unsigned num_z = unsigned(p_domain->GetBoundingBox()[5]/spacing) + 1;
         PottsMeshGenerator<3> generator(num_x, 0, 0, num_y, 0, 0, num_z, 0, 0);
         PottsMesh<3>* p_mesh = generator.GetMesh();
-        p_mesh->Scale(spacing, spacing, spacing);
+        p_mesh->Scale(spacing/cell_lenth_scale, spacing/cell_lenth_scale, spacing/cell_lenth_scale);
 
         // Create a tumour cells in a cylinder in the middle of the domain
         boost::shared_ptr<Part<3> > p_tumour_cell_region = GetInitialTumourCellRegion();
@@ -230,13 +231,13 @@ public:
         // Create the oxygen pde solver
         boost::shared_ptr<FiniteDifferenceSolver<3> > p_oxygen_solver = GetOxygenSolver(p_domain, p_network);
         p_oxygen_solver->GetGrid()->SetVesselNetwork(p_network);
-        p_oxygen_solver->GetGrid()->SetCellPopulation(cell_population);
+        p_oxygen_solver->GetGrid()->SetCellPopulation(cell_population, cell_lenth_scale);
         p_oxygen_solver->Setup();
 
         // Create the vegf pde solver
         boost::shared_ptr<FiniteDifferenceSolver<3> > p_vegf_solver = GetVegfSolver(p_domain, p_network);
         p_vegf_solver->GetGrid()->SetVesselNetwork(p_network);
-        p_vegf_solver->GetGrid()->SetCellPopulation(cell_population);
+        p_vegf_solver->GetGrid()->SetCellPopulation(cell_population, cell_lenth_scale);
         p_vegf_solver->Setup();
 
         // Create the angiogenesis solver
@@ -266,7 +267,8 @@ public:
         boost::shared_ptr<Part<3> > p_domain = GetSimulationDomain();
 
         // Create nodes corresponding to cell positions
-        double spacing = 40.0;
+        units::quantity<unit::length> spacing(40.0*unit::microns);
+        units::quantity<unit::length> cell_lenth_scale(1.0*unit::microns);
         unsigned num_x = unsigned(p_domain->GetBoundingBox()[1]/spacing) + 1;
         unsigned num_y = unsigned(p_domain->GetBoundingBox()[3]/spacing) + 1;
         unsigned num_z = unsigned(p_domain->GetBoundingBox()[5]/spacing) + 1;
@@ -278,17 +280,17 @@ public:
         std::vector<Node<3>*> nodes;
         for(unsigned idx=0; idx<location_indices.size(); idx++)
         {
-            c_vector<double, 3> location = Grid::GetLocationOf1dIndex(location_indices[idx], num_x, num_y, spacing);
-            nodes.push_back(new Node<3>(idx, location, false));
+            DimensionalChastePoint<3> location(0.0, 0.0, 0.0);
+            nodes.push_back(new Node<3>(idx, location.GetLocation(cell_lenth_scale), false));
         }
 
         NodesOnlyMesh<3> mesh;
-        mesh.ConstructNodesWithoutMesh(nodes, 1.5 * spacing);
+        mesh.ConstructNodesWithoutMesh(nodes, 1.5 * spacing/cell_lenth_scale);
         std::vector<CellPtr> cells;
         CellsGenerator<SimpleOxygenBasedCellCycleModel, 3> cells_generator;
         cells_generator.GenerateBasic(cells, mesh.GetNumNodes());
         NodeBasedCellPopulation<3> cell_population(mesh, cells);
-        cell_population.SetAbsoluteMovementThreshold(2.0 * spacing);
+        cell_population.SetAbsoluteMovementThreshold(2.0 * spacing/cell_lenth_scale);
         cell_population.AddCellWriter<CellLabelWriter>();
 
         // Create the vessel network
@@ -297,13 +299,13 @@ public:
         // Create the oxygen pde solver
         boost::shared_ptr<FiniteDifferenceSolver<3> > p_oxygen_solver = GetOxygenSolver(p_domain, p_network);
         p_oxygen_solver->GetGrid()->SetVesselNetwork(p_network);
-        p_oxygen_solver->GetGrid()->SetCellPopulation(cell_population);
+        p_oxygen_solver->GetGrid()->SetCellPopulation(cell_population,cell_lenth_scale);
         p_oxygen_solver->Setup();
 
         // Create the vegf pde solver
         boost::shared_ptr<FiniteDifferenceSolver<3> > p_vegf_solver = GetVegfSolver(p_domain, p_network);
         p_vegf_solver->GetGrid()->SetVesselNetwork(p_network);
-        p_vegf_solver->GetGrid()->SetCellPopulation(cell_population);
+        p_vegf_solver->GetGrid()->SetCellPopulation(cell_population,cell_lenth_scale);
         p_vegf_solver->Setup();
 
         // Create the angiogenesis solver

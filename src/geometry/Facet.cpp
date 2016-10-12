@@ -59,7 +59,9 @@ Facet<DIM>::Facet(boost::shared_ptr<Polygon<DIM> > pPolygon) :
         mPolygons(),
         mVertices(),
         mVerticesUpToDate(false),
-        mData()
+        mData(),
+        mLabel(),
+        mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
 {
     mPolygons.push_back(pPolygon);
 }
@@ -168,7 +170,6 @@ DimensionalChastePoint<DIM> Facet<DIM>::GetCentroid()
     }
     else
     {
-
         return DimensionalChastePoint<DIM>(return_centroid[0], return_centroid[1], 0.0, mReferenceLength);
     }
 }

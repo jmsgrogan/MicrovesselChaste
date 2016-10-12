@@ -383,8 +383,9 @@ std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > Part<DIM>::GetVert
 }
 
 template<unsigned DIM>
-std::vector<unsigned> Part<DIM>::GetContainingGridIndices(unsigned num_x, unsigned num_y, unsigned num_z, double spacing)
+std::vector<unsigned> Part<DIM>::GetContainingGridIndices(unsigned num_x, unsigned num_y, unsigned num_z, units::quantity<unit::length> spacing)
 {
+    double scaled_spacing = spacing/mReferenceLength;
     std::vector<unsigned> location_indices;
     for(unsigned kdx=0; kdx<num_z; kdx++)
     {
@@ -392,7 +393,7 @@ std::vector<unsigned> Part<DIM>::GetContainingGridIndices(unsigned num_x, unsign
         {
             for(unsigned idx=0; idx<num_x; idx++)
             {
-                DimensionalChastePoint<DIM> location(double(idx) * spacing, double(jdx) * spacing, double(kdx) * spacing);
+                DimensionalChastePoint<DIM> location(double(idx) * scaled_spacing, double(jdx) * scaled_spacing, double(kdx) * scaled_spacing, mReferenceLength);
                 unsigned index = idx + num_x * jdx + num_x * num_y * kdx;
                 if(IsPointInPart(location))
                 {

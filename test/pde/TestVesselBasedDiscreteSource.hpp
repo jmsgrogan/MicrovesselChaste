@@ -71,11 +71,8 @@ public:
                             vessel_length,
                             vessel_length,
                             DimensionalChastePoint<3>(0.0, 0.0, 0.0));
-        c_vector<double, 3> translation_vector;
-        translation_vector[0] = -vessel_length/(2.0* 1.e-6 * unit::metres);
-        translation_vector[1] = -vessel_length/(2.0* 1.e-6 * unit::metres);
-        translation_vector[2] = 0.0;
-
+        DimensionalChastePoint<3> translation_vector(-vessel_length/(2.0* 1.e-6 * unit::metres),
+                                                     -vessel_length/(2.0* 1.e-6 * unit::metres), 0.0, 1.e-6 * unit::metres);
         p_domain->Translate(translation_vector);
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 10.0 * 1.e-6 * unit::metres);

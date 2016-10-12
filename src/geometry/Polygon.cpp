@@ -50,7 +50,8 @@ Polygon<DIM>::Polygon(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> 
 
 template<unsigned DIM>
 Polygon<DIM>::Polygon(boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex) :
-        mVertices()
+        mVertices(),
+        mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
 {
     mVertices.push_back(pVertex);
 }

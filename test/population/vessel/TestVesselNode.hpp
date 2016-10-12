@@ -63,18 +63,19 @@ public:
         ChastePoint<3> point1(1.0, 2.0, 3.0);
         ChastePoint<2> point2(5.0, 6.0);
 
-        c_vector<double, 2> location1;
+        c_vector<double, 3> location1;
         location1[0] = 1.0;
         location1[1] = 2.0;
+        location1[2] = 0.0;
 
         // Pointer Factory Constructors
         boost::shared_ptr<VesselNode<3> > p_node_1 = VesselNode<3>::Create(2.0, 3.0, 4.0);
-        boost::shared_ptr<VesselNode<3> > p_node_3 = VesselNode<3>::Create(DimensionalChastePoint<3>(location1));
+        boost::shared_ptr<VesselNode<3> > p_node_3 = VesselNode<3>::Create(DimensionalChastePoint<3>(location1, 1.e-6*unit::metres));
 
         // Test the location methods
-        TS_ASSERT_DELTA(p_node_1->rGetLocation()[0], 2.0, 1.e-6);
-        TS_ASSERT_DELTA(p_node_1->rGetLocation()[1], 3.0, 1.e-6);
-        TS_ASSERT_DELTA(p_node_1->rGetLocation()[2], 4.0, 1.e-6);
+        TS_ASSERT_DELTA(p_node_1->rGetLocation().GetLocation(1.e-6*unit::metres)[0], 2.0, 1.e-6);
+        TS_ASSERT_DELTA(p_node_1->rGetLocation().GetLocation(1.e-6*unit::metres)[1], 3.0, 1.e-6);
+        TS_ASSERT_DELTA(p_node_1->rGetLocation().GetLocation(1.e-6*unit::metres)[2], 4.0, 1.e-6);
     }
 
     void TestSimpleGetAndSetMethods() throw (Exception)
@@ -115,7 +116,7 @@ public:
 
         // Coincident methods
         TS_ASSERT(p_node_1->IsCoincident(p_node_2->rGetLocation()));
-        TS_ASSERT(p_node_1->IsCoincident(location1));
+        TS_ASSERT(p_node_1->IsCoincident(DimensionalChastePoint<3>(location1, 1.e-6*unit::metres)));
 
         // Distance methods
         TS_ASSERT_DELTA(p_node_1->GetDistance(p_node_3->rGetLocation())/p_node_1->GetReferenceLengthScale(), std::sqrt(27.0), 1.e-6);
@@ -164,9 +165,9 @@ public:
             boost::shared_ptr<VesselNode<3> > p_node = boost::shared_ptr<VesselNode<3> >(new VesselNode<3>(1.0, 2.0, 3.0, 5.0*unit::metres));
 
             boost::shared_ptr<AbstractVesselNetworkComponent<3> > p_cast_node = boost::static_pointer_cast<AbstractVesselNetworkComponent<3> >(p_node);
-            TS_ASSERT_DELTA(p_node->rGetLocation().rGetLocation()[0], 1.0, 1.e-6);
-            TS_ASSERT_DELTA(p_node->rGetLocation().rGetLocation()[1], 2.0, 1.e-6);
-            TS_ASSERT_DELTA(p_node->rGetLocation().rGetLocation()[2], 3.0, 1.e-6);
+            TS_ASSERT_DELTA(p_node->rGetLocation().GetLocation(1.e-6*unit::metres)[0], 1.0, 1.e-6);
+            TS_ASSERT_DELTA(p_node->rGetLocation().GetLocation(1.e-6*unit::metres)[1], 2.0, 1.e-6);
+            TS_ASSERT_DELTA(p_node->rGetLocation().GetLocation(1.e-6*unit::metres)[2], 3.0, 1.e-6);
 
             std::ofstream ofs(archive_filename.c_str());
             boost::archive::text_oarchive output_arch(ofs);
@@ -185,10 +186,10 @@ public:
             input_arch >> p_node_from_archive;
             boost::shared_ptr<VesselNode<3> > p_cast_node = boost::static_pointer_cast<VesselNode<3> >(p_node_from_archive);
 
-            std::cout << p_cast_node->rGetLocation().rGetLocation() << std::endl;
-            TS_ASSERT_DELTA(p_cast_node->rGetLocation().rGetLocation()[0], 1.0, 1.e-6);
-            TS_ASSERT_DELTA(p_cast_node->rGetLocation().rGetLocation()[1], 2.0, 1.e-6);
-            TS_ASSERT_DELTA(p_cast_node->rGetLocation().rGetLocation()[2], 3.0, 1.e-6);
+            std::cout << p_cast_node->rGetLocation().GetLocation(1.e-6*unit::metres) << std::endl;
+            TS_ASSERT_DELTA(p_cast_node->rGetLocation().GetLocation(1.e-6*unit::metres)[0], 1.0, 1.e-6);
+            TS_ASSERT_DELTA(p_cast_node->rGetLocation().GetLocation(1.e-6*unit::metres)[1], 2.0, 1.e-6);
+            TS_ASSERT_DELTA(p_cast_node->rGetLocation().GetLocation(1.e-6*unit::metres)[2], 3.0, 1.e-6);
         }
     }
 };

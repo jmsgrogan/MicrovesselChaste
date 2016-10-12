@@ -184,7 +184,7 @@ public:
         TS_ASSERT_DELTA(p_polygon->GetPlane()->GetNormal()[1], 0.0, 1.e-6);
         TS_ASSERT_DELTA(p_polygon->GetPlane()->GetNormal()[2], 1.0, 1.e-6);
 
-        TS_ASSERT_DELTA(p_polygon->GetDistanceToEdges(DimensionalChastePoint<3>(0.5, 0.5, 0.0, 1.e-6*unit::metres)).value(), 0.5e-6, 1.e-8);
+        TS_ASSERT_DELTA(p_polygon->GetDistanceToEdges(DimensionalChastePoint<3>(1.5, 0.5, 0.0, 1.e-6*unit::metres)).value(), 0.5e-6, 1.e-8);
     }
 };
 

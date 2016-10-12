@@ -146,7 +146,7 @@ public:
 
         boost::shared_ptr<Part<2> > p_part2 = Part<2>::Create();
         boost::shared_ptr<Polygon<2> > p_circle2 = p_part2->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<2>(0.5, 0.5));
-        TS_ASSERT_THROWS_THIS(p_part->Extrude(p_circle, 1.e-6*unit::metres), "Only parts in 3D space can be extruded.");
+        TS_ASSERT_THROWS_THIS(p_part2->Extrude(p_circle2, 1.e-6*unit::metres), "Only parts in 3D space can be extruded.");
     }
 
     void DontTestAddParrallelVessels3d()
@@ -233,10 +233,10 @@ public:
     void TestContainingGridIndices()
     {
         Part<3> part = Part<3>();
-        part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5, 0.5, 1.0e-6*unit::metres));
 
-        std::vector<unsigned> containing_indices = part.GetContainingGridIndices(20, 20, 20, 1.0);
-        TS_ASSERT_EQUALS(containing_indices.size(), 11u*11u*11u);
+        std::vector<unsigned> containing_indices = part.GetContainingGridIndices(20, 20, 20, 1.0e-6*unit::metres);
+        TS_ASSERT_EQUALS(containing_indices.size(), 10u*10u*10u);
     }
 
     void TestGetSegmentIndices()
