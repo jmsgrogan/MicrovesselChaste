@@ -54,10 +54,10 @@ public:
         units::quantity<unit::length> reference_length = 1.0 * unit::metres;
         DimensionalChastePoint<3> point1(1.0, 2.0, 0.5, reference_length);
         DimensionalChastePoint<3> point2(2.0, 4.0, 0.5, reference_length);
-        DimensionalChastePoint<3> point3(1.5, 3.0, 0.5, reference_length);
+        DimensionalChastePoint<3> point3(1.5, 4.0, 0.5, reference_length);
 
         TS_ASSERT_DELTA(GetDistance(point1, point2).value(), std::sqrt(5.0), 1.e-6);
-        TS_ASSERT_DELTA(GetDistanceToLineSegment(point1, point2, point3).value(), 1.0, 1.e-6);
+        TS_ASSERT_DELTA(GetDistanceToLineSegment(point1, point2, point3).value(), 0.4472, 1.e-4);
     }
 
     void TestLineInBoxBothOutside()

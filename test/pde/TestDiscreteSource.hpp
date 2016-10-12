@@ -124,7 +124,7 @@ public:
 
         boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_domain);
-        p_mesh_generator->SetMaxElementArea(100.0);
+        p_mesh_generator->SetMaxElementArea(100.0*units::pow<3>(1.e-6 * unit::metres));
         p_mesh_generator->Update();
 
         // Set up the discrete source
