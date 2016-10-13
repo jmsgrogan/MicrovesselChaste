@@ -115,7 +115,6 @@ namespace unit{
     typedef units::derived_dimension<units::mass_base_dimension, 1>::type mass_dimension;
     typedef units::unit<mass_dimension, units::si::system> mass;
     BOOST_UNITS_STATIC_CONSTANT(kg, mass);
-    typedef mass MassUnit;
     typedef units::derived_dimension<units::mass_base_dimension, 1, units::time_base_dimension, -1>::type mass_flow_rate_dimension;
     typedef units::unit<mass_flow_rate_dimension, units::si::system> mass_flow_rate;
     BOOST_UNITS_STATIC_CONSTANT(kg_per_second, mass_flow_rate);
