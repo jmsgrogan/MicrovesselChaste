@@ -2,104 +2,1660 @@
 
 #include "boost/python.hpp"
 
+#include "indexing_suite/value_traits.hpp"
+
+#include "indexing_suite/container_suite.hpp"
+
+#include "indexing_suite/vector.hpp"
+
 #include "geometry_headers.hpp"
 
 namespace bp = boost::python;
 
-BOOST_PYTHON_MODULE(_chaste_project_Microvessel_geometry){
-    { //::Vertex
-        typedef bp::class_< Vertex > Vertex_exposer_t;
-        Vertex_exposer_t Vertex_exposer = Vertex_exposer_t( "Vertex", bp::init< double, double, double, boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > >(( bp::arg("x"), bp::arg("y"), bp::arg("z"), bp::arg("referenceLength") )) );
-        bp::scope Vertex_scope( Vertex_exposer );
-        Vertex_exposer.def( bp::init< boost::numeric::ublas::c_vector< double, 3 >, boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > >(( bp::arg("coords"), bp::arg("referenceLength") )) );
-        Vertex_exposer.def( bp::init< bp::optional< double, double, double > >(( bp::arg("x")=0., bp::arg("y")=0., bp::arg("z")=0. )) );
-        bp::implicitly_convertible< double, Vertex >();
-        Vertex_exposer.def( bp::init< boost::numeric::ublas::c_vector< double, 3 > >(( bp::arg("coords") )) );
-        bp::implicitly_convertible< boost::numeric::ublas::c_vector< double, 3 >, Vertex >();
-        { //::Vertex::Create
+namespace boost { namespace python { namespace indexing {
+
+template<>
+struct value_traits< DimensionalChastePoint< 2 > >{
+
+    static bool const equality_comparable = false;
+    
+
+    static bool const less_than_comparable = false;
+    
+
+    template<typename PythonClass, typename Policy>
+    static void visit_container_class(PythonClass &, Policy const &){
         
-            typedef ::boost::shared_ptr< Vertex > ( *Create_function_type )( double,double,double,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > );
+    }
+
+};
+
+}/*indexing*/ } /*python*/ } /*boost*/
+
+namespace boost { namespace python { namespace indexing {
+
+template<>
+struct value_traits< DimensionalChastePoint< 3 > >{
+
+    static bool const equality_comparable = false;
+    
+
+    static bool const less_than_comparable = false;
+    
+
+    template<typename PythonClass, typename Policy>
+    static void visit_container_class(PythonClass &, Policy const &){
+        
+    }
+
+};
+
+}/*indexing*/ } /*python*/ } /*boost*/
+
+namespace boost { namespace python { namespace indexing {
+
+template<>
+struct value_traits< boost::shared_ptr< DimensionalChastePoint< 2 > > >{
+
+    static bool const equality_comparable = false;
+    
+
+    static bool const less_than_comparable = false;
+    
+
+    template<typename PythonClass, typename Policy>
+    static void visit_container_class(PythonClass &, Policy const &){
+        
+    }
+
+};
+
+}/*indexing*/ } /*python*/ } /*boost*/
+
+namespace boost { namespace python { namespace indexing {
+
+template<>
+struct value_traits< boost::shared_ptr< DimensionalChastePoint< 3 > > >{
+
+    static bool const equality_comparable = false;
+    
+
+    static bool const less_than_comparable = false;
+    
+
+    template<typename PythonClass, typename Policy>
+    static void visit_container_class(PythonClass &, Policy const &){
+        
+    }
+
+};
+
+}/*indexing*/ } /*python*/ } /*boost*/
+
+namespace boost { namespace python { namespace indexing {
+
+template<>
+struct value_traits< boost::shared_ptr< Facet< 2 > > >{
+
+    static bool const equality_comparable = false;
+    
+
+    static bool const less_than_comparable = false;
+    
+
+    template<typename PythonClass, typename Policy>
+    static void visit_container_class(PythonClass &, Policy const &){
+        
+    }
+
+};
+
+}/*indexing*/ } /*python*/ } /*boost*/
+
+namespace boost { namespace python { namespace indexing {
+
+template<>
+struct value_traits< boost::shared_ptr< Facet< 3 > > >{
+
+    static bool const equality_comparable = false;
+    
+
+    static bool const less_than_comparable = false;
+    
+
+    template<typename PythonClass, typename Policy>
+    static void visit_container_class(PythonClass &, Policy const &){
+        
+    }
+
+};
+
+}/*indexing*/ } /*python*/ } /*boost*/
+
+namespace boost { namespace python { namespace indexing {
+
+template<>
+struct value_traits< boost::shared_ptr< Polygon< 2 > > >{
+
+    static bool const equality_comparable = false;
+    
+
+    static bool const less_than_comparable = false;
+    
+
+    template<typename PythonClass, typename Policy>
+    static void visit_container_class(PythonClass &, Policy const &){
+        
+    }
+
+};
+
+}/*indexing*/ } /*python*/ } /*boost*/
+
+namespace boost { namespace python { namespace indexing {
+
+template<>
+struct value_traits< boost::shared_ptr< Polygon< 3 > > >{
+
+    static bool const equality_comparable = false;
+    
+
+    static bool const less_than_comparable = false;
+    
+
+    template<typename PythonClass, typename Policy>
+    static void visit_container_class(PythonClass &, Policy const &){
+        
+    }
+
+};
+
+}/*indexing*/ } /*python*/ } /*boost*/
+
+BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_geometry){
+    bp::class_< std::vector< unsigned int > >("vector_less__unsigned_int__greater_")    
+        .def( bp::indexing::vector_suite< std::vector< unsigned int > >() );
+
+    bp::class_< std::vector< std::pair<unsigned int, unsigned int> > >("vector_less__std_scope_pair_less_unsigned_int_comma__unsigned_int_greater___greater_")    
+        .def( bp::indexing::vector_suite< std::vector< std::pair<unsigned int, unsigned int> > >() );
+
+    bp::class_< std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > >("vector_less__boost_scope_units_scope_quantity_less_boost_scope_units_scope_unit_less_boost_scope_units_scope_list_less_boost_scope_units_scope_dim_less_boost_scope_units_scope_length_base_dimension_comma__boost_scope_units_scope_static_rational_less_1_comma__1_greater___greater__comma__boost_scope_units_scope_dimensionless_type_greater__comma__boost_scope_units_scope_homogeneous_system_less_boost_scope_units_scope_list_less_boost_scope_units_scope_si_scope_meter_base_unit_comma__boost_scope_units_scope_list_less_boost_scope_units_scope_scaled_base_unit_less_boost_scope_units_scope_cgs_scope_gram_base_unit_comma__boost_scope_units_scope_scale_less_10_comma__static_rational_less_3_greater___greater___greater__comma__boost_scope_units_scope_list_less_boost_scope_units_scope_si_scope_second_base_unit_comma__boost_scope_units_scope_list_less_boost_scope_units_scope_si_scope_ampere_base_unit_comma__boost_scope_units_scope_list_less_boost_scope_units_scope_si_scope_kelvin_base_unit_comma__boost_scope_units_scope_list_less_boost_scope_units_scope_si_scope_mole_base_unit_comma__boost_scope_units_scope_list_less_boost_scope_units_scope_si_scope_candela_base_unit_comma__boost_scope_units_scope_list_less_boost_scope_units_scope_angle_scope_radian_base_unit_comma__boost_scope_units_scope_list_less_boost_scope_units_scope_angle_scope_steradian_base_unit_comma__boost_scope_units_scope_dimensionless_type_greater___greater___greater___greater___greater___greater___greater___greater___greater___greater__comma__void_greater__comma__double_greater___greater_")    
+        .def( bp::indexing::vector_suite< std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > >() );
+
+    { //::std::vector< boost::shared_ptr<Polygon<3> > >
+        typedef bp::class_< std::vector< boost::shared_ptr<Polygon<3> > > > __type_exposer_t;
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
+        bp::scope __type_scope( __type_exposer );
+        __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<Polygon<3> > > >() );
+    }
+
+    { //::std::vector< boost::shared_ptr<Polygon<2> > >
+        typedef bp::class_< std::vector< boost::shared_ptr<Polygon<2> > > > __type_exposer_t;
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
+        bp::scope __type_scope( __type_exposer );
+        __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<Polygon<2> > > >() );
+    }
+
+    { //::std::vector< boost::shared_ptr<Facet<3> > >
+        typedef bp::class_< std::vector< boost::shared_ptr<Facet<3> > > > __type_exposer_t;
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
+        bp::scope __type_scope( __type_exposer );
+        __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<Facet<3> > > >() );
+    }
+
+    { //::std::vector< boost::shared_ptr<Facet<2> > >
+        typedef bp::class_< std::vector< boost::shared_ptr<Facet<2> > > > __type_exposer_t;
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
+        bp::scope __type_scope( __type_exposer );
+        __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<Facet<2> > > >() );
+    }
+
+    { //::std::vector< boost::shared_ptr<DimensionalChastePoint<3> > >
+        typedef bp::class_< std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > > __type_exposer_t;
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
+        bp::scope __type_scope( __type_exposer );
+        __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > >() );
+    }
+
+    { //::std::vector< boost::shared_ptr<DimensionalChastePoint<2> > >
+        typedef bp::class_< std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > > __type_exposer_t;
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
+        bp::scope __type_scope( __type_exposer );
+        __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > >() );
+    }
+
+    { //::std::vector< bool >
+        typedef bp::class_< std::vector< bool > > vector_less__bool__greater__exposer_t;
+        vector_less__bool__greater__exposer_t vector_less__bool__greater__exposer = vector_less__bool__greater__exposer_t( "vector_less__bool__greater_" );
+        bp::scope vector_less__bool__greater__scope( vector_less__bool__greater__exposer );
+        vector_less__bool__greater__exposer.def( bp::indexing::vector_suite< std::vector< bool > >() );
+    }
+
+    { //::std::vector< DimensionalChastePoint<3> >
+        typedef bp::class_< std::vector< DimensionalChastePoint<3> > > __type_exposer_t;
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
+        bp::scope __type_scope( __type_exposer );
+        __type_exposer.def( bp::indexing::vector_suite< std::vector< DimensionalChastePoint<3> > >() );
+    }
+
+    { //::std::vector< DimensionalChastePoint<2> >
+        typedef bp::class_< std::vector< DimensionalChastePoint<2> > > __type_exposer_t;
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
+        bp::scope __type_scope( __type_exposer );
+        __type_exposer.def( bp::indexing::vector_suite< std::vector< DimensionalChastePoint<2> > >() );
+    }
+
+    { //::Facet< 2 >
+        typedef bp::class_< Facet< 2 > > Facet2_exposer_t;
+        Facet2_exposer_t Facet2_exposer = Facet2_exposer_t( "Facet2", bp::init< std::vector< boost::shared_ptr<Polygon<2> > > >(( bp::arg("polygons") )) );
+        bp::scope Facet2_scope( Facet2_exposer );
+        bp::implicitly_convertible< std::vector< boost::shared_ptr<Polygon<2> > >, Facet< 2 > >();
+        Facet2_exposer.def( bp::init< boost::shared_ptr< Polygon< 2 > > >(( bp::arg("pPolygon") )) );
+        bp::implicitly_convertible< boost::shared_ptr< Polygon< 2 > >, Facet< 2 > >();
+        { //::Facet< 2 >::AddPolygon
+        
+            typedef Facet< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AddPolygon_function_type)( ::boost::shared_ptr< Polygon< 2 > > ) ;
             
-            Vertex_exposer.def( 
+            Facet2_exposer.def( 
+                "AddPolygon"
+                , AddPolygon_function_type( &::Facet< 2 >::AddPolygon )
+                , ( bp::arg("pPolygon") ) );
+        
+        }
+        { //::Facet< 2 >::AddPolygons
+        
+            typedef Facet< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AddPolygons_function_type)( ::std::vector< boost::shared_ptr<Polygon<2> > > ) ;
+            
+            Facet2_exposer.def( 
+                "AddPolygons"
+                , AddPolygons_function_type( &::Facet< 2 >::AddPolygons )
+                , ( bp::arg("polygons") ) );
+        
+        }
+        { //::Facet< 2 >::ContainsPoint
+        
+            typedef Facet< 2 > exported_class_t;
+            typedef bool ( exported_class_t::*ContainsPoint_function_type)( ::DimensionalChastePoint< 2 > const & ) ;
+            
+            Facet2_exposer.def( 
+                "ContainsPoint"
+                , ContainsPoint_function_type( &::Facet< 2 >::ContainsPoint )
+                , ( bp::arg("location") ) );
+        
+        }
+        { //::Facet< 2 >::Create
+        
+            typedef Facet< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< Facet< 2 > > ( *Create_function_type )( ::std::vector< boost::shared_ptr<Polygon<2> > > );
+            
+            Facet2_exposer.def( 
                 "Create"
-                , Create_function_type( &::Vertex::Create )
-                , ( bp::arg("x"), bp::arg("y"), bp::arg("z"), bp::arg("referenceLength") ) );
+                , Create_function_type( &::Facet< 2 >::Create )
+                , ( bp::arg("polygons") ) );
         
         }
-        { //::Vertex::Create
+        { //::Facet< 2 >::Create
         
-            typedef ::boost::shared_ptr< Vertex > ( *Create_function_type )( ::boost::numeric::ublas::c_vector< double, 3 >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > );
+            typedef Facet< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< Facet< 2 > > ( *Create_function_type )( ::boost::shared_ptr< Polygon< 2 > > );
             
-            Vertex_exposer.def( 
+            Facet2_exposer.def( 
                 "Create"
-                , Create_function_type( &::Vertex::Create )
-                , ( bp::arg("coords"), bp::arg("referenceLength") ) );
+                , Create_function_type( &::Facet< 2 >::Create )
+                , ( bp::arg("pPolygon") ) );
         
         }
-        { //::Vertex::Create
+        { //::Facet< 2 >::GetBoundingBox
         
-            typedef ::boost::shared_ptr< Vertex > ( *Create_function_type )( double,double,double );
+            typedef Facet< 2 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetBoundingBox_function_type)(  ) ;
             
-            Vertex_exposer.def( 
-                "Create"
-                , Create_function_type( &::Vertex::Create )
-                , ( bp::arg("x")=0., bp::arg("y")=0., bp::arg("z")=0. ) );
+            Facet2_exposer.def( 
+                "GetBoundingBox"
+                , GetBoundingBox_function_type( &::Facet< 2 >::GetBoundingBox ) );
         
         }
-        { //::Vertex::Create
+        { //::Facet< 2 >::GetCentroid
         
-            typedef ::boost::shared_ptr< Vertex > ( *Create_function_type )( ::boost::numeric::ublas::c_vector< double, 3 > );
+            typedef Facet< 2 > exported_class_t;
+            typedef ::DimensionalChastePoint< 2 > ( exported_class_t::*GetCentroid_function_type)(  ) ;
             
-            Vertex_exposer.def( 
-                "Create"
-                , Create_function_type( &::Vertex::Create )
-                , ( bp::arg("coords") ) );
+            Facet2_exposer.def( 
+                "GetCentroid"
+                , GetCentroid_function_type( &::Facet< 2 >::GetCentroid ) );
         
         }
-        { //::Vertex::GetIndex
+        { //::Facet< 2 >::GetDistance
         
-            typedef unsigned int ( ::Vertex::*GetIndex_function_type)(  ) ;
+            typedef Facet< 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetDistance_function_type)( ::DimensionalChastePoint< 2 > const & ) ;
             
-            Vertex_exposer.def( 
-                "GetIndex"
-                , GetIndex_function_type( &::Vertex::GetIndex ) );
+            Facet2_exposer.def( 
+                "GetDistance"
+                , GetDistance_function_type( &::Facet< 2 >::GetDistance )
+                , ( bp::arg("rLocation") ) );
         
         }
-        { //::Vertex::RotateAboutAxis
+        { //::Facet< 2 >::GetLabel
         
-            typedef void ( ::Vertex::*RotateAboutAxis_function_type)( ::boost::numeric::ublas::c_vector< double, 3 >,double ) ;
+            typedef Facet< 2 > exported_class_t;
+            typedef ::std::string ( exported_class_t::*GetLabel_function_type)(  ) ;
             
-            Vertex_exposer.def( 
+            Facet2_exposer.def( 
+                "GetLabel"
+                , GetLabel_function_type( &::Facet< 2 >::GetLabel ) );
+        
+        }
+        { //::Facet< 2 >::GetNormal
+        
+            typedef Facet< 2 > exported_class_t;
+            typedef ::boost::numeric::ublas::c_vector< double, 2 > ( exported_class_t::*GetNormal_function_type)(  ) ;
+            
+            Facet2_exposer.def( 
+                "GetNormal"
+                , GetNormal_function_type( &::Facet< 2 >::GetNormal ) );
+        
+        }
+        { //::Facet< 2 >::GetPlane
+        
+            typedef Facet< 2 > exported_class_t;
+            typedef ::vtkSmartPointer< vtkPlane > ( exported_class_t::*GetPlane_function_type)(  ) ;
+            
+            Facet2_exposer.def( 
+                "GetPlane"
+                , GetPlane_function_type( &::Facet< 2 >::GetPlane ) );
+        
+        }
+        { //::Facet< 2 >::GetPolygons
+        
+            typedef Facet< 2 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<Polygon<2> > > ( exported_class_t::*GetPolygons_function_type)(  ) ;
+            
+            Facet2_exposer.def( 
+                "GetPolygons"
+                , GetPolygons_function_type( &::Facet< 2 >::GetPolygons ) );
+        
+        }
+        { //::Facet< 2 >::GetVertices
+        
+            typedef Facet< 2 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > ( exported_class_t::*GetVertices_function_type)(  ) ;
+            
+            Facet2_exposer.def( 
+                "GetVertices"
+                , GetVertices_function_type( &::Facet< 2 >::GetVertices ) );
+        
+        }
+        { //::Facet< 2 >::GetVtkVertices
+        
+            typedef Facet< 2 > exported_class_t;
+            typedef ::std::pair< vtkSmartPointer< vtkPoints >, vtkSmartPointer< vtkIdTypeArray > > ( exported_class_t::*GetVtkVertices_function_type)(  ) ;
+            
+            Facet2_exposer.def( 
+                "GetVtkVertices"
+                , GetVtkVertices_function_type( &::Facet< 2 >::GetVtkVertices ) );
+        
+        }
+        { //::Facet< 2 >::RotateAboutAxis
+        
+            typedef Facet< 2 > exported_class_t;
+            typedef void ( exported_class_t::*RotateAboutAxis_function_type)( ::boost::numeric::ublas::c_vector< double, 3 >,double ) ;
+            
+            Facet2_exposer.def( 
                 "RotateAboutAxis"
-                , RotateAboutAxis_function_type( &::Vertex::RotateAboutAxis )
+                , RotateAboutAxis_function_type( &::Facet< 2 >::RotateAboutAxis )
                 , ( bp::arg("axis"), bp::arg("angle") ) );
         
         }
-        { //::Vertex::SetIndex
+        { //::Facet< 2 >::SetLabel
         
-            typedef void ( ::Vertex::*SetIndex_function_type)( unsigned int ) ;
+            typedef Facet< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetLabel_function_type)( ::std::string const & ) ;
             
-            Vertex_exposer.def( 
-                "SetIndex"
-                , SetIndex_function_type( &::Vertex::SetIndex )
-                , ( bp::arg("index") ) );
+            Facet2_exposer.def( 
+                "SetLabel"
+                , SetLabel_function_type( &::Facet< 2 >::SetLabel )
+                , ( bp::arg("label") ) );
         
         }
-        { //::Vertex::Translate
+        { //::Facet< 2 >::Translate
         
-            typedef void ( ::Vertex::*Translate_function_type)( ::boost::numeric::ublas::c_vector< double, 3 > ) ;
+            typedef Facet< 2 > exported_class_t;
+            typedef void ( exported_class_t::*Translate_function_type)( ::DimensionalChastePoint< 2 > ) ;
             
-            Vertex_exposer.def( 
+            Facet2_exposer.def( 
                 "Translate"
-                , Translate_function_type( &::Vertex::Translate )
+                , Translate_function_type( &::Facet< 2 >::Translate )
                 , ( bp::arg("translationVector") ) );
         
         }
-        Vertex_exposer.staticmethod( "Create" );
-        bp::register_ptr_to_python< boost::shared_ptr< Vertex > >();
-        bp::implicitly_convertible< boost::shared_ptr< Vertex >, boost::shared_ptr< boost::enable_shared_from_this< Vertex > > >();
-        bp::implicitly_convertible< boost::shared_ptr< Vertex >, boost::shared_ptr< DimensionalChastePoint< 3 > > >();
-        bp::implicitly_convertible< boost::shared_ptr< Vertex >, boost::shared_ptr< boost::enable_shared_from_this< DimensionalChastePoint< 3 > > > >();
-        bp::implicitly_convertible< boost::shared_ptr< Vertex >, boost::shared_ptr< ChastePoint< 3 > > >();
+        { //::Facet< 2 >::UpdateVertices
+        
+            typedef Facet< 2 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateVertices_function_type)(  ) ;
+            
+            Facet2_exposer.def( 
+                "UpdateVertices"
+                , UpdateVertices_function_type( &::Facet< 2 >::UpdateVertices ) );
+        
+        }
+        Facet2_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< Facet<2> > >();
+    }
+
+    { //::Facet< 3 >
+        typedef bp::class_< Facet< 3 > > Facet3_exposer_t;
+        Facet3_exposer_t Facet3_exposer = Facet3_exposer_t( "Facet3", bp::init< std::vector< boost::shared_ptr<Polygon<3> > > >(( bp::arg("polygons") )) );
+        bp::scope Facet3_scope( Facet3_exposer );
+        bp::implicitly_convertible< std::vector< boost::shared_ptr<Polygon<3> > >, Facet< 3 > >();
+        Facet3_exposer.def( bp::init< boost::shared_ptr< Polygon< 3 > > >(( bp::arg("pPolygon") )) );
+        bp::implicitly_convertible< boost::shared_ptr< Polygon< 3 > >, Facet< 3 > >();
+        { //::Facet< 3 >::AddPolygon
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddPolygon_function_type)( ::boost::shared_ptr< Polygon< 3 > > ) ;
+            
+            Facet3_exposer.def( 
+                "AddPolygon"
+                , AddPolygon_function_type( &::Facet< 3 >::AddPolygon )
+                , ( bp::arg("pPolygon") ) );
+        
+        }
+        { //::Facet< 3 >::AddPolygons
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddPolygons_function_type)( ::std::vector< boost::shared_ptr<Polygon<3> > > ) ;
+            
+            Facet3_exposer.def( 
+                "AddPolygons"
+                , AddPolygons_function_type( &::Facet< 3 >::AddPolygons )
+                , ( bp::arg("polygons") ) );
+        
+        }
+        { //::Facet< 3 >::ContainsPoint
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef bool ( exported_class_t::*ContainsPoint_function_type)( ::DimensionalChastePoint< 3 > const & ) ;
+            
+            Facet3_exposer.def( 
+                "ContainsPoint"
+                , ContainsPoint_function_type( &::Facet< 3 >::ContainsPoint )
+                , ( bp::arg("location") ) );
+        
+        }
+        { //::Facet< 3 >::Create
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< Facet< 3 > > ( *Create_function_type )( ::std::vector< boost::shared_ptr<Polygon<3> > > );
+            
+            Facet3_exposer.def( 
+                "Create"
+                , Create_function_type( &::Facet< 3 >::Create )
+                , ( bp::arg("polygons") ) );
+        
+        }
+        { //::Facet< 3 >::Create
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< Facet< 3 > > ( *Create_function_type )( ::boost::shared_ptr< Polygon< 3 > > );
+            
+            Facet3_exposer.def( 
+                "Create"
+                , Create_function_type( &::Facet< 3 >::Create )
+                , ( bp::arg("pPolygon") ) );
+        
+        }
+        { //::Facet< 3 >::GetBoundingBox
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetBoundingBox_function_type)(  ) ;
+            
+            Facet3_exposer.def( 
+                "GetBoundingBox"
+                , GetBoundingBox_function_type( &::Facet< 3 >::GetBoundingBox ) );
+        
+        }
+        { //::Facet< 3 >::GetCentroid
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef ::DimensionalChastePoint< 3 > ( exported_class_t::*GetCentroid_function_type)(  ) ;
+            
+            Facet3_exposer.def( 
+                "GetCentroid"
+                , GetCentroid_function_type( &::Facet< 3 >::GetCentroid ) );
+        
+        }
+        { //::Facet< 3 >::GetDistance
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetDistance_function_type)( ::DimensionalChastePoint< 3 > const & ) ;
+            
+            Facet3_exposer.def( 
+                "GetDistance"
+                , GetDistance_function_type( &::Facet< 3 >::GetDistance )
+                , ( bp::arg("rLocation") ) );
+        
+        }
+        { //::Facet< 3 >::GetLabel
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef ::std::string ( exported_class_t::*GetLabel_function_type)(  ) ;
+            
+            Facet3_exposer.def( 
+                "GetLabel"
+                , GetLabel_function_type( &::Facet< 3 >::GetLabel ) );
+        
+        }
+        { //::Facet< 3 >::GetNormal
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef ::boost::numeric::ublas::c_vector< double, 3 > ( exported_class_t::*GetNormal_function_type)(  ) ;
+            
+            Facet3_exposer.def( 
+                "GetNormal"
+                , GetNormal_function_type( &::Facet< 3 >::GetNormal ) );
+        
+        }
+        { //::Facet< 3 >::GetPlane
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef ::vtkSmartPointer< vtkPlane > ( exported_class_t::*GetPlane_function_type)(  ) ;
+            
+            Facet3_exposer.def( 
+                "GetPlane"
+                , GetPlane_function_type( &::Facet< 3 >::GetPlane ) );
+        
+        }
+        { //::Facet< 3 >::GetPolygons
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<Polygon<3> > > ( exported_class_t::*GetPolygons_function_type)(  ) ;
+            
+            Facet3_exposer.def( 
+                "GetPolygons"
+                , GetPolygons_function_type( &::Facet< 3 >::GetPolygons ) );
+        
+        }
+        { //::Facet< 3 >::GetVertices
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > ( exported_class_t::*GetVertices_function_type)(  ) ;
+            
+            Facet3_exposer.def( 
+                "GetVertices"
+                , GetVertices_function_type( &::Facet< 3 >::GetVertices ) );
+        
+        }
+        { //::Facet< 3 >::GetVtkVertices
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef ::std::pair< vtkSmartPointer< vtkPoints >, vtkSmartPointer< vtkIdTypeArray > > ( exported_class_t::*GetVtkVertices_function_type)(  ) ;
+            
+            Facet3_exposer.def( 
+                "GetVtkVertices"
+                , GetVtkVertices_function_type( &::Facet< 3 >::GetVtkVertices ) );
+        
+        }
+        { //::Facet< 3 >::RotateAboutAxis
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef void ( exported_class_t::*RotateAboutAxis_function_type)( ::boost::numeric::ublas::c_vector< double, 3 >,double ) ;
+            
+            Facet3_exposer.def( 
+                "RotateAboutAxis"
+                , RotateAboutAxis_function_type( &::Facet< 3 >::RotateAboutAxis )
+                , ( bp::arg("axis"), bp::arg("angle") ) );
+        
+        }
+        { //::Facet< 3 >::SetLabel
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetLabel_function_type)( ::std::string const & ) ;
+            
+            Facet3_exposer.def( 
+                "SetLabel"
+                , SetLabel_function_type( &::Facet< 3 >::SetLabel )
+                , ( bp::arg("label") ) );
+        
+        }
+        { //::Facet< 3 >::Translate
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef void ( exported_class_t::*Translate_function_type)( ::DimensionalChastePoint< 3 > ) ;
+            
+            Facet3_exposer.def( 
+                "Translate"
+                , Translate_function_type( &::Facet< 3 >::Translate )
+                , ( bp::arg("translationVector") ) );
+        
+        }
+        { //::Facet< 3 >::UpdateVertices
+        
+            typedef Facet< 3 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateVertices_function_type)(  ) ;
+            
+            Facet3_exposer.def( 
+                "UpdateVertices"
+                , UpdateVertices_function_type( &::Facet< 3 >::UpdateVertices ) );
+        
+        }
+        Facet3_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< Facet<3> > >();
+    }
+
+    { //::Part< 2 >
+        typedef bp::class_< Part< 2 > > Part_less__2__greater__exposer_t;
+        Part_less__2__greater__exposer_t Part_less__2__greater__exposer = Part_less__2__greater__exposer_t( "Part_less__2__greater_", bp::init< >() );
+        bp::scope Part_less__2__greater__scope( Part_less__2__greater__exposer );
+        { //::Part< 2 >::AddCircle
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< Polygon< 2 > > ( exported_class_t::*AddCircle_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::DimensionalChastePoint< 2 >,unsigned int ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "AddCircle"
+                , AddCircle_function_type( &::Part< 2 >::AddCircle )
+                , ( bp::arg("radius"), bp::arg("centre"), bp::arg("numSegments")=(unsigned int)(24) ) );
+        
+        }
+        { //::Part< 2 >::AddCuboid
+        
+            typedef Part< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AddCuboid_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::DimensionalChastePoint< 2 > ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "AddCuboid"
+                , AddCuboid_function_type( &::Part< 2 >::AddCuboid )
+                , ( bp::arg("sizeX"), bp::arg("sizeY"), bp::arg("sizeZ"), bp::arg("origin") ) );
+        
+        }
+        { //::Part< 2 >::AddCylinder
+        
+            typedef Part< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AddCylinder_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::DimensionalChastePoint< 2 >,unsigned int ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "AddCylinder"
+                , AddCylinder_function_type( &::Part< 2 >::AddCylinder )
+                , ( bp::arg("radius"), bp::arg("depth"), bp::arg("centre"), bp::arg("numSegments")=(unsigned int)(24) ) );
+        
+        }
+        { //::Part< 2 >::AddHoleMarker
+        
+            typedef Part< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AddHoleMarker_function_type)( ::DimensionalChastePoint< 2 > ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "AddHoleMarker"
+                , AddHoleMarker_function_type( &::Part< 2 >::AddHoleMarker )
+                , ( bp::arg("location") ) );
+        
+        }
+        { //::Part< 2 >::AddPolygon
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< Polygon< 2 > > ( exported_class_t::*AddPolygon_function_type)( ::std::vector< boost::shared_ptr<DimensionalChastePoint<2> > >,bool,::boost::shared_ptr< Facet< 2 > > ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "AddPolygon"
+                , AddPolygon_function_type( &::Part< 2 >::AddPolygon )
+                , ( bp::arg("vertices"), bp::arg("newFacet")=(bool)(false), bp::arg("pFacet")=boost::shared_ptr<Facet<DIM> >() ) );
+        
+        }
+        { //::Part< 2 >::AddPolygon
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< Polygon< 2 > > ( exported_class_t::*AddPolygon_function_type)( ::boost::shared_ptr< Polygon< 2 > >,bool,::boost::shared_ptr< Facet< 2 > > ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "AddPolygon"
+                , AddPolygon_function_type( &::Part< 2 >::AddPolygon )
+                , ( bp::arg("pPolygon"), bp::arg("newFacet")=(bool)(false), bp::arg("pFacet")=boost::shared_ptr<Facet<DIM> >() ) );
+        
+        }
+        { //::Part< 2 >::AddRectangle
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< Polygon< 2 > > ( exported_class_t::*AddRectangle_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::DimensionalChastePoint< 2 > ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "AddRectangle"
+                , AddRectangle_function_type( &::Part< 2 >::AddRectangle )
+                , ( bp::arg("sizeX"), bp::arg("sizeY"), bp::arg("origin") ) );
+        
+        }
+        { //::Part< 2 >::AddVesselNetwork
+        
+            typedef Part< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AddVesselNetwork_function_type)( ::boost::shared_ptr< VesselNetwork< 2 > >,bool ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "AddVesselNetwork"
+                , AddVesselNetwork_function_type( &::Part< 2 >::AddVesselNetwork )
+                , ( bp::arg("pVesselNetwork"), bp::arg("surface")=(bool)(false) ) );
+        
+        }
+        { //::Part< 2 >::BooleanWithNetwork
+        
+            typedef Part< 2 > exported_class_t;
+            typedef void ( exported_class_t::*BooleanWithNetwork_function_type)( ::boost::shared_ptr< VesselNetwork< 2 > > ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "BooleanWithNetwork"
+                , BooleanWithNetwork_function_type( &::Part< 2 >::BooleanWithNetwork )
+                , ( bp::arg("pVesselNetwork") ) );
+        
+        }
+        { //::Part< 2 >::Create
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< Part< 2 > > ( *Create_function_type )(  );
+            
+            Part_less__2__greater__exposer.def( 
+                "Create"
+                , Create_function_type( &::Part< 2 >::Create ) );
+        
+        }
+        { //::Part< 2 >::Extrude
+        
+            typedef Part< 2 > exported_class_t;
+            typedef void ( exported_class_t::*Extrude_function_type)( ::boost::shared_ptr< Polygon< 2 > >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "Extrude"
+                , Extrude_function_type( &::Part< 2 >::Extrude )
+                , ( bp::arg("pPolygon"), bp::arg("distance") ) );
+        
+        }
+        { //::Part< 2 >::GetBoundingBox
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetBoundingBox_function_type)(  ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "GetBoundingBox"
+                , GetBoundingBox_function_type( &::Part< 2 >::GetBoundingBox ) );
+        
+        }
+        { //::Part< 2 >::GetContainingGridIndices
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::std::vector< unsigned int > ( exported_class_t::*GetContainingGridIndices_function_type)( unsigned int,unsigned int,unsigned int,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "GetContainingGridIndices"
+                , GetContainingGridIndices_function_type( &::Part< 2 >::GetContainingGridIndices )
+                , ( bp::arg("num_x"), bp::arg("num_y"), bp::arg("num_z"), bp::arg("spacing") ) );
+        
+        }
+        { //::Part< 2 >::GetFacet
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< Facet< 2 > > ( exported_class_t::*GetFacet_function_type)( ::DimensionalChastePoint< 2 > const & ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "GetFacet"
+                , GetFacet_function_type( &::Part< 2 >::GetFacet )
+                , ( bp::arg("rLocation") ) );
+        
+        }
+        { //::Part< 2 >::GetFacets
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<Facet<2> > > ( exported_class_t::*GetFacets_function_type)(  ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "GetFacets"
+                , GetFacets_function_type( &::Part< 2 >::GetFacets ) );
+        
+        }
+        { //::Part< 2 >::GetHoleMarkers
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::std::vector< DimensionalChastePoint<2> > ( exported_class_t::*GetHoleMarkers_function_type)(  ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "GetHoleMarkers"
+                , GetHoleMarkers_function_type( &::Part< 2 >::GetHoleMarkers ) );
+        
+        }
+        { //::Part< 2 >::GetPolygons
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<Polygon<2> > > ( exported_class_t::*GetPolygons_function_type)(  ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "GetPolygons"
+                , GetPolygons_function_type( &::Part< 2 >::GetPolygons ) );
+        
+        }
+        { //::Part< 2 >::GetReferenceLengthScale
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetReferenceLengthScale_function_type)(  ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "GetReferenceLengthScale"
+                , GetReferenceLengthScale_function_type( &::Part< 2 >::GetReferenceLengthScale ) );
+        
+        }
+        { //::Part< 2 >::GetSegmentIndices
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::std::vector< std::pair<unsigned int, unsigned int> > ( exported_class_t::*GetSegmentIndices_function_type)(  ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "GetSegmentIndices"
+                , GetSegmentIndices_function_type( &::Part< 2 >::GetSegmentIndices ) );
+        
+        }
+        { //::Part< 2 >::GetVertexLocations
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::std::vector< DimensionalChastePoint<2> > ( exported_class_t::*GetVertexLocations_function_type)(  ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "GetVertexLocations"
+                , GetVertexLocations_function_type( &::Part< 2 >::GetVertexLocations ) );
+        
+        }
+        { //::Part< 2 >::GetVertices
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > ( exported_class_t::*GetVertices_function_type)(  ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "GetVertices"
+                , GetVertices_function_type( &::Part< 2 >::GetVertices ) );
+        
+        }
+        { //::Part< 2 >::GetVtk
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::vtkSmartPointer< vtkPolyData > ( exported_class_t::*GetVtk_function_type)(  ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "GetVtk"
+                , GetVtk_function_type( &::Part< 2 >::GetVtk ) );
+        
+        }
+        { //::Part< 2 >::IsPointInPart
+        
+            typedef Part< 2 > exported_class_t;
+            typedef bool ( exported_class_t::*IsPointInPart_function_type)( ::DimensionalChastePoint< 2 > ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "IsPointInPart"
+                , IsPointInPart_function_type( &::Part< 2 >::IsPointInPart )
+                , ( bp::arg("location") ) );
+        
+        }
+        { //::Part< 2 >::IsPointInPart
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::std::vector< bool > ( exported_class_t::*IsPointInPart_function_type)( ::std::vector< DimensionalChastePoint<2> > const & ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "IsPointInPart"
+                , IsPointInPart_function_type( &::Part< 2 >::IsPointInPart )
+                , ( bp::arg("location") ) );
+        
+        }
+        { //::Part< 2 >::MergeCoincidentVertices
+        
+            typedef Part< 2 > exported_class_t;
+            typedef void ( exported_class_t::*MergeCoincidentVertices_function_type)(  ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "MergeCoincidentVertices"
+                , MergeCoincidentVertices_function_type( &::Part< 2 >::MergeCoincidentVertices ) );
+        
+        }
+        { //::Part< 2 >::SetReferenceLengthScale
+        
+            typedef Part< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetReferenceLengthScale_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "SetReferenceLengthScale"
+                , SetReferenceLengthScale_function_type( &::Part< 2 >::SetReferenceLengthScale )
+                , ( bp::arg("referenceLength") ) );
+        
+        }
+        { //::Part< 2 >::Translate
+        
+            typedef Part< 2 > exported_class_t;
+            typedef void ( exported_class_t::*Translate_function_type)( ::DimensionalChastePoint< 2 > ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "Translate"
+                , Translate_function_type( &::Part< 2 >::Translate )
+                , ( bp::arg("vector") ) );
+        
+        }
+        { //::Part< 2 >::Write
+        
+            typedef Part< 2 > exported_class_t;
+            typedef void ( exported_class_t::*Write_function_type)( ::std::string const &,::GeometryFormat::Value ) ;
+            
+            Part_less__2__greater__exposer.def( 
+                "Write"
+                , Write_function_type( &::Part< 2 >::Write )
+                , ( bp::arg("rFilename"), bp::arg("format")=GeometryFormat::Value::VTP ) );
+        
+        }
+        Part_less__2__greater__exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< Part<2> > >();
+    }
+
+    { //::Part< 3 >
+        typedef bp::class_< Part< 3 > > Part3_exposer_t;
+        Part3_exposer_t Part3_exposer = Part3_exposer_t( "Part3", bp::init< >() );
+        bp::scope Part3_scope( Part3_exposer );
+        { //::Part< 3 >::AddCircle
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< Polygon< 3 > > ( exported_class_t::*AddCircle_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::DimensionalChastePoint< 3 >,unsigned int ) ;
+            
+            Part3_exposer.def( 
+                "AddCircle"
+                , AddCircle_function_type( &::Part< 3 >::AddCircle )
+                , ( bp::arg("radius"), bp::arg("centre"), bp::arg("numSegments")=(unsigned int)(24) ) );
+        
+        }
+        { //::Part< 3 >::AddCuboid
+        
+            typedef Part< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddCuboid_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::DimensionalChastePoint< 3 > ) ;
+            
+            Part3_exposer.def( 
+                "AddCuboid"
+                , AddCuboid_function_type( &::Part< 3 >::AddCuboid )
+                , ( bp::arg("sizeX"), bp::arg("sizeY"), bp::arg("sizeZ"), bp::arg("origin") ) );
+        
+        }
+        { //::Part< 3 >::AddCylinder
+        
+            typedef Part< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddCylinder_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::DimensionalChastePoint< 3 >,unsigned int ) ;
+            
+            Part3_exposer.def( 
+                "AddCylinder"
+                , AddCylinder_function_type( &::Part< 3 >::AddCylinder )
+                , ( bp::arg("radius"), bp::arg("depth"), bp::arg("centre"), bp::arg("numSegments")=(unsigned int)(24) ) );
+        
+        }
+        { //::Part< 3 >::AddHoleMarker
+        
+            typedef Part< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddHoleMarker_function_type)( ::DimensionalChastePoint< 3 > ) ;
+            
+            Part3_exposer.def( 
+                "AddHoleMarker"
+                , AddHoleMarker_function_type( &::Part< 3 >::AddHoleMarker )
+                , ( bp::arg("location") ) );
+        
+        }
+        { //::Part< 3 >::AddPolygon
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< Polygon< 3 > > ( exported_class_t::*AddPolygon_function_type)( ::std::vector< boost::shared_ptr<DimensionalChastePoint<3> > >,bool,::boost::shared_ptr< Facet< 3 > > ) ;
+            
+            Part3_exposer.def( 
+                "AddPolygon"
+                , AddPolygon_function_type( &::Part< 3 >::AddPolygon )
+                , ( bp::arg("vertices"), bp::arg("newFacet")=(bool)(false), bp::arg("pFacet")=boost::shared_ptr<Facet<DIM> >() ) );
+        
+        }
+        { //::Part< 3 >::AddPolygon
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< Polygon< 3 > > ( exported_class_t::*AddPolygon_function_type)( ::boost::shared_ptr< Polygon< 3 > >,bool,::boost::shared_ptr< Facet< 3 > > ) ;
+            
+            Part3_exposer.def( 
+                "AddPolygon"
+                , AddPolygon_function_type( &::Part< 3 >::AddPolygon )
+                , ( bp::arg("pPolygon"), bp::arg("newFacet")=(bool)(false), bp::arg("pFacet")=boost::shared_ptr<Facet<DIM> >() ) );
+        
+        }
+        { //::Part< 3 >::AddRectangle
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< Polygon< 3 > > ( exported_class_t::*AddRectangle_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::DimensionalChastePoint< 3 > ) ;
+            
+            Part3_exposer.def( 
+                "AddRectangle"
+                , AddRectangle_function_type( &::Part< 3 >::AddRectangle )
+                , ( bp::arg("sizeX"), bp::arg("sizeY"), bp::arg("origin") ) );
+        
+        }
+        { //::Part< 3 >::AddVesselNetwork
+        
+            typedef Part< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddVesselNetwork_function_type)( ::boost::shared_ptr< VesselNetwork< 3 > >,bool ) ;
+            
+            Part3_exposer.def( 
+                "AddVesselNetwork"
+                , AddVesselNetwork_function_type( &::Part< 3 >::AddVesselNetwork )
+                , ( bp::arg("pVesselNetwork"), bp::arg("surface")=(bool)(false) ) );
+        
+        }
+        { //::Part< 3 >::BooleanWithNetwork
+        
+            typedef Part< 3 > exported_class_t;
+            typedef void ( exported_class_t::*BooleanWithNetwork_function_type)( ::boost::shared_ptr< VesselNetwork< 3 > > ) ;
+            
+            Part3_exposer.def( 
+                "BooleanWithNetwork"
+                , BooleanWithNetwork_function_type( &::Part< 3 >::BooleanWithNetwork )
+                , ( bp::arg("pVesselNetwork") ) );
+        
+        }
+        { //::Part< 3 >::Create
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< Part< 3 > > ( *Create_function_type )(  );
+            
+            Part3_exposer.def( 
+                "Create"
+                , Create_function_type( &::Part< 3 >::Create ) );
+        
+        }
+        { //::Part< 3 >::Extrude
+        
+            typedef Part< 3 > exported_class_t;
+            typedef void ( exported_class_t::*Extrude_function_type)( ::boost::shared_ptr< Polygon< 3 > >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            Part3_exposer.def( 
+                "Extrude"
+                , Extrude_function_type( &::Part< 3 >::Extrude )
+                , ( bp::arg("pPolygon"), bp::arg("distance") ) );
+        
+        }
+        { //::Part< 3 >::GetBoundingBox
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetBoundingBox_function_type)(  ) ;
+            
+            Part3_exposer.def( 
+                "GetBoundingBox"
+                , GetBoundingBox_function_type( &::Part< 3 >::GetBoundingBox ) );
+        
+        }
+        { //::Part< 3 >::GetContainingGridIndices
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::std::vector< unsigned int > ( exported_class_t::*GetContainingGridIndices_function_type)( unsigned int,unsigned int,unsigned int,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            Part3_exposer.def( 
+                "GetContainingGridIndices"
+                , GetContainingGridIndices_function_type( &::Part< 3 >::GetContainingGridIndices )
+                , ( bp::arg("num_x"), bp::arg("num_y"), bp::arg("num_z"), bp::arg("spacing") ) );
+        
+        }
+        { //::Part< 3 >::GetFacet
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< Facet< 3 > > ( exported_class_t::*GetFacet_function_type)( ::DimensionalChastePoint< 3 > const & ) ;
+            
+            Part3_exposer.def( 
+                "GetFacet"
+                , GetFacet_function_type( &::Part< 3 >::GetFacet )
+                , ( bp::arg("rLocation") ) );
+        
+        }
+        { //::Part< 3 >::GetFacets
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<Facet<3> > > ( exported_class_t::*GetFacets_function_type)(  ) ;
+            
+            Part3_exposer.def( 
+                "GetFacets"
+                , GetFacets_function_type( &::Part< 3 >::GetFacets ) );
+        
+        }
+        { //::Part< 3 >::GetHoleMarkers
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::std::vector< DimensionalChastePoint<3> > ( exported_class_t::*GetHoleMarkers_function_type)(  ) ;
+            
+            Part3_exposer.def( 
+                "GetHoleMarkers"
+                , GetHoleMarkers_function_type( &::Part< 3 >::GetHoleMarkers ) );
+        
+        }
+        { //::Part< 3 >::GetPolygons
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<Polygon<3> > > ( exported_class_t::*GetPolygons_function_type)(  ) ;
+            
+            Part3_exposer.def( 
+                "GetPolygons"
+                , GetPolygons_function_type( &::Part< 3 >::GetPolygons ) );
+        
+        }
+        { //::Part< 3 >::GetReferenceLengthScale
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetReferenceLengthScale_function_type)(  ) ;
+            
+            Part3_exposer.def( 
+                "GetReferenceLengthScale"
+                , GetReferenceLengthScale_function_type( &::Part< 3 >::GetReferenceLengthScale ) );
+        
+        }
+        { //::Part< 3 >::GetSegmentIndices
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::std::vector< std::pair<unsigned int, unsigned int> > ( exported_class_t::*GetSegmentIndices_function_type)(  ) ;
+            
+            Part3_exposer.def( 
+                "GetSegmentIndices"
+                , GetSegmentIndices_function_type( &::Part< 3 >::GetSegmentIndices ) );
+        
+        }
+        { //::Part< 3 >::GetVertexLocations
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::std::vector< DimensionalChastePoint<3> > ( exported_class_t::*GetVertexLocations_function_type)(  ) ;
+            
+            Part3_exposer.def( 
+                "GetVertexLocations"
+                , GetVertexLocations_function_type( &::Part< 3 >::GetVertexLocations ) );
+        
+        }
+        { //::Part< 3 >::GetVertices
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > ( exported_class_t::*GetVertices_function_type)(  ) ;
+            
+            Part3_exposer.def( 
+                "GetVertices"
+                , GetVertices_function_type( &::Part< 3 >::GetVertices ) );
+        
+        }
+        { //::Part< 3 >::GetVtk
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::vtkSmartPointer< vtkPolyData > ( exported_class_t::*GetVtk_function_type)(  ) ;
+            
+            Part3_exposer.def( 
+                "GetVtk"
+                , GetVtk_function_type( &::Part< 3 >::GetVtk ) );
+        
+        }
+        { //::Part< 3 >::IsPointInPart
+        
+            typedef Part< 3 > exported_class_t;
+            typedef bool ( exported_class_t::*IsPointInPart_function_type)( ::DimensionalChastePoint< 3 > ) ;
+            
+            Part3_exposer.def( 
+                "IsPointInPart"
+                , IsPointInPart_function_type( &::Part< 3 >::IsPointInPart )
+                , ( bp::arg("location") ) );
+        
+        }
+        { //::Part< 3 >::IsPointInPart
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::std::vector< bool > ( exported_class_t::*IsPointInPart_function_type)( ::std::vector< DimensionalChastePoint<3> > const & ) ;
+            
+            Part3_exposer.def( 
+                "IsPointInPart"
+                , IsPointInPart_function_type( &::Part< 3 >::IsPointInPart )
+                , ( bp::arg("location") ) );
+        
+        }
+        { //::Part< 3 >::MergeCoincidentVertices
+        
+            typedef Part< 3 > exported_class_t;
+            typedef void ( exported_class_t::*MergeCoincidentVertices_function_type)(  ) ;
+            
+            Part3_exposer.def( 
+                "MergeCoincidentVertices"
+                , MergeCoincidentVertices_function_type( &::Part< 3 >::MergeCoincidentVertices ) );
+        
+        }
+        { //::Part< 3 >::SetReferenceLengthScale
+        
+            typedef Part< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetReferenceLengthScale_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            Part3_exposer.def( 
+                "SetReferenceLengthScale"
+                , SetReferenceLengthScale_function_type( &::Part< 3 >::SetReferenceLengthScale )
+                , ( bp::arg("referenceLength") ) );
+        
+        }
+        { //::Part< 3 >::Translate
+        
+            typedef Part< 3 > exported_class_t;
+            typedef void ( exported_class_t::*Translate_function_type)( ::DimensionalChastePoint< 3 > ) ;
+            
+            Part3_exposer.def( 
+                "Translate"
+                , Translate_function_type( &::Part< 3 >::Translate )
+                , ( bp::arg("vector") ) );
+        
+        }
+        { //::Part< 3 >::Write
+        
+            typedef Part< 3 > exported_class_t;
+            typedef void ( exported_class_t::*Write_function_type)( ::std::string const &,::GeometryFormat::Value ) ;
+            
+            Part3_exposer.def( 
+                "Write"
+                , Write_function_type( &::Part< 3 >::Write )
+                , ( bp::arg("rFilename"), bp::arg("format")=GeometryFormat::Value::VTP ) );
+        
+        }
+        Part3_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< Part<3> > >();
+    }
+
+    { //::Polygon< 2 >
+        typedef bp::class_< Polygon< 2 > > Polygon2_exposer_t;
+        Polygon2_exposer_t Polygon2_exposer = Polygon2_exposer_t( "Polygon2", bp::init< std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > >(( bp::arg("vertices") )) );
+        bp::scope Polygon2_scope( Polygon2_exposer );
+        bp::implicitly_convertible< std::vector< boost::shared_ptr<DimensionalChastePoint<2> > >, Polygon< 2 > >();
+        Polygon2_exposer.def( bp::init< boost::shared_ptr< DimensionalChastePoint< 2 > > >(( bp::arg("pVertex") )) );
+        bp::implicitly_convertible< boost::shared_ptr< DimensionalChastePoint< 2 > >, Polygon< 2 > >();
+        { //::Polygon< 2 >::AddVertex
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AddVertex_function_type)( ::boost::shared_ptr< DimensionalChastePoint< 2 > > ) ;
+            
+            Polygon2_exposer.def( 
+                "AddVertex"
+                , AddVertex_function_type( &::Polygon< 2 >::AddVertex )
+                , ( bp::arg("pVertex") ) );
+        
+        }
+        { //::Polygon< 2 >::AddVertices
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AddVertices_function_type)( ::std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > ) ;
+            
+            Polygon2_exposer.def( 
+                "AddVertices"
+                , AddVertices_function_type( &::Polygon< 2 >::AddVertices )
+                , ( bp::arg("vertices") ) );
+        
+        }
+        { //::Polygon< 2 >::ContainsPoint
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef bool ( exported_class_t::*ContainsPoint_function_type)( ::DimensionalChastePoint< 2 > const & ) ;
+            
+            Polygon2_exposer.def( 
+                "ContainsPoint"
+                , ContainsPoint_function_type( &::Polygon< 2 >::ContainsPoint )
+                , ( bp::arg("rLocation") ) );
+        
+        }
+        { //::Polygon< 2 >::Create
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< Polygon< 2 > > ( *Create_function_type )( ::std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > );
+            
+            Polygon2_exposer.def( 
+                "Create"
+                , Create_function_type( &::Polygon< 2 >::Create )
+                , ( bp::arg("vertices") ) );
+        
+        }
+        { //::Polygon< 2 >::Create
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< Polygon< 2 > > ( *Create_function_type )( ::boost::shared_ptr< DimensionalChastePoint< 2 > > );
+            
+            Polygon2_exposer.def( 
+                "Create"
+                , Create_function_type( &::Polygon< 2 >::Create )
+                , ( bp::arg("pVertex") ) );
+        
+        }
+        { //::Polygon< 2 >::GetBoundingBox
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetBoundingBox_function_type)(  ) ;
+            
+            Polygon2_exposer.def( 
+                "GetBoundingBox"
+                , GetBoundingBox_function_type( &::Polygon< 2 >::GetBoundingBox ) );
+        
+        }
+        { //::Polygon< 2 >::GetCentroid
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef ::DimensionalChastePoint< 2 > ( exported_class_t::*GetCentroid_function_type)(  ) ;
+            
+            Polygon2_exposer.def( 
+                "GetCentroid"
+                , GetCentroid_function_type( &::Polygon< 2 >::GetCentroid ) );
+        
+        }
+        { //::Polygon< 2 >::GetDistance
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetDistance_function_type)( ::DimensionalChastePoint< 2 > const & ) ;
+            
+            Polygon2_exposer.def( 
+                "GetDistance"
+                , GetDistance_function_type( &::Polygon< 2 >::GetDistance )
+                , ( bp::arg("rLocation") ) );
+        
+        }
+        { //::Polygon< 2 >::GetDistanceToEdges
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetDistanceToEdges_function_type)( ::DimensionalChastePoint< 2 > const & ) ;
+            
+            Polygon2_exposer.def( 
+                "GetDistanceToEdges"
+                , GetDistanceToEdges_function_type( &::Polygon< 2 >::GetDistanceToEdges )
+                , ( bp::arg("rLocation") ) );
+        
+        }
+        { //::Polygon< 2 >::GetNormal
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef ::boost::numeric::ublas::c_vector< double, 2 > ( exported_class_t::*GetNormal_function_type)(  ) ;
+            
+            Polygon2_exposer.def( 
+                "GetNormal"
+                , GetNormal_function_type( &::Polygon< 2 >::GetNormal ) );
+        
+        }
+        { //::Polygon< 2 >::GetPlane
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef ::vtkSmartPointer< vtkPlane > ( exported_class_t::*GetPlane_function_type)(  ) ;
+            
+            Polygon2_exposer.def( 
+                "GetPlane"
+                , GetPlane_function_type( &::Polygon< 2 >::GetPlane ) );
+        
+        }
+        { //::Polygon< 2 >::GetVertex
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< DimensionalChastePoint< 2 > > ( exported_class_t::*GetVertex_function_type)( unsigned int ) ;
+            
+            Polygon2_exposer.def( 
+                "GetVertex"
+                , GetVertex_function_type( &::Polygon< 2 >::GetVertex )
+                , ( bp::arg("idx") ) );
+        
+        }
+        { //::Polygon< 2 >::GetVertices
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > ( exported_class_t::*GetVertices_function_type)(  ) ;
+            
+            Polygon2_exposer.def( 
+                "GetVertices"
+                , GetVertices_function_type( &::Polygon< 2 >::GetVertices ) );
+        
+        }
+        { //::Polygon< 2 >::GetVtkPolygon
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef ::vtkSmartPointer< vtkPolygon > ( exported_class_t::*GetVtkPolygon_function_type)(  ) ;
+            
+            Polygon2_exposer.def( 
+                "GetVtkPolygon"
+                , GetVtkPolygon_function_type( &::Polygon< 2 >::GetVtkPolygon ) );
+        
+        }
+        { //::Polygon< 2 >::GetVtkVertices
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef ::std::pair< vtkSmartPointer< vtkPoints >, vtkSmartPointer< vtkIdTypeArray > > ( exported_class_t::*GetVtkVertices_function_type)(  ) ;
+            
+            Polygon2_exposer.def( 
+                "GetVtkVertices"
+                , GetVtkVertices_function_type( &::Polygon< 2 >::GetVtkVertices ) );
+        
+        }
+        { //::Polygon< 2 >::ReplaceVertex
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef void ( exported_class_t::*ReplaceVertex_function_type)( unsigned int,::boost::shared_ptr< DimensionalChastePoint< 2 > > ) ;
+            
+            Polygon2_exposer.def( 
+                "ReplaceVertex"
+                , ReplaceVertex_function_type( &::Polygon< 2 >::ReplaceVertex )
+                , ( bp::arg("idx"), bp::arg("pVertex") ) );
+        
+        }
+        { //::Polygon< 2 >::RotateAboutAxis
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef void ( exported_class_t::*RotateAboutAxis_function_type)( ::boost::numeric::ublas::c_vector< double, 3 >,double ) ;
+            
+            Polygon2_exposer.def( 
+                "RotateAboutAxis"
+                , RotateAboutAxis_function_type( &::Polygon< 2 >::RotateAboutAxis )
+                , ( bp::arg("axis"), bp::arg("angle") ) );
+        
+        }
+        { //::Polygon< 2 >::Translate
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef void ( exported_class_t::*Translate_function_type)( ::DimensionalChastePoint< 2 > ) ;
+            
+            Polygon2_exposer.def( 
+                "Translate"
+                , Translate_function_type( &::Polygon< 2 >::Translate )
+                , ( bp::arg("translationVector") ) );
+        
+        }
+        Polygon2_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< Polygon<2> > >();
+    }
+
+    { //::Polygon< 3 >
+        typedef bp::class_< Polygon< 3 > > Polygon3_exposer_t;
+        Polygon3_exposer_t Polygon3_exposer = Polygon3_exposer_t( "Polygon3", bp::init< std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > >(( bp::arg("vertices") )) );
+        bp::scope Polygon3_scope( Polygon3_exposer );
+        bp::implicitly_convertible< std::vector< boost::shared_ptr<DimensionalChastePoint<3> > >, Polygon< 3 > >();
+        Polygon3_exposer.def( bp::init< boost::shared_ptr< DimensionalChastePoint< 3 > > >(( bp::arg("pVertex") )) );
+        bp::implicitly_convertible< boost::shared_ptr< DimensionalChastePoint< 3 > >, Polygon< 3 > >();
+        { //::Polygon< 3 >::AddVertex
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddVertex_function_type)( ::boost::shared_ptr< DimensionalChastePoint< 3 > > ) ;
+            
+            Polygon3_exposer.def( 
+                "AddVertex"
+                , AddVertex_function_type( &::Polygon< 3 >::AddVertex )
+                , ( bp::arg("pVertex") ) );
+        
+        }
+        { //::Polygon< 3 >::AddVertices
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddVertices_function_type)( ::std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > ) ;
+            
+            Polygon3_exposer.def( 
+                "AddVertices"
+                , AddVertices_function_type( &::Polygon< 3 >::AddVertices )
+                , ( bp::arg("vertices") ) );
+        
+        }
+        { //::Polygon< 3 >::ContainsPoint
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef bool ( exported_class_t::*ContainsPoint_function_type)( ::DimensionalChastePoint< 3 > const & ) ;
+            
+            Polygon3_exposer.def( 
+                "ContainsPoint"
+                , ContainsPoint_function_type( &::Polygon< 3 >::ContainsPoint )
+                , ( bp::arg("rLocation") ) );
+        
+        }
+        { //::Polygon< 3 >::Create
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< Polygon< 3 > > ( *Create_function_type )( ::std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > );
+            
+            Polygon3_exposer.def( 
+                "Create"
+                , Create_function_type( &::Polygon< 3 >::Create )
+                , ( bp::arg("vertices") ) );
+        
+        }
+        { //::Polygon< 3 >::Create
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< Polygon< 3 > > ( *Create_function_type )( ::boost::shared_ptr< DimensionalChastePoint< 3 > > );
+            
+            Polygon3_exposer.def( 
+                "Create"
+                , Create_function_type( &::Polygon< 3 >::Create )
+                , ( bp::arg("pVertex") ) );
+        
+        }
+        { //::Polygon< 3 >::GetBoundingBox
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetBoundingBox_function_type)(  ) ;
+            
+            Polygon3_exposer.def( 
+                "GetBoundingBox"
+                , GetBoundingBox_function_type( &::Polygon< 3 >::GetBoundingBox ) );
+        
+        }
+        { //::Polygon< 3 >::GetCentroid
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef ::DimensionalChastePoint< 3 > ( exported_class_t::*GetCentroid_function_type)(  ) ;
+            
+            Polygon3_exposer.def( 
+                "GetCentroid"
+                , GetCentroid_function_type( &::Polygon< 3 >::GetCentroid ) );
+        
+        }
+        { //::Polygon< 3 >::GetDistance
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetDistance_function_type)( ::DimensionalChastePoint< 3 > const & ) ;
+            
+            Polygon3_exposer.def( 
+                "GetDistance"
+                , GetDistance_function_type( &::Polygon< 3 >::GetDistance )
+                , ( bp::arg("rLocation") ) );
+        
+        }
+        { //::Polygon< 3 >::GetDistanceToEdges
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetDistanceToEdges_function_type)( ::DimensionalChastePoint< 3 > const & ) ;
+            
+            Polygon3_exposer.def( 
+                "GetDistanceToEdges"
+                , GetDistanceToEdges_function_type( &::Polygon< 3 >::GetDistanceToEdges )
+                , ( bp::arg("rLocation") ) );
+        
+        }
+        { //::Polygon< 3 >::GetNormal
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef ::boost::numeric::ublas::c_vector< double, 3 > ( exported_class_t::*GetNormal_function_type)(  ) ;
+            
+            Polygon3_exposer.def( 
+                "GetNormal"
+                , GetNormal_function_type( &::Polygon< 3 >::GetNormal ) );
+        
+        }
+        { //::Polygon< 3 >::GetPlane
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef ::vtkSmartPointer< vtkPlane > ( exported_class_t::*GetPlane_function_type)(  ) ;
+            
+            Polygon3_exposer.def( 
+                "GetPlane"
+                , GetPlane_function_type( &::Polygon< 3 >::GetPlane ) );
+        
+        }
+        { //::Polygon< 3 >::GetVertex
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< DimensionalChastePoint< 3 > > ( exported_class_t::*GetVertex_function_type)( unsigned int ) ;
+            
+            Polygon3_exposer.def( 
+                "GetVertex"
+                , GetVertex_function_type( &::Polygon< 3 >::GetVertex )
+                , ( bp::arg("idx") ) );
+        
+        }
+        { //::Polygon< 3 >::GetVertices
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > ( exported_class_t::*GetVertices_function_type)(  ) ;
+            
+            Polygon3_exposer.def( 
+                "GetVertices"
+                , GetVertices_function_type( &::Polygon< 3 >::GetVertices ) );
+        
+        }
+        { //::Polygon< 3 >::GetVtkPolygon
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef ::vtkSmartPointer< vtkPolygon > ( exported_class_t::*GetVtkPolygon_function_type)(  ) ;
+            
+            Polygon3_exposer.def( 
+                "GetVtkPolygon"
+                , GetVtkPolygon_function_type( &::Polygon< 3 >::GetVtkPolygon ) );
+        
+        }
+        { //::Polygon< 3 >::GetVtkVertices
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef ::std::pair< vtkSmartPointer< vtkPoints >, vtkSmartPointer< vtkIdTypeArray > > ( exported_class_t::*GetVtkVertices_function_type)(  ) ;
+            
+            Polygon3_exposer.def( 
+                "GetVtkVertices"
+                , GetVtkVertices_function_type( &::Polygon< 3 >::GetVtkVertices ) );
+        
+        }
+        { //::Polygon< 3 >::ReplaceVertex
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef void ( exported_class_t::*ReplaceVertex_function_type)( unsigned int,::boost::shared_ptr< DimensionalChastePoint< 3 > > ) ;
+            
+            Polygon3_exposer.def( 
+                "ReplaceVertex"
+                , ReplaceVertex_function_type( &::Polygon< 3 >::ReplaceVertex )
+                , ( bp::arg("idx"), bp::arg("pVertex") ) );
+        
+        }
+        { //::Polygon< 3 >::RotateAboutAxis
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef void ( exported_class_t::*RotateAboutAxis_function_type)( ::boost::numeric::ublas::c_vector< double, 3 >,double ) ;
+            
+            Polygon3_exposer.def( 
+                "RotateAboutAxis"
+                , RotateAboutAxis_function_type( &::Polygon< 3 >::RotateAboutAxis )
+                , ( bp::arg("axis"), bp::arg("angle") ) );
+        
+        }
+        { //::Polygon< 3 >::Translate
+        
+            typedef Polygon< 3 > exported_class_t;
+            typedef void ( exported_class_t::*Translate_function_type)( ::DimensionalChastePoint< 3 > ) ;
+            
+            Polygon3_exposer.def( 
+                "Translate"
+                , Translate_function_type( &::Polygon< 3 >::Translate )
+                , ( bp::arg("translationVector") ) );
+        
+        }
+        Polygon3_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< Polygon<3> > >();
     }
 }

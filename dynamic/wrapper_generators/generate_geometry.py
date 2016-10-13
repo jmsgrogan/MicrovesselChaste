@@ -11,10 +11,13 @@ import generate_bindings
 
 def update_builder(builder):
 
-    include_classes = ["Vertex"] 
-#                       "Facet", 
-#                       "Polygon", 
-#                       "Part<3>"]
+    include_classes = ["Facet<3>", 
+                       "Polygon<3>", 
+                       "Part<3>",
+                       "Facet<2>", 
+                       "Polygon<2>", 
+                       "Part<2>"
+                       "GeometryFormat"]
 
     for eachClass in include_classes:
         builder.class_(eachClass).include()  

@@ -14,6 +14,8 @@ population/vessel/TestVessel.hpp
 population/vessel/TestVesselNetwork.hpp
 population/vessel/calculators/TestVesselNetworkGraphCalculator.hpp
 population/vessel/calculators/TestVesselNetworkGeometryCalculator.hpp
+population/vessel/calculators/TestDistanceMap.hpp
+population/vessel/calculators/TestDensityMap.hpp
 population/vessel/generators/TestVesselNetworkGenerator.hpp
 population/vessel/readers/TestVesselNetworkReader.hpp
 population/vessel/writers/TestVesselNetworkWriter.hpp
@@ -21,7 +23,8 @@ population/TestVesselNetworkCellPopulationInteractor.hpp
 geometry/TestPolygon.hpp
 geometry/TestFacet.hpp
 geometry/TestPart.hpp
-geometry/TestGeometryTools.hpp
+geometry/tools/TestGeometryTools.hpp
+geometry/tools/TestSurfaceTools.hpp
 geometry/generators/TestMappableGridGenerator.hpp
 geometry/generators/TestVesselSurfaceGenerator.hpp
 geometry/generators/TestVoronoiGenerator.hpp
@@ -30,8 +33,7 @@ mesh/TestDimensionalChastePoint.hpp
 mesh/TestRegularGrid.hpp
 mesh/TestRegularGridWriter.hpp
 mesh/TestDiscreteContinuumMesh.hpp
-mesh/utilities/TestDistanceMap.hpp
-mesh/utilities/TestDensityMap.hpp
+mesh/TestMeshReaderAndWriter.hpp
 pde/TestFiniteDifferenceSolver.hpp
 pde/TestNonLinearFiniteDifferenceSolver.hpp
 pde/TestGreensFunctionSolver.hpp
@@ -59,6 +61,10 @@ simulation/angiogenesis/TestRegressionSolver.hpp
 simulation/angiogenesis/TestAngiogenesisWithCaPopulation.hpp
 simulation/TestMicrovesselSimulationModifier.hpp
 simulation/TestMicrovesselSolver.hpp
+image/TestImageReaderAndWriter.hpp
+image/TestImageToMesh.hpp
+image/TestImageToSurface.hpp
+image/TestNetworkToImage.hpp
 tutorials/TestLatticeBasedAngiogenesisLiteratePaper.hpp
 tutorials/TestOffLatticeAngiogenesisLiteratePaper.hpp
 tutorials/TestBuildVesselNetworkLiteratePaper.hpp

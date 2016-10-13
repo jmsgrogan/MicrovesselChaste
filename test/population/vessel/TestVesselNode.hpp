@@ -165,9 +165,9 @@ public:
             boost::shared_ptr<VesselNode<3> > p_node = boost::shared_ptr<VesselNode<3> >(new VesselNode<3>(1.0, 2.0, 3.0, 5.0*unit::metres));
 
             boost::shared_ptr<AbstractVesselNetworkComponent<3> > p_cast_node = boost::static_pointer_cast<AbstractVesselNetworkComponent<3> >(p_node);
-            TS_ASSERT_DELTA(p_node->rGetLocation().GetLocation(1.e-6*unit::metres)[0], 1.0, 1.e-6);
-            TS_ASSERT_DELTA(p_node->rGetLocation().GetLocation(1.e-6*unit::metres)[1], 2.0, 1.e-6);
-            TS_ASSERT_DELTA(p_node->rGetLocation().GetLocation(1.e-6*unit::metres)[2], 3.0, 1.e-6);
+            TS_ASSERT_DELTA(p_node->rGetLocation().GetLocation(5.0*unit::metres)[0], 1.0, 1.e-6);
+            TS_ASSERT_DELTA(p_node->rGetLocation().GetLocation(5.0*unit::metres)[1], 2.0, 1.e-6);
+            TS_ASSERT_DELTA(p_node->rGetLocation().GetLocation(5.0*unit::metres)[2], 3.0, 1.e-6);
 
             std::ofstream ofs(archive_filename.c_str());
             boost::archive::text_oarchive output_arch(ofs);
@@ -185,11 +185,9 @@ public:
             // restore from the archive
             input_arch >> p_node_from_archive;
             boost::shared_ptr<VesselNode<3> > p_cast_node = boost::static_pointer_cast<VesselNode<3> >(p_node_from_archive);
-
-            std::cout << p_cast_node->rGetLocation().GetLocation(1.e-6*unit::metres) << std::endl;
-            TS_ASSERT_DELTA(p_cast_node->rGetLocation().GetLocation(1.e-6*unit::metres)[0], 1.0, 1.e-6);
-            TS_ASSERT_DELTA(p_cast_node->rGetLocation().GetLocation(1.e-6*unit::metres)[1], 2.0, 1.e-6);
-            TS_ASSERT_DELTA(p_cast_node->rGetLocation().GetLocation(1.e-6*unit::metres)[2], 3.0, 1.e-6);
+            TS_ASSERT_DELTA(p_cast_node->rGetLocation().GetLocation(5.0*unit::metres)[0], 1.0, 1.e-6);
+            TS_ASSERT_DELTA(p_cast_node->rGetLocation().GetLocation(5.0*unit::metres)[1], 2.0, 1.e-6);
+            TS_ASSERT_DELTA(p_cast_node->rGetLocation().GetLocation(5.0*unit::metres)[2], 3.0, 1.e-6);
         }
     }
 };

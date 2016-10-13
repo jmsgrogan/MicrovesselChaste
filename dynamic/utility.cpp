@@ -65,7 +65,7 @@ struct ParameterCollection_wrapper : ParameterCollection, bp::wrapper< Parameter
 
 };
 
-BOOST_PYTHON_MODULE(_chaste_project_Microvessel_utility){
+BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
     { //::BaseParameterInstance
         typedef bp::class_< BaseParameterInstance_wrapper > BaseParameterInstance_exposer_t;
         BaseParameterInstance_exposer_t BaseParameterInstance_exposer = BaseParameterInstance_exposer_t( "BaseParameterInstance", bp::init< >() );
