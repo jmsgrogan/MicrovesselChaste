@@ -33,50 +33,56 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef TESTIMAGETOSURFACE_HPP_
-#define TESTIMAGETOSURFACE_HPP_
+#ifndef TESTVTKSCENE_HPP_
+#define TESTVTKSCENE_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include "SmartPointers.hpp"
-#include <vtkXMLPolyDataReader.h>
-#include <vtkSmartPointer.h>
-#include "BoundaryExtractor.hpp"
-#include "GeometryWriter.hpp"
+#include "VtkScene.hpp"
 #include "FileFinder.hpp"
 #include "OutputFileHandler.hpp"
-#include "UnitCollection.hpp"
+#include "Part.hpp"
+#include "RegularGrid.hpp"
+#include "DiscreteContinuumMesh.hpp"
+#include "DiscreteContinuumMeshGenerator.hpp"
+#include "VesselNetworkGenerator.hpp"
+#include "VesselNetwork.hpp"
 
-class TestSurfaceTools : public CxxTest::TestSuite
+class TestVtkScene : public CxxTest::TestSuite
 {
 public:
 
-    void TestExtractBoundary()
+    void TestSimpleRendering()
     {
-
         // Read the image from file
-        OutputFileHandler file_handler1 = OutputFileHandler("TestSurfaceTools/");
-        FileFinder finder = FileFinder("projects/MicrovesselChaste/test/data/surface.vtp", RelativeTo::ChasteSourceRoot);
+        OutputFileHandler file_handler1 = OutputFileHandler("TestVtkScene/");
+        boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
+        p_part->AddCuboid(100.e-6*unit::metres, 100.e-6*unit::metres, 100.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1.e-6*unit::metres));
 
-        vtkSmartPointer<vtkXMLPolyDataReader> p_reader = vtkSmartPointer<vtkXMLPolyDataReader>::New();
-        p_reader->SetFileName(finder.GetAbsolutePath().c_str());
-        p_reader->Update();
+        // Specify the network dimensions
+        units::quantity<unit::length> vessel_length = 40.0* 1.e-6 * unit::metres;
 
-        BoundaryExtractor extractor;
-        extractor.SetInput(p_reader->GetOutput());
-        extractor.SetDoSmoothing(false);
-        extractor.Update();
+        // Generate the network
+        VesselNetworkGenerator<3> vascular_network_generator;
+        boost::shared_ptr<VesselNetwork<3> > p_network = vascular_network_generator.GenerateHexagonalUnit(vessel_length);
 
-        boost::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
-        p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"boundary.vtp").c_str());
-        p_writer->SetInput(extractor.GetOutput());
-        p_writer->Write();
+        // Generate a grid
+        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        std::vector<unsigned> extents(3, 1);
+        extents[0] = 100;
+        extents[1] = 100;
+        p_grid->SetExtents(extents);
 
-        extractor.SetDoSmoothing(true);
-        extractor.SetSmoothingLength(200.0);
-        extractor.Update();
-        p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"boundary_smoothed.vtp").c_str());
-        p_writer->SetInput(extractor.GetOutput());
-        p_writer->Write();
+        VtkScene<3> scene1;
+        scene1.SetVesselNetwork(p_network);
+        scene1.SetRegularGrid(p_grid);
+        scene1.Show();
+
+        VtkScene<3> scene2;
+        scene2.SetOutputFilePath(file_handler1.GetOutputDirectoryFullPath() + "scene.png");
+        scene2.SetPart(p_part);
+        scene2.SetVesselNetwork(p_network);
+        scene2.Show(false);
     }
 };
 #endif

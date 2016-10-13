@@ -145,7 +145,7 @@ public:
      * @param rLocation the division location
      * @return the node at the division location
      */
-    boost::shared_ptr<VesselNode<DIM> > DivideVessel(boost::shared_ptr<Vessel<DIM> > pVessel,
+    virtual boost::shared_ptr<VesselNode<DIM> > DivideVessel(boost::shared_ptr<Vessel<DIM> > pVessel,
                                                      const DimensionalChastePoint<DIM>& rLocation);
 
     /**
@@ -154,7 +154,7 @@ public:
      * @param pEndNode the node that the new segment will start on, should already be on the end of the vessel
      * @param pNewNode the new node to be added to the end of the vessel
      */
-    void ExtendVessel(boost::shared_ptr<Vessel<DIM> > pVessel, boost::shared_ptr<VesselNode<DIM> > pEndNode,
+    virtual void ExtendVessel(boost::shared_ptr<Vessel<DIM> > pVessel, boost::shared_ptr<VesselNode<DIM> > pEndNode,
                       boost::shared_ptr<VesselNode<DIM> > pNewNode);
 
     /**
@@ -163,7 +163,7 @@ public:
      * @param sproutTipLocation the sprout tip
      * @return the new sprout
      */
-    boost::shared_ptr<Vessel<DIM> > FormSprout(const DimensionalChastePoint<DIM>& sproutBaseLocation,
+    virtual boost::shared_ptr<Vessel<DIM> > FormSprout(const DimensionalChastePoint<DIM>& sproutBaseLocation,
                                                const DimensionalChastePoint<DIM>& sproutTipLocation);
 
     /**

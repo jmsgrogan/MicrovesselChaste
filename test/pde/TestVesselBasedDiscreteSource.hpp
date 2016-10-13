@@ -85,10 +85,10 @@ public:
         p_pde->SetContinuumConstantInUTerm(consumption_rate);
 
         // Set up the discrete source
-        boost::shared_ptr<DiscreteSource<3> > p_vessel_source_lin = DiscreteSource<3>::Create();
+        boost::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_source_lin = VesselBasedDiscreteSource<3>::Create();
         p_vessel_source_lin->SetLinearInUValue(-1.e3*unit::per_second);
 
-        boost::shared_ptr<DiscreteSource<3> > p_vessel_source_const = DiscreteSource<3>::Create();
+        boost::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_source_const = VesselBasedDiscreteSource<3>::Create();
         p_vessel_source_const->SetConstantInUValue(40.e3* unit::mole_per_metre_cubed_per_second);
 
         p_pde->AddDiscreteSource(p_vessel_source_lin);
@@ -100,7 +100,7 @@ public:
         solver.SetPde(p_pde);
         solver.SetVesselNetwork(p_network);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteSource/TestWithVessels", false));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestGridFunction", false));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();

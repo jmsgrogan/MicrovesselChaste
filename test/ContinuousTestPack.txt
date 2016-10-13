@@ -6,6 +6,7 @@ utility/TestParameterCollection.hpp
 utility/literature_parameters/TestGenericParameters.hpp
 utility/literature_parameters/TestOwen11Parameters.hpp
 utility/TestMicrovesselParallelMethods.hpp
+utility/visualization/TestVtkScene.hpp
 population/vessel/properties/TestNodeFlowProperties.hpp
 population/vessel/properties/TestSegmentFlowProperties.hpp
 population/vessel/TestVesselNode.hpp
