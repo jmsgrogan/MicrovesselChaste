@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -51,9 +51,9 @@
 #include <vtkProbeFilter.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkWindowedSincPolyDataFilter.h>
-#include <vtkvmtkSimpleCapPolyData.h>
-#include <vtkvmtkPolyDataSizingFunction.h>
-#include <vtkvmtkPolyDataToUnstructuredGridFilter.h>
+//#include <vtkvmtkSimpleCapPolyData.h>
+//#include <vtkvmtkPolyDataSizingFunction.h>
+//#include <vtkvmtkPolyDataToUnstructuredGridFilter.h>
 #include "UblasCustomFunctions.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
@@ -61,10 +61,11 @@
 template<unsigned DIM>
 NetworkToSurface<DIM>::NetworkToSurface() :
     mpNetwork(),
-    mSamplingGridSpacing(2.0),
-    mSplineResamplingLength(10.0),
+    mSamplingGridSpacing(2.0 * 1.e-6 * unit::metres),
+    mSplineResamplingLength(10.0 * 1.e-6 * unit::metres),
     mpSurface(),
-    mpImage()
+    mpImage(),
+    mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
 {
 
 }
@@ -101,13 +102,13 @@ void NetworkToSurface<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM
 }
 
 template<unsigned DIM>
-void NetworkToSurface<DIM>::SetResamplingSplineSize(double splineResampleSize)
+void NetworkToSurface<DIM>::SetResamplingSplineSize(units::quantity<unit::length> splineResampleSize)
 {
     mSplineResamplingLength = splineResampleSize;
 }
 
 template<unsigned DIM>
-void NetworkToSurface<DIM>::SetResamplingGridSize(double sampleGridSize)
+void NetworkToSurface<DIM>::SetResamplingGridSize(units::quantity<unit::length> sampleGridSize)
 {
     mSamplingGridSpacing = sampleGridSize;
 }
@@ -140,7 +141,7 @@ void NetworkToSurface<DIM>::Update()
 
         // Downsample and smooth the polyline
         vtkSmartPointer<vtkSplineFilter> p_spline= vtkSmartPointer<vtkSplineFilter>::New();
-        p_spline->SetLength(mSplineResamplingLength);
+        p_spline->SetLength(mSplineResamplingLength/mReferenceLength);
         p_spline->SetSubdivideToLength();
         p_spline->SetInputConnection(p_stripper->GetOutputPort());
 
@@ -158,18 +159,18 @@ void NetworkToSurface<DIM>::Update()
         {
             if(nodes[idx]->GetFlowProperties()->IsInputNode() or nodes[idx]->GetFlowProperties()->IsOutputNode())
             {
-                double radius = nodes[idx]->GetRadius()/nodes[idx]->GetReferenceLengthScale();
+                double radius = nodes[idx]->GetRadius()/mReferenceLength;
                 vtkSmartPointer<vtkBox> p_box = vtkSmartPointer<vtkBox>::New();
                 p_box->SetBounds(-1.1*radius, 0.0, -1.1*radius, 1.1*radius, - 1.1*radius, 1.1*radius);
 
                 c_vector<double, 3> loc;
-                loc[0]= nodes[idx]->rGetLocation()[0];
-                loc[1]= nodes[idx]->rGetLocation()[1];
+                loc[0]= nodes[idx]->rGetLocation().GetLocation(mReferenceLength)[0];
+                loc[1]= nodes[idx]->rGetLocation().GetLocation(mReferenceLength)[1];
                 loc[2]=0.0;
 
                 c_vector<double, 3> tangent;
-                tangent[0]= nodes[idx]->GetSegment(0)->GetOppositeNode(nodes[idx])->rGetLocation()[0] - loc[0];
-                tangent[1]= nodes[idx]->GetSegment(0)->GetOppositeNode(nodes[idx])->rGetLocation()[1] - loc[1];
+                tangent[0]= nodes[idx]->GetSegment(0)->GetOppositeNode(nodes[idx])->rGetLocation().GetLocation(mReferenceLength)[0] - loc[0];
+                tangent[1]= nodes[idx]->GetSegment(0)->GetOppositeNode(nodes[idx])->rGetLocation().GetLocation(mReferenceLength)[1] - loc[1];
                 tangent[2] = 0.0;
                 tangent /=norm_2(tangent);
 
@@ -259,9 +260,9 @@ void NetworkToSurface<DIM>::Update()
 
                 p_box->SetBounds(-1.1*radius, 0.0, -1.1*radius, 1.1*radius, - 1.1*radius, 1.1*radius);
 
-                c_vector<double, 3> loc = nodes[idx]->rGetLocation();
+                c_vector<double, 3> loc = nodes[idx]->rGetLocation().GetLocation(mReferenceLength);
                 c_vector<double, 3> tangent;
-                tangent = nodes[idx]->GetSegment(0)->GetOppositeNode(nodes[idx])->rGetLocation() - loc;
+                tangent = nodes[idx]->GetSegment(0)->GetOppositeNode(nodes[idx])->rGetLocation().GetLocation(mReferenceLength) - loc;
                 tangent /=norm_2(tangent);
 
                 double rotation_angle = std::acos(inner_prod(box_axis, tangent))*(180.0/M_PI);
@@ -288,14 +289,15 @@ void NetworkToSurface<DIM>::Update()
         }
 
         // Use vmtk to cap the surface
-        vtkSmartPointer<vtkvmtkSimpleCapPolyData> p_capper = vtkSmartPointer<vtkvmtkSimpleCapPolyData>::New();
-        p_capper->SetInputData(p_cleaned);
-        p_capper->SetCellEntityIdsArrayName("CellEntityIds");
-        p_capper->SetCellEntityIdOffset(1);
-        p_capper->Update();
+//        vtkSmartPointer<vtkvmtkSimpleCapPolyData> p_capper = vtkSmartPointer<vtkvmtkSimpleCapPolyData>::New();
+//        p_capper->SetInputData(p_cleaned);
+//        p_capper->SetCellEntityIdsArrayName("CellEntityIds");
+//        p_capper->SetCellEntityIdOffset(1);
+//        p_capper->Update();
 
         vtkSmartPointer<vtkPolyDataNormals> p_normals = vtkSmartPointer<vtkPolyDataNormals>::New();
-        p_normals->SetInputConnection(p_capper->GetOutputPort());
+//        p_normals->SetInputConnection(p_capper->GetOutputPort());
+        p_normals->SetInputData(p_cleaned);
         p_normals->AutoOrientNormalsOn();
         p_normals->SplittingOff();
         p_normals->ConsistencyOn();

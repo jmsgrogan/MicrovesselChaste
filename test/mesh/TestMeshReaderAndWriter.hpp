@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -51,7 +51,7 @@ public:
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestMeshReaderAndWriter/");
-        FileFinder finder = FileFinder("projects/MicrovascularTransport/test/data/bifurcation_mesh.vtu", RelativeTo::ChasteSourceRoot);
+        FileFinder finder = FileFinder("projects/MicrovesselChaste/test/data/bifurcation_mesh.vtu", RelativeTo::ChasteSourceRoot);
 
         // Read the file
         MeshReader mesh_reader;
@@ -66,8 +66,8 @@ public:
         mesh_writer.Write();
 
         // Write it out in dolfin format
-        mesh_writer.SetOutputFormat(MeshFormat::DOLFIN);
-        mesh_writer.Write();
+//        mesh_writer.SetOutputFormat(MeshFormat::DOLFIN);
+//        mesh_writer.Write();
 
         // Write it out in stl format
         mesh_writer.SetOutputFormat(MeshFormat::STL);
@@ -78,7 +78,7 @@ public:
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestMeshReaderAndWriter2d/");
-        FileFinder finder = FileFinder("projects/MicrovascularTransport/test/data/retinal_2d.vtu", RelativeTo::ChasteSourceRoot);
+        FileFinder finder = FileFinder("projects/MicrovesselChaste/test/data/retinal_2d.vtu", RelativeTo::ChasteSourceRoot);
 
         // Read the file
         MeshReader mesh_reader;
@@ -92,8 +92,8 @@ public:
         mesh_writer.Write();
 
         // Write it out in dolfin format
-        mesh_writer.SetOutputFormat(MeshFormat::DOLFIN);
-        mesh_writer.Write();
+//        mesh_writer.SetOutputFormat(MeshFormat::DOLFIN);
+//        mesh_writer.Write();
     }
 };
 #endif

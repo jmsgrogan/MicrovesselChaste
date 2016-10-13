@@ -39,7 +39,7 @@
 #include <cxxtest/TestSuite.h>
 #include "SmartPointers.hpp"
 #include "ImageReader.hpp"
-#include "ImageWriter.hpp"
+#include "RegularGridWriter.hpp"
 #include "NetworkToImage.hpp"
 #include "FileFinder.hpp"
 #include "OutputFileHandler.hpp"
@@ -67,13 +67,13 @@ public:
         // Convert it to an image
         NetworkToImage<3> converter;
         converter.SetNetwork(p_network);
-        converter.SetGridSpacing(2.0);
+        converter.SetGridSpacing(2.0* 1.e-6 * unit::metres);
         converter.SetPaddingFactors(0.0, 0.1, 0.0);
         converter.Update();
 
         // Write out the image
         OutputFileHandler file_handler1 = OutputFileHandler("TestNetworkToImage/");
-        ImageWriter writer;
+        RegularGridWriter writer;
         writer.SetImage(converter.GetOutput());
         writer.SetFilename(file_handler1.GetOutputDirectoryFullPath()+"single_vessel.vti");
         writer.Write();
@@ -116,13 +116,13 @@ public:
         // Convert it to an image
         NetworkToImage<3> converter;
         converter.SetNetwork(p_network);
-        converter.SetGridSpacing(2.0);
+        converter.SetGridSpacing(2.0* 1.e-6 * unit::metres);
         converter.SetPaddingFactors(0.0, 0.1, 0.0);
         converter.Update();
 
         // Write out the image
         OutputFileHandler file_handler1 = OutputFileHandler("TestNetworkToImage/", false);
-        ImageWriter writer;
+        RegularGridWriter writer;
         writer.SetImage(converter.GetOutput());
         writer.SetFilename(file_handler1.GetOutputDirectoryFullPath()+"bifurcation_vessel.vti");
         writer.Write();

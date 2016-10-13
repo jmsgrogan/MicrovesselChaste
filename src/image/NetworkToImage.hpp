@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,14 +33,15 @@
 
  */
 
-#ifndef NetworkToImage_HPP_
-#define NetworkToImage_HPP_
+#ifndef NETWORKTOIMAGE_HPP_
+#define NETWORKTOIMAGE_HPP_
 
 #include "SmartPointers.hpp"
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkImageData.h>
 #include <vtkSmartPointer.h>
 #include "VesselNetwork.hpp"
+#include "UnitCollection.hpp"
 
 /**
 * Convert a vessel network to vtk image data. This can be used for visualization
@@ -62,22 +63,12 @@ class NetworkToImage
     /**
      *  The grid spacing
      */
-    double mGridSpacing;
+    units::quantity<unit::length> mGridSpacing;
 
     /**
-     *  The padding factor in X
+     *  The padding factors in each direction
      */
-    double mPaddingFactorX;
-
-    /**
-     *  The padding factor in Y
-     */
-    double mPaddingFactorY;
-
-    /**
-     *  The padding factor in Z
-     */
-    double mPaddingFactorZ;
+    c_vector<double, DIM> mPaddingFactors;
 
     /**
      *  The dimension of the output image
@@ -119,7 +110,7 @@ public:
      * Set the pixel spacing for the image
      * @param spacing the pixel spacing
      */
-    void SetGridSpacing(double spacing);
+    void SetGridSpacing(units::quantity<unit::length> spacing);
 
     /**
      * Set the padding factors for the image. This is multiplied by the network extents
@@ -143,4 +134,4 @@ public:
     void Update();
 };
 
-#endif /*NetworkToImage_HPP_*/
+#endif /*NETWORKTOIMAGE_HPP_*/

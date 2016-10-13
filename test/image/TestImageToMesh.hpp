@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,8 +33,8 @@
 
  */
 
-#ifndef TestImageToMesh_HPP_
-#define TestImageToMesh_HPP_
+#ifndef TESTIMAGETOMESH_HPP_
+#define TESTIMAGETOMESH_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include "SmartPointers.hpp"
@@ -43,13 +43,12 @@
 #include <vtkSmartPointer.h>
 #include "ImageToMesh.hpp"
 #include "ImageReader.hpp"
-#include "ImageWriter.hpp"
+#include "RegularGridWriter.hpp"
 #include "SurfaceCleaner.hpp"
 #include "FileFinder.hpp"
 #include "OutputFileHandler.hpp"
 #include "VtkMeshWriter.hpp"
 #include "MultiFormatMeshWriter.hpp"
-#include "LabelDolfinMesh.hpp"
 #include "Part.hpp"
 
 class TestImageToMesh : public CxxTest::TestSuite
@@ -60,40 +59,40 @@ public:
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestImageToMesh/", false);
-        FileFinder finder = FileFinder("projects/Angiogenesis/test/data/median.tif", RelativeTo::ChasteSourceRoot);
+        FileFinder finder = FileFinder("projects/MicrovesselChaste/test/data/median.tif", RelativeTo::ChasteSourceRoot);
 
         ImageReader reader = ImageReader();
         reader.SetFilename(finder.GetAbsolutePath());
         reader.SetImageResizeFactors(0.5, 0.5, 1.0);
         reader.Read();
 
-        ImageWriter writer = ImageWriter();
+        RegularGridWriter writer = RegularGridWriter();
         writer.SetFilename(file_handler1.GetOutputDirectoryFullPath() + "/resized_image.vti");
         writer.SetImage(reader.GetImage());
         writer.Write();
 
         // Do the meshing
-        ImageToMesh image_mesher = ImageToMesh();
+        ImageToMesh<2> image_mesher = ImageToMesh<2> ();
         image_mesher.SetInput(reader.GetImage());
-        image_mesher.SetElementSize(20.0);
+        image_mesher.SetElementSize(2.e6*units::pow<3>(1.e-6*unit::metres));
         image_mesher.Update();
 
         VtkMeshWriter<2, 2> mesh_writer("TestImageToMesh", "Image2d", false);
-        mesh_writer.WriteFilesUsingMesh(*(image_mesher.GetMesh2d()));
+        mesh_writer.WriteFilesUsingMesh(*(image_mesher.GetMesh()));
     }
 
     void Test2dMeshTissue()
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestImageToMesh/", false);
-        FileFinder finder = FileFinder("projects/Angiogenesis/test/data/median.tif", RelativeTo::ChasteSourceRoot);
+        FileFinder finder = FileFinder("projects/MicrovesselChaste/test/data/median.tif", RelativeTo::ChasteSourceRoot);
 
         ImageReader reader = ImageReader();
         reader.SetFilename(finder.GetAbsolutePath());
         reader.SetImageResizeFactors(0.5, 0.5, 1.0);
         reader.Read();
 
-        ImageWriter writer = ImageWriter();
+        RegularGridWriter writer = RegularGridWriter();
         writer.SetFilename(file_handler1.GetOutputDirectoryFullPath() + "/resized_image.vti");
         writer.SetImage(reader.GetImage());
         writer.Write();
@@ -102,29 +101,30 @@ public:
         c_vector<double, 2> origin;
         origin[0] = 200.0;
         origin[1] = 200.0;
-        p_domain->AddRectangle(2000.0, 1400.0, origin);
+        p_domain->AddRectangle(2000.0*unit::metres, 1400.0*unit::metres, DimensionalChastePoint<2>(origin, 1.e-6*unit::metres));
 
         // Do the meshing
-        ImageToMesh image_mesher = ImageToMesh();
+        ImageToMesh<2> image_mesher = ImageToMesh<2>();
         image_mesher.SetInput(reader.GetImage());
-        image_mesher.SetElementSize(20.0);
+        image_mesher.SetElementSize(2.e6*units::pow<3>(1.e-6*unit::metres));
         image_mesher.SetTissueDomain(p_domain);
         image_mesher.Update();
 
         VtkMeshWriter<2, 2> mesh_writer("TestImageToMesh", "Image2dTissue", false);
-        mesh_writer.WriteFilesUsingMesh(*(image_mesher.GetMesh2d()));
+        mesh_writer.WriteFilesUsingMesh(*(image_mesher.GetMesh()));
 
         MultiFormatMeshWriter<2> dolfin_mesh_writer;
-        dolfin_mesh_writer.SetMesh(image_mesher.GetMesh2d());
+        dolfin_mesh_writer.SetMesh(image_mesher.GetMesh());
         dolfin_mesh_writer.SetFilename(file_handler1.GetOutputDirectoryFullPath() + "/RetinalTissue");
-        dolfin_mesh_writer.SetOutputFormat(MeshFormat::DOLFIN);
+//        dolfin_mesh_writer.SetOutputFormat(MeshFormat::DOLFIN);
+        dolfin_mesh_writer.SetOutputFormat(MeshFormat::STL);
         dolfin_mesh_writer.Write();
 
-        LabelDolfinMesh<2> labeller;
-        labeller.SetInputFilename(file_handler1.GetOutputDirectoryFullPath() + "/RetinalTissue.xml");
-        labeller.SetOutputFilename(file_handler1.GetOutputDirectoryFullPath() + "/RetinalTissueLabel");
-        labeller.SetElementAttributes(image_mesher.GetMesh2d()->GetElementRegionMarkers());
-        labeller.Update();
+//        LabelDolfinMesh<2> labeller;
+//        labeller.SetInputFilename(file_handler1.GetOutputDirectoryFullPath() + "/RetinalTissue.xml");
+//        labeller.SetOutputFilename(file_handler1.GetOutputDirectoryFullPath() + "/RetinalTissueLabel");
+//        labeller.SetElementAttributes(image_mesher.GetMesh2d()->GetElementRegionMarkers());
+//        labeller.Update();
     }
 };
 #endif

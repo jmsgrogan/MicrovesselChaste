@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,8 +33,8 @@
 
  */
 
-#ifndef TestImageToSurface_HPP_
-#define TestImageToSurface_HPP_
+#ifndef TESTIMAGETOSURFACE_HPP_
+#define TESTIMAGETOSURFACE_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include "SmartPointers.hpp"
@@ -54,7 +54,7 @@ public:
 
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestSurfaceTools/");
-        FileFinder finder = FileFinder("projects/Angiogenesis/test/data/surface.vtp", RelativeTo::ChasteSourceRoot);
+        FileFinder finder = FileFinder("projects/MicrovesselChaste/test/data/surface.vtp", RelativeTo::ChasteSourceRoot);
 
         vtkSmartPointer<vtkXMLPolyDataReader> p_reader = vtkSmartPointer<vtkXMLPolyDataReader>::New();
         p_reader->SetFileName(finder.GetAbsolutePath().c_str());
@@ -71,7 +71,7 @@ public:
         p_writer->Write();
 
         extractor.SetDoSmoothing(true);
-        extractor.SetSmoothingLength(200.0);
+        extractor.SetSmoothingLength(200.0*1.e-6*unit::metres);
         extractor.Update();
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"boundary_smoothed.vtp").c_str());
         p_writer->SetInput(extractor.GetOutput());
