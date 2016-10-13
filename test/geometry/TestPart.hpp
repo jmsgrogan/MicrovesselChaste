@@ -108,18 +108,24 @@ public:
         TS_ASSERT_DELTA(part.GetReferenceLengthScale().value(), 1.e-6, 1.e-8);
         TS_ASSERT_THROWS_THIS(part.GetFacet(DimensionalChastePoint<3>(4.0, 0.0, 0.0, 1.e-6*unit::metres)), "No facet found at input location");
         part.SetReferenceLengthScale(10.e-6*unit::metres);
+        OutputFileHandler output_file_handler("TestPart");
+        part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Rectangle.vtp"));
     }
 
     void TestAddCuboid()
     {
         Part<3> part = Part<3>();
         part.AddCuboid(1.e-6*unit::metres, 1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1.e-6*unit::metres));
+        OutputFileHandler output_file_handler("TestPart", false);
+        part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Cuboid.vtp"));
     }
 
     void TestAddCylinder()
     {
         Part<3> part = Part<3>();
         part.AddCylinder(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1.e-6*unit::metres), 24);
+        OutputFileHandler output_file_handler("TestPart", false);
+        part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Cylinder.vtp"));
     }
 
     void TestComposite2DPart()
@@ -132,7 +138,7 @@ public:
         p_part2->AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
         p_part2->AddPolygon(p_part->GetPolygons()[1], p_part2->GetFacets()[0]);
 
-        OutputFileHandler output_file_handler("TestPart");
+        OutputFileHandler output_file_handler("TestPart", false);
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath().append("Composite2DPart.vtp"));
     }
 

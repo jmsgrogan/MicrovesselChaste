@@ -52,6 +52,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselSegment.hpp"
 #include "VesselNetwork.hpp"
 #include "AbstractCellPopulation.hpp"
+#include "UnitCollection.hpp"
 
 // Forward declaration
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
