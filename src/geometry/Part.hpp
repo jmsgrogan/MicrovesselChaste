@@ -214,7 +214,7 @@ public:
      * @param spacing the grid spacing
      * @return a vector of grid indices
      */
-    std::vector<unsigned> GetContainingGridIndices(unsigned num_x, unsigned num_y = 1, unsigned num_z = 1, units::quantity<unit::length> spacing = 1.0);
+    std::vector<unsigned> GetContainingGridIndices(unsigned num_x, unsigned num_y, unsigned num_z, units::quantity<unit::length> spacing);
 
     /**
      * Return the hole marker locations

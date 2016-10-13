@@ -70,7 +70,7 @@ def generate_wrappers(args):
     builder = do_module(module_name, builder)
     
     # Make the wrapper code
-    builder.build_code_creator(module_name="_chaste_project_Microvessel_" + module_name)
+    builder.build_code_creator(module_name="_chaste_project_MicrovesselChaste_" + module_name)
     builder.code_creator.user_defined_directories.append(work_dir + "/dynamic/wrapper_headers/")
     builder.write_module(work_dir + "/dynamic/" + module_name + ".cpp")
     
