@@ -19,14 +19,8 @@ def update_builder(builder):
 #     for eachClass in include_classes:
 #         builder.class_(eachClass).include()
 
-#     helpers = builder.classes(lambda decl: decl.name.startswith('UnitTester'))
-#     for eachClass in helpers:
-#         eachClass.include()
-#        eachClass.rename(class_name)
-
 #     chaste_ns = builder.global_ns.namespace('chaste')
 #     helpers = chaste_ns.classes()
-#     print module_builder.__file__
 #     helpers = builder.classes(lambda decl: decl.name.startswith('ParameterInstance'))
 #     for eachClass in helpers:
 #         eachClass.include()
@@ -67,67 +61,96 @@ def update_builder(builder):
     # they live in the unit namespace
     unit_ns = builder.global_ns.namespace('unit', recursive=False)
     pypluplus_alias_ns = builder.global_ns.namespace('pyplusplus')
-#    pypluplus_alias_ns = pypluplus_ns.namespace( 'alias', recursive=False )
     
-#     helpers = unit_ns.classes(lambda decl: decl.name.startswith('kg'))
-#     helpers.include()
-    
-#     helpers = unit_ns.classes('kg')
-#     helpers.include()
-    
-#     class_name = "kg"
-#     helpers = unit_ns.classes(lambda decl: decl.name.startswith(class_name+'_instance_t<true>'))
-#     for eachClass in helpers:
-#         eachClass.include()
-#         eachClass.rename(class_name)
-# #    builder.variable("kg").include()
-#     
-# # #    helpers = unit_ns.typedefs("mass")
-# #     for var_gen_typedef in helpers:
-# #         var_gen_cls = var_gen_typedef.type.declaration
-# # #        var_gen_cls.member_operators( symbol='()' ).create_with_signature = True
-# #         var_gen_cls.include()
-# # #        var_gen_cls.constructors().exclude()
-#     
-# #     
+    class_name = "kg"
+    helpers = unit_ns.classes(lambda decl: decl.name.startswith(class_name+'_instance_t<true>'))
+    for eachClass in helpers:
+        eachClass.include()
+        eachClass.rename(class_name)
+   
+    unit_names = ["membrane_permeability",
+                  "volumetric_solubility",
+                  "solubility",
+                  "diffusivity_per_concentration",
+                  "diffusivity",
+#                 "flow_impedance",
+#                 "flow_rate",
+#                 "dynamic_viscosity",
+#                 "pressure",]
+#                 "force",
+#                 "velocity",
+                 "number_density",
+                 "molar_mass",
+                 "rate_per_concentration",
+                 "concentration_gradient",
+                 "concentration_flux",
+                 "concentration",
+                 "molar_flux",
+                 "molar_flow_rate",
+                 "mass", 
+                 "per_area",
+                 "per_length",
+#                "volume",
+#                "area",
+#                "length",
+                "rate",]
+#                "time",
+#                "plane_angle"]
 
-    helpers = pypluplus_alias_ns.typedefs('MassQuantity')
-    for var_gen_typedef in helpers:
-        print var_gen_typedef.name
-        print var_gen_typedef.type.declaration
-        var_gen_cls = var_gen_typedef.type.declaration
-        var_gen_cls.rename(var_gen_typedef.name)
-        var_gen_cls.include()
-        var_gen_cls.constructors().exclude()
-        var_gen_cls.add_registration_code('def(double() * bp::self)')
-        var_gen_cls.add_registration_code('def(bp::self_ns::str(bp::self))')
-# #         
-# #    helpers = unit_ns.typedefs(lambda decl: decl.name.startswith('mass'))
-# #    helpers = unit_ns.typedefs('MassUnit')
-#     helpers = unit_ns.typedefs('mass')
-#     for var_gen_typedef in helpers:
-#         print var_gen_typedef.name
-#         var_gen_cls = var_gen_typedef.type.declaration
-#         print var_gen_cls
-# #        var_gen_cls.member_operators( symbol='()' ).create_with_signature = True
-#         var_gen_cls.rename(var_gen_typedef.name)
-#         var_gen_cls.include()
-#         var_gen_cls.add_registration_code('def(double() * bp::self)')
-#         var_gen_cls.add_registration_code('def(bp::self_ns::str(bp::self))')
-#         var_gen_cls.constructors().exclude()
-    
-#    builder.class_('::boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::mass_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double>').include()
-    
-#     helpers = builder.classes(lambda decl: decl.name.startswith('quantity'))
-#     helpers.include()
-    
-#     PressureUnit@::pyplusplus::aliases::PressureUnit
-#     builder.print_declarations()
-    
-#    builder.class_("::boost::units::unit< boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >").include()
-#     builder.variable("kg").include()
+    for eachUnit in unit_names:
+        helpers = unit_ns.typedefs(eachUnit)
+        for var_gen_typedef in helpers:
+            var_gen_cls = var_gen_typedef.decl_type.declaration
+            var_gen_cls.rename(var_gen_typedef.name)
+    #        var_gen_cls.member_operators( symbol='()' ).create_with_signature = True
+            var_gen_cls.include()
+            try:
+                var_gen_cls.constructors().exclude()
+            except:
+                print var_gen_typedef.name
+            var_gen_cls.add_registration_code('def(double() * bp::self)')
+            var_gen_cls.add_registration_code('def(bp::self_ns::str(bp::self))')
+            var_gen_cls.constructors().exclude()  
 
-#    builder.class_('::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >').add_registration_code('def(float() * bp::self)')
-#    builder.class_('::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >').add_registration_code('def(bp::self * float())')
-    
+    quantity_names = ["MembranePermeabilityQuantity",
+                      "VolumetricSolubilityQuantity",
+                      "SolubilityQuantity",
+                      "DiffusivityPerConcentrationQuantity",
+                      "DiffusivityQuantity",
+                      "FlowRateQuantity",
+                      "ViscosityQuantity",
+                      "PressureQuantity",
+                      "ForceQuantity",
+                      "VelocityQuantity",
+                      "NumberDensityQuantity",
+                      "MolarMassQuantity",
+                      "RatePerConcentrationQuantity",
+                      "ConcentrationGradientQuantity",
+                      "ConcentrationFluxQuantity",
+                      "ConcentrationQuantity",
+                      "MolarFluxQuantity",
+                      "MolarFlowRateQuantity",
+                      "AmountQuantity",
+                      "MassFluxQuantity",
+                      "MassFlowRateQuantity",
+                      "MassQuantity",
+                      "PerAreaQuantity",
+                      "PerLengthQuantity",
+                      "VolumeQuantity",
+                      "AreaQuantity",
+                      "LengthQuantity",
+                      "RateQuantity",
+                      "TimeQuantity",
+                      "AngleQuantity",
+                      ]
+    for eachQuantity in quantity_names:
+        helpers = pypluplus_alias_ns.typedefs(eachQuantity)
+        for var_gen_typedef in helpers:
+            var_gen_cls = var_gen_typedef.decl_type.declaration
+            var_gen_cls.rename(var_gen_typedef.name)
+            var_gen_cls.include()
+            var_gen_cls.constructors().exclude()
+            var_gen_cls.add_registration_code('def(double() * bp::self)')
+            var_gen_cls.add_registration_code('def(bp::self_ns::str(bp::self))')
+
     return builder
