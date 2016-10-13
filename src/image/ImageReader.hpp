@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,8 +33,8 @@
 
  */
 
-#ifndef ImageReader_HPP_
-#define ImageReader_HPP_
+#ifndef IMAGEREADER_HPP_
+#define IMAGEREADER_HPP_
 
 #include "SmartPointers.hpp"
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning

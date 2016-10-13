@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -41,7 +41,8 @@
 
 template<unsigned DIM>
 CsvVesselNetworkReader<DIM>::CsvVesselNetworkReader()
-    : mFileName()
+    : mFileName(),
+      mRadiusLabel()
 {
 }
 
@@ -109,10 +110,13 @@ boost::shared_ptr<VesselNetwork<DIM> > CsvVesselNetworkReader<DIM>::Read()
     }
 
     // Need to flip in 'y' direction for consistency with VTK tools
-    double y_max = p_network->GetExtents()[1].second;
+    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = p_network->GetExtents();
+    units::quantity<unit::length> length_scale = extents.second.GetReferenceLengthScale();
+    double y_max = extents.second.GetLocation(length_scale)[1];
+
     for(unsigned idx=0; idx<p_network->GetNumberOfNodes();idx++)
     {
-        c_vector<double, DIM> current_location = p_network->GetNode(idx)->rGetLocation();
+        c_vector<double, DIM> current_location = p_network->GetNode(idx)->rGetLocation().GetLocation(length_scale);
         c_vector<double, DIM> new_location;
         new_location[0] = current_location[0];
         new_location[1] = y_max - current_location[1];
@@ -120,9 +124,8 @@ boost::shared_ptr<VesselNetwork<DIM> > CsvVesselNetworkReader<DIM>::Read()
         {
             new_location[2] = current_location[2];
         }
-        p_network->GetNode(idx)->SetLocation(new_location);
+        p_network->GetNode(idx)->SetLocation(DimensionalChastePoint<DIM>(new_location, length_scale));
     }
-
     return p_network;
 }
 

@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,8 +33,8 @@
 
  */
 
-#ifndef MultiFormatMeshWriter_HPP_
-#define MultiFormatMeshWriter_HPP_
+#ifndef MULTIFORMATMESHWRITER_HPP_
+#define MULTIFORMATMESHWRITER_HPP_
 
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkUnstructuredGrid.h>
@@ -69,7 +69,6 @@ private:
      *  The mesh to be written in vtk format
      */
     vtkSmartPointer<vtkUnstructuredGrid> mpVtkMesh;
-
 
     /**
      *  The mesh to be written in DiscreteContinuumMesh format
@@ -134,4 +133,4 @@ public:
     void Write();
 };
 
-#endif /*MultiFormatMeshWriter_HPP_*/
+#endif /*MULTIFORMATMESHWRITER_HPP_*/

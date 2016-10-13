@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -39,7 +39,7 @@
 #include <cxxtest/TestSuite.h>
 #include "SmartPointers.hpp"
 #include "ImageReader.hpp"
-#include "ImageWriter.hpp"
+#include "RegularGridWriter.hpp"
 #include "FileFinder.hpp"
 #include "OutputFileHandler.hpp"
 
@@ -51,7 +51,7 @@ public:
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestImageReaderAndWriter/");
-        FileFinder finder = FileFinder("projects/Angiogenesis/test/data/median.tif", RelativeTo::ChasteSourceRoot);
+        FileFinder finder = FileFinder("projects/MicrovesselChaste/test/data/median.tif", RelativeTo::ChasteSourceRoot);
 
         // Read the file in tif format
         ImageReader image_reader;
@@ -60,7 +60,7 @@ public:
         image_reader.Read();
 
         // Write it out in VTI format
-        ImageWriter image_writer;
+        RegularGridWriter image_writer;
         image_writer.SetFilename(file_handler1.GetOutputDirectoryFullPath()+"image_vtk_format.vti");
         image_writer.SetImage(image_reader.GetImage());
         image_writer.Write();

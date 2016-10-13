@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,20 +33,18 @@
 
  */
 
-#ifndef TestImageToSurface_HPP_
-#define TestImageToSurface_HPP_
+#ifndef TESTIMAGETOSURFACE_HPP_
+#define TESTIMAGETOSURFACE_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include "SmartPointers.hpp"
-#ifdef CHASTE_ANGIOGENESIS_EXTENDED
 #include <vtkXMLPolyDataWriter.h>
 #include <vtkXMLImageDataWriter.h>
 #include <vtkSmartPointer.h>
 #include "ImageToSurface.hpp"
 #include "ImageReader.hpp"
-#include "VtkSurfaceCleaner.hpp"
+#include "SurfaceCleaner.hpp"
 #include "GeometryWriter.hpp"
-#endif /*CHASTE_ANGIOGENESIS_EXTENDED*/
 
 #include "FileFinder.hpp"
 #include "OutputFileHandler.hpp"
@@ -57,25 +55,23 @@ public:
 
     void TestDefaultExtraction()
     {
-        #ifdef CHASTE_ANGIOGENESIS_EXTENDED
-
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestImageToSurface/");
-        FileFinder finder = FileFinder("projects/Angiogenesis/test/data/median.tif", RelativeTo::ChasteSourceRoot);
+        FileFinder finder = FileFinder("projects/MicrovesselChaste/test/data/median.tif", RelativeTo::ChasteSourceRoot);
 
         ImageReader reader = ImageReader();
         reader.SetFilename(finder.GetAbsolutePath());
         reader.SetImageResizeFactors(0.5, 0.5, 1.0);
-        reader.Update();
+        reader.Read();
 
         vtkSmartPointer<vtkXMLImageDataWriter> p_writer1 = vtkSmartPointer<vtkXMLImageDataWriter>::New();
         p_writer1->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"image.vti").c_str());
-        p_writer1->SetInput(reader.GetOutput());
+        p_writer1->SetInputData(reader.GetImage());
         p_writer1->Write();
 
         // Extract the surface
         ImageToSurface surface_extract = ImageToSurface();
-        surface_extract.SetInput(reader.GetOutput());
+        surface_extract.SetInput(reader.GetImage());
         surface_extract.SetThreshold(1.0, false);
         surface_extract.Update();
 
@@ -97,10 +93,8 @@ public:
         p_writer->Write();
 
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"surface_cleaned.stl").c_str());
-        p_writer->SetWriteStl(true);
+        p_writer->SetOutputFormat(GeometryFormat::STL);
         p_writer->Write();
-
-        #endif /*CHASTE_ANGIOGENESIS_EXTENDED*/
     }
 };
 #endif

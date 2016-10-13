@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -13,7 +13,7 @@
  modification, are permitted provided that the following conditions are met:
  * Redistributions of source code must retain the above copyright notice,
  this list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice,
+ * Redistributions in binary form must reproduce the abovea copyright notice,
  this list of conditions and the following disclaimer in the documentation
  and/or other materials provided with the distribution.
  * Neither the name of the University of Oxford nor the names of its
@@ -33,8 +33,8 @@
 
  */
 
-#ifndef GeometryWriter_HPP_
-#define GeometryWriter_HPP_
+#ifndef GEOMETRYWRITER_HPP_
+#define GEOMETRYWRITER_HPP_
 
 #include <string>
 #define _BACKWARD_BACKWARD_WARNING_H 1

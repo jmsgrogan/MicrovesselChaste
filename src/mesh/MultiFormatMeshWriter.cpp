@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -113,7 +113,7 @@ void MultiFormatMeshWriter<DIM>::Write()
         if(mpMesh)
         {
             vtkSmartPointer<vtkPoints> p_vtk_points = vtkSmartPointer<vtkPoints>::New();
-            std::vector<std::vector<double> > node_locations = mpMesh->GetNodeLocations();
+            std::vector<c_vector<double, DIM> > node_locations = mpMesh->GetNodeLocations();
             p_vtk_points->SetNumberOfPoints(node_locations.size());
             for(unsigned idx=0; idx<node_locations.size(); idx++)
             {

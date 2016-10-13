@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -43,6 +43,7 @@
 #include <vtkSmartPointer.h>
 #include "SmartPointers.hpp"
 #include "VesselNetwork.hpp"
+#include "UnitCollection.hpp"
 
 /**
  * This class generates a 2d or 3d triangulated surface from a vessel network (centrelines and radii).
@@ -61,12 +62,12 @@ class NetworkToSurface
     /**
      * The spacing of the sampling grid.
      */
-    unsigned mSamplingGridSpacing;
+    units::quantity<unit::length> mSamplingGridSpacing;
 
     /**
      * The length for spline re-sampling
      */
-    unsigned mSplineResamplingLength;
+    units::quantity<unit::length> mSplineResamplingLength;
 
     /**
      * The surface
@@ -77,6 +78,11 @@ class NetworkToSurface
      * The sampling image, can be used for assigning region attributes and identifing holes during meshing.
      */
     vtkSmartPointer<vtkImageData> mpImage;
+
+    /**
+     * The reference length scale
+     */
+    units::quantity<unit::length> mReferenceLength;
 
 public:
 
@@ -118,13 +124,13 @@ public:
      * Set the re-sampling spline length
      * @param splineResampleSize the spline resampling size
      */
-    void SetResamplingSplineSize(double splineResampleSize);
+    void SetResamplingSplineSize(units::quantity<unit::length> splineResampleSize);
 
     /**
      * Set the re-sampling grid size
      * @param sampleGridSize the resampling grid size
      */
-    void SetResamplingGridSize(double sampleGridSize);
+    void SetResamplingGridSize(units::quantity<unit::length> sampleGridSize);
 
     /**
      * Do the meshing

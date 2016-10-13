@@ -1,5 +1,6 @@
 /*
- Copyright (c) 2005-2015, University of Oxford.
+
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -46,12 +47,13 @@
 #include "BoundaryExtractor.hpp"
 #include "UblasIncludes.hpp"
 #include "GeometryWriter.hpp"
-#include "Debug.hpp"
+#include "DiscreteContinuumMeshGenerator.hpp"
+#include "BaseUnits.hpp"
 
 template<unsigned DIM>
 ImageToMesh<DIM>::ImageToMesh()
     : mpImage(vtkSmartPointer<vtkImageData>::New()),
-      mElementSize(1.0),
+      mElementSize(0.0 * unit::metres * unit::metres* unit::metres),
       mMesh(),
       mpDomain()
 {
@@ -91,7 +93,7 @@ void ImageToMesh<DIM>::SetTissueDomain(boost::shared_ptr<Part<DIM> > pTissueDoma
 }
 
 template<unsigned DIM>
-void ImageToMesh<DIM>::SetElementSize(double elementSize)
+void ImageToMesh<DIM>::SetElementSize(units::quantity<unit::volume> elementSize)
 {
     mElementSize = elementSize;
 }
@@ -130,25 +132,27 @@ void ImageToMesh<DIM>::Update()
 
     if(DIM==2)
     {
-        boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > p_temp_mesh = DiscreteContinuumMesh<DIM, DIM>::Create();
-        p_temp_mesh->SetDomain(extractor.GetOutput());
+        DiscreteContinuumMeshGenerator<DIM, DIM> temp_mesh_generator;
+        temp_mesh_generator.SetDomain(extractor.GetOutput());
         if(mpDomain)
         {
-            p_temp_mesh->SetDomain(mpDomain);
+            temp_mesh_generator.SetDomain(mpDomain);
         }
-        p_temp_mesh->Update();
+        temp_mesh_generator.Update();
+        boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > p_temp_mesh = temp_mesh_generator.GetMesh();
 
-        std::vector<std::vector<double> > mesh_points = p_temp_mesh->GetNodeLocations();
+        std::vector<DimensionalChastePoint<DIM> > mesh_points = p_temp_mesh->GetNodeLocationsAsPoints();
         std::vector<std::vector<unsigned> > mesh_connectivity = p_temp_mesh->GetConnectivity();
 
+        units::quantity<unit::length> reference_length = p_temp_mesh->GetReferenceLengthScale();
         vtkSmartPointer<vtkPoints> p_vtk_points = vtkSmartPointer<vtkPoints>::New();
         for(unsigned idx = 0; idx<mesh_connectivity.size(); idx++)
         {
-            double centx = (mesh_points[mesh_connectivity[idx][0]][0] +
-                    mesh_points[mesh_connectivity[idx][1]][0] +
-                    mesh_points[mesh_connectivity[idx][2]][0])/3.0;
-            double centy = (mesh_points[mesh_connectivity[idx][0]][1] +
-                    mesh_points[mesh_connectivity[idx][1]][1] + mesh_points[mesh_connectivity[idx][2]][1])/3.0;
+            c_vector<double, DIM> location0 = mesh_points[mesh_connectivity[idx][0]].GetLocation(reference_length);
+            c_vector<double, DIM> location1 = mesh_points[mesh_connectivity[idx][1]].GetLocation(reference_length);
+            c_vector<double, DIM> location2 = mesh_points[mesh_connectivity[idx][2]].GetLocation(reference_length);
+            double centx = (location0[0] + location1[0] + location2[0])/3.0;
+            double centy = (location0[1] + location1[1] + location2[1])/3.0;
             p_vtk_points->InsertNextPoint(centx, centy, 0.0);
         }
 
@@ -161,15 +165,8 @@ void ImageToMesh<DIM>::Update()
         p_image_probe->SetSourceData(mpImage);
         p_image_probe->Update();
 
-        for(unsigned idx = 0; idx<mesh_connectivity.size(); idx++)
-        {
-            double centx = (mesh_points[mesh_connectivity[idx][0]][0] + mesh_points[mesh_connectivity[idx][1]][0] + mesh_points[mesh_connectivity[idx][2]][0])/3.0;
-            double centy = (mesh_points[mesh_connectivity[idx][0]][1] + mesh_points[mesh_connectivity[idx][1]][1] + mesh_points[mesh_connectivity[idx][2]][1])/3.0;
-            p_vtk_points->InsertNextPoint(centx, centy, 0.0);
-        }
-
-        std::vector<c_vector<double, DIM> > holes;
-        std::vector<c_vector<double, DIM> > regions;
+        std::vector<DimensionalChastePoint<DIM> > holes;
+        std::vector<DimensionalChastePoint<DIM> > regions;
         for(unsigned idx=0; idx<p_image_probe->GetOutput()->GetPointData()->GetScalars()->GetNumberOfTuples(); idx++)
         {
             if(p_image_probe->GetOutput()->GetPointData()->GetScalars()->GetTuple1(idx)>5)
@@ -184,14 +181,13 @@ void ImageToMesh<DIM>::Update()
                     c_vector<double, DIM> loc;
                     loc[0] = p_vtk_points->GetPoint(idx)[0];
                     loc[1] = p_vtk_points->GetPoint(idx)[1];
-
-                    if(mpDomain->GetPolygons()[0]->ContainsPoint(loc3))
+                    if(mpDomain->GetPolygons()[0]->ContainsPoint(DimensionalChastePoint<DIM>(loc3, reference_length)))
                     {
-                        regions.push_back(loc);
+                        regions.push_back(DimensionalChastePoint<DIM>(loc, reference_length));
                     }
                     else
                     {
-                        holes.push_back(loc);
+                        holes.push_back(DimensionalChastePoint<DIM>(loc, reference_length));
                     }
                 }
                 else
@@ -199,22 +195,22 @@ void ImageToMesh<DIM>::Update()
                     c_vector<double, DIM> loc;
                     loc[0] = p_vtk_points->GetPoint(idx)[0];
                     loc[1] = p_vtk_points->GetPoint(idx)[1];
-                    holes.push_back(loc);
+                    holes.push_back(DimensionalChastePoint<DIM>(loc, reference_length));
                 }
             }
         }
 
-        boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > p_fine_mesh = DiscreteContinuumMesh<DIM, DIM>::Create();
-        p_fine_mesh->SetDomain(extractor.GetOutput());
-        p_fine_mesh->SetMaxElementArea(mElementSize);
-        p_fine_mesh->SetHoles(holes);
-        p_fine_mesh->SetRegionMarkers(regions);
+        DiscreteContinuumMeshGenerator<DIM, DIM> fine_mesh_generator;
+        fine_mesh_generator.SetDomain(extractor.GetOutput());
+        fine_mesh_generator.SetMaxElementArea(mElementSize);
+        fine_mesh_generator.SetHoles(holes);
+        fine_mesh_generator.SetRegionMarkers(regions);
         if(mpDomain)
         {
-            p_fine_mesh->SetDomain(mpDomain);
+            fine_mesh_generator.SetDomain(mpDomain);
         }
-        p_fine_mesh->Update();
-
+        fine_mesh_generator.Update();
+        boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > p_fine_mesh = fine_mesh_generator.GetMesh();
         mMesh = p_fine_mesh;
     }
     else

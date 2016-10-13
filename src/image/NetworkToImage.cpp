@@ -1,5 +1,6 @@
 /*
- Copyright (c) 2005-2015, University of Oxford.
+
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -37,15 +38,16 @@
 #include "DistanceMap.hpp"
 #include "NetworkToImage.hpp"
 #include "UnitCollection.hpp"
+#include "BaseUnits.hpp"
+#include "UblasIncludes.hpp"
+#include "UblasVectorInclude.hpp"
 
 template<unsigned DIM>
 NetworkToImage<DIM>::NetworkToImage()
     : mpImage(vtkSmartPointer<vtkImageData>::New()),
       mpNetwork(),
-      mGridSpacing(1.0),
-      mPaddingFactorX(0.0),
-      mPaddingFactorY(0.0),
-      mPaddingFactorZ(0.0),
+      mGridSpacing(BaseUnits::Instance()->GetReferenceLengthScale()),
+      mPaddingFactors(zero_vector<double>(DIM)),
       mImageDimension(DIM)
 {
 
@@ -84,7 +86,7 @@ void NetworkToImage<DIM>::SetNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNet
 }
 
 template<unsigned DIM>
-void NetworkToImage<DIM>::SetGridSpacing(double spacing)
+void NetworkToImage<DIM>::SetGridSpacing(units::quantity<unit::length> spacing)
 {
     mGridSpacing = spacing;
 }
@@ -92,9 +94,12 @@ void NetworkToImage<DIM>::SetGridSpacing(double spacing)
 template<unsigned DIM>
 void NetworkToImage<DIM>::SetPaddingFactors(double paddingX, double paddingY, double paddingZ)
 {
-    mPaddingFactorX = paddingX;
-    mPaddingFactorY = paddingY;
-    mPaddingFactorZ = paddingZ;
+    mPaddingFactors[0] = paddingX;
+    mPaddingFactors[1] = paddingY;
+    if(DIM==3)
+    {
+        mPaddingFactors[2] = paddingZ;
+    }
 }
 
 template<unsigned DIM>
@@ -111,35 +116,21 @@ void NetworkToImage<DIM>::Update()
         EXCEPTION("No input vessel network set.");
     }
 
-    std::vector<std::pair<double, double> > extents = mpNetwork->GetExtents(true);
-    double range_x = (extents[0].second - extents[0].first)*(1.0 + 2.0*mPaddingFactorX);
-    double range_y = (extents[1].second - extents[1].first)*(1.0 + 2.0*mPaddingFactorY);
-    double range_z = 0.0;
-    double origin_x = extents[0].first - (extents[0].second - extents[0].first)*mPaddingFactorX;
-    double origin_y = extents[1].first - (extents[1].second - extents[1].first)*mPaddingFactorY;
-    double origin_z = 0.0;
-
-    if (mImageDimension == 3 and DIM == 3)
-    {
-        range_z = (extents[2].second - extents[2].first)*(1.0 + 2.0*mPaddingFactorZ);
-        origin_z = extents[2].first - (extents[2].second - extents[2].first)*mPaddingFactorZ;
-    }
+    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = mpNetwork->GetExtents(true);
+    c_vector<double, DIM> range = ublas::element_prod(scalar_vector<double>(DIM, 1.0) + 2.0*mPaddingFactors, (extents.second - extents.first).GetLocation(mGridSpacing));
+    c_vector<double, DIM> origin = (extents.first.GetLocation(mGridSpacing) - ublas::element_prod((extents.second - extents.first).GetLocation(mGridSpacing), mPaddingFactors));
 
     boost::shared_ptr<RegularGrid<DIM> > p_grid = RegularGrid<DIM>::Create();
-    p_grid->SetSpacing(mGridSpacing * 1.e-6 * unit::metres);
+    p_grid->SetSpacing(mGridSpacing);
     std::vector<unsigned> final_extents;
-    final_extents.push_back(unsigned(range_x/mGridSpacing)+1);
-    final_extents.push_back(unsigned(range_y/mGridSpacing)+1);
-    final_extents.push_back(unsigned(range_z/mGridSpacing)+1);
-    p_grid->SetExtents(final_extents);
-    c_vector<double, DIM> origin;
-    origin[0] = origin_x;
-    origin[1] = origin_y;
-    if(DIM == 3)
+    final_extents.push_back(unsigned(range[0])+1);
+    final_extents.push_back(unsigned(range[1])+1);
+    if(mImageDimension == 3 and DIM==3)
     {
-        origin[2] = origin_z;
+        final_extents.push_back(unsigned(range[2])+1);
     }
-    p_grid->SetOrigin(origin);
+    p_grid->SetExtents(final_extents);
+    p_grid->SetOrigin(DimensionalChastePoint<DIM>(origin, mGridSpacing));
 
     boost::shared_ptr<DistanceMap<DIM> > p_distance_map = DistanceMap<DIM>::Create();
     p_distance_map->SetVesselNetwork(mpNetwork);
@@ -148,7 +139,7 @@ void NetworkToImage<DIM>::Update()
     p_distance_map->Setup();
     p_distance_map->Solve();
 
-    std::vector<double> point_solution = p_distance_map->GetPointSolution();
+    std::vector<double> point_solution = p_distance_map->GetSolution(p_grid);
     for(unsigned idx=0; idx<point_solution.size();idx++)
     {
         if(point_solution[idx]==0.0)
