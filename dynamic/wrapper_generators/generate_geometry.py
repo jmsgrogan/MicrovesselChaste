@@ -16,17 +16,17 @@ def update_builder(builder):
                        "Part<3>",
                        "Facet<2>", 
                        "Polygon<2>", 
-                       "Part<2>"
-                       "GeometryFormat",]
-#                        "NetworkToSurface<3>",
-#                        "NetworkToSurface<3>",
-#                        "VesselSurfaceGenerator<3>",
-#                        "VesselSurfaceGenerator<2>",
-#                        "VoronoiGenerator<2>",
-#                        "VoronoiGenerator<2>",
-#                        "BoundaryExtractor",
-#                        "SurfaceCleaner",
-#                        "GeometryWriter"]
+                       "Part<2>",
+                       "GeometryFormat",
+                        "NetworkToSurface<3>",
+                        "NetworkToSurface<3>",
+                        "VesselSurfaceGenerator<3>",
+                        "VesselSurfaceGenerator<2>",
+                        "VoronoiGenerator<3>",
+                        "VoronoiGenerator<2>",
+                        "BoundaryExtractor",
+                        "SurfaceCleaner",
+                        "GeometryWriter"]
 
     for eachClass in include_classes:
         builder.class_(eachClass).include()  
@@ -40,6 +40,8 @@ def update_builder(builder):
     builder.class_('Polygon<3>').calldefs().use_default_arguments=False 
     builder.class_('Part<2>').calldefs().use_default_arguments=False   
     builder.class_('Facet<2>').calldefs().use_default_arguments=False    
-    builder.class_('Polygon<2>').calldefs().use_default_arguments=False      
+    builder.class_('Polygon<2>').calldefs().use_default_arguments=False  
+    builder.class_('VoronoiGenerator<3>').calldefs().use_default_arguments=False        
+    builder.class_('VoronoiGenerator<2>').calldefs().use_default_arguments=False      
   
     return builder

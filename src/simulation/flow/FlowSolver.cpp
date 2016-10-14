@@ -172,7 +172,7 @@ void FlowSolver<DIM>::Update(bool runSetup)
         }
         scaled_impedances.push_back(impedance);
     }
-    units::quantity<unit::flow_impedance> multipler = (max_impedance + min_impedance) / 2.0; //scale impedances to avoid floating point problems in PETSC solvers.
+    units::quantity<unit::flow_impedance> multiplier = (max_impedance + min_impedance) / 2.0; //scale impedances to avoid floating point problems in PETSC solvers.
 
     // Set up the system matrix
     for (unsigned node_index = 0; node_index < mNodes.size(); node_index++)
@@ -198,8 +198,12 @@ void FlowSolver<DIM>::Update(bool runSetup)
             {
                 units::quantity<unit::flow_impedance> impedance = scaled_impedances[mNodeVesselConnectivity[node_index][vessel_index]];
                 // Add the inverse impedances to the linear system
-                mpLinearSystem->AddToMatrixElement(node_index, node_index, -multipler / impedance); // Aii
-                mpLinearSystem->AddToMatrixElement(node_index, mNodeNodeConnectivity[node_index][vessel_index], multipler / impedance); // Aij
+
+
+                mpLinearSystem->AddToMatrixElement(node_index, node_index, -multiplier / impedance); // Aii
+
+
+                mpLinearSystem->AddToMatrixElement(node_index, mNodeNodeConnectivity[node_index][vessel_index], multiplier / impedance); // Aij
             }
         }
     }

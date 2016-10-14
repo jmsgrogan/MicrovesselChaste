@@ -1726,7 +1726,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         molar_flow_rate_exposer.def(bp::self_ns::str(bp::self));
     }
 
-    bp::class_< unit::kg_instance_t< true > >( "kg" )    
+    bp::class_< unit::kg_instance_t< true >, boost::noncopyable >( "kg", bp::no_init )    
         .def_readonly( "instance", &unit::kg_instance_t< true >::instance );
 
     { //::Instantiation
