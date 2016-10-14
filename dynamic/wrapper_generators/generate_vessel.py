@@ -23,7 +23,30 @@ def update_builder(builder):
                        "VesselNetworkWriter<3>",
                        "VesselNetworkReader<3>",
                        "VesselDistribution",
-                       "SegmentLocation"]
+                       "SegmentLocation",
+                       "VesselNetworkCellPopulationInteractor<3>",
+                       "DensityMap<3>",
+                       "DistanceMap<3>",
+                       "LacunarityCalculator<3>",
+                       "VesselNetworkGeometryCalculator<3>",
+                       "VesselNetworkGraphCalculator<3>",
+                       "NodeFlowProperties<2>",
+                       "SegmentFlowProperties<2>",
+                       "VesselFlowProperties<2>",
+                       "VesselNode<2>",
+                       "VesselSegment<2>",
+                       "Vessel<2>",
+                       "VesselNetwork<2>",
+                       "VesselNetworkWriter<2>",
+                       "AbstractVesselNetworkComponent<2>",
+                       "VesselNetworkGenerator<2>",
+                       "VesselNetworkReader<2>",
+                       "VesselNetworkCellPopulationInteractor<2>",
+                       "DensityMap<2>",
+                       "DistanceMap<2>",
+                       "LacunarityCalculator<2>",
+                       "VesselNetworkGeometryCalculator<2>",
+                       "VesselNetworkGraphCalculator<2>"]
     
     # Include each class and do template renaming
     for eachClass in include_classes:

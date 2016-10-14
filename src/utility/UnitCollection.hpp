@@ -82,11 +82,11 @@ namespace unit{
 
     // angle
     typedef units::si::plane_angle plane_angle;
-    BOOST_UNITS_STATIC_CONSTANT(radians, units::si::plane_angle);
+    BOOST_UNITS_STATIC_CONSTANT(radians, plane_angle);
 
     // Time
     typedef units::si::time time;
-    BOOST_UNITS_STATIC_CONSTANT(seconds, units::si::time);
+    BOOST_UNITS_STATIC_CONSTANT(seconds, time);
     BOOST_UNITS_STATIC_CONSTANT(minutes, units::metric::minute_base_unit::unit_type);
     BOOST_UNITS_STATIC_CONSTANT(hours, units::metric::hour_base_unit::unit_type);
     BOOST_UNITS_STATIC_CONSTANT(days, units::metric::day_base_unit::unit_type);
@@ -102,7 +102,7 @@ namespace unit{
     typedef units::si::length length;
     typedef units::si::area area;
     typedef units::si::volume volume;
-    BOOST_UNITS_STATIC_CONSTANT(metres, units::si::length);
+    BOOST_UNITS_STATIC_CONSTANT(metres, length);
     BOOST_UNITS_STATIC_CONSTANT(microns, units::metric::micron_base_unit::unit_type);
     typedef units::derived_dimension<units::length_base_dimension, -1>::type per_length_dimension;
     typedef units::unit<per_length_dimension, units::si::system> per_length;
@@ -158,9 +158,9 @@ namespace unit{
 
     // Force/Pressure/Stress
     typedef units::si::force force;
-    BOOST_UNITS_STATIC_CONSTANT(newtons, units::si::force);
+    BOOST_UNITS_STATIC_CONSTANT(newtons, force);
     typedef units::si::pressure pressure;
-    BOOST_UNITS_STATIC_CONSTANT(pascals, units::si::pressure);
+    BOOST_UNITS_STATIC_CONSTANT(pascals, pressure);
     BOOST_UNITS_STATIC_CONSTANT(mmHg, units::metric::mmHg_base_unit::unit_type);
 
     // Flow

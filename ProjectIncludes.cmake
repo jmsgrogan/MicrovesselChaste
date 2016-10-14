@@ -37,6 +37,7 @@ list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/geom
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/geometry/writers)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/geometry/generators)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/geometry/tools)
+list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/population/)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/population/vessel)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/population/vessel/properties)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/population/vessel/calculators)

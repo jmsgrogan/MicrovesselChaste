@@ -11,10 +11,18 @@ import generate_bindings
 
 def update_builder(builder):
 
-    include_classes = ["RegularGrid<3,3>", 
+    include_classes = ["RegularGrid<3>", 
+                       "RegularGrid<2>", 
                        "DiscreteContinuumMesh<3,3>", 
+                       "DiscreteContinuumMesh<2,2>",
+                       "RegularGridWriter",
+                       "DiscreteContinuumMeshGenerator<3,3>",
+                       "DiscreteContinuumMeshGenerator<2,2>",
+                       "MultiFormatMeshWriter<3>",
+                       "MultiFormatMeshWriter<2>",
                        "DimensionalChastePoint<3>",
-                       "DimensionalChastePoint<2>" ]
+                       "DimensionalChastePoint<2>" ,
+                       "MeshFormat"]
     
     for eachClass in include_classes:
         builder.class_(eachClass).include()  

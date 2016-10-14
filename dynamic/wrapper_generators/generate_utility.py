@@ -76,8 +76,8 @@ def update_builder(builder):
 #                 "flow_impedance",
 #                 "flow_rate",
 #                 "dynamic_viscosity",
-#                 "pressure",]
-#                 "force",
+#                  "pressure",
+#                  "force",
 #                 "velocity",
                  "number_density",
                  "molar_mass",
@@ -100,7 +100,7 @@ def update_builder(builder):
     for eachUnit in unit_names:
         helpers = unit_ns.typedefs(eachUnit)
         for var_gen_typedef in helpers:
-            var_gen_cls = var_gen_typedef.decl_type.declaration
+            var_gen_cls = var_gen_typedef.type.declaration
             var_gen_cls.rename(var_gen_typedef.name)
     #        var_gen_cls.member_operators( symbol='()' ).create_with_signature = True
             var_gen_cls.include()
@@ -146,7 +146,7 @@ def update_builder(builder):
     for eachQuantity in quantity_names:
         helpers = pypluplus_alias_ns.typedefs(eachQuantity)
         for var_gen_typedef in helpers:
-            var_gen_cls = var_gen_typedef.decl_type.declaration
+            var_gen_cls = var_gen_typedef.type.declaration
             var_gen_cls.rename(var_gen_typedef.name)
             var_gen_cls.include()
             var_gen_cls.constructors().exclude()
