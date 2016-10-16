@@ -44,7 +44,9 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkActor.h>
 #include <vtkProperty.h>
 #include <vtkUnsignedCharArray.h>
-#include <vtkNamedColors.h>
+#if VTK_MAJOR_VERSION > 5
+    #include <vtkNamedColors.h>
+#endif
 #include <vtkSphereSource.h>
 #include <vtkGlyph3D.h>
 #include <vtkCubeAxesActor2D.h>
@@ -110,25 +112,26 @@ VtkScene<DIM>::VtkScene()
     mpColorLookUpTable->SetNumberOfTableValues(10);
     mpColorLookUpTable->Build();
 
-    vtkSmartPointer<vtkNamedColors> p_named_colors = vtkSmartPointer<vtkNamedColors>::New();
-    mpColorLookUpTable->SetTableValue(0, p_named_colors->GetColor4d("Black").GetData());
-    mpColorLookUpTable->SetTableValue(1, p_named_colors->GetColor4d("Banana").GetData());
-    mpColorLookUpTable->SetTableValue(2, p_named_colors->GetColor4d("Tomato").GetData());
-    mpColorLookUpTable->SetTableValue(3, p_named_colors->GetColor4d("Wheat").GetData());
-    mpColorLookUpTable->SetTableValue(4, p_named_colors->GetColor4d("Lavender").GetData());
-    mpColorLookUpTable->SetTableValue(5, p_named_colors->GetColor4d("Flesh").GetData());
-    mpColorLookUpTable->SetTableValue(6, p_named_colors->GetColor4d("Raspberry").GetData());
-    mpColorLookUpTable->SetTableValue(7, p_named_colors->GetColor4d("Salmon").GetData());
-    mpColorLookUpTable->SetTableValue(8, p_named_colors->GetColor4d("Mint").GetData());
-    mpColorLookUpTable->SetTableValue(9, p_named_colors->GetColor4d("Peacock").GetData());
+    #if VTK_MAJOR_VERSION > 5
+        vtkSmartPointer<vtkNamedColors> p_named_colors = vtkSmartPointer<vtkNamedColors>::New();
+        mpColorLookUpTable->SetTableValue(0, p_named_colors->GetColor4d("Black").GetData());
+        mpColorLookUpTable->SetTableValue(1, p_named_colors->GetColor4d("Banana").GetData());
+        mpColorLookUpTable->SetTableValue(2, p_named_colors->GetColor4d("Tomato").GetData());
+        mpColorLookUpTable->SetTableValue(3, p_named_colors->GetColor4d("Wheat").GetData());
+        mpColorLookUpTable->SetTableValue(4, p_named_colors->GetColor4d("Lavender").GetData());
+        mpColorLookUpTable->SetTableValue(5, p_named_colors->GetColor4d("Flesh").GetData());
+        mpColorLookUpTable->SetTableValue(6, p_named_colors->GetColor4d("Raspberry").GetData());
+        mpColorLookUpTable->SetTableValue(7, p_named_colors->GetColor4d("Salmon").GetData());
+        mpColorLookUpTable->SetTableValue(8, p_named_colors->GetColor4d("Mint").GetData());
+        mpColorLookUpTable->SetTableValue(9, p_named_colors->GetColor4d("Peacock").GetData());
+    #endif
 
     mpRenderWindow->AddRenderer(mpRenderer);
     mpRenderWindow->SetSize(800.0, 600.0);
 
     mpRenderWindowInteractor->SetRenderWindow(mpRenderWindow);
 
-    vtkSmartPointer<customMouseInteractorStyle> style =
-      vtkSmartPointer<customMouseInteractorStyle>::New();
+    vtkSmartPointer<customMouseInteractorStyle> style = vtkSmartPointer<customMouseInteractorStyle>::New();
     mpRenderWindowInteractor->SetInteractorStyle( style );
 }
 
@@ -184,7 +187,11 @@ void VtkScene<DIM>::UpdatePartActor()
 {
     vtkSmartPointer<vtkPolyData> p_poly = mpPart->GetVtk();
     vtkSmartPointer<vtkPolyDataMapper> p_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    p_mapper->SetInputData(p_poly);
+    #if VTK_MAJOR_VERSION <= 5
+        p_mapper->SetInput(p_poly);
+    #else
+        p_mapper->SetInputData(p_poly);
+    #endif
 
     vtkSmartPointer<vtkActor> p_actor = vtkSmartPointer<vtkActor>::New();
     p_actor->GetProperty()->SetColor(0,0,1);
@@ -220,14 +227,24 @@ void VtkScene<DIM>::UpdateVesselNetworkActor()
     p_sheres->SetThetaResolution(16);
 
     vtkSmartPointer<vtkGlyph3D> p_shere_glyphs = vtkSmartPointer<vtkGlyph3D>::New();
-    p_shere_glyphs->SetInputData(p_poly);
-    p_shere_glyphs->SetSourceData(p_sheres->GetOutput());
+    #if VTK_MAJOR_VERSION <= 5
+        p_shere_glyphs->SetInput(p_poly);
+        p_shere_glyphs->SetSource(p_sheres->GetOutput());
+    #else
+        p_shere_glyphs->SetInputData(p_poly);
+        p_shere_glyphs->SetSourceData(p_sheres->GetOutput());
+    #endif
+
     p_shere_glyphs->ClampingOff();
     p_shere_glyphs->SetScaleModeToScaleByScalar();
     p_shere_glyphs->SetScaleFactor(1.0);
 
     vtkSmartPointer<vtkPolyDataMapper> p_polydata_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    p_polydata_mapper->SetInputData(p_shere_glyphs->GetOutput());
+    #if VTK_MAJOR_VERSION <= 5
+        p_polydata_mapper->SetInput(p_shere_glyphs->GetOutput());
+    #else
+        p_polydata_mapper->SetInputData(p_shere_glyphs->GetOutput());
+    #endif
     p_polydata_mapper->ScalarVisibilityOn();
 
     vtkSmartPointer<vtkActor> p_actor = vtkSmartPointer<vtkActor>::New();
@@ -250,7 +267,11 @@ void VtkScene<DIM>::UpdateVesselNetworkActor()
     p_poly->GetCellData()->SetScalars(p_vessel_colors);
 
     vtkSmartPointer<vtkPolyDataMapper> p_polydata_mapper2 = vtkSmartPointer<vtkPolyDataMapper>::New();
-    p_polydata_mapper2->SetInputData(p_poly);
+    #if VTK_MAJOR_VERSION <= 5
+        p_polydata_mapper2->SetInput(p_poly);
+    #else
+        p_polydata_mapper2->SetInputData(p_poly);
+    #endif
     p_polydata_mapper2->ScalarVisibilityOn();
 
     vtkSmartPointer<vtkActor> p_actor2 = vtkSmartPointer<vtkActor>::New();
@@ -288,14 +309,24 @@ void VtkScene<DIM>::UpdateCellPopulationActor()
     p_spheres->SetThetaResolution(16);
 
     vtkSmartPointer<vtkGlyph3D> p_glyph = vtkSmartPointer<vtkGlyph3D>::New();
-    p_glyph->SetInputData(p_polydata);
-    p_glyph->SetSourceData(p_spheres->GetOutput());
+    #if VTK_MAJOR_VERSION <= 5
+        p_glyph->SetInput(p_polydata);
+        p_glyph->SetSource(p_spheres->GetOutput());
+    #else
+        p_glyph->SetInputData(p_polydata);
+        p_glyph->SetSourceData(p_spheres->GetOutput());
+    #endif
+
     p_glyph->ClampingOff();
     p_glyph->SetScaleModeToScaleByScalar();
     p_glyph->SetScaleFactor(1.0);
 
     vtkSmartPointer<vtkPolyDataMapper> p_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    p_mapper->SetInputData(p_glyph->GetOutput());
+    #if VTK_MAJOR_VERSION <= 5
+        p_mapper->SetInput(p_glyph->GetOutput());
+    #else
+        p_mapper->SetInputData(p_glyph->GetOutput());
+    #endif
     p_mapper->ScalarVisibilityOn();
 
     vtkSmartPointer<vtkActor> p_actor = vtkSmartPointer<vtkActor>::New();
@@ -310,10 +341,18 @@ void VtkScene<DIM>::UpdateRegularGridActor()
     vtkSmartPointer<vtkImageData> p_grid = mpGrid->GetVtkGrid();
 
     vtkSmartPointer<vtkGeometryFilter> p_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
-    p_geom_filter->SetInputData(p_grid);
+    #if VTK_MAJOR_VERSION <= 5
+        p_geom_filter->SetInput(p_grid);
+    #else
+        p_geom_filter->SetInputData(p_grid);
+    #endif
 
     vtkSmartPointer<vtkPolyDataMapper> p_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    p_mapper->SetInputData(p_geom_filter->GetOutput());
+    #if VTK_MAJOR_VERSION <= 5
+        p_mapper->SetInput(p_geom_filter->GetOutput());
+    #else
+        p_mapper->SetInputData(p_geom_filter->GetOutput());
+    #endif
 
     vtkSmartPointer<vtkActor> p_actor = vtkSmartPointer<vtkActor>::New();
     p_actor->SetMapper(p_mapper);
@@ -327,13 +366,21 @@ void VtkScene<DIM>::UpdateMeshActor()
     vtkSmartPointer<vtkUnstructuredGrid> p_grid = mpMesh->GetAsVtkUnstructuredGrid();
 
     vtkSmartPointer<vtkGeometryFilter> p_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
-    p_geom_filter->SetInputData(p_grid);
+    #if VTK_MAJOR_VERSION <= 5
+        p_geom_filter->SetInput(p_grid);
+    #else
+        p_geom_filter->SetInputData(p_grid);
+    #endif
 
 //    vtkSmartPointer<vtkExtractEdges> p_edges = vtkSmartPointer<vtkExtractEdges>::New();
 //    p_edges->SetInput(p_geom_filter);
 
     vtkSmartPointer<vtkPolyDataMapper> p_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    p_mapper->SetInputData(p_geom_filter->GetOutput());
+    #if VTK_MAJOR_VERSION <= 5
+        p_mapper->SetInput(p_geom_filter->GetOutput());
+    #else
+        p_mapper->SetInputData(p_geom_filter->GetOutput());
+    #endif
 
     vtkSmartPointer<vtkActor> p_actor = vtkSmartPointer<vtkActor>::New();
     p_actor->SetMapper(p_mapper);

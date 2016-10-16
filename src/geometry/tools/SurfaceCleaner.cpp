@@ -98,7 +98,11 @@ void SurfaceCleaner::Update()
     }
 
     vtkSmartPointer<vtkDecimatePro> p_decimate = vtkSmartPointer<vtkDecimatePro>::New();
-    p_decimate->SetInputData(mpInputSurface);
+    #if VTK_MAJOR_VERSION <= 5
+        p_decimate->SetInput(mpInputSurface);
+    #else
+        p_decimate->SetInputData(mpInputSurface);
+    #endif
     p_decimate->SetTargetReduction(mDecimateTargetReduction);
     p_decimate->SetFeatureAngle(mDecimateFeatureAngle);
     p_decimate->Update();

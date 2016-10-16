@@ -38,8 +38,10 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include <vector>
 #include "SmartPointers.hpp"
-#include <vtkAutoInit.h>
-VTK_MODULE_INIT(vtkRenderingOpenGL);
+#if VTK_MAJOR_VERSION > 5
+    #include <vtkAutoInit.h>
+    VTK_MODULE_INIT(vtkRenderingOpenGL);
+#endif
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
 #include <vtkRenderer.h>

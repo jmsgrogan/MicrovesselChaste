@@ -97,7 +97,11 @@ void BoundaryExtractor::Update()
     }
 
     vtkSmartPointer<vtkFeatureEdges> p_features = vtkSmartPointer<vtkFeatureEdges>::New();
-    p_features->SetInputData(mpInputSurface);
+    #if VTK_MAJOR_VERSION <= 5
+        p_features->SetInput(mpInputSurface);
+    #else
+        p_features->SetInputData(mpInputSurface);
+    #endif
 
     vtkSmartPointer<vtkCleanPolyData> p_clean = vtkSmartPointer<vtkCleanPolyData>::New();
     p_clean->SetInputConnection(p_features->GetOutputPort());

@@ -48,6 +48,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkLine.h>
 #include <vtkCellArray.h>
 #include <vtkBox.h>
+#include <vtkVersion.h>
 #include <vtkProbeFilter.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkWindowedSincPolyDataFilter.h>
@@ -129,7 +130,11 @@ void NetworkToSurface<DIM>::Update()
 
         // Get the outer boundaries of the network
         vtkSmartPointer<vtkMarchingSquares> p_squares = vtkSmartPointer<vtkMarchingSquares>::New();
-        p_squares->SetInputData(mpImage);
+        #if VTK_MAJOR_VERSION <= 5
+            p_squares->SetInput(mpImage);
+        #else
+            p_squares->SetInputData(mpImage);
+        #endif
         p_squares->SetValue(0, 1);
 
         // Remove duplicate points and join up lines to form polylines
@@ -190,7 +195,11 @@ void NetworkToSurface<DIM>::Update()
                 p_box->SetTransform(p_tranform);
 
                 vtkSmartPointer<vtkClipPolyData> p_clipper = vtkSmartPointer<vtkClipPolyData>::New();
-                p_clipper->SetInputData(p_cleaned);
+                #if VTK_MAJOR_VERSION <= 5
+                    p_clipper->SetInput(p_cleaned);
+                #else
+                    p_clipper->SetInputData(p_cleaned);
+                #endif
                 p_clipper->SetClipFunction(p_box);
                 p_clipper->Update();
 
@@ -229,7 +238,11 @@ void NetworkToSurface<DIM>::Update()
 
         // Get the outer boundaries of the network
         vtkSmartPointer<vtkMarchingCubes> p_cubes = vtkSmartPointer<vtkMarchingCubes>::New();
-        p_cubes->SetInputData(mpImage);
+        #if VTK_MAJOR_VERSION <= 5
+            p_cubes->SetInput(mpImage);
+        #else
+            p_cubes->SetInputData(mpImage);
+        #endif
         p_cubes->SetValue(0, 1);
 
         vtkSmartPointer<vtkCleanPolyData> p_cleaner = vtkSmartPointer<vtkCleanPolyData>::New();
@@ -281,7 +294,11 @@ void NetworkToSurface<DIM>::Update()
                 p_box->SetTransform(p_tranform);
 
                 vtkSmartPointer<vtkClipPolyData> p_clipper = vtkSmartPointer<vtkClipPolyData>::New();
-                p_clipper->SetInputData(p_cleaned);
+                #if VTK_MAJOR_VERSION <= 5
+                    p_clipper->SetInput(p_cleaned);
+                #else
+                    p_clipper->SetInputData(p_cleaned);
+                #endif
                 p_clipper->SetClipFunction(p_box);
                 p_clipper->Update();
                 p_cleaned->DeepCopy(p_clipper->GetOutput());
@@ -297,7 +314,12 @@ void NetworkToSurface<DIM>::Update()
 
         vtkSmartPointer<vtkPolyDataNormals> p_normals = vtkSmartPointer<vtkPolyDataNormals>::New();
 //        p_normals->SetInputConnection(p_capper->GetOutputPort());
-        p_normals->SetInputData(p_cleaned);
+        #if VTK_MAJOR_VERSION <= 5
+            p_normals->SetInput(p_cleaned);
+        #else
+            p_normals->SetInputData(p_cleaned);
+        #endif
+
         p_normals->AutoOrientNormalsOn();
         p_normals->SplittingOff();
         p_normals->ConsistencyOn();
