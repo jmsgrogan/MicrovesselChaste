@@ -105,7 +105,12 @@ void ImageToSurface::Update()
     if(mUseMarchingCubes)
     {
         vtkSmartPointer<vtkMarchingCubes> p_marching_cubes = vtkSmartPointer<vtkMarchingCubes>::New();
-        p_marching_cubes->SetInputData(mpImage);
+        #if VTK_MAJOR_VERSION <= 5
+            p_marching_cubes->SetInput(mpImage);
+        #else
+            p_marching_cubes->SetInputData(mpImage);
+        #endif
+
         p_marching_cubes->SetValue(0, mThreshold);
         p_marching_cubes->Update();
 
@@ -114,7 +119,11 @@ void ImageToSurface::Update()
     else
     {
         vtkSmartPointer<vtkThreshold> p_threshold = vtkSmartPointer<vtkThreshold>::New();
-        p_threshold->SetInputData(mpImage);
+        #if VTK_MAJOR_VERSION <= 5
+            p_threshold->SetInput(mpImage);
+        #else
+            p_threshold->SetInputData(mpImage);
+        #endif
 
         if(mSegmentAboveThreshold)
         {

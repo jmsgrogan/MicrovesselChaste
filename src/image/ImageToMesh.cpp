@@ -161,8 +161,13 @@ void ImageToMesh<DIM>::Update()
         p_sampling_data->SetPoints(p_vtk_points);
 
         vtkSmartPointer<vtkProbeFilter> p_image_probe = vtkSmartPointer<vtkProbeFilter>::New();
-        p_image_probe->SetInputData(p_sampling_data);
-        p_image_probe->SetSourceData(mpImage);
+        #if VTK_MAJOR_VERSION <= 5
+            p_image_probe->SetInput(p_sampling_data);
+            p_image_probe->SetSource(mpImage);
+        #else
+            p_image_probe->SetInputData(p_sampling_data);
+            p_image_probe->SetSourceData(mpImage);
+        #endif
         p_image_probe->Update();
 
         std::vector<DimensionalChastePoint<DIM> > holes;

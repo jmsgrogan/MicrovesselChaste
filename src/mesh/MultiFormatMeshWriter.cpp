@@ -167,13 +167,22 @@ void MultiFormatMeshWriter<DIM>::Write()
         {
             vtkSmartPointer<vtkXMLUnstructuredGridWriter> p_writer1 = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
             p_writer1->SetFileName((mFilepath + ".vtu").c_str());
-            p_writer1->SetInputData(mpVtkMesh);
+            #if VTK_MAJOR_VERSION <= 5
+                p_writer1->SetInput(mpVtkMesh);
+            #else
+                p_writer1->SetInputData(mpVtkMesh);
+            #endif
             p_writer1->Write();
         }
         else
         {
             vtkSmartPointer<vtkGeometryFilter> p_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
-            p_geom_filter->SetInputData(mpVtkMesh);
+            #if VTK_MAJOR_VERSION <= 5
+                p_geom_filter->SetInput(mpVtkMesh);
+            #else
+                p_geom_filter->SetInputData(mpVtkMesh);
+            #endif
+
             p_geom_filter->Update();
 
             vtkSmartPointer<vtkTriangleFilter> p_tri_filter = vtkSmartPointer<vtkTriangleFilter>::New();
@@ -185,7 +194,12 @@ void MultiFormatMeshWriter<DIM>::Write()
 
             vtkSmartPointer<vtkSTLWriter> p_writer1 = vtkSmartPointer<vtkSTLWriter>::New();
             p_writer1->SetFileName((mFilepath + ".stl").c_str());
-            p_writer1->SetInputData(p_clean_filter->GetOutput());
+
+            #if VTK_MAJOR_VERSION <= 5
+                p_writer1->SetInput(p_clean_filter->GetOutput());
+            #else
+                p_writer1->SetInputData(p_clean_filter->GetOutput());
+            #endif
             p_writer1->SetFileTypeToASCII();
             p_writer1->Write();
         }
