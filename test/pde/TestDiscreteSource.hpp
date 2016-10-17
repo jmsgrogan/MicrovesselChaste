@@ -54,6 +54,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "DiscreteContinuumMesh.hpp"
 #include "FunctionMap.hpp"
 #include "FiniteElementSolver.hpp"
+#include "VtkMeshWriter.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
@@ -64,13 +65,14 @@ public:
 
     void TestGridFunction() throw(Exception)
     {
-        units::quantity<unit::length> length = 100 * 1.e-6 * unit::metres;
+        units::quantity<unit::length> length(100.0*unit::microns);
 
         // Set up the grid
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(length, length, length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        p_domain->AddCuboid(length, length, length, DimensionalChastePoint<3>());
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        p_grid->GenerateFromPart(p_domain, 5.0 * 1.e-6 * unit::metres);
+        units::quantity<unit::length> grid_spacing(5.0*unit::microns);
+        p_grid->GenerateFromPart(p_domain, grid_spacing);
 
         // Set up the discrete source
         std::vector<DimensionalChastePoint<3> > linear_consumption_points;
@@ -116,15 +118,15 @@ public:
 
     void TestMeshFunction() throw(Exception)
     {
-        units::quantity<unit::length> length = 100 * 1.e-6 * unit::metres;
+        units::quantity<unit::length> length(100.0*unit::microns);
 
         // Set up the grid
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(length, length, length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        p_domain->AddCuboid(length, length, length, DimensionalChastePoint<3>());
 
         boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_domain);
-        p_mesh_generator->SetMaxElementArea(100.0*units::pow<3>(1.e-6 * unit::metres));
+        p_mesh_generator->SetMaxElementArea(units::pow<3>(0.1*length));
         p_mesh_generator->Update();
 
         // Set up the discrete source
@@ -162,38 +164,37 @@ public:
         {
             solution.push_back(double(point_rates[idx].value() + point_conc_rates[idx].value()));
         }
-
         solver.UpdateElementSolution(solution);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteSource/TestMeshFunction", true));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteSource/TestMeshFunction", false));
         solver.SetFileHandler(p_output_file_handler);
         solver.Write();
     }
 
     void TestLinearGridPde() throw(Exception)
     {
-        units::quantity<unit::length> length = 100 * 1.e-6 * unit::metres;
+        units::quantity<unit::length> length(100.0*unit::microns);
 
         // Set up the grid
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(length, length, length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        p_domain->AddCuboid(length, length, length, DimensionalChastePoint<3>());
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        p_grid->GenerateFromPart(p_domain, 10.0 * 1.e-6 * unit::metres);
+        units::quantity<unit::length> grid_spacing(5.0*unit::microns);
+        p_grid->GenerateFromPart(p_domain, grid_spacing);
 
         // Choose the PDE
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
         units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
-        units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e-4 * unit::mole_per_metre_cubed_per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
-        p_pde->SetContinuumConstantInUTerm(consumption_rate);
 
         // Set up the discrete source
         std::vector<DimensionalChastePoint<3> > linear_consumption_points;
         linear_consumption_points.push_back(DimensionalChastePoint<3>(50.0, 50.0, 50.0, 1.e-6 * unit::metres));
         boost::shared_ptr<DiscreteSource<3> > p_linear_point_source = DiscreteSource<3>::Create();
-        p_linear_point_source->SetLinearInUValue(1.0 * unit::per_second);
+        p_linear_point_source->SetLinearInUValue(-1.0 * unit::per_second);
         p_linear_point_source->SetPoints(linear_consumption_points);
 
         boost::shared_ptr<DiscreteSource<3> > p_const_point_source = DiscreteSource<3>::Create();
+        units::quantity<unit::concentration_flow_rate> consumption_rate(2.e-4 * unit::mole_per_metre_cubed_per_second);
         p_const_point_source->SetConstantInUValue(consumption_rate);
         std::vector<DimensionalChastePoint<3> > constant_consumption_points;
         constant_consumption_points.push_back(DimensionalChastePoint<3>(25.0, 25.0, 25.0, 1.e-6 * unit::metres));
@@ -209,11 +210,14 @@ public:
         p_pde->AddDiscreteSource(p_const_point_source);
         p_pde->AddDiscreteSource(p_linear_point_source);
 
+        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary2 = DiscreteContinuumBoundaryCondition<3>::Create();
+        p_boundary2->SetValue(3.e-6*unit::mole_per_metre_cubed);
+
         // Set up and run the solver
         FiniteDifferenceSolver<3> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
-
+        solver.AddBoundaryCondition(p_boundary2);
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteSource/TestLinearGridPde", false));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
@@ -222,30 +226,31 @@ public:
 
     void TestNonLinearGridPde() throw(Exception)
     {
-        units::quantity<unit::length> length = 100 * 1.e-6 * unit::metres;
+        units::quantity<unit::length> length(100.0*unit::microns);
 
         // Set up the grid
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(length, length, length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        p_grid->GenerateFromPart(p_domain, 10.0 * 1.e-6 * unit::metres);
+        units::quantity<unit::length> grid_spacing(5.0*unit::microns);
+        p_grid->GenerateFromPart(p_domain, grid_spacing);
 
         // Choose the PDE
         boost::shared_ptr<MichaelisMentenSteadyStateDiffusionReactionPde<3> > p_pde = MichaelisMentenSteadyStateDiffusionReactionPde<3>::Create();
         units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
-        units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e-4 * unit::mole_per_metre_cubed_per_second);
+
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
-        p_pde->SetContinuumConstantInUTerm(consumption_rate);
         p_pde->SetMichaelisMentenThreshold(2.0 * unit::mole_per_metre_cubed);
 
         // Set up the discrete source
         std::vector<DimensionalChastePoint<3> > linear_consumption_points;
         linear_consumption_points.push_back(DimensionalChastePoint<3>(50.0, 50.0, 50.0, 1.e-6 * unit::metres));
         boost::shared_ptr<DiscreteSource<3> > p_linear_point_source = DiscreteSource<3>::Create();
-        p_linear_point_source->SetLinearInUValue(1.0 * unit::per_second);
+        p_linear_point_source->SetLinearInUValue(-1.0 * unit::per_second);
         p_linear_point_source->SetPoints(linear_consumption_points);
 
         boost::shared_ptr<DiscreteSource<3> > p_const_point_source = DiscreteSource<3>::Create();
+        units::quantity<unit::concentration_flow_rate> consumption_rate(2.e-4 * unit::mole_per_metre_cubed_per_second);
         p_const_point_source->SetConstantInUValue(consumption_rate);
         std::vector<DimensionalChastePoint<3> > constant_consumption_points;
         constant_consumption_points.push_back(DimensionalChastePoint<3>(25.0, 25.0, 25.0, 1.e-6 * unit::metres));
@@ -258,6 +263,9 @@ public:
         constant_consumption_points.push_back(DimensionalChastePoint<3>(25.0, 75.0, 75.0, 1.e-6 * unit::metres));
         p_const_point_source->SetPoints(constant_consumption_points);
 
+        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary2 = DiscreteContinuumBoundaryCondition<3>::Create();
+        p_boundary2->SetValue(3.e-6*unit::mole_per_metre_cubed);
+
         p_pde->AddDiscreteSource(p_linear_point_source);
         p_pde->AddDiscreteSource(p_const_point_source);
 
@@ -265,7 +273,7 @@ public:
         FiniteDifferenceSolver<3> solver;
         solver.SetGrid(p_grid);
         solver.SetNonLinearPde(p_pde);
-
+        solver.AddBoundaryCondition(p_boundary2);
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteSource/TestNonLinearGridPde", false));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);

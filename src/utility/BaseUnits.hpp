@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef BaseUnits_HPP_
-#define BaseUnits_HPP_
+#ifndef BASEUNITS_HPP_
+#define BASEUNITS_HPP_
 
 #include <boost/shared_ptr.hpp>
 #include "ChasteSerialization.hpp"
@@ -161,4 +161,4 @@ private:
 
 };
 
-#endif /*BaseUnits_HPP_*/
+#endif /*BASEUNITS_HPP_*/

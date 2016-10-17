@@ -33,21 +33,20 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef TESTNETWORKTOIMAGE_HPP_
-#define TESTNETWORKTOIMAGE_HPP_
+#ifndef TESTNETWORKTOSURFACE_HPP_
+#define TESTNETWORKTOSURFACE_HPP_
 
 #include <cxxtest/TestSuite.h>
-#include "SmartPointers.hpp"
-#include "ImageReader.hpp"
-#include "RegularGridWriter.hpp"
-#include "NetworkToImage.hpp"
+#include <vector>
+#include <string>
+#include <math.h>
 #include "FileFinder.hpp"
-#include "OutputFileHandler.hpp"
-#include "VesselNode.hpp"
 #include "VesselNetwork.hpp"
-#include "Vessel.hpp"
+#include "OutputFileHandler.hpp"
+#include "NetworkToSurface.hpp"
+#include "GeometryWriter.hpp"
 
-class TestNetworkToImage : public CxxTest::TestSuite
+class TestNetworkToSurface : public CxxTest::TestSuite
 {
 public:
 
@@ -64,25 +63,16 @@ public:
         p_network->SetSegmentRadii(radius* 1.e-6 * unit::metres);
         p_network->SetNodeRadiiFromSegments();
 
-        // Convert it to an image
-        NetworkToImage<3> converter;
-        converter.SetNetwork(p_network);
-        converter.SetGridSpacing(2.0* 1.e-6 * unit::metres);
-        converter.SetPaddingFactors(0.0, 0.1, 0.0);
+        // Convert it to a surface
+        NetworkToSurface<3> converter;
+        converter.SetVesselNetwork(p_network);
         converter.Update();
 
         // Write out the image
-        OutputFileHandler file_handler1 = OutputFileHandler("TestNetworkToImage/");
-        RegularGridWriter writer;
-        writer.SetImage(converter.GetOutput());
-        writer.SetFilename(file_handler1.GetOutputDirectoryFullPath()+"single_vessel.vti");
-        writer.Write();
-
-        converter.SetImageDimension(2);
-        converter.Update();
-
-        writer.SetImage(converter.GetOutput());
-        writer.SetFilename(file_handler1.GetOutputDirectoryFullPath()+"single_vessel_2d.vti");
+        OutputFileHandler file_handler1("TestNetworkToSurface/");
+        GeometryWriter writer;
+        writer.SetInput(converter.GetSurface());
+        writer.SetFileName(file_handler1.GetOutputDirectoryFullPath()+"single_vessel.vti");
         writer.Write();
     }
 
@@ -114,25 +104,18 @@ public:
         p_network->SetSegmentRadii(radius* 1.e-6 * unit::metres);
         p_network->SetNodeRadiiFromSegments();
 
-        // Convert it to an image
-        NetworkToImage<3> converter;
-        converter.SetNetwork(p_network);
-        converter.SetGridSpacing(2.0* 1.e-6 * unit::metres);
-        converter.SetPaddingFactors(0.0, 0.1, 0.0);
+        // Convert it to a surface
+        NetworkToSurface<3> converter;
+        converter.SetVesselNetwork(p_network);
         converter.Update();
 
         // Write out the image
-        OutputFileHandler file_handler1 = OutputFileHandler("TestNetworkToImage/", false);
-        RegularGridWriter writer;
-        writer.SetImage(converter.GetOutput());
-        writer.SetFilename(file_handler1.GetOutputDirectoryFullPath()+"bifurcation_vessel.vti");
-        writer.Write();
-
-        converter.SetImageDimension(2);
-        converter.Update();
-        writer.SetImage(converter.GetOutput());
-        writer.SetFilename(file_handler1.GetOutputDirectoryFullPath()+"bifurcation_vessel_2d.vti");
+        OutputFileHandler file_handler1("TestNetworkToSurface/", false);
+        GeometryWriter writer;
+        writer.SetInput(converter.GetSurface());
+        writer.SetFileName(file_handler1.GetOutputDirectoryFullPath()+"bifrucation_vessel.vti");
         writer.Write();
     }
 };
-#endif
+
+#endif /*TESTNETWORKTOSURFACE_HPP_*/

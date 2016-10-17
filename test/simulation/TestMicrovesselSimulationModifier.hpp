@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef TESTSPHEROIDWITHANGIOGENESIS_HPP_
-#define TESTSPHEROIDWITHANGIOGENESIS_HPP_
+#ifndef TESTMICROVESSELSIMULATIONMODIFIER_HPP_
+#define TESTMICROVESSELSIMULATIONMODIFIER_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include "LinearSteadyStateDiffusionReactionPde.hpp"
@@ -77,20 +77,18 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "MicrovesselSimulationModifier.hpp"
 #include "RegularGrid.hpp"
 #include "UnitCollection.hpp"
+#include "CellBasedDiscreteSource.hpp"
 
-class TestSpheroidWithAngiogenesis : public AbstractCellBasedTestSuite
+class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
 {
 
     boost::shared_ptr<Part<3> > GetSimulationDomain()
     {
-        double domain_x = 800.0;
-        double domain_y = 800.0;
-        double domain_z = 200.0;
+        units::quantity<unit::length> domain_x(800.0*unit::microns);
+        units::quantity<unit::length> domain_y(800.0*unit::microns);
+        units::quantity<unit::length> domain_z(200.0*unit::microns);
         boost::shared_ptr<Part<3> > p_domain = Part<3> ::Create();
-        p_domain->AddCuboid(domain_x*1.e-6*unit::metres,
-                            domain_y*1.e-6*unit::metres,
-                            domain_z*1.e-6*unit::metres,
-                            DimensionalChastePoint<3>(0.0));
+        p_domain->AddCuboid(domain_x, domain_y, domain_z, DimensionalChastePoint<3>());
         return p_domain;
     }
 
@@ -100,13 +98,13 @@ class TestSpheroidWithAngiogenesis : public AbstractCellBasedTestSuite
         std::vector<boost::shared_ptr<VesselNode<3> > > bottom_nodes;
         for(unsigned idx=0; idx<81; idx++)
         {
-            bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10, 50.0, 100.0));
+            bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10.0, 50.0, 100.0, 1.e-6*unit::metres));
         }
         boost::shared_ptr<Vessel<3> > p_vessel_1 = Vessel<3>::Create(bottom_nodes);
         std::vector<boost::shared_ptr<VesselNode<3> > > top_nodes;
         for(unsigned idx=0; idx<81; idx++)
         {
-            top_nodes.push_back(VesselNode<3>::Create(double(idx)*10, 750.0, 100.0));
+            top_nodes.push_back(VesselNode<3>::Create(double(idx)*10.0, 750.0, 100.0, 1.e-6*unit::metres));
         }
         boost::shared_ptr<Vessel<3> > p_vessel_2 = Vessel<3>::Create(top_nodes);
 
@@ -135,11 +133,11 @@ class TestSpheroidWithAngiogenesis : public AbstractCellBasedTestSuite
 
     boost::shared_ptr<Part<3> > GetInitialTumourCellRegion()
     {
-        double radius = 100.0;
-        double depth = 200.0;
+        units::quantity<unit::length> radius(100.0*unit::microns);
+        units::quantity<unit::length> depth(200.0*unit::microns);
         boost::shared_ptr<Part<3> > p_domain = Part<3> ::Create();
-        boost::shared_ptr<Polygon<3> > circle = p_domain->AddCircle(radius*1.e-6*unit::metres, DimensionalChastePoint<3>(400.0, 400.0, 0.0));
-        p_domain->Extrude(circle, depth*1.e-6*unit::metres);
+        boost::shared_ptr<Polygon<3> > circle = p_domain->AddCircle(radius, DimensionalChastePoint<3>(400.0, 400.0, 0.0, 1.e-6*unit::metres));
+        p_domain->Extrude(circle, depth);
         return p_domain;
     }
 
@@ -150,25 +148,21 @@ class TestSpheroidWithAngiogenesis : public AbstractCellBasedTestSuite
         units::quantity<unit::diffusivity> oxygen_diffusivity(0.0033 * unit::metre_squared_per_second);
         p_oxygen_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity);
 
-        boost::shared_ptr<DiscreteSource<3> > p_cell_oxygen_sink = DiscreteSource<3>::Create();
-//        p_cell_oxygen_sink->SetType(SourceType::CELL);
-//        p_cell_oxygen_sink->SetSource(SourceStrength::PRESCRIBED);
-//        p_cell_oxygen_sink->SetValue(1.e-6 * unit::);
+        boost::shared_ptr<CellBasedDiscreteSource<3> > p_cell_oxygen_sink = CellBasedDiscreteSource<3>::Create();
+        p_cell_oxygen_sink->SetConstantInUConsumptionRatePerCell(-1.e-9 * unit::mole_per_second);
         p_oxygen_pde->AddDiscreteSource(p_cell_oxygen_sink);
 
         boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_vessel_ox_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
-        p_vessel_ox_boundary_condition->SetValue(40.0 * unit::mole_per_metre_cubed);
-        p_vessel_ox_boundary_condition->SetType(BoundaryConditionType::VESSEL_LINE);
-        p_vessel_ox_boundary_condition->SetSource(BoundaryConditionSource::PRESCRIBED);
-        p_vessel_ox_boundary_condition->SetNetwork(p_network);
+        p_vessel_ox_boundary_condition->SetValue(40.0e-6 * unit::mole_per_metre_cubed);
 
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        p_grid->GenerateFromPart(p_domain, 40.0 * 1.e-6 * unit::metres);
+        p_grid->GenerateFromPart(p_domain, 50.0 * 1.e-6 * unit::metres);
 
         boost::shared_ptr<FiniteDifferenceSolver<3> > p_oxygen_solver = FiniteDifferenceSolver<3>::Create();
         p_oxygen_solver->SetGrid(p_grid);
         p_oxygen_solver->SetPde(p_oxygen_pde);
         p_oxygen_solver->AddBoundaryCondition(p_vessel_ox_boundary_condition);
+        p_oxygen_solver->SetLabel("oxygen");
         return p_oxygen_solver;
     }
 
@@ -176,23 +170,26 @@ class TestSpheroidWithAngiogenesis : public AbstractCellBasedTestSuite
                                                                   boost::shared_ptr<VesselNetwork<3> > p_network)
     {
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_vegf_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
-        units::quantity<unit::diffusivity> oxygen_diffusivity(0.0033 * unit::metre_squared_per_second);
+        units::quantity<unit::diffusivity> vegf_diffusivity(0.0033 * unit::metre_squared_per_second);
 
-        p_vegf_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity);
+        p_vegf_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
         p_vegf_pde->SetContinuumLinearInUTerm(-1.e-7*unit::per_second);
 
-        boost::shared_ptr<DiscreteSource<3> > p_cell_vegf_source = DiscreteSource<3>::Create();
-//        p_cell_vegf_source->SetType(SourceType::CELL);
-//        p_cell_vegf_source->SetSource(SourceStrength::PRESCRIBED);
-//        p_cell_vegf_source->SetValue(-1.e-4);
+        boost::shared_ptr<CellBasedDiscreteSource<3> > p_cell_vegf_source = CellBasedDiscreteSource<3>::Create();
+        p_cell_vegf_source->SetConstantInUConsumptionRatePerCell(1.e-6 * unit::mole_per_second);
         p_vegf_pde->AddDiscreteSource(p_cell_vegf_source);
 
+        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_vessel_vegf_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
+        p_vessel_vegf_boundary_condition->SetValue(3.e-9 * unit::mole_per_metre_cubed);
+
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        p_grid->GenerateFromPart(p_domain, 40.0 * 1.e-6 * unit::metres);
+        p_grid->GenerateFromPart(p_domain, 50.0 * 1.e-6 * unit::metres);
 
         boost::shared_ptr<FiniteDifferenceSolver<3> > p_vegf_solver = FiniteDifferenceSolver<3>::Create();
         p_vegf_solver->SetGrid(p_grid);
         p_vegf_solver->SetPde(p_vegf_pde);
+        p_vegf_solver->AddBoundaryCondition(p_vessel_vegf_boundary_condition);
+        p_vegf_solver->SetLabel("vegf");
         return p_vegf_solver;
     }
 
@@ -254,7 +251,7 @@ public:
         p_simulation_modifier->SetCellDataUpdateLabels(update_labels);
 
         OnLatticeSimulation<3> simulator(cell_population);
-        simulator.SetOutputDirectory("TestAngiogenesisSimulationModifier/CaBased");
+        simulator.SetOutputDirectory("TestMicrovesselSimulationModifier/CaBased");
         simulator.SetDt(1.0);
         simulator.SetEndTime(4.0);
         simulator.AddSimulationModifier(p_simulation_modifier);
@@ -276,11 +273,18 @@ public:
         // Create a tumour cells in a cylinder in the middle of the domain
         boost::shared_ptr<Part<3> > p_tumour_cell_region = GetInitialTumourCellRegion();
         std::vector<unsigned> location_indices = p_tumour_cell_region->GetContainingGridIndices(num_x, num_y, num_z, spacing);
+        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        std::vector<unsigned> extents(3);
+        extents[0] = num_x;
+        extents[1] = num_y;
+        extents[2] = num_z;
+        p_grid->SetExtents(extents);
+        p_grid->SetSpacing(spacing);
 
         std::vector<Node<3>*> nodes;
         for(unsigned idx=0; idx<location_indices.size(); idx++)
         {
-            DimensionalChastePoint<3> location(0.0, 0.0, 0.0);
+            DimensionalChastePoint<3> location = p_grid->GetLocationOf1dIndex(location_indices[idx]);
             nodes.push_back(new Node<3>(idx, location.GetLocation(cell_lenth_scale), false));
         }
 
@@ -305,7 +309,7 @@ public:
         // Create the vegf pde solver
         boost::shared_ptr<FiniteDifferenceSolver<3> > p_vegf_solver = GetVegfSolver(p_domain, p_network);
         p_vegf_solver->GetGrid()->SetVesselNetwork(p_network);
-        p_vegf_solver->GetGrid()->SetCellPopulation(cell_population,cell_lenth_scale);
+        p_vegf_solver->GetGrid()->SetCellPopulation(cell_population, cell_lenth_scale);
         p_vegf_solver->Setup();
 
         // Create the angiogenesis solver
@@ -323,7 +327,7 @@ public:
         p_simulation_modifier->SetCellDataUpdateLabels(update_labels);
 
         OffLatticeSimulation<3> simulator(cell_population);
-        simulator.SetOutputDirectory("TestAngiogenesisSimulationModifier/NodeBased");
+        simulator.SetOutputDirectory("TestMicrovesselSimulationModifier/NodeBased");
         simulator.SetDt(1.0);
         simulator.SetEndTime(4.0);
         simulator.AddSimulationModifier(p_simulation_modifier);
@@ -340,4 +344,4 @@ public:
     }
 };
 
-#endif /* TESTSPHEROIDWITHANGIOGENESIS_HPP_ */
+#endif /* TESTMICROVESSELSIMULATIONMODIFIER_HPP_ */

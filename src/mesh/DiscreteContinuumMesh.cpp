@@ -58,7 +58,7 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::DiscreteContinuumMesh() :
     mAttributes(),
     mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
-    mpVtkMesh(vtkSmartPointer<vtkUnstructuredGrid>::New()),
+    mpVtkMesh(),
     mpVtkCellLocator(vtkSmartPointer<vtkCellLocator>::New()),
     mVtkRepresentationUpToDate(false),
     mPointElementMap(),
@@ -322,8 +322,7 @@ std::vector<std::vector<unsigned> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM
         unsigned num_nodes = AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetElement(idx)->GetNumNodes();
         for (unsigned jdx = 0; jdx < num_nodes; jdx++)
         {
-            node_indexes.push_back(
-                    AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetElement(idx)->GetNodeGlobalIndex(jdx));
+            node_indexes.push_back(AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetElement(idx)->GetNodeGlobalIndex(jdx));
         }
         connectivity.push_back(node_indexes);
     }
@@ -337,7 +336,7 @@ std::vector<c_vector<double, SPACE_DIM> > DiscreteContinuumMesh<ELEMENT_DIM, SPA
     std::vector<c_vector<double, SPACE_DIM> > locations(num_nodes);
     for (unsigned idx = 0; idx < num_nodes; idx++)
     {
-        locations.push_back(AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetNode(idx)->rGetLocation());
+        locations[idx] = AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetNode(idx)->rGetLocation();
     }
     return locations;
 }
@@ -345,11 +344,11 @@ std::vector<c_vector<double, SPACE_DIM> > DiscreteContinuumMesh<ELEMENT_DIM, SPA
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 std::vector<DimensionalChastePoint<SPACE_DIM> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetNodeLocationsAsPoints()
 {
-    std::vector<DimensionalChastePoint<SPACE_DIM> > locations;
     unsigned num_nodes = AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetNumNodes();
+    std::vector<DimensionalChastePoint<SPACE_DIM> > locations(num_nodes);
     for (unsigned idx = 0; idx < num_nodes; idx++)
     {
-        locations.push_back(DimensionalChastePoint<SPACE_DIM>(AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetNode(idx)->rGetLocation(), mReferenceLength));
+        locations[idx] = DimensionalChastePoint<SPACE_DIM>(AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetNode(idx)->rGetLocation(), mReferenceLength);
     }
     return locations;
 }

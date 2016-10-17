@@ -99,7 +99,7 @@ void MechanicalStimulusCalculator<DIM>::Calculate()
 
         // Empirical Equation. Pressure in mmHg, WSS in dyne/cm2.
         units::quantity<unit::pressure> conversion_pressure(1.0*unit::mmHg);
-        double average_pressure_in_mmHg = (node0_pressure + node1_pressure)/conversion_pressure;
+        double average_pressure_in_mmHg = (node0_pressure + node1_pressure)/(2.0*conversion_pressure);
 
         // The calculation does not work for low pressures, so we need to specify a cut-off value.
         if (log10(average_pressure_in_mmHg) < 1.0)
@@ -113,8 +113,7 @@ void MechanicalStimulusCalculator<DIM>::Calculate()
         }
 
         // The equation is dimensionally inconsistent. Drop out of the units framework.
-        double log_term_1 = log10((segments[idx]->GetFlowProperties()->GetWallShearStress()/dyne_per_centi_metre_squared +
-                mTauRef/dyne_per_centi_metre_squared));
+        double log_term_1 = log10((segments[idx]->GetFlowProperties()->GetWallShearStress()/dyne_per_centi_metre_squared + mTauRef/dyne_per_centi_metre_squared));
         double log_term_2 = log10(mTauP/dyne_per_centi_metre_squared);
 
         units::quantity<unit::rate> mechanical_stimulus = (log_term_1 - 0.5*log_term_2) * unit::per_second;

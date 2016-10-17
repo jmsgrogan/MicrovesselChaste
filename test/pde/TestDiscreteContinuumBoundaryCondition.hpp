@@ -55,7 +55,7 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include "PetscSetupAndFinalize.hpp"
 
-class TestVesselBasedDiscreteSource : public CxxTest::TestSuite
+class TestDiscreteContinuumBoundaryCondition : public CxxTest::TestSuite
 {
 
 public:
@@ -94,17 +94,17 @@ public:
         p_pde->AddDiscreteSource(p_vessel_source_lin);
         p_pde->AddDiscreteSource(p_vessel_source_const);
 
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary2 = DiscreteContinuumBoundaryCondition<3>::Create();
-        p_boundary2->SetValue(1.0*unit::mole_per_metre_cubed);
+        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
+        p_boundary->SetValue(1.0*unit::mole_per_metre_cubed);
 
         // Set up and run the solver
         FiniteDifferenceSolver<3> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.SetVesselNetwork(p_network);
-        solver.AddBoundaryCondition(p_boundary2);
+        solver.AddBoundaryCondition(p_boundary);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestFiniteDifferenceSolver"));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteContinuumBoundaryCondition"));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();
@@ -144,20 +144,19 @@ public:
         boost::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_source_const = VesselBasedDiscreteSource<3>::Create();
         p_vessel_source_const->SetConstantInUValue(40.e-7* unit::mole_per_metre_cubed_per_second);
 
+        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
+        p_boundary->SetValue(1.0*unit::mole_per_metre_cubed);
+
         p_pde->AddDiscreteSource(p_vessel_source_lin);
         p_pde->AddDiscreteSource(p_vessel_source_const);
-
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary2 = DiscreteContinuumBoundaryCondition<3>::Create();
-        p_boundary2->SetValue(1.0*unit::mole_per_metre_cubed);
 
         // Set up and run the solver
         FiniteElementSolver<3> solver;
         solver.SetMesh(p_mesh_generator->GetMesh());
         solver.SetPde(p_pde);
         solver.SetVesselNetwork(p_network);
-        solver.AddBoundaryCondition(p_boundary2);
-
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestFiniteElementSolver"));
+        solver.AddBoundaryCondition(p_boundary);
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteContinuumBoundaryCondition"));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();

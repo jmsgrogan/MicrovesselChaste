@@ -276,6 +276,11 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::Setup()
 
     unsigned num_nodes = this->mpMesh->GetNodeLocationsAsPoints().size();
     this->mSolution = std::vector<double>(0.0, num_nodes);
+
+    if(this->mpNetwork)
+    {
+        this->mpMesh->SetVesselNetwork(this->mpNetwork)  ;
+    }
 }
 
 template<unsigned DIM>

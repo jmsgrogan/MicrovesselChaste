@@ -70,10 +70,10 @@ public:
         calculator->Calculate();
 
         // convert pressure to mmhg
-        double converted_pressure = pressure * 760 / (1.01 * pow(10.0, 5));
-        double Tau_P = 0.1 * (100.0 - 86.0 * pow(exp(-5.0 * log10(log10(converted_pressure))), 5.4));
-        double expected_mechanical_stimulus = log10((wall_shear_stress + 0.05) / Tau_P);
-        TS_ASSERT_DELTA(p_vessel->GetSegments()[0]->GetFlowProperties()->GetGrowthStimulus().value(), expected_mechanical_stimulus, 1e-6);
+        double converted_pressure = pressure * (760.0 / (101325.0));
+        double Tau_P = (100.0 - 86.0 * exp(-5000.0*pow(log10(log10(converted_pressure)), 5.4)));
+        double expected_mechanical_stimulus = log10(10.0*wall_shear_stress + 1.e-5) - 0.5 * log10(Tau_P);
+        TS_ASSERT_DELTA(p_vessel->GetSegments()[0]->GetFlowProperties()->GetGrowthStimulus().value(), expected_mechanical_stimulus, 1e-3);
     }
 
     void TestMechanicalStimulusVsPressure()
