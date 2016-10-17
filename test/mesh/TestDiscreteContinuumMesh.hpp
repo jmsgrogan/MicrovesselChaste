@@ -200,7 +200,7 @@ public:
         mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
     }
 
-    void TestMeshCubeWithVesselSurfaceInternal()
+    void DontTestMeshCubeWithVesselSurfaceInternal()
     {
         units::quantity<unit::length> vessel_length = 100.0* 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
@@ -224,7 +224,7 @@ public:
         mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
     }
 
-    void TestParrallelVesselSurfaceCube()
+    void DontTestParrallelVesselSurfaceCube()
     {
         units::quantity<unit::length> vessel_length = 100.0* 1.e-6 * unit::metres;
         double radius = 10.0;

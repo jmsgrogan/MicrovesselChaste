@@ -129,6 +129,10 @@ void NetworkToImage<DIM>::Update()
     {
         final_extents.push_back(unsigned(range[2])+1);
     }
+    else
+    {
+        final_extents.push_back(1);
+    }
     p_grid->SetExtents(final_extents);
     p_grid->SetOrigin(DimensionalChastePoint<DIM>(origin, mGridSpacing));
 

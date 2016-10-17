@@ -471,7 +471,7 @@ public:
         SimulationTime::Destroy();
         p_simulation_time = SimulationTime::Instance();
         p_simulation_time->SetStartTime(0.0);
-        p_simulation_time->SetEndTimeAndNumberOfTimeSteps(75.0, 150);
+        p_simulation_time->SetEndTimeAndNumberOfTimeSteps(total_time/BaseUnits::Instance()->GetReferenceTimeScale(), num_increments);
 
         // Create cell-cycle models and cells
         Owen2011OxygenBasedCellCycleModel* p_model = new Owen2011OxygenBasedCellCycleModel();

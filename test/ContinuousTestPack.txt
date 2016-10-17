@@ -29,6 +29,7 @@ geometry/tools/TestSurfaceTools.hpp
 geometry/generators/TestMappableGridGenerator.hpp
 geometry/generators/TestVesselSurfaceGenerator.hpp
 geometry/generators/TestVoronoiGenerator.hpp
+geometry/generators/TestNetworkToSurface.hpp
 geometry/writers/TestGeometryWriter.hpp
 mesh/TestDimensionalChastePoint.hpp
 mesh/TestRegularGrid.hpp
@@ -44,6 +45,7 @@ pde/TestCellBasedDiscreteSource.hpp
 pde/TestSolutionDependentDiscreteSource.hpp
 pde/TestDiscreteSource.hpp
 pde/TestVesselBasedDiscreteSource.hpp
+pde/TestDiscreteContinuumBoundaryCondition.hpp
 population/cell/TestOwen2011OxygenBasedCellCycleModelWithOde.hpp
 population/cell/TestOwen2011OxygenBasedCellCycleOdeSystem.hpp
 simulation/flow/TestFlowSolver.hpp

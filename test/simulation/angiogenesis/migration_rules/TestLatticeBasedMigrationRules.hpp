@@ -138,7 +138,7 @@ public:
         std::vector<units::quantity<unit::concentration> > vegf_field =
                 std::vector<units::quantity<unit::concentration> >(extents[0]*extents[1], 0.0*unit::mole_per_metre_cubed);
 
-        units::quantity<unit::concentration> max_vegf(0.2*1.e-9*unit::mole_per_metre_cubed);
+        units::quantity<unit::concentration> max_vegf(0.2e-9*unit::mole_per_metre_cubed);
         for(unsigned idx=0; idx<p_grid->GetNumberOfPoints(); idx++)
         {
             vegf_field[idx] = max_vegf * p_grid->GetLocationOf1dIndex(idx).GetLocation(1.e-6*unit::metres)[0] / (float(extents[0]) * spacing);
@@ -148,14 +148,14 @@ public:
         // Set up the migration rule
         boost::shared_ptr<Owen2011MigrationRule<2> > p_migration_rule = Owen2011MigrationRule<2>::Create();
         p_migration_rule->SetGrid(p_grid);
-        p_migration_rule->SetMovementProbability(0.1);
+        p_migration_rule->SetMovementProbability(1.0);
         p_migration_rule->SetNetwork(p_network);
         p_migration_rule->SetDiscreteContinuumSolver(p_funciton_map);
 
         // Test that we move into the correct locations and that sometimes, but not always, we don't move.
         // Also check that we mostly move in the direction of the vegf gradient, but not always
         RandomNumberGenerator::Instance()->Reseed(522525);
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(1.0, 1);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(100.0, 1);
 
         unsigned not_moved = 0;
         unsigned num_right = 0;

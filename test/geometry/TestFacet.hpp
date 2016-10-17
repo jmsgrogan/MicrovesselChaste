@@ -185,7 +185,7 @@ public:
 
         TS_ASSERT_DELTA(p_facet->GetPlane()->GetNormal()[0], 0.0, 1.e-6);
         TS_ASSERT_DELTA(p_facet->GetPlane()->GetNormal()[1], 0.0, 1.e-6);
-        TS_ASSERT_DELTA(p_facet->GetPlane()->GetNormal()[2], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(abs(p_facet->GetPlane()->GetNormal()[2]), 1.0, 1.e-6);
 
         std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > short_vertices;
         short_vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));

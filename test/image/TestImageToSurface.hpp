@@ -45,7 +45,6 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "ImageReader.hpp"
 #include "SurfaceCleaner.hpp"
 #include "GeometryWriter.hpp"
-
 #include "FileFinder.hpp"
 #include "OutputFileHandler.hpp"
 
