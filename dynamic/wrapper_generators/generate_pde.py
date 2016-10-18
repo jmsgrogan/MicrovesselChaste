@@ -24,44 +24,40 @@ def update_builder(builder):
                        "BoundaryConditionType",
                        "BoundaryConditionSource",
                        "SourceType",
-                       "SourceStrength"]
-    
-    sizeof(DiscreteSource<3>) +
-                    sizeof(CellStateDependentDiscreteSource<3>) +
-                    sizeof(CellBasedDiscreteSource<3>) +
-                    sizeof(SolutionDependentDiscreteSource<3>) +
-                    sizeof(VesselBasedDiscreteSource<3>) +
-                    sizeof(DiscreteContinuumBoundaryCondition<3>) +
-                    sizeof(AbstractDiscreteContinuumLinearEllipticPde<3, 3>) +
-                    sizeof(AbstractDiscreteContinuumNonLinearEllipticPde<3, 3>) +
-                    sizeof(LinearSteadyStateDiffusionReactionPde<3, 3>) +
-                    sizeof(MichaelisMentenSteadyStateDiffusionReactionPde<3, 3>) +
-                    sizeof(LinearSteadyStateDiffusionReactionPde<3, 3>) +
-                    sizeof(AbstractDiscreteContinuumSolver<3>) +
-                    sizeof(AbstractRegularGridDiscreteContinuumSolver<3>) +
-                    sizeof(AbstractUnstructuredGridDiscreteContinuumSolver<3>) +
-                    sizeof(FiniteDifferenceSolver<3>) +
-                    sizeof(FiniteElementSolver<3>) +
-                    sizeof(FunctionMap<3>) +
-                    sizeof(GreensFunctionSolver<3>) +
-                    sizeof(DiscreteSource<2>) +
-                    sizeof(CellStateDependentDiscreteSource<2>) +
-                    sizeof(CellBasedDiscreteSource<2>) +
-                    sizeof(SolutionDependentDiscreteSource<2>) +
-                    sizeof(VesselBasedDiscreteSource<2>) +
-                    sizeof(DiscreteContinuumBoundaryCondition<2>) +
-                    sizeof(AbstractDiscreteContinuumLinearEllipticPde<2, 2>) +
-                    sizeof(AbstractDiscreteContinuumNonLinearEllipticPde<2, 2>) +
-                    sizeof(LinearSteadyStateDiffusionReactionPde<2, 2>) +
-                    sizeof(MichaelisMentenSteadyStateDiffusionReactionPde<2, 2>) +
-                    sizeof(LinearSteadyStateDiffusionReactionPde<2, 2>) +
-                    sizeof(AbstractDiscreteContinuumSolver<2>) +
-                    sizeof(AbstractRegularGridDiscreteContinuumSolver<2>) +
-                    sizeof(AbstractUnstructuredGridDiscreteContinuumSolver<2>) +
-                    sizeof(FiniteDifferenceSolver<2>) +
-                    sizeof(FiniteElementSolver<2>) +
-                    sizeof(FunctionMap<2>) +
-                    sizeof(GreensFunctionSolver<2>);
+                       "SourceStrength"
+                       "DiscreteSource<3>",
+                       "SolutionDependentDiscreteSource<3>",
+                       "VesselBasedDiscreteSource<3>",
+                       "DiscreteContinuumBoundaryCondition<3>",
+                       "AbstractDiscreteContinuumLinearEllipticPde<3, 3>",
+                       "AbstractDiscreteContinuumNonLinearEllipticPde<3, 3>",
+                       "LinearSteadyStateDiffusionReactionPde<3, 3>",
+                       "MichaelisMentenSteadyStateDiffusionReactionPde<3, 3>",
+                       "AbstractDiscreteContinuumSolver<3>",
+                       "AbstractRegularGridDiscreteContinuumSolver<3>",
+                       "AbstractUnstructuredGridDiscreteContinuumSolver<3>",
+                       "FiniteDifferenceSolver<3>",
+                       "FiniteElementSolver<3>",
+                       "FunctionMap<3>",
+                       "GreensFunctionSolver<3>",
+                       "DiscreteSource<2>",
+                       "CellStateDependentDiscreteSource<2>",
+                       "CellBasedDiscreteSource<2>",
+                       "SolutionDependentDiscreteSource<2>",
+                       "VesselBasedDiscreteSource<2>",
+                       "DiscreteContinuumBoundaryCondition<2>",
+                       "AbstractDiscreteContinuumLinearEllipticPde<2, 2>",
+                       "AbstractDiscreteContinuumNonLinearEllipticPde<2, 2>",
+                       "LinearSteadyStateDiffusionReactionPde<2, 2>",
+                       "MichaelisMentenSteadyStateDiffusionReactionPde<2, 2>",
+                       "AbstractDiscreteContinuumSolver<2>",
+                       "AbstractRegularGridDiscreteContinuumSolver<2>",
+                       "AbstractUnstructuredGridDiscreteContinuumSolver<2>",
+                       "FiniteDifferenceSolver<2>",
+                       "FiniteElementSolver<2>",
+                       "FunctionMap<2>",
+                       "GreensFunctionSolver<2>",
+                       ]
 
     for eachClass in include_classes:
         builder.class_(eachClass).include()  
