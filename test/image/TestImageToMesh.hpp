@@ -38,9 +38,6 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include <cxxtest/TestSuite.h>
 #include "SmartPointers.hpp"
-#include <vtkXMLPolyDataWriter.h>
-#include <vtkXMLImageDataWriter.h>
-#include <vtkSmartPointer.h>
 #include "ImageToMesh.hpp"
 #include "ImageReader.hpp"
 #include "RegularGridWriter.hpp"
@@ -72,16 +69,18 @@ public:
         writer.Write();
 
         // Do the meshing
-        ImageToMesh<2> image_mesher = ImageToMesh<2> ();
-        image_mesher.SetInput(reader.GetImage());
-        image_mesher.SetElementSize(2.e6*units::pow<3>(1.e-6*unit::metres));
-        image_mesher.Update();
+        boost::shared_ptr<ImageToMesh<2> > p_image_mesher = ImageToMesh<2>::Create();
+
+        TS_ASSERT_THROWS_THIS(p_image_mesher->GetMesh(), "No mesh set. Did you run 'Update()' ?");
+        p_image_mesher->SetInput(reader.GetImage());
+        p_image_mesher->SetElementSize(2.e6*units::pow<3>(1.e-6*unit::metres));
+        p_image_mesher->Update();
 
         VtkMeshWriter<2, 2> mesh_writer("TestImageToMesh", "Image2d", false);
-        mesh_writer.WriteFilesUsingMesh(*(image_mesher.GetMesh()));
+        mesh_writer.WriteFilesUsingMesh(*(p_image_mesher->GetMesh()));
     }
 
-    void Test2dMeshTissue()
+    void DontTest2dMeshTissue()
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestImageToMesh/", false);

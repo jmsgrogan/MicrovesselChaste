@@ -258,7 +258,7 @@ public:
         simulator.Solve();
     }
 
-    void TestNodeBasedSpheroid() throw (Exception)
+    void DontTestNodeBasedSpheroid() throw (Exception)
     {
         // Create the domain
         boost::shared_ptr<Part<3> > p_domain = GetSimulationDomain();

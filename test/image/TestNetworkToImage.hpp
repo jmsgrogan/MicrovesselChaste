@@ -65,23 +65,23 @@ public:
         p_network->SetNodeRadiiFromSegments();
 
         // Convert it to an image
-        NetworkToImage<3> converter;
-        converter.SetNetwork(p_network);
-        converter.SetGridSpacing(2.0* 1.e-6 * unit::metres);
-        converter.SetPaddingFactors(0.0, 0.1, 0.0);
-        converter.Update();
+        boost::shared_ptr<NetworkToImage<3> > p_converter = NetworkToImage<3>::Create();
+        p_converter->SetNetwork(p_network);
+        p_converter->SetGridSpacing(2.0* 1.e-6 * unit::metres);
+        p_converter->SetPaddingFactors(0.0, 0.1, 0.0);
+        p_converter->Update();
 
         // Write out the image
         OutputFileHandler file_handler1 = OutputFileHandler("TestNetworkToImage/");
         RegularGridWriter writer;
-        writer.SetImage(converter.GetOutput());
+        writer.SetImage(p_converter->GetOutput());
         writer.SetFilename(file_handler1.GetOutputDirectoryFullPath()+"single_vessel.vti");
         writer.Write();
 
-        converter.SetImageDimension(2);
-        converter.Update();
+        p_converter->SetImageDimension(2);
+        p_converter->Update();
 
-        writer.SetImage(converter.GetOutput());
+        writer.SetImage(p_converter->GetOutput());
         writer.SetFilename(file_handler1.GetOutputDirectoryFullPath()+"single_vessel_2d.vti");
         writer.Write();
     }

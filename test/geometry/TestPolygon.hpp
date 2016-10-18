@@ -142,6 +142,42 @@ public:
         std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > vertex_pair = p_polygon->GetVtkVertices();
     }
 
+    void TestVtkMethods2d()
+    {
+        std::vector<boost::shared_ptr<DimensionalChastePoint<2> > > vertices;
+        vertices.push_back(DimensionalChastePoint<2>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<2>::Create(1.0, 0.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<2>::Create(1.0, 1.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<2>::Create(0.0, 1.0, 0.0, 1.e-6*unit::metres));
+
+        std::vector<boost::shared_ptr<DimensionalChastePoint<2> > > short_vertices;
+        short_vertices.push_back(DimensionalChastePoint<2>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
+        short_vertices.push_back(DimensionalChastePoint<2>::Create(1.0, 0.0, 0.0, 1.e-6*unit::metres));
+
+        boost::shared_ptr<Polygon<2> > p_polygon = Polygon<2>::Create(vertices);
+        boost::shared_ptr<Polygon<2> > p_short_polygon = Polygon<2>::Create(short_vertices);
+        TS_ASSERT_THROWS_THIS(p_short_polygon->GetNormal(), "At least 3 vertices are required to generate a normal.");
+
+        DimensionalChastePoint<2> centroid = p_polygon->GetCentroid();
+        TS_ASSERT_DELTA(centroid.GetLocation(1.e-6*unit::metres)[0], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(centroid.GetLocation(1.e-6*unit::metres)[1], 0.5, 1.e-6);
+
+        c_vector<double, 2> normal = p_polygon->GetNormal();
+        TS_ASSERT_DELTA(normal[0], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(normal[1], 0.0, 1.e-6);
+
+        DimensionalChastePoint<2> test_point1(0.75, 0.75, 0.0);
+        DimensionalChastePoint<2> test_point2(1.25, 0.75, 0.0);
+        DimensionalChastePoint<2> test_point3(0.75, 0.75, 1.0);
+
+        TS_ASSERT(p_polygon->ContainsPoint(test_point1));
+        TS_ASSERT(!p_polygon->ContainsPoint(test_point2));
+        TS_ASSERT(!p_polygon->ContainsPoint(test_point3));
+
+        vtkSmartPointer<vtkPolygon> p_vtk_polygon =  p_polygon->GetVtkPolygon();
+        std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > vertex_pair = p_polygon->GetVtkVertices();
+    }
+
     void TestTransforms()
     {
         std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices;

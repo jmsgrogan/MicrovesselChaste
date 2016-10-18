@@ -54,14 +54,14 @@ public:
         FileFinder finder = FileFinder("projects/MicrovesselChaste/test/data/bifurcation_mesh.vtu", RelativeTo::ChasteSourceRoot);
 
         // Read the file
-        MeshReader mesh_reader;
-        mesh_reader.SetFilename(finder.GetAbsolutePath());
-        mesh_reader.Read();
+        boost::shared_ptr<MeshReader> p_mesh_reader = MeshReader::Create();
+        p_mesh_reader->SetFilename(finder.GetAbsolutePath());
+        p_mesh_reader->Read();
 
         // Write it out in vtk format
         MultiFormatMeshWriter<3> mesh_writer;
         mesh_writer.SetFilename(file_handler1.GetOutputDirectoryFullPath()+"bifurcation_mesh");
-        mesh_writer.SetMesh(mesh_reader.GetMesh());
+        mesh_writer.SetMesh(p_mesh_reader->GetMesh());
         mesh_writer.SetOutputFormat(MeshFormat::VTU);
         mesh_writer.Write();
 
