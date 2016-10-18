@@ -178,15 +178,10 @@ void ImageToMesh<DIM>::Update()
             {
                 if(mpDomain)
                 {
-                    c_vector<double, 3> loc3;
-                    loc3[0] = p_vtk_points->GetPoint(idx)[0];
-                    loc3[1] = p_vtk_points->GetPoint(idx)[1];
-                    loc3[2] = p_vtk_points->GetPoint(idx)[2];
-
                     c_vector<double, DIM> loc;
                     loc[0] = p_vtk_points->GetPoint(idx)[0];
                     loc[1] = p_vtk_points->GetPoint(idx)[1];
-                    if(mpDomain->GetPolygons()[0]->ContainsPoint(DimensionalChastePoint<DIM>(loc3, reference_length)))
+                    if(mpDomain->GetPolygons()[0]->ContainsPoint(DimensionalChastePoint<DIM>(loc, reference_length)))
                     {
                         regions.push_back(DimensionalChastePoint<DIM>(loc, reference_length));
                     }
@@ -204,7 +199,6 @@ void ImageToMesh<DIM>::Update()
                 }
             }
         }
-
         DiscreteContinuumMeshGenerator<DIM, DIM> fine_mesh_generator;
         fine_mesh_generator.SetDomain(extractor.GetOutput());
         fine_mesh_generator.SetMaxElementArea(mElementSize);

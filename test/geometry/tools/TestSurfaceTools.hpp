@@ -52,7 +52,6 @@ public:
 
     void TestExtractBoundary()
     {
-
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestSurfaceTools/");
         FileFinder finder = FileFinder("projects/MicrovesselChaste/test/data/surface.vtp", RelativeTo::ChasteSourceRoot);
@@ -61,21 +60,21 @@ public:
         p_reader->SetFileName(finder.GetAbsolutePath().c_str());
         p_reader->Update();
 
-        BoundaryExtractor extractor;
-        extractor.SetInput(p_reader->GetOutput());
-        extractor.SetDoSmoothing(false);
-        extractor.Update();
+        boost::shared_ptr<BoundaryExtractor> p_extractor = BoundaryExtractor::Create();
+        p_extractor->SetInput(p_reader->GetOutput());
+        p_extractor->SetDoSmoothing(false);
+        p_extractor->Update();
 
         boost::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"boundary.vtp").c_str());
-        p_writer->SetInput(extractor.GetOutput());
+        p_writer->SetInput(p_extractor->GetOutput());
         p_writer->Write();
 
-        extractor.SetDoSmoothing(true);
-        extractor.SetSmoothingLength(200.0);
-        extractor.Update();
+        p_extractor->SetDoSmoothing(true);
+        p_extractor->SetSmoothingLength(200.0);
+        p_extractor->Update();
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"boundary_smoothed.vtp").c_str());
-        p_writer->SetInput(extractor.GetOutput());
+        p_writer->SetInput(p_extractor->GetOutput());
         p_writer->Write();
     }
 };

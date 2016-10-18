@@ -4,8 +4,8 @@
 import unittest
 import math
 import numpy as np
-import chaste.projects.angiogenesis as angiogenesis
-import chaste.projects.angiogenesis.geometry 
+import chaste.projects.microvessel as microvessel
+import chaste.projects.microvessel.geometry 
         
 class TestFacet(unittest.TestCase):
     
@@ -14,16 +14,16 @@ class TestFacet(unittest.TestCase):
     def test_all_methods(self):
         
         # Make some vertices
-        vertex1 = angiogenesis.geometry.Vertex((0.0, 0.0, 0.0))
-        vertex2 = angiogenesis.geometry.Vertex((1.0, 0.0, 0.0))
-        vertex3 = angiogenesis.geometry.Vertex((1.0, 1.0, 0.0))
-        vertex4 = angiogenesis.geometry.Vertex((0.0, 1.0, 0.0))
+        vertex1 = microvessel.geometry.Vertex((0.0, 0.0, 0.0))
+        vertex2 = microvessel.geometry.Vertex((1.0, 0.0, 0.0))
+        vertex3 = microvessel.geometry.Vertex((1.0, 1.0, 0.0))
+        vertex4 = microvessel.geometry.Vertex((0.0, 1.0, 0.0))
     
         # Make a polygon with several vertices
-        polygon = angiogenesis.geometry.Polygon([vertex1, vertex2, vertex3, vertex4])
+        polygon = microvessel.geometry.Polygon([vertex1, vertex2, vertex3, vertex4])
 
         # Make a facet
-        facet = angiogenesis.geometry.Facet(polygon)
+        facet = microvessel.geometry.Facet(polygon)
         self.assertEqual(len(facet.GetVertices()), 4)
         self.assertEqual(len(facet.GetPolygons()), 1)
 

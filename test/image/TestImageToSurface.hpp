@@ -69,20 +69,22 @@ public:
         p_writer1->Write();
 
         // Extract the surface
-        ImageToSurface surface_extract = ImageToSurface();
-        surface_extract.SetInput(reader.GetImage());
-        surface_extract.SetThreshold(1.0, false);
-        surface_extract.Update();
+        boost::shared_ptr<ImageToSurface> p_surface_extract = ImageToSurface::Create();
+
+        TS_ASSERT_THROWS_THIS(p_surface_extract->GetOutput(), "No output set. Did you run 'Update()' ?");
+        p_surface_extract->SetInput(reader.GetImage());
+        p_surface_extract->SetThreshold(1.0, false);
+        p_surface_extract->Update();
 
         // Write the surface to file
         boost::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"surface.vtp").c_str());
-        p_writer->SetInput(surface_extract.GetOutput());
+        p_writer->SetInput(p_surface_extract->GetOutput());
         p_writer->Write();
 
         // Clean the surface
         boost::shared_ptr<SurfaceCleaner> p_cleaner = SurfaceCleaner::Create();
-        p_cleaner->SetInput(surface_extract.GetOutput());
+        p_cleaner->SetInput(p_surface_extract->GetOutput());
         p_cleaner->SetDecimateTargetReduction(0.995);
         p_cleaner->SetLinearSubdivisionNumber(1);
         p_cleaner->Update();
@@ -93,6 +95,13 @@ public:
 
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"surface_cleaned.stl").c_str());
         p_writer->SetOutputFormat(GeometryFormat::STL);
+        p_writer->Write();
+
+        // Use marching cubes
+        p_surface_extract->SetUseMarchingCubes(true);
+        p_surface_extract->Update();
+        p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"surface_marching_cubes.vtp").c_str());
+        p_writer->SetInput(p_surface_extract->GetOutput());
         p_writer->Write();
     }
 };
