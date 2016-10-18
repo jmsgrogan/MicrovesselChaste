@@ -18,7 +18,24 @@ def update_builder(builder):
                        "OffLatticeMigrationRule<3>",
                        "OffLatticeSproutingRule<3>",
                        "AbstractMigrationRule<3>",
-                       "AbstractSproutingRule<3>"]
+                       "AbstractSproutingRule<3>",
+                       "AngiogenesisSolver<2>",
+                       "Owen2011MigrationRule<2>",
+                       "Owen2011SproutingRule<2>",
+                       "OffLatticeMigrationRule<2>",
+                       "OffLatticeMigrationRule<2>",
+                       "OffLatticeSproutingRule<2>",
+                       "AbstractMigrationRule<2>",
+                       "AbstractSproutingRule<2>",
+                       "LatticeBasedMigrationRule<2>",
+                       "CellPopulationMigrationRule<2>",
+                       "RegressionSolver<2>",
+                       "WallShearStressBasedRegressionSolver<2>",
+                       "LatticeBasedMigrationRule<3>",
+                       "CellPopulationMigrationRule<3>",
+                       "RegressionSolver<3>",
+                       "WallShearStressBasedRegressionSolver<3>",
+                       ]
     
     for eachClass in include_classes:
         builder.class_(eachClass).include()  
