@@ -5,3 +5,4 @@ doc/wiki
 *.pyc
 *.so
 *~
+paper/
