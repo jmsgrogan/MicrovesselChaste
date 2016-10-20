@@ -70,22 +70,26 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <boost/units/base_units/metric/micron.hpp>
 
 /**
- * This is a collection of Boost units and quantities of interest for use in the Microvessel project.
+ * This is a collection of Boost units and quantities.
  * The SI system is the base system. A dimension is composed of the base dimensions of time, mass, length
- * etc raised to a rational power. A unit is a specific amount in a dimension (e.g. length^1) and system (e.g. since using SI it is a metre). It is instantiated as
+ * etc raised to an integer power. A unit is a specific amount in a dimension (e.g. length^1) and system (e.g. since using SI it is a metre). It is instantiated as
  * a static constant with a useful name 'e.g. metres' using BOOST_UNITS_STATIC_CONSTANT for thread safety.
  * A quantity is an unit and a amount together (e.g. [moles, 2.0] to represent two moles).
+ *
+ * Some fundamental SI quantities, such as length, are redefined here. This is not neccessary for C++, but allows them to be used in Python wrapping.
  */
 namespace units = boost::units;
 namespace unit{
     typedef units::si::dimensionless dimensionless;
 
     // angle
-    typedef units::si::plane_angle plane_angle;
+    typedef units::derived_dimension<units::plane_angle_base_dimension, -1>::type plane_angle_dimension;
+    typedef units::unit<plane_angle_dimension, units::si::system> plane_angle;
     BOOST_UNITS_STATIC_CONSTANT(radians, plane_angle);
 
     // Time
-    typedef units::si::time time;
+    typedef units::derived_dimension<units::time_base_dimension, 1>::type time_dimension;
+    typedef units::unit<time_dimension, units::si::system> time;
     BOOST_UNITS_STATIC_CONSTANT(seconds, time);
     BOOST_UNITS_STATIC_CONSTANT(minutes, units::metric::minute_base_unit::unit_type);
     BOOST_UNITS_STATIC_CONSTANT(hours, units::metric::hour_base_unit::unit_type);
@@ -99,10 +103,16 @@ namespace unit{
     BOOST_UNITS_STATIC_CONSTANT(per_hour, per_hour_type);
 
     // Length
-    typedef units::si::length length;
-    typedef units::si::area area;
-    typedef units::si::volume volume;
+    typedef units::derived_dimension<units::length_base_dimension, 1>::type length_dimension;
+    typedef units::unit<length_dimension, units::si::system> length;
     BOOST_UNITS_STATIC_CONSTANT(metres, length);
+    typedef units::derived_dimension<units::length_base_dimension, 2>::type area_dimension;
+    typedef units::unit<area_dimension, units::si::system> area;
+    BOOST_UNITS_STATIC_CONSTANT(metres_squared, area);
+    typedef units::derived_dimension<units::length_base_dimension, 3>::type volume_dimension;
+    typedef units::unit<volume_dimension, units::si::system> volume;
+    BOOST_UNITS_STATIC_CONSTANT(metres_cubed, volume);
+
     BOOST_UNITS_STATIC_CONSTANT(microns, units::metric::micron_base_unit::unit_type);
     typedef units::derived_dimension<units::length_base_dimension, -1>::type per_length_dimension;
     typedef units::unit<per_length_dimension, units::si::system> per_length;
@@ -154,12 +164,17 @@ namespace unit{
     BOOST_UNITS_STATIC_CONSTANT(per_metre_cubed, number_density);
 
     // Velocity
-    typedef units::si::velocity velocity;
+    typedef units::derived_dimension<units::length_base_dimension, 1, units::time_base_dimension, -1>::type velocity_dimension;
+    typedef units::unit<velocity_dimension, units::si::system> velocity;
+    BOOST_UNITS_STATIC_CONSTANT(metres_per_second, velocity);
 
     // Force/Pressure/Stress
-    typedef units::si::force force;
+    typedef units::derived_dimension<units::mass_base_dimension, 1, units::length_base_dimension, 1, units::time_base_dimension, -2>::type force_dimension;
+    typedef units::unit<force_dimension, units::si::system> force;
     BOOST_UNITS_STATIC_CONSTANT(newtons, force);
-    typedef units::si::pressure pressure;
+
+    typedef units::derived_dimension<units::mass_base_dimension, 1, units::length_base_dimension, -1, units::time_base_dimension, -2>::type pressure_dimension;
+    typedef units::unit<pressure_dimension, units::si::system> pressure;
     BOOST_UNITS_STATIC_CONSTANT(pascals, pressure);
     BOOST_UNITS_STATIC_CONSTANT(mmHg, units::metric::mmHg_base_unit::unit_type);
 

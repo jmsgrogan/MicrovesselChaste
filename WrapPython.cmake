@@ -50,7 +50,6 @@ set(CASTXML_EXE_LOC "/usr/bin/castxml" CACHE FILEPATH "Path to the castxml execu
 
 # Collect the header directories for this project
 include(${CMAKE_CURRENT_SOURCE_DIR}/ProjectIncludes.cmake)
-#include_directories(${MicrovesselChaste_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dynamic/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrapper_headers)
 include_directories(${CMAKE_SOURCE_DIR}/projects/PyChaste/src)
@@ -61,10 +60,10 @@ set (MicrovesselChaste_PYTHON_MODULES "")
 set (MicrovesselChaste_PYTHON_MODULE_LOCATIONS "")
 
 # Auto wrapper
-#list (APPEND MicrovesselChaste_AUTO_MODULES utility)
-#list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel/utility)
-#list (APPEND MicrovesselChaste_AUTO_MODULES geometry)
-#list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel/geometry)
+list (APPEND MicrovesselChaste_AUTO_MODULES utility)
+list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel/utility)
+list (APPEND MicrovesselChaste_AUTO_MODULES geometry)
+list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel/geometry)
 list (APPEND MicrovesselChaste_AUTO_MODULES mesh)
 list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel/mesh)
 #list (APPEND MicrovesselChaste_AUTO_MODULES vessel)
@@ -81,7 +80,6 @@ list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DI
 #list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel/population/cell/)
 
 list (APPEND MicrovesselChaste_PYTHON_MODULES ${MicrovesselChaste_AUTO_MODULES})
-list (APPEND MicrovesselChaste_PYTHON_MODULES preload)
 list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel/)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/python/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/python/ PATTERN "*.so" EXCLUDE)

@@ -73,3 +73,4 @@ tutorials/TestOffLatticeAngiogenesisLiteratePaper.hpp
 tutorials/TestBuildVesselNetworkLiteratePaper.hpp
 tutorials/TestBloodFlowLiteratePaper.hpp
 tutorials/TestSolvingPdesLiteratePaper.hpp
+python/mesh/TestDimensionalChastePointPython.py
