@@ -334,114 +334,6 @@ struct DistanceMap_less__3__greater__wrapper : DistanceMap< 3 >, bp::wrapper< Di
 
 };
 
-struct LacunarityCalculator_less__2__greater__wrapper : LacunarityCalculator< 2 >, bp::wrapper< LacunarityCalculator< 2 > > {
-
-    LacunarityCalculator_less__2__greater__wrapper(LacunarityCalculator<2> const & arg )
-    : LacunarityCalculator<2>( arg )
-      , bp::wrapper< LacunarityCalculator< 2 > >(){
-        // copy constructor
-        
-    }
-
-    LacunarityCalculator_less__2__greater__wrapper( )
-    : LacunarityCalculator<2>( )
-      , bp::wrapper< LacunarityCalculator< 2 > >(){
-        // null constructor
-    
-    }
-
-    virtual void Solve(  ) {
-        if( bp::override func_Solve = this->get_override( "Solve" ) )
-            func_Solve(  );
-        else{
-            this->LacunarityCalculator< 2 >::Solve(  );
-        }
-    }
-    
-    void default_Solve(  ) {
-        LacunarityCalculator< 2 >::Solve( );
-    }
-
-    virtual void Update(  ) {
-        if( bp::override func_Update = this->get_override( "Update" ) )
-            func_Update(  );
-        else{
-            this->LacunarityCalculator< 2 >::Update(  );
-        }
-    }
-    
-    void default_Update(  ) {
-        LacunarityCalculator< 2 >::Update( );
-    }
-
-    virtual void UpdateCellData(  ) {
-        if( bp::override func_UpdateCellData = this->get_override( "UpdateCellData" ) )
-            func_UpdateCellData(  );
-        else{
-            this->LacunarityCalculator< 2 >::UpdateCellData(  );
-        }
-    }
-    
-    void default_UpdateCellData(  ) {
-        LacunarityCalculator< 2 >::UpdateCellData( );
-    }
-
-};
-
-struct LacunarityCalculator_less__3__greater__wrapper : LacunarityCalculator< 3 >, bp::wrapper< LacunarityCalculator< 3 > > {
-
-    LacunarityCalculator_less__3__greater__wrapper(LacunarityCalculator<3> const & arg )
-    : LacunarityCalculator<3>( arg )
-      , bp::wrapper< LacunarityCalculator< 3 > >(){
-        // copy constructor
-        
-    }
-
-    LacunarityCalculator_less__3__greater__wrapper( )
-    : LacunarityCalculator<3>( )
-      , bp::wrapper< LacunarityCalculator< 3 > >(){
-        // null constructor
-    
-    }
-
-    virtual void Solve(  ) {
-        if( bp::override func_Solve = this->get_override( "Solve" ) )
-            func_Solve(  );
-        else{
-            this->LacunarityCalculator< 3 >::Solve(  );
-        }
-    }
-    
-    void default_Solve(  ) {
-        LacunarityCalculator< 3 >::Solve( );
-    }
-
-    virtual void Update(  ) {
-        if( bp::override func_Update = this->get_override( "Update" ) )
-            func_Update(  );
-        else{
-            this->LacunarityCalculator< 3 >::Update(  );
-        }
-    }
-    
-    void default_Update(  ) {
-        LacunarityCalculator< 3 >::Update( );
-    }
-
-    virtual void UpdateCellData(  ) {
-        if( bp::override func_UpdateCellData = this->get_override( "UpdateCellData" ) )
-            func_UpdateCellData(  );
-        else{
-            this->LacunarityCalculator< 3 >::UpdateCellData(  );
-        }
-    }
-    
-    void default_UpdateCellData(  ) {
-        LacunarityCalculator< 3 >::UpdateCellData( );
-    }
-
-};
-
 struct NodeFlowProperties_less__2__greater__wrapper : NodeFlowProperties< 2 >, bp::wrapper< NodeFlowProperties< 2 > > {
 
     NodeFlowProperties_less__2__greater__wrapper(NodeFlowProperties<2> const & arg )
@@ -1812,6 +1704,12 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
         __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<Vessel<2> > > >() );
     }
 
+//    bp::class_< std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > >("vector_less__boost_scope_shared_ptr_less_DimensionalChastePoint_less_3_greater___greater___greater_")
+//        .def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > >() );
+//
+//    bp::class_< std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > >("vector_less__boost_scope_shared_ptr_less_DimensionalChastePoint_less_2_greater___greater___greater_")
+//        .def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > >() );
+
     { //::std::vector< bool >
         typedef bp::class_< std::vector< bool > > vector_less__bool__greater__exposer_t;
         vector_less__bool__greater__exposer_t vector_less__bool__greater__exposer = vector_less__bool__greater__exposer_t( "vector_less__bool__greater_" );
@@ -2048,140 +1946,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
         bp::register_ptr_to_python< boost::shared_ptr< DistanceMap<3> > >();
         bp::implicitly_convertible< boost::shared_ptr< DistanceMap< 3 > >, boost::shared_ptr< AbstractRegularGridDiscreteContinuumSolver< 3 > > >();
         bp::implicitly_convertible< boost::shared_ptr< DistanceMap< 3 > >, boost::shared_ptr< AbstractDiscreteContinuumSolver< 3 > > >();
-    }
-
-    { //::LacunarityCalculator< 2 >
-        typedef bp::class_< LacunarityCalculator_less__2__greater__wrapper > LacunarityCalculator2_exposer_t;
-        LacunarityCalculator2_exposer_t LacunarityCalculator2_exposer = LacunarityCalculator2_exposer_t( "LacunarityCalculator2", bp::init< >() );
-        bp::scope LacunarityCalculator2_scope( LacunarityCalculator2_exposer );
-        { //::LacunarityCalculator< 2 >::Create
-        
-            typedef LacunarityCalculator< 2 > exported_class_t;
-            typedef ::boost::shared_ptr< LacunarityCalculator< 2 > > ( *Create_function_type )(  );
-            
-            LacunarityCalculator2_exposer.def( 
-                "Create"
-                , Create_function_type( &::LacunarityCalculator< 2 >::Create ) );
-        
-        }
-        { //::LacunarityCalculator< 2 >::SetVesselNetwork
-        
-            typedef LacunarityCalculator< 2 > exported_class_t;
-            typedef void ( exported_class_t::*SetVesselNetwork_function_type)( ::boost::shared_ptr< VesselNetwork< 2 > > ) ;
-            
-            LacunarityCalculator2_exposer.def( 
-                "SetVesselNetwork"
-                , SetVesselNetwork_function_type( &::LacunarityCalculator< 2 >::SetVesselNetwork )
-                , ( bp::arg("pNetwork") ) );
-        
-        }
-        { //::LacunarityCalculator< 2 >::Solve
-        
-            typedef LacunarityCalculator< 2 > exported_class_t;
-            typedef void ( exported_class_t::*Solve_function_type)(  ) ;
-            typedef void ( LacunarityCalculator_less__2__greater__wrapper::*default_Solve_function_type)(  ) ;
-            
-            LacunarityCalculator2_exposer.def( 
-                "Solve"
-                , Solve_function_type(&::LacunarityCalculator< 2 >::Solve)
-                , default_Solve_function_type(&LacunarityCalculator_less__2__greater__wrapper::default_Solve) );
-        
-        }
-        { //::LacunarityCalculator< 2 >::Update
-        
-            typedef LacunarityCalculator< 2 > exported_class_t;
-            typedef void ( exported_class_t::*Update_function_type)(  ) ;
-            typedef void ( LacunarityCalculator_less__2__greater__wrapper::*default_Update_function_type)(  ) ;
-            
-            LacunarityCalculator2_exposer.def( 
-                "Update"
-                , Update_function_type(&::LacunarityCalculator< 2 >::Update)
-                , default_Update_function_type(&LacunarityCalculator_less__2__greater__wrapper::default_Update) );
-        
-        }
-        { //::LacunarityCalculator< 2 >::UpdateCellData
-        
-            typedef LacunarityCalculator< 2 > exported_class_t;
-            typedef void ( exported_class_t::*UpdateCellData_function_type)(  ) ;
-            typedef void ( LacunarityCalculator_less__2__greater__wrapper::*default_UpdateCellData_function_type)(  ) ;
-            
-            LacunarityCalculator2_exposer.def( 
-                "UpdateCellData"
-                , UpdateCellData_function_type(&::LacunarityCalculator< 2 >::UpdateCellData)
-                , default_UpdateCellData_function_type(&LacunarityCalculator_less__2__greater__wrapper::default_UpdateCellData) );
-        
-        }
-        LacunarityCalculator2_exposer.staticmethod( "Create" );
-        bp::register_ptr_to_python< boost::shared_ptr< LacunarityCalculator<2> > >();
-        bp::implicitly_convertible< boost::shared_ptr< LacunarityCalculator< 2 > >, boost::shared_ptr< AbstractRegularGridDiscreteContinuumSolver< 2 > > >();
-        bp::implicitly_convertible< boost::shared_ptr< LacunarityCalculator< 2 > >, boost::shared_ptr< AbstractDiscreteContinuumSolver< 2 > > >();
-    }
-
-    { //::LacunarityCalculator< 3 >
-        typedef bp::class_< LacunarityCalculator_less__3__greater__wrapper > LacunarityCalculator3_exposer_t;
-        LacunarityCalculator3_exposer_t LacunarityCalculator3_exposer = LacunarityCalculator3_exposer_t( "LacunarityCalculator3", bp::init< >() );
-        bp::scope LacunarityCalculator3_scope( LacunarityCalculator3_exposer );
-        { //::LacunarityCalculator< 3 >::Create
-        
-            typedef LacunarityCalculator< 3 > exported_class_t;
-            typedef ::boost::shared_ptr< LacunarityCalculator< 3 > > ( *Create_function_type )(  );
-            
-            LacunarityCalculator3_exposer.def( 
-                "Create"
-                , Create_function_type( &::LacunarityCalculator< 3 >::Create ) );
-        
-        }
-        { //::LacunarityCalculator< 3 >::SetVesselNetwork
-        
-            typedef LacunarityCalculator< 3 > exported_class_t;
-            typedef void ( exported_class_t::*SetVesselNetwork_function_type)( ::boost::shared_ptr< VesselNetwork< 3 > > ) ;
-            
-            LacunarityCalculator3_exposer.def( 
-                "SetVesselNetwork"
-                , SetVesselNetwork_function_type( &::LacunarityCalculator< 3 >::SetVesselNetwork )
-                , ( bp::arg("pNetwork") ) );
-        
-        }
-        { //::LacunarityCalculator< 3 >::Solve
-        
-            typedef LacunarityCalculator< 3 > exported_class_t;
-            typedef void ( exported_class_t::*Solve_function_type)(  ) ;
-            typedef void ( LacunarityCalculator_less__3__greater__wrapper::*default_Solve_function_type)(  ) ;
-            
-            LacunarityCalculator3_exposer.def( 
-                "Solve"
-                , Solve_function_type(&::LacunarityCalculator< 3 >::Solve)
-                , default_Solve_function_type(&LacunarityCalculator_less__3__greater__wrapper::default_Solve) );
-        
-        }
-        { //::LacunarityCalculator< 3 >::Update
-        
-            typedef LacunarityCalculator< 3 > exported_class_t;
-            typedef void ( exported_class_t::*Update_function_type)(  ) ;
-            typedef void ( LacunarityCalculator_less__3__greater__wrapper::*default_Update_function_type)(  ) ;
-            
-            LacunarityCalculator3_exposer.def( 
-                "Update"
-                , Update_function_type(&::LacunarityCalculator< 3 >::Update)
-                , default_Update_function_type(&LacunarityCalculator_less__3__greater__wrapper::default_Update) );
-        
-        }
-        { //::LacunarityCalculator< 3 >::UpdateCellData
-        
-            typedef LacunarityCalculator< 3 > exported_class_t;
-            typedef void ( exported_class_t::*UpdateCellData_function_type)(  ) ;
-            typedef void ( LacunarityCalculator_less__3__greater__wrapper::*default_UpdateCellData_function_type)(  ) ;
-            
-            LacunarityCalculator3_exposer.def( 
-                "UpdateCellData"
-                , UpdateCellData_function_type(&::LacunarityCalculator< 3 >::UpdateCellData)
-                , default_UpdateCellData_function_type(&LacunarityCalculator_less__3__greater__wrapper::default_UpdateCellData) );
-        
-        }
-        LacunarityCalculator3_exposer.staticmethod( "Create" );
-        bp::register_ptr_to_python< boost::shared_ptr< LacunarityCalculator<3> > >();
-        bp::implicitly_convertible< boost::shared_ptr< LacunarityCalculator< 3 > >, boost::shared_ptr< AbstractRegularGridDiscreteContinuumSolver< 3 > > >();
-        bp::implicitly_convertible< boost::shared_ptr< LacunarityCalculator< 3 > >, boost::shared_ptr< AbstractDiscreteContinuumSolver< 3 > > >();
     }
 
     { //::NodeFlowProperties< 2 >
@@ -5359,6 +5123,10 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
 
     bp::class_< VesselNetworkGenerator< 2 > >( "VesselNetworkGenerator2", bp::init< >() )    
         .def( 
+            "Generate3dNetwork"
+            , (::boost::shared_ptr< VesselNetwork< 2 > > ( ::VesselNetworkGenerator<2>::* )( ::boost::shared_ptr< Part< 2 > >,::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-2, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> >,::VesselDistribution::Value,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,bool,::std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > ))( &::VesselNetworkGenerator< 2 >::Generate3dNetwork )
+            , ( bp::arg("domain"), bp::arg("targetDensity"), bp::arg("distrbutionType"), bp::arg("exclusionDistance"), bp::arg("useBbox"), bp::arg("seeds") ) )    
+        .def( 
             "GenerateBifurcationUnit"
             , (::boost::shared_ptr< VesselNetwork< 2 > > ( ::VesselNetworkGenerator<2>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::DimensionalChastePoint< 2 > ))( &::VesselNetworkGenerator< 2 >::GenerateBifurcationUnit )
             , ( bp::arg("vesselLength"), bp::arg("startPosition") ) )    
@@ -5377,15 +5145,19 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
         .def( 
             "GenerateOvalNetwork"
             , (::boost::shared_ptr< VesselNetwork< 2 > > ( ::VesselNetworkGenerator<2>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,unsigned int,double,double ))( &::VesselNetworkGenerator< 2 >::GenerateOvalNetwork )
-            , ( bp::arg("scaleFactor"), bp::arg("num_increments")=(unsigned int)(40), bp::arg("a_param")=0.5, bp::arg("b_param")=1. ) )
+            , ( bp::arg("scaleFactor"), bp::arg("num_increments"), bp::arg("a_param"), bp::arg("b_param") ) )    
+        .def( 
+            "GenerateParrallelNetwork"
+            , (::boost::shared_ptr< VesselNetwork< 2 > > ( ::VesselNetworkGenerator<2>::* )( ::boost::shared_ptr< Part< 2 > >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::VesselDistribution::Value,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,bool,::std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > ))( &::VesselNetworkGenerator< 2 >::GenerateParrallelNetwork )
+            , ( bp::arg("domain"), bp::arg("targetDensity"), bp::arg("distrbutionType"), bp::arg("exclusionDistance"), bp::arg("useBbox"), bp::arg("seeds") ) )    
         .def( 
             "GenerateSingleVessel"
             , (::boost::shared_ptr< VesselNetwork< 2 > > ( ::VesselNetworkGenerator<2>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::DimensionalChastePoint< 2 >,unsigned int,unsigned int ))( &::VesselNetworkGenerator< 2 >::GenerateSingleVessel )
-            , ( bp::arg("vesselLength"), bp::arg("startPosition"), bp::arg("divisions")=(unsigned int)(0), bp::arg("axis")=(unsigned int)(2) ) )    
+            , ( bp::arg("vesselLength"), bp::arg("startPosition"), bp::arg("divisions"), bp::arg("axis") ) )    
         .def( 
             "GenerateVoronoiNetwork"
             , (::boost::shared_ptr< VesselNetwork< 2 > > ( ::VesselNetworkGenerator<2>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,unsigned int ))( &::VesselNetworkGenerator< 2 >::GenerateVoronoiNetwork )
-            , ( bp::arg("cubeX"), bp::arg("cubeY"), bp::arg("cubeZ"), bp::arg("numPoints")=(unsigned int)(400) ) )    
+            , ( bp::arg("cubeX"), bp::arg("cubeY"), bp::arg("cubeZ"), bp::arg("numPoints") ) )    
         .def( 
             "MapToSphere"
             , (void ( ::VesselNetworkGenerator<2>::* )( ::boost::shared_ptr< VesselNetwork< 2 > >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,double,double ))( &::VesselNetworkGenerator< 2 >::MapToSphere )
@@ -5401,6 +5173,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
 
     bp::class_< VesselNetworkGenerator< 3 > >( "VesselNetworkGenerator3", bp::init< >() )    
         .def( 
+            "Generate3dNetwork"
+            , (::boost::shared_ptr< VesselNetwork< 3 > > ( ::VesselNetworkGenerator<3>::* )( ::boost::shared_ptr< Part< 3 > >,::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-2, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> >,::VesselDistribution::Value,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,bool,::std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > ))( &::VesselNetworkGenerator< 3 >::Generate3dNetwork )
+            , ( bp::arg("domain"), bp::arg("targetDensity"), bp::arg("distrbutionType"), bp::arg("exclusionDistance"), bp::arg("useBbox"), bp::arg("seeds") ) )    
+        .def( 
+            "GenerateBifurcationUnit"
+            , (::boost::shared_ptr< VesselNetwork< 3 > > ( ::VesselNetworkGenerator<3>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::DimensionalChastePoint< 3 > ))( &::VesselNetworkGenerator< 3 >::GenerateBifurcationUnit )
+            , ( bp::arg("vesselLength"), bp::arg("startPosition") ) )    
+        .def( 
             "GenerateFromPart"
             , (::boost::shared_ptr< VesselNetwork< 3 > > ( ::VesselNetworkGenerator<3>::* )( ::boost::shared_ptr< Part< 3 > > ))( &::VesselNetworkGenerator< 3 >::GenerateFromPart )
             , ( bp::arg("part") ) )    
@@ -5415,15 +5195,19 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
         .def( 
             "GenerateOvalNetwork"
             , (::boost::shared_ptr< VesselNetwork< 3 > > ( ::VesselNetworkGenerator<3>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,unsigned int,double,double ))( &::VesselNetworkGenerator< 3 >::GenerateOvalNetwork )
-            , ( bp::arg("scaleFactor"), bp::arg("num_increments")=(unsigned int)(40), bp::arg("a_param")=0.5, bp::arg("b_param")=1. ) )    
+            , ( bp::arg("scaleFactor"), bp::arg("num_increments"), bp::arg("a_param"), bp::arg("b_param") ) )    
+        .def( 
+            "GenerateParrallelNetwork"
+            , (::boost::shared_ptr< VesselNetwork< 3 > > ( ::VesselNetworkGenerator<3>::* )( ::boost::shared_ptr< Part< 3 > >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::VesselDistribution::Value,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,bool,::std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > ))( &::VesselNetworkGenerator< 3 >::GenerateParrallelNetwork )
+            , ( bp::arg("domain"), bp::arg("targetDensity"), bp::arg("distrbutionType"), bp::arg("exclusionDistance"), bp::arg("useBbox"), bp::arg("seeds") ) )    
         .def( 
             "GenerateSingleVessel"
             , (::boost::shared_ptr< VesselNetwork< 3 > > ( ::VesselNetworkGenerator<3>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::DimensionalChastePoint< 3 >,unsigned int,unsigned int ))( &::VesselNetworkGenerator< 3 >::GenerateSingleVessel )
-            , ( bp::arg("vesselLength"), bp::arg("startPosition"), bp::arg("divisions")=(unsigned int)(0), bp::arg("axis")=(unsigned int)(2) ) )    
+            , ( bp::arg("vesselLength"), bp::arg("startPosition"), bp::arg("divisions"), bp::arg("axis") ) )    
         .def( 
             "GenerateVoronoiNetwork"
             , (::boost::shared_ptr< VesselNetwork< 3 > > ( ::VesselNetworkGenerator<3>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,unsigned int ))( &::VesselNetworkGenerator< 3 >::GenerateVoronoiNetwork )
-            , ( bp::arg("cubeX"), bp::arg("cubeY"), bp::arg("cubeZ"), bp::arg("numPoints")=(unsigned int)(400) ) )    
+            , ( bp::arg("cubeX"), bp::arg("cubeY"), bp::arg("cubeZ"), bp::arg("numPoints") ) )    
         .def( 
             "MapToSphere"
             , (void ( ::VesselNetworkGenerator<3>::* )( ::boost::shared_ptr< VesselNetwork< 3 > >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,double,double ))( &::VesselNetworkGenerator< 3 >::MapToSphere )

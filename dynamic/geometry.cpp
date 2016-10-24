@@ -823,6 +823,20 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_geometry){
         bp::register_ptr_to_python< boost::shared_ptr< GeometryWriter > >();
     }
 
+    bp::class_< MappableGridGenerator >( "MappableGridGenerator", bp::init< >() )    
+        .def( 
+            "GenerateCylinder"
+            , (::boost::shared_ptr< Part< 3 > > ( ::MappableGridGenerator::* )( double,double,double,unsigned int,unsigned int,double ))( &::MappableGridGenerator::GenerateCylinder )
+            , ( bp::arg("cylinderRadius"), bp::arg("cylinderThickness"), bp::arg("cylinderHeight"), bp::arg("numX"), bp::arg("numY"), bp::arg("cylinderAngle")=2. * 3.1415926535897931 ) )    
+        .def( 
+            "GenerateHemisphere"
+            , (::boost::shared_ptr< Part< 3 > > ( ::MappableGridGenerator::* )( double,double,unsigned int,unsigned int,double,double ))( &::MappableGridGenerator::GenerateHemisphere )
+            , ( bp::arg("sphereRadius"), bp::arg("sphereThickness"), bp::arg("numX"), bp::arg("numY"), bp::arg("sphereAzimuthAngle")=2. * 3.1415926535897931, bp::arg("spherePolarAngle")=0.5 * 3.1415926535897931 ) )    
+        .def( 
+            "GeneratePlane"
+            , (::boost::shared_ptr< Part< 3 > > ( ::MappableGridGenerator::* )( unsigned int,unsigned int,bool ))( &::MappableGridGenerator::GeneratePlane )
+            , ( bp::arg("numX"), bp::arg("numY"), bp::arg("withEndCaps")=(bool)(true) ) );
+
     bp::class_< NetworkToSurface< 2 > >( "NetworkToSurface_less__2__greater_" );
 
     { //::NetworkToSurface< 3 >

@@ -1,9 +1,5 @@
 python/flow/TestHaematocritCalculators.py
 python/flow/TestStraightVesselFlow.py
-python/geometry/TestPart.py
-python/geometry/TestFacet.py
-python/geometry/TestPolygon.py
-python/geometry/TestVertex.py
 python/pde/TestFiniteDifferenceSolver.py
 python/tutorials/TestSnailTrail.py
 python/tutorials/TestSnailTrailOffLattice.py
