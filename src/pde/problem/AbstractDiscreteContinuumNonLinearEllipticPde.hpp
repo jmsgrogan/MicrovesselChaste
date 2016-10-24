@@ -123,12 +123,6 @@ public:
     virtual ~AbstractDiscreteContinuumNonLinearEllipticPde();
 
     /**
-     * Factory Constructor
-     * @return a pointer to an instance of the pde
-     */
-    static boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM> > Create();
-
-    /**
      * Add a discrete source to the pde
      * @param pDiscreteSource a pointer the discrete source
      */

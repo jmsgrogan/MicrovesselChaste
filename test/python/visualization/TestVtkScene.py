@@ -1,18 +1,19 @@
 import unittest
-import chaste.geometry
-import chaste.population.vessel
-import chaste.visualization.vtk_scene
+import chaste
+import chaste.projects.microvessel as microvessel
+import chaste.projects.microvessel.population.vessel
+import chaste.projects.microvessel.utility
 
 class TestVtkScene(unittest.TestCase):
     
     def test_part(self):
         # Create a circle with radius 10
-        part = chaste.geometry.Part()
+        part = microvessel.geometry.Part()
         circle = part.AddCircle(100)
         part.Extrude(circle, 100)
         
         # Visualize it using VTK
-        scene = chaste.visualization.vtk_scene.Scene()
+        scene = microvessel.utility.VtkScene()
         scene.add_part(part)
         scene.filename = "/home/grogan/test/visualization/TestVtkScene/part_capture.png"
         scene.show(interactive=False)
