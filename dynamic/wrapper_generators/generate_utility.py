@@ -94,45 +94,43 @@ def update_builder(builder):
                 "area",
                 "length",
                 "rate",
-                "time",
-                "plane_angle"]
+                "time",]
+#                "plane_angle"]
     
-    units = {"membrane_permeability": "", 
-             "volumetric_solubility": "",
-             "solubility": "",
-             "diffusivity_per_concentration": "",
-             "diffusivity": "",
-             "flow_impedance": "",
-             "flow_rate": "",
-             "dynamic_viscosity": "",
-             "pressure": "",
-             "force": "",
-             "velocity": "",
-             "number_density": "",
-             "molar_mass": "",
-             "rate_per_concentration": "",
-             "concentration_gradient": "",
-             "concentration_flux": "",
-             "concentration": "",
-             "molar_flux": "",
-             "molar_flow_rate": "",
-             "mass": "",
-             "per_area": "",
-             "per_length": "",
-             "volume": "",
-             "area": "",
-             "length": "",
-             "length": "",
-             "rate":"",
-             "time":"",
-             "plane_angle":"",          
+    units = {"membrane_permeability": "metre_per_second", 
+             "volumetric_solubility": "per_pascal",
+             "solubility": "mole_per_metre_cubed_per_second",
+             "diffusivity_per_concentration": "metre_pow5_per_second_per_mole",
+             "diffusivity": "metre_squared_per_second",
+             "flow_impedance": "pascal_second_per_metre_cubed",
+             "flow_rate": "metre_cubed_per_second",
+             "dynamic_viscosity": "poiseuille",
+             "pressure": "pascal",
+             "force": "newton",
+             "velocity": "metre_per_second",
+             "number_density": "per_metre_cubed",
+             "molar_mass": "mole_per_kg",
+             "rate_per_concentration": "metre_cubed_per_mole_per_second",
+             "concentration_gradient": "mole_per_metre_pow4",
+             "concentration_flux": "mole_per_metre_pow5_per_second",
+             "concentration": "mole_per_metre_cubed",
+             "molar_flux": "mole_per_metre_squared_per_second",
+             "molar_flow_rate": "mole_per_second",
+             "mass": "kg",
+             "per_area": "per_metre_squared",
+             "per_length": "per_metre",
+             "volume": "metre_cubed",
+             "area": "metre_squared",
+             "length": "metre",
+             "rate":"per_second",
+             "time":"second",        
              }
 
     for eachUnit in unit_names:
         helpers = unit_ns.typedefs(eachUnit)
         for var_gen_typedef in helpers:
             var_gen_cls = var_gen_typedef.type.declaration
-            var_gen_cls.rename(var_gen_typedef.name)
+            var_gen_cls.rename(units[var_gen_typedef.name])
     #        var_gen_cls.member_operators( symbol='()' ).create_with_signature = True
             var_gen_cls.include()
             try:

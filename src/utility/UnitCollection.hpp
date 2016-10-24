@@ -84,7 +84,8 @@ namespace unit{
 
     // angle
     typedef units::derived_dimension<units::plane_angle_base_dimension, -1>::type plane_angle_dimension;
-    typedef units::unit<plane_angle_dimension, units::si::system> plane_angle;
+    //typedef units::unit<plane_angle_dimension, units::si::system> plane_angle;
+    typedef units::si::plane_angle plane_angle;
     BOOST_UNITS_STATIC_CONSTANT(radians, plane_angle);
 
     // Time
