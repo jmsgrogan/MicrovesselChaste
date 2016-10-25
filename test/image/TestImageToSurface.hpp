@@ -37,10 +37,10 @@ Copyright (c) 2005-2016, University of Oxford.
 #define TESTIMAGETOSURFACE_HPP_
 
 #include <cxxtest/TestSuite.h>
-#include "SmartPointers.hpp"
-#include <vtkXMLPolyDataWriter.h>
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkXMLImageDataWriter.h>
 #include <vtkSmartPointer.h>
+#include "SmartPointers.hpp"
 #include "ImageToSurface.hpp"
 #include "ImageReader.hpp"
 #include "SurfaceCleaner.hpp"
@@ -65,7 +65,11 @@ public:
 
         vtkSmartPointer<vtkXMLImageDataWriter> p_writer1 = vtkSmartPointer<vtkXMLImageDataWriter>::New();
         p_writer1->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"image.vti").c_str());
-        p_writer1->SetInputData(reader.GetImage());
+        #if VTK_MAJOR_VERSION <= 5
+            p_writer1->SetInput(reader.GetImage());
+        #else
+            p_writer1->SetInputData(reader.GetImage());
+        #endif
         p_writer1->Write();
 
         // Extract the surface

@@ -37,6 +37,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #define TESTIMAGETOSURFACE_HPP_
 
 #include <cxxtest/TestSuite.h>
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include "SmartPointers.hpp"
 #include <vtkXMLPolyDataReader.h>
 #include <vtkSmartPointer.h>
