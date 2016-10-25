@@ -1,7 +1,0 @@
-python/flow/TestHaematocritCalculators.py
-python/flow/TestStraightVesselFlow.py
-python/pde/TestFiniteDifferenceSolver.py
-python/tutorials/TestSnailTrail.py
-python/tutorials/TestSnailTrailOffLattice.py
-python/tutorials/TestPythonBuildVesselNetworkLiteratePaper.py
-python/tutorials/TestRWC.py

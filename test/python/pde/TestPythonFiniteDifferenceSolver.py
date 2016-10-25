@@ -36,6 +36,7 @@ import math
 import os
 import numpy as np
 import chaste
+import chaste.core
 chaste.init()
 import chaste.projects.microvessel as microvessel
 import chaste.projects.microvessel.mesh
@@ -46,18 +47,21 @@ import chaste.projects.microvessel.utility as utility
 class TestFiniteDifferenceSolver(unittest.TestCase):
           
     def test_fixed_outer_boundary(self):
+        file_handler = chaste.core.OutputFileHandler("Python/TestFiniteDifferenceSolver/test_fixed_outer_boundary")
+        
         domain = geometry.Part3()
         length_scale = 1.e-6*utility.metre()
-        domain.AddCuboid(100.e-6*utility.metre(), 100.e-6*utility.metre(), 100.e-6*utility.metre())
+        origin = microvessel.mesh.DimensionalChastePoint3((0.0, 0.0, 0.0), length_scale)
+        domain.AddCuboid(100.e-6*utility.metre(), 100.e-6*utility.metre(), 100.e-6*utility.metre(), origin)
         
         grid = chaste.projects.microvessel.mesh.RegularGrid3()
         grid.GenerateFromPart(domain, 10.e-6*utility.metre())
         
-        pde = chaste.projects.microvessel.pde.LinearSteadyStateDiffusionReactionPde3()
+        pde = chaste.projects.microvessel.pde.LinearSteadyStateDiffusionReactionPde3_3()
         pde.SetIsotropicDiffusionConstant(0.003*utility.metre_squared_per_second())
-        pde.SetContinuumLinearInUTerm(-1.e-5*utilty.per_second())
+        pde.SetContinuumLinearInUTerm(-1.0*utility.per_second())
         
-        bc = chaste.pde.DiscreteContinuumBoundaryCondition()
+        bc = chaste.projects.microvessel.pde.DiscreteContinuumBoundaryCondition3()
         bc.SetValue(30.0*utility.mole_per_metre_cubed())
         
 #         file_handler = chaste.core.OutputFileHandler("chaste/TestFiniteDifferenceSolver")
@@ -65,76 +69,81 @@ class TestFiniteDifferenceSolver(unittest.TestCase):
         solver.SetGrid(grid)
         solver.SetPde(pde)
         solver.AddBoundaryCondition(bc)
+        solver.SetFileHandler(file_handler)
+        solver.SetWriteSolution(True)
+        solver.Solve()
+        
+#     def test_fixed_left_boundary(self):
+#         file_handler = chaste.core.OutputFileHandler("Python/TestFiniteDifferenceSolver/test_fixed_left_boundary")
+#         
+#         domain = geometry.Part3()
+#         length_scale = 1.e-6*utility.metre()
+#         origin = microvessel.mesh.DimensionalChastePoint3((0.0, 0.0, 0.0), length_scale)
+#         domain.AddCuboid(100.e-6*utility.metre(), 100.e-6*utility.metre(), 100.e-6*utility.metre(), origin)
+#         
+#         grid = chaste.projects.microvessel.mesh.RegularGrid3()
+#         grid.GenerateFromPart(domain, 10.e-6*utility.metre())
+#         
+#         pde = chaste.projects.microvessel.pde.LinearSteadyStateDiffusionReactionPde3_3()
+#         pde.SetIsotropicDiffusionConstant(0.003*utility.metre_squared_per_second())
+#         pde.SetContinuumLinearInUTerm(-1.e-5*utility.per_second())
+#         
+#         for eachFacet in domain.GetFacets():
+#             if eachFacet.GetCentroid().GetLocation(length_scale)[0] == 0.0:
+#                 eachFacet.SetData("Boundary", 30.0)
+#         
+#         bc = chaste.projects.microvessel.pde.DiscreteContinuumBoundaryCondition3()
+#         bc.SetType(chaste.pde.BoundaryConditionType.FACET)
+#         bc.SetSource(chaste.pde.BoundaryConditionSource.LABEL_BASED)
+#         bc.SetLabelName("Boundary")
+#         bc.SetDomain(domain)
+#         
+#         solver = chaste.projects.microvessel.pde.FiniteDifferenceSolver()
+#         solver.SetGrid(grid)
+#         solver.SetPde(pde)
+#         solver.AddBoundaryCondition(bc)
 #         solver.SetFileHandler(file_handler)
 #         solver.SetFileName("OuterBoundary")
-#         solver.SetWriteSolution(True)
-        solver.Solve()
-#         print solver.GetVtkSolution()
-        
-    def test_fixed_left_boundary(self):
-        domain = geometry.Part3()
-        length_scale = 1.e-6*utility.metre()
-        domain.AddCuboid(100.e-6*utility.metre(), 100.e-6*utility.metre(), 100.e-6*utility.metre())
-        
-        grid = chaste.projects.microvessel.mesh.RegularGrid3()
-        grid.GenerateFromPart(domain, 10.e-6*utility.metre())
-        
-        pde = chaste.projects.microvessel.pde.LinearSteadyStateDiffusionReactionPde3()
-        pde.SetIsotropicDiffusionConstant(0.003*utility.metre_squared_per_second())
-        pde.SetContinuumLinearInUTerm(-1.e-5*utilty.per_second())
-        
-        for eachFacet in domain.GetFacets():
-            if eachFacet.GetCentroid()[0] == 0.0:
-                eachFacet.SetData("Boundary", 30.0)
-        
-        bc = chaste.projects.microvessel.pde.DiscreteContinuumBoundaryCondition()
-        bc.SetType(chaste.pde.BoundaryConditionType.FACET)
-        bc.SetSource(chaste.pde.BoundaryConditionSource.LABEL_BASED)
-        bc.SetLabelName("Boundary")
-        bc.SetDomain(domain)
-        
-        solver = chaste.projects.microvessel.pde.FiniteDifferenceSolver()
-        solver.SetGrid(grid)
-        solver.SetPde(pde)
-        solver.AddBoundaryCondition(bc)
-        solver.Solve()
-        
-    def test_fixed_left_right_boundary(self):
-        domain = geometry.Part3()
-        length_scale = 1.e-6*utility.metre()
-        domain.AddCuboid(100.e-6*utility.metre(), 100.e-6*utility.metre(), 10.e-6*utility.metre())
-        
-        grid = chaste.projects.microvessel.mesh.RegularGrid3()
-        grid.GenerateFromPart(domain, 10.e-6*utility.metre())
-        
-        pde = chaste.projects.microvessel.pde.LinearSteadyStateDiffusionReactionPde3()
-        pde.SetIsotropicDiffusionConstant(0.003*utility.metre_squared_per_second())
-        pde.SetContinuumLinearInUTerm(-1.e-5*utilty.per_second())
-        
-        for eachFacet in domain.GetFacets():
-            if eachFacet.GetCentroid()[0] == 0.0:
-                eachFacet.SetData("LeftBoundary", 30.0)
-        
-        for eachFacet in domain.GetFacets():
-            if eachFacet.GetCentroid()[0] == 100.0:
-                eachFacet.SetData("RightBoundary", 15.0)
-        
-        left_bc = chaste.projects.microvessel.pde.DiscreteContinuumBoundaryCondition3()
-        left_bc.SetType(chaste.projects.microvessel.pde.BoundaryConditionType.FACET)
-        left_bc.SetSource(chaste.projects.microvessel.pde.BoundaryConditionSource.LABEL_BASED)
-        left_bc.SetLabelName("LeftBoundary")
-        left_bc.SetDomain(domain)
-        
-        right_bc = chaste.projects.microvessel.pde.DiscreteContinuumBoundaryCondition3()
-        right_bc.SetType(chaste.projects.microvessel.pde.BoundaryConditionType.FACET)
-        right_bc.SetSource(chaste.projects.microvessel.pde.BoundaryConditionSource.LABEL_BASED)
-        right_bc.SetLabelName("RightBoundary")
-        right_bc.SetDomain(domain)
-        
-        solver = chaste.projects.microvessel.pde.FiniteDifferenceSolver3()
-        solver.SetGrid(grid)
-        solver.SetPde(pde)
-        solver.AddBoundaryCondition(left_bc)
-        solver.AddBoundaryCondition(right_bc)
-        solver.Solve()
+#         solver.SetWriteSolution(True)        
+#         solver.Solve()
+#         
+#     def test_fixed_left_right_boundary(self):
+#         domain = geometry.Part3()
+#         length_scale = 1.e-6*utility.metre()
+#         origin = microvessel.mesh.DimensionalChastePoint3((0.0, 0.0, 0.0), length_scale)
+#         domain.AddCuboid(100.e-6*utility.metre(), 100.e-6*utility.metre(), 10.e-6*utility.metre(), origin)
+#         
+#         grid = chaste.projects.microvessel.mesh.RegularGrid3()
+#         grid.GenerateFromPart(domain, 10.e-6*utility.metre())
+#         
+#         pde = chaste.projects.microvessel.pde.LinearSteadyStateDiffusionReactionPde3_3()
+#         pde.SetIsotropicDiffusionConstant(0.003*utility.metre_squared_per_second())
+#         pde.SetContinuumLinearInUTerm(-1.e-5*utility.per_second())
+#         
+#         for eachFacet in domain.GetFacets():
+#             if eachFacet.GetCentroid().GetLocation(length_scale)[0] == 0.0:
+#                 eachFacet.SetData("LeftBoundary", 30.0)
+#         
+#         for eachFacet in domain.GetFacets():
+#             if eachFacet.GetCentroid().GetLocation(length_scale)[0] == 100.0:
+#                 eachFacet.SetData("RightBoundary", 15.0)
+#         
+#         left_bc = chaste.projects.microvessel.pde.DiscreteContinuumBoundaryCondition3()
+#         left_bc.SetType(chaste.projects.microvessel.pde.BoundaryConditionType.FACET)
+#         left_bc.SetSource(chaste.projects.microvessel.pde.BoundaryConditionSource.LABEL_BASED)
+#         left_bc.SetLabelName("LeftBoundary")
+#         left_bc.SetDomain(domain)
+#         
+#         right_bc = chaste.projects.microvessel.pde.DiscreteContinuumBoundaryCondition3()
+#         right_bc.SetType(chaste.projects.microvessel.pde.BoundaryConditionType.FACET)
+#         right_bc.SetSource(chaste.projects.microvessel.pde.BoundaryConditionSource.LABEL_BASED)
+#         right_bc.SetLabelName("RightBoundary")
+#         right_bc.SetDomain(domain)
+#         
+#         solver = chaste.projects.microvessel.pde.FiniteDifferenceSolver3()
+#         solver.SetGrid(grid)
+#         solver.SetPde(pde)
+#         solver.AddBoundaryCondition(left_bc)
+#         solver.AddBoundaryCondition(right_bc)
+#         solver.Solve()
         

@@ -25,9 +25,8 @@ class TestPolygon(unittest.TestCase):
         # Make a polygon with one vertex
         polygon1 = microvessel.geometry.Polygon3(vertex1)
         self.assertEqual(len(polygon1.GetVertices()), 1)
-        polygon1.AddVertex(vertex2)
-        polygon1.AddVertex(vertex3)
-        polygon1.AddVertex(vertex4)
+        verts = [vertex2, vertex3, vertex4]
+        polygon1.AddVertices(verts)
         
         # Make a polygon with several vertices
         polygon2 = microvessel.geometry.Polygon3(vertex2)

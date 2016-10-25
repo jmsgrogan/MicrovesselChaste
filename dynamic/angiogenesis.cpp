@@ -576,6 +576,90 @@ struct CellPopulationMigrationRule_less__3__greater__wrapper : CellPopulationMig
 
 };
 
+struct LatticeBasedSproutingRule_less__2__greater__wrapper : LatticeBasedSproutingRule< 2 >, bp::wrapper< LatticeBasedSproutingRule< 2 > > {
+
+    LatticeBasedSproutingRule_less__2__greater__wrapper(LatticeBasedSproutingRule<2> const & arg )
+    : LatticeBasedSproutingRule<2>( arg )
+      , bp::wrapper< LatticeBasedSproutingRule< 2 > >(){
+        // copy constructor
+        
+    }
+
+    LatticeBasedSproutingRule_less__2__greater__wrapper( )
+    : LatticeBasedSproutingRule<2>( )
+      , bp::wrapper< LatticeBasedSproutingRule< 2 > >(){
+        // null constructor
+    
+    }
+
+    virtual ::std::vector< boost::shared_ptr<VesselNode<2> > > GetSprouts( ::std::vector< boost::shared_ptr<VesselNode<2> > > const & rNodes ) {
+        if( bp::override func_GetSprouts = this->get_override( "GetSprouts" ) )
+            return func_GetSprouts( boost::ref(rNodes) );
+        else{
+            return this->LatticeBasedSproutingRule< 2 >::GetSprouts( boost::ref(rNodes) );
+        }
+    }
+    
+    ::std::vector< boost::shared_ptr<VesselNode<2> > > default_GetSprouts( ::std::vector< boost::shared_ptr<VesselNode<2> > > const & rNodes ) {
+        return LatticeBasedSproutingRule< 2 >::GetSprouts( boost::ref(rNodes) );
+    }
+
+    virtual void SetGrid( ::boost::shared_ptr< RegularGrid< 2 > > pGrid ) {
+        if( bp::override func_SetGrid = this->get_override( "SetGrid" ) )
+            func_SetGrid( pGrid );
+        else{
+            this->LatticeBasedSproutingRule< 2 >::SetGrid( pGrid );
+        }
+    }
+    
+    void default_SetGrid( ::boost::shared_ptr< RegularGrid< 2 > > pGrid ) {
+        LatticeBasedSproutingRule< 2 >::SetGrid( pGrid );
+    }
+
+};
+
+struct LatticeBasedSproutingRule_less__3__greater__wrapper : LatticeBasedSproutingRule< 3 >, bp::wrapper< LatticeBasedSproutingRule< 3 > > {
+
+    LatticeBasedSproutingRule_less__3__greater__wrapper(LatticeBasedSproutingRule<3> const & arg )
+    : LatticeBasedSproutingRule<3>( arg )
+      , bp::wrapper< LatticeBasedSproutingRule< 3 > >(){
+        // copy constructor
+        
+    }
+
+    LatticeBasedSproutingRule_less__3__greater__wrapper( )
+    : LatticeBasedSproutingRule<3>( )
+      , bp::wrapper< LatticeBasedSproutingRule< 3 > >(){
+        // null constructor
+    
+    }
+
+    virtual ::std::vector< boost::shared_ptr<VesselNode<3> > > GetSprouts( ::std::vector< boost::shared_ptr<VesselNode<3> > > const & rNodes ) {
+        if( bp::override func_GetSprouts = this->get_override( "GetSprouts" ) )
+            return func_GetSprouts( boost::ref(rNodes) );
+        else{
+            return this->LatticeBasedSproutingRule< 3 >::GetSprouts( boost::ref(rNodes) );
+        }
+    }
+    
+    ::std::vector< boost::shared_ptr<VesselNode<3> > > default_GetSprouts( ::std::vector< boost::shared_ptr<VesselNode<3> > > const & rNodes ) {
+        return LatticeBasedSproutingRule< 3 >::GetSprouts( boost::ref(rNodes) );
+    }
+
+    virtual void SetGrid( ::boost::shared_ptr< RegularGrid< 3 > > pGrid ) {
+        if( bp::override func_SetGrid = this->get_override( "SetGrid" ) )
+            func_SetGrid( pGrid );
+        else{
+            this->LatticeBasedSproutingRule< 3 >::SetGrid( pGrid );
+        }
+    }
+    
+    void default_SetGrid( ::boost::shared_ptr< RegularGrid< 3 > > pGrid ) {
+        LatticeBasedSproutingRule< 3 >::SetGrid( pGrid );
+    }
+
+};
+
 struct OffLatticeMigrationRule_less__2__greater__wrapper : OffLatticeMigrationRule< 2 >, bp::wrapper< OffLatticeMigrationRule< 2 > > {
 
     OffLatticeMigrationRule_less__2__greater__wrapper(OffLatticeMigrationRule<2> const & arg )
@@ -880,6 +964,18 @@ struct Owen2011SproutingRule_less__2__greater__wrapper : Owen2011SproutingRule< 
         return Owen2011SproutingRule< 2 >::GetSprouts( boost::ref(rNodes) );
     }
 
+    virtual void SetGrid( ::boost::shared_ptr< RegularGrid< 2 > > pGrid ) {
+        if( bp::override func_SetGrid = this->get_override( "SetGrid" ) )
+            func_SetGrid( pGrid );
+        else{
+            this->LatticeBasedSproutingRule< 2 >::SetGrid( pGrid );
+        }
+    }
+    
+    void default_SetGrid( ::boost::shared_ptr< RegularGrid< 2 > > pGrid ) {
+        LatticeBasedSproutingRule< 2 >::SetGrid( pGrid );
+    }
+
 };
 
 struct Owen2011SproutingRule_less__3__greater__wrapper : Owen2011SproutingRule< 3 >, bp::wrapper< Owen2011SproutingRule< 3 > > {
@@ -908,6 +1004,18 @@ struct Owen2011SproutingRule_less__3__greater__wrapper : Owen2011SproutingRule< 
     
     ::std::vector< boost::shared_ptr<VesselNode<3> > > default_GetSprouts( ::std::vector< boost::shared_ptr<VesselNode<3> > > const & rNodes ) {
         return Owen2011SproutingRule< 3 >::GetSprouts( boost::ref(rNodes) );
+    }
+
+    virtual void SetGrid( ::boost::shared_ptr< RegularGrid< 3 > > pGrid ) {
+        if( bp::override func_SetGrid = this->get_override( "SetGrid" ) )
+            func_SetGrid( pGrid );
+        else{
+            this->LatticeBasedSproutingRule< 3 >::SetGrid( pGrid );
+        }
+    }
+    
+    void default_SetGrid( ::boost::shared_ptr< RegularGrid< 3 > > pGrid ) {
+        LatticeBasedSproutingRule< 3 >::SetGrid( pGrid );
     }
 
 };
@@ -2194,6 +2302,98 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_angiogenesis){
         bp::implicitly_convertible< boost::shared_ptr< CellPopulationMigrationRule< 3 > >, boost::shared_ptr< AbstractMigrationRule< 3 > > >();
     }
 
+    { //::LatticeBasedSproutingRule< 2 >
+        typedef bp::class_< LatticeBasedSproutingRule_less__2__greater__wrapper, bp::bases< AbstractSproutingRule< 2 > > > LatticeBasedSproutingRule2_exposer_t;
+        LatticeBasedSproutingRule2_exposer_t LatticeBasedSproutingRule2_exposer = LatticeBasedSproutingRule2_exposer_t( "LatticeBasedSproutingRule2", bp::init< >() );
+        bp::scope LatticeBasedSproutingRule2_scope( LatticeBasedSproutingRule2_exposer );
+        { //::LatticeBasedSproutingRule< 2 >::Create
+        
+            typedef LatticeBasedSproutingRule< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< LatticeBasedSproutingRule< 2 > > ( *Create_function_type )(  );
+            
+            LatticeBasedSproutingRule2_exposer.def( 
+                "Create"
+                , Create_function_type( &::LatticeBasedSproutingRule< 2 >::Create ) );
+        
+        }
+        { //::LatticeBasedSproutingRule< 2 >::GetSprouts
+        
+            typedef LatticeBasedSproutingRule< 2 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<VesselNode<2> > > ( exported_class_t::*GetSprouts_function_type)( ::std::vector< boost::shared_ptr<VesselNode<2> > > const & ) ;
+            typedef ::std::vector< boost::shared_ptr<VesselNode<2> > > ( LatticeBasedSproutingRule_less__2__greater__wrapper::*default_GetSprouts_function_type)( ::std::vector< boost::shared_ptr<VesselNode<2> > > const & ) ;
+            
+            LatticeBasedSproutingRule2_exposer.def( 
+                "GetSprouts"
+                , GetSprouts_function_type(&::LatticeBasedSproutingRule< 2 >::GetSprouts)
+                , default_GetSprouts_function_type(&LatticeBasedSproutingRule_less__2__greater__wrapper::default_GetSprouts)
+                , ( bp::arg("rNodes") ) );
+        
+        }
+        { //::LatticeBasedSproutingRule< 2 >::SetGrid
+        
+            typedef LatticeBasedSproutingRule< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetGrid_function_type)( ::boost::shared_ptr< RegularGrid< 2 > > ) ;
+            typedef void ( LatticeBasedSproutingRule_less__2__greater__wrapper::*default_SetGrid_function_type)( ::boost::shared_ptr< RegularGrid< 2 > > ) ;
+            
+            LatticeBasedSproutingRule2_exposer.def( 
+                "SetGrid"
+                , SetGrid_function_type(&::LatticeBasedSproutingRule< 2 >::SetGrid)
+                , default_SetGrid_function_type(&LatticeBasedSproutingRule_less__2__greater__wrapper::default_SetGrid)
+                , ( bp::arg("pGrid") ) );
+        
+        }
+        LatticeBasedSproutingRule2_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< LatticeBasedSproutingRule<2> > >();
+        bp::implicitly_convertible< boost::shared_ptr< LatticeBasedSproutingRule< 2 > >, boost::shared_ptr< AbstractSproutingRule< 2 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< Owen2011SproutingRule< 2 > >, boost::shared_ptr< LatticeBasedSproutingRule< 2 > > >();
+    }
+
+    { //::LatticeBasedSproutingRule< 3 >
+        typedef bp::class_< LatticeBasedSproutingRule_less__3__greater__wrapper, bp::bases< AbstractSproutingRule< 3 > > > LatticeBasedSproutingRule3_exposer_t;
+        LatticeBasedSproutingRule3_exposer_t LatticeBasedSproutingRule3_exposer = LatticeBasedSproutingRule3_exposer_t( "LatticeBasedSproutingRule3", bp::init< >() );
+        bp::scope LatticeBasedSproutingRule3_scope( LatticeBasedSproutingRule3_exposer );
+        { //::LatticeBasedSproutingRule< 3 >::Create
+        
+            typedef LatticeBasedSproutingRule< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< LatticeBasedSproutingRule< 3 > > ( *Create_function_type )(  );
+            
+            LatticeBasedSproutingRule3_exposer.def( 
+                "Create"
+                , Create_function_type( &::LatticeBasedSproutingRule< 3 >::Create ) );
+        
+        }
+        { //::LatticeBasedSproutingRule< 3 >::GetSprouts
+        
+            typedef LatticeBasedSproutingRule< 3 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<VesselNode<3> > > ( exported_class_t::*GetSprouts_function_type)( ::std::vector< boost::shared_ptr<VesselNode<3> > > const & ) ;
+            typedef ::std::vector< boost::shared_ptr<VesselNode<3> > > ( LatticeBasedSproutingRule_less__3__greater__wrapper::*default_GetSprouts_function_type)( ::std::vector< boost::shared_ptr<VesselNode<3> > > const & ) ;
+            
+            LatticeBasedSproutingRule3_exposer.def( 
+                "GetSprouts"
+                , GetSprouts_function_type(&::LatticeBasedSproutingRule< 3 >::GetSprouts)
+                , default_GetSprouts_function_type(&LatticeBasedSproutingRule_less__3__greater__wrapper::default_GetSprouts)
+                , ( bp::arg("rNodes") ) );
+        
+        }
+        { //::LatticeBasedSproutingRule< 3 >::SetGrid
+        
+            typedef LatticeBasedSproutingRule< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetGrid_function_type)( ::boost::shared_ptr< RegularGrid< 3 > > ) ;
+            typedef void ( LatticeBasedSproutingRule_less__3__greater__wrapper::*default_SetGrid_function_type)( ::boost::shared_ptr< RegularGrid< 3 > > ) ;
+            
+            LatticeBasedSproutingRule3_exposer.def( 
+                "SetGrid"
+                , SetGrid_function_type(&::LatticeBasedSproutingRule< 3 >::SetGrid)
+                , default_SetGrid_function_type(&LatticeBasedSproutingRule_less__3__greater__wrapper::default_SetGrid)
+                , ( bp::arg("pGrid") ) );
+        
+        }
+        LatticeBasedSproutingRule3_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< LatticeBasedSproutingRule<3> > >();
+        bp::implicitly_convertible< boost::shared_ptr< LatticeBasedSproutingRule< 3 > >, boost::shared_ptr< AbstractSproutingRule< 3 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< Owen2011SproutingRule< 3 > >, boost::shared_ptr< LatticeBasedSproutingRule< 3 > > >();
+    }
+
     { //::OffLatticeMigrationRule< 2 >
         typedef bp::class_< OffLatticeMigrationRule_less__2__greater__wrapper, bp::bases< AbstractMigrationRule< 2 > > > OffLatticeMigrationRule2_exposer_t;
         OffLatticeMigrationRule2_exposer_t OffLatticeMigrationRule2_exposer = OffLatticeMigrationRule2_exposer_t( "OffLatticeMigrationRule2", bp::init< >() );
@@ -2619,7 +2819,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_angiogenesis){
     }
 
     { //::Owen2011SproutingRule< 2 >
-        typedef bp::class_< Owen2011SproutingRule_less__2__greater__wrapper > Owen2011SproutingRule2_exposer_t;
+        typedef bp::class_< Owen2011SproutingRule_less__2__greater__wrapper, bp::bases< LatticeBasedSproutingRule< 2 > > > Owen2011SproutingRule2_exposer_t;
         Owen2011SproutingRule2_exposer_t Owen2011SproutingRule2_exposer = Owen2011SproutingRule2_exposer_t( "Owen2011SproutingRule2", bp::init< >() );
         bp::scope Owen2011SproutingRule2_scope( Owen2011SproutingRule2_exposer );
         { //::Owen2011SproutingRule< 2 >::Create
@@ -2656,14 +2856,26 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_angiogenesis){
                 , ( bp::arg("halfMaxVegf") ) );
         
         }
+        { //::LatticeBasedSproutingRule< 2 >::SetGrid
+        
+            typedef Owen2011SproutingRule< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetGrid_function_type)( ::boost::shared_ptr< RegularGrid< 2 > > ) ;
+            typedef void ( Owen2011SproutingRule_less__2__greater__wrapper::*default_SetGrid_function_type)( ::boost::shared_ptr< RegularGrid< 2 > > ) ;
+            
+            Owen2011SproutingRule2_exposer.def( 
+                "SetGrid"
+                , SetGrid_function_type(&::LatticeBasedSproutingRule< 2 >::SetGrid)
+                , default_SetGrid_function_type(&Owen2011SproutingRule_less__2__greater__wrapper::default_SetGrid)
+                , ( bp::arg("pGrid") ) );
+        
+        }
         Owen2011SproutingRule2_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< Owen2011SproutingRule<2> > >();
-        bp::implicitly_convertible< boost::shared_ptr< Owen2011SproutingRule< 2 > >, boost::shared_ptr< LatticeBasedSproutingRule< 2 > > >();
         bp::implicitly_convertible< boost::shared_ptr< Owen2011SproutingRule< 2 > >, boost::shared_ptr< AbstractSproutingRule< 2 > > >();
     }
 
     { //::Owen2011SproutingRule< 3 >
-        typedef bp::class_< Owen2011SproutingRule_less__3__greater__wrapper > Owen2011SproutingRule3_exposer_t;
+        typedef bp::class_< Owen2011SproutingRule_less__3__greater__wrapper, bp::bases< LatticeBasedSproutingRule< 3 > > > Owen2011SproutingRule3_exposer_t;
         Owen2011SproutingRule3_exposer_t Owen2011SproutingRule3_exposer = Owen2011SproutingRule3_exposer_t( "Owen2011SproutingRule3", bp::init< >() );
         bp::scope Owen2011SproutingRule3_scope( Owen2011SproutingRule3_exposer );
         { //::Owen2011SproutingRule< 3 >::Create
@@ -2700,9 +2912,21 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_angiogenesis){
                 , ( bp::arg("halfMaxVegf") ) );
         
         }
+        { //::LatticeBasedSproutingRule< 3 >::SetGrid
+        
+            typedef Owen2011SproutingRule< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetGrid_function_type)( ::boost::shared_ptr< RegularGrid< 3 > > ) ;
+            typedef void ( Owen2011SproutingRule_less__3__greater__wrapper::*default_SetGrid_function_type)( ::boost::shared_ptr< RegularGrid< 3 > > ) ;
+            
+            Owen2011SproutingRule3_exposer.def( 
+                "SetGrid"
+                , SetGrid_function_type(&::LatticeBasedSproutingRule< 3 >::SetGrid)
+                , default_SetGrid_function_type(&Owen2011SproutingRule_less__3__greater__wrapper::default_SetGrid)
+                , ( bp::arg("pGrid") ) );
+        
+        }
         Owen2011SproutingRule3_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< Owen2011SproutingRule<3> > >();
-        bp::implicitly_convertible< boost::shared_ptr< Owen2011SproutingRule< 3 > >, boost::shared_ptr< LatticeBasedSproutingRule< 3 > > >();
         bp::implicitly_convertible< boost::shared_ptr< Owen2011SproutingRule< 3 > >, boost::shared_ptr< AbstractSproutingRule< 3 > > >();
     }
 

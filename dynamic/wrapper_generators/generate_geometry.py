@@ -60,9 +60,9 @@ def update_builder(builder):
 
     for eachClass in include_classes:
         builder.class_(eachClass).include()  
-        new_name = generate_bindings.template_replace(eachClass)
-        if(new_name != eachClass):
-            builder.class_(eachClass).rename(new_name) 
+#         new_name = generate_bindings.template_replace(eachClass)
+#         if(new_name != eachClass):
+#             builder.class_(eachClass).rename(new_name) 
 
     # There is a problem with templated default arguements, so turn them off for now.  
     builder.class_('Part<3>').calldefs().use_default_arguments=False   
@@ -72,6 +72,7 @@ def update_builder(builder):
     builder.class_('Facet<2>').calldefs().use_default_arguments=False    
     builder.class_('Polygon<2>').calldefs().use_default_arguments=False  
     builder.class_('VoronoiGenerator<3>').calldefs().use_default_arguments=False        
-    builder.class_('VoronoiGenerator<2>').calldefs().use_default_arguments=False      
+    builder.class_('VoronoiGenerator<2>').calldefs().use_default_arguments=False 
+    builder.class_('VoronoiGenerator<2>').exclude()   
   
     return builder

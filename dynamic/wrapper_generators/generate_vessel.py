@@ -75,7 +75,13 @@ def update_builder(builder):
                        "DistanceMap<2>",
 #                       "LacunarityCalculator<2>",
                        "VesselNetworkGeometryCalculator<2>",
-                       "VesselNetworkGraphCalculator<2>"]
+                       "VesselNetworkGraphCalculator<2>",
+                       "AbstractVesselNetworkComponentProperties<2>",
+                       "AbstractVesselNetworkComponentProperties<3>",
+                       "AbstractVesselNetworkComponentFlowProperties<2>",
+                       "AbstractVesselNetworkComponentFlowProperties<3>",
+                       "AbstractVesselNetworkComponentChemicalProperties<2>",
+                       "AbstractVesselNetworkComponentChemicalProperties<3>"]
     
     # Include each class and do template renaming
     for eachClass in include_classes:

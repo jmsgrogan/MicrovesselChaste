@@ -50,6 +50,9 @@ Copyright (c) 2005-2016, University of Oxford.
 //#include "LacunarityCalculator.hpp"
 #include "VesselNetworkGeometryCalculator.hpp"
 #include "VesselNetworkGraphCalculator.hpp"
+#include "AbstractVesselNetworkComponentProperties.hpp"
+#include "AbstractVesselNetworkComponentFlowProperties.hpp"
+#include "AbstractVesselNetworkComponentChemicalProperties.hpp"
 
 template class NodeFlowProperties<3>;
 template class SegmentFlowProperties<3>;
@@ -85,6 +88,12 @@ template class DistanceMap<2>;
 //template class LacunarityCalculator<2>;
 template class VesselNetworkGeometryCalculator<2>;
 template class VesselNetworkGraphCalculator<2>;
+template class AbstractVesselNetworkComponentProperties<2>;
+template class AbstractVesselNetworkComponentProperties<3>;
+template class AbstractVesselNetworkComponentFlowProperties<2>;
+template class AbstractVesselNetworkComponentFlowProperties<3>;
+template class AbstractVesselNetworkComponentChemicalProperties<2>;
+template class AbstractVesselNetworkComponentChemicalProperties<3>;
 
 typedef std::vector<DimensionalChastePoint<2> > VecDimendionsalChastePoint2;
 typedef std::vector<DimensionalChastePoint<3> > VecDimendionsalChastePoint3;

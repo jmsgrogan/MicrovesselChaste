@@ -44,6 +44,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "CellPopulationMigrationRule.hpp"
 #include "RegressionSolver.hpp"
 #include "WallShearStressBasedRegressionSolver.hpp"
+#include "LatticeBasedSproutingRule.hpp"
 
 template class AngiogenesisSolver<3>;
 template class Owen2011MigrationRule<3>;
@@ -52,6 +53,7 @@ template class OffLatticeMigrationRule<3>;
 template class OffLatticeSproutingRule<3>;
 template class AbstractMigrationRule<3>;
 template class AbstractSproutingRule<3>;
+template class LatticeBasedSproutingRule<3>;
 template class RegressionSolver<3>;
 template class WallShearStressBasedRegressionSolver<3>;
 template class CellPopulationMigrationRule<3>;
@@ -62,6 +64,7 @@ template class OffLatticeMigrationRule<2>;
 template class OffLatticeSproutingRule<2>;
 template class AbstractMigrationRule<2>;
 template class AbstractSproutingRule<2>;
+template class LatticeBasedSproutingRule<2>;
 template class LatticeBasedMigrationRule<2>;
 template class CellPopulationMigrationRule<2>;
 template class RegressionSolver<2>;

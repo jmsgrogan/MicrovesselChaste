@@ -62,7 +62,8 @@ def update_builder(builder):
                        "CellPopulationMigrationRule<3>",
                        "RegressionSolver<3>",
                        "WallShearStressBasedRegressionSolver<3>",
-                       ]
+                       "LatticeBasedSproutingRule<3>",
+                       "LatticeBasedSproutingRule<2>"]
     
     for eachClass in include_classes:
         builder.class_(eachClass).include()  

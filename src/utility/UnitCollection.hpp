@@ -180,7 +180,8 @@ namespace unit{
     BOOST_UNITS_STATIC_CONSTANT(mmHg, units::metric::mmHg_base_unit::unit_type);
 
     // Flow
-    typedef units::si::dynamic_viscosity dynamic_viscosity;
+    typedef units::derived_dimension<units::mass_base_dimension, 1, units::length_base_dimension, -1, units::time_base_dimension, -1>::type dynamic_viscosity_dimension;
+    typedef units::unit<dynamic_viscosity_dimension, units::si::system> dynamic_viscosity;
     BOOST_UNITS_STATIC_CONSTANT(poiseuille, dynamic_viscosity);
     typedef units::derived_dimension<units::length_base_dimension, 3, units::time_base_dimension, -1>::type flow_rate_dimension;
     typedef units::unit<flow_rate_dimension, units::si::system> flow_rate;

@@ -213,82 +213,82 @@ struct value_traits< std::vector< boost::shared_ptr<Polygon<3> > > >{
 }/*indexing*/ } /*python*/ } /*boost*/
 
 BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_geometry){
-    bp::class_< std::vector< unsigned int > >("vector_less__unsigned_int__greater_")    
+    bp::class_< std::vector< unsigned int > >("VecUnsignedInt_GeometryModule")    
         .def( bp::indexing::vector_suite< std::vector< unsigned int > >() );
 
-    bp::class_< std::vector< std::vector< boost::shared_ptr<Polygon<3> > > > >("vector_less__std_scope_vector_less__boost_scope_shared_ptr_less_Polygon_less_3_greater___greater___greater___greater_")    
+    bp::class_< std::vector< std::vector< boost::shared_ptr<Polygon<3> > > > >("VecVecPolygonPtr3")    
         .def( bp::indexing::vector_suite< std::vector< std::vector< boost::shared_ptr<Polygon<3> > > > >() );
 
-    bp::class_< std::vector< std::vector< boost::shared_ptr<Polygon<2> > > > >("vector_less__std_scope_vector_less__boost_scope_shared_ptr_less_Polygon_less_2_greater___greater___greater___greater_")    
+    bp::class_< std::vector< std::vector< boost::shared_ptr<Polygon<2> > > > >("VecVecPolygonPtr2")    
         .def( bp::indexing::vector_suite< std::vector< std::vector< boost::shared_ptr<Polygon<2> > > > >() );
 
-    bp::class_< std::vector< std::pair<unsigned int, unsigned int> > >("vector_less__std_scope_pair_less_unsigned_int_comma__unsigned_int_greater___greater_")    
+    bp::class_< std::vector< std::pair<unsigned int, unsigned int> > >("VecPairUnsignedIntUnsignedInt_GeometryModule")    
         .def( bp::indexing::vector_suite< std::vector< std::pair<unsigned int, unsigned int> > >() );
 
-    bp::class_< std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > >("vector_less__boost_scope_units_scope_quantity_less_boost_scope_units_scope_unit_less_boost_scope_units_scope_list_less_boost_scope_units_scope_dim_less_boost_scope_units_scope_length_base_dimension_comma__boost_scope_units_scope_static_rational_less_1_comma__1_greater___greater__comma__boost_scope_units_scope_dimensionless_type_greater__comma__boost_scope_units_scope_homogeneous_system_less_boost_scope_units_scope_list_less_boost_scope_units_scope_si_scope_meter_base_unit_comma__boost_scope_units_scope_list_less_boost_scope_units_scope_scaled_base_unit_less_boost_scope_units_scope_cgs_scope_gram_base_unit_comma__boost_scope_units_scope_scale_less_10_comma__static_rational_less_3_greater___greater___greater__comma__boost_scope_units_scope_list_less_boost_scope_units_scope_si_scope_second_base_unit_comma__boost_scope_units_scope_list_less_boost_scope_units_scope_si_scope_ampere_base_unit_comma__boost_scope_units_scope_list_less_boost_scope_units_scope_si_scope_kelvin_base_unit_comma__boost_scope_units_scope_list_less_boost_scope_units_scope_si_scope_mole_base_unit_comma__boost_scope_units_scope_list_less_boost_scope_units_scope_si_scope_candela_base_unit_comma__boost_scope_units_scope_list_less_boost_scope_units_scope_angle_scope_radian_base_unit_comma__boost_scope_units_scope_list_less_boost_scope_units_scope_angle_scope_steradian_base_unit_comma__boost_scope_units_scope_dimensionless_type_greater___greater___greater___greater___greater___greater___greater___greater___greater___greater__comma__void_greater__comma__double_greater___greater_")    
+    bp::class_< std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > >("VecLengthQuantity")    
         .def( bp::indexing::vector_suite< std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > >() );
 
     { //::std::vector< boost::shared_ptr<Polygon<3> > >
-        typedef bp::class_< std::vector< boost::shared_ptr<Polygon<3> > > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<Polygon<3> > > >() );
+        typedef bp::class_< std::vector< boost::shared_ptr<Polygon<3> > > > VecPolygonPtr3_exposer_t;
+        VecPolygonPtr3_exposer_t VecPolygonPtr3_exposer = VecPolygonPtr3_exposer_t( "VecPolygonPtr3" );
+        bp::scope VecPolygonPtr3_scope( VecPolygonPtr3_exposer );
+        VecPolygonPtr3_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<Polygon<3> > > >() );
     }
 
     { //::std::vector< boost::shared_ptr<Polygon<2> > >
-        typedef bp::class_< std::vector< boost::shared_ptr<Polygon<2> > > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<Polygon<2> > > >() );
+        typedef bp::class_< std::vector< boost::shared_ptr<Polygon<2> > > > VecPolygonPtr2_exposer_t;
+        VecPolygonPtr2_exposer_t VecPolygonPtr2_exposer = VecPolygonPtr2_exposer_t( "VecPolygonPtr2" );
+        bp::scope VecPolygonPtr2_scope( VecPolygonPtr2_exposer );
+        VecPolygonPtr2_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<Polygon<2> > > >() );
     }
 
     { //::std::vector< boost::shared_ptr<Facet<3> > >
-        typedef bp::class_< std::vector< boost::shared_ptr<Facet<3> > > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<Facet<3> > > >() );
+        typedef bp::class_< std::vector< boost::shared_ptr<Facet<3> > > > VecFacetPtr3_exposer_t;
+        VecFacetPtr3_exposer_t VecFacetPtr3_exposer = VecFacetPtr3_exposer_t( "VecFacetPtr3" );
+        bp::scope VecFacetPtr3_scope( VecFacetPtr3_exposer );
+        VecFacetPtr3_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<Facet<3> > > >() );
     }
 
     { //::std::vector< boost::shared_ptr<Facet<2> > >
-        typedef bp::class_< std::vector< boost::shared_ptr<Facet<2> > > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<Facet<2> > > >() );
+        typedef bp::class_< std::vector< boost::shared_ptr<Facet<2> > > > VecFacetPtr2_exposer_t;
+        VecFacetPtr2_exposer_t VecFacetPtr2_exposer = VecFacetPtr2_exposer_t( "VecFacetPtr2" );
+        bp::scope VecFacetPtr2_scope( VecFacetPtr2_exposer );
+        VecFacetPtr2_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<Facet<2> > > >() );
     }
 
     { //::std::vector< boost::shared_ptr<DimensionalChastePoint<3> > >
-        typedef bp::class_< std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > >() );
+        typedef bp::class_< std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > > VecDimensionalChastePointPtr3_exposer_t;
+        VecDimensionalChastePointPtr3_exposer_t VecDimensionalChastePointPtr3_exposer = VecDimensionalChastePointPtr3_exposer_t( "VecDimensionalChastePointPtr3" );
+        bp::scope VecDimensionalChastePointPtr3_scope( VecDimensionalChastePointPtr3_exposer );
+        VecDimensionalChastePointPtr3_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > >() );
     }
 
     { //::std::vector< boost::shared_ptr<DimensionalChastePoint<2> > >
-        typedef bp::class_< std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > >() );
+        typedef bp::class_< std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > > VecDimensionalChastePointPtr2_exposer_t;
+        VecDimensionalChastePointPtr2_exposer_t VecDimensionalChastePointPtr2_exposer = VecDimensionalChastePointPtr2_exposer_t( "VecDimensionalChastePointPtr2" );
+        bp::scope VecDimensionalChastePointPtr2_scope( VecDimensionalChastePointPtr2_exposer );
+        VecDimensionalChastePointPtr2_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > >() );
     }
 
     { //::std::vector< bool >
-        typedef bp::class_< std::vector< bool > > vector_less__bool__greater__exposer_t;
-        vector_less__bool__greater__exposer_t vector_less__bool__greater__exposer = vector_less__bool__greater__exposer_t( "vector_less__bool__greater_" );
-        bp::scope vector_less__bool__greater__scope( vector_less__bool__greater__exposer );
-        vector_less__bool__greater__exposer.def( bp::indexing::vector_suite< std::vector< bool > >() );
+        typedef bp::class_< std::vector< bool > > VecBool_GeometryModule_exposer_t;
+        VecBool_GeometryModule_exposer_t VecBool_GeometryModule_exposer = VecBool_GeometryModule_exposer_t( "VecBool_GeometryModule" );
+        bp::scope VecBool_GeometryModule_scope( VecBool_GeometryModule_exposer );
+        VecBool_GeometryModule_exposer.def( bp::indexing::vector_suite< std::vector< bool > >() );
     }
 
     { //::std::vector< DimensionalChastePoint<3> >
-        typedef bp::class_< std::vector< DimensionalChastePoint<3> > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< DimensionalChastePoint<3> > >() );
+        typedef bp::class_< std::vector< DimensionalChastePoint<3> > > VecDimensionalChastePoint3_GeometryModule_exposer_t;
+        VecDimensionalChastePoint3_GeometryModule_exposer_t VecDimensionalChastePoint3_GeometryModule_exposer = VecDimensionalChastePoint3_GeometryModule_exposer_t( "VecDimensionalChastePoint3_GeometryModule" );
+        bp::scope VecDimensionalChastePoint3_GeometryModule_scope( VecDimensionalChastePoint3_GeometryModule_exposer );
+        VecDimensionalChastePoint3_GeometryModule_exposer.def( bp::indexing::vector_suite< std::vector< DimensionalChastePoint<3> > >() );
     }
 
     { //::std::vector< DimensionalChastePoint<2> >
-        typedef bp::class_< std::vector< DimensionalChastePoint<2> > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< DimensionalChastePoint<2> > >() );
+        typedef bp::class_< std::vector< DimensionalChastePoint<2> > > VecDimensionalChastePoint2_GeometryModule_exposer_t;
+        VecDimensionalChastePoint2_GeometryModule_exposer_t VecDimensionalChastePoint2_GeometryModule_exposer = VecDimensionalChastePoint2_GeometryModule_exposer_t( "VecDimensionalChastePoint2_GeometryModule" );
+        bp::scope VecDimensionalChastePoint2_GeometryModule_scope( VecDimensionalChastePoint2_GeometryModule_exposer );
+        VecDimensionalChastePoint2_GeometryModule_exposer.def( bp::indexing::vector_suite< std::vector< DimensionalChastePoint<2> > >() );
     }
 
     { //::BoundaryExtractor
@@ -836,8 +836,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_geometry){
             "GeneratePlane"
             , (::boost::shared_ptr< Part< 3 > > ( ::MappableGridGenerator::* )( unsigned int,unsigned int,bool ))( &::MappableGridGenerator::GeneratePlane )
             , ( bp::arg("numX"), bp::arg("numY"), bp::arg("withEndCaps")=(bool)(true) ) );
-
-    bp::class_< NetworkToSurface< 2 > >( "NetworkToSurface_less__2__greater_" );
 
     { //::NetworkToSurface< 3 >
         typedef bp::class_< NetworkToSurface< 3 > > NetworkToSurface3_exposer_t;
@@ -2102,12 +2100,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_geometry){
         
         }
     }
-
-    bp::class_< VoronoiGenerator< 2 > >( "VoronoiGenerator2", bp::init< >() )    
-        .def( 
-            "Generate"
-            , (::boost::shared_ptr< Part< 2 > > ( ::VoronoiGenerator<2>::* )( ::boost::shared_ptr< Part< 2 > >,::std::vector< boost::shared_ptr<DimensionalChastePoint<2> > >,unsigned int ))( &::VoronoiGenerator< 2 >::Generate )
-            , ( bp::arg("pPart"), bp::arg("seeds"), bp::arg("numSeeds") ) );
 
     bp::class_< VoronoiGenerator< 3 > >( "VoronoiGenerator3", bp::init< >() )    
         .def( 

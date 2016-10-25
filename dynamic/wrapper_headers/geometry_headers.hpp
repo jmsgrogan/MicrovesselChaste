@@ -33,6 +33,9 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
+#ifndef GEOMETRY_HEADERS_HPP
+#define GEOMETRY_HEADERS_HPP
+
 #include "Polygon.hpp"
 #include "Facet.hpp"
 #include "Part.hpp"
@@ -43,7 +46,46 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "BoundaryExtractor.hpp"
 #include "SurfaceCleaner.hpp"
 #include "GeometryWriter.hpp"
+#include "DimensionalChastePoint.hpp"
 
+//// Adding typedef's in this namespace will give nicer class names
+namespace pyplusplus{
+namespace aliases{
+typedef Part<3> Part3;
+typedef Part<2> Part2;
+typedef Facet<3> Facet3;
+typedef Facet<2> Facet2;
+typedef Polygon<3> Polygon3;
+typedef Polygon<2> Polygon2;
+typedef NetworkToSurface<3> NetworkToSurface3;
+typedef VesselSurfaceGenerator<3> VesselSurfaceGenerator3;
+typedef VoronoiGenerator<3> VoronoiGenerator3;
+typedef NetworkToSurface<2> NetworkToSurface2;
+typedef VesselSurfaceGenerator<2> VesselSurfaceGenerator2;
+typedef VoronoiGenerator<2> VoronoiGenerator2;
+typedef std::vector<std::vector<boost::shared_ptr<Polygon<2> >, std::allocator<boost::shared_ptr<Polygon<2> > > > > VecVecPolygonPtr2;
+typedef std::vector<std::vector<boost::shared_ptr<Polygon<3> >, std::allocator<boost::shared_ptr<Polygon<3> > > > > VecVecPolygonPtr3;
+typedef std::vector<boost::shared_ptr<Polygon<2> >, std::allocator<boost::shared_ptr<Polygon<2> > > > VecPolygonPtr2;
+typedef std::vector<boost::shared_ptr<Polygon<3> >, std::allocator<boost::shared_ptr<Polygon<3> > > > VecPolygonPtr3;
+typedef std::vector<boost::shared_ptr<Facet<2> >, std::allocator<boost::shared_ptr<Facet<2> > > > VecFacetPtr2;
+typedef std::vector<boost::shared_ptr<Facet<3> >, std::allocator<boost::shared_ptr<Facet<3> > > > VecFacetPtr3;
+typedef std::vector<boost::shared_ptr<DimensionalChastePoint<2> >, std::allocator<boost::shared_ptr<DimensionalChastePoint<2> > > > VecDimensionalChastePointPtr2;
+typedef std::vector<boost::shared_ptr<DimensionalChastePoint<3> >, std::allocator<boost::shared_ptr<DimensionalChastePoint<3> > > > VecDimensionalChastePointPtr3;
+typedef std::vector<units::quantity<unit::length> > VecLengthQuantity;
+
+// These are defined in the mesh module. They are included here to avoid duplicate registration warnings.
+typedef std::vector<DimensionalChastePoint<2>, std::allocator<DimensionalChastePoint<2> > > VecDimensionalChastePoint2_GeometryModule;
+typedef std::vector<DimensionalChastePoint<3>, std::allocator<DimensionalChastePoint<3> > > VecDimensionalChastePoint3_GeometryModule;
+
+// These are defined in the PyChaste preload module. They are included here to avoid duplicate registration warnings.
+typedef std::vector<unsigned int> VecUnsignedInt_GeometryModule;
+typedef std::vector<bool> VecBool_GeometryModule;
+typedef std::vector< std::pair<unsigned int, unsigned int> > VecPairUnsignedIntUnsignedInt_GeometryModule;
+
+}
+}//pyplusplus::aliases
+
+// Instantiate template classes
 template class Part<3>;
 template class Part<2>;
 template class Facet<3>;
@@ -56,7 +98,5 @@ template class VoronoiGenerator<3>;
 template class NetworkToSurface<2>;
 template class VesselSurfaceGenerator<2>;
 template class VoronoiGenerator<2>;
-typedef std::vector<boost::shared_ptr<Polygon<2> >, std::allocator<boost::shared_ptr<Polygon<2> > > > VecPolygon2;
-typedef std::vector<boost::shared_ptr<Polygon<3> >, std::allocator<boost::shared_ptr<Polygon<3> > > > VecPolygon3;
-typedef std::vector<boost::shared_ptr<Facet<2> >, std::allocator<boost::shared_ptr<Facet<2> > > > VecFacet2;
-typedef std::vector<boost::shared_ptr<Facet<3> >, std::allocator<boost::shared_ptr<Facet<3> > > > VecFacet3;
+
+#endif
