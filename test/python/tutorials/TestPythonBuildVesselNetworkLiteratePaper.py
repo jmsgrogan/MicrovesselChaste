@@ -68,7 +68,7 @@ class TestPythonBuildVesselNetworkLiteratePaper(unittest.TestCase):
         ## create a Y shaped network. Later we will learn how to build up networks in a more efficient manner.
         
         length_scale = 1.e-6*utility.metre()
-        length = 100.0 * length_scale
+        length = 100.0
         n1 = vessel.VesselNode3(0.0, 0.0 ,0.0, length_scale)
         n2 = vessel.VesselNode3(length, 0.0, 0.0, length_scale)
         n3 = vessel.VesselNode3(2.0 * length, length, 0.0, length_scale)
@@ -97,7 +97,10 @@ class TestPythonBuildVesselNetworkLiteratePaper(unittest.TestCase):
         ## Networks are written using VTKs PolyData format, which should have a .vtp extension.
         
         file_handler = chaste.core.OutputFileHandler("Python/TestPythonBuildVesselNetworkLiteratePaper", True)
-        network.Write(file_handler.GetOutputDirectoryFullPath() + "bifurcating_network.vtp")
+        writer = vessel.VesselNetworkWriter3()
+        writer.SetVesselNetwork(network)
+        writer.SetFileName(file_handler.GetOutputDirectoryFullPath() + "bifurcating_network.vtp")
+        writer.Write()
 
         ## Now we can visualize then network in Paraview. See the tutorial [wiki:UserTutorials/VisualizingWithParaview here], to get started. To view the network import the file
         ## `TestPythonBuildVesselNetworkLiteratePaper\bifurcating_network.vtp` into Paraview. For a nicer rendering you can do `Filters->Alphabetical->Tube`.

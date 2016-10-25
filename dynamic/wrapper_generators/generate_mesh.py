@@ -55,8 +55,8 @@ def update_builder(builder):
     
     for eachClass in include_classes:
         builder.class_(eachClass).include()  
-        new_name = generate_bindings.template_replace(eachClass)
-        if(new_name != eachClass):
-            builder.class_(eachClass).rename(new_name) 
+#         new_name = generate_bindings.template_replace(eachClass)
+#         if(new_name != eachClass):
+#             builder.class_(eachClass).rename(new_name) 
    
     return builder

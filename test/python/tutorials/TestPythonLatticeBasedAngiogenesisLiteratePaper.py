@@ -39,7 +39,7 @@ import chaste.projects.microvessel.geometry
 import chaste.projects.microvessel.mesh 
 import chaste.projects.microvessel.utility as utility
 import chaste.projects.microvessel.population.vessel as vessel
-import chaste.projects.microvessel.population.simulation as simulation
+import chaste.projects.microvessel.simulation as simulation
 import chaste.projects.microvessel.pde
 
 class TestLatticeBasedAngiogenesis(unittest.TestCase):
@@ -55,12 +55,12 @@ class TestLatticeBasedAngiogenesis(unittest.TestCase):
         grid.SetExtents((25, 25, 1))
         
         # Set up a vegf field
-        field = chaste.projects.microvesse.pde.FunctionMap3()
+        field = chaste.projects.microvessel.pde.FunctionMap3()
         field.SetGrid(grid)
         
         vegf_field = []
         for idx in range(grid.GetExtents()[0]*grid.GetExtents()[1]):
-            vegf_field.append(0.2*grid.GetLocationOf1dIndex(idx)[0]/(grid.GetSpacing()*grid.GetExtents()[0]))
+            vegf_field.append(0.2*grid.GetLocationOf1dIndex(idx).GetLocation(length_scale)[0]/(40.0*grid.GetExtents()[0]))
             
         field.SetFileName("Function.vti")
         field.SetFileHandler(file_handler)
@@ -69,49 +69,35 @@ class TestLatticeBasedAngiogenesis(unittest.TestCase):
         field.Write()
         
         # Set up the initial vessel
-        length = grid.GetSpacing() * (grid.GetExtents()[1] - 1) * length_scale
+        length =  float(grid.GetExtents()[1] - 1) * grid.GetSpacing()
         divisions = grid.GetExtents()[1] - 2 # divide the vessel to coincide with grid
         
-        start_point = microvessel.mesh.DimensionalChastePoint3(2.0 * grid.GetSpacing(), 0.0, 0.0, length_scale)
-        network = vessel.VesselNetworkGenerator().GenerateSingleVessel(length, start_point, divisions, 1)
-        network.write(file_handler.GetOutputDirectoryFullPath() + "/network.vtp")
+        start_point = microvessel.mesh.DimensionalChastePoint3(2.0 * 40.0, 0.0, 0.0, length_scale)
+        network = vessel.VesselNetworkGenerator3().GenerateSingleVessel(length, start_point, divisions, 1)
+        #network.write(file_handler.GetOutputDirectoryFullPath() + "/network.vtp")
         
-        # Set up the sprouting and migration rules for angiogenesis
-        # migration_rule = chaste.simulation.Owen2011MigrationRule()
-        # migration_rule.SetGrid(grid)
-        # migration_rule.SetDiscreteContinuumSolver(field)
-        # migration_rule.SetCellMotilityParameter(100.0)
-        # migration_rule.SetCellChemotacticParameter(80000.0)
-        # migration_rule.SetNetwork(network)
-        # # 
-        # sprouting_rule = chaste.simulation.Owen2011SproutingRule()
-        # sprouting_rule.SetDiscreteContinuumSolver(field)
-        # sprouting_rule.SetGrid(grid)
-        # sprouting_rule.SetVesselNetwork(network)
-        # sprouting_rule.SetSproutingProbability(0.5);
-        
-        migration_rule = chaste.simulation.Owen2011MigrationRule3()
+        migration_rule = simulation.Owen2011MigrationRule3()
         migration_rule.SetGrid(grid)
         migration_rule.SetDiscreteContinuumSolver(field)
         migration_rule.SetCellMotilityParameter(100.0 * utility.metre_squared_per_second())
-        migration_rule.SetCellChemotacticParameter(80000.0)
+        migration_rule.SetCellChemotacticParameter(80000.0 * utility.metre_pow5_per_second_per_mole())
         migration_rule.SetNetwork(network)
         # 
-        sprouting_rule = chaste.simulation.Owen2011SproutingRule3()
-        sprouting_rule.SetDiscreteContinuumSolver(field)
-        sprouting_rule.SetGrid(grid)
-        sprouting_rule.SetVesselNetwork(network)
-        sprouting_rule.SetSproutingProbability(0.5 * untility.per_second());
+        sprouting_rule = simulation.Owen2011SproutingRule3()
+#        sprouting_rule.SetDiscreteContinuumSolver(field)
+#        sprouting_rule.SetGrid(grid)
+#        sprouting_rule.SetVesselNetwork(network)
+#        sprouting_rule.SetSproutingProbability(0.5 * untility.per_second());
         # 
         # # Set up the angiogenesis solver
-        solver = chaste.simulation.AngiogenesisSolver3()
+        solver = simulation.AngiogenesisSolver3()
         solver.SetVesselNetwork(network)
         solver.SetVesselGrid(grid)
         solver.SetOutputFileHandler(file_handler)
         solver.SetSproutingRule(sprouting_rule)
         solver.SetMigrationRule(migration_rule)
         
-        manager = chaste.simulation.SimulationManager()
+        manager = simulation.SimulationManager()
         manager.Setup()
         manager.SetEndTimeAndNumberOfTimeSteps(10.0, 10.0)
         

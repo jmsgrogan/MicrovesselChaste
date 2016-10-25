@@ -214,10 +214,10 @@ struct value_traits< std::vector< unsigned int > >{
 
 BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_mesh){
     { //::std::vector< unsigned int >
-        typedef bp::class_< std::vector< unsigned int > > vector_less__unsigned_int__greater__exposer_t;
-        vector_less__unsigned_int__greater__exposer_t vector_less__unsigned_int__greater__exposer = vector_less__unsigned_int__greater__exposer_t( "vector_less__unsigned_int__greater_" );
-        bp::scope vector_less__unsigned_int__greater__scope( vector_less__unsigned_int__greater__exposer );
-        vector_less__unsigned_int__greater__exposer.def( bp::indexing::vector_suite< std::vector< unsigned int > >() );
+        typedef bp::class_< std::vector< unsigned int > > VecUnsignedInt_MeshModule_exposer_t;
+        VecUnsignedInt_MeshModule_exposer_t VecUnsignedInt_MeshModule_exposer = VecUnsignedInt_MeshModule_exposer_t( "VecUnsignedInt_MeshModule" );
+        bp::scope VecUnsignedInt_MeshModule_scope( VecUnsignedInt_MeshModule_exposer );
+        VecUnsignedInt_MeshModule_exposer.def( bp::indexing::vector_suite< std::vector< unsigned int > >() );
     }
 
     { //::std::vector< std::vector< unsigned int > >
@@ -263,10 +263,10 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_mesh){
     }
 
     { //::std::vector< double >
-        typedef bp::class_< std::vector< double > > vector_less__double__greater__exposer_t;
-        vector_less__double__greater__exposer_t vector_less__double__greater__exposer = vector_less__double__greater__exposer_t( "vector_less__double__greater_" );
-        bp::scope vector_less__double__greater__scope( vector_less__double__greater__exposer );
-        vector_less__double__greater__exposer.def( bp::indexing::vector_suite< std::vector< double > >() );
+        typedef bp::class_< std::vector< double > > VecDouble_MeshModule_exposer_t;
+        VecDouble_MeshModule_exposer_t VecDouble_MeshModule_exposer = VecDouble_MeshModule_exposer_t( "VecDouble_MeshModule" );
+        bp::scope VecDouble_MeshModule_scope( VecDouble_MeshModule_exposer );
+        VecDouble_MeshModule_exposer.def( bp::indexing::vector_suite< std::vector< double > >() );
     }
 
     { //::std::vector< boost::numeric::ublas::c_vector<double, 3> >
@@ -284,17 +284,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_mesh){
     }
 
     { //::std::vector< DimensionalChastePoint<3> >
-        typedef bp::class_< std::vector< DimensionalChastePoint<3> > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< DimensionalChastePoint<3> > >() );
+        typedef bp::class_< std::vector< DimensionalChastePoint<3> > > VecDimensionalChastePoint3_exposer_t;
+        VecDimensionalChastePoint3_exposer_t VecDimensionalChastePoint3_exposer = VecDimensionalChastePoint3_exposer_t( "VecDimensionalChastePoint3" );
+        bp::scope VecDimensionalChastePoint3_scope( VecDimensionalChastePoint3_exposer );
+        VecDimensionalChastePoint3_exposer.def( bp::indexing::vector_suite< std::vector< DimensionalChastePoint<3> > >() );
     }
 
     { //::std::vector< DimensionalChastePoint<2> >
-        typedef bp::class_< std::vector< DimensionalChastePoint<2> > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< DimensionalChastePoint<2> > >() );
+        typedef bp::class_< std::vector< DimensionalChastePoint<2> > > VecDimensionalChastePoint2_exposer_t;
+        VecDimensionalChastePoint2_exposer_t VecDimensionalChastePoint2_exposer = VecDimensionalChastePoint2_exposer_t( "VecDimensionalChastePoint2" );
+        bp::scope VecDimensionalChastePoint2_scope( VecDimensionalChastePoint2_exposer );
+        VecDimensionalChastePoint2_exposer.def( bp::indexing::vector_suite< std::vector< DimensionalChastePoint<2> > >() );
     }
 
     { //::DimensionalChastePoint< 2 >
@@ -2141,15 +2141,5 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_mesh){
         }
         RegularGridWriter_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< RegularGridWriter > >();
-    }
-
-    { //::Instantiation
-    
-        typedef int ( *Instantiation_function_type )(  );
-        
-        bp::def( 
-            "Instantiation"
-            , Instantiation_function_type( &::Instantiation ) );
-    
     }
 }

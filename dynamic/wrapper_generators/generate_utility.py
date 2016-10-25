@@ -90,21 +90,15 @@ def update_builder(builder):
     # they live in the unit namespace
     unit_ns = builder.global_ns.namespace('unit', recursive=False)
     pypluplus_alias_ns = builder.global_ns.namespace('pyplusplus')
-    
-#     class_name = "kg"
-#     helpers = unit_ns.classes(lambda decl: decl.name.startswith(class_name+'_instance_t<true>'))
-#     for eachClass in helpers:
-#         eachClass.include()
-#         eachClass.rename(class_name)
    
     unit_names = ["membrane_permeability",
                   "volumetric_solubility",
                   "solubility",
                   "diffusivity_per_concentration",
                   "diffusivity",
-#                 "flow_impedance",
-#                 "flow_rate",
-#                 "dynamic_viscosity",
+                  "flow_impedance",
+                 "flow_rate",
+                 "dynamic_viscosity",
                 "pressure",
                 "force",
                 "velocity",
@@ -160,15 +154,10 @@ def update_builder(builder):
         for var_gen_typedef in helpers:
             var_gen_cls = var_gen_typedef.type.declaration
             var_gen_cls.rename(units[var_gen_typedef.name])
-    #        var_gen_cls.member_operators( symbol='()' ).create_with_signature = True
             var_gen_cls.include()
-            try:
-                var_gen_cls.constructors().exclude()
-            except:
-                print var_gen_typedef.name
+            var_gen_cls.constructors().exclude()
             var_gen_cls.add_registration_code('def(double() * bp::self)')
             var_gen_cls.add_registration_code('def(bp::self_ns::str(bp::self))')
-            var_gen_cls.constructors().exclude()  
 
     quantity_names = ["MembranePermeabilityQuantity",
                       "VolumetricSolubilityQuantity",
@@ -209,6 +198,10 @@ def update_builder(builder):
             var_gen_cls.include()
             var_gen_cls.constructors().exclude()
             var_gen_cls.add_registration_code('def(double() * bp::self)')
+            var_gen_cls.add_registration_code('def(bp::self * double())')
+            var_gen_cls.add_registration_code('def(bp::self / bp::self)')
+            var_gen_cls.add_registration_code('def(bp::self / double())')
+            var_gen_cls.add_registration_code('def(double() / bp::self)')
             var_gen_cls.add_registration_code('def(bp::self_ns::str(bp::self))')
 
     return builder

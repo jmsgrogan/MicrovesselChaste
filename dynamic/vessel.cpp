@@ -214,6 +214,150 @@ struct AbstractVesselNetworkComponent_less__3__greater__wrapper : AbstractVessel
 
 };
 
+struct AbstractVesselNetworkComponentProperties_less__2__greater__wrapper : AbstractVesselNetworkComponentProperties< 2 >, bp::wrapper< AbstractVesselNetworkComponentProperties< 2 > > {
+
+    AbstractVesselNetworkComponentProperties_less__2__greater__wrapper( )
+    : AbstractVesselNetworkComponentProperties<2>( )
+      , bp::wrapper< AbstractVesselNetworkComponentProperties< 2 > >(){
+        // null constructor
+    
+    }
+
+    virtual ::std::map< std::string, double > GetOutputData(  ) const {
+        bp::override func_GetOutputData = this->get_override( "GetOutputData" );
+        return func_GetOutputData(  );
+    }
+
+};
+
+struct AbstractVesselNetworkComponentChemicalProperties_less__2__greater__wrapper : AbstractVesselNetworkComponentChemicalProperties< 2 >, bp::wrapper< AbstractVesselNetworkComponentChemicalProperties< 2 > > {
+
+    AbstractVesselNetworkComponentChemicalProperties_less__2__greater__wrapper( )
+    : AbstractVesselNetworkComponentChemicalProperties<2>( )
+      , bp::wrapper< AbstractVesselNetworkComponentChemicalProperties< 2 > >(){
+        // null constructor
+    
+    }
+
+    virtual void SetPermeability( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > permeability ) {
+        if( bp::override func_SetPermeability = this->get_override( "SetPermeability" ) )
+            func_SetPermeability( permeability );
+        else{
+            this->AbstractVesselNetworkComponentChemicalProperties< 2 >::SetPermeability( permeability );
+        }
+    }
+    
+    void default_SetPermeability( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > permeability ) {
+        AbstractVesselNetworkComponentChemicalProperties< 2 >::SetPermeability( permeability );
+    }
+
+    virtual ::std::map< std::string, double > GetOutputData(  ) const {
+        bp::override func_GetOutputData = this->get_override( "GetOutputData" );
+        return func_GetOutputData(  );
+    }
+
+};
+
+struct AbstractVesselNetworkComponentProperties_less__3__greater__wrapper : AbstractVesselNetworkComponentProperties< 3 >, bp::wrapper< AbstractVesselNetworkComponentProperties< 3 > > {
+
+    AbstractVesselNetworkComponentProperties_less__3__greater__wrapper( )
+    : AbstractVesselNetworkComponentProperties<3>( )
+      , bp::wrapper< AbstractVesselNetworkComponentProperties< 3 > >(){
+        // null constructor
+    
+    }
+
+    virtual ::std::map< std::string, double > GetOutputData(  ) const {
+        bp::override func_GetOutputData = this->get_override( "GetOutputData" );
+        return func_GetOutputData(  );
+    }
+
+};
+
+struct AbstractVesselNetworkComponentChemicalProperties_less__3__greater__wrapper : AbstractVesselNetworkComponentChemicalProperties< 3 >, bp::wrapper< AbstractVesselNetworkComponentChemicalProperties< 3 > > {
+
+    AbstractVesselNetworkComponentChemicalProperties_less__3__greater__wrapper( )
+    : AbstractVesselNetworkComponentChemicalProperties<3>( )
+      , bp::wrapper< AbstractVesselNetworkComponentChemicalProperties< 3 > >(){
+        // null constructor
+    
+    }
+
+    virtual void SetPermeability( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > permeability ) {
+        if( bp::override func_SetPermeability = this->get_override( "SetPermeability" ) )
+            func_SetPermeability( permeability );
+        else{
+            this->AbstractVesselNetworkComponentChemicalProperties< 3 >::SetPermeability( permeability );
+        }
+    }
+    
+    void default_SetPermeability( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > permeability ) {
+        AbstractVesselNetworkComponentChemicalProperties< 3 >::SetPermeability( permeability );
+    }
+
+    virtual ::std::map< std::string, double > GetOutputData(  ) const {
+        bp::override func_GetOutputData = this->get_override( "GetOutputData" );
+        return func_GetOutputData(  );
+    }
+
+};
+
+struct AbstractVesselNetworkComponentFlowProperties_less__2__greater__wrapper : AbstractVesselNetworkComponentFlowProperties< 2 >, bp::wrapper< AbstractVesselNetworkComponentFlowProperties< 2 > > {
+
+    AbstractVesselNetworkComponentFlowProperties_less__2__greater__wrapper( )
+    : AbstractVesselNetworkComponentFlowProperties<2>( )
+      , bp::wrapper< AbstractVesselNetworkComponentFlowProperties< 2 > >(){
+        // null constructor
+    
+    }
+
+    virtual void SetPressure( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > pressure ) {
+        if( bp::override func_SetPressure = this->get_override( "SetPressure" ) )
+            func_SetPressure( pressure );
+        else{
+            this->AbstractVesselNetworkComponentFlowProperties< 2 >::SetPressure( pressure );
+        }
+    }
+    
+    void default_SetPressure( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > pressure ) {
+        AbstractVesselNetworkComponentFlowProperties< 2 >::SetPressure( pressure );
+    }
+
+    virtual ::std::map< std::string, double > GetOutputData(  ) const {
+        bp::override func_GetOutputData = this->get_override( "GetOutputData" );
+        return func_GetOutputData(  );
+    }
+
+};
+
+struct AbstractVesselNetworkComponentFlowProperties_less__3__greater__wrapper : AbstractVesselNetworkComponentFlowProperties< 3 >, bp::wrapper< AbstractVesselNetworkComponentFlowProperties< 3 > > {
+
+    AbstractVesselNetworkComponentFlowProperties_less__3__greater__wrapper( )
+    : AbstractVesselNetworkComponentFlowProperties<3>( )
+      , bp::wrapper< AbstractVesselNetworkComponentFlowProperties< 3 > >(){
+        // null constructor
+    
+    }
+
+    virtual void SetPressure( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > pressure ) {
+        if( bp::override func_SetPressure = this->get_override( "SetPressure" ) )
+            func_SetPressure( pressure );
+        else{
+            this->AbstractVesselNetworkComponentFlowProperties< 3 >::SetPressure( pressure );
+        }
+    }
+    
+    void default_SetPressure( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > pressure ) {
+        AbstractVesselNetworkComponentFlowProperties< 3 >::SetPressure( pressure );
+    }
+
+    virtual ::std::map< std::string, double > GetOutputData(  ) const {
+        bp::override func_GetOutputData = this->get_override( "GetOutputData" );
+        return func_GetOutputData(  );
+    }
+
+};
+
 struct DensityMap_less__2__greater__wrapper : DensityMap< 2 >, bp::wrapper< DensityMap< 2 > > {
 
     DensityMap_less__2__greater__wrapper(DensityMap<2> const & arg )
@@ -362,6 +506,18 @@ struct NodeFlowProperties_less__2__greater__wrapper : NodeFlowProperties< 2 >, b
         return NodeFlowProperties< 2 >::GetOutputData( );
     }
 
+    virtual void SetPressure( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > pressure ) {
+        if( bp::override func_SetPressure = this->get_override( "SetPressure" ) )
+            func_SetPressure( pressure );
+        else{
+            this->AbstractVesselNetworkComponentFlowProperties< 2 >::SetPressure( pressure );
+        }
+    }
+    
+    void default_SetPressure( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > pressure ) {
+        AbstractVesselNetworkComponentFlowProperties< 2 >::SetPressure( pressure );
+    }
+
 };
 
 struct NodeFlowProperties_less__3__greater__wrapper : NodeFlowProperties< 3 >, bp::wrapper< NodeFlowProperties< 3 > > {
@@ -390,6 +546,18 @@ struct NodeFlowProperties_less__3__greater__wrapper : NodeFlowProperties< 3 >, b
     
     ::std::map< std::string, double > default_GetOutputData(  ) const  {
         return NodeFlowProperties< 3 >::GetOutputData( );
+    }
+
+    virtual void SetPressure( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > pressure ) {
+        if( bp::override func_SetPressure = this->get_override( "SetPressure" ) )
+            func_SetPressure( pressure );
+        else{
+            this->AbstractVesselNetworkComponentFlowProperties< 3 >::SetPressure( pressure );
+        }
+    }
+    
+    void default_SetPressure( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > pressure ) {
+        AbstractVesselNetworkComponentFlowProperties< 3 >::SetPressure( pressure );
     }
 
 };
@@ -422,6 +590,18 @@ struct SegmentFlowProperties_less__2__greater__wrapper : SegmentFlowProperties< 
         return SegmentFlowProperties< 2 >::GetOutputData( );
     }
 
+    virtual void SetPressure( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > pressure ) {
+        if( bp::override func_SetPressure = this->get_override( "SetPressure" ) )
+            func_SetPressure( pressure );
+        else{
+            this->AbstractVesselNetworkComponentFlowProperties< 2 >::SetPressure( pressure );
+        }
+    }
+    
+    void default_SetPressure( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > pressure ) {
+        AbstractVesselNetworkComponentFlowProperties< 2 >::SetPressure( pressure );
+    }
+
 };
 
 struct SegmentFlowProperties_less__3__greater__wrapper : SegmentFlowProperties< 3 >, bp::wrapper< SegmentFlowProperties< 3 > > {
@@ -450,6 +630,18 @@ struct SegmentFlowProperties_less__3__greater__wrapper : SegmentFlowProperties< 
     
     ::std::map< std::string, double > default_GetOutputData(  ) const  {
         return SegmentFlowProperties< 3 >::GetOutputData( );
+    }
+
+    virtual void SetPressure( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > pressure ) {
+        if( bp::override func_SetPressure = this->get_override( "SetPressure" ) )
+            func_SetPressure( pressure );
+        else{
+            this->AbstractVesselNetworkComponentFlowProperties< 3 >::SetPressure( pressure );
+        }
+    }
+    
+    void default_SetPressure( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > pressure ) {
+        AbstractVesselNetworkComponentFlowProperties< 3 >::SetPressure( pressure );
     }
 
 };
@@ -682,6 +874,18 @@ struct VesselFlowProperties_less__2__greater__wrapper : VesselFlowProperties< 2 
         return VesselFlowProperties< 2 >::GetOutputData( );
     }
 
+    virtual void SetPressure( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > pressure ) {
+        if( bp::override func_SetPressure = this->get_override( "SetPressure" ) )
+            func_SetPressure( pressure );
+        else{
+            this->AbstractVesselNetworkComponentFlowProperties< 2 >::SetPressure( pressure );
+        }
+    }
+    
+    void default_SetPressure( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > pressure ) {
+        AbstractVesselNetworkComponentFlowProperties< 2 >::SetPressure( pressure );
+    }
+
 };
 
 struct VesselFlowProperties_less__3__greater__wrapper : VesselFlowProperties< 3 >, bp::wrapper< VesselFlowProperties< 3 > > {
@@ -710,6 +914,18 @@ struct VesselFlowProperties_less__3__greater__wrapper : VesselFlowProperties< 3 
     
     ::std::map< std::string, double > default_GetOutputData(  ) const  {
         return VesselFlowProperties< 3 >::GetOutputData( );
+    }
+
+    virtual void SetPressure( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > pressure ) {
+        if( bp::override func_SetPressure = this->get_override( "SetPressure" ) )
+            func_SetPressure( pressure );
+        else{
+            this->AbstractVesselNetworkComponentFlowProperties< 3 >::SetPressure( pressure );
+        }
+    }
+    
+    void default_SetPressure( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > pressure ) {
+        AbstractVesselNetworkComponentFlowProperties< 3 >::SetPressure( pressure );
     }
 
 };
@@ -1704,12 +1920,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
         __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<Vessel<2> > > >() );
     }
 
-//    bp::class_< std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > >("vector_less__boost_scope_shared_ptr_less_DimensionalChastePoint_less_3_greater___greater___greater_")
-//        .def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<DimensionalChastePoint<3> > > >() );
-//
-//    bp::class_< std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > >("vector_less__boost_scope_shared_ptr_less_DimensionalChastePoint_less_2_greater___greater___greater_")
-//        .def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<DimensionalChastePoint<2> > > >() );
-
     { //::std::vector< bool >
         typedef bp::class_< std::vector< bool > > vector_less__bool__greater__exposer_t;
         vector_less__bool__greater__exposer_t vector_less__bool__greater__exposer = vector_less__bool__greater__exposer_t( "vector_less__bool__greater_" );
@@ -1797,6 +2007,68 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
             , (void ( ::AbstractVesselNetworkComponent<3>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))(&::AbstractVesselNetworkComponent< 3 >::SetRadius)
             , (void ( AbstractVesselNetworkComponent_less__3__greater__wrapper::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))(&AbstractVesselNetworkComponent_less__3__greater__wrapper::default_SetRadius)
             , ( bp::arg("radius") ) );
+
+    bp::class_< AbstractVesselNetworkComponentProperties_less__2__greater__wrapper, boost::noncopyable >( "AbstractVesselNetworkComponentProperties2", bp::init< >() )    
+        .def( 
+            "GetOutputData"
+            , bp::pure_virtual( (::std::map< std::string, double > ( ::AbstractVesselNetworkComponentProperties<2>::* )(  )const)(&::AbstractVesselNetworkComponentProperties< 2 >::GetOutputData) ) );
+
+    bp::class_< AbstractVesselNetworkComponentChemicalProperties_less__2__greater__wrapper, bp::bases< AbstractVesselNetworkComponentProperties< 2 > >, boost::noncopyable >( "AbstractVesselNetworkComponentChemicalProperties2", bp::init< >() )    
+        .def( 
+            "GetPermeability"
+            , (::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( ::AbstractVesselNetworkComponentChemicalProperties<2>::* )(  )const)( &::AbstractVesselNetworkComponentChemicalProperties< 2 >::GetPermeability ) )    
+        .def( 
+            "SetPermeability"
+            , (void ( ::AbstractVesselNetworkComponentChemicalProperties<2>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))(&::AbstractVesselNetworkComponentChemicalProperties< 2 >::SetPermeability)
+            , (void ( AbstractVesselNetworkComponentChemicalProperties_less__2__greater__wrapper::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))(&AbstractVesselNetworkComponentChemicalProperties_less__2__greater__wrapper::default_SetPermeability)
+            , ( bp::arg("permeability") ) )    
+        .def( 
+            "GetOutputData"
+            , bp::pure_virtual( (::std::map< std::string, double > ( ::AbstractVesselNetworkComponentProperties<2>::* )(  )const)(&::AbstractVesselNetworkComponentProperties< 2 >::GetOutputData) ) );
+
+    bp::class_< AbstractVesselNetworkComponentProperties_less__3__greater__wrapper, boost::noncopyable >( "AbstractVesselNetworkComponentProperties3", bp::init< >() )    
+        .def( 
+            "GetOutputData"
+            , bp::pure_virtual( (::std::map< std::string, double > ( ::AbstractVesselNetworkComponentProperties<3>::* )(  )const)(&::AbstractVesselNetworkComponentProperties< 3 >::GetOutputData) ) );
+
+    bp::class_< AbstractVesselNetworkComponentChemicalProperties_less__3__greater__wrapper, bp::bases< AbstractVesselNetworkComponentProperties< 3 > >, boost::noncopyable >( "AbstractVesselNetworkComponentChemicalProperties3", bp::init< >() )    
+        .def( 
+            "GetPermeability"
+            , (::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( ::AbstractVesselNetworkComponentChemicalProperties<3>::* )(  )const)( &::AbstractVesselNetworkComponentChemicalProperties< 3 >::GetPermeability ) )    
+        .def( 
+            "SetPermeability"
+            , (void ( ::AbstractVesselNetworkComponentChemicalProperties<3>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))(&::AbstractVesselNetworkComponentChemicalProperties< 3 >::SetPermeability)
+            , (void ( AbstractVesselNetworkComponentChemicalProperties_less__3__greater__wrapper::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))(&AbstractVesselNetworkComponentChemicalProperties_less__3__greater__wrapper::default_SetPermeability)
+            , ( bp::arg("permeability") ) )    
+        .def( 
+            "GetOutputData"
+            , bp::pure_virtual( (::std::map< std::string, double > ( ::AbstractVesselNetworkComponentProperties<3>::* )(  )const)(&::AbstractVesselNetworkComponentProperties< 3 >::GetOutputData) ) );
+
+    bp::class_< AbstractVesselNetworkComponentFlowProperties_less__2__greater__wrapper, bp::bases< AbstractVesselNetworkComponentProperties< 2 > >, boost::noncopyable >( "AbstractVesselNetworkComponentFlowProperties2", bp::init< >() )    
+        .def( 
+            "GetPressure"
+            , (::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( ::AbstractVesselNetworkComponentFlowProperties<2>::* )(  )const)( &::AbstractVesselNetworkComponentFlowProperties< 2 >::GetPressure ) )    
+        .def( 
+            "SetPressure"
+            , (void ( ::AbstractVesselNetworkComponentFlowProperties<2>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))(&::AbstractVesselNetworkComponentFlowProperties< 2 >::SetPressure)
+            , (void ( AbstractVesselNetworkComponentFlowProperties_less__2__greater__wrapper::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))(&AbstractVesselNetworkComponentFlowProperties_less__2__greater__wrapper::default_SetPressure)
+            , ( bp::arg("pressure") ) )    
+        .def( 
+            "GetOutputData"
+            , bp::pure_virtual( (::std::map< std::string, double > ( ::AbstractVesselNetworkComponentProperties<2>::* )(  )const)(&::AbstractVesselNetworkComponentProperties< 2 >::GetOutputData) ) );
+
+    bp::class_< AbstractVesselNetworkComponentFlowProperties_less__3__greater__wrapper, bp::bases< AbstractVesselNetworkComponentProperties< 3 > >, boost::noncopyable >( "AbstractVesselNetworkComponentFlowProperties3", bp::init< >() )    
+        .def( 
+            "GetPressure"
+            , (::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( ::AbstractVesselNetworkComponentFlowProperties<3>::* )(  )const)( &::AbstractVesselNetworkComponentFlowProperties< 3 >::GetPressure ) )    
+        .def( 
+            "SetPressure"
+            , (void ( ::AbstractVesselNetworkComponentFlowProperties<3>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))(&::AbstractVesselNetworkComponentFlowProperties< 3 >::SetPressure)
+            , (void ( AbstractVesselNetworkComponentFlowProperties_less__3__greater__wrapper::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))(&AbstractVesselNetworkComponentFlowProperties_less__3__greater__wrapper::default_SetPressure)
+            , ( bp::arg("pressure") ) )    
+        .def( 
+            "GetOutputData"
+            , bp::pure_virtual( (::std::map< std::string, double > ( ::AbstractVesselNetworkComponentProperties<3>::* )(  )const)(&::AbstractVesselNetworkComponentProperties< 3 >::GetOutputData) ) );
 
     { //::DensityMap< 2 >
         typedef bp::class_< DensityMap_less__2__greater__wrapper > DensityMap2_exposer_t;
@@ -1949,7 +2221,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
     }
 
     { //::NodeFlowProperties< 2 >
-        typedef bp::class_< NodeFlowProperties_less__2__greater__wrapper > NodeFlowProperties2_exposer_t;
+        typedef bp::class_< NodeFlowProperties_less__2__greater__wrapper, bp::bases< AbstractVesselNetworkComponentFlowProperties< 2 > > > NodeFlowProperties2_exposer_t;
         NodeFlowProperties2_exposer_t NodeFlowProperties2_exposer = NodeFlowProperties2_exposer_t( "NodeFlowProperties2", bp::init< >() );
         bp::scope NodeFlowProperties2_scope( NodeFlowProperties2_exposer );
         { //::NodeFlowProperties< 2 >::GetOutputData
@@ -2027,6 +2299,19 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
                 , UseVelocityBoundaryCondition_function_type( &::NodeFlowProperties< 2 >::UseVelocityBoundaryCondition ) );
         
         }
+        { //::AbstractVesselNetworkComponentFlowProperties< 2 >::SetPressure
+        
+            typedef NodeFlowProperties< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetPressure_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            typedef void ( NodeFlowProperties_less__2__greater__wrapper::*default_SetPressure_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            NodeFlowProperties2_exposer.def( 
+                "SetPressure"
+                , SetPressure_function_type(&::AbstractVesselNetworkComponentFlowProperties< 2 >::SetPressure)
+                , default_SetPressure_function_type(&NodeFlowProperties_less__2__greater__wrapper::default_SetPressure)
+                , ( bp::arg("pressure") ) );
+        
+        }
         bp::register_ptr_to_python< boost::shared_ptr< NodeFlowProperties<2> > >();
         bp::implicitly_convertible< boost::shared_ptr< NodeFlowProperties< 2 > >, boost::shared_ptr< AbstractVesselNetworkComponentFlowProperties< 2 > > >();
         bp::implicitly_convertible< boost::shared_ptr< NodeFlowProperties< 2 > >, boost::shared_ptr< AbstractVesselNetworkComponentProperties< 2 > > >();
@@ -2036,7 +2321,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
     }
 
     { //::NodeFlowProperties< 3 >
-        typedef bp::class_< NodeFlowProperties_less__3__greater__wrapper > NodeFlowProperties3_exposer_t;
+        typedef bp::class_< NodeFlowProperties_less__3__greater__wrapper, bp::bases< AbstractVesselNetworkComponentFlowProperties< 3 > > > NodeFlowProperties3_exposer_t;
         NodeFlowProperties3_exposer_t NodeFlowProperties3_exposer = NodeFlowProperties3_exposer_t( "NodeFlowProperties3", bp::init< >() );
         bp::scope NodeFlowProperties3_scope( NodeFlowProperties3_exposer );
         { //::NodeFlowProperties< 3 >::GetOutputData
@@ -2114,6 +2399,19 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
                 , UseVelocityBoundaryCondition_function_type( &::NodeFlowProperties< 3 >::UseVelocityBoundaryCondition ) );
         
         }
+        { //::AbstractVesselNetworkComponentFlowProperties< 3 >::SetPressure
+        
+            typedef NodeFlowProperties< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetPressure_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            typedef void ( NodeFlowProperties_less__3__greater__wrapper::*default_SetPressure_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            NodeFlowProperties3_exposer.def( 
+                "SetPressure"
+                , SetPressure_function_type(&::AbstractVesselNetworkComponentFlowProperties< 3 >::SetPressure)
+                , default_SetPressure_function_type(&NodeFlowProperties_less__3__greater__wrapper::default_SetPressure)
+                , ( bp::arg("pressure") ) );
+        
+        }
         bp::register_ptr_to_python< boost::shared_ptr< NodeFlowProperties<3> > >();
         bp::implicitly_convertible< boost::shared_ptr< NodeFlowProperties< 3 > >, boost::shared_ptr< AbstractVesselNetworkComponentFlowProperties< 3 > > >();
         bp::implicitly_convertible< boost::shared_ptr< NodeFlowProperties< 3 > >, boost::shared_ptr< AbstractVesselNetworkComponentProperties< 3 > > >();
@@ -2123,7 +2421,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
     }
 
     { //::SegmentFlowProperties< 2 >
-        typedef bp::class_< SegmentFlowProperties_less__2__greater__wrapper > SegmentFlowProperties2_exposer_t;
+        typedef bp::class_< SegmentFlowProperties_less__2__greater__wrapper, bp::bases< AbstractVesselNetworkComponentFlowProperties< 2 > > > SegmentFlowProperties2_exposer_t;
         SegmentFlowProperties2_exposer_t SegmentFlowProperties2_exposer = SegmentFlowProperties2_exposer_t( "SegmentFlowProperties2", bp::init< >() );
         bp::scope SegmentFlowProperties2_scope( SegmentFlowProperties2_exposer );
         { //::SegmentFlowProperties< 2 >::GetFlowRate
@@ -2264,6 +2562,19 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
                 , ( bp::arg("wallShear") ) );
         
         }
+        { //::AbstractVesselNetworkComponentFlowProperties< 2 >::SetPressure
+        
+            typedef SegmentFlowProperties< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetPressure_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            typedef void ( SegmentFlowProperties_less__2__greater__wrapper::*default_SetPressure_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            SegmentFlowProperties2_exposer.def( 
+                "SetPressure"
+                , SetPressure_function_type(&::AbstractVesselNetworkComponentFlowProperties< 2 >::SetPressure)
+                , default_SetPressure_function_type(&SegmentFlowProperties_less__2__greater__wrapper::default_SetPressure)
+                , ( bp::arg("pressure") ) );
+        
+        }
         bp::register_ptr_to_python< boost::shared_ptr< SegmentFlowProperties<2> > >();
         bp::implicitly_convertible< boost::shared_ptr< SegmentFlowProperties< 2 > >, boost::shared_ptr< AbstractVesselNetworkComponentFlowProperties< 2 > > >();
         bp::implicitly_convertible< boost::shared_ptr< SegmentFlowProperties< 2 > >, boost::shared_ptr< AbstractVesselNetworkComponentProperties< 2 > > >();
@@ -2273,7 +2584,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
     }
 
     { //::SegmentFlowProperties< 3 >
-        typedef bp::class_< SegmentFlowProperties_less__3__greater__wrapper > SegmentFlowProperties3_exposer_t;
+        typedef bp::class_< SegmentFlowProperties_less__3__greater__wrapper, bp::bases< AbstractVesselNetworkComponentFlowProperties< 3 > > > SegmentFlowProperties3_exposer_t;
         SegmentFlowProperties3_exposer_t SegmentFlowProperties3_exposer = SegmentFlowProperties3_exposer_t( "SegmentFlowProperties3", bp::init< >() );
         bp::scope SegmentFlowProperties3_scope( SegmentFlowProperties3_exposer );
         { //::SegmentFlowProperties< 3 >::GetFlowRate
@@ -2412,6 +2723,19 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
                 "SetWallShearStress"
                 , SetWallShearStress_function_type( &::SegmentFlowProperties< 3 >::SetWallShearStress )
                 , ( bp::arg("wallShear") ) );
+        
+        }
+        { //::AbstractVesselNetworkComponentFlowProperties< 3 >::SetPressure
+        
+            typedef SegmentFlowProperties< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetPressure_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            typedef void ( SegmentFlowProperties_less__3__greater__wrapper::*default_SetPressure_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            SegmentFlowProperties3_exposer.def( 
+                "SetPressure"
+                , SetPressure_function_type(&::AbstractVesselNetworkComponentFlowProperties< 3 >::SetPressure)
+                , default_SetPressure_function_type(&SegmentFlowProperties_less__3__greater__wrapper::default_SetPressure)
+                , ( bp::arg("pressure") ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< SegmentFlowProperties<3> > >();
@@ -3264,7 +3588,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
     }
 
     { //::VesselFlowProperties< 2 >
-        typedef bp::class_< VesselFlowProperties_less__2__greater__wrapper > VesselFlowProperties2_exposer_t;
+        typedef bp::class_< VesselFlowProperties_less__2__greater__wrapper, bp::bases< AbstractVesselNetworkComponentFlowProperties< 2 > > > VesselFlowProperties2_exposer_t;
         VesselFlowProperties2_exposer_t VesselFlowProperties2_exposer = VesselFlowProperties2_exposer_t( "VesselFlowProperties2", bp::init< >() );
         bp::scope VesselFlowProperties2_scope( VesselFlowProperties2_exposer );
         { //::VesselFlowProperties< 2 >::CheckSegments
@@ -3489,6 +3813,19 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
                 , ( bp::arg("segments") ) );
         
         }
+        { //::AbstractVesselNetworkComponentFlowProperties< 2 >::SetPressure
+        
+            typedef VesselFlowProperties< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetPressure_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            typedef void ( VesselFlowProperties_less__2__greater__wrapper::*default_SetPressure_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            VesselFlowProperties2_exposer.def( 
+                "SetPressure"
+                , SetPressure_function_type(&::AbstractVesselNetworkComponentFlowProperties< 2 >::SetPressure)
+                , default_SetPressure_function_type(&VesselFlowProperties_less__2__greater__wrapper::default_SetPressure)
+                , ( bp::arg("pressure") ) );
+        
+        }
         bp::register_ptr_to_python< boost::shared_ptr< VesselFlowProperties<2> > >();
         bp::implicitly_convertible< boost::shared_ptr< VesselFlowProperties< 2 > >, boost::shared_ptr< AbstractVesselNetworkComponentFlowProperties< 2 > > >();
         bp::implicitly_convertible< boost::shared_ptr< VesselFlowProperties< 2 > >, boost::shared_ptr< AbstractVesselNetworkComponentProperties< 2 > > >();
@@ -3498,7 +3835,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
     }
 
     { //::VesselFlowProperties< 3 >
-        typedef bp::class_< VesselFlowProperties_less__3__greater__wrapper > VesselFlowProperties3_exposer_t;
+        typedef bp::class_< VesselFlowProperties_less__3__greater__wrapper, bp::bases< AbstractVesselNetworkComponentFlowProperties< 3 > > > VesselFlowProperties3_exposer_t;
         VesselFlowProperties3_exposer_t VesselFlowProperties3_exposer = VesselFlowProperties3_exposer_t( "VesselFlowProperties3", bp::init< >() );
         bp::scope VesselFlowProperties3_scope( VesselFlowProperties3_exposer );
         { //::VesselFlowProperties< 3 >::CheckSegments
@@ -3721,6 +4058,19 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
                 "UpdateSegments"
                 , UpdateSegments_function_type( &::VesselFlowProperties< 3 >::UpdateSegments )
                 , ( bp::arg("segments") ) );
+        
+        }
+        { //::AbstractVesselNetworkComponentFlowProperties< 3 >::SetPressure
+        
+            typedef VesselFlowProperties< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetPressure_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            typedef void ( VesselFlowProperties_less__3__greater__wrapper::*default_SetPressure_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            VesselFlowProperties3_exposer.def( 
+                "SetPressure"
+                , SetPressure_function_type(&::AbstractVesselNetworkComponentFlowProperties< 3 >::SetPressure)
+                , default_SetPressure_function_type(&VesselFlowProperties_less__3__greater__wrapper::default_SetPressure)
+                , ( bp::arg("pressure") ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< VesselFlowProperties<3> > >();

@@ -33,6 +33,9 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
+#ifndef MESH_HEADERS_HPP
+#define MESH_HEADERS_HPP
+
 #include "RegularGrid.hpp"
 #include "RegularGridWriter.hpp"
 #include "DiscreteContinuumMesh.hpp"
@@ -41,17 +44,36 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "MultiFormatMeshWriter.hpp"
 #include "DimensionalChastePoint.hpp"
 
-inline int Instantiation()
-{
-    return
-            sizeof(RegularGrid<3>) +
-            sizeof(RegularGrid<2>) +
-            sizeof(DiscreteContinuumMesh<3, 3>) +
-            sizeof(DiscreteContinuumMesh<2, 2>) +
-            sizeof(DiscreteContinuumMeshGenerator<3,3>)+
-            sizeof(DiscreteContinuumMeshGenerator<2,2>)+
-            sizeof(MultiFormatMeshWriter<3>)+
-            sizeof(MultiFormatMeshWriter<2>)+
-            sizeof(DimensionalChastePoint<3>)+
-            sizeof(DimensionalChastePoint<2>);
+namespace pyplusplus{
+namespace aliases{
+typedef RegularGrid<3> RegularGrid3;
+typedef RegularGrid<2> RegularGrid2;
+typedef DiscreteContinuumMesh<3, 3> DiscreteContinuumMesh3_3;
+typedef DiscreteContinuumMesh<2, 2> DiscreteContinuumMesh2_2;
+typedef DiscreteContinuumMeshGenerator<3, 3> DiscreteContinuumMeshGenerator3_3;
+typedef DiscreteContinuumMeshGenerator<2, 2> DiscreteContinuumMeshGenerator2_2;
+typedef MultiFormatMeshWriter<3> MultiFormatMeshWriter3;
+typedef MultiFormatMeshWriter<2> MultiFormatMeshWriter2;
+typedef DimensionalChastePoint<3> DimensionalChastePoint3;
+typedef DimensionalChastePoint<2> DimensionalChastePoint2;
+typedef std::vector<DimensionalChastePoint<2>, std::allocator<DimensionalChastePoint<2> > > VecDimensionalChastePoint2;
+typedef std::vector<DimensionalChastePoint<3>, std::allocator<DimensionalChastePoint<3> > > VecDimensionalChastePoint3;
+
+// These are defined in the PyChaste preload module. They are included here to avoid duplicate registration warnings.
+typedef std::vector<unsigned int> VecUnsignedInt_MeshModule;
+typedef std::vector<double> VecDouble_MeshModule;
 }
+}//pyplusplus::aliases
+
+template class RegularGrid<3>;
+template class RegularGrid<2>;
+template class DiscreteContinuumMesh<3, 3>;
+template class DiscreteContinuumMesh<2, 2>;
+template class DiscreteContinuumMeshGenerator<3, 3>;
+template class DiscreteContinuumMeshGenerator<2, 2>;
+template class MultiFormatMeshWriter<3>;
+template class MultiFormatMeshWriter<2>;
+template class DimensionalChastePoint<3>;
+template class DimensionalChastePoint<2>;
+
+#endif

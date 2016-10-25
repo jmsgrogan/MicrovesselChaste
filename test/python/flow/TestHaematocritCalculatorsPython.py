@@ -40,23 +40,22 @@ import chaste.projects.microvessel.geometry
 import chaste.projects.microvessel.mesh 
 import chaste.projects.microvessel.utility as utility
 import chaste.projects.microvessel.population.vessel as vessel
-import chaste.projects.microvessel.population.simulation as simulation
+import chaste.projects.microvessel.simulation as simulation
 
 class TestBetteridgeCalculator(unittest.TestCase):
     
     file_handler = chaste.core.OutputFileHandler("Python/TestHaematocritTransport/")
     
     # Set up a vessel network
-    length = 100.e-6*utility.metre()
-
+    length = 100.0
     network = vessel.VesselNetwork3()
-    n1 = vessel.VesselNode3((0.0, 0.0, 0.0))
-    n2 = vessel.VesselNode3((length, 0.0, 0.0))
-    n3 = vessel.VesselNode3((length + math.cos(math.pi/6.0)*length, math.sin(math.pi/6.0)*length, 0.0))
-    n4 = vessel.VesselNode3((length + math.cos(math.pi/6.0)*length, -math.sin(math.pi/6.0)*length, 0.0))
-    n5 = vessel.VesselNode3((length + 2.0*math.cos(math.pi/6.0)*length, 0.0, 0.0))
-    n6 = vessel.VesselNode3((2.0 * length + 2.0*math.cos(math.pi/6.0)*length, 0.0, 0.0))
-    n7 = vessel.VesselNode3((3.0 * length + 2.0*math.cos(math.pi/6.0)*length, 0.0, 0.0))
+    n1 = vessel.VesselNode3(0.0, 0.0, 0.0)
+    n2 = vessel.VesselNode3(length, 0.0, 0.0)
+    n3 = vessel.VesselNode3(length + math.cos(math.pi/6.0)*length, math.sin(math.pi/6.0)*length, 0.0)
+    n4 = vessel.VesselNode3(length + math.cos(math.pi/6.0)*length, -math.sin(math.pi/6.0)*length, 0.0)
+    n5 = vessel.VesselNode3(length + 2.0*math.cos(math.pi/6.0)*length, 0.0, 0.0)
+    n6 = vessel.VesselNode3(2.0 * length + 2.0*math.cos(math.pi/6.0)*length, 0.0, 0.0)
+    n7 = vessel.VesselNode3(3.0 * length + 2.0*math.cos(math.pi/6.0)*length, 0.0, 0.0)
     
     n1.GetFlowProperties().SetIsInputNode(True)#
     n1.GetFlowProperties().SetPressure(5000.0 * utility.pascal())

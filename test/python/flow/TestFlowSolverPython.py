@@ -46,7 +46,7 @@ class TestStraightVesselFlow(unittest.TestCase):
     def setup_network(self):
         length = 100.0
         radius = 10.e-6*utility.metre()
-        #viscosity = 4.e-3*utility.poiseuille()
+        viscosity = 4.e-3*utility.poiseuille()
         
         n1 = vessel.VesselNode3(0.0, 0.0, 0.0)
         n2 = vessel.VesselNode3(length, 0.0, 0.0)
@@ -58,9 +58,9 @@ class TestStraightVesselFlow(unittest.TestCase):
         network = vessel.VesselNetwork3()
         network.AddVessel(v1)
         
-#        for eachVessel in network.GetVessels():
-#            for eachSegment in eachVessel.GetSegments():
-                #eachSegment.GetFlowProperties().SetViscosity(viscosity)
+        for eachVessel in network.GetVessels():
+            for eachSegment in eachVessel.GetSegments():
+                eachSegment.GetFlowProperties().SetViscosity(viscosity)
         network.SetSegmentRadii(radius)
         
         return network
@@ -78,7 +78,7 @@ class TestStraightVesselFlow(unittest.TestCase):
         flow_solver.SetVesselNetwork(network)
         flow_solver.Solve()
         
-        network.Write(file_handler.GetOutputDirectoryFullPath() + "/flow_solution.vtp")
+        print network.GetNumberOfNodes()
         # 
         
 if __name__ == '__main__':

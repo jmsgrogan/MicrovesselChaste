@@ -39,7 +39,7 @@ import chaste.projects.microvessel.geometry
 import chaste.projects.microvessel.mesh 
 import chaste.projects.microvessel.utility as utility
 import chaste.projects.microvessel.population.vessel as vessel
-import chaste.projects.microvessel.population.simulation as simulation
+import chaste.projects.microvessel.simulation as simulation
 import chaste.projects.microvessel.pde
 
 class TestOffLatticeAngiogenesis(unittest.TestCase):
