@@ -29,7 +29,7 @@
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # 
-
+add_compile_options(-Wno-unused-local-typedefs)
 # Build the Python bindings
 add_definitions(-DCHASTE_MicrovesselChaste_PYTHON)
 find_package(Boost COMPONENTS python REQUIRED)
