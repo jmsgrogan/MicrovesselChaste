@@ -64,7 +64,7 @@ class TestFiniteDifferenceSolver(unittest.TestCase):
         bc = chaste.projects.microvessel.pde.DiscreteContinuumBoundaryCondition3()
         bc.SetValue(30.0*utility.mole_per_metre_cubed())
         
-#         file_handler = chaste.core.OutputFileHandler("chaste/TestFiniteDifferenceSolver")
+
         solver = chaste.projects.microvessel.pde.FiniteDifferenceSolver3()
         solver.SetGrid(grid)
         solver.SetPde(pde)

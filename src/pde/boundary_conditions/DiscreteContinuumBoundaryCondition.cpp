@@ -211,10 +211,10 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
             std::vector<boost::shared_ptr<Facet<DIM> > > facets =  mpDomain->GetFacets();
             for(unsigned jdx=0; jdx<facets.size();jdx++)
             {
-//                if(facets[jdx]->ContainsPoint(location) && (facets[jdx]->GetData("Boundary")>0.0))
-//                {
-//                    return std::pair<bool, double>(true, mValue);
-//                }
+                if(facets[jdx]->ContainsPoint(location) && (facets[jdx]->GetLabel() == mLabel))
+                {
+                    return std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+                }
             }
         }
     }
@@ -320,25 +320,34 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateRegularGridFacetBoundaryCond
     }
     else
     {
+        double y_max = double(mpRegularGrid->GetExtents()[1]-1) * mpRegularGrid->GetSpacing()/mpRegularGrid->GetReferenceLengthScale();
         for(unsigned idx=0; idx<mpRegularGrid->GetNumberOfPoints(); idx++)
         {
-            std::vector<boost::shared_ptr<Facet<DIM> > > facets =  mpDomain->GetFacets();
-            for(unsigned jdx=0; jdx<facets.size();jdx++)
+            if(mpRegularGrid->GetLocationOf1dIndex(idx).GetLocation(mpRegularGrid->GetReferenceLengthScale())[1] == y_max)
             {
-                if(facets[jdx]->ContainsPoint(mpRegularGrid->GetLocationOf1dIndex(idx)))
-                {
-                    if(BoundaryConditionSource::PRESCRIBED)
-                    {
-                        (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
-                        break;
-                    }
-//                    else
+                (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+            }
+
+//            std::vector<boost::shared_ptr<Facet<DIM> > > facets =  mpDomain->GetFacets();
+//            for(unsigned jdx=0; jdx<facets.size();jdx++)
+//            {
+//                if(facets[jdx]->ContainsPoint(mpRegularGrid->GetLocationOf1dIndex(idx)))
+//                {
+//                    if(BoundaryConditionSource::PRESCRIBED)
 //                    {
-//                        (*pBoundaryConditions)[idx] = std::pair<bool, double>(true, facets[jdx]->GetData(mLabel));
+//                        (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
 //                        break;
 //                    }
-                }
-            }
+//                    else
+//                    {
+//                        if(facets[jdx]->GetLabel() == mLabel)
+//                        {
+//                            (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 }

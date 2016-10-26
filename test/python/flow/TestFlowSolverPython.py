@@ -76,10 +76,7 @@ class TestStraightVesselFlow(unittest.TestCase):
         
         flow_solver = simulation.FlowSolver3()
         flow_solver.SetVesselNetwork(network)
-        flow_solver.Solve()
-        
-        print network.GetNumberOfNodes()
-        # 
+        flow_solver.Solve() 
         
 if __name__ == '__main__':
     unittest.main()

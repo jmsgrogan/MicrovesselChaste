@@ -62,7 +62,7 @@ class TestLatticeBasedAngiogenesis(unittest.TestCase):
         for idx in range(grid.GetExtents()[0]*grid.GetExtents()[1]):
             vegf_field.append(0.2*grid.GetLocationOf1dIndex(idx).GetLocation(length_scale)[0]/(40.0*grid.GetExtents()[0]))
             
-        field.SetFileName("Function.vti")
+        field.SetFileName("Function")
         field.SetFileHandler(file_handler)
         field.Setup()
         field.UpdateSolution(vegf_field)
@@ -84,17 +84,17 @@ class TestLatticeBasedAngiogenesis(unittest.TestCase):
         migration_rule.SetNetwork(network)
         # 
         sprouting_rule = simulation.Owen2011SproutingRule3()
-#        sprouting_rule.SetDiscreteContinuumSolver(field)
-#        sprouting_rule.SetGrid(grid)
-#        sprouting_rule.SetVesselNetwork(network)
-#        sprouting_rule.SetSproutingProbability(0.5 * untility.per_second());
+        sprouting_rule.SetDiscreteContinuumSolver(field)
+        sprouting_rule.SetGrid(grid)
+        sprouting_rule.SetVesselNetwork(network)
+        sprouting_rule.SetSproutingProbability(0.5 * utility.per_second());
         # 
         # # Set up the angiogenesis solver
         solver = simulation.AngiogenesisSolver3()
         solver.SetVesselNetwork(network)
         solver.SetVesselGrid(grid)
         solver.SetOutputFileHandler(file_handler)
-        solver.SetSproutingRule(sprouting_rule)
+#         solver.SetSproutingRule(sprouting_rule)
         solver.SetMigrationRule(migration_rule)
         
         manager = simulation.SimulationManager()

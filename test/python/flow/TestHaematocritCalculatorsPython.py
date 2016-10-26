@@ -83,7 +83,7 @@ class TestBetteridgeCalculator(unittest.TestCase):
     for eachVessel in network.GetVessels():
         for eachSegment in eachVessel.GetSegments():
             eachSegment.GetFlowProperties().SetViscosity(viscosity)
-            eachSegment.GetFlowProperties().SetHaematocrit(initial_haematocrit)
+            #eachSegment.GetFlowProperties().SetHaematocrit(initial_haematocrit)
             
     v2.GetSegments()[0].SetRadius(5.e-6 * utility.metre())
     v4.GetSegments()[0].SetRadius(5.e-6 * utility.metre())
@@ -92,17 +92,18 @@ class TestBetteridgeCalculator(unittest.TestCase):
     impedance_calculator.SetVesselNetwork(network)
     impedance_calculator.Calculate()
     
-    network.Write(file_handler.GetOutputDirectoryFullPath() + "/original_network.vtp")
+    #network.Write(file_handler.GetOutputDirectoryFullPath() + "/original_network.vtp")
     
     flow_solver = simulation.FlowSolver3()
     flow_solver.SetVesselNetwork(network)
     flow_solver.Solve()
     
     haematocrit_calculator = simulation.BetteridgeHaematocritSolver3()
-    haematocrit_calculator.SetHaematocrit(initial_haematocrit)
-    haematocrit_calculator.Calculate(network)
+    #haematocrit_calculator.SetHaematocrit(initial_haematocrit)
+    haematocrit_calculator.SetVesselNetwork(network)
+    haematocrit_calculator.Calculate()
     
-    network.Write(file_handler.GetOutputDirectoryFullPath() + "/flow_network.vtp")
+    #network.Write(file_handler.GetOutputDirectoryFullPath() + "/flow_network.vtp")
 
 if __name__ == '__main__':
     unittest.main()
