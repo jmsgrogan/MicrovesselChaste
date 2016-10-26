@@ -98,6 +98,11 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::
     for(unsigned idx = 0; idx < rNodes.size(); idx++)
     {
         // Check we are not too close to the end of the vessel
+        if(rNodes[idx]->GetNumberOfSegments() != 2)
+        {
+            continue;
+        }
+
         if(this->mVesselEndCutoff > 0.0 * unit::metres)
         {
             if(rNodes[idx]->GetSegment(0)->GetVessel()->GetClosestEndNodeDistance(rNodes[idx]->rGetLocation())< this->mVesselEndCutoff)

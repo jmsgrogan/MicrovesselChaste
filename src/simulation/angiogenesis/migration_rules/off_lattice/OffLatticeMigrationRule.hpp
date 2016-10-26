@@ -51,17 +51,17 @@ class OffLatticeMigrationRule : public AbstractMigrationRule<DIM>
     /**
      * Global direction vectors, x (1,0,0)
      */
-    c_vector<double, DIM> mGlobalX;
+    c_vector<double, 3> mGlobalX;
 
     /**
      * Global direction vectors, y (0,1,0)
      */
-    c_vector<double, DIM> mGlobalY;
+    c_vector<double, 3> mGlobalY;
 
     /**
      * Global direction vectors, z (0,0,1)
      */
-    c_vector<double, DIM> mGlobalZ;
+    c_vector<double, 3> mGlobalZ;
 
     /**
      * Mean angle between current and new directions about global axes
