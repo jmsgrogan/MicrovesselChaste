@@ -152,11 +152,11 @@ void RegularGrid<DIM>::GenerateFromPart(boost::shared_ptr<Part<DIM> > pPart, uni
 {
     mSpacing = gridSize;
     std::vector<units::quantity<unit::length> > spatial_extents = pPart->GetBoundingBox();
-    mExtents[0] = unsigned((spatial_extents[1] - spatial_extents[0]) / gridSize) + 1u;
-    mExtents[1] = unsigned((spatial_extents[3] - spatial_extents[2]) / gridSize) + 1u;
+    mExtents[0] = unsigned((spatial_extents[1] - spatial_extents[0]) / gridSize);
+    mExtents[1] = unsigned((spatial_extents[3] - spatial_extents[2]) / gridSize);
     if (DIM == 3)
     {
-        mExtents[2] = unsigned((spatial_extents[5] - spatial_extents[4]) / gridSize) + 1u;
+        mExtents[2] = unsigned((spatial_extents[5] - spatial_extents[4]) / gridSize);
         mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0]/mReferenceLength, spatial_extents[2]/mReferenceLength, spatial_extents[4]/mReferenceLength, mReferenceLength);
     }
     else
