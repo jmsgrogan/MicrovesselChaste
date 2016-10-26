@@ -212,7 +212,7 @@ DimensionalChastePoint<DIM> OffsetAlongVector(const c_vector<double, DIM>& rVect
  */
 template<unsigned DIM>
 DimensionalChastePoint<DIM> RotateAboutAxis(const DimensionalChastePoint<DIM>& rDirection,
-                                      const DimensionalChastePoint<DIM>& rAxis, units::quantity<unit::plane_angle> angle);
+                                      const DimensionalChastePoint<3>& rAxis, units::quantity<unit::plane_angle> angle);
 
 /**
  * Rotate the supplied vector about the axis by the specified angle.
@@ -223,7 +223,7 @@ DimensionalChastePoint<DIM> RotateAboutAxis(const DimensionalChastePoint<DIM>& r
  */
 template<unsigned DIM>
 c_vector<double, DIM> RotateAboutAxis(const c_vector<double, DIM>& rDirection,
-                                      const c_vector<double, DIM>& rAxis, units::quantity<unit::plane_angle> angle);
+                                      const c_vector<double, 3>& rAxis, units::quantity<unit::plane_angle> angle);
 
 #include "GeometryToolsImpl.hpp"
 #endif /*GEOMETRYTOOLS_HPP_*/

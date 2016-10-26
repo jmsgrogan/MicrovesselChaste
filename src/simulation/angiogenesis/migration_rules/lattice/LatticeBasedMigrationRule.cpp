@@ -78,13 +78,6 @@ std::vector<double> LatticeBasedMigrationRule<DIM>::GetNeighbourMovementProbabil
             }
         }
 
-        // Also ensure that the new location would not try to cross a vessel which is oriented diagonally
-        // TODO: Very slow, bottleneck
-//        if(already_attached or this->mpVesselNetwork->VesselCrossesLineSegment(neighbour_location, pNode->rGetLocation()))
-//        {
-//            continue;
-//        }
-
         if(already_attached)
         {
             continue;

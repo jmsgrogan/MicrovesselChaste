@@ -165,19 +165,19 @@ std::vector<DimensionalChastePoint<DIM> > GetProbeLocationsInternalPoint(Dimensi
     units::quantity<unit::length> length_scale = rCentralPoint.GetReferenceLengthScale();
     std::vector<DimensionalChastePoint<DIM> > probe_locations(num_probes, DimensionalChastePoint<DIM>(0.0, 0.0, 0.0, length_scale));
     probe_locations[0] = rCentralPoint;
-    c_vector<double, DIM> unit_axis = rRotationAxis.GetUnitVector();
-
     double normalized_probe_length = probeLength/length_scale;
 
-    c_vector<double, DIM> new_direction = RotateAboutAxis<DIM>(rInitialDirection.GetUnitVector(), unit_axis, angle);
-    new_direction /= norm_2(new_direction);
-    probe_locations[1] = rCentralPoint + DimensionalChastePoint<DIM>(new_direction*normalized_probe_length, length_scale);
-
-    c_vector<double, DIM> new_direction_r1 = RotateAboutAxis<DIM>(new_direction, unit_axis, M_PI*unit::radians);
-    new_direction_r1 /= norm_2(new_direction_r1);
-    probe_locations[2] = rCentralPoint + DimensionalChastePoint<DIM>(new_direction_r1*normalized_probe_length, length_scale);
     if(DIM==3)
     {
+        c_vector<double, DIM> unit_axis = rRotationAxis.GetUnitVector();
+        c_vector<double, DIM> new_direction = RotateAboutAxis<DIM>(rInitialDirection.GetUnitVector(), unit_axis, angle);
+        new_direction /= norm_2(new_direction);
+        probe_locations[1] = rCentralPoint + DimensionalChastePoint<DIM>(new_direction*normalized_probe_length, length_scale);
+
+        c_vector<double, DIM> new_direction_r1 = RotateAboutAxis<DIM>(new_direction, unit_axis, M_PI*unit::radians);
+        new_direction_r1 /= norm_2(new_direction_r1);
+        probe_locations[2] = rCentralPoint + DimensionalChastePoint<DIM>(new_direction_r1*normalized_probe_length, length_scale);
+
         c_vector<double, DIM> new_direction_r2 = RotateAboutAxis<DIM>(new_direction, unit_axis, M_PI/2.0*unit::radians);
         new_direction_r2 /= norm_2(new_direction_r2);
         probe_locations[3] = rCentralPoint + DimensionalChastePoint<DIM>(new_direction_r2*normalized_probe_length, length_scale);
@@ -185,6 +185,12 @@ std::vector<DimensionalChastePoint<DIM> > GetProbeLocationsInternalPoint(Dimensi
         c_vector<double, DIM> new_direction_r3 = RotateAboutAxis<DIM>(new_direction, unit_axis, 3.0*M_PI/2.0*unit::radians);
         new_direction_r3 /= norm_2(new_direction_r3);
         probe_locations[4] = rCentralPoint + DimensionalChastePoint<DIM>(new_direction_r3*normalized_probe_length, length_scale);
+    }
+    else
+    {
+        DimensionalChastePoint<DIM> new_direction(normalized_probe_length*rInitialDirection.GetUnitVector(), length_scale);
+        probe_locations[1] = rCentralPoint + new_direction;
+        probe_locations[2] = rCentralPoint - new_direction;
     }
 
     return probe_locations;
@@ -433,20 +439,18 @@ DimensionalChastePoint<DIM> OffsetAlongVector(const c_vector<double, DIM>& rVect
 
 template<unsigned DIM>
 DimensionalChastePoint<DIM> RotateAboutAxis(const DimensionalChastePoint<DIM>& rDirection,
-                                      const DimensionalChastePoint<DIM>& rAxis, units::quantity<unit::plane_angle> angle)
+                                      const DimensionalChastePoint<3>& rAxis, units::quantity<unit::plane_angle> angle)
 {
     double sin_a = units::sin(angle);
     double cos_a = units::cos(angle);
-    c_vector<double, DIM> unit_axis = rAxis.GetUnitVector();
-    units::quantity<unit::length> dot_product = GetDotProduct(rDirection, unit_axis);
+    c_vector<double, DIM> new_direction;
     units::quantity<unit::length> length_scale = rDirection.GetReferenceLengthScale();
     c_vector<double, DIM> dimensionless_direction = rDirection.GetLocation(length_scale);
-
-    double dimensionless_dot_product = dot_product/length_scale;
-    c_vector<double, DIM> new_direction;
-
     if(DIM==3)
     {
+        c_vector<double, 3> unit_axis = rAxis.GetUnitVector();
+        units::quantity<unit::length> dot_product = GetDotProduct(rDirection, unit_axis);
+        double dimensionless_dot_product = dot_product/length_scale;
         new_direction[0] = (unit_axis[0] * dimensionless_dot_product * (1.0 - cos_a) + dimensionless_direction[0] * cos_a
                     + (-unit_axis[2] * dimensionless_direction[1] + unit_axis[1] * dimensionless_direction[2]) * sin_a);
         new_direction[1] = (unit_axis[1] * dimensionless_dot_product * (1.0 - cos_a) + dimensionless_direction[1] * cos_a
@@ -456,24 +460,24 @@ DimensionalChastePoint<DIM> RotateAboutAxis(const DimensionalChastePoint<DIM>& r
     }
     else
     {
-        new_direction[0] = unit_axis[0] * dimensionless_dot_product * (1.0 - cos_a) + dimensionless_direction[0] * cos_a;
-        new_direction[1] = unit_axis[1] * dimensionless_dot_product * (1.0 - cos_a) + dimensionless_direction[1] * cos_a;
+        new_direction[0] = dimensionless_direction[0] * cos_a - dimensionless_direction[1]*sin_a;
+        new_direction[1] = dimensionless_direction[0] * sin_a + dimensionless_direction[1]*cos_a;
     }
     return DimensionalChastePoint<DIM>(new_direction, length_scale);
 }
 
 template<unsigned DIM>
 c_vector<double, DIM> RotateAboutAxis(const c_vector<double, DIM>& rDirection,
-                                      const c_vector<double, DIM>& rAxis, units::quantity<unit::plane_angle> angle)
+                                      const c_vector<double, 3>& rAxis, units::quantity<unit::plane_angle> angle)
 {
     double sin_a = units::sin(angle);
     double cos_a = units::cos(angle);
-    c_vector<double, DIM> unit_axis = rAxis/norm_2(rAxis);
-    double dot_product = inner_prod(rDirection, unit_axis);
     c_vector<double, DIM> new_direction = zero_vector<double>(DIM);
 
     if(DIM==3)
     {
+        c_vector<double, 3> unit_axis = rAxis/norm_2(rAxis);
+        double dot_product = inner_prod(rDirection, unit_axis);
         new_direction[0] = (unit_axis[0] * dot_product * (1.0 - cos_a) + rDirection[0] * cos_a
                     + (-unit_axis[2] * rDirection[1] + unit_axis[1] * rDirection[2]) * sin_a);
         new_direction[1] = (unit_axis[1] * dot_product * (1.0 - cos_a) + rDirection[1] * cos_a
@@ -483,8 +487,8 @@ c_vector<double, DIM> RotateAboutAxis(const c_vector<double, DIM>& rDirection,
     }
     else
     {
-        new_direction[0] = unit_axis[0] * dot_product * (1.0 - cos_a) + rDirection[0] * cos_a;
-        new_direction[1] = unit_axis[1] * dot_product * (1.0 - cos_a) + rDirection[1] * cos_a;
+        new_direction[0] = rDirection[0] * cos_a - rDirection[1]*sin_a;
+        new_direction[1] = rDirection[0] * sin_a + rDirection[1]*cos_a;
     }
     return new_direction;
 }

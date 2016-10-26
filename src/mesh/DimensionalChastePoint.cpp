@@ -224,8 +224,8 @@ void DimensionalChastePoint<DIM>::RotateAboutAxis(c_vector<double, 3> axis, doub
     }
     else
     {
-        new_location[0] = old_location[0] * cos_a;
-        new_location[1] = old_location[1] * cos_a;
+        new_location[0] = old_location[0] * cos_a - old_location[1]*sin_a;
+        new_location[1] = old_location[0] * sin_a + old_location[1]*cos_a;
     }
 
     this->mLocation = new_location;

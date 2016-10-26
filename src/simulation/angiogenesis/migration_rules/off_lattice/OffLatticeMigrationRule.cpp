@@ -41,21 +41,18 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned DIM>
 OffLatticeMigrationRule<DIM>::OffLatticeMigrationRule()
     : AbstractMigrationRule<DIM>(),
-      mGlobalX(unit_vector<double>(DIM,0)),
-      mGlobalY(unit_vector<double>(DIM,1)),
-      mGlobalZ(zero_vector<double>(DIM)),
-      mMeanAngles(std::vector<units::quantity<unit::plane_angle> >(DIM, 0.0*unit::radians)),
-      mSdvAngles(std::vector<units::quantity<unit::plane_angle> >(DIM, M_PI/18.0*unit::radians)),
+      mGlobalX(unit_vector<double>(3,0)),
+      mGlobalY(unit_vector<double>(3,1)),
+      mGlobalZ(unit_vector<double>(3,2)),
+      mMeanAngles(std::vector<units::quantity<unit::plane_angle> >(3, 0.0*unit::radians)),
+      mSdvAngles(std::vector<units::quantity<unit::plane_angle> >(3, M_PI/18.0*unit::radians)),
       mVelocity(20.0 *(1.e-6/3600.0) * unit::metre_per_second),
       mChemotacticStrength(1.0),
       mAttractionStrength(1.0),
       mProbeLength(5.0 * 1.e-6 * unit::metres),
       mCriticalMutualAttractionLength(100.0 * 1.e-6 *unit::metres)
 {
-    if(DIM==3)
-    {
-        mGlobalZ = unit_vector<double>(DIM,2);
-    }
+
 }
 
 template <unsigned DIM>
@@ -105,7 +102,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
         std::vector<units::quantity<unit::concentration> > probed_solutions;
         unsigned probes_per_node = (2*DIM)+1;
         std::vector<DimensionalChastePoint<DIM> > probe_locations(probes_per_node*rNodes.size(), DimensionalChastePoint<DIM>(0.0, 0.0, 0.0, 1.e-6*unit::metres));
-        std::vector<bool> candidate_locations_inside_domain(probes_per_node*rNodes.size(), false);
+        std::vector<bool> candidate_locations_inside_domain(probes_per_node*rNodes.size(), true);
 
         if(this->mpSolver)
         {
@@ -135,16 +132,22 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
                     RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0]/unit::radians, mSdvAngles[0]/unit::radians)*unit::radians;
             units::quantity<unit::plane_angle> angle_y =
                     RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[1]/unit::radians, mSdvAngles[1]/unit::radians)*unit::radians;
-            units::quantity<unit::plane_angle> angle_z = 0.0*unit::radians;
+            units::quantity<unit::plane_angle> angle_z =
+                    RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[2]/unit::radians, mSdvAngles[2]/unit::radians)*unit::radians;
+            DimensionalChastePoint<DIM> currentDirection = rNodes[idx]->rGetLocation()-rNodes[idx]->GetSegments()[0]->GetOppositeNode(rNodes[idx])->rGetLocation();
+            c_vector<double, DIM> new_direction;
             if(DIM==3)
             {
-                angle_z = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[2]/unit::radians, mSdvAngles[2]/unit::radians)*unit::radians;
+                c_vector<double, DIM> new_direction_z = RotateAboutAxis<DIM>(currentDirection.GetUnitVector(), mGlobalZ, angle_z);
+                c_vector<double, DIM> new_direction_y = RotateAboutAxis<DIM>(new_direction_z, mGlobalY, angle_y);
+                new_direction = RotateAboutAxis<DIM>(new_direction_y, mGlobalX, angle_x);
+                new_direction /= norm_2(new_direction);
             }
-            DimensionalChastePoint<DIM> currentDirection = rNodes[idx]->rGetLocation()-rNodes[idx]->GetSegments()[0]->GetOppositeNode(rNodes[idx])->rGetLocation();
-            c_vector<double, DIM> new_direction_z = RotateAboutAxis<DIM>(currentDirection.GetUnitVector(), mGlobalZ, angle_z);
-            c_vector<double, DIM> new_direction_y = RotateAboutAxis<DIM>(new_direction_z, mGlobalY, angle_y);
-            c_vector<double, DIM> new_direction = RotateAboutAxis<DIM>(new_direction_y, mGlobalX, angle_x);
-            new_direction /= norm_2(new_direction);
+            else
+            {
+                new_direction = RotateAboutAxis<DIM>(currentDirection.GetUnitVector(), mGlobalZ, angle_z);
+                new_direction /= norm_2(new_direction);
+            }
 
             // Chemotaxis
             if(this->mpSolver)
@@ -254,20 +257,34 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
         probes_per_node = 5;
     }
     std::vector<DimensionalChastePoint<DIM> > probe_locations(probes_per_node*rNodes.size(), DimensionalChastePoint<DIM>(0.0, 0.0, 0.0, reference_length));
-    std::vector<bool> candidate_locations_inside_domain(probes_per_node*rNodes.size(), false);
+    std::vector<bool> candidate_locations_inside_domain(probes_per_node*rNodes.size(), true);
 
     // Get a normal to the segments, will depend on whether they are parallel
     for(unsigned idx = 0; idx < rNodes.size(); idx++)
     {
         c_vector<double, DIM> sprout_direction;
-        c_vector<double, DIM> cross_product = VectorProduct(rNodes[idx]->GetSegments()[0]->GetUnitTangent(),
-                                                            rNodes[idx]->GetSegments()[1]->GetUnitTangent());
-
+        c_vector<double, DIM> cross_product;
         double sum = 0.0;
-        for(unsigned jdx=0; jdx<DIM; jdx++)
+
+        if(DIM==3)
         {
-            sum += abs(cross_product[jdx]);
+            cross_product = VectorProduct(rNodes[idx]->GetSegments()[0]->GetUnitTangent(),
+                                                                rNodes[idx]->GetSegments()[1]->GetUnitTangent());
+            for(unsigned jdx=0; jdx<DIM; jdx++)
+            {
+                sum += abs(cross_product[jdx]);
+            }
         }
+        else
+        {
+            c_vector<double, DIM> tangent1 = rNodes[idx]->GetSegments()[0]->GetUnitTangent();
+            c_vector<double, DIM> tangent2 = rNodes[idx]->GetSegments()[1]->GetUnitTangent();
+            for(unsigned jdx=0; jdx<DIM; jdx++)
+            {
+                sum += abs(tangent1[jdx]-tangent2[jdx]);
+            }
+        }
+
         if (sum<=1.e-6)
         {
             // more or less parallel segments, chose any normal to the first tangent
@@ -311,14 +328,45 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
         }
         else
         {
-            // otherwise the direction is out of the plane of the segment tangents
-            if(RandomNumberGenerator::Instance()->ranf()>=0.5)
+            if(DIM==3)
             {
-                sprout_direction = cross_product/norm_2(cross_product);
+                // otherwise the direction is out of the plane of the segment tangents
+                if(RandomNumberGenerator::Instance()->ranf()>=0.5)
+                {
+                    sprout_direction = cross_product/norm_2(cross_product);
+                }
+                else
+                {
+                    sprout_direction = -cross_product/norm_2(cross_product);
+                }
             }
             else
             {
-                sprout_direction = -cross_product/norm_2(cross_product);
+                c_vector<double, DIM> tangent1 = rNodes[idx]->GetSegments()[0]->GetUnitTangent();
+                c_vector<double, DIM> tangent2 = rNodes[idx]->GetSegments()[1]->GetUnitTangent();
+                c_vector<double, DIM> av_tangent = (tangent1 + tangent2)/2.0;
+                av_tangent/=norm_2(av_tangent);
+
+                c_vector<double, DIM> normal;
+                if(av_tangent[1] == 0.0)
+                {
+                    normal[0] = 0.0;
+                    normal[1] = 1.0;
+                }
+                else
+                {
+                    normal[0] = 1.0;
+                    normal[1] = -av_tangent[0] /av_tangent[1];
+                }
+
+                if(RandomNumberGenerator::Instance()->ranf()>=0.5)
+                {
+                    sprout_direction = normal/norm_2(normal);
+                }
+                else
+                {
+                    sprout_direction = -normal/norm_2(normal);
+                }
             }
         }
 
@@ -373,7 +421,6 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             // Get the index of the max viable gradient
             units::quantity<unit::concentration_gradient> max_grad = 0.0 * unit::mole_per_metre_pow_4;
             int my_index = -1;
-
             for(unsigned jdx = 0; jdx<gradients.size(); jdx++)
             {
                 if(gradients[jdx]>max_grad)
@@ -399,10 +446,12 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
                 new_direction = probe_locations[idx*probes_per_node+4]-rNodes[idx]->rGetLocation();
             }
         }
+
         units::quantity<unit::time> time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
         units::quantity<unit::length> increment_length = time_increment* mVelocity;
         movement_vectors.push_back(OffsetAlongVector<DIM>(new_direction, increment_length));
     }
+
     return movement_vectors;
 }
 
