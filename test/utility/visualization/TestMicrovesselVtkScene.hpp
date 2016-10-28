@@ -33,12 +33,12 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef TESTVTKSCENE_HPP_
-#define TESTVTKSCENE_HPP_
+#ifndef TESTMicrovesselVtkScene_HPP_
+#define TESTMicrovesselVtkScene_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include "SmartPointers.hpp"
-#include "VtkScene.hpp"
+#include "MicrovesselVtkScene.hpp"
 #include "FileFinder.hpp"
 #include "OutputFileHandler.hpp"
 #include "Part.hpp"
@@ -48,14 +48,14 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselNetworkGenerator.hpp"
 #include "VesselNetwork.hpp"
 
-class TestVtkScene : public CxxTest::TestSuite
+class TestMicrovesselVtkScene : public CxxTest::TestSuite
 {
 public:
 
     void TestSimpleRendering()
     {
         // Read the image from file
-        OutputFileHandler file_handler1 = OutputFileHandler("TestVtkScene/");
+        OutputFileHandler file_handler1 = OutputFileHandler("TestMicrovesselVtkScene/");
         boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
         p_part->AddCuboid(100.e-6*unit::metres, 100.e-6*unit::metres, 100.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1.e-6*unit::metres));
 
@@ -73,12 +73,12 @@ public:
         extents[1] = 100;
         p_grid->SetExtents(extents);
 
-        VtkScene<3> scene1;
+        MicrovesselVtkScene<3> scene1;
         scene1.SetVesselNetwork(p_network);
         scene1.SetRegularGrid(p_grid);
         scene1.Show();
 
-        VtkScene<3> scene2;
+        MicrovesselVtkScene<3> scene2;
         scene2.SetOutputFilePath(file_handler1.GetOutputDirectoryFullPath() + "scene.png");
         scene2.SetPart(p_part);
         scene2.SetVesselNetwork(p_network);

@@ -33,8 +33,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef VTKSCENE_HPP_
-#define VTKSCENE_HPP_
+#ifndef MicrovesselVtkScene_HPP_
+#define MicrovesselVtkScene_HPP_
 
 #include <vector>
 #include "SmartPointers.hpp"
@@ -59,7 +59,7 @@ Copyright (c) 2005-2016, University of Oxford.
  * A simple vtk renderer for simulation outputs
  */
 template<unsigned DIM>
-class VtkScene
+class MicrovesselVtkScene
 {
     /**
      * The vtk renderer
@@ -122,12 +122,12 @@ public:
     /**
      * Constructor
      */
-    VtkScene();
+    MicrovesselVtkScene();
 
     /**
      * Destructor
      */
-    ~VtkScene();
+    ~MicrovesselVtkScene();
 
     void ResetRenderer();
 
@@ -165,4 +165,4 @@ public:
 
 };
 
-#endif /* VTKSCENE_HPP_*/
+#endif /* MicrovesselVtkScene_HPP_*/

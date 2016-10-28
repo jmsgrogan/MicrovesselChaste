@@ -58,7 +58,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkGeometryFilter.h>
 #include <vtkTubeFilter.h>
 #include <vtkExtractEdges.h>
-#include "VtkScene.hpp"
+#include "MicrovesselVtkScene.hpp"
 #include "BaseUnits.hpp"
 #include "VesselNetworkWriter.hpp"
 #include "Debug.hpp"
@@ -93,7 +93,7 @@ class customMouseInteractorStyle : public vtkInteractorStyleTrackballCamera
 vtkStandardNewMacro(customMouseInteractorStyle);
 
 template<unsigned DIM>
-VtkScene<DIM>::VtkScene()
+MicrovesselVtkScene<DIM>::MicrovesselVtkScene()
     : mpRenderer(vtkSmartPointer<vtkRenderer>::New()),
       mpRenderWindow(vtkSmartPointer<vtkRenderWindow>::New()),
       mpRenderWindowInteractor(vtkSmartPointer<vtkRenderWindowInteractor>::New()),
@@ -136,13 +136,13 @@ VtkScene<DIM>::VtkScene()
 }
 
 template<unsigned DIM>
-VtkScene<DIM>::~VtkScene()
+MicrovesselVtkScene<DIM>::~MicrovesselVtkScene()
 {
 
 }
 
 template<unsigned DIM>
-void VtkScene<DIM>::ResetRenderer()
+void MicrovesselVtkScene<DIM>::ResetRenderer()
 {
     vtkSmartPointer<vtkActorCollection> p_actors = mpRenderer->GetActors();
     vtkActor *p_actor;
@@ -177,13 +177,13 @@ void VtkScene<DIM>::ResetRenderer()
 }
 
 template<unsigned DIM>
-void VtkScene<DIM>::SetOutputFilePath(const std::string& rPath)
+void MicrovesselVtkScene<DIM>::SetOutputFilePath(const std::string& rPath)
 {
     mOutputFilePath = rPath;
 }
 
 template<unsigned DIM>
-void VtkScene<DIM>::UpdatePartActor()
+void MicrovesselVtkScene<DIM>::UpdatePartActor()
 {
     vtkSmartPointer<vtkPolyData> p_poly = mpPart->GetVtk();
     vtkSmartPointer<vtkPolyDataMapper> p_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
@@ -200,7 +200,7 @@ void VtkScene<DIM>::UpdatePartActor()
 }
 
 template<unsigned DIM>
-void VtkScene<DIM>::UpdateVesselNetworkActor()
+void MicrovesselVtkScene<DIM>::UpdateVesselNetworkActor()
 {
     VesselNetworkWriter<DIM> network_writer;
     network_writer.SetVesselNetwork(mpNetwork);
@@ -282,7 +282,7 @@ void VtkScene<DIM>::UpdateVesselNetworkActor()
 }
 
 template<unsigned DIM>
-void VtkScene<DIM>::UpdateCellPopulationActor()
+void MicrovesselVtkScene<DIM>::UpdateCellPopulationActor()
 {
     vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
     vtkSmartPointer<vtkPolyData> p_polydata = vtkSmartPointer<vtkPolyData>::New();
@@ -336,7 +336,7 @@ void VtkScene<DIM>::UpdateCellPopulationActor()
 }
 
 template<unsigned DIM>
-void VtkScene<DIM>::UpdateRegularGridActor()
+void MicrovesselVtkScene<DIM>::UpdateRegularGridActor()
 {
     vtkSmartPointer<vtkImageData> p_grid = mpGrid->GetVtkGrid();
 
@@ -361,7 +361,7 @@ void VtkScene<DIM>::UpdateRegularGridActor()
 }
 
 template<unsigned DIM>
-void VtkScene<DIM>::UpdateMeshActor()
+void MicrovesselVtkScene<DIM>::UpdateMeshActor()
 {
     vtkSmartPointer<vtkUnstructuredGrid> p_grid = mpMesh->GetAsVtkUnstructuredGrid();
 
@@ -395,37 +395,37 @@ void VtkScene<DIM>::UpdateMeshActor()
 }
 
 template<unsigned DIM>
-void VtkScene<DIM>::SetPart(boost::shared_ptr<Part<DIM> > pPart)
+void MicrovesselVtkScene<DIM>::SetPart(boost::shared_ptr<Part<DIM> > pPart)
 {
     mpPart = pPart;
 }
 
 template<unsigned DIM>
-void VtkScene<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void MicrovesselVtkScene<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpNetwork = pNetwork;
 }
 
 template<unsigned DIM>
-void VtkScene<DIM>::SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation)
+void MicrovesselVtkScene<DIM>::SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation)
 {
     mpCellPopulation = pCellPopulation;
 }
 
 template<unsigned DIM>
-void VtkScene<DIM>::SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid)
+void MicrovesselVtkScene<DIM>::SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid)
 {
     mpGrid = pGrid;
 }
 
 template<unsigned DIM>
-void VtkScene<DIM>::SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh)
+void MicrovesselVtkScene<DIM>::SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh)
 {
     mpMesh = pMesh;
 }
 
 template<unsigned DIM>
-void VtkScene<DIM>::Show(bool interactive)
+void MicrovesselVtkScene<DIM>::Show(bool interactive)
 {
     // Set up axes and camera
 //    vtkSmartPointer<vtkCubeAxesActor2D> p_axis = vtkSmartPointer<vtkCubeAxesActor2D>::New();
@@ -469,5 +469,5 @@ void VtkScene<DIM>::Show(bool interactive)
     }
 }
 
-template class VtkScene<2>;
-template class VtkScene<3>;
+template class MicrovesselVtkScene<2>;
+template class MicrovesselVtkScene<3>;

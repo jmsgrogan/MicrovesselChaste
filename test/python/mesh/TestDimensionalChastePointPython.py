@@ -72,5 +72,8 @@ class TestDimensionalChastePoint(unittest.TestCase):
         self.assertAlmostEqual(point.GetLocation(length_scale)[1], -3.0, 2)
         self.assertAlmostEqual(point.GetLocation(length_scale)[2], 5.0, 2)
         
+        input_location = np.array((0.0, 1.0, 2.0))
+        point2d = microvessel.mesh.DimensionalChastePoint2(input_location, length_scale)
+        
 if __name__ == '__main__':
     unittest.main()
