@@ -33,14 +33,16 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef MicrovesselVtkScene_HPP_
-#define MicrovesselVtkScene_HPP_
+#ifndef MICROVESSELVTKSCENE_HPP_
+#define MICROVESSELVTKSCENE_HPP_
 
 #include <vector>
 #include "SmartPointers.hpp"
+#include <vtkVersion.h>
 #if VTK_MAJOR_VERSION > 5
     #include <vtkAutoInit.h>
     VTK_MODULE_INIT(vtkRenderingOpenGL);
+    #include <vtkOggTheoraWriter.h>
 #endif
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
@@ -48,12 +50,18 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkLookupTable.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
+#include <vtkWindowToImageFilter.h>
 #include "Part.hpp"
+#include "PartActorGenerator.hpp"
 #include "RegularGrid.hpp"
+#include "RegularGridActorGenerator.hpp"
 #include "VesselNetwork.hpp"
 #include "AbstractCellPopulation.hpp"
 #include "DiscreteContinuumMesh.hpp"
+#include "DiscreteContinuumMeshActorGenerator.hpp"
 #include "UnitCollection.hpp"
+#include "MeshBasedCellPopulation.hpp"
+
 
 /**
  * A simple vtk renderer for simulation outputs
@@ -77,26 +85,6 @@ class MicrovesselVtkScene
     vtkSmartPointer<vtkRenderWindowInteractor> mpRenderWindowInteractor;
 
     /**
-     * The part
-     */
-    boost::shared_ptr<Part<DIM> > mpPart;
-
-    /**
-     * The vessel network
-     */
-    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
-
-    /**
-     * The mesh
-     */
-    boost::shared_ptr<DiscreteContinuumMesh<DIM> > mpMesh;
-
-    /**
-     * The regular grid
-     */
-    boost::shared_ptr<RegularGrid<DIM> > mpGrid;
-
-    /**
      * The cell population
      */
     boost::shared_ptr<AbstractCellPopulation<DIM> > mpCellPopulation;
@@ -107,15 +95,77 @@ class MicrovesselVtkScene
     std::string mOutputFilePath;
 
     /**
+     * The color lookup
+     */
+    vtkSmartPointer<vtkLookupTable> mpColorLookUpTable;
+
+    #if VTK_MAJOR_VERSION > 5
+    /**
+     * The animation writer
+     */
+    vtkSmartPointer<vtkOggTheoraWriter> mAnimationWriter;
+    #endif
+
+    /**
+     * The image to window filter
+     */
+    vtkSmartPointer<vtkWindowToImageFilter> mWindowToImageFilter;
+
+    /**
+     * Is the rendering interactive
+     */
+    bool mIsInteractive;
+
+    /**
+     * Save as an animation
+     */
+    bool mSaveAsAnimation;
+
+    /**
+     * Save as an image
+     */
+    bool mSaveAsImages;
+
+    /**
+     * Has the renderer started
+     */
+    bool mHasStarted;
+
+    /**
+     * Add annotation
+     */
+    bool mAddAnnotations;
+
+    /**
+     * How often to update the renderer during a simulation
+     */
+    unsigned mOutputFrequency;
+
+    /**
+     * The part generator
+     */
+    boost::shared_ptr<PartActorGenerator<DIM> > mpPartGenerator;
+
+    /**
+     * The vessel network
+     */
+    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
+
+    /**
+     * The mesh
+     */
+    boost::shared_ptr<DiscreteContinuumMeshActorGenerator<DIM> > mpDiscreteContinuumMeshGenerator;
+
+    /**
+     * The regular grid actor generator
+     */
+    boost::shared_ptr<RegularGridActorGenerator<DIM> > mpGridGenerator;
+
+    /**
      * Scale features using this length. e.g. set to micron if we want
      * to render features in microns
      */
     units::quantity<unit::length> mLengthScale;
-
-    /**
-     * The color lookup
-     */
-    vtkSmartPointer<vtkLookupTable> mpColorLookUpTable;
 
 public:
 
@@ -129,33 +179,43 @@ public:
      */
     ~MicrovesselVtkScene();
 
-    void ResetRenderer();
+    /**
+     * Shut down the scene and close the animation
+     */
+    void End();
 
-    void UpdatePartActor();
+    boost::shared_ptr<PartActorGenerator<DIM> > GetPartActorGenerator();
 
-    void UpdateVesselNetworkActor();
+    boost::shared_ptr<DiscreteContinuumMeshActorGenerator<DIM> > GetDiscreteContinuumMeshActorGenerator();
 
-    void UpdateCellPopulationActor();
-
-    void UpdateRegularGridActor();
-
-    void UpdateMeshActor();
-
-    void SetPart(boost::shared_ptr<Part<DIM> > pPart);
-
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
-
-    void SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation);
-
-    void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
-
-    void SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh);
+    boost::shared_ptr<RegularGridActorGenerator<DIM> > GetRegularGridActorGenerator();
 
     /**
-     * Render the scene
-     * @param interactive do interactive rendering, otherwise write the scene to file
+     * Update the actors for the cell population
      */
-    void Show(bool interactive = true);
+    void UpdateCellPopulationActor();
+
+    /**
+     * Update the actors for mesh based cell populations
+     */
+    void UpdateMeshBasedCellPopulationActor();
+
+    /**
+     * Update the renderer, this will update the population actor and write output images
+     * @param timeStep the curren time step, for annotating output files
+     */
+    void ResetRenderer(unsigned timeStep=0);
+
+    /**
+    * Render the scene
+    */
+    void Start();
+
+    /**
+    * Set the cell population
+    * @param pCellPopulation the cell population for rendering
+    */
+    void SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation);
 
     /**
      * Set the path for output
@@ -163,6 +223,24 @@ public:
      */
     void SetOutputFilePath(const std::string& rPath);
 
+    void SetIsInteractive(bool isInteractive);
+
+    void SetSaveAsAnimation(bool saveAsAnimation);
+
+    void SetSaveAsImages(bool saveAsImages);
+
+    void StartInteractiveEventHandler();
+
+    void UpdateVesselNetworkActor();
+
+    void SetPart(boost::shared_ptr<Part<DIM> > pPart);
+
+    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+
+    void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
+
+    void SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh);
+
 };
 
-#endif /* MicrovesselVtkScene_HPP_*/
+#endif /* MICROVESSELVTKSCENE_HPP_*/

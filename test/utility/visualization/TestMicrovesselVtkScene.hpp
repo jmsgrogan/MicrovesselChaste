@@ -75,14 +75,15 @@ public:
 
         MicrovesselVtkScene<3> scene1;
         scene1.SetVesselNetwork(p_network);
-        scene1.SetRegularGrid(p_grid);
-        scene1.Show();
+        scene1.SetPart(p_part);
+        scene1.SetIsInteractive(true);
+        scene1.SetSaveAsAnimation(false);
+        scene1.GetPartActorGenerator()->SetShowPoints(true);
+        scene1.GetPartActorGenerator()->SetPointSize(5.0);
+        scene1.GetPartActorGenerator()->SetEdgeSize(1.0);
 
-        MicrovesselVtkScene<3> scene2;
-        scene2.SetOutputFilePath(file_handler1.GetOutputDirectoryFullPath() + "scene.png");
-        scene2.SetPart(p_part);
-        scene2.SetVesselNetwork(p_network);
-        scene2.Show(false);
+        scene1.Start();
+        scene1.StartInteractiveEventHandler();
     }
 };
 #endif
