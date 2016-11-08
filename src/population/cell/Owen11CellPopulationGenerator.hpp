@@ -40,7 +40,6 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "Part.hpp"
 #include "SmartPointers.hpp"
 #include "VesselNetwork.hpp"
-#include "SimpleCell.hpp"
 #include "RegularGrid.hpp"
 #include "UnitCollection.hpp"
 #include "AbstractCellMutationState.hpp"

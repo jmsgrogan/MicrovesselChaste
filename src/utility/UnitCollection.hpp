@@ -62,6 +62,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <boost/units/systems/si/mass.hpp>
 #include <boost/units/systems/si/amount.hpp>
 #include <boost/units/systems/si/plane_angle.hpp>
+#include <boost/units/systems/si/absorbed_dose.hpp>
 
 #include <boost/units/base_units/metric/minute.hpp>
 #include <boost/units/base_units/metric/hour.hpp>
@@ -207,6 +208,21 @@ namespace unit{
     typedef units::derived_dimension<units::length_base_dimension, 1, units::time_base_dimension, -1>::type membrane_permeability_dimension;
     typedef units::unit<membrane_permeability_dimension, units::si::system> membrane_permeability;
     BOOST_UNITS_STATIC_CONSTANT(metre_per_second, membrane_permeability);
+
+    // Radiation
+    typedef units::derived_dimension<units::length_base_dimension, 2, units::time_base_dimension, -2>::type absorbed_dose_dimension;
+    typedef units::unit<absorbed_dose_dimension, units::si::system> absorbed_dose;
+    BOOST_UNITS_STATIC_CONSTANT(gray, absorbed_dose);
+
+    typedef units::derived_dimension<units::length_base_dimension, -2, units::time_base_dimension, 2>::type per_absorbed_dose_dimension;
+    typedef units::unit<per_absorbed_dose_dimension, units::si::system> per_absorbed_dose;
+    BOOST_UNITS_STATIC_CONSTANT(per_gray, per_absorbed_dose);
+
+    typedef units::derived_dimension<units::length_base_dimension, -4, units::time_base_dimension, 4>::type per_absorbed_dose_squared_dimension;
+    typedef units::unit<per_absorbed_dose_squared_dimension, units::si::system> per_absorbed_dose_squared;
+    BOOST_UNITS_STATIC_CONSTANT(per_gray_squared, per_absorbed_dose_squared);
+
 };
+
 
 #endif /* UNITCOLLECTIONS_HPP */

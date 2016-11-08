@@ -45,7 +45,7 @@
 #include "ImageReader.hpp"
 
 ImageReader::ImageReader()
-    : mpVtkImage(vtkSmartPointer<vtkImageData>::New()),
+    : mpVtkImage(),
       mFilepath(),
       mResizeX(1.0),
       mResizeY(1.0),

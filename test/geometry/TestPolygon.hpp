@@ -168,11 +168,9 @@ public:
 
         DimensionalChastePoint<2> test_point1(0.75, 0.75, 0.0);
         DimensionalChastePoint<2> test_point2(1.25, 0.75, 0.0);
-        DimensionalChastePoint<2> test_point3(0.75, 0.75, 1.0);
 
         TS_ASSERT(p_polygon->ContainsPoint(test_point1));
         TS_ASSERT(!p_polygon->ContainsPoint(test_point2));
-        TS_ASSERT(!p_polygon->ContainsPoint(test_point3));
 
         vtkSmartPointer<vtkPolygon> p_vtk_polygon =  p_polygon->GetVtkPolygon();
         std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > vertex_pair = p_polygon->GetVtkVertices();
@@ -218,7 +216,7 @@ public:
         TS_ASSERT_DELTA(p_polygon->GetDistance(DimensionalChastePoint<3>(0.5, 0.5, 0.5, 1.e-6*unit::metres)).value(), 0.5e-6, 1.e-8);
         TS_ASSERT_DELTA(p_polygon->GetPlane()->GetNormal()[0], 0.0, 1.e-6);
         TS_ASSERT_DELTA(p_polygon->GetPlane()->GetNormal()[1], 0.0, 1.e-6);
-        TS_ASSERT_DELTA(p_polygon->GetPlane()->GetNormal()[2], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(std::abs(p_polygon->GetPlane()->GetNormal()[2]), 1.0, 1.e-6);
 
         TS_ASSERT_DELTA(p_polygon->GetDistanceToEdges(DimensionalChastePoint<3>(1.5, 0.5, 0.0, 1.e-6*unit::metres)).value(), 0.5e-6, 1.e-8);
     }

@@ -34,28 +34,28 @@
 import unittest
 import chaste.core
 chaste.init()
-import chaste.projects.microvessel as microvessel
-import chaste.projects.microvessel.geometry
-import chaste.projects.microvessel.mesh 
-import chaste.projects.microvessel.utility as utility
-import chaste.projects.microvessel.population.vessel as vessel
-import chaste.projects.microvessel.simulation as simulation
+import microvessel_chaste
+import microvessel_chaste.geometry
+import microvessel_chaste.mesh 
+from microvessel_chaste.utility import * # bring in all units for convenience
+import microvessel_chaste.population.vessel
+import microvessel_chaste.simulation
 
 class TestStraightVesselFlow(unittest.TestCase):
     
     def setup_network(self):
         length = 100.0
-        radius = 10.e-6*utility.metre()
-        viscosity = 4.e-3*utility.poiseuille()
+        radius = 10.e-6*metre()
+        viscosity = 4.e-3*poiseuille()
         
-        n1 = vessel.VesselNode3(0.0, 0.0, 0.0)
-        n2 = vessel.VesselNode3(length, 0.0, 0.0)
+        n1 = microvessel_chaste.population.vessel.VesselNode3(0.0, 0.0, 0.0)
+        n2 = microvessel_chaste.population.vessel.VesselNode3(length, 0.0, 0.0)
         
         n1.GetFlowProperties().SetIsInputNode(True)
         n2.GetFlowProperties().SetIsOutputNode(True)
         
-        v1 = vessel.Vessel3([n1 ,n2])
-        network = vessel.VesselNetwork3()
+        v1 = microvessel_chaste.population.vessel.Vessel3([n1 ,n2])
+        network = microvessel_chaste.population.vessel.VesselNetwork3()
         network.AddVessel(v1)
         
         for eachVessel in network.GetVessels():
@@ -70,11 +70,11 @@ class TestStraightVesselFlow(unittest.TestCase):
         network = self.setup_network()
         file_handler = chaste.core.OutputFileHandler("Python/TestStraightVesselFlow/")
         
-        impedance_calculator = simulation.VesselImpedanceCalculator3()
+        impedance_calculator = microvessel_chaste.simulation.VesselImpedanceCalculator3()
         impedance_calculator.SetVesselNetwork(network)
         impedance_calculator.Calculate()
         
-        flow_solver = simulation.FlowSolver3()
+        flow_solver = microvessel_chaste.simulation.FlowSolver3()
         flow_solver.SetVesselNetwork(network)
         flow_solver.Solve() 
         
