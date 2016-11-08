@@ -7,7 +7,7 @@ Copyright (c) 2005-2016, University of Oxford.
  University of Oxford, having an administrative office at Wellington
  Square, Oxford OX1 2JD, UK.
 
- This file is RegularGrid of Chaste.
+ This file is VesselNetwork of Chaste.
 
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -22,7 +22,7 @@ Copyright (c) 2005-2016, University of Oxford.
 
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A RegularGridICULAR PURPOSE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A VesselNetworkICULAR PURPOSE
  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
@@ -33,8 +33,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef REGULARGRIDACTORGENERATOR_HPP_
-#define REGULARGRIDACTORGENERATOR_HPP_
+#ifndef VESSELNETWORKACTORGENERATOR_HPP_
+#define VESSELNETWORKACTORGENERATOR_HPP_
 
 #include <vector>
 #include "SmartPointers.hpp"
@@ -42,58 +42,45 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkSmartPointer.h>
 #include <vtkRenderer.h>
 #include <vtkLookupTable.h>
-#include "RegularGrid.hpp"
+#include "VesselNetwork.hpp"
 #include "UnitCollection.hpp"
 #include "AbstractActorGenerator.hpp"
 
 /**
- * This class generates Vtk actors for RegularGrids
+ * This class generates Vtk actors for VesselNetworks
  */
 template<unsigned DIM>
-class RegularGridActorGenerator : public AbstractActorGenerator<DIM>
+class VesselNetworkActorGenerator : public AbstractActorGenerator<DIM>
 {
     /**
-     * The RegularGrid
+     * The VesselNetwork
      */
-    boost::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
-
-    /**
-     * The edge opacity
-     */
-    double mEdgeOpacity;
-
-    bool mUseTubesForEdges;
+    boost::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
 
 public:
 
     /**
      * Constructor
      */
-    RegularGridActorGenerator();
+    VesselNetworkActorGenerator();
 
     /**
      * Destructor
      */
-    ~RegularGridActorGenerator();
+    ~VesselNetworkActorGenerator();
 
     /**
-     * Add the RegularGrid actor to the renderer
+     * Add the VesselNetwork actor to the renderer
      * @param pRenderer the current renderer
      */
     void AddActor(vtkSmartPointer<vtkRenderer> pRenderer);
 
     /**
-     * Set the RegularGrid
-     * @param pRegularGrid the RegularGrid to render
+     * Set the VesselNetwork
+     * @param pVesselNetwork the VesselNetwork to render
      */
-    void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pRegularGrid);
-
-    /**
-     * Set the opacity for the edges
-     * @param opacity the opacity for the edges
-     */
-    void SetEdgeOpacity(double opacity);
+    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
 
 };
 
-#endif /* REGULARGRIDACTORGENERATOR_HPP_*/
+#endif /* VESSELNETWORKACTORGENERATOR_HPP_*/

@@ -41,7 +41,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
 #include <vtkRenderer.h>
-#include <vtkLookupTable.h>
+#include <vtkColorTransferFunction.h>
 #include "UnitCollection.hpp"
 #include "UblasVectorInclude.hpp"
 
@@ -57,7 +57,7 @@ protected:
     /**
      * The color lookup
      */
-    vtkSmartPointer<vtkLookupTable> mpColorLookUpTable;
+    vtkSmartPointer<vtkColorTransferFunction> mpColorTransferFunction;
 
     /**
      * Scale features using this length. e.g. set to micron if we want
@@ -95,6 +95,8 @@ protected:
      */
     c_vector<double, 3> mVolumeColor;
 
+    std::vector<c_vector<double, 3> > mViridisColorMap;
+
     /**
      * The volume opacity
      */
@@ -103,6 +105,8 @@ protected:
     double mPointSize;
 
     double mEdgeSize;
+
+    std::string mDataLabel;
 
 public:
 
@@ -167,6 +171,8 @@ public:
     void SetPointSize(double size);
 
     void SetEdgeSize(double size);
+
+    void SetDataLabel(const std::string& rLabel);
 
 };
 

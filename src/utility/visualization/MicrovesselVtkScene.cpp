@@ -128,30 +128,30 @@ MicrovesselVtkScene<DIM>::MicrovesselVtkScene()
       mAddAnnotations(false),
       mOutputFrequency(1),
       mpPartGenerator(boost::shared_ptr<PartActorGenerator<DIM> >(new PartActorGenerator<DIM>())),
-      mpNetwork(),
+      mpNetworkGenerator(boost::shared_ptr<VesselNetworkActorGenerator<DIM> >(new VesselNetworkActorGenerator<DIM>())),
       mpDiscreteContinuumMeshGenerator(boost::shared_ptr<DiscreteContinuumMeshActorGenerator<DIM> >(new DiscreteContinuumMeshActorGenerator<DIM>())),
       mpGridGenerator(boost::shared_ptr<RegularGridActorGenerator<DIM> >(new RegularGridActorGenerator<DIM>())),
       mLengthScale(BaseUnits::Instance()->GetReferenceLengthScale())
 {
     mpRenderer->SetBackground(1.0, 1.0, 1.0);
 
-    // Create a default LUT
-    mpColorLookUpTable->SetNumberOfTableValues(10);
-    mpColorLookUpTable->Build();
-
-    #if VTK_MAJOR_VERSION > 5
-        vtkSmartPointer<vtkNamedColors> p_named_colors = vtkSmartPointer<vtkNamedColors>::New();
-        mpColorLookUpTable->SetTableValue(0, p_named_colors->GetColor4d("Black").GetData());
-        mpColorLookUpTable->SetTableValue(1, p_named_colors->GetColor4d("Banana").GetData());
-        mpColorLookUpTable->SetTableValue(2, p_named_colors->GetColor4d("Tomato").GetData());
-        mpColorLookUpTable->SetTableValue(3, p_named_colors->GetColor4d("Wheat").GetData());
-        mpColorLookUpTable->SetTableValue(4, p_named_colors->GetColor4d("Lavender").GetData());
-        mpColorLookUpTable->SetTableValue(5, p_named_colors->GetColor4d("Flesh").GetData());
-        mpColorLookUpTable->SetTableValue(6, p_named_colors->GetColor4d("Raspberry").GetData());
-        mpColorLookUpTable->SetTableValue(7, p_named_colors->GetColor4d("Salmon").GetData());
-        mpColorLookUpTable->SetTableValue(8, p_named_colors->GetColor4d("Mint").GetData());
-        mpColorLookUpTable->SetTableValue(9, p_named_colors->GetColor4d("Peacock").GetData());
-    #endif
+//    // Create a default LUT
+//    mpColorLookUpTable->SetNumberOfTableValues(10);
+//    mpColorLookUpTable->Build();
+//
+//    #if VTK_MAJOR_VERSION > 5
+//        vtkSmartPointer<vtkNamedColors> p_named_colors = vtkSmartPointer<vtkNamedColors>::New();
+//        mpColorLookUpTable->SetTableValue(0, p_named_colors->GetColor4d("Black").GetData());
+//        mpColorLookUpTable->SetTableValue(1, p_named_colors->GetColor4d("Banana").GetData());
+//        mpColorLookUpTable->SetTableValue(2, p_named_colors->GetColor4d("Tomato").GetData());
+//        mpColorLookUpTable->SetTableValue(3, p_named_colors->GetColor4d("Wheat").GetData());
+//        mpColorLookUpTable->SetTableValue(4, p_named_colors->GetColor4d("Lavender").GetData());
+//        mpColorLookUpTable->SetTableValue(5, p_named_colors->GetColor4d("Flesh").GetData());
+//        mpColorLookUpTable->SetTableValue(6, p_named_colors->GetColor4d("Raspberry").GetData());
+//        mpColorLookUpTable->SetTableValue(7, p_named_colors->GetColor4d("Salmon").GetData());
+//        mpColorLookUpTable->SetTableValue(8, p_named_colors->GetColor4d("Mint").GetData());
+//        mpColorLookUpTable->SetTableValue(9, p_named_colors->GetColor4d("Peacock").GetData());
+//    #endif
 
     mpRenderWindow->AddRenderer(mpRenderer);
     mpRenderWindow->SetSize(800.0, 600.0);
@@ -187,6 +187,12 @@ boost::shared_ptr<RegularGridActorGenerator<DIM> > MicrovesselVtkScene<DIM>::Get
 }
 
 template<unsigned DIM>
+boost::shared_ptr<VesselNetworkActorGenerator<DIM> > MicrovesselVtkScene<DIM>::GetVesselNetworkActorGenerator()
+{
+    return mpNetworkGenerator;
+}
+
+template<unsigned DIM>
 void MicrovesselVtkScene<DIM>::ResetRenderer(unsigned time_step)
 {
     if(!mHasStarted)
@@ -210,9 +216,9 @@ void MicrovesselVtkScene<DIM>::ResetRenderer(unsigned time_step)
     {
         mpPartGenerator->AddActor(mpRenderer);
     }
-    if(mpNetwork)
+    if(mpNetworkGenerator)
     {
-        UpdateVesselNetworkActor();
+        mpNetworkGenerator->AddActor(mpRenderer);
     }
     if(mpDiscreteContinuumMeshGenerator)
     {
@@ -293,91 +299,15 @@ void MicrovesselVtkScene<DIM>::SetSaveAsAnimation(bool saveAsAnimation)
 }
 
 template<unsigned DIM>
-void MicrovesselVtkScene<DIM>::SetIsInteractive(bool isInteractive)
+void MicrovesselVtkScene<DIM>::SetSaveAsImages(bool saveAsImages)
 {
-    mIsInteractive = isInteractive;
+    mSaveAsImages = saveAsImages;
 }
 
 template<unsigned DIM>
-void MicrovesselVtkScene<DIM>::UpdateVesselNetworkActor()
+void MicrovesselVtkScene<DIM>::SetIsInteractive(bool isInteractive)
 {
-    VesselNetworkWriter<DIM> network_writer;
-    network_writer.SetVesselNetwork(mpNetwork);
-    vtkSmartPointer<vtkPolyData> p_poly = network_writer.GetOutput();
-
-    vtkSmartPointer<vtkUnsignedCharArray> p_node_colors = vtkSmartPointer<vtkUnsignedCharArray>::New();
-    p_node_colors->SetNumberOfComponents(3);
-    p_node_colors->SetName("PointColors");
-    double rgb[3];
-    unsigned char ucrgb[3];
-    mpColorLookUpTable->GetColor(2, rgb);
-    for (size_t j = 0; j < 3; ++j)
-    {
-        ucrgb[j] = static_cast<unsigned char>(rgb[j] * 255);
-    }
-    for(unsigned idx=0; idx<p_poly->GetNumberOfPoints(); idx++)
-    {
-        p_node_colors->InsertNextTuple3(ucrgb[0], ucrgb[1], ucrgb[2]);
-    }
-
-    vtkSmartPointer<vtkSphereSource> p_sheres = vtkSmartPointer<vtkSphereSource>::New();
-    p_sheres->SetRadius(0.5);
-    p_sheres->SetPhiResolution(16);
-    p_sheres->SetThetaResolution(16);
-
-    vtkSmartPointer<vtkGlyph3D> p_shere_glyphs = vtkSmartPointer<vtkGlyph3D>::New();
-    #if VTK_MAJOR_VERSION <= 5
-        p_shere_glyphs->SetInput(p_poly);
-        p_shere_glyphs->SetSource(p_sheres->GetOutput());
-    #else
-        p_shere_glyphs->SetInputData(p_poly);
-        p_shere_glyphs->SetSourceData(p_sheres->GetOutput());
-    #endif
-
-    p_shere_glyphs->ClampingOff();
-    p_shere_glyphs->SetScaleModeToScaleByScalar();
-    p_shere_glyphs->SetScaleFactor(1.0);
-
-    vtkSmartPointer<vtkPolyDataMapper> p_polydata_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    #if VTK_MAJOR_VERSION <= 5
-        p_polydata_mapper->SetInput(p_shere_glyphs->GetOutput());
-    #else
-        p_polydata_mapper->SetInputData(p_shere_glyphs->GetOutput());
-    #endif
-    p_polydata_mapper->ScalarVisibilityOn();
-
-    vtkSmartPointer<vtkActor> p_actor = vtkSmartPointer<vtkActor>::New();
-    p_actor->SetMapper(p_polydata_mapper);
-
-    vtkSmartPointer<vtkUnsignedCharArray> p_vessel_colors = vtkSmartPointer<vtkUnsignedCharArray>::New();
-    p_vessel_colors->SetNumberOfComponents(3);
-    p_vessel_colors->SetName("VesselColors");
-    double rgb2[3];
-    unsigned char ucrgb2[3];
-    mpColorLookUpTable->GetColor(7, rgb2);
-    for (size_t j = 0; j < 3; ++j)
-    {
-        ucrgb[j] = static_cast<unsigned char>(rgb2[j] * 255);
-    }
-    for(unsigned idx=0; idx<p_poly->GetNumberOfCells(); idx++)
-    {
-        p_vessel_colors->InsertNextTuple3(ucrgb2[0], ucrgb2[1], ucrgb2[2]);
-    }
-    p_poly->GetCellData()->SetScalars(p_vessel_colors);
-
-    vtkSmartPointer<vtkPolyDataMapper> p_polydata_mapper2 = vtkSmartPointer<vtkPolyDataMapper>::New();
-    #if VTK_MAJOR_VERSION <= 5
-        p_polydata_mapper2->SetInput(p_poly);
-    #else
-        p_polydata_mapper2->SetInputData(p_poly);
-    #endif
-    p_polydata_mapper2->ScalarVisibilityOn();
-
-    vtkSmartPointer<vtkActor> p_actor2 = vtkSmartPointer<vtkActor>::New();
-    p_actor2->SetMapper(p_polydata_mapper2);
-
-    mpRenderer->AddActor(p_actor);
-    mpRenderer->AddActor(p_actor2);
+    mIsInteractive = isInteractive;
 }
 
 template<unsigned DIM>
@@ -679,7 +609,7 @@ void MicrovesselVtkScene<DIM>::SetPart(boost::shared_ptr<Part<DIM> > pPart)
 template<unsigned DIM>
 void MicrovesselVtkScene<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
-    mpNetwork = pNetwork;
+    mpNetworkGenerator->SetVesselNetwork(pNetwork);
 }
 
 template<unsigned DIM>

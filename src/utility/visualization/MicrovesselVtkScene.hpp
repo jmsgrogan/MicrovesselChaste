@@ -42,6 +42,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #if VTK_MAJOR_VERSION > 5
     #include <vtkAutoInit.h>
     VTK_MODULE_INIT(vtkRenderingOpenGL);
+    VTK_MODULE_INIT(vtkRenderingFreeType);
     #include <vtkOggTheoraWriter.h>
 #endif
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
@@ -56,12 +57,12 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "RegularGrid.hpp"
 #include "RegularGridActorGenerator.hpp"
 #include "VesselNetwork.hpp"
+#include "VesselNetworkActorGenerator.hpp"
 #include "AbstractCellPopulation.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "DiscreteContinuumMeshActorGenerator.hpp"
 #include "UnitCollection.hpp"
 #include "MeshBasedCellPopulation.hpp"
-
 
 /**
  * A simple vtk renderer for simulation outputs
@@ -149,7 +150,7 @@ class MicrovesselVtkScene
     /**
      * The vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
+    boost::shared_ptr<VesselNetworkActorGenerator<DIM> > mpNetworkGenerator;
 
     /**
      * The mesh
@@ -189,6 +190,8 @@ public:
     boost::shared_ptr<DiscreteContinuumMeshActorGenerator<DIM> > GetDiscreteContinuumMeshActorGenerator();
 
     boost::shared_ptr<RegularGridActorGenerator<DIM> > GetRegularGridActorGenerator();
+
+    boost::shared_ptr<VesselNetworkActorGenerator<DIM> > GetVesselNetworkActorGenerator();
 
     /**
      * Update the actors for the cell population
@@ -230,8 +233,6 @@ public:
     void SetSaveAsImages(bool saveAsImages);
 
     void StartInteractiveEventHandler();
-
-    void UpdateVesselNetworkActor();
 
     void SetPart(boost::shared_ptr<Part<DIM> > pPart);
 
