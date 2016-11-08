@@ -4,10 +4,10 @@
 import unittest
 import math
 import numpy as np
-import chaste.projects.microvessel as microvessel
-import chaste.projects.microvessel.geometry
-import chaste.projects.microvessel.mesh 
-import chaste.projects.microvessel.utility as utility
+import microvessel_chaste
+import microvessel_chaste.geometry
+import microvessel_chaste.mesh 
+from microvessel_chaste.utility import * # bring in all units for convenience
         
 class TestPolygon(unittest.TestCase):
     
@@ -16,20 +16,20 @@ class TestPolygon(unittest.TestCase):
     def test_all_methods(self):
         
         # Make some vertices
-        length_scale = 1.e-6*utility.metre()
-        vertex1 = microvessel.mesh.DimensionalChastePoint3((0.0, 0.0, 0.0), length_scale)
-        vertex2 = microvessel.mesh.DimensionalChastePoint3((1.0, 0.0, 0.0), length_scale)
-        vertex3 = microvessel.mesh.DimensionalChastePoint3((1.0, 1.0, 0.0), length_scale)
-        vertex4 = microvessel.mesh.DimensionalChastePoint3((0.0, 1.0, 0.0), length_scale)
+        length_scale = 1.e-6*metre()
+        vertex1 = microvessel_chaste.mesh.DimensionalChastePoint3((0.0, 0.0, 0.0), length_scale)
+        vertex2 = microvessel_chaste.mesh.DimensionalChastePoint3((1.0, 0.0, 0.0), length_scale)
+        vertex3 = microvessel_chaste.mesh.DimensionalChastePoint3((1.0, 1.0, 0.0), length_scale)
+        vertex4 = microvessel_chaste.mesh.DimensionalChastePoint3((0.0, 1.0, 0.0), length_scale)
         
         # Make a polygon with one vertex
-        polygon1 = microvessel.geometry.Polygon3(vertex1)
+        polygon1 = microvessel_chaste.geometry.Polygon3(vertex1)
         self.assertEqual(len(polygon1.GetVertices()), 1)
         verts = [vertex2, vertex3, vertex4]
         polygon1.AddVertices(verts)
         
         # Make a polygon with several vertices
-        polygon2 = microvessel.geometry.Polygon3(vertex2)
+        polygon2 = microvessel_chaste.geometry.Polygon3(vertex2)
         polygon2.AddVertex(vertex3)
         polygon2.AddVertex(vertex4)
         self.assertEqual(len(polygon2.GetVertices()), 3)
@@ -43,8 +43,11 @@ class TestPolygon(unittest.TestCase):
         target_bbox = [0.0, 1.0, 0.0, 1.0, 0.0, 0.0]
         
         # Check translating and rotating
-        translation_vector = microvessel.mesh.DimensionalChastePoint3(1.0, 2.0, 3.0, length_scale)
+        translation_vector = microvessel_chaste.mesh.DimensionalChastePoint3(1.0, 2.0, 3.0, length_scale)
         polygon2.Translate(translation_vector)
         rotation_axis = (0.0, 0.0, 1.0)
         polygon2.RotateAboutAxis(rotation_axis, math.pi)
+        
+if __name__ == '__main__':
+    unittest.main()
         

@@ -49,11 +49,11 @@
 
 import unittest
 import chaste.core
-import chaste.projects.microvessel as microvessel
-import chaste.projects.microvessel.geometry
-import chaste.projects.microvessel.mesh 
-import chaste.projects.microvessel.utility as utility
-import chaste.projects.microvessel.population.vessel as vessel
+import microvessel_chaste
+import microvessel_chaste.geometry
+import microvessel_chaste.mesh 
+import microvessel_chaste.population.vessel
+from microvessel_chaste.utility import * # bring in all units for convenience
 
 class TestPythonBuildVesselNetworkLiteratePaper(unittest.TestCase):
     ## = Test 1 - Building a vessel network manually, writing it to file and visualizing it=
@@ -67,23 +67,23 @@ class TestPythonBuildVesselNetworkLiteratePaper(unittest.TestCase):
         ## directly through their constructors. Vessel network components are templated over spatial dimension, and can be 2D or 3D. We will
         ## create a Y shaped network. Later we will learn how to build up networks in a more efficient manner.
         
-        length_scale = 1.e-6*utility.metre()
+        length_scale = 1.e-6*metre()
         length = 100.0
-        n1 = vessel.VesselNode3(0.0, 0.0 ,0.0, length_scale)
-        n2 = vessel.VesselNode3(length, 0.0, 0.0, length_scale)
-        n3 = vessel.VesselNode3(2.0 * length, length, 0.0, length_scale)
-        n4 = vessel.VesselNode3(2.0 * length, -length, 0.0, length_scale)
+        n1 = microvessel_chaste.population.vessel.VesselNode3(0.0, 0.0 ,0.0, length_scale)
+        n2 = microvessel_chaste.population.vessel.VesselNode3(length, 0.0, 0.0, length_scale)
+        n3 = microvessel_chaste.population.vessel.VesselNode3(2.0 * length, length, 0.0, length_scale)
+        n4 = microvessel_chaste.population.vessel.VesselNode3(2.0 * length, -length, 0.0, length_scale)
         
         ## Next we make vessel segments and vessels. Vessel segments are straight-line features which contain a vascular node at each end. Vessels
         ## can be constructed from multiple vessel segments, but in this case each vessel just has a single segment.
         
-        v1 = vessel.Vessel3([n1 ,n2])
-        v2 = vessel.Vessel3([n2, n3])
-        v3 = vessel.Vessel3([n2, n4])
+        v1 = microvessel_chaste.population.vessel.Vessel3([n1 ,n2])
+        v2 = microvessel_chaste.population.vessel.Vessel3([n2, n3])
+        v3 = microvessel_chaste.population.vessel.Vessel3([n2, n4])
         
         ## Now we can add our vessels to a vessel network.
         
-        network = vessel.VesselNetwork3()
+        network = microvessel_chaste.population.vessel.VesselNetwork3()
         network.AddVessel(v1)
         network.AddVessel(v2)
         network.AddVessel(v3)
@@ -97,7 +97,7 @@ class TestPythonBuildVesselNetworkLiteratePaper(unittest.TestCase):
         ## Networks are written using VTKs PolyData format, which should have a .vtp extension.
         
         file_handler = chaste.core.OutputFileHandler("Python/TestPythonBuildVesselNetworkLiteratePaper", True)
-        writer = vessel.VesselNetworkWriter3()
+        writer = microvessel_chaste.population.vessel.VesselNetworkWriter3()
         writer.SetVesselNetwork(network)
         writer.SetFileName(file_handler.GetOutputDirectoryFullPath() + "bifurcating_network.vtp")
         writer.Write()

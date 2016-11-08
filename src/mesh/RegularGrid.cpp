@@ -33,8 +33,7 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#include "Exception.hpp"
-#include "RegularGrid.hpp"
+#include <cmath>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
 #include <vtkImageData.h>
 #include <vtkDoubleArray.h>
@@ -44,6 +43,8 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkPoints.h>
 #include <vtkSmartPointer.h>
 #include <vtkLine.h>
+#include "Exception.hpp"
+#include "RegularGrid.hpp"
 #include "RegularGridWriter.hpp"
 #include "BaseUnits.hpp"
 
@@ -152,11 +153,11 @@ void RegularGrid<DIM>::GenerateFromPart(boost::shared_ptr<Part<DIM> > pPart, uni
 {
     mSpacing = gridSize;
     std::vector<units::quantity<unit::length> > spatial_extents = pPart->GetBoundingBox();
-    mExtents[0] = unsigned((spatial_extents[1] - spatial_extents[0]) / gridSize);
-    mExtents[1] = unsigned((spatial_extents[3] - spatial_extents[2]) / gridSize);
+    mExtents[0] = unsigned(std::floor((spatial_extents[1] - spatial_extents[0]) / gridSize))+1;
+    mExtents[1] = unsigned(std::floor((spatial_extents[3] - spatial_extents[2]) / gridSize))+1;
     if (DIM == 3)
     {
-        mExtents[2] = unsigned((spatial_extents[5] - spatial_extents[4]) / gridSize);
+        mExtents[2] = unsigned(std::floor((spatial_extents[5] - spatial_extents[4]) / gridSize))+1;
         mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0]/mReferenceLength, spatial_extents[2]/mReferenceLength, spatial_extents[4]/mReferenceLength, mReferenceLength);
     }
     else
@@ -307,7 +308,10 @@ const std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >& RegularGr
         if (x_index <= mExtents[0] && y_index <= mExtents[1] && z_index <= mExtents[2])
         {
             unsigned grid_index = x_index + y_index * mExtents[0] + z_index * mExtents[0] * mExtents[1];
-            mPointNodeMap[grid_index].push_back(nodes[idx]);
+            if(grid_index<mPointNodeMap.size())
+            {
+                mPointNodeMap[grid_index].push_back(nodes[idx]);
+            }
         }
     }
     return mPointNodeMap;
@@ -337,7 +341,6 @@ const std::vector<std::vector<CellPtr> >& RegularGrid<DIM>::GetPointCellMap(bool
         mPointCellMap.push_back(empty_cell_pointers);
     }
 
-
     for (typename AbstractCellPopulation<DIM>::Iterator cell_iter = mpCellPopulation->Begin();
             cell_iter != mpCellPopulation->End(); ++cell_iter)
     {
@@ -354,10 +357,13 @@ const std::vector<std::vector<CellPtr> >& RegularGrid<DIM>::GetPointCellMap(bool
         if (x_index <= mExtents[0] && y_index <= mExtents[1] && z_index <= mExtents[2])
         {
             unsigned grid_index = x_index + y_index * mExtents[0] + z_index * mExtents[0] * mExtents[1];
-            mPointCellMap[grid_index].push_back(*cell_iter);
+            if(grid_index<mPointCellMap.size())
+            {
+                mPointCellMap[grid_index].push_back(*cell_iter);
+            }
         }
-
     }
+
     return mPointCellMap;
 }
 

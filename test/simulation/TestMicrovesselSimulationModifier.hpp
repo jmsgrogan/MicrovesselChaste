@@ -79,6 +79,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UnitCollection.hpp"
 #include "CellBasedDiscreteSource.hpp"
 
+#include "Debug.hpp"
+
 class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
 {
 
@@ -258,14 +260,14 @@ public:
         simulator.Solve();
     }
 
-    void DontTestNodeBasedSpheroid() throw (Exception)
+    void TestNodeBasedSpheroid() throw (Exception)
     {
         // Create the domain
         boost::shared_ptr<Part<3> > p_domain = GetSimulationDomain();
 
         // Create nodes corresponding to cell positions
         units::quantity<unit::length> spacing(40.0*unit::microns);
-        units::quantity<unit::length> cell_lenth_scale(1.0*unit::microns);
+        units::quantity<unit::length> cell_lenth_scale(40.0*unit::microns);
         unsigned num_x = unsigned(p_domain->GetBoundingBox()[1]/spacing) + 1;
         unsigned num_y = unsigned(p_domain->GetBoundingBox()[3]/spacing) + 1;
         unsigned num_z = unsigned(p_domain->GetBoundingBox()[5]/spacing) + 1;
@@ -275,9 +277,9 @@ public:
         std::vector<unsigned> location_indices = p_tumour_cell_region->GetContainingGridIndices(num_x, num_y, num_z, spacing);
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         std::vector<unsigned> extents(3);
-        extents[0] = num_x;
-        extents[1] = num_y;
-        extents[2] = num_z;
+        extents[0] = 1.5*num_x;
+        extents[1] = 1.5*num_y;
+        extents[2] = 1.5*num_z;
         p_grid->SetExtents(extents);
         p_grid->SetSpacing(spacing);
 
@@ -328,8 +330,8 @@ public:
 
         OffLatticeSimulation<3> simulator(cell_population);
         simulator.SetOutputDirectory("TestMicrovesselSimulationModifier/NodeBased");
-        simulator.SetDt(1.0);
-        simulator.SetEndTime(4.0);
+        simulator.SetDt(0.02);
+        simulator.SetEndTime(0.5);
         simulator.AddSimulationModifier(p_simulation_modifier);
 
         MAKE_PTR(GeneralisedLinearSpringForce<3>, p_force);

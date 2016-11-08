@@ -38,34 +38,33 @@ import numpy as np
 import chaste
 import chaste.core
 chaste.init()
-import chaste.projects.microvessel as microvessel
-import chaste.projects.microvessel.mesh
-import chaste.projects.microvessel.pde
-import chaste.projects.microvessel.geometry as geometry
-import chaste.projects.microvessel.utility as utility
+import microvessel_chaste
+import microvessel_chaste.geometry
+import microvessel_chaste.mesh 
+import microvessel_chaste.pde 
+from microvessel_chaste.utility import * # bring in all units for convenience
 
 class TestFiniteDifferenceSolver(unittest.TestCase):
           
     def test_fixed_outer_boundary(self):
         file_handler = chaste.core.OutputFileHandler("Python/TestFiniteDifferenceSolver/test_fixed_outer_boundary")
         
-        domain = geometry.Part3()
-        length_scale = 1.e-6*utility.metre()
-        origin = microvessel.mesh.DimensionalChastePoint3((0.0, 0.0, 0.0), length_scale)
-        domain.AddCuboid(100.e-6*utility.metre(), 100.e-6*utility.metre(), 100.e-6*utility.metre(), origin)
+        domain = microvessel_chaste.geometry.Part3()
+        length_scale = 1.e-6*metre()
+        origin = microvessel_chaste.mesh.DimensionalChastePoint3((0.0, 0.0, 0.0), length_scale)
+        domain.AddCuboid(100.e-6*metre(), 100.e-6*metre(), 100.e-6*metre(), origin)
         
-        grid = chaste.projects.microvessel.mesh.RegularGrid3()
-        grid.GenerateFromPart(domain, 10.e-6*utility.metre())
+        grid = microvessel_chaste.mesh.RegularGrid3()
+        grid.GenerateFromPart(domain, 10.e-6*metre())
         
-        pde = chaste.projects.microvessel.pde.LinearSteadyStateDiffusionReactionPde3_3()
-        pde.SetIsotropicDiffusionConstant(0.003*utility.metre_squared_per_second())
-        pde.SetContinuumLinearInUTerm(-1.0*utility.per_second())
+        pde = microvessel_chaste.pde.LinearSteadyStateDiffusionReactionPde3_3()
+        pde.SetIsotropicDiffusionConstant(0.003*metre_squared_per_second())
+        pde.SetContinuumLinearInUTerm(-1.0*per_second())
         
-        bc = chaste.projects.microvessel.pde.DiscreteContinuumBoundaryCondition3()
-        bc.SetValue(30.0*utility.mole_per_metre_cubed())
+        bc = microvessel_chaste.pde.DiscreteContinuumBoundaryCondition3()
+        bc.SetValue(30.0*mole_per_metre_cubed())
         
-
-        solver = chaste.projects.microvessel.pde.FiniteDifferenceSolver3()
+        solver = microvessel_chaste.pde.FiniteDifferenceSolver3()
         solver.SetGrid(grid)
         solver.SetPde(pde)
         solver.AddBoundaryCondition(bc)
@@ -146,4 +145,8 @@ class TestFiniteDifferenceSolver(unittest.TestCase):
 #         solver.AddBoundaryCondition(left_bc)
 #         solver.AddBoundaryCondition(right_bc)
 #         solver.Solve()
+
+if __name__ == '__main__':
+    unittest.main()
+        
         

@@ -41,9 +41,11 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include "ChasteSerialization.hpp"
 #include <boost/serialization/base_object.hpp>
+#include "UnitCollection.hpp"
 
 /**
- * A cell killer that kills cells based on the LQ Model in Radiotherapy
+ * A radiotherapy based cell killer based on the linear-quadratic model.
+ * Some different OER models are included.
  */
 template<unsigned DIM>
 class LQRadiotherapyCellKiller : public AbstractCellKiller<DIM>
@@ -51,32 +53,32 @@ class LQRadiotherapyCellKiller : public AbstractCellKiller<DIM>
     /**
      * Linear component of radiosensitivity of a cancerous cell.
      */
-    double cancerousLinearRadiosensitivity;
+    units::quantity<unit::per_absorbed_dose> cancerousLinearRadiosensitivity;
 
     /**
      * Quadratic component of radiosensitivity of a cancerous cell.
      */
-    double cancerousQuadraticRadiosensitivity;
+    units::quantity<unit::per_absorbed_dose_squared> cancerousQuadraticRadiosensitivity;
 
     /**
      * Linear component of radiosensitivity of a normal cell.
      */
-    double normalLinearRadiosensitivity;
+    units::quantity<unit::per_absorbed_dose> normalLinearRadiosensitivity;
 
     /**
      * Quadratic component of radiosensitivity of a normal cell.
      */
-    double normalQuadraticRadiosensitivity;
+    units::quantity<unit::per_absorbed_dose_squared> normalQuadraticRadiosensitivity;
 
     /**
      * Dose of Radiation injected
      */
-    double mDose;
+    units::quantity<unit::absorbed_dose> mDose;
 
     /**
      * Times at which radiotherapy is used
      */
-    std::vector<double> mRadiationTimes;
+    std::vector<units::quantity<unit::time> > mRadiationTimes;
 
     /**
      * alpha_max OER term
@@ -106,12 +108,12 @@ class LQRadiotherapyCellKiller : public AbstractCellKiller<DIM>
     /**
      * Radiotherapy alpha_max term
      */
-    double mAlphaMax;
+    units::quantity<unit::per_absorbed_dose> mAlphaMax;
 
     /**
      * Radiotherapy beta_max term
      */
-    double mBetaMax;
+    units::quantity<unit::per_absorbed_dose_squared> mBetaMax;
 
     /**
      * Whether to use an oxygen enhancement ratio
@@ -161,36 +163,6 @@ public:
     void CheckAndLabelCellsForApoptosisOrDeath();
 
     /**
-     * Get the radiosensitivity of normal cells
-     * @return the radiosensitivity of normal cells
-     */
-    double GetNormalLinearRadiosensitivity();
-
-    /**
-     * Get the quad radiosensitivity of normal cells
-     * @return the quad radiosensitivity of normal cells
-     */
-    double GetNormalQuadraticRadiosensitivity();
-
-    /**
-     * Get the radiosensitivity of cancer cells
-     * @return the radiosensitivity of cancer cells
-     */
-    double GetCancerousLinearRadiosensitivity();
-
-    /**
-     * Get the quad radiosensitivity of cancer cells
-     * @return the quad radiosensitivity of cancer cells
-     */
-    double GetCancerousQuadraticRadiosensitivity();
-
-    /**
-     * Get the injected dose
-     * @return the injected dose
-     */
-    double GetDoseInjected();
-
-    /**
      * Overridden OutputCellKillerParameters() method.
      *
      * @param rParamsFile the file stream to which the parameters are output
@@ -201,13 +173,13 @@ public:
      * Sets doseInjected, the radiation dose injected
      * @param d dose delivered
      */
-    void SetDoseInjected(double d);
+    void SetDoseInjected(units::quantity<unit::absorbed_dose> d);
 
     /**
      * Sets timeOfRadiation, the time at which radiation occurs
      * @param t the radiation times
      */
-    void SetTimeOfRadiation(std::vector<double> t);
+    void SetTimeOfRadiation(std::vector<units::quantity<unit::time> > t);
 
     /**
      * Sets cancerousLinearRadiosensitivity and cancerousQuadraticRadiosensitivity to specified concentration.
@@ -215,7 +187,7 @@ public:
      * @param alpha linear radiosensitivity for cancer cells
      * @param beta quadratic radiosensitivity for cancer cells
      */
-    void SetCancerousRadiosensitivity(double alpha, double beta);
+    void SetCancerousRadiosensitivity(units::quantity<unit::per_absorbed_dose> alpha, units::quantity<unit::per_absorbed_dose_squared> beta);
 
     /**
      * Sets normalLinearRadiosensitivity and normalQuadraticRadiosensitivity to specified concentration.
@@ -223,7 +195,7 @@ public:
      * @param alpha linear radiosensitivity for normal cells
      * @param beta quadratic radiosensitivity for normal cells
      */
-    void SetNormalRadiosensitivity(double alpha, double beta);
+    void SetNormalRadiosensitivity(units::quantity<unit::per_absorbed_dose> alpha, units::quantity<unit::per_absorbed_dose_squared> beta);
 
     /**
      * Sets alpha_max OER value
@@ -259,13 +231,13 @@ public:
      * Sets alpha_max radiotherapy value
      * @param value alpha_max radiotherapy value
      */
-    void SetAlphaMax(double value);
+    void SetAlphaMax(units::quantity<unit::per_absorbed_dose> value);
 
     /**
      * Sets beta_max radiotherapy value
      * @param value beta_max radiotherapy value
      */
-    void SetBetaMax(double value);
+    void SetBetaMax(units::quantity<unit::per_absorbed_dose_squared> value);
 
     /**
      * Whether to use OER

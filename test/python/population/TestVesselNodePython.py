@@ -32,23 +32,23 @@
 """
 
 import unittest
-import chaste.projects.microvessel as microvessel
-import chaste.projects.microvessel.geometry
-import chaste.projects.microvessel.mesh 
-import chaste.projects.microvessel.utility as utility
-import chaste.projects.microvessel.population.vessel as vessel
+import microvessel_chaste
+import microvessel_chaste.geometry
+import microvessel_chaste.mesh 
+import microvessel_chaste.population.vessel
+from microvessel_chaste.utility import * # bring in all units for convenience
 
 class TestVesselNodePython(unittest.TestCase):
 
     
     def test_BuildNetworkManually(self):
         
-        length_scale = 1.e-6*utility.metre()
+        length_scale = 1.e-6*metre()
         length = 100.0
-        n1 = vessel.VesselNode2(0.0, 0.0 ,0.0, length_scale)
-        n2 = vessel.VesselNode2(length, 0.0, 0.0, length_scale)
-        n3 = vessel.VesselNode2(2.0 * length, length, 0.0, length_scale)
-        n4 = vessel.VesselNode2(2.0 * length, -length, 0.0, length_scale)
+        n1 = microvessel_chaste.population.vessel.VesselNode2(0.0, 0.0 ,0.0, length_scale)
+        n2 = microvessel_chaste.population.vessel.VesselNode2(length, 0.0, 0.0, length_scale)
+        n3 = microvessel_chaste.population.vessel.VesselNode2(2.0 * length, length, 0.0, length_scale)
+        n4 = microvessel_chaste.population.vessel.VesselNode2(2.0 * length, -length, 0.0, length_scale)
 
         
 if __name__ == '__main__':

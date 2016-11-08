@@ -34,13 +34,13 @@
 import unittest
 import chaste.core
 chaste.init()
-import chaste.projects.microvessel as microvessel
-import chaste.projects.microvessel.geometry
-import chaste.projects.microvessel.mesh 
-import chaste.projects.microvessel.utility as utility
-import chaste.projects.microvessel.population.vessel as vessel
-import chaste.projects.microvessel.simulation as simulation
-import chaste.projects.microvessel.pde
+import microvessel_chaste
+import microvessel_chaste.geometry
+import microvessel_chaste.mesh 
+import microvessel_chaste.population.vessel
+import microvessel_chaste.pde
+import microvessel_chaste.simulation
+from microvessel_chaste.utility import * # bring in all units for convenience
 
 class TestLatticeBasedAngiogenesis(unittest.TestCase):
           
@@ -49,13 +49,13 @@ class TestLatticeBasedAngiogenesis(unittest.TestCase):
         file_handler = chaste.core.OutputFileHandler("Python/TestPythonLatticeBasedAngiogenesisLiteratePaper")
         
         # Set up a grid
-        length_scale = 1.e-6*utility.metre()
-        grid = chaste.projects.microvessel.mesh.RegularGrid3()
-        grid.SetSpacing(40.e-6*utility.metre())
+        length_scale = 1.e-6*metre()
+        grid = microvessel_chaste.mesh.RegularGrid3()
+        grid.SetSpacing(40.e-6*metre())
         grid.SetExtents((25, 25, 1))
         
         # Set up a vegf field
-        field = chaste.projects.microvessel.pde.FunctionMap3()
+        field = microvessel_chaste.pde.FunctionMap3()
         field.SetGrid(grid)
         
         vegf_field = []
@@ -72,32 +72,32 @@ class TestLatticeBasedAngiogenesis(unittest.TestCase):
         length =  float(grid.GetExtents()[1] - 1) * grid.GetSpacing()
         divisions = grid.GetExtents()[1] - 2 # divide the vessel to coincide with grid
         
-        start_point = microvessel.mesh.DimensionalChastePoint3(2.0 * 40.0, 0.0, 0.0, length_scale)
-        network = vessel.VesselNetworkGenerator3().GenerateSingleVessel(length, start_point, divisions, 1)
+        start_point = microvessel_chaste.mesh.DimensionalChastePoint3(2.0 * 40.0, 0.0, 0.0, length_scale)
+        network = microvessel_chaste.population.vessel.VesselNetworkGenerator3().GenerateSingleVessel(length, start_point, divisions, 1)
         #network.write(file_handler.GetOutputDirectoryFullPath() + "/network.vtp")
         
-        migration_rule = simulation.Owen2011MigrationRule3()
+        migration_rule = microvessel_chaste.simulation.Owen2011MigrationRule3()
         migration_rule.SetGrid(grid)
         migration_rule.SetDiscreteContinuumSolver(field)
-        migration_rule.SetCellMotilityParameter(100.0 * utility.metre_squared_per_second())
-        migration_rule.SetCellChemotacticParameter(80000.0 * utility.metre_pow5_per_second_per_mole())
+        migration_rule.SetCellMotilityParameter(100.0 * metre_squared_per_second())
+        migration_rule.SetCellChemotacticParameter(80000.0 * metre_pow5_per_second_per_mole())
         migration_rule.SetNetwork(network)
         # 
-        sprouting_rule = simulation.Owen2011SproutingRule3()
+        sprouting_rule = microvessel_chaste.simulation.Owen2011SproutingRule3()
         sprouting_rule.SetDiscreteContinuumSolver(field)
         sprouting_rule.SetGrid(grid)
         sprouting_rule.SetVesselNetwork(network)
-        sprouting_rule.SetSproutingProbability(0.5 * utility.per_second());
+        sprouting_rule.SetSproutingProbability(0.5 * per_second());
         # 
         # # Set up the angiogenesis solver
-        solver = simulation.AngiogenesisSolver3()
+        solver = microvessel_chaste.simulation.AngiogenesisSolver3()
         solver.SetVesselNetwork(network)
         solver.SetVesselGrid(grid)
         solver.SetOutputFileHandler(file_handler)
 #         solver.SetSproutingRule(sprouting_rule)
         solver.SetMigrationRule(migration_rule)
         
-        manager = simulation.SimulationManager()
+        manager = microvessel_chaste.simulation.SimulationManager()
         manager.Setup()
         manager.SetEndTimeAndNumberOfTimeSteps(10.0, 10.0)
         
@@ -107,3 +107,6 @@ class TestLatticeBasedAngiogenesis(unittest.TestCase):
             print e.GetMessage
         
         manager.TearDown()
+        
+if __name__ == '__main__':
+    unittest.main()

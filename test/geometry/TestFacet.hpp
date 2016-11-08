@@ -161,11 +161,8 @@ public:
         TS_ASSERT_DELTA(normal[1], 0.0, 1.e-6);
         DimensionalChastePoint<2> test_point1(0.75, 0.75, 0.0);
         DimensionalChastePoint<2> test_point2(1.25, 0.75, 0.0);
-        DimensionalChastePoint<2> test_point3(0.75, 0.75, 1.0);
-
         TS_ASSERT(p_facet->ContainsPoint(test_point1));
         TS_ASSERT(!p_facet->ContainsPoint(test_point2));
-        TS_ASSERT(!p_facet->ContainsPoint(test_point3));
     }
 
     void TestTransforms()
