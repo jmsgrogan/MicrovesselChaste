@@ -71,9 +71,9 @@ image/TestImageToSurface.hpp
 image/TestNetworkToImage.hpp
 tutorials/TestLatticeBasedAngiogenesisLiteratePaper.hpp
 tutorials/TestOffLatticeAngiogenesisLiteratePaper.hpp
-tutorials/TestBuildVesselNetworkLiteratePaper.hpp
-tutorials/TestBloodFlowLiteratePaper.hpp
-tutorials/TestSolvingPdesLiteratePaper.hpp
+tutorials/TestBuildVesselNetworkTutorial.hpp
+tutorials/TestBloodFlowTutorialhpp
+tutorials/TestSolvingPdesTutorial.hpp
 python/population/TestVesselNodePython.py
 python/geometry/TestPolygonPython.py
 python/geometry/TestFacetPython.py
