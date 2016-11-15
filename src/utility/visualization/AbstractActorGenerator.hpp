@@ -46,7 +46,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UblasVectorInclude.hpp"
 
 /**
- * This class generates Vtk actors for Abstracts
+ * This class generates Vtk actors for geometric features.
  */
 template<unsigned DIM>
 class AbstractActorGenerator

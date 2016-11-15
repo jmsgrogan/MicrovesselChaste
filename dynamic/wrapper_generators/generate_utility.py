@@ -117,7 +117,8 @@ def update_builder(builder):
                 "area",
                 "length",
                 "rate",
-                "time",]
+                "time",
+                "dimensionless"]
 #                "plane_angle"]
     
     units = {"membrane_permeability": "metre_per_second", 
@@ -146,7 +147,8 @@ def update_builder(builder):
              "area": "metre_squared",
              "length": "metre",
              "rate":"per_second",
-             "time":"second",        
+             "time":"second", 
+             "dimensionless" : "dimensionless",       
              }
 
     for eachUnit in unit_names:
@@ -189,7 +191,9 @@ def update_builder(builder):
                       "RateQuantity",
                       "TimeQuantity",
                       "AngleQuantity",
+                      "DimensionlessQuantity"
                       ]
+    
     for eachQuantity in quantity_names:
         helpers = pypluplus_alias_ns.typedefs(eachQuantity)
         for var_gen_typedef in helpers:

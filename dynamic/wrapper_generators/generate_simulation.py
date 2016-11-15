@@ -40,13 +40,10 @@ import generate_bindings
 
 def update_builder(builder):
     
-    include_classes = ["OnLatticeSimulationWrapper",
-                       "NodeBasedSimulationWrapper",
-                       "MicrovesselSolver<3>",
+    include_classes = ["MicrovesselSolver<3>",
                        "MicrovesselSimulationModifier<3>",
                        "MicrovesselSolver<2>",
-                       "MicrovesselSimulationModifier<2>",
-                       "SimulationManager"]
+                       "MicrovesselSimulationModifier<2>"]
     
     for eachClass in include_classes:
         builder.class_(eachClass).include()  

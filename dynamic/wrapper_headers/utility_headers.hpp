@@ -41,6 +41,7 @@ Copyright (c) 2005-2016, University of Oxford.
 //// Typdef in this namespace so that pyplusplus uses the nicer typedef'd name for the class
 namespace pyplusplus{
 namespace aliases{
+typedef units::quantity<unit::dimensionless, double> DimensionlessQuantity;
 typedef units::quantity<unit::plane_angle, double> AngleQuantity;
 typedef units::quantity<unit::time, double> TimeQuantity;
 typedef units::quantity<unit::rate, double> RateQuantity;

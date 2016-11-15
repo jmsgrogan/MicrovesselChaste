@@ -79,13 +79,13 @@ def generate_wrappers(args):
     header_collection = args[3]
     castxml_binary = args[4]
     includes = args[5:]
-    
+
     xml_generator_config = parser.xml_generator_configuration_t(xml_generator_path=castxml_binary, 
                                                                 xml_generator="castxml",
                                                                 compiler = "gnu",
                                                                 compiler_path="/usr/bin/c++",
                                                                 include_paths=includes)
-     
+
     builder = module_builder.module_builder_t([header_collection],
                                                 xml_generator_path = castxml_binary,
                                                 xml_generator_config = xml_generator_config,
@@ -101,8 +101,9 @@ def generate_wrappers(args):
     builder = do_module(module_name, builder)
     
     # Make the wrapper code
-    builder.build_code_creator(module_name="_chaste_project_MicrovesselChaste_" + module_name, 
-                               doc_extractor=doxygen_extractor.doxygen_doc_extractor())
+#     builder.build_code_creator(module_name="_chaste_project_MicrovesselChaste_" + module_name, 
+#                                doc_extractor=doxygen_extractor.doxygen_doc_extractor())
+    builder.build_code_creator(module_name="_chaste_project_MicrovesselChaste_" + module_name)
     builder.code_creator.user_defined_directories.append(work_dir + "/dynamic/wrapper_headers/")
     builder.write_module(work_dir + "/dynamic/" + module_name + ".cpp")
     
