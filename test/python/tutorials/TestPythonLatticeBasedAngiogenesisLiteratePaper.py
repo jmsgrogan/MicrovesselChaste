@@ -359,11 +359,13 @@ class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite)
         ##
         ## Do the solve. A sample solution is shown at the top of this test.
         ##
+        
         simulator.Solve()
         
         ##
         ## Dump the parameters to file for inspection.
         ##
+        
         ParameterCollection.Instance().DumpToFile(file_handler.GetOutputDirectoryFullPath()+"parameter_collection.xml")
 
         
