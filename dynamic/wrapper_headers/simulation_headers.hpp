@@ -33,18 +33,6 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-<<<<<<< HEAD
-#include "OnLatticeSimulationWrapper.hpp"
-#include "NodeBasedSimulationWrapper.hpp"
-#include "MicrovesselSolver.hpp"
-#include "MicrovesselSimulationModifier.hpp"
-#include "SimulationManager.hpp"
-
-template class MicrovesselSolver<3>;
-template class MicrovesselSimulationModifier<3>;
-template class MicrovesselSolver<2>;
-template class MicrovesselSimulationModifier<2>;
-=======
 #include "MicrovesselSolver.hpp"
 #include "MicrovesselSimulationModifier.hpp"
 #include "Owen2011TrackingModifier.hpp"
@@ -65,7 +53,3 @@ namespace aliases{
 typedef std::vector<std::string>  VecString;
 }
 }
-
-
-
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477

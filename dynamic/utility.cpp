@@ -6,9 +6,6 @@
 
 namespace bp = boost::python;
 
-<<<<<<< HEAD
-BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
-=======
 struct BaseParameterInstance_wrapper : BaseParameterInstance, bp::wrapper< BaseParameterInstance > {
 
     BaseParameterInstance_wrapper(BaseParameterInstance const & arg )
@@ -1917,9 +1914,12 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         DimensionlessQuantity_exposer.staticmethod( "from_value" );
+        DimensionlessQuantity_exposer.def(bp::self + bp::self);
+        DimensionlessQuantity_exposer.def(bp::self - bp::self);
         DimensionlessQuantity_exposer.def(double() * bp::self);
         DimensionlessQuantity_exposer.def(bp::self * double());
         DimensionlessQuantity_exposer.def(bp::self / bp::self);
+        DimensionlessQuantity_exposer.def(bp::self * bp::self);
         DimensionlessQuantity_exposer.def(bp::self / double());
         DimensionlessQuantity_exposer.def(double() / bp::self);
         DimensionlessQuantity_exposer.def(bp::self_ns::str(bp::self));
@@ -1927,7 +1927,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
 
     bp::implicitly_convertible< boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >, boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::value_type >();
 
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
     { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >
         typedef bp::class_< boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > > AmountQuantity_exposer_t;
         AmountQuantity_exposer_t AmountQuantity_exposer = AmountQuantity_exposer_t( "AmountQuantity" );
@@ -1957,8 +1956,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
-<<<<<<< HEAD
-=======
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::operator=
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -1983,7 +1980,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::value
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -1996,14 +1992,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         AmountQuantity_exposer.staticmethod( "from_value" );
+        AmountQuantity_exposer.def(bp::self + bp::self);
+        AmountQuantity_exposer.def(bp::self - bp::self);
         AmountQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         AmountQuantity_exposer.def(bp::self * double());
         AmountQuantity_exposer.def(bp::self / bp::self);
+        AmountQuantity_exposer.def(bp::self * bp::self);
         AmountQuantity_exposer.def(bp::self / double());
         AmountQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         AmountQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -2048,14 +2044,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         PerLengthQuantity_exposer.staticmethod( "from_value" );
+        PerLengthQuantity_exposer.def(bp::self + bp::self);
+        PerLengthQuantity_exposer.def(bp::self - bp::self);
         PerLengthQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         PerLengthQuantity_exposer.def(bp::self * double());
         PerLengthQuantity_exposer.def(bp::self / bp::self);
+        PerLengthQuantity_exposer.def(bp::self * bp::self);
         PerLengthQuantity_exposer.def(bp::self / double());
         PerLengthQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         PerLengthQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -2088,8 +2084,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
-<<<<<<< HEAD
-=======
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::operator=
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -2114,7 +2108,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::value
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -2127,14 +2120,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         ViscosityQuantity_exposer.staticmethod( "from_value" );
+        ViscosityQuantity_exposer.def(bp::self + bp::self);
+        ViscosityQuantity_exposer.def(bp::self - bp::self);
         ViscosityQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         ViscosityQuantity_exposer.def(bp::self * double());
         ViscosityQuantity_exposer.def(bp::self / bp::self);
+        ViscosityQuantity_exposer.def(bp::self * bp::self);
         ViscosityQuantity_exposer.def(bp::self / double());
         ViscosityQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         ViscosityQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -2167,8 +2160,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
-<<<<<<< HEAD
-=======
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::operator=
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -2193,7 +2184,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::value
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -2206,14 +2196,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         PressureQuantity_exposer.staticmethod( "from_value" );
+        PressureQuantity_exposer.def(bp::self + bp::self);
+        PressureQuantity_exposer.def(bp::self - bp::self);
         PressureQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         PressureQuantity_exposer.def(bp::self * double());
         PressureQuantity_exposer.def(bp::self / bp::self);
+        PressureQuantity_exposer.def(bp::self * bp::self);
         PressureQuantity_exposer.def(bp::self / double());
         PressureQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         PressureQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -2258,14 +2248,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         PerAreaQuantity_exposer.staticmethod( "from_value" );
+        PerAreaQuantity_exposer.def(bp::self + bp::self);
+        PerAreaQuantity_exposer.def(bp::self - bp::self);
         PerAreaQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         PerAreaQuantity_exposer.def(bp::self * double());
         PerAreaQuantity_exposer.def(bp::self / bp::self);
+        PerAreaQuantity_exposer.def(bp::self * bp::self);
         PerAreaQuantity_exposer.def(bp::self / double());
         PerAreaQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         PerAreaQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -2298,8 +2288,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
-<<<<<<< HEAD
-=======
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::operator=
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -2324,7 +2312,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::value
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -2337,14 +2324,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         SolubilityQuantity_exposer.staticmethod( "from_value" );
+        SolubilityQuantity_exposer.def(bp::self + bp::self);
+        SolubilityQuantity_exposer.def(bp::self - bp::self);
         SolubilityQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         SolubilityQuantity_exposer.def(bp::self * double());
         SolubilityQuantity_exposer.def(bp::self / bp::self);
+        SolubilityQuantity_exposer.def(bp::self * bp::self);
         SolubilityQuantity_exposer.def(bp::self / double());
         SolubilityQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         SolubilityQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -2389,14 +2376,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         MassFluxQuantity_exposer.staticmethod( "from_value" );
+        MassFluxQuantity_exposer.def(bp::self + bp::self);
+        MassFluxQuantity_exposer.def(bp::self - bp::self);
         MassFluxQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         MassFluxQuantity_exposer.def(bp::self * double());
         MassFluxQuantity_exposer.def(bp::self / bp::self);
+        MassFluxQuantity_exposer.def(bp::self * bp::self);
         MassFluxQuantity_exposer.def(bp::self / double());
         MassFluxQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         MassFluxQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -2441,14 +2428,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         MolarFluxQuantity_exposer.staticmethod( "from_value" );
+        MolarFluxQuantity_exposer.def(bp::self + bp::self);
+        MolarFluxQuantity_exposer.def(bp::self - bp::self);
         MolarFluxQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         MolarFluxQuantity_exposer.def(bp::self * double());
         MolarFluxQuantity_exposer.def(bp::self / bp::self);
+        MolarFluxQuantity_exposer.def(bp::self * bp::self);
         MolarFluxQuantity_exposer.def(bp::self / double());
         MolarFluxQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         MolarFluxQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -2493,14 +2480,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         NumberDensityQuantity_exposer.staticmethod( "from_value" );
+        NumberDensityQuantity_exposer.def(bp::self + bp::self);
+        NumberDensityQuantity_exposer.def(bp::self - bp::self);
         NumberDensityQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         NumberDensityQuantity_exposer.def(bp::self * double());
         NumberDensityQuantity_exposer.def(bp::self / bp::self);
+        NumberDensityQuantity_exposer.def(bp::self * bp::self);
         NumberDensityQuantity_exposer.def(bp::self / double());
         NumberDensityQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         NumberDensityQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -2569,15 +2556,91 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         ConcentrationQuantity_exposer.staticmethod( "from_value" );
+        ConcentrationQuantity_exposer.def(bp::self + bp::self);
+        ConcentrationQuantity_exposer.def(bp::self - bp::self);
         ConcentrationQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         ConcentrationQuantity_exposer.def(bp::self * double());
         ConcentrationQuantity_exposer.def(bp::self / bp::self);
+        ConcentrationQuantity_exposer.def(bp::self * bp::self);
         ConcentrationQuantity_exposer.def(bp::self / double());
         ConcentrationQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         ConcentrationQuantity_exposer.def(bp::self_ns::str(bp::self));
+    }
+
+    { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >
+        typedef bp::class_< boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > > ConcentrationFlowRateQuantity_exposer_t;
+        ConcentrationFlowRateQuantity_exposer_t ConcentrationFlowRateQuantity_exposer = ConcentrationFlowRateQuantity_exposer_t( "ConcentrationFlowRateQuantity" );
+        bp::scope ConcentrationFlowRateQuantity_scope( ConcentrationFlowRateQuantity_exposer );
+        { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::from_value
+        
+            typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::this_type ( *from_value_function_type )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::value_type const & );
+            
+            ConcentrationFlowRateQuantity_exposer.def( 
+                "from_value"
+                , from_value_function_type( &::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::from_value )
+                , ( bp::arg("val") ) );
+        
+        }
+        ConcentrationFlowRateQuantity_exposer.def( bp::self *= bp::other< double >() );
+        ConcentrationFlowRateQuantity_exposer.def( bp::self /= bp::other< double >() );
+        { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::operator=
+        
+            typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::this_type & ( exported_class_t::*assign_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::this_type const & ) ;
+            
+            ConcentrationFlowRateQuantity_exposer.def( 
+                "assign"
+                , assign_function_type( &::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::operator= )
+                , ( bp::arg("source") )
+                , bp::return_self< >() );
+        
+        }
+        { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::operator=
+        
+            typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::this_type & ( exported_class_t::*assign_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > const & ) ;
+            
+            ConcentrationFlowRateQuantity_exposer.def( 
+                "assign"
+                , assign_function_type( &::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::operator= )
+                , ( bp::arg("source") )
+                , bp::return_self< >() );
+        
+        }
+        { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::operator=
+        
+            typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::this_type & ( exported_class_t::*assign_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > const & ) ;
+            
+            ConcentrationFlowRateQuantity_exposer.def( 
+                "assign"
+                , assign_function_type( &::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::operator= )
+                , ( bp::arg("source") )
+                , bp::return_self< >() );
+        
+        }
+        { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::value
+        
+            typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::value_type const & ( exported_class_t::*value_function_type)(  ) const;
+            
+            ConcentrationFlowRateQuantity_exposer.def( 
+                "value"
+                , value_function_type( &::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::value )
+                , bp::return_value_policy< bp::copy_const_reference >() );
+        
+        }
+        ConcentrationFlowRateQuantity_exposer.staticmethod( "from_value" );
+        ConcentrationFlowRateQuantity_exposer.def(bp::self + bp::self);
+        ConcentrationFlowRateQuantity_exposer.def(bp::self - bp::self);
+        ConcentrationFlowRateQuantity_exposer.def(double() * bp::self);
+        ConcentrationFlowRateQuantity_exposer.def(bp::self * double());
+        ConcentrationFlowRateQuantity_exposer.def(bp::self / bp::self);
+        ConcentrationFlowRateQuantity_exposer.def(bp::self * bp::self);
+        ConcentrationFlowRateQuantity_exposer.def(bp::self / double());
+        ConcentrationFlowRateQuantity_exposer.def(double() / bp::self);
+        ConcentrationFlowRateQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
     { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -4, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >
@@ -2621,14 +2684,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         ConcentrationGradientQuantity_exposer.staticmethod( "from_value" );
+        ConcentrationGradientQuantity_exposer.def(bp::self + bp::self);
+        ConcentrationGradientQuantity_exposer.def(bp::self - bp::self);
         ConcentrationGradientQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         ConcentrationGradientQuantity_exposer.def(bp::self * double());
         ConcentrationGradientQuantity_exposer.def(bp::self / bp::self);
+        ConcentrationGradientQuantity_exposer.def(bp::self * bp::self);
         ConcentrationGradientQuantity_exposer.def(bp::self / double());
         ConcentrationGradientQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         ConcentrationGradientQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -2673,14 +2736,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         ConcentrationFluxQuantity_exposer.staticmethod( "from_value" );
+        ConcentrationFluxQuantity_exposer.def(bp::self + bp::self);
+        ConcentrationFluxQuantity_exposer.def(bp::self - bp::self);
         ConcentrationFluxQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         ConcentrationFluxQuantity_exposer.def(bp::self * double());
         ConcentrationFluxQuantity_exposer.def(bp::self / bp::self);
+        ConcentrationFluxQuantity_exposer.def(bp::self * bp::self);
         ConcentrationFluxQuantity_exposer.def(bp::self / double());
         ConcentrationFluxQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         ConcentrationFluxQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -2749,14 +2812,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         LengthQuantity_exposer.staticmethod( "from_value" );
+        LengthQuantity_exposer.def(bp::self + bp::self);
+        LengthQuantity_exposer.def(bp::self - bp::self);
         LengthQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         LengthQuantity_exposer.def(bp::self * double());
         LengthQuantity_exposer.def(bp::self / bp::self);
+        LengthQuantity_exposer.def(bp::self * bp::self);
         LengthQuantity_exposer.def(bp::self / double());
         LengthQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         LengthQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -2789,8 +2852,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
-<<<<<<< HEAD
-=======
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::operator=
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -2815,7 +2876,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::value
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -2828,14 +2888,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         VolumetricSolubilityQuantity_exposer.staticmethod( "from_value" );
+        VolumetricSolubilityQuantity_exposer.def(bp::self + bp::self);
+        VolumetricSolubilityQuantity_exposer.def(bp::self - bp::self);
         VolumetricSolubilityQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         VolumetricSolubilityQuantity_exposer.def(bp::self * double());
         VolumetricSolubilityQuantity_exposer.def(bp::self / bp::self);
+        VolumetricSolubilityQuantity_exposer.def(bp::self * bp::self);
         VolumetricSolubilityQuantity_exposer.def(bp::self / double());
         VolumetricSolubilityQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         VolumetricSolubilityQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -2880,14 +2940,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         ForceQuantity_exposer.staticmethod( "from_value" );
+        ForceQuantity_exposer.def(bp::self + bp::self);
+        ForceQuantity_exposer.def(bp::self - bp::self);
         ForceQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         ForceQuantity_exposer.def(bp::self * double());
         ForceQuantity_exposer.def(bp::self / bp::self);
+        ForceQuantity_exposer.def(bp::self * bp::self);
         ForceQuantity_exposer.def(bp::self / double());
         ForceQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         ForceQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -2920,8 +2980,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
-<<<<<<< HEAD
-=======
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::operator=
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -2946,7 +3004,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::value
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -2959,22 +3016,23 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         VelocityQuantity_exposer.staticmethod( "from_value" );
-        VelocityQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-        VelocityQuantity_exposer.def(bp::self_ns::str(bp::self));
-        VelocityQuantity_exposer.def(double() * bp::self);
-=======
-        VelocityQuantity_exposer.def(bp::self * double());
-        VelocityQuantity_exposer.def(bp::self / bp::self);
-        VelocityQuantity_exposer.def(bp::self / double());
-        VelocityQuantity_exposer.def(double() / bp::self);
-        VelocityQuantity_exposer.def(bp::self_ns::str(bp::self));
+        VelocityQuantity_exposer.def(bp::self + bp::self);
+        VelocityQuantity_exposer.def(bp::self - bp::self);
         VelocityQuantity_exposer.def(double() * bp::self);
         VelocityQuantity_exposer.def(bp::self * double());
         VelocityQuantity_exposer.def(bp::self / bp::self);
+        VelocityQuantity_exposer.def(bp::self * bp::self);
         VelocityQuantity_exposer.def(bp::self / double());
         VelocityQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
+        VelocityQuantity_exposer.def(bp::self_ns::str(bp::self));
+        VelocityQuantity_exposer.def(bp::self + bp::self);
+        VelocityQuantity_exposer.def(bp::self - bp::self);
+        VelocityQuantity_exposer.def(double() * bp::self);
+        VelocityQuantity_exposer.def(bp::self * double());
+        VelocityQuantity_exposer.def(bp::self / bp::self);
+        VelocityQuantity_exposer.def(bp::self * bp::self);
+        VelocityQuantity_exposer.def(bp::self / double());
+        VelocityQuantity_exposer.def(double() / bp::self);
         VelocityQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -3019,14 +3077,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         AreaQuantity_exposer.staticmethod( "from_value" );
+        AreaQuantity_exposer.def(bp::self + bp::self);
+        AreaQuantity_exposer.def(bp::self - bp::self);
         AreaQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         AreaQuantity_exposer.def(bp::self * double());
         AreaQuantity_exposer.def(bp::self / bp::self);
+        AreaQuantity_exposer.def(bp::self * bp::self);
         AreaQuantity_exposer.def(bp::self / double());
         AreaQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         AreaQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -3059,8 +3117,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
-<<<<<<< HEAD
-=======
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::operator=
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -3085,7 +3141,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::value
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -3098,14 +3153,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         DiffusivityQuantity_exposer.staticmethod( "from_value" );
+        DiffusivityQuantity_exposer.def(bp::self + bp::self);
+        DiffusivityQuantity_exposer.def(bp::self - bp::self);
         DiffusivityQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         DiffusivityQuantity_exposer.def(bp::self * double());
         DiffusivityQuantity_exposer.def(bp::self / bp::self);
+        DiffusivityQuantity_exposer.def(bp::self * bp::self);
         DiffusivityQuantity_exposer.def(bp::self / double());
         DiffusivityQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         DiffusivityQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -3150,14 +3205,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         VolumeQuantity_exposer.staticmethod( "from_value" );
+        VolumeQuantity_exposer.def(bp::self + bp::self);
+        VolumeQuantity_exposer.def(bp::self - bp::self);
         VolumeQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         VolumeQuantity_exposer.def(bp::self * double());
         VolumeQuantity_exposer.def(bp::self / bp::self);
+        VolumeQuantity_exposer.def(bp::self * bp::self);
         VolumeQuantity_exposer.def(bp::self / double());
         VolumeQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         VolumeQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -3202,14 +3257,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         FlowRateQuantity_exposer.staticmethod( "from_value" );
+        FlowRateQuantity_exposer.def(bp::self + bp::self);
+        FlowRateQuantity_exposer.def(bp::self - bp::self);
         FlowRateQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         FlowRateQuantity_exposer.def(bp::self * double());
         FlowRateQuantity_exposer.def(bp::self / bp::self);
+        FlowRateQuantity_exposer.def(bp::self * bp::self);
         FlowRateQuantity_exposer.def(bp::self / double());
         FlowRateQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         FlowRateQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -3254,14 +3309,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         RatePerConcentrationQuantity_exposer.staticmethod( "from_value" );
+        RatePerConcentrationQuantity_exposer.def(bp::self + bp::self);
+        RatePerConcentrationQuantity_exposer.def(bp::self - bp::self);
         RatePerConcentrationQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         RatePerConcentrationQuantity_exposer.def(bp::self * double());
         RatePerConcentrationQuantity_exposer.def(bp::self / bp::self);
+        RatePerConcentrationQuantity_exposer.def(bp::self * bp::self);
         RatePerConcentrationQuantity_exposer.def(bp::self / double());
         RatePerConcentrationQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         RatePerConcentrationQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -3306,14 +3361,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         DiffusivityPerConcentrationQuantity_exposer.staticmethod( "from_value" );
+        DiffusivityPerConcentrationQuantity_exposer.def(bp::self + bp::self);
+        DiffusivityPerConcentrationQuantity_exposer.def(bp::self - bp::self);
         DiffusivityPerConcentrationQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         DiffusivityPerConcentrationQuantity_exposer.def(bp::self * double());
         DiffusivityPerConcentrationQuantity_exposer.def(bp::self / bp::self);
+        DiffusivityPerConcentrationQuantity_exposer.def(bp::self * bp::self);
         DiffusivityPerConcentrationQuantity_exposer.def(bp::self / double());
         DiffusivityPerConcentrationQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         DiffusivityPerConcentrationQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -3358,14 +3413,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         MolarMassQuantity_exposer.staticmethod( "from_value" );
+        MolarMassQuantity_exposer.def(bp::self + bp::self);
+        MolarMassQuantity_exposer.def(bp::self - bp::self);
         MolarMassQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         MolarMassQuantity_exposer.def(bp::self * double());
         MolarMassQuantity_exposer.def(bp::self / bp::self);
+        MolarMassQuantity_exposer.def(bp::self * bp::self);
         MolarMassQuantity_exposer.def(bp::self / double());
         MolarMassQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         MolarMassQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -3398,8 +3453,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
-<<<<<<< HEAD
-=======
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::operator=
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -3424,7 +3477,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::value
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -3437,14 +3489,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         MassQuantity_exposer.staticmethod( "from_value" );
+        MassQuantity_exposer.def(bp::self + bp::self);
+        MassQuantity_exposer.def(bp::self - bp::self);
         MassQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         MassQuantity_exposer.def(bp::self * double());
         MassQuantity_exposer.def(bp::self / bp::self);
+        MassQuantity_exposer.def(bp::self * bp::self);
         MassQuantity_exposer.def(bp::self / double());
         MassQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         MassQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -3489,14 +3541,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         MassFlowRateQuantity_exposer.staticmethod( "from_value" );
+        MassFlowRateQuantity_exposer.def(bp::self + bp::self);
+        MassFlowRateQuantity_exposer.def(bp::self - bp::self);
         MassFlowRateQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         MassFlowRateQuantity_exposer.def(bp::self * double());
         MassFlowRateQuantity_exposer.def(bp::self / bp::self);
+        MassFlowRateQuantity_exposer.def(bp::self * bp::self);
         MassFlowRateQuantity_exposer.def(bp::self / double());
         MassFlowRateQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         MassFlowRateQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -3541,14 +3593,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         AngleQuantity_exposer.staticmethod( "from_value" );
+        AngleQuantity_exposer.def(bp::self + bp::self);
+        AngleQuantity_exposer.def(bp::self - bp::self);
         AngleQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         AngleQuantity_exposer.def(bp::self * double());
         AngleQuantity_exposer.def(bp::self / bp::self);
+        AngleQuantity_exposer.def(bp::self * bp::self);
         AngleQuantity_exposer.def(bp::self / double());
         AngleQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         AngleQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -3581,8 +3633,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
-<<<<<<< HEAD
-=======
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::operator=
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -3607,7 +3657,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         { //::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >::value
         
             typedef boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > exported_class_t;
@@ -3620,14 +3669,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         RateQuantity_exposer.staticmethod( "from_value" );
+        RateQuantity_exposer.def(bp::self + bp::self);
+        RateQuantity_exposer.def(bp::self - bp::self);
         RateQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         RateQuantity_exposer.def(bp::self * double());
         RateQuantity_exposer.def(bp::self / bp::self);
+        RateQuantity_exposer.def(bp::self * bp::self);
         RateQuantity_exposer.def(bp::self / double());
         RateQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         RateQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -3672,14 +3721,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         MolarFlowRateQuantity_exposer.staticmethod( "from_value" );
+        MolarFlowRateQuantity_exposer.def(bp::self + bp::self);
+        MolarFlowRateQuantity_exposer.def(bp::self - bp::self);
         MolarFlowRateQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-=======
         MolarFlowRateQuantity_exposer.def(bp::self * double());
         MolarFlowRateQuantity_exposer.def(bp::self / bp::self);
+        MolarFlowRateQuantity_exposer.def(bp::self * bp::self);
         MolarFlowRateQuantity_exposer.def(bp::self / double());
         MolarFlowRateQuantity_exposer.def(double() / bp::self);
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         MolarFlowRateQuantity_exposer.def(bp::self_ns::str(bp::self));
     }
 
@@ -3748,14 +3797,12 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         
         }
         TimeQuantity_exposer.staticmethod( "from_value" );
+        TimeQuantity_exposer.def(bp::self + bp::self);
+        TimeQuantity_exposer.def(bp::self - bp::self);
         TimeQuantity_exposer.def(double() * bp::self);
-<<<<<<< HEAD
-        TimeQuantity_exposer.def(bp::self_ns::str(bp::self));
-    }
-
-=======
         TimeQuantity_exposer.def(bp::self * double());
         TimeQuantity_exposer.def(bp::self / bp::self);
+        TimeQuantity_exposer.def(bp::self * bp::self);
         TimeQuantity_exposer.def(bp::self / double());
         TimeQuantity_exposer.def(double() / bp::self);
         TimeQuantity_exposer.def(bp::self_ns::str(bp::self));
@@ -3777,11 +3824,11 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        dimensionless_exposer.def(bp::self * bp::self);
         dimensionless_exposer.def(double() * bp::self);
         dimensionless_exposer.def(bp::self_ns::str(bp::self));
     }
 
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
     { //::boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >
         typedef bp::class_< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void > > per_metre_exposer_t;
         per_metre_exposer_t per_metre_exposer = per_metre_exposer_t( "per_metre" );
@@ -3798,6 +3845,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        per_metre_exposer.def(bp::self * bp::self);
         per_metre_exposer.def(double() * bp::self);
         per_metre_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -3818,6 +3866,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        poiseuille_exposer.def(bp::self * bp::self);
         poiseuille_exposer.def(double() * bp::self);
         poiseuille_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -3838,6 +3887,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        pascal_exposer.def(bp::self * bp::self);
         pascal_exposer.def(double() * bp::self);
         pascal_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -3858,6 +3908,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        per_metre_squared_exposer.def(bp::self * bp::self);
         per_metre_squared_exposer.def(double() * bp::self);
         per_metre_squared_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -3878,6 +3929,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        mole_per_metre_cubed_per_second_exposer.def(bp::self * bp::self);
         mole_per_metre_cubed_per_second_exposer.def(double() * bp::self);
         mole_per_metre_cubed_per_second_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -3898,6 +3950,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        mole_per_metre_squared_per_second_exposer.def(bp::self * bp::self);
         mole_per_metre_squared_per_second_exposer.def(double() * bp::self);
         mole_per_metre_squared_per_second_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -3918,6 +3971,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        per_metre_cubed_exposer.def(bp::self * bp::self);
         per_metre_cubed_exposer.def(double() * bp::self);
         per_metre_cubed_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -3938,12 +3992,11 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        mole_per_metre_cubed_exposer.def(bp::self * bp::self);
         mole_per_metre_cubed_exposer.def(double() * bp::self);
         mole_per_metre_cubed_exposer.def(bp::self_ns::str(bp::self));
     }
 
-<<<<<<< HEAD
-=======
     { //::boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >
         typedef bp::class_< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void > > mole_per_metre_cubed_per_second_exposer_t;
         mole_per_metre_cubed_per_second_exposer_t mole_per_metre_cubed_per_second_exposer = mole_per_metre_cubed_per_second_exposer_t( "mole_per_metre_cubed_per_second" );
@@ -3960,11 +4013,11 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        mole_per_metre_cubed_per_second_exposer.def(bp::self * bp::self);
         mole_per_metre_cubed_per_second_exposer.def(double() * bp::self);
         mole_per_metre_cubed_per_second_exposer.def(bp::self_ns::str(bp::self));
     }
 
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
     { //::boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -4, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >
         typedef bp::class_< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -4, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void > > mole_per_metre_pow4_exposer_t;
         mole_per_metre_pow4_exposer_t mole_per_metre_pow4_exposer = mole_per_metre_pow4_exposer_t( "mole_per_metre_pow4" );
@@ -3981,6 +4034,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        mole_per_metre_pow4_exposer.def(bp::self * bp::self);
         mole_per_metre_pow4_exposer.def(double() * bp::self);
         mole_per_metre_pow4_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4001,6 +4055,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        pascal_second_per_metre_cubed_exposer.def(bp::self * bp::self);
         pascal_second_per_metre_cubed_exposer.def(double() * bp::self);
         pascal_second_per_metre_cubed_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4021,6 +4076,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        mole_per_metre_pow5_per_second_exposer.def(bp::self * bp::self);
         mole_per_metre_pow5_per_second_exposer.def(double() * bp::self);
         mole_per_metre_pow5_per_second_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4041,6 +4097,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        metre_exposer.def(bp::self * bp::self);
         metre_exposer.def(double() * bp::self);
         metre_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4061,6 +4118,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        per_pascal_exposer.def(bp::self * bp::self);
         per_pascal_exposer.def(double() * bp::self);
         per_pascal_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4081,6 +4139,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        newton_exposer.def(bp::self * bp::self);
         newton_exposer.def(double() * bp::self);
         newton_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4101,8 +4160,10 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        metre_per_second_exposer.def(bp::self * bp::self);
         metre_per_second_exposer.def(double() * bp::self);
         metre_per_second_exposer.def(bp::self_ns::str(bp::self));
+        metre_per_second_exposer.def(bp::self * bp::self);
         metre_per_second_exposer.def(double() * bp::self);
         metre_per_second_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4123,6 +4184,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        metre_squared_exposer.def(bp::self * bp::self);
         metre_squared_exposer.def(double() * bp::self);
         metre_squared_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4143,6 +4205,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        metre_squared_per_second_exposer.def(bp::self * bp::self);
         metre_squared_per_second_exposer.def(double() * bp::self);
         metre_squared_per_second_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4163,6 +4226,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        metre_cubed_exposer.def(bp::self * bp::self);
         metre_cubed_exposer.def(double() * bp::self);
         metre_cubed_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4183,6 +4247,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        metre_cubed_per_second_exposer.def(bp::self * bp::self);
         metre_cubed_per_second_exposer.def(double() * bp::self);
         metre_cubed_per_second_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4203,6 +4268,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        metre_cubed_per_mole_per_second_exposer.def(bp::self * bp::self);
         metre_cubed_per_mole_per_second_exposer.def(double() * bp::self);
         metre_cubed_per_mole_per_second_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4223,6 +4289,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        metre_pow5_per_second_per_mole_exposer.def(bp::self * bp::self);
         metre_pow5_per_second_per_mole_exposer.def(double() * bp::self);
         metre_pow5_per_second_per_mole_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4243,6 +4310,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        mole_per_kg_exposer.def(bp::self * bp::self);
         mole_per_kg_exposer.def(double() * bp::self);
         mole_per_kg_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4263,6 +4331,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        kg_exposer.def(bp::self * bp::self);
         kg_exposer.def(double() * bp::self);
         kg_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4283,6 +4352,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        per_second_exposer.def(bp::self * bp::self);
         per_second_exposer.def(double() * bp::self);
         per_second_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4303,6 +4373,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        mole_per_second_exposer.def(bp::self * bp::self);
         mole_per_second_exposer.def(double() * bp::self);
         mole_per_second_exposer.def(bp::self_ns::str(bp::self));
     }
@@ -4323,6 +4394,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
                 , bp::return_self< >() );
         
         }
+        second_exposer.def(bp::self * bp::self);
         second_exposer.def(double() * bp::self);
         second_exposer.def(bp::self_ns::str(bp::self));
     }

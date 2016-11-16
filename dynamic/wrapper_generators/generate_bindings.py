@@ -65,7 +65,24 @@ def boost_units_namespace_fix(module_file):
             lines.append(line)
     with open(module_file, 'w') as outfile:
         for line in lines:
-            outfile.write(line)    
+            outfile.write(line)   
+            
+def pypp_template_name_fix(module_file):
+    
+    # Pyplusplus does not deal with negative template values in names
+    lines = []
+    replacements = {"__-1_": "__neg1_",
+                    "__-2_": "__neg2_",
+                    "__-3_": "__neg3_",}
+    
+    with open(module_file) as infile:
+        for line in infile:
+            for src, target in replacements.iteritems():
+                line = line.replace(src, target)
+            lines.append(line)
+    with open(module_file, 'w') as outfile:
+        for line in lines:
+            outfile.write(line)     
             
 def do_module(module_name, builder):
     
@@ -79,21 +96,12 @@ def generate_wrappers(args):
     header_collection = args[3]
     castxml_binary = args[4]
     includes = args[5:]
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
     xml_generator_config = parser.xml_generator_configuration_t(xml_generator_path=castxml_binary, 
                                                                 xml_generator="castxml",
                                                                 compiler = "gnu",
                                                                 compiler_path="/usr/bin/c++",
                                                                 include_paths=includes)
-<<<<<<< HEAD
-     
-=======
 
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
     builder = module_builder.module_builder_t([header_collection],
                                                 xml_generator_path = castxml_binary,
                                                 xml_generator_config = xml_generator_config,
@@ -109,19 +117,17 @@ def generate_wrappers(args):
     builder = do_module(module_name, builder)
     
     # Make the wrapper code
-<<<<<<< HEAD
-    builder.build_code_creator(module_name="_chaste_project_MicrovesselChaste_" + module_name, 
-                               doc_extractor=doxygen_extractor.doxygen_doc_extractor())
-=======
 #     builder.build_code_creator(module_name="_chaste_project_MicrovesselChaste_" + module_name, 
 #                                doc_extractor=doxygen_extractor.doxygen_doc_extractor())
     builder.build_code_creator(module_name="_chaste_project_MicrovesselChaste_" + module_name)
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
     builder.code_creator.user_defined_directories.append(work_dir + "/dynamic/wrapper_headers/")
     builder.write_module(work_dir + "/dynamic/" + module_name + ".cpp")
     
     # Fix a bug with boost units
     boost_units_namespace_fix(work_dir + "/dynamic/" + module_name + ".cpp")
+    
+    if "utility" in module_name:
+        pypp_template_name_fix(work_dir + "/dynamic/" + module_name + ".cpp")
     
 if __name__=="__main__":
     generate_wrappers(sys.argv)

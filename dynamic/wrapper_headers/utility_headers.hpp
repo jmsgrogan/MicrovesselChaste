@@ -37,20 +37,16 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UnitCollection.hpp"
 #include "ParameterCollection.hpp"
 #include "BaseParameterInstance.hpp"
-<<<<<<< HEAD
-=======
 #include "Owen11Parameters.hpp"
 #include "Secomb04Parameters.hpp"
 #include "GenericParameters.hpp"
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
+
 
 //// Typdef in this namespace so that pyplusplus uses the nicer typedef'd name for the class
 namespace pyplusplus{
 namespace aliases{
-<<<<<<< HEAD
-=======
+
 typedef units::quantity<unit::dimensionless, double> DimensionlessQuantity;
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 typedef units::quantity<unit::plane_angle, double> AngleQuantity;
 typedef units::quantity<unit::time, double> TimeQuantity;
 typedef units::quantity<unit::rate, double> RateQuantity;
@@ -67,10 +63,8 @@ typedef units::quantity<unit::molar_flow_rate, double> MolarFlowRateQuantity;
 typedef units::quantity<unit::molar_flux, double> MolarFluxQuantity;
 typedef units::quantity<unit::concentration, double> ConcentrationQuantity;
 typedef units::quantity<unit::concentration_flux, double> ConcentrationFluxQuantity;
-<<<<<<< HEAD
-=======
+
 typedef units::quantity<unit::concentration_flow_rate, double> ConcentrationFlowRateQuantity;
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 typedef units::quantity<unit::concentration_gradient, double> ConcentrationGradientQuantity;
 typedef units::quantity<unit::rate_per_concentration, double> RatePerConcentrationQuantity;
 typedef units::quantity<unit::molar_mass, double> MolarMassQuantity;
@@ -86,13 +80,7 @@ typedef units::quantity<unit::diffusivity_per_concentration, double> Diffusivity
 typedef units::quantity<unit::solubility, double> SolubilityQuantity;
 typedef units::quantity<unit::volumetric_solubility, double> VolumetricSolubilityQuantity;
 typedef units::quantity<unit::membrane_permeability, double> MembranePermeabilityQuantity;
-<<<<<<< HEAD
-//typedef ParameterInstance<unit::mass> ParameterInstanceMass;
-//typedef ParameterInstance<unit::time> ParameterInstanceTime;
-//typedef ParameterInstance<unit::dynamic_viscosity> ParameterInstanceDynamicViscosity;
-//typedef ParameterInstance<unit::pressure> ParameterInstancePressure;
-//typedef ParameterInstance<unit::length> ParameterInstanceLength;
-=======
+
 
 typedef ParameterInstance<unit::dimensionless> ParameterInstanceDimensionless;
 //typedef ParameterInstance<unit::plane_angle> ParameterInstanceAngle;
@@ -128,20 +116,10 @@ typedef ParameterInstance<unit::solubility> ParameterInstanceSolubility;
 typedef ParameterInstance<unit::volumetric_solubility> ParameterInstanceVolumetricSolubility;
 typedef ParameterInstance<unit::membrane_permeability> ParameterInstanceMembranePermeability;
 
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 }
 }//pyplusplus::aliases
 //
 
-//namespace chaste{
-//template class ParameterInstance<unit::mass>;
-//}
-
-<<<<<<< HEAD
-//template class ChastePoint<3>;
-
-=======
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 inline int Instantiation()
 {
     return  sizeof(pyplusplus::aliases::MembranePermeabilityQuantity) +
@@ -160,10 +138,6 @@ inline int Instantiation()
             sizeof(pyplusplus::aliases::ConcentrationGradientQuantity) +
             sizeof(pyplusplus::aliases::ConcentrationFluxQuantity) +
             sizeof(pyplusplus::aliases::ConcentrationQuantity) +
-<<<<<<< HEAD
-=======
-            sizeof(pyplusplus::aliases::ConcentrationFlowRateQuantity) +
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
             sizeof(pyplusplus::aliases::MolarFluxQuantity) +
             sizeof(pyplusplus::aliases::MolarFlowRateQuantity) +
             sizeof(pyplusplus::aliases::AmountQuantity) +
@@ -177,14 +151,6 @@ inline int Instantiation()
             sizeof(pyplusplus::aliases::LengthQuantity) +
             sizeof(pyplusplus::aliases::RateQuantity) +
             sizeof(pyplusplus::aliases::TimeQuantity) +
-<<<<<<< HEAD
-            sizeof(pyplusplus::aliases::AngleQuantity);
-//            sizeof(ParameterInstance<unit::mass>) +
-//            sizeof(ParameterInstance<unit::time>) +
-//            sizeof(ParameterInstance<unit::dynamic_viscosity>) +
-//            sizeof(ParameterInstance<unit::pressure>) +
-//            sizeof(ParameterInstance<unit::length>);
-=======
             sizeof(pyplusplus::aliases::AngleQuantity) +
             sizeof(ParameterInstance<unit::dimensionless>) +
 //            sizeof(ParameterInstance<unit::plane_angle>) +
@@ -219,5 +185,5 @@ inline int Instantiation()
             sizeof(ParameterInstance<unit::solubility> ) +
             sizeof(ParameterInstance<unit::volumetric_solubility> ) +
             sizeof(ParameterInstance<unit::membrane_permeability> );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
+
 }

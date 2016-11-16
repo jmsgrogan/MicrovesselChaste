@@ -95,5 +95,13 @@ template class AbstractVesselNetworkComponentFlowProperties<3>;
 template class AbstractVesselNetworkComponentChemicalProperties<2>;
 template class AbstractVesselNetworkComponentChemicalProperties<3>;
 
+namespace pyplusplus{
+namespace aliases{
 typedef std::vector<DimensionalChastePoint<2> > VecDimendionsalChastePoint2;
 typedef std::vector<DimensionalChastePoint<3> > VecDimendionsalChastePoint3;
+typedef std::pair<DimensionalChastePoint<3>, DimensionalChastePoint<3> > PairDimendionsalChastePoint3DimendionsalChastePoint3;
+typedef std::pair<DimensionalChastePoint<2>, DimensionalChastePoint<2> > PairDimendionsalChastePoint2DimendionsalChastePoint2;
+}
+}//pyplusplus::aliases
+
+

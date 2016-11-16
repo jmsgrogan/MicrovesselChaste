@@ -176,6 +176,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
 
             double haematocrit_ratio = point_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit()/mReferenceHaematocrit;
             values[idx] += mVesselPermeability * (surface_area/grid_volume) * mReferenceConcentration * haematocrit_ratio;
+            std::cout << "const" << values[idx] << std::endl;
         }
     }
     return values;
@@ -201,6 +202,7 @@ std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLin
             if(haematocrit>0.0)
             {
                 values[idx] -= mVesselPermeability * (surface_area/grid_volume);
+                std::cout << "lin" << values[idx] << std::endl;
             }
         }
     }

@@ -106,7 +106,7 @@ public:
     /**
      * Destructor
      */
-    ~VesselNetwork();
+    virtual ~VesselNetwork();
 
     /**
      * Adds a vessel to the VesselNetwork.

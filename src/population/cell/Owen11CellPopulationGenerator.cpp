@@ -114,7 +114,7 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
 {
     if(!mpRegularGrid)
     {
-        EXCEPTION("A regular grid is required to set of the cell popaultion");
+        EXCEPTION("A regular grid is required to set of the cell population");
     }
 
     unsigned extents_z = 1;
@@ -131,7 +131,18 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
 
     // There is a bug in Chaste causing index out of bounds for large grid spacing. It may be better to use a scaling here
     // so grid spacing is always one.
-    p_mesh->Scale(mpRegularGrid->GetSpacing()/mCellPopulationReferenceLength, mpRegularGrid->GetSpacing()/mCellPopulationReferenceLength);
+    if(DIM==2)
+    {
+        p_mesh->Scale(mpRegularGrid->GetSpacing()/mCellPopulationReferenceLength,
+        		mpRegularGrid->GetSpacing()/mCellPopulationReferenceLength);
+    }
+    else
+	{
+        p_mesh->Scale(mpRegularGrid->GetSpacing()/mCellPopulationReferenceLength,
+        		mpRegularGrid->GetSpacing()/mCellPopulationReferenceLength,
+				mpRegularGrid->GetSpacing()/mCellPopulationReferenceLength);
+	}
+
     std::vector<unsigned> location_indices;
     for (unsigned index=0; index < p_mesh->GetNumNodes(); index++)
     {
@@ -208,10 +219,14 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
     }
     else
     {
-        DimensionalChastePoint<DIM> origin(double(mpRegularGrid->GetExtents()[0])*mpRegularGrid->GetSpacing()/(2.0*mReferenceLength),
-                                         double(mpRegularGrid->GetExtents()[1])*mpRegularGrid->GetSpacing()/(2.0*mReferenceLength),
-                                         double(mpRegularGrid->GetExtents()[2])*mpRegularGrid->GetSpacing()/(2.0*mReferenceLength),
-                                         mReferenceLength);
+        double dimensionless_spacing = mpRegularGrid->GetSpacing()/mReferenceLength;
+        c_vector<double, DIM> dimensionless_origin = mpRegularGrid->GetOrigin().GetLocation(mReferenceLength);
+
+        DimensionalChastePoint<DIM> origin(double(mpRegularGrid->GetExtents()[0])*dimensionless_spacing/2.0 + dimensionless_origin[0],
+                                         double(mpRegularGrid->GetExtents()[1])*dimensionless_spacing/2.0 + dimensionless_origin[0],
+                                         double(mpRegularGrid->GetExtents()[2])*dimensionless_spacing/2.0 + dimensionless_origin[0],
+										 mReferenceLength);
+
         for(unsigned idx=0; idx<mpRegularGrid->GetNumberOfPoints(); idx++)
         {
             units::quantity<unit::length> distance = mpRegularGrid->GetLocationOf1dIndex(idx).GetDistance(origin);
@@ -224,8 +239,7 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
 
     // Set up the cell cycle model . Note that Cell Based Chaste does not use dimensional analysis so we need to be careful with units.
     units::quantity<unit::pressure> initial_oxygen_tension(30.0*unit::mmHg);
-    units::quantity<unit::solubility>  solubility =
-            Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("Owen11CellPopulationGenerator") *
+    units::quantity<unit::solubility>  solubility = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("Owen11CellPopulationGenerator") *
             GenericParameters::mpGasConcentrationAtStp->GetValue("Owen11CellPopulationGenerator");
     units::quantity<unit::concentration>  initial_oxygen_concentration = initial_oxygen_tension*solubility;
 

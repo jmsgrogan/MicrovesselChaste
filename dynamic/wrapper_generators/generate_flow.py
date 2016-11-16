@@ -66,10 +66,7 @@ def update_builder(builder):
                    "AbstractStructuralAdaptationSolver<2>",
                    "StructuralAdaptationSolver<2>",
                    "AbstractHaematocritSolver<2>",
-<<<<<<< HEAD
-=======
                    "MetabolicStimulusCalculator<2>",
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
                    "AlarconHaematocritSolver<2>",
                    "ConstantHaematocritSolver<2>",]
 
