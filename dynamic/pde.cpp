@@ -4507,63 +4507,77 @@ struct value_traits< boost::units::quantity< boost::units::unit< boost::units::l
 BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
     { //::std::vector< double >
         typedef bp::class_< std::vector< double > > vector_less__double__greater__exposer_t;
-        vector_less__double__greater__exposer_t vector_less__double__greater__exposer = vector_less__double__greater__exposer_t( "vector_less__double__greater_", "" );
+        vector_less__double__greater__exposer_t vector_less__double__greater__exposer = vector_less__double__greater__exposer_t( "vector_less__double__greater_" );
         bp::scope vector_less__double__greater__scope( vector_less__double__greater__exposer );
         vector_less__double__greater__exposer.def( bp::indexing::vector_suite< std::vector< double > >() );
     }
 
     { //::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> >
         typedef bp::class_< std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type", "" );
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
         bp::scope __type_scope( __type_exposer );
         __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > >() );
     }
 
     { //::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> >
         typedef bp::class_< std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type", "" );
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
         bp::scope __type_scope( __type_exposer );
         __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > >() );
     }
 
     { //::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> >
         typedef bp::class_< std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type", "" );
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
         bp::scope __type_scope( __type_exposer );
         __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > >() );
     }
 
     { //::std::vector< boost::shared_ptr<DiscreteSource<3> > >
         typedef bp::class_< std::vector< boost::shared_ptr<DiscreteSource<3> > > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type", "" );
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
         bp::scope __type_scope( __type_exposer );
         __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<DiscreteSource<3> > > >() );
     }
 
     { //::std::vector< boost::shared_ptr<DiscreteSource<2> > >
         typedef bp::class_< std::vector< boost::shared_ptr<DiscreteSource<2> > > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type", "" );
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
         bp::scope __type_scope( __type_exposer );
         __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<DiscreteSource<2> > > >() );
     }
 
     { //::std::vector< DimensionalChastePoint<3> >
         typedef bp::class_< std::vector< DimensionalChastePoint<3> > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type", "" );
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
         bp::scope __type_scope( __type_exposer );
         __type_exposer.def( bp::indexing::vector_suite< std::vector< DimensionalChastePoint<3> > >() );
     }
 
     { //::std::vector< DimensionalChastePoint<2> >
         typedef bp::class_< std::vector< DimensionalChastePoint<2> > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type", "" );
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
         bp::scope __type_scope( __type_exposer );
         __type_exposer.def( bp::indexing::vector_suite< std::vector< DimensionalChastePoint<2> > >() );
     }
 
+    { //::std::map< unsigned int, boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> >
+        typedef bp::class_< std::map< unsigned int, boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > > MapUnsigned_ConcentrationFlowRate_exposer_t;
+        MapUnsigned_ConcentrationFlowRate_exposer_t MapUnsigned_ConcentrationFlowRate_exposer = MapUnsigned_ConcentrationFlowRate_exposer_t( "MapUnsigned_ConcentrationFlowRate" );
+        bp::scope MapUnsigned_ConcentrationFlowRate_scope( MapUnsigned_ConcentrationFlowRate_exposer );
+        MapUnsigned_ConcentrationFlowRate_exposer.def( bp::indexing::map_suite< std::map< unsigned int, boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > >() );
+    }
+
+    { //::std::map< unsigned int, boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> >
+        typedef bp::class_< std::map< unsigned int, boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > > MapUnsigned_Concentration_exposer_t;
+        MapUnsigned_Concentration_exposer_t MapUnsigned_Concentration_exposer = MapUnsigned_Concentration_exposer_t( "MapUnsigned_Concentration" );
+        bp::scope MapUnsigned_Concentration_scope( MapUnsigned_Concentration_exposer );
+        MapUnsigned_Concentration_exposer.def( bp::indexing::map_suite< std::map< unsigned int, boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > >() );
+    }
+
     { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >
         typedef bp::class_< AbstractDiscreteContinuumLinearEllipticPde_less__2_comma__2__greater__wrapper, boost::noncopyable > AbstractDiscreteContinuumLinearEllipticPde2_2_exposer_t;
-        AbstractDiscreteContinuumLinearEllipticPde2_2_exposer_t AbstractDiscreteContinuumLinearEllipticPde2_2_exposer = AbstractDiscreteContinuumLinearEllipticPde2_2_exposer_t( "AbstractDiscreteContinuumLinearEllipticPde2_2", "", bp::init< >("Constructor\n/") );
+        AbstractDiscreteContinuumLinearEllipticPde2_2_exposer_t AbstractDiscreteContinuumLinearEllipticPde2_2_exposer = AbstractDiscreteContinuumLinearEllipticPde2_2_exposer_t( "AbstractDiscreteContinuumLinearEllipticPde2_2", bp::init< >() );
         bp::scope AbstractDiscreteContinuumLinearEllipticPde2_2_scope( AbstractDiscreteContinuumLinearEllipticPde2_2_exposer );
         { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::AddDiscreteSource
         
@@ -4573,8 +4587,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "AddDiscreteSource"
                 , AddDiscreteSource_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::AddDiscreteSource )
-                , ( bp::arg("pDiscreteSource") )
-                , "Add a discrete source to the pde\n@param pDiscreteSource a pointer the discrete source\n/" );
+                , ( bp::arg("pDiscreteSource") ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeConstantInUSourceTerm
@@ -4598,8 +4611,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "ComputeConstantInUSourceTerm"
                 , ComputeConstantInUSourceTerm_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeConstantInUSourceTerm )
-                , ( bp::arg("gridIndex")=(unsigned int)(0) )
-                , "Overwritten method to return the constant in U contribution to the regular grid solvers\n@param gridIndex grid index\n@return source strength\n/" );
+                , ( bp::arg("gridIndex")=(unsigned int)(0) ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeDiffusionTerm
@@ -4622,8 +4634,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             AbstractDiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "ComputeIsotropicDiffusionTerm"
-                , ComputeIsotropicDiffusionTerm_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeIsotropicDiffusionTerm )
-                , "Return the diffusion constant for isotropic diffusion\n@return the diffusion constant\n/" );
+                , ComputeIsotropicDiffusionTerm_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeIsotropicDiffusionTerm ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm
@@ -4634,8 +4645,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "ComputeLinearInUCoeffInSourceTerm"
                 , bp::pure_virtual( ComputeLinearInUCoeffInSourceTerm_function_type(&::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm) )
-                , ( bp::arg("gridIndex")=(unsigned int)(0) )
-                , "Abstract method to return the linear in U contribution to the regular grid solvers\n@param gridIndex grid index\n@return source strength\n/" );
+                , ( bp::arg("gridIndex")=(unsigned int)(0) ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::GetDiscreteSources
@@ -4645,8 +4655,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             AbstractDiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "GetDiscreteSources"
-                , GetDiscreteSources_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::GetDiscreteSources )
-                , "Return the collection of discrete sources\n@return vector of pointers to the discrete sources\n/" );
+                , GetDiscreteSources_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::GetDiscreteSources ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::SetContinuumConstantInUTerm
@@ -4657,8 +4666,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "SetContinuumConstantInUTerm"
                 , SetContinuumConstantInUTerm_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::SetContinuumConstantInUTerm )
-                , ( bp::arg("constantInUTerm") )
-                , "Set the continuum constant in U term\n@param constantInUTerm the continuum constant in U term\n/" );
+                , ( bp::arg("constantInUTerm") ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::SetIsotropicDiffusionConstant
@@ -4669,8 +4677,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "SetIsotropicDiffusionConstant"
                 , SetIsotropicDiffusionConstant_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::SetIsotropicDiffusionConstant )
-                , ( bp::arg("diffusivity") )
-                , "Set the isotropic diffusion constant\n@param diffusivity the isotropic diffusion constant\n/" );
+                , ( bp::arg("diffusivity") ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::SetMesh
@@ -4681,8 +4688,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "SetMesh"
                 , SetMesh_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::SetMesh )
-                , ( bp::arg("pMesh") )
-                , "Set the finite element mesh\n@param pMesh the finite element mesh\n/" );
+                , ( bp::arg("pMesh") ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::SetReferenceConcentration
@@ -4693,8 +4699,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "SetReferenceConcentration"
                 , SetReferenceConcentration_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::SetReferenceConcentration )
-                , ( bp::arg("referenceConcentration") )
-                , "Set the reference concentration\n@param referenceConcentration the reference concentration\n/" );
+                , ( bp::arg("referenceConcentration") ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::SetRegularGrid
@@ -4705,8 +4710,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "SetRegularGrid"
                 , SetRegularGrid_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::SetRegularGrid )
-                , ( bp::arg("pRegularGrid") )
-                , "Set the regular grid\n@param pRegularGrid the regular grid\n/" );
+                , ( bp::arg("pRegularGrid") ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::SetUseRegularGrid
@@ -4717,8 +4721,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "SetUseRegularGrid"
                 , SetUseRegularGrid_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::SetUseRegularGrid )
-                , ( bp::arg("useRegularGrid") )
-                , "Set whether to use a regular grid\n@param useRegularGrid whether to use a regular grid\n/" );
+                , ( bp::arg("useRegularGrid") ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::UpdateDiscreteSourceStrengths
@@ -4741,8 +4744,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "ComputeLinearInUCoeffInSourceTerm"
                 , bp::pure_virtual( ComputeLinearInUCoeffInSourceTerm_function_type(&::AbstractLinearEllipticPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm) )
-                , ( bp::arg("rX"), bp::arg("pElement") )
-                , "@return computed coefficient of u in the linear part of the source term, i.e f(x) in\nDiv(D Grad u)  +  f(x)u + g(x) = 0, at a given point in space.\n@param rX The point in space\n@param pElement\n/" );
+                , ( bp::arg("rX"), bp::arg("pElement") ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde<2, 2> > >();
@@ -4753,7 +4755,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >
         typedef bp::class_< AbstractDiscreteContinuumLinearEllipticPde_less__3_comma__3__greater__wrapper, boost::noncopyable > AbstractDiscreteContinuumLinearEllipticPde3_3_exposer_t;
-        AbstractDiscreteContinuumLinearEllipticPde3_3_exposer_t AbstractDiscreteContinuumLinearEllipticPde3_3_exposer = AbstractDiscreteContinuumLinearEllipticPde3_3_exposer_t( "AbstractDiscreteContinuumLinearEllipticPde3_3", "", bp::init< >("Constructor\n/") );
+        AbstractDiscreteContinuumLinearEllipticPde3_3_exposer_t AbstractDiscreteContinuumLinearEllipticPde3_3_exposer = AbstractDiscreteContinuumLinearEllipticPde3_3_exposer_t( "AbstractDiscreteContinuumLinearEllipticPde3_3", bp::init< >() );
         bp::scope AbstractDiscreteContinuumLinearEllipticPde3_3_scope( AbstractDiscreteContinuumLinearEllipticPde3_3_exposer );
         { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::AddDiscreteSource
         
@@ -4763,8 +4765,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "AddDiscreteSource"
                 , AddDiscreteSource_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::AddDiscreteSource )
-                , ( bp::arg("pDiscreteSource") )
-                , "Add a discrete source to the pde\n@param pDiscreteSource a pointer the discrete source\n/" );
+                , ( bp::arg("pDiscreteSource") ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeConstantInUSourceTerm
@@ -4788,8 +4789,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "ComputeConstantInUSourceTerm"
                 , ComputeConstantInUSourceTerm_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeConstantInUSourceTerm )
-                , ( bp::arg("gridIndex")=(unsigned int)(0) )
-                , "Overwritten method to return the constant in U contribution to the regular grid solvers\n@param gridIndex grid index\n@return source strength\n/" );
+                , ( bp::arg("gridIndex")=(unsigned int)(0) ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeDiffusionTerm
@@ -4812,8 +4812,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             AbstractDiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "ComputeIsotropicDiffusionTerm"
-                , ComputeIsotropicDiffusionTerm_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeIsotropicDiffusionTerm )
-                , "Return the diffusion constant for isotropic diffusion\n@return the diffusion constant\n/" );
+                , ComputeIsotropicDiffusionTerm_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeIsotropicDiffusionTerm ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm
@@ -4824,8 +4823,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "ComputeLinearInUCoeffInSourceTerm"
                 , bp::pure_virtual( ComputeLinearInUCoeffInSourceTerm_function_type(&::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm) )
-                , ( bp::arg("gridIndex")=(unsigned int)(0) )
-                , "Abstract method to return the linear in U contribution to the regular grid solvers\n@param gridIndex grid index\n@return source strength\n/" );
+                , ( bp::arg("gridIndex")=(unsigned int)(0) ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::GetDiscreteSources
@@ -4835,8 +4833,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             AbstractDiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "GetDiscreteSources"
-                , GetDiscreteSources_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::GetDiscreteSources )
-                , "Return the collection of discrete sources\n@return vector of pointers to the discrete sources\n/" );
+                , GetDiscreteSources_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::GetDiscreteSources ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::SetContinuumConstantInUTerm
@@ -4847,8 +4844,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "SetContinuumConstantInUTerm"
                 , SetContinuumConstantInUTerm_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::SetContinuumConstantInUTerm )
-                , ( bp::arg("constantInUTerm") )
-                , "Set the continuum constant in U term\n@param constantInUTerm the continuum constant in U term\n/" );
+                , ( bp::arg("constantInUTerm") ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::SetIsotropicDiffusionConstant
@@ -4859,8 +4855,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "SetIsotropicDiffusionConstant"
                 , SetIsotropicDiffusionConstant_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::SetIsotropicDiffusionConstant )
-                , ( bp::arg("diffusivity") )
-                , "Set the isotropic diffusion constant\n@param diffusivity the isotropic diffusion constant\n/" );
+                , ( bp::arg("diffusivity") ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::SetMesh
@@ -4871,8 +4866,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "SetMesh"
                 , SetMesh_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::SetMesh )
-                , ( bp::arg("pMesh") )
-                , "Set the finite element mesh\n@param pMesh the finite element mesh\n/" );
+                , ( bp::arg("pMesh") ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::SetReferenceConcentration
@@ -4883,8 +4877,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "SetReferenceConcentration"
                 , SetReferenceConcentration_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::SetReferenceConcentration )
-                , ( bp::arg("referenceConcentration") )
-                , "Set the reference concentration\n@param referenceConcentration the reference concentration\n/" );
+                , ( bp::arg("referenceConcentration") ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::SetRegularGrid
@@ -4895,8 +4888,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "SetRegularGrid"
                 , SetRegularGrid_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::SetRegularGrid )
-                , ( bp::arg("pRegularGrid") )
-                , "Set the regular grid\n@param pRegularGrid the regular grid\n/" );
+                , ( bp::arg("pRegularGrid") ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::SetUseRegularGrid
@@ -4907,8 +4899,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "SetUseRegularGrid"
                 , SetUseRegularGrid_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::SetUseRegularGrid )
-                , ( bp::arg("useRegularGrid") )
-                , "Set whether to use a regular grid\n@param useRegularGrid whether to use a regular grid\n/" );
+                , ( bp::arg("useRegularGrid") ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::UpdateDiscreteSourceStrengths
@@ -4931,8 +4922,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "ComputeLinearInUCoeffInSourceTerm"
                 , bp::pure_virtual( ComputeLinearInUCoeffInSourceTerm_function_type(&::AbstractLinearEllipticPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm) )
-                , ( bp::arg("rX"), bp::arg("pElement") )
-                , "@return computed coefficient of u in the linear part of the source term, i.e f(x) in\nDiv(D Grad u)  +  f(x)u + g(x) = 0, at a given point in space.\n@param rX The point in space\n@param pElement\n/" );
+                , ( bp::arg("rX"), bp::arg("pElement") ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde<3, 3> > >();
@@ -4943,7 +4933,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >
         typedef bp::class_< AbstractDiscreteContinuumNonLinearEllipticPde_less__2_comma__2__greater__wrapper, boost::noncopyable > AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer_t;
-        AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer_t AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer = AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer_t( "AbstractDiscreteContinuumNonLinearEllipticPde2_2", "", bp::init< >("Constructor\n/") );
+        AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer_t AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer = AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer_t( "AbstractDiscreteContinuumNonLinearEllipticPde2_2", bp::init< >() );
         bp::scope AbstractDiscreteContinuumNonLinearEllipticPde2_2_scope( AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer );
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::AddDiscreteSource
         
@@ -4953,8 +4943,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer.def( 
                 "AddDiscreteSource"
                 , AddDiscreteSource_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::AddDiscreteSource )
-                , ( bp::arg("pDiscreteSource") )
-                , "Add a discrete source to the pde\n@param pDiscreteSource a pointer the discrete source\n/" );
+                , ( bp::arg("pDiscreteSource") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::ComputeConstantInUSourceTerm
@@ -4977,8 +4966,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer.def( 
                 "ComputeIsotropicDiffusionTerm"
-                , ComputeIsotropicDiffusionTerm_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::ComputeIsotropicDiffusionTerm )
-                , "Return the diffusion constant for isotropic diffusion\n@return the diffusion constant\n/" );
+                , ComputeIsotropicDiffusionTerm_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::ComputeIsotropicDiffusionTerm ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm
@@ -5002,8 +4990,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer.def( 
                 "ComputeNonlinearSourceTerm"
                 , bp::pure_virtual( ComputeNonlinearSourceTerm_function_type(&::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::ComputeNonlinearSourceTerm) )
-                , ( bp::arg("gridIndex"), bp::arg("u") )
-                , "Abstract method to return the non linear contribution to the regular grid solvers\n@param gridIndex grid index\n@param u the concentration\n@return source strength\n/" );
+                , ( bp::arg("gridIndex"), bp::arg("u") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::ComputeNonlinearSourceTermPrime
@@ -5014,8 +5001,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer.def( 
                 "ComputeNonlinearSourceTermPrime"
                 , bp::pure_virtual( ComputeNonlinearSourceTermPrime_function_type(&::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::ComputeNonlinearSourceTermPrime) )
-                , ( bp::arg("gridIndex"), bp::arg("u") )
-                , "Abstract method to return the non linear prime contribution to the regular grid solvers\n@param gridIndex grid index\n@param u the concentration\n@return source strength\n/" );
+                , ( bp::arg("gridIndex"), bp::arg("u") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::GetDiscreteSources
@@ -5025,8 +5011,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer.def( 
                 "GetDiscreteSources"
-                , GetDiscreteSources_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::GetDiscreteSources )
-                , "Return the collection of discrete sources\n@return vector of pointers to the discrete sources\n/" );
+                , GetDiscreteSources_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::GetDiscreteSources ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::SetContinuumConstantInUTerm
@@ -5037,8 +5022,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer.def( 
                 "SetContinuumConstantInUTerm"
                 , SetContinuumConstantInUTerm_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::SetContinuumConstantInUTerm )
-                , ( bp::arg("constantInUTerm") )
-                , "Set the continuum constant in U term\n@param constantInUTerm the continuum constant in U term\n/" );
+                , ( bp::arg("constantInUTerm") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::SetContinuumLinearInUTerm
@@ -5049,8 +5033,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer.def( 
                 "SetContinuumLinearInUTerm"
                 , SetContinuumLinearInUTerm_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::SetContinuumLinearInUTerm )
-                , ( bp::arg("linearInUTerm") )
-                , "Set the linear constant in U term\n@param linearInUTerm the linear constant in U term\n/" );
+                , ( bp::arg("linearInUTerm") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::SetIsotropicDiffusionConstant
@@ -5061,8 +5044,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer.def( 
                 "SetIsotropicDiffusionConstant"
                 , SetIsotropicDiffusionConstant_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::SetIsotropicDiffusionConstant )
-                , ( bp::arg("diffusivity") )
-                , "Set the isotropic diffusion constant\n@param diffusivity the isotropic diffusion constant\n/" );
+                , ( bp::arg("diffusivity") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::SetMesh
@@ -5073,8 +5055,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer.def( 
                 "SetMesh"
                 , SetMesh_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::SetMesh )
-                , ( bp::arg("pMesh") )
-                , "Set the finite element mesh\n@param pMesh the finite element mesh\n/" );
+                , ( bp::arg("pMesh") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::SetRegularGrid
@@ -5085,8 +5066,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer.def( 
                 "SetRegularGrid"
                 , SetRegularGrid_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::SetRegularGrid )
-                , ( bp::arg("pRegularGrid") )
-                , "Set the regular grid\n@param pRegularGrid the regular grid\n/" );
+                , ( bp::arg("pRegularGrid") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::SetUseRegularGrid
@@ -5097,8 +5077,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer.def( 
                 "SetUseRegularGrid"
                 , SetUseRegularGrid_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::SetUseRegularGrid )
-                , ( bp::arg("useRegularGrid") )
-                , "Set whether to use a regular grid\n@param useRegularGrid whether to use a regular grid\n/" );
+                , ( bp::arg("useRegularGrid") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::UpdateDiscreteSourceStrengths
@@ -5121,8 +5100,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer.def( 
                 "ComputeDiffusionTerm"
                 , bp::pure_virtual( ComputeDiffusionTerm_function_type(&::AbstractNonlinearEllipticPde< 2 >::ComputeDiffusionTerm) )
-                , ( bp::arg("rX"), bp::arg("u") )
-                , "@return computed diffusion term. The diffusion tensor should be symmetric and positive definite.\n@param rX the point in space at which the diffusion term is computed.\n@param u the value of the dependent variable at the point\n/" );
+                , ( bp::arg("rX"), bp::arg("u") ) );
         
         }
         { //::AbstractNonlinearEllipticPde< 2 >::ComputeDiffusionTermPrime
@@ -5133,8 +5111,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer.def( 
                 "ComputeDiffusionTermPrime"
                 , bp::pure_virtual( ComputeDiffusionTermPrime_function_type(&::AbstractNonlinearEllipticPde< 2 >::ComputeDiffusionTermPrime) )
-                , ( bp::arg("rX"), bp::arg("u") )
-                , "@return computed derivative of diffusion term.\n@param rX the point in space at which the diffusion term is computed.\n@param u the value of the dependent variable at the point\n/" );
+                , ( bp::arg("rX"), bp::arg("u") ) );
         
         }
         { //::AbstractNonlinearEllipticPde< 2 >::ComputeLinearSourceTerm
@@ -5145,8 +5122,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer.def( 
                 "ComputeLinearSourceTerm"
                 , bp::pure_virtual( ComputeLinearSourceTerm_function_type(&::AbstractNonlinearEllipticPde< 2 >::ComputeLinearSourceTerm) )
-                , ( bp::arg("rX") )
-                , "@return computed linear source term.\n@param rX the point in space at which the linear source term is computed\n/" );
+                , ( bp::arg("rX") ) );
         
         }
         { //::AbstractNonlinearEllipticPde< 2 >::ComputeNonlinearSourceTerm
@@ -5157,8 +5133,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer.def( 
                 "ComputeNonlinearSourceTerm"
                 , bp::pure_virtual( ComputeNonlinearSourceTerm_function_type(&::AbstractNonlinearEllipticPde< 2 >::ComputeNonlinearSourceTerm) )
-                , ( bp::arg("rX"), bp::arg("u") )
-                , "@return computed nonlinear source term.\n@param rX the point in space at which the nonlinear source term is computed\n@param u the value of the dependent variable at the point\n/" );
+                , ( bp::arg("rX"), bp::arg("u") ) );
         
         }
         { //::AbstractNonlinearEllipticPde< 2 >::ComputeNonlinearSourceTermPrime
@@ -5169,8 +5144,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde2_2_exposer.def( 
                 "ComputeNonlinearSourceTermPrime"
                 , bp::pure_virtual( ComputeNonlinearSourceTermPrime_function_type(&::AbstractNonlinearEllipticPde< 2 >::ComputeNonlinearSourceTermPrime) )
-                , ( bp::arg("rX"), bp::arg("u") )
-                , "@return computed derivative of nonlinear source term.\n@param rX the point in space at which the nonlinear source term is computed\n@param u the value of the dependent variable at the point\n/" );
+                , ( bp::arg("rX"), bp::arg("u") ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< AbstractDiscreteContinuumNonLinearEllipticPde<2, 2> > >();
@@ -5180,7 +5154,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >
         typedef bp::class_< AbstractDiscreteContinuumNonLinearEllipticPde_less__3_comma__3__greater__wrapper, boost::noncopyable > AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer_t;
-        AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer_t AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer = AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer_t( "AbstractDiscreteContinuumNonLinearEllipticPde3_3", "", bp::init< >("Constructor\n/") );
+        AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer_t AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer = AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer_t( "AbstractDiscreteContinuumNonLinearEllipticPde3_3", bp::init< >() );
         bp::scope AbstractDiscreteContinuumNonLinearEllipticPde3_3_scope( AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer );
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::AddDiscreteSource
         
@@ -5190,8 +5164,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer.def( 
                 "AddDiscreteSource"
                 , AddDiscreteSource_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::AddDiscreteSource )
-                , ( bp::arg("pDiscreteSource") )
-                , "Add a discrete source to the pde\n@param pDiscreteSource a pointer the discrete source\n/" );
+                , ( bp::arg("pDiscreteSource") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::ComputeConstantInUSourceTerm
@@ -5214,8 +5187,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer.def( 
                 "ComputeIsotropicDiffusionTerm"
-                , ComputeIsotropicDiffusionTerm_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::ComputeIsotropicDiffusionTerm )
-                , "Return the diffusion constant for isotropic diffusion\n@return the diffusion constant\n/" );
+                , ComputeIsotropicDiffusionTerm_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::ComputeIsotropicDiffusionTerm ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm
@@ -5239,8 +5211,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer.def( 
                 "ComputeNonlinearSourceTerm"
                 , bp::pure_virtual( ComputeNonlinearSourceTerm_function_type(&::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::ComputeNonlinearSourceTerm) )
-                , ( bp::arg("gridIndex"), bp::arg("u") )
-                , "Abstract method to return the non linear contribution to the regular grid solvers\n@param gridIndex grid index\n@param u the concentration\n@return source strength\n/" );
+                , ( bp::arg("gridIndex"), bp::arg("u") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::ComputeNonlinearSourceTermPrime
@@ -5251,8 +5222,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer.def( 
                 "ComputeNonlinearSourceTermPrime"
                 , bp::pure_virtual( ComputeNonlinearSourceTermPrime_function_type(&::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::ComputeNonlinearSourceTermPrime) )
-                , ( bp::arg("gridIndex"), bp::arg("u") )
-                , "Abstract method to return the non linear prime contribution to the regular grid solvers\n@param gridIndex grid index\n@param u the concentration\n@return source strength\n/" );
+                , ( bp::arg("gridIndex"), bp::arg("u") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::GetDiscreteSources
@@ -5262,8 +5232,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer.def( 
                 "GetDiscreteSources"
-                , GetDiscreteSources_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::GetDiscreteSources )
-                , "Return the collection of discrete sources\n@return vector of pointers to the discrete sources\n/" );
+                , GetDiscreteSources_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::GetDiscreteSources ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::SetContinuumConstantInUTerm
@@ -5274,8 +5243,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer.def( 
                 "SetContinuumConstantInUTerm"
                 , SetContinuumConstantInUTerm_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::SetContinuumConstantInUTerm )
-                , ( bp::arg("constantInUTerm") )
-                , "Set the continuum constant in U term\n@param constantInUTerm the continuum constant in U term\n/" );
+                , ( bp::arg("constantInUTerm") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::SetContinuumLinearInUTerm
@@ -5286,8 +5254,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer.def( 
                 "SetContinuumLinearInUTerm"
                 , SetContinuumLinearInUTerm_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::SetContinuumLinearInUTerm )
-                , ( bp::arg("linearInUTerm") )
-                , "Set the linear constant in U term\n@param linearInUTerm the linear constant in U term\n/" );
+                , ( bp::arg("linearInUTerm") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::SetIsotropicDiffusionConstant
@@ -5298,8 +5265,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer.def( 
                 "SetIsotropicDiffusionConstant"
                 , SetIsotropicDiffusionConstant_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::SetIsotropicDiffusionConstant )
-                , ( bp::arg("diffusivity") )
-                , "Set the isotropic diffusion constant\n@param diffusivity the isotropic diffusion constant\n/" );
+                , ( bp::arg("diffusivity") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::SetMesh
@@ -5310,8 +5276,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer.def( 
                 "SetMesh"
                 , SetMesh_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::SetMesh )
-                , ( bp::arg("pMesh") )
-                , "Set the finite element mesh\n@param pMesh the finite element mesh\n/" );
+                , ( bp::arg("pMesh") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::SetRegularGrid
@@ -5322,8 +5287,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer.def( 
                 "SetRegularGrid"
                 , SetRegularGrid_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::SetRegularGrid )
-                , ( bp::arg("pRegularGrid") )
-                , "Set the regular grid\n@param pRegularGrid the regular grid\n/" );
+                , ( bp::arg("pRegularGrid") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::SetUseRegularGrid
@@ -5334,8 +5298,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer.def( 
                 "SetUseRegularGrid"
                 , SetUseRegularGrid_function_type( &::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::SetUseRegularGrid )
-                , ( bp::arg("useRegularGrid") )
-                , "Set whether to use a regular grid\n@param useRegularGrid whether to use a regular grid\n/" );
+                , ( bp::arg("useRegularGrid") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::UpdateDiscreteSourceStrengths
@@ -5358,8 +5321,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer.def( 
                 "ComputeDiffusionTerm"
                 , bp::pure_virtual( ComputeDiffusionTerm_function_type(&::AbstractNonlinearEllipticPde< 3 >::ComputeDiffusionTerm) )
-                , ( bp::arg("rX"), bp::arg("u") )
-                , "@return computed diffusion term. The diffusion tensor should be symmetric and positive definite.\n@param rX the point in space at which the diffusion term is computed.\n@param u the value of the dependent variable at the point\n/" );
+                , ( bp::arg("rX"), bp::arg("u") ) );
         
         }
         { //::AbstractNonlinearEllipticPde< 3 >::ComputeDiffusionTermPrime
@@ -5370,8 +5332,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer.def( 
                 "ComputeDiffusionTermPrime"
                 , bp::pure_virtual( ComputeDiffusionTermPrime_function_type(&::AbstractNonlinearEllipticPde< 3 >::ComputeDiffusionTermPrime) )
-                , ( bp::arg("rX"), bp::arg("u") )
-                , "@return computed derivative of diffusion term.\n@param rX the point in space at which the diffusion term is computed.\n@param u the value of the dependent variable at the point\n/" );
+                , ( bp::arg("rX"), bp::arg("u") ) );
         
         }
         { //::AbstractNonlinearEllipticPde< 3 >::ComputeLinearSourceTerm
@@ -5382,8 +5343,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer.def( 
                 "ComputeLinearSourceTerm"
                 , bp::pure_virtual( ComputeLinearSourceTerm_function_type(&::AbstractNonlinearEllipticPde< 3 >::ComputeLinearSourceTerm) )
-                , ( bp::arg("rX") )
-                , "@return computed linear source term.\n@param rX the point in space at which the linear source term is computed\n/" );
+                , ( bp::arg("rX") ) );
         
         }
         { //::AbstractNonlinearEllipticPde< 3 >::ComputeNonlinearSourceTerm
@@ -5394,8 +5354,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer.def( 
                 "ComputeNonlinearSourceTerm"
                 , bp::pure_virtual( ComputeNonlinearSourceTerm_function_type(&::AbstractNonlinearEllipticPde< 3 >::ComputeNonlinearSourceTerm) )
-                , ( bp::arg("rX"), bp::arg("u") )
-                , "@return computed nonlinear source term.\n@param rX the point in space at which the nonlinear source term is computed\n@param u the value of the dependent variable at the point\n/" );
+                , ( bp::arg("rX"), bp::arg("u") ) );
         
         }
         { //::AbstractNonlinearEllipticPde< 3 >::ComputeNonlinearSourceTermPrime
@@ -5406,8 +5365,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             AbstractDiscreteContinuumNonLinearEllipticPde3_3_exposer.def( 
                 "ComputeNonlinearSourceTermPrime"
                 , bp::pure_virtual( ComputeNonlinearSourceTermPrime_function_type(&::AbstractNonlinearEllipticPde< 3 >::ComputeNonlinearSourceTermPrime) )
-                , ( bp::arg("rX"), bp::arg("u") )
-                , "@return computed derivative of nonlinear source term.\n@param rX the point in space at which the nonlinear source term is computed\n@param u the value of the dependent variable at the point\n/" );
+                , ( bp::arg("rX"), bp::arg("u") ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< AbstractDiscreteContinuumNonLinearEllipticPde<3, 3> > >();
@@ -5415,16 +5373,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         bp::implicitly_convertible< boost::shared_ptr< MichaelisMentenSteadyStateDiffusionReactionPde< 3, 3 > >, boost::shared_ptr< AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 > > >();
     }
 
-    bp::class_< AbstractDiscreteContinuumSolver_less__2__greater__wrapper, boost::noncopyable >( "AbstractDiscreteContinuumSolver2", "", bp::init< >("Constructor\n/") )    
+    bp::class_< AbstractDiscreteContinuumSolver_less__2__greater__wrapper, boost::noncopyable >( "AbstractDiscreteContinuumSolver2", bp::init< >() )    
         .def( 
             "AddBoundaryCondition"
             , (void ( ::AbstractDiscreteContinuumSolver<2>::* )( ::boost::shared_ptr< DiscreteContinuumBoundaryCondition< 2 > > ))( &::AbstractDiscreteContinuumSolver< 2 >::AddBoundaryCondition )
-            , ( bp::arg("pBoundaryCondition") )
-            , "Add a DiscreteContinuum boundary condition for the domain\n@param pBoundaryCondition the boundary condition\n/" )    
+            , ( bp::arg("pBoundaryCondition") ) )    
         .def( 
             "CellPopulationIsSet"
-            , (bool ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))( &::AbstractDiscreteContinuumSolver< 2 >::CellPopulationIsSet )
-            , "Has a cell population been set?\n@return whether a cell population been set.\n/" )    
+            , (bool ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))( &::AbstractDiscreteContinuumSolver< 2 >::CellPopulationIsSet ) )    
         .def( 
             "GetConcentrations"
             , (::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))(&::AbstractDiscreteContinuumSolver< 2 >::GetConcentrations)
@@ -5432,35 +5388,28 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         .def( 
             "GetConcentrations"
             , bp::pure_virtual( (::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( ::AbstractDiscreteContinuumSolver<2>::* )( ::boost::shared_ptr< RegularGrid< 2 > > ))(&::AbstractDiscreteContinuumSolver< 2 >::GetConcentrations) )
-            , ( bp::arg("pGrid") )
-            , "Return the value of the field at all points on the supplied grid\n@param pGrid the sampling grid\n@return the value of the field ordered according to grid order\n/" )    
+            , ( bp::arg("pGrid") ) )    
         .def( 
             "GetConcentrations"
             , bp::pure_virtual( (::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( ::AbstractDiscreteContinuumSolver<2>::* )( ::std::vector< DimensionalChastePoint<2> > const & ))(&::AbstractDiscreteContinuumSolver< 2 >::GetConcentrations) )
-            , ( bp::arg("rSamplePoints") )
-            , "Return the value of the field at the requested points\n@param rSamplePoints a vector of sample points\n@return the value of the field ordered according to input point order\n/" )    
+            , ( bp::arg("rSamplePoints") ) )    
         .def( 
             "GetConcentrations"
             , bp::pure_virtual( (::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( ::AbstractDiscreteContinuumSolver<2>::* )( ::boost::shared_ptr< DiscreteContinuumMesh< 2, 2 > > ))(&::AbstractDiscreteContinuumSolver< 2 >::GetConcentrations) )
-            , ( bp::arg("pMesh") )
-            , "Return the value of the field on the nodes of the input mesh\n@param pMesh the mesh from which nodes are sampled\n@return the value of the field ordered according to mesh node ordering\n/" )    
+            , ( bp::arg("pMesh") ) )    
         .def( 
             "GetLabel"
             , (::std::string const & ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))( &::AbstractDiscreteContinuumSolver< 2 >::GetLabel )
-            , bp::return_value_policy< bp::copy_const_reference >()
-            , "Return the name of the field being solved for\n@return a reference to the field name\n/" )    
+            , bp::return_value_policy< bp::copy_const_reference >() )    
         .def( 
             "GetNonLinearPde"
-            , (::boost::shared_ptr< AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 > > ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))( &::AbstractDiscreteContinuumSolver< 2 >::GetNonLinearPde )
-            , "Return the nonlinear PDE\n@return the DiscreteContinuum nonlinear elliptic pde\n/" )    
+            , (::boost::shared_ptr< AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 > > ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))( &::AbstractDiscreteContinuumSolver< 2 >::GetNonLinearPde ) )    
         .def( 
             "GetPde"
-            , (::boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde< 2, 2 > > ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))( &::AbstractDiscreteContinuumSolver< 2 >::GetPde )
-            , "Return the PDE\n@return the DiscreteContinuum linear elliptic pde\n/" )    
+            , (::boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde< 2, 2 > > ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))( &::AbstractDiscreteContinuumSolver< 2 >::GetPde ) )    
         .def( 
             "GetReferenceConcentration"
-            , (::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))( &::AbstractDiscreteContinuumSolver< 2 >::GetReferenceConcentration )
-            , "Return the reference concentration value.\n@return the reference concentration value\n/" )    
+            , (::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))( &::AbstractDiscreteContinuumSolver< 2 >::GetReferenceConcentration ) )    
         .def( 
             "GetSolution"
             , (::std::vector< double > ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))(&::AbstractDiscreteContinuumSolver< 2 >::GetSolution)
@@ -5468,87 +5417,69 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         .def( 
             "GetSolution"
             , bp::pure_virtual( (::std::vector< double > ( ::AbstractDiscreteContinuumSolver<2>::* )( ::std::vector< DimensionalChastePoint<2> > const & ))(&::AbstractDiscreteContinuumSolver< 2 >::GetSolution) )
-            , ( bp::arg("rSamplePoints") )
-            , "Return the value of the field at the requested points\n@param rSamplePoints the points for sampling\n@return the value of the field ordered according to input point order\n/" )    
+            , ( bp::arg("rSamplePoints") ) )    
         .def( 
             "GetSolution"
             , bp::pure_virtual( (::std::vector< double > ( ::AbstractDiscreteContinuumSolver<2>::* )( ::boost::shared_ptr< RegularGrid< 2 > > ))(&::AbstractDiscreteContinuumSolver< 2 >::GetSolution) )
-            , ( bp::arg("pGrid") )
-            , "Return the value of the field at all points on the supplied grid\n@param pGrid the grid to be sampled\n@return the value of the field ordered according to input point order\n/" )    
+            , ( bp::arg("pGrid") ) )    
         .def( 
             "GetSolution"
             , bp::pure_virtual( (::std::vector< double > ( ::AbstractDiscreteContinuumSolver<2>::* )( ::boost::shared_ptr< DiscreteContinuumMesh< 2, 2 > > ))(&::AbstractDiscreteContinuumSolver< 2 >::GetSolution) )
-            , ( bp::arg("pMesh") )
-            , "Return the value of the field at all points on the supplied mesh nodes\n@param pMesh the mesh for point sampling\n@return the value of the field ordered according to mesh node order\n/" )    
+            , ( bp::arg("pMesh") ) )    
         .def( 
             "HasRegularGrid"
-            , (bool ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))( &::AbstractDiscreteContinuumSolver< 2 >::HasRegularGrid )
-            , "Return true if the solver uses a regular grid to store solutions\n@return true if the solver uses a regular grid to store solutions\n/" )    
+            , (bool ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))( &::AbstractDiscreteContinuumSolver< 2 >::HasRegularGrid ) )    
         .def( 
             "HasUnstructuredGrid"
-            , (bool ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))( &::AbstractDiscreteContinuumSolver< 2 >::HasUnstructuredGrid )
-            , "Return true if the solver uses a unstructured grid to store solutions\n@return true if the solver uses a unstructured grid to store solutions\n/" )    
+            , (bool ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))( &::AbstractDiscreteContinuumSolver< 2 >::HasUnstructuredGrid ) )    
         .def( 
             "SetCellPopulation"
             , (void ( ::AbstractDiscreteContinuumSolver<2>::* )( ::AbstractCellPopulation< 2, 2 > &,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::AbstractDiscreteContinuumSolver< 2 >::SetCellPopulation )
-            , ( bp::arg("rCellPopulation"), bp::arg("cellPopulationReferenceLength"), bp::arg("cellPopulationReferenceConcentration") )
-            , "Set the cell population\n@param rCellPopulation a reference to the cell population\n@param cellPopulationReferenceLength the length scale for the cell population\n@param cellPopulationReferenceConcentration the concentration scale for the cell population\n/" )    
+            , ( bp::arg("rCellPopulation"), bp::arg("cellPopulationReferenceLength"), bp::arg("cellPopulationReferenceConcentration") ) )    
         .def( 
             "SetFileHandler"
             , (void ( ::AbstractDiscreteContinuumSolver<2>::* )( ::boost::shared_ptr< OutputFileHandler > ))( &::AbstractDiscreteContinuumSolver< 2 >::SetFileHandler )
-            , ( bp::arg("pOutputFileHandler") )
-            , "Set the file handler containing the working directory\n@param pOutputFileHandler the file handler containing the working directory\n/" )    
+            , ( bp::arg("pOutputFileHandler") ) )    
         .def( 
             "SetFileName"
             , (void ( ::AbstractDiscreteContinuumSolver<2>::* )( ::std::string const & ))( &::AbstractDiscreteContinuumSolver< 2 >::SetFileName )
-            , ( bp::arg("rFilename") )
-            , "Set the file name for output\n@param rFilename the file name\n/" )    
+            , ( bp::arg("rFilename") ) )    
         .def( 
             "SetLabel"
             , (void ( ::AbstractDiscreteContinuumSolver<2>::* )( ::std::string const & ))( &::AbstractDiscreteContinuumSolver< 2 >::SetLabel )
-            , ( bp::arg("rLabel") )
-            , "Set the name of the field being solved for\n@param rLabel a reference to the field name\n/" )    
+            , ( bp::arg("rLabel") ) )    
         .def( 
             "SetNonLinearPde"
             , (void ( ::AbstractDiscreteContinuumSolver<2>::* )( ::boost::shared_ptr< AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 > > ))( &::AbstractDiscreteContinuumSolver< 2 >::SetNonLinearPde )
-            , ( bp::arg("pPde") )
-            , "Set the nonlinear PDE to be solved\n@param pPde the pde to be solved\n/" )    
+            , ( bp::arg("pPde") ) )    
         .def( 
             "SetPde"
             , (void ( ::AbstractDiscreteContinuumSolver<2>::* )( ::boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde< 2, 2 > > ))( &::AbstractDiscreteContinuumSolver< 2 >::SetPde )
-            , ( bp::arg("pPde") )
-            , "Set the PDE to be solved\n@param pPde the pde to be solved\n/" )    
+            , ( bp::arg("pPde") ) )    
         .def( 
             "SetReferenceConcentration"
             , (void ( ::AbstractDiscreteContinuumSolver<2>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::AbstractDiscreteContinuumSolver< 2 >::SetReferenceConcentration )
-            , ( bp::arg("referenceConcentration") )
-            , "Set the reference concentration\n@param referenceConcentration the reference concentration\n/" )    
+            , ( bp::arg("referenceConcentration") ) )    
         .def( 
             "SetVesselNetwork"
             , (void ( ::AbstractDiscreteContinuumSolver<2>::* )( ::boost::shared_ptr< VesselNetwork< 2 > > ))( &::AbstractDiscreteContinuumSolver< 2 >::SetVesselNetwork )
-            , ( bp::arg("pNetwork") )
-            , "Set the vessel network\n@param pNetwork the vessel network\n/" )    
+            , ( bp::arg("pNetwork") ) )    
         .def( 
             "SetWriteSolution"
             , (void ( ::AbstractDiscreteContinuumSolver<2>::* )( bool ))( &::AbstractDiscreteContinuumSolver< 2 >::SetWriteSolution )
-            , ( bp::arg("write")=(bool)(true) )
-            , "Set whether to write the solution to file on next solve\n@param write write the solution\n/" )    
+            , ( bp::arg("write")=(bool)(true) ) )    
         .def( 
             "Setup"
-            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))(&::AbstractDiscreteContinuumSolver< 2 >::Setup) )
-            , "Operations to be performed prior to the first solve\n/" )    
+            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))(&::AbstractDiscreteContinuumSolver< 2 >::Setup) ) )    
         .def( 
             "Solve"
-            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))(&::AbstractDiscreteContinuumSolver< 2 >::Solve) )
-            , "Do the solve\n/" )    
+            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))(&::AbstractDiscreteContinuumSolver< 2 >::Solve) ) )    
         .def( 
             "Update"
-            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))(&::AbstractDiscreteContinuumSolver< 2 >::Update) )
-            , "Operations to be performed prior to every solve\n/" )    
+            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))(&::AbstractDiscreteContinuumSolver< 2 >::Update) ) )    
         .def( 
             "UpdateCellData"
-            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))(&::AbstractDiscreteContinuumSolver< 2 >::UpdateCellData) )
-            , "Set the cell data to the values in the field\n/" )    
+            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))(&::AbstractDiscreteContinuumSolver< 2 >::UpdateCellData) ) )    
         .def( 
             "UpdateSolution"
             , (void ( ::AbstractDiscreteContinuumSolver<2>::* )( ::std::vector< double > const & ))(&::AbstractDiscreteContinuumSolver< 2 >::UpdateSolution)
@@ -5561,19 +5492,16 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             , ( bp::arg("rData") ) )    
         .def( 
             "Write"
-            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))(&::AbstractDiscreteContinuumSolver< 2 >::Write) )
-            , "Write the solution to file\n/" );
+            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))(&::AbstractDiscreteContinuumSolver< 2 >::Write) ) );
 
-    bp::class_< AbstractDiscreteContinuumSolver_less__3__greater__wrapper, boost::noncopyable >( "AbstractDiscreteContinuumSolver3", "", bp::init< >("Constructor\n/") )    
+    bp::class_< AbstractDiscreteContinuumSolver_less__3__greater__wrapper, boost::noncopyable >( "AbstractDiscreteContinuumSolver3", bp::init< >() )    
         .def( 
             "AddBoundaryCondition"
             , (void ( ::AbstractDiscreteContinuumSolver<3>::* )( ::boost::shared_ptr< DiscreteContinuumBoundaryCondition< 3 > > ))( &::AbstractDiscreteContinuumSolver< 3 >::AddBoundaryCondition )
-            , ( bp::arg("pBoundaryCondition") )
-            , "Add a DiscreteContinuum boundary condition for the domain\n@param pBoundaryCondition the boundary condition\n/" )    
+            , ( bp::arg("pBoundaryCondition") ) )    
         .def( 
             "CellPopulationIsSet"
-            , (bool ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))( &::AbstractDiscreteContinuumSolver< 3 >::CellPopulationIsSet )
-            , "Has a cell population been set?\n@return whether a cell population been set.\n/" )    
+            , (bool ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))( &::AbstractDiscreteContinuumSolver< 3 >::CellPopulationIsSet ) )    
         .def( 
             "GetConcentrations"
             , (::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))(&::AbstractDiscreteContinuumSolver< 3 >::GetConcentrations)
@@ -5581,35 +5509,28 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         .def( 
             "GetConcentrations"
             , bp::pure_virtual( (::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( ::AbstractDiscreteContinuumSolver<3>::* )( ::boost::shared_ptr< RegularGrid< 3 > > ))(&::AbstractDiscreteContinuumSolver< 3 >::GetConcentrations) )
-            , ( bp::arg("pGrid") )
-            , "Return the value of the field at all points on the supplied grid\n@param pGrid the sampling grid\n@return the value of the field ordered according to grid order\n/" )    
+            , ( bp::arg("pGrid") ) )    
         .def( 
             "GetConcentrations"
             , bp::pure_virtual( (::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( ::AbstractDiscreteContinuumSolver<3>::* )( ::std::vector< DimensionalChastePoint<3> > const & ))(&::AbstractDiscreteContinuumSolver< 3 >::GetConcentrations) )
-            , ( bp::arg("rSamplePoints") )
-            , "Return the value of the field at the requested points\n@param rSamplePoints a vector of sample points\n@return the value of the field ordered according to input point order\n/" )    
+            , ( bp::arg("rSamplePoints") ) )    
         .def( 
             "GetConcentrations"
             , bp::pure_virtual( (::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( ::AbstractDiscreteContinuumSolver<3>::* )( ::boost::shared_ptr< DiscreteContinuumMesh< 3, 3 > > ))(&::AbstractDiscreteContinuumSolver< 3 >::GetConcentrations) )
-            , ( bp::arg("pMesh") )
-            , "Return the value of the field on the nodes of the input mesh\n@param pMesh the mesh from which nodes are sampled\n@return the value of the field ordered according to mesh node ordering\n/" )    
+            , ( bp::arg("pMesh") ) )    
         .def( 
             "GetLabel"
             , (::std::string const & ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))( &::AbstractDiscreteContinuumSolver< 3 >::GetLabel )
-            , bp::return_value_policy< bp::copy_const_reference >()
-            , "Return the name of the field being solved for\n@return a reference to the field name\n/" )    
+            , bp::return_value_policy< bp::copy_const_reference >() )    
         .def( 
             "GetNonLinearPde"
-            , (::boost::shared_ptr< AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 > > ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))( &::AbstractDiscreteContinuumSolver< 3 >::GetNonLinearPde )
-            , "Return the nonlinear PDE\n@return the DiscreteContinuum nonlinear elliptic pde\n/" )    
+            , (::boost::shared_ptr< AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 > > ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))( &::AbstractDiscreteContinuumSolver< 3 >::GetNonLinearPde ) )    
         .def( 
             "GetPde"
-            , (::boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde< 3, 3 > > ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))( &::AbstractDiscreteContinuumSolver< 3 >::GetPde )
-            , "Return the PDE\n@return the DiscreteContinuum linear elliptic pde\n/" )    
+            , (::boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde< 3, 3 > > ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))( &::AbstractDiscreteContinuumSolver< 3 >::GetPde ) )    
         .def( 
             "GetReferenceConcentration"
-            , (::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))( &::AbstractDiscreteContinuumSolver< 3 >::GetReferenceConcentration )
-            , "Return the reference concentration value.\n@return the reference concentration value\n/" )    
+            , (::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))( &::AbstractDiscreteContinuumSolver< 3 >::GetReferenceConcentration ) )    
         .def( 
             "GetSolution"
             , (::std::vector< double > ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))(&::AbstractDiscreteContinuumSolver< 3 >::GetSolution)
@@ -5617,87 +5538,69 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         .def( 
             "GetSolution"
             , bp::pure_virtual( (::std::vector< double > ( ::AbstractDiscreteContinuumSolver<3>::* )( ::std::vector< DimensionalChastePoint<3> > const & ))(&::AbstractDiscreteContinuumSolver< 3 >::GetSolution) )
-            , ( bp::arg("rSamplePoints") )
-            , "Return the value of the field at the requested points\n@param rSamplePoints the points for sampling\n@return the value of the field ordered according to input point order\n/" )    
+            , ( bp::arg("rSamplePoints") ) )    
         .def( 
             "GetSolution"
             , bp::pure_virtual( (::std::vector< double > ( ::AbstractDiscreteContinuumSolver<3>::* )( ::boost::shared_ptr< RegularGrid< 3 > > ))(&::AbstractDiscreteContinuumSolver< 3 >::GetSolution) )
-            , ( bp::arg("pGrid") )
-            , "Return the value of the field at all points on the supplied grid\n@param pGrid the grid to be sampled\n@return the value of the field ordered according to input point order\n/" )    
+            , ( bp::arg("pGrid") ) )    
         .def( 
             "GetSolution"
             , bp::pure_virtual( (::std::vector< double > ( ::AbstractDiscreteContinuumSolver<3>::* )( ::boost::shared_ptr< DiscreteContinuumMesh< 3, 3 > > ))(&::AbstractDiscreteContinuumSolver< 3 >::GetSolution) )
-            , ( bp::arg("pMesh") )
-            , "Return the value of the field at all points on the supplied mesh nodes\n@param pMesh the mesh for point sampling\n@return the value of the field ordered according to mesh node order\n/" )    
+            , ( bp::arg("pMesh") ) )    
         .def( 
             "HasRegularGrid"
-            , (bool ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))( &::AbstractDiscreteContinuumSolver< 3 >::HasRegularGrid )
-            , "Return true if the solver uses a regular grid to store solutions\n@return true if the solver uses a regular grid to store solutions\n/" )    
+            , (bool ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))( &::AbstractDiscreteContinuumSolver< 3 >::HasRegularGrid ) )    
         .def( 
             "HasUnstructuredGrid"
-            , (bool ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))( &::AbstractDiscreteContinuumSolver< 3 >::HasUnstructuredGrid )
-            , "Return true if the solver uses a unstructured grid to store solutions\n@return true if the solver uses a unstructured grid to store solutions\n/" )    
+            , (bool ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))( &::AbstractDiscreteContinuumSolver< 3 >::HasUnstructuredGrid ) )    
         .def( 
             "SetCellPopulation"
             , (void ( ::AbstractDiscreteContinuumSolver<3>::* )( ::AbstractCellPopulation< 3, 3 > &,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::AbstractDiscreteContinuumSolver< 3 >::SetCellPopulation )
-            , ( bp::arg("rCellPopulation"), bp::arg("cellPopulationReferenceLength"), bp::arg("cellPopulationReferenceConcentration") )
-            , "Set the cell population\n@param rCellPopulation a reference to the cell population\n@param cellPopulationReferenceLength the length scale for the cell population\n@param cellPopulationReferenceConcentration the concentration scale for the cell population\n/" )    
+            , ( bp::arg("rCellPopulation"), bp::arg("cellPopulationReferenceLength"), bp::arg("cellPopulationReferenceConcentration") ) )    
         .def( 
             "SetFileHandler"
             , (void ( ::AbstractDiscreteContinuumSolver<3>::* )( ::boost::shared_ptr< OutputFileHandler > ))( &::AbstractDiscreteContinuumSolver< 3 >::SetFileHandler )
-            , ( bp::arg("pOutputFileHandler") )
-            , "Set the file handler containing the working directory\n@param pOutputFileHandler the file handler containing the working directory\n/" )    
+            , ( bp::arg("pOutputFileHandler") ) )    
         .def( 
             "SetFileName"
             , (void ( ::AbstractDiscreteContinuumSolver<3>::* )( ::std::string const & ))( &::AbstractDiscreteContinuumSolver< 3 >::SetFileName )
-            , ( bp::arg("rFilename") )
-            , "Set the file name for output\n@param rFilename the file name\n/" )    
+            , ( bp::arg("rFilename") ) )    
         .def( 
             "SetLabel"
             , (void ( ::AbstractDiscreteContinuumSolver<3>::* )( ::std::string const & ))( &::AbstractDiscreteContinuumSolver< 3 >::SetLabel )
-            , ( bp::arg("rLabel") )
-            , "Set the name of the field being solved for\n@param rLabel a reference to the field name\n/" )    
+            , ( bp::arg("rLabel") ) )    
         .def( 
             "SetNonLinearPde"
             , (void ( ::AbstractDiscreteContinuumSolver<3>::* )( ::boost::shared_ptr< AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 > > ))( &::AbstractDiscreteContinuumSolver< 3 >::SetNonLinearPde )
-            , ( bp::arg("pPde") )
-            , "Set the nonlinear PDE to be solved\n@param pPde the pde to be solved\n/" )    
+            , ( bp::arg("pPde") ) )    
         .def( 
             "SetPde"
             , (void ( ::AbstractDiscreteContinuumSolver<3>::* )( ::boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde< 3, 3 > > ))( &::AbstractDiscreteContinuumSolver< 3 >::SetPde )
-            , ( bp::arg("pPde") )
-            , "Set the PDE to be solved\n@param pPde the pde to be solved\n/" )    
+            , ( bp::arg("pPde") ) )    
         .def( 
             "SetReferenceConcentration"
             , (void ( ::AbstractDiscreteContinuumSolver<3>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::AbstractDiscreteContinuumSolver< 3 >::SetReferenceConcentration )
-            , ( bp::arg("referenceConcentration") )
-            , "Set the reference concentration\n@param referenceConcentration the reference concentration\n/" )    
+            , ( bp::arg("referenceConcentration") ) )    
         .def( 
             "SetVesselNetwork"
             , (void ( ::AbstractDiscreteContinuumSolver<3>::* )( ::boost::shared_ptr< VesselNetwork< 3 > > ))( &::AbstractDiscreteContinuumSolver< 3 >::SetVesselNetwork )
-            , ( bp::arg("pNetwork") )
-            , "Set the vessel network\n@param pNetwork the vessel network\n/" )    
+            , ( bp::arg("pNetwork") ) )    
         .def( 
             "SetWriteSolution"
             , (void ( ::AbstractDiscreteContinuumSolver<3>::* )( bool ))( &::AbstractDiscreteContinuumSolver< 3 >::SetWriteSolution )
-            , ( bp::arg("write")=(bool)(true) )
-            , "Set whether to write the solution to file on next solve\n@param write write the solution\n/" )    
+            , ( bp::arg("write")=(bool)(true) ) )    
         .def( 
             "Setup"
-            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))(&::AbstractDiscreteContinuumSolver< 3 >::Setup) )
-            , "Operations to be performed prior to the first solve\n/" )    
+            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))(&::AbstractDiscreteContinuumSolver< 3 >::Setup) ) )    
         .def( 
             "Solve"
-            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))(&::AbstractDiscreteContinuumSolver< 3 >::Solve) )
-            , "Do the solve\n/" )    
+            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))(&::AbstractDiscreteContinuumSolver< 3 >::Solve) ) )    
         .def( 
             "Update"
-            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))(&::AbstractDiscreteContinuumSolver< 3 >::Update) )
-            , "Operations to be performed prior to every solve\n/" )    
+            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))(&::AbstractDiscreteContinuumSolver< 3 >::Update) ) )    
         .def( 
             "UpdateCellData"
-            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))(&::AbstractDiscreteContinuumSolver< 3 >::UpdateCellData) )
-            , "Set the cell data to the values in the field\n/" )    
+            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))(&::AbstractDiscreteContinuumSolver< 3 >::UpdateCellData) ) )    
         .def( 
             "UpdateSolution"
             , (void ( ::AbstractDiscreteContinuumSolver<3>::* )( ::std::vector< double > const & ))(&::AbstractDiscreteContinuumSolver< 3 >::UpdateSolution)
@@ -5710,10 +5613,9 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             , ( bp::arg("rData") ) )    
         .def( 
             "Write"
-            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))(&::AbstractDiscreteContinuumSolver< 3 >::Write) )
-            , "Write the solution to file\n/" );
+            , bp::pure_virtual( (void ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))(&::AbstractDiscreteContinuumSolver< 3 >::Write) ) );
 
-    bp::class_< AbstractRegularGridDiscreteContinuumSolver_less__2__greater__wrapper, bp::bases< AbstractDiscreteContinuumSolver< 2 > >, boost::noncopyable >( "AbstractRegularGridDiscreteContinuumSolver2", "", bp::init< >("Constructor\n/") )    
+    bp::class_< AbstractRegularGridDiscreteContinuumSolver_less__2__greater__wrapper, bp::bases< AbstractDiscreteContinuumSolver< 2 > >, boost::noncopyable >( "AbstractRegularGridDiscreteContinuumSolver2", bp::init< >() )    
         .def( 
             "GetConcentrations"
             , (::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( ::AbstractRegularGridDiscreteContinuumSolver<2>::* )( ::std::vector< DimensionalChastePoint<2> > const & ))(&::AbstractRegularGridDiscreteContinuumSolver< 2 >::GetConcentrations)
@@ -5731,8 +5633,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             , ( bp::arg("pMesh") ) )    
         .def( 
             "GetGrid"
-            , (::boost::shared_ptr< RegularGrid< 2 > > ( ::AbstractRegularGridDiscreteContinuumSolver<2>::* )(  ))( &::AbstractRegularGridDiscreteContinuumSolver< 2 >::GetGrid )
-            , "Return the grid\n@return a pointer to the structured grid\n/" )    
+            , (::boost::shared_ptr< RegularGrid< 2 > > ( ::AbstractRegularGridDiscreteContinuumSolver<2>::* )(  ))( &::AbstractRegularGridDiscreteContinuumSolver< 2 >::GetGrid ) )    
         .def( 
             "GetSolution"
             , (::std::vector< double > ( ::AbstractRegularGridDiscreteContinuumSolver<2>::* )( ::std::vector< DimensionalChastePoint<2> > const & ))(&::AbstractRegularGridDiscreteContinuumSolver< 2 >::GetSolution)
@@ -5755,16 +5656,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         .def( 
             "SetGrid"
             , (void ( ::AbstractRegularGridDiscreteContinuumSolver<2>::* )( ::boost::shared_ptr< RegularGrid< 2 > > ))( &::AbstractRegularGridDiscreteContinuumSolver< 2 >::SetGrid )
-            , ( bp::arg("pRegularGrid") )
-            , "Set the structured grid\n@param pRegularGrid the structured grid\n/" )    
+            , ( bp::arg("pRegularGrid") ) )    
         .def( 
             "Setup"
             , (void ( ::AbstractRegularGridDiscreteContinuumSolver<2>::* )(  ))(&::AbstractRegularGridDiscreteContinuumSolver< 2 >::Setup)
             , (void ( AbstractRegularGridDiscreteContinuumSolver_less__2__greater__wrapper::* )(  ))(&AbstractRegularGridDiscreteContinuumSolver_less__2__greater__wrapper::default_Setup) )    
         .def( 
             "Solve"
-            , bp::pure_virtual( (void ( ::AbstractRegularGridDiscreteContinuumSolver<2>::* )(  ))(&::AbstractRegularGridDiscreteContinuumSolver< 2 >::Solve) )
-            , "Overridden Update method.\n/" )    
+            , bp::pure_virtual( (void ( ::AbstractRegularGridDiscreteContinuumSolver<2>::* )(  ))(&::AbstractRegularGridDiscreteContinuumSolver< 2 >::Solve) ) )    
         .def( 
             "Update"
             , (void ( ::AbstractRegularGridDiscreteContinuumSolver<2>::* )(  ))(&::AbstractRegularGridDiscreteContinuumSolver< 2 >::Update)
@@ -5806,7 +5705,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             , (void ( AbstractRegularGridDiscreteContinuumSolver_less__2__greater__wrapper::* )( ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > const & ))(&AbstractRegularGridDiscreteContinuumSolver_less__2__greater__wrapper::default_UpdateSolution)
             , ( bp::arg("rData") ) );
 
-    bp::class_< AbstractRegularGridDiscreteContinuumSolver_less__3__greater__wrapper, bp::bases< AbstractDiscreteContinuumSolver< 3 > >, boost::noncopyable >( "AbstractRegularGridDiscreteContinuumSolver3", "", bp::init< >("Constructor\n/") )    
+    bp::class_< AbstractRegularGridDiscreteContinuumSolver_less__3__greater__wrapper, bp::bases< AbstractDiscreteContinuumSolver< 3 > >, boost::noncopyable >( "AbstractRegularGridDiscreteContinuumSolver3", bp::init< >() )    
         .def( 
             "GetConcentrations"
             , (::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( ::AbstractRegularGridDiscreteContinuumSolver<3>::* )( ::std::vector< DimensionalChastePoint<3> > const & ))(&::AbstractRegularGridDiscreteContinuumSolver< 3 >::GetConcentrations)
@@ -5824,8 +5723,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             , ( bp::arg("pMesh") ) )    
         .def( 
             "GetGrid"
-            , (::boost::shared_ptr< RegularGrid< 3 > > ( ::AbstractRegularGridDiscreteContinuumSolver<3>::* )(  ))( &::AbstractRegularGridDiscreteContinuumSolver< 3 >::GetGrid )
-            , "Return the grid\n@return a pointer to the structured grid\n/" )    
+            , (::boost::shared_ptr< RegularGrid< 3 > > ( ::AbstractRegularGridDiscreteContinuumSolver<3>::* )(  ))( &::AbstractRegularGridDiscreteContinuumSolver< 3 >::GetGrid ) )    
         .def( 
             "GetSolution"
             , (::std::vector< double > ( ::AbstractRegularGridDiscreteContinuumSolver<3>::* )( ::std::vector< DimensionalChastePoint<3> > const & ))(&::AbstractRegularGridDiscreteContinuumSolver< 3 >::GetSolution)
@@ -5848,16 +5746,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         .def( 
             "SetGrid"
             , (void ( ::AbstractRegularGridDiscreteContinuumSolver<3>::* )( ::boost::shared_ptr< RegularGrid< 3 > > ))( &::AbstractRegularGridDiscreteContinuumSolver< 3 >::SetGrid )
-            , ( bp::arg("pRegularGrid") )
-            , "Set the structured grid\n@param pRegularGrid the structured grid\n/" )    
+            , ( bp::arg("pRegularGrid") ) )    
         .def( 
             "Setup"
             , (void ( ::AbstractRegularGridDiscreteContinuumSolver<3>::* )(  ))(&::AbstractRegularGridDiscreteContinuumSolver< 3 >::Setup)
             , (void ( AbstractRegularGridDiscreteContinuumSolver_less__3__greater__wrapper::* )(  ))(&AbstractRegularGridDiscreteContinuumSolver_less__3__greater__wrapper::default_Setup) )    
         .def( 
             "Solve"
-            , bp::pure_virtual( (void ( ::AbstractRegularGridDiscreteContinuumSolver<3>::* )(  ))(&::AbstractRegularGridDiscreteContinuumSolver< 3 >::Solve) )
-            , "Overridden Update method.\n/" )    
+            , bp::pure_virtual( (void ( ::AbstractRegularGridDiscreteContinuumSolver<3>::* )(  ))(&::AbstractRegularGridDiscreteContinuumSolver< 3 >::Solve) ) )    
         .def( 
             "Update"
             , (void ( ::AbstractRegularGridDiscreteContinuumSolver<3>::* )(  ))(&::AbstractRegularGridDiscreteContinuumSolver< 3 >::Update)
@@ -5899,7 +5795,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             , (void ( AbstractRegularGridDiscreteContinuumSolver_less__3__greater__wrapper::* )( ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > const & ))(&AbstractRegularGridDiscreteContinuumSolver_less__3__greater__wrapper::default_UpdateSolution)
             , ( bp::arg("rData") ) );
 
-    bp::class_< AbstractUnstructuredGridDiscreteContinuumSolver_less__2__greater__wrapper, bp::bases< AbstractDiscreteContinuumSolver< 2 > >, boost::noncopyable >( "AbstractUnstructuredGridDiscreteContinuumSolver2", "", bp::init< >("Constructor\n/") )    
+    bp::class_< AbstractUnstructuredGridDiscreteContinuumSolver_less__2__greater__wrapper, bp::bases< AbstractDiscreteContinuumSolver< 2 > >, boost::noncopyable >( "AbstractUnstructuredGridDiscreteContinuumSolver2", bp::init< >() )    
         .def( 
             "GetConcentrations"
             , (::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( ::AbstractUnstructuredGridDiscreteContinuumSolver<2>::* )( ::std::vector< DimensionalChastePoint<2> > const & ))(&::AbstractUnstructuredGridDiscreteContinuumSolver< 2 >::GetConcentrations)
@@ -5921,8 +5817,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             , (::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( AbstractUnstructuredGridDiscreteContinuumSolver_less__2__greater__wrapper::* )(  ))(&AbstractUnstructuredGridDiscreteContinuumSolver_less__2__greater__wrapper::default_GetConcentrationsAtCentroids) )    
         .def( 
             "GetMesh"
-            , (::boost::shared_ptr< DiscreteContinuumMesh< 2, 2 > > ( ::AbstractUnstructuredGridDiscreteContinuumSolver<2>::* )(  ))( &::AbstractUnstructuredGridDiscreteContinuumSolver< 2 >::GetMesh )
-            , "Return the mesh\n@return a pointer to the mesh\n/" )    
+            , (::boost::shared_ptr< DiscreteContinuumMesh< 2, 2 > > ( ::AbstractUnstructuredGridDiscreteContinuumSolver<2>::* )(  ))( &::AbstractUnstructuredGridDiscreteContinuumSolver< 2 >::GetMesh ) )    
         .def( 
             "GetSolution"
             , (::std::vector< double > ( ::AbstractUnstructuredGridDiscreteContinuumSolver<2>::* )( ::std::vector< DimensionalChastePoint<2> > const & ))(&::AbstractUnstructuredGridDiscreteContinuumSolver< 2 >::GetSolution)
@@ -5945,16 +5840,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         .def( 
             "SetMesh"
             , (void ( ::AbstractUnstructuredGridDiscreteContinuumSolver<2>::* )( ::boost::shared_ptr< DiscreteContinuumMesh< 2, 2 > > ))( &::AbstractUnstructuredGridDiscreteContinuumSolver< 2 >::SetMesh )
-            , ( bp::arg("pMesh") )
-            , "Set the mesh\n@param pMesh the finite element mesh\n/" )    
+            , ( bp::arg("pMesh") ) )    
         .def( 
             "Setup"
             , (void ( ::AbstractUnstructuredGridDiscreteContinuumSolver<2>::* )(  ))(&::AbstractUnstructuredGridDiscreteContinuumSolver< 2 >::Setup)
             , (void ( AbstractUnstructuredGridDiscreteContinuumSolver_less__2__greater__wrapper::* )(  ))(&AbstractUnstructuredGridDiscreteContinuumSolver_less__2__greater__wrapper::default_Setup) )    
         .def( 
             "Solve"
-            , bp::pure_virtual( (void ( ::AbstractUnstructuredGridDiscreteContinuumSolver<2>::* )(  ))(&::AbstractUnstructuredGridDiscreteContinuumSolver< 2 >::Solve) )
-            , "Overridden Update method.\n/" )    
+            , bp::pure_virtual( (void ( ::AbstractUnstructuredGridDiscreteContinuumSolver<2>::* )(  ))(&::AbstractUnstructuredGridDiscreteContinuumSolver< 2 >::Solve) ) )    
         .def( 
             "Update"
             , (void ( ::AbstractUnstructuredGridDiscreteContinuumSolver<2>::* )(  ))(&::AbstractUnstructuredGridDiscreteContinuumSolver< 2 >::Update)
@@ -5991,7 +5884,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             , (::std::vector< double > ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))(&::AbstractDiscreteContinuumSolver< 2 >::GetSolution)
             , (::std::vector< double > ( AbstractUnstructuredGridDiscreteContinuumSolver_less__2__greater__wrapper::* )(  ))(&AbstractUnstructuredGridDiscreteContinuumSolver_less__2__greater__wrapper::default_GetSolution) );
 
-    bp::class_< AbstractUnstructuredGridDiscreteContinuumSolver_less__3__greater__wrapper, bp::bases< AbstractDiscreteContinuumSolver< 3 > >, boost::noncopyable >( "AbstractUnstructuredGridDiscreteContinuumSolver3", "", bp::init< >("Constructor\n/") )    
+    bp::class_< AbstractUnstructuredGridDiscreteContinuumSolver_less__3__greater__wrapper, bp::bases< AbstractDiscreteContinuumSolver< 3 > >, boost::noncopyable >( "AbstractUnstructuredGridDiscreteContinuumSolver3", bp::init< >() )    
         .def( 
             "GetConcentrations"
             , (::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( ::AbstractUnstructuredGridDiscreteContinuumSolver<3>::* )( ::std::vector< DimensionalChastePoint<3> > const & ))(&::AbstractUnstructuredGridDiscreteContinuumSolver< 3 >::GetConcentrations)
@@ -6013,8 +5906,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             , (::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( AbstractUnstructuredGridDiscreteContinuumSolver_less__3__greater__wrapper::* )(  ))(&AbstractUnstructuredGridDiscreteContinuumSolver_less__3__greater__wrapper::default_GetConcentrationsAtCentroids) )    
         .def( 
             "GetMesh"
-            , (::boost::shared_ptr< DiscreteContinuumMesh< 3, 3 > > ( ::AbstractUnstructuredGridDiscreteContinuumSolver<3>::* )(  ))( &::AbstractUnstructuredGridDiscreteContinuumSolver< 3 >::GetMesh )
-            , "Return the mesh\n@return a pointer to the mesh\n/" )    
+            , (::boost::shared_ptr< DiscreteContinuumMesh< 3, 3 > > ( ::AbstractUnstructuredGridDiscreteContinuumSolver<3>::* )(  ))( &::AbstractUnstructuredGridDiscreteContinuumSolver< 3 >::GetMesh ) )    
         .def( 
             "GetSolution"
             , (::std::vector< double > ( ::AbstractUnstructuredGridDiscreteContinuumSolver<3>::* )( ::std::vector< DimensionalChastePoint<3> > const & ))(&::AbstractUnstructuredGridDiscreteContinuumSolver< 3 >::GetSolution)
@@ -6037,16 +5929,14 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         .def( 
             "SetMesh"
             , (void ( ::AbstractUnstructuredGridDiscreteContinuumSolver<3>::* )( ::boost::shared_ptr< DiscreteContinuumMesh< 3, 3 > > ))( &::AbstractUnstructuredGridDiscreteContinuumSolver< 3 >::SetMesh )
-            , ( bp::arg("pMesh") )
-            , "Set the mesh\n@param pMesh the finite element mesh\n/" )    
+            , ( bp::arg("pMesh") ) )    
         .def( 
             "Setup"
             , (void ( ::AbstractUnstructuredGridDiscreteContinuumSolver<3>::* )(  ))(&::AbstractUnstructuredGridDiscreteContinuumSolver< 3 >::Setup)
             , (void ( AbstractUnstructuredGridDiscreteContinuumSolver_less__3__greater__wrapper::* )(  ))(&AbstractUnstructuredGridDiscreteContinuumSolver_less__3__greater__wrapper::default_Setup) )    
         .def( 
             "Solve"
-            , bp::pure_virtual( (void ( ::AbstractUnstructuredGridDiscreteContinuumSolver<3>::* )(  ))(&::AbstractUnstructuredGridDiscreteContinuumSolver< 3 >::Solve) )
-            , "Overridden Update method.\n/" )    
+            , bp::pure_virtual( (void ( ::AbstractUnstructuredGridDiscreteContinuumSolver<3>::* )(  ))(&::AbstractUnstructuredGridDiscreteContinuumSolver< 3 >::Solve) ) )    
         .def( 
             "Update"
             , (void ( ::AbstractUnstructuredGridDiscreteContinuumSolver<3>::* )(  ))(&::AbstractUnstructuredGridDiscreteContinuumSolver< 3 >::Update)
@@ -6085,7 +5975,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::BoundaryConditionSource
         typedef bp::class_< BoundaryConditionSource > BoundaryConditionSource_exposer_t;
-        BoundaryConditionSource_exposer_t BoundaryConditionSource_exposer = BoundaryConditionSource_exposer_t( "BoundaryConditionSource", "/\nHelper struct for defining the source of the boundary condition value.\nIt can be from a data array or a single prescribed value.\n/" );
+        BoundaryConditionSource_exposer_t BoundaryConditionSource_exposer = BoundaryConditionSource_exposer_t( "BoundaryConditionSource" );
         bp::scope BoundaryConditionSource_scope( BoundaryConditionSource_exposer );
         bp::enum_< BoundaryConditionSource::Value>("Value")
             .value("LABEL_BASED", BoundaryConditionSource::LABEL_BASED)
@@ -6096,7 +5986,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::BoundaryConditionType
         typedef bp::class_< BoundaryConditionType > BoundaryConditionType_exposer_t;
-        BoundaryConditionType_exposer_t BoundaryConditionType_exposer = BoundaryConditionType_exposer_t( "BoundaryConditionType", "Helper struct for defining the type of boundary condition.\n/" );
+        BoundaryConditionType_exposer_t BoundaryConditionType_exposer = BoundaryConditionType_exposer_t( "BoundaryConditionType" );
         bp::scope BoundaryConditionType_scope( BoundaryConditionType_exposer );
         bp::enum_< BoundaryConditionType::Value>("Value")
             .value("POINT", BoundaryConditionType::POINT)
@@ -6112,7 +6002,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::DiscreteSource< 2 >
         typedef bp::class_< DiscreteSource_less__2__greater__wrapper > DiscreteSource2_exposer_t;
-        DiscreteSource2_exposer_t DiscreteSource2_exposer = DiscreteSource2_exposer_t( "DiscreteSource2", "", bp::init< >("Constructor\n/") );
+        DiscreteSource2_exposer_t DiscreteSource2_exposer = DiscreteSource2_exposer_t( "DiscreteSource2", bp::init< >() );
         bp::scope DiscreteSource2_scope( DiscreteSource2_exposer );
         { //::DiscreteSource< 2 >::Create
         
@@ -6121,8 +6011,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             DiscreteSource2_exposer.def( 
                 "Create"
-                , Create_function_type( &::DiscreteSource< 2 >::Create )
-                , "Factory constructor method\n@return a pointer to an instance of the class\n/" );
+                , Create_function_type( &::DiscreteSource< 2 >::Create ) );
         
         }
         { //::DiscreteSource< 2 >::GetConstantInUMeshValues
@@ -6181,8 +6070,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteSource2_exposer.def( 
                 "SetConstantInUValue"
                 , SetConstantInUValue_function_type( &::DiscreteSource< 2 >::SetConstantInUValue )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::DiscreteSource< 2 >::SetLabelName
@@ -6193,8 +6081,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteSource2_exposer.def( 
                 "SetLabelName"
                 , SetLabelName_function_type( &::DiscreteSource< 2 >::SetLabelName )
-                , ( bp::arg("rLabel") )
-                , "Set the name of the label used in LABEL type sources\n@param rLabel the label for the source strength value\n/" );
+                , ( bp::arg("rLabel") ) );
         
         }
         { //::DiscreteSource< 2 >::SetLinearInUValue
@@ -6205,8 +6092,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteSource2_exposer.def( 
                 "SetLinearInUValue"
                 , SetLinearInUValue_function_type( &::DiscreteSource< 2 >::SetLinearInUValue )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::DiscreteSource< 2 >::SetMesh
@@ -6217,8 +6103,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteSource2_exposer.def( 
                 "SetMesh"
                 , SetMesh_function_type( &::DiscreteSource< 2 >::SetMesh )
-                , ( bp::arg("pMesh") )
-                , "Set the finite element mesh\n@param pMesh the finite element mesh\n/" );
+                , ( bp::arg("pMesh") ) );
         
         }
         { //::DiscreteSource< 2 >::SetPoints
@@ -6229,8 +6114,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteSource2_exposer.def( 
                 "SetPoints"
                 , SetPoints_function_type( &::DiscreteSource< 2 >::SetPoints )
-                , ( bp::arg("points") )
-                , "Set the points for POINT type sources\n@param points the point locations for POINT type sources\n/" );
+                , ( bp::arg("points") ) );
         
         }
         { //::DiscreteSource< 2 >::SetRegularGrid
@@ -6241,8 +6125,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteSource2_exposer.def( 
                 "SetRegularGrid"
                 , SetRegularGrid_function_type( &::DiscreteSource< 2 >::SetRegularGrid )
-                , ( bp::arg("pRegularGrid") )
-                , "Set the regular grid\n@param pRegularGrid the regular grid\n/" );
+                , ( bp::arg("pRegularGrid") ) );
         
         }
         DiscreteSource2_exposer.staticmethod( "Create" );
@@ -6251,7 +6134,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::CellBasedDiscreteSource< 2 >
         typedef bp::class_< CellBasedDiscreteSource_less__2__greater__wrapper, bp::bases< DiscreteSource< 2 > > > CellBasedDiscreteSource2_exposer_t;
-        CellBasedDiscreteSource2_exposer_t CellBasedDiscreteSource2_exposer = CellBasedDiscreteSource2_exposer_t( "CellBasedDiscreteSource2", "", bp::init< >("Constructor\n/") );
+        CellBasedDiscreteSource2_exposer_t CellBasedDiscreteSource2_exposer = CellBasedDiscreteSource2_exposer_t( "CellBasedDiscreteSource2", bp::init< >() );
         bp::scope CellBasedDiscreteSource2_scope( CellBasedDiscreteSource2_exposer );
         { //::CellBasedDiscreteSource< 2 >::Create
         
@@ -6260,8 +6143,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             CellBasedDiscreteSource2_exposer.def( 
                 "Create"
-                , Create_function_type( &::CellBasedDiscreteSource< 2 >::Create )
-                , "Factory constructor method\n@return a pointer to an instance of the class\n/" );
+                , Create_function_type( &::CellBasedDiscreteSource< 2 >::Create ) );
         
         }
         { //::CellBasedDiscreteSource< 2 >::GetConstantInUMeshValues
@@ -6320,8 +6202,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             CellBasedDiscreteSource2_exposer.def( 
                 "SetConstantInUConsumptionRatePerCell"
                 , SetConstantInUConsumptionRatePerCell_function_type( &::CellBasedDiscreteSource< 2 >::SetConstantInUConsumptionRatePerCell )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::CellBasedDiscreteSource< 2 >::SetLinearInUConsumptionRatePerCell
@@ -6332,8 +6213,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             CellBasedDiscreteSource2_exposer.def( 
                 "SetLinearInUConsumptionRatePerCell"
                 , SetLinearInUConsumptionRatePerCell_function_type( &::CellBasedDiscreteSource< 2 >::SetLinearInUConsumptionRatePerCell )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         CellBasedDiscreteSource2_exposer.staticmethod( "Create" );
@@ -6343,7 +6223,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::DiscreteSource< 3 >
         typedef bp::class_< DiscreteSource_less__3__greater__wrapper > DiscreteSource3_exposer_t;
-        DiscreteSource3_exposer_t DiscreteSource3_exposer = DiscreteSource3_exposer_t( "DiscreteSource3", "", bp::init< >("Constructor\n/") );
+        DiscreteSource3_exposer_t DiscreteSource3_exposer = DiscreteSource3_exposer_t( "DiscreteSource3", bp::init< >() );
         bp::scope DiscreteSource3_scope( DiscreteSource3_exposer );
         { //::DiscreteSource< 3 >::Create
         
@@ -6352,8 +6232,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             DiscreteSource3_exposer.def( 
                 "Create"
-                , Create_function_type( &::DiscreteSource< 3 >::Create )
-                , "Factory constructor method\n@return a pointer to an instance of the class\n/" );
+                , Create_function_type( &::DiscreteSource< 3 >::Create ) );
         
         }
         { //::DiscreteSource< 3 >::GetConstantInUMeshValues
@@ -6412,8 +6291,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteSource3_exposer.def( 
                 "SetConstantInUValue"
                 , SetConstantInUValue_function_type( &::DiscreteSource< 3 >::SetConstantInUValue )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::DiscreteSource< 3 >::SetLabelName
@@ -6424,8 +6302,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteSource3_exposer.def( 
                 "SetLabelName"
                 , SetLabelName_function_type( &::DiscreteSource< 3 >::SetLabelName )
-                , ( bp::arg("rLabel") )
-                , "Set the name of the label used in LABEL type sources\n@param rLabel the label for the source strength value\n/" );
+                , ( bp::arg("rLabel") ) );
         
         }
         { //::DiscreteSource< 3 >::SetLinearInUValue
@@ -6436,8 +6313,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteSource3_exposer.def( 
                 "SetLinearInUValue"
                 , SetLinearInUValue_function_type( &::DiscreteSource< 3 >::SetLinearInUValue )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::DiscreteSource< 3 >::SetMesh
@@ -6448,8 +6324,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteSource3_exposer.def( 
                 "SetMesh"
                 , SetMesh_function_type( &::DiscreteSource< 3 >::SetMesh )
-                , ( bp::arg("pMesh") )
-                , "Set the finite element mesh\n@param pMesh the finite element mesh\n/" );
+                , ( bp::arg("pMesh") ) );
         
         }
         { //::DiscreteSource< 3 >::SetPoints
@@ -6460,8 +6335,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteSource3_exposer.def( 
                 "SetPoints"
                 , SetPoints_function_type( &::DiscreteSource< 3 >::SetPoints )
-                , ( bp::arg("points") )
-                , "Set the points for POINT type sources\n@param points the point locations for POINT type sources\n/" );
+                , ( bp::arg("points") ) );
         
         }
         { //::DiscreteSource< 3 >::SetRegularGrid
@@ -6472,8 +6346,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteSource3_exposer.def( 
                 "SetRegularGrid"
                 , SetRegularGrid_function_type( &::DiscreteSource< 3 >::SetRegularGrid )
-                , ( bp::arg("pRegularGrid") )
-                , "Set the regular grid\n@param pRegularGrid the regular grid\n/" );
+                , ( bp::arg("pRegularGrid") ) );
         
         }
         DiscreteSource3_exposer.staticmethod( "Create" );
@@ -6482,7 +6355,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::CellBasedDiscreteSource< 3 >
         typedef bp::class_< CellBasedDiscreteSource_less__3__greater__wrapper, bp::bases< DiscreteSource< 3 > > > CellBasedDiscreteSource3_exposer_t;
-        CellBasedDiscreteSource3_exposer_t CellBasedDiscreteSource3_exposer = CellBasedDiscreteSource3_exposer_t( "CellBasedDiscreteSource3", "", bp::init< >("Constructor\n/") );
+        CellBasedDiscreteSource3_exposer_t CellBasedDiscreteSource3_exposer = CellBasedDiscreteSource3_exposer_t( "CellBasedDiscreteSource3", bp::init< >() );
         bp::scope CellBasedDiscreteSource3_scope( CellBasedDiscreteSource3_exposer );
         { //::CellBasedDiscreteSource< 3 >::Create
         
@@ -6491,8 +6364,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             CellBasedDiscreteSource3_exposer.def( 
                 "Create"
-                , Create_function_type( &::CellBasedDiscreteSource< 3 >::Create )
-                , "Factory constructor method\n@return a pointer to an instance of the class\n/" );
+                , Create_function_type( &::CellBasedDiscreteSource< 3 >::Create ) );
         
         }
         { //::CellBasedDiscreteSource< 3 >::GetConstantInUMeshValues
@@ -6551,8 +6423,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             CellBasedDiscreteSource3_exposer.def( 
                 "SetConstantInUConsumptionRatePerCell"
                 , SetConstantInUConsumptionRatePerCell_function_type( &::CellBasedDiscreteSource< 3 >::SetConstantInUConsumptionRatePerCell )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::CellBasedDiscreteSource< 3 >::SetLinearInUConsumptionRatePerCell
@@ -6563,8 +6434,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             CellBasedDiscreteSource3_exposer.def( 
                 "SetLinearInUConsumptionRatePerCell"
                 , SetLinearInUConsumptionRatePerCell_function_type( &::CellBasedDiscreteSource< 3 >::SetLinearInUConsumptionRatePerCell )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         CellBasedDiscreteSource3_exposer.staticmethod( "Create" );
@@ -6574,7 +6444,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::CellStateDependentDiscreteSource< 2 >
         typedef bp::class_< CellStateDependentDiscreteSource_less__2__greater__wrapper, bp::bases< DiscreteSource< 2 > > > CellStateDependentDiscreteSource2_exposer_t;
-        CellStateDependentDiscreteSource2_exposer_t CellStateDependentDiscreteSource2_exposer = CellStateDependentDiscreteSource2_exposer_t( "CellStateDependentDiscreteSource2", "", bp::init< >("Constructor\n/") );
+        CellStateDependentDiscreteSource2_exposer_t CellStateDependentDiscreteSource2_exposer = CellStateDependentDiscreteSource2_exposer_t( "CellStateDependentDiscreteSource2", bp::init< >() );
         bp::scope CellStateDependentDiscreteSource2_scope( CellStateDependentDiscreteSource2_exposer );
         { //::CellStateDependentDiscreteSource< 2 >::Create
         
@@ -6583,8 +6453,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             CellStateDependentDiscreteSource2_exposer.def( 
                 "Create"
-                , Create_function_type( &::CellStateDependentDiscreteSource< 2 >::Create )
-                , "Factory constructor method\n@return a pointer to an instance of the class\n/" );
+                , Create_function_type( &::CellStateDependentDiscreteSource< 2 >::Create ) );
         
         }
         { //::CellStateDependentDiscreteSource< 2 >::GetConstantInUMeshValues
@@ -6643,8 +6512,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             CellStateDependentDiscreteSource2_exposer.def( 
                 "SetStateRateMap"
                 , SetStateRateMap_function_type( &::CellStateDependentDiscreteSource< 2 >::SetStateRateMap )
-                , ( bp::arg("stateRateMap") )
-                , "Set cell 'color' specific consumption rates. 'Color' is a property of the cell mutation state set in its constructor.\nIt is up to the user to ensure that different mutation states of interest have different 'color' values assigned.\nIf a cell 'color' key is requested from the map that does not have a value assigned then its consumption rate will\nbe 0.0.\n@param stateRateMap the label for the source strength value\n/" );
+                , ( bp::arg("stateRateMap") ) );
         
         }
         { //::CellStateDependentDiscreteSource< 2 >::SetStateRateThresholdMap
@@ -6655,8 +6523,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             CellStateDependentDiscreteSource2_exposer.def( 
                 "SetStateRateThresholdMap"
                 , SetStateRateThresholdMap_function_type( &::CellStateDependentDiscreteSource< 2 >::SetStateRateThresholdMap )
-                , ( bp::arg("stateThresholdMap") )
-                , "Set cell 'color' specific consumption rate thresholds.\nIf a cell 'color' key is requested from the map that does not have a value assigned then its consumption rate threshold will\nbe 0.0.\n@param stateThresholdMap the label for the source strength value\n/" );
+                , ( bp::arg("stateThresholdMap") ) );
         
         }
         CellStateDependentDiscreteSource2_exposer.staticmethod( "Create" );
@@ -6666,7 +6533,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::CellStateDependentDiscreteSource< 3 >
         typedef bp::class_< CellStateDependentDiscreteSource_less__3__greater__wrapper, bp::bases< DiscreteSource< 3 > > > CellStateDependentDiscreteSource3_exposer_t;
-        CellStateDependentDiscreteSource3_exposer_t CellStateDependentDiscreteSource3_exposer = CellStateDependentDiscreteSource3_exposer_t( "CellStateDependentDiscreteSource3", "", bp::init< >("Constructor\n/") );
+        CellStateDependentDiscreteSource3_exposer_t CellStateDependentDiscreteSource3_exposer = CellStateDependentDiscreteSource3_exposer_t( "CellStateDependentDiscreteSource3", bp::init< >() );
         bp::scope CellStateDependentDiscreteSource3_scope( CellStateDependentDiscreteSource3_exposer );
         { //::CellStateDependentDiscreteSource< 3 >::Create
         
@@ -6675,8 +6542,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             CellStateDependentDiscreteSource3_exposer.def( 
                 "Create"
-                , Create_function_type( &::CellStateDependentDiscreteSource< 3 >::Create )
-                , "Factory constructor method\n@return a pointer to an instance of the class\n/" );
+                , Create_function_type( &::CellStateDependentDiscreteSource< 3 >::Create ) );
         
         }
         { //::CellStateDependentDiscreteSource< 3 >::GetConstantInUMeshValues
@@ -6735,8 +6601,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             CellStateDependentDiscreteSource3_exposer.def( 
                 "SetStateRateMap"
                 , SetStateRateMap_function_type( &::CellStateDependentDiscreteSource< 3 >::SetStateRateMap )
-                , ( bp::arg("stateRateMap") )
-                , "Set cell 'color' specific consumption rates. 'Color' is a property of the cell mutation state set in its constructor.\nIt is up to the user to ensure that different mutation states of interest have different 'color' values assigned.\nIf a cell 'color' key is requested from the map that does not have a value assigned then its consumption rate will\nbe 0.0.\n@param stateRateMap the label for the source strength value\n/" );
+                , ( bp::arg("stateRateMap") ) );
         
         }
         { //::CellStateDependentDiscreteSource< 3 >::SetStateRateThresholdMap
@@ -6747,8 +6612,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             CellStateDependentDiscreteSource3_exposer.def( 
                 "SetStateRateThresholdMap"
                 , SetStateRateThresholdMap_function_type( &::CellStateDependentDiscreteSource< 3 >::SetStateRateThresholdMap )
-                , ( bp::arg("stateThresholdMap") )
-                , "Set cell 'color' specific consumption rate thresholds.\nIf a cell 'color' key is requested from the map that does not have a value assigned then its consumption rate threshold will\nbe 0.0.\n@param stateThresholdMap the label for the source strength value\n/" );
+                , ( bp::arg("stateThresholdMap") ) );
         
         }
         CellStateDependentDiscreteSource3_exposer.staticmethod( "Create" );
@@ -6758,7 +6622,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::DiscreteContinuumBoundaryCondition< 2 >
         typedef bp::class_< DiscreteContinuumBoundaryCondition< 2 > > DiscreteContinuumBoundaryCondition2_exposer_t;
-        DiscreteContinuumBoundaryCondition2_exposer_t DiscreteContinuumBoundaryCondition2_exposer = DiscreteContinuumBoundaryCondition2_exposer_t( "DiscreteContinuumBoundaryCondition2", "", bp::init< >("Constructor\n/") );
+        DiscreteContinuumBoundaryCondition2_exposer_t DiscreteContinuumBoundaryCondition2_exposer = DiscreteContinuumBoundaryCondition2_exposer_t( "DiscreteContinuumBoundaryCondition2", bp::init< >() );
         bp::scope DiscreteContinuumBoundaryCondition2_scope( DiscreteContinuumBoundaryCondition2_exposer );
         { //::DiscreteContinuumBoundaryCondition< 2 >::Create
         
@@ -6767,8 +6631,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "Create"
-                , Create_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::Create )
-                , "Factory constructor method\n/" );
+                , Create_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::Create ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::GetType
@@ -6778,8 +6641,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "GetType"
-                , GetType_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::GetType )
-                , "Return the type of boundary condition, POINT, FACET, OUTER etc.\n@return the type of boundary condition\n/" );
+                , GetType_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::GetType ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::GetValue
@@ -6789,8 +6651,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "GetValue"
-                , GetValue_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::GetValue )
-                , "Return the default value of the boundary condition\n@return the default value of the boundary condition\n/" );
+                , GetValue_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::GetValue ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::GetValue
@@ -6801,8 +6662,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "GetValue"
                 , GetValue_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::GetValue )
-                , ( bp::arg("location"), bp::arg("tolerance") )
-                , "Return the value of the boundary condition evaluated at a point and whether the point is on a boundary\n@param location the location of the point\n@param tolerance the tolerance for evaluating if a point is on a boundary\n@return a bool specifying if the point is on a boundary and the value of the point on the boundary\n/" );
+                , ( bp::arg("location"), bp::arg("tolerance") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::SetDomain
@@ -6813,8 +6673,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "SetDomain"
                 , SetDomain_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::SetDomain )
-                , ( bp::arg("pDomain") )
-                , "Set a domain for use in the calculation of FACET type boundary conditions\n@param pDomain the part containing labelled facets for the boundary condition\n/" );
+                , ( bp::arg("pDomain") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::SetLabelName
@@ -6825,8 +6684,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "SetLabelName"
                 , SetLabelName_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::SetLabelName )
-                , ( bp::arg("label") )
-                , "Set the name of the label used in LABEL type sources\n@param rLabel the label for the source strength value\n/" );
+                , ( bp::arg("label") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::SetMesh
@@ -6837,8 +6695,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "SetMesh"
                 , SetMesh_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::SetMesh )
-                , ( bp::arg("pMesh") )
-                , "Set the finite element mesh\n@param pMesh the finite element mesh\n/" );
+                , ( bp::arg("pMesh") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::SetNetwork
@@ -6849,8 +6706,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "SetNetwork"
                 , SetNetwork_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::SetNetwork )
-                , ( bp::arg("pNetwork") )
-                , "" );
+                , ( bp::arg("pNetwork") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::SetPoints
@@ -6861,8 +6717,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "SetPoints"
                 , SetPoints_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::SetPoints )
-                , ( bp::arg("points") )
-                , "Set the points for POINT type boundary conditions\n@param points the point locations for POINT type boundary conditions\n/" );
+                , ( bp::arg("points") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::SetRegularGrid
@@ -6873,8 +6728,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "SetRegularGrid"
                 , SetRegularGrid_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::SetRegularGrid )
-                , ( bp::arg("pRegularGrid") )
-                , "Set the regular grid\n@param pRegularGrid the regular grid\n/" );
+                , ( bp::arg("pRegularGrid") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::SetSource
@@ -6885,8 +6739,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "SetSource"
                 , SetSource_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::SetSource )
-                , ( bp::arg("boundarySource") )
-                , "Set where the value of the boundary condition is obtained, e.g. LABEL, PRESCRIBED\n@param boundarySource enum specifying where the value of the boundary condition is obtained\n/" );
+                , ( bp::arg("boundarySource") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::SetType
@@ -6897,8 +6750,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "SetType"
                 , SetType_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::SetType )
-                , ( bp::arg("boundaryType") )
-                , "Set the type of boundary condition, e.g. POINT, FACET\n@param boundaryType enum specifying the type of boundary condition\n/" );
+                , ( bp::arg("boundaryType") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::SetValue
@@ -6909,8 +6761,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "SetValue"
                 , SetValue_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::SetValue )
-                , ( bp::arg("value") )
-                , "Set the default value of the boundary condition for any points on the boundary\n@param value the default value of the boundary condition for any points on the boundary\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::UpdateBoundaryConditionContainer
@@ -6921,8 +6772,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "UpdateBoundaryConditionContainer"
                 , UpdateBoundaryConditionContainer_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::UpdateBoundaryConditionContainer )
-                , ( bp::arg("pContainer") )
-                , "Update the boundary conditions container for use with the finite element solver\n@param pContainer the boundary condition container\n/" );
+                , ( bp::arg("pContainer") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::UpdateRegularGridBoundaryConditions
@@ -6933,8 +6783,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "UpdateRegularGridBoundaryConditions"
                 , UpdateRegularGridBoundaryConditions_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::UpdateRegularGridBoundaryConditions )
-                , ( bp::arg("pBoundaryConditions") )
-                , "Update the boundary conditions on the regular grid\n@param pBoundaryConditions the boundary condition container\n@param tolerance the tolerance for evaluating if a point is on a boundary\n/" );
+                , ( bp::arg("pBoundaryConditions") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::UpdateRegularGridCellBoundaryConditions
@@ -6945,8 +6794,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "UpdateRegularGridCellBoundaryConditions"
                 , UpdateRegularGridCellBoundaryConditions_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::UpdateRegularGridCellBoundaryConditions )
-                , ( bp::arg("pBoundaryConditions") )
-                , "" );
+                , ( bp::arg("pBoundaryConditions") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::UpdateRegularGridFacetBoundaryConditions
@@ -6957,8 +6805,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "UpdateRegularGridFacetBoundaryConditions"
                 , UpdateRegularGridFacetBoundaryConditions_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::UpdateRegularGridFacetBoundaryConditions )
-                , ( bp::arg("pBoundaryConditions") )
-                , "" );
+                , ( bp::arg("pBoundaryConditions") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::UpdateRegularGridPartBoundaryConditions
@@ -6969,8 +6816,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "UpdateRegularGridPartBoundaryConditions"
                 , UpdateRegularGridPartBoundaryConditions_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::UpdateRegularGridPartBoundaryConditions )
-                , ( bp::arg("pBoundaryConditions") )
-                , "" );
+                , ( bp::arg("pBoundaryConditions") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::UpdateRegularGridPointBoundaryConditions
@@ -6981,8 +6827,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "UpdateRegularGridPointBoundaryConditions"
                 , UpdateRegularGridPointBoundaryConditions_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::UpdateRegularGridPointBoundaryConditions )
-                , ( bp::arg("pBoundaryConditions") )
-                , "" );
+                , ( bp::arg("pBoundaryConditions") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 2 >::UpdateRegularGridSegmentBoundaryConditions
@@ -6993,8 +6838,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition2_exposer.def( 
                 "UpdateRegularGridSegmentBoundaryConditions"
                 , UpdateRegularGridSegmentBoundaryConditions_function_type( &::DiscreteContinuumBoundaryCondition< 2 >::UpdateRegularGridSegmentBoundaryConditions )
-                , ( bp::arg("pBoundaryConditions") )
-                , "" );
+                , ( bp::arg("pBoundaryConditions") ) );
         
         }
         DiscreteContinuumBoundaryCondition2_exposer.staticmethod( "Create" );
@@ -7003,7 +6847,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::DiscreteContinuumBoundaryCondition< 3 >
         typedef bp::class_< DiscreteContinuumBoundaryCondition< 3 > > DiscreteContinuumBoundaryCondition3_exposer_t;
-        DiscreteContinuumBoundaryCondition3_exposer_t DiscreteContinuumBoundaryCondition3_exposer = DiscreteContinuumBoundaryCondition3_exposer_t( "DiscreteContinuumBoundaryCondition3", "", bp::init< >("Constructor\n/") );
+        DiscreteContinuumBoundaryCondition3_exposer_t DiscreteContinuumBoundaryCondition3_exposer = DiscreteContinuumBoundaryCondition3_exposer_t( "DiscreteContinuumBoundaryCondition3", bp::init< >() );
         bp::scope DiscreteContinuumBoundaryCondition3_scope( DiscreteContinuumBoundaryCondition3_exposer );
         { //::DiscreteContinuumBoundaryCondition< 3 >::Create
         
@@ -7012,8 +6856,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "Create"
-                , Create_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::Create )
-                , "Factory constructor method\n/" );
+                , Create_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::Create ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::GetType
@@ -7023,8 +6866,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "GetType"
-                , GetType_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::GetType )
-                , "Return the type of boundary condition, POINT, FACET, OUTER etc.\n@return the type of boundary condition\n/" );
+                , GetType_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::GetType ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::GetValue
@@ -7034,8 +6876,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "GetValue"
-                , GetValue_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::GetValue )
-                , "Return the default value of the boundary condition\n@return the default value of the boundary condition\n/" );
+                , GetValue_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::GetValue ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::GetValue
@@ -7046,8 +6887,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "GetValue"
                 , GetValue_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::GetValue )
-                , ( bp::arg("location"), bp::arg("tolerance") )
-                , "Return the value of the boundary condition evaluated at a point and whether the point is on a boundary\n@param location the location of the point\n@param tolerance the tolerance for evaluating if a point is on a boundary\n@return a bool specifying if the point is on a boundary and the value of the point on the boundary\n/" );
+                , ( bp::arg("location"), bp::arg("tolerance") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::SetDomain
@@ -7058,8 +6898,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "SetDomain"
                 , SetDomain_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::SetDomain )
-                , ( bp::arg("pDomain") )
-                , "Set a domain for use in the calculation of FACET type boundary conditions\n@param pDomain the part containing labelled facets for the boundary condition\n/" );
+                , ( bp::arg("pDomain") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::SetLabelName
@@ -7070,8 +6909,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "SetLabelName"
                 , SetLabelName_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::SetLabelName )
-                , ( bp::arg("label") )
-                , "Set the name of the label used in LABEL type sources\n@param rLabel the label for the source strength value\n/" );
+                , ( bp::arg("label") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::SetMesh
@@ -7082,8 +6920,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "SetMesh"
                 , SetMesh_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::SetMesh )
-                , ( bp::arg("pMesh") )
-                , "Set the finite element mesh\n@param pMesh the finite element mesh\n/" );
+                , ( bp::arg("pMesh") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::SetNetwork
@@ -7094,8 +6931,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "SetNetwork"
                 , SetNetwork_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::SetNetwork )
-                , ( bp::arg("pNetwork") )
-                , "" );
+                , ( bp::arg("pNetwork") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::SetPoints
@@ -7106,8 +6942,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "SetPoints"
                 , SetPoints_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::SetPoints )
-                , ( bp::arg("points") )
-                , "Set the points for POINT type boundary conditions\n@param points the point locations for POINT type boundary conditions\n/" );
+                , ( bp::arg("points") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::SetRegularGrid
@@ -7118,8 +6953,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "SetRegularGrid"
                 , SetRegularGrid_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::SetRegularGrid )
-                , ( bp::arg("pRegularGrid") )
-                , "Set the regular grid\n@param pRegularGrid the regular grid\n/" );
+                , ( bp::arg("pRegularGrid") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::SetSource
@@ -7130,8 +6964,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "SetSource"
                 , SetSource_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::SetSource )
-                , ( bp::arg("boundarySource") )
-                , "Set where the value of the boundary condition is obtained, e.g. LABEL, PRESCRIBED\n@param boundarySource enum specifying where the value of the boundary condition is obtained\n/" );
+                , ( bp::arg("boundarySource") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::SetType
@@ -7142,8 +6975,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "SetType"
                 , SetType_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::SetType )
-                , ( bp::arg("boundaryType") )
-                , "Set the type of boundary condition, e.g. POINT, FACET\n@param boundaryType enum specifying the type of boundary condition\n/" );
+                , ( bp::arg("boundaryType") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::SetValue
@@ -7154,8 +6986,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "SetValue"
                 , SetValue_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::SetValue )
-                , ( bp::arg("value") )
-                , "Set the default value of the boundary condition for any points on the boundary\n@param value the default value of the boundary condition for any points on the boundary\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::UpdateBoundaryConditionContainer
@@ -7166,8 +6997,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "UpdateBoundaryConditionContainer"
                 , UpdateBoundaryConditionContainer_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::UpdateBoundaryConditionContainer )
-                , ( bp::arg("pContainer") )
-                , "Update the boundary conditions container for use with the finite element solver\n@param pContainer the boundary condition container\n/" );
+                , ( bp::arg("pContainer") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::UpdateRegularGridBoundaryConditions
@@ -7178,8 +7008,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "UpdateRegularGridBoundaryConditions"
                 , UpdateRegularGridBoundaryConditions_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::UpdateRegularGridBoundaryConditions )
-                , ( bp::arg("pBoundaryConditions") )
-                , "Update the boundary conditions on the regular grid\n@param pBoundaryConditions the boundary condition container\n@param tolerance the tolerance for evaluating if a point is on a boundary\n/" );
+                , ( bp::arg("pBoundaryConditions") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::UpdateRegularGridCellBoundaryConditions
@@ -7190,8 +7019,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "UpdateRegularGridCellBoundaryConditions"
                 , UpdateRegularGridCellBoundaryConditions_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::UpdateRegularGridCellBoundaryConditions )
-                , ( bp::arg("pBoundaryConditions") )
-                , "" );
+                , ( bp::arg("pBoundaryConditions") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::UpdateRegularGridFacetBoundaryConditions
@@ -7202,8 +7030,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "UpdateRegularGridFacetBoundaryConditions"
                 , UpdateRegularGridFacetBoundaryConditions_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::UpdateRegularGridFacetBoundaryConditions )
-                , ( bp::arg("pBoundaryConditions") )
-                , "" );
+                , ( bp::arg("pBoundaryConditions") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::UpdateRegularGridPartBoundaryConditions
@@ -7214,8 +7041,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "UpdateRegularGridPartBoundaryConditions"
                 , UpdateRegularGridPartBoundaryConditions_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::UpdateRegularGridPartBoundaryConditions )
-                , ( bp::arg("pBoundaryConditions") )
-                , "" );
+                , ( bp::arg("pBoundaryConditions") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::UpdateRegularGridPointBoundaryConditions
@@ -7226,8 +7052,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "UpdateRegularGridPointBoundaryConditions"
                 , UpdateRegularGridPointBoundaryConditions_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::UpdateRegularGridPointBoundaryConditions )
-                , ( bp::arg("pBoundaryConditions") )
-                , "" );
+                , ( bp::arg("pBoundaryConditions") ) );
         
         }
         { //::DiscreteContinuumBoundaryCondition< 3 >::UpdateRegularGridSegmentBoundaryConditions
@@ -7238,8 +7063,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             DiscreteContinuumBoundaryCondition3_exposer.def( 
                 "UpdateRegularGridSegmentBoundaryConditions"
                 , UpdateRegularGridSegmentBoundaryConditions_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::UpdateRegularGridSegmentBoundaryConditions )
-                , ( bp::arg("pBoundaryConditions") )
-                , "" );
+                , ( bp::arg("pBoundaryConditions") ) );
         
         }
         DiscreteContinuumBoundaryCondition3_exposer.staticmethod( "Create" );
@@ -7248,7 +7072,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::FiniteDifferenceSolver< 2 >
         typedef bp::class_< FiniteDifferenceSolver_less__2__greater__wrapper, bp::bases< AbstractRegularGridDiscreteContinuumSolver< 2 > > > FiniteDifferenceSolver2_exposer_t;
-        FiniteDifferenceSolver2_exposer_t FiniteDifferenceSolver2_exposer = FiniteDifferenceSolver2_exposer_t( "FiniteDifferenceSolver2", "", bp::init< >("Constructor\n/") );
+        FiniteDifferenceSolver2_exposer_t FiniteDifferenceSolver2_exposer = FiniteDifferenceSolver2_exposer_t( "FiniteDifferenceSolver2", bp::init< >() );
         bp::scope FiniteDifferenceSolver2_scope( FiniteDifferenceSolver2_exposer );
         { //::FiniteDifferenceSolver< 2 >::Create
         
@@ -7257,8 +7081,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             FiniteDifferenceSolver2_exposer.def( 
                 "Create"
-                , Create_function_type( &::FiniteDifferenceSolver< 2 >::Create )
-                , "Factory constructor method\n@return a shared pointer to a new solver\n/" );
+                , Create_function_type( &::FiniteDifferenceSolver< 2 >::Create ) );
         
         }
         { //::FiniteDifferenceSolver< 2 >::GetRGBoundaryConditions
@@ -7268,8 +7091,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             FiniteDifferenceSolver2_exposer.def( 
                 "GetRGBoundaryConditions"
-                , GetRGBoundaryConditions_function_type( &::FiniteDifferenceSolver< 2 >::GetRGBoundaryConditions )
-                , "Get the boundary conditions in the finite difference representation\n@return pointer to the vector of boundary conditions, which is pairs of whether to apply-concentration values ordered by grid index.\n/" );
+                , GetRGBoundaryConditions_function_type( &::FiniteDifferenceSolver< 2 >::GetRGBoundaryConditions ) );
         
         }
         { //::FiniteDifferenceSolver< 2 >::Setup
@@ -7316,8 +7138,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             FiniteDifferenceSolver2_exposer.def( 
                 "UpdateBoundaryConditionsEachSolve"
                 , UpdateBoundaryConditionsEachSolve_function_type( &::FiniteDifferenceSolver< 2 >::UpdateBoundaryConditionsEachSolve )
-                , ( bp::arg("doUpdate") )
-                , "Whether to update the boundary conditions on each solve\n@param doUpdate update the boundary conditions on each solve\n/" );
+                , ( bp::arg("doUpdate") ) );
         
         }
         { //::AbstractDiscreteContinuumSolver< 2 >::GetConcentrations
@@ -7518,7 +7339,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::FiniteDifferenceSolver< 3 >
         typedef bp::class_< FiniteDifferenceSolver_less__3__greater__wrapper, bp::bases< AbstractRegularGridDiscreteContinuumSolver< 3 > > > FiniteDifferenceSolver3_exposer_t;
-        FiniteDifferenceSolver3_exposer_t FiniteDifferenceSolver3_exposer = FiniteDifferenceSolver3_exposer_t( "FiniteDifferenceSolver3", "", bp::init< >("Constructor\n/") );
+        FiniteDifferenceSolver3_exposer_t FiniteDifferenceSolver3_exposer = FiniteDifferenceSolver3_exposer_t( "FiniteDifferenceSolver3", bp::init< >() );
         bp::scope FiniteDifferenceSolver3_scope( FiniteDifferenceSolver3_exposer );
         { //::FiniteDifferenceSolver< 3 >::Create
         
@@ -7527,8 +7348,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             FiniteDifferenceSolver3_exposer.def( 
                 "Create"
-                , Create_function_type( &::FiniteDifferenceSolver< 3 >::Create )
-                , "Factory constructor method\n@return a shared pointer to a new solver\n/" );
+                , Create_function_type( &::FiniteDifferenceSolver< 3 >::Create ) );
         
         }
         { //::FiniteDifferenceSolver< 3 >::GetRGBoundaryConditions
@@ -7538,8 +7358,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             FiniteDifferenceSolver3_exposer.def( 
                 "GetRGBoundaryConditions"
-                , GetRGBoundaryConditions_function_type( &::FiniteDifferenceSolver< 3 >::GetRGBoundaryConditions )
-                , "Get the boundary conditions in the finite difference representation\n@return pointer to the vector of boundary conditions, which is pairs of whether to apply-concentration values ordered by grid index.\n/" );
+                , GetRGBoundaryConditions_function_type( &::FiniteDifferenceSolver< 3 >::GetRGBoundaryConditions ) );
         
         }
         { //::FiniteDifferenceSolver< 3 >::Setup
@@ -7586,8 +7405,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             FiniteDifferenceSolver3_exposer.def( 
                 "UpdateBoundaryConditionsEachSolve"
                 , UpdateBoundaryConditionsEachSolve_function_type( &::FiniteDifferenceSolver< 3 >::UpdateBoundaryConditionsEachSolve )
-                , ( bp::arg("doUpdate") )
-                , "Whether to update the boundary conditions on each solve\n@param doUpdate update the boundary conditions on each solve\n/" );
+                , ( bp::arg("doUpdate") ) );
         
         }
         { //::AbstractDiscreteContinuumSolver< 3 >::GetConcentrations
@@ -7788,7 +7606,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::FiniteElementSolver< 2 >
         typedef bp::class_< FiniteElementSolver_less__2__greater__wrapper, bp::bases< AbstractUnstructuredGridDiscreteContinuumSolver< 2 > > > FiniteElementSolver2_exposer_t;
-        FiniteElementSolver2_exposer_t FiniteElementSolver2_exposer = FiniteElementSolver2_exposer_t( "FiniteElementSolver2", "", bp::init< >("Constructor\n/") );
+        FiniteElementSolver2_exposer_t FiniteElementSolver2_exposer = FiniteElementSolver2_exposer_t( "FiniteElementSolver2", bp::init< >() );
         bp::scope FiniteElementSolver2_scope( FiniteElementSolver2_exposer );
         { //::FiniteElementSolver< 2 >::Create
         
@@ -7797,8 +7615,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             FiniteElementSolver2_exposer.def( 
                 "Create"
-                , Create_function_type( &::FiniteElementSolver< 2 >::Create )
-                , "Construct a new instance of the class and return a shared pointer to it.\n@return a shared pointer to a class instance.\n/" );
+                , Create_function_type( &::FiniteElementSolver< 2 >::Create ) );
         
         }
         { //::FiniteElementSolver< 2 >::SetGuess
@@ -7809,8 +7626,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             FiniteElementSolver2_exposer.def( 
                 "SetGuess"
                 , SetGuess_function_type( &::FiniteElementSolver< 2 >::SetGuess )
-                , ( bp::arg("guess") )
-                , "Set the initial dimensionless guess\n@param guess the guess.\n/" );
+                , ( bp::arg("guess") ) );
         
         }
         { //::FiniteElementSolver< 2 >::SetUseLinearSolveForGuess
@@ -7821,8 +7637,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             FiniteElementSolver2_exposer.def( 
                 "SetUseLinearSolveForGuess"
                 , SetUseLinearSolveForGuess_function_type( &::FiniteElementSolver< 2 >::SetUseLinearSolveForGuess )
-                , ( bp::arg("useLinearSolve") )
-                , "Use the solution from a linear solver as the initial guess\n@param useLinearSolve use the solution from a linear solver as the initial guess\n/" );
+                , ( bp::arg("useLinearSolve") ) );
         
         }
         { //::FiniteElementSolver< 2 >::SetUseSimpleNetonSolver
@@ -7833,8 +7648,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             FiniteElementSolver2_exposer.def( 
                 "SetUseSimpleNetonSolver"
                 , SetUseSimpleNetonSolver_function_type( &::FiniteElementSolver< 2 >::SetUseSimpleNetonSolver )
-                , ( bp::arg("useNewton") )
-                , "Use Chaste's simple newton solve\n@param useNewton use Chaste's simple newton solve\n/" );
+                , ( bp::arg("useNewton") ) );
         
         }
         { //::FiniteElementSolver< 2 >::Solve
@@ -8070,7 +7884,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::FiniteElementSolver< 3 >
         typedef bp::class_< FiniteElementSolver_less__3__greater__wrapper, bp::bases< AbstractUnstructuredGridDiscreteContinuumSolver< 3 > > > FiniteElementSolver3_exposer_t;
-        FiniteElementSolver3_exposer_t FiniteElementSolver3_exposer = FiniteElementSolver3_exposer_t( "FiniteElementSolver3", "", bp::init< >("Constructor\n/") );
+        FiniteElementSolver3_exposer_t FiniteElementSolver3_exposer = FiniteElementSolver3_exposer_t( "FiniteElementSolver3", bp::init< >() );
         bp::scope FiniteElementSolver3_scope( FiniteElementSolver3_exposer );
         { //::FiniteElementSolver< 3 >::Create
         
@@ -8079,8 +7893,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             FiniteElementSolver3_exposer.def( 
                 "Create"
-                , Create_function_type( &::FiniteElementSolver< 3 >::Create )
-                , "Construct a new instance of the class and return a shared pointer to it.\n@return a shared pointer to a class instance.\n/" );
+                , Create_function_type( &::FiniteElementSolver< 3 >::Create ) );
         
         }
         { //::FiniteElementSolver< 3 >::SetGuess
@@ -8091,8 +7904,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             FiniteElementSolver3_exposer.def( 
                 "SetGuess"
                 , SetGuess_function_type( &::FiniteElementSolver< 3 >::SetGuess )
-                , ( bp::arg("guess") )
-                , "Set the initial dimensionless guess\n@param guess the guess.\n/" );
+                , ( bp::arg("guess") ) );
         
         }
         { //::FiniteElementSolver< 3 >::SetUseLinearSolveForGuess
@@ -8103,8 +7915,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             FiniteElementSolver3_exposer.def( 
                 "SetUseLinearSolveForGuess"
                 , SetUseLinearSolveForGuess_function_type( &::FiniteElementSolver< 3 >::SetUseLinearSolveForGuess )
-                , ( bp::arg("useLinearSolve") )
-                , "Use the solution from a linear solver as the initial guess\n@param useLinearSolve use the solution from a linear solver as the initial guess\n/" );
+                , ( bp::arg("useLinearSolve") ) );
         
         }
         { //::FiniteElementSolver< 3 >::SetUseSimpleNetonSolver
@@ -8115,8 +7926,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             FiniteElementSolver3_exposer.def( 
                 "SetUseSimpleNetonSolver"
                 , SetUseSimpleNetonSolver_function_type( &::FiniteElementSolver< 3 >::SetUseSimpleNetonSolver )
-                , ( bp::arg("useNewton") )
-                , "Use Chaste's simple newton solve\n@param useNewton use Chaste's simple newton solve\n/" );
+                , ( bp::arg("useNewton") ) );
         
         }
         { //::FiniteElementSolver< 3 >::Solve
@@ -8352,7 +8162,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::FunctionMap< 2 >
         typedef bp::class_< FunctionMap_less__2__greater__wrapper, bp::bases< AbstractRegularGridDiscreteContinuumSolver< 2 > > > FunctionMap2_exposer_t;
-        FunctionMap2_exposer_t FunctionMap2_exposer = FunctionMap2_exposer_t( "FunctionMap2", "", bp::init< >("") );
+        FunctionMap2_exposer_t FunctionMap2_exposer = FunctionMap2_exposer_t( "FunctionMap2", bp::init< >() );
         bp::scope FunctionMap2_scope( FunctionMap2_exposer );
         { //::FunctionMap< 2 >::Create
         
@@ -8361,8 +8171,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             FunctionMap2_exposer.def( 
                 "Create"
-                , Create_function_type( &::FunctionMap< 2 >::Create )
-                , "/ Factory constructor method\n@return a shared pointer to a new solver\n/" );
+                , Create_function_type( &::FunctionMap< 2 >::Create ) );
         
         }
         { //::FunctionMap< 2 >::Solve
@@ -8599,7 +8408,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::FunctionMap< 3 >
         typedef bp::class_< FunctionMap_less__3__greater__wrapper, bp::bases< AbstractRegularGridDiscreteContinuumSolver< 3 > > > FunctionMap3_exposer_t;
-        FunctionMap3_exposer_t FunctionMap3_exposer = FunctionMap3_exposer_t( "FunctionMap3", "", bp::init< >("") );
+        FunctionMap3_exposer_t FunctionMap3_exposer = FunctionMap3_exposer_t( "FunctionMap3", bp::init< >() );
         bp::scope FunctionMap3_scope( FunctionMap3_exposer );
         { //::FunctionMap< 3 >::Create
         
@@ -8608,8 +8417,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             FunctionMap3_exposer.def( 
                 "Create"
-                , Create_function_type( &::FunctionMap< 3 >::Create )
-                , "/ Factory constructor method\n@return a shared pointer to a new solver\n/" );
+                , Create_function_type( &::FunctionMap< 3 >::Create ) );
         
         }
         { //::FunctionMap< 3 >::Solve
@@ -8844,12 +8652,11 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         bp::implicitly_convertible< boost::shared_ptr< FunctionMap< 3 > >, boost::shared_ptr< AbstractDiscreteContinuumSolver< 3 > > >();
     }
 
-    bp::class_< GreensFunctionSolver_less__2__greater__wrapper, bp::bases< AbstractRegularGridDiscreteContinuumSolver< 2 > > >( "GreensFunctionSolver2", "", bp::init< >("Constructor\n/") )    
+    bp::class_< GreensFunctionSolver_less__2__greater__wrapper, bp::bases< AbstractRegularGridDiscreteContinuumSolver< 2 > > >( "GreensFunctionSolver2", bp::init< >() )    
         .def( 
             "SetSubSegmentCutoff"
             , (void ( ::GreensFunctionSolver<2>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::GreensFunctionSolver< 2 >::SetSubSegmentCutoff )
-            , ( bp::arg("value") )
-            , "Set the minimum subsegment length\n@param value the minimum subsegment length\n/" )    
+            , ( bp::arg("value") ) )    
         .def( 
             "Solve"
             , (void ( ::GreensFunctionSolver<2>::* )(  ))(&::GreensFunctionSolver< 2 >::Solve)
@@ -8933,12 +8740,11 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             , (void ( ::AbstractRegularGridDiscreteContinuumSolver<2>::* )(  ))(&::AbstractRegularGridDiscreteContinuumSolver< 2 >::Write)
             , (void ( GreensFunctionSolver_less__2__greater__wrapper::* )(  ))(&GreensFunctionSolver_less__2__greater__wrapper::default_Write) );
 
-    bp::class_< GreensFunctionSolver_less__3__greater__wrapper, bp::bases< AbstractRegularGridDiscreteContinuumSolver< 3 > > >( "GreensFunctionSolver3", "", bp::init< >("Constructor\n/") )    
+    bp::class_< GreensFunctionSolver_less__3__greater__wrapper, bp::bases< AbstractRegularGridDiscreteContinuumSolver< 3 > > >( "GreensFunctionSolver3", bp::init< >() )    
         .def( 
             "SetSubSegmentCutoff"
             , (void ( ::GreensFunctionSolver<3>::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::GreensFunctionSolver< 3 >::SetSubSegmentCutoff )
-            , ( bp::arg("value") )
-            , "Set the minimum subsegment length\n@param value the minimum subsegment length\n/" )    
+            , ( bp::arg("value") ) )    
         .def( 
             "Solve"
             , (void ( ::GreensFunctionSolver<3>::* )(  ))(&::GreensFunctionSolver< 3 >::Solve)
@@ -9024,7 +8830,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::LinearSteadyStateDiffusionReactionPde< 2, 2 >
         typedef bp::class_< LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper, bp::bases< AbstractDiscreteContinuumLinearEllipticPde< 2, 2 > > > LinearSteadyStateDiffusionReactionPde2_2_exposer_t;
-        LinearSteadyStateDiffusionReactionPde2_2_exposer_t LinearSteadyStateDiffusionReactionPde2_2_exposer = LinearSteadyStateDiffusionReactionPde2_2_exposer_t( "LinearSteadyStateDiffusionReactionPde2_2", "", bp::init< >("Constructor\n/") );
+        LinearSteadyStateDiffusionReactionPde2_2_exposer_t LinearSteadyStateDiffusionReactionPde2_2_exposer = LinearSteadyStateDiffusionReactionPde2_2_exposer_t( "LinearSteadyStateDiffusionReactionPde2_2", bp::init< >() );
         bp::scope LinearSteadyStateDiffusionReactionPde2_2_scope( LinearSteadyStateDiffusionReactionPde2_2_exposer );
         { //::LinearSteadyStateDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm
         
@@ -9059,8 +8865,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             LinearSteadyStateDiffusionReactionPde2_2_exposer.def( 
                 "Create"
-                , Create_function_type( &::LinearSteadyStateDiffusionReactionPde< 2, 2 >::Create )
-                , "Factory Constructor\n@return a pointer to an instance of the pde\n/" );
+                , Create_function_type( &::LinearSteadyStateDiffusionReactionPde< 2, 2 >::Create ) );
         
         }
         { //::LinearSteadyStateDiffusionReactionPde< 2, 2 >::SetContinuumLinearInUTerm
@@ -9071,8 +8876,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             LinearSteadyStateDiffusionReactionPde2_2_exposer.def( 
                 "SetContinuumLinearInUTerm"
                 , SetContinuumLinearInUTerm_function_type( &::LinearSteadyStateDiffusionReactionPde< 2, 2 >::SetContinuumLinearInUTerm )
-                , ( bp::arg("linearInUTerm") )
-                , "Set the linear constant in U term\n@param linearInUTerm the linear constant in U term\n/" );
+                , ( bp::arg("linearInUTerm") ) );
         
         }
         { //::LinearSteadyStateDiffusionReactionPde< 2, 2 >::UpdateDiscreteSourceStrengths
@@ -9108,8 +8912,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             LinearSteadyStateDiffusionReactionPde2_2_exposer.def( 
                 "ComputeConstantInUSourceTerm"
                 , ComputeConstantInUSourceTerm_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeConstantInUSourceTerm )
-                , ( bp::arg("gridIndex")=(unsigned int)(0) )
-                , "Overwritten method to return the constant in U contribution to the regular grid solvers\n@param gridIndex grid index\n@return source strength\n/" );
+                , ( bp::arg("gridIndex")=(unsigned int)(0) ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeDiffusionTerm
@@ -9133,7 +8936,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::LinearSteadyStateDiffusionReactionPde< 3, 3 >
         typedef bp::class_< LinearSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper, bp::bases< AbstractDiscreteContinuumLinearEllipticPde< 3, 3 > > > LinearSteadyStateDiffusionReactionPde3_3_exposer_t;
-        LinearSteadyStateDiffusionReactionPde3_3_exposer_t LinearSteadyStateDiffusionReactionPde3_3_exposer = LinearSteadyStateDiffusionReactionPde3_3_exposer_t( "LinearSteadyStateDiffusionReactionPde3_3", "", bp::init< >("Constructor\n/") );
+        LinearSteadyStateDiffusionReactionPde3_3_exposer_t LinearSteadyStateDiffusionReactionPde3_3_exposer = LinearSteadyStateDiffusionReactionPde3_3_exposer_t( "LinearSteadyStateDiffusionReactionPde3_3", bp::init< >() );
         bp::scope LinearSteadyStateDiffusionReactionPde3_3_scope( LinearSteadyStateDiffusionReactionPde3_3_exposer );
         { //::LinearSteadyStateDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm
         
@@ -9168,8 +8971,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             LinearSteadyStateDiffusionReactionPde3_3_exposer.def( 
                 "Create"
-                , Create_function_type( &::LinearSteadyStateDiffusionReactionPde< 3, 3 >::Create )
-                , "Factory Constructor\n@return a pointer to an instance of the pde\n/" );
+                , Create_function_type( &::LinearSteadyStateDiffusionReactionPde< 3, 3 >::Create ) );
         
         }
         { //::LinearSteadyStateDiffusionReactionPde< 3, 3 >::SetContinuumLinearInUTerm
@@ -9180,8 +8982,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             LinearSteadyStateDiffusionReactionPde3_3_exposer.def( 
                 "SetContinuumLinearInUTerm"
                 , SetContinuumLinearInUTerm_function_type( &::LinearSteadyStateDiffusionReactionPde< 3, 3 >::SetContinuumLinearInUTerm )
-                , ( bp::arg("linearInUTerm") )
-                , "Set the linear constant in U term\n@param linearInUTerm the linear constant in U term\n/" );
+                , ( bp::arg("linearInUTerm") ) );
         
         }
         { //::LinearSteadyStateDiffusionReactionPde< 3, 3 >::UpdateDiscreteSourceStrengths
@@ -9217,8 +9018,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             LinearSteadyStateDiffusionReactionPde3_3_exposer.def( 
                 "ComputeConstantInUSourceTerm"
                 , ComputeConstantInUSourceTerm_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeConstantInUSourceTerm )
-                , ( bp::arg("gridIndex")=(unsigned int)(0) )
-                , "Overwritten method to return the constant in U contribution to the regular grid solvers\n@param gridIndex grid index\n@return source strength\n/" );
+                , ( bp::arg("gridIndex")=(unsigned int)(0) ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeDiffusionTerm
@@ -9242,7 +9042,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::MichaelisMentenSteadyStateDiffusionReactionPde< 2, 2 >
         typedef bp::class_< MichaelisMentenSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper, bp::bases< AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 > > > MichaelisMentenSteadyStateDiffusionReactionPde2_2_exposer_t;
-        MichaelisMentenSteadyStateDiffusionReactionPde2_2_exposer_t MichaelisMentenSteadyStateDiffusionReactionPde2_2_exposer = MichaelisMentenSteadyStateDiffusionReactionPde2_2_exposer_t( "MichaelisMentenSteadyStateDiffusionReactionPde2_2", "", bp::init< >("Constructor\n/") );
+        MichaelisMentenSteadyStateDiffusionReactionPde2_2_exposer_t MichaelisMentenSteadyStateDiffusionReactionPde2_2_exposer = MichaelisMentenSteadyStateDiffusionReactionPde2_2_exposer_t( "MichaelisMentenSteadyStateDiffusionReactionPde2_2", bp::init< >() );
         bp::scope MichaelisMentenSteadyStateDiffusionReactionPde2_2_scope( MichaelisMentenSteadyStateDiffusionReactionPde2_2_exposer );
         { //::MichaelisMentenSteadyStateDiffusionReactionPde< 2, 2 >::ComputeConstantInUSourceTerm
         
@@ -9252,8 +9052,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             MichaelisMentenSteadyStateDiffusionReactionPde2_2_exposer.def( 
                 "ComputeConstantInUSourceTerm"
                 , ComputeConstantInUSourceTerm_function_type( &::MichaelisMentenSteadyStateDiffusionReactionPde< 2, 2 >::ComputeConstantInUSourceTerm )
-                , ( bp::arg("rX"), bp::arg("pElement") )
-                , "Over-ridden method to return the constant in U contribution to the Chaste FE solver\n@param rX grid location\n@param pElement pointer to containing element\n@return source strength\n/" );
+                , ( bp::arg("rX"), bp::arg("pElement") ) );
         
         }
         { //::MichaelisMentenSteadyStateDiffusionReactionPde< 2, 2 >::ComputeConstantInUSourceTerm
@@ -9303,8 +9102,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             MichaelisMentenSteadyStateDiffusionReactionPde2_2_exposer.def( 
                 "ComputeLinearInUCoeffInSourceTerm"
                 , ComputeLinearInUCoeffInSourceTerm_function_type( &::MichaelisMentenSteadyStateDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm )
-                , ( bp::arg("rX"), bp::arg("pElement") )
-                , "Over-ridden method to return the linear in U contribution to the Chaste FE solver\n@param rX grid location\n@param pElement pointer to containing element\n@return source strength\n/" );
+                , ( bp::arg("rX"), bp::arg("pElement") ) );
         
         }
         { //::MichaelisMentenSteadyStateDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm
@@ -9392,8 +9190,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             MichaelisMentenSteadyStateDiffusionReactionPde2_2_exposer.def( 
                 "Create"
-                , Create_function_type( &::MichaelisMentenSteadyStateDiffusionReactionPde< 2, 2 >::Create )
-                , "Factory Constructor\n@return a pointer to an instance of the pde\n/" );
+                , Create_function_type( &::MichaelisMentenSteadyStateDiffusionReactionPde< 2, 2 >::Create ) );
         
         }
         { //::MichaelisMentenSteadyStateDiffusionReactionPde< 2, 2 >::GetMichaelisMentenThreshold
@@ -9403,8 +9200,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             MichaelisMentenSteadyStateDiffusionReactionPde2_2_exposer.def( 
                 "GetMichaelisMentenThreshold"
-                , GetMichaelisMentenThreshold_function_type( &::MichaelisMentenSteadyStateDiffusionReactionPde< 2, 2 >::GetMichaelisMentenThreshold )
-                , "Get the concentration at half max consumption in the michaelis menten model\n@return threshold the concentration at half max consumption in the michaelis menten model\n/" );
+                , GetMichaelisMentenThreshold_function_type( &::MichaelisMentenSteadyStateDiffusionReactionPde< 2, 2 >::GetMichaelisMentenThreshold ) );
         
         }
         { //::MichaelisMentenSteadyStateDiffusionReactionPde< 2, 2 >::SetMichaelisMentenThreshold
@@ -9415,8 +9211,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             MichaelisMentenSteadyStateDiffusionReactionPde2_2_exposer.def( 
                 "SetMichaelisMentenThreshold"
                 , SetMichaelisMentenThreshold_function_type( &::MichaelisMentenSteadyStateDiffusionReactionPde< 2, 2 >::SetMichaelisMentenThreshold )
-                , ( bp::arg("threshold") )
-                , "Set the concentration at half max consumption in the michaelis menten model\n@param threshold the concentration at half max consumption in the michaelis menten model\n/" );
+                , ( bp::arg("threshold") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >::UpdateDiscreteSourceStrengths
@@ -9438,7 +9233,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::MichaelisMentenSteadyStateDiffusionReactionPde< 3, 3 >
         typedef bp::class_< MichaelisMentenSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper, bp::bases< AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 > > > MichaelisMentenSteadyStateDiffusionReactionPde3_3_exposer_t;
-        MichaelisMentenSteadyStateDiffusionReactionPde3_3_exposer_t MichaelisMentenSteadyStateDiffusionReactionPde3_3_exposer = MichaelisMentenSteadyStateDiffusionReactionPde3_3_exposer_t( "MichaelisMentenSteadyStateDiffusionReactionPde3_3", "", bp::init< >("Constructor\n/") );
+        MichaelisMentenSteadyStateDiffusionReactionPde3_3_exposer_t MichaelisMentenSteadyStateDiffusionReactionPde3_3_exposer = MichaelisMentenSteadyStateDiffusionReactionPde3_3_exposer_t( "MichaelisMentenSteadyStateDiffusionReactionPde3_3", bp::init< >() );
         bp::scope MichaelisMentenSteadyStateDiffusionReactionPde3_3_scope( MichaelisMentenSteadyStateDiffusionReactionPde3_3_exposer );
         { //::MichaelisMentenSteadyStateDiffusionReactionPde< 3, 3 >::ComputeConstantInUSourceTerm
         
@@ -9448,8 +9243,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             MichaelisMentenSteadyStateDiffusionReactionPde3_3_exposer.def( 
                 "ComputeConstantInUSourceTerm"
                 , ComputeConstantInUSourceTerm_function_type( &::MichaelisMentenSteadyStateDiffusionReactionPde< 3, 3 >::ComputeConstantInUSourceTerm )
-                , ( bp::arg("rX"), bp::arg("pElement") )
-                , "Over-ridden method to return the constant in U contribution to the Chaste FE solver\n@param rX grid location\n@param pElement pointer to containing element\n@return source strength\n/" );
+                , ( bp::arg("rX"), bp::arg("pElement") ) );
         
         }
         { //::MichaelisMentenSteadyStateDiffusionReactionPde< 3, 3 >::ComputeConstantInUSourceTerm
@@ -9499,8 +9293,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             MichaelisMentenSteadyStateDiffusionReactionPde3_3_exposer.def( 
                 "ComputeLinearInUCoeffInSourceTerm"
                 , ComputeLinearInUCoeffInSourceTerm_function_type( &::MichaelisMentenSteadyStateDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm )
-                , ( bp::arg("rX"), bp::arg("pElement") )
-                , "Over-ridden method to return the linear in U contribution to the Chaste FE solver\n@param rX grid location\n@param pElement pointer to containing element\n@return source strength\n/" );
+                , ( bp::arg("rX"), bp::arg("pElement") ) );
         
         }
         { //::MichaelisMentenSteadyStateDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm
@@ -9588,8 +9381,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             MichaelisMentenSteadyStateDiffusionReactionPde3_3_exposer.def( 
                 "Create"
-                , Create_function_type( &::MichaelisMentenSteadyStateDiffusionReactionPde< 3, 3 >::Create )
-                , "Factory Constructor\n@return a pointer to an instance of the pde\n/" );
+                , Create_function_type( &::MichaelisMentenSteadyStateDiffusionReactionPde< 3, 3 >::Create ) );
         
         }
         { //::MichaelisMentenSteadyStateDiffusionReactionPde< 3, 3 >::GetMichaelisMentenThreshold
@@ -9599,8 +9391,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             MichaelisMentenSteadyStateDiffusionReactionPde3_3_exposer.def( 
                 "GetMichaelisMentenThreshold"
-                , GetMichaelisMentenThreshold_function_type( &::MichaelisMentenSteadyStateDiffusionReactionPde< 3, 3 >::GetMichaelisMentenThreshold )
-                , "Get the concentration at half max consumption in the michaelis menten model\n@return threshold the concentration at half max consumption in the michaelis menten model\n/" );
+                , GetMichaelisMentenThreshold_function_type( &::MichaelisMentenSteadyStateDiffusionReactionPde< 3, 3 >::GetMichaelisMentenThreshold ) );
         
         }
         { //::MichaelisMentenSteadyStateDiffusionReactionPde< 3, 3 >::SetMichaelisMentenThreshold
@@ -9611,8 +9402,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             MichaelisMentenSteadyStateDiffusionReactionPde3_3_exposer.def( 
                 "SetMichaelisMentenThreshold"
                 , SetMichaelisMentenThreshold_function_type( &::MichaelisMentenSteadyStateDiffusionReactionPde< 3, 3 >::SetMichaelisMentenThreshold )
-                , ( bp::arg("threshold") )
-                , "Set the concentration at half max consumption in the michaelis menten model\n@param threshold the concentration at half max consumption in the michaelis menten model\n/" );
+                , ( bp::arg("threshold") ) );
         
         }
         { //::AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 >::UpdateDiscreteSourceStrengths
@@ -9634,7 +9424,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::SolutionDependentDiscreteSource< 2 >
         typedef bp::class_< SolutionDependentDiscreteSource_less__2__greater__wrapper, bp::bases< DiscreteSource< 2 > > > SolutionDependentDiscreteSource2_exposer_t;
-        SolutionDependentDiscreteSource2_exposer_t SolutionDependentDiscreteSource2_exposer = SolutionDependentDiscreteSource2_exposer_t( "SolutionDependentDiscreteSource2", "", bp::init< >("Constructor\n/") );
+        SolutionDependentDiscreteSource2_exposer_t SolutionDependentDiscreteSource2_exposer = SolutionDependentDiscreteSource2_exposer_t( "SolutionDependentDiscreteSource2", bp::init< >() );
         bp::scope SolutionDependentDiscreteSource2_scope( SolutionDependentDiscreteSource2_exposer );
         { //::SolutionDependentDiscreteSource< 2 >::Create
         
@@ -9643,8 +9433,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             SolutionDependentDiscreteSource2_exposer.def( 
                 "Create"
-                , Create_function_type( &::SolutionDependentDiscreteSource< 2 >::Create )
-                , "Factory constructor method\n@return a pointer to an instance of the class\n/" );
+                , Create_function_type( &::SolutionDependentDiscreteSource< 2 >::Create ) );
         
         }
         { //::SolutionDependentDiscreteSource< 2 >::GetConstantInUMeshValues
@@ -9703,8 +9492,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             SolutionDependentDiscreteSource2_exposer.def( 
                 "SetConstantInUSinkRatePerSolutionQuantity"
                 , SetConstantInUSinkRatePerSolutionQuantity_function_type( &::SolutionDependentDiscreteSource< 2 >::SetConstantInUSinkRatePerSolutionQuantity )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::SolutionDependentDiscreteSource< 2 >::SetLinearInUSinkRatePerSolutionQuantity
@@ -9715,8 +9503,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             SolutionDependentDiscreteSource2_exposer.def( 
                 "SetLinearInUSinkRatePerSolutionQuantity"
                 , SetLinearInUSinkRatePerSolutionQuantity_function_type( &::SolutionDependentDiscreteSource< 2 >::SetLinearInUSinkRatePerSolutionQuantity )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::SolutionDependentDiscreteSource< 2 >::SetSolution
@@ -9727,8 +9514,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             SolutionDependentDiscreteSource2_exposer.def( 
                 "SetSolution"
                 , SetSolution_function_type( &::SolutionDependentDiscreteSource< 2 >::SetSolution )
-                , ( bp::arg("solution") )
-                , "Set the sampled field from which to obtain a solution for SOLUTION type sources\n@param solution the field from which to use solution values\n/" );
+                , ( bp::arg("solution") ) );
         
         }
         SolutionDependentDiscreteSource2_exposer.staticmethod( "Create" );
@@ -9738,7 +9524,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::SolutionDependentDiscreteSource< 3 >
         typedef bp::class_< SolutionDependentDiscreteSource_less__3__greater__wrapper, bp::bases< DiscreteSource< 3 > > > SolutionDependentDiscreteSource3_exposer_t;
-        SolutionDependentDiscreteSource3_exposer_t SolutionDependentDiscreteSource3_exposer = SolutionDependentDiscreteSource3_exposer_t( "SolutionDependentDiscreteSource3", "", bp::init< >("Constructor\n/") );
+        SolutionDependentDiscreteSource3_exposer_t SolutionDependentDiscreteSource3_exposer = SolutionDependentDiscreteSource3_exposer_t( "SolutionDependentDiscreteSource3", bp::init< >() );
         bp::scope SolutionDependentDiscreteSource3_scope( SolutionDependentDiscreteSource3_exposer );
         { //::SolutionDependentDiscreteSource< 3 >::Create
         
@@ -9747,8 +9533,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             SolutionDependentDiscreteSource3_exposer.def( 
                 "Create"
-                , Create_function_type( &::SolutionDependentDiscreteSource< 3 >::Create )
-                , "Factory constructor method\n@return a pointer to an instance of the class\n/" );
+                , Create_function_type( &::SolutionDependentDiscreteSource< 3 >::Create ) );
         
         }
         { //::SolutionDependentDiscreteSource< 3 >::GetConstantInUMeshValues
@@ -9807,8 +9592,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             SolutionDependentDiscreteSource3_exposer.def( 
                 "SetConstantInUSinkRatePerSolutionQuantity"
                 , SetConstantInUSinkRatePerSolutionQuantity_function_type( &::SolutionDependentDiscreteSource< 3 >::SetConstantInUSinkRatePerSolutionQuantity )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::SolutionDependentDiscreteSource< 3 >::SetLinearInUSinkRatePerSolutionQuantity
@@ -9819,8 +9603,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             SolutionDependentDiscreteSource3_exposer.def( 
                 "SetLinearInUSinkRatePerSolutionQuantity"
                 , SetLinearInUSinkRatePerSolutionQuantity_function_type( &::SolutionDependentDiscreteSource< 3 >::SetLinearInUSinkRatePerSolutionQuantity )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::SolutionDependentDiscreteSource< 3 >::SetSolution
@@ -9831,8 +9614,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             SolutionDependentDiscreteSource3_exposer.def( 
                 "SetSolution"
                 , SetSolution_function_type( &::SolutionDependentDiscreteSource< 3 >::SetSolution )
-                , ( bp::arg("solution") )
-                , "Set the sampled field from which to obtain a solution for SOLUTION type sources\n@param solution the field from which to use solution values\n/" );
+                , ( bp::arg("solution") ) );
         
         }
         SolutionDependentDiscreteSource3_exposer.staticmethod( "Create" );
@@ -9842,7 +9624,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::VesselBasedDiscreteSource< 2 >
         typedef bp::class_< VesselBasedDiscreteSource_less__2__greater__wrapper, bp::bases< DiscreteSource< 2 > > > VesselBasedDiscreteSource2_exposer_t;
-        VesselBasedDiscreteSource2_exposer_t VesselBasedDiscreteSource2_exposer = VesselBasedDiscreteSource2_exposer_t( "VesselBasedDiscreteSource2", "", bp::init< >("Constructor\n/") );
+        VesselBasedDiscreteSource2_exposer_t VesselBasedDiscreteSource2_exposer = VesselBasedDiscreteSource2_exposer_t( "VesselBasedDiscreteSource2", bp::init< >() );
         bp::scope VesselBasedDiscreteSource2_scope( VesselBasedDiscreteSource2_exposer );
         { //::VesselBasedDiscreteSource< 2 >::Create
         
@@ -9851,8 +9633,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             VesselBasedDiscreteSource2_exposer.def( 
                 "Create"
-                , Create_function_type( &::VesselBasedDiscreteSource< 2 >::Create )
-                , "Factory constructor method\n@return a pointer to an instance of the class\n/" );
+                , Create_function_type( &::VesselBasedDiscreteSource< 2 >::Create ) );
         
         }
         { //::VesselBasedDiscreteSource< 2 >::GetConstantInUMeshValues
@@ -9911,8 +9692,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             VesselBasedDiscreteSource2_exposer.def( 
                 "SetReferenceConcentration"
                 , SetReferenceConcentration_function_type( &::VesselBasedDiscreteSource< 2 >::SetReferenceConcentration )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::VesselBasedDiscreteSource< 2 >::SetReferenceHaematocrit
@@ -9923,8 +9703,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             VesselBasedDiscreteSource2_exposer.def( 
                 "SetReferenceHaematocrit"
                 , SetReferenceHaematocrit_function_type( &::VesselBasedDiscreteSource< 2 >::SetReferenceHaematocrit )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::VesselBasedDiscreteSource< 2 >::SetVesselPermeability
@@ -9935,8 +9714,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             VesselBasedDiscreteSource2_exposer.def( 
                 "SetVesselPermeability"
                 , SetVesselPermeability_function_type( &::VesselBasedDiscreteSource< 2 >::SetVesselPermeability )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         VesselBasedDiscreteSource2_exposer.staticmethod( "Create" );
@@ -9946,7 +9724,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     { //::VesselBasedDiscreteSource< 3 >
         typedef bp::class_< VesselBasedDiscreteSource_less__3__greater__wrapper, bp::bases< DiscreteSource< 3 > > > VesselBasedDiscreteSource3_exposer_t;
-        VesselBasedDiscreteSource3_exposer_t VesselBasedDiscreteSource3_exposer = VesselBasedDiscreteSource3_exposer_t( "VesselBasedDiscreteSource3", "", bp::init< >("Constructor\n/") );
+        VesselBasedDiscreteSource3_exposer_t VesselBasedDiscreteSource3_exposer = VesselBasedDiscreteSource3_exposer_t( "VesselBasedDiscreteSource3", bp::init< >() );
         bp::scope VesselBasedDiscreteSource3_scope( VesselBasedDiscreteSource3_exposer );
         { //::VesselBasedDiscreteSource< 3 >::Create
         
@@ -9955,8 +9733,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             
             VesselBasedDiscreteSource3_exposer.def( 
                 "Create"
-                , Create_function_type( &::VesselBasedDiscreteSource< 3 >::Create )
-                , "Factory constructor method\n@return a pointer to an instance of the class\n/" );
+                , Create_function_type( &::VesselBasedDiscreteSource< 3 >::Create ) );
         
         }
         { //::VesselBasedDiscreteSource< 3 >::GetConstantInUMeshValues
@@ -10015,8 +9792,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             VesselBasedDiscreteSource3_exposer.def( 
                 "SetReferenceConcentration"
                 , SetReferenceConcentration_function_type( &::VesselBasedDiscreteSource< 3 >::SetReferenceConcentration )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::VesselBasedDiscreteSource< 3 >::SetReferenceHaematocrit
@@ -10027,8 +9803,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             VesselBasedDiscreteSource3_exposer.def( 
                 "SetReferenceHaematocrit"
                 , SetReferenceHaematocrit_function_type( &::VesselBasedDiscreteSource< 3 >::SetReferenceHaematocrit )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::VesselBasedDiscreteSource< 3 >::SetVesselPermeability
@@ -10039,8 +9814,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             VesselBasedDiscreteSource3_exposer.def( 
                 "SetVesselPermeability"
                 , SetVesselPermeability_function_type( &::VesselBasedDiscreteSource< 3 >::SetVesselPermeability )
-                , ( bp::arg("value") )
-                , "Set the value of the source for PRESCRIBED type sources\n@param value the value of the source\n/" );
+                , ( bp::arg("value") ) );
         
         }
         VesselBasedDiscreteSource3_exposer.staticmethod( "Create" );

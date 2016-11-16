@@ -40,21 +40,24 @@ from pygccxml import parser
 def update_builder(builder):
     
 
-#     include_classes = [ 
-#                        "ParameterCollection",] 
-#                        #"BaseParameterInstance", 
-#                        #"BaseUnits"]
-#       
-#     for eachClass in include_classes:
-#         builder.class_(eachClass).include()
+    include_classes = ["ParameterCollection",
+                       "BaseParameterInstance", 
+                       "BaseUnits",
+                       "Owen11Parameters",
+                       "Secomb04Parameters",
+                       "GenericParameters"]
 
-#     chaste_ns = builder.global_ns.namespace('chaste')
-#     helpers = chaste_ns.classes()
-#     helpers = builder.classes(lambda decl: decl.name.startswith('ParameterInstance'))
-#     for eachClass in helpers:
-#         eachClass.include()
+    for eachClass in include_classes:
+        builder.class_(eachClass).include()
+        
+    builder.class_("BaseUnits").member_function("Instance").call_policies = call_policies.return_value_policy(call_policies.reference_existing_object)
+    builder.class_("ParameterCollection").member_function("Instance").call_policies = call_policies.return_value_policy(call_policies.reference_existing_object)
+
+    helpers = builder.classes(lambda decl: decl.name.startswith('ParameterInstance'))
+    for eachClass in helpers:
+        eachClass.include()
 #         eachClass.rename("SomethingElse")
-#         print eachClass.alias
+        print eachClass.alias
 
 #    builder.variable("kg").include()
 #     helpers = builder.classes(lambda decl: decl.name.startswith('ParameterInstance'))
@@ -107,6 +110,7 @@ def update_builder(builder):
                 "rate_per_concentration",
                 "concentration_gradient",
                 "concentration_flux",
+                "concentration_flow_rate",
                 "concentration",
                 "molar_flux",
                 "molar_flow_rate",
@@ -137,6 +141,7 @@ def update_builder(builder):
              "rate_per_concentration": "metre_cubed_per_mole_per_second",
              "concentration_gradient": "mole_per_metre_pow4",
              "concentration_flux": "mole_per_metre_pow5_per_second",
+             "concentration_flow_rate": "mole_per_metre_cubed_per_second",
              "concentration": "mole_per_metre_cubed",
              "molar_flux": "mole_per_metre_squared_per_second",
              "molar_flow_rate": "mole_per_second",

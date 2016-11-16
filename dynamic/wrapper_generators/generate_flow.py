@@ -66,6 +66,7 @@ def update_builder(builder):
                    "AbstractStructuralAdaptationSolver<2>",
                    "StructuralAdaptationSolver<2>",
                    "AbstractHaematocritSolver<2>",
+                   "MetabolicStimulusCalculator<2>",
                    "AlarconHaematocritSolver<2>",
                    "ConstantHaematocritSolver<2>",]
 

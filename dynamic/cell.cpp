@@ -2,9 +2,653 @@
 
 #include "boost/python.hpp"
 
+#include "indexing_suite/value_traits.hpp"
+
+#include "indexing_suite/container_suite.hpp"
+
+#include "indexing_suite/vector.hpp"
+
+#include "indexing_suite/set.hpp"
+
 #include "cell_headers.hpp"
 
 namespace bp = boost::python;
+
+struct CaBasedCellPopulation_less__2__greater__wrapper : CaBasedCellPopulation< 2 >, bp::wrapper< CaBasedCellPopulation< 2 > > {
+
+    CaBasedCellPopulation_less__2__greater__wrapper(::PottsMesh< 2 > & rMesh, ::std::vector< boost::shared_ptr<Cell> > & rCells, ::std::vector< unsigned int > const locationIndices, unsigned int latticeCarryingCapacity=1U, bool deleteMesh=false, bool validate=false )
+    : CaBasedCellPopulation<2>( boost::ref(rMesh), boost::ref(rCells), locationIndices, latticeCarryingCapacity, deleteMesh, validate )
+      , bp::wrapper< CaBasedCellPopulation< 2 > >(){
+        // constructor
+    
+    }
+
+    CaBasedCellPopulation_less__2__greater__wrapper(::PottsMesh< 2 > & rMesh )
+    : CaBasedCellPopulation<2>( boost::ref(rMesh) )
+      , bp::wrapper< CaBasedCellPopulation< 2 > >(){
+        // constructor
+    
+    }
+
+    virtual void AcceptCellWriter( ::boost::shared_ptr< AbstractCellWriter< 2, 2 > > pCellWriter, ::CellPtr pCell ) {
+        if( bp::override func_AcceptCellWriter = this->get_override( "AcceptCellWriter" ) )
+            func_AcceptCellWriter( pCellWriter, pCell );
+        else{
+            this->CaBasedCellPopulation< 2 >::AcceptCellWriter( pCellWriter, pCell );
+        }
+    }
+    
+    void default_AcceptCellWriter( ::boost::shared_ptr< AbstractCellWriter< 2, 2 > > pCellWriter, ::CellPtr pCell ) {
+        CaBasedCellPopulation< 2 >::AcceptCellWriter( pCellWriter, pCell );
+    }
+
+    virtual void AcceptPopulationCountWriter( ::boost::shared_ptr< AbstractCellPopulationCountWriter< 2, 2 > > pPopulationCountWriter ) {
+        if( bp::override func_AcceptPopulationCountWriter = this->get_override( "AcceptPopulationCountWriter" ) )
+            func_AcceptPopulationCountWriter( pPopulationCountWriter );
+        else{
+            this->CaBasedCellPopulation< 2 >::AcceptPopulationCountWriter( pPopulationCountWriter );
+        }
+    }
+    
+    void default_AcceptPopulationCountWriter( ::boost::shared_ptr< AbstractCellPopulationCountWriter< 2, 2 > > pPopulationCountWriter ) {
+        CaBasedCellPopulation< 2 >::AcceptPopulationCountWriter( pPopulationCountWriter );
+    }
+
+    virtual void AcceptPopulationWriter( ::boost::shared_ptr< AbstractCellPopulationWriter< 2, 2 > > pPopulationWriter ) {
+        if( bp::override func_AcceptPopulationWriter = this->get_override( "AcceptPopulationWriter" ) )
+            func_AcceptPopulationWriter( pPopulationWriter );
+        else{
+            this->CaBasedCellPopulation< 2 >::AcceptPopulationWriter( pPopulationWriter );
+        }
+    }
+    
+    void default_AcceptPopulationWriter( ::boost::shared_ptr< AbstractCellPopulationWriter< 2, 2 > > pPopulationWriter ) {
+        CaBasedCellPopulation< 2 >::AcceptPopulationWriter( pPopulationWriter );
+    }
+
+    virtual ::CellPtr AddCell( ::CellPtr pNewCell, ::CellPtr pParentCell=::CellPtr( ) ) {
+        if( bp::override func_AddCell = this->get_override( "AddCell" ) )
+            return func_AddCell( pNewCell, pParentCell );
+        else{
+            return this->CaBasedCellPopulation< 2 >::AddCell( pNewCell, pParentCell );
+        }
+    }
+    
+    ::CellPtr default_AddCell( ::CellPtr pNewCell, ::CellPtr pParentCell=::CellPtr( ) ) {
+        return CaBasedCellPopulation< 2 >::AddCell( pNewCell, pParentCell );
+    }
+
+    virtual void AddCellUsingLocationIndex( unsigned int index, ::CellPtr pCell ) {
+        if( bp::override func_AddCellUsingLocationIndex = this->get_override( "AddCellUsingLocationIndex" ) )
+            func_AddCellUsingLocationIndex( index, pCell );
+        else{
+            this->CaBasedCellPopulation< 2 >::AddCellUsingLocationIndex( index, pCell );
+        }
+    }
+    
+    void default_AddCellUsingLocationIndex( unsigned int index, ::CellPtr pCell ) {
+        CaBasedCellPopulation< 2 >::AddCellUsingLocationIndex( index, pCell );
+    }
+
+    virtual void AddUpdateRule( ::boost::shared_ptr< AbstractUpdateRule< 2 > > pUpdateRule ) {
+        if( bp::override func_AddUpdateRule = this->get_override( "AddUpdateRule" ) )
+            func_AddUpdateRule( pUpdateRule );
+        else{
+            this->CaBasedCellPopulation< 2 >::AddUpdateRule( pUpdateRule );
+        }
+    }
+    
+    void default_AddUpdateRule( ::boost::shared_ptr< AbstractUpdateRule< 2 > > pUpdateRule ) {
+        CaBasedCellPopulation< 2 >::AddUpdateRule( pUpdateRule );
+    }
+
+    virtual double EvaluateDivisionPropensity( unsigned int currentNodeIndex, unsigned int targetNodeIndex, ::CellPtr pCell ) {
+        if( bp::override func_EvaluateDivisionPropensity = this->get_override( "EvaluateDivisionPropensity" ) )
+            return func_EvaluateDivisionPropensity( currentNodeIndex, targetNodeIndex, pCell );
+        else{
+            return this->CaBasedCellPopulation< 2 >::EvaluateDivisionPropensity( currentNodeIndex, targetNodeIndex, pCell );
+        }
+    }
+    
+    double default_EvaluateDivisionPropensity( unsigned int currentNodeIndex, unsigned int targetNodeIndex, ::CellPtr pCell ) {
+        return CaBasedCellPopulation< 2 >::EvaluateDivisionPropensity( currentNodeIndex, targetNodeIndex, pCell );
+    }
+
+    virtual double GetCellDataItemAtPdeNode( unsigned int pdeNodeIndex, ::std::string & rVariableName, bool dirichletBoundaryConditionApplies=false, double dirichletBoundaryValue=0. ) {
+        if( bp::override func_GetCellDataItemAtPdeNode = this->get_override( "GetCellDataItemAtPdeNode" ) )
+            return func_GetCellDataItemAtPdeNode( pdeNodeIndex, rVariableName, dirichletBoundaryConditionApplies, dirichletBoundaryValue );
+        else{
+            return this->CaBasedCellPopulation< 2 >::GetCellDataItemAtPdeNode( pdeNodeIndex, rVariableName, dirichletBoundaryConditionApplies, dirichletBoundaryValue );
+        }
+    }
+    
+    double default_GetCellDataItemAtPdeNode( unsigned int pdeNodeIndex, ::std::string & rVariableName, bool dirichletBoundaryConditionApplies=false, double dirichletBoundaryValue=0. ) {
+        return CaBasedCellPopulation< 2 >::GetCellDataItemAtPdeNode( pdeNodeIndex, rVariableName, dirichletBoundaryConditionApplies, dirichletBoundaryValue );
+    }
+
+    virtual ::boost::numeric::ublas::c_vector< double, 2 > GetLocationOfCellCentre( ::CellPtr pCell ) {
+        if( bp::override func_GetLocationOfCellCentre = this->get_override( "GetLocationOfCellCentre" ) )
+            return func_GetLocationOfCellCentre( pCell );
+        else{
+            return this->CaBasedCellPopulation< 2 >::GetLocationOfCellCentre( pCell );
+        }
+    }
+    
+    ::boost::numeric::ublas::c_vector< double, 2 > default_GetLocationOfCellCentre( ::CellPtr pCell ) {
+        return CaBasedCellPopulation< 2 >::GetLocationOfCellCentre( pCell );
+    }
+
+    virtual ::std::set< unsigned int > GetNeighbouringLocationIndices( ::CellPtr pCell ) {
+        if( bp::override func_GetNeighbouringLocationIndices = this->get_override( "GetNeighbouringLocationIndices" ) )
+            return func_GetNeighbouringLocationIndices( pCell );
+        else{
+            return this->CaBasedCellPopulation< 2 >::GetNeighbouringLocationIndices( pCell );
+        }
+    }
+    
+    ::std::set< unsigned int > default_GetNeighbouringLocationIndices( ::CellPtr pCell ) {
+        return CaBasedCellPopulation< 2 >::GetNeighbouringLocationIndices( pCell );
+    }
+
+    virtual unsigned int GetNumNodes(  ) {
+        if( bp::override func_GetNumNodes = this->get_override( "GetNumNodes" ) )
+            return func_GetNumNodes(  );
+        else{
+            return this->CaBasedCellPopulation< 2 >::GetNumNodes(  );
+        }
+    }
+    
+    unsigned int default_GetNumNodes(  ) {
+        return CaBasedCellPopulation< 2 >::GetNumNodes( );
+    }
+
+    virtual ::std::vector< boost::shared_ptr<AbstractUpdateRule<2> > > const GetUpdateRuleCollection(  ) const  {
+        if( bp::override func_GetUpdateRuleCollection = this->get_override( "GetUpdateRuleCollection" ) )
+            return func_GetUpdateRuleCollection(  );
+        else{
+            return this->CaBasedCellPopulation< 2 >::GetUpdateRuleCollection(  );
+        }
+    }
+    
+    ::std::vector< boost::shared_ptr<AbstractUpdateRule<2> > > const default_GetUpdateRuleCollection(  ) const  {
+        return CaBasedCellPopulation< 2 >::GetUpdateRuleCollection( );
+    }
+
+    virtual double GetVolumeOfCell( ::CellPtr pCell ) {
+        if( bp::override func_GetVolumeOfCell = this->get_override( "GetVolumeOfCell" ) )
+            return func_GetVolumeOfCell( pCell );
+        else{
+            return this->CaBasedCellPopulation< 2 >::GetVolumeOfCell( pCell );
+        }
+    }
+    
+    double default_GetVolumeOfCell( ::CellPtr pCell ) {
+        return CaBasedCellPopulation< 2 >::GetVolumeOfCell( pCell );
+    }
+
+    virtual double GetWidth( unsigned int const & rDimension ) {
+        if( bp::override func_GetWidth = this->get_override( "GetWidth" ) )
+            return func_GetWidth( rDimension );
+        else{
+            return this->CaBasedCellPopulation< 2 >::GetWidth( rDimension );
+        }
+    }
+    
+    double default_GetWidth( unsigned int const & rDimension ) {
+        return CaBasedCellPopulation< 2 >::GetWidth( rDimension );
+    }
+
+    virtual bool IsCellAssociatedWithADeletedLocation( ::CellPtr pCell ) {
+        if( bp::override func_IsCellAssociatedWithADeletedLocation = this->get_override( "IsCellAssociatedWithADeletedLocation" ) )
+            return func_IsCellAssociatedWithADeletedLocation( pCell );
+        else{
+            return this->CaBasedCellPopulation< 2 >::IsCellAssociatedWithADeletedLocation( pCell );
+        }
+    }
+    
+    bool default_IsCellAssociatedWithADeletedLocation( ::CellPtr pCell ) {
+        return CaBasedCellPopulation< 2 >::IsCellAssociatedWithADeletedLocation( pCell );
+    }
+
+    virtual bool IsPdeNodeAssociatedWithNonApoptoticCell( unsigned int pdeNodeIndex ) {
+        if( bp::override func_IsPdeNodeAssociatedWithNonApoptoticCell = this->get_override( "IsPdeNodeAssociatedWithNonApoptoticCell" ) )
+            return func_IsPdeNodeAssociatedWithNonApoptoticCell( pdeNodeIndex );
+        else{
+            return this->CaBasedCellPopulation< 2 >::IsPdeNodeAssociatedWithNonApoptoticCell( pdeNodeIndex );
+        }
+    }
+    
+    bool default_IsPdeNodeAssociatedWithNonApoptoticCell( unsigned int pdeNodeIndex ) {
+        return CaBasedCellPopulation< 2 >::IsPdeNodeAssociatedWithNonApoptoticCell( pdeNodeIndex );
+    }
+
+    virtual bool IsRoomToDivide( ::CellPtr pCell ) {
+        if( bp::override func_IsRoomToDivide = this->get_override( "IsRoomToDivide" ) )
+            return func_IsRoomToDivide( pCell );
+        else{
+            return this->CaBasedCellPopulation< 2 >::IsRoomToDivide( pCell );
+        }
+    }
+    
+    bool default_IsRoomToDivide( ::CellPtr pCell ) {
+        return CaBasedCellPopulation< 2 >::IsRoomToDivide( pCell );
+    }
+
+    virtual bool IsSiteAvailable( unsigned int index, ::CellPtr pCell ) {
+        if( bp::override func_IsSiteAvailable = this->get_override( "IsSiteAvailable" ) )
+            return func_IsSiteAvailable( index, pCell );
+        else{
+            return this->CaBasedCellPopulation< 2 >::IsSiteAvailable( index, pCell );
+        }
+    }
+    
+    bool default_IsSiteAvailable( unsigned int index, ::CellPtr pCell ) {
+        return CaBasedCellPopulation< 2 >::IsSiteAvailable( index, pCell );
+    }
+
+    virtual void OpenWritersFiles( ::OutputFileHandler & rOutputFileHandler ) {
+        if( bp::override func_OpenWritersFiles = this->get_override( "OpenWritersFiles" ) )
+            func_OpenWritersFiles( boost::ref(rOutputFileHandler) );
+        else{
+            this->CaBasedCellPopulation< 2 >::OpenWritersFiles( boost::ref(rOutputFileHandler) );
+        }
+    }
+    
+    void default_OpenWritersFiles( ::OutputFileHandler & rOutputFileHandler ) {
+        CaBasedCellPopulation< 2 >::OpenWritersFiles( boost::ref(rOutputFileHandler) );
+    }
+
+    virtual void OutputCellPopulationParameters( ::out_stream & rParamsFile ) {
+        if( bp::override func_OutputCellPopulationParameters = this->get_override( "OutputCellPopulationParameters" ) )
+            func_OutputCellPopulationParameters( boost::ref(rParamsFile) );
+        else{
+            this->CaBasedCellPopulation< 2 >::OutputCellPopulationParameters( boost::ref(rParamsFile) );
+        }
+    }
+    
+    void default_OutputCellPopulationParameters( ::out_stream & rParamsFile ) {
+        CaBasedCellPopulation< 2 >::OutputCellPopulationParameters( boost::ref(rParamsFile) );
+    }
+
+    virtual void RemoveAllUpdateRules(  ) {
+        if( bp::override func_RemoveAllUpdateRules = this->get_override( "RemoveAllUpdateRules" ) )
+            func_RemoveAllUpdateRules(  );
+        else{
+            this->CaBasedCellPopulation< 2 >::RemoveAllUpdateRules(  );
+        }
+    }
+    
+    void default_RemoveAllUpdateRules(  ) {
+        CaBasedCellPopulation< 2 >::RemoveAllUpdateRules( );
+    }
+
+    virtual void RemoveCellUsingLocationIndex( unsigned int index, ::CellPtr pCell ) {
+        if( bp::override func_RemoveCellUsingLocationIndex = this->get_override( "RemoveCellUsingLocationIndex" ) )
+            func_RemoveCellUsingLocationIndex( index, pCell );
+        else{
+            this->CaBasedCellPopulation< 2 >::RemoveCellUsingLocationIndex( index, pCell );
+        }
+    }
+    
+    void default_RemoveCellUsingLocationIndex( unsigned int index, ::CellPtr pCell ) {
+        CaBasedCellPopulation< 2 >::RemoveCellUsingLocationIndex( index, pCell );
+    }
+
+    virtual unsigned int RemoveDeadCells(  ) {
+        if( bp::override func_RemoveDeadCells = this->get_override( "RemoveDeadCells" ) )
+            return func_RemoveDeadCells(  );
+        else{
+            return this->CaBasedCellPopulation< 2 >::RemoveDeadCells(  );
+        }
+    }
+    
+    unsigned int default_RemoveDeadCells(  ) {
+        return CaBasedCellPopulation< 2 >::RemoveDeadCells( );
+    }
+
+    virtual void Update( bool hasHadBirthsOrDeaths=true ) {
+        if( bp::override func_Update = this->get_override( "Update" ) )
+            func_Update( hasHadBirthsOrDeaths );
+        else{
+            this->CaBasedCellPopulation< 2 >::Update( hasHadBirthsOrDeaths );
+        }
+    }
+    
+    void default_Update( bool hasHadBirthsOrDeaths=true ) {
+        CaBasedCellPopulation< 2 >::Update( hasHadBirthsOrDeaths );
+    }
+
+    virtual void UpdateCellLocations( double dt ) {
+        if( bp::override func_UpdateCellLocations = this->get_override( "UpdateCellLocations" ) )
+            func_UpdateCellLocations( dt );
+        else{
+            this->CaBasedCellPopulation< 2 >::UpdateCellLocations( dt );
+        }
+    }
+    
+    void default_UpdateCellLocations( double dt ) {
+        CaBasedCellPopulation< 2 >::UpdateCellLocations( dt );
+    }
+
+};
+
+struct CaBasedCellPopulation_less__3__greater__wrapper : CaBasedCellPopulation< 3 >, bp::wrapper< CaBasedCellPopulation< 3 > > {
+
+    CaBasedCellPopulation_less__3__greater__wrapper(::PottsMesh< 3 > & rMesh, ::std::vector< boost::shared_ptr<Cell> > & rCells, ::std::vector< unsigned int > const locationIndices, unsigned int latticeCarryingCapacity=1U, bool deleteMesh=false, bool validate=false )
+    : CaBasedCellPopulation<3>( boost::ref(rMesh), boost::ref(rCells), locationIndices, latticeCarryingCapacity, deleteMesh, validate )
+      , bp::wrapper< CaBasedCellPopulation< 3 > >(){
+        // constructor
+    
+    }
+
+    CaBasedCellPopulation_less__3__greater__wrapper(::PottsMesh< 3 > & rMesh )
+    : CaBasedCellPopulation<3>( boost::ref(rMesh) )
+      , bp::wrapper< CaBasedCellPopulation< 3 > >(){
+        // constructor
+    
+    }
+
+    virtual void AcceptCellWriter( ::boost::shared_ptr< AbstractCellWriter< 3, 3 > > pCellWriter, ::CellPtr pCell ) {
+        if( bp::override func_AcceptCellWriter = this->get_override( "AcceptCellWriter" ) )
+            func_AcceptCellWriter( pCellWriter, pCell );
+        else{
+            this->CaBasedCellPopulation< 3 >::AcceptCellWriter( pCellWriter, pCell );
+        }
+    }
+    
+    void default_AcceptCellWriter( ::boost::shared_ptr< AbstractCellWriter< 3, 3 > > pCellWriter, ::CellPtr pCell ) {
+        CaBasedCellPopulation< 3 >::AcceptCellWriter( pCellWriter, pCell );
+    }
+
+    virtual void AcceptPopulationCountWriter( ::boost::shared_ptr< AbstractCellPopulationCountWriter< 3, 3 > > pPopulationCountWriter ) {
+        if( bp::override func_AcceptPopulationCountWriter = this->get_override( "AcceptPopulationCountWriter" ) )
+            func_AcceptPopulationCountWriter( pPopulationCountWriter );
+        else{
+            this->CaBasedCellPopulation< 3 >::AcceptPopulationCountWriter( pPopulationCountWriter );
+        }
+    }
+    
+    void default_AcceptPopulationCountWriter( ::boost::shared_ptr< AbstractCellPopulationCountWriter< 3, 3 > > pPopulationCountWriter ) {
+        CaBasedCellPopulation< 3 >::AcceptPopulationCountWriter( pPopulationCountWriter );
+    }
+
+    virtual void AcceptPopulationWriter( ::boost::shared_ptr< AbstractCellPopulationWriter< 3, 3 > > pPopulationWriter ) {
+        if( bp::override func_AcceptPopulationWriter = this->get_override( "AcceptPopulationWriter" ) )
+            func_AcceptPopulationWriter( pPopulationWriter );
+        else{
+            this->CaBasedCellPopulation< 3 >::AcceptPopulationWriter( pPopulationWriter );
+        }
+    }
+    
+    void default_AcceptPopulationWriter( ::boost::shared_ptr< AbstractCellPopulationWriter< 3, 3 > > pPopulationWriter ) {
+        CaBasedCellPopulation< 3 >::AcceptPopulationWriter( pPopulationWriter );
+    }
+
+    virtual ::CellPtr AddCell( ::CellPtr pNewCell, ::CellPtr pParentCell=::CellPtr( ) ) {
+        if( bp::override func_AddCell = this->get_override( "AddCell" ) )
+            return func_AddCell( pNewCell, pParentCell );
+        else{
+            return this->CaBasedCellPopulation< 3 >::AddCell( pNewCell, pParentCell );
+        }
+    }
+    
+    ::CellPtr default_AddCell( ::CellPtr pNewCell, ::CellPtr pParentCell=::CellPtr( ) ) {
+        return CaBasedCellPopulation< 3 >::AddCell( pNewCell, pParentCell );
+    }
+
+    virtual void AddCellUsingLocationIndex( unsigned int index, ::CellPtr pCell ) {
+        if( bp::override func_AddCellUsingLocationIndex = this->get_override( "AddCellUsingLocationIndex" ) )
+            func_AddCellUsingLocationIndex( index, pCell );
+        else{
+            this->CaBasedCellPopulation< 3 >::AddCellUsingLocationIndex( index, pCell );
+        }
+    }
+    
+    void default_AddCellUsingLocationIndex( unsigned int index, ::CellPtr pCell ) {
+        CaBasedCellPopulation< 3 >::AddCellUsingLocationIndex( index, pCell );
+    }
+
+    virtual void AddUpdateRule( ::boost::shared_ptr< AbstractUpdateRule< 3 > > pUpdateRule ) {
+        if( bp::override func_AddUpdateRule = this->get_override( "AddUpdateRule" ) )
+            func_AddUpdateRule( pUpdateRule );
+        else{
+            this->CaBasedCellPopulation< 3 >::AddUpdateRule( pUpdateRule );
+        }
+    }
+    
+    void default_AddUpdateRule( ::boost::shared_ptr< AbstractUpdateRule< 3 > > pUpdateRule ) {
+        CaBasedCellPopulation< 3 >::AddUpdateRule( pUpdateRule );
+    }
+
+    virtual double EvaluateDivisionPropensity( unsigned int currentNodeIndex, unsigned int targetNodeIndex, ::CellPtr pCell ) {
+        if( bp::override func_EvaluateDivisionPropensity = this->get_override( "EvaluateDivisionPropensity" ) )
+            return func_EvaluateDivisionPropensity( currentNodeIndex, targetNodeIndex, pCell );
+        else{
+            return this->CaBasedCellPopulation< 3 >::EvaluateDivisionPropensity( currentNodeIndex, targetNodeIndex, pCell );
+        }
+    }
+    
+    double default_EvaluateDivisionPropensity( unsigned int currentNodeIndex, unsigned int targetNodeIndex, ::CellPtr pCell ) {
+        return CaBasedCellPopulation< 3 >::EvaluateDivisionPropensity( currentNodeIndex, targetNodeIndex, pCell );
+    }
+
+    virtual double GetCellDataItemAtPdeNode( unsigned int pdeNodeIndex, ::std::string & rVariableName, bool dirichletBoundaryConditionApplies=false, double dirichletBoundaryValue=0. ) {
+        if( bp::override func_GetCellDataItemAtPdeNode = this->get_override( "GetCellDataItemAtPdeNode" ) )
+            return func_GetCellDataItemAtPdeNode( pdeNodeIndex, rVariableName, dirichletBoundaryConditionApplies, dirichletBoundaryValue );
+        else{
+            return this->CaBasedCellPopulation< 3 >::GetCellDataItemAtPdeNode( pdeNodeIndex, rVariableName, dirichletBoundaryConditionApplies, dirichletBoundaryValue );
+        }
+    }
+    
+    double default_GetCellDataItemAtPdeNode( unsigned int pdeNodeIndex, ::std::string & rVariableName, bool dirichletBoundaryConditionApplies=false, double dirichletBoundaryValue=0. ) {
+        return CaBasedCellPopulation< 3 >::GetCellDataItemAtPdeNode( pdeNodeIndex, rVariableName, dirichletBoundaryConditionApplies, dirichletBoundaryValue );
+    }
+
+    virtual ::boost::numeric::ublas::c_vector< double, 3 > GetLocationOfCellCentre( ::CellPtr pCell ) {
+        if( bp::override func_GetLocationOfCellCentre = this->get_override( "GetLocationOfCellCentre" ) )
+            return func_GetLocationOfCellCentre( pCell );
+        else{
+            return this->CaBasedCellPopulation< 3 >::GetLocationOfCellCentre( pCell );
+        }
+    }
+    
+    ::boost::numeric::ublas::c_vector< double, 3 > default_GetLocationOfCellCentre( ::CellPtr pCell ) {
+        return CaBasedCellPopulation< 3 >::GetLocationOfCellCentre( pCell );
+    }
+
+    virtual ::std::set< unsigned int > GetNeighbouringLocationIndices( ::CellPtr pCell ) {
+        if( bp::override func_GetNeighbouringLocationIndices = this->get_override( "GetNeighbouringLocationIndices" ) )
+            return func_GetNeighbouringLocationIndices( pCell );
+        else{
+            return this->CaBasedCellPopulation< 3 >::GetNeighbouringLocationIndices( pCell );
+        }
+    }
+    
+    ::std::set< unsigned int > default_GetNeighbouringLocationIndices( ::CellPtr pCell ) {
+        return CaBasedCellPopulation< 3 >::GetNeighbouringLocationIndices( pCell );
+    }
+
+    virtual unsigned int GetNumNodes(  ) {
+        if( bp::override func_GetNumNodes = this->get_override( "GetNumNodes" ) )
+            return func_GetNumNodes(  );
+        else{
+            return this->CaBasedCellPopulation< 3 >::GetNumNodes(  );
+        }
+    }
+    
+    unsigned int default_GetNumNodes(  ) {
+        return CaBasedCellPopulation< 3 >::GetNumNodes( );
+    }
+
+    virtual ::std::vector< boost::shared_ptr<AbstractUpdateRule<3> > > const GetUpdateRuleCollection(  ) const  {
+        if( bp::override func_GetUpdateRuleCollection = this->get_override( "GetUpdateRuleCollection" ) )
+            return func_GetUpdateRuleCollection(  );
+        else{
+            return this->CaBasedCellPopulation< 3 >::GetUpdateRuleCollection(  );
+        }
+    }
+    
+    ::std::vector< boost::shared_ptr<AbstractUpdateRule<3> > > const default_GetUpdateRuleCollection(  ) const  {
+        return CaBasedCellPopulation< 3 >::GetUpdateRuleCollection( );
+    }
+
+    virtual double GetVolumeOfCell( ::CellPtr pCell ) {
+        if( bp::override func_GetVolumeOfCell = this->get_override( "GetVolumeOfCell" ) )
+            return func_GetVolumeOfCell( pCell );
+        else{
+            return this->CaBasedCellPopulation< 3 >::GetVolumeOfCell( pCell );
+        }
+    }
+    
+    double default_GetVolumeOfCell( ::CellPtr pCell ) {
+        return CaBasedCellPopulation< 3 >::GetVolumeOfCell( pCell );
+    }
+
+    virtual double GetWidth( unsigned int const & rDimension ) {
+        if( bp::override func_GetWidth = this->get_override( "GetWidth" ) )
+            return func_GetWidth( rDimension );
+        else{
+            return this->CaBasedCellPopulation< 3 >::GetWidth( rDimension );
+        }
+    }
+    
+    double default_GetWidth( unsigned int const & rDimension ) {
+        return CaBasedCellPopulation< 3 >::GetWidth( rDimension );
+    }
+
+    virtual bool IsCellAssociatedWithADeletedLocation( ::CellPtr pCell ) {
+        if( bp::override func_IsCellAssociatedWithADeletedLocation = this->get_override( "IsCellAssociatedWithADeletedLocation" ) )
+            return func_IsCellAssociatedWithADeletedLocation( pCell );
+        else{
+            return this->CaBasedCellPopulation< 3 >::IsCellAssociatedWithADeletedLocation( pCell );
+        }
+    }
+    
+    bool default_IsCellAssociatedWithADeletedLocation( ::CellPtr pCell ) {
+        return CaBasedCellPopulation< 3 >::IsCellAssociatedWithADeletedLocation( pCell );
+    }
+
+    virtual bool IsPdeNodeAssociatedWithNonApoptoticCell( unsigned int pdeNodeIndex ) {
+        if( bp::override func_IsPdeNodeAssociatedWithNonApoptoticCell = this->get_override( "IsPdeNodeAssociatedWithNonApoptoticCell" ) )
+            return func_IsPdeNodeAssociatedWithNonApoptoticCell( pdeNodeIndex );
+        else{
+            return this->CaBasedCellPopulation< 3 >::IsPdeNodeAssociatedWithNonApoptoticCell( pdeNodeIndex );
+        }
+    }
+    
+    bool default_IsPdeNodeAssociatedWithNonApoptoticCell( unsigned int pdeNodeIndex ) {
+        return CaBasedCellPopulation< 3 >::IsPdeNodeAssociatedWithNonApoptoticCell( pdeNodeIndex );
+    }
+
+    virtual bool IsRoomToDivide( ::CellPtr pCell ) {
+        if( bp::override func_IsRoomToDivide = this->get_override( "IsRoomToDivide" ) )
+            return func_IsRoomToDivide( pCell );
+        else{
+            return this->CaBasedCellPopulation< 3 >::IsRoomToDivide( pCell );
+        }
+    }
+    
+    bool default_IsRoomToDivide( ::CellPtr pCell ) {
+        return CaBasedCellPopulation< 3 >::IsRoomToDivide( pCell );
+    }
+
+    virtual bool IsSiteAvailable( unsigned int index, ::CellPtr pCell ) {
+        if( bp::override func_IsSiteAvailable = this->get_override( "IsSiteAvailable" ) )
+            return func_IsSiteAvailable( index, pCell );
+        else{
+            return this->CaBasedCellPopulation< 3 >::IsSiteAvailable( index, pCell );
+        }
+    }
+    
+    bool default_IsSiteAvailable( unsigned int index, ::CellPtr pCell ) {
+        return CaBasedCellPopulation< 3 >::IsSiteAvailable( index, pCell );
+    }
+
+    virtual void OpenWritersFiles( ::OutputFileHandler & rOutputFileHandler ) {
+        if( bp::override func_OpenWritersFiles = this->get_override( "OpenWritersFiles" ) )
+            func_OpenWritersFiles( boost::ref(rOutputFileHandler) );
+        else{
+            this->CaBasedCellPopulation< 3 >::OpenWritersFiles( boost::ref(rOutputFileHandler) );
+        }
+    }
+    
+    void default_OpenWritersFiles( ::OutputFileHandler & rOutputFileHandler ) {
+        CaBasedCellPopulation< 3 >::OpenWritersFiles( boost::ref(rOutputFileHandler) );
+    }
+
+    virtual void OutputCellPopulationParameters( ::out_stream & rParamsFile ) {
+        if( bp::override func_OutputCellPopulationParameters = this->get_override( "OutputCellPopulationParameters" ) )
+            func_OutputCellPopulationParameters( boost::ref(rParamsFile) );
+        else{
+            this->CaBasedCellPopulation< 3 >::OutputCellPopulationParameters( boost::ref(rParamsFile) );
+        }
+    }
+    
+    void default_OutputCellPopulationParameters( ::out_stream & rParamsFile ) {
+        CaBasedCellPopulation< 3 >::OutputCellPopulationParameters( boost::ref(rParamsFile) );
+    }
+
+    virtual void RemoveAllUpdateRules(  ) {
+        if( bp::override func_RemoveAllUpdateRules = this->get_override( "RemoveAllUpdateRules" ) )
+            func_RemoveAllUpdateRules(  );
+        else{
+            this->CaBasedCellPopulation< 3 >::RemoveAllUpdateRules(  );
+        }
+    }
+    
+    void default_RemoveAllUpdateRules(  ) {
+        CaBasedCellPopulation< 3 >::RemoveAllUpdateRules( );
+    }
+
+    virtual void RemoveCellUsingLocationIndex( unsigned int index, ::CellPtr pCell ) {
+        if( bp::override func_RemoveCellUsingLocationIndex = this->get_override( "RemoveCellUsingLocationIndex" ) )
+            func_RemoveCellUsingLocationIndex( index, pCell );
+        else{
+            this->CaBasedCellPopulation< 3 >::RemoveCellUsingLocationIndex( index, pCell );
+        }
+    }
+    
+    void default_RemoveCellUsingLocationIndex( unsigned int index, ::CellPtr pCell ) {
+        CaBasedCellPopulation< 3 >::RemoveCellUsingLocationIndex( index, pCell );
+    }
+
+    virtual unsigned int RemoveDeadCells(  ) {
+        if( bp::override func_RemoveDeadCells = this->get_override( "RemoveDeadCells" ) )
+            return func_RemoveDeadCells(  );
+        else{
+            return this->CaBasedCellPopulation< 3 >::RemoveDeadCells(  );
+        }
+    }
+    
+    unsigned int default_RemoveDeadCells(  ) {
+        return CaBasedCellPopulation< 3 >::RemoveDeadCells( );
+    }
+
+    virtual void Update( bool hasHadBirthsOrDeaths=true ) {
+        if( bp::override func_Update = this->get_override( "Update" ) )
+            func_Update( hasHadBirthsOrDeaths );
+        else{
+            this->CaBasedCellPopulation< 3 >::Update( hasHadBirthsOrDeaths );
+        }
+    }
+    
+    void default_Update( bool hasHadBirthsOrDeaths=true ) {
+        CaBasedCellPopulation< 3 >::Update( hasHadBirthsOrDeaths );
+    }
+
+    virtual void UpdateCellLocations( double dt ) {
+        if( bp::override func_UpdateCellLocations = this->get_override( "UpdateCellLocations" ) )
+            func_UpdateCellLocations( dt );
+        else{
+            this->CaBasedCellPopulation< 3 >::UpdateCellLocations( dt );
+        }
+    }
+    
+    void default_UpdateCellLocations( double dt ) {
+        CaBasedCellPopulation< 3 >::UpdateCellLocations( dt );
+    }
+
+};
 
 struct Owen2011OxygenBasedCellCycleModel_wrapper : Owen2011OxygenBasedCellCycleModel, bp::wrapper< Owen2011OxygenBasedCellCycleModel > {
 
@@ -144,12 +788,977 @@ struct Owen2011OxygenBasedCellCycleModel_wrapper : Owen2011OxygenBasedCellCycleM
 
 };
 
+namespace boost { namespace python { namespace indexing {
+
+template<>
+struct value_traits< boost::shared_ptr< AbstractUpdateRule< 2 > > >{
+
+    static bool const equality_comparable = false;
+    
+
+    static bool const less_than_comparable = false;
+    
+
+    template<typename PythonClass, typename Policy>
+    static void visit_container_class(PythonClass &, Policy const &){
+        
+    }
+
+};
+
+}/*indexing*/ } /*python*/ } /*boost*/
+
+namespace boost { namespace python { namespace indexing {
+
+template<>
+struct value_traits< boost::shared_ptr< AbstractUpdateRule< 3 > > >{
+
+    static bool const equality_comparable = false;
+    
+
+    static bool const less_than_comparable = false;
+    
+
+    template<typename PythonClass, typename Policy>
+    static void visit_container_class(PythonClass &, Policy const &){
+        
+    }
+
+};
+
+}/*indexing*/ } /*python*/ } /*boost*/
+
+namespace boost { namespace python { namespace indexing {
+
+template<>
+struct value_traits< boost::shared_ptr< Cell > >{
+
+    static bool const equality_comparable = false;
+    
+
+    static bool const less_than_comparable = false;
+    
+
+    template<typename PythonClass, typename Policy>
+    static void visit_container_class(PythonClass &, Policy const &){
+        
+    }
+
+};
+
+}/*indexing*/ } /*python*/ } /*boost*/
+
 BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
-    bp::class_< CancerCellMutationState >( "CancerCellMutationState", "Subclass of AbstractCellMutationState defining a cancerous mutation state for the Vascular tumour model.\n/", bp::init< >("Constructor.\n/") );
+    { //::std::vector< unsigned int >
+        typedef bp::class_< std::vector< unsigned int > > vector_less__unsigned_int__greater__exposer_t;
+        vector_less__unsigned_int__greater__exposer_t vector_less__unsigned_int__greater__exposer = vector_less__unsigned_int__greater__exposer_t( "vector_less__unsigned_int__greater_" );
+        bp::scope vector_less__unsigned_int__greater__scope( vector_less__unsigned_int__greater__exposer );
+        vector_less__unsigned_int__greater__exposer.def( bp::indexing::vector_suite< std::vector< unsigned int > >() );
+    }
+
+    { //::std::vector< boost::shared_ptr<Cell> >
+        typedef bp::class_< std::vector< boost::shared_ptr<Cell> > > vector_less__boost_scope_shared_ptr_less_Cell_greater___greater__exposer_t;
+        vector_less__boost_scope_shared_ptr_less_Cell_greater___greater__exposer_t vector_less__boost_scope_shared_ptr_less_Cell_greater___greater__exposer = vector_less__boost_scope_shared_ptr_less_Cell_greater___greater__exposer_t( "vector_less__boost_scope_shared_ptr_less_Cell_greater___greater_" );
+        bp::scope vector_less__boost_scope_shared_ptr_less_Cell_greater___greater__scope( vector_less__boost_scope_shared_ptr_less_Cell_greater___greater__exposer );
+        vector_less__boost_scope_shared_ptr_less_Cell_greater___greater__exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<Cell> > >() );
+    }
+
+    { //::std::vector< boost::shared_ptr<AbstractUpdateRule<3> > >
+        typedef bp::class_< std::vector< boost::shared_ptr<AbstractUpdateRule<3> > > > __type_exposer_t;
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
+        bp::scope __type_scope( __type_exposer );
+        __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<AbstractUpdateRule<3> > > >() );
+    }
+
+    { //::std::vector< boost::shared_ptr<AbstractUpdateRule<2> > >
+        typedef bp::class_< std::vector< boost::shared_ptr<AbstractUpdateRule<2> > > > __type_exposer_t;
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
+        bp::scope __type_scope( __type_exposer );
+        __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<AbstractUpdateRule<2> > > >() );
+    }
+
+    { //::std::set< unsigned int >
+        typedef bp::class_< std::set< unsigned int > > set_less__unsigned_int__greater__exposer_t;
+        set_less__unsigned_int__greater__exposer_t set_less__unsigned_int__greater__exposer = set_less__unsigned_int__greater__exposer_t( "set_less__unsigned_int__greater_" );
+        bp::scope set_less__unsigned_int__greater__scope( set_less__unsigned_int__greater__exposer );
+        set_less__unsigned_int__greater__exposer.def( bp::indexing::set_suite< std::set< unsigned int > >() );
+    }
+
+    { //::AbstractCellMutationState
+        typedef bp::class_< AbstractCellMutationState > AbstractCellMutationState_exposer_t;
+        AbstractCellMutationState_exposer_t AbstractCellMutationState_exposer = AbstractCellMutationState_exposer_t( "AbstractCellMutationState", bp::init< unsigned int >(( bp::arg("colour") )) );
+        bp::scope AbstractCellMutationState_scope( AbstractCellMutationState_exposer );
+        bp::implicitly_convertible< unsigned int, AbstractCellMutationState >();
+        { //::AbstractCellMutationState::GetColour
+        
+            typedef unsigned int ( ::AbstractCellMutationState::*GetColour_function_type)(  ) const;
+            
+            AbstractCellMutationState_exposer.def( 
+                "GetColour"
+                , GetColour_function_type( &::AbstractCellMutationState::GetColour ) );
+        
+        }
+    }
+
+    { //::CaBasedCellPopulation< 2 >
+        typedef bp::class_< CaBasedCellPopulation_less__2__greater__wrapper, boost::noncopyable > CaBasedCellPopulation2_exposer_t;
+        CaBasedCellPopulation2_exposer_t CaBasedCellPopulation2_exposer = CaBasedCellPopulation2_exposer_t( "CaBasedCellPopulation2", bp::init< PottsMesh< 2 > &, std::vector< boost::shared_ptr<Cell> > &, std::vector< unsigned int >, bp::optional< unsigned int, bool, bool > >(( bp::arg("rMesh"), bp::arg("rCells"), bp::arg("locationIndices"), bp::arg("latticeCarryingCapacity")=(unsigned int)(1U), bp::arg("deleteMesh")=(bool)(false), bp::arg("validate")=(bool)(false) )) );
+        bp::scope CaBasedCellPopulation2_scope( CaBasedCellPopulation2_exposer );
+        CaBasedCellPopulation2_exposer.def( bp::init< PottsMesh< 2 > & >(( bp::arg("rMesh") )) );
+        bp::implicitly_convertible< PottsMesh< 2 > &, CaBasedCellPopulation< 2 > >();
+        { //::CaBasedCellPopulation< 2 >::AcceptCellWriter
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AcceptCellWriter_function_type)( ::boost::shared_ptr< AbstractCellWriter< 2, 2 > >,::CellPtr ) ;
+            typedef void ( CaBasedCellPopulation_less__2__greater__wrapper::*default_AcceptCellWriter_function_type)( ::boost::shared_ptr< AbstractCellWriter< 2, 2 > >,::CellPtr ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "AcceptCellWriter"
+                , AcceptCellWriter_function_type(&::CaBasedCellPopulation< 2 >::AcceptCellWriter)
+                , default_AcceptCellWriter_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_AcceptCellWriter)
+                , ( bp::arg("pCellWriter"), bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::AcceptPopulationCountWriter
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AcceptPopulationCountWriter_function_type)( ::boost::shared_ptr< AbstractCellPopulationCountWriter< 2, 2 > > ) ;
+            typedef void ( CaBasedCellPopulation_less__2__greater__wrapper::*default_AcceptPopulationCountWriter_function_type)( ::boost::shared_ptr< AbstractCellPopulationCountWriter< 2, 2 > > ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "AcceptPopulationCountWriter"
+                , AcceptPopulationCountWriter_function_type(&::CaBasedCellPopulation< 2 >::AcceptPopulationCountWriter)
+                , default_AcceptPopulationCountWriter_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_AcceptPopulationCountWriter)
+                , ( bp::arg("pPopulationCountWriter") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::AcceptPopulationWriter
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AcceptPopulationWriter_function_type)( ::boost::shared_ptr< AbstractCellPopulationWriter< 2, 2 > > ) ;
+            typedef void ( CaBasedCellPopulation_less__2__greater__wrapper::*default_AcceptPopulationWriter_function_type)( ::boost::shared_ptr< AbstractCellPopulationWriter< 2, 2 > > ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "AcceptPopulationWriter"
+                , AcceptPopulationWriter_function_type(&::CaBasedCellPopulation< 2 >::AcceptPopulationWriter)
+                , default_AcceptPopulationWriter_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_AcceptPopulationWriter)
+                , ( bp::arg("pPopulationWriter") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::AddCell
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef ::CellPtr ( exported_class_t::*AddCell_function_type)( ::CellPtr,::CellPtr ) ;
+            typedef ::CellPtr ( CaBasedCellPopulation_less__2__greater__wrapper::*default_AddCell_function_type)( ::CellPtr,::CellPtr ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "AddCell"
+                , AddCell_function_type(&::CaBasedCellPopulation< 2 >::AddCell)
+                , default_AddCell_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_AddCell)
+                , ( bp::arg("pNewCell"), bp::arg("pParentCell")=::CellPtr( ) ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::AddCellUsingLocationIndex
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AddCellUsingLocationIndex_function_type)( unsigned int,::CellPtr ) ;
+            typedef void ( CaBasedCellPopulation_less__2__greater__wrapper::*default_AddCellUsingLocationIndex_function_type)( unsigned int,::CellPtr ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "AddCellUsingLocationIndex"
+                , AddCellUsingLocationIndex_function_type(&::CaBasedCellPopulation< 2 >::AddCellUsingLocationIndex)
+                , default_AddCellUsingLocationIndex_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_AddCellUsingLocationIndex)
+                , ( bp::arg("index"), bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::AddUpdateRule
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AddUpdateRule_function_type)( ::boost::shared_ptr< AbstractUpdateRule< 2 > > ) ;
+            typedef void ( CaBasedCellPopulation_less__2__greater__wrapper::*default_AddUpdateRule_function_type)( ::boost::shared_ptr< AbstractUpdateRule< 2 > > ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "AddUpdateRule"
+                , AddUpdateRule_function_type(&::CaBasedCellPopulation< 2 >::AddUpdateRule)
+                , default_AddUpdateRule_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_AddUpdateRule)
+                , ( bp::arg("pUpdateRule") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::EvaluateDivisionPropensity
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef double ( exported_class_t::*EvaluateDivisionPropensity_function_type)( unsigned int,unsigned int,::CellPtr ) ;
+            typedef double ( CaBasedCellPopulation_less__2__greater__wrapper::*default_EvaluateDivisionPropensity_function_type)( unsigned int,unsigned int,::CellPtr ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "EvaluateDivisionPropensity"
+                , EvaluateDivisionPropensity_function_type(&::CaBasedCellPopulation< 2 >::EvaluateDivisionPropensity)
+                , default_EvaluateDivisionPropensity_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_EvaluateDivisionPropensity)
+                , ( bp::arg("currentNodeIndex"), bp::arg("targetNodeIndex"), bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::GetCaBasedDivisionRule
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< AbstractCaBasedDivisionRule< 2 > > ( exported_class_t::*GetCaBasedDivisionRule_function_type)(  ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "GetCaBasedDivisionRule"
+                , GetCaBasedDivisionRule_function_type( &::CaBasedCellPopulation< 2 >::GetCaBasedDivisionRule ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::GetCellDataItemAtPdeNode
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef double ( exported_class_t::*GetCellDataItemAtPdeNode_function_type)( unsigned int,::std::string &,bool,double ) ;
+            typedef double ( CaBasedCellPopulation_less__2__greater__wrapper::*default_GetCellDataItemAtPdeNode_function_type)( unsigned int,::std::string &,bool,double ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "GetCellDataItemAtPdeNode"
+                , GetCellDataItemAtPdeNode_function_type(&::CaBasedCellPopulation< 2 >::GetCellDataItemAtPdeNode)
+                , default_GetCellDataItemAtPdeNode_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_GetCellDataItemAtPdeNode)
+                , ( bp::arg("pdeNodeIndex"), bp::arg("rVariableName"), bp::arg("dirichletBoundaryConditionApplies")=(bool)(false), bp::arg("dirichletBoundaryValue")=0. ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::GetLocationOfCellCentre
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef ::boost::numeric::ublas::c_vector< double, 2 > ( exported_class_t::*GetLocationOfCellCentre_function_type)( ::CellPtr ) ;
+            typedef ::boost::numeric::ublas::c_vector< double, 2 > ( CaBasedCellPopulation_less__2__greater__wrapper::*default_GetLocationOfCellCentre_function_type)( ::CellPtr ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "GetLocationOfCellCentre"
+                , GetLocationOfCellCentre_function_type(&::CaBasedCellPopulation< 2 >::GetLocationOfCellCentre)
+                , default_GetLocationOfCellCentre_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_GetLocationOfCellCentre)
+                , ( bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::GetNeighbouringLocationIndices
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef ::std::set< unsigned int > ( exported_class_t::*GetNeighbouringLocationIndices_function_type)( ::CellPtr ) ;
+            typedef ::std::set< unsigned int > ( CaBasedCellPopulation_less__2__greater__wrapper::*default_GetNeighbouringLocationIndices_function_type)( ::CellPtr ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "GetNeighbouringLocationIndices"
+                , GetNeighbouringLocationIndices_function_type(&::CaBasedCellPopulation< 2 >::GetNeighbouringLocationIndices)
+                , default_GetNeighbouringLocationIndices_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_GetNeighbouringLocationIndices)
+                , ( bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::GetNumNodes
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetNumNodes_function_type)(  ) ;
+            typedef unsigned int ( CaBasedCellPopulation_less__2__greater__wrapper::*default_GetNumNodes_function_type)(  ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "GetNumNodes"
+                , GetNumNodes_function_type(&::CaBasedCellPopulation< 2 >::GetNumNodes)
+                , default_GetNumNodes_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_GetNumNodes) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::GetUpdateRuleCollection
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<AbstractUpdateRule<2> > > const ( exported_class_t::*GetUpdateRuleCollection_function_type)(  ) const;
+            typedef ::std::vector< boost::shared_ptr<AbstractUpdateRule<2> > > const ( CaBasedCellPopulation_less__2__greater__wrapper::*default_GetUpdateRuleCollection_function_type)(  ) const;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "GetUpdateRuleCollection"
+                , GetUpdateRuleCollection_function_type(&::CaBasedCellPopulation< 2 >::GetUpdateRuleCollection)
+                , default_GetUpdateRuleCollection_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_GetUpdateRuleCollection) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::GetVolumeOfCell
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef double ( exported_class_t::*GetVolumeOfCell_function_type)( ::CellPtr ) ;
+            typedef double ( CaBasedCellPopulation_less__2__greater__wrapper::*default_GetVolumeOfCell_function_type)( ::CellPtr ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "GetVolumeOfCell"
+                , GetVolumeOfCell_function_type(&::CaBasedCellPopulation< 2 >::GetVolumeOfCell)
+                , default_GetVolumeOfCell_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_GetVolumeOfCell)
+                , ( bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::GetWidth
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef double ( exported_class_t::*GetWidth_function_type)( unsigned int const & ) ;
+            typedef double ( CaBasedCellPopulation_less__2__greater__wrapper::*default_GetWidth_function_type)( unsigned int const & ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "GetWidth"
+                , GetWidth_function_type(&::CaBasedCellPopulation< 2 >::GetWidth)
+                , default_GetWidth_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_GetWidth)
+                , ( bp::arg("rDimension") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::IsCellAssociatedWithADeletedLocation
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef bool ( exported_class_t::*IsCellAssociatedWithADeletedLocation_function_type)( ::CellPtr ) ;
+            typedef bool ( CaBasedCellPopulation_less__2__greater__wrapper::*default_IsCellAssociatedWithADeletedLocation_function_type)( ::CellPtr ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "IsCellAssociatedWithADeletedLocation"
+                , IsCellAssociatedWithADeletedLocation_function_type(&::CaBasedCellPopulation< 2 >::IsCellAssociatedWithADeletedLocation)
+                , default_IsCellAssociatedWithADeletedLocation_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_IsCellAssociatedWithADeletedLocation)
+                , ( bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::IsPdeNodeAssociatedWithNonApoptoticCell
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef bool ( exported_class_t::*IsPdeNodeAssociatedWithNonApoptoticCell_function_type)( unsigned int ) ;
+            typedef bool ( CaBasedCellPopulation_less__2__greater__wrapper::*default_IsPdeNodeAssociatedWithNonApoptoticCell_function_type)( unsigned int ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "IsPdeNodeAssociatedWithNonApoptoticCell"
+                , IsPdeNodeAssociatedWithNonApoptoticCell_function_type(&::CaBasedCellPopulation< 2 >::IsPdeNodeAssociatedWithNonApoptoticCell)
+                , default_IsPdeNodeAssociatedWithNonApoptoticCell_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_IsPdeNodeAssociatedWithNonApoptoticCell)
+                , ( bp::arg("pdeNodeIndex") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::IsRoomToDivide
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef bool ( exported_class_t::*IsRoomToDivide_function_type)( ::CellPtr ) ;
+            typedef bool ( CaBasedCellPopulation_less__2__greater__wrapper::*default_IsRoomToDivide_function_type)( ::CellPtr ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "IsRoomToDivide"
+                , IsRoomToDivide_function_type(&::CaBasedCellPopulation< 2 >::IsRoomToDivide)
+                , default_IsRoomToDivide_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_IsRoomToDivide)
+                , ( bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::IsSiteAvailable
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef bool ( exported_class_t::*IsSiteAvailable_function_type)( unsigned int,::CellPtr ) ;
+            typedef bool ( CaBasedCellPopulation_less__2__greater__wrapper::*default_IsSiteAvailable_function_type)( unsigned int,::CellPtr ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "IsSiteAvailable"
+                , IsSiteAvailable_function_type(&::CaBasedCellPopulation< 2 >::IsSiteAvailable)
+                , default_IsSiteAvailable_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_IsSiteAvailable)
+                , ( bp::arg("index"), bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::OpenWritersFiles
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef void ( exported_class_t::*OpenWritersFiles_function_type)( ::OutputFileHandler & ) ;
+            typedef void ( CaBasedCellPopulation_less__2__greater__wrapper::*default_OpenWritersFiles_function_type)( ::OutputFileHandler & ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "OpenWritersFiles"
+                , OpenWritersFiles_function_type(&::CaBasedCellPopulation< 2 >::OpenWritersFiles)
+                , default_OpenWritersFiles_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_OpenWritersFiles)
+                , ( bp::arg("rOutputFileHandler") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::OutputCellPopulationParameters
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef void ( exported_class_t::*OutputCellPopulationParameters_function_type)( ::out_stream & ) ;
+            typedef void ( CaBasedCellPopulation_less__2__greater__wrapper::*default_OutputCellPopulationParameters_function_type)( ::out_stream & ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "OutputCellPopulationParameters"
+                , OutputCellPopulationParameters_function_type(&::CaBasedCellPopulation< 2 >::OutputCellPopulationParameters)
+                , default_OutputCellPopulationParameters_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_OutputCellPopulationParameters)
+                , ( bp::arg("rParamsFile") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::RemoveAllUpdateRules
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef void ( exported_class_t::*RemoveAllUpdateRules_function_type)(  ) ;
+            typedef void ( CaBasedCellPopulation_less__2__greater__wrapper::*default_RemoveAllUpdateRules_function_type)(  ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "RemoveAllUpdateRules"
+                , RemoveAllUpdateRules_function_type(&::CaBasedCellPopulation< 2 >::RemoveAllUpdateRules)
+                , default_RemoveAllUpdateRules_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_RemoveAllUpdateRules) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::RemoveCellUsingLocationIndex
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef void ( exported_class_t::*RemoveCellUsingLocationIndex_function_type)( unsigned int,::CellPtr ) ;
+            typedef void ( CaBasedCellPopulation_less__2__greater__wrapper::*default_RemoveCellUsingLocationIndex_function_type)( unsigned int,::CellPtr ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "RemoveCellUsingLocationIndex"
+                , RemoveCellUsingLocationIndex_function_type(&::CaBasedCellPopulation< 2 >::RemoveCellUsingLocationIndex)
+                , default_RemoveCellUsingLocationIndex_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_RemoveCellUsingLocationIndex)
+                , ( bp::arg("index"), bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::RemoveDeadCells
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*RemoveDeadCells_function_type)(  ) ;
+            typedef unsigned int ( CaBasedCellPopulation_less__2__greater__wrapper::*default_RemoveDeadCells_function_type)(  ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "RemoveDeadCells"
+                , RemoveDeadCells_function_type(&::CaBasedCellPopulation< 2 >::RemoveDeadCells)
+                , default_RemoveDeadCells_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_RemoveDeadCells) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::SetCaBasedDivisionRule
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetCaBasedDivisionRule_function_type)( ::boost::shared_ptr< AbstractCaBasedDivisionRule< 2 > > ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "SetCaBasedDivisionRule"
+                , SetCaBasedDivisionRule_function_type( &::CaBasedCellPopulation< 2 >::SetCaBasedDivisionRule )
+                , ( bp::arg("pCaBasedDivisionRule") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::Update
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef void ( exported_class_t::*Update_function_type)( bool ) ;
+            typedef void ( CaBasedCellPopulation_less__2__greater__wrapper::*default_Update_function_type)( bool ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "Update"
+                , Update_function_type(&::CaBasedCellPopulation< 2 >::Update)
+                , default_Update_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_Update)
+                , ( bp::arg("hasHadBirthsOrDeaths")=(bool)(true) ) );
+        
+        }
+        { //::CaBasedCellPopulation< 2 >::UpdateCellLocations
+        
+            typedef CaBasedCellPopulation< 2 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateCellLocations_function_type)( double ) ;
+            typedef void ( CaBasedCellPopulation_less__2__greater__wrapper::*default_UpdateCellLocations_function_type)( double ) ;
+            
+            CaBasedCellPopulation2_exposer.def( 
+                "UpdateCellLocations"
+                , UpdateCellLocations_function_type(&::CaBasedCellPopulation< 2 >::UpdateCellLocations)
+                , default_UpdateCellLocations_function_type(&CaBasedCellPopulation_less__2__greater__wrapper::default_UpdateCellLocations)
+                , ( bp::arg("dt") ) );
+        
+        }
+        bp::register_ptr_to_python< boost::shared_ptr< CaBasedCellPopulation<2> > >();
+        bp::implicitly_convertible< boost::shared_ptr< CaBasedCellPopulation< 2 > >, boost::shared_ptr< AbstractOnLatticeCellPopulation< 2 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< CaBasedCellPopulation< 2 > >, boost::shared_ptr< AbstractCellPopulation< 2, 2 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< CaBasedCellPopulation< 2 > >, boost::shared_ptr< Identifiable > >();
+    }
+
+    { //::CaBasedCellPopulation< 3 >
+        typedef bp::class_< CaBasedCellPopulation_less__3__greater__wrapper, boost::noncopyable > CaBasedCellPopulation3_exposer_t;
+        CaBasedCellPopulation3_exposer_t CaBasedCellPopulation3_exposer = CaBasedCellPopulation3_exposer_t( "CaBasedCellPopulation3", bp::init< PottsMesh< 3 > &, std::vector< boost::shared_ptr<Cell> > &, std::vector< unsigned int >, bp::optional< unsigned int, bool, bool > >(( bp::arg("rMesh"), bp::arg("rCells"), bp::arg("locationIndices"), bp::arg("latticeCarryingCapacity")=(unsigned int)(1U), bp::arg("deleteMesh")=(bool)(false), bp::arg("validate")=(bool)(false) )) );
+        bp::scope CaBasedCellPopulation3_scope( CaBasedCellPopulation3_exposer );
+        CaBasedCellPopulation3_exposer.def( bp::init< PottsMesh< 3 > & >(( bp::arg("rMesh") )) );
+        bp::implicitly_convertible< PottsMesh< 3 > &, CaBasedCellPopulation< 3 > >();
+        { //::CaBasedCellPopulation< 3 >::AcceptCellWriter
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AcceptCellWriter_function_type)( ::boost::shared_ptr< AbstractCellWriter< 3, 3 > >,::CellPtr ) ;
+            typedef void ( CaBasedCellPopulation_less__3__greater__wrapper::*default_AcceptCellWriter_function_type)( ::boost::shared_ptr< AbstractCellWriter< 3, 3 > >,::CellPtr ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "AcceptCellWriter"
+                , AcceptCellWriter_function_type(&::CaBasedCellPopulation< 3 >::AcceptCellWriter)
+                , default_AcceptCellWriter_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_AcceptCellWriter)
+                , ( bp::arg("pCellWriter"), bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::AcceptPopulationCountWriter
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AcceptPopulationCountWriter_function_type)( ::boost::shared_ptr< AbstractCellPopulationCountWriter< 3, 3 > > ) ;
+            typedef void ( CaBasedCellPopulation_less__3__greater__wrapper::*default_AcceptPopulationCountWriter_function_type)( ::boost::shared_ptr< AbstractCellPopulationCountWriter< 3, 3 > > ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "AcceptPopulationCountWriter"
+                , AcceptPopulationCountWriter_function_type(&::CaBasedCellPopulation< 3 >::AcceptPopulationCountWriter)
+                , default_AcceptPopulationCountWriter_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_AcceptPopulationCountWriter)
+                , ( bp::arg("pPopulationCountWriter") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::AcceptPopulationWriter
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AcceptPopulationWriter_function_type)( ::boost::shared_ptr< AbstractCellPopulationWriter< 3, 3 > > ) ;
+            typedef void ( CaBasedCellPopulation_less__3__greater__wrapper::*default_AcceptPopulationWriter_function_type)( ::boost::shared_ptr< AbstractCellPopulationWriter< 3, 3 > > ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "AcceptPopulationWriter"
+                , AcceptPopulationWriter_function_type(&::CaBasedCellPopulation< 3 >::AcceptPopulationWriter)
+                , default_AcceptPopulationWriter_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_AcceptPopulationWriter)
+                , ( bp::arg("pPopulationWriter") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::AddCell
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef ::CellPtr ( exported_class_t::*AddCell_function_type)( ::CellPtr,::CellPtr ) ;
+            typedef ::CellPtr ( CaBasedCellPopulation_less__3__greater__wrapper::*default_AddCell_function_type)( ::CellPtr,::CellPtr ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "AddCell"
+                , AddCell_function_type(&::CaBasedCellPopulation< 3 >::AddCell)
+                , default_AddCell_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_AddCell)
+                , ( bp::arg("pNewCell"), bp::arg("pParentCell")=::CellPtr( ) ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::AddCellUsingLocationIndex
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddCellUsingLocationIndex_function_type)( unsigned int,::CellPtr ) ;
+            typedef void ( CaBasedCellPopulation_less__3__greater__wrapper::*default_AddCellUsingLocationIndex_function_type)( unsigned int,::CellPtr ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "AddCellUsingLocationIndex"
+                , AddCellUsingLocationIndex_function_type(&::CaBasedCellPopulation< 3 >::AddCellUsingLocationIndex)
+                , default_AddCellUsingLocationIndex_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_AddCellUsingLocationIndex)
+                , ( bp::arg("index"), bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::AddUpdateRule
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddUpdateRule_function_type)( ::boost::shared_ptr< AbstractUpdateRule< 3 > > ) ;
+            typedef void ( CaBasedCellPopulation_less__3__greater__wrapper::*default_AddUpdateRule_function_type)( ::boost::shared_ptr< AbstractUpdateRule< 3 > > ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "AddUpdateRule"
+                , AddUpdateRule_function_type(&::CaBasedCellPopulation< 3 >::AddUpdateRule)
+                , default_AddUpdateRule_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_AddUpdateRule)
+                , ( bp::arg("pUpdateRule") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::EvaluateDivisionPropensity
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef double ( exported_class_t::*EvaluateDivisionPropensity_function_type)( unsigned int,unsigned int,::CellPtr ) ;
+            typedef double ( CaBasedCellPopulation_less__3__greater__wrapper::*default_EvaluateDivisionPropensity_function_type)( unsigned int,unsigned int,::CellPtr ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "EvaluateDivisionPropensity"
+                , EvaluateDivisionPropensity_function_type(&::CaBasedCellPopulation< 3 >::EvaluateDivisionPropensity)
+                , default_EvaluateDivisionPropensity_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_EvaluateDivisionPropensity)
+                , ( bp::arg("currentNodeIndex"), bp::arg("targetNodeIndex"), bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::GetCaBasedDivisionRule
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< AbstractCaBasedDivisionRule< 3 > > ( exported_class_t::*GetCaBasedDivisionRule_function_type)(  ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "GetCaBasedDivisionRule"
+                , GetCaBasedDivisionRule_function_type( &::CaBasedCellPopulation< 3 >::GetCaBasedDivisionRule ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::GetCellDataItemAtPdeNode
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef double ( exported_class_t::*GetCellDataItemAtPdeNode_function_type)( unsigned int,::std::string &,bool,double ) ;
+            typedef double ( CaBasedCellPopulation_less__3__greater__wrapper::*default_GetCellDataItemAtPdeNode_function_type)( unsigned int,::std::string &,bool,double ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "GetCellDataItemAtPdeNode"
+                , GetCellDataItemAtPdeNode_function_type(&::CaBasedCellPopulation< 3 >::GetCellDataItemAtPdeNode)
+                , default_GetCellDataItemAtPdeNode_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_GetCellDataItemAtPdeNode)
+                , ( bp::arg("pdeNodeIndex"), bp::arg("rVariableName"), bp::arg("dirichletBoundaryConditionApplies")=(bool)(false), bp::arg("dirichletBoundaryValue")=0. ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::GetLocationOfCellCentre
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef ::boost::numeric::ublas::c_vector< double, 3 > ( exported_class_t::*GetLocationOfCellCentre_function_type)( ::CellPtr ) ;
+            typedef ::boost::numeric::ublas::c_vector< double, 3 > ( CaBasedCellPopulation_less__3__greater__wrapper::*default_GetLocationOfCellCentre_function_type)( ::CellPtr ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "GetLocationOfCellCentre"
+                , GetLocationOfCellCentre_function_type(&::CaBasedCellPopulation< 3 >::GetLocationOfCellCentre)
+                , default_GetLocationOfCellCentre_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_GetLocationOfCellCentre)
+                , ( bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::GetNeighbouringLocationIndices
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef ::std::set< unsigned int > ( exported_class_t::*GetNeighbouringLocationIndices_function_type)( ::CellPtr ) ;
+            typedef ::std::set< unsigned int > ( CaBasedCellPopulation_less__3__greater__wrapper::*default_GetNeighbouringLocationIndices_function_type)( ::CellPtr ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "GetNeighbouringLocationIndices"
+                , GetNeighbouringLocationIndices_function_type(&::CaBasedCellPopulation< 3 >::GetNeighbouringLocationIndices)
+                , default_GetNeighbouringLocationIndices_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_GetNeighbouringLocationIndices)
+                , ( bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::GetNumNodes
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetNumNodes_function_type)(  ) ;
+            typedef unsigned int ( CaBasedCellPopulation_less__3__greater__wrapper::*default_GetNumNodes_function_type)(  ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "GetNumNodes"
+                , GetNumNodes_function_type(&::CaBasedCellPopulation< 3 >::GetNumNodes)
+                , default_GetNumNodes_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_GetNumNodes) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::GetUpdateRuleCollection
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<AbstractUpdateRule<3> > > const ( exported_class_t::*GetUpdateRuleCollection_function_type)(  ) const;
+            typedef ::std::vector< boost::shared_ptr<AbstractUpdateRule<3> > > const ( CaBasedCellPopulation_less__3__greater__wrapper::*default_GetUpdateRuleCollection_function_type)(  ) const;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "GetUpdateRuleCollection"
+                , GetUpdateRuleCollection_function_type(&::CaBasedCellPopulation< 3 >::GetUpdateRuleCollection)
+                , default_GetUpdateRuleCollection_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_GetUpdateRuleCollection) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::GetVolumeOfCell
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef double ( exported_class_t::*GetVolumeOfCell_function_type)( ::CellPtr ) ;
+            typedef double ( CaBasedCellPopulation_less__3__greater__wrapper::*default_GetVolumeOfCell_function_type)( ::CellPtr ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "GetVolumeOfCell"
+                , GetVolumeOfCell_function_type(&::CaBasedCellPopulation< 3 >::GetVolumeOfCell)
+                , default_GetVolumeOfCell_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_GetVolumeOfCell)
+                , ( bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::GetWidth
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef double ( exported_class_t::*GetWidth_function_type)( unsigned int const & ) ;
+            typedef double ( CaBasedCellPopulation_less__3__greater__wrapper::*default_GetWidth_function_type)( unsigned int const & ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "GetWidth"
+                , GetWidth_function_type(&::CaBasedCellPopulation< 3 >::GetWidth)
+                , default_GetWidth_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_GetWidth)
+                , ( bp::arg("rDimension") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::IsCellAssociatedWithADeletedLocation
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef bool ( exported_class_t::*IsCellAssociatedWithADeletedLocation_function_type)( ::CellPtr ) ;
+            typedef bool ( CaBasedCellPopulation_less__3__greater__wrapper::*default_IsCellAssociatedWithADeletedLocation_function_type)( ::CellPtr ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "IsCellAssociatedWithADeletedLocation"
+                , IsCellAssociatedWithADeletedLocation_function_type(&::CaBasedCellPopulation< 3 >::IsCellAssociatedWithADeletedLocation)
+                , default_IsCellAssociatedWithADeletedLocation_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_IsCellAssociatedWithADeletedLocation)
+                , ( bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::IsPdeNodeAssociatedWithNonApoptoticCell
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef bool ( exported_class_t::*IsPdeNodeAssociatedWithNonApoptoticCell_function_type)( unsigned int ) ;
+            typedef bool ( CaBasedCellPopulation_less__3__greater__wrapper::*default_IsPdeNodeAssociatedWithNonApoptoticCell_function_type)( unsigned int ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "IsPdeNodeAssociatedWithNonApoptoticCell"
+                , IsPdeNodeAssociatedWithNonApoptoticCell_function_type(&::CaBasedCellPopulation< 3 >::IsPdeNodeAssociatedWithNonApoptoticCell)
+                , default_IsPdeNodeAssociatedWithNonApoptoticCell_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_IsPdeNodeAssociatedWithNonApoptoticCell)
+                , ( bp::arg("pdeNodeIndex") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::IsRoomToDivide
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef bool ( exported_class_t::*IsRoomToDivide_function_type)( ::CellPtr ) ;
+            typedef bool ( CaBasedCellPopulation_less__3__greater__wrapper::*default_IsRoomToDivide_function_type)( ::CellPtr ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "IsRoomToDivide"
+                , IsRoomToDivide_function_type(&::CaBasedCellPopulation< 3 >::IsRoomToDivide)
+                , default_IsRoomToDivide_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_IsRoomToDivide)
+                , ( bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::IsSiteAvailable
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef bool ( exported_class_t::*IsSiteAvailable_function_type)( unsigned int,::CellPtr ) ;
+            typedef bool ( CaBasedCellPopulation_less__3__greater__wrapper::*default_IsSiteAvailable_function_type)( unsigned int,::CellPtr ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "IsSiteAvailable"
+                , IsSiteAvailable_function_type(&::CaBasedCellPopulation< 3 >::IsSiteAvailable)
+                , default_IsSiteAvailable_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_IsSiteAvailable)
+                , ( bp::arg("index"), bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::OpenWritersFiles
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef void ( exported_class_t::*OpenWritersFiles_function_type)( ::OutputFileHandler & ) ;
+            typedef void ( CaBasedCellPopulation_less__3__greater__wrapper::*default_OpenWritersFiles_function_type)( ::OutputFileHandler & ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "OpenWritersFiles"
+                , OpenWritersFiles_function_type(&::CaBasedCellPopulation< 3 >::OpenWritersFiles)
+                , default_OpenWritersFiles_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_OpenWritersFiles)
+                , ( bp::arg("rOutputFileHandler") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::OutputCellPopulationParameters
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef void ( exported_class_t::*OutputCellPopulationParameters_function_type)( ::out_stream & ) ;
+            typedef void ( CaBasedCellPopulation_less__3__greater__wrapper::*default_OutputCellPopulationParameters_function_type)( ::out_stream & ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "OutputCellPopulationParameters"
+                , OutputCellPopulationParameters_function_type(&::CaBasedCellPopulation< 3 >::OutputCellPopulationParameters)
+                , default_OutputCellPopulationParameters_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_OutputCellPopulationParameters)
+                , ( bp::arg("rParamsFile") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::RemoveAllUpdateRules
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef void ( exported_class_t::*RemoveAllUpdateRules_function_type)(  ) ;
+            typedef void ( CaBasedCellPopulation_less__3__greater__wrapper::*default_RemoveAllUpdateRules_function_type)(  ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "RemoveAllUpdateRules"
+                , RemoveAllUpdateRules_function_type(&::CaBasedCellPopulation< 3 >::RemoveAllUpdateRules)
+                , default_RemoveAllUpdateRules_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_RemoveAllUpdateRules) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::RemoveCellUsingLocationIndex
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef void ( exported_class_t::*RemoveCellUsingLocationIndex_function_type)( unsigned int,::CellPtr ) ;
+            typedef void ( CaBasedCellPopulation_less__3__greater__wrapper::*default_RemoveCellUsingLocationIndex_function_type)( unsigned int,::CellPtr ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "RemoveCellUsingLocationIndex"
+                , RemoveCellUsingLocationIndex_function_type(&::CaBasedCellPopulation< 3 >::RemoveCellUsingLocationIndex)
+                , default_RemoveCellUsingLocationIndex_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_RemoveCellUsingLocationIndex)
+                , ( bp::arg("index"), bp::arg("pCell") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::RemoveDeadCells
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*RemoveDeadCells_function_type)(  ) ;
+            typedef unsigned int ( CaBasedCellPopulation_less__3__greater__wrapper::*default_RemoveDeadCells_function_type)(  ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "RemoveDeadCells"
+                , RemoveDeadCells_function_type(&::CaBasedCellPopulation< 3 >::RemoveDeadCells)
+                , default_RemoveDeadCells_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_RemoveDeadCells) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::SetCaBasedDivisionRule
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetCaBasedDivisionRule_function_type)( ::boost::shared_ptr< AbstractCaBasedDivisionRule< 3 > > ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "SetCaBasedDivisionRule"
+                , SetCaBasedDivisionRule_function_type( &::CaBasedCellPopulation< 3 >::SetCaBasedDivisionRule )
+                , ( bp::arg("pCaBasedDivisionRule") ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::Update
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef void ( exported_class_t::*Update_function_type)( bool ) ;
+            typedef void ( CaBasedCellPopulation_less__3__greater__wrapper::*default_Update_function_type)( bool ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "Update"
+                , Update_function_type(&::CaBasedCellPopulation< 3 >::Update)
+                , default_Update_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_Update)
+                , ( bp::arg("hasHadBirthsOrDeaths")=(bool)(true) ) );
+        
+        }
+        { //::CaBasedCellPopulation< 3 >::UpdateCellLocations
+        
+            typedef CaBasedCellPopulation< 3 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateCellLocations_function_type)( double ) ;
+            typedef void ( CaBasedCellPopulation_less__3__greater__wrapper::*default_UpdateCellLocations_function_type)( double ) ;
+            
+            CaBasedCellPopulation3_exposer.def( 
+                "UpdateCellLocations"
+                , UpdateCellLocations_function_type(&::CaBasedCellPopulation< 3 >::UpdateCellLocations)
+                , default_UpdateCellLocations_function_type(&CaBasedCellPopulation_less__3__greater__wrapper::default_UpdateCellLocations)
+                , ( bp::arg("dt") ) );
+        
+        }
+        bp::register_ptr_to_python< boost::shared_ptr< CaBasedCellPopulation<3> > >();
+        bp::implicitly_convertible< boost::shared_ptr< CaBasedCellPopulation< 3 > >, boost::shared_ptr< AbstractOnLatticeCellPopulation< 3 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< CaBasedCellPopulation< 3 > >, boost::shared_ptr< AbstractCellPopulation< 3, 3 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< CaBasedCellPopulation< 3 > >, boost::shared_ptr< Identifiable > >();
+    }
+
+    bp::class_< CancerCellMutationState, bp::bases< AbstractCellMutationState > >( "CancerCellMutationState", bp::init< >() );
+
+    bp::class_< MacrophageMutationState, bp::bases< AbstractCellMutationState > >( "MacrophageMutationState", bp::init< >() );
+
+    { //::Owen11CellPopulationGenerator< 2 >
+        typedef bp::class_< Owen11CellPopulationGenerator< 2 > > Owen11CellPopulationGenerator2_exposer_t;
+        Owen11CellPopulationGenerator2_exposer_t Owen11CellPopulationGenerator2_exposer = Owen11CellPopulationGenerator2_exposer_t( "Owen11CellPopulationGenerator2", bp::init< >() );
+        bp::scope Owen11CellPopulationGenerator2_scope( Owen11CellPopulationGenerator2_exposer );
+        { //::Owen11CellPopulationGenerator< 2 >::Create
+        
+            typedef Owen11CellPopulationGenerator< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< Owen11CellPopulationGenerator< 2 > > ( *Create_function_type )(  );
+            
+            Owen11CellPopulationGenerator2_exposer.def( 
+                "Create"
+                , Create_function_type( &::Owen11CellPopulationGenerator< 2 >::Create ) );
+        
+        }
+        { //::Owen11CellPopulationGenerator< 2 >::SetReferenceLengthScale
+        
+            typedef Owen11CellPopulationGenerator< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetReferenceLengthScale_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            Owen11CellPopulationGenerator2_exposer.def( 
+                "SetReferenceLengthScale"
+                , SetReferenceLengthScale_function_type( &::Owen11CellPopulationGenerator< 2 >::SetReferenceLengthScale )
+                , ( bp::arg("lengthScale") ) );
+        
+        }
+        { //::Owen11CellPopulationGenerator< 2 >::SetRegularGrid
+        
+            typedef Owen11CellPopulationGenerator< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetRegularGrid_function_type)( ::boost::shared_ptr< RegularGrid< 2 > > ) ;
+            
+            Owen11CellPopulationGenerator2_exposer.def( 
+                "SetRegularGrid"
+                , SetRegularGrid_function_type( &::Owen11CellPopulationGenerator< 2 >::SetRegularGrid )
+                , ( bp::arg("pGrid") ) );
+        
+        }
+        { //::Owen11CellPopulationGenerator< 2 >::SetTumourRadius
+        
+            typedef Owen11CellPopulationGenerator< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetTumourRadius_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            Owen11CellPopulationGenerator2_exposer.def( 
+                "SetTumourRadius"
+                , SetTumourRadius_function_type( &::Owen11CellPopulationGenerator< 2 >::SetTumourRadius )
+                , ( bp::arg("tumourRadius") ) );
+        
+        }
+        { //::Owen11CellPopulationGenerator< 2 >::SetVesselNetwork
+        
+            typedef Owen11CellPopulationGenerator< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetVesselNetwork_function_type)( ::boost::shared_ptr< VesselNetwork< 2 > > ) ;
+            
+            Owen11CellPopulationGenerator2_exposer.def( 
+                "SetVesselNetwork"
+                , SetVesselNetwork_function_type( &::Owen11CellPopulationGenerator< 2 >::SetVesselNetwork )
+                , ( bp::arg("pNetwork") ) );
+        
+        }
+        { //::Owen11CellPopulationGenerator< 2 >::Update
+        
+            typedef Owen11CellPopulationGenerator< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< CaBasedCellPopulation< 2 > > ( exported_class_t::*Update_function_type)(  ) ;
+            
+            Owen11CellPopulationGenerator2_exposer.def( 
+                "Update"
+                , Update_function_type( &::Owen11CellPopulationGenerator< 2 >::Update ) );
+        
+        }
+        Owen11CellPopulationGenerator2_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< Owen11CellPopulationGenerator<2> > >();
+    }
+
+    { //::Owen11CellPopulationGenerator< 3 >
+        typedef bp::class_< Owen11CellPopulationGenerator< 3 > > Owen11CellPopulationGenerator3_exposer_t;
+        Owen11CellPopulationGenerator3_exposer_t Owen11CellPopulationGenerator3_exposer = Owen11CellPopulationGenerator3_exposer_t( "Owen11CellPopulationGenerator3", bp::init< >() );
+        bp::scope Owen11CellPopulationGenerator3_scope( Owen11CellPopulationGenerator3_exposer );
+        { //::Owen11CellPopulationGenerator< 3 >::Create
+        
+            typedef Owen11CellPopulationGenerator< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< Owen11CellPopulationGenerator< 3 > > ( *Create_function_type )(  );
+            
+            Owen11CellPopulationGenerator3_exposer.def( 
+                "Create"
+                , Create_function_type( &::Owen11CellPopulationGenerator< 3 >::Create ) );
+        
+        }
+        { //::Owen11CellPopulationGenerator< 3 >::SetReferenceLengthScale
+        
+            typedef Owen11CellPopulationGenerator< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetReferenceLengthScale_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            Owen11CellPopulationGenerator3_exposer.def( 
+                "SetReferenceLengthScale"
+                , SetReferenceLengthScale_function_type( &::Owen11CellPopulationGenerator< 3 >::SetReferenceLengthScale )
+                , ( bp::arg("lengthScale") ) );
+        
+        }
+        { //::Owen11CellPopulationGenerator< 3 >::SetRegularGrid
+        
+            typedef Owen11CellPopulationGenerator< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetRegularGrid_function_type)( ::boost::shared_ptr< RegularGrid< 3 > > ) ;
+            
+            Owen11CellPopulationGenerator3_exposer.def( 
+                "SetRegularGrid"
+                , SetRegularGrid_function_type( &::Owen11CellPopulationGenerator< 3 >::SetRegularGrid )
+                , ( bp::arg("pGrid") ) );
+        
+        }
+        { //::Owen11CellPopulationGenerator< 3 >::SetTumourRadius
+        
+            typedef Owen11CellPopulationGenerator< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetTumourRadius_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            Owen11CellPopulationGenerator3_exposer.def( 
+                "SetTumourRadius"
+                , SetTumourRadius_function_type( &::Owen11CellPopulationGenerator< 3 >::SetTumourRadius )
+                , ( bp::arg("tumourRadius") ) );
+        
+        }
+        { //::Owen11CellPopulationGenerator< 3 >::SetVesselNetwork
+        
+            typedef Owen11CellPopulationGenerator< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetVesselNetwork_function_type)( ::boost::shared_ptr< VesselNetwork< 3 > > ) ;
+            
+            Owen11CellPopulationGenerator3_exposer.def( 
+                "SetVesselNetwork"
+                , SetVesselNetwork_function_type( &::Owen11CellPopulationGenerator< 3 >::SetVesselNetwork )
+                , ( bp::arg("pNetwork") ) );
+        
+        }
+        { //::Owen11CellPopulationGenerator< 3 >::Update
+        
+            typedef Owen11CellPopulationGenerator< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< CaBasedCellPopulation< 3 > > ( exported_class_t::*Update_function_type)(  ) ;
+            
+            Owen11CellPopulationGenerator3_exposer.def( 
+                "Update"
+                , Update_function_type( &::Owen11CellPopulationGenerator< 3 >::Update ) );
+        
+        }
+        Owen11CellPopulationGenerator3_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< Owen11CellPopulationGenerator<3> > >();
+    }
 
     { //::Owen2011OxygenBasedCellCycleModel
         typedef bp::class_< Owen2011OxygenBasedCellCycleModel_wrapper > Owen2011OxygenBasedCellCycleModel_exposer_t;
-        Owen2011OxygenBasedCellCycleModel_exposer_t Owen2011OxygenBasedCellCycleModel_exposer = Owen2011OxygenBasedCellCycleModel_exposer_t( "Owen2011OxygenBasedCellCycleModel", "Oxygen-dependent ODE-based cell-cycle model. Published by Owen et al. 2011\n/", bp::init< bp::optional< boost::shared_ptr< AbstractCellCycleModelOdeSolver > > >(( bp::arg("pOdeSolver")=boost::shared_ptr<AbstractCellCycleModelOdeSolver>() ), "Default constructor.\n@param pOdeSolver An optional pointer to a cell-cycle model ODE solver object (allows the use of different ODE solvers)\n/") );
+        Owen2011OxygenBasedCellCycleModel_exposer_t Owen2011OxygenBasedCellCycleModel_exposer = Owen2011OxygenBasedCellCycleModel_exposer_t( "Owen2011OxygenBasedCellCycleModel", bp::init< bp::optional< boost::shared_ptr< AbstractCellCycleModelOdeSolver > > >(( bp::arg("pOdeSolver")=boost::shared_ptr<AbstractCellCycleModelOdeSolver>() )) );
         bp::scope Owen2011OxygenBasedCellCycleModel_scope( Owen2011OxygenBasedCellCycleModel_exposer );
         bp::implicitly_convertible< boost::shared_ptr< AbstractCellCycleModelOdeSolver >, Owen2011OxygenBasedCellCycleModel >();
         { //::Owen2011OxygenBasedCellCycleModel::CheckAndLabelCell
@@ -158,8 +1767,19 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "CheckAndLabelCell"
-                , CheckAndLabelCell_function_type( &::Owen2011OxygenBasedCellCycleModel::CheckAndLabelCell )
-                , "Check if the oxygen concentration of the cell is below the EnterQuiescenceOxygenConcentration.\nIf it is true the label cells.\n/" );
+                , CheckAndLabelCell_function_type( &::Owen2011OxygenBasedCellCycleModel::CheckAndLabelCell ) );
+        
+        }
+        { //::Owen2011OxygenBasedCellCycleModel::CreateCellCycleModel
+        
+            typedef ::AbstractCellCycleModel * ( ::Owen2011OxygenBasedCellCycleModel::*CreateCellCycleModel_function_type)(  ) ;
+            typedef ::AbstractCellCycleModel * ( Owen2011OxygenBasedCellCycleModel_wrapper::*default_CreateCellCycleModel_function_type)(  ) ;
+            
+            Owen2011OxygenBasedCellCycleModel_exposer.def( 
+                "CreateCellCycleModel"
+                , CreateCellCycleModel_function_type(&::Owen2011OxygenBasedCellCycleModel::CreateCellCycleModel)
+                , default_CreateCellCycleModel_function_type(&Owen2011OxygenBasedCellCycleModel_wrapper::default_CreateCellCycleModel)
+                , bp::return_value_policy< bp::manage_new_object >() );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::GetCriticalQuiescentDuration
@@ -168,8 +1788,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "GetCriticalQuiescentDuration"
-                , GetCriticalQuiescentDuration_function_type( &::Owen2011OxygenBasedCellCycleModel::GetCriticalQuiescentDuration )
-                , "@return mCriticalQuiescentDuration\n/" );
+                , GetCriticalQuiescentDuration_function_type( &::Owen2011OxygenBasedCellCycleModel::GetCriticalQuiescentDuration ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::GetCurrentQuiescenceOnsetTime
@@ -178,8 +1797,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "GetCurrentQuiescenceOnsetTime"
-                , GetCurrentQuiescenceOnsetTime_function_type( &::Owen2011OxygenBasedCellCycleModel::GetCurrentQuiescenceOnsetTime )
-                , "@return mCurrentQuiescenceOnsetTime\n/" );
+                , GetCurrentQuiescenceOnsetTime_function_type( &::Owen2011OxygenBasedCellCycleModel::GetCurrentQuiescenceOnsetTime ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::GetCurrentQuiescentDuration
@@ -188,8 +1806,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "GetCurrentQuiescentDuration"
-                , GetCurrentQuiescentDuration_function_type( &::Owen2011OxygenBasedCellCycleModel::GetCurrentQuiescentDuration )
-                , "@return mCurrentQuiescentDuration\n/" );
+                , GetCurrentQuiescentDuration_function_type( &::Owen2011OxygenBasedCellCycleModel::GetCurrentQuiescentDuration ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::GetEnterQuiescenceOxygenConcentration
@@ -198,8 +1815,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "GetEnterQuiescenceOxygenConcentration"
-                , GetEnterQuiescenceOxygenConcentration_function_type( &::Owen2011OxygenBasedCellCycleModel::GetEnterQuiescenceOxygenConcentration )
-                , "@return mEnterQuiescenceOxygenConcentration\n/" );
+                , GetEnterQuiescenceOxygenConcentration_function_type( &::Owen2011OxygenBasedCellCycleModel::GetEnterQuiescenceOxygenConcentration ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::GetG2Duration
@@ -219,8 +1835,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "GetLeaveQuiescenceOxygenConcentration"
-                , GetLeaveQuiescenceOxygenConcentration_function_type( &::Owen2011OxygenBasedCellCycleModel::GetLeaveQuiescenceOxygenConcentration )
-                , "@return mLeaveQuiescenceOxygenConcentration\n/" );
+                , GetLeaveQuiescenceOxygenConcentration_function_type( &::Owen2011OxygenBasedCellCycleModel::GetLeaveQuiescenceOxygenConcentration ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::GetMDuration
@@ -240,8 +1855,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "GetP53"
-                , GetP53_function_type( &::Owen2011OxygenBasedCellCycleModel::GetP53 )
-                , "Get the value of p53.\n@return the value of p53.\n/" );
+                , GetP53_function_type( &::Owen2011OxygenBasedCellCycleModel::GetP53 ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::GetPhi
@@ -250,8 +1864,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "GetPhi"
-                , GetPhi_function_type( &::Owen2011OxygenBasedCellCycleModel::GetPhi )
-                , "Get the value of phi.\n@return the value of phi.\n/" );
+                , GetPhi_function_type( &::Owen2011OxygenBasedCellCycleModel::GetPhi ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::GetSDuration
@@ -271,8 +1884,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "GetVEGF"
-                , GetVEGF_function_type( &::Owen2011OxygenBasedCellCycleModel::GetVEGF )
-                , "Get the value of VEGF.\n@return the value of VEGF.\n/" );
+                , GetVEGF_function_type( &::Owen2011OxygenBasedCellCycleModel::GetVEGF ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::Initialise
@@ -338,8 +1950,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetCriticalQuiescentDuration"
                 , SetCriticalQuiescentDuration_function_type( &::Owen2011OxygenBasedCellCycleModel::SetCriticalQuiescentDuration )
-                , ( bp::arg("criticalQuiescentDuration") )
-                , "Set method for mCriticalQuiescentDuration.\n@param criticalQuiescentDuration the new value of mCriticalQuiescentDuration\n/" );
+                , ( bp::arg("criticalQuiescentDuration") ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetCurrentQuiescenceOnsetTime
@@ -349,8 +1960,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetCurrentQuiescenceOnsetTime"
                 , SetCurrentQuiescenceOnsetTime_function_type( &::Owen2011OxygenBasedCellCycleModel::SetCurrentQuiescenceOnsetTime )
-                , ( bp::arg("currentQuiescenceOnsetTime") )
-                , "Set method for mCurrentQuiescenceOnsetTime.\n@param currentQuiescenceOnsetTime the new value of mCurrentQuiescenceOnsetTime\n/" );
+                , ( bp::arg("currentQuiescenceOnsetTime") ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetEnterQuiescenceOxygenConcentration
@@ -360,8 +1970,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetEnterQuiescenceOxygenConcentration"
                 , SetEnterQuiescenceOxygenConcentration_function_type( &::Owen2011OxygenBasedCellCycleModel::SetEnterQuiescenceOxygenConcentration )
-                , ( bp::arg("enterQuiescenceOxygenConcentration") )
-                , "Set method for mEnterQuiescenceOxygenConcentration.\n@param enterQuiescenceOxygenConcentration the new value of mEnterQuiescenceOxygenConcentration\n/" );
+                , ( bp::arg("enterQuiescenceOxygenConcentration") ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetG2Onset
@@ -371,8 +1980,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetG2Onset"
                 , SetG2Onset_function_type( &::Owen2011OxygenBasedCellCycleModel::SetG2Onset )
-                , ( bp::arg("value") )
-                , "Set the G2 onset time\n@param value the G2 onset time\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetLeaveQuiescenceOxygenConcentration
@@ -382,8 +1990,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetLeaveQuiescenceOxygenConcentration"
                 , SetLeaveQuiescenceOxygenConcentration_function_type( &::Owen2011OxygenBasedCellCycleModel::SetLeaveQuiescenceOxygenConcentration )
-                , ( bp::arg("leaveQuiescenceOxygenConcentration") )
-                , "Set method for mLeaveQuiescenceOxygenConcentration.\n@param leaveQuiescenceOxygenConcentration the new value of mLeaveQuiescenceOxygenConcentration\n/" );
+                , ( bp::arg("leaveQuiescenceOxygenConcentration") ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetMOnset
@@ -393,8 +2000,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetMOnset"
                 , SetMOnset_function_type( &::Owen2011OxygenBasedCellCycleModel::SetMOnset )
-                , ( bp::arg("value") )
-                , "Set the M onset time\n@param value the M onset time\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetMaxRandInitialPhase
@@ -404,8 +2010,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetMaxRandInitialPhase"
                 , SetMaxRandInitialPhase_function_type( &::Owen2011OxygenBasedCellCycleModel::SetMaxRandInitialPhase )
-                , ( bp::arg("rand_max_phase") )
-                , "Set maximum phase of cell upon initialisation.\n@param rand_max_phase the maximum phase value at initialization\n/" );
+                , ( bp::arg("rand_max_phase") ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetOdeSolverTimeStep
@@ -415,8 +2020,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetOdeSolverTimeStep"
                 , SetOdeSolverTimeStep_function_type( &::Owen2011OxygenBasedCellCycleModel::SetOdeSolverTimeStep )
-                , ( bp::arg("timeStep") )
-                , "Set the ODE solver time step\n@param timeStep the ODE solver time step\n/" );
+                , ( bp::arg("timeStep") ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetReferenceConcentrationScale
@@ -426,8 +2030,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetReferenceConcentrationScale"
                 , SetReferenceConcentrationScale_function_type( &::Owen2011OxygenBasedCellCycleModel::SetReferenceConcentrationScale )
-                , ( bp::arg("referenceConcentrationScale") )
-                , "Set the reference concentration scale\n@param referenceConcentrationScale the reference concentration scale\n/" );
+                , ( bp::arg("referenceConcentrationScale") ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetReferenceTimeScale
@@ -437,8 +2040,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetReferenceTimeScale"
                 , SetReferenceTimeScale_function_type( &::Owen2011OxygenBasedCellCycleModel::SetReferenceTimeScale )
-                , ( bp::arg("referenceTimeScale") )
-                , "Set the reference timescale\n@param referenceTimeScale the reference timescale\n/" );
+                , ( bp::arg("referenceTimeScale") ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetSOnset
@@ -448,8 +2050,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetSOnset"
                 , SetSOnset_function_type( &::Owen2011OxygenBasedCellCycleModel::SetSOnset )
-                , ( bp::arg("value") )
-                , "Set the S2 onset time\n@param value the S2 onset time\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetThresholdFractionOfNormalCellNeighbours
@@ -459,8 +2060,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetThresholdFractionOfNormalCellNeighbours"
                 , SetThresholdFractionOfNormalCellNeighbours_function_type( &::Owen2011OxygenBasedCellCycleModel::SetThresholdFractionOfNormalCellNeighbours )
-                , ( bp::arg("value") )
-                , "Set method for mthresholdFractionOfNormalCellNeighbours.\n@param value the new value of mthresholdFractionOfNormalCellNeighbours\n/" );
+                , ( bp::arg("value") ) );
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::UpdateCellCyclePhase
@@ -480,9 +2080,16 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "UpdateQuiescentDuration"
-                , UpdateQuiescentDuration_function_type( &::Owen2011OxygenBasedCellCycleModel::UpdateQuiescentDuration )
-                , "Update the duration for which the cell has been quiescent.\n/" );
+                , UpdateQuiescentDuration_function_type( &::Owen2011OxygenBasedCellCycleModel::UpdateQuiescentDuration ) );
         
         }
     }
+
+    bp::class_< QuiescentCancerCellMutationState, bp::bases< AbstractCellMutationState > >( "QuiescentCancerCellMutationState", bp::init< >() );
+
+    bp::class_< StalkCellMutationState, bp::bases< AbstractCellMutationState > >( "StalkCellMutationState", bp::init< >() );
+
+    bp::class_< TipCellMutationState, bp::bases< AbstractCellMutationState > >( "TipCellMutationState", bp::init< >() );
+
+    bp::class_< VesselCellMutationState, bp::bases< AbstractCellMutationState > >( "VesselCellMutationState", bp::init< >() );
 }

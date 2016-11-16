@@ -35,8 +35,24 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include "MicrovesselSolver.hpp"
 #include "MicrovesselSimulationModifier.hpp"
+#include "Owen2011TrackingModifier.hpp"
+#include "AbstractCellBasedSimulationModifier.hpp"
 
 template class MicrovesselSolver<3>;
 template class MicrovesselSimulationModifier<3>;
+template class Owen2011TrackingModifier<3>;
 template class MicrovesselSolver<2>;
 template class MicrovesselSimulationModifier<2>;
+template class Owen2011TrackingModifier<2>;
+template class AbstractCellBasedSimulationModifier<2, 2>;
+template class AbstractCellBasedSimulationModifier<3, 3>;
+
+//// Typdef in this namespace so that pyplusplus uses the nicer typedef'd name for the class
+namespace pyplusplus{
+namespace aliases{
+typedef std::vector<std::string>  VecString;
+}
+}
+
+
+

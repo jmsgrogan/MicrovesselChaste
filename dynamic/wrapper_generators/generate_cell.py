@@ -40,13 +40,32 @@ import generate_bindings
 
 def update_builder(builder):
     
-    include_classes = ["CancerCellMutationState", 
-                       "Owen2011OxygenBasedCellCycleModel"]
+    include_classes = ["AbstractCellMutationState",
+                       "CancerCellMutationState", 
+                       "Owen2011OxygenBasedCellCycleModel",
+                       "Owen11CellPopulationGenerator<2>",
+                       "Owen11CellPopulationGenerator<3>",
+                       "QuiescentCancerCellMutationState",
+                       "StalkCellMutationState",
+                       "TipCellMutationState",
+                       "VesselCellMutationState",
+                       "MacrophageMutationState",
+                       "CaBasedCellPopulation<2>",
+                       "CaBasedCellPopulation<3>"]
     
     for eachClass in include_classes:
         builder.class_(eachClass).include()  
         new_name = generate_bindings.template_replace(eachClass)
         if(new_name != eachClass):
             builder.class_(eachClass).rename(new_name) 
+            
+    builder.class_("Owen2011OxygenBasedCellCycleModel").member_function("CreateCellCycleModel").call_policies = call_policies.return_value_policy(call_policies.manage_new_object)
+    
+    for eachTemplate in ["<2>", "<3>"]:
+        builder.class_("CaBasedCellPopulation"+eachTemplate).member_functions("GetNode").exclude()
+        builder.class_("CaBasedCellPopulation"+eachTemplate).member_functions(lambda decl: decl.name.startswith("rGetMesh")).exclude()
+        builder.class_("CaBasedCellPopulation"+eachTemplate).member_functions(lambda decl: decl.name.startswith("GetTetrahedralMeshForPdeModifier")).exclude()
+        builder.class_("CaBasedCellPopulation"+eachTemplate).member_functions("GetNodeCorrespondingToCell").exclude()
+        builder.class_("CaBasedCellPopulation"+eachTemplate).member_functions("rGetAvailableSpaces").exclude()
 
     return builder

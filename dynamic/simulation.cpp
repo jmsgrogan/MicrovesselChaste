@@ -12,6 +12,106 @@
 
 namespace bp = boost::python;
 
+struct AbstractCellBasedSimulationModifier_less__2_comma__2__greater__wrapper : AbstractCellBasedSimulationModifier< 2, 2 >, bp::wrapper< AbstractCellBasedSimulationModifier< 2, 2 > > {
+
+    AbstractCellBasedSimulationModifier_less__2_comma__2__greater__wrapper( )
+    : AbstractCellBasedSimulationModifier<2, 2>( )
+      , bp::wrapper< AbstractCellBasedSimulationModifier< 2, 2 > >(){
+        // null constructor
+    
+    }
+
+    virtual void OutputSimulationModifierParameters( ::out_stream & rParamsFile ){
+        bp::override func_OutputSimulationModifierParameters = this->get_override( "OutputSimulationModifierParameters" );
+        func_OutputSimulationModifierParameters( boost::ref(rParamsFile) );
+    }
+
+    virtual void SetupSolve( ::AbstractCellPopulation< 2, 2 > & rCellPopulation, ::std::string outputDirectory ){
+        bp::override func_SetupSolve = this->get_override( "SetupSolve" );
+        func_SetupSolve( boost::ref(rCellPopulation), outputDirectory );
+    }
+
+    virtual void UpdateAtEndOfOutputTimeStep( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
+        if( bp::override func_UpdateAtEndOfOutputTimeStep = this->get_override( "UpdateAtEndOfOutputTimeStep" ) )
+            func_UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+        else{
+            this->AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+        }
+    }
+    
+    void default_UpdateAtEndOfOutputTimeStep( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
+        AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+    }
+
+    virtual void UpdateAtEndOfSolve( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
+        if( bp::override func_UpdateAtEndOfSolve = this->get_override( "UpdateAtEndOfSolve" ) )
+            func_UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+        else{
+            this->AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+        }
+    }
+    
+    void default_UpdateAtEndOfSolve( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
+        AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+    }
+
+    virtual void UpdateAtEndOfTimeStep( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ){
+        bp::override func_UpdateAtEndOfTimeStep = this->get_override( "UpdateAtEndOfTimeStep" );
+        func_UpdateAtEndOfTimeStep( boost::ref(rCellPopulation) );
+    }
+
+};
+
+struct AbstractCellBasedSimulationModifier_less__3_comma__3__greater__wrapper : AbstractCellBasedSimulationModifier< 3, 3 >, bp::wrapper< AbstractCellBasedSimulationModifier< 3, 3 > > {
+
+    AbstractCellBasedSimulationModifier_less__3_comma__3__greater__wrapper( )
+    : AbstractCellBasedSimulationModifier<3, 3>( )
+      , bp::wrapper< AbstractCellBasedSimulationModifier< 3, 3 > >(){
+        // null constructor
+    
+    }
+
+    virtual void OutputSimulationModifierParameters( ::out_stream & rParamsFile ){
+        bp::override func_OutputSimulationModifierParameters = this->get_override( "OutputSimulationModifierParameters" );
+        func_OutputSimulationModifierParameters( boost::ref(rParamsFile) );
+    }
+
+    virtual void SetupSolve( ::AbstractCellPopulation< 3, 3 > & rCellPopulation, ::std::string outputDirectory ){
+        bp::override func_SetupSolve = this->get_override( "SetupSolve" );
+        func_SetupSolve( boost::ref(rCellPopulation), outputDirectory );
+    }
+
+    virtual void UpdateAtEndOfOutputTimeStep( ::AbstractCellPopulation< 3, 3 > & rCellPopulation ) {
+        if( bp::override func_UpdateAtEndOfOutputTimeStep = this->get_override( "UpdateAtEndOfOutputTimeStep" ) )
+            func_UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+        else{
+            this->AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+        }
+    }
+    
+    void default_UpdateAtEndOfOutputTimeStep( ::AbstractCellPopulation< 3, 3 > & rCellPopulation ) {
+        AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+    }
+
+    virtual void UpdateAtEndOfSolve( ::AbstractCellPopulation< 3, 3 > & rCellPopulation ) {
+        if( bp::override func_UpdateAtEndOfSolve = this->get_override( "UpdateAtEndOfSolve" ) )
+            func_UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+        else{
+            this->AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+        }
+    }
+    
+    void default_UpdateAtEndOfSolve( ::AbstractCellPopulation< 3, 3 > & rCellPopulation ) {
+        AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+    }
+
+    virtual void UpdateAtEndOfTimeStep( ::AbstractCellPopulation< 3, 3 > & rCellPopulation ){
+        bp::override func_UpdateAtEndOfTimeStep = this->get_override( "UpdateAtEndOfTimeStep" );
+        func_UpdateAtEndOfTimeStep( boost::ref(rCellPopulation) );
+    }
+
+};
+
 struct MicrovesselSimulationModifier_less__2__greater__wrapper : MicrovesselSimulationModifier< 2 >, bp::wrapper< MicrovesselSimulationModifier< 2 > > {
 
     MicrovesselSimulationModifier_less__2__greater__wrapper(MicrovesselSimulationModifier<2> const & arg )
@@ -62,6 +162,30 @@ struct MicrovesselSimulationModifier_less__2__greater__wrapper : MicrovesselSimu
     
     void default_UpdateAtEndOfTimeStep( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
         MicrovesselSimulationModifier< 2 >::UpdateAtEndOfTimeStep( boost::ref(rCellPopulation) );
+    }
+
+    virtual void UpdateAtEndOfOutputTimeStep( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
+        if( bp::override func_UpdateAtEndOfOutputTimeStep = this->get_override( "UpdateAtEndOfOutputTimeStep" ) )
+            func_UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+        else{
+            this->AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+        }
+    }
+    
+    void default_UpdateAtEndOfOutputTimeStep( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
+        AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+    }
+
+    virtual void UpdateAtEndOfSolve( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
+        if( bp::override func_UpdateAtEndOfSolve = this->get_override( "UpdateAtEndOfSolve" ) )
+            func_UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+        else{
+            this->AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+        }
+    }
+    
+    void default_UpdateAtEndOfSolve( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
+        AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
     }
 
 };
@@ -118,6 +242,186 @@ struct MicrovesselSimulationModifier_less__3__greater__wrapper : MicrovesselSimu
         MicrovesselSimulationModifier< 3 >::UpdateAtEndOfTimeStep( boost::ref(rCellPopulation) );
     }
 
+    virtual void UpdateAtEndOfOutputTimeStep( ::AbstractCellPopulation< 3, 3 > & rCellPopulation ) {
+        if( bp::override func_UpdateAtEndOfOutputTimeStep = this->get_override( "UpdateAtEndOfOutputTimeStep" ) )
+            func_UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+        else{
+            this->AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+        }
+    }
+    
+    void default_UpdateAtEndOfOutputTimeStep( ::AbstractCellPopulation< 3, 3 > & rCellPopulation ) {
+        AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+    }
+
+    virtual void UpdateAtEndOfSolve( ::AbstractCellPopulation< 3, 3 > & rCellPopulation ) {
+        if( bp::override func_UpdateAtEndOfSolve = this->get_override( "UpdateAtEndOfSolve" ) )
+            func_UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+        else{
+            this->AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+        }
+    }
+    
+    void default_UpdateAtEndOfSolve( ::AbstractCellPopulation< 3, 3 > & rCellPopulation ) {
+        AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+    }
+
+};
+
+struct Owen2011TrackingModifier_less__2__greater__wrapper : Owen2011TrackingModifier< 2 >, bp::wrapper< Owen2011TrackingModifier< 2 > > {
+
+    Owen2011TrackingModifier_less__2__greater__wrapper(Owen2011TrackingModifier<2> const & arg )
+    : Owen2011TrackingModifier<2>( arg )
+      , bp::wrapper< Owen2011TrackingModifier< 2 > >(){
+        // copy constructor
+        
+    }
+
+    Owen2011TrackingModifier_less__2__greater__wrapper( )
+    : Owen2011TrackingModifier<2>( )
+      , bp::wrapper< Owen2011TrackingModifier< 2 > >(){
+        // null constructor
+    
+    }
+
+    virtual void OutputSimulationModifierParameters( ::out_stream & rParamsFile ) {
+        if( bp::override func_OutputSimulationModifierParameters = this->get_override( "OutputSimulationModifierParameters" ) )
+            func_OutputSimulationModifierParameters( boost::ref(rParamsFile) );
+        else{
+            this->Owen2011TrackingModifier< 2 >::OutputSimulationModifierParameters( boost::ref(rParamsFile) );
+        }
+    }
+    
+    void default_OutputSimulationModifierParameters( ::out_stream & rParamsFile ) {
+        Owen2011TrackingModifier< 2 >::OutputSimulationModifierParameters( boost::ref(rParamsFile) );
+    }
+
+    virtual void SetupSolve( ::AbstractCellPopulation< 2, 2 > & rCellPopulation, ::std::string outputDirectory ) {
+        if( bp::override func_SetupSolve = this->get_override( "SetupSolve" ) )
+            func_SetupSolve( boost::ref(rCellPopulation), outputDirectory );
+        else{
+            this->Owen2011TrackingModifier< 2 >::SetupSolve( boost::ref(rCellPopulation), outputDirectory );
+        }
+    }
+    
+    void default_SetupSolve( ::AbstractCellPopulation< 2, 2 > & rCellPopulation, ::std::string outputDirectory ) {
+        Owen2011TrackingModifier< 2 >::SetupSolve( boost::ref(rCellPopulation), outputDirectory );
+    }
+
+    virtual void UpdateAtEndOfTimeStep( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
+        if( bp::override func_UpdateAtEndOfTimeStep = this->get_override( "UpdateAtEndOfTimeStep" ) )
+            func_UpdateAtEndOfTimeStep( boost::ref(rCellPopulation) );
+        else{
+            this->Owen2011TrackingModifier< 2 >::UpdateAtEndOfTimeStep( boost::ref(rCellPopulation) );
+        }
+    }
+    
+    void default_UpdateAtEndOfTimeStep( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
+        Owen2011TrackingModifier< 2 >::UpdateAtEndOfTimeStep( boost::ref(rCellPopulation) );
+    }
+
+    virtual void UpdateAtEndOfOutputTimeStep( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
+        if( bp::override func_UpdateAtEndOfOutputTimeStep = this->get_override( "UpdateAtEndOfOutputTimeStep" ) )
+            func_UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+        else{
+            this->AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+        }
+    }
+    
+    void default_UpdateAtEndOfOutputTimeStep( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
+        AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+    }
+
+    virtual void UpdateAtEndOfSolve( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
+        if( bp::override func_UpdateAtEndOfSolve = this->get_override( "UpdateAtEndOfSolve" ) )
+            func_UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+        else{
+            this->AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+        }
+    }
+    
+    void default_UpdateAtEndOfSolve( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
+        AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+    }
+
+};
+
+struct Owen2011TrackingModifier_less__3__greater__wrapper : Owen2011TrackingModifier< 3 >, bp::wrapper< Owen2011TrackingModifier< 3 > > {
+
+    Owen2011TrackingModifier_less__3__greater__wrapper(Owen2011TrackingModifier<3> const & arg )
+    : Owen2011TrackingModifier<3>( arg )
+      , bp::wrapper< Owen2011TrackingModifier< 3 > >(){
+        // copy constructor
+        
+    }
+
+    Owen2011TrackingModifier_less__3__greater__wrapper( )
+    : Owen2011TrackingModifier<3>( )
+      , bp::wrapper< Owen2011TrackingModifier< 3 > >(){
+        // null constructor
+    
+    }
+
+    virtual void OutputSimulationModifierParameters( ::out_stream & rParamsFile ) {
+        if( bp::override func_OutputSimulationModifierParameters = this->get_override( "OutputSimulationModifierParameters" ) )
+            func_OutputSimulationModifierParameters( boost::ref(rParamsFile) );
+        else{
+            this->Owen2011TrackingModifier< 3 >::OutputSimulationModifierParameters( boost::ref(rParamsFile) );
+        }
+    }
+    
+    void default_OutputSimulationModifierParameters( ::out_stream & rParamsFile ) {
+        Owen2011TrackingModifier< 3 >::OutputSimulationModifierParameters( boost::ref(rParamsFile) );
+    }
+
+    virtual void SetupSolve( ::AbstractCellPopulation< 3, 3 > & rCellPopulation, ::std::string outputDirectory ) {
+        if( bp::override func_SetupSolve = this->get_override( "SetupSolve" ) )
+            func_SetupSolve( boost::ref(rCellPopulation), outputDirectory );
+        else{
+            this->Owen2011TrackingModifier< 3 >::SetupSolve( boost::ref(rCellPopulation), outputDirectory );
+        }
+    }
+    
+    void default_SetupSolve( ::AbstractCellPopulation< 3, 3 > & rCellPopulation, ::std::string outputDirectory ) {
+        Owen2011TrackingModifier< 3 >::SetupSolve( boost::ref(rCellPopulation), outputDirectory );
+    }
+
+    virtual void UpdateAtEndOfTimeStep( ::AbstractCellPopulation< 3, 3 > & rCellPopulation ) {
+        if( bp::override func_UpdateAtEndOfTimeStep = this->get_override( "UpdateAtEndOfTimeStep" ) )
+            func_UpdateAtEndOfTimeStep( boost::ref(rCellPopulation) );
+        else{
+            this->Owen2011TrackingModifier< 3 >::UpdateAtEndOfTimeStep( boost::ref(rCellPopulation) );
+        }
+    }
+    
+    void default_UpdateAtEndOfTimeStep( ::AbstractCellPopulation< 3, 3 > & rCellPopulation ) {
+        Owen2011TrackingModifier< 3 >::UpdateAtEndOfTimeStep( boost::ref(rCellPopulation) );
+    }
+
+    virtual void UpdateAtEndOfOutputTimeStep( ::AbstractCellPopulation< 3, 3 > & rCellPopulation ) {
+        if( bp::override func_UpdateAtEndOfOutputTimeStep = this->get_override( "UpdateAtEndOfOutputTimeStep" ) )
+            func_UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+        else{
+            this->AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+        }
+    }
+    
+    void default_UpdateAtEndOfOutputTimeStep( ::AbstractCellPopulation< 3, 3 > & rCellPopulation ) {
+        AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
+    }
+
+    virtual void UpdateAtEndOfSolve( ::AbstractCellPopulation< 3, 3 > & rCellPopulation ) {
+        if( bp::override func_UpdateAtEndOfSolve = this->get_override( "UpdateAtEndOfSolve" ) )
+            func_UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+        else{
+            this->AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+        }
+    }
+    
+    void default_UpdateAtEndOfSolve( ::AbstractCellPopulation< 3, 3 > & rCellPopulation ) {
+        AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
+    }
+
 };
 
 namespace boost { namespace python { namespace indexing {
@@ -162,10 +466,10 @@ struct value_traits< boost::shared_ptr< AbstractDiscreteContinuumSolver< 3 > > >
 
 BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
     { //::std::vector< std::string >
-        typedef bp::class_< std::vector< std::string > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< std::string > >() );
+        typedef bp::class_< std::vector< std::string > > VecString_exposer_t;
+        VecString_exposer_t VecString_exposer = VecString_exposer_t( "VecString" );
+        bp::scope VecString_scope( VecString_exposer );
+        VecString_exposer.def( bp::indexing::vector_suite< std::vector< std::string > >() );
     }
 
     { //::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<3> > >
@@ -182,8 +486,64 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
         __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<2> > > >() );
     }
 
+    bp::class_< AbstractCellBasedSimulationModifier_less__2_comma__2__greater__wrapper, boost::noncopyable >( "AbstractCellBasedSimulationModifier2_2", bp::init< >() )    
+        .def( 
+            "OutputSimulationModifierInfo"
+            , (void ( ::AbstractCellBasedSimulationModifier<2, 2>::* )( ::out_stream & ))( &::AbstractCellBasedSimulationModifier< 2, 2 >::OutputSimulationModifierInfo )
+            , ( bp::arg("rParamsFile") ) )    
+        .def( 
+            "OutputSimulationModifierParameters"
+            , bp::pure_virtual( (void ( ::AbstractCellBasedSimulationModifier<2, 2>::* )( ::out_stream & ))(&::AbstractCellBasedSimulationModifier< 2, 2 >::OutputSimulationModifierParameters) )
+            , ( bp::arg("rParamsFile") ) )    
+        .def( 
+            "SetupSolve"
+            , bp::pure_virtual( (void ( ::AbstractCellBasedSimulationModifier<2, 2>::* )( ::AbstractCellPopulation< 2, 2 > &,::std::string ))(&::AbstractCellBasedSimulationModifier< 2, 2 >::SetupSolve) )
+            , ( bp::arg("rCellPopulation"), bp::arg("outputDirectory") ) )    
+        .def( 
+            "UpdateAtEndOfOutputTimeStep"
+            , (void ( ::AbstractCellBasedSimulationModifier<2, 2>::* )( ::AbstractCellPopulation< 2, 2 > & ))(&::AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfOutputTimeStep)
+            , (void ( AbstractCellBasedSimulationModifier_less__2_comma__2__greater__wrapper::* )( ::AbstractCellPopulation< 2, 2 > & ))(&AbstractCellBasedSimulationModifier_less__2_comma__2__greater__wrapper::default_UpdateAtEndOfOutputTimeStep)
+            , ( bp::arg("rCellPopulation") ) )    
+        .def( 
+            "UpdateAtEndOfSolve"
+            , (void ( ::AbstractCellBasedSimulationModifier<2, 2>::* )( ::AbstractCellPopulation< 2, 2 > & ))(&::AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfSolve)
+            , (void ( AbstractCellBasedSimulationModifier_less__2_comma__2__greater__wrapper::* )( ::AbstractCellPopulation< 2, 2 > & ))(&AbstractCellBasedSimulationModifier_less__2_comma__2__greater__wrapper::default_UpdateAtEndOfSolve)
+            , ( bp::arg("rCellPopulation") ) )    
+        .def( 
+            "UpdateAtEndOfTimeStep"
+            , bp::pure_virtual( (void ( ::AbstractCellBasedSimulationModifier<2, 2>::* )( ::AbstractCellPopulation< 2, 2 > & ))(&::AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfTimeStep) )
+            , ( bp::arg("rCellPopulation") ) );
+
+    bp::class_< AbstractCellBasedSimulationModifier_less__3_comma__3__greater__wrapper, boost::noncopyable >( "AbstractCellBasedSimulationModifier3_3", bp::init< >() )    
+        .def( 
+            "OutputSimulationModifierInfo"
+            , (void ( ::AbstractCellBasedSimulationModifier<3, 3>::* )( ::out_stream & ))( &::AbstractCellBasedSimulationModifier< 3, 3 >::OutputSimulationModifierInfo )
+            , ( bp::arg("rParamsFile") ) )    
+        .def( 
+            "OutputSimulationModifierParameters"
+            , bp::pure_virtual( (void ( ::AbstractCellBasedSimulationModifier<3, 3>::* )( ::out_stream & ))(&::AbstractCellBasedSimulationModifier< 3, 3 >::OutputSimulationModifierParameters) )
+            , ( bp::arg("rParamsFile") ) )    
+        .def( 
+            "SetupSolve"
+            , bp::pure_virtual( (void ( ::AbstractCellBasedSimulationModifier<3, 3>::* )( ::AbstractCellPopulation< 3, 3 > &,::std::string ))(&::AbstractCellBasedSimulationModifier< 3, 3 >::SetupSolve) )
+            , ( bp::arg("rCellPopulation"), bp::arg("outputDirectory") ) )    
+        .def( 
+            "UpdateAtEndOfOutputTimeStep"
+            , (void ( ::AbstractCellBasedSimulationModifier<3, 3>::* )( ::AbstractCellPopulation< 3, 3 > & ))(&::AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfOutputTimeStep)
+            , (void ( AbstractCellBasedSimulationModifier_less__3_comma__3__greater__wrapper::* )( ::AbstractCellPopulation< 3, 3 > & ))(&AbstractCellBasedSimulationModifier_less__3_comma__3__greater__wrapper::default_UpdateAtEndOfOutputTimeStep)
+            , ( bp::arg("rCellPopulation") ) )    
+        .def( 
+            "UpdateAtEndOfSolve"
+            , (void ( ::AbstractCellBasedSimulationModifier<3, 3>::* )( ::AbstractCellPopulation< 3, 3 > & ))(&::AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfSolve)
+            , (void ( AbstractCellBasedSimulationModifier_less__3_comma__3__greater__wrapper::* )( ::AbstractCellPopulation< 3, 3 > & ))(&AbstractCellBasedSimulationModifier_less__3_comma__3__greater__wrapper::default_UpdateAtEndOfSolve)
+            , ( bp::arg("rCellPopulation") ) )    
+        .def( 
+            "UpdateAtEndOfTimeStep"
+            , bp::pure_virtual( (void ( ::AbstractCellBasedSimulationModifier<3, 3>::* )( ::AbstractCellPopulation< 3, 3 > & ))(&::AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfTimeStep) )
+            , ( bp::arg("rCellPopulation") ) );
+
     { //::MicrovesselSimulationModifier< 2 >
-        typedef bp::class_< MicrovesselSimulationModifier_less__2__greater__wrapper > MicrovesselSimulationModifier2_exposer_t;
+        typedef bp::class_< MicrovesselSimulationModifier_less__2__greater__wrapper, bp::bases< AbstractCellBasedSimulationModifier< 2, 2 > > > MicrovesselSimulationModifier2_exposer_t;
         MicrovesselSimulationModifier2_exposer_t MicrovesselSimulationModifier2_exposer = MicrovesselSimulationModifier2_exposer_t( "MicrovesselSimulationModifier2", bp::init< >() );
         bp::scope MicrovesselSimulationModifier2_scope( MicrovesselSimulationModifier2_exposer );
         { //::MicrovesselSimulationModifier< 2 >::Create
@@ -290,6 +650,32 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
                 , ( bp::arg("rCellPopulation") ) );
         
         }
+        { //::AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfOutputTimeStep
+        
+            typedef MicrovesselSimulationModifier< 2 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateAtEndOfOutputTimeStep_function_type)( ::AbstractCellPopulation< 2, 2 > & ) ;
+            typedef void ( MicrovesselSimulationModifier_less__2__greater__wrapper::*default_UpdateAtEndOfOutputTimeStep_function_type)( ::AbstractCellPopulation< 2, 2 > & ) ;
+            
+            MicrovesselSimulationModifier2_exposer.def( 
+                "UpdateAtEndOfOutputTimeStep"
+                , UpdateAtEndOfOutputTimeStep_function_type(&::AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfOutputTimeStep)
+                , default_UpdateAtEndOfOutputTimeStep_function_type(&MicrovesselSimulationModifier_less__2__greater__wrapper::default_UpdateAtEndOfOutputTimeStep)
+                , ( bp::arg("rCellPopulation") ) );
+        
+        }
+        { //::AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfSolve
+        
+            typedef MicrovesselSimulationModifier< 2 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateAtEndOfSolve_function_type)( ::AbstractCellPopulation< 2, 2 > & ) ;
+            typedef void ( MicrovesselSimulationModifier_less__2__greater__wrapper::*default_UpdateAtEndOfSolve_function_type)( ::AbstractCellPopulation< 2, 2 > & ) ;
+            
+            MicrovesselSimulationModifier2_exposer.def( 
+                "UpdateAtEndOfSolve"
+                , UpdateAtEndOfSolve_function_type(&::AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfSolve)
+                , default_UpdateAtEndOfSolve_function_type(&MicrovesselSimulationModifier_less__2__greater__wrapper::default_UpdateAtEndOfSolve)
+                , ( bp::arg("rCellPopulation") ) );
+        
+        }
         MicrovesselSimulationModifier2_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< MicrovesselSimulationModifier<2> > >();
         bp::implicitly_convertible< boost::shared_ptr< MicrovesselSimulationModifier< 2 > >, boost::shared_ptr< AbstractCellBasedSimulationModifier< 2, 2 > > >();
@@ -297,7 +683,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
     }
 
     { //::MicrovesselSimulationModifier< 3 >
-        typedef bp::class_< MicrovesselSimulationModifier_less__3__greater__wrapper > MicrovesselSimulationModifier3_exposer_t;
+        typedef bp::class_< MicrovesselSimulationModifier_less__3__greater__wrapper, bp::bases< AbstractCellBasedSimulationModifier< 3, 3 > > > MicrovesselSimulationModifier3_exposer_t;
         MicrovesselSimulationModifier3_exposer_t MicrovesselSimulationModifier3_exposer = MicrovesselSimulationModifier3_exposer_t( "MicrovesselSimulationModifier3", bp::init< >() );
         bp::scope MicrovesselSimulationModifier3_scope( MicrovesselSimulationModifier3_exposer );
         { //::MicrovesselSimulationModifier< 3 >::Create
@@ -401,6 +787,32 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
             MicrovesselSimulationModifier3_exposer.def( 
                 "UpdateCellData"
                 , UpdateCellData_function_type( &::MicrovesselSimulationModifier< 3 >::UpdateCellData )
+                , ( bp::arg("rCellPopulation") ) );
+        
+        }
+        { //::AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfOutputTimeStep
+        
+            typedef MicrovesselSimulationModifier< 3 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateAtEndOfOutputTimeStep_function_type)( ::AbstractCellPopulation< 3, 3 > & ) ;
+            typedef void ( MicrovesselSimulationModifier_less__3__greater__wrapper::*default_UpdateAtEndOfOutputTimeStep_function_type)( ::AbstractCellPopulation< 3, 3 > & ) ;
+            
+            MicrovesselSimulationModifier3_exposer.def( 
+                "UpdateAtEndOfOutputTimeStep"
+                , UpdateAtEndOfOutputTimeStep_function_type(&::AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfOutputTimeStep)
+                , default_UpdateAtEndOfOutputTimeStep_function_type(&MicrovesselSimulationModifier_less__3__greater__wrapper::default_UpdateAtEndOfOutputTimeStep)
+                , ( bp::arg("rCellPopulation") ) );
+        
+        }
+        { //::AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfSolve
+        
+            typedef MicrovesselSimulationModifier< 3 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateAtEndOfSolve_function_type)( ::AbstractCellPopulation< 3, 3 > & ) ;
+            typedef void ( MicrovesselSimulationModifier_less__3__greater__wrapper::*default_UpdateAtEndOfSolve_function_type)( ::AbstractCellPopulation< 3, 3 > & ) ;
+            
+            MicrovesselSimulationModifier3_exposer.def( 
+                "UpdateAtEndOfSolve"
+                , UpdateAtEndOfSolve_function_type(&::AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfSolve)
+                , default_UpdateAtEndOfSolve_function_type(&MicrovesselSimulationModifier_less__3__greater__wrapper::default_UpdateAtEndOfSolve)
                 , ( bp::arg("rCellPopulation") ) );
         
         }
@@ -767,4 +1179,66 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
         MicrovesselSolver3_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< MicrovesselSolver<3> > >();
     }
+
+    bp::class_< Owen2011TrackingModifier_less__2__greater__wrapper, bp::bases< AbstractCellBasedSimulationModifier< 2, 2 > > >( "Owen2011TrackingModifier2", bp::init< >() )    
+        .def( 
+            "OutputSimulationModifierParameters"
+            , (void ( ::Owen2011TrackingModifier<2>::* )( ::out_stream & ))(&::Owen2011TrackingModifier< 2 >::OutputSimulationModifierParameters)
+            , (void ( Owen2011TrackingModifier_less__2__greater__wrapper::* )( ::out_stream & ))(&Owen2011TrackingModifier_less__2__greater__wrapper::default_OutputSimulationModifierParameters)
+            , ( bp::arg("rParamsFile") ) )    
+        .def( 
+            "SetupSolve"
+            , (void ( ::Owen2011TrackingModifier<2>::* )( ::AbstractCellPopulation< 2, 2 > &,::std::string ))(&::Owen2011TrackingModifier< 2 >::SetupSolve)
+            , (void ( Owen2011TrackingModifier_less__2__greater__wrapper::* )( ::AbstractCellPopulation< 2, 2 > &,::std::string ))(&Owen2011TrackingModifier_less__2__greater__wrapper::default_SetupSolve)
+            , ( bp::arg("rCellPopulation"), bp::arg("outputDirectory") ) )    
+        .def( 
+            "UpdateAtEndOfTimeStep"
+            , (void ( ::Owen2011TrackingModifier<2>::* )( ::AbstractCellPopulation< 2, 2 > & ))(&::Owen2011TrackingModifier< 2 >::UpdateAtEndOfTimeStep)
+            , (void ( Owen2011TrackingModifier_less__2__greater__wrapper::* )( ::AbstractCellPopulation< 2, 2 > & ))(&Owen2011TrackingModifier_less__2__greater__wrapper::default_UpdateAtEndOfTimeStep)
+            , ( bp::arg("rCellPopulation") ) )    
+        .def( 
+            "UpdateCellData"
+            , (void ( ::Owen2011TrackingModifier<2>::* )( ::AbstractCellPopulation< 2, 2 > & ))( &::Owen2011TrackingModifier< 2 >::UpdateCellData )
+            , ( bp::arg("rCellPopulation") ) )    
+        .def( 
+            "UpdateAtEndOfOutputTimeStep"
+            , (void ( ::AbstractCellBasedSimulationModifier<2, 2>::* )( ::AbstractCellPopulation< 2, 2 > & ))(&::AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfOutputTimeStep)
+            , (void ( Owen2011TrackingModifier_less__2__greater__wrapper::* )( ::AbstractCellPopulation< 2, 2 > & ))(&Owen2011TrackingModifier_less__2__greater__wrapper::default_UpdateAtEndOfOutputTimeStep)
+            , ( bp::arg("rCellPopulation") ) )    
+        .def( 
+            "UpdateAtEndOfSolve"
+            , (void ( ::AbstractCellBasedSimulationModifier<2, 2>::* )( ::AbstractCellPopulation< 2, 2 > & ))(&::AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfSolve)
+            , (void ( Owen2011TrackingModifier_less__2__greater__wrapper::* )( ::AbstractCellPopulation< 2, 2 > & ))(&Owen2011TrackingModifier_less__2__greater__wrapper::default_UpdateAtEndOfSolve)
+            , ( bp::arg("rCellPopulation") ) );
+
+    bp::class_< Owen2011TrackingModifier_less__3__greater__wrapper, bp::bases< AbstractCellBasedSimulationModifier< 3, 3 > > >( "Owen2011TrackingModifier3", bp::init< >() )    
+        .def( 
+            "OutputSimulationModifierParameters"
+            , (void ( ::Owen2011TrackingModifier<3>::* )( ::out_stream & ))(&::Owen2011TrackingModifier< 3 >::OutputSimulationModifierParameters)
+            , (void ( Owen2011TrackingModifier_less__3__greater__wrapper::* )( ::out_stream & ))(&Owen2011TrackingModifier_less__3__greater__wrapper::default_OutputSimulationModifierParameters)
+            , ( bp::arg("rParamsFile") ) )    
+        .def( 
+            "SetupSolve"
+            , (void ( ::Owen2011TrackingModifier<3>::* )( ::AbstractCellPopulation< 3, 3 > &,::std::string ))(&::Owen2011TrackingModifier< 3 >::SetupSolve)
+            , (void ( Owen2011TrackingModifier_less__3__greater__wrapper::* )( ::AbstractCellPopulation< 3, 3 > &,::std::string ))(&Owen2011TrackingModifier_less__3__greater__wrapper::default_SetupSolve)
+            , ( bp::arg("rCellPopulation"), bp::arg("outputDirectory") ) )    
+        .def( 
+            "UpdateAtEndOfTimeStep"
+            , (void ( ::Owen2011TrackingModifier<3>::* )( ::AbstractCellPopulation< 3, 3 > & ))(&::Owen2011TrackingModifier< 3 >::UpdateAtEndOfTimeStep)
+            , (void ( Owen2011TrackingModifier_less__3__greater__wrapper::* )( ::AbstractCellPopulation< 3, 3 > & ))(&Owen2011TrackingModifier_less__3__greater__wrapper::default_UpdateAtEndOfTimeStep)
+            , ( bp::arg("rCellPopulation") ) )    
+        .def( 
+            "UpdateCellData"
+            , (void ( ::Owen2011TrackingModifier<3>::* )( ::AbstractCellPopulation< 3, 3 > & ))( &::Owen2011TrackingModifier< 3 >::UpdateCellData )
+            , ( bp::arg("rCellPopulation") ) )    
+        .def( 
+            "UpdateAtEndOfOutputTimeStep"
+            , (void ( ::AbstractCellBasedSimulationModifier<3, 3>::* )( ::AbstractCellPopulation< 3, 3 > & ))(&::AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfOutputTimeStep)
+            , (void ( Owen2011TrackingModifier_less__3__greater__wrapper::* )( ::AbstractCellPopulation< 3, 3 > & ))(&Owen2011TrackingModifier_less__3__greater__wrapper::default_UpdateAtEndOfOutputTimeStep)
+            , ( bp::arg("rCellPopulation") ) )    
+        .def( 
+            "UpdateAtEndOfSolve"
+            , (void ( ::AbstractCellBasedSimulationModifier<3, 3>::* )( ::AbstractCellPopulation< 3, 3 > & ))(&::AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfSolve)
+            , (void ( Owen2011TrackingModifier_less__3__greater__wrapper::* )( ::AbstractCellPopulation< 3, 3 > & ))(&Owen2011TrackingModifier_less__3__greater__wrapper::default_UpdateAtEndOfSolve)
+            , ( bp::arg("rCellPopulation") ) );
 }
