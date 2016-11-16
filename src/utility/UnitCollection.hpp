@@ -81,7 +81,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 namespace units = boost::units;
 namespace unit{
-    typedef units::si::dimensionless dimensionless;
+
+    typedef units::unit<units::dimensionless_type, units::si::system> dimensionless;
+    BOOST_UNITS_STATIC_CONSTANT(no_unit, dimensionless);
 
     // angle
     typedef units::derived_dimension<units::plane_angle_base_dimension, -1>::type plane_angle_dimension;

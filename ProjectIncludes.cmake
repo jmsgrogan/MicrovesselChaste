@@ -33,6 +33,8 @@
 ######### Collect the include directories for the project. ###################### 
 set(MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/population/vessel/properties/)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/utility)
+list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/utility/visualization)
+list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/utility/literature_parameters)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/geometry)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/geometry/writers)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/geometry/generators)
@@ -49,7 +51,6 @@ list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/popu
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/population/cell/properties/mutations)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/population/cell/cycle)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/simulation/)
-list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/simulation/wrappers)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/simulation/angiogenesis)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/simulation/angiogenesis/migration_rules)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/simulation/angiogenesis/migration_rules/lattice)

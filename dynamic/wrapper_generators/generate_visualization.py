@@ -1,6 +1,6 @@
-/*
+#!/usr/bin/env python
 
-Copyright (c) 2005-2016, University of Oxford.
+"""Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -30,42 +30,36 @@ Copyright (c) 2005-2016, University of Oxford.
  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+""" 
 
- */
+import sys
+from pyplusplus import module_builder
+from pyplusplus.module_builder import call_policies
+from pygccxml import parser
+import generate_bindings
 
-<<<<<<< HEAD
-#include "OnLatticeSimulationWrapper.hpp"
-#include "NodeBasedSimulationWrapper.hpp"
-#include "MicrovesselSolver.hpp"
-#include "MicrovesselSimulationModifier.hpp"
-#include "SimulationManager.hpp"
+def update_builder(builder):
+    
+    include_classes = ["MicrovesselVtkScene<2>", 
+                       "CellPopulationActorGenerator<2>", 
+                       "DiscreteContinuumMeshActorGenerator<2>", 
+                       "RegularGridActorGenerator<2>",
+                       "VesselNetworkActorGenerator<2>",
+                       "PartActorGenerator<2>",
+                       "AbstractActorGenerator<2>",
+                       "MicrovesselVtkScene<3>", 
+                       "CellPopulationActorGenerator<3>", 
+                       "DiscreteContinuumMeshActorGenerator<3>", 
+                       "RegularGridActorGenerator<3>",
+                       "VesselNetworkActorGenerator<3>",
+                       "PartActorGenerator<3>",
+                       "AbstractActorGenerator<3>",
+                       ]
+    
+    for eachClass in include_classes:
+        builder.class_(eachClass).include()  
+        new_name = generate_bindings.template_replace(eachClass)
+        if(new_name != eachClass):
+            builder.class_(eachClass).rename(new_name) 
 
-template class MicrovesselSolver<3>;
-template class MicrovesselSimulationModifier<3>;
-template class MicrovesselSolver<2>;
-template class MicrovesselSimulationModifier<2>;
-=======
-#include "MicrovesselSolver.hpp"
-#include "MicrovesselSimulationModifier.hpp"
-#include "Owen2011TrackingModifier.hpp"
-#include "AbstractCellBasedSimulationModifier.hpp"
-
-template class MicrovesselSolver<3>;
-template class MicrovesselSimulationModifier<3>;
-template class Owen2011TrackingModifier<3>;
-template class MicrovesselSolver<2>;
-template class MicrovesselSimulationModifier<2>;
-template class Owen2011TrackingModifier<2>;
-template class AbstractCellBasedSimulationModifier<2, 2>;
-template class AbstractCellBasedSimulationModifier<3, 3>;
-
-//// Typdef in this namespace so that pyplusplus uses the nicer typedef'd name for the class
-namespace pyplusplus{
-namespace aliases{
-typedef std::vector<std::string>  VecString;
-}
-}
-
-
-
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
+    return builder

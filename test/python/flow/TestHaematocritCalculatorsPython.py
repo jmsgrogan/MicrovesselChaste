@@ -79,11 +79,11 @@ class TestBetteridgeCalculator(unittest.TestCase):
     
     network.SetSegmentRadii(10.e-6 * metre())
     viscosity = 1.e-3 * poiseuille()
-    initial_haematocrit = 0.1
+    initial_haematocrit = 0.1 * dimensionless()
     for eachVessel in network.GetVessels():
         for eachSegment in eachVessel.GetSegments():
             eachSegment.GetFlowProperties().SetViscosity(viscosity)
-            #eachSegment.GetFlowProperties().SetHaematocrit(initial_haematocrit)
+            eachSegment.GetFlowProperties().SetHaematocrit(initial_haematocrit)
             
     v2.GetSegments()[0].SetRadius(5.e-6 * metre())
     v4.GetSegments()[0].SetRadius(5.e-6 * metre())

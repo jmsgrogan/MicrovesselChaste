@@ -51,6 +51,17 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "FunctionMap.hpp"
 #include "GreensFunctionSolver.hpp"
 
+<<<<<<< HEAD
+=======
+//// Typdef in this namespace so that pyplusplus uses the nicer typedef'd name for the class
+namespace pyplusplus{
+namespace aliases{
+typedef std::map<unsigned, units::quantity<unit::concentration_flow_rate> >  MapUnsigned_ConcentrationFlowRate;
+typedef std::map<unsigned, units::quantity<unit::concentration> >  MapUnsigned_Concentration;
+}
+}
+
+>>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 namespace chaste
 {
     namespace pde
@@ -92,7 +103,13 @@ namespace chaste
                     sizeof(FiniteDifferenceSolver<2>) +
                     sizeof(FiniteElementSolver<2>) +
                     sizeof(FunctionMap<2>) +
+<<<<<<< HEAD
                     sizeof(GreensFunctionSolver<2>);
+=======
+                    sizeof(GreensFunctionSolver<2>) +
+                    sizeof(pyplusplus::aliases::MapUnsigned_ConcentrationFlowRate) +
+                                sizeof(pyplusplus::aliases::MapUnsigned_Concentration);
+>>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         }
     }
 }

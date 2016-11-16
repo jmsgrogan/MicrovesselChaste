@@ -59,6 +59,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselNetwork.hpp"
 #include "VesselNetworkActorGenerator.hpp"
 #include "AbstractCellPopulation.hpp"
+#include "CellPopulationActorGenerator.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "DiscreteContinuumMeshActorGenerator.hpp"
 #include "UnitCollection.hpp"
@@ -84,11 +85,6 @@ class MicrovesselVtkScene
      * The vtk render window interactor
      */
     vtkSmartPointer<vtkRenderWindowInteractor> mpRenderWindowInteractor;
-
-    /**
-     * The cell population
-     */
-    boost::shared_ptr<AbstractCellPopulation<DIM> > mpCellPopulation;
 
     /**
      * The path for output
@@ -142,6 +138,13 @@ class MicrovesselVtkScene
      */
     unsigned mOutputFrequency;
 
+    bool mIncludeAxes;
+
+    /**
+     * The cell population
+     */
+    boost::shared_ptr<CellPopulationActorGenerator<DIM> > mpCellPopulationGenerator;
+
     /**
      * The part generator
      */
@@ -193,15 +196,7 @@ public:
 
     boost::shared_ptr<VesselNetworkActorGenerator<DIM> > GetVesselNetworkActorGenerator();
 
-    /**
-     * Update the actors for the cell population
-     */
-    void UpdateCellPopulationActor();
-
-    /**
-     * Update the actors for mesh based cell populations
-     */
-    void UpdateMeshBasedCellPopulationActor();
+    boost::shared_ptr<CellPopulationActorGenerator<DIM> > GetCellPopulationActorGenerator();
 
     /**
      * Update the renderer, this will update the population actor and write output images

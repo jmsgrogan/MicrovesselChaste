@@ -40,6 +40,7 @@ from pygccxml import parser
 def update_builder(builder):
     
 
+<<<<<<< HEAD
 #     include_classes = [ 
 #                        "ParameterCollection",] 
 #                        #"BaseParameterInstance", 
@@ -55,6 +56,26 @@ def update_builder(builder):
 #         eachClass.include()
 #         eachClass.rename("SomethingElse")
 #         print eachClass.alias
+=======
+    include_classes = ["ParameterCollection",
+                       "BaseParameterInstance", 
+                       "BaseUnits",
+                       "Owen11Parameters",
+                       "Secomb04Parameters",
+                       "GenericParameters"]
+
+    for eachClass in include_classes:
+        builder.class_(eachClass).include()
+        
+    builder.class_("BaseUnits").member_function("Instance").call_policies = call_policies.return_value_policy(call_policies.reference_existing_object)
+    builder.class_("ParameterCollection").member_function("Instance").call_policies = call_policies.return_value_policy(call_policies.reference_existing_object)
+
+    helpers = builder.classes(lambda decl: decl.name.startswith('ParameterInstance'))
+    for eachClass in helpers:
+        eachClass.include()
+#         eachClass.rename("SomethingElse")
+        print eachClass.alias
+>>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 
 #    builder.variable("kg").include()
 #     helpers = builder.classes(lambda decl: decl.name.startswith('ParameterInstance'))
@@ -107,6 +128,10 @@ def update_builder(builder):
                 "rate_per_concentration",
                 "concentration_gradient",
                 "concentration_flux",
+<<<<<<< HEAD
+=======
+                "concentration_flow_rate",
+>>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
                 "concentration",
                 "molar_flux",
                 "molar_flow_rate",
@@ -117,7 +142,12 @@ def update_builder(builder):
                 "area",
                 "length",
                 "rate",
+<<<<<<< HEAD
                 "time",]
+=======
+                "time",
+                "dimensionless"]
+>>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 #                "plane_angle"]
     
     units = {"membrane_permeability": "metre_per_second", 
@@ -136,6 +166,10 @@ def update_builder(builder):
              "rate_per_concentration": "metre_cubed_per_mole_per_second",
              "concentration_gradient": "mole_per_metre_pow4",
              "concentration_flux": "mole_per_metre_pow5_per_second",
+<<<<<<< HEAD
+=======
+             "concentration_flow_rate": "mole_per_metre_cubed_per_second",
+>>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
              "concentration": "mole_per_metre_cubed",
              "molar_flux": "mole_per_metre_squared_per_second",
              "molar_flow_rate": "mole_per_second",
@@ -146,7 +180,12 @@ def update_builder(builder):
              "area": "metre_squared",
              "length": "metre",
              "rate":"per_second",
+<<<<<<< HEAD
              "time":"second",        
+=======
+             "time":"second", 
+             "dimensionless" : "dimensionless",       
+>>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
              }
 
     for eachUnit in unit_names:
@@ -189,7 +228,13 @@ def update_builder(builder):
                       "RateQuantity",
                       "TimeQuantity",
                       "AngleQuantity",
+<<<<<<< HEAD
                       ]
+=======
+                      "DimensionlessQuantity"
+                      ]
+    
+>>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
     for eachQuantity in quantity_names:
         helpers = pypluplus_alias_ns.typedefs(eachQuantity)
         for var_gen_typedef in helpers:

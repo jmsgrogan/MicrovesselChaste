@@ -336,6 +336,39 @@ struct MechanicalStimulusCalculator_less__3__greater__wrapper : MechanicalStimul
 
 };
 
+<<<<<<< HEAD
+=======
+struct MetabolicStimulusCalculator_less__2__greater__wrapper : MetabolicStimulusCalculator< 2 >, bp::wrapper< MetabolicStimulusCalculator< 2 > > {
+
+    MetabolicStimulusCalculator_less__2__greater__wrapper(MetabolicStimulusCalculator<2> const & arg )
+    : MetabolicStimulusCalculator<2>( arg )
+      , bp::wrapper< MetabolicStimulusCalculator< 2 > >(){
+        // copy constructor
+        
+    }
+
+    MetabolicStimulusCalculator_less__2__greater__wrapper( )
+    : MetabolicStimulusCalculator<2>( )
+      , bp::wrapper< MetabolicStimulusCalculator< 2 > >(){
+        // null constructor
+    
+    }
+
+    virtual void Calculate(  ) {
+        if( bp::override func_Calculate = this->get_override( "Calculate" ) )
+            func_Calculate(  );
+        else{
+            this->MetabolicStimulusCalculator< 2 >::Calculate(  );
+        }
+    }
+    
+    void default_Calculate(  ) {
+        MetabolicStimulusCalculator< 2 >::Calculate( );
+    }
+
+};
+
+>>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 struct MetabolicStimulusCalculator_less__3__greater__wrapper : MetabolicStimulusCalculator< 3 >, bp::wrapper< MetabolicStimulusCalculator< 3 > > {
 
     MetabolicStimulusCalculator_less__3__greater__wrapper(MetabolicStimulusCalculator<3> const & arg )
@@ -931,8 +964,11 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_flow){
             , (void ( ::AlarconHaematocritSolver<2>::* )( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::AlarconHaematocritSolver< 2 >::SetTHR )
             , ( bp::arg("thr") ) );
 
+<<<<<<< HEAD
     bp::class_< AlarconHaematocritSolver< 3 >, bp::bases< AbstractHaematocritSolver< 3 > > >( "AlarconHaematocritSolver_less__3__greater_" );
 
+=======
+>>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
     bp::class_< BetteridgeHaematocritSolver_less__2__greater__wrapper, bp::bases< AbstractHaematocritSolver< 2 > > >( "BetteridgeHaematocritSolver2", bp::init< >() )    
         .def( 
             "Calculate"
@@ -1343,7 +1379,103 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_flow){
         bp::implicitly_convertible< boost::shared_ptr< MechanicalStimulusCalculator< 3 > >, boost::shared_ptr< AbstractVesselNetworkCalculator< 3 > > >();
     }
 
+<<<<<<< HEAD
     bp::class_< MetabolicStimulusCalculator< 2 >, bp::bases< AbstractVesselNetworkCalculator< 2 > > >( "MetabolicStimulusCalculator_less__2__greater_" );
+=======
+    { //::MetabolicStimulusCalculator< 2 >
+        typedef bp::class_< MetabolicStimulusCalculator_less__2__greater__wrapper, bp::bases< AbstractVesselNetworkCalculator< 2 > > > MetabolicStimulusCalculator2_exposer_t;
+        MetabolicStimulusCalculator2_exposer_t MetabolicStimulusCalculator2_exposer = MetabolicStimulusCalculator2_exposer_t( "MetabolicStimulusCalculator2", bp::init< >() );
+        bp::scope MetabolicStimulusCalculator2_scope( MetabolicStimulusCalculator2_exposer );
+        { //::MetabolicStimulusCalculator< 2 >::Calculate
+        
+            typedef MetabolicStimulusCalculator< 2 > exported_class_t;
+            typedef void ( exported_class_t::*Calculate_function_type)(  ) ;
+            typedef void ( MetabolicStimulusCalculator_less__2__greater__wrapper::*default_Calculate_function_type)(  ) ;
+            
+            MetabolicStimulusCalculator2_exposer.def( 
+                "Calculate"
+                , Calculate_function_type(&::MetabolicStimulusCalculator< 2 >::Calculate)
+                , default_Calculate_function_type(&MetabolicStimulusCalculator_less__2__greater__wrapper::default_Calculate) );
+        
+        }
+        { //::MetabolicStimulusCalculator< 2 >::Create
+        
+            typedef MetabolicStimulusCalculator< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< MetabolicStimulusCalculator< 2 > > ( *Create_function_type )(  );
+            
+            MetabolicStimulusCalculator2_exposer.def( 
+                "Create"
+                , Create_function_type( &::MetabolicStimulusCalculator< 2 >::Create ) );
+        
+        }
+        { //::MetabolicStimulusCalculator< 2 >::GetKm
+        
+            typedef MetabolicStimulusCalculator< 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetKm_function_type)(  ) ;
+            
+            MetabolicStimulusCalculator2_exposer.def( 
+                "GetKm"
+                , GetKm_function_type( &::MetabolicStimulusCalculator< 2 >::GetKm ) );
+        
+        }
+        { //::MetabolicStimulusCalculator< 2 >::GetMaxStimulus
+        
+            typedef MetabolicStimulusCalculator< 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetMaxStimulus_function_type)(  ) ;
+            
+            MetabolicStimulusCalculator2_exposer.def( 
+                "GetMaxStimulus"
+                , GetMaxStimulus_function_type( &::MetabolicStimulusCalculator< 2 >::GetMaxStimulus ) );
+        
+        }
+        { //::MetabolicStimulusCalculator< 2 >::GetQRef
+        
+            typedef MetabolicStimulusCalculator< 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetQRef_function_type)(  ) ;
+            
+            MetabolicStimulusCalculator2_exposer.def( 
+                "GetQRef"
+                , GetQRef_function_type( &::MetabolicStimulusCalculator< 2 >::GetQRef ) );
+        
+        }
+        { //::MetabolicStimulusCalculator< 2 >::SetKm
+        
+            typedef MetabolicStimulusCalculator< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetKm_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            MetabolicStimulusCalculator2_exposer.def( 
+                "SetKm"
+                , SetKm_function_type( &::MetabolicStimulusCalculator< 2 >::SetKm )
+                , ( bp::arg("km") ) );
+        
+        }
+        { //::MetabolicStimulusCalculator< 2 >::SetMaxStimulus
+        
+            typedef MetabolicStimulusCalculator< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetMaxStimulus_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            MetabolicStimulusCalculator2_exposer.def( 
+                "SetMaxStimulus"
+                , SetMaxStimulus_function_type( &::MetabolicStimulusCalculator< 2 >::SetMaxStimulus )
+                , ( bp::arg("maxStimulus") ) );
+        
+        }
+        { //::MetabolicStimulusCalculator< 2 >::SetQRef
+        
+            typedef MetabolicStimulusCalculator< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetQRef_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            MetabolicStimulusCalculator2_exposer.def( 
+                "SetQRef"
+                , SetQRef_function_type( &::MetabolicStimulusCalculator< 2 >::SetQRef )
+                , ( bp::arg("qRef") ) );
+        
+        }
+        MetabolicStimulusCalculator2_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< MetabolicStimulusCalculator<2> > >();
+        bp::implicitly_convertible< boost::shared_ptr< MetabolicStimulusCalculator< 2 > >, boost::shared_ptr< AbstractVesselNetworkCalculator< 2 > > >();
+    }
+>>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 
     { //::MetabolicStimulusCalculator< 3 >
         typedef bp::class_< MetabolicStimulusCalculator_less__3__greater__wrapper, bp::bases< AbstractVesselNetworkCalculator< 3 > > > MetabolicStimulusCalculator3_exposer_t;

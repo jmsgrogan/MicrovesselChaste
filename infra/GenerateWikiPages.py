@@ -56,8 +56,10 @@ if __name__ == '__main__':
                      
     # Generate the markdown for each and send it to the wiki repo.
     for eachFile in tutorial_files:
-        outfile = " doc/wiki/" + os.path.splitext(ntpath.basename(eachFile[1]))[0] +".md"
+        #outfile = " doc/wiki/" + os.path.splitext(ntpath.basename(eachFile[1]))[0] +".md"
+        outfile = " doc/wiki/" + os.path.splitext(ntpath.basename(eachFile[1]))[0] +".ipynb"
         inputfile = eachFile[0] + eachFile[1]
-        launch_string = "infra/CreateMarkdownTutorial.py " + inputfile + outfile 
+        #launch_string = "infra/CreateMarkdownTutorial.py " + inputfile + outfile 
+        launch_string = "infra/CreateJupyterNotebookTutorial.py " + inputfile + outfile 
         os.system(launch_string)
 

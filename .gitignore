@@ -8,4 +8,6 @@ doc/wiki
 paper/
 papers/
 papers/
-paper/
+.settings/
+dynamic/exposed_decl.pypp.txt
+
