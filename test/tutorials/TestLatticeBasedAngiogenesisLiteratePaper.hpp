@@ -108,8 +108,8 @@ Copyright (c) 2005-2016, University of Oxford.
 /*
  * angiogenesis and regression,
  */
-#include "Owen2011SproutingRule.hpp"
-#include "Owen2011MigrationRule.hpp"
+#include "OffLatticeSproutingRule.hpp"
+#include "OffLatticeMigrationRule.hpp"
 #include "AngiogenesisSolver.hpp"
 #include "WallShearStressBasedRegressionSolver.hpp"
 /*
@@ -152,6 +152,8 @@ public:
 		boost::shared_ptr<VesselNetworkReader<3> > p_vessel_reader =
 				boost::shared_ptr<VesselNetworkReader<3> >(new VesselNetworkReader<3> );
 		p_vessel_reader->SetFileName("/home/grogan/bio_original.vtp");
+		p_vessel_reader->SetMergeCoincidentPoints(true);
+		p_vessel_reader->SetTargetSegmentLength(40.0e-6*unit::metres);
 		boost::shared_ptr<VesselNetwork<3> >  p_network = p_vessel_reader->Read();
 
         /* The vessel network may contain short vessels due to image processing artifacts,
@@ -162,7 +164,10 @@ public:
 		units::quantity<unit::length> short_vessel_cutoff = 40.0e-6 * unit::metres;
 		bool remove_end_vessels_only = true;
 		p_network->RemoveShortVessels(short_vessel_cutoff, remove_end_vessels_only);
+		p_network->UpdateAll();
 		p_network->MergeCoincidentNodes();
+		p_network->UpdateAll();
+
 		/*
 		 * Write the modified network to file for inspection
 		 */
@@ -182,8 +187,8 @@ public:
 		 * this purpose. We size and position the lattice according to the bounds of the vessel network.
 		 */
 		std::vector<DimensionalChastePoint<3> > bbox;
-		bbox.push_back(DimensionalChastePoint<3>(1200.0, 1600.0, -20.0, 1.e-6*unit::metres));
-		bbox.push_back(DimensionalChastePoint<3>(3200.0, 3000.0, 370.0, 1.e-6*unit::metres));
+		bbox.push_back(DimensionalChastePoint<3>(1500.0, 1600.0, -10.0, 1.e-6*unit::metres));
+		bbox.push_back(DimensionalChastePoint<3>(3100.0, 3000.0, 300.0, 1.e-6*unit::metres));
         /*
          * Set up the lattice (grid), we will use the same dimensions as [Owen et al. 2011](http://www.ncbi.nlm.nih.gov/pubmed/21363914).
          * Note that we are using hard-coded parameters from that paper. You can see the values by inspecting `Owen11Parameters.cpp`.
@@ -206,7 +211,7 @@ public:
 			grid_extents.push_back(std::floor(extents[idx])+1);
 		}
 		p_grid->SetExtents(grid_extents);
-		p_network->Translate(DimensionalChastePoint<3>(-1200.0, -1600.0, +20.0, 1.e-6*unit::metres));
+		p_network->Translate(DimensionalChastePoint<3>(-1500.0, -1600.0, +10.0, 1.e-6*unit::metres));
         /*
          * We can write the lattice to file for quick visualization with Paraview. Rendering of this and subsequent images is performed
          * using standard Paraview operations, not detailed here.
@@ -339,6 +344,7 @@ public:
         p_network->SetSegmentRadii(large_vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
         p_network->SetSegmentViscosity(viscosity);
+        p_network->Write(p_handler->GetOutputDirectoryFullPath() + "flow_boundary_labelled_network_flow.vtp");
         /*
         * Set up the pre- and post flow calculators.
         */
@@ -372,25 +378,31 @@ public:
          * Set up an angiogenesis solver and add sprouting and migration rules.
          */
         boost::shared_ptr<AngiogenesisSolver<3> > p_angiogenesis_solver = AngiogenesisSolver<3>::Create();
-        boost::shared_ptr<Owen2011SproutingRule<3> > p_sprouting_rule = Owen2011SproutingRule<3>::Create();
-        boost::shared_ptr<Owen2011MigrationRule<3> > p_migration_rule = Owen2011MigrationRule<3>::Create();
+        boost::shared_ptr<OffLatticeSproutingRule<3> > p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
+        p_sprouting_rule->SetSproutingProbability(1.e-3* unit::per_second);
+        boost::shared_ptr<OffLatticeMigrationRule<3> > p_migration_rule = OffLatticeMigrationRule<3>::Create();
+        p_migration_rule->SetChemotacticStrength(0.1);
+        p_migration_rule->SetAttractionStrength(0.5);
+
+        units::quantity<unit::velocity> sprout_velocity(40.0*unit::microns/unit::hours);
+        p_migration_rule->SetSproutingVelocity(sprout_velocity);
         p_angiogenesis_solver->SetMigrationRule(p_migration_rule);
         p_angiogenesis_solver->SetSproutingRule(p_sprouting_rule);
         p_sprouting_rule->SetDiscreteContinuumSolver(p_vegf_solver);
         p_migration_rule->SetDiscreteContinuumSolver(p_vegf_solver);
-        p_angiogenesis_solver->SetVesselGrid(p_grid);
+        //p_angiogenesis_solver->SetVesselGrid(p_grid);
         p_angiogenesis_solver->SetVesselNetwork(p_network);
          /*
          * The microvessel solver will manage all aspects of the vessel solve.
          */
         boost::shared_ptr<MicrovesselSolver<3> > p_microvessel_solver = MicrovesselSolver<3>::Create();
         p_microvessel_solver->SetVesselNetwork(p_network);
-        p_microvessel_solver->SetOutputFrequency(5);
+        p_microvessel_solver->SetOutputFrequency(1);
         p_microvessel_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
         p_microvessel_solver->AddDiscreteContinuumSolver(p_vegf_solver);
         p_microvessel_solver->SetStructuralAdaptationSolver(p_structural_adaptation_solver);
-        //p_microvessel_solver->SetRegressionSolver(p_regression_solver);
-        //p_microvessel_solver->SetAngiogenesisSolver(p_angiogenesis_solver);
+        p_microvessel_solver->SetRegressionSolver(p_regression_solver);
+        p_microvessel_solver->SetAngiogenesisSolver(p_angiogenesis_solver);
         /*
          * The microvessel solution modifier will link the vessel and cell solvers. We need to explicitly tell is
          * which extracellular fields to update based on PDE solutions.
@@ -398,7 +410,7 @@ public:
         boost::shared_ptr<MicrovesselSimulationModifier<3> > p_microvessel_modifier = MicrovesselSimulationModifier<3>::Create();
         p_microvessel_modifier->SetMicrovesselSolver(p_microvessel_solver);
         std::vector<std::string> update_labels;
-        //update_labels.push_back("oxygen");
+        update_labels.push_back("oxygen");
         update_labels.push_back("VEGF_Extracellular");
         p_microvessel_modifier->SetCellDataUpdateLabels(update_labels);
         /*
@@ -420,13 +432,13 @@ public:
          * Set up the remainder of the simulation
          */
         simulator.SetOutputDirectory("TestLatticeBasedAngiogenesisLiteratePaper");
-        simulator.SetSamplingTimestepMultiple(5);
+        simulator.SetSamplingTimestepMultiple(1);
         simulator.SetDt(0.5);
         /*
          * This end time corresponds to roughly 10 minutes run-time on a desktop PC. Increase it or decrease as
          * preferred. The end time used in Owen et al. 2011 is 4800 hours.
          */
-        simulator.SetEndTime(20.0);
+        simulator.SetEndTime(200.0);
         /*
          * Do the solve. A sample solution is shown at the top of this test.
          */

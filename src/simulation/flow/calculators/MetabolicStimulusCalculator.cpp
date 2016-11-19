@@ -104,6 +104,7 @@ void MetabolicStimulusCalculator<DIM>::Calculate()
         units::quantity<unit::rate> metabolic_stimulus;
         units::quantity<unit::dimensionless> haematocrit = segments[idx]->GetFlowProperties()->GetHaematocrit();
         units::quantity<unit::flow_rate> flow_rate = units::fabs(segments[idx]->GetFlowProperties()->GetFlowRate());
+
         if (flow_rate > 0.0 * unit::metre_cubed_per_second)
         {
             if (haematocrit > 0.0)

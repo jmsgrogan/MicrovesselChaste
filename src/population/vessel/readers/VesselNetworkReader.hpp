@@ -64,6 +64,17 @@ class VesselNetworkReader
     double mRadiusConversionFactor;
 
     /**
+     * Merge any coincident points in the input data
+     */
+    bool mMergeCoincidentPoints;
+
+    /**
+     * If this is non-zero the network will be re-sampled to a target segment length using
+     * a vtk spline filter.
+     */
+    units::quantity<unit::length> mTargetSegmentLength;
+
+    /**
      * The reference length scale for the vessel network, default in microns.
      */
     units::quantity<unit::length> mReferenceLength;
@@ -100,6 +111,20 @@ public:
      * @param rRadius the radius array name
      */
     void SetRadiusArrayName(const std::string& rRadius);
+
+    /**
+     * If true merge coincident input points
+     *
+     * @param mergePoints merge coincident input points
+     */
+    void SetMergeCoincidentPoints(bool mergePoints);
+
+    /**
+     * If nonzero resample the network to a target segment length
+     *
+     * @param targetSegmentLength the target segment length
+     */
+    void SetTargetSegmentLength(units::quantity<unit::length> targetSegmentLength);
 
     /**
      * Set the full path the file

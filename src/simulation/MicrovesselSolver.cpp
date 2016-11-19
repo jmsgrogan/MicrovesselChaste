@@ -98,11 +98,13 @@ void MicrovesselSolver<DIM>::Increment()
     unsigned num_steps = SimulationTime::Instance()->GetTimeStepsElapsed();
 
     // If there is a structural adaptation or flow problem solve it
+    std::cout << "ADAPT_IN****" << std::endl;
     if(mpStructuralAdaptationSolver)
     {
         mpStructuralAdaptationSolver->UpdateFlowSolver(true);
         mpStructuralAdaptationSolver->Solve();
     }
+    std::cout << "ADAPT_OUT****" << std::endl;
 
     // If there are PDEs solve them
     if(mDiscreteContinuumSolvers.size()>0)

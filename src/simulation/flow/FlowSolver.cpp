@@ -87,19 +87,13 @@ void FlowSolver<DIM>::SetUp()
     // Set up the system
     mpLinearSystem = boost::shared_ptr<LinearSystem>(new LinearSystem(num_nodes, max_branches + 1));
 
-    // If the network is small the preconditioner is turned off in LinearSystem,
+    // Note: If the network is small the preconditioner is turned off in LinearSystem,
     // so an iterative solver is used instead.
     if (num_nodes >= 6 && mUseDirectSolver)
     {
         mpLinearSystem->SetPcType("lu");
         mpLinearSystem->SetKspType("preonly");
     }
-
-    // Get the node-vessel and node-node connectivity
-    boost::shared_ptr<VesselNetworkGraphCalculator<DIM> > p_graph_calculator = VesselNetworkGraphCalculator<DIM>::Create();
-    p_graph_calculator->SetVesselNetwork(mpVesselNetwork);
-    mNodeVesselConnectivity = p_graph_calculator->GetNodeVesselConnectivity();
-    mNodeNodeConnectivity = p_graph_calculator->GetNodeNodeConnectivity();
 
     // Get the boundary condition nodes
     std::vector<boost::shared_ptr<VesselNode<DIM> > > boundary_condition_nodes;
@@ -114,8 +108,13 @@ void FlowSolver<DIM>::SetUp()
     }
 
     // Get the nodes that correspond to segments that are not connected to the rest of the network
+    boost::shared_ptr<VesselNetworkGraphCalculator<DIM> > p_graph_calculator = VesselNetworkGraphCalculator<DIM>::Create();
+    p_graph_calculator->SetVesselNetwork(mpVesselNetwork);
+    mNodeVesselConnectivity = p_graph_calculator->GetNodeVesselConnectivity();
+    mNodeNodeConnectivity = p_graph_calculator->GetNodeNodeConnectivity();
+
     std::vector<bool> connected = p_graph_calculator->IsConnected(boundary_condition_nodes, mNodes);
-    std::vector<unsigned> mUnconnectedNodeIndices;
+    mUnconnectedNodeIndices.clear();
     for (unsigned node_index = 0; node_index < num_nodes; node_index++)
     {
         if (!connected[node_index])
@@ -124,6 +123,7 @@ void FlowSolver<DIM>::SetUp()
         }
     }
 
+    std::cout << "num_connected" << mUnconnectedNodeIndices.size() << std::endl;
     mIsSetUp = true;
     Update(false);
 }
@@ -150,6 +150,7 @@ void FlowSolver<DIM>::Update(bool runSetup)
 
     mpLinearSystem->SwitchWriteModeLhsMatrix();
     mpLinearSystem->ZeroLhsMatrix();
+    mpLinearSystem->ZeroRhsVector();
 
     // Get the impedances, scale them by the maximum impedance to remove small values from the system matrix
     std::vector<units::quantity<unit::flow_impedance> > scaled_impedances;
@@ -199,10 +200,7 @@ void FlowSolver<DIM>::Update(bool runSetup)
                 units::quantity<unit::flow_impedance> impedance = scaled_impedances[mNodeVesselConnectivity[node_index][vessel_index]];
                 // Add the inverse impedances to the linear system
 
-
                 mpLinearSystem->AddToMatrixElement(node_index, node_index, -multiplier / impedance); // Aii
-
-
                 mpLinearSystem->AddToMatrixElement(node_index, mNodeNodeConnectivity[node_index][vessel_index], multiplier / impedance); // Aij
             }
         }
@@ -210,6 +208,7 @@ void FlowSolver<DIM>::Update(bool runSetup)
 
     mpLinearSystem->AssembleIntermediateLinearSystem();
     // Update the RHS
+
     for (unsigned bc_index = 0; bc_index < mBoundaryConditionNodeIndices.size(); bc_index++)
     {
         if(mNodes[mBoundaryConditionNodeIndices[bc_index]]->GetFlowProperties()->UseVelocityBoundaryCondition())
@@ -244,10 +243,14 @@ void FlowSolver<DIM>::Solve()
 
     // Recover the pressure of the vessel nodes
     ReplicatableVector a(solution);
+
+    std::cout << "****************" << std::endl;
     for (unsigned node_index = 0; node_index < mNodes.size(); node_index++)
     {
+        std::cout << "pressure" << a[node_index] << std::endl;
         mNodes[node_index]->GetFlowProperties()->SetPressure(a[node_index] * unit::pascals);
     }
+    std::cout << "****************" << std::endl;
 
     // Set the segment flow rates and nodal pressures
     for (unsigned vessel_index = 0; vessel_index < mVessels.size(); vessel_index++)

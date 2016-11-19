@@ -137,6 +137,7 @@ void StructuralAdaptationSolver<DIM>::Iterate()
     {
         segments[idx]->GetFlowProperties()->SetGrowthStimulus(0.0*(1.0/(unit::seconds)));
     }
+
     for(unsigned idx=0; idx<mPostFlowSolveCalculators.size();idx++)
     {
         mPostFlowSolveCalculators[idx]->Calculate();

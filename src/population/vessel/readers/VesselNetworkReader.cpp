@@ -42,6 +42,8 @@
 #include <vtkLine.h>
 #include <vtkXMLPolyDataReader.h>
 #include <vtkSmartPointer.h>
+#include <vtkCleanPolyData.h>
+#include <vtkSplineFilter.h>
 #include "Exception.hpp"
 #include "VesselNetworkReader.hpp"
 
@@ -50,8 +52,11 @@ VesselNetworkReader<DIM>::VesselNetworkReader()
     : mFileName(),
       mRadiusLabel("Node Radius"),
       mRadiusConversionFactor(1.0),
+	  mMergeCoincidentPoints(false),
+	  mTargetSegmentLength(0.0*unit::metres),
       mReferenceLength(1.e-6 * unit::metres)
 {
+
 }
 
 template<unsigned DIM>
@@ -73,6 +78,18 @@ void VesselNetworkReader<DIM>::SetRadiusArrayName(const std::string& rRadius)
 }
 
 template <unsigned DIM>
+void VesselNetworkReader<DIM>::SetMergeCoincidentPoints(bool mergePoints)
+{
+	mMergeCoincidentPoints = mergePoints;
+}
+
+template <unsigned DIM>
+void VesselNetworkReader<DIM>::SetTargetSegmentLength(units::quantity<unit::length> targetSegmentLength)
+{
+	mTargetSegmentLength = targetSegmentLength;
+}
+
+template <unsigned DIM>
 void VesselNetworkReader<DIM>::SetReferenceLengthScale(units::quantity<unit::length> rReferenceLength)
 {
     mReferenceLength = rReferenceLength;
@@ -91,13 +108,31 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkReader<DIM>::Read()
 
     // Create a VTK PolyData object based on the contents of the input VTK file
     vtkSmartPointer<vtkXMLPolyDataReader> p_reader = vtkSmartPointer<vtkXMLPolyDataReader>::New();
-    vtkSmartPointer<vtkPolyData> p_polydata = vtkSmartPointer<vtkPolyData>::New();
-    vtkSmartPointer<vtkPointData> p_point_data = vtkSmartPointer<vtkPointData>::New();
     p_reader->SetFileName(mFileName.c_str());
     p_reader->Update();
-    p_polydata = p_reader->GetOutput();
+
+    vtkSmartPointer<vtkPolyData> p_polydata = p_reader->GetOutput();
+
+    if(mMergeCoincidentPoints)
+    {
+    	vtkSmartPointer<vtkCleanPolyData> p_cleaner = vtkSmartPointer<vtkCleanPolyData>::New();
+    	p_cleaner->SetInputData(p_polydata);
+    	p_cleaner->Update();
+    	p_polydata = p_cleaner->GetOutput();
+    }
+
+	if(mTargetSegmentLength != 0.0*unit::metres)
+	{
+	   	vtkSmartPointer<vtkSplineFilter> p_spline_filter = vtkSmartPointer<vtkSplineFilter>::New();
+	   	p_spline_filter->SetInputData(p_polydata);
+	   	p_spline_filter->SetSubdivideToLength();
+	   	p_spline_filter->SetLength(mTargetSegmentLength/mReferenceLength);
+	   	p_spline_filter->Update();
+    	p_polydata = p_spline_filter->GetOutput();
+	}
 
     // Create the nodes
+    vtkSmartPointer<vtkPointData> p_point_data = vtkSmartPointer<vtkPointData>::New();
     std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes;
     for (vtkIdType i = 0; i < p_polydata->GetNumberOfPoints(); i++)
     {
