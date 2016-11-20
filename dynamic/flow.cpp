@@ -336,8 +336,6 @@ struct MechanicalStimulusCalculator_less__3__greater__wrapper : MechanicalStimul
 
 };
 
-<<<<<<< HEAD
-=======
 struct MetabolicStimulusCalculator_less__2__greater__wrapper : MetabolicStimulusCalculator< 2 >, bp::wrapper< MetabolicStimulusCalculator< 2 > > {
 
     MetabolicStimulusCalculator_less__2__greater__wrapper(MetabolicStimulusCalculator<2> const & arg )
@@ -368,7 +366,6 @@ struct MetabolicStimulusCalculator_less__2__greater__wrapper : MetabolicStimulus
 
 };
 
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 struct MetabolicStimulusCalculator_less__3__greater__wrapper : MetabolicStimulusCalculator< 3 >, bp::wrapper< MetabolicStimulusCalculator< 3 > > {
 
     MetabolicStimulusCalculator_less__3__greater__wrapper(MetabolicStimulusCalculator<3> const & arg )
@@ -964,11 +961,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_flow){
             , (void ( ::AlarconHaematocritSolver<2>::* )( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::AlarconHaematocritSolver< 2 >::SetTHR )
             , ( bp::arg("thr") ) );
 
-<<<<<<< HEAD
-    bp::class_< AlarconHaematocritSolver< 3 >, bp::bases< AbstractHaematocritSolver< 3 > > >( "AlarconHaematocritSolver_less__3__greater_" );
-
-=======
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
     bp::class_< BetteridgeHaematocritSolver_less__2__greater__wrapper, bp::bases< AbstractHaematocritSolver< 2 > > >( "BetteridgeHaematocritSolver2", bp::init< >() )    
         .def( 
             "Calculate"
@@ -1379,9 +1371,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_flow){
         bp::implicitly_convertible< boost::shared_ptr< MechanicalStimulusCalculator< 3 > >, boost::shared_ptr< AbstractVesselNetworkCalculator< 3 > > >();
     }
 
-<<<<<<< HEAD
-    bp::class_< MetabolicStimulusCalculator< 2 >, bp::bases< AbstractVesselNetworkCalculator< 2 > > >( "MetabolicStimulusCalculator_less__2__greater_" );
-=======
     { //::MetabolicStimulusCalculator< 2 >
         typedef bp::class_< MetabolicStimulusCalculator_less__2__greater__wrapper, bp::bases< AbstractVesselNetworkCalculator< 2 > > > MetabolicStimulusCalculator2_exposer_t;
         MetabolicStimulusCalculator2_exposer_t MetabolicStimulusCalculator2_exposer = MetabolicStimulusCalculator2_exposer_t( "MetabolicStimulusCalculator2", bp::init< >() );
@@ -1475,7 +1464,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_flow){
         bp::register_ptr_to_python< boost::shared_ptr< MetabolicStimulusCalculator<2> > >();
         bp::implicitly_convertible< boost::shared_ptr< MetabolicStimulusCalculator< 2 > >, boost::shared_ptr< AbstractVesselNetworkCalculator< 2 > > >();
     }
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 
     { //::MetabolicStimulusCalculator< 3 >
         typedef bp::class_< MetabolicStimulusCalculator_less__3__greater__wrapper, bp::bases< AbstractVesselNetworkCalculator< 3 > > > MetabolicStimulusCalculator3_exposer_t;

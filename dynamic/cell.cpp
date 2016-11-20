@@ -2,8 +2,6 @@
 
 #include "boost/python.hpp"
 
-<<<<<<< HEAD
-=======
 #include "indexing_suite/value_traits.hpp"
 
 #include "indexing_suite/container_suite.hpp"
@@ -12,157 +10,10 @@
 
 #include "indexing_suite/set.hpp"
 
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 #include "cell_headers.hpp"
 
 namespace bp = boost::python;
 
-<<<<<<< HEAD
-struct Owen2011OxygenBasedCellCycleModel_wrapper : Owen2011OxygenBasedCellCycleModel, bp::wrapper< Owen2011OxygenBasedCellCycleModel > {
-
-    Owen2011OxygenBasedCellCycleModel_wrapper(Owen2011OxygenBasedCellCycleModel const & arg )
-    : Owen2011OxygenBasedCellCycleModel( arg )
-      , bp::wrapper< Owen2011OxygenBasedCellCycleModel >(){
-        // copy constructor
-        
-    }
-
-    Owen2011OxygenBasedCellCycleModel_wrapper(::boost::shared_ptr< AbstractCellCycleModelOdeSolver > pOdeSolver=boost::shared_ptr<AbstractCellCycleModelOdeSolver>() )
-    : Owen2011OxygenBasedCellCycleModel( pOdeSolver )
-      , bp::wrapper< Owen2011OxygenBasedCellCycleModel >(){
-        // constructor
-    
-    }
-
-    virtual ::AbstractCellCycleModel * CreateCellCycleModel(  ) {
-        if( bp::override func_CreateCellCycleModel = this->get_override( "CreateCellCycleModel" ) )
-            return func_CreateCellCycleModel(  );
-        else{
-            return this->Owen2011OxygenBasedCellCycleModel::CreateCellCycleModel(  );
-        }
-    }
-    
-    ::AbstractCellCycleModel * default_CreateCellCycleModel(  ) {
-        return Owen2011OxygenBasedCellCycleModel::CreateCellCycleModel( );
-    }
-
-    virtual double GetG2Duration(  ) const  {
-        if( bp::override func_GetG2Duration = this->get_override( "GetG2Duration" ) )
-            return func_GetG2Duration(  );
-        else{
-            return this->Owen2011OxygenBasedCellCycleModel::GetG2Duration(  );
-        }
-    }
-    
-    double default_GetG2Duration(  ) const  {
-        return Owen2011OxygenBasedCellCycleModel::GetG2Duration( );
-    }
-
-    virtual double GetMDuration(  ) const  {
-        if( bp::override func_GetMDuration = this->get_override( "GetMDuration" ) )
-            return func_GetMDuration(  );
-        else{
-            return this->Owen2011OxygenBasedCellCycleModel::GetMDuration(  );
-        }
-    }
-    
-    double default_GetMDuration(  ) const  {
-        return Owen2011OxygenBasedCellCycleModel::GetMDuration( );
-    }
-
-    virtual double GetSDuration(  ) const  {
-        if( bp::override func_GetSDuration = this->get_override( "GetSDuration" ) )
-            return func_GetSDuration(  );
-        else{
-            return this->Owen2011OxygenBasedCellCycleModel::GetSDuration(  );
-        }
-    }
-    
-    double default_GetSDuration(  ) const  {
-        return Owen2011OxygenBasedCellCycleModel::GetSDuration( );
-    }
-
-    virtual void Initialise(  ) {
-        if( bp::override func_Initialise = this->get_override( "Initialise" ) )
-            func_Initialise(  );
-        else{
-            this->Owen2011OxygenBasedCellCycleModel::Initialise(  );
-        }
-    }
-    
-    void default_Initialise(  ) {
-        Owen2011OxygenBasedCellCycleModel::Initialise( );
-    }
-
-    virtual void InitialiseDaughterCell(  ) {
-        if( bp::override func_InitialiseDaughterCell = this->get_override( "InitialiseDaughterCell" ) )
-            func_InitialiseDaughterCell(  );
-        else{
-            this->Owen2011OxygenBasedCellCycleModel::InitialiseDaughterCell(  );
-        }
-    }
-    
-    void default_InitialiseDaughterCell(  ) {
-        Owen2011OxygenBasedCellCycleModel::InitialiseDaughterCell( );
-    }
-
-    virtual void OutputCellCycleModelParameters( ::out_stream & rParamsFile ) {
-        if( bp::override func_OutputCellCycleModelParameters = this->get_override( "OutputCellCycleModelParameters" ) )
-            func_OutputCellCycleModelParameters( boost::ref(rParamsFile) );
-        else{
-            this->Owen2011OxygenBasedCellCycleModel::OutputCellCycleModelParameters( boost::ref(rParamsFile) );
-        }
-    }
-    
-    void default_OutputCellCycleModelParameters( ::out_stream & rParamsFile ) {
-        Owen2011OxygenBasedCellCycleModel::OutputCellCycleModelParameters( boost::ref(rParamsFile) );
-    }
-
-    virtual bool ReadyToDivide(  ) {
-        if( bp::override func_ReadyToDivide = this->get_override( "ReadyToDivide" ) )
-            return func_ReadyToDivide(  );
-        else{
-            return this->Owen2011OxygenBasedCellCycleModel::ReadyToDivide(  );
-        }
-    }
-    
-    bool default_ReadyToDivide(  ) {
-        return Owen2011OxygenBasedCellCycleModel::ReadyToDivide( );
-    }
-
-    virtual void ResetForDivision(  ) {
-        if( bp::override func_ResetForDivision = this->get_override( "ResetForDivision" ) )
-            func_ResetForDivision(  );
-        else{
-            this->Owen2011OxygenBasedCellCycleModel::ResetForDivision(  );
-        }
-    }
-    
-    void default_ResetForDivision(  ) {
-        Owen2011OxygenBasedCellCycleModel::ResetForDivision( );
-    }
-
-    virtual void UpdateCellCyclePhase(  ) {
-        if( bp::override func_UpdateCellCyclePhase = this->get_override( "UpdateCellCyclePhase" ) )
-            func_UpdateCellCyclePhase(  );
-        else{
-            this->Owen2011OxygenBasedCellCycleModel::UpdateCellCyclePhase(  );
-        }
-    }
-    
-    void default_UpdateCellCyclePhase(  ) {
-        Owen2011OxygenBasedCellCycleModel::UpdateCellCyclePhase( );
-    }
-
-};
-
-BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
-    bp::class_< CancerCellMutationState >( "CancerCellMutationState", "Subclass of AbstractCellMutationState defining a cancerous mutation state for the Vascular tumour model.\n/", bp::init< >("Constructor.\n/") );
-
-    { //::Owen2011OxygenBasedCellCycleModel
-        typedef bp::class_< Owen2011OxygenBasedCellCycleModel_wrapper > Owen2011OxygenBasedCellCycleModel_exposer_t;
-        Owen2011OxygenBasedCellCycleModel_exposer_t Owen2011OxygenBasedCellCycleModel_exposer = Owen2011OxygenBasedCellCycleModel_exposer_t( "Owen2011OxygenBasedCellCycleModel", "Oxygen-dependent ODE-based cell-cycle model. Published by Owen et al. 2011\n/", bp::init< bp::optional< boost::shared_ptr< AbstractCellCycleModelOdeSolver > > >(( bp::arg("pOdeSolver")=boost::shared_ptr<AbstractCellCycleModelOdeSolver>() ), "Default constructor.\n@param pOdeSolver An optional pointer to a cell-cycle model ODE solver object (allows the use of different ODE solvers)\n/") );
-=======
 struct CaBasedCellPopulation_less__2__greater__wrapper : CaBasedCellPopulation< 2 >, bp::wrapper< CaBasedCellPopulation< 2 > > {
 
     CaBasedCellPopulation_less__2__greater__wrapper(::PottsMesh< 2 > & rMesh, ::std::vector< boost::shared_ptr<Cell> > & rCells, ::std::vector< unsigned int > const locationIndices, unsigned int latticeCarryingCapacity=1U, bool deleteMesh=false, bool validate=false )
@@ -1908,7 +1759,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
     { //::Owen2011OxygenBasedCellCycleModel
         typedef bp::class_< Owen2011OxygenBasedCellCycleModel_wrapper > Owen2011OxygenBasedCellCycleModel_exposer_t;
         Owen2011OxygenBasedCellCycleModel_exposer_t Owen2011OxygenBasedCellCycleModel_exposer = Owen2011OxygenBasedCellCycleModel_exposer_t( "Owen2011OxygenBasedCellCycleModel", bp::init< bp::optional< boost::shared_ptr< AbstractCellCycleModelOdeSolver > > >(( bp::arg("pOdeSolver")=boost::shared_ptr<AbstractCellCycleModelOdeSolver>() )) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         bp::scope Owen2011OxygenBasedCellCycleModel_scope( Owen2011OxygenBasedCellCycleModel_exposer );
         bp::implicitly_convertible< boost::shared_ptr< AbstractCellCycleModelOdeSolver >, Owen2011OxygenBasedCellCycleModel >();
         { //::Owen2011OxygenBasedCellCycleModel::CheckAndLabelCell
@@ -1917,10 +1767,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "CheckAndLabelCell"
-<<<<<<< HEAD
-                , CheckAndLabelCell_function_type( &::Owen2011OxygenBasedCellCycleModel::CheckAndLabelCell )
-                , "Check if the oxygen concentration of the cell is below the EnterQuiescenceOxygenConcentration.\nIf it is true the label cells.\n/" );
-=======
                 , CheckAndLabelCell_function_type( &::Owen2011OxygenBasedCellCycleModel::CheckAndLabelCell ) );
         
         }
@@ -1934,7 +1780,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
                 , CreateCellCycleModel_function_type(&::Owen2011OxygenBasedCellCycleModel::CreateCellCycleModel)
                 , default_CreateCellCycleModel_function_type(&Owen2011OxygenBasedCellCycleModel_wrapper::default_CreateCellCycleModel)
                 , bp::return_value_policy< bp::manage_new_object >() );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::GetCriticalQuiescentDuration
@@ -1943,12 +1788,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "GetCriticalQuiescentDuration"
-<<<<<<< HEAD
-                , GetCriticalQuiescentDuration_function_type( &::Owen2011OxygenBasedCellCycleModel::GetCriticalQuiescentDuration )
-                , "@return mCriticalQuiescentDuration\n/" );
-=======
                 , GetCriticalQuiescentDuration_function_type( &::Owen2011OxygenBasedCellCycleModel::GetCriticalQuiescentDuration ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::GetCurrentQuiescenceOnsetTime
@@ -1957,12 +1797,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "GetCurrentQuiescenceOnsetTime"
-<<<<<<< HEAD
-                , GetCurrentQuiescenceOnsetTime_function_type( &::Owen2011OxygenBasedCellCycleModel::GetCurrentQuiescenceOnsetTime )
-                , "@return mCurrentQuiescenceOnsetTime\n/" );
-=======
                 , GetCurrentQuiescenceOnsetTime_function_type( &::Owen2011OxygenBasedCellCycleModel::GetCurrentQuiescenceOnsetTime ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::GetCurrentQuiescentDuration
@@ -1971,12 +1806,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "GetCurrentQuiescentDuration"
-<<<<<<< HEAD
-                , GetCurrentQuiescentDuration_function_type( &::Owen2011OxygenBasedCellCycleModel::GetCurrentQuiescentDuration )
-                , "@return mCurrentQuiescentDuration\n/" );
-=======
                 , GetCurrentQuiescentDuration_function_type( &::Owen2011OxygenBasedCellCycleModel::GetCurrentQuiescentDuration ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::GetEnterQuiescenceOxygenConcentration
@@ -1985,12 +1815,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "GetEnterQuiescenceOxygenConcentration"
-<<<<<<< HEAD
-                , GetEnterQuiescenceOxygenConcentration_function_type( &::Owen2011OxygenBasedCellCycleModel::GetEnterQuiescenceOxygenConcentration )
-                , "@return mEnterQuiescenceOxygenConcentration\n/" );
-=======
                 , GetEnterQuiescenceOxygenConcentration_function_type( &::Owen2011OxygenBasedCellCycleModel::GetEnterQuiescenceOxygenConcentration ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::GetG2Duration
@@ -2010,12 +1835,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "GetLeaveQuiescenceOxygenConcentration"
-<<<<<<< HEAD
-                , GetLeaveQuiescenceOxygenConcentration_function_type( &::Owen2011OxygenBasedCellCycleModel::GetLeaveQuiescenceOxygenConcentration )
-                , "@return mLeaveQuiescenceOxygenConcentration\n/" );
-=======
                 , GetLeaveQuiescenceOxygenConcentration_function_type( &::Owen2011OxygenBasedCellCycleModel::GetLeaveQuiescenceOxygenConcentration ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::GetMDuration
@@ -2035,12 +1855,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "GetP53"
-<<<<<<< HEAD
-                , GetP53_function_type( &::Owen2011OxygenBasedCellCycleModel::GetP53 )
-                , "Get the value of p53.\n@return the value of p53.\n/" );
-=======
                 , GetP53_function_type( &::Owen2011OxygenBasedCellCycleModel::GetP53 ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::GetPhi
@@ -2049,12 +1864,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "GetPhi"
-<<<<<<< HEAD
-                , GetPhi_function_type( &::Owen2011OxygenBasedCellCycleModel::GetPhi )
-                , "Get the value of phi.\n@return the value of phi.\n/" );
-=======
                 , GetPhi_function_type( &::Owen2011OxygenBasedCellCycleModel::GetPhi ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::GetSDuration
@@ -2074,12 +1884,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "GetVEGF"
-<<<<<<< HEAD
-                , GetVEGF_function_type( &::Owen2011OxygenBasedCellCycleModel::GetVEGF )
-                , "Get the value of VEGF.\n@return the value of VEGF.\n/" );
-=======
                 , GetVEGF_function_type( &::Owen2011OxygenBasedCellCycleModel::GetVEGF ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::Initialise
@@ -2145,12 +1950,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetCriticalQuiescentDuration"
                 , SetCriticalQuiescentDuration_function_type( &::Owen2011OxygenBasedCellCycleModel::SetCriticalQuiescentDuration )
-<<<<<<< HEAD
-                , ( bp::arg("criticalQuiescentDuration") )
-                , "Set method for mCriticalQuiescentDuration.\n@param criticalQuiescentDuration the new value of mCriticalQuiescentDuration\n/" );
-=======
                 , ( bp::arg("criticalQuiescentDuration") ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetCurrentQuiescenceOnsetTime
@@ -2160,12 +1960,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetCurrentQuiescenceOnsetTime"
                 , SetCurrentQuiescenceOnsetTime_function_type( &::Owen2011OxygenBasedCellCycleModel::SetCurrentQuiescenceOnsetTime )
-<<<<<<< HEAD
-                , ( bp::arg("currentQuiescenceOnsetTime") )
-                , "Set method for mCurrentQuiescenceOnsetTime.\n@param currentQuiescenceOnsetTime the new value of mCurrentQuiescenceOnsetTime\n/" );
-=======
                 , ( bp::arg("currentQuiescenceOnsetTime") ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetEnterQuiescenceOxygenConcentration
@@ -2175,12 +1970,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetEnterQuiescenceOxygenConcentration"
                 , SetEnterQuiescenceOxygenConcentration_function_type( &::Owen2011OxygenBasedCellCycleModel::SetEnterQuiescenceOxygenConcentration )
-<<<<<<< HEAD
-                , ( bp::arg("enterQuiescenceOxygenConcentration") )
-                , "Set method for mEnterQuiescenceOxygenConcentration.\n@param enterQuiescenceOxygenConcentration the new value of mEnterQuiescenceOxygenConcentration\n/" );
-=======
                 , ( bp::arg("enterQuiescenceOxygenConcentration") ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetG2Onset
@@ -2190,12 +1980,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetG2Onset"
                 , SetG2Onset_function_type( &::Owen2011OxygenBasedCellCycleModel::SetG2Onset )
-<<<<<<< HEAD
-                , ( bp::arg("value") )
-                , "Set the G2 onset time\n@param value the G2 onset time\n/" );
-=======
                 , ( bp::arg("value") ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetLeaveQuiescenceOxygenConcentration
@@ -2205,12 +1990,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetLeaveQuiescenceOxygenConcentration"
                 , SetLeaveQuiescenceOxygenConcentration_function_type( &::Owen2011OxygenBasedCellCycleModel::SetLeaveQuiescenceOxygenConcentration )
-<<<<<<< HEAD
-                , ( bp::arg("leaveQuiescenceOxygenConcentration") )
-                , "Set method for mLeaveQuiescenceOxygenConcentration.\n@param leaveQuiescenceOxygenConcentration the new value of mLeaveQuiescenceOxygenConcentration\n/" );
-=======
                 , ( bp::arg("leaveQuiescenceOxygenConcentration") ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetMOnset
@@ -2220,12 +2000,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetMOnset"
                 , SetMOnset_function_type( &::Owen2011OxygenBasedCellCycleModel::SetMOnset )
-<<<<<<< HEAD
-                , ( bp::arg("value") )
-                , "Set the M onset time\n@param value the M onset time\n/" );
-=======
                 , ( bp::arg("value") ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetMaxRandInitialPhase
@@ -2235,12 +2010,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetMaxRandInitialPhase"
                 , SetMaxRandInitialPhase_function_type( &::Owen2011OxygenBasedCellCycleModel::SetMaxRandInitialPhase )
-<<<<<<< HEAD
-                , ( bp::arg("rand_max_phase") )
-                , "Set maximum phase of cell upon initialisation.\n@param rand_max_phase the maximum phase value at initialization\n/" );
-=======
                 , ( bp::arg("rand_max_phase") ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetOdeSolverTimeStep
@@ -2250,12 +2020,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetOdeSolverTimeStep"
                 , SetOdeSolverTimeStep_function_type( &::Owen2011OxygenBasedCellCycleModel::SetOdeSolverTimeStep )
-<<<<<<< HEAD
-                , ( bp::arg("timeStep") )
-                , "Set the ODE solver time step\n@param timeStep the ODE solver time step\n/" );
-=======
                 , ( bp::arg("timeStep") ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetReferenceConcentrationScale
@@ -2265,12 +2030,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetReferenceConcentrationScale"
                 , SetReferenceConcentrationScale_function_type( &::Owen2011OxygenBasedCellCycleModel::SetReferenceConcentrationScale )
-<<<<<<< HEAD
-                , ( bp::arg("referenceConcentrationScale") )
-                , "Set the reference concentration scale\n@param referenceConcentrationScale the reference concentration scale\n/" );
-=======
                 , ( bp::arg("referenceConcentrationScale") ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetReferenceTimeScale
@@ -2280,12 +2040,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetReferenceTimeScale"
                 , SetReferenceTimeScale_function_type( &::Owen2011OxygenBasedCellCycleModel::SetReferenceTimeScale )
-<<<<<<< HEAD
-                , ( bp::arg("referenceTimeScale") )
-                , "Set the reference timescale\n@param referenceTimeScale the reference timescale\n/" );
-=======
                 , ( bp::arg("referenceTimeScale") ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetSOnset
@@ -2295,12 +2050,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetSOnset"
                 , SetSOnset_function_type( &::Owen2011OxygenBasedCellCycleModel::SetSOnset )
-<<<<<<< HEAD
-                , ( bp::arg("value") )
-                , "Set the S2 onset time\n@param value the S2 onset time\n/" );
-=======
                 , ( bp::arg("value") ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::SetThresholdFractionOfNormalCellNeighbours
@@ -2310,12 +2060,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "SetThresholdFractionOfNormalCellNeighbours"
                 , SetThresholdFractionOfNormalCellNeighbours_function_type( &::Owen2011OxygenBasedCellCycleModel::SetThresholdFractionOfNormalCellNeighbours )
-<<<<<<< HEAD
-                , ( bp::arg("value") )
-                , "Set method for mthresholdFractionOfNormalCellNeighbours.\n@param value the new value of mthresholdFractionOfNormalCellNeighbours\n/" );
-=======
                 , ( bp::arg("value") ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         
         }
         { //::Owen2011OxygenBasedCellCycleModel::UpdateCellCyclePhase
@@ -2335,13 +2080,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
             
             Owen2011OxygenBasedCellCycleModel_exposer.def( 
                 "UpdateQuiescentDuration"
-<<<<<<< HEAD
-                , UpdateQuiescentDuration_function_type( &::Owen2011OxygenBasedCellCycleModel::UpdateQuiescentDuration )
-                , "Update the duration for which the cell has been quiescent.\n/" );
-        
-        }
-    }
-=======
                 , UpdateQuiescentDuration_function_type( &::Owen2011OxygenBasedCellCycleModel::UpdateQuiescentDuration ) );
         
         }
@@ -2354,5 +2092,4 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
     bp::class_< TipCellMutationState, bp::bases< AbstractCellMutationState > >( "TipCellMutationState", bp::init< >() );
 
     bp::class_< VesselCellMutationState, bp::bases< AbstractCellMutationState > >( "VesselCellMutationState", bp::init< >() );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 }

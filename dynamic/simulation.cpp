@@ -12,8 +12,6 @@
 
 namespace bp = boost::python;
 
-<<<<<<< HEAD
-=======
 struct AbstractCellBasedSimulationModifier_less__2_comma__2__greater__wrapper : AbstractCellBasedSimulationModifier< 2, 2 >, bp::wrapper< AbstractCellBasedSimulationModifier< 2, 2 > > {
 
     AbstractCellBasedSimulationModifier_less__2_comma__2__greater__wrapper( )
@@ -114,7 +112,6 @@ struct AbstractCellBasedSimulationModifier_less__3_comma__3__greater__wrapper : 
 
 };
 
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 struct MicrovesselSimulationModifier_less__2__greater__wrapper : MicrovesselSimulationModifier< 2 >, bp::wrapper< MicrovesselSimulationModifier< 2 > > {
 
     MicrovesselSimulationModifier_less__2__greater__wrapper(MicrovesselSimulationModifier<2> const & arg )
@@ -167,8 +164,6 @@ struct MicrovesselSimulationModifier_less__2__greater__wrapper : MicrovesselSimu
         MicrovesselSimulationModifier< 2 >::UpdateAtEndOfTimeStep( boost::ref(rCellPopulation) );
     }
 
-<<<<<<< HEAD
-=======
     virtual void UpdateAtEndOfOutputTimeStep( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
         if( bp::override func_UpdateAtEndOfOutputTimeStep = this->get_override( "UpdateAtEndOfOutputTimeStep" ) )
             func_UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
@@ -193,7 +188,6 @@ struct MicrovesselSimulationModifier_less__2__greater__wrapper : MicrovesselSimu
         AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
     }
 
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 };
 
 struct MicrovesselSimulationModifier_less__3__greater__wrapper : MicrovesselSimulationModifier< 3 >, bp::wrapper< MicrovesselSimulationModifier< 3 > > {
@@ -248,24 +242,6 @@ struct MicrovesselSimulationModifier_less__3__greater__wrapper : MicrovesselSimu
         MicrovesselSimulationModifier< 3 >::UpdateAtEndOfTimeStep( boost::ref(rCellPopulation) );
     }
 
-<<<<<<< HEAD
-};
-
-namespace boost { namespace python { namespace indexing {
-
-template<>
-struct value_traits< boost::shared_ptr< AbstractDiscreteContinuumSolver< 2 > > >{
-
-    static bool const equality_comparable = false;
-    
-
-    static bool const less_than_comparable = false;
-    
-
-    template<typename PythonClass, typename Policy>
-    static void visit_container_class(PythonClass &, Policy const &){
-        
-=======
     virtual void UpdateAtEndOfOutputTimeStep( ::AbstractCellPopulation< 3, 3 > & rCellPopulation ) {
         if( bp::override func_UpdateAtEndOfOutputTimeStep = this->get_override( "UpdateAtEndOfOutputTimeStep" ) )
             func_UpdateAtEndOfOutputTimeStep( boost::ref(rCellPopulation) );
@@ -366,14 +342,10 @@ struct Owen2011TrackingModifier_less__2__greater__wrapper : Owen2011TrackingModi
     
     void default_UpdateAtEndOfSolve( ::AbstractCellPopulation< 2, 2 > & rCellPopulation ) {
         AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfSolve( boost::ref(rCellPopulation) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
     }
 
 };
 
-<<<<<<< HEAD
-}/*indexing*/ } /*python*/ } /*boost*/
-=======
 struct Owen2011TrackingModifier_less__3__greater__wrapper : Owen2011TrackingModifier< 3 >, bp::wrapper< Owen2011TrackingModifier< 3 > > {
 
     Owen2011TrackingModifier_less__3__greater__wrapper(Owen2011TrackingModifier<3> const & arg )
@@ -451,16 +423,11 @@ struct Owen2011TrackingModifier_less__3__greater__wrapper : Owen2011TrackingModi
     }
 
 };
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 
 namespace boost { namespace python { namespace indexing {
 
 template<>
-<<<<<<< HEAD
-struct value_traits< boost::shared_ptr< AbstractDiscreteContinuumSolver< 3 > > >{
-=======
 struct value_traits< boost::shared_ptr< AbstractDiscreteContinuumSolver< 2 > > >{
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 
     static bool const equality_comparable = false;
     
@@ -480,11 +447,7 @@ struct value_traits< boost::shared_ptr< AbstractDiscreteContinuumSolver< 2 > > >
 namespace boost { namespace python { namespace indexing {
 
 template<>
-<<<<<<< HEAD
-struct value_traits< boost::shared_ptr< SimpleCellPopulation< 3 > > >{
-=======
 struct value_traits< boost::shared_ptr< AbstractDiscreteContinuumSolver< 3 > > >{
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 
     static bool const equality_comparable = false;
     
@@ -503,31 +466,10 @@ struct value_traits< boost::shared_ptr< AbstractDiscreteContinuumSolver< 3 > > >
 
 BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
     { //::std::vector< std::string >
-<<<<<<< HEAD
-        typedef bp::class_< std::vector< std::string > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< std::string > >() );
-    }
-
-    { //::std::vector< double >
-        typedef bp::class_< std::vector< double > > vector_less__double__greater__exposer_t;
-        vector_less__double__greater__exposer_t vector_less__double__greater__exposer = vector_less__double__greater__exposer_t( "vector_less__double__greater_" );
-        bp::scope vector_less__double__greater__scope( vector_less__double__greater__exposer );
-        vector_less__double__greater__exposer.def( bp::indexing::vector_suite< std::vector< double > >() );
-    }
-
-    { //::std::vector< boost::shared_ptr<SimpleCellPopulation<3> > >
-        typedef bp::class_< std::vector< boost::shared_ptr<SimpleCellPopulation<3> > > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<SimpleCellPopulation<3> > > >() );
-=======
         typedef bp::class_< std::vector< std::string > > VecString_exposer_t;
         VecString_exposer_t VecString_exposer = VecString_exposer_t( "VecString" );
         bp::scope VecString_scope( VecString_exposer );
         VecString_exposer.def( bp::indexing::vector_suite< std::vector< std::string > >() );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
     }
 
     { //::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<3> > >
@@ -544,10 +486,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
         __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<2> > > >() );
     }
 
-<<<<<<< HEAD
-    { //::MicrovesselSimulationModifier< 2 >
-        typedef bp::class_< MicrovesselSimulationModifier_less__2__greater__wrapper > MicrovesselSimulationModifier2_exposer_t;
-=======
     bp::class_< AbstractCellBasedSimulationModifier_less__2_comma__2__greater__wrapper, boost::noncopyable >( "AbstractCellBasedSimulationModifier2_2", bp::init< >() )    
         .def( 
             "OutputSimulationModifierInfo"
@@ -606,7 +544,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
 
     { //::MicrovesselSimulationModifier< 2 >
         typedef bp::class_< MicrovesselSimulationModifier_less__2__greater__wrapper, bp::bases< AbstractCellBasedSimulationModifier< 2, 2 > > > MicrovesselSimulationModifier2_exposer_t;
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         MicrovesselSimulationModifier2_exposer_t MicrovesselSimulationModifier2_exposer = MicrovesselSimulationModifier2_exposer_t( "MicrovesselSimulationModifier2", bp::init< >() );
         bp::scope MicrovesselSimulationModifier2_scope( MicrovesselSimulationModifier2_exposer );
         { //::MicrovesselSimulationModifier< 2 >::Create
@@ -713,8 +650,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
                 , ( bp::arg("rCellPopulation") ) );
         
         }
-<<<<<<< HEAD
-=======
         { //::AbstractCellBasedSimulationModifier< 2, 2 >::UpdateAtEndOfOutputTimeStep
         
             typedef MicrovesselSimulationModifier< 2 > exported_class_t;
@@ -741,7 +676,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
                 , ( bp::arg("rCellPopulation") ) );
         
         }
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         MicrovesselSimulationModifier2_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< MicrovesselSimulationModifier<2> > >();
         bp::implicitly_convertible< boost::shared_ptr< MicrovesselSimulationModifier< 2 > >, boost::shared_ptr< AbstractCellBasedSimulationModifier< 2, 2 > > >();
@@ -749,11 +683,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
     }
 
     { //::MicrovesselSimulationModifier< 3 >
-<<<<<<< HEAD
-        typedef bp::class_< MicrovesselSimulationModifier_less__3__greater__wrapper > MicrovesselSimulationModifier3_exposer_t;
-=======
         typedef bp::class_< MicrovesselSimulationModifier_less__3__greater__wrapper, bp::bases< AbstractCellBasedSimulationModifier< 3, 3 > > > MicrovesselSimulationModifier3_exposer_t;
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         MicrovesselSimulationModifier3_exposer_t MicrovesselSimulationModifier3_exposer = MicrovesselSimulationModifier3_exposer_t( "MicrovesselSimulationModifier3", bp::init< >() );
         bp::scope MicrovesselSimulationModifier3_scope( MicrovesselSimulationModifier3_exposer );
         { //::MicrovesselSimulationModifier< 3 >::Create
@@ -860,8 +790,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
                 , ( bp::arg("rCellPopulation") ) );
         
         }
-<<<<<<< HEAD
-=======
         { //::AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfOutputTimeStep
         
             typedef MicrovesselSimulationModifier< 3 > exported_class_t;
@@ -888,7 +816,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
                 , ( bp::arg("rCellPopulation") ) );
         
         }
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
         MicrovesselSimulationModifier3_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< MicrovesselSimulationModifier<3> > >();
         bp::implicitly_convertible< boost::shared_ptr< MicrovesselSimulationModifier< 3 > >, boost::shared_ptr< AbstractCellBasedSimulationModifier< 3, 3 > > >();
@@ -1253,120 +1180,6 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
         bp::register_ptr_to_python< boost::shared_ptr< MicrovesselSolver<3> > >();
     }
 
-<<<<<<< HEAD
-    bp::class_< NodeBasedSimulationWrapper >( "NodeBasedSimulationWrapper", bp::init< >() )    
-        .def( 
-            "GetOutputPopulations"
-            , (::std::vector< boost::shared_ptr<SimpleCellPopulation<3> > > ( ::NodeBasedSimulationWrapper::* )(  ))( &::NodeBasedSimulationWrapper::GetOutputPopulations ) )    
-        .def( 
-            "Run"
-            , (void ( ::NodeBasedSimulationWrapper::* )(  ))( &::NodeBasedSimulationWrapper::Run ) )    
-        .def( 
-            "SetInputPopulation"
-            , (void ( ::NodeBasedSimulationWrapper::* )( ::boost::shared_ptr< SimpleCellPopulation< 3 > > ))( &::NodeBasedSimulationWrapper::SetInputPopulation )
-            , ( bp::arg("pInputPopulation") ) )    
-        .def( 
-            "SetNumberOfTimeSteps"
-            , (void ( ::NodeBasedSimulationWrapper::* )( unsigned int ))( &::NodeBasedSimulationWrapper::SetNumberOfTimeSteps )
-            , ( bp::arg("numberOfTimeSteps") ) )    
-        .def( 
-            "SetTimeStepSize"
-            , (void ( ::NodeBasedSimulationWrapper::* )( double ))( &::NodeBasedSimulationWrapper::SetTimeStepSize )
-            , ( bp::arg("stepSize") ) );
-
-    bp::class_< OnLatticeSimulationWrapper >( "OnLatticeSimulationWrapper", bp::init< >() )    
-        .def( 
-            "GetOutputPopulations"
-            , (::std::vector< boost::shared_ptr<SimpleCellPopulation<3> > > ( ::OnLatticeSimulationWrapper::* )(  ))( &::OnLatticeSimulationWrapper::GetOutputPopulations ) )    
-        .def( 
-            "SetAlphaMax"
-            , (void ( ::OnLatticeSimulationWrapper::* )( double ))( &::OnLatticeSimulationWrapper::SetAlphaMax )
-            , ( bp::arg("value") ) )    
-        .def( 
-            "SetBetaMax"
-            , (void ( ::OnLatticeSimulationWrapper::* )( double ))( &::OnLatticeSimulationWrapper::SetBetaMax )
-            , ( bp::arg("value") ) )    
-        .def( 
-            "SetCellPopulation"
-            , (void ( ::OnLatticeSimulationWrapper::* )( ::boost::shared_ptr< CaBasedCellPopulation< 3 > > ))( &::OnLatticeSimulationWrapper::SetCellPopulation )
-            , ( bp::arg("pInputPopulation") ) )    
-        .def( 
-            "SetDt"
-            , (void ( ::OnLatticeSimulationWrapper::* )( double ))( &::OnLatticeSimulationWrapper::SetDt )
-            , ( bp::arg("timeStepSize") ) )    
-        .def( 
-            "SetEndTime"
-            , (void ( ::OnLatticeSimulationWrapper::* )( double ))( &::OnLatticeSimulationWrapper::SetEndTime )
-            , ( bp::arg("endTime") ) )    
-        .def( 
-            "SetNetwork"
-            , (void ( ::OnLatticeSimulationWrapper::* )( ::boost::shared_ptr< VesselNetwork< 3 > > ))( &::OnLatticeSimulationWrapper::SetNetwork )
-            , ( bp::arg("pNetwork") ) )    
-        .def( 
-            "SetOerAlphaMax"
-            , (void ( ::OnLatticeSimulationWrapper::* )( double ))( &::OnLatticeSimulationWrapper::SetOerAlphaMax )
-            , ( bp::arg("value") ) )    
-        .def( 
-            "SetOerAlphaMin"
-            , (void ( ::OnLatticeSimulationWrapper::* )( double ))( &::OnLatticeSimulationWrapper::SetOerAlphaMin )
-            , ( bp::arg("value") ) )    
-        .def( 
-            "SetOerBetaMax"
-            , (void ( ::OnLatticeSimulationWrapper::* )( double ))( &::OnLatticeSimulationWrapper::SetOerBetaMax )
-            , ( bp::arg("value") ) )    
-        .def( 
-            "SetOerBetaMin"
-            , (void ( ::OnLatticeSimulationWrapper::* )( double ))( &::OnLatticeSimulationWrapper::SetOerBetaMin )
-            , ( bp::arg("value") ) )    
-        .def( 
-            "SetOerConstant"
-            , (void ( ::OnLatticeSimulationWrapper::* )( double ))( &::OnLatticeSimulationWrapper::SetOerConstant )
-            , ( bp::arg("value") ) )    
-        .def( 
-            "SetOutputDirectory"
-            , (void ( ::OnLatticeSimulationWrapper::* )( ::std::string const & ))( &::OnLatticeSimulationWrapper::SetOutputDirectory )
-            , ( bp::arg("rDirectory") ) )    
-        .def( 
-            "SetRadiotherapyDose"
-            , (void ( ::OnLatticeSimulationWrapper::* )( double ))( &::OnLatticeSimulationWrapper::SetRadiotherapyDose )
-            , ( bp::arg("dose") ) )    
-        .def( 
-            "SetRadiotherapyHitTimes"
-            , (void ( ::OnLatticeSimulationWrapper::* )( ::std::vector< double > ))( &::OnLatticeSimulationWrapper::SetRadiotherapyHitTimes )
-            , ( bp::arg("hitTimes") ) )    
-        .def( 
-            "SetSamplingTimestepMultiple"
-            , (void ( ::OnLatticeSimulationWrapper::* )( unsigned int ))( &::OnLatticeSimulationWrapper::SetSamplingTimestepMultiple )
-            , ( bp::arg("samplingMultiple") ) )    
-        .def( 
-            "SetUseRadiotherapyCellKiller"
-            , (void ( ::OnLatticeSimulationWrapper::* )( bool ))( &::OnLatticeSimulationWrapper::SetUseRadiotherapyCellKiller )
-            , ( bp::arg("UseKiller") ) )    
-        .def( 
-            "SetVesselDistanceTolerance"
-            , (void ( ::OnLatticeSimulationWrapper::* )( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::OnLatticeSimulationWrapper::SetVesselDistanceTolerance )
-            , ( bp::arg("tolerance") ) )    
-        .def( 
-            "Solve"
-            , (void ( ::OnLatticeSimulationWrapper::* )( ::boost::shared_ptr< MicrovesselSimulationModifier< 3 > > ))( &::OnLatticeSimulationWrapper::Solve )
-            , ( bp::arg("pVtModifier") ) )    
-        .def( 
-            "UseOer"
-            , (void ( ::OnLatticeSimulationWrapper::* )( bool ))( &::OnLatticeSimulationWrapper::UseOer )
-            , ( bp::arg("useOer") ) );
-
-    bp::class_< SimulationManager >( "SimulationManager", bp::init< >() )    
-        .def( 
-            "SetEndTimeAndNumberOfTimeSteps"
-            , (void ( ::SimulationManager::* )( double,double ))( &::SimulationManager::SetEndTimeAndNumberOfTimeSteps )
-            , ( bp::arg("endTime"), bp::arg("numberOfSteps") ) )    
-        .def( 
-            "Setup"
-            , (void ( ::SimulationManager::* )(  ))( &::SimulationManager::Setup ) )    
-        .def( 
-            "TearDown"
-            , (void ( ::SimulationManager::* )(  ))( &::SimulationManager::TearDown ) );
-=======
     bp::class_< Owen2011TrackingModifier_less__2__greater__wrapper, bp::bases< AbstractCellBasedSimulationModifier< 2, 2 > > >( "Owen2011TrackingModifier2", bp::init< >() )    
         .def( 
             "OutputSimulationModifierParameters"
@@ -1428,5 +1241,4 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
             , (void ( ::AbstractCellBasedSimulationModifier<3, 3>::* )( ::AbstractCellPopulation< 3, 3 > & ))(&::AbstractCellBasedSimulationModifier< 3, 3 >::UpdateAtEndOfSolve)
             , (void ( Owen2011TrackingModifier_less__3__greater__wrapper::* )( ::AbstractCellPopulation< 3, 3 > & ))(&Owen2011TrackingModifier_less__3__greater__wrapper::default_UpdateAtEndOfSolve)
             , ( bp::arg("rCellPopulation") ) );
->>>>>>> 771a962055d447a8738a2e7efbc60beb1eaaa477
 }
