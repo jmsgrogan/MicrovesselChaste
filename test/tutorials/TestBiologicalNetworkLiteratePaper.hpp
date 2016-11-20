@@ -33,20 +33,10 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef TESTLATTICEBASEDANGIOGENESISLITERATEPAPER_HPP_
-#define TESTLATTICEBASEDANGIOGENESISLITERATEPAPER_HPP_
+#ifndef TESTBIOLOGICALNETWORKLITERATEPAPER_HPP_
+#define TESTBIOLOGICALNETWORKLITERATEPAPER_HPP_
 
-/* # A Lattice Based Angiogenesis Tutorial
- * This tutorial is designed to introduce a lattice based angiogenesis problem based on a simplified version of the
- * vascular tumour application described in
- *  [Owen et al. 2011](http://www.ncbi.nlm.nih.gov/pubmed/21363914).
- *
- * It is a 2D simulation using cellular automaton
- * for cells, a regular grid for vessel movement and the same grid for the solution of partial differential equations
- * for oxygen and VEGF transport using the finite difference method.
- *
- * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/landing.png)
- *
+/* # A Biological Network Demo
  * ## The Test
  * Start by introducing the necessary header files. The first contain functionality for setting up unit tests,
  * smart pointer tools and output management,
@@ -450,4 +440,4 @@ public:
     }
 };
 
-#endif /*TESTLATTICEBASEDANGIOGENESISLITERATEPAPER_HPP_*/
+#endif /*TESTBIOLOGICALNETWORKLITERATEPAPER_HPP_*/

@@ -44,6 +44,7 @@
 #include <vtkSmartPointer.h>
 #include <vtkCleanPolyData.h>
 #include <vtkSplineFilter.h>
+#include <vtkVersion.h>
 #include "Exception.hpp"
 #include "VesselNetworkReader.hpp"
 
@@ -116,7 +117,11 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkReader<DIM>::Read()
     if(mMergeCoincidentPoints)
     {
     	vtkSmartPointer<vtkCleanPolyData> p_cleaner = vtkSmartPointer<vtkCleanPolyData>::New();
-    	p_cleaner->SetInputData(p_polydata);
+        #if VTK_MAJOR_VERSION <= 5
+            p_cleaner->SetInput(p_polydata);
+        #else
+            p_cleaner->SetInputData(p_polydata);
+        #endif
     	p_cleaner->Update();
     	p_polydata = p_cleaner->GetOutput();
     }
@@ -124,7 +129,11 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkReader<DIM>::Read()
 	if(mTargetSegmentLength != 0.0*unit::metres)
 	{
 	   	vtkSmartPointer<vtkSplineFilter> p_spline_filter = vtkSmartPointer<vtkSplineFilter>::New();
-	   	p_spline_filter->SetInputData(p_polydata);
+        #if VTK_MAJOR_VERSION <= 5
+            p_spline_filter->SetInput(p_polydata);
+        #else
+            p_spline_filter->SetInputData(p_polydata);
+        #endif
 	   	p_spline_filter->SetSubdivideToLength();
 	   	p_spline_filter->SetLength(mTargetSegmentLength/mReferenceLength);
 	   	p_spline_filter->Update();

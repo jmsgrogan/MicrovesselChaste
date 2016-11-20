@@ -69,7 +69,7 @@ image/TestImageReaderAndWriter.hpp
 image/TestImageToMesh.hpp
 image/TestImageToSurface.hpp
 image/TestNetworkToImage.hpp
-tutorials/TestLatticeBasedAngiogenesisLiteratePaper.hpp
+tutorials/TestBiologicalNetworkLiteratePaper.hpp
 tutorials/TestOffLatticeAngiogenesisLiteratePaper.hpp
 tutorials/TestBuildVesselNetworkTutorial.hpp
 tutorials/TestBloodFlowTutorial.hpp
@@ -83,5 +83,5 @@ python/flow/TestFlowSolverPython.py
 python/flow/TestHaematocritCalculatorsPython.py
 python/pde/TestPythonFiniteDifferenceSolver.py
 python/tutorials/TestPythonBuildVesselNetworkLiteratePaper.py
-python/tutorials/TestPythonLatticeBasedAngiogenesisLiteratePaper.py
+python/tutorials/TestPythonBiologicalNetworkLiteratePaper.py
 python/tutorials/TestPythonOffLatticeAngiogenesisLiteratePaper.py

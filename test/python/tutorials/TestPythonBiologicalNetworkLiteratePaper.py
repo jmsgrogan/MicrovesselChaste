@@ -58,7 +58,7 @@ import microvessel_chaste.pde
 import microvessel_chaste.simulation
 from microvessel_chaste.utility import * # bring in all units for convenience
 
-class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
+class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
           
     def test_fixed_outer_boundary(self):
         
