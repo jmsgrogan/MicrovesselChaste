@@ -77,7 +77,7 @@ list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DI
 list (APPEND MicrovesselChaste_AUTO_MODULES angiogenesis)
 list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/simulation/)
 list (APPEND MicrovesselChaste_AUTO_MODULES cell)
-list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_haste/population/cell/)
+list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/population/cell/)
 list (APPEND MicrovesselChaste_AUTO_MODULES visualization)
 list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/visualization)
 

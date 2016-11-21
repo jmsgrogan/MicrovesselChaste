@@ -42,7 +42,7 @@ setup(
     packages = find_packages(),
     install_requires = ['petsc4py==3.7', 'matplotlib', 'numpy'],
     package_data={
-        'chaste': ['_chaste_project_MicrovesselChaste_preload.so', 
+        'microvessel_chaste': ['_chaste_project_MicrovesselChaste_preload.so', 
                    'geometry/_chaste_project_MicrovesselChaste_geometry.so',
                    'mesh/_chaste_project_MicrovesselChaste_mesh.so', 
                    'pde/_chaste_project_MicrovesselChaste_pde.so', 

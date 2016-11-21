@@ -1,0 +1,49 @@
+package:
+  name: microvessel-chaste
+  version: 3.4
+
+source:
+  path: /home/grogan/Software/Chaste
+
+build:
+  number: 0
+
+requirements:
+  build:
+    - python
+    - xsd ==4.0.0
+    - xerces-c
+    - vtk ==7.0
+    - petsc ==3.7.4
+    - boost
+    - lxml
+    - amara ==1.2.0.2
+    - rdflib
+    - setuptools
+    - distribute
+    - pip
+    - numpy
+    - petsc4py ==3.7
+    - matplotlib
+
+  run:
+    - python
+    - xsd ==4.0.0
+    - xerces-c
+    - vtk ==7.0
+    - petsc ==3.7.4
+    - boost
+    - scipy
+    - matplotlib
+    - petsc4py ==3.7
+    - jupyter
+    - lxml
+    - amara ==1.2.0.2
+    - rdflib
+    - numpy
+    - matplotlib
+
+about:
+  home: http://www.cs.ox.ac.uk/chaste/
+  license: 3-clause BSD
+
