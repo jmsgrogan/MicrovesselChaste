@@ -64,20 +64,6 @@ import nbformat as nbf
 # This had better match GenerateHowTo.py!
 HOWTO_TAG = "HOW_TO_TAG"
 
-def CheckFunctionOpening(block):
-    
-    for eachLine in block:
-        if "def:" in eachLine:
-            return True
-    return False
-
-def StripIndent(block):
-    
-    stripped_block = []
-    for eachLine in block:
-        stripped_block.append(eachLine[7:])
-    return block
-
 def ConvertFileToJupyterNotebook(fileobj, filepath, nb):
     """Convert a single tutorial source file to markdown, returning the page source."""
     # "State machine" state variables
@@ -100,9 +86,17 @@ def ConvertFileToJupyterNotebook(fileobj, filepath, nb):
         CleanEndComment = lambda stripped_line: stripped_line[:-2].strip()
         end_can_be_start = True
     
+    # SetUp string
+    test_setup_string = '# Set up the test \n'
+    test_setup_string += 'chaste.cell_based.SetupNotebookTest()\n'
+    
+    test_teardown_string = '# Tear down the test \n'
+    test_teardown_string += 'chaste.cell_based.TearDownNotebookTest()\n'
+    
     # Output
     last_line = ''
     last_block = ''
+    blocks = [] # [string, is_code]
     
     for line in fileobj:
         line = line.rstrip() # Note: also removes '\n'
@@ -117,8 +111,7 @@ def ConvertFileToJupyterNotebook(fileobj, filepath, nb):
             if ifdefs_seen == 0:
                 if status is ST_CODE:
                     # close code block
-                    if  not CheckFunctionOpening(last_block):
-                        nb['cells'].append(nbf.v4.new_code_cell(StripIndent(last_block)))
+                    blocks.append([last_block, True])
                     last_block = ''
                 parsing = False
     
@@ -136,8 +129,7 @@ def ConvertFileToJupyterNotebook(fileobj, filepath, nb):
                 stripped_line = line = stripped_line[2:].strip()
                 # if the last line was code, close the output code block
                 if status is ST_CODE:
-                    if not CheckFunctionOpening(last_block):
-                        nb['cells'].append(nbf.v4.new_code_cell(StripIndent(last_block)))
+                    blocks.append([last_block, True])
                     last_block = ''
                 # set the status as text
                 status = ST_TEXT
@@ -146,7 +138,7 @@ def ConvertFileToJupyterNotebook(fileobj, filepath, nb):
                 stripped_line = line = line[1:].strip()
             elif status is ST_NONE and len(stripped_line) > 0:
                 # Line has content and isn't a comment => it's code
-                nb['cells'].append(nbf.v4.new_markdown_cell(last_block))
+                blocks.append([last_block, False])
                 last_block = ''
                 status = ST_CODE
             
@@ -188,11 +180,40 @@ def ConvertFileToJupyterNotebook(fileobj, filepath, nb):
         if stripped_line.startswith('#if'):
             ifdefs_seen += 1
         last_line = stripped_line
-
+        
+    # Assemble the notebook cells
+    for eachBlock in blocks:
+        if eachBlock[1]:
+            
+            # Convert the string block to a list for easier processing
+            block_list = eachBlock[0].split('\n')
+            
+            # Strip out class and function calls, unittest and main and left-align all lines
+            output_lines = []
+            ignore_lines_contain = ["class", "def", "unittest", "main", "self.assert"]
+            for eachLine in block_list:
+                if not any(ignore_string in eachLine for ignore_string in ignore_lines_contain):
+                    output_lines.append(eachLine.strip())
+                    
+            # Look for the setup and teardown marks
+            for idx, eachLine in enumerate(output_lines):
+                if "JUPYTER_SETUP" in eachLine:
+                    output_lines[idx] = test_setup_string
+                if "JUPYTER_TEARDOWN" in eachLine:
+                    output_lines[idx] = test_teardown_string
+            
+            # Reassemble the block as a single string, strip empty lines
+            if len(output_lines)>0:
+                out_string = "\n".join(output_lines) 
+                out_string = os.linesep.join([s for s in out_string.splitlines() if s])
+                nb['cells'].append(nbf.v4.new_code_cell(out_string))  
+        else:
+            nb['cells'].append(nbf.v4.new_markdown_cell(eachBlock[0]))                
+        
 def ConvertTutorialToJupyterNotebook(test_file_path, test_file, other_files, revision=''):
     """Convert a tutorial, possibly comprised of multiple files, to a Jupyter notebook.
     
-    test_file is the content of the tutorial test .hpp file, as an object which will
+    test_file is the content of the tutorial test .py file, as an object which will
     return each line in turn when iterated.
     other_files is a list of subsidiary files, which may be empty.  Each entry should
     be a pair, the first item of which is the basename of the file, and the second is
@@ -205,12 +226,18 @@ def ConvertTutorialToJupyterNotebook(test_file_path, test_file, other_files, rev
     nb['cells'] = []
 
     # Header
-    nb['cells'].append(nbf.v4.new_markdown_cell('This tutorial is automatically generated from the file ' + test_file_path + revision + '.\n\n'))
+    nb['cells'].append(nbf.v4.new_markdown_cell('This tutorial is automatically generated from the file ' + 
+                                                test_file_path + revision + '.\n\n'))
+    
+    # Notebook specific imports
+    notebook_header = '# Jupyter notebook specific imports \nimport matplotlib as mpl \n'
+    notebook_header += 'import matplotlib.pyplot as plt \n%matplotlib inline'
+    nb['cells'].append(nbf.v4.new_code_cell(notebook_header))
+        
     # Convert each file in turn
     ConvertFileToJupyterNotebook(test_file, test_file_path, nb)
 
     return nb
-
 
 def ParseOptions():
     usage = "usage: %prog [options] <test_file>|- <output_file>|-"
@@ -226,7 +253,6 @@ def ParseOptions():
     
     return options, args
 
-
 if __name__ == '__main__':
     options, args = ParseOptions()
     
@@ -241,8 +267,8 @@ if __name__ == '__main__':
     if test_file == '-':
         # Read from stdin (pipe mode)
         in_file = sys.stdin
-    elif test_file[-3:] not in ['hpp', '.py'] or os.path.basename(test_file)[:4] != 'Test':
-        print >>sys.stderr, "Syntax error:", test_file, "does not appear to be a test file"
+    elif test_file[-3:] not in ['.py',] or os.path.basename(test_file)[:4] != 'Test':
+        print >>sys.stderr, "Syntax error:", test_file, "does not appear to be a Python test file"
         sys.exit(1)
     else:
         in_file = open(test_file)
@@ -255,14 +281,14 @@ if __name__ == '__main__':
     
     # Do the conversion
     nb = ConvertTutorialToJupyterNotebook(real_file_path, in_file, [], options.revision)
-    print out_file_name
+    
+    ## Some logging
+    print "Generating:" + out_file_name
+    
     with open(out_file_name, 'w') as f:
         nbf.write(nb, f)
 
     # Close files
     if in_file is not sys.stdin:
         in_file.close()
-    
-#     if out_file is not sys.stdout:
-#         out_file.close()
 

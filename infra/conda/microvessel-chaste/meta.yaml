@@ -3,16 +3,16 @@ package:
   version: 3.4
 
 source:
-  path: /home/grogan/Software/Chaste
+  path: /home/grogan/Chaste
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
     - python
     - xsd ==4.0.0
-    - xerces-c
+    - xerces-c ==3.1.4
     - vtk ==7.0
     - petsc ==3.7.4
     - boost
@@ -25,11 +25,13 @@ requirements:
     - numpy
     - petsc4py ==3.7
     - matplotlib
+    - curl
+    - blas 1.* openblas
 
   run:
     - python
     - xsd ==4.0.0
-    - xerces-c
+    - xerces-c ==3.1.4
     - vtk ==7.0
     - petsc ==3.7.4
     - boost
@@ -42,6 +44,8 @@ requirements:
     - rdflib
     - numpy
     - matplotlib
+    - curl
+    - blas 1.* openblas
 
 about:
   home: http://www.cs.ox.ac.uk/chaste/

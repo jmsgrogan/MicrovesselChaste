@@ -274,6 +274,9 @@ if __name__ == '__main__':
     # Do the conversion
     out_file.write(ConvertTutorialToMarkdownText(real_file_path, in_file, [], options.revision))
     
+    ## Some logging
+    print "Generating:" + out_file_name
+    
     # Close files
     if in_file is not sys.stdin:
         in_file.close()

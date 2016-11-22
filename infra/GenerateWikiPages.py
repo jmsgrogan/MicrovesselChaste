@@ -54,12 +54,17 @@ if __name__ == '__main__':
                     if not fnmatch.fnmatch(file, '*.pyc'):
                         tutorial_files.append([eachSearchPath, file])
                      
-    # Generate the markdown for each and send it to the wiki repo.
+    # Generate the markdown for each
     for eachFile in tutorial_files:
-        #outfile = " doc/wiki/" + os.path.splitext(ntpath.basename(eachFile[1]))[0] +".md"
-        outfile = " doc/wiki/" + os.path.splitext(ntpath.basename(eachFile[1]))[0] +".ipynb"
-        inputfile = eachFile[0] + eachFile[1]
-        #launch_string = "infra/CreateMarkdownTutorial.py " + inputfile + outfile 
+        outfile = " doc/tutorials/" + os.path.splitext(ntpath.basename(eachFile[1]))[0] +".md"
+        inputfile = eachFile[0] + "/" + eachFile[1]
+        launch_string = "infra/CreateMarkdownTutorial.py " + inputfile + outfile 
+        os.system(launch_string)
+        
+    # Generate the jupyter notebooks for each
+    for eachFile in tutorial_files:
+        outfile = " doc/tutorials/" + os.path.splitext(ntpath.basename(eachFile[1]))[0] +".ipynb"
+        inputfile = eachFile[0] + "/" + eachFile[1]
         launch_string = "infra/CreateJupyterNotebookTutorial.py " + inputfile + outfile 
         os.system(launch_string)
 

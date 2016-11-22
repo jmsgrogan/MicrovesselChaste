@@ -87,6 +87,7 @@ list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DI
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/python/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/python/ PATTERN "*.so" EXCLUDE)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/python/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/python/test/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/doc/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/python/doc/)
 
 # Loop through each module that uses auto wrapper code generation and make the wrapper code
 add_custom_target(project_MicrovesselChaste_Python_Bindings)
@@ -113,6 +114,7 @@ foreach(val RANGE ${len2})
     add_library(_chaste_project_MicrovesselChaste_${python_module} SHARED ${CMAKE_CURRENT_SOURCE_DIR}/dynamic/${python_module}.cpp)
     set_target_properties(_chaste_project_MicrovesselChaste_${python_module} PROPERTIES PREFIX "" LIBRARY_OUTPUT_DIRECTORY ${python_module_location})
     target_link_libraries(_chaste_project_MicrovesselChaste_${python_module} boost_python ${PYTHON_LIBRARIES} ${Chaste_THIRD_PARTY_LIBRARIES} ${Chaste_LIBRARIES} ${PROJECT_MicrovesselChaste_LIB})
+    add_dependencies(_chaste_project_MicrovesselChaste_${python_module} project_MicrovesselChaste)
 endforeach()
 
 # Add a target so all the libraries are built with a single command

@@ -31,8 +31,6 @@ cmake .. \
     -DChaste_ENABLE_continuum_mechanics_TESTING=OFF \
     -DChaste_ENABLE_project_PyChaste_TESTING=OFF \
     -DChaste_ENABLE_project_MicrovesselChaste_TESTING=OFF \
-    -DChaste_ENABLE_project_MicrovesselChaste_APPS=OFF \
-    -DChaste_ENABLE_project_PyChaste_APPS=OFF \
     -DChaste_ERROR_ON_WARNING=OFF \
     -DVTK_DIR=$PREFIX \
     -DXERCESC_LIBRARY=$LIBRARY_PATH/libxerces-c.so \

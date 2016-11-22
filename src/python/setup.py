@@ -35,12 +35,15 @@ from setuptools import setup, Distribution,find_packages
 class BinaryDistribution(Distribution):
     def is_pure(self):
         return False
+    
+    def has_ext_modules(self):
+        return True
 
 setup(
     name = "microvessel_chaste",
     version = "3.4.dev0",
     packages = find_packages(),
-    install_requires = ['petsc4py==3.7', 'matplotlib', 'numpy'],
+    #install_requires = ['petsc4py==3.7', 'matplotlib', 'numpy'],
     package_data={
         'microvessel_chaste': ['_chaste_project_MicrovesselChaste_preload.so', 
                    'geometry/_chaste_project_MicrovesselChaste_geometry.so',
@@ -54,7 +57,14 @@ setup(
                    'simulation/_chaste_project_MicrovesselChaste_flow.so', 
                    'simulation/_chaste_project_MicrovesselChaste_angiogenesis.so',],},
       
+    data_files = [('tutorials', ['doc/tutorials/TestPythonOffLatticeAngiogenesisLiteratePaper.ipynb', 
+                                'doc/tutorials/TestPythonLatticeBasedAngiogenesisTutorial.ipynb',
+                                'doc/tutorials/TestPythonBuildVesselNetworkTutorial.ipynb',
+                                'doc/tutorials/TestPythonBiologicalNetworkLiteratePaper.ipynb',])],
+      
+      
     include_package_data=True,
+    zip_safe = False,
 
     # Project Metadata
     author = "Chaste Team, University of Oxford",
