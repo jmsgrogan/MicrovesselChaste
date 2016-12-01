@@ -46,7 +46,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UblasVectorInclude.hpp"
 
 /**
- * This class generates Vtk actors for geometric features.
+ * This class generates VTK actors for geometric features.
  */
 template<unsigned DIM>
 class AbstractActorGenerator
@@ -55,9 +55,14 @@ class AbstractActorGenerator
 protected:
 
     /**
-     * The color lookup
+     * The color lookup for continuous entities
      */
     vtkSmartPointer<vtkColorTransferFunction> mpColorTransferFunction;
+
+    /**
+     * The color lookup for discrete entities
+     */
+    vtkSmartPointer<vtkColorTransferFunction> mpDiscreteColorTransferFunction;
 
     /**
      * Scale features using this length. e.g. set to micron if we want
@@ -95,17 +100,24 @@ protected:
      */
     c_vector<double, 3> mVolumeColor;
 
-    std::vector<c_vector<double, 3> > mViridisColorMap;
-
     /**
      * The volume opacity
      */
     double mVolumeOpacity;
 
+    /**
+     * The default size for points
+     */
     double mPointSize;
 
+    /**
+     * The default size for edges
+     */
     double mEdgeSize;
 
+    /**
+     * The label for contouring on data
+     */
     std::string mDataLabel;
 
 public:
@@ -125,6 +137,16 @@ public:
      * @param pRenderer the current renderer
      */
     virtual void AddActor(vtkSmartPointer<vtkRenderer> pRenderer) = 0;
+
+    /**
+     * @return return the color transfer function
+     */
+    vtkSmartPointer<vtkColorTransferFunction> GetColorTransferFunction();
+
+    /**
+     * @return return the discrete color transfer function
+     */
+    vtkSmartPointer<vtkColorTransferFunction> GetDiscreteColorTransferFunction();
 
     /**
      * Set whether to show the edges
@@ -168,10 +190,22 @@ public:
      */
     void SetVolumeOpacity(double opacity);
 
+    /**
+     * Set the default point size
+     * @param size the default point size
+     */
     void SetPointSize(double size);
 
+    /**
+     * Set the default edge size
+     * @param size the default edge size
+     */
     void SetEdgeSize(double size);
 
+    /**
+     * Set the label for contouring data
+     * @param rLabel the label for contouring data
+     */
     void SetDataLabel(const std::string& rLabel);
 
 };

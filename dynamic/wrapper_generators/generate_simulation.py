@@ -46,13 +46,20 @@ def update_builder(builder):
                        "MicrovesselSimulationModifier<2>",
                        "Owen2011TrackingModifier<3>",
                        "Owen2011TrackingModifier<2>",
+                       "AbstractMicrovesselModifier<2>",
+                       "VtkSceneMicrovesselModifier<2>",
+                       "AbstractMicrovesselModifier<3>",
+                       "VtkSceneMicrovesselModifier<3>",                       
                        "AbstractCellBasedSimulationModifier<2,2>",
                        "AbstractCellBasedSimulationModifier<3,3>"]
     
+    class_collection = []
+
     for eachClass in include_classes:
         builder.class_(eachClass).include()  
         new_name = generate_bindings.template_replace(eachClass)
+        class_collection.append(new_name)
         if(new_name != eachClass):
             builder.class_(eachClass).rename(new_name) 
     
-    return builder
+    return builder, class_collection

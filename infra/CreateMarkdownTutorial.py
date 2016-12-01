@@ -209,6 +209,7 @@ def ConvertTutorialToMarkdownText(test_file_path, test_file, other_files, revisi
         revision = ' at revision r' + str(revision)
     output = []
     # Header
+    output.append('---\nlayout: page-full-width \ntitle: ' + test_file + '\n---\n')
     output.append('This tutorial is automatically generated from the file ' + test_file_path + revision + '.\n')
     output.append('Note that the code is given in full at the bottom of the page.\n\n\n')
     # Convert each file in turn

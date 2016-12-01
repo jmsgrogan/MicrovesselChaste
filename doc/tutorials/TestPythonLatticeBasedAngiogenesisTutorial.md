@@ -27,6 +27,7 @@ import microvessel_chaste.mesh
 import microvessel_chaste.population.vessel
 import microvessel_chaste.pde
 import microvessel_chaste.simulation
+import microvessel_chaste.visualization
 from microvessel_chaste.utility import * # bring in all units for convenience
 
 class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
@@ -54,9 +55,9 @@ results. For our purposes microns for length and hours for time are suitable bas
 
 ```
 Set up the lattice (grid), we will use the same dimensions as [Owen et al. 2011](http://www.ncbi.nlm.nih.gov/pubmed/21363914).
-Note that we are using hard-coded parameters from that paper. You can see the values by inspecting `Owen11Parameters.cpp`.
-Alternatively each parameter supports the `<<` operator for streaming. When we get the value of the parameter by doing
-`Owen11Parameters::mpLatticeSpacing->GetValue("User")` a record is kept that this parameter has been used in the simulation.
+Note that we are using hard-coded parameters from that paper. You can see the values by printing.
+When we get the value of the parameter by doing
+`Owen11Parameters.mpLatticeSpacing.GetValue("User")` a record is kept that this parameter has been used in the simulation.
 A record of all parameters used in a simulation can be dumped to file on completion, as will be shown below.
 
 ```python
@@ -73,6 +74,17 @@ using standard Paraview operations, not detailed here.
 
 ```python
         grid.Write(file_handler)
+
+```
+We can visualize the grid
+
+```python
+        scene = microvessel_chaste.visualization.MicrovesselVtkScene2()
+        #scene.SetRegularGrid(grid)
+        #scene.GetRegularGridActorGenerator().SetVolumeOpacity(0.1)
+        scene.SetIsInteractive(True)
+        scene.SetOutputFilePath(file_handler.GetOutputDirectoryFullPath()+"render")
+        scene.Start()
 
 ```
 Next, set up the vessel network, this will initially consist of two, large counter-flowing vessels. Also set the inlet
@@ -102,7 +114,12 @@ Again, we can write the network to file for quick visualization with Paraview.
 
 ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/Lattice_Angiogenesis_Tutorial_Grid_Vessels.png)
 
+We can visualize the network
+
 ```python
+        scene.SetVesselNetwork(network)
+        scene.GetVesselNetworkActorGenerator().SetEdgeSize(20.0)
+        scene.ResetRenderer()
         network.Write(file_handler.GetOutputDirectoryFullPath() + "initial_network.vtp")
 
 ```
@@ -117,6 +134,12 @@ the population using conventional Cell Based Chaste methods.
         tumour_radius = 300.0 * 1.e-6 * metre()
         cell_population_genenerator.SetTumourRadius(tumour_radius)
         cell_population = cell_population_genenerator.Update()
+
+        scene.SetCellPopulation(cell_population)
+        scene.GetCellPopulationActorGenerator().SetPointSize(10)
+        scene.ResetRenderer()
+
+        scene.StartInteractiveEventHandler()
 
 ```
 At this point the simulation domain will look as follows:
@@ -179,11 +202,11 @@ there is no release.
         quiescent_cancer_state = microvessel_chaste.population.cell.QuiescentCancerCellMutationState()
         normal_cell_state = chaste.cell_based.WildTypeCellMutationState()
 
-#        normal_and_quiescent_cell_rates[normal_cell_state.GetColour()] = Owen11Parameters.mpCellVegfSecretionRate.GetValue("User")
+        normal_and_quiescent_cell_rates[normal_cell_state.GetColour()] = Owen11Parameters.mpCellVegfSecretionRate.GetValue("User")
         normal_and_quiescent_cell_rate_thresholds[normal_cell_state.GetColour()] = 0.27*mole_per_metre_cubed()
-#        normal_and_quiescent_cell_rates[quiescent_cancer_state.GetColour()] = Owen11Parameters.mpCellVegfSecretionRate.GetValue("User")
+        normal_and_quiescent_cell_rates[quiescent_cancer_state.GetColour()] = Owen11Parameters.mpCellVegfSecretionRate.GetValue("User")
         normal_and_quiescent_cell_rate_thresholds[quiescent_cancer_state.GetColour()] = 0.0*mole_per_metre_cubed()
-#        normal_and_quiescent_cell_source.SetStateRateMap(normal_and_quiescent_cell_rates)
+        normal_and_quiescent_cell_source.SetStateRateMap(normal_and_quiescent_cell_rates)
         normal_and_quiescent_cell_source.SetLabelName("VEGF")
         normal_and_quiescent_cell_source.SetStateRateThresholdMap(normal_and_quiescent_cell_rate_thresholds)
         vegf_pde.AddDiscreteSource(normal_and_quiescent_cell_source)
@@ -363,6 +386,7 @@ import microvessel_chaste.mesh
 import microvessel_chaste.population.vessel
 import microvessel_chaste.pde
 import microvessel_chaste.simulation
+import microvessel_chaste.visualization
 from microvessel_chaste.utility import * # bring in all units for convenience
 
 class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
@@ -384,6 +408,13 @@ class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite)
 
         grid.Write(file_handler)
 
+        scene = microvessel_chaste.visualization.MicrovesselVtkScene2()
+        #scene.SetRegularGrid(grid)
+        #scene.GetRegularGridActorGenerator().SetVolumeOpacity(0.1)
+        scene.SetIsInteractive(True)
+        scene.SetOutputFilePath(file_handler.GetOutputDirectoryFullPath()+"render")
+        scene.Start()
+
         node1 = microvessel_chaste.population.vessel.VesselNode2.Create(0.0, 400.0, 0.0, reference_length)
         node2 = microvessel_chaste.population.vessel.VesselNode2.Create(2000.0, 400.0, 0.0, reference_length)
         node1.GetFlowProperties().SetIsInputNode(True)
@@ -402,6 +433,9 @@ class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite)
         network.AddVessel(vessel1)
         network.AddVessel(vessel2)
 
+        scene.SetVesselNetwork(network)
+        scene.GetVesselNetworkActorGenerator().SetEdgeSize(20.0)
+        scene.ResetRenderer()
         network.Write(file_handler.GetOutputDirectoryFullPath() + "initial_network.vtp")
 
         cell_population_genenerator = microvessel_chaste.population.cell.Owen11CellPopulationGenerator2()
@@ -410,6 +444,12 @@ class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite)
         tumour_radius = 300.0 * 1.e-6 * metre()
         cell_population_genenerator.SetTumourRadius(tumour_radius)
         cell_population = cell_population_genenerator.Update()
+
+        scene.SetCellPopulation(cell_population)
+        scene.GetCellPopulationActorGenerator().SetPointSize(10)
+        scene.ResetRenderer()
+
+        scene.StartInteractiveEventHandler()
 
         oxygen_pde = microvessel_chaste.pde.LinearSteadyStateDiffusionReactionPde2_2()
         oxygen_pde.SetIsotropicDiffusionConstant(Owen11Parameters.mpOxygenDiffusivity.GetValue("User"))
@@ -441,11 +481,11 @@ class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite)
         quiescent_cancer_state = microvessel_chaste.population.cell.QuiescentCancerCellMutationState()
         normal_cell_state = chaste.cell_based.WildTypeCellMutationState()
 
-#        normal_and_quiescent_cell_rates[normal_cell_state.GetColour()] = Owen11Parameters.mpCellVegfSecretionRate.GetValue("User")
+        normal_and_quiescent_cell_rates[normal_cell_state.GetColour()] = Owen11Parameters.mpCellVegfSecretionRate.GetValue("User")
         normal_and_quiescent_cell_rate_thresholds[normal_cell_state.GetColour()] = 0.27*mole_per_metre_cubed()
-#        normal_and_quiescent_cell_rates[quiescent_cancer_state.GetColour()] = Owen11Parameters.mpCellVegfSecretionRate.GetValue("User")
+        normal_and_quiescent_cell_rates[quiescent_cancer_state.GetColour()] = Owen11Parameters.mpCellVegfSecretionRate.GetValue("User")
         normal_and_quiescent_cell_rate_thresholds[quiescent_cancer_state.GetColour()] = 0.0*mole_per_metre_cubed()
-#        normal_and_quiescent_cell_source.SetStateRateMap(normal_and_quiescent_cell_rates)
+        normal_and_quiescent_cell_source.SetStateRateMap(normal_and_quiescent_cell_rates)
         normal_and_quiescent_cell_source.SetLabelName("VEGF")
         normal_and_quiescent_cell_source.SetStateRateThresholdMap(normal_and_quiescent_cell_rate_thresholds)
         vegf_pde.AddDiscreteSource(normal_and_quiescent_cell_source)

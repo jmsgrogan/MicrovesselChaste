@@ -1,6 +1,6 @@
 import numpy as np
 import vtk
-import chaste_project_Angiogenesis.utility.bases as bases
+import bases
 
 class LocationsToVtkPoints(bases.SimpleIOBase):
     

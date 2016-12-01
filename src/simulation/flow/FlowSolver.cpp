@@ -123,7 +123,6 @@ void FlowSolver<DIM>::SetUp()
         }
     }
 
-    std::cout << "num_connected" << mUnconnectedNodeIndices.size() << std::endl;
     mIsSetUp = true;
     Update(false);
 }
@@ -244,13 +243,10 @@ void FlowSolver<DIM>::Solve()
     // Recover the pressure of the vessel nodes
     ReplicatableVector a(solution);
 
-    std::cout << "****************" << std::endl;
     for (unsigned node_index = 0; node_index < mNodes.size(); node_index++)
     {
-        std::cout << "pressure" << a[node_index] << std::endl;
         mNodes[node_index]->GetFlowProperties()->SetPressure(a[node_index] * unit::pascals);
     }
-    std::cout << "****************" << std::endl;
 
     // Set the segment flow rates and nodal pressures
     for (unsigned vessel_index = 0; vessel_index < mVessels.size(); vessel_index++)

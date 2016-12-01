@@ -45,11 +45,10 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "AbstractCellPopulation.hpp"
 #include "VertexBasedCellPopulation.hpp"
 #include "MeshBasedCellPopulation.hpp"
-#include "UnitCollection.hpp"
 #include "AbstractActorGenerator.hpp"
 
 /**
- * This class generates Vtk actors for CellPopulations
+ * This class generates VTK actors for CellPopulations
  */
 template<unsigned DIM>
 class CellPopulationActorGenerator : public AbstractActorGenerator<DIM>
@@ -58,6 +57,46 @@ class CellPopulationActorGenerator : public AbstractActorGenerator<DIM>
      * The CellPopulation
      */
     boost::shared_ptr<AbstractCellPopulation<DIM> > mpCellPopulation;
+
+    /**
+     * Show mutable mesh edges for Mesh Based populations
+     */
+    bool mShowMutableMeshEdges;
+
+    /**
+     * Show voronoi mesh edges for Mesh and Vertex Based populations
+     */
+    bool mShowVoronoiMeshEdges;
+
+    /**
+     * Show Potts mesh edges for Ca and Potts Based populations
+     */
+    bool mShowPottsMeshEdges;
+
+    /**
+     * Show Potts mesh outlines
+     */
+    bool mShowPottsMeshOutlines;
+
+    /**
+     * Color the cells by type
+     */
+    bool mColorByCellType;
+
+    /**
+     * Color the cells by data
+     */
+    bool mColorByCellData;
+
+    /**
+     * Whether to show the cell centres
+     */
+    bool mShowCellCentres;
+
+    /**
+     * Color cells using a user defined color
+     */
+    bool mColorCellByUserDefined;
 
 public:
 
@@ -78,10 +117,28 @@ public:
     void AddActor(vtkSmartPointer<vtkRenderer> pRenderer);
 
     /**
-     * Add the CellPopulation actor to the renderer
+     * Specialized class for adding Mesh based population
      * @param pRenderer the current renderer
      */
     void AddMeshBasedCellPopulationActor(vtkSmartPointer<vtkRenderer> pRenderer);
+
+    /**
+     * Specialized class for adding Mesh based population
+     * @param pRenderer the current renderer
+     */
+    void AddVertexBasedCellPopulationActor(vtkSmartPointer<vtkRenderer> pRenderer);
+
+    /**
+     * Specialized class for adding Ca based population
+     * @param pRenderer the current renderer
+     */
+    void AddCaBasedCellPopulationActor(vtkSmartPointer<vtkRenderer> pRenderer);
+
+    /**
+     * Specialized class for adding Potts based population
+     * @param pRenderer the current renderer
+     */
+    void AddPottsBasedCellPopulationActor(vtkSmartPointer<vtkRenderer> pRenderer);
 
     /**
      * Set the CellPopulation
@@ -89,6 +146,46 @@ public:
      */
     void SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation);
 
+    /**
+     * @param showEdges show the voronoi mesh
+     */
+    void SetShowVoronoiMeshEdges(bool showEdges);
+
+    /**
+     * @param showEdges show the mutable mesh
+     */
+    void SetShowMutableMeshEdges(bool showEdges);
+
+    /**
+     * @param showEdges show the potts mesh
+     */
+    void SetShowPottsMeshEdges(bool showEdges);
+
+    /**
+     * @param showOutlines show the outlines of Potts cells
+     */
+    void SetShowPottsMeshOutlines(bool showOutlines);
+
+    /**
+     * @param colorByCellType color cells by type
+     */
+    void SetColorByCellType(bool colorByCellType);
+
+    /**
+     * @param colorByCellType color cells by the user defined point color
+     */
+    void SetColorByUserDefined(bool colorByCellUserDefined);
+
+
+    /**
+     * @param colorByCellData color cells by data
+     */
+    void SetColorByCellData(bool colorByCellData);
+
+    /**
+     * @param showCentres show cell centres
+     */
+    void SetShowCellCentres(bool showCentres);
 };
 
 #endif /* CELLPOPULATIONACTORGENERATOR_HPP_*/

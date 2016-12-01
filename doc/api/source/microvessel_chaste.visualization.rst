@@ -1,34 +1,6 @@
 microvessel_chaste.visualization package
 ========================================
 
-Submodules
-----------
-
-microvessel_chaste.visualization.mpl_scene module
--------------------------------------------------
-
-.. automodule:: microvessel_chaste.visualization.mpl_scene
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-microvessel_chaste.visualization.viewer module
-----------------------------------------------
-
-.. automodule:: microvessel_chaste.visualization.viewer
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-microvessel_chaste.visualization.vtk_scene module
--------------------------------------------------
-
-.. automodule:: microvessel_chaste.visualization.vtk_scene
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
 Module contents
 ---------------
 
@@ -36,3 +8,47 @@ Module contents
     :members:
     :undoc-members:
     :show-inheritance:
+    
+.. autoclass:: microvessel_chaste.visualization.MicrovesselVtkScene2
+        :members:
+
+.. autoclass:: microvessel_chaste.visualization.CellPopulationActorGenerator2
+        :members:
+
+.. autoclass:: microvessel_chaste.visualization.DiscreteContinuumMeshActorGenerator2
+        :members:
+
+.. autoclass:: microvessel_chaste.visualization.RegularGridActorGenerator2
+        :members:
+
+.. autoclass:: microvessel_chaste.visualization.VesselNetworkActorGenerator2
+        :members:
+
+.. autoclass:: microvessel_chaste.visualization.PartActorGenerator2
+        :members:
+
+.. autoclass:: microvessel_chaste.visualization.AbstractActorGenerator2
+        :members:
+
+.. autoclass:: microvessel_chaste.visualization.MicrovesselVtkScene3
+        :members:
+
+.. autoclass:: microvessel_chaste.visualization.CellPopulationActorGenerator3
+        :members:
+
+.. autoclass:: microvessel_chaste.visualization.DiscreteContinuumMeshActorGenerator3
+        :members:
+
+.. autoclass:: microvessel_chaste.visualization.RegularGridActorGenerator3
+        :members:
+
+.. autoclass:: microvessel_chaste.visualization.VesselNetworkActorGenerator3
+        :members:
+
+.. autoclass:: microvessel_chaste.visualization.PartActorGenerator3
+        :members:
+
+.. autoclass:: microvessel_chaste.visualization.AbstractActorGenerator3
+        :members:
+
+

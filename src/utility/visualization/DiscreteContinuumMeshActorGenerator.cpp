@@ -58,6 +58,9 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkPolygon.h>
 #include <vtkIdList.h>
 #include <vtkFeatureEdges.h>
+#include <vtkScalarBarActor.h>
+#include <vtkColorTransferFunction.h>
+#include <vtkTextProperty.h>
 #include "UblasIncludes.hpp"
 #include "UblasVectorInclude.hpp"
 #include "Exception.hpp"
@@ -95,17 +98,74 @@ void DiscreteContinuumMeshActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRende
             p_geom_filter->SetInputData(p_grid);
         #endif
 
+        p_geom_filter->Update();
+
+        vtkSmartPointer<vtkColorTransferFunction> p_scaled_ctf = vtkSmartPointer<vtkColorTransferFunction>::New();
+        if(!this->mDataLabel.empty())
+        {
+            double range[2];
+            p_grid->GetPointData()->GetArray(this->mDataLabel.c_str())->GetRange(range);
+            for(unsigned idx=0; idx<256; idx++)
+            {
+                double color[3];
+                this->mpColorTransferFunction->GetColor(double(idx)/255.0, color);
+                p_scaled_ctf->AddRGBPoint(range[0] + double(idx)*(range[1]-range[0])/255.0, color[0], color[1], color[2]);
+            }
+        }
+
         vtkSmartPointer<vtkPolyDataMapper> p_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
         #if VTK_MAJOR_VERSION <= 5
             p_mapper->SetInput(p_geom_filter->GetOutput());
         #else
             p_mapper->SetInputData(p_geom_filter->GetOutput());
         #endif
+        if(!this->mDataLabel.empty())
+        {
+            p_mapper->SetLookupTable(p_scaled_ctf);
+            p_mapper->ScalarVisibilityOn();
+            p_mapper->SelectColorArray(this->mDataLabel.c_str());
+            p_mapper->SetScalarModeToUsePointFieldData();
+            p_mapper->SetColorModeToMapScalars();
+        }
 
         vtkSmartPointer<vtkActor> p_actor = vtkSmartPointer<vtkActor>::New();
         p_actor->SetMapper(p_mapper);
-        p_actor->GetProperty()->SetColor(0,0,1);
+        if(this->mShowEdges)
+        {
+            p_actor->GetProperty()->SetEdgeVisibility(1);
+            p_actor->GetProperty()->SetLineWidth(this->mEdgeSize);
+            p_actor->GetProperty()->SetColor(this->mEdgeColor[0]/255.0, this->mEdgeColor[1]/255.0, this->mEdgeColor[2]/255.0);
+        }
+
+        if(this->mDataLabel.empty())
+        {
+            p_actor->GetProperty()->SetColor(this->mVolumeColor[0],this->mVolumeColor[1], this->mVolumeColor[2]);
+        }
+
+        p_actor->GetProperty()->SetOpacity(this->mVolumeOpacity);
         pRenderer->AddActor(p_actor);
+
+        if(!this->mDataLabel.empty())
+        {
+            vtkSmartPointer<vtkScalarBarActor> p_scale_bar = vtkSmartPointer<vtkScalarBarActor>::New();
+            p_scale_bar->SetLookupTable(p_scaled_ctf);
+            p_scale_bar->SetTitle(this->mDataLabel.c_str());
+            p_scale_bar->SetOrientationToHorizontal();
+            p_scale_bar->GetPositionCoordinate()->SetCoordinateSystemToNormalizedViewport();
+            p_scale_bar->GetPositionCoordinate()->SetValue(0.25, 0.84);
+            p_scale_bar->SetWidth(0.5);
+            p_scale_bar->SetHeight(0.1);
+            p_scale_bar->GetTitleTextProperty()->ItalicOff();
+            p_scale_bar->GetLabelTextProperty()->ItalicOff();
+            p_scale_bar->GetTitleTextProperty()->BoldOff();
+            p_scale_bar->GetLabelTextProperty()->BoldOff();
+            p_scale_bar->SetLabelFormat("%.2g");
+            p_scale_bar->GetTitleTextProperty()->SetFontSize(5.0);
+            p_scale_bar->GetLabelTextProperty()->SetFontSize(5.0);
+            p_scale_bar->GetTitleTextProperty()->SetColor(0.0, 0.0, 0.0);
+            p_scale_bar->GetLabelTextProperty()->SetColor(0.0, 0.0, 0.0);
+            pRenderer->AddActor(p_scale_bar);
+        }
     }
 }
 

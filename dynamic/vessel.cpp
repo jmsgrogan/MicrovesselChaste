@@ -5970,6 +5970,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
                 , ( bp::arg("rFileName") ) );
         
         }
+        { //::VesselNetworkReader< 2 >::SetMergeCoincidentPoints
+        
+            typedef VesselNetworkReader< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetMergeCoincidentPoints_function_type)( bool ) ;
+            
+            VesselNetworkReader2_exposer.def( 
+                "SetMergeCoincidentPoints"
+                , SetMergeCoincidentPoints_function_type( &::VesselNetworkReader< 2 >::SetMergeCoincidentPoints )
+                , ( bp::arg("mergePoints") ) );
+        
+        }
         { //::VesselNetworkReader< 2 >::SetRadiusArrayName
         
             typedef VesselNetworkReader< 2 > exported_class_t;
@@ -5990,6 +6001,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
                 "SetReferenceLengthScale"
                 , SetReferenceLengthScale_function_type( &::VesselNetworkReader< 2 >::SetReferenceLengthScale )
                 , ( bp::arg("rReferenceLength") ) );
+        
+        }
+        { //::VesselNetworkReader< 2 >::SetTargetSegmentLength
+        
+            typedef VesselNetworkReader< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetTargetSegmentLength_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            VesselNetworkReader2_exposer.def( 
+                "SetTargetSegmentLength"
+                , SetTargetSegmentLength_function_type( &::VesselNetworkReader< 2 >::SetTargetSegmentLength )
+                , ( bp::arg("targetSegmentLength") ) );
         
         }
         VesselNetworkReader2_exposer.staticmethod( "Create" );
@@ -6031,6 +6053,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
                 , ( bp::arg("rFileName") ) );
         
         }
+        { //::VesselNetworkReader< 3 >::SetMergeCoincidentPoints
+        
+            typedef VesselNetworkReader< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetMergeCoincidentPoints_function_type)( bool ) ;
+            
+            VesselNetworkReader3_exposer.def( 
+                "SetMergeCoincidentPoints"
+                , SetMergeCoincidentPoints_function_type( &::VesselNetworkReader< 3 >::SetMergeCoincidentPoints )
+                , ( bp::arg("mergePoints") ) );
+        
+        }
         { //::VesselNetworkReader< 3 >::SetRadiusArrayName
         
             typedef VesselNetworkReader< 3 > exported_class_t;
@@ -6051,6 +6084,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
                 "SetReferenceLengthScale"
                 , SetReferenceLengthScale_function_type( &::VesselNetworkReader< 3 >::SetReferenceLengthScale )
                 , ( bp::arg("rReferenceLength") ) );
+        
+        }
+        { //::VesselNetworkReader< 3 >::SetTargetSegmentLength
+        
+            typedef VesselNetworkReader< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetTargetSegmentLength_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            VesselNetworkReader3_exposer.def( 
+                "SetTargetSegmentLength"
+                , SetTargetSegmentLength_function_type( &::VesselNetworkReader< 3 >::SetTargetSegmentLength )
+                , ( bp::arg("targetSegmentLength") ) );
         
         }
         VesselNetworkReader3_exposer.staticmethod( "Create" );

@@ -126,6 +126,11 @@ class DiscreteContinuumMesh : public TetrahedralMesh<ELEMENT_DIM, SPACE_DIM>
      */
     units::quantity<unit::length> mCellPopulationReferenceLength;
 
+    /**
+     * Optional nodal data
+     */
+    std::vector<double> mNodalData;
+
 public:
 
     /**

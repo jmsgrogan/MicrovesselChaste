@@ -33,10 +33,50 @@
 """
 
 import sys
+sys.setrecursionlimit(3000) # Avoid: RuntimeError: maximum recursion depth exceeded in cmp
 from pyplusplus import module_builder
-from pyplusplus.module_builder import call_policies
+from pyplusplus.module_builder import call_policies, file_cache_t
+from pyplusplus import messages
 import doxygen_extractor
 from pygccxml import parser
+
+chaste_license = """
+/*
+
+Copyright (c) 2005-2016, University of Oxford.
+All rights reserved.
+
+University of Oxford means the Chancellor, Masters and Scholars of the
+University of Oxford, having an administrative office at Wellington
+Square, Oxford OX1 2JD, UK.
+
+This file is part of Chaste.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+ * Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+ * Neither the name of the University of Oxford nor the names of its
+   contributors may be used to endorse or promote products derived from this
+   software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*/
+"""
+
 
 def template_replace(class_name):
 
@@ -84,11 +124,19 @@ def pypp_template_name_fix(module_file):
         for line in lines:
             outfile.write(line)     
             
-def do_module(module_name, builder):
+def do_module(module_name, builder, work_dir):
     
     # Set up the builder with module specifc classes
     this_module = __import__("generate_" + module_name)
-    return this_module.update_builder(builder)
+    builder, class_names = this_module.update_builder(builder)
+    
+    # Write the class names to file
+    f = open(work_dir + '/'+ module_name +'_class_names_for_doc.txt','w')
+    for eachClass in class_names:
+        f.write('.. autoclass:: microvessel_chaste.'+module_name+'.'+eachClass + '\n\t:members:\n\n')
+    f.close()
+        
+    return builder
        
 def generate_wrappers(args):
     module_name = args[1]
@@ -109,16 +157,17 @@ def generate_wrappers(args):
                                                 include_paths = includes,
                                                 indexing_suite_version=2)
     
+    messages.disable(messages.W1040) # unexposed declaration
+    messages.disable(messages.W1031) # user to expose non public member function
+   
     # Don't wrap std library
     builder.global_ns.namespace('std').exclude()
     builder.global_ns.exclude()
     
     # Set up the builder for each module
-    builder = do_module(module_name, builder)
+    builder = do_module(module_name, builder, work_dir + "/dynamic/")
     
     # Make the wrapper code
-#     builder.build_code_creator(module_name="_chaste_project_MicrovesselChaste_" + module_name, 
-#                                doc_extractor=doxygen_extractor.doxygen_doc_extractor())
     builder.build_code_creator(module_name="_chaste_project_MicrovesselChaste_" + module_name)
     builder.code_creator.user_defined_directories.append(work_dir + "/dynamic/wrapper_headers/")
     builder.write_module(work_dir + "/dynamic/" + module_name + ".cpp")

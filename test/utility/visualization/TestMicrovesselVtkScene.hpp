@@ -33,8 +33,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef TESTMicrovesselVtkScene_HPP_
-#define TESTMicrovesselVtkScene_HPP_
+#ifndef TESTMICROVESSELVTKSCENE_HPP_
+#define TESTMICROVESSELVTKSCENE_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include "SmartPointers.hpp"
@@ -137,10 +137,11 @@ public:
         MicrovesselVtkScene<3> scene1;
         scene1.SetVesselNetwork(p_network);
 
-        scene1.GetVesselNetworkActorGenerator()->SetShowPoints(false);
+        scene1.GetVesselNetworkActorGenerator()->SetShowPoints(true);
         scene1.GetVesselNetworkActorGenerator()->SetShowVolume(true);
         scene1.GetVesselNetworkActorGenerator()->SetShowEdges(false);
         scene1.GetVesselNetworkActorGenerator()->SetEdgeSize(10.0);
+        scene1.GetVesselNetworkActorGenerator()->SetPointSize(15.0);
         scene1.GetVesselNetworkActorGenerator()->SetDataLabel("Node Id");
 
         scene1.SetIsInteractive(false);

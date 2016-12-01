@@ -46,6 +46,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "AbstractCellPopulation.hpp"
 #include "AngiogenesisSolver.hpp"
 #include "RegressionSolver.hpp"
+#include "AbstractMicrovesselModifier.hpp"
 
 /**
  * This class manages the solution of vascular tumour growth problems. It steps through time,
@@ -101,6 +102,16 @@ class MicrovesselSolver
      */
     bool mUpdatePdeEachSolve;
 
+    /**
+     * A collection of modifiers for the solver
+     */
+    std::vector<boost::shared_ptr<AbstractMicrovesselModifier<DIM> > > mMicrovesselModifiers;
+
+    /**
+     * A cell population
+     */
+    boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > mpCellPopulation;
+
 public:
 
     /**
@@ -124,6 +135,12 @@ public:
      * @param pDiscreteContinuumSolver a discrete-continuum solver
      */
     void AddDiscreteContinuumSolver(boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pDiscreteContinuumSolver);
+
+    /**
+     * Add a MicrovesselModifier to the collection
+     * @param pMicrovesselModifier a microvessel modifier
+     */
+    void AddMicrovesselModifier(boost::shared_ptr<AbstractMicrovesselModifier<DIM> > pMicrovesselModifier);
 
     /**
      * Return the current DiscreteContinuum solvers
@@ -199,6 +216,12 @@ public:
      * @param pNetwork the vessel network
      */
     void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+
+    /**
+     * Set the cell population, only needed for visualization
+     * @param pCellPopulation the cell population
+     */
+    void SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > pCellPopulation);
 
     /**
      * Set the regression solver

@@ -35,14 +35,20 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include "MicrovesselSolver.hpp"
 #include "MicrovesselSimulationModifier.hpp"
+#include "AbstractMicrovesselModifier.hpp"
+#include "VtkSceneMicrovesselModifier.hpp"
 #include "Owen2011TrackingModifier.hpp"
 #include "AbstractCellBasedSimulationModifier.hpp"
 
 template class MicrovesselSolver<3>;
 template class MicrovesselSimulationModifier<3>;
+template class AbstractMicrovesselModifier<3>;
+template class VtkSceneMicrovesselModifier<3>;
 template class Owen2011TrackingModifier<3>;
 template class MicrovesselSolver<2>;
 template class MicrovesselSimulationModifier<2>;
+template class AbstractMicrovesselModifier<2>;
+template class VtkSceneMicrovesselModifier<2>;
 template class Owen2011TrackingModifier<2>;
 template class AbstractCellBasedSimulationModifier<2, 2>;
 template class AbstractCellBasedSimulationModifier<3, 3>;

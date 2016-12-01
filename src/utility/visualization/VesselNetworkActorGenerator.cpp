@@ -114,33 +114,33 @@ void VesselNetworkActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRenderer> pRe
         }
         if(this->mShowPoints)
         {
-            vtkSmartPointer<vtkSphereSource> p_sheres = vtkSmartPointer<vtkSphereSource>::New();
-            p_sheres->SetRadius(this->mPointSize);
-            p_sheres->SetPhiResolution(16);
-            p_sheres->SetThetaResolution(16);
+            vtkSmartPointer<vtkSphereSource> p_spheres = vtkSmartPointer<vtkSphereSource>::New();
+            p_spheres->SetRadius(this->mPointSize);
+            p_spheres->SetPhiResolution(16);
+            p_spheres->SetThetaResolution(16);
 
-            vtkSmartPointer<vtkGlyph3D> p_shere_glyphs = vtkSmartPointer<vtkGlyph3D>::New();
+            vtkSmartPointer<vtkGlyph3D> p_glyph = vtkSmartPointer<vtkGlyph3D>::New();
             #if VTK_MAJOR_VERSION <= 5
-                p_shere_glyphs->SetInput(p_polydata);
-                p_shere_glyphs->SetSource(p_sheres->GetOutput());
+                p_glyph->SetInput(p_polydata);
+                p_glyph->SetSource(p_spheres->GetOutput());
             #else
-                p_shere_glyphs->SetInputData(p_polydata);
-                p_shere_glyphs->SetSourceData(p_sheres->GetOutput());
+                p_glyph->SetInputData(p_polydata);
+                p_glyph->SetSourceConnection(p_spheres->GetOutputPort());
             #endif
-            p_shere_glyphs->ClampingOff();
-            p_shere_glyphs->SetScaleModeToScaleByScalar();
-            p_shere_glyphs->SetScaleFactor(1.0);
+            p_glyph->ClampingOff();
+            p_glyph->SetScaleModeToScaleByScalar();
+            p_glyph->SetScaleFactor(1.0);
+            p_glyph->Update();
 
-            vtkSmartPointer<vtkPolyDataMapper> p_polydata_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+            vtkSmartPointer<vtkPolyDataMapper> p_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
             #if VTK_MAJOR_VERSION <= 5
-                p_polydata_mapper->SetInput(p_shere_glyphs->GetOutput());
+                p_mapper->SetInput(p_glyph->GetOutput());
             #else
-                p_polydata_mapper->SetInputData(p_shere_glyphs->GetOutput());
+                p_mapper->SetInputData(p_glyph->GetOutput());
             #endif
-            p_polydata_mapper->ScalarVisibilityOn();
 
             vtkSmartPointer<vtkActor> p_actor = vtkSmartPointer<vtkActor>::New();
-            p_actor->SetMapper(p_polydata_mapper);
+            p_actor->SetMapper(p_mapper);
             p_actor->GetProperty()->SetColor(this->mPointColor[0]/255.0, this->mPointColor[1]/255.0, this->mPointColor[2]/255.0);
             pRenderer->AddActor(p_actor);
         }
@@ -153,11 +153,6 @@ void VesselNetworkActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRenderer> pRe
             #else
                 p_polydata_mapper2->SetInputData(p_polydata);
             #endif
-            p_polydata_mapper2->ScalarVisibilityOn();
-            if(!this->mDataLabel.empty())
-            {
-                p_polydata_mapper2->SetLookupTable(p_scaled_ctf);
-            }
 
             vtkSmartPointer<vtkActor> p_actor2 = vtkSmartPointer<vtkActor>::New();
             p_actor2->SetMapper(p_polydata_mapper2);
@@ -174,7 +169,7 @@ void VesselNetworkActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRenderer> pRe
                 p_tubes->SetInputData(p_polydata);
             #endif
             p_tubes->SetRadius(this->mEdgeSize);
-            p_tubes->SetNumberOfSides(12);
+            p_tubes->SetNumberOfSides(16);
 
             vtkSmartPointer<vtkPolyDataMapper> p_tube_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
             p_tube_mapper->SetInputConnection(p_tubes->GetOutputPort());
@@ -216,7 +211,6 @@ void VesselNetworkActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRenderer> pRe
                 p_scale_bar->GetLabelTextProperty()->SetFontSize(5.0);
                 p_scale_bar->GetTitleTextProperty()->SetColor(0.0, 0.0, 0.0);
                 p_scale_bar->GetLabelTextProperty()->SetColor(0.0, 0.0, 0.0);
-
                 pRenderer->AddActor(p_scale_bar);
             }
         }

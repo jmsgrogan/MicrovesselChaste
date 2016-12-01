@@ -56,6 +56,7 @@ import microvessel_chaste.mesh
 import microvessel_chaste.population.vessel
 import microvessel_chaste.pde
 import microvessel_chaste.simulation
+import microvessel_chaste.visualization
 from microvessel_chaste.utility import * # bring in all units for convenience
 
 class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
@@ -66,13 +67,31 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         ## Set up output file management and seed the random number generator.
         ##
         
-        file_handler = chaste.core.OutputFileHandler("Python/TestLatticeBasedAngiogenesisLiteratePaper")
+        file_handler = chaste.core.OutputFileHandler("Python/TestBiologicalNetworkLiteratePaper")
         chaste.core.RandomNumberGenerator.Instance().Reseed(12345)
+        
+        ##
+        ## This component uses explicit dimensions for all quantities, but interfaces with solvers which take
+        ## non-dimensional inputs. The `BaseUnits` singleton takes time, length and mass reference scales to
+        ## allow non-dimensionalisation when sending quantities to external solvers and re-dimensionalisation of
+        ## results. For our purposes microns for length and hours for time are suitable base units.
+        ##
+        
+        reference_length = 1.e-6*metre()
+        reference_time = 3600.0*second()
+        reference_concentration = 1.e-6*mole_per_metre_cubed()
+        BaseUnits.Instance().SetReferenceLengthScale(reference_length)
+        BaseUnits.Instance().SetReferenceTimeScale(reference_time)
+        BaseUnits.Instance().SetReferenceConcentrationScale(reference_concentration)
         
         ## Read a vessel network derived from biological images from file
         
         vessel_reader = microvessel_chaste.population.vessel.VesselNetworkReader3()
-        vessel_reader.SetFileName("/home/grogan/bio_original.vtp")
+        file_finder = chaste.core.FileFinder("/projects/MicrovesselChaste/test/data/bio_original.vtp", 
+                                             chaste.core.RelativeTo.ChasteSourceRoot)
+        vessel_reader.SetFileName(file_finder.GetAbsolutePath())
+        #vessel_reader.SetMergeCoincidentPoints(True)
+        #vessel_reader.SetTargetSegmentLength(40.0e-6*metre())
         network = vessel_reader.Read()
         
         ## The vessel network may contain short vessels due to image processing artifacts, 
@@ -83,13 +102,20 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         short_vessel_cutoff = 40.0e-6 * metre()
         remove_end_vessels_only = True
         network.RemoveShortVessels(short_vessel_cutoff, remove_end_vessels_only)
+        network.UpdateAll()
         network.MergeCoincidentNodes()
+        network.UpdateAll()
 
-        
         ## Write the modified network to file for inspection
         
         network.Write(file_handler.GetOutputDirectoryFullPath() + "cleaned_network.vtp")
         
+        scene = microvessel_chaste.visualization.MicrovesselVtkScene3()
+        scene.SetIsInteractive(True)
+        scene.SetOutputFilePath(file_handler.GetOutputDirectoryFullPath()+"render")
+        scene.SetVesselNetwork(network)
+        scene.GetVesselNetworkActorGenerator().SetEdgeSize(20.0)
+
         ## Simulating tumour growth for the entire network would be prohibitive for this tutorial, so
         ## we sample a small region. We can use some geometry tools to help.
         cylinder = microvessel_chaste.geometry.Part3()
@@ -100,15 +126,15 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         cylinder.BooleanWithNetwork(network)
         
         network.Write(file_handler.GetOutputDirectoryFullPath() + "cleaned_cut_network.vtp")
-        
+
         ##
         ## We are ready to simulate tumour growth and angiogenesis. We will use a regular lattice for
         ## this purpose. We size and position the lattice according to the bounds of the vessel network.
         ## 
         
         #network_bounding_box = network.GetExtents()
-        network_bounding_box = [microvessel_chaste.mesh.DimensionalChastePoint3(1200.0, 1600.0, -20.0, 1.e-6*metre()),
-                                microvessel_chaste.mesh.DimensionalChastePoint3(3200.0, 3000.0, 370.0, 1.e-6*metre())]
+        network_bounding_box = [microvessel_chaste.mesh.DimensionalChastePoint3(1500.0, 1600.0, -10.0, 1.e-6*metre()),
+                                microvessel_chaste.mesh.DimensionalChastePoint3(3100.0, 3000.0, 300.0, 1.e-6*metre())]
         grid = microvessel_chaste.mesh.RegularGrid3()
         grid_spacing = 40.0e-6* metre()
         grid.SetSpacing(grid_spacing)
@@ -120,14 +146,15 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         extents = [int(x)+1 for x in extents] # snap to the nearest unit, overestimate size if needed
  
         grid.SetExtents(extents)
-        network.Translate(microvessel_chaste.mesh.DimensionalChastePoint3(-1200.0, -1600.0, +20.0, 1.e-6*metre()))
+        network.Translate(microvessel_chaste.mesh.DimensionalChastePoint3(-1500.0, -1600.0, +10.0, 1.e-6*metre()))
          
         ##
         ## We can write the lattice to file for quick visualization.
         ##
          
         grid.Write(file_handler) 
-               
+        scene.SetRegularGrid(grid)
+             
         ##
         ## Next we set the inflow and outflow boundary conditions for blood flow. Because the network connectivity
         ## is relatively low we assign all vessels near the top of the domain (z coord) as inflows and the bottom
@@ -136,10 +163,10 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
          
         for eachNode in network.GetNodes():
             if eachNode.GetNumberOfSegments() == 1:
-                if abs(eachNode.rGetLocation().GetLocation(1.e-6*metre())[2] - network_bounding_box[1].GetLocation(1.e-6*metre())[2]) < 40.0:
+                if abs(eachNode.rGetLocation().GetLocation(1.e-6*metre())[2] - network_bounding_box[1].GetLocation(1.e-6*metre())[2]) < 80.0:
                     eachNode.GetFlowProperties().SetIsInputNode(True)
                     eachNode.GetFlowProperties().SetPressure(Owen11Parameters.mpInletPressure.GetValue("User"))
-                elif abs(eachNode.rGetLocation().GetLocation(1.e-6*metre())[2] - network_bounding_box[0].GetLocation(1.e-6*metre())[2]) < 40.0:
+                elif abs(eachNode.rGetLocation().GetLocation(1.e-6*metre())[2] - network_bounding_box[0].GetLocation(1.e-6*metre())[2]) < 80.0:
                     eachNode.GetFlowProperties().SetIsOutputNode(True);
                     eachNode.GetFlowProperties().SetPressure(Owen11Parameters.mpOutletPressure.GetValue("User"))
          
@@ -162,6 +189,8 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         cell_population_genenerator.SetTumourRadius(tumour_radius)
         cell_population = cell_population_genenerator.Update()
 
+        #scene.Start()
+        #scene.StartInteractiveEventHandler()
         ##
         ## At this point the simulation domain will look as follows:
         ##
@@ -223,11 +252,11 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         quiescent_cancer_state = microvessel_chaste.population.cell.QuiescentCancerCellMutationState()
         normal_cell_state = chaste.cell_based.WildTypeCellMutationState()
  
-#        normal_and_quiescent_cell_rates[normal_cell_state.GetColour()] = Owen11Parameters.mpCellVegfSecretionRate.GetValue("User")
+        normal_and_quiescent_cell_rates[normal_cell_state.GetColour()] = Owen11Parameters.mpCellVegfSecretionRate.GetValue("User")
         normal_and_quiescent_cell_rate_thresholds[normal_cell_state.GetColour()] = 0.27*mole_per_metre_cubed()
-#        normal_and_quiescent_cell_rates[quiescent_cancer_state.GetColour()] = Owen11Parameters.mpCellVegfSecretionRate.GetValue("User")
+        normal_and_quiescent_cell_rates[quiescent_cancer_state.GetColour()] = Owen11Parameters.mpCellVegfSecretionRate.GetValue("User")
         normal_and_quiescent_cell_rate_thresholds[quiescent_cancer_state.GetColour()] = 0.0*mole_per_metre_cubed()
-#        normal_and_quiescent_cell_source.SetStateRateMap(normal_and_quiescent_cell_rates)
+        normal_and_quiescent_cell_source.SetStateRateMap(normal_and_quiescent_cell_rates)
         normal_and_quiescent_cell_source.SetLabelName("VEGF")
         normal_and_quiescent_cell_source.SetStateRateThresholdMap(normal_and_quiescent_cell_rate_thresholds)
         vegf_pde.AddDiscreteSource(normal_and_quiescent_cell_source)
@@ -302,6 +331,7 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
          
         angiogenesis_solver = microvessel_chaste.simulation.AngiogenesisSolver3()
         sprouting_rule = microvessel_chaste.simulation.Owen2011SproutingRule3()
+        sprouting_rule.SetSproutingProbability(1.e-4*per_second())
         migration_rule = microvessel_chaste.simulation.Owen2011MigrationRule3()
         angiogenesis_solver.SetMigrationRule(migration_rule)
         angiogenesis_solver.SetSproutingRule(sprouting_rule)
@@ -318,10 +348,10 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         microvessel_solver.SetVesselNetwork(network)
         microvessel_solver.SetOutputFrequency(5)
         microvessel_solver.AddDiscreteContinuumSolver(oxygen_solver)
-#        microvessel_solver.AddDiscreteContinuumSolver(vegf_solver)
+        microvessel_solver.AddDiscreteContinuumSolver(vegf_solver)
         microvessel_solver.SetStructuralAdaptationSolver(structural_adaptation_solver)
         microvessel_solver.SetRegressionSolver(regression_solver)
-#        microvessel_solver.SetAngiogenesisSolver(angiogenesis_solver)
+        microvessel_solver.SetAngiogenesisSolver(angiogenesis_solver)
          
         ##
         ## The microvessel solution modifier will link the vessel and cell solvers. We need to explicitly tell is
@@ -332,7 +362,7 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         microvessel_modifier.SetMicrovesselSolver(microvessel_solver)
         update_labels = microvessel_chaste.simulation.VecString()
         update_labels.append("oxygen")
-#        update_labels.append("VEGF_Extracellular")
+        update_labels.append("VEGF_Extracellular")
         microvessel_modifier.SetCellDataUpdateLabels(update_labels)
          
         ##
@@ -360,7 +390,7 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         ## Set up the remainder of the simulation
         ##
          
-        simulator.SetOutputDirectory("Python/TestLatticeBasedAngiogenesisLiteratePaper")
+        simulator.SetOutputDirectory("Python/TestBiologicalNetworkLiteratePaper")
         simulator.SetSamplingTimestepMultiple(5)
         simulator.SetDt(0.5)
          
@@ -369,7 +399,7 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         ## preferred. The end time used in Owen et al. 2011 is 4800 hours.
         ##
          
-        simulator.SetEndTime(20.0)
+        simulator.SetEndTime(100.0)
          
         ##
         ## Do the solve. A sample solution is shown at the top of this test.

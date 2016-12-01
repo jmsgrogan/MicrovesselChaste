@@ -108,7 +108,7 @@ public:
 Set up output file management and seed the random number generator.
 
 ```cpp
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestLatticeBasedAngiogenesisLiteratePaper"));
+        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestBiologicalNetworkLiteratePaper"));
         RandomNumberGenerator::Instance()->Reseed(12345);
 ```
 
@@ -129,12 +129,12 @@ results. For our purposes microns for length and hours for time are suitable bas
 Read a vessel network derived from biological images from file
 
 ```cpp
-		boost::shared_ptr<VesselNetworkReader<3> > p_vessel_reader =
-				boost::shared_ptr<VesselNetworkReader<3> >(new VesselNetworkReader<3> );
-		p_vessel_reader->SetFileName("/home/grogan/bio_original.vtp");
-		p_vessel_reader->SetMergeCoincidentPoints(true);
-		p_vessel_reader->SetTargetSegmentLength(40.0e-6*unit::metres);
-		boost::shared_ptr<VesselNetwork<3> >  p_network = p_vessel_reader->Read();
+        boost::shared_ptr<VesselNetworkReader<3> > p_vessel_reader =
+                boost::shared_ptr<VesselNetworkReader<3> >(new VesselNetworkReader<3> );
+        p_vessel_reader->SetFileName("/home/grogan/bio_original.vtp");
+        p_vessel_reader->SetMergeCoincidentPoints(true);
+        p_vessel_reader->SetTargetSegmentLength(40.0e-6*unit::metres);
+        boost::shared_ptr<VesselNetwork<3> >  p_network = p_vessel_reader->Read();
 
 ```
 The vessel network may contain short vessels due to image processing artifacts,
@@ -143,39 +143,39 @@ to other vessels at both ends. Note that units are explicitly specified for all 
 ok to allow some small disconnected regions to remain for our purposes.
 
 ```cpp
-		units::quantity<unit::length> short_vessel_cutoff = 40.0e-6 * unit::metres;
-		bool remove_end_vessels_only = true;
-		p_network->RemoveShortVessels(short_vessel_cutoff, remove_end_vessels_only);
-		p_network->UpdateAll();
-		p_network->MergeCoincidentNodes();
-		p_network->UpdateAll();
-
+        units::quantity<unit::length> short_vessel_cutoff = 40.0e-6 * unit::metres;
+        bool remove_end_vessels_only = true;
+        p_network->RemoveShortVessels(short_vessel_cutoff, remove_end_vessels_only);
+        p_network->UpdateAll();
+        p_network->MergeCoincidentNodes();
+        p_network->UpdateAll();
 ```
+
 Write the modified network to file for inspection
 
 ```cpp
-		p_network->Write(p_handler->GetOutputDirectoryFullPath() + "cleaned_network.vtp");
+        p_network->Write(p_handler->GetOutputDirectoryFullPath() + "cleaned_network.vtp");
 ```
 Simulating tumour growth for the entire network would be prohibitive for this tutorial, so
 we sample a small region. We can use some geometry tools to help.
 
 ```cpp
-		boost::shared_ptr<Part<3> > p_cylinder = Part<3>::Create();
-		DimensionalChastePoint<3> centre(2300.0, 2300.0, -5.0, 1.e-6*unit::metres);
-		units::quantity<unit::length> radius = 600.0e-6*unit::metres;
-		units::quantity<unit::length> depth = 205.e-6*unit::metres;
-		p_cylinder->AddCylinder(radius, depth, centre, 24);
-		p_cylinder->BooleanWithNetwork(p_network);
-		p_network->Write(p_handler->GetOutputDirectoryFullPath() + "cleaned_cut_network.vtp");
+        boost::shared_ptr<Part<3> > p_cylinder = Part<3>::Create();
+        DimensionalChastePoint<3> centre(2300.0, 2300.0, -5.0, 1.e-6*unit::metres);
+        units::quantity<unit::length> radius = 600.0e-6*unit::metres;
+        units::quantity<unit::length> depth = 205.e-6*unit::metres;
+        p_cylinder->AddCylinder(radius, depth, centre, 24);
+        p_cylinder->BooleanWithNetwork(p_network);
+        p_network->Write(p_handler->GetOutputDirectoryFullPath() + "cleaned_cut_network.vtp");
 ```
 
 We are ready to simulate tumour growth and angiogenesis. We will use a regular lattice for
 this purpose. We size and position the lattice according to the bounds of the vessel network.
 
 ```cpp
-		std::vector<DimensionalChastePoint<3> > bbox;
-		bbox.push_back(DimensionalChastePoint<3>(1500.0, 1600.0, -10.0, 1.e-6*unit::metres));
-		bbox.push_back(DimensionalChastePoint<3>(3100.0, 3000.0, 300.0, 1.e-6*unit::metres));
+        std::vector<DimensionalChastePoint<3> > bbox;
+        bbox.push_back(DimensionalChastePoint<3>(1500.0, 1600.0, -10.0, 1.e-6*unit::metres));
+        bbox.push_back(DimensionalChastePoint<3>(3100.0, 3000.0, 300.0, 1.e-6*unit::metres));
 ```
 
 Set up the lattice (grid), we will use the same dimensions as [Owen et al. 2011](http://www.ncbi.nlm.nih.gov/pubmed/21363914).
@@ -193,16 +193,16 @@ A record of all parameters used in a simulation can be dumped to file on complet
 We can use the built-in dimensional analysis functionality to get the network extents in terms of grid units
 
 ```cpp
-		c_vector<double, 3> botom_front_left =  bbox[0].GetLocation(grid_spacing);
-		c_vector<double, 3> top_back_right =  bbox[1].GetLocation(grid_spacing);
-		c_vector<double, 3> extents = top_back_right - botom_front_left;
-		std::vector<unsigned> grid_extents;
-		for(unsigned idx=0; idx<3 ; idx++)
-		{
-			grid_extents.push_back(std::floor(extents[idx])+1);
-		}
-		p_grid->SetExtents(grid_extents);
-		p_network->Translate(DimensionalChastePoint<3>(-1500.0, -1600.0, +10.0, 1.e-6*unit::metres));
+        c_vector<double, 3> botom_front_left =  bbox[0].GetLocation(grid_spacing);
+        c_vector<double, 3> top_back_right =  bbox[1].GetLocation(grid_spacing);
+        c_vector<double, 3> extents = top_back_right - botom_front_left;
+        std::vector<unsigned> grid_extents;
+        for(unsigned idx=0; idx<3 ; idx++)
+        {
+            grid_extents.push_back(std::floor(extents[idx])+1);
+        }
+        p_grid->SetExtents(grid_extents);
+        p_network->Translate(DimensionalChastePoint<3>(-1500.0, -1600.0, +10.0, 1.e-6*unit::metres));
 ```
 
 We can write the lattice to file for quick visualization with Paraview. Rendering of this and subsequent images is performed
@@ -221,21 +221,21 @@ as outflows.
 ```cpp
         for(unsigned idx=0;idx<p_network->GetNodes().size(); idx++)
         {
-        	if(p_network->GetNodes()[idx]->GetNumberOfSegments() == 1)
-        	{
-        		if(std::abs(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1.e-6*unit::metres)[2] -
-        				bbox[1].GetLocation(1.e-6*unit::metres)[2]) < 80.0)
-        		{
-        			p_network->GetNodes()[idx]->GetFlowProperties()->SetIsInputNode(true);
-        			p_network->GetNodes()[idx]->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue("User"));
-        		}
-        		else if(std::abs(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1.e-6*unit::metres)[2] -
-        				bbox[0].GetLocation(1.e-6*unit::metres)[2]) < 80.0)
-        		{
-        			p_network->GetNodes()[idx]->GetFlowProperties()->SetIsOutputNode(true);
-        			p_network->GetNodes()[idx]->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue("User"));
-        		}
-        	}
+            if(p_network->GetNodes()[idx]->GetNumberOfSegments() == 1)
+            {
+                if(std::abs(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1.e-6*unit::metres)[2] -
+                        bbox[1].GetLocation(1.e-6*unit::metres)[2]) < 80.0)
+                {
+                    p_network->GetNodes()[idx]->GetFlowProperties()->SetIsInputNode(true);
+                    p_network->GetNodes()[idx]->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue("User"));
+                }
+                else if(std::abs(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1.e-6*unit::metres)[2] -
+                        bbox[0].GetLocation(1.e-6*unit::metres)[2]) < 80.0)
+                {
+                    p_network->GetNodes()[idx]->GetFlowProperties()->SetIsOutputNode(true);
+                    p_network->GetNodes()[idx]->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue("User"));
+                }
+            }
         }
 ```
 
@@ -554,7 +554,7 @@ public:
 
     void Test3dLatticeBased() throw (Exception)
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestLatticeBasedAngiogenesisLiteratePaper"));
+        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestBiologicalNetworkLiteratePaper"));
         RandomNumberGenerator::Instance()->Reseed(12345);
         units::quantity<unit::length> reference_length(1.0 * unit::microns);
         units::quantity<unit::time> reference_time(1.0* unit::hours);
@@ -562,62 +562,61 @@ public:
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         BaseUnits::Instance()->SetReferenceConcentrationScale(reference_concentration);
-		boost::shared_ptr<VesselNetworkReader<3> > p_vessel_reader =
-				boost::shared_ptr<VesselNetworkReader<3> >(new VesselNetworkReader<3> );
-		p_vessel_reader->SetFileName("/home/grogan/bio_original.vtp");
-		p_vessel_reader->SetMergeCoincidentPoints(true);
-		p_vessel_reader->SetTargetSegmentLength(40.0e-6*unit::metres);
-		boost::shared_ptr<VesselNetwork<3> >  p_network = p_vessel_reader->Read();
+        boost::shared_ptr<VesselNetworkReader<3> > p_vessel_reader =
+                boost::shared_ptr<VesselNetworkReader<3> >(new VesselNetworkReader<3> );
+        p_vessel_reader->SetFileName("/home/grogan/bio_original.vtp");
+        p_vessel_reader->SetMergeCoincidentPoints(true);
+        p_vessel_reader->SetTargetSegmentLength(40.0e-6*unit::metres);
+        boost::shared_ptr<VesselNetwork<3> >  p_network = p_vessel_reader->Read();
 
-		units::quantity<unit::length> short_vessel_cutoff = 40.0e-6 * unit::metres;
-		bool remove_end_vessels_only = true;
-		p_network->RemoveShortVessels(short_vessel_cutoff, remove_end_vessels_only);
-		p_network->UpdateAll();
-		p_network->MergeCoincidentNodes();
-		p_network->UpdateAll();
-
-		p_network->Write(p_handler->GetOutputDirectoryFullPath() + "cleaned_network.vtp");
-		boost::shared_ptr<Part<3> > p_cylinder = Part<3>::Create();
-		DimensionalChastePoint<3> centre(2300.0, 2300.0, -5.0, 1.e-6*unit::metres);
-		units::quantity<unit::length> radius = 600.0e-6*unit::metres;
-		units::quantity<unit::length> depth = 205.e-6*unit::metres;
-		p_cylinder->AddCylinder(radius, depth, centre, 24);
-		p_cylinder->BooleanWithNetwork(p_network);
-		p_network->Write(p_handler->GetOutputDirectoryFullPath() + "cleaned_cut_network.vtp");
-		std::vector<DimensionalChastePoint<3> > bbox;
-		bbox.push_back(DimensionalChastePoint<3>(1500.0, 1600.0, -10.0, 1.e-6*unit::metres));
-		bbox.push_back(DimensionalChastePoint<3>(3100.0, 3000.0, 300.0, 1.e-6*unit::metres));
+        units::quantity<unit::length> short_vessel_cutoff = 40.0e-6 * unit::metres;
+        bool remove_end_vessels_only = true;
+        p_network->RemoveShortVessels(short_vessel_cutoff, remove_end_vessels_only);
+        p_network->UpdateAll();
+        p_network->MergeCoincidentNodes();
+        p_network->UpdateAll();
+        p_network->Write(p_handler->GetOutputDirectoryFullPath() + "cleaned_network.vtp");
+        boost::shared_ptr<Part<3> > p_cylinder = Part<3>::Create();
+        DimensionalChastePoint<3> centre(2300.0, 2300.0, -5.0, 1.e-6*unit::metres);
+        units::quantity<unit::length> radius = 600.0e-6*unit::metres;
+        units::quantity<unit::length> depth = 205.e-6*unit::metres;
+        p_cylinder->AddCylinder(radius, depth, centre, 24);
+        p_cylinder->BooleanWithNetwork(p_network);
+        p_network->Write(p_handler->GetOutputDirectoryFullPath() + "cleaned_cut_network.vtp");
+        std::vector<DimensionalChastePoint<3> > bbox;
+        bbox.push_back(DimensionalChastePoint<3>(1500.0, 1600.0, -10.0, 1.e-6*unit::metres));
+        bbox.push_back(DimensionalChastePoint<3>(3100.0, 3000.0, 300.0, 1.e-6*unit::metres));
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         units::quantity<unit::length> grid_spacing = 40.0e-6*unit::metres;
         p_grid->SetSpacing(grid_spacing);
-		c_vector<double, 3> botom_front_left =  bbox[0].GetLocation(grid_spacing);
-		c_vector<double, 3> top_back_right =  bbox[1].GetLocation(grid_spacing);
-		c_vector<double, 3> extents = top_back_right - botom_front_left;
-		std::vector<unsigned> grid_extents;
-		for(unsigned idx=0; idx<3 ; idx++)
-		{
-			grid_extents.push_back(std::floor(extents[idx])+1);
-		}
-		p_grid->SetExtents(grid_extents);
-		p_network->Translate(DimensionalChastePoint<3>(-1500.0, -1600.0, +10.0, 1.e-6*unit::metres));
+        c_vector<double, 3> botom_front_left =  bbox[0].GetLocation(grid_spacing);
+        c_vector<double, 3> top_back_right =  bbox[1].GetLocation(grid_spacing);
+        c_vector<double, 3> extents = top_back_right - botom_front_left;
+        std::vector<unsigned> grid_extents;
+        for(unsigned idx=0; idx<3 ; idx++)
+        {
+            grid_extents.push_back(std::floor(extents[idx])+1);
+        }
+        p_grid->SetExtents(grid_extents);
+        p_network->Translate(DimensionalChastePoint<3>(-1500.0, -1600.0, +10.0, 1.e-6*unit::metres));
         p_grid->Write(p_handler);
         for(unsigned idx=0;idx<p_network->GetNodes().size(); idx++)
         {
-        	if(p_network->GetNodes()[idx]->GetNumberOfSegments() == 1)
-        	{
-        		if(std::abs(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1.e-6*unit::metres)[2] -
-        				bbox[1].GetLocation(1.e-6*unit::metres)[2]) < 80.0)
-        		{
-        			p_network->GetNodes()[idx]->GetFlowProperties()->SetIsInputNode(true);
-        			p_network->GetNodes()[idx]->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue("User"));
-        		}
-        		else if(std::abs(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1.e-6*unit::metres)[2] -
-        				bbox[0].GetLocation(1.e-6*unit::metres)[2]) < 80.0)
-        		{
-        			p_network->GetNodes()[idx]->GetFlowProperties()->SetIsOutputNode(true);
-        			p_network->GetNodes()[idx]->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue("User"));
-        		}
-        	}
+            if(p_network->GetNodes()[idx]->GetNumberOfSegments() == 1)
+            {
+                if(std::abs(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1.e-6*unit::metres)[2] -
+                        bbox[1].GetLocation(1.e-6*unit::metres)[2]) < 80.0)
+                {
+                    p_network->GetNodes()[idx]->GetFlowProperties()->SetIsInputNode(true);
+                    p_network->GetNodes()[idx]->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue("User"));
+                }
+                else if(std::abs(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1.e-6*unit::metres)[2] -
+                        bbox[0].GetLocation(1.e-6*unit::metres)[2]) < 80.0)
+                {
+                    p_network->GetNodes()[idx]->GetFlowProperties()->SetIsOutputNode(true);
+                    p_network->GetNodes()[idx]->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue("User"));
+                }
+            }
         }
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "flow_boundary_labelled_network.vtp");
         boost::shared_ptr<Owen11CellPopulationGenerator<3> > p_cell_population_genenerator = Owen11CellPopulationGenerator<3>::Create();

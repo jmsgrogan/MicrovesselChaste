@@ -1,6 +1,6 @@
 import vtk
-import chaste_project_Angiogenesis.population.vessel
-import chaste_project_Angiogenesis.utility.bases as bases
+import microvessel_chaste.population.vessel
+import microvessel_chaste.utility.bases as bases
 
 class NetworkToPlanarBoundaries(bases.SimpleIOBase):
     
@@ -134,20 +134,20 @@ class VtkLinesToNetwork(bases.SimpleIOBase):
         
         nodes = [] 
         for i in range(vtk_numPoints):
-            nodes.append(chaste_project_Angiogenesis.population.vessel.VascularNode(vtk_points.GetPoint(i)))
+            nodes.append(microvessel_chaste.population.vessel.VesselNetwork3(vtk_points.GetPoint(i)))
         
         numCells = self.polydata.GetNumberOfLines()  
         cellArray = self.polydata.GetLines()
         cellArray.InitTraversal()
         segList = vtk.vtkIdList()
-        self.output = chaste_project_Angiogenesis.population.vessel.VascularNetwork()
+        self.output = microvessel_chaste.population.vessel.VesselNetwork3()
         for i in range(numCells): 
             cellArray.GetNextCell(segList)
             point_indices = []
             for j in range(0, segList.GetNumberOfIds()):
                 seg_id = segList.GetId(j)
                 point_indices.append(int(seg_id))
-            vessel = chaste_project_Angiogenesis.population.vessel.Vessel([nodes[point_indices[0]], nodes[point_indices[1]]])
+            vessel = microvessel_chaste.population.vessel.Vessel3([nodes[point_indices[0]], nodes[point_indices[1]]])
             self.output.addVessel(vessel)   
         self.output.UpdateAll(False)
         return self.output

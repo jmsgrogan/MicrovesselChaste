@@ -66,7 +66,8 @@ DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::DiscreteContinuumMesh() :
     mCellElementMap(),
     mpNetwork(),
     mpCellPopulation(),
-    mCellPopulationReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
+    mCellPopulationReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
+    mNodalData()
 {
 
 }
@@ -97,6 +98,9 @@ vtkSmartPointer<vtkUnstructuredGrid> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DI
     {
         mpVtkMesh = vtkSmartPointer<vtkUnstructuredGrid>::New();
         vtkSmartPointer<vtkPoints> p_vtk_points = vtkSmartPointer<vtkPoints>::New();
+        vtkSmartPointer<vtkDoubleArray> p_point_data = vtkSmartPointer<vtkDoubleArray>::New();
+        p_point_data->SetName("Nodal Values");
+
         std::vector<c_vector<double, SPACE_DIM> > node_locations = GetNodeLocations();
         p_vtk_points->SetNumberOfPoints(node_locations.size());
         for(unsigned idx=0; idx<node_locations.size(); idx++)
@@ -109,8 +113,17 @@ vtkSmartPointer<vtkUnstructuredGrid> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DI
             {
                 p_vtk_points->InsertPoint(idx, node_locations[idx][0], node_locations[idx][1], 0.0);
             }
+
+            if(mNodalData.size()==node_locations.size())
+            {
+                p_point_data->InsertNextTuple1(mNodalData[idx]);
+            }
         }
         mpVtkMesh->SetPoints(p_vtk_points);
+        if(mNodalData.size()==node_locations.size())
+        {
+            mpVtkMesh->GetPointData()->AddArray(p_point_data);
+        }
 
         // Add vtk tets or triangles
         std::vector<std::vector<unsigned> > element_connectivity =  GetConnectivity();

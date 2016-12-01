@@ -3,7 +3,6 @@ try:
    import cPickle as pickle
 except:
    import pickle
-import pandas
 import vtk
 import recursion
 
@@ -61,9 +60,6 @@ def read(filename):
         reader.SetFileName(filename)
         reader.Update()
         return reader.GetOutput()
-    
-    if extension.upper() == ".CSV":
-        return pandas.read_csv(filename, [], header=0)
     
 def read_pickle(filename):
     with open(filename, 'rb') as handle:

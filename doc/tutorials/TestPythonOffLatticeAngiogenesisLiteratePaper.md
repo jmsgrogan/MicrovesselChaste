@@ -26,6 +26,7 @@ import microvessel_chaste.mesh
 import microvessel_chaste.population.vessel
 import microvessel_chaste.pde
 import microvessel_chaste.simulation
+import microvessel_chaste.visualization
 from microvessel_chaste.utility import * # bring in all units for convenience
 
 class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
@@ -73,6 +74,17 @@ reduce computational expense.
                                                          polar_angle)
 
 ```
+We can visualize the part
+
+```python
+        scene = microvessel_chaste.visualization.MicrovesselVtkScene3()
+        #scene.SetPart(domain)
+        #scene.GetPartActorGenerator().SetVolumeOpacity(0.7)
+        #scene.GetPartActorGenerator().SetVolumeColor((255.0, 255.0, 255.0))
+        scene.SetIsInteractive(True)
+        scene.SetOutputFilePath(file_handler.GetOutputDirectoryFullPath()+"render")
+
+```
 Set up a vessel network, with divisions roughly every 'cell length'. Initially it is straight. We will map it onto the hemisphere.
 
 ```python
@@ -98,6 +110,9 @@ Set up a vessel network, with divisions roughly every 'cell length'. Initially i
                                                                            reference_length)
             eachNode.SetLocation(new_position)
 
+        scene.SetVesselNetwork(network)
+        scene.GetVesselNetworkActorGenerator().SetEdgeSize(20.0)
+
 ```
 The initial domain and vessel network now look as follows:
 
@@ -120,9 +135,14 @@ Now make a finite element mesh on the cornea.
 ```python
         mesh_generator = microvessel_chaste.mesh.DiscreteContinuumMeshGenerator3_3()
         mesh_generator.SetDomain(domain)
-        #mesh_generator.SetMaxElementArea(100000.0*(units::pow<3>(1.e-6*unit::metres)));
+        mesh_generator.SetMaxElementArea(1e-6 * metre_cubed())
         mesh_generator.Update()
         mesh = mesh_generator.GetMesh()
+
+        scene.SetMesh(mesh)
+
+        scene.Start()
+        scene.StartInteractiveEventHandler()
 
 ```
 Set up the vegf pde
@@ -225,6 +245,7 @@ import microvessel_chaste.mesh
 import microvessel_chaste.population.vessel
 import microvessel_chaste.pde
 import microvessel_chaste.simulation
+import microvessel_chaste.visualization
 from microvessel_chaste.utility import * # bring in all units for convenience
 
 class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
@@ -255,6 +276,13 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
                                                          azimuth_angle,
                                                          polar_angle)
 
+        scene = microvessel_chaste.visualization.MicrovesselVtkScene3()
+        #scene.SetPart(domain)
+        #scene.GetPartActorGenerator().SetVolumeOpacity(0.7)
+        #scene.GetPartActorGenerator().SetVolumeColor((255.0, 255.0, 255.0))
+        scene.SetIsInteractive(True)
+        scene.SetOutputFilePath(file_handler.GetOutputDirectoryFullPath()+"render")
+
         network_generator = microvessel_chaste.population.vessel.VesselNetworkGenerator3()
         vessel_length = np.pi * radius
         cell_length = 40.0e-6 * metre()
@@ -277,6 +305,9 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
                                                                            reference_length)
             eachNode.SetLocation(new_position)
 
+        scene.SetVesselNetwork(network)
+        scene.GetVesselNetworkActorGenerator().SetEdgeSize(20.0)
+
         vegf_domain = microvessel_chaste.geometry.Part3()
         pellet_side_length = 300.0e-6 * metre()
         origin = microvessel_chaste.mesh.DimensionalChastePoint3(-150.0,900.0,0.0)
@@ -286,9 +317,14 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
 
         mesh_generator = microvessel_chaste.mesh.DiscreteContinuumMeshGenerator3_3()
         mesh_generator.SetDomain(domain)
-        #mesh_generator.SetMaxElementArea(100000.0*(units::pow<3>(1.e-6*unit::metres)));
+        mesh_generator.SetMaxElementArea(1e-6 * metre_cubed())
         mesh_generator.Update()
         mesh = mesh_generator.GetMesh()
+
+        scene.SetMesh(mesh)
+
+        scene.Start()
+        scene.StartInteractiveEventHandler()
 
         vegf_pde = microvessel_chaste.pde.LinearSteadyStateDiffusionReactionPde3_3()
         vegf_pde.SetIsotropicDiffusionConstant(Owen11Parameters.mpVegfDiffusivity.GetValue("User"))

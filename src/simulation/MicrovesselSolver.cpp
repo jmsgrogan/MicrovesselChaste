@@ -51,7 +51,9 @@ MicrovesselSolver<DIM>::MicrovesselSolver() :
         mpAngiogenesisSolver(),
         mpRegressionSolver(),
         mDiscreteContinuumSolversHaveCompatibleGridIndexing(false),
-        mUpdatePdeEachSolve(true)
+        mUpdatePdeEachSolve(true),
+        mMicrovesselModifiers(),
+        mpCellPopulation()
 {
 
 }
@@ -88,6 +90,12 @@ void MicrovesselSolver<DIM>::AddDiscreteContinuumSolver(boost::shared_ptr<Abstra
 }
 
 template<unsigned DIM>
+void MicrovesselSolver<DIM>::AddMicrovesselModifier(boost::shared_ptr<AbstractMicrovesselModifier<DIM> > pMicrovesselModifier)
+{
+    mMicrovesselModifiers.push_back(pMicrovesselModifier);
+}
+
+template<unsigned DIM>
 std::vector<boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > > MicrovesselSolver<DIM>::GetDiscreteContinuumSolvers()
 {
     return mDiscreteContinuumSolvers;
@@ -97,14 +105,21 @@ void MicrovesselSolver<DIM>::Increment()
 {
     unsigned num_steps = SimulationTime::Instance()->GetTimeStepsElapsed();
 
+    if(num_steps==0)
+    {
+        for(unsigned idx=0;idx<mMicrovesselModifiers.size(); idx++)
+        {
+            mMicrovesselModifiers[idx]->SetupSolve(mpNetwork, mpCellPopulation,
+                    mDiscreteContinuumSolvers, mpOutputFileHandler->GetOutputDirectoryFullPath());
+        }
+    }
+
     // If there is a structural adaptation or flow problem solve it
-    std::cout << "ADAPT_IN****" << std::endl;
     if(mpStructuralAdaptationSolver)
     {
         mpStructuralAdaptationSolver->UpdateFlowSolver(true);
         mpStructuralAdaptationSolver->Solve();
     }
-    std::cout << "ADAPT_OUT****" << std::endl;
 
     // If there are PDEs solve them
     if(mDiscreteContinuumSolvers.size()>0)
@@ -178,6 +193,11 @@ void MicrovesselSolver<DIM>::Increment()
             p_network_writer->Write();
         }
     }
+
+    for(unsigned idx=0;idx<mMicrovesselModifiers.size(); idx++)
+    {
+        mMicrovesselModifiers[idx]->UpdateAtEndOfTimeStep(mpNetwork, mpCellPopulation, mDiscreteContinuumSolvers);
+    }
 }
 
 template<unsigned DIM>
@@ -205,6 +225,12 @@ template<unsigned DIM>
 void MicrovesselSolver<DIM>::SetAngiogenesisSolver(boost::shared_ptr<AngiogenesisSolver<DIM> > pAngiogenesisSolver)
 {
     mpAngiogenesisSolver = pAngiogenesisSolver;
+}
+
+template<unsigned DIM>
+void MicrovesselSolver<DIM>::SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > pCellPopulation)
+{
+    mpCellPopulation = pCellPopulation;
 }
 
 template<unsigned DIM>

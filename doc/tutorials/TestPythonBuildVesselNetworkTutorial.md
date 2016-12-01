@@ -15,7 +15,7 @@ This tutorial covers:
  
 Further functionality is gradually introduced over the course of subsequent tutorials.
 
-= The Test =
+## The Test
 
 ```python
 import unittest
@@ -24,11 +24,13 @@ import microvessel_chaste
 import microvessel_chaste.geometry
 import microvessel_chaste.mesh
 import microvessel_chaste.population.vessel
+import microvessel_chaste.visualization
 from microvessel_chaste.utility import * # bring in all units for convenience
 
 class TestPythonBuildVesselNetworkLiteratePaper(unittest.TestCase):
+
 ```
-= Test 1 - Building a vessel network manually, writing it to file and visualizing it=
+## Test 1 - Building a vessel network manually, writing it to file and visualizing it
 In the first test we will build a vessel network from its constituent components; nodes, segments and vessels. We will do some
 simple tests to make sure the network has been formed as expected. Then we write the network to file and visualize it in Paraview.
 
@@ -42,6 +44,7 @@ directly through their constructors. Vessel network components are templated ove
 create a Y shaped network. Later we will learn how to build up networks in a more efficient manner.
 
 ```python
+        file_handler = chaste.core.OutputFileHandler("Python/TestPythonBuildVesselNetworkLiteratePaper", True)
         length_scale = 1.e-6*metre()
         length = 100.0
         n1 = microvessel_chaste.population.vessel.VesselNode3(0.0, 0.0 ,0.0, length_scale)
@@ -62,10 +65,12 @@ can be constructed from multiple vessel segments, but in this case each vessel j
 Now we can add our vessels to a vessel network.
 
 ```python
-        network = microvessel_chaste.population.vessel.VesselNetwork3()
+        network = microvessel_chaste.population.vessel.VesselNetwork3.Create()
         network.AddVessel(v1)
         network.AddVessel(v2)
         network.AddVessel(v3)
+        network.SetSegmentRadii(10.0*length_scale)
+        network.SetNodeRadii(10.0*length_scale)
 
 ```
 We use our test framework to make sure that the network has been created correctly by checking the number of vessels and nodes
@@ -75,11 +80,21 @@ We use our test framework to make sure that the network has been created correct
         self.assertEqual(network.GetNumberOfVessels(), 3)
 
 ```
+We can visualize the network
+
+```python
+        scene = microvessel_chaste.visualization.MicrovesselVtkScene3()
+        scene.SetVesselNetwork(network)
+        scene.SetIsInteractive(True)
+        scene.SetOutputFilePath(file_handler.GetOutputDirectoryFullPath()+"render")
+        scene.Start()
+        scene.StartInteractiveEventHandler()
+
+```
 Next we write out network to file. We use the Chaste `OutputFileHandler` functionality to management the output location
 Networks are written using VTKs PolyData format, which should have a .vtp extension.
 
 ```python
-        file_handler = chaste.core.OutputFileHandler("Python/TestPythonBuildVesselNetworkLiteratePaper", True)
         writer = microvessel_chaste.population.vessel.VesselNetworkWriter3()
         writer.SetVesselNetwork(network)
         writer.SetFileName(file_handler.GetOutputDirectoryFullPath() + "bifurcating_network.vtp")
@@ -107,11 +122,14 @@ import microvessel_chaste
 import microvessel_chaste.geometry
 import microvessel_chaste.mesh
 import microvessel_chaste.population.vessel
+import microvessel_chaste.visualization
 from microvessel_chaste.utility import * # bring in all units for convenience
 
 class TestPythonBuildVesselNetworkLiteratePaper(unittest.TestCase):
+
     def test_BuildNetworkManually(self):
 
+        file_handler = chaste.core.OutputFileHandler("Python/TestPythonBuildVesselNetworkLiteratePaper", True)
         length_scale = 1.e-6*metre()
         length = 100.0
         n1 = microvessel_chaste.population.vessel.VesselNode3(0.0, 0.0 ,0.0, length_scale)
@@ -123,15 +141,23 @@ class TestPythonBuildVesselNetworkLiteratePaper(unittest.TestCase):
         v2 = microvessel_chaste.population.vessel.Vessel3([n2, n3])
         v3 = microvessel_chaste.population.vessel.Vessel3([n2, n4])
 
-        network = microvessel_chaste.population.vessel.VesselNetwork3()
+        network = microvessel_chaste.population.vessel.VesselNetwork3.Create()
         network.AddVessel(v1)
         network.AddVessel(v2)
         network.AddVessel(v3)
+        network.SetSegmentRadii(10.0*length_scale)
+        network.SetNodeRadii(10.0*length_scale)
 
         self.assertEqual(network.GetNumberOfNodes(), 4)
         self.assertEqual(network.GetNumberOfVessels(), 3)
 
-        file_handler = chaste.core.OutputFileHandler("Python/TestPythonBuildVesselNetworkLiteratePaper", True)
+        scene = microvessel_chaste.visualization.MicrovesselVtkScene3()
+        scene.SetVesselNetwork(network)
+        scene.SetIsInteractive(True)
+        scene.SetOutputFilePath(file_handler.GetOutputDirectoryFullPath()+"render")
+        scene.Start()
+        scene.StartInteractiveEventHandler()
+
         writer = microvessel_chaste.population.vessel.VesselNetworkWriter3()
         writer.SetVesselNetwork(network)
         writer.SetFileName(file_handler.GetOutputDirectoryFullPath() + "bifurcating_network.vtp")

@@ -84,9 +84,12 @@ def update_builder(builder):
                        "AbstractVesselNetworkComponentChemicalProperties<3>"]
     
     # Include each class and do template renaming
+    class_collection = []
+
     for eachClass in include_classes:
         builder.class_(eachClass).include()  
         new_name = generate_bindings.template_replace(eachClass)
+        class_collection.append(new_name)
         if(new_name != eachClass):
             builder.class_(eachClass).rename(new_name) 
             
@@ -106,4 +109,4 @@ def update_builder(builder):
     builder.class_('Vessel<3>').add_registration_code('def("__init__", bp::make_constructor(V3_MultiSegment))')
     builder.class_('Vessel<3>').add_registration_code('def("__init__", bp::make_constructor(V3_Nodes))')
 
-    return builder
+    return builder, class_collection
