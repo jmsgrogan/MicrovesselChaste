@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Changelog | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Changelog</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            
+            <!-- [ [2.10.0](#2.10.0) | [2.9.0](#2.9.0) | [2.8.0](#2.8.0) | [2.7.2](#2.7.2) | [2.7.1](#2.7.1) | [2.7.0](#2.7.0) | [2.6.1](#2.6.1) | [2.6.0](#2.6.0) | [2.5.0](#2.5.0) | [2.4.0](#2.4.0) | [2.3.2](#2.3.2) | [2.3.0](#2.3.0) | [2.1.8](#2.1.8) | [2.1.7](#2.1.7) | [2.1.5](#2.1.5) | [2.0](#2.0) ] -->
+
+<h2>Changes in Version 2.11</h2>
+
+<p>Please consult the <a href="/news/2.11.1">Scala 2.11.1 release notes</a>.</p>
+
+<h2>Changes in Version 2.10.0</h2>
+
+<p>The Scala 2.10.0 codebase includes the following new features and changes:</p>
+
+<h3>Value Classes</h3>
+
+<p>A class may now extend <code>AnyVal</code> to make it behave like a struct type (restrictions apply).
+See: http://docs.scala-lang.org/overviews/core/value-classes.html</p>
+
+<h3>Implicit Classes</h3>
+
+<p>The <code>implicit</code> modifier now also applies to class definitions to reduce the boilerplate of implicit wrappers.
+See: http://docs.scala-lang.org/sips/pending/implicit-classes.html</p>
+
+<h3>String Interpolation</h3>
+
+<p>Example:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">val what = "awesome"; println(s"string interpolation is ${what.toUpperCase}!")
+</code></pre></div>
+<p>See more: http://docs.scala-lang.org/overviews/core/string-interpolation.html</p>
+
+<h3>Futures and Promises</h3>
+
+<p>Asynchronously get some JSON:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">for (req &lt;- WS.url(restApiUrl).get()) yield (req.json \ "users").as[List[User]] (uses play!)
+</code></pre></div>
+<p>See more: http://docs.scala-lang.org/overviews/core/futures.html</p>
+
+<h3>Dynamic and applyDynamic</h3>
+
+<p><code>x.foo</code> becomes <code>x.applyDynamic(&quot;foo&quot;)</code> if <code>x</code>&#39;s type does not define a <code>foo</code>, but is a subtype of <code>Dynamic</code>
+See: http://docs.scala-lang.org/sips/pending/type-dynamic.html</p>
+
+<h3>Dependent method types</h3>
+<div class="highlight"><pre><code class="language-" data-lang="">def identity(x: AnyRef): x.type = x // the return type says we return exactly what we got
+</code></pre></div>
+<h3>New ByteCode emitter based on ASM</h3>
+
+<ul>
+<li>Can target JDK 1.5, 1.6 and 1.7</li>
+<li>Emits 1.6 bytecode by default</li>
+<li>Old 1.5 backend is deprecated</li>
+</ul>
+
+<h3>A new Pattern Matcher</h3>
+
+<ul>
+<li>rewritten from scratch to generate more robust code (no more exponential blow-up!)</li>
+<li>code generation and analyses are now independent (the latter can be turned off with -Xno-patmat-analysis)</li>
+</ul>
+
+<h3>Scaladoc Improvements</h3>
+
+<ul>
+<li>Implicits (-implicits flag)</li>
+<li>Diagrams (-diagrams flag, requires graphviz)</li>
+<li>Groups (-groups)</li>
+</ul>
+
+<h3>Modularized Language features</h3>
+
+<p>Get on top of the advanced Scala features used in your codebase by explicitly importing them.
+See: http://docs.scala-lang.org/sips/pending/modularizing-language-features.html</p>
+
+<h3>Parallel Collections are now configurable with custom thread pools</h3>
+
+<p>See: http://docs.scala-lang.org/overviews/parallel-collections/overview.html</p>
+
+<h3>Akka Actors now part of the distribution</h3>
+
+<p>The original Scala actors are now deprecated.
+See the actors migration project for more information.</p>
+
+<h3>Performance Improvements</h3>
+
+<ul>
+<li>Faster inliner</li>
+<li><code>Range#sum</code> is now O(1)</li>
+<li>Update of <code>ForkJoin</code> library</li>
+<li>Fixes in immutable <code>TreeSet</code>/<code>TreeMap</code></li>
+<li>Improvements to <code>PartialFunction</code>s</li>
+<li>Addition of <code>???</code> and <code>NotImplementedError</code></li>
+<li>Addition of <code>IsTraversableOnce</code> + <code>IsTraversableLike</code> type classes for extension methods</li>
+<li>Deprecations and cleanup</li>
+<li>Floating point and octal literal syntax deprecation</li>
+<li>Removed <code>scala.dbc</code></li>
+<li>Experimental features</li>
+</ul>
+
+<p>The following exciting -- experimental -- features are part of 2.10.0:</p>
+
+<h4>Scala Reflection</h4>
+
+<p>See: https://docs.google.com/document/d/1Z1VhhNPplbUpaZPIYdc0_EUv5RiGQ2X4oqp0i-vz1qw/edit#heading=h.pqwdkl</p>
+
+<h4>Macros</h4>
+
+<p>See: http://docs.scala-lang.org/overviews/macros/overview.html</p>
+
+<p>The API is subject to (possibly major) changes in the 2.11.x series, but don&#39;t let that stop you from experimenting with them! A lot of developers have already come up with very cool applications for them.</p>
+
+<h2>Changes in Version 2.9.1 to 2.9.2</h2>
+
+<p>No language changes were introduced.</p>
+
+<h2>Changes in Version 2.9.0 (12-May-2011) {: #2.9.0 }</h2>
+
+<p>The Scala 2.9.0 codebase includes the following new features and changes:</p>
+
+<h3>Parallel Collections</h3>
+
+<p>Every collection may be converted into a corresponding parallel collection with the new <code>par</code> method. Parallel collections utilize multicore processors by implementing bulk operations such as <code>foreach</code>, <code>map</code>, <code>filter</code> etc. in parallel. Parallel collections are located in the package <code>scala.collection.parallel</code>.</p>
+
+<p>Depending on the collection in question, <code>par</code> may require copying the underlying dataset to create a parallel collection. However, specific collections share their underlying dataset with a parallel collection, making <code>par</code> a constant time operation.</p>
+
+<p>Currently available parallel collections are:</p>
+
+<ul>
+<li>parallel arrays - <code>scala.collection.parallel.mutable.ParArray</code></li>
+<li>parallel ranges - <code>scala.collection.parallel.immutable.ParRange</code></li>
+<li>parallel hash maps - <code>scala.collection.parallel.mutable.ParHashMap</code></li>
+<li>parallel hash sets - <code>scala.collection.parallel.mutable.ParHashSet</code></li>
+<li>parallel hash tries - <code>scala.collection.parallel.immutable.{ParHashMap, ParHashSet}</code></li>
+<li>parallel vectors - <code>scala.collection.parallel.immutable.ParVector</code></li>
+</ul>
+
+<p>The method <code>seq</code> is used to convert from a parallel collection to a corresponding sequential collection. This method is always efficient (O(1)).</p>
+
+<h3>The App Trait</h3>
+
+<p>The <code>App</code> trait is a safer, more powerful alternative to the previous <code>Application</code> trait, which has now been deprecated. The new recommended way to write a top-level application is like this:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">object Echo extends App {
+  println("Echo" + (args mkString " "))
+}
+</code></pre></div>
+<p>Objects inheriting from the old <code>Application</code> trait were almost as convenient to write, but were not thread-safe and were often not optimized by the VM, since the application&#39;s body was execited as part of of the object&#39;s initialization sequence. Objects inheriting the <code>App</code> trait instead make use of Scala 2.9&#39;s delayed initialization feature to execute the whole body as part of an inherited <code>main</code> method. Another new feature of the <code>App</code> scheme is that command line arguments are now accessible via the <code>args</code> value (which is inherited from trait <code>App</code>)</p>
+
+<h3>The DelayedInit Trait</h3>
+
+<p>The <code>DelayedInit</code> trait provides another tool to customize initialization sequences of classes and objects. If a class or object inherits from this trait, all its initialization code is packed in a closure and forwarded as an argument to a method named <code>delayedInit</code> which is defined as an abstract method in trait <code>DelayedInit</code>.</p>
+
+<p>Implementations of <code>delayedInit</code> have thus full freedom when to execute the initialization code. For instance, Scala&#39;s new <code>App</code> trait stores all initialization sequences in an internal buffer and executes them when the object&#39;s <code>main</code> method is called.</p>
+
+<p>Note that only initialization code contained in classes and objects is passed to <code>DelayedInit</code>; initialization code contained in traits is not affected.</p>
+
+<h3>Repl Improvements</h3>
+
+<p>Improvements in jline, the repl input handler. More robust cursor handling, bash-style ctrl-R history search, new commands like <code>:imports</code>, <code>:implicits</code>, <code>:keybindings</code>. On platforms with the necessary runtime support, <code>:javap</code> will disassemble any class including repl-defined ones. A long-running repl command can now be interrupted via ctrl-C without terminating the repl session. Improved programmability: the repl classloader exposes repl-defined classes via their given names.</p>
+
+<h3>Scala Runner</h3>
+
+<p>Scala code can now be executed in any of the following ways:</p>
+
+<ul>
+<li><code>scala &lt;jarfile&gt;</code> will run the main class, similar to java -jar</li>
+<li><code>scala &lt;classname&gt;</code> will run the main method of that class</li>
+<li><code>scala &lt;sourcefile&gt;</code> will run the script contents as a scala script</li>
+<li><code>scala &lt;sourcefile&gt;</code> will, if the contents are not a script, find a single main method in a top level object and run that. This allows the same file to be used with scalac and to be run directly.</li>
+<li><code>scala -save &lt;sourcefile&gt;</code> will create a jar file with the compiled source, which is then reusable and can be run as <code>scala &lt;jarfile&gt;</code></li>
+</ul>
+
+<h3>Java Interop</h3>
+
+<ul>
+<li>The <code>@strictfp</code> annotation is now supported.</li>
+<li>Various fixes in <code>JavaConverters</code> and <code>JavaConversions</code> for smoother interoperation.</li>
+<li>Primitive types and their boxed versions are now implicitly converted bidirectionally.</li>
+</ul>
+
+<h3>Other features</h3>
+
+<h4>Generalized try-catch-finally</h4>
+
+<pre><b>try</b> <em>body</em>
+<b>catch</b> <em>handler</em>
+<b>finally</b> <em>cleanup</em>
+</pre>
+
+<p>Here, <em>body</em> and <em>cleanup</em> can be arbitrary expressions, and <em>handler</em> can be any expression which evaluates to a valid exception handler (which is: <code>PartialFunction[Throwable, T]</code>).</p>
+
+<h4>New packages</h4>
+
+<p><code>scala.sys</code> and <code>scala.sys.process</code>, which are imported from <code>sbt.Process</code>.</p>
+
+<h4>New methods in collections</h4>
+
+<p><code>collectFirst</code>, <code>maxBy</code>, <code>minBy</code>, <code>span</code>, <code>inits</code>, <code>tails</code>, <code>permutations</code>, <code>combinations</code>, <code>subsets</code></p>
+
+<h4>AnyRef specialization</h4>
+
+<p>It is now possible to specialize on type parameters for subtypes of <code>AnyRef</code> (<code>class Foo[@specialize(AnyRef) T](arr: Array[T]) { ... })</code>, which allows for more efficient array indexing and updates.</p>
+
+<h2>Changes in Version 2.8.1</h2>
+
+<p>No language changes were introduced.</p>
+
+<h2>Changes in Version 2.8.0 (14-Jul-2010) {: #2.8.0 }</h2>
+
+<p>Scala 2.8.0 is a significantly innovative release, which contains a large amount of fixes and introduces many new features:</p>
+
+<h4>Redesigned collection library</h4>
+
+<p>The collection library has undergone a complete overhaul for Scala 2.8, offering a more coherent and efficient design, while maintaining virtually complete compatibility with existing sources. Detailed information <a href="http://www.scala-lang.org/sid/3">here</a>.</p>
+
+<h4>New array implementation, manifests for polymorphic arrays</h4>
+
+<p>Handling of arrays has been simplified and optimized in Scala 2.8. The previous compiler magic has been replaced by a more systematic and predictable implementation in terms of implicit conversions. Detailed information <a href="http://www.scala-lang.org/sid/7">here</a>.</p>
+
+<h4>Type specialization</h4>
+
+<p>Scala 2.8 adds specialized type parameters, which enable the compiler to generate transparently multiple versions of a given definition, and to use the most specific version whenever the static type information at a call site allows it. Detailed information <a href="http://www.scala-lang.org/sid/9">here</a>.</p>
+
+<h4>Named and default arguments</h4>
+
+<p>Named arguments improve the readability of method calls with many arguments. Default arguments reduce code duplication, and enable &quot;copy&quot; methods for case classes, useful to generate quickly modified copies of case classes. Detailed information <a href="http://www.scala-lang.org/sid/1">here</a>.</p>
+
+<h4>Package objects</h4>
+
+<p>Packages can now contain besides classes and objects also methods, fields or type aliases. These are added to a package by declaring a package object. More capabilities might be added to package objects in subsequent releases.</p>
+
+<h4>Beefed up Scala Swing libraries, better documentation</h4>
+
+<p>Components publish key events, input events can be consumed, refactored window subhierarchy, additional demos, Swing listeners are installed lazily, more complete component caching, minor refactorings, bugfixes, more Scaladocs. Detailed information <a href="http://www.scala-lang.org/sid/8">here</a>.</p>
+
+<h4>Revamped REPL</h4>
+
+<p>Many bugfixes. Tab-completion for all packages on the classpath, as well as object and instance methods and fields, including type aliases and package objects. Searchable history, integrated shell access, and a power mode which offers direct access to compiler internals.</p>
+
+<h4>Implicits changes</h4>
+
+<p>We have refined the implicit resolution process so that resolution is now able to determine type variables.</p>
+
+<h4>Improved equality</h4>
+
+<p>Equality across numeric types is to be consistent across all the primitives types, while also adhering to the equals/hashCode contract. Numeric comparisons will have the same results as they would between Java primitives.</p>
+
+<h4>Packrat parser combinators</h4>
+
+<p>With support for packrat parsing, parser combinators are now able to handle left-recursive grammars and will show improved performance for ambiguous productions.</p>
+
+<h4>Improved XML library</h4>
+
+<p>Many bugfixes.</p>
+
+<h4>Type constructor inference</h4>
+
+<p>Type inference has been extended to deal with type constructors, so that, in certain cases, you can omit type parameter lists that contain higher-kinded types (aka type constructors, e.g., <code>List</code>).</p>
+
+<h4>Improved Annotations</h4>
+
+<p>Scala 2.8 adds support for nested java annotations. For annotations on fields, it is now possible to specify which synthetic members (getter / setter) will have the annotation. Documentation about Scala annotations can be found <a href="http://www.scala-lang.org/sid/5">here</a>.</p>
+
+<h4>Enhanced actors</h4>
+
+<p>New Reactors provide more lightweight, purely event-based actors with optional, implicit sender identification. Support for actors with daemon-style semantics was added. Actors can be configured to use the efficient JSR166y fork/join pool, resulting in significant performance improvements on 1.6 JVMs. Schedulers are now pluggable and easier to customize.</p>
+
+<h4>Support for continuations</h4>
+
+<p>Continuations are supported by a compiler plugin, which is now supported as part of the main distribution.</p>
+
+<h3>Internal improvements</h3>
+
+<h4>New presentation compiler</h4>
+
+<p>This new infrastructure, within the Scala compiler, enables IDEs to hook into the compiler to find efficiently information about the structure of the program under editing. This new code offers a better platform for the development of IDE plugins.</p>
+
+<h4>New build manager</h4>
+
+<p>The new feature used by for example Eclipse to detect intelligently changes in the files and compile only necessary Scala sources, instead of performing clean build on whole projects. This technique enables to significantly reduce the compilation time on bigger projects.</p>
+
+<h4>Speed improvements</h4>
+
+<p>The compiler now runs as optimised code. In addition, a number of improvements and fine-tunings have further improved the compiler speed up to 50%.</p>
+
+<h3>Additional tools</h3>
+
+<h4>Scaladoc 2</h4>
+
+<p>A new look-and-feel, automatic comments expansion and wiki-like syntax, as well as compile-time error checking. Read more about changes on the <a href="http://lampsvn.epfl.ch/trac/scala/wiki/Scaladoc/">Scaladoc 2 mini-site</a>.</p>
+
+<h4>Sbaz 2</h4>
+
+<p>Sbaz includes many bug fixes and enhancements. It now gives better feedback to the user during lengthy downloads and while diagnosing dependency audits, which in turn have been re-factored and enhanced. Sbaz should work properly on Windows using either cmd or cygwin, and is now capable of reliably updating itself. Support for pack200 has been added, in some cases reducing file sizes up to 70%.</p>
+
+<h4>Scalap</h4>
+
+<p>A new <code>scalap</code>, contributed by the community, is included. The new <code>scalap</code> is aware of package objects and can decompile them by using <code>&lt;package_name&gt;.package</code>.</p>
+
+<h4>Scala IDE for Eclipse</h4>
+
+<p>The IDE has been extensively reworked with much functionality moved into the Scala compiler where it can be better maintained and reused by non-Eclipse IDEs and other tools. The integration with Eclipse&#39;s JDT has been deepened, and much previously Scala-specific behaviour and functionality is now provided directly by the JDT leading to across the board improvements. The Scala IDE for Eclipse is now <a href="http://www.scala-ide.org">hosted at Assembla</a>.</p>
+
+<h2>Changes in 2.7.3 to 2.7.7</h2>
+
+<p>No language changes were introduced.</p>
+
+<h2>Changes in Version 2.7.2 (10-Nov-2008) {: #2.7.2 }</h2>
+
+<h4>Generic Signatures</h4>
+
+<p>The Scala compiler now generates Java&#39;s generic signatures, so that Scala generics are visible to Java.</p>
+
+<h4>Java/Scala Combined Projects</h4>
+
+<p>The compiler can now parse (but not translate) Java source files. This makes it possible to have mixed Java/Scala projects with recursive dependencies between them. In such a project, you can submit first all the Java and Scala sources to the Scala compiler. In a second step, the Java sources are compiled using the Scala generated .class files and the Scala sources are compiled again using the Java generated .class files.</p>
+
+<h4>ScalaSwing</h4>
+
+<p>Another major addition is the first beta version of the ScalaSwing library, which is now bundled with the distribution.</p>
+
+<h4>Scala Collections</h4>
+
+<p>There are new implementations of collection classes, contributed by David MacIver: <code>IntMap</code>, <code>LongMap</code>, and <code>TreeHashMap</code> (immutable), ArrayStack and <code>OpenHashMap</code> (mutable).</p>
+
+<h2>Changes in Version 2.7.1 (09-Apr-2008) {: #2.7.1 }</h2>
+
+<h4>Change in Scoping Rules for Wildcard Placeholders in Types</h4>
+
+<p>A wildcard in a type now binds to the closest enclosing type application.</p>
+
+<p>For example <code>List[List[_]]</code> is now equivalent to the existential type</p>
+<div class="highlight"><pre><code class="language-" data-lang="">List[List[t] forSome { type t }]face
+</code></pre></div>
+<p>In version 2.7.0, the type expanded instead to</p>
+<div class="highlight"><pre><code class="language-" data-lang="">List[List[t]] forSome { type t }
+</code></pre></div>
+<p>The new convention corresponds exactly to the way wildcards in Java are interpreted.</p>
+
+<h4>No Contractiveness Requirement for Implicits</h4>
+
+<p>The contractiveness requirement for implicit method definitions has been dropped. Instead it is checked for each implicit expansion         individually that the expansion does not result in a cycle or a tree of infinitely growing types.</p>
+
+<h2>Changes in Version 2.7.0 (07-Feb-2008) {: #2.7.0 }</h2>
+
+<h4>Java Generics</h4>
+
+<p>Scala now supports <a href="http://en.wikipedia.org/wiki/Generics_in_Java">Java generic types</a> by default:</p>
+
+<ul>
+<li>A generic type in Java such as <code>ArrayList&lt;String&gt;</code> is translated to a generic type in Scala: <code>ArrayList[String]</code>.</li>
+<li>A wildcard type such as <code>ArrayList&lt;? extends Number&gt;</code> is translated to <code>ArrayList[_ &lt;: Number]</code>. This is itself a shorthand for the existential type <code>ArrayList[T] forSome { type T &lt;: Number }</code>.</li>
+<li>A raw type in Java such as <code>ArrayList</code> is translated to <code>ArrayList[_]</code>, which is a shorthand for <code>ArrayList[T] forSome { type T }</code>.</li>
+</ul>
+
+<p>This translation works if <code>-target:jvm-1.5</code> is specified, which is the new default. For any other target, Java generics are not         recognized. To ensure upgradability of Scala codebases, extraneous type parameters for Java classes under <a href="http://www.scala-lang.org/docu/files/tools/scalac.html">scalac</a> <code>-target:jvm-1.4</code> are simply ignored. For instance, when compiling with <code>&gt;-target:jvm-1.4</code>, a Scala type such as <code>ArrayList[String]</code> is simply treated as the unparameterized type <code>ArrayList</code>&gt;.</p>
+
+<h4>Case Classes</h4>
+
+<p>The Scala compiler generates now for every case class a companion extractor object. For instance, given the case class:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">case class X(elem: String)
+</code></pre></div>
+<p>the following companion object is generated:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">object X {
+  def unapply(x: X): Some[String] = Some(x.elem)
+  def apply(s: String): X = new X(s)
+}
+</code></pre></div>
+<p>If the object exists already, only the <code>apply</code> and <code>unapply</code> methods are added to it.</p>
+
+<p>Three restrictions on case classes have been removed:</p>
+
+<ul>
+<li><p>Case classes can now inherit from other case classes.</p>
+
+<p>case class Foo(x: Int)
+  case class Bar(override val x: Int, y: Int) extends Foo(x)
+  object test extends Application {
+    println(Bar(1, 2).x)
+    (Bar(1, 2): Foo) match {
+      case Foo(x) =&gt; println(x)
+    }
+  }</p></li>
+<li><p>Case classes may now be <code>abstract</code></p></li>
+<li><p>Case classes may now come with companion objects:</p>
+
+<p>case class Foo(x: Int)
+  object Foo {
+    val x = 2
+    val y = Foo(2)
+  }
+  object test extends Application {
+    println(Foo.x)
+    println(Foo.y match { case Foo(x) =&gt; x } )
+  }</p></li>
+</ul>
+
+<h4>Removed features</h4>
+
+<p>The following deprecated features have been removed from the standard Scala library:</p>
+
+<p>| Removed  | Use instead
+|:--------:|:------------:
+| <code>All</code> and <code>AllRef</code> (object <code>scala.Predef</code>) | <code>Nothing</code> and <code>Null</code> (available since 2.3.0)
+| element and arity (class <code>scala.Product</code>)  | <code>productElement</code> and <code>productArity</code>
+| <code>scala.compat.Math</code> | <code>scala.Math</code>
+| <code>scala.testing.UnitTest</code> | <code>scala.testing.SUnit</code>
+| <code>assertNotSame</code> and <code>assertSame</code> (class <code>scala.testing.SUnit.Assert</code>) | <code>assertNotEq</code> and <code>assertEq</code>
+| <code>scala.util.Fluid</code> | <code>scala.util.DynamicVariable</code></p>
+
+<h2>Changes in Version 2.6.1 (30-Nov-2007) {: #2.6.1 }</h2>
+
+<h4>Mutable variables introduced by pattern binding</h4>
+
+<p>Mutable variables can now be introduced by a pattern matching definition, just like values can. For example:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">var (x, y) = if (positive) (1, 2) else (-1, -3)
+var hd :: tl = mylist
+</code></pre></div>
+<h4>Self-types</h4>
+
+<p>Self types can now be introduced without defining an alias name for <code>this</code>. For example:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">class C {
+  type T &lt;: Trait
+  trait Trait { this: T =&gt; ... }
+}
+</code></pre></div>
+<h2>Changes in Version 2.6 (27-Jul-2007) {: #2.6.0 }</h2>
+
+<h4>Existential types</h4>
+
+<p>It is now possible to define existential types using the new keyword <code>forSome</code>. An existential type has the form <code>T forSome {Q}</code> where <code>Q</code> is a  sequence of value and/or type declarations. Given the class definitions</p>
+<div class="highlight"><pre><code class="language-" data-lang="">class Ref[T]
+abstract class Outer { type T }
+</code></pre></div>
+<p>one may for example write the following existential types</p>
+<div class="highlight"><pre><code class="language-" data-lang="">Ref[T] forSome { type T &lt;: java.lang.Number }
+Ref[x.T] forSome { val x: Outer }
+</code></pre></div>
+<h4>Lazy values</h4>
+
+<p>It is now possible to define lazy value declarations using the new modifier <code>lazy</code>.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">import compat.Platform._
+val t0 = currentTime
+lazy val t1 = currentTime
+val t2 = currentTime
+
+println("t0 &lt;= t2: " + (t0 &lt;= t2))  //true
+println("t1 &lt;= t2: " + (t1 &lt;= t2))  //false (lazy evaluation of t1)
+</code></pre></div>
+<h4>Structural types</h4>
+
+<p>It is now possible to declare structural types using type refinements. For example:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">class File(name: String) {
+  def getName(): String = name
+  def open() { /*..*/ }
+  def close() { println("close file") }
+}
+def test(f: { def getName(): String }) { println(f.getName) }
+
+test(new File("test.txt"))
+test(new java.io.File("test.txt"))
+</code></pre></div>
+<h4>Deprecated features</h4>
+
+<ul>
+<li>The old-style syntax of for-comprehensions has been deprecated.</li>
+<li>The <code>requires</code> clause has been deprecated; use <code>{ self: T =&gt;; ... }</code> instead.</li>
+<li><code>&amp;f</code> for unapplied methods has been deprecated; use <code>f _</code> instead.</li>
+</ul>
+
+<h2>Changes in Version 2.5 (02-May-2007) {: #2.5.0 }</h2>
+
+<h4>Type constructor polymorphism</h4>
+
+<p>Type parameters and abstract type members can now also abstract over type constructors. This allows a more precise <code>Iterable</code> interface:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">trait Iterable[+t] {
+  type MyType[+t] &lt;: Iterable[t] // MyType is a type constructor
+
+  def filter(p: t =&gt; Boolean): MyType[t] = //...
+  def map[s](f: t =&gt; s): MyType[s] = //...
+}
+
+abstract class List[+t] extends Iterable[t] {
+  type MyType[+t] = List[t]
+}
+</code></pre></div>
+<p>This definition of <code>Iterable</code> makes explicit that mapping a function over a certain structure (e.g., a <code>List</code>&gt;) will yield the same structure (containing different elements).</p>
+
+<h4>Early object initialization</h4>
+
+<p>It is now possible to initialize some fields of an object before any parent constructors are called. This is particularly useful for traits, which do not have normal constructor parameters. For example:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">trait Greeting {
+  val name: String
+  val msg = "How are you, " + name
+}
+class C extends {
+  val name = "Bob"
+} with Greeting {
+  println(msg)
+}
+</code></pre></div>
+<p>In the code above, the field <code>name</code> is initialized before the constructor of <code>Greeting</code> is called. Therefore, field <code>msg</code> in class <code>Greeting</code> is properly initialized to <code>&quot;How are you, Bob&quot;</code>.</p>
+
+<h4><code>for</code>-comprehensions, revised</h4>
+
+<p>The syntax of <code>for</code>-comprehensions has been changed. For example:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">for (val x &lt;- List(1, 2, 3); x % 2 == 0) println(x)
+</code></pre></div>
+<p>is now written</p>
+<div class="highlight"><pre><code class="language-" data-lang="">for (x &lt;- List(1, 2, 3) if x % 2 == 0) println(x)
+</code></pre></div>
+<p>Thus a <code>for</code>-comprehension now starts with a (possibly guarded) generator followed by one or more enumerators which can be         either a (possibly guarded) generator, a guard or a local value definition.</p>
+
+<p>The old syntax is still available but will be deprecated in the future.</p>
+
+<h4>Implicit anonymous functions</h4>
+
+<p>It is now possible to define anonymous functions using underscores in parameter position. For instance, the expressions in the left         column are each function values which expand to the anonymous functions on their right.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">_ + 1                  x =&gt; x + 1
+_ * _                  (x1, x2) =&gt; x1 * x2
+(_: int) * 2           (x: int) =&gt; (x: int) * 2
+if (_) x else y        z =&gt; if (z) x else y
+_.map(f)               x =&gt; x.map(f)
+_.map(_ + 1)           x =&gt; x.map(y =&gt; y + 1)
+</code></pre></div>
+<p>As a special case, a partially unapplied method is now designated <code>m _</code> instead of the previous notation <code>&amp;;m</code>.</p>
+
+<p>The new notation will displace the special syntax forms <code>.m()</code> for abstracting over method receivers and <code>&amp;m</code> for treating an unapplied method as a function value. For the time being, the old syntax forms are still available, but they will be deprecated in the future.</p>
+
+<h4>Pattern matching anonymous functions, refined</h4>
+
+<p>It is now possible to use case clauses to define a function value  directly for functions of arities greater than one. Previously,         only unary functions could be defined that way. For example:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">def scalarProduct(xs: Array[Double], ys: Array[Double]) =
+  (0.0 /: (xs zip ys)) {
+    case (a, (b, c)) =&gt; a + b * c
+  }
+</code></pre></div>
+<h2>Changes in Version 2.4 (09-Mar-2007) {: #2.4.0 }</h2>
+
+<h4>Object-local private and protected</h4>
+
+<p>The <code>private</code> and <code>protected</code> modifiers now accept a <code>[this]</code> qualifier. A definition <code>M</code> which is labelled         <code>private[this]</code> is private, and in addition can be accessed only from within the current object. That is, the only legal prefixes         for <code>M</code> are <code>this</code> or <code>C.this</code>. Analogously, a definition <code>M</code> which is labelled <code>protected[this]</code> is protected, and in         addition can be accessed only from within the current object.</p>
+
+<h4>Tuples, revised</h4>
+
+<p>The syntax for tuples has been changed from <code>{...}</code> to <code>(...)</code>. For any sequence of types T<sub>1</sub>, ..., T<sub>n</sub>,</p>
+
+<p><code>(</code>T<sub>1</sub>, ..., T<sub>n</sub><code>)</code> is a shorthand for <code>Tuplen[</code>T<sub>1</sub>, ..., T<sub>n</sub><code>]</code>.</p>
+
+<p>Analogously, for any sequence of expressions or patterns x<sub>1</sub>, ..., x<sub>n</sub>,</p>
+
+<p><code>(</code>x<sub>1</sub>, ..., x<sub>n</sub><code>)</code> is a shorthand for <code>Tuplen(</code>x<sub>1</sub>, ..., x<sub>n</sub><code>)</code>.</p>
+
+<h4>Access modifiers for primary constructors</h4>
+
+<p>The primary constructor of a class can now be marked <code>private</code> or <code>protected</code>. If such an access modifier is given, it comes between the name of the class and its value parameters. For example:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">class C[T] private (x: T) { ... }
+</code></pre></div>
+<h4>Annotations</h4>
+
+<p>The support for attributes has been extended and its syntax changed. Attributes are now called <em>annotations</em>. The syntax has been changed to follow Java&#39;s conventions, e.g. <code>@annotation</code> instead of <code>[attribute]</code>. The old syntax is still available but will be         deprecated in the future.</p>
+
+<p>Annotations are now serialized so that they can be read by compile-time or run-time tools. Class <code>scala.Annotation</code> has two         sub-traits which are used to indicate how annotations are retained. Instances of an annotation class inheriting from trait         <code>scala.ClassfileAnnotation</code> will be stored in the generated class files. Instances of an annotation class inheriting from trait         <code>scala.StaticAnnotation</code> will be visible  to the Scala type-checker in every compilation unit where the annotated symbol is accessed.</p>
+
+<h4>Decidable Subtyping</h4>
+
+<p>The implementation of subtyping has been changed to prevent infinite recursions. Termination of subtyping is now ensured by a new         restriction of class graphs to be finitary.</p>
+
+<h4>Case classes cannot be abstract</h4>
+
+<p>It is now explicitly ruled out that case classes can be abstract. The specification was silent on this point before, but did not explain how abstract case classes were treated. The Scala compiler allowed the idiom.</p>
+
+<h4>New syntax for self aliases and self types</h4>
+
+<p>It is now possible to give an explicit alias name and/or type for the self reference <code>this</code>. For instance, in</p>
+<div class="highlight"><pre><code class="language-" data-lang="">class C { self: D =&gt;
+  ...
+}
+</code></pre></div>
+<p>the name <code>self</code> is introduced as an alias for <code>this</code> within <code>C</code> and the self type of <code>C</code> is assumed to be <code>D</code>. This construct is introduced now in order to replace eventually both the qualified this construct <code>C.this</code> and the <code>requires</code> clause in Scala.</p>
+
+<h4>Assignment Operators</h4>
+
+<p>It is now possible to combine operators with assignments. For example:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">var x: int = 0
+x += 1
+</code></pre></div>
+<h2>Changes in Version 2.3.2 (23-Jan-2007) {: #2.3.2 }</h2>
+
+<h4>Extractors</h4>
+
+<p>It is now possible to define patterns independently of case classes, using <code>unapply</code> methods in extractor objects. Here is an example:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">object Twice {
+  def apply(x: Int): int = x*2
+  def unapply(z: Int): Option[int] = if (z%2 == 0) Some(z/2) else None
+}
+val x = Twice(21)
+x match { case Twice(n) =&gt; Console.println(n) } // prints 21
+</code></pre></div>
+<p>In the example, <code>Twice</code> is an extractor object with two methods:</p>
+
+<ul>
+<li>The <code>apply</code> method is used to build even numbers.</li>
+<li>The <code>unapply</code> method is used to decompose an even number; it is in a sense the reverse of <code>apply</code>. <code>unapply</code> methods return option types: <code>Some(...)</code> for a match that suceeds, <code>None</code> for a match that fails. Pattern variables are returned as the elements of <code>Some</code>. If there are several variables, they are grouped in a tuple.</li>
+</ul>
+
+<p>In the second-to-last line, <code>Twice</code>&#39;s <code>apply</code> method   is used to construct a number <code>x</code>. In the last line, <code>x</code> is tested against the pattern <code>Twice(n)</code>. This pattern succeeds for even numbers and assigns to the variable <code>n</code> one half of the number that was tested. The pattern match makes use of the <code>unapply</code> method of object <code>Twice</code>. More details on extractors can be found in the paper <a href="http://www.scala-lang.org/docu/files/MatchingObjectsWithPatterns-TR.pdf">Matching Objects with Patterns</a> by Emir, Odersky and Williams</p>
+
+<h4>Tuples</h4>
+
+<p>A new lightweight syntax for tuples has been introduced. For any sequence of types <code>{</code>T<sub>1</sub> ,.., T<sub>n</sub><code>}</code>,</p>
+
+<p><code>{</code>T<sub>1</sub> ,.., T<sub>n</sub><code>}</code> is a shorthand for <code>Tuplen[</code>T<sub>1</sub> ,.., T<sub>n</sub><code>]</code>.</p>
+
+<p>Analogously, for any sequence of expressions or patterns x<sub>1</sub>,.., x<sub>n</sub>,</p>
+
+<p><code>{</code>x<sub>1</sub> ,.., x<sub>n</sub><code>}</code> is a shorthand for <code>Tuplen(</code>x<sub>1</sub> ,.., x<sub>n</sub><code>)</code>.</p>
+
+<h4>Infix operators of greater arities</h4>
+
+<p>It is now possible to use methods which have more than one parameter as infix operators. In this case, all method arguments are written as a normal parameter list in parentheses. Example:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">class C {
+  def +(x: int, y: String) = ...
+}
+val c = new C
+c + (1, "abc")
+</code></pre></div>
+<h4>Deprecated attribute</h4>
+
+<p>A new standard attribute <code>deprecated</code> is available. If a member definition is marked with this attribute, any reference to the     member will cause a &quot;deprecated&quot; warning message to be emitted.</p>
+
+<h2>Changes in Version 2.3.0 (23-Nov-2006) {: #2.3.0 }</h2>
+
+<h4>Procedures</h4>
+
+<p>A simplified syntax for functions returning <code>Unit</code> has been introduced. Scala now allows the following shorthands:</p>
+
+<p><code>def f(params)</code> for <code>def f(params): Unit</code> and</p>
+
+<p><code>def f(params) { … }</code> for <code>def f(params): Unit = { … }</code>.</p>
+
+<h4>Type Patterns</h4>
+
+<p>The syntax of types in patterns has been refined. Scala now distinguishes between type variables (starting with a lower case letter) and types as type arguments in patterns. Type variables are bound in the pattern. Other type arguments are, as in previous versions, erased. The Scala compiler will now issue an &quot;<code>unchecked</code>&quot; warning at places where type erasure might compromise type-safety.</p>
+
+<h4>Standard Types</h4>
+
+<p>The recommended names for the two bottom classes in Scala&#39;s type hierarchy have changed as follows:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">All      ==&gt;     Nothing
+AllRef   ==&gt;     Null
+</code></pre></div>
+<p>The old names are still available as type aliases.</p>
+
+<h2>Changes in Version 2.1.8 (23-Aug-2006) {: #2.1.8 }</h2>
+
+<h4>Visibility Qualifier for protected</h4>
+
+<p>Protected members can now have a visibility qualifier, e.g., <code>protected[&lt;qualifier&gt;]</code>. In particular, one can now simulate package protected access as in Java writing</p>
+<div class="highlight"><pre><code class="language-" data-lang="">protected[P] def X ...
+</code></pre></div>
+<p>where <code>P</code> would name the package containing <code>X</code>.</p>
+
+<h4>Relaxation of Private Access</h4>
+
+<p>Private members of a class can now be referenced from the companion module of the class and vice versa.</p>
+
+<h4>Implicit Lookup</h4>
+
+<p>The lookup method for implicit definitions has been generalized. When searching for an implicit definition matching a type <code>T</code>, now are considered</p>
+
+<ul>
+<li>all identifiers accessible without prefix, and</li>
+<li>all members of companion modules of classes associated with <code>T</code>.</li>
+</ul>
+
+<p>(The second clause is more general than before). Here, a class is <em>associated</em> with a type <code>T</code> if it is referenced by some part of <code>T</code>, or if it is a base class of some part of <code>T</code>. For instance, to find implicit members corresponding to the type</p>
+<div class="highlight"><pre><code class="language-" data-lang="">HashSet[List[Int], String]
+</code></pre></div>
+<p>one would now look in the companion modules (aka static parts) of <code>HashSet</code>, <code>List</code>, <code>Int</code>, and <code>String</code>. Before, it was just the static part of <code>HashSet</code>.</p>
+
+<h4>Tightened Pattern Match</h4>
+
+<p>A typed pattern match with a singleton type <code>p.type</code> now tests whether the selector value is reference-equal to <code>p</code>. For example:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">val p = List(1, 2, 3)
+val q = List(1, 2)
+val r = q
+r match {
+  case _: p.type =&gt; Console.println("p")
+  case _: q.type =&gt; Console.println("q")
+}
+</code></pre></div>
+<p>This will match the second case and hence will print <code>&quot;q&quot;</code>. Before, the singleton types were erased to <code>List</code>, and         therefore the first case would have matched, which is non-sensical.</p>
+
+<h2>Changes in Version 2.1.7 (19-Jul-2006) {: #2.1.7 }</h2>
+
+<h4>Multi-Line string literals</h4>
+
+<p>It is now possible to write multi-line string-literals enclosed in triple quotes. Example</p>
+<div class="highlight"><pre><code class="language-" data-lang="">"""this is a
+   multi-line
+   string literal"""
+</code></pre></div>
+<p>No escape substitutions except for unicode escapes are performed in such string literals.</p>
+
+<h2>Changes in Version 2.1.5 (24-May-2006) {: #2.1.5 }</h2>
+
+<h4>Class Literals</h4>
+
+<p>There is a new syntax for class literals: For any class type <code>C</code>, <code>classOf[C]</code> designates the run-time representation of         <code>C</code>.</p>
+
+<h2>Changes in Version 2.0 (12-Mar-2006) {: #2.0 }</h2>
+
+<p>Scala in its second version is different in some details from the first version of the language. There have been several additions and some old idioms are no longer supported. This section summarizes the main changes.</p>
+
+<h4>New Keywords</h4>
+
+<p>The following three words are now reserved; they cannot be used as identifiers</p>
+<div class="highlight"><pre><code class="language-" data-lang="">implicit     match     requires
+</code></pre></div>
+<h4>Newlines as Statement Separators</h4>
+
+<p>Newlines can now be used as statement separators in place of semicolons</p>
+
+<h4>Syntax Restrictions</h4>
+
+<p>There are some other situations where old constructs no longer work:</p>
+
+<h5>Pattern matching expressions</h5>
+
+<p>The <code>match</code> keyword now appears only as infix operator between a selector expression and a number of cases, as in:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">expr match {
+  case Some(x) =&gt; ...
+  case None =&gt; ...
+}
+</code></pre></div>
+<p>Variants such as <code>expr.match {...}</code> or just <code>match {...}</code> are no longer supported.</p>
+
+<h5><code>with</code> in <code>extends</code> clauses</h5>
+
+<p>The idiom</p>
+<div class="highlight"><pre><code class="language-" data-lang="">class C with M { ... }
+</code></pre></div>
+<p>is no longer supported. A <code>with</code> connective is only allowed following an <code>extends</code> clause. For instance, the line above would have to be written</p>
+<div class="highlight"><pre><code class="language-" data-lang="">class C extends AnyRef with M { ... }
+</code></pre></div>
+<p>However, assuming <code>M</code> is a trait , it is also legal to write</p>
+<div class="highlight"><pre><code class="language-" data-lang="">class C extends M { ... }
+</code></pre></div>
+<p>The latter expression is treated as equivalent to</p>
+<div class="highlight"><pre><code class="language-" data-lang="">class C extends S with M { ... }
+</code></pre></div>
+<p>where <code>S</code> is the superclass of <code>M</code>.</p>
+
+<h5>Regular Expression Patterns</h5>
+
+<p>The only form of regular expression pattern that is currently supported is a sequence pattern, which might end in a sequence wildcard <code>_*</code>. Example:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">case List(1, 2, _*) =&gt; ... // will match all lists starting with 1,2
+</code></pre></div>
+<p>It is at current not clear whether this is a permanent restriction. We are evaluating the possibility of re-introducing full regular expression patterns in Scala.</p>
+
+<h4>Selftype Annotations</h4>
+
+<p>The recommended syntax of selftype annotations has changed.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">class C: T extends B { ... }
+</code></pre></div>
+<p>becomes</p>
+<div class="highlight"><pre><code class="language-" data-lang="">class C requires T extends B { ... }
+</code></pre></div>
+<p>That is, selftypes are now indicated by the new <code>requires</code> keyword. The old syntax is still available but is considered deprecated.</p>
+
+<h4>For-comprehensions</h4>
+
+<p>For-comprehensions  now admit value and pattern definitions. For example:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">for {
+  val x &lt;- List.range(1, 100)
+  val y &lt;- List.range(1, x)
+  val z = x + y
+  isPrime(z)
+} yield Pair(x, y)
+</code></pre></div>
+<p>Note the definition <code>val z = x + y</code> as the third item in the for-comprehension.</p>
+
+<h4>Conversions</h4>
+
+<p>The rules for implicit conversions of methods to functions have been tightened. Previously, a parameterized method used as a value was always implicitly converted to a function. This could lead to unexpected results when method arguments where forgotten. Consider for instance the statement below:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">show(x.toString)
+</code></pre></div>
+<p>where <code>show</code> is defined as follows:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">def show(x: String) = Console.println(x)
+</code></pre></div>
+<p>Most likely, the programmer forgot to supply an empty argument list <code>()</code> to <code>toString</code>. The previous Scala version would treat this code as a partially applied method, and expand it to:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">show(() =&gt; x.toString())
+</code></pre></div>
+<p>As a result, the address of a closure would be printed instead of the value of <code>s</code>.</p>
+
+<p>Scala version 2.0 will apply a conversion from partially applied method to function value only if the expected type of the expression is indeed a function type. For instance, the conversion would not be applied in the code above because the expected type of <code>show</code>&#39;s parameter is <code>String</code>, not a function type.</p>
+
+<p>The new convention disallows some previously legal code. Example:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">def sum(f: int =&gt; double)(a: int, b: int): double =
+  if (a &gt; b) 0 else f(a) + sum(f)(a + 1, b)
+
+val sumInts = sum(x =&gt; x)  // error: missing arguments
+</code></pre></div>
+<p>The partial application of <code>sum</code> in the last line of the code above will not be converted to a function type. Instead, the   compiler will produce an error message which states that arguments for method <code>sum</code> are missing. The problem can be fixed by providing an expected type for the partial application, for instance by annotating the definition of <code>sumInts</code> with its type:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">val sumInts: (int, int) =&gt; double = sum(x =&gt; x)  // OK
+</code></pre></div>
+<p>On the other hand, Scala version 2.0 now automatically applies methods with empty parameter lists to <code>()</code> argument lists when   necessary. For instance, the <code>show</code> expression above will now be expanded to</p>
+<div class="highlight"><pre><code class="language-" data-lang="">show(x.toString())
+</code></pre></div>
+<p>Scala version 2.0 also relaxes the rules of overriding with respect to empty parameter lists. The revised definition of <em>matching   members</em> makes it now possible to override a method with an explicit, but empty parameter list <code>()</code> with a parameterless method, and <em>vice versa</em>. For instance, the following class definition is now legal:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">class C {
+  override def toString: String = //...
+}
+</code></pre></div>
+<p>Previously this definition would have been rejected, because the <code>toString</code> method as inherited from <code>java.lang.Object</code> takes an empty parameter list.</p>
+
+<h4>Class Parameters</h4>
+
+<p>A class parameter may now be prefixed by <code>val</code> or <code>var</code>.</p>
+
+<h4>Private Qualifiers</h4>
+
+<p>Previously, Scala had three levels of visibility: <em>private</em>, <em>protected</em> and <em>public</em>. There was no way to restrict accesses to members of the current package, as in Java. Scala 2 now defines access qualifiers that let one express this level of visibility, among others. In the definition</p>
+<div class="highlight"><pre><code class="language-" data-lang="">private[C] def f(...)
+</code></pre></div>
+<p>access to <code>f</code> is restricted to all code within the class or package <code>C</code> (which must contain the definition of <code>f</code>)</p>
+
+<h4>Changes in the Mixin Model</h4>
+
+<p>The model which details mixin composition of classes has changed significantly. The main differences are:</p>
+
+<ul>
+<li>We now distinguish between <em>traits</em> that are used as mixin classes and normal classes. The syntax of traits has been generalized from version 1.0, in that traits are now allowed to have mutable fields. However, as in version 1.0, traits may still do not have           constructor parameters.</li>
+<li>Member resolution and super accesses are now both defined in terms of a <em>class linearization</em>.</li>
+<li>Scala&#39;s notion of method overloading has been generalized; in particular, it is now possible to have overloaded variants of the           same method in a subclass and in a superclass, or in several different mixins. This makes method overloading in Scala conceptually the same as in Java.</li>
+</ul>
+
+<p>The new mixin model is explained in more detail in the <a href="/files/archive/spec/2.11/">Scala Language Specification</a>.</p>
+
+<h4>Implicit Parameters</h4>
+
+<p>Views in Scala 1.0 have been replaced by the more general concept of implicit parameters</p>
+
+<h4>Flexible Typing of Pattern Matching</h4>
+
+<p>The new version of Scala implements more flexible typing rules when it comes to pattern matching over heterogeneous class hierarchies. A <em>heterogeneous class hierarchy</em> is  one where subclasses inherit a common superclass with different         parameter types. With the new rules in Scala version 2.0 one can perform pattern matches over such hierarchies with more precise         typings that keep track of the information gained by comparing the types of a selector and a matching pattern. This gives Scala capabilities analogous to guarded algebraic data types.</p>
+
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div class="contents">Contents</div>
+              <div id="toc"></div>
+              <br/>
+              <div class="alert-info">
+                <a href="/contribute/documentation.html#updating_scalalangorg"><p><strong>Problem with this page?</strong>
+                Please help us fix it!</p></a>
+              </div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

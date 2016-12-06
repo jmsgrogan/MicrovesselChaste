@@ -1,0 +1,3 @@
+<map id="ParameterInstance&lt; UNIT &gt;" name="ParameterInstance&lt; UNIT &gt;">
+<area shape="rect" id="node2" href="$classBaseParameterInstance.html" title="{BaseParameterInstance\n|&#45; mName\l&#45; mShortDescription\l&#45; mSourceInformation\l&#45; mSymbol\l&#45; mBaseValue\l|+ BaseParameterInstance()\l+ BaseParameterInstance()\l+ ~BaseParameterInstance()\l+ GetName()\l+ GetBibliographicInformation()\l+ GetShortDescription()\l+ GetSymbol()\l+ GetValueAsString()\l+ RegisterWithCollection()\l+ SetBibliographicInformation()\l+ SetName()\l+ SetShortDescription()\l+ SetSymbol()\l+ Create()\l&#45; serialize()\l}" alt="" coords="27,145,230,487"/>
+</map>

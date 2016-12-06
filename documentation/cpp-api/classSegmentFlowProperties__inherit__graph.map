@@ -1,0 +1,4 @@
+<map id="SegmentFlowProperties&lt; DIM &gt;" name="SegmentFlowProperties&lt; DIM &gt;">
+<area shape="rect" id="node3" href="$classAbstractVesselNetworkComponentFlowProperties.html" title="{AbstractVesselNetworkComponent\lFlowProperties\&lt; DIM \&gt;\n|# mPressure\l|+ AbstractVesselNetworkComponent\lFlowProperties()\l+ ~AbstractVesselNetworkComponent\lFlowProperties()\l+ GetPressure()\l+ SetPressure()\l&#45; serialize()\l}" alt="" coords="263,373,510,553"/>
+<area shape="rect" id="node5" href="$classAbstractVesselNetworkComponentProperties.html" title="{AbstractVesselNetworkComponent\lProperties\&lt; DIM \&gt;\n||+ AbstractVesselNetworkComponent\lProperties()\l+ ~AbstractVesselNetworkComponent\lProperties()\l+ GetOutputData()\l&#45; serialize()\l}" alt="" coords="395,160,642,325"/>
+</map>

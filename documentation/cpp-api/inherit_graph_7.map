@@ -1,0 +1,12 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classAbstractDiscreteContinuumSolver.html" title="AbstractDiscreteContinuum\lSolver\&lt; DIM \&gt;" alt="" coords="5,231,188,273"/>
+<area shape="rect" id="node2" href="$classAbstractRegularGridDiscreteContinuumSolver.html" title="AbstractRegularGridDiscrete\lContinuumSolver\&lt; DIM \&gt;" alt="" coords="236,166,425,207"/>
+<area shape="rect" id="node9" href="$classAbstractUnstructuredGridDiscreteContinuumSolver.html" title="AbstractUnstructuredGrid\lDiscreteContinuumSolver\l\&lt; DIM \&gt;" alt="" coords="245,289,416,345"/>
+<area shape="rect" id="node3" href="$classDensityMap.html" title="DensityMap\&lt; DIM \&gt;" alt="" coords="478,5,619,32"/>
+<area shape="rect" id="node4" href="$classDistanceMap.html" title="DistanceMap\&lt; DIM \&gt;" alt="" coords="475,56,623,83"/>
+<area shape="rect" id="node5" href="$classFiniteDifferenceSolver.html" title="FiniteDifferenceSolver\l\&lt; DIM \&gt;" alt="" coords="473,107,624,149"/>
+<area shape="rect" id="node6" href="$classFunctionMap.html" title="FunctionMap\&lt; DIM \&gt;" alt="" coords="475,173,622,200"/>
+<area shape="rect" id="node7" href="$classGreensFunctionSolver.html" title="GreensFunctionSolver\l\&lt; DIM \&gt;" alt="" coords="473,225,624,266"/>
+<area shape="rect" id="node8" href="$classLacunarityCalculator.html" title="LacunarityCalculator\l\&lt; DIM \&gt;" alt="" coords="478,290,619,331"/>
+<area shape="rect" id="node10" href="$classFiniteElementSolver.html" title="FiniteElementSolver\l\&lt; DIM \&gt;" alt="" coords="479,355,618,397"/>
+</map>

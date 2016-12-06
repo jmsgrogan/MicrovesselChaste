@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Performance of trait methods | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/scala-logo-white-sm.png" alt="white Scala logo" /></a>
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Performance of trait methods</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            <div class="article-date">July 8, 2016</div>
+            
+              <div class="written">Written By: <span class="by">Lukas Rytz</span></div>
+            
+            <h1>Performance of using default methods to compile Scala trait methods</h1>
+
+<h2>[Update] New insights</h2>
+
+<p>Since the writing of this post, we have made a lot of progress in narrowing down the performance
+issue described. The most important new insights:</p>
+
+<ul>
+<li>Jason has written a JMH-based test harness for measuring cold and hot perfromance of the Scala
+compiler (<a href="https://github.com/scala/compiler-benchmark">scala/compiler-benchmark</a>). He used this
+to show that the performance difference discussed in this post only affects cold performance,
+i.e., startup time.</li>
+<li>Scala 2.12.0-RC2 (and the final Scala 2.12.0) emits all mixin forwarders by default to avoid
+the startup performance slowdown.</li>
+<li>The micro-benchmark analyzed in this blog post is not the root cause of the performance
+regression observed when running the Scala compiler. It just shows one example where the use
+of default methods can have unexpected consequences on performance.</li>
+<li>A significant amount of the observed slowdown seems to be happening during class loading, when
+the JVM performs lookup of default methods inherited by classes.</li>
+</ul>
+
+<p>The more recent benchmarks are logged in the discussion of PR
+<a href="https://github.com/scala/scala/pull/5429">#5429</a>.</p>
+
+<p>The rest of this post is left mostly unchanged.</p>
+
+<h2>Introduction</h2>
+
+<p>Recently we observed that <a href="https://github.com/scala/scala/commit/33e7106">33e7106</a> causes a 20%
+slowdown in cold performance of the Scala compiler. Hot performance, for example when using sbt,
+is not affected. This post logs what we learned in trying to understand the cause of this regression.</p>
+
+<p>Thanks to <a href="https://twitter.com/darkdimius">Dmitry Petrashko</a> and
+<a href="https://twitter.com/retronym">Jason Zaugg</a> for reviews, inputs, ideas, hints, suggestions and
+references.</p>
+
+<p>If you have any feedback please post a comment below or <a href="http://lrytz.flavors.me/#about">contact me</a>
+directly.</p>
+
+<h2>Bytecode formats for trait methods</h2>
+
+<p>In Scala 2.12, bodies of methods defined in traits will be compiled to default methods in the
+interface classfile. In short, we have the following bytecode formats for concrete trait methods:</p>
+
+<ul>
+<li>2.11.x: trait method bodies are in static methods in the trait&#39;s <code>T$impl</code> class. Classes
+extending a trait get a virtual method that implements the abstract method in the interface and
+forwards to the static implementation method.</li>
+<li>2.12.0-M4: trait method bodies are in (non-static) interface default methods, subclasses get an
+virtual method (overridding the default method) that forwards to that default method using
+<code>invokespecial</code> (a <code>super</code> call).</li>
+<li><a href="https://github.com/scala/scala/commit/33e7106">33e7106</a>: in most cases, no more forwarders are
+generated in subclasses as they are not needed: the JVM will resolve the correct method.
+Concrete trait methods are invoked either using <code>invokeinterface</code> (if the static receiver type
+is the trait) or <code>invokevirtual</code> (if the static receiver type is the subclass).</li>
+<li>2.12.0-M5: trait method bodies are emitted in static methods in the interface classfile. The
+default methods forward to the static methods.</li>
+</ul>
+
+<h2>Performance measurements</h2>
+
+<p>Scala is unfortunately still lacking a proper infrastructure for montioring performance of the
+compiler and the bytecode it generates. Improving this situation will be one of the main tasks once
+Scala 2.12.0 out the door. But for now we are left with measuring performance and identifying
+regressions by hand.</p>
+
+<p>In the particular case we were measuring the cold performance of the Scala compiler, i.e., the time
+it takes to run the compiler on a fresh JVM and compile some code. We tested by compiling the source
+code of <a href="https://github.com/pathikrit/better-files">better-files</a>: the code is small, has no
+dependencies and compiles on 2.10, 2.11 and 2.12.</p>
+
+<p>Measurements were performed by simply running the Scala compiler in a loop:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">for i in {1..10}; do time /path/to/scala/bin/scalac @files; done
+</code></pre></div>
+<p>The numbers for various Scala versions are in
+<a href="https://docs.google.com/spreadsheets/d/12-GILZectCueVLeyC0HjOlnlQRZPBcTADGf9sVmGAW0/edit#gid=37831420">this spreadsheet</a>.</p>
+
+<p>Besides the 20% regression introduced in 33e7106, there are a number of other changes in compiler
+performance that we cannot explain at this point. For example, we don&#39;t know why 2.12.0-M5 is 13%
+faster than 33e7106. We will continue to work on this during the Scala 2.12 release candidate cycle.</p>
+
+<p>In this post we take a look at the changes introduced by 33e7106. A first observation is that the
+slowdown is not due to additional logic in the compiler, but the change in the bytecode of the
+compiler itself. This can be easily verified: a compiler built from revision 33e7106 using its
+parent (b932419) as STARR has no slowdown. Building it with itself as STARR, the resulting compiler
+runs slower.</p>
+
+<p>This means that any Scala applications using concrete trait methods is likely to be affected by
+this problem.</p>
+
+<h2>Some details on the HotSpot compiler</h2>
+
+<p>This section explains some details of the HotSpot optimizer. It assembles information from various
+sources and own observations; it might contain mistakes and misunderstandings. It is certainly
+simplified and incomplete. More details are available in the linked resources.</p>
+
+<h3>JITing</h3>
+
+<p>My recommended reference for this first section is the talk &quot;JVM Mechanics&quot; by Doug Hawkins
+(<a href="https://www.youtube.com/watch?v=E9i9NJeXGmM">video</a>,
+<a href="http://www.slideshare.net/dougqh/jvm-mechanics-when-does-the">slides</a>).</p>
+
+<p>First of all, JVM 8 uses two JIT compilers: C1 and C2. C1 is fast but performs only basic
+optimizations, in particular it does not perform speculative optimizations based on profiling
+(frequency of branches, type profiles at callsites). C2 is profile-guided and speculative but
+slower.</p>
+
+<p>The JVM starts by interpreting the program. It only compiles methods that are either called often
+enough or that have long enough loops. There are two counters for each method:</p>
+
+<ul>
+<li>the number of times it is invoked, and</li>
+<li>the number of times a backwards branch is executed.</li>
+</ul>
+
+<p>The decision to compile a method is based on these counters. A simplified (ignoring backwards
+branches), typical scenario: after 2000 invocations a method gets compiled by C1, after 15000 it
+gets re-compiled by C2 (see <a href="http://stackoverflow.com/a/35614237/248998">this answer on SO</a> for more
+details). Note that the C1-generated assembly is instrumented to update the two counters (and also
+to collect other profiling data that will be used by the C2 optimizer). After compiling a method,
+new invocations of the method will use the newly generated assembly.</p>
+
+<p>The above works well for a method that is invoked many times, but what happens to a long-running
+method that is invoked only once, but has a long loop? The decision to compile this method is taken
+when the counter of backwards branches passes a threshold. Once compilation is done, the JVM
+performs a so-called on-stack replacement (OSR): the stack frame of the running method is modified
+as necessary and execution continues using the new assembly.</p>
+
+<p>An OSR / loop compilation of a method is always tied to a specific loop: the entry point of the
+generated assembly is at the end of the loop (locations are referred to by the index in the jvm
+bytecode, called &quot;bytecode index&quot; / <code>bci</code>). If there are multiple hot loops within a method, the
+same method may get multiple OSR compiled versions. More details on this can be found in
+<a href="https://gist.github.com/rednaxelafx/1165804#osr">this post</a> by Krystal Mok which explains the
+many details of the <code>-XX:+PrintCompilation</code> output.</p>
+
+<h3>Inlining</h3>
+
+<p>For this section my reference s Aleksey Shipilёv&#39;s extensive post
+<a href="http://shipilev.net/blog/2015/black-magic-method-dispatch/">The Black Magic of (Java) Method Dispatch</a>.</p>
+
+<p>Inlining is fundamental because it acts as an enabler for most other optimizations. The reason is
+that inlining duplicates the code of a method into a specific environment, which allows the
+optimizer to specialize the code. As Aleksey says in the conclusion: &quot;inlining actually broadens the
+scope of other optimizations, and that alone is, in many cases, enough reason to inline&quot;.</p>
+
+<p>Both C1 and C2 perform inlining. The policy whether to inline a method is non-trivial and uses
+several heuristics (implemented in
+<a href="http://hg.openjdk.java.net/jdk8u/jdk8u/hotspot/file/f22b5be95347/src/share/vm/opto/bytecodeInfo.cpp">bytecodeInfo.cpp</a>,
+methods <code>should_inline</code>, <code>should_not_inline</code> and <code>try_to_inline</code>). A simplified summary:</p>
+
+<ul>
+<li>Trivial methods (6 bytes by default, <code>MaxTrivialSize</code>) are always inlined.</li>
+<li>Methods up to 35 bytes (<code>MaxInlineSize</code>) invoked more than 250 (<code>MinInliningThreshold</code>) times are
+inlined.</li>
+<li>Methods up to 325 bytes (<code>FreqInlineSize</code>) are inlined if the callsite is &quot;hot&quot; (or &quot;frequent&quot;),
+which means it is invoked more than 20 times (no command-line flag in release versions) per one
+invocation of the caller method.</li>
+<li>The inlining depth is limited (9 by default, <code>MaxInlineLevel</code>).</li>
+<li>No inlining is performed if the callsite method is already very large.</li>
+</ul>
+
+<p>The procedure is the same for C1 and C2, it uses the invocation counter that is also used for
+compilation decisions (previous section).</p>
+
+<p>Dmitry points out that a method being inlined might already be compiled, in which case the compiled
+assembly will be inlined. The size limits for inlining are controlled by a different parameter in
+this case, see
+<a href="https://groups.google.com/forum/#!msg/mechanical-sympathy/8ARGnMds7tU/p4rxkhi-vgcJ">this thread</a>
+and <a href="https://bugs.openjdk.java.net/browse/JDK-6316156">this ticket</a> for reference.</p>
+
+<h3>Inlining virtual methods</h3>
+
+<p>In C1, a method can only be inlined if it can be statically resolved. This is the case for static
+and private methods, for constructors, but also for virtual methods that are never overridden. The
+JVM has full knowledge on code of the program it is executing. If a method is virtual and could
+in principle be overridden in a subclass, but no such subclass has been loaded (so far), an
+invocation of the method can only resolve to that single definition.</p>
+
+<p>The process of analyzing the hierarchy of classes currently loaded in the VM is called &quot;class
+hierarchy analysis&quot; (CHA). Both C1 and C2 use the information computed by CHA to inline calls to
+virtual methods that are not overridden.</p>
+
+<p>When the JVM loads a new class, a virtual method that was statically not overridden by CHA may get
+an override. All assembly code that made use of the now invalid assumption is discarded and
+execution of the corresponding methods is again performed by the interpreter. This process is called
+deoptimization. In case a deoptimized method is currently being executed, passing control to the
+interpreter requires adapting the stack frame from compiled code to what the interpreter expects.
+This process is similar to on-stack replacement, but in reverse.</p>
+
+<p>If the stack frame contains return addresses that point to invalidated code, those addresses are
+re-written to code that will perform the deoptimization and pass control to the interpreter.</p>
+
+<p>In addition to using CHA, the C2 compiler performs speculative inlining of virtual methods based on
+the type profiles gathered by the interpreter and the C1-generated assembly. If the receiver type
+at a callsite is always the same (the callsite is &quot;monomorphic&quot;) the method is inlined. The assembly
+contains a type test to validate the assumption, if it breaks the method gets deoptimized.</p>
+
+<p>C2 will also inline bi-morphic callsites: the code of both callees is inlined, a type test is used
+to branch to the correct one (or to bail out). Finally, if the type profile shows a clear bias to
+a specific receiver type (for example 90%), its method is inlined and virtual dispatch is used for
+the other cases (shown in Aleksey&#39;s post).</p>
+
+<p>If a callsite has 3+ receiver types without a clear bias, C2 does not inline and an ordinary method
+lookup is performed at runtime.</p>
+
+<p>Note that C2 performs other speculative optimizations than profile-based inlining, for example
+profile-based branch elimination, and it has a graph-coloring register allocator.</p>
+
+<h2>Understanding the performance regression</h2>
+
+<p>With the above knowledge at hand (I wish I had it when I started) we try to identify what causes
+the slowdown of eliminating forwarder methods.</p>
+
+<h3>Call performance</h3>
+
+<p>In a first step we measured the call performance of the various trait encodings.</p>
+
+<p>The first
+<a href="https://github.com/lrytz/benchmarks/blob/master/src/main/java/traitEncodings/CallPerformance.java">benchmark <code>CallPerformance</code></a>
+has roughly the following structure:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">interface I {
+    default int addDefault(int a, int b) { return a + b; }
+
+    static int addStatic(int a, int b) { return a + b; }
+    default int addDefaultStatic(int a, int b) { return addStatic(a, b); }
+
+    default int addForwarded(int a, int b) { return a + b; }
+
+    int addInherited(int a, int b);
+
+    int addVirtual(int a, int b);
+}
+
+static abstract class A implements I {
+    public int addInherited(int a, int b) { return a + b; }
+}
+
+static class C1 extends A implements I {
+    public int addForwarded(int a, int b) { return I.super.addForwarded(a, b); }
+
+    public int addVirtual(int a, int b) { return a + b; }
+}
+</code></pre></div>
+<p>There are identical copies of <code>C1</code> (<code>C2</code>, ...). The example encodes the following formats (we
+don&#39;t test the 2.11.x format):</p>
+
+<ul>
+<li><code>addDefault</code> for 33e7106</li>
+<li><code>addDefaultStatic</code> for 2.12.0-M5</li>
+<li><code>addForwarded</code> for 2.12.0-M4</li>
+</ul>
+
+<p>The methods <code>addInherited</code> and <code>addVirtual</code> don&#39;t represent trait method encodings, they are for
+comparison. We test all encodings in a monomorphic callsite (receiver is always <code>C1</code>) and in a
+polymorphic one.</p>
+
+<h4>Monomorphic case</h4>
+
+<p>In the monomorphic case all trait encodings are inlined and perform the same (there are tiny
+differences, if you are interested check Aleksey&#39;s blog post).</p>
+
+<p>If we annotate all methods with JMH&#39;s <code>DONT_INLINE</code> directive, encodings with a forwarder (either
+M4-style forwarder invoking the trait default method, or the upcoming M5-style default method
+forwarding to static) are a bit slower (so a default method without a forwarder is faster).
+The penalty for having either forwarder is similar.</p>
+
+<h4>Polymorphic case</h4>
+
+<p>If the callsite is polymorphic:</p>
+
+<ul>
+<li>The M4 encoding (<code>addForwarded</code>) is slow because the forwarder cannot be inlined. This the known
+issue of trait methods leading to megamorphic callsites that exists in Scala 2.11.x and older.</li>
+<li>The 33e7106 (<code>addDefault</code>) and M5 (<code>addDefaultStatic</code>) encodings are also slow: the default
+method is not inlined (checked with <code>-XX:+PrintInlining</code> and by comparing with a method marked
+<code>DONT_INLINE</code>). We will explore this in detail later.</li>
+</ul>
+
+<p>For comparison, an invocation of <code>addInherited</code> is inlined and therefore much faster. So an
+inherited virtual method is not treated in the same way as an inherited default method. The next
+section goes into details why this is the case.</p>
+
+<p><em>Note:</em> for the question why the 33e7106 encoding causes a 20% performance regression, this cannot be
+the reason. We found out that <code>addDefault</code> is slower than it could be in the polymorphic case, but
+it is not slower than the M4 encoding.</p>
+
+<h3>CHA and default methods</h3>
+
+<p>The reason <code>addDefault</code> is not inlined while <code>addInherited</code> in the previous example has to do with
+CHA: in fact, CHA is disabled altogether for default methods. This is logged in the JVM bugtracker
+under <a href="https://bugs.openjdk.java.net/browse/JDK-8036580">JDK-8036580</a>. It was disabled in order to
+fix <a href="https://bugs.openjdk.java.net/browse/JDK-8036100">JDK-8036100</a> which lead to the wrong method
+being inlined. (It was @retronym who initially suggested these tickets could be relevant).</p>
+
+<p>The reason for <code>addInherited</code> being inlined is that the VM knows (from CHA) the method is not
+overridden in any of the loaded classes. This is tested in the
+<a href="https://github.com/lrytz/benchmarks/blob/master/src/main/java/traitEncodings/InliningCHA.java"><code>InliningCHA</code> benchmark</a>.</p>
+
+<p>The first benchmark measures a megamorphic call to <code>addInherited</code>, just like in the previous
+section. This call is inlined. The second benchmark performs the exact same operation but makes sure
+that new subclass <code>CX</code> is loaded which overrides <code>addInherited</code>. CHA no longer returns a single
+target for the method and the call is not inlined. Note that no instance of <code>CX</code> is created.</p>
+
+<p>This seems to be a shortcoming in C2&#39;s inliner implementation: based on the type profiling data,
+C2 knows that the only types reaching the callsites are <code>C1</code>, <code>C2</code>, <code>C3</code> and <code>C4</code>. Using CHA it
+could in principle find out that there is a single implementation of <code>addInherited</code>.</p>
+
+<h3>Method lookup in classes implementing many interfaces</h3>
+
+<p>We are still searching for an answer why 33e7106 caused a performance regression. Martin Thompson
+notes in a
+<a href="http://mechanical-sympathy.blogspot.ch/2012/04/invoke-interface-optimisations.html">blog post</a>
+(dated 2012):</p>
+
+<blockquote>
+<p>I have observed that when a class implements multiple interfaces, with multiple methods,
+performance can degrade significantly because the method dispatch involves a linear search of
+method list</p>
+</blockquote>
+
+<p>We can reproduce this in the
+<a href="https://github.com/lrytz/benchmarks/blob/master/src/main/java/traitEncodings/InterfaceManyMembers.java">benchmark <code>InterfaceManyMembers</code></a>.
+The basic example is the following:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">interface I1 { default int a1 ... }
+interface I2 { default int b1 ... ; default int b2 ... }
+...
+
+class A1 implements I1 { }
+class A2 implements I2 { }
+...
+
+class B1 implements I1 { }
+class B2 implements I1, I2 { }
+...
+</code></pre></div>
+<p>In the benchmark, every class (<code>A1</code>, <code>A2</code>, <code>B1</code>, ...) exists in four copies to make sure the
+callsite is megamorphic. We measure how much time an invocation of one default method takes:</p>
+
+<ul>
+<li>The number of default methods in an interface does not matter, so <code>A1.a1</code> and <code>A2.b1</code> perform
+the same.</li>
+<li>The number of implemented interfaces matters, there&#39;s a penalty for every additional interface.
+So <code>B1.a1</code> is faster than <code>B2.b1</code>, etc.</li>
+</ul>
+
+<p>Adding an overriding forwarder method to the subclasses does not change this result, the slowdown
+per additional interface remains. So this seems not to be the reason for the performance regression.</p>
+
+<h3>Back to default methods</h3>
+
+<p>Googling a little bit more about the performance of default methods, I found a relevant
+<a href="http://stackoverflow.com/questions/30312096/java-default-methods-is-slower-than-the-same-code-but-in-an-abstract-class">post on SO</a>
+containing a nice benchmark.</p>
+
+<p>I simplified the example into the
+<a href="https://github.com/lrytz/benchmarks/blob/master/src/main/java/traitEncodings/DefaultMethodPreventsOptimization.java">benchmark <code>DefaultMethodPreventsOptimization</code></a>,
+which is relatively small:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">interface I {
+    int getV();
+    default int accessDefault() { return getV(); }
+}
+
+abstract class A implements I {
+    public int accessVirtual() { return getV(); }
+    public int accessForward(){ return I.super.accessDefault(); }
+}
+
+class C extends A implements I {
+    public int v = 0;
+    public int getV() { return v; }
+}
+</code></pre></div>
+<p>The benchmark shows that <code>c.v = x; c.accessDefault()</code> is 3x slower than
+<code>c.v = x; c.accessVirtual()</code> or <code>c.v = x; c.accessForward()</code>.</p>
+
+<h4>A look at the assembly</h4>
+
+<p>(This section was revised later, thanks to <a href="https://twitter.com/blaisorblade">Paolo Giarrusso</a> for
+his feedback!)</p>
+
+<p>As noted in comments on the StackOverflow thread, everything is inlined in all three benchmarks,
+so the difference is not due to inlining. We can observe that the assembly generated for the
+<code>accessDefault</code> case is less optimized than in the other cases. Here is the output of JMH&#39;s
+<code>-prof perfasm</code> feature, it includes the assembly of the hottest regions:</p>
+
+<ul>
+<li>for <a href="https://gist.github.com/lrytz/f1c24e685b871639d7e618b56325e102#file-adefault-txt">accessDefault</a></li>
+<li>for <a href="https://gist.github.com/lrytz/f1c24e685b871639d7e618b56325e102#file-bvirtual-txt">accessVirtual</a></li>
+<li>for <a href="https://gist.github.com/lrytz/f1c24e685b871639d7e618b56325e102#file-cforward-txt">accessForward</a></li>
+</ul>
+
+<p>In fact, the assembly for the <code>accessVirtual</code> and <code>accessForward</code> cases is identical.</p>
+
+<p>One answer on the SO thread suggests that lack of CHA for the default method case prevents
+eliminating a type guard, which in turn prevents optimizations on the field write and read. A later
+comment points out that this does not seem to be the case.</p>
+
+<p>The benchmark basically measures the following loop:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">int r = 0;
+for (int x = 0; x &lt; N; x++) {
+  c.v = x;
+  r += c.v // field acces either through a default or a virtual method
+}
+</code></pre></div>
+<p>Comparing the assembly code of the loop when using the default method or the virtual method, Paolo
+identified one interesting difference. When using the default method, the loop body consists of the
+following instructions:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">mov  %edi,0x10(%rax)   ;*putfield v
+add  0x10(%r13),%edx   ;*iadd
+inc  %edi              ;*iinc
+</code></pre></div>
+<p>By default the JVM outputs the AT&amp;T assembly syntax, so instructions have the form
+<code>mnemonic src dst</code>. The <code>%edi</code> register contains the loop counter <code>x</code>, <code>%edx</code> contains the result
+<code>r</code>.</p>
+
+<ul>
+<li>The first instruction writes <code>x</code> into the field <code>c.v</code>: <code>%rax</code> contains the address of object
+<code>c</code>, the field <code>v</code> is located at offset <code>0x10</code>.</li>
+<li>The second instruction reads the field <code>c.v</code> and adds the value to <code>x</code>. Note that this time,
+register <code>%r13</code> is used to access object <code>c</code>. There are two registers that contain the same
+object address, but the JIT compiler does not seem to know this fact.</li>
+<li>The last line increases the loop counter.</li>
+</ul>
+
+<p>Comparing that to the loop body assembly when using a virtual method to access the field:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">mov  %r8d,0x10(%r10)   ;*putfield v
+add  %r8d,%edx         ;*iadd
+inc  %r8d              ;*iinc
+</code></pre></div>
+<p>Here, <code>%r8d</code> contains the loop counter <code>x</code>. Note that there is only one memory access: the JIT
+compiler identified that the memory read accesses the same location that was just written, so it
+uses the register already containing the value.</p>
+
+<p>The full assembly code is actually a lot larger than just a loop around the three instructions shown
+above. For one, there is infrastructure code added by JMH to measure times and to make sure values
+are consumed. But the main reason is loop unrolling. The faster assembly (when using the virtual
+method) contains the following loop:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">↗ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ mov    %r8d,%r11d
+│ add    $0xf,%r11d
+│ mov    %r11d,0x10(%r10)   ;*putfield v
+│ add    $0x78,%edx         ;*iadd
+│ add    $0x10,%r8d         ;*iinc
+│ cmp    $0x3d9,%r8d
+╰ jl     &lt;loop-start&gt;
+</code></pre></div>
+<p>This code does the following:</p>
+
+<ul>
+<li>The register <code>%r8d</code> still contains the loop counter <code>x</code>, so the loop adds <code>x</code> to <code>r</code> (<code>%edx</code>)
+16 times (without increasing <code>x</code> in between).</li>
+<li>Then it stores the value of <code>x</code> into <code>%r11d</code>, adds the constant <code>0xf</code> (decimal 15) to make up
+for the folded iterations and stores that value into the field <code>c.v</code>.</li>
+<li>The constant <code>0x78</code> (decimal 120) is added to the result <code>r</code> to make up for the fact that the
+loop counter was not increased (0 + 1 + 2 + ... + 15 = 120).</li>
+<li>The loop counter is increased by the constant <code>0x10</code> (decimal 16), corresponding to the 16
+unfolded iterations.</li>
+<li>The loop counter is compared against <code>0x3d9</code> (decimal 985): if it is smaller, another round of
+the unfolded loop can be executed (the loop ends at 1000). Otherwise execution continues in
+a different location that performs single loop iterations.</li>
+</ul>
+
+<p>The interesting observation here is that the field <code>c.v</code> is only written once per 16 iterations.</p>
+
+<p>The slower assembly (when using the default method) also contains an unfolded loop, but the memory
+location <code>c.x</code> is written <strong>and</strong> read in every iteration (instead of only written in every 16th).
+Again, the problem seems to be that the JIT compiler does not know that two registers contain the
+same memory address for object <code>c</code>. The unfolded loop also uses a lot of registers, it even seems to
+make use of SSE registers (<code>%xmm1</code>, ...) as 32 bit registers.</p>
+
+<h4>And CHA, again</h4>
+
+<p><a href="https://twitter.com/shipilev">Aleksey Shipilёv</a> kindly took a look at the example and managed to
+narrow it down further. Using the JVM option <code>-XX:-UseCHA</code>, he observed that the C2 compiler
+generates the slower bytecode (with two memory accesses per iteration) also for virtual methods when
+CHA is disabled. This was reported in a <a href="https://bugs.openjdk.java.net/browse/JDK-8161334">new ticket</a>.</p>
+
+<p>This limitation may be accidental, i.e., the loop optimizer should probably perform the same no
+matter if inlining was CHA- or profile-based. But the example shows that for now, the lack of CHA
+for default methods causes optimizations (other than inlining) to fail, which may result in
+significant slowdowns.</p>
+
+<h2>Summary</h2>
+
+<p>We found a few interesting behaviors of the JVM optimizer.</p>
+
+<ul>
+<li>There are two possibilities for a method to be inlined:</li>
+</ul>
+
+<ol>
+<li>The method is not overridden in any of the classes currently loaded, as determined by CHA. In
+ this case the method can be inlined by C1 and C2.</li>
+<li>The type profile shows that the receiver type at the callsite has a clear bias towards one or
+ two types. In this case C2 will inline the corresponding implementation(s) speculatively.</li>
+</ol>
+
+<p>Because CHA is not available for default methods, default methods can only be inlined by C2,
+  based on type profiling. This means that a default method at a megamorphic callsite is never
+  inlined, even if the method does not have any overrides.</p>
+
+<ul>
+<li><p>The JIT does not combine the knowledge of type profiles and CHA. Assume a type profile shows that
+a certain callsite has 3 receiver types at run-time, so it is megamorphic. Also assume that there
+exist multiple versions (overrides / implementations) of the selected method, but CHA shows that
+method resolution for the 3 types in question always yields the same implementation. In principle
+the method could be inlined in this case, but this is not currently implemented.</p></li>
+<li><p>Interface method lookup slows down by the number of interfaces a class implements.</p></li>
+<li><p>The JVM fails to perform certain optimizations when default methods are used. We could show in a
+benchmark that moving a method from a parent class into a parent interface can degrade performance
+significantly. Adding an override to a subclass which invokes the default method using a <code>super</code>
+call restores the performance.</p></li>
+</ul>
+
+<p>The assembly code reveals that the JVM fails to eliminate memory accesses when using the default
+  methods.</p>
+
+<p>While we can reproduce certain slowdowns when using default methods in micro-benchmarks, this does
+not answer definitively why we observe a 20% performance regression when running the Scala compiler on
+default methods without forwarders. The fact that the JIT compiler fails to perform certain
+optimizations may be the reason, but we don&#39;t have any evidence or proof to relate the two
+observations.</p>
+
+<h2>References</h2>
+
+<p>Besides the <a href="http://shipilev.net/blog/2015/black-magic-method-dispatch/">post</a> already mentioned,
+Aleksey Shipilёv&#39;s <a href="http://shipilev.net/">blog</a> is an excellent resource for Java and JVM
+intrinsics.</p>
+
+<p>The talk &quot;JVM Mechanics&quot; by Doug Hawkins was also mentioned above
+(<a href="https://www.youtube.com/watch?v=E9i9NJeXGmM">video</a>,
+<a href="http://www.slideshare.net/dougqh/jvm-mechanics-when-does-the">slides</a>),
+it is a great overview on the JIT, inliner and optimizer. For an overview I can also recommend a
+<a href="http://middlewaresnippets.blogspot.ch/2014/11/java-virtual-machine-code-generation.html">longer blog post</a>
+by René van Wijk and a
+<a href="https://www.lmax.com/blog/staff-blogs/2016/03/05/observing-jvm-warm-effects/">shorter one</a>
+by Mark Price focussing on the JIT compilers.</p>
+
+<p>The JVM has an excessive number of flags for logging and tweaking:</p>
+
+<ul>
+<li>Some flags are <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html">documented here</a></li>
+<li>Many others are not documented, run <code>java -XX:+PrintFlagsFinal</code> to get a list of all flags</li>
+</ul>
+
+<p>Some flags used in the examples of this post:</p>
+
+<ul>
+<li><code>-XX:TieredStopAtLevel=1</code> to disable C2</li>
+<li><code>-XX:+PrintCompilation</code> logs methods being compiled (and deoptimized)</li>
+<li><code>-XX:+PrintInlining</code> logs callsites being inlined (or not), best used together with the above</li>
+</ul>
+
+<p><a href="https://github.com/AdoptOpenJDK/jitwatch">JITWatch</a> is a GUI tool that helps understanding what the
+JIT is doing (I haven&#39;t tried it yet).</p>
+
+<p>A
+<a href="http://mail.openjdk.java.net/pipermail/hotspot-compiler-dev/2015-April/thread.html#17649">thread</a>
+on the hotspot-compiler-dev mailing list on why CHA is disabled for interfaces. Seems to discuss
+the situation before default methods were a common thing.</p>
+
+<p>A <a href="https://gist.github.com/rednaxelafx/1165804#file-notes-md">gist</a> by Krystal Mok explaining many
+details of the <code>-XX:+PrintCompilation</code> output and other details of the JIT process.</p>
+
+<p>The <a href="http://openjdk.java.net/groups/hotspot/docs/HotSpotGlossary.html">glossary</a> on the HotSpot
+wiki contains some useful nomenclature.</p>
+
+<p>Finally, a <a href="https://www.cs.princeton.edu/picasso/mats/HotspotOverview.pdf">slide deck</a> by Paul
+Hohensee that covers many details of HotSpots internals.</p>
+
+<h1>Discussion</h1>
+
+            
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  
+    var disqus_shortname = 'scalasip'; // required: replace example with your forum shortname
+  
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div id="toc"></div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

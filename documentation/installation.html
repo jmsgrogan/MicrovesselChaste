@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Installation | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Installation</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <div class="row">
+      <div class="span12">
+          <div class="main-page-column" style="width: 100%;">
+            
+            <h2>Linux</h2>
+
+<h3>Conda Package</h3>
+
+<p>The <a href="https://www.continuum.io/downloads">conda</a> package is recommended. If you already have <code>conda</code> installed just do:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">conda config --add channels conda-forge
+conda config --add channels jmsgrogan
+conda install microvessel-chaste
+</code></pre></div>
+<p>You should then be able to do:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">import microvessel_chaste
+</code></pre></div>
+<p>in a python session. </p>
+
+<p>If you need to install <code>conda</code>, the <a href="http://conda.pydata.org/miniconda.html">Miniconda</a> package will suffice. </p>
+
+<h3>Docker</h3>
+
+<p>A Docker image is also available. This image will launch a Jupyter notebook at <a href="http://localhost::8888">http://localhost::8888</a> in a web browser, which can be used to try out the package. If you already have docker installed do:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">docker pull jmsgrogan/microvessel-chaste
+docker run -it -p 8888:8888 jmsgrogan/microvessel-chaste
+</code></pre></div>
+<p>and go to the above link in your browser. Alternatively do:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">docker pull jmsgrogan/microvessel-chaste
+docker run -it jmsgrogan/microvessel-chaste /bin/bash
+</code></pre></div>
+<p>to get access to the shell and launch Python yourself.</p>
+
+<p>To install Docker follow the <a href="https://docs.docker.com/">instructions here</a>.</p>
+
+<h2>Windows/MacOS</h2>
+
+<h3>Docker</h3>
+
+<p>Only Docker is supported on these platforms at the moment. Install Docker following the <a href="https://docs.docker.com/">instructions here</a> and proceed as per the Linux Docker instructions above.</p>
+
+<h2>Build From Source (Linux) - C++ and Python</h2>
+
+<p>It is reasonably straightforward to build the package from source on Linux.</p>
+
+<p>First, Chaste dependencies need to be built following the <a href="https://chaste.cs.ox.ac.uk/trac/wiki/InstallGuides/InstallGuide">Chaste Install Guide</a>. </p>
+
+<p>The project only supports the development version of Chaste. This can be obtained by doing:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">git clone -b develop https://chaste.cs.ox.ac.uk/git/chaste.git $CHASTE_SOURCE_DIR
+</code></pre></div>
+<p>The project code itself can be obtained by doing: </p>
+<div class="highlight"><pre><code class="language-" data-lang="">git clone https://github.com/jmsgrogan/MicrovesselChaste.git $MICROVESSEL_PROJECT_SOURCE_DIR
+</code></pre></div>
+<p>The Microvessel project code needs to be included in the main Chaste source. This can be done with a symbolic link:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">cd $CHASTE_SOURCE_DIR/projects
+ln -s $MICROVESSEL_PROJECT_SOURCE_DIR
+</code></pre></div>
+<p>The C++ libraries can be built using the <a href="https://chaste.cs.ox.ac.uk/trac/wiki/ChasteGuides/CmakeBuildGuide">Chaste CMake build system</a>. First, create a build directory outside the source tree and proceed as:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">cd $CHASTE_BUILD_DIR
+cmake $CHASTE_SOURCE_DIR
+make project_MicrovesselChaste -j $NUM_AVAILABLE_CPUS
+</code></pre></div>
+<p>This will build the C++ library and all tests. To avoid building tests do:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">make chaste_project_MicrovesselChaste -j $NUM_AVAILABLE_CPUS
+</code></pre></div>
+<p>as the final command. The <a href="https://chaste.cs.ox.ac.uk/trac/wiki/ChasteGuides/CmakeBuildGuide">Chaste CMake build system guide</a> should be consulted for options related to generating optimized builds, running other types of test and installation as a system library.</p>
+
+<p>To build the Python library it is neccessary to first build <a href="https://github.com/jmsgrogan/PyChaste.git">PyChaste</a>, a Python wrapper for Chaste. Do: </p>
+<div class="highlight"><pre><code class="language-" data-lang="">git clone https://github.com/jmsgrogan/PyChaste.git $PYCHASTE_PROJECT_SOURCE_DIR
+cd $CHASTE_SOURCE_DIR/projects
+ln -s $PYCHASTE_PROJECT_SOURCE_DIR
+cd $CHASTE_BUILD_DIR
+cmake $CHASTE_SOURCE_DIR
+make chaste_project_PyChaste -j $NUM_AVAILABLE_CPUS
+make chaste_project_PyChaste_Python -j $NUM_AVAILABLE_CPUS
+cd $CHASTE_BUILD_DIR/projects/PyChaste/python/chaste
+python setup.py install
+</code></pre></div>
+<p>Similarly, for Microvessel Chaste do:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">cd $CHASTE_BUILD_DIR
+make project_MicrovesselChaste_Python -j $NUM_AVAILABLE_CPUS
+cd $CHASTE_BUILD_DIR/projects/MicrovesselChaste/python/microvessel-chaste
+python setup.py install
+</code></pre></div>
+<p>You can then import <code>chaste</code> and <code>microvessel_chaste</code> in a Python session.</p>
+
+<h2>Troubleshooting</h2>
+
+<ul>
+<li>Missing Boost Python when building from source: If you are building from source you may need to install Boost Python in addition to the Chaste dependencies. Do <code>sudo apt-get install libboost-python-dev</code> on Ubuntu to obtain it.</li>
+<li>Missing librt.so when loading conda package: this is a problem with the version of VTK in conda-forge. Make sure you have added the conda channels in the order above.</li>
+<li>Missing liblapack.so when loading conda package: libatlas is needed on the system. Do <code>sudo apt-get install libatlas-base-dev</code> on Ubuntu.</li>
+</ul>
+
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

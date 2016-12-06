@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Scala.js no longer experimental | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/scala-logo-white-sm.png" alt="white Scala logo" /></a>
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Scala.js no longer experimental</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            <div class="article-date">February 5, 2015</div>
+            
+              <div class="written">Written By: <span class="by">Sébastien Doeraene</span></div>
+            
+            <p>Today, we <a href="http://www.scala-js.org/news/2015/02/05/announcing-scalajs-0.6.0/">announced the release of Scala.js v0.6.0</a>, the Scala to JavaScript compiler, and dropped the experimental flag associated to it.
+Yes, you read it right: Scala.js is no longer experimental!
+After exactly 2 years of development, we finally feel comfortable calling it production-ready.</p>
+
+<p><em>Note, however, that Scala.js is not part of the Typesafe Reactive platform.
+Thus, although we consider Scala.js production-ready, Typesafe does not provide any commercial support for it.</em></p>
+
+<h2>More than a compiler, an entire ecosystem</h2>
+
+<p>At its core, Scala.js is a compiler from Scala to JavaScript.
+It compiles <code>.scala</code> files to a single optimized and minimized <code>.js</code> file per application.
+The resulting JavaScript code is vanilla ECMAScript 5.1, which therefore works everywhere – on any OS, any browser, or even on Node.js.
+Just like regular Scala, you get all the powerful language features that you know and love: type inference, classes, traits and objects, pattern matching, the collections library, implicits, etc.
+And, in the same way that Scala is fully interoperable with Java, Scala.js is fully interoperable with JavaScript. Scala.js can interoperate with JavaScript either in a statically or dynamically-typed way.</p>
+
+<p>While that all sounds great, a compiler would be nothing without an ecosystem of libraries and tools. Scala.js has that covered too!</p>
+
+<p>You can use your favorite IDE to develop in Scala.js, and from experience, we can report that IntelliJ IDEA and Eclipse both provide a flawless development experience. Other editors should also work well.
+With Scala.js tooling, you get syntax highlighting, code completion (even for JavaScript libraries and the DOM!), jump-to-definition, and most other features you come to expect in a Scala tooling environment.
+After all, <em>Scala.js is just Scala</em>.
+Though, your IDE won&#39;t be able to run or debug Scala.js code. For that, you can use a browser, and you can even step through your Scala code because Scala.js emits <a href="http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/">source maps</a>.</p>
+
+<p>Building Scala.js libraries and applications is easy –  there is an sbt plugin, which gives you the same comfort and development speed as with Scala on the JVM.
+It can even run unit tests automatically with either Rhino, Node.js or PhantomJS, according to your needs.</p>
+
+<p>Scala.js also has a growing ecosystem of libraries, which you can depend on through Maven dependencies (<code>libraryDependencies</code> in sbt).
+They cover UI frameworks, statically-typed client-server communication, reactive extensions, and so on.
+Several popular Scala community libraries such as Shapeless and Scalaz cross-compile with Scala.js.</p>
+
+<p>Finally, we&#39;re proud that Scala.js has a thriving community of nice and helpful people.
+Ask questions <a href="http://stackoverflow.com/questions/tagged/scala.js">on StackOverflow</a>, discuss <a href="https://groups.google.com/forum/#!forum/scala-js">on the mailing list</a>, and discuss with us <a href="https://gitter.im/scala-js/scala-js">in the Gitter chat room</a>.</p>
+
+<h2>Why Scala.js is awesome</h2>
+
+<p>We&#39;ve asked developers who use Scala.js daily why they think Scala.js is awesome.
+Here is a distilled version of what they have answered, in decreasing order of how many people mentioned it.
+You can read <a href="https://groups.google.com/forum/#!topic/scala-js/_1Sfb5Nj08w">the entire discussion on the mailing list</a>.</p>
+
+<ul>
+<li>5 Share code between client and server</li>
+<li>4 Strong typing, including for JavaScript libraries</li>
+<li>4 Tooling: IDE support, sbt integration, dependency, unit testing, stack traces and source maps, cross-compiling projects</li>
+<li>4 Portability: bring Scala to environments powered by JavaScript, most importantly the browsers, but also others, such as the brand new <a href="https://www.youtube.com/watch?v=KVZ-P-ZI6W4">React Native</a></li>
+<li>3 Integration with JavaScript</li>
+<li>2 Fast compilation cycle (wrt other compile-to-JS options such as GWT)</li>
+<li>2 Statically-checked client-server RPC with Autowire</li>
+<li>2 The Scala Standard library</li>
+<li>2 It&#39;s not a toy</li>
+<li>2 Great community, welcoming to new users and helpful</li>
+<li>1 Very good documentation</li>
+</ul>
+
+<p>Here are also a few selected quotes from the mailing list discussion.</p>
+
+<blockquote>
+<p>It&#39;s mostly about the strong typing for me.
+Nothing revolutionary about that idea, but it&#39;s just as true on the client as on the server:
+having the compiler type-check your code makes it <em>much</em> quicker to get complex, sophisticated systems up and running.</p>
+
+<p>Also, having the same language, end-to-end, is fabulous.
+[...]
+With Scala.js, for the first time ever, I have a single solid, strongly-typed language that I can use throughout the system -- from the fiddly details of the UI, through the API definitions and the front-end web server, to the Akka middleware and the database back end.
+That&#39;s really kind of amazing.
+It is also why I personally think Scala.js is the killer app for Scala as a language.
+-- <cite>Justin du Cœur</cite></p>
+</blockquote>
+
+<p></p>
+
+<blockquote>
+<p>In a lot of ways, Scala.js frees your Scala code from the confines of the headless Linux server that it&#39;s been running on for years.
+Scala might be a nice language, but you&#39;ve never been able to use it to make anything cool that a non-backend-systems person would understand.
+[...]
+With Scala.js, you can easily create small Scala applications and email the tiny 100kb executables (or just the link to them) to anyone, who can run them on any modern device, even smartphones.
+Made a cute game? A fun visualization? An animated sequence? Now you can show the world.</p>
+
+<p>Scala&#39;s no longer just for distributed systems people and type-theorists!
+-- <cite>Li Haoyi</cite></p>
+</blockquote>
+
+<p></p>
+
+<blockquote>
+<p>Before Scala.js I did investigate using <a href="http://opalang.org/">Opa</a> as another approach to get &quot;End-to-End&quot; type safety.
+The problem I had there was that to do JavaScript interop, I had to drop down from Opa into Ocaml and write out manual bindings to the JavaScript library I wanted to use.
+Scala.js&#39; approach is infinitely better.
+Despite how much better I think typed libraries are, that does not negate the fact that there are good and useful JS libraries out there, and the ability to &quot;hack&quot; it into Scala.js code effortlessly with <code>js.Dynamic</code> or add a typed facade if desired is fantastic.
+-- <cite>Nick Childers</cite></p>
+</blockquote>
+
+<p></p>
+
+<blockquote>
+<p>I have done some work with <a href="http://www.gwtproject.org/">GWT</a> before and compared to that the first thing you will notice is that Scala.js is FAST.
+It compiles 100 times faster, yet it still outputs JavaScript that is both faster and smaller.
+-- <cite>Baldur Norddahl</cite></p>
+</blockquote>
+
+<p></p>
+
+<blockquote>
+<p>Scala.js has very good tooling and very good documentation.
+If you already write JVM flavoured Scala you can be up and running in no time and write JS flavoured Scala.
+-- <cite>Guillaume Belrose</cite></p>
+</blockquote>
+
+<p></p>
+
+<blockquote>
+<p>[...] Scala.js has one of the smartest and most responsive communities I have ever seen.
+You, Li Haoyi, and many other posters here have contributed to making this platform welcoming to newcomers.
+The help I&#39;ve received here has encouraged me to learn Scala proper, as well as many interesting functional programming concepts.
+-- <cite>Travis Good</cite></p>
+</blockquote>
+
+<p></p>
+
+<blockquote>
+<p>One of the biggest awesomeness of Scala.js is the core team&#39;s steady hands.
+Right from the get go, Scala.js showed a mature engineering approach where each release made a meaningful difference to user projects, vetted release-to-release compatibility, communicated breaking changes well in advance, maintained useful associated libraries, and let pragmatism win over everything else.
+As a result, even though this is such a new project, it doesn&#39;t feel risky to use it in real projects.
+-- <cite>Ramnivas Laddad</cite></p>
+</blockquote>
+
+<p></p>
+
+<blockquote>
+<p>Scala.js is simply the best option available on browsers today, if you&#39;re looking for a language with a powerful yet flexible type system.
+-- <cite>Xavier Cho</cite></p>
+</blockquote>
+
+<h2>Why remove the experimental flag now?</h2>
+
+<p>Many Scala.js users would say that it has been production-ready for quite some time already.
+Possibly as early as 0.5.0, which was released in June 2014.
+So why do we choose to remove the experimental flag now?
+What has changed?</p>
+
+<p>The big difference is several different aspects of <em>stability</em>:</p>
+
+<ul>
+<li>The semantics of the language are settled. They may still evolve in a backward compatible way (defining previously undefined behaviors), but will otherwise not change anymore.</li>
+<li>The standard library of Scala.js (the <code>scala.scalajs.js</code> package) will remain backward source and binary compatible.</li>
+<li>The sbt builds will remain backward source compatible.</li>
+</ul>
+
+<p>Of course, we must still be able to evolve the library and the builds, so things might become deprecated, and eventually removed, but will do so at a slower pace than before.</p>
+
+<p>All things considered, this means that the code you write today, for Scala.js 0.6.0, will continue to work throughout 0.6.x and 1.x.y unchanged.</p>
+
+<p>&quot;So why isn&#39;t it 1.0.0 already?
+It seems like these properties satisfy to the requirements of a 1.0.0 version.
+What are you hiding?&quot;</p>
+
+<p>While from all user-visible points of view Scala.js is stable, there remains just one quasi-implementation detail which might have to change in future versions – the format of the intermediate files of Scala.js, the <code>.sjsir</code> files.
+These files are essentially the Scala.js equivalent of <code>.class</code> files for the JVM.
+We&#39;re not yet completely certain that we&#39;re settled on their format, so we&#39;d like to reserve the possibility of changing it in the coming months.
+Doing so means breaking binary compatibility (by definition), and therefore would require a change in major version number.
+So we&#39;re not yet jumping to version 1.0.0 just yet – this is so that we may give ourselves one last chance to modify the Scala.js intermediate format before we make the leap to our first major version.</p>
+
+<p>Though, rest assured! We&#39;re confident that Scala.js is otherwise stable and ready for widespread adoption.</p>
+
+<h2>Getting started</h2>
+
+<p>There are three main ways to get started with Scala.js:</p>
+
+<ul>
+<li><a href="http://www.scala-js.org/doc/tutorial.html">The tutorial</a></li>
+<li>The free e-book <a href="http://lihaoyi.github.io/hands-on-scala-js/">Hands-on Scala.js</a></li>
+<li>The online sandbox <a href="http://www.scala-js-fiddle.com/">Scala.jsFiddle</a></li>
+</ul>
+
+<p>So go ahead!
+Use it, love it, and build the web applications of the future!</p>
+
+            
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div id="toc"></div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

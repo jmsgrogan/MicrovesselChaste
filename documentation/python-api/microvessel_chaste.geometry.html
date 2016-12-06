@@ -1,0 +1,997 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>microvessel_chaste.geometry package &mdash; Microvessel Chaste 3.4dev documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Microvessel Chaste 3.4dev documentation" href="index.html"/>
+        <link rel="up" title="microvessel_chaste package" href="microvessel_chaste.html"/>
+        <link rel="next" title="microvessel_chaste.mesh package" href="microvessel_chaste.mesh.html"/>
+        <link rel="prev" title="microvessel_chaste package" href="microvessel_chaste.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Microvessel Chaste
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="microvessel_chaste.html">microvessel_chaste package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="microvessel_chaste.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">microvessel_chaste.geometry package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-microvessel_chaste.geometry">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="microvessel_chaste.mesh.html">microvessel_chaste.mesh package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="microvessel_chaste.pde.html">microvessel_chaste.pde package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="microvessel_chaste.population.html">microvessel_chaste.population package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="microvessel_chaste.simulation.html">microvessel_chaste.simulation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="microvessel_chaste.utility.html">microvessel_chaste.utility package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="microvessel_chaste.visualization.html">microvessel_chaste.visualization package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="microvessel_chaste.html#module-microvessel_chaste">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Microvessel Chaste</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="microvessel_chaste.html">microvessel_chaste package</a> &raquo;</li>
+      
+    <li>microvessel_chaste.geometry package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/microvessel_chaste.geometry.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="microvessel-chaste-geometry-package">
+<h1>microvessel_chaste.geometry package<a class="headerlink" href="#microvessel-chaste-geometry-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-microvessel_chaste.geometry">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-microvessel_chaste.geometry" title="Permalink to this headline">¶</a></h2>
+<p>Geometry Module</p>
+<dl class="class">
+<dt id="microvessel_chaste.geometry.Polygon3">
+<em class="property">class </em><code class="descclassname">microvessel_chaste.geometry.</code><code class="descname">Polygon3</code><a class="headerlink" href="#microvessel_chaste.geometry.Polygon3" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="microvessel_chaste.geometry.Polygon3.AddVertex">
+<code class="descname">AddVertex</code><span class="sig-paren">(</span><em>(Polygon3)arg1</em>, <em>(object)pVertex</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.AddVertex" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void AddVertex(Polygon&lt;3u&gt; {lvalue},boost::shared_ptr&lt;DimensionalChastePoint&lt;3u&gt; &gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Polygon3.AddVertices">
+<code class="descname">AddVertices</code><span class="sig-paren">(</span><em>(Polygon3)arg1</em>, <em>(VecDimensionalChastePointPtr3)vertices</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.AddVertices" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void AddVertices(Polygon&lt;3u&gt; {lvalue},std::vector&lt;boost::shared_ptr&lt;DimensionalChastePoint&lt;3u&gt; &gt;, std::allocator&lt;boost::shared_ptr&lt;DimensionalChastePoint&lt;3u&gt; &gt; &gt; &gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Polygon3.ContainsPoint">
+<code class="descname">ContainsPoint</code><span class="sig-paren">(</span><em>(Polygon3)arg1</em>, <em>(object)rLocation</em><span class="sig-paren">)</span> &rarr; bool :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.ContainsPoint" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>bool ContainsPoint(Polygon&lt;3u&gt; {lvalue},DimensionalChastePoint&lt;3u&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="microvessel_chaste.geometry.Polygon3.Create">
+<em class="property">static </em><code class="descname">Create</code><span class="sig-paren">(</span><em>(VecDimensionalChastePointPtr3)vertices</em><span class="sig-paren">)</span> &rarr; Polygon3 :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.Create" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt; Create(std::vector&lt;boost::shared_ptr&lt;DimensionalChastePoint&lt;3u&gt; &gt;, std::allocator&lt;boost::shared_ptr&lt;DimensionalChastePoint&lt;3u&gt; &gt; &gt; &gt;)</dd>
+</dl>
+</div></blockquote>
+<p>Create( (object)pVertex) -&gt; Polygon3 :</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt; Create(boost::shared_ptr&lt;DimensionalChastePoint&lt;3u&gt; &gt;)</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Polygon3.GetBoundingBox">
+<code class="descname">GetBoundingBox</code><span class="sig-paren">(</span><em>(Polygon3)arg1</em><span class="sig-paren">)</span> &rarr; VecLengthQuantity :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.GetBoundingBox" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::vector&lt;boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt;, std::allocator&lt;boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt; &gt; &gt; GetBoundingBox(Polygon&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Polygon3.GetCentroid">
+<code class="descname">GetCentroid</code><span class="sig-paren">(</span><em>(Polygon3)arg1</em><span class="sig-paren">)</span> &rarr; object :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.GetCentroid" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>DimensionalChastePoint&lt;3u&gt; GetCentroid(Polygon&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Polygon3.GetDistance">
+<code class="descname">GetDistance</code><span class="sig-paren">(</span><em>(Polygon3)arg1</em>, <em>(object)rLocation</em><span class="sig-paren">)</span> &rarr; LengthQuantity :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.GetDistance" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt; GetDistance(Polygon&lt;3u&gt; {lvalue},DimensionalChastePoint&lt;3u&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Polygon3.GetDistanceToEdges">
+<code class="descname">GetDistanceToEdges</code><span class="sig-paren">(</span><em>(Polygon3)arg1</em>, <em>(object)rLocation</em><span class="sig-paren">)</span> &rarr; LengthQuantity :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.GetDistanceToEdges" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt; GetDistanceToEdges(Polygon&lt;3u&gt; {lvalue},DimensionalChastePoint&lt;3u&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Polygon3.GetNormal">
+<code class="descname">GetNormal</code><span class="sig-paren">(</span><em>(Polygon3)arg1</em><span class="sig-paren">)</span> &rarr; object :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.GetNormal" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::numeric::ublas::c_vector&lt;double, 3ul&gt; GetNormal(Polygon&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Polygon3.GetPlane">
+<code class="descname">GetPlane</code><span class="sig-paren">(</span><em>(Polygon3)arg1</em><span class="sig-paren">)</span> &rarr; object :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.GetPlane" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>vtkSmartPointer&lt;vtkPlane&gt; GetPlane(Polygon&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Polygon3.GetVertex">
+<code class="descname">GetVertex</code><span class="sig-paren">(</span><em>(Polygon3)arg1</em>, <em>(int)idx</em><span class="sig-paren">)</span> &rarr; object :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.GetVertex" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::shared_ptr&lt;DimensionalChastePoint&lt;3u&gt; &gt; GetVertex(Polygon&lt;3u&gt; {lvalue},unsigned int)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Polygon3.GetVertices">
+<code class="descname">GetVertices</code><span class="sig-paren">(</span><em>(Polygon3)arg1</em><span class="sig-paren">)</span> &rarr; VecDimensionalChastePointPtr3 :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.GetVertices" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::vector&lt;boost::shared_ptr&lt;DimensionalChastePoint&lt;3u&gt; &gt;, std::allocator&lt;boost::shared_ptr&lt;DimensionalChastePoint&lt;3u&gt; &gt; &gt; &gt; GetVertices(Polygon&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Polygon3.GetVtkPolygon">
+<code class="descname">GetVtkPolygon</code><span class="sig-paren">(</span><em>(Polygon3)arg1</em><span class="sig-paren">)</span> &rarr; object :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.GetVtkPolygon" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>vtkSmartPointer&lt;vtkPolygon&gt; GetVtkPolygon(Polygon&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Polygon3.GetVtkVertices">
+<code class="descname">GetVtkVertices</code><span class="sig-paren">(</span><em>(Polygon3)arg1</em><span class="sig-paren">)</span> &rarr; object :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.GetVtkVertices" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::pair&lt;vtkSmartPointer&lt;vtkPoints&gt;, vtkSmartPointer&lt;vtkIdTypeArray&gt; &gt; GetVtkVertices(Polygon&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Polygon3.ReplaceVertex">
+<code class="descname">ReplaceVertex</code><span class="sig-paren">(</span><em>(Polygon3)arg1</em>, <em>(int)idx</em>, <em>(object)pVertex</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.ReplaceVertex" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void ReplaceVertex(Polygon&lt;3u&gt; {lvalue},unsigned int,boost::shared_ptr&lt;DimensionalChastePoint&lt;3u&gt; &gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Polygon3.RotateAboutAxis">
+<code class="descname">RotateAboutAxis</code><span class="sig-paren">(</span><em>(Polygon3)arg1</em>, <em>(object)axis</em>, <em>(object)angle</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.RotateAboutAxis" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void RotateAboutAxis(Polygon&lt;3u&gt; {lvalue},boost::numeric::ublas::c_vector&lt;double, 3ul&gt;,double)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Polygon3.Translate">
+<code class="descname">Translate</code><span class="sig-paren">(</span><em>(Polygon3)arg1</em>, <em>(object)translationVector</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Polygon3.Translate" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void Translate(Polygon&lt;3u&gt; {lvalue},DimensionalChastePoint&lt;3u&gt;)</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="microvessel_chaste.geometry.Facet3">
+<em class="property">class </em><code class="descclassname">microvessel_chaste.geometry.</code><code class="descname">Facet3</code><a class="headerlink" href="#microvessel_chaste.geometry.Facet3" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="microvessel_chaste.geometry.Facet3.AddPolygon">
+<code class="descname">AddPolygon</code><span class="sig-paren">(</span><em>(Facet3)arg1</em>, <em>(Polygon3)pPolygon</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.AddPolygon" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void AddPolygon(Facet&lt;3u&gt; {lvalue},boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Facet3.AddPolygons">
+<code class="descname">AddPolygons</code><span class="sig-paren">(</span><em>(Facet3)arg1</em>, <em>(VecPolygonPtr3)polygons</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.AddPolygons" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void AddPolygons(Facet&lt;3u&gt; {lvalue},std::vector&lt;boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt;, std::allocator&lt;boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt; &gt; &gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Facet3.ContainsPoint">
+<code class="descname">ContainsPoint</code><span class="sig-paren">(</span><em>(Facet3)arg1</em>, <em>(object)location</em><span class="sig-paren">)</span> &rarr; bool :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.ContainsPoint" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>bool ContainsPoint(Facet&lt;3u&gt; {lvalue},DimensionalChastePoint&lt;3u&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="microvessel_chaste.geometry.Facet3.Create">
+<em class="property">static </em><code class="descname">Create</code><span class="sig-paren">(</span><em>(VecPolygonPtr3)polygons</em><span class="sig-paren">)</span> &rarr; Facet3 :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.Create" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::shared_ptr&lt;Facet&lt;3u&gt; &gt; Create(std::vector&lt;boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt;, std::allocator&lt;boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt; &gt; &gt;)</dd>
+</dl>
+</div></blockquote>
+<p>Create( (Polygon3)pPolygon) -&gt; Facet3 :</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::shared_ptr&lt;Facet&lt;3u&gt; &gt; Create(boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt;)</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Facet3.GetBoundingBox">
+<code class="descname">GetBoundingBox</code><span class="sig-paren">(</span><em>(Facet3)arg1</em><span class="sig-paren">)</span> &rarr; VecLengthQuantity :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.GetBoundingBox" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::vector&lt;boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt;, std::allocator&lt;boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt; &gt; &gt; GetBoundingBox(Facet&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Facet3.GetCentroid">
+<code class="descname">GetCentroid</code><span class="sig-paren">(</span><em>(Facet3)arg1</em><span class="sig-paren">)</span> &rarr; object :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.GetCentroid" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>DimensionalChastePoint&lt;3u&gt; GetCentroid(Facet&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Facet3.GetDistance">
+<code class="descname">GetDistance</code><span class="sig-paren">(</span><em>(Facet3)arg1</em>, <em>(object)rLocation</em><span class="sig-paren">)</span> &rarr; LengthQuantity :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.GetDistance" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt; GetDistance(Facet&lt;3u&gt; {lvalue},DimensionalChastePoint&lt;3u&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Facet3.GetLabel">
+<code class="descname">GetLabel</code><span class="sig-paren">(</span><em>(Facet3)arg1</em><span class="sig-paren">)</span> &rarr; str :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.GetLabel" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; GetLabel(Facet&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Facet3.GetNormal">
+<code class="descname">GetNormal</code><span class="sig-paren">(</span><em>(Facet3)arg1</em><span class="sig-paren">)</span> &rarr; object :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.GetNormal" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::numeric::ublas::c_vector&lt;double, 3ul&gt; GetNormal(Facet&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Facet3.GetPlane">
+<code class="descname">GetPlane</code><span class="sig-paren">(</span><em>(Facet3)arg1</em><span class="sig-paren">)</span> &rarr; object :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.GetPlane" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>vtkSmartPointer&lt;vtkPlane&gt; GetPlane(Facet&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Facet3.GetPolygons">
+<code class="descname">GetPolygons</code><span class="sig-paren">(</span><em>(Facet3)arg1</em><span class="sig-paren">)</span> &rarr; VecPolygonPtr3 :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.GetPolygons" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::vector&lt;boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt;, std::allocator&lt;boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt; &gt; &gt; GetPolygons(Facet&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Facet3.GetVertices">
+<code class="descname">GetVertices</code><span class="sig-paren">(</span><em>(Facet3)arg1</em><span class="sig-paren">)</span> &rarr; VecDimensionalChastePointPtr3 :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.GetVertices" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::vector&lt;boost::shared_ptr&lt;DimensionalChastePoint&lt;3u&gt; &gt;, std::allocator&lt;boost::shared_ptr&lt;DimensionalChastePoint&lt;3u&gt; &gt; &gt; &gt; GetVertices(Facet&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Facet3.GetVtkVertices">
+<code class="descname">GetVtkVertices</code><span class="sig-paren">(</span><em>(Facet3)arg1</em><span class="sig-paren">)</span> &rarr; object :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.GetVtkVertices" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::pair&lt;vtkSmartPointer&lt;vtkPoints&gt;, vtkSmartPointer&lt;vtkIdTypeArray&gt; &gt; GetVtkVertices(Facet&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Facet3.RotateAboutAxis">
+<code class="descname">RotateAboutAxis</code><span class="sig-paren">(</span><em>(Facet3)arg1</em>, <em>(object)axis</em>, <em>(object)angle</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.RotateAboutAxis" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void RotateAboutAxis(Facet&lt;3u&gt; {lvalue},boost::numeric::ublas::c_vector&lt;double, 3ul&gt;,double)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Facet3.SetLabel">
+<code class="descname">SetLabel</code><span class="sig-paren">(</span><em>(Facet3)arg1</em>, <em>(str)label</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.SetLabel" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void SetLabel(Facet&lt;3u&gt; {lvalue},std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Facet3.Translate">
+<code class="descname">Translate</code><span class="sig-paren">(</span><em>(Facet3)arg1</em>, <em>(object)translationVector</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.Translate" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void Translate(Facet&lt;3u&gt; {lvalue},DimensionalChastePoint&lt;3u&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Facet3.UpdateVertices">
+<code class="descname">UpdateVertices</code><span class="sig-paren">(</span><em>(Facet3)arg1</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Facet3.UpdateVertices" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void UpdateVertices(Facet&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="microvessel_chaste.geometry.Part3">
+<em class="property">class </em><code class="descclassname">microvessel_chaste.geometry.</code><code class="descname">Part3</code><a class="headerlink" href="#microvessel_chaste.geometry.Part3" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.AddCircle">
+<code class="descname">AddCircle</code><span class="sig-paren">(</span><em>(Part3)arg1</em>, <em>(LengthQuantity)radius</em>, <em>(object)centre</em>, <em>(int)numSegments</em><span class="sig-paren">)</span> &rarr; Polygon3 :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.AddCircle" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt; AddCircle(Part&lt;3u&gt; {lvalue},boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt;,DimensionalChastePoint&lt;3u&gt;,unsigned int)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.AddCuboid">
+<code class="descname">AddCuboid</code><span class="sig-paren">(</span><em>(Part3)arg1</em>, <em>(LengthQuantity)sizeX</em>, <em>(LengthQuantity)sizeY</em>, <em>(LengthQuantity)sizeZ</em>, <em>(object)origin</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.AddCuboid" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void AddCuboid(Part&lt;3u&gt; {lvalue},boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt;,boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt;,boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt;,DimensionalChastePoint&lt;3u&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.AddCylinder">
+<code class="descname">AddCylinder</code><span class="sig-paren">(</span><em>(Part3)arg1</em>, <em>(LengthQuantity)radius</em>, <em>(LengthQuantity)depth</em>, <em>(object)centre</em>, <em>(int)numSegments</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.AddCylinder" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void AddCylinder(Part&lt;3u&gt; {lvalue},boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt;,boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt;,DimensionalChastePoint&lt;3u&gt;,unsigned int)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.AddHoleMarker">
+<code class="descname">AddHoleMarker</code><span class="sig-paren">(</span><em>(Part3)arg1</em>, <em>(object)location</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.AddHoleMarker" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void AddHoleMarker(Part&lt;3u&gt; {lvalue},DimensionalChastePoint&lt;3u&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.AddPolygon">
+<code class="descname">AddPolygon</code><span class="sig-paren">(</span><em>(Part3)arg1</em>, <em>(VecDimensionalChastePointPtr3)vertices</em>, <em>(bool)newFacet</em>, <em>(Facet3)pFacet</em><span class="sig-paren">)</span> &rarr; Polygon3 :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.AddPolygon" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt; AddPolygon(Part&lt;3u&gt; {lvalue},std::vector&lt;boost::shared_ptr&lt;DimensionalChastePoint&lt;3u&gt; &gt;, std::allocator&lt;boost::shared_ptr&lt;DimensionalChastePoint&lt;3u&gt; &gt; &gt; &gt;,bool,boost::shared_ptr&lt;Facet&lt;3u&gt; &gt;)</dd>
+</dl>
+</div></blockquote>
+<p>AddPolygon( (Part3)arg1, (Polygon3)pPolygon, (bool)newFacet, (Facet3)pFacet) -&gt; Polygon3 :</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt; AddPolygon(Part&lt;3u&gt; {lvalue},boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt;,bool,boost::shared_ptr&lt;Facet&lt;3u&gt; &gt;)</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.AddRectangle">
+<code class="descname">AddRectangle</code><span class="sig-paren">(</span><em>(Part3)arg1</em>, <em>(LengthQuantity)sizeX</em>, <em>(LengthQuantity)sizeY</em>, <em>(object)origin</em><span class="sig-paren">)</span> &rarr; Polygon3 :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.AddRectangle" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt; AddRectangle(Part&lt;3u&gt; {lvalue},boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt;,boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt;,DimensionalChastePoint&lt;3u&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.AddVesselNetwork">
+<code class="descname">AddVesselNetwork</code><span class="sig-paren">(</span><em>(Part3)arg1</em>, <em>(object)pVesselNetwork</em>, <em>(bool)surface</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.AddVesselNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void AddVesselNetwork(Part&lt;3u&gt; {lvalue},boost::shared_ptr&lt;VesselNetwork&lt;3u&gt; &gt;,bool)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.BooleanWithNetwork">
+<code class="descname">BooleanWithNetwork</code><span class="sig-paren">(</span><em>(Part3)arg1</em>, <em>(object)pVesselNetwork</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.BooleanWithNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void BooleanWithNetwork(Part&lt;3u&gt; {lvalue},boost::shared_ptr&lt;VesselNetwork&lt;3u&gt; &gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="microvessel_chaste.geometry.Part3.Create">
+<em class="property">static </em><code class="descname">Create</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; Part3 :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.Create" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::shared_ptr&lt;Part&lt;3u&gt; &gt; Create()</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.Extrude">
+<code class="descname">Extrude</code><span class="sig-paren">(</span><em>(Part3)arg1</em>, <em>(Polygon3)pPolygon</em>, <em>(LengthQuantity)distance</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.Extrude" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void Extrude(Part&lt;3u&gt; {lvalue},boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt;,boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.GetBoundingBox">
+<code class="descname">GetBoundingBox</code><span class="sig-paren">(</span><em>(Part3)arg1</em><span class="sig-paren">)</span> &rarr; VecLengthQuantity :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.GetBoundingBox" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::vector&lt;boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt;, std::allocator&lt;boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt; &gt; &gt; GetBoundingBox(Part&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.GetContainingGridIndices">
+<code class="descname">GetContainingGridIndices</code><span class="sig-paren">(</span><em>(Part3)arg1</em>, <em>(int)num_x</em>, <em>(int)num_y</em>, <em>(int)num_z</em>, <em>(LengthQuantity)spacing</em><span class="sig-paren">)</span> &rarr; VecUnsignedInt_GeometryModule :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.GetContainingGridIndices" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::vector&lt;unsigned int, std::allocator&lt;unsigned int&gt; &gt; GetContainingGridIndices(Part&lt;3u&gt; {lvalue},unsigned int,unsigned int,unsigned int,boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.GetFacet">
+<code class="descname">GetFacet</code><span class="sig-paren">(</span><em>(Part3)arg1</em>, <em>(object)rLocation</em><span class="sig-paren">)</span> &rarr; Facet3 :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.GetFacet" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::shared_ptr&lt;Facet&lt;3u&gt; &gt; GetFacet(Part&lt;3u&gt; {lvalue},DimensionalChastePoint&lt;3u&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.GetFacets">
+<code class="descname">GetFacets</code><span class="sig-paren">(</span><em>(Part3)arg1</em><span class="sig-paren">)</span> &rarr; VecFacetPtr3 :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.GetFacets" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::vector&lt;boost::shared_ptr&lt;Facet&lt;3u&gt; &gt;, std::allocator&lt;boost::shared_ptr&lt;Facet&lt;3u&gt; &gt; &gt; &gt; GetFacets(Part&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.GetHoleMarkers">
+<code class="descname">GetHoleMarkers</code><span class="sig-paren">(</span><em>(Part3)arg1</em><span class="sig-paren">)</span> &rarr; VecDimensionalChastePoint3_GeometryModule :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.GetHoleMarkers" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::vector&lt;DimensionalChastePoint&lt;3u&gt;, std::allocator&lt;DimensionalChastePoint&lt;3u&gt; &gt; &gt; GetHoleMarkers(Part&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.GetPolygons">
+<code class="descname">GetPolygons</code><span class="sig-paren">(</span><em>(Part3)arg1</em><span class="sig-paren">)</span> &rarr; VecPolygonPtr3 :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.GetPolygons" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::vector&lt;boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt;, std::allocator&lt;boost::shared_ptr&lt;Polygon&lt;3u&gt; &gt; &gt; &gt; GetPolygons(Part&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.GetReferenceLengthScale">
+<code class="descname">GetReferenceLengthScale</code><span class="sig-paren">(</span><em>(Part3)arg1</em><span class="sig-paren">)</span> &rarr; LengthQuantity :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.GetReferenceLengthScale" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt; GetReferenceLengthScale(Part&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.GetSegmentIndices">
+<code class="descname">GetSegmentIndices</code><span class="sig-paren">(</span><em>(Part3)arg1</em><span class="sig-paren">)</span> &rarr; VecPairUnsignedIntUnsignedInt_GeometryModule :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.GetSegmentIndices" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::vector&lt;std::pair&lt;unsigned int, unsigned int&gt;, std::allocator&lt;std::pair&lt;unsigned int, unsigned int&gt; &gt; &gt; GetSegmentIndices(Part&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.GetVertexLocations">
+<code class="descname">GetVertexLocations</code><span class="sig-paren">(</span><em>(Part3)arg1</em><span class="sig-paren">)</span> &rarr; VecDimensionalChastePoint3_GeometryModule :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.GetVertexLocations" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::vector&lt;DimensionalChastePoint&lt;3u&gt;, std::allocator&lt;DimensionalChastePoint&lt;3u&gt; &gt; &gt; GetVertexLocations(Part&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.GetVertices">
+<code class="descname">GetVertices</code><span class="sig-paren">(</span><em>(Part3)arg1</em><span class="sig-paren">)</span> &rarr; VecDimensionalChastePointPtr3 :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.GetVertices" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::vector&lt;boost::shared_ptr&lt;DimensionalChastePoint&lt;3u&gt; &gt;, std::allocator&lt;boost::shared_ptr&lt;DimensionalChastePoint&lt;3u&gt; &gt; &gt; &gt; GetVertices(Part&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.GetVtk">
+<code class="descname">GetVtk</code><span class="sig-paren">(</span><em>(Part3)arg1</em><span class="sig-paren">)</span> &rarr; object :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.GetVtk" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>vtkSmartPointer&lt;vtkPolyData&gt; GetVtk(Part&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.IsPointInPart">
+<code class="descname">IsPointInPart</code><span class="sig-paren">(</span><em>(Part3)arg1</em>, <em>(object)location</em><span class="sig-paren">)</span> &rarr; bool :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.IsPointInPart" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>bool IsPointInPart(Part&lt;3u&gt; {lvalue},DimensionalChastePoint&lt;3u&gt;)</dd>
+</dl>
+</div></blockquote>
+<p>IsPointInPart( (Part3)arg1, (VecDimensionalChastePoint3_GeometryModule)location) -&gt; VecBool_GeometryModule :</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>std::vector&lt;bool, std::allocator&lt;bool&gt; &gt; IsPointInPart(Part&lt;3u&gt; {lvalue},std::vector&lt;DimensionalChastePoint&lt;3u&gt;, std::allocator&lt;DimensionalChastePoint&lt;3u&gt; &gt; &gt;)</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.MergeCoincidentVertices">
+<code class="descname">MergeCoincidentVertices</code><span class="sig-paren">(</span><em>(Part3)arg1</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.MergeCoincidentVertices" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void MergeCoincidentVertices(Part&lt;3u&gt; {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.SetReferenceLengthScale">
+<code class="descname">SetReferenceLengthScale</code><span class="sig-paren">(</span><em>(Part3)arg1</em>, <em>(LengthQuantity)referenceLength</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.SetReferenceLengthScale" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void SetReferenceLengthScale(Part&lt;3u&gt; {lvalue},boost::units::quantity&lt;boost::units::unit&lt;boost::units::list&lt;boost::units::dim&lt;boost::units::length_base_dimension, boost::units::static_rational&lt;1l, 1l&gt; &gt;, boost::units::dimensionless_type&gt;, boost::units::homogeneous_system&lt;boost::units::list&lt;boost::units::si::meter_base_unit, boost::units::list&lt;boost::units::scaled_base_unit&lt;boost::units::cgs::gram_base_unit, boost::units::scale&lt;10l, boost::units::static_rational&lt;3l, 1l&gt; &gt; &gt;, boost::units::list&lt;boost::units::si::second_base_unit, boost::units::list&lt;boost::units::si::ampere_base_unit, boost::units::list&lt;boost::units::si::kelvin_base_unit, boost::units::list&lt;boost::units::si::mole_base_unit, boost::units::list&lt;boost::units::si::candela_base_unit, boost::units::list&lt;boost::units::angle::radian_base_unit, boost::units::list&lt;boost::units::angle::steradian_base_unit, boost::units::dimensionless_type&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;, void&gt;, double&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.Translate">
+<code class="descname">Translate</code><span class="sig-paren">(</span><em>(Part3)arg1</em>, <em>(object)vector</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.Translate" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void Translate(Part&lt;3u&gt; {lvalue},DimensionalChastePoint&lt;3u&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.Part3.Write">
+<code class="descname">Write</code><span class="sig-paren">(</span><em>(Part3)arg1</em>, <em>(str)rFilename</em>, <em>(Value)format</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.Part3.Write" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void Write(Part&lt;3u&gt; {lvalue},std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;,GeometryFormat::Value)</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="microvessel_chaste.geometry.BoundaryExtractor">
+<em class="property">class </em><code class="descclassname">microvessel_chaste.geometry.</code><code class="descname">BoundaryExtractor</code><a class="headerlink" href="#microvessel_chaste.geometry.BoundaryExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="microvessel_chaste.geometry.BoundaryExtractor.Create">
+<em class="property">static </em><code class="descname">Create</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; BoundaryExtractor :<a class="headerlink" href="#microvessel_chaste.geometry.BoundaryExtractor.Create" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::shared_ptr&lt;BoundaryExtractor&gt; Create()</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.BoundaryExtractor.GetOutput">
+<code class="descname">GetOutput</code><span class="sig-paren">(</span><em>(BoundaryExtractor)arg1</em><span class="sig-paren">)</span> &rarr; object :<a class="headerlink" href="#microvessel_chaste.geometry.BoundaryExtractor.GetOutput" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>vtkSmartPointer&lt;vtkPolyData&gt; GetOutput(BoundaryExtractor {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.BoundaryExtractor.SetDoSmoothing">
+<code class="descname">SetDoSmoothing</code><span class="sig-paren">(</span><em>(BoundaryExtractor)arg1</em>, <em>(bool)doSmoothing</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.BoundaryExtractor.SetDoSmoothing" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void SetDoSmoothing(BoundaryExtractor {lvalue},bool)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.BoundaryExtractor.SetInput">
+<code class="descname">SetInput</code><span class="sig-paren">(</span><em>(BoundaryExtractor)arg1</em>, <em>(object)pInputSurface</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.BoundaryExtractor.SetInput" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void SetInput(BoundaryExtractor {lvalue},vtkSmartPointer&lt;vtkPolyData&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.BoundaryExtractor.SetSmoothingLength">
+<code class="descname">SetSmoothingLength</code><span class="sig-paren">(</span><em>(BoundaryExtractor)arg1</em>, <em>(object)value</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.BoundaryExtractor.SetSmoothingLength" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void SetSmoothingLength(BoundaryExtractor {lvalue},double)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.BoundaryExtractor.Update">
+<code class="descname">Update</code><span class="sig-paren">(</span><em>(BoundaryExtractor)arg1</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.BoundaryExtractor.Update" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void Update(BoundaryExtractor {lvalue})</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="microvessel_chaste.geometry.SurfaceCleaner">
+<em class="property">class </em><code class="descclassname">microvessel_chaste.geometry.</code><code class="descname">SurfaceCleaner</code><a class="headerlink" href="#microvessel_chaste.geometry.SurfaceCleaner" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="microvessel_chaste.geometry.SurfaceCleaner.Create">
+<em class="property">static </em><code class="descname">Create</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; SurfaceCleaner :<a class="headerlink" href="#microvessel_chaste.geometry.SurfaceCleaner.Create" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::shared_ptr&lt;SurfaceCleaner&gt; Create()</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.SurfaceCleaner.GetOutput">
+<code class="descname">GetOutput</code><span class="sig-paren">(</span><em>(SurfaceCleaner)arg1</em><span class="sig-paren">)</span> &rarr; object :<a class="headerlink" href="#microvessel_chaste.geometry.SurfaceCleaner.GetOutput" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>vtkSmartPointer&lt;vtkPolyData&gt; GetOutput(SurfaceCleaner {lvalue})</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.SurfaceCleaner.SetDecimateFeatureAngle">
+<code class="descname">SetDecimateFeatureAngle</code><span class="sig-paren">(</span><em>(SurfaceCleaner)arg1</em>, <em>(object)value</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.SurfaceCleaner.SetDecimateFeatureAngle" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void SetDecimateFeatureAngle(SurfaceCleaner {lvalue},double)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.SurfaceCleaner.SetDecimateTargetReduction">
+<code class="descname">SetDecimateTargetReduction</code><span class="sig-paren">(</span><em>(SurfaceCleaner)arg1</em>, <em>(object)value</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.SurfaceCleaner.SetDecimateTargetReduction" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void SetDecimateTargetReduction(SurfaceCleaner {lvalue},double)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.SurfaceCleaner.SetInput">
+<code class="descname">SetInput</code><span class="sig-paren">(</span><em>(SurfaceCleaner)arg1</em>, <em>(object)pInputSurface</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.SurfaceCleaner.SetInput" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void SetInput(SurfaceCleaner {lvalue},vtkSmartPointer&lt;vtkPolyData&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.SurfaceCleaner.SetLinearSubdivisionNumber">
+<code class="descname">SetLinearSubdivisionNumber</code><span class="sig-paren">(</span><em>(SurfaceCleaner)arg1</em>, <em>(object)value</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.SurfaceCleaner.SetLinearSubdivisionNumber" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void SetLinearSubdivisionNumber(SurfaceCleaner {lvalue},double)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.SurfaceCleaner.Update">
+<code class="descname">Update</code><span class="sig-paren">(</span><em>(SurfaceCleaner)arg1</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.SurfaceCleaner.Update" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void Update(SurfaceCleaner {lvalue})</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="microvessel_chaste.geometry.GeometryWriter">
+<em class="property">class </em><code class="descclassname">microvessel_chaste.geometry.</code><code class="descname">GeometryWriter</code><a class="headerlink" href="#microvessel_chaste.geometry.GeometryWriter" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="microvessel_chaste.geometry.GeometryWriter.Create">
+<em class="property">static </em><code class="descname">Create</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; GeometryWriter :<a class="headerlink" href="#microvessel_chaste.geometry.GeometryWriter.Create" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::shared_ptr&lt;GeometryWriter&gt; Create()</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.GeometryWriter.SetFileName">
+<code class="descname">SetFileName</code><span class="sig-paren">(</span><em>(GeometryWriter)arg1</em>, <em>(str)rFileName</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.GeometryWriter.SetFileName" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void SetFileName(GeometryWriter {lvalue},std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.GeometryWriter.SetInput">
+<code class="descname">SetInput</code><span class="sig-paren">(</span><em>(GeometryWriter)arg1</em>, <em>(object)pSurface</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.GeometryWriter.SetInput" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void SetInput(GeometryWriter {lvalue},vtkSmartPointer&lt;vtkPolyData&gt;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.GeometryWriter.SetOutputFormat">
+<code class="descname">SetOutputFormat</code><span class="sig-paren">(</span><em>(GeometryWriter)arg1</em>, <em>(Value)format</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.GeometryWriter.SetOutputFormat" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void SetOutputFormat(GeometryWriter {lvalue},GeometryFormat::Value)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="microvessel_chaste.geometry.GeometryWriter.Write">
+<code class="descname">Write</code><span class="sig-paren">(</span><em>(GeometryWriter)arg1</em><span class="sig-paren">)</span> &rarr; None :<a class="headerlink" href="#microvessel_chaste.geometry.GeometryWriter.Write" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void Write(GeometryWriter {lvalue})</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="microvessel_chaste.mesh.html" class="btn btn-neutral float-right" title="microvessel_chaste.mesh package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="microvessel_chaste.html" class="btn btn-neutral" title="microvessel_chaste package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, University of Oxford.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'3.4dev',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

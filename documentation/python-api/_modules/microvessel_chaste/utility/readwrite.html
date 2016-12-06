@@ -1,0 +1,286 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>microvessel_chaste.utility.readwrite &mdash; Microvessel Chaste 3.4dev documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Microvessel Chaste 3.4dev documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Microvessel Chaste
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../microvessel_chaste.html">microvessel_chaste package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Microvessel Chaste</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>microvessel_chaste.utility.readwrite</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for microvessel_chaste.utility.readwrite</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">errno</span>
+<span class="k">try</span><span class="p">:</span>
+   <span class="kn">import</span> <span class="nn">cPickle</span> <span class="k">as</span> <span class="nn">pickle</span>
+<span class="k">except</span><span class="p">:</span>
+   <span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">import</span> <span class="nn">vtk</span>
+<span class="kn">import</span> <span class="nn">recursion</span>
+
+<div class="viewcode-block" id="dir_maker"><a class="viewcode-back" href="../../../microvessel_chaste.utility.html#microvessel_chaste.utility.readwrite.dir_maker">[docs]</a><span class="k">def</span> <span class="nf">dir_maker</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">)):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">exc</span><span class="o">.</span><span class="n">errno</span> <span class="o">!=</span> <span class="n">errno</span><span class="o">.</span><span class="n">EEXIST</span><span class="p">:</span>
+                <span class="k">raise</span></div>
+
+<div class="viewcode-block" id="write"><a class="viewcode-back" href="../../../microvessel_chaste.utility.html#microvessel_chaste.utility.readwrite.write">[docs]</a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    
+    <span class="n">dir_maker</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="s2">&quot;vtk&quot;</span> <span class="ow">in</span> <span class="n">feature</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">:</span>
+        
+        <span class="k">if</span> <span class="s2">&quot;tiff&quot;</span> <span class="ow">in</span> <span class="n">extension</span> <span class="ow">or</span> <span class="s2">&quot;tif&quot;</span> <span class="ow">in</span> <span class="n">extension</span><span class="p">:</span>
+            
+            <span class="n">converter</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkImageShiftScale</span><span class="p">()</span>
+            <span class="n">converter</span><span class="o">.</span><span class="n">SetScale</span><span class="p">(</span><span class="mf">255.0</span><span class="p">)</span>
+            <span class="n">converter</span><span class="o">.</span><span class="n">SetOutputScalarTypeToUnsignedChar</span><span class="p">()</span>
+            <span class="n">converter</span><span class="o">.</span><span class="n">SetInput</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+            <span class="n">converter</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
+            <span class="n">feature</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">GetOutput</span><span class="p">()</span>
+            <span class="n">writer</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkTIFFWriter</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">writer</span> <span class="o">=</span> <span class="n">recursion</span><span class="o">.</span><span class="n">get_class</span><span class="p">(</span><span class="s2">&quot;vtk.vtkXML&quot;</span> <span class="o">+</span> <span class="n">feature</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span> <span class="o">+</span> <span class="s2">&quot;Writer&quot;</span><span class="p">)()</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">SetFileName</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">vtk</span><span class="o">.</span><span class="n">VTK_MAJOR_VERSION</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">SetInput</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">SetInputData</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">Write</span><span class="p">()</span> 
+        <span class="k">return</span>
+    
+    <span class="k">if</span> <span class="s2">&quot;Shell&quot;</span> <span class="ow">in</span> <span class="n">feature</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">:</span>
+        <span class="n">feature</span><span class="o">.</span><span class="n">exportStep</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">return</span></div>
+    
+<div class="viewcode-block" id="write_pickle"><a class="viewcode-back" href="../../../microvessel_chaste.utility.html#microvessel_chaste.utility.readwrite.write_pickle">[docs]</a><span class="k">def</span> <span class="nf">write_pickle</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">handle</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="read"><a class="viewcode-back" href="../../../microvessel_chaste.utility.html#microvessel_chaste.utility.readwrite.read">[docs]</a><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    
+    <span class="n">_</span><span class="p">,</span> <span class="n">extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    
+    <span class="n">vtk_extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;.vtp&quot;</span><span class="p">,</span> <span class="s2">&quot;.vtu&quot;</span><span class="p">,</span> <span class="s2">&quot;.vti&quot;</span><span class="p">,</span> <span class="s2">&quot;.tiff&quot;</span><span class="p">,</span> <span class="s2">&quot;.tif&quot;</span><span class="p">]</span>
+    <span class="n">vtk_readers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;vtkXMLPolyData&quot;</span><span class="p">,</span> <span class="s2">&quot;vtkXMLUnstructuredGrid&quot;</span><span class="p">,</span> <span class="s2">&quot;vtkXMLImageData&quot;</span><span class="p">,</span> <span class="s2">&quot;vtkTIFF&quot;</span><span class="p">,</span> <span class="s2">&quot;vtkTIFF&quot;</span><span class="p">]</span>
+    
+    <span class="k">if</span> <span class="n">extension</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">vtk_extensions</span><span class="p">):</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">recursion</span><span class="o">.</span><span class="n">get_class</span><span class="p">(</span><span class="s2">&quot;vtk.&quot;</span> <span class="o">+</span> <span class="n">vtk_readers</span><span class="p">[</span><span class="n">vtk_extensions</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">extension</span><span class="p">)]</span> <span class="o">+</span> <span class="s2">&quot;Reader&quot;</span><span class="p">)()</span>
+        <span class="n">reader</span><span class="o">.</span><span class="n">SetFileName</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">reader</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">reader</span><span class="o">.</span><span class="n">GetOutput</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">extension</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;.CSV&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="p">[],</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="read_pickle"><a class="viewcode-back" href="../../../microvessel_chaste.utility.html#microvessel_chaste.utility.readwrite.read_pickle">[docs]</a><span class="k">def</span> <span class="nf">read_pickle</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="n">data</span>  <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+    
+<div class="viewcode-block" id="read_vtk_surface"><a class="viewcode-back" href="../../../microvessel_chaste.utility.html#microvessel_chaste.utility.readwrite.read_vtk_surface">[docs]</a><span class="k">def</span> <span class="nf">read_vtk_surface</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">clean</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">triangulate</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkXMLPolyDataReader</span><span class="p">()</span>
+    <span class="n">reader</span><span class="o">.</span><span class="n">SetFileName</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">reader</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
+    <span class="n">current</span> <span class="o">=</span> <span class="n">reader</span>
+    
+    <span class="k">if</span> <span class="n">triangulate</span><span class="p">:</span>
+        <span class="n">triangle</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkTriangleFilter</span><span class="p">()</span>
+        <span class="n">triangle</span><span class="o">.</span><span class="n">SetInputConnection</span><span class="p">(</span><span class="n">current</span><span class="o">.</span><span class="n">GetOutputPort</span><span class="p">())</span>
+        <span class="n">triangle</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">triangle</span>
+    
+    <span class="k">if</span> <span class="n">clean</span><span class="p">:</span>
+        <span class="n">clean</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkCleanPolyData</span><span class="p">()</span>
+        <span class="n">clean</span><span class="o">.</span><span class="n">SetInputConnection</span><span class="p">(</span><span class="n">current</span><span class="o">.</span><span class="n">GetOutputPort</span><span class="p">())</span>
+        <span class="n">clean</span><span class="o">.</span><span class="n">SetTolerance</span><span class="p">(</span><span class="mf">1.e-3</span><span class="p">)</span>
+        <span class="n">clean</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">clean</span>
+        
+    <span class="k">return</span> <span class="n">current</span><span class="o">.</span><span class="n">GetOutput</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, University of Oxford.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'3.4dev',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>SIP/SLIP Summary, July 27th 2015 | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/scala-logo-white-sm.png" alt="white Scala logo" /></a>
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">SIP/SLIP Summary, July 27th 2015</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            <div class="article-date">July 26, 2015</div>
+            
+              <div class="written">Written By: <span class="by">Dick Wall</span></div>
+            
+            <h2>SIP/SLIP Summary, July 27th 2015</h2>
+
+<h3>Next Committee Meeting:</h3>
+
+<p>Thursday August 13th, 4.30pm GMT. <a href="https://plus.google.com/u/1/events/cfh933nkhhq0pe7h23c9v4csk6o">Google Hangout Event</a></p>
+
+<p><a href="https://www.youtube.com/watch?v=ndkT5qHZHI0">Video of last meeting</a></p>
+
+<h2>Fixing Either</h2>
+
+<p>| Title          | Author(s)          |
+|----------------|--------------------|
+| <a href="https://github.com/robcd/scala.github.com/blob/master/sips/pending/_posts/2012-06-29-fixing-either.md">Fixing Either</a> | Rob Dickens |</p>
+
+<h3>Summary</h3>
+
+<p>Fix a number of issues with using <code>Either</code>, particularly in for expressions. Potentially implement right bias for <code>map</code>, <code>flatMap</code> and related functions.</p>
+
+<h3>Notes</h3>
+
+<p>This is a SIP that has been dormant for a long time. We are reaching out to Rob Dickens to see if he is still interested in pursuing the changes.</p>
+
+<p>Either, and related proposals/ideas such as validation and the <code>Or</code> type are currently being discussed by multiple interested parties in the Scala space.</p>
+
+<p>As a result, the likely path forward for this SIP and the related activity/interest will be to attempt to put together an expert group for this work.</p>
+
+<p>Since this change is likely to be contained entirely within library code and not require language changes, the resulting proposal should be a SLIP.</p>
+
+<h3>Related</h3>
+
+<p>https://github.com/scala/scala/pull/4547 is a closed pull request against Scala that covers some of the same territory.</p>
+
+<h3>Invitation to Comment</h3>
+
+<p>For the time being, until a formal SLIP submission is contributed, please register interest
+on the <a href="https://gitter.im/scala/slip">scala/slip gitter channel</a> with your contact details (preferably email, if you don&#39;t want to make that public, contact @dickwall directly on gitter).</p>
+
+<h2>Implicits in For Comprehensions</h2>
+
+<p>| Title          | Author(s)          |
+|----------------|--------------------|
+| <a href="https://github.com/scala/scala.github.com/pull/417">Implicits in For Comprehensions</a> | Harold Lee |</p>
+
+<h3>Summary</h3>
+
+<p>Allow the use of the implicit keyword in for expressions for the definition of
+values. The comments indicate that this should likely be broadened to all pattern matches.</p>
+
+<h3>Notes</h3>
+
+<p>This will be a SIP if successful since it requires a language change. It will be renumbered
+if accepted.</p>
+
+<p>This is a recent SIP and has some useful discussion already on the pull request. Comments prior to the next SIP/SLIP committee meeting on Thursday, August 13th are requested.</p>
+
+<h3>Invitation to comment</h3>
+
+<p>Please direct comments to <a href="https://github.com/scala/scala.github.com/pull/417">Pull Request #417</a>.</p>
+
+<h2>Extensions of Futures and Promises</h2>
+
+<p>| Title          | Author(s)          |
+|----------------|--------------------|
+| <a href="https://docs.google.com/document/d/1Vza2-B3FzgtleX8RNs6rqRbhOn9jotrUfFB77h0DIGU/edit?hl=en_US#heading=h.bu8cg3api4vx">Extensions of Futures and Promises</a> | Anton Kolmakov, Eduard Maltsev |</p>
+
+<h3>Summary</h3>
+
+<p>Extension to SIP 14 to provide extra functionality not covered in that SIP, including scheduling, future-local variables, and more functionality on <code>scala.concurrent.Future</code>.</p>
+
+<h3>Notes</h3>
+
+<p>Another candidate for a SLIP since changes appeared to be contained within libraries.</p>
+
+<p>SLIP number will be assigned if/when accepted.</p>
+
+<p>Need to gauge current level of interest from proposers.</p>
+
+<p>Seeking public comment prior to August 13th meeting.</p>
+
+<h3>Invitation to comment</h3>
+
+<p>You can comment on <a href="https://docs.google.com/document/d/1Vza2-B3FzgtleX8RNs6rqRbhOn9jotrUfFB77h0DIGU/edit?hl=en_US#heading=h.bu8cg3api4vx">the proposal document</a> for notes on the text provided there, or on <a href="https://github.com/scala/scala.github.com/pull/295">pull request #295</a> for more general comments or concerns.</p>
+
+<h2>Backticks in String Interpolation</h2>
+
+<p>| Title          | Author(s)          |
+|----------------|--------------------|
+| <a href="https://github.com/scala/scala.github.com/pull/297/">Backticks in String Interpolation</a> | Kevin Wright |</p>
+
+<h3>Summary</h3>
+
+<p>Allow backticks to be used to denote identifiers in string interpolation without the need for the surrounding <code>{</code> <code>}</code>s, or in the enhanced proposal, without the need for <code>$</code> either.</p>
+
+<h3>Notes</h3>
+
+<p>Needs language changes, hence will continue to be a (renumbered) SIP if/when accepted.</p>
+
+<p>Feeling for this change is mostly negative within the committee at present. Kevin points out that backtick identifiers are already possible if surrounded by <code>${ }</code>, so while this would streamline string interpolation, particularly for quasiquoting, it may be a tough sell with regards to risk/reward.</p>
+
+<p>Seeking public comment (and in particular multiple supporters willing to volunteer to push the SIP forward) prior to August 13th meeting.</p>
+
+<h3>Invitation to comment</h3>
+
+<p>Comments requested on <a href="https://github.com/scala/scala.github.com/pull/297/">pull request #297</a>. There is more than the usual onus on supporters to back up their support with volunteer effort for this proposal.</p>
+
+<h2>Binary Literals, Underscores in Literals</h2>
+
+<p>| Title          | Author(s)          |
+|----------------|--------------------|
+| <a href="https://groups.google.com/forum/#!msg/scala-debate/4-CE9Lpf6CM/UJrhS9cyYcgJ">Support _ in numeric literals</a> | Eran Medan |</p>
+
+<h3>Source Material</h3>
+
+<p><a href="https://www.reddit.com/r/scala/comments/3aqlhu/is_there_a_voting_mechanism_for_new_scala_features/">Reddit Posting from eranation</a></p>
+
+<p><a href="https://github.com/non/spire#syntax">Spire Syntax using String Interpolation and Macros</a></p>
+
+<h3>Summary</h3>
+
+<p>Allow underscores in numeric literals, e.g. <code>1_000_000_000</code> instead of <code>1000000000</code>. This is a change that Java introduced in Java 7 and the desire of a SIP for this would be to keep Scala in line with Java lexically in this regard.</p>
+
+<h3>Notes</h3>
+
+<p>Not yet a formal SIP/SLIP proposal, and status of SIP vs SLIP submission will depend on the proposed implementation: If a library based approach, like that used in Spire, is proposed, a SLIP, if language changes are required, a SIP.</p>
+
+<p>The committee is divided on language changes for this feature, with the leaning tending toward the Spire approach of string interpolation and macros at present, but with Martin supporting the language change to keep in line with Java lexical syntax.</p>
+
+<p>Detractors note that <code>_</code> is already used for many different purposes within Scala, and this would introduce another meaning for it.</p>
+
+<p>To move forward in either form, volunteer support from the community will be required.</p>
+
+<h3>Invitation to comment</h3>
+
+<p>Since there is no PR or proposal at present upon which to comment, supporters (and detractors) are invited to discuss and register interest on the <a href="https://groups.google.com/forum/#!msg/scala-debate/4-CE9Lpf6CM/UJrhS9cyYcgJ">scala debate post</a> prior to the August 13th meeting. At that time we will discuss whether to invite the proposal, and in what form (SIP or SLIP).</p>
+
+            
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div id="toc"></div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

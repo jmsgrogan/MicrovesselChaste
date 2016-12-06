@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Scala 2.11.8 is now available! | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Scala 2.11.8 is now available!</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            
+            <div class="article-date">March 8, 2016</div>
+
+<p>We are pleased to announce the availability of Scala 2.11.8!</p>
+
+<p>Significant changes since 2.11.7 include:</p>
+
+<ul>
+<li>The Scala REPL now has robust and flexible tab-completion (details below)</li>
+<li>An assortment of bugs have been fixed</li>
+</ul>
+
+<p>Compared to 2.11.7, this release resolves <a href="https://issues.scala-lang.org/issues/?jql=project%20%3D%20SI%20AND%20resolution%20%3D%20Fixed%20AND%20fixVersion%20in%20%28%22Scala%202.11.8%22%29%20ORDER%20BY%20component%20ASC%2C%20priority%20DESC">44 issues</a>.  We merged <a href="https://github.com/scala/scala/pulls?q=is%3Apr+is%3Amerged+milestone%3A2.11.8">175 pull requests</a>.</p>
+
+<p>As usual for minor releases, Scala 2.11.8 is binary compatible with other releases in the Scala 2.11 series.</p>
+
+<p>The last planned 2.11.x release will be 2.11.9 in late 2016.</p>
+
+<h3>New tab-completion in the Scala REPL</h3>
+
+<p>The implementation of tab-completion in the Scala REPL has been rewritten and now uses the same infrastructure as for example Scala IDE and ENSIME.</p>
+
+<p>There are a number of improvements:</p>
+
+<ul>
+<li>Reliable completion, also in partial expressions and syntactically incorrect programs: try <code>class C { def f(l: List[Int]) = l.&lt;TAB&gt;</code></li>
+<li>CamelCase completion: try <code>(l: List[Int]).rro&lt;TAB&gt;</code>, it expands to <code>(l: List[Int]).reduceRightOption</code></li>
+<li>Show desugarings performed by the compiler by adding <code>//print</code>: try <code>for (x &lt;- 1 to 10) println(x) //print&lt;TAB&gt;</code></li>
+<li>Complete bean getters without typing <code>get</code>: try <code>(d: java.util.Date).day&lt;TAB&gt;</code></li>
+<li>Find members by typing any CamelCased part of the name: try <code>classOf[String].typ&lt;TAB&gt;</code> to get <code>getAnnotationsByType</code>, <code>getComponentType</code> and others</li>
+<li>Complete non-qualified names, including types: try <code>def f(s: Str&lt;TAB&gt;</code></li>
+<li>Press tab twice to see the method signature: try <code>List(1,2,3).part&lt;TAB&gt;</code>, which completes to <code>List(1,2,3).partition</code>; press tab again to display <code>def partition(p: Int =&gt; Boolean): (List[Int], List[Int])</code></li>
+</ul>
+
+<p>Thanks to @retronym and @som-snytt for their fruitful collaboration on this work!</p>
+
+<h3>Contributors</h3>
+
+<p>A big thank you to everyone who&#39;s helped improve Scala by reporting bugs, improving our documentation, spreading kindness in mailing lists and other public fora, and submitting and reviewing pull requests! You are all magnificent.</p>
+
+<p>According to <code>git shortlog -sn --no-merges v2.11.7..v2.11.8</code>, 44 people contributed to this minor release: Seth Tisue, Jason Zaugg, Janek Bogucki, Lukas Rytz, Stefan Zeiger, A. P. Marki, Rex Kerr, Performant Data LLC, wpopielarski, Adriaan Moors, Vlad Ureche, Rui Gonçalves, vsalvis, martijnhoekstra, todesking, Li Yao, Frank S. Thomas, Igor Racic, Michał Pociecha, Kenji Yoshida, Tomas Janousek, dk14, jvican, stusmall, kirillkh, Alexey Romanov, Antoine Gourlay, Arnout Engelen, Eitan Adler, Felix Mulder, Gerard Basler, Jan Bessai, JoeRatt, Kirill Khazan, Linas Medziunas, Marconi Lanna, Mariot Chauvin, Michael, Parambir Singh, Paul Draper, Ryan Zhang, Simon Schäfer, Sébastien Doeraene, Tim Vergenz.</p>
+
+<h3>Obtaining Scala</h3>
+
+<p>Scala releases are available through a variety of channels, including (but not limited to):</p>
+
+<ul>
+<li>Download a distribution from <a href="http://scala-lang.org/download/2.11.8.html">scala-lang.org</a></li>
+<li>Bump the <code>scalaVersion</code> setting in your SBT-based project</li>
+<li>Obtain JARs via <a href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.scala-lang%22%20AND%20v%3A%222.11.8%22">Maven Central</a></li>
+<li>Try the <a href="https://www.lightbend.com/activator/template/hello-scala-2_11">Hello Scala 2.11 template</a> in <a href="https://www.lightbend.com/activator/download">Lightbend Activator</a></li>
+</ul>
+
+<h3>Scala 2.11 Notes</h3>
+
+<p>The <a href="http://scala-lang.org/news/2.11.1">release notes for Scala 2.11.1</a> have important information applicable to the whole 2.11 series, such as:</p>
+
+<ul>
+<li>Details on new features, important changes and deprecations since Scala 2.10.</li>
+<li>The specification of binary compatibility between minor releases.</li>
+</ul>
+
+
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div class="contents">Contents</div>
+              <div id="toc"></div>
+              <br/>
+              <div class="alert-info">
+                <a href="/contribute/documentation.html#updating_scalalangorg"><p><strong>Problem with this page?</strong>
+                Please help us fix it!</p></a>
+              </div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

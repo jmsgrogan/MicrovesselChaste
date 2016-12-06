@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Test Blood Flow Tutorial | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Test Blood Flow Tutorial</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <div class="row">
+      <div class="span12">
+          <div class="main-page-column" style="width: 100%;">
+            
+            <p>This tutorial is automatically generated from the file test/tutorials//TestBloodFlowTutorial.hpp.
+Note that the code is given in full at the bottom of the page.</p>
+
+<h1>Modelling Blood Flow Tutorial</h1>
+
+<p>This tutorial demonstrates functionality for modelling blood flow, structural adaptation and vessel
+regression in a vessel network.</p>
+
+<p>This tutorial covers:
+ * Managing parameter values
+ * Running a minimal Poiseuille flow simulation and looking at results
+ * Adding haematocrit
+ * Adding structural adaptation in response to flow
+ * Adding vessel regression in low flow regions</p>
+
+<h1>The Test</h1>
+
+<p>Start by introducing the necessary header files, explained in previous tutorials.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;vector&gt;
+#include &lt;cxxtest/TestSuite.h&gt;
+#include "Owen11Parameters.hpp"
+#include "AbstractCellBasedWithTimingsTestSuite.hpp"
+#include "SmartPointers.hpp"
+#include "OutputFileHandler.hpp"
+#include "VesselNode.hpp"
+#include "VesselSegment.hpp"
+#include "Vessel.hpp"
+#include "VesselNetwork.hpp"
+#include "VesselNetworkGenerator.hpp"
+#include "UnitCollection.hpp"
+#include "BaseUnits.hpp"
+</span></code></pre></div>
+<p>A container for flow information (boundary conditions, pressure values) for nodes.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "NodeFlowProperties.hpp"
+</span></code></pre></div>
+<p>A collection of useful literature parameter values and a way to dump values to
+file after use.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "Owen11Parameters.hpp"
+#include "GenericParameters.hpp"
+#include "ParameterCollection.hpp"
+</span></code></pre></div>
+<p>The flow and haematocrit solvers, along with neccessary calculators.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "VesselImpedanceCalculator.hpp"
+#include "FlowSolver.hpp"
+#include "AlarconHaematocritSolver.hpp"
+#include "ConstantHaematocritSolver.hpp"
+#include "StructuralAdaptationSolver.hpp"
+#include "WallShearStressCalculator.hpp"
+#include "MechanicalStimulusCalculator.hpp"
+</span></code></pre></div>
+<p>The vessel regression solver and a generic solver to collect all the
+flow solvers.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "WallShearStressBasedRegressionSolver.hpp"
+#include "MicrovesselSolver.hpp"
+</span></code></pre></div>
+<p>Keep this last.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "PetscSetupAndFinalize.hpp"
+</span>
+<span class="k">class</span> <span class="nc">TestBloodFlowLiteratePaper</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AbstractCellBasedWithTimingsTestSuite</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+</code></pre></div>
+<h2>Test 1 - Simulating 1d Flow in a Bifurcating Network</h2>
+
+<p><img src="https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/bifurcation_network_flow.png" alt="Off Lattice Angiogenesis Image"></p>
+
+<p>In the first test we will simulate blood flow in a simple bifurcating vessel network. Subsequent tests will add detail in the form of
+more complex networks, structural adaptation and vessel regression.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="kt">void</span> <span class="nf">TestSimpleFlowProblem</span><span class="p">()</span> <span class="k">throw</span> <span class="p">(</span><span class="n">Exception</span><span class="p">)</span>
+    <span class="p">{</span>
+</code></pre></div>
+<p>We will work in microns</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">reference_length</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceLengthScale</span><span class="p">(</span><span class="n">reference_length</span><span class="p">);</span>
+</code></pre></div>
+<p>First make the network using a generator. Start with a simple unit.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">vessel_length</span><span class="p">(</span><span class="mf">100.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">start_point</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+        <span class="n">VesselNetworkGenerator</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">network_generator</span><span class="p">;</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNetwork</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_network</span> <span class="o">=</span> <span class="n">network_generator</span><span class="p">.</span><span class="n">GenerateBifurcationUnit</span><span class="p">(</span><span class="n">vessel_length</span><span class="p">,</span> <span class="n">start_point</span><span class="p">);</span>
+</code></pre></div>
+<p>Next, pattern it to make a larger network</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span> <span class="n">num_units_per_direction</span><span class="p">;</span>
+        <span class="n">num_units_per_direction</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="n">num_units_per_direction</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+        <span class="n">network_generator</span><span class="p">.</span><span class="n">PatternUnitByTranslation</span><span class="p">(</span><span class="n">p_network</span><span class="p">,</span> <span class="n">num_units_per_direction</span><span class="p">);</span>
+</code></pre></div>
+<p>Specify which nodes will be the inlets and outlets of the network for the flow problem. This information, as well
+as all other info related to the flow problem, is contained in a <code>NodeFlowProperties</code> instance. Also, set the inlet and
+outlet pressures in Pa or mmHg. We can mix and match these thanks to the dimensional analysis functionality. Because
+the network is simple, we can figure out which node is which just from their index. For more complicated networks
+we need to use spatial locators and <code>NearestNode</code> type methods.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">pressure</span><span class="o">&gt;</span> <span class="n">inlet_pressure</span><span class="p">(</span><span class="mf">50.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">mmHg</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsInputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">inlet_pressure</span><span class="p">);</span>
+</code></pre></div>
+<p>It would be useful if we had a record of which parameter values we have used in the simulation and where they are sourced in the
+literature. Instead of manually entering parameter values like above we can use a <code>ParameterCollection</code> singleton which allows for
+some extra metadata storage. We will take some parameter values from a paper by Owen et al. (2011).</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNode</span><span class="p">(</span><span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNumberOfNodes</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsOutputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNode</span><span class="p">(</span><span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNumberOfNodes</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpOutletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+</code></pre></div>
+<p>Now set the segment radii and viscosity values.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">vessel_radius</span><span class="p">(</span><span class="n">GenericParameters</span><span class="o">::</span><span class="n">mpCapillaryRadius</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentRadii</span><span class="p">(</span><span class="n">vessel_radius</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">dynamic_viscosity</span><span class="o">&gt;</span> <span class="n">viscosity</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpPlasmaViscosity</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">();</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentViscosity</span><span class="p">(</span><span class="n">viscosity</span><span class="p">);</span>
+</code></pre></div>
+<p>We use a calculator to work out the impedance of each vessel based on assumptions of Poiseuille flow and cylindrical vessels. This
+updates the value of the impedance in the vessel.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">impedance_calculator</span> <span class="o">=</span> <span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="n">impedance_calculator</span><span class="p">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">impedance_calculator</span><span class="p">.</span><span class="n">Calculate</span><span class="p">();</span>
+</code></pre></div>
+<p>Check that the impedance is as expected in one of the vessels</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">flow_impedance</span><span class="o">&gt;</span> <span class="n">expected_impedance</span> <span class="o">=</span> <span class="mf">8.0</span> <span class="o">*</span> <span class="n">viscosity</span><span class="o">*</span> <span class="n">vessel_length</span><span class="o">/</span><span class="p">(</span><span class="n">M_PI</span><span class="o">*</span><span class="n">units</span><span class="o">::</span><span class="n">pow</span><span class="o">&lt;</span><span class="mi">4</span><span class="o">&gt;</span><span class="p">(</span><span class="n">vessel_radius</span><span class="p">));</span>
+        <span class="n">TS_ASSERT_DELTA</span><span class="p">(</span><span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetVessel</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetSegment</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetImpedance</span><span class="p">().</span><span class="n">value</span><span class="p">(),</span> <span class="n">expected_impedance</span><span class="p">.</span><span class="n">value</span><span class="p">(),</span> <span class="mf">1.e-6</span><span class="p">);</span>
+</code></pre></div>
+<p>Now we can solve for the flow rates in each vessel based on the inlet and outlet pressures and impedances. The solver
+updates the value of pressures and flow rates in each vessel and node in the network.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">FlowSolver</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">flow_solver</span> <span class="o">=</span> <span class="n">FlowSolver</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="n">flow_solver</span><span class="p">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">flow_solver</span><span class="p">.</span><span class="n">Solve</span><span class="p">();</span>
+</code></pre></div>
+<p>Check the pressure, it is expected to drop linearly so should be the average of the input and output half way along the network.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">pressure</span><span class="o">&gt;</span> <span class="n">expected_pressure</span> <span class="o">=</span> <span class="p">(</span><span class="n">inlet_pressure</span> <span class="o">+</span> <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpOutletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">())</span><span class="o">/</span><span class="mf">2.0</span><span class="p">;</span>
+        <span class="n">TS_ASSERT_DELTA</span><span class="p">(</span><span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNode</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetPressure</span><span class="p">().</span><span class="n">value</span><span class="p">(),</span> <span class="n">expected_pressure</span><span class="p">.</span><span class="n">value</span><span class="p">(),</span> <span class="mf">1.e-6</span><span class="p">);</span>
+</code></pre></div>
+<p>Next we write out the network, including updated flow data, to file.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">MAKE_PTR_ARGS</span><span class="p">(</span><span class="n">OutputFileHandler</span><span class="p">,</span> <span class="n">p_handler</span><span class="p">,</span> <span class="p">(</span><span class="s">"TestBloodFlowLiteratePaper/TestSimpleFlowProblem"</span><span class="p">));</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s">"bifurcating_network_results.vtp"</span><span class="p">);</span>
+</code></pre></div>
+<p>Now we can visualize the results in Paraview. To view the network import the file
+<code>TestBloodFlowLiteratePaper\bifurcating_network.vtp</code> into Paraview. For a nicer rendering you can do <code>Filters-&gt;Alphabetical-&gt;Tube</code>.
+Finally, dump our parameter collection to an xml file and, importantly, clear it for the next test.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">ParameterCollection</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">DumpToFile</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s">"parameter_collection.xml"</span><span class="p">);</span>
+        <span class="n">ParameterCollection</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Destroy</span><span class="p">();</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Destroy</span><span class="p">();</span>
+    <span class="p">}</span>
+</code></pre></div>
+<h2>Test 2 - Simulating Haematocrit Transport in 3</h2>
+
+<p><img src="https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/haematocrit.png" alt="Off Lattice Angiogenesis Image"></p>
+
+<p>In this test we will simulate haematocrit transport in a 3d vessel network.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="kt">void</span> <span class="nf">TestFlowProblemWithHaematocrit</span><span class="p">()</span> <span class="k">throw</span> <span class="p">(</span><span class="n">Exception</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">MAKE_PTR_ARGS</span><span class="p">(</span><span class="n">OutputFileHandler</span><span class="p">,</span> <span class="n">p_handler</span><span class="p">,</span> <span class="p">(</span><span class="s">"TestBloodFlowLiteratePaper/TestFlowProblemWithHaematocrit"</span><span class="p">,</span> <span class="nb">false</span><span class="p">));</span>
+</code></pre></div>
+<p>This time we solve a flow problem and then use the solution to calculate the haematocrit distribution,
+assuming it has no effect on the flow. Set up the network as before</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">cell_width</span><span class="p">(</span><span class="mf">25.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceLengthScale</span><span class="p">(</span><span class="n">cell_width</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">target_width</span> <span class="o">=</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="n">cell_width</span><span class="p">;</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">target_height</span> <span class="o">=</span> <span class="mf">30.0</span> <span class="o">*</span> <span class="n">cell_width</span><span class="p">;</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">vessel_length</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">cell_width</span><span class="p">;</span>
+        <span class="n">VesselNetworkGenerator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">network_generator</span><span class="p">;</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNetwork</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_network</span> <span class="o">=</span> <span class="n">network_generator</span><span class="p">.</span><span class="n">GenerateHexagonalNetwork</span><span class="p">(</span><span class="n">target_width</span><span class="p">,</span>
+                                                                                                    <span class="n">target_height</span><span class="p">,</span>
+                                                                                                    <span class="n">vessel_length</span><span class="p">);</span>
+</code></pre></div>
+<p>We will use a locator to mark the bottom left and top right nodes as respective inlets and outlets</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">inlet_locator</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">cell_width</span><span class="p">);</span>
+        <span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">outlet_locator</span><span class="p">(</span><span class="n">target_width</span><span class="o">/</span><span class="n">cell_width</span><span class="p">,</span> <span class="n">target_height</span><span class="o">/</span><span class="n">cell_width</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">cell_width</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNode</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_inlet_node</span> <span class="o">=</span> <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNearestNode</span><span class="p">(</span><span class="n">inlet_locator</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNode</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_outlet_node</span> <span class="o">=</span> <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNearestNode</span><span class="p">(</span><span class="n">outlet_locator</span><span class="p">);</span>
+        <span class="n">p_inlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsInputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_inlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpInletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+        <span class="n">p_outlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsOutputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_outlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpOutletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+
+</code></pre></div>
+<p>Now set the segment radii and viscosity values.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">vessel_radius</span><span class="p">(</span><span class="n">GenericParameters</span><span class="o">::</span><span class="n">mpCapillaryRadius</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentRadii</span><span class="p">(</span><span class="n">vessel_radius</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">dynamic_viscosity</span><span class="o">&gt;</span> <span class="n">viscosity</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpPlasmaViscosity</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">();</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentViscosity</span><span class="p">(</span><span class="n">viscosity</span><span class="p">);</span>
+</code></pre></div>
+<p>Next some simple extra functionality is demonstrated by mapping the network onto a hemisphere</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">sphere_radius</span> <span class="o">=</span> <span class="mf">400.0</span> <span class="o">*</span> <span class="n">cell_width</span><span class="p">;</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">sphere_thickess</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">cell_width</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">sphere_azimuth</span> <span class="o">=</span> <span class="n">M_PI</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">sphere_polar</span> <span class="o">=</span> <span class="n">M_PI</span><span class="o">/</span><span class="mf">2.0</span><span class="p">;</span>
+        <span class="n">network_generator</span><span class="p">.</span><span class="n">MapToSphere</span><span class="p">(</span><span class="n">p_network</span><span class="p">,</span> <span class="n">sphere_radius</span><span class="p">,</span> <span class="n">sphere_thickess</span><span class="p">,</span> <span class="n">sphere_azimuth</span><span class="p">,</span> <span class="n">sphere_polar</span><span class="p">);</span>
+</code></pre></div>
+<p>Get the impedance</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">impedance_calculator</span> <span class="o">=</span> <span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="n">impedance_calculator</span><span class="p">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">impedance_calculator</span><span class="p">.</span><span class="n">Calculate</span><span class="p">();</span>
+</code></pre></div>
+<p>Solve the flow problem</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">FlowSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">flow_solver</span> <span class="o">=</span> <span class="n">FlowSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="n">flow_solver</span><span class="p">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">flow_solver</span><span class="p">.</span><span class="n">Solve</span><span class="p">();</span>
+</code></pre></div>
+<p>Solve the haematocrit problem</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">AlarconHaematocritSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">haematocrit_solver</span> <span class="o">=</span> <span class="n">AlarconHaematocritSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="n">haematocrit_solver</span><span class="p">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">haematocrit_solver</span><span class="p">.</span><span class="n">SetHaematocrit</span><span class="p">(</span><span class="mf">0.45</span><span class="p">);</span>
+        <span class="n">haematocrit_solver</span><span class="p">.</span><span class="n">Calculate</span><span class="p">();</span>
+</code></pre></div>
+<p>Next we write out the network, including updated flow data, to file.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceLengthScale</span><span class="p">(</span><span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s">"network_haematocrit.vtp"</span><span class="p">);</span>
+</code></pre></div>
+<p>Now we can visualize the results in Paraview. To view the network import the file
+<code>TestBloodFlowLiteratePaper\bifurcating_network.vtp</code> into Paraview. For a nicer rendering you can do <code>Filters-&gt;Alphabetical-&gt;Tube</code>.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">ParameterCollection</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">DumpToFile</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s">"parameter_collection.xml"</span><span class="p">);</span>
+        <span class="n">ParameterCollection</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Destroy</span><span class="p">();</span>
+    <span class="p">}</span>
+</code></pre></div>
+<h2>Test 3 - Simulating Flow With Structural Adaptation</h2>
+
+<p><img src="https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/structural_adaptation.png" alt="Off Lattice Angiogenesis Image"></p>
+
+<p>In this test the vessel network will adapt over time as a result of flow conditions.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="kt">void</span> <span class="nf">TestFlowProblemStucturalAdaptation</span><span class="p">()</span> <span class="k">throw</span> <span class="p">(</span><span class="n">Exception</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">MAKE_PTR_ARGS</span><span class="p">(</span><span class="n">OutputFileHandler</span><span class="p">,</span> <span class="n">p_handler</span><span class="p">,</span> <span class="p">(</span><span class="s">"TestBloodFlowLiteratePaper/TestFlowProblemStucturalAdaptation"</span><span class="p">,</span> <span class="nb">false</span><span class="p">));</span>
+</code></pre></div>
+<p>We will work in microns</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">reference_length</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceLengthScale</span><span class="p">(</span><span class="n">reference_length</span><span class="p">);</span>
+</code></pre></div>
+<p>Set up a hexagonal vessel network</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">target_width</span><span class="p">(</span><span class="mi">8000</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">target_height</span><span class="p">(</span><span class="mi">2000</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">vessel_length</span><span class="p">(</span><span class="mf">300.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">VesselNetworkGenerator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">network_generator</span><span class="p">;</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNetwork</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_network</span> <span class="o">=</span> <span class="n">network_generator</span><span class="p">.</span><span class="n">GenerateHexagonalNetwork</span><span class="p">(</span><span class="n">target_width</span><span class="p">,</span>
+                                                                                                    <span class="n">target_height</span><span class="p">,</span>
+                                                                                                    <span class="n">vessel_length</span><span class="p">);</span>
+</code></pre></div>
+<p>We will use a locator to mark the bottom left and top right nodes as respective inlets and outlets as before.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">inlet_locator</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">reference_length</span><span class="p">);</span>
+        <span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">outlet_locator</span><span class="p">(</span><span class="n">target_width</span><span class="o">/</span><span class="n">reference_length</span><span class="p">,</span> <span class="n">target_height</span><span class="o">/</span><span class="n">reference_length</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">reference_length</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNode</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_inlet_node</span> <span class="o">=</span> <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNearestNode</span><span class="p">(</span><span class="n">inlet_locator</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNode</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_outlet_node</span> <span class="o">=</span> <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNearestNode</span><span class="p">(</span><span class="n">outlet_locator</span><span class="p">);</span>
+        <span class="n">p_inlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsInputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_inlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpInletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+        <span class="n">p_outlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsOutputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_outlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpOutletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+</code></pre></div>
+<p>Set the radius and viscosity and write the initial network to file.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">vessel_radius</span><span class="p">(</span><span class="mf">40.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentRadii</span><span class="p">(</span><span class="n">vessel_radius</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">dynamic_viscosity</span><span class="o">&gt;</span> <span class="n">viscosity</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpPlasmaViscosity</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">();</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentViscosity</span><span class="p">(</span><span class="n">viscosity</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s">"initial_network.vtp"</span><span class="p">);</span>
+</code></pre></div>
+<p>Set up the timer and time scale. The structural adaptation alrogithm works by calcualting growth or shrinkage stimuli
+from several flow derived sources. We can specify how the network adapts as a function of flow by adding a collection
+of calculators for wall shear stress, haematocrit etc.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceTimeScale</span><span class="p">(</span><span class="mf">60.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">seconds</span><span class="p">);</span>
+        <span class="n">SimulationTime</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetEndTimeAndNumberOfTimeSteps</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_impedance_calculator</span> <span class="o">=</span> <span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ConstantHaematocritSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_haematocrit_calculator</span> <span class="o">=</span> <span class="n">ConstantHaematocritSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_haematocrit_calculator</span><span class="o">-&gt;</span><span class="n">SetHaematocrit</span><span class="p">(</span><span class="mf">0.45</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">WallShearStressCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_wss_calculator</span> <span class="o">=</span> <span class="n">WallShearStressCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">MechanicalStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_mech_stimulus_calculator</span> <span class="o">=</span> <span class="n">MechanicalStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+</code></pre></div>
+<p>Set up the structural adaptation solver, which manages iterations over a flow solve and executes each calculator in the order it has been added.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">StructuralAdaptationSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">structural_adaptation_solver</span><span class="p">;</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">SetWriteOutput</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">SetOutputFileName</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s">"adaptation_data.dat"</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">SetTolerance</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">SetMaxIterations</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">AddPreFlowSolveCalculator</span><span class="p">(</span><span class="n">p_impedance_calculator</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_haematocrit_calculator</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_wss_calculator</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_mech_stimulus_calculator</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">SetTimeIncrement</span><span class="p">(</span><span class="mf">0.01</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">seconds</span><span class="p">);</span>
+</code></pre></div>
+<p>Do the solve and write the network to file.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">Solve</span><span class="p">();</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s">"network_initial_sa.vtp"</span><span class="p">);</span>
+    <span class="p">}</span>
+</code></pre></div>
+<h1>Test 4 - Simulating Flow With Regression</h1>
+
+<p>In this test the vessel network will adapt over time as a result of flow conditions and also vessels will be removed
+to regression in low wall shear stress regions.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="kt">void</span> <span class="nf">TestFlowProblemStucturalAdaptationWithRegression</span><span class="p">()</span> <span class="k">throw</span> <span class="p">(</span><span class="n">Exception</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">MAKE_PTR_ARGS</span><span class="p">(</span><span class="n">OutputFileHandler</span><span class="p">,</span> <span class="n">p_handler</span><span class="p">,</span> <span class="p">(</span><span class="s">"TestBloodFlowLiteratePaper/TestFlowProblemStucturalAdaptationWithRegression"</span><span class="p">,</span> <span class="nb">false</span><span class="p">));</span>
+</code></pre></div>
+<p>Set up the problem as before.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">reference_length</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceLengthScale</span><span class="p">(</span><span class="n">reference_length</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">target_width</span><span class="p">(</span><span class="mi">8000</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">target_height</span><span class="p">(</span><span class="mi">2000</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">vessel_length</span><span class="p">(</span><span class="mf">300.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">VesselNetworkGenerator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">network_generator</span><span class="p">;</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNetwork</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_network</span> <span class="o">=</span> <span class="n">network_generator</span><span class="p">.</span><span class="n">GenerateHexagonalNetwork</span><span class="p">(</span><span class="n">target_width</span><span class="p">,</span>
+                                                                                                    <span class="n">target_height</span><span class="p">,</span>
+                                                                                                    <span class="n">vessel_length</span><span class="p">);</span>
+
+        <span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">inlet_locator</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">reference_length</span><span class="p">);</span>
+        <span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">outlet_locator</span><span class="p">(</span><span class="n">target_width</span><span class="o">/</span><span class="n">reference_length</span><span class="p">,</span> <span class="n">target_height</span><span class="o">/</span><span class="n">reference_length</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">reference_length</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNode</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_inlet_node</span> <span class="o">=</span> <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNearestNode</span><span class="p">(</span><span class="n">inlet_locator</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNode</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_outlet_node</span> <span class="o">=</span> <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNearestNode</span><span class="p">(</span><span class="n">outlet_locator</span><span class="p">);</span>
+        <span class="n">p_inlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsInputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_inlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpInletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+        <span class="n">p_outlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsOutputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_outlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpOutletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">vessel_radius</span><span class="p">(</span><span class="mf">40.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentRadii</span><span class="p">(</span><span class="n">vessel_radius</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">dynamic_viscosity</span><span class="o">&gt;</span> <span class="n">viscosity</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpPlasmaViscosity</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">();</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentViscosity</span><span class="p">(</span><span class="n">viscosity</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s">"initial_network.vtp"</span><span class="p">);</span>
+
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceTimeScale</span><span class="p">(</span><span class="mf">60.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">seconds</span><span class="p">);</span>
+        <span class="n">SimulationTime</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetEndTimeAndNumberOfTimeSteps</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_impedance_calculator</span> <span class="o">=</span> <span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ConstantHaematocritSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_haematocrit_calculator</span> <span class="o">=</span> <span class="n">ConstantHaematocritSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_haematocrit_calculator</span><span class="o">-&gt;</span><span class="n">SetHaematocrit</span><span class="p">(</span><span class="mf">0.45</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">WallShearStressCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_wss_calculator</span> <span class="o">=</span> <span class="n">WallShearStressCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">MechanicalStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_mech_stimulus_calculator</span> <span class="o">=</span> <span class="n">MechanicalStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">StructuralAdaptationSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_structural_adaptation_solver</span> <span class="o">=</span> <span class="n">StructuralAdaptationSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetWriteOutput</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetOutputFileName</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s">"adaptation_data.dat"</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetTolerance</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetMaxIterations</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPreFlowSolveCalculator</span><span class="p">(</span><span class="n">p_impedance_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_haematocrit_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_wss_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_mech_stimulus_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetTimeIncrement</span><span class="p">(</span><span class="mf">0.01</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">seconds</span><span class="p">);</span>
+</code></pre></div>
+<p>Set up a regression solver</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">WallShearStressBasedRegressionSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_regression_solver</span> <span class="o">=</span> <span class="n">WallShearStressBasedRegressionSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_regression_solver</span><span class="o">-&gt;</span><span class="n">SetMaximumTimeWithLowWallShearStress</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="mf">3600.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">seconds</span><span class="p">);</span>
+        <span class="n">p_regression_solver</span><span class="o">-&gt;</span><span class="n">SetLowWallShearStressThreshold</span><span class="p">(</span><span class="mf">1.e-06</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">pascals</span><span class="p">);</span>
+        <span class="n">p_regression_solver</span><span class="o">-&gt;</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+</code></pre></div>
+<p>Set up a <code>MicrovesselSolver</code> to manage all solves.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">MicrovesselSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">microvessel_solver</span><span class="p">;</span>
+        <span class="n">microvessel_solver</span><span class="p">.</span><span class="n">SetRegressionSolver</span><span class="p">(</span><span class="n">p_regression_solver</span><span class="p">);</span>
+        <span class="n">microvessel_solver</span><span class="p">.</span><span class="n">SetStructuralAdaptationSolver</span><span class="p">(</span><span class="n">p_structural_adaptation_solver</span><span class="p">);</span>
+        <span class="n">microvessel_solver</span><span class="p">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">microvessel_solver</span><span class="p">.</span><span class="n">SetOutputFileHandler</span><span class="p">(</span><span class="n">p_handler</span><span class="p">);</span>
+        <span class="n">microvessel_solver</span><span class="p">.</span><span class="n">SetOutputFrequency</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</code></pre></div>
+<p>Run the solver</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">microvessel_solver</span><span class="p">.</span><span class="n">Run</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<h1>Code</h1>
+
+<p>The full code is given below</p>
+
+<h2>File name <code>TestBloodFlowTutorial.hpp</code></h2>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;vector&gt;
+#include &lt;cxxtest/TestSuite.h&gt;
+#include "Owen11Parameters.hpp"
+#include "AbstractCellBasedWithTimingsTestSuite.hpp"
+#include "SmartPointers.hpp"
+#include "OutputFileHandler.hpp"
+#include "VesselNode.hpp"
+#include "VesselSegment.hpp"
+#include "Vessel.hpp"
+#include "VesselNetwork.hpp"
+#include "VesselNetworkGenerator.hpp"
+#include "UnitCollection.hpp"
+#include "BaseUnits.hpp"
+#include "NodeFlowProperties.hpp"
+#include "Owen11Parameters.hpp"
+#include "GenericParameters.hpp"
+#include "ParameterCollection.hpp"
+#include "VesselImpedanceCalculator.hpp"
+#include "FlowSolver.hpp"
+#include "AlarconHaematocritSolver.hpp"
+#include "ConstantHaematocritSolver.hpp"
+#include "StructuralAdaptationSolver.hpp"
+#include "WallShearStressCalculator.hpp"
+#include "MechanicalStimulusCalculator.hpp"
+#include "WallShearStressBasedRegressionSolver.hpp"
+#include "MicrovesselSolver.hpp"
+#include "PetscSetupAndFinalize.hpp"
+</span>
+<span class="k">class</span> <span class="nc">TestBloodFlowLiteratePaper</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AbstractCellBasedWithTimingsTestSuite</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">TestSimpleFlowProblem</span><span class="p">()</span> <span class="k">throw</span> <span class="p">(</span><span class="n">Exception</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">reference_length</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceLengthScale</span><span class="p">(</span><span class="n">reference_length</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">vessel_length</span><span class="p">(</span><span class="mf">100.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">start_point</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+        <span class="n">VesselNetworkGenerator</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">network_generator</span><span class="p">;</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNetwork</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_network</span> <span class="o">=</span> <span class="n">network_generator</span><span class="p">.</span><span class="n">GenerateBifurcationUnit</span><span class="p">(</span><span class="n">vessel_length</span><span class="p">,</span> <span class="n">start_point</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span> <span class="n">num_units_per_direction</span><span class="p">;</span>
+        <span class="n">num_units_per_direction</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="n">num_units_per_direction</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+        <span class="n">network_generator</span><span class="p">.</span><span class="n">PatternUnitByTranslation</span><span class="p">(</span><span class="n">p_network</span><span class="p">,</span> <span class="n">num_units_per_direction</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">pressure</span><span class="o">&gt;</span> <span class="n">inlet_pressure</span><span class="p">(</span><span class="mf">50.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">mmHg</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsInputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">inlet_pressure</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNode</span><span class="p">(</span><span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNumberOfNodes</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsOutputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNode</span><span class="p">(</span><span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNumberOfNodes</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpOutletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">vessel_radius</span><span class="p">(</span><span class="n">GenericParameters</span><span class="o">::</span><span class="n">mpCapillaryRadius</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentRadii</span><span class="p">(</span><span class="n">vessel_radius</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">dynamic_viscosity</span><span class="o">&gt;</span> <span class="n">viscosity</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpPlasmaViscosity</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">();</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentViscosity</span><span class="p">(</span><span class="n">viscosity</span><span class="p">);</span>
+        <span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">impedance_calculator</span> <span class="o">=</span> <span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="n">impedance_calculator</span><span class="p">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">impedance_calculator</span><span class="p">.</span><span class="n">Calculate</span><span class="p">();</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">flow_impedance</span><span class="o">&gt;</span> <span class="n">expected_impedance</span> <span class="o">=</span> <span class="mf">8.0</span> <span class="o">*</span> <span class="n">viscosity</span><span class="o">*</span> <span class="n">vessel_length</span><span class="o">/</span><span class="p">(</span><span class="n">M_PI</span><span class="o">*</span><span class="n">units</span><span class="o">::</span><span class="n">pow</span><span class="o">&lt;</span><span class="mi">4</span><span class="o">&gt;</span><span class="p">(</span><span class="n">vessel_radius</span><span class="p">));</span>
+        <span class="n">TS_ASSERT_DELTA</span><span class="p">(</span><span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetVessel</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetSegment</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetImpedance</span><span class="p">().</span><span class="n">value</span><span class="p">(),</span> <span class="n">expected_impedance</span><span class="p">.</span><span class="n">value</span><span class="p">(),</span> <span class="mf">1.e-6</span><span class="p">);</span>
+        <span class="n">FlowSolver</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">flow_solver</span> <span class="o">=</span> <span class="n">FlowSolver</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="n">flow_solver</span><span class="p">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">flow_solver</span><span class="p">.</span><span class="n">Solve</span><span class="p">();</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">pressure</span><span class="o">&gt;</span> <span class="n">expected_pressure</span> <span class="o">=</span> <span class="p">(</span><span class="n">inlet_pressure</span> <span class="o">+</span> <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpOutletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">())</span><span class="o">/</span><span class="mf">2.0</span><span class="p">;</span>
+        <span class="n">TS_ASSERT_DELTA</span><span class="p">(</span><span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNode</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetPressure</span><span class="p">().</span><span class="n">value</span><span class="p">(),</span> <span class="n">expected_pressure</span><span class="p">.</span><span class="n">value</span><span class="p">(),</span> <span class="mf">1.e-6</span><span class="p">);</span>
+        <span class="n">MAKE_PTR_ARGS</span><span class="p">(</span><span class="n">OutputFileHandler</span><span class="p">,</span> <span class="n">p_handler</span><span class="p">,</span> <span class="p">(</span><span class="s">"TestBloodFlowLiteratePaper/TestSimpleFlowProblem"</span><span class="p">));</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s">"bifurcating_network_results.vtp"</span><span class="p">);</span>
+        <span class="n">ParameterCollection</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">DumpToFile</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s">"parameter_collection.xml"</span><span class="p">);</span>
+        <span class="n">ParameterCollection</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Destroy</span><span class="p">();</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Destroy</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">TestFlowProblemWithHaematocrit</span><span class="p">()</span> <span class="k">throw</span> <span class="p">(</span><span class="n">Exception</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">MAKE_PTR_ARGS</span><span class="p">(</span><span class="n">OutputFileHandler</span><span class="p">,</span> <span class="n">p_handler</span><span class="p">,</span> <span class="p">(</span><span class="s">"TestBloodFlowLiteratePaper/TestFlowProblemWithHaematocrit"</span><span class="p">,</span> <span class="nb">false</span><span class="p">));</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">cell_width</span><span class="p">(</span><span class="mf">25.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceLengthScale</span><span class="p">(</span><span class="n">cell_width</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">target_width</span> <span class="o">=</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="n">cell_width</span><span class="p">;</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">target_height</span> <span class="o">=</span> <span class="mf">30.0</span> <span class="o">*</span> <span class="n">cell_width</span><span class="p">;</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">vessel_length</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">cell_width</span><span class="p">;</span>
+        <span class="n">VesselNetworkGenerator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">network_generator</span><span class="p">;</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNetwork</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_network</span> <span class="o">=</span> <span class="n">network_generator</span><span class="p">.</span><span class="n">GenerateHexagonalNetwork</span><span class="p">(</span><span class="n">target_width</span><span class="p">,</span>
+                                                                                                    <span class="n">target_height</span><span class="p">,</span>
+                                                                                                    <span class="n">vessel_length</span><span class="p">);</span>
+        <span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">inlet_locator</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">cell_width</span><span class="p">);</span>
+        <span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">outlet_locator</span><span class="p">(</span><span class="n">target_width</span><span class="o">/</span><span class="n">cell_width</span><span class="p">,</span> <span class="n">target_height</span><span class="o">/</span><span class="n">cell_width</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">cell_width</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNode</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_inlet_node</span> <span class="o">=</span> <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNearestNode</span><span class="p">(</span><span class="n">inlet_locator</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNode</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_outlet_node</span> <span class="o">=</span> <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNearestNode</span><span class="p">(</span><span class="n">outlet_locator</span><span class="p">);</span>
+        <span class="n">p_inlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsInputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_inlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpInletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+        <span class="n">p_outlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsOutputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_outlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpOutletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">vessel_radius</span><span class="p">(</span><span class="n">GenericParameters</span><span class="o">::</span><span class="n">mpCapillaryRadius</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentRadii</span><span class="p">(</span><span class="n">vessel_radius</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">dynamic_viscosity</span><span class="o">&gt;</span> <span class="n">viscosity</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpPlasmaViscosity</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">();</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentViscosity</span><span class="p">(</span><span class="n">viscosity</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">sphere_radius</span> <span class="o">=</span> <span class="mf">400.0</span> <span class="o">*</span> <span class="n">cell_width</span><span class="p">;</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">sphere_thickess</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">cell_width</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">sphere_azimuth</span> <span class="o">=</span> <span class="n">M_PI</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">sphere_polar</span> <span class="o">=</span> <span class="n">M_PI</span><span class="o">/</span><span class="mf">2.0</span><span class="p">;</span>
+        <span class="n">network_generator</span><span class="p">.</span><span class="n">MapToSphere</span><span class="p">(</span><span class="n">p_network</span><span class="p">,</span> <span class="n">sphere_radius</span><span class="p">,</span> <span class="n">sphere_thickess</span><span class="p">,</span> <span class="n">sphere_azimuth</span><span class="p">,</span> <span class="n">sphere_polar</span><span class="p">);</span>
+        <span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">impedance_calculator</span> <span class="o">=</span> <span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="n">impedance_calculator</span><span class="p">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">impedance_calculator</span><span class="p">.</span><span class="n">Calculate</span><span class="p">();</span>
+        <span class="n">FlowSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">flow_solver</span> <span class="o">=</span> <span class="n">FlowSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="n">flow_solver</span><span class="p">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">flow_solver</span><span class="p">.</span><span class="n">Solve</span><span class="p">();</span>
+        <span class="n">AlarconHaematocritSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">haematocrit_solver</span> <span class="o">=</span> <span class="n">AlarconHaematocritSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="n">haematocrit_solver</span><span class="p">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">haematocrit_solver</span><span class="p">.</span><span class="n">SetHaematocrit</span><span class="p">(</span><span class="mf">0.45</span><span class="p">);</span>
+        <span class="n">haematocrit_solver</span><span class="p">.</span><span class="n">Calculate</span><span class="p">();</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceLengthScale</span><span class="p">(</span><span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s">"network_haematocrit.vtp"</span><span class="p">);</span>
+        <span class="n">ParameterCollection</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">DumpToFile</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s">"parameter_collection.xml"</span><span class="p">);</span>
+        <span class="n">ParameterCollection</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Destroy</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">TestFlowProblemStucturalAdaptation</span><span class="p">()</span> <span class="k">throw</span> <span class="p">(</span><span class="n">Exception</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">MAKE_PTR_ARGS</span><span class="p">(</span><span class="n">OutputFileHandler</span><span class="p">,</span> <span class="n">p_handler</span><span class="p">,</span> <span class="p">(</span><span class="s">"TestBloodFlowLiteratePaper/TestFlowProblemStucturalAdaptation"</span><span class="p">,</span> <span class="nb">false</span><span class="p">));</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">reference_length</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceLengthScale</span><span class="p">(</span><span class="n">reference_length</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">target_width</span><span class="p">(</span><span class="mi">8000</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">target_height</span><span class="p">(</span><span class="mi">2000</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">vessel_length</span><span class="p">(</span><span class="mf">300.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">VesselNetworkGenerator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">network_generator</span><span class="p">;</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNetwork</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_network</span> <span class="o">=</span> <span class="n">network_generator</span><span class="p">.</span><span class="n">GenerateHexagonalNetwork</span><span class="p">(</span><span class="n">target_width</span><span class="p">,</span>
+                                                                                                    <span class="n">target_height</span><span class="p">,</span>
+                                                                                                    <span class="n">vessel_length</span><span class="p">);</span>
+        <span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">inlet_locator</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">reference_length</span><span class="p">);</span>
+        <span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">outlet_locator</span><span class="p">(</span><span class="n">target_width</span><span class="o">/</span><span class="n">reference_length</span><span class="p">,</span> <span class="n">target_height</span><span class="o">/</span><span class="n">reference_length</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">reference_length</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNode</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_inlet_node</span> <span class="o">=</span> <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNearestNode</span><span class="p">(</span><span class="n">inlet_locator</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNode</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_outlet_node</span> <span class="o">=</span> <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNearestNode</span><span class="p">(</span><span class="n">outlet_locator</span><span class="p">);</span>
+        <span class="n">p_inlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsInputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_inlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpInletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+        <span class="n">p_outlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsOutputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_outlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpOutletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">vessel_radius</span><span class="p">(</span><span class="mf">40.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentRadii</span><span class="p">(</span><span class="n">vessel_radius</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">dynamic_viscosity</span><span class="o">&gt;</span> <span class="n">viscosity</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpPlasmaViscosity</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">();</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentViscosity</span><span class="p">(</span><span class="n">viscosity</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s">"initial_network.vtp"</span><span class="p">);</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceTimeScale</span><span class="p">(</span><span class="mf">60.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">seconds</span><span class="p">);</span>
+        <span class="n">SimulationTime</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetEndTimeAndNumberOfTimeSteps</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_impedance_calculator</span> <span class="o">=</span> <span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ConstantHaematocritSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_haematocrit_calculator</span> <span class="o">=</span> <span class="n">ConstantHaematocritSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_haematocrit_calculator</span><span class="o">-&gt;</span><span class="n">SetHaematocrit</span><span class="p">(</span><span class="mf">0.45</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">WallShearStressCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_wss_calculator</span> <span class="o">=</span> <span class="n">WallShearStressCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">MechanicalStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_mech_stimulus_calculator</span> <span class="o">=</span> <span class="n">MechanicalStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">StructuralAdaptationSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">structural_adaptation_solver</span><span class="p">;</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">SetWriteOutput</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">SetOutputFileName</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s">"adaptation_data.dat"</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">SetTolerance</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">SetMaxIterations</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">AddPreFlowSolveCalculator</span><span class="p">(</span><span class="n">p_impedance_calculator</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_haematocrit_calculator</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_wss_calculator</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_mech_stimulus_calculator</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">SetTimeIncrement</span><span class="p">(</span><span class="mf">0.01</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">seconds</span><span class="p">);</span>
+        <span class="n">structural_adaptation_solver</span><span class="p">.</span><span class="n">Solve</span><span class="p">();</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s">"network_initial_sa.vtp"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">TestFlowProblemStucturalAdaptationWithRegression</span><span class="p">()</span> <span class="k">throw</span> <span class="p">(</span><span class="n">Exception</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">MAKE_PTR_ARGS</span><span class="p">(</span><span class="n">OutputFileHandler</span><span class="p">,</span> <span class="n">p_handler</span><span class="p">,</span> <span class="p">(</span><span class="s">"TestBloodFlowLiteratePaper/TestFlowProblemStucturalAdaptationWithRegression"</span><span class="p">,</span> <span class="nb">false</span><span class="p">));</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">reference_length</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceLengthScale</span><span class="p">(</span><span class="n">reference_length</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">target_width</span><span class="p">(</span><span class="mi">8000</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">target_height</span><span class="p">(</span><span class="mi">2000</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">vessel_length</span><span class="p">(</span><span class="mf">300.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">VesselNetworkGenerator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">network_generator</span><span class="p">;</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNetwork</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_network</span> <span class="o">=</span> <span class="n">network_generator</span><span class="p">.</span><span class="n">GenerateHexagonalNetwork</span><span class="p">(</span><span class="n">target_width</span><span class="p">,</span>
+                                                                                                    <span class="n">target_height</span><span class="p">,</span>
+                                                                                                    <span class="n">vessel_length</span><span class="p">);</span>
+
+        <span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">inlet_locator</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">reference_length</span><span class="p">);</span>
+        <span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">outlet_locator</span><span class="p">(</span><span class="n">target_width</span><span class="o">/</span><span class="n">reference_length</span><span class="p">,</span> <span class="n">target_height</span><span class="o">/</span><span class="n">reference_length</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">reference_length</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNode</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_inlet_node</span> <span class="o">=</span> <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNearestNode</span><span class="p">(</span><span class="n">inlet_locator</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNode</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_outlet_node</span> <span class="o">=</span> <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNearestNode</span><span class="p">(</span><span class="n">outlet_locator</span><span class="p">);</span>
+        <span class="n">p_inlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsInputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_inlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpInletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+        <span class="n">p_outlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsOutputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_outlet_node</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpOutletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">());</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">vessel_radius</span><span class="p">(</span><span class="mf">40.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentRadii</span><span class="p">(</span><span class="n">vessel_radius</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">dynamic_viscosity</span><span class="o">&gt;</span> <span class="n">viscosity</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpPlasmaViscosity</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">();</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentViscosity</span><span class="p">(</span><span class="n">viscosity</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s">"initial_network.vtp"</span><span class="p">);</span>
+
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceTimeScale</span><span class="p">(</span><span class="mf">60.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">seconds</span><span class="p">);</span>
+        <span class="n">SimulationTime</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetEndTimeAndNumberOfTimeSteps</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_impedance_calculator</span> <span class="o">=</span> <span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ConstantHaematocritSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_haematocrit_calculator</span> <span class="o">=</span> <span class="n">ConstantHaematocritSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_haematocrit_calculator</span><span class="o">-&gt;</span><span class="n">SetHaematocrit</span><span class="p">(</span><span class="mf">0.45</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">WallShearStressCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_wss_calculator</span> <span class="o">=</span> <span class="n">WallShearStressCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">MechanicalStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_mech_stimulus_calculator</span> <span class="o">=</span> <span class="n">MechanicalStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">StructuralAdaptationSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_structural_adaptation_solver</span> <span class="o">=</span> <span class="n">StructuralAdaptationSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetWriteOutput</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetOutputFileName</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s">"adaptation_data.dat"</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetTolerance</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetMaxIterations</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPreFlowSolveCalculator</span><span class="p">(</span><span class="n">p_impedance_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_haematocrit_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_wss_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_mech_stimulus_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetTimeIncrement</span><span class="p">(</span><span class="mf">0.01</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">seconds</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">WallShearStressBasedRegressionSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_regression_solver</span> <span class="o">=</span> <span class="n">WallShearStressBasedRegressionSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_regression_solver</span><span class="o">-&gt;</span><span class="n">SetMaximumTimeWithLowWallShearStress</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="mf">3600.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">seconds</span><span class="p">);</span>
+        <span class="n">p_regression_solver</span><span class="o">-&gt;</span><span class="n">SetLowWallShearStressThreshold</span><span class="p">(</span><span class="mf">1.e-06</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">pascals</span><span class="p">);</span>
+        <span class="n">p_regression_solver</span><span class="o">-&gt;</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">MicrovesselSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">microvessel_solver</span><span class="p">;</span>
+        <span class="n">microvessel_solver</span><span class="p">.</span><span class="n">SetRegressionSolver</span><span class="p">(</span><span class="n">p_regression_solver</span><span class="p">);</span>
+        <span class="n">microvessel_solver</span><span class="p">.</span><span class="n">SetStructuralAdaptationSolver</span><span class="p">(</span><span class="n">p_structural_adaptation_solver</span><span class="p">);</span>
+        <span class="n">microvessel_solver</span><span class="p">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">microvessel_solver</span><span class="p">.</span><span class="n">SetOutputFileHandler</span><span class="p">(</span><span class="n">p_handler</span><span class="p">);</span>
+        <span class="n">microvessel_solver</span><span class="p">.</span><span class="n">SetOutputFrequency</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="n">microvessel_solver</span><span class="p">.</span><span class="n">Run</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

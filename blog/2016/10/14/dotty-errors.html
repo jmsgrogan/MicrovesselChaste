@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Awesome Error Messages for Dotty | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/scala-logo-white-sm.png" alt="white Scala logo" /></a>
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Awesome Error Messages for Dotty</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            <div class="article-date">October 14, 2016</div>
+            
+              <div class="written">Written By: <span class="by">Felix Mulder</span></div>
+            
+            <p>One thing that really excites me about being part of the core group of
+developers working on <a href="http://lampepfl.github.io/dotty">Dotty</a> is my chance to
+impact usability. A lot of thought has gone into designing Dotty to be as fast
+and structurally sound as possible.  Now comes the next step - adding a new
+level of usability for the compiler and the surrounding tools.</p>
+
+<p>We&#39;ve looked at how other modern languages like
+<a href="http://elm-lang.org/blog/compiler-errors-for-humans">Elm</a> and
+<a href="https://blog.rust-lang.org/2016/08/10/Shape-of-errors-to-come.html">Rust</a>
+handle compiler warnings and error messages, and come to realize that Dotty is
+actually in great shape to provide comprehensive and easy to understand error
+messages in the same spirit.</p>
+
+<p>Let&#39;s dive right into some examples, let&#39;s say you have this code:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">try {
+  foo()
+}
+</code></pre></div>
+<p>It doesn&#39;t really make sense to put this in a <code>try</code>-block for two reasons:</p>
+
+<ol>
+<li>It doesn&#39;t throw an exception</li>
+<li>It doesn&#39;t have a <code>catch</code> or <code>finally</code> clause</li>
+</ol>
+
+<p>So let&#39;s say we compile this file using scalac, we get something like:</p>
+
+<pre>
+test.scala:2: warning: A try without a catch or finally is equivalent to putting
+its body in a block; no exceptions are handled.
+     try {
+       ^
+       one warning found
+</pre>
+
+<p>This is helpful, but it has a couple of drawbacks:</p>
+
+<ol>
+<li>If we have a bazillion errors, it will be hard to read</li>
+<li>If we don&#39;t know about <code>catch</code> or <code>finally</code> blocks - we don&#39;t know how to
+solve this (yes I know, most people do know what these are but - toy
+example!)</li>
+</ol>
+
+<p>So what do you get with Dotty? This:</p>
+
+<p><img src="http://i.imgur.com/vNE706E.png" alt="try-error"></p>
+
+<p>All errors are now visually separated, and the output is colorized so that you
+can find your mistakes quickly.</p>
+
+<p>Another one of our goals is to be able to properly explain things when asked.
+As such, if you pass the flag <code>-explain</code> when compiling the example above,
+you&#39;ll get a more verbose explanation:</p>
+
+<p><img src="http://i.imgur.com/pNhgsdf.png" alt="try-error2"></p>
+
+<h2>Mistyping members</h2>
+
+<p>Sometimes, especially when you&#39;re in a rush - you might mistype some members.
+Currently we offer you the following support when selecting on a type:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">class Foo {
+  def bar = ???
+}
+
+val foo = new Foo()
+foo.barr
+</code></pre></div>
+<p>Will yield:</p>
+
+<p><img src="http://i.imgur.com/iDnpB9O.png" alt="mistype"></p>
+
+<p>In the future we want to be able to offer you these types of suggestions on
+other things like missing imports.</p>
+
+<h2>Type diffs</h2>
+
+<p>Sometimes when working with complex types - it&#39;s hard to see exactly where the
+error occurs. The Dotty compiler will in these cases give you a colored diff:</p>
+
+<p><img src="http://i.imgur.com/vlmwrmD.png" alt="mismatch"></p>
+
+<p>It will not do this however if the differences are huge - but it will syntax
+highlight the found and expected type anyway.</p>
+
+<h2>We want you!</h2>
+
+<p>To make the transition to these new error messages as quick and pain-free as
+possible - we need help! This is a perfect entry-point into hacking on the
+compiler as you&#39;ll need to create semantic objects that contain the relevant
+information for the error or warning.</p>
+
+<p>So - this is what you do:</p>
+
+<ol>
+<li>Go to the <a href="https://github.com/lampepfl/dotty/issues/1589">Error messages issue</a></li>
+<li>Read the howto on error messages</li>
+<li>Choose an error message you want to help with and post a comment saying
+which one(s)</li>
+<li>Get hacking</li>
+<li>Submit a PR!</li>
+</ol>
+
+            
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div id="toc"></div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

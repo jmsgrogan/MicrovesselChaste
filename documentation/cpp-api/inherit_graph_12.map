@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classAbstractSproutingRule.html" title="AbstractSproutingRule\l\&lt; DIM \&gt;" alt="" coords="5,39,159,80"/>
+<area shape="rect" id="node2" href="$classLatticeBasedSproutingRule.html" title="LatticeBasedSproutingRule\l\&lt; DIM \&gt;" alt="" coords="207,5,387,47"/>
+<area shape="rect" id="node4" href="$classOffLatticeSproutingRule.html" title="OffLatticeSproutingRule\l\&lt; DIM \&gt;" alt="" coords="216,71,377,112"/>
+<area shape="rect" id="node3" href="$classOwen2011SproutingRule.html" title="Owen2011SproutingRule\l\&lt; DIM \&gt;" alt="" coords="435,5,601,47"/>
+</map>

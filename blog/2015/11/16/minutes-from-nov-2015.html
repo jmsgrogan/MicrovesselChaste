@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Minutes from Nov 2015 SIP/SLIP Meeting | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/scala-logo-white-sm.png" alt="white Scala logo" /></a>
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Minutes from Nov 2015 SIP/SLIP Meeting</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            <div class="article-date">November 16, 2015</div>
+            
+              <div class="written">Written By: <span class="by">Hamish Dickson</span></div>
+            
+            <h2>SIP/SLIP meeting, November 2015</h2>
+
+<p><a href="https://www.youtube.com/watch?v=RJAwDhB3Vr8">A video recording of this meeting</a> is available.</p>
+
+<h2>Welcomes and apologies</h2>
+
+<p>Today we have <a href="http://github.com/dickwall">@dickwall</a>, <a href="http://github.com/sjrd">@sjrd</a>, <a href="http://github.com/SethTisue">@SethTisue</a>, <a href="http://github.com/heathermiller">@heathermiller</a>, <a href="http://github.com/non">@non</a> and <a href="http://github.com/odersky">@odersky</a>.</p>
+
+<p><a href="http://github.com/jsuereth">@jsuereth</a> is unable to make it.</p>
+
+<h2>November milestone issues</h2>
+
+<h3>Adding scala.io.Target</h3>
+
+<p>Link to SLIP: <a href="https://github.com/scala/slip/pull/2">https://github.com/scala/slip/pull/2</a></p>
+
+<p>Notes:</p>
+
+<ul>
+<li>nothing has changed on this one, <a href="http://github.com/dickwall">@dickwall</a> suggests hibernate tag</li>
+<li>believe this has been replaced/deprecated by the larger IO library discussion</li>
+</ul>
+
+<h3>Unsigned integer data types</h3>
+
+<p>Link to SLIP: <a href="https://github.com/scala/slip/pull/30">https://github.com/scala/slip/pull/30</a></p>
+
+<p>Owner: <a href="http://github.com/sjrd">@sjrd</a></p>
+
+<p>Notes:</p>
+
+<p><a href="http://github.com/sjrd">@sjrd</a> covers the idea and motivation:</p>
+
+<ul>
+<li>the general idea is to introduce 4 new data types corresponding to the unsigned integers</li>
+<li>motivation is mainly coming from Scala.js and the hope is that this will resolve some Scala.js weirdness along with the fact that there is currently no way to represent a type of value unsigned integer from javascript point of view</li>
+</ul>
+
+<p><a href="http://github.com/dickwall">@dickwall</a> asks what the size of the implementation will be. <a href="http://github.com/sjrd">@sjrd</a> has two approaches at the moment:</p>
+
+<p>One is to limit compiler changes as much as possible</p>
+
+<ul>
+<li>this would lead to a &quot;one line&quot; change</li>
+<li>the change would also prevent optimization where things are boxed at runtime (which is very close to the compiler), all other changes are library based</li>
+<li>main drawback is performance for equality is impacted. For the simple implementation so far investigated, it&#39;s about a 3 x hit on performance <a href="http://github.com/odersky">@odersky</a> thinks that&#39;s a show stopper, but <a href="http://github.com/sjrd">@sjrd</a> points out that they are still working on this</li>
+<li>problem is Scala Number is a class, AnyVals can&#39;t extend classes, which is why we have to mangle with boxes at runtime</li>
+</ul>
+
+<p>The second option is to change the compiler</p>
+
+<p>Actions:</p>
+
+<ul>
+<li><a href="http://github.com/dickwall">@dickwall</a> put this into public review for a month - let people comment on the SLIP/add suggestions</li>
+<li><a href="http://github.com/dickwall">@dickwall</a> will create a tag for public review and add it to this SLIP</li>
+</ul>
+
+<h3>Implicits in for comprehensions/pattern matches SIP tracking</h3>
+
+<p>Link to SLIP: <a href="https://github.com/scala/slip/issues/6">https://github.com/scala/slip/issues/6</a></p>
+
+<p>Notes:</p>
+
+<ul>
+<li><a href="http://github.com/som-snytt">@som-snytt</a> has an implementation for this now, so good progress</li>
+<li>hibernating tag removed</li>
+</ul>
+
+<p>Next steps:</p>
+
+<p><a href="http://github.com/SethTisue">@SethTisue</a> update:</p>
+
+<ul>
+<li><a href="http://github.com/som-snytt">@som-snytt</a> has code that looks like it works and does what this SLIP says it should</li>
+<li>the next question is is this good enough? Does this need to be taken further? The issue is that now implicits can behave differently in for comprehensions than outside. The committee are concerned about corner cases and would like Scala&#39;s features to be consistent</li>
+<li>it&#39;s decided that this needs to be extended to a general pattern, and <a href="http://github.com/odersky">@odersky</a> is keen on that work being done</li>
+<li><a href="http://github.com/SethTisue">@SethTisue</a> doesn&#39;t know what the likelihood of <a href="http://github.com/som-snytt">@som-snytt</a> taking the rest of this work on - the for comprehension might be the only version that he has time for. If he doesn&#39;t have time, then hopefully the community will be able to help</li>
+</ul>
+
+<p>Open question:</p>
+
+<ul>
+<li><a href="http://github.com/odersky">@odersky</a> in Dotty, want to enforce that every implicit has an explicitly given type because it&#39;s very confusing that implicits get lost due to the order of local type inference</li>
+<li>how will that work in a <code>for</code>? The natural thing would be for an implicit not to have a result type.. will we have to enforce that?</li>
+</ul>
+
+<p>Actions:</p>
+
+<ul>
+<li><a href="http://github.com/SethTisue">@SethTisue</a> to post instructions on the SLIP PR on how to use a specific Scala build so people can try out the current implementation</li>
+</ul>
+
+<h3>Implicit enrichment of <code>scala.util.Either</code> to support monadic bias</h3>
+
+<p>Link to SLIP: <a href="https://github.com/scala/slip/pull/20">https://github.com/scala/slip/pull/20</a></p>
+
+<p>Notes:</p>
+
+<ul>
+<li>The way we left this from last time, we were unsure where it stood, but <a href="https://github.com/swaldman">@swaldman</a> has gone ahead and provided a proposal for this</li>
+<li><a href="http://github.com/SethTisue">@SethTisue</a> should consider this SLIP in the context of other SLIPs going on at the moment</li>
+</ul>
+
+<p>Actions:</p>
+
+<ul>
+<li><a href="https://github.com/swaldman">@swaldman</a> to co-ordinate this with other SLIPs</li>
+</ul>
+
+<h3>Collections overhaul</h3>
+
+<p>Link to SLIP: <a href="https://github.com/scala/slip/issues/27">https://github.com/scala/slip/issues/27</a></p>
+
+<p>Notes:</p>
+
+<ul>
+<li>not much activity this month</li>
+<li>active, hold fire until next meeting</li>
+</ul>
+
+<h3>scala-parser-combinators vs fastparse</h3>
+
+<p>Link to SLIP: <a href="https://github.com/scala/slip/issues/24">https://github.com/scala/slip/issues/24</a></p>
+
+<p>Notes:</p>
+
+<ul>
+<li>nothing has happened, no updates here</li>
+<li><a href="http://github.com/SethTisue">@SethTisue</a> impression from <a href="https://github.com/lihaoyi">@lihaoyi</a> is that he&#39;s ok with FastParse going into the standard module, but he probably doesn&#39;t have the time</li>
+<li><a href="http://github.com/odersky">@odersky</a> agrees we&#39;re blocked until someone can do this really</li>
+</ul>
+
+<h3>SLIP 27 Tracking</h3>
+
+<p>Link to SLIP: <a href="https://github.com/scala/slip/issues/23">https://github.com/scala/slip/issues/23</a></p>
+
+<p>Notes:</p>
+
+<ul>
+<li><a href="http://github.com/jsuereth">@jsuereth</a> is out for this meeting - he is really the one that can update us on this issue</li>
+<li>hold this until next month</li>
+<li>this issue is linked to the collection overhaul and it needs to be decided if this should be done separately or if it should be rolled into a larger change</li>
+</ul>
+
+<h3>Scala IO fix-up/overhaul</h3>
+
+<p>Link to SLIP: <a href="https://github.com/scala/slip/issues/19">https://github.com/scala/slip/issues/19</a></p>
+
+<p>Notes:</p>
+
+<ul>
+<li>calmed down a bit here, not much has happened</li>
+<li><a href="http://github.com/dickwall">@dickwall</a> is nearly done with his blog post, discussed in the last meeting</li>
+<li>not ready for hibernate just yet</li>
+</ul>
+
+<h3>Establish a fair survey mechanism for SLIPs?</h3>
+
+<p>Link to SLIP: <a href="https://github.com/scala/slip/issues/29">https://github.com/scala/slip/issues/29</a></p>
+
+<p>Notes:</p>
+
+<ul>
+<li><p>this came from a large SLIP discussion about the JSON AST (see below), with no obvious outcome other than: no one wants a survey mechanism that is too simplistic</p></li>
+<li><p><a href="http://github.com/dickwall">@dickwall</a> suggests we close this SLIP, <a href="http://github.com/non">@non</a> agrees pointing out that creating the proposal was the right thing to do</p></li>
+</ul>
+
+<p><a href="http://github.com/odersky">@odersky</a> talks about how Haskell deals with this issue and suggests we adopt parts of that for Scala:</p>
+
+<ul>
+<li>if something is proposed to the Haskell platform, then everybody who has a module in the platform can vote on that</li>
+<li>we can have a more restrictive model than this, where you have core committers who decide what goes in there and they are the power brokers</li>
+<li>alternative is to have a more general system where everybody who contributes to the system can vote (that&#39;s what Haskell does)</li>
+<li><a href="http://github.com/odersky">@odersky</a> thinks people should be at least committers to vote</li>
+</ul>
+
+<p><a href="http://github.com/dickwall">@dickwall</a> closes issue, but happy for it to be reopened as and when it&#39;s needed</p>
+
+<h3>Gather, list, contact interested parties for an Either/Or/Xor/Validation etc SLIP and possible expert group</h3>
+
+<p>Link to SLIP: <a href="https://github.com/scala/slip/issues/5">https://github.com/scala/slip/issues/5</a></p>
+
+<p>Notes:</p>
+
+<ul>
+<li><a href="http://github.com/non">@non</a> no update on this, know people are to do research on this, but it hasn&#39;t happened yet (people get busy)</li>
+<li>not given hibernated tag</li>
+</ul>
+
+<h3>SIP: Auto-uncurry n-ary functions</h3>
+
+<p>There is no SIP tracking issue as yet, but information can be found here: <a href="https://github.com/lampepfl/dotty/issues/897">https://github.com/lampepfl/dotty/issues/897</a></p>
+
+<p>No issue created as yet, but <a href="http://github.com/odersky">@odersky</a> will create one if needed</p>
+
+<h3>SIP for supporting named type arguments and partial type argument lists</h3>
+
+<p>Link to SLIP: <a href="https://github.com/scala/scala.github.com/pull/456">https://github.com/scala/scala.github.com/pull/456</a></p>
+
+<p>Notes:</p>
+
+<ul>
+<li>most of the committee hasn&#39;t read this</li>
+<li><a href="http://github.com/dickwall">@dickwall</a> suggests it should go out for public review, <a href="http://github.com/SethTisue">@SethTisue</a> points out that the committee should read it first and then decide if that&#39;s a good idea (this is agreed)</li>
+</ul>
+
+<p>Homework:</p>
+
+<ul>
+<li>SLIP committee reads the proposal</li>
+<li>review in December SLIP meeting</li>
+</ul>
+
+<h2>JSON AST, Scala standard library, and the SLIP process</h2>
+
+<p>Link to issue and document: <a href="https://github.com/scala/slip/issues/31">https://github.com/scala/slip/issues/31</a></p>
+
+<p><a href="https://github.com/scala/slip/pull/28">A SLIP proposing a standard JSON AST</a> deviated quickly from the purpose of the SLIP and started a long discussion about what should and should not be in a Scala standard library. This and other discussions seem to really stem from the fact that it isn&#39;t clear what should go where in the Scala ecosystem.</p>
+
+<p><a href="http://github.com/odersky">@odersky</a> has since created a document on this topic called &quot;What should go into the standard library&quot; (link above) which proposes a new structure for Scala and it&#39;s libraries. Comments are invited.</p>
+
+<p>The document proposes a solution similar to Haskell:</p>
+
+<ul>
+<li>a &quot;core&quot;: which consists only what the compiler needs and not more (<a href="http://github.com/odersky">@odersky</a> thinks for Scala this should be explained slightly)</li>
+<li>a &quot;platform&quot;: can vary and be much bigger. The platform would be maintained by a different set of people from the core (and have it&#39;s own committee), it would be handled by the people who contribute modules to the platform</li>
+</ul>
+
+<p><a href="http://github.com/odersky">@odersky</a> thinks this would be a good model for us as well - the SLIP/SIP committee would look after the core and language, leave the platform to those who work on the platform. The SLIP committee would probably need to jumpstart the platform process in the beginning, but would like to hand over it&#39;s running to the community as soon as possible</p>
+
+<p>Conversation over the proposal:</p>
+
+<ul>
+<li><a href="http://github.com/dickwall">@dickwall</a> points out there is scope to have the &quot;EPFL Scala platform&quot; as well as other platforms, including more functional ones</li>
+<li>suggests we borrow from Ubuntu model with &quot;umbrella dependencies&quot; that you bring in letting you group things. Haskell has this too - where you can use different platforms</li>
+<li>idea behind the SLIP process is was to get library developers to work together, not to work on things just for the standard library. It sounds like this process would achieve that</li>
+<li>users would also know they are going to get a certain quality of library</li>
+</ul>
+
+<p><a href="http://github.com/non">@non</a> good vision, but questions/comments:</p>
+
+<ul>
+<li>core is very large, bringing it down would be very hard to migrate things out. Think we are a long way from being able to do this (although that doesn&#39;t mean we shouldn&#39;t aim for it)</li>
+<li>likes the idea of a platform, but the thing that&#39;s hard is the Scala namespace... the idea that the platform can have some stuff in the Scala namespace and some stuff that&#39;s not, that&#39;s a challenge</li>
+<li>The JSON AST discussions raised a good question: should we create a shared platform library and make it good, or should we create a good library and make that a platform library later? People had good points for both sides of this argument</li>
+<li>once you say something is in the Scala namespace, then you&#39;re saying it&#39;s going to be the thing because it&#39;s been blessed in some way. We say there is one platform, but if there are things in another namespace (eg Akka) those have a fundamentally different status than something in Scala namespace</li>
+<li>typically (eg in Python), maintainers maintain their module (not everything) make micro decisions about that module, but have larger committee who decides what&#39;s in or out or when there is going to be a new version or there is a difference of opinion they deal with that</li>
+<li>does <a href="http://github.com/odersky">@odersky</a> see it like that? Would there be a gatekeeper - if so will that keep this from taking off?</li>
+</ul>
+
+<p><a href="http://github.com/dickwall">@dickwall</a>:</p>
+
+<ul>
+<li>we have to be able to trust that the user can find a high quality implementation of a library</li>
+<li><a href="http://github.com/dickwall">@dickwall</a> points out that even he sometimes has problems finding libraries sometimes</li>
+<li><a href="http://github.com/dickwall">@dickwall</a>points out that if something is in the Scala namespace, it&#39;s rightly or wrongly considered to have some elevated level of quality beyond &quot;some random thing that I&#39;ve put together&quot;</li>
+</ul>
+
+<p><a href="http://github.com/odersky">@odersky</a> discovery is important, but lets not discuss that now, concentrate on Scala namespace and Scala platform</p>
+
+<p><a href="http://github.com/dickwall">@dickwall</a> is there a place for high quality libraries to live? (not SLIP)</p>
+
+<ul>
+<li><a href="http://github.com/odersky">@odersky</a> thinks this should be left to the community</li>
+<li><a href="http://github.com/odersky">@odersky</a> for the Scala namespace/platform one answer would be is that&#39;s a question for the platform team has to decide - to what degree they want to leverage the Scala namespace</li>
+</ul>
+
+<p><a href="http://github.com/odersky">@odersky</a> Scala namespace is most useful when it&#39;s not very big and is important for common standards</p>
+
+<ul>
+<li>for example it was not good to continue with several versions of Futures, instead putting a standard version in the Scala namespace made sense, since it&#39;s not very big and should be a standard</li>
+<li>what should and should not be in the Scala namespace should be a discussion and not a hard and fast set of rules.</li>
+</ul>
+
+<p>Splitting out core:</p>
+
+<ul>
+<li><a href="http://github.com/odersky">@odersky</a> thinks we should appeal to the community to help, since even Typesafe can&#39;t do all of this on it&#39;s own</li>
+<li><a href="http://github.com/SethTisue">@SethTisue</a> splitting the library up was already on Typesafe&#39;s plate for Scala 2.13. Could use help from the community, since disentangling the compiler from everything else involves a lot of work</li>
+<li><a href="http://github.com/dickwall">@dickwall</a> thinks this should be tracked through the SIP/SLIP site - SIP/SLIPs are much more than adding new things to the language</li>
+</ul>
+
+<p><a href="http://github.com/sjrd">@sjrd</a>:</p>
+
+<ul>
+<li>there is a contradiction saying platform maintainers should decide what goes into the Scala namespace and the wish to have several platforms</li>
+<li>if you want the best part to be something different and you have Several groups of people organizing platforms, everyone in these groups will decide what to put in &quot;their&quot; Scala namespace and that&#39;s not the point of a namespace</li>
+<li><a href="http://github.com/heathermiller">@heathermiller</a> assume other platforms (other than the Scala.org platform) would have to use another namespace</li>
+<li><a href="http://github.com/odersky">@odersky</a> Scala namespace really just another module in the platform that exits to be general and a common base</li>
+</ul>
+
+<p>Actions:</p>
+
+<ul>
+<li><a href="http://github.com/dickwall">@dickwall</a> created new issue to track this: https://github.com/scala/slip/issues/31</li>
+<li>The community should read <a href="http://github.com/odersky">@odersky</a>&#39;s document and let the SLIP know their thoughts/questions/comments</li>
+</ul>
+
+<h3>... so what about JSON AST question/discussion</h3>
+
+<p>Link to SLIP: <a href="https://github.com/scala/slip/pull/28">https://github.com/scala/slip/pull/28</a></p>
+
+<p>Notes:</p>
+
+<ul>
+<li><a href="http://github.com/SethTisue">@SethTisue</a> from the SLIP meeting point of view, shall we give it a number and essentially encourage this being discussed?</li>
+<li><a href="http://github.com/dickwall">@dickwall</a> points out that this shouldn&#39;t have been initially submitted with a SLIP number (some misunderstanding there on the SLIP discussion)</li>
+</ul>
+
+<p>note, the implementation of this isn&#39;t completely finished yet.</p>
+
+<ul>
+<li><a href="http://github.com/non">@non</a> we can all agree this is interesting enough/there has been enough debate for this to be given a SLIP number and become &quot;active&quot;</li>
+<li><a href="http://github.com/dickwall">@dickwall</a> given number 28, but won&#39;t be &quot;accepted&quot; until some conclusion can be reached on where it&#39;s position is</li>
+</ul>
+
+<p>people think this is a good idea, but it would be a platform library change in the new set up</p>
+
+<p>From the SLIP discussion, there seem to be 3 different ideas/wants for this</p>
+
+<ul>
+<li>to create something for JSON like what Python has: something dead simple and you can use it to parse JSON without thinking</li>
+<li>a common AST for inner-op, for example the Spray people liked that (original idea for SLIP)</li>
+<li>a really high quality JSON parsing in the standard library (all edge cases etc)</li>
+</ul>
+
+<p>a discussion needs to happen around that</p>
+
+<p>Also, should this go into the Scala namespace?</p>
+
+<p><a href="http://github.com/SethTisue">@SethTisue</a> points out that part the reason the reaction of this was hard to gauge was it wasn&#39;t clear if people realized this wasn&#39;t for core (it&#39;s not).</p>
+
+<p><a href="http://github.com/heathermiller">@heathermiller</a> even we are confused about what is and isn&#39;t core</p>
+
+<p><a href="http://github.com/odersky">@odersky</a> suggests for the issue of &quot;bless and then make good&quot; vs &quot;good and then bless&quot; we could adopt a package alias to bless things and bring them into the Scala namespace and solve the naming problem</p>
+
+<p>Actions:</p>
+
+<ul>
+<li>SLIP give a number (28)</li>
+</ul>
+
+<h2>AOB</h2>
+
+<ul>
+<li>Sadly, <a href="http://github.com/dickwall">@dickwall</a> is to step aside from the committee meetings but will continue to help with some of the process work. This is <a href="http://github.com/dickwall">@dickwall</a>&#39;s last committee meeting</li>
+<li><a href="http://github.com/SethTisue">@SethTisue</a> will set up and moderate the December meeting</li>
+<li>all agree <a href="http://github.com/dickwall">@dickwall</a> has done a great job and thank him</li>
+<li><a href="http://github.com/odersky">@odersky</a> how do we find a new moderator? Suggests they email the other SLIP members to see if they can find a new moderator/find volunteers</li>
+</ul>
+
+            
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div id="toc"></div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

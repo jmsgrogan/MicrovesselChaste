@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classAbstractMigrationRule.html" title="AbstractMigrationRule\l\&lt; DIM \&gt;" alt="" coords="5,71,156,112"/>
+<area shape="rect" id="node2" href="$classLatticeBasedMigrationRule.html" title="LatticeBasedMigrationRule\l\&lt; DIM \&gt;" alt="" coords="204,37,383,79"/>
+<area shape="rect" id="node5" href="$classOffLatticeMigrationRule.html" title="OffLatticeMigrationRule\l\&lt; DIM \&gt;" alt="" coords="214,103,373,144"/>
+<area shape="rect" id="node3" href="$classCellPopulationMigrationRule.html" title="CellPopulationMigrationRule\l\&lt; DIM \&gt;" alt="" coords="431,5,617,47"/>
+<area shape="rect" id="node4" href="$classOwen2011MigrationRule.html" title="Owen2011MigrationRule\l\&lt; DIM \&gt;" alt="" coords="442,71,606,112"/>
+</map>

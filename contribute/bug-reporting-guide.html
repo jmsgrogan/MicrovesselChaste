@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Bug Reporting | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Bug Reporting</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            
+            <p>The Scala project tracker is located at <a href="http://issues.scala-lang.org">http://issues.scala-lang.org</a>. Before you submit a bug make sure that it is certainly a bug by following instructions in <em>Is it a Bug?</em>.</p>
+
+<h2>Is it a Bug?</h2>
+
+<p>The first step in identifying a bug is to identify which component of the Scala distribution is affected. First, ensure that your issue falls within any of the following categories:</p>
+
+<ul>
+<li><strong>Library</strong> bugs typically manifest themselves as run-time exceptions, or as <em>unexpected</em>/<em>unintuitive</em> behavior of Scala Standard Library methods.</li>
+<li><strong>Compiler</strong> errors are manifested as compile time exceptions, unexpected behavior of your code at run time, or invalid behavior of the type system.</li>
+<li><strong>Reflection</strong> are bugs that appear in the ‘scala.reflect’ package. For the <em>reflection</em> bugs , the same rules apply as for the <em>library</em> bugs.</li>
+<li><strong>Scaladoc</strong> bugs are manifested as a logical problems in the information it presents (that is, the displayed information is incorrect, such as an incorrect subclassing relationship), or incorrect behavior of the user interface. If you&#39;d like to suggest a change in the content of the documentation, please submit a pull request (possible to do in the browser using GitHub, which is easier and faster than filing a bug). Please file a bug about the content of documentation only if you cannot provide a suggestion for its fix.</li>
+</ul>
+
+<p>If your issue is related to any of the following external projects, make sure to use its appropriate issue tracker:</p>
+
+<ul>
+<li><a href="http://doc.akka.io/docs/akka/current/project/issue-tracking.html">Akka</a></li>
+<li><a href="http://github.com/playframework/Play20/issues">Play!</a></li>
+<li><a href="http://github.com/slick/slick/issues">Slick</a></li>
+<li><a href="http://github.com/scala/actors-migration/issues?state=open">Actors Migration Kit</a></li>
+<li><a href="https://scala-ide-portfolio.assembla.com/spaces/scala-ide/support/tickets">Scala IDE</a></li>
+<li><a href="https://github.com/sbt/sbt/issues">sbt</a></li>
+</ul>
+
+<p>The following are generally considered to be bugs:</p>
+
+<ul>
+<li><strong>Scala Compiler Crash</strong> If the Scala compiler is crashing with an internal error (compile time exception) you have certainly found a bug, and can move on to the next section of this document on reporting confirmed bugs.</li>
+<li><strong>Regressions</strong> If some code snippet worked in a previous Scala release, but now no longer compiles or results in an exception, it is probably a regression.</li>
+<li><strong>Verify Errors</strong> happen when the compiled Scala program is loaded to the Java Virtual Machine. If you&#39;re getting a <em>Verify Error</em>, you&#39;ve usually found a bug. Make sure first that your project is not using stale <code>.class</code> files before reporting a new issue.</li>
+</ul>
+
+<p>If you have a code snippet that is resulting in bytecode which you believe is behaving incorrectly, you may or may not have found a bug. Before reporting your issue, please attempt the following:</p>
+
+<ul>
+<li>Make sure you minimize your problem. To correctly minimize the problem follow the following instructions:</li>
+</ul>
+
+<ol>
+<li><p>Gradually take apart the offensive code snippet until you believe you have the simplest representation of your problem.</p></li>
+<li><p>Ensure that you have decoupled your code snippet from any library that could be introducing the offensive behavior. One way to achieve this is to try to recompile the offensive code snippet in isolation, outside of the context of any complex build environment. If your code depends on some strictly Java library and source code is available for it, make sure that the latter is also minimized.</p></li>
+<li><p>Make sure you are compiling your project from a clean slate. Your problem could be related to separate compilation, which is difficult to detect without a clean build with new <code>.class</code> files.</p></li>
+<li><p>If you have encountered a bug while building your code in the IDE, then please reproduce it on the command line. The same rule applies for build tools like <code>sbt</code> or <code>ant</code>.</p></li>
+<li><p>If you want to file an improvement in the issue tracker please discuss it first on one of the mailing lists. They offer much bigger audience than issue tracker. The latter is not suitable for long discussions.</p></li>
+</ol>
+
+<ul>
+<li>Keep in mind that the behavior you are witnessing could be intended. Good formal resources for verifying whether or not the language behavior is intended is either in the <a href="http://docs.scala-lang.org/sips/sip-list.html">Scala Improvement Proposal Documents</a> or in the <a href="http://www.scala-lang.org/files/archive/spec/2.11/">Scala Language Specification</a>. If in doubt, you may always ask on the <a href="https://groups.google.com/forum/?fromgroups#!forum/scala-internals">scala-internals mailing list</a> or <a href="http://stackoverflow.com/questions/tagged/scala">stackoveflow</a>.</li>
+</ul>
+
+<p>In general, if you find yourself stuck on any of these steps, asking on one of the following Scala mailing lists can be helpful:</p>
+
+<ul>
+<li>For unexpected behavior use <a href="https://groups.google.com/forum/?fromgroups#!forum/scala-language">scala-language</a>, or <a href="https://groups.google.com/forum/?fromgroups#!forum/scala-user">scala-user</a> mailing lists.</li>
+<li><p>For compiler bugs use the <a href="https://groups.google.com/forum/?fromgroups#!forum/scala-internals">scala-internals</a> mailing list.</p>
+
+<ul>
+<li>Examples of exceptions reported by the compiler which usually are not bugs:</li>
+<li><code>StackOverflowError</code> is typically not a bug unless the stacktrace involves the internal packages of the compiler (like <code>scala.tools.nsc...</code>). Try to increase the Java stack size (<code>-Xss</code>), in most of the cases it helps.</li>
+<li><code>AbstractMethodError</code> can occur when you did not recompile all the necessary Scala files (build tools, like <code>sbt</code>, can prevent that from happening) or you are mixing external libraries compiled for different Scala versions (for example one uses <code>2.10.x</code> and the other <code>2.11.x</code>).</li>
+</ul></li>
+</ul>
+
+<h2>Reporting Confirmed Bugs is a Sin</h2>
+
+<p>Before reporting your bug, make sure to check the issue tracker for other similar bugs. The exception name or a compiler phase are the best keywords to search for. If you are experiencing unexpected behavior search for method/class names where it happens. Your issue might already be reported, and a workaround might already be available for you take advantage of. If your issue <em>is</em> reported, be sure to add your test case as a comment if it is different from any of the existing ones.</p>
+
+<p><strong>Note:</strong> reporting a bug that already exists creates an additional overhead for you, the Scala Team, and all people that search the issue database. To avoid this inconvenience make sure that you thoroughly search for an existing issue.</p>
+
+<p>If you cannot find your issue in the issue tracker, create a new bug. The details about creating a bug report are in the following section.</p>
+
+<h2>Creating a Bug Report</h2>
+
+<p>Please make sure to fill in as many fields as possible. Make sure you&#39;ve indicated the following:</p>
+
+<ol>
+<li><strong>Exact Scala version</strong> that you are using. For example, <code>2.10.1</code> or <code>2.11.0-RC</code>. If the bug happens in multiple versions indicate all of them.</li>
+<li><strong>The component</strong> that is affected by the bug. For example, the Standard Library, Scaladoc, etc.</li>
+<li><strong>Labels</strong> related to your issue. For example, if you think your issue is related to the typechecker, and if you have successfully minimized your issue, label your bug as &quot;typechecker&quot; and &quot;minimized&quot;. Issue tracker will suggest names for existing labels as you type them so try not to create duplicates.</li>
+<li><strong>Running environment</strong>. Are you running on Linux? Windows? What JVM version are you using?</li>
+</ol>
+
+<p>In order for us to quickly triage the bug that you&#39;ve found, it&#39;s important that the code snippet which produces the observed issue is as minimized as possible. For advice on minimizing your code snippet, please see the appropriate subsection of the above (Is it a Bug?).</p>
+
+<h3>Description</h3>
+
+<p>In the description of your issue, be as detailed as you can. Bug reports which have the following information included are typically understood, triaged, and fixed very quickly:</p>
+
+<ol>
+<li><p>Include a test case (minimized if possible) enabling us to reproduce the problematic behavior. Include your test case (and output) in proper formatting <code>{code}</code> blocks:</p>
+
+<p>{code}Here you put your classes{code}</p></li>
+<li><p>The expected output.</p></li>
+<li><p>The actual output, including the stacktrace.</p></li>
+<li><p>Related discussion on the mailing lists, if applicable.</p></li>
+<li><p>If you have already looked into the issue provide interesting insights or proposals for fixing the issue.</p></li>
+</ol>
+
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div class="contents">Contents</div>
+              <div id="toc"></div>
+              <br/>
+              <div class="alert-info">
+                <a href="/contribute/documentation.html#updating_scalalangorg"><p><strong>Problem with this page?</strong>
+                Please help us fix it!</p></a>
+              </div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

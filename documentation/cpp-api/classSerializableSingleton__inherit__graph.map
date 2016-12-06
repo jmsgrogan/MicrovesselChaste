@@ -1,0 +1,4 @@
+<map id="SerializableSingleton" name="SerializableSingleton">
+<area shape="rect" id="node2" href="$classBaseUnits.html" title="{BaseUnits\&lt; BaseUnits \&gt;\n|&#45; mTime\l&#45; mLength\l&#45; mConcentration\l&#45; mpInstance\l|+ GetReferenceTimeScale()\l+ GetReferenceLengthScale()\l+ GetReferenceConcentration\lScale()\l+ SetReferenceTimeScale()\l+ SetReferenceLengthScale()\l+ SetReferenceConcentration\lScale()\l+ Instance()\l+ SharedInstance()\l+ Destroy()\l# BaseUnits()\l&#45; serialize()\l}" alt="" coords="5,131,201,428"/>
+<area shape="rect" id="node3" href="$classParameterCollection.html" title="{ParameterCollection\l\&lt; ParameterCollection \&gt;\n|&#45; mParameters\l&#45; mpInstance\l|+ AddParameter()\l+ DumpToFile()\l+ GetParameter()\l+ Instance()\l+ SharedInstance()\l+ Destroy()\l# ParameterCollection()\l&#45; serialize()\l}" alt="" coords="225,175,389,384"/>
+</map>

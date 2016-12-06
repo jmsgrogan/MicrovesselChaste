@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Introducing Scalafix: a code migration tool for Scala | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/scala-logo-white-sm.png" alt="white Scala logo" /></a>
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Introducing Scalafix: a code migration tool for Scala</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            <div class="article-date">October 24, 2016</div>
+            
+              <div class="written">Written By: <span class="by">Ólafur Páll Geirsson</span></div>
+            
+            <p>I am excited to announce the first release of
+<a href="http://scalacenter.github.io/scalafix/">scalafix</a>, a new tool to
+prepare Scala code for future Scala versions, including Scala 2.13
+and beyond as well as <a href="http://dotty.epfl.ch/">Dotty</a>, a next
+generation Scala compiler.</p>
+
+<p>This effort follows the Scala Center Advisory
+Board proposal:
+<a href="https://scala.epfl.ch/minutes/2016/06/06/may-9-2016.html#proposal-scp-002-clarification-of-scala-to-dotty-migration-path">&quot;Clarification of Scala to Dotty migration path&quot;</a>.</p>
+
+<h2>What can scalafix do?</h2>
+
+<p>Scalafix takes care of easy, repetitive and tedious code transformations
+so you can focus on the changes that truly deserve your attention. In a
+nutshell, scalafix reads a source file, transforms usage of unsupported
+features into newer alternatives, and writes the final result back to
+the original source file. Scalafix aims to automate the migration of as
+many unsupported features as possible. There will be cases where
+scalafix is unable to perform automatic migration. In such situations,
+scalafix will point to the offending source line and provide
+instructions on how to refactor the code. The objective is that your
+existing Scala code base gets up and running faster with new Scala versions.</p>
+
+<h2>Scalafix and Scala 2</h2>
+
+<p>Scala 2.13 is still being planned, so we don&#39;t know yet exactly what
+language changes it will include.  But with Scalafix available to help
+migrate existing code, changes could become possible that would
+previously have been considered too disruptive because they would
+require too much code to be updated by hand.  Possible examples include:</p>
+
+<ul>
+<li>Rewriting code to avoid the use of the now-disfavored
+<code>language.postfixOps</code> syntax</li>
+<li>Deprecation of <code>any2StringAdd</code>, in favor of string interpolation</li>
+<li>Deprecation of procedure syntax, as in Dotty</li>
+<li>Changes to the Scala collections API</li>
+</ul>
+
+<h2>Scalafix and Dotty</h2>
+
+<p>There is a lot to be excited over in Dotty,
+<a href="http://www.slideshare.net/Odersky/scala-days-nyc-2016">faster compilation times</a>,
+<a href="https://d-d.me/talks/scaladays2015/#/">faster+smaller binaries</a> and
+<a href="http://www.scala-lang.org/blog/2016/10/14/dotty-errors.html">awesome error messages</a>
+to name a few things. However, some Scala 2.x applications can&#39;t
+immediately enjoy these benefits due to several breaking changes in
+Dotty. Scalafix is part of our strategy to smoothen the migration
+process for those applications.</p>
+
+<h2>What can scalafix do?</h2>
+
+<p>Scalafix comes with a command line interface and an SBT plugin. Running
+scalafix is as simple as:</p>
+<div class="highlight"><pre><code class="language-" data-lang=""># CLI
+scalafix Code.scala
+# SBT, after adding plugin to project/plugins.sbt
+sbt scalafix
+</code></pre></div>
+<p>More detailed instructions on how to setup scalafix are on the
+<a href="http://scalacenter.github.io/scalafix/">project website</a>.</p>
+
+<p>This initial release implements two rewrites: <code>ProcedureSyntax</code> and
+<code>VolatileLazyVal</code>. More rewrite rules are planned for future releases.</p>
+
+<p>The <code>ProcedureSyntax</code> rewrite works like this:</p>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="c1">// before
+</span><span class="k">def</span> <span class="n">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="o">{</span> <span class="c1">// note lack of '='
+</span>  <span class="n">println</span><span class="o">(</span><span class="s">"Hello scalafix!"</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="c1">// after
+</span><span class="k">def</span> <span class="n">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span> <span class="c1">// note ': Unit ='
+</span>  <span class="n">println</span><span class="o">(</span><span class="s">"Hello scalafix!"</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Deprecating or dropping procedure syntax is part of a general effort to
+simplify the Scala language.</p>
+
+<p>The <code>VolatileLazyVal</code> rewrite adds Dotty&#39;s <code>@volatile</code> annotation to lazy vals,
+like this:</p>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">lazy</span> <span class="k">val</span> <span class="n">x</span> <span class="k">=</span> <span class="o">...</span> <span class="c1">// before
+</span><span class="nd">@volatile</span> <span class="k">lazy</span> <span class="k">val</span> <span class="n">x</span> <span class="k">=</span> <span class="o">...</span> <span class="c1">// after
+</span></code></pre></div>
+<p>With <code>@volatile</code>, Dotty uses a deadlock free scheme that is
+comparable-if-not-faster than the scheme used in scalac.</p>
+
+<h2>How does scalafix work?</h2>
+
+<p>All the heavy-lifting behind scalafix happens in
+<a href="http://scalameta.org/">scala.meta</a>, a new metaprogramming toolkit
+aspiring to succeed scala.reflect. Scala.meta makes it easy to do
+non-trivial code transformations while preserving syntactic details in
+the original source file. This key attribute of scala.meta makes it
+suitable for both developer tools like scalafix as well as compile-time
+metaprograms like macros.</p>
+
+<p>The grand vision of scala.meta is to provide a single interface to
+accomplish most common metaprogramming tasks in
+Scala.
+<img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/scalameta-sketch.jpg" alt="scala.meta sketch">
+ The idea is to untie metaprograms from compiler implementations, providing a
+platform-independent API that works both in the Scala compiler, Dotty
+and tools like IntelliJ IDEA. Metaprogram authors benefit from a
+user-friendly interface built on immutable ADTs and type classes.
+Compiler authors benefit from the fact that they don&#39;t need to expose
+compiler internals in order to support popular features like macros.</p>
+
+<p>In scalafix, we use the scala.meta API to parse Scala source files,
+traverse abstract syntax trees, inspect tokens (including comments!) and
+then perform the minimum required transformations to the source file.
+Thanks to scala.meta dialects, which abstract away syntactic differences
+between variants of Scala, we can use the same programs to manipulate
+regular Scala source files, SBT files as well as code that uses new
+Dotty syntax such as union types and trait parameters. All this powerful
+functionality is implemented behind a minimalistic interface.
+The NonVolatileLazyVal
+<a href="https://github.com/scalacenter/scalafix/blob/master/core/src/main/scala/scalafix/rewrite/VolatileLazyVal.scala">implementation</a>
+is 15 lines of code. It could comfortably fit in three tweets.</p>
+
+<p>We would not be able to achieve this level of expressiveness with
+scala.reflect, the current standard metaprogramming framework for Scala.
+Why? To name a few reasons, scala.reflect does not preserve syntactic
+details such as comments and scala.reflect has no notions of dialects,
+so it is bound to only support Scala 2.x.</p>
+
+<h2>How does scalafix evolve?</h2>
+
+<p>As we have seen above, the functionality of scalafix heavily relies on
+the infrastructure provided by scala.meta. However, in order to write
+more sophisticated scalafix rewrite rules, there are two main features
+missing in scala.meta, namely a <em>scalac converter</em> and <em>semantic API</em>.
+We are closely collaborating with Eugene Burmako, the lead developer of
+scala.meta, in the development efforts of these two features.</p>
+
+<h3>Scalac converter</h3>
+
+<p>The scalac converter is a key subsystem of scala.meta.
+For every Scala feature, the converter recognizes its representation in the Scala
+compiler and translates it into the corresponding data structures of the
+scala.meta API.</p>
+
+<p>Over the last months, we’ve made great improvements to the converter,
+which is under development in the <a href="https://github.com/scalameta/paradise">scalameta/paradise</a> repository.
+We have established a comprehensive test suite that consists of a sample of
+over 26.000 Scala source files collected from popular open-source
+projects. Thanks to the joint effort of the team of scala.meta
+<a href="https://github.com/scalameta/paradise/graphs/contributors">contributors</a>,
+the converter now supports about 19.000 source files form the test
+corpus. We are continuously working to increase that number, aiming to
+bring language coverage to 100%.</p>
+
+<h3>Semantic API</h3>
+
+<p>The semantic API will enable scala.meta programs to inspect compiler information
+such as type inference, name resolution and other functionality that
+requires a compilation step. This opens opportunities for new scalafix rewrite
+rules that cannot be done on a purely syntactic level,
+like <code>NonVolatileLazyVal</code> and <code>ProcedureSyntax</code>.</p>
+
+<p>We already have a
+<a href="https://github.com/scalacenter/scalafix/pull/14">working prototype</a> 
+of the first scalafix rewrite that uses the semantic API: <code>ExplicitImplicit</code>.
+<code>ExplicitImplicit</code> inserts type annotations for implicit definitions, like this:</p>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="c1">// before
+</span><span class="k">implicit</span> <span class="k">val</span> <span class="n">x</span> <span class="k">=</span> <span class="o">(</span><span class="k">_:</span> <span class="kt">String</span><span class="o">).</span><span class="n">length</span>
+<span class="c1">// after
+</span><span class="k">implicit</span> <span class="k">val</span> <span class="n">x</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=&gt;</span> <span class="nc">Int</span> <span class="k">=</span> <span class="o">(</span><span class="k">_:</span> <span class="kt">String</span><span class="o">).</span><span class="n">length</span>
+</code></pre></div>
+<p><code>ExplicitImplicit</code> requires the semantic API in order to get the inferred type
+annotations.</p>
+
+<h2>Towards new-style macros</h2>
+
+<p>One could say that by contributing to scala.meta, we get two features
+for the price of one. First, an improved converter and semantic API
+enables us to implement more sophisticated scalafix rewrite rules.
+Secondly, we accelerate the development of a new macro system that will
+work both with scalac and Dotty.</p>
+
+<p>As announced at Scala Days 2016, the current macros based on
+scala.reflect will be going away. Such macros have a number of known
+issues, including over complicated API and lacking IDE support. More
+importantly, the deep coupling between old-style macros and scalac
+means macros written in the old system effectively cannot be
+ported to Dotty. The plan is to discontinue support for scala.reflect
+macros in favor of <a href="https://github.com/scala/scala.github.com/pull/567">a new macro system called
+inline/meta</a>.</p>
+
+<p>A technology preview of the new-style macros came out this summer. This
+early release is still somewhat rough around the edges. Nevertheless,
+<a href="https://olafurpg.github.io/scalafmt/">scalafmt</a> is already using
+these new macro annotations in production for more than a month now. If you
+are interested in learning more, the best place to get started is 
+<a href="http://olafurpg.github.io/scala.meta-workshop">my recent Scala World workshop</a>.</p>
+
+<p>Much like scalafix, new-style macros crucially rely on the
+infrastructure provided by scala.meta. Concretely, the converter and the
+semantic APIs constitute a significant chunk of the implementation
+effort behind the new macro system.</p>
+
+<p>Interestingly, our contributions to scala.meta were originally motivated
+by the needs of scalafix. However, they are also immediately helping the
+development of this new universal macro system for Scala. We are excited
+that our open-source collaboration with the scala.meta team brings
+multiple benefits for the good of everyone!</p>
+
+<h2>Get involved</h2>
+
+<p>Are you interested in metaprogramming, developer tools and running
+experiments on millions of lines of Scala code? Come chat with us on
+<a href="https://gitter.im/scalacenter/scalafix">Gitter</a>, and we’ll discuss how you can make a difference in shaping the
+developer tools of the future!</p>
+
+            
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div id="toc"></div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

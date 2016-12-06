@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Scala 2.10.4-RC1 is now available! | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Scala 2.10.4-RC1 is now available!</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            
+            <div class="article-date">December 20, 2013</div>
+
+<p>We are very happy to announce the first release candidate of Scala 2.10.4!
+If no serious blocking issues are found this will become the final 2.10.4 version.</p>
+
+<!-- Substitute both version numbers here! -->
+
+<p>The release is available for download from <a href="http://scala-lang.org/download/2.10.4-RC1.html">scala-lang.org</a> or from <a href="http://search.maven.org/#search%7Cga%7C1%7Cg:%22org.scala-lang%22%20AND%20v%3A%222.10.4-RC1%22">Maven Central</a>.</p>
+
+<p>The Scala team and contributors <a href="https://issues.scala-lang.org/issues/?filter=12308">fixed 23 issues since 2.10.3</a>!</p>
+
+<p>In total,
+<a href="https://github.com/scala/scala/issues?milestone=22&amp;state=closed">39 RC1 pull requests</a>
+were merged on <a href="https://github.com/scala/scala">GitHub</a>.</p>
+
+<!--break-->
+
+<h3>Known Issues</h3>
+
+<p>Before reporting a bug, please have a look at these <a href="https://issues.scala-lang.org/issues/?filter=12309">known issues</a>.</p>
+
+<h3>Scala IDE for Eclipse</h3>
+
+<p>The Scala IDE with this release built right in is available through the following update-site:</p>
+
+<ul>
+<li><a href="http://download.scala-ide.org/sdk/helium/e38/scala210/dev/site">for Eclipse 4.2/4.3 (Juno/Kepler)</a></li>
+</ul>
+
+<p>Have a look at the <a href="http://scala-ide.org/docs/user/gettingstarted.html">getting started guide</a> for more info.</p>
+
+<h3>New features in the 2.10 series</h3>
+
+<p>Since 2.10.4 is strictly a bug-fix release, here&#39;s an overview of the most prominent new features and improvements as introduced in 2.10.0:</p>
+
+<ul>
+<li><p>Value Classes</p>
+
+<ul>
+<li>A class may now extend <code>AnyVal</code> to make it behave like a struct type (restrictions apply).</li>
+<li><a href="http://docs.scala-lang.org/overviews/core/value-classes.html">http://docs.scala-lang.org/overviews/core/value-classes.html</a></li>
+</ul></li>
+<li><p>Implicit Classes</p>
+
+<ul>
+<li>The implicit modifier now also applies to class definitions to reduce the boilerplate of implicit wrappers.</li>
+<li><a href="http://docs.scala-lang.org/sips/pending/implicit-classes.html">http://docs.scala-lang.org/sips/pending/implicit-classes.html</a></li>
+</ul></li>
+<li><p>String Interpolation</p>
+
+<ul>
+<li><code>val what = &quot;awesome&quot;; println(s&quot;string interpolation is ${what.toUpperCase}!&quot;)</code></li>
+<li><a href="http://docs.scala-lang.org/overviews/core/string-interpolation.html">http://docs.scala-lang.org/overviews/core/string-interpolation.html</a></li>
+</ul></li>
+<li><p>Futures and Promises</p>
+
+<ul>
+<li>Asynchronously get some JSON: <code>for (req &lt;- WS.url(restApiUrl).get()) yield (req.json \ &quot;users&quot;).as[List[User]]</code> (uses play!)</li>
+<li><a href="http://docs.scala-lang.org/overviews/core/futures.html">http://docs.scala-lang.org/overviews/core/futures.html</a></li>
+</ul></li>
+<li><p>Dynamic and applyDynamic</p>
+
+<ul>
+<li><code>x.foo</code> becomes <code>x.applyDynamic(&quot;foo&quot;)</code> if <code>x</code>&#39;s type does not define a <code>foo</code>, but is a subtype of <code>Dynamic</code></li>
+<li><a href="http://docs.scala-lang.org/sips/pending/type-dynamic.html">http://docs.scala-lang.org/sips/pending/type-dynamic.html</a></li>
+</ul></li>
+<li><p>Dependent method types:</p>
+
+<ul>
+<li><code>def identity(x: AnyRef): x.type = x</code> // the return type says we return exactly what we got</li>
+</ul></li>
+<li><p>New ByteCode emitter based on ASM</p>
+
+<ul>
+<li>Can target JDK 1.5, 1.6 and 1.7</li>
+<li>Emits 1.6 bytecode by default</li>
+<li>Old 1.5 backend is deprecated</li>
+</ul></li>
+<li><p>A new Pattern Matcher</p>
+
+<ul>
+<li>rewritten from scratch to generate more robust code (no more <a href="https://issues.scala-lang.org/browse/SI-1133">exponential blow-up</a>!)</li>
+<li>code generation and analyses are now independent (the latter can be turned off with <code>-Xno-patmat-analysis</code>)</li>
+</ul></li>
+<li><p>Scaladoc Improvements</p>
+
+<ul>
+<li>Implicits (-implicits flag)</li>
+<li>Diagrams (-diagrams flag, requires graphviz)</li>
+<li>Groups (-groups)</li>
+</ul></li>
+<li><p>Modularized Language features</p>
+
+<ul>
+<li>Get on top of the advanced Scala features used in your codebase by explicitly importing them.</li>
+<li><a href="http://docs.scala-lang.org/sips/pending/modularizing-language-features.html">http://docs.scala-lang.org/sips/pending/modularizing-language-features.html</a></li>
+</ul></li>
+<li><p>Parallel Collections are now configurable with custom thread pools</p>
+
+<ul>
+<li><a href="http://docs.scala-lang.org/overviews/parallel-collections/overview.html">http://docs.scala-lang.org/overviews/parallel-collections/overview.html</a></li>
+</ul></li>
+<li><p>Akka Actors now part of the distribution</p>
+
+<ul>
+<li>scala.actors have been deprecated and the akka implementation is now included in the distribution.</li>
+<li>See the <a href="http://docs.scala-lang.org/actors-migration/">actors migration project</a> for more information.</li>
+</ul></li>
+<li><p>Performance Improvements</p>
+
+<ul>
+<li>Faster inliner</li>
+<li><code>Range#sum</code> is now O(1)</li>
+<li>Update of ForkJoin library</li>
+<li>Fixes in immutable <code>TreeSet</code>/<code>TreeMap</code></li>
+<li>Improvements to PartialFunctions</li>
+</ul></li>
+<li><p>Addition of <code>???</code> and <code>NotImplementedError</code></p></li>
+<li><p>Addition of <code>IsTraversableOnce</code> + <code>IsTraversableLike</code> type classes for extension methods</p></li>
+<li><p>Deprecations and cleanup</p>
+
+<ul>
+<li>Floating point and octal literal syntax deprecation</li>
+<li>Removed scala.dbc</li>
+</ul></li>
+</ul>
+
+<h3>Experimental features</h3>
+
+<ul>
+<li><p>Scala Reflection</p>
+
+<ul>
+<li><a href="http://docs.scala-lang.org/overviews/reflection/overview.html">http://docs.scala-lang.org/overviews/reflection/overview.html</a></li>
+</ul></li>
+<li><p>Macros</p>
+
+<ul>
+<li><a href="http://docs.scala-lang.org/overviews/macros/overview.html">http://docs.scala-lang.org/overviews/macros/overview.html</a></li>
+</ul></li>
+</ul>
+
+<p>The API is subject to (possibly major) changes in the 2.11.x series, but don&#39;t let that stop you from experimenting with them!
+A lot of developers have already come up with very cool applications for them.
+Some examples can be seen at <a href="http://scalamacros.org/news/2012/11/05/status-update.html">http://scalamacros.org/news/2012/11/05/status-update.html</a>.</p>
+
+<h4>A big thank you to all the contributors!</h4>
+
+<p># | Author
+---: | ---
+16 | <notextile>Jason Zaugg</notextile>
+15 | <notextile>Adriaan Moors</notextile>
+3 | <notextile>Simon Schaefer</notextile>
+3 | <notextile>Eugene Burmako</notextile>
+3 | <notextile>Luc Bourlier</notextile>
+2 | <notextile>Som Snytt</notextile>
+2 | <notextile>Paul Phillips</notextile>
+2 | <notextile>Mirco Dotta</notextile>
+1 | <notextile>Mark Harrah</notextile>
+1 | <notextile>Vlad Ureche</notextile>
+1 | <notextile>Heather Miller</notextile>
+1 | <notextile>Franc&Atilde;&szlig;ois Garillot</notextile>
+1 | <notextile>Roberto Tyley</notextile></p>
+
+<h4>Commits and the issues they fixed since v2.10.3</h4>
+
+<p>Issue(s) | Commit | Message
+--- | --- | ---
+<a href="https://issues.scala-lang.org/browse/SI-6426">SI-6426</a> | <a href="https://github.com/scala/scala/commit/47562e7adb">47562e7adb</a> | <notextile>Revert &quot;SI-6426, importable _.&quot;</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8062">SI-8062</a> | <a href="https://github.com/scala/scala/commit/f0d913b51d">f0d913b51d</a> | <notextile>SI-8062 Fix inliner cycle with recursion, separate compilation</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7912">SI-7912</a> | <a href="https://github.com/scala/scala/commit/006e2f2aad">006e2f2aad</a> | <notextile>SI-7912 Be defensive calling <code>toString</code> in <code>MatchError#getMessage</code></notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8060">SI-8060</a> | <a href="https://github.com/scala/scala/commit/bb427a3416">bb427a3416</a> | <notextile>SI-8060 Avoid infinite loop with higher kinded type alias</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7995">SI-7995</a> | <a href="https://github.com/scala/scala/commit/5ed834e251">5ed834e251</a> | <notextile>SI-7995 completion imported vars and vals</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8019">SI-8019</a> | <a href="https://github.com/scala/scala/commit/c955cf4c2e">c955cf4c2e</a> | <notextile>SI-8019 Make Publisher check PartialFunction is defined for Event</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8029">SI-8029</a> | <a href="https://github.com/scala/scala/commit/fdcc262070">fdcc262070</a> | <notextile>SI-8029 Avoid multi-run cyclic error with companions, package object</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7439">SI-7439</a> | <a href="https://github.com/scala/scala/commit/8d74fa0242">8d74fa0242</a> | <notextile>[backport] SI-7439 Avoid NPE in <code>isMonomorphicType</code> with stub symbols.</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8010">SI-8010</a> | <a href="https://github.com/scala/scala/commit/9036f774bc">9036f774bc</a> | <notextile>SI-8010 Fix regression in erasure double definition checks</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7982">SI-7982</a> | <a href="https://github.com/scala/scala/commit/7d4109486b">7d4109486b</a> | <notextile>SI-7982 Changed contract of askLoadedType to unload units by default</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-6913">SI-6913</a> | <a href="https://github.com/scala/scala/commit/70634395a4">70634395a4</a> | <notextile>SI-6913 Fixing semantics of Future fallbackTo to be according to docs</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7458">SI-7458</a> | <a href="https://github.com/scala/scala/commit/02308c9691">02308c9691</a> | <notextile>SI-7458 Pres. compiler must not observe trees in silent mode</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7548">SI-7548</a> | <a href="https://github.com/scala/scala/commit/652b3b4b9d">652b3b4b9d</a> | <notextile>SI-7548 Test to demonstrate residual exploratory typing bug</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7548">SI-7548</a> | <a href="https://github.com/scala/scala/commit/b7509c922f">b7509c922f</a> | <notextile>SI-7548 askTypeAt returns the same type whether the source was fully or targeted</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8005">SI-8005</a> | <a href="https://github.com/scala/scala/commit/3629b645cc">3629b645cc</a> | <notextile>SI-8005 Fixes NoPositon error for updateDynamic calls</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8004">SI-8004</a> | <a href="https://github.com/scala/scala/commit/696545d53f">696545d53f</a> | <notextile>SI-8004 Resolve NoPosition error for applyDynamicNamed method call</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7463">SI-7463</a>, <a href="https://issues.scala-lang.org/browse/SI-8003">SI-8003</a> | <a href="https://github.com/scala/scala/commit/b915f440eb">b915f440eb</a> | <notextile>SI-7463,SI-8003 Correct wrong position for {select,apply}Dynamic calls</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7280">SI-7280</a> | <a href="https://github.com/scala/scala/commit/053a2744c6">053a2744c6</a> | <notextile>[nomaster] SI-7280 Scope completion not returning members provided by imports</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7915">SI-7915</a> | <a href="https://github.com/scala/scala/commit/04df2e48e4">04df2e48e4</a> | <notextile>SI-7915 Corrected range positions created during default args expansion</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7776">SI-7776</a> | <a href="https://github.com/scala/scala/commit/d15ed081ef">d15ed081ef</a> | <notextile>[backport] SI-7776 post-erasure signature clashes are now macro-aware</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-6546">SI-6546</a> | <a href="https://github.com/scala/scala/commit/075f6f260c">075f6f260c</a> | <notextile>SI-6546 InnerClasses attribute refers to absent class</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7638">SI-7638</a>, <a href="https://issues.scala-lang.org/browse/SI-4012">SI-4012</a> | <a href="https://github.com/scala/scala/commit/e09a8a2b7f">e09a8a2b7f</a> | <notextile>SI-4012 Mixin and specialization work well</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7519">SI-7519</a> | <a href="https://github.com/scala/scala/commit/50c8b39ec4">50c8b39ec4</a> | <notextile>SI-7519: Additional test case covering sbt/sbt#914</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7519">SI-7519</a> | <a href="https://github.com/scala/scala/commit/ce74bb0060">ce74bb0060</a> | <notextile>[nomaster] SI-7519 Less brutal attribute resetting in adapt fallback</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-4936">SI-4936</a>, <a href="https://issues.scala-lang.org/browse/SI-6026">SI-6026</a> | <a href="https://github.com/scala/scala/commit/e350bd2cbc">e350bd2cbc</a> | <notextile>[nomaster] SI-6026 backport getResource bug fix</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-6026">SI-6026</a> | <a href="https://github.com/scala/scala/commit/2bfe0e797c">2bfe0e797c</a> | <notextile>SI-6026 REPL checks for javap before tools.jar</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7295">SI-7295</a> | <a href="https://github.com/scala/scala/commit/25bcba59ce">25bcba59ce</a> | <notextile>SI-7295 Fix windows batch file with args containing parentheses</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7020">SI-7020</a> | <a href="https://github.com/scala/scala/commit/7b560213cb">7b560213cb</a> | <notextile>Disable tests for SI-7020</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7783">SI-7783</a> | <a href="https://github.com/scala/scala/commit/2ccbfa5778">2ccbfa5778</a> | <notextile>SI-7783 Don&#39;t issue deprecation warnings for inferred TypeTrees</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7815">SI-7815</a> | <a href="https://github.com/scala/scala/commit/733b3220c9">733b3220c9</a> | <notextile>SI-7815 Dealias before deeming method type as dependent</notextile></p>
+
+<h4>Complete commit list!</h4>
+
+<p>sha | Title
+---: | ---
+<a href="https://github.com/scala/scala/commit/3fa2c97853">3fa2c97853</a> | <notextile>Report error on code size overflow, log method name.</notextile>
+<a href="https://github.com/scala/scala/commit/2aa9da578e">2aa9da578e</a> | <notextile>Partially revert f8d8f7d08d.</notextile>
+<a href="https://github.com/scala/scala/commit/47562e7adb">47562e7adb</a> | <notextile>Revert &quot;SI-6426, importable _.&quot;</notextile>
+<a href="https://github.com/scala/scala/commit/f0d913b51d">f0d913b51d</a> | <notextile>SI-8062 Fix inliner cycle with recursion, separate compilation</notextile>
+<a href="https://github.com/scala/scala/commit/9cdbe28c00">9cdbe28c00</a> | <notextile>Fixup #3248 missed a spot in pack.xml</notextile>
+<a href="https://github.com/scala/scala/commit/006e2f2aad">006e2f2aad</a> | <notextile>SI-7912 Be defensive calling <code>toString</code> in <code>MatchError#getMessage</code></notextile>
+<a href="https://github.com/scala/scala/commit/bb427a3416">bb427a3416</a> | <notextile>SI-8060 Avoid infinite loop with higher kinded type alias</notextile>
+<a href="https://github.com/scala/scala/commit/27a38602de">27a38602de</a> | <notextile>Update README, include doc/licenses in distro</notextile>
+<a href="https://github.com/scala/scala/commit/139ba9d875">139ba9d875</a> | <notextile>Add attribution for Typesafe.</notextile>
+<a href="https://github.com/scala/scala/commit/e555106070">e555106070</a> | <notextile>Remove docs/examples; they reside at scala/scala-dist</notextile>
+<a href="https://github.com/scala/scala/commit/dc6dd58d9d">dc6dd58d9d</a> | <notextile>Remove unused android test and corresponding license.</notextile>
+<a href="https://github.com/scala/scala/commit/f8d8f7d08d">f8d8f7d08d</a> | <notextile>Do not distribute partest and its dependencies.</notextile>
+<a href="https://github.com/scala/scala/commit/5ed834e251">5ed834e251</a> | <notextile>SI-7995 completion imported vars and vals</notextile>
+<a href="https://github.com/scala/scala/commit/c955cf4c2e">c955cf4c2e</a> | <notextile>SI-8019 Make Publisher check PartialFunction is defined for Event</notextile>
+<a href="https://github.com/scala/scala/commit/fdcc262070">fdcc262070</a> | <notextile>SI-8029 Avoid multi-run cyclic error with companions, package object</notextile>
+<a href="https://github.com/scala/scala/commit/8d74fa0242">8d74fa0242</a> | <notextile>[backport] SI-7439 Avoid NPE in <code>isMonomorphicType</code> with stub symbols.</notextile>
+<a href="https://github.com/scala/scala/commit/9036f774bc">9036f774bc</a> | <notextile>SI-8010 Fix regression in erasure double definition checks</notextile>
+<a href="https://github.com/scala/scala/commit/3faa2eedd8">3faa2eedd8</a> | <notextile>[nomaster] better error messages for various macro definition errors</notextile>
+<a href="https://github.com/scala/scala/commit/7d4109486b">7d4109486b</a> | <notextile>SI-7982 Changed contract of askLoadedType to unload units by default</notextile>
+<a href="https://github.com/scala/scala/commit/70634395a4">70634395a4</a> | <notextile>SI-6913 Fixing semantics of Future fallbackTo to be according to docs</notextile>
+<a href="https://github.com/scala/scala/commit/02308c9691">02308c9691</a> | <notextile>SI-7458 Pres. compiler must not observe trees in silent mode</notextile>
+<a href="https://github.com/scala/scala/commit/652b3b4b9d">652b3b4b9d</a> | <notextile>SI-7548 Test to demonstrate residual exploratory typing bug</notextile>
+<a href="https://github.com/scala/scala/commit/b7509c922f">b7509c922f</a> | <notextile>SI-7548 askTypeAt returns the same type whether the source was fully or targeted</notextile>
+<a href="https://github.com/scala/scala/commit/0c963c9085">0c963c9085</a> | <notextile>[nomaster] teaches toolbox about -Yrangepos</notextile>
+<a href="https://github.com/scala/scala/commit/3629b645cc">3629b645cc</a> | <notextile>SI-8005 Fixes NoPositon error for updateDynamic calls</notextile>
+<a href="https://github.com/scala/scala/commit/696545d53f">696545d53f</a> | <notextile>SI-8004 Resolve NoPosition error for applyDynamicNamed method call</notextile>
+<a href="https://github.com/scala/scala/commit/b915f440eb">b915f440eb</a> | <notextile>SI-7463,SI-8003 Correct wrong position for {select,apply}Dynamic calls</notextile>
+<a href="https://github.com/scala/scala/commit/053a2744c6">053a2744c6</a> | <notextile>[nomaster] SI-7280 Scope completion not returning members provided by imports</notextile>
+<a href="https://github.com/scala/scala/commit/eb9f0f7975">eb9f0f7975</a> | <notextile>[nomaster] Adds test cases for scope completion</notextile>
+<a href="https://github.com/scala/scala/commit/3a8796da1a">3a8796da1a</a> | <notextile>[nomaster] Test infrastructure for scope completion</notextile>
+<a href="https://github.com/scala/scala/commit/04df2e48e4">04df2e48e4</a> | <notextile>SI-7915 Corrected range positions created during default args expansion</notextile>
+<a href="https://github.com/scala/scala/commit/ec89b59717">ec89b59717</a> | <notextile>Upgrade pax-url-aether to 1.6.0.</notextile>
+<a href="https://github.com/scala/scala/commit/1d29c0a08b">1d29c0a08b</a> | <notextile>[backport] Add buildcharacter.properties to .gitignore.</notextile>
+<a href="https://github.com/scala/scala/commit/31ead67a30">31ead67a30</a> | <notextile>IDE needs swing/actors/continuations</notextile>
+<a href="https://github.com/scala/scala/commit/852a9479d0">852a9479d0</a> | <notextile>Allow retrieving STARR from non-standard repo for PR validation</notextile>
+<a href="https://github.com/scala/scala/commit/40af1e0c44">40af1e0c44</a> | <notextile>Allow publishing only core (pr validation)</notextile>
+<a href="https://github.com/scala/scala/commit/ba0718fd1d">ba0718fd1d</a> | <notextile>Render relevant properties to buildcharacter.properties</notextile>
+<a href="https://github.com/scala/scala/commit/d15ed081ef">d15ed081ef</a> | <notextile>[backport] SI-7776 post-erasure signature clashes are now macro-aware</notextile>
+<a href="https://github.com/scala/scala/commit/6045a05b83">6045a05b83</a> | <notextile>Fix completion after application with implicit arguments</notextile>
+<a href="https://github.com/scala/scala/commit/075f6f260c">075f6f260c</a> | <notextile>SI-6546 InnerClasses attribute refers to absent class</notextile>
+<a href="https://github.com/scala/scala/commit/e09a8a2b7f">e09a8a2b7f</a> | <notextile>SI-4012 Mixin and specialization work well</notextile>
+<a href="https://github.com/scala/scala/commit/50c8b39ec4">50c8b39ec4</a> | <notextile>SI-7519: Additional test case covering sbt/sbt#914</notextile>
+<a href="https://github.com/scala/scala/commit/ce74bb0060">ce74bb0060</a> | <notextile>[nomaster] SI-7519 Less brutal attribute resetting in adapt fallback</notextile>
+<a href="https://github.com/scala/scala/commit/e350bd2cbc">e350bd2cbc</a> | <notextile>[nomaster] SI-6026 backport getResource bug fix</notextile>
+<a href="https://github.com/scala/scala/commit/2bfe0e797c">2bfe0e797c</a> | <notextile>SI-6026 REPL checks for javap before tools.jar</notextile>
+<a href="https://github.com/scala/scala/commit/25bcba59ce">25bcba59ce</a> | <notextile>SI-7295 Fix windows batch file with args containing parentheses</notextile>
+<a href="https://github.com/scala/scala/commit/7b560213cb">7b560213cb</a> | <notextile>Disable tests for SI-7020</notextile>
+<a href="https://github.com/scala/scala/commit/8986ee4fd5">8986ee4fd5</a> | <notextile>Disable flaky presentation compiler test.</notextile>
+<a href="https://github.com/scala/scala/commit/2ccbfa5778">2ccbfa5778</a> | <notextile>SI-7783 Don&#39;t issue deprecation warnings for inferred TypeTrees</notextile>
+<a href="https://github.com/scala/scala/commit/ee9138e99e">ee9138e99e</a> | <notextile>Bump version to 2.10.4 for nightlies</notextile>
+<a href="https://github.com/scala/scala/commit/733b3220c9">733b3220c9</a> | <notextile>SI-7815 Dealias before deeming method type as dependent</notextile></p>
+
+
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div class="contents">Contents</div>
+              <div id="toc"></div>
+              <br/>
+              <div class="alert-info">
+                <a href="/contribute/documentation.html#updating_scalalangorg"><p><strong>Problem with this page?</strong>
+                Please help us fix it!</p></a>
+              </div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Google Summer of Code 2014 Scala Projects | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Google Summer of Code 2014 Scala Projects</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            
+            <h2>Google Summer of Code</h2>
+
+<p><strong>This year the Scala team applied again for the <a href="http://www.google-melange.com/gsoc/homepage/google/gsoc2014">Google Summer of
+  Code</a>
+  program to work with enthusiastic students on challenging Scala
+  projects</strong></p>
+
+<p>This page provides a list of project ideas. The suggestions are only a
+starting point for students. We expect students to explore the ideas
+in much more detail, preferably with their own suggestions and
+detailed plans on how they want to proceed. Don&#39;t feel constrained by
+the provided list! We welcome any of your own challenging ideas, but
+make sure that the proposed project satisfies the <a href="#requirements_and_guidelines">main
+requirements</a> mentioned below.</p>
+
+<h3>How to get involved</h3>
+
+<p>The best place to propose and discuss your proposals is our
+<a href="http://groups.google.com/group/scala-language">&quot;scala-language&quot;</a>
+mailing list. This way you will get quickly responses from the whole
+Scala community.</p>
+
+<h3>Previous Summer of Code</h3>
+
+<p>We encourage you to have a look at our <a href="http://www.scala-lang.org/gsoc2010#">Summer of Code
+2010</a>,
+<a href="http://www.scala-lang.org/gsoc2011#">2011</a>,
+<a href="http://www.scala-lang.org/gsoc2012#">2012</a> and
+<a href="http://www.scala-lang.org/news/2013/03/20/gsoc13.html">2013</a> page to
+get an idea on what we and you can expect while working on Scala.</p>
+
+<h2>Project Ideas</h2>
+
+<p>Here are some project ideas for you. The list is non-binding and any
+reasonable project related to Scala that is proposed by a student will
+be thoroughly reviewed.</p>
+
+<hr>
+
+<h3>Miniboxing for Breeze and Spire</h3>
+
+<p>A very tricky question in compilers is how to translate high level
+generic code, such as classes with type parameters to optimized low
+level code. Researchers have proposed many translations in the last 25
+years, yet we can&#39;t claim to have a perfect solution. This is because
+generic code is uniform at a high level, but its low level translation
+requires optimized non-uniform representations to obtain good
+performance. Thus we have an inherent tension between uniformity and
+optimality.</p>
+
+<p>In the context of the Java Virtual Machine, <a href="http://scala-miniboxing.org/">miniboxing</a> is a new
+translation that sidesteps the shortcomings of previous approaches,
+while maintaing the optimality of the low level non-uniform code. It
+builds on the specialization transformation, which is already included
+in the <a href="http://github.com/scala/scala">Scala compiler</a>, but produces too much bytecode to be
+useful in practical applications. Although miniboxing is developed for
+the Scala language, the same transformation could also be implemented
+in <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/language/index.html">Java</a> and in other JVM languages, such as <a href="http://x10-lang.org">IBM&#39;s X10</a>,
+<a href="http://kotlin.jetbrains.org/">JetBrains&#39; Kotlin</a>  and <a href="http://ceylon-lang.org/">RedHat&#39;s Ceylon</a>.</p>
+
+<p>The miniboxing transformation matches optimal performance in
+microbenchmarks, but in order to make a significant impact in the
+Scala community, it needs to be prove itself on large benchmarks, such
+as the <a href="https://github.com/non/spire">spire numeric abstractions library</a> and the <a href="https://github.com/scalanlp/breeze">breeze numeric
+processing library</a>. In this context, the tasks for this project
+are:</p>
+
+<ul>
+<li>develop the necessary mechanisms around the miniboxing plugin to
+allow running the spire and breeze benchmarks</li>
+<li>identify slowdowns caused by the miniboxing translation and</li>
+<li>propose and implement solutions to improve the performance.</li>
+</ul>
+
+<p>This project requires familiarity with compilers (requirement: having
+taken at least a basic Compilers course), the Scala programming language
+(requirement: having taken the <a href="https://www.coursera.org/course/progfun">Functional Programming in Scala</a>
+course) and with <a href="http://en.wikipedia.org/wiki/Java_bytecode">Java bytecode</a>. Note that acceptance for this
+project is conditioned by the successful completion of a challenge,
+which will be explained once you apply for the project. A big plus is
+having contributed to OSS software written in Scala.</p>
+
+<p><strong>Resources</strong></p>
+
+<ul>
+<li><a href="http://scala-miniboxing.org/">the miniboxing plugin website</a></li>
+<li><a href="http://infoscience.epfl.ch/record/188060">a paper explaining the generic code translation challenges and the
+miniboxing transformation</a></li>
+<li><a href="https://github.com/miniboxing/miniboxing-plugin">miniboxing plugin on github</a> -- a compiler plugin that
+introduces the miniboxing transformation in the compiler pipeline</li>
+<li><a href="https://github.com/non/spire">spire numeric abstractions library</a> on github</li>
+<li><a href="https://github.com/scalanlp/breeze">breeze numerical processing, machine learning and natural language
+processing library</a> on github</li>
+</ul>
+
+<p>Keywords:  generic code translation, miniboxing, specialization</p>
+
+<p>Mentored by <a href="http://people.epfl.ch/vlad.ureche">Vlad Ureche</a> and <a href="http://www.cs.berkeley.edu/%7Edlwh/">David Hall</a>.</p>
+
+<h3>MacroGL library</h3>
+
+<p>OpenGL is a cross-language, multi-platform API for rendering 2D and 3D
+computer graphics. The API interacts with a GPU to achieve
+hardware-accelerated rendering. OpenGL is used heavily in the industry
+and is constantly evolving. On the JVM, namely Scala and Java, you can
+currently use OpenGL by relying either on the JOGL library (Java
+OpenGL) or LWJGL (Lightweight Java Game Library). Both libraries are
+low-level bindings on top of OpenGL - these libraries are ports of the
+C-like OpenGL API to Java.</p>
+
+<p>While this is highly configurable, programming with these low-level
+constructs may be cumbersome.</p>
+
+<ul>
+<li>OpenGL state has to be manually set up before performing the desired
+task, and then reverted to previous state once the task is done</li>
+<li>Creating OpenGL objects like buffers, textures or shader programs
+requires a large number of API calls and imperative state changes,
+while it could be done declaratively for typical programs</li>
+<li>Communicating values to shader programs requires imperative API
+calls and dealing with the layout of shader variables in the OpenGL
+programs</li>
+<li>Error states have to be queried manually and there are not
+exceptions being thrown, let alone error messages other than numeric
+error codes.</li>
+</ul>
+
+<p>All this results in a lot of boilerplate code that is hard to understand, maintain and debug.</p>
+
+<p>The <a href="https://github.com/storm-enroute/macrogl">MacroGL library</a> is a
+high-level API that allows writing more structured, yet efficient
+OpenGL code. Here are some of its features.</p>
+
+<ul>
+<li><p>It provides structured constructs for setting transformation
+matrices, OpenGL settings, textures, programs, buffers, and in
+general setting up the rendering pipeline</p>
+<div class="highlight"><pre><code class="language-" data-lang="">for {
+  _ &lt;- enabling(GL_CULL_FACE)
+  _ &lt;- using.matrix(scene.camera.projectionMatrix)
+  _ &lt;- using.matrix(scene.camera.modelviewMatrix)
+  _ &lt;- using.texture(GL_TEXTURE0, shadowChannel)
+  b &lt;- using.framebuffer(screenBuffer)
+  _ &lt;- b.attachTexture2D(GL_COLOR_ATTACHMENT_0, screenChannel, 0)
+} objectBuffer.render()
+</code></pre></div></li>
+</ul>
+
+<p>These for-comprehensions use Scala Macros to inline the
+  state-handling code and avoid object allocations for closures.</p>
+
+<ul>
+<li><p>It prefers convention over configuration when declaratively
+instantiating OpenGL objects like shaders:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">val glowFilter = new Program("glowfilter")(
+  Program.Shader.Vertex(resources("glowfilter.vert")),
+  Program.Shader.Fragment(resources("glowfilter.frag"))
+)
+</code></pre></div></li>
+<li><p>It allows easy communication between the Scala program and the
+shaders:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">glowFilter.uniform.width = width
+glowFilter.uniform.height = height
+</code></pre></div></li>
+<li><p>Supports Vector and Matrix types</p></li>
+<li><p>easier error querying</p></li>
+<li><p>easy access to many rendering pipeline settings</p></li>
+</ul>
+
+<p>The current MacroGL functionality is, however, restricted to core
+OpenGL features. We would like to extend the library to completely
+cover the OpenGL API. Some of the features missing:
+- texture types - 1D, 3D, cube maps, texture arrays, mipmapping
+- tessellation and geometry shaders
+- implementing missing buffer types and consolidating the existing
+  buffer types
+- facilities efficiently uploading images to textures
+- we want to use the quasiquoting features of Scala 2.11 to simplify
+  macros in MacroGL and bring them more up-to-date
+- optional exception throwing when an error state is detected,
+  governed by ErrorPolicy typeclasses (must be turned off for
+  performance after development)
+- structured constructs for geometry rendering
+- allow a richer set of uniform variable types for shaders (currently
+  MacroGL API only supports integers, floats, float vectors and float
+  matrices)
+- avoiding boxing in some places, such as setting uniform variables
+  for shaders
+- implementing more Vector and Matrix types (e.g. integers), divide
+  them into mutable and immutable versions
+- parsing common 3d model formats and producing buffers</p>
+
+<p>The goal of this project is to provide a set of higher-level
+abstractions and a Scala-based API that works with JOGL, while in the
+same time retaining most of the performance and efficiency of
+JOGL. This should allow Scala programmer to write safer and more
+reliable OpenGL code which is also easier to understand and maintain.</p>
+
+<p>The final goal is to produce and document a usable, concise and
+powerful open source library for writing OpenGL programs more
+efficiently in Scala. Deliverables are the following:</p>
+
+<ul>
+<li><p>implemented most of missing features described above and merged them
+into the main distribution</p></li>
+<li><p>MacroGL ported from Scala 2.10 to Scala 2.11, leaving 2.11 as the
+development version</p></li>
+<li><p>detailed documentation in form of a GitHub page, containing API
+docs, overview of different features with descriptions, a getting
+started guide, and several example use cases</p></li>
+</ul>
+
+<p>Mentored by <a href="http://people.epfl.ch/aleksandar.prokopec">Aleksandar
+Prokopec</a></p>
+
+<h3>Generic XML interpolator</h3>
+
+<p>Scala features XML literals which desugar to calls of the XML
+library. The support for XML literals is part of the parser and the
+compiler, and are bound to a single desugared API. Scala 2.10 added
+support for generic, customizable string interpolators. Standard ones
+are <code>s&quot;foo = $foo&quot;</code> or <code>f&quot;bar = $bar%.2f&quot;</code>.
+<a href="http://docs.scala-lang.org/overviews/macros/quasiquotes.html">Quasi-quotes</a>,
+added in Scala 2.11, show that these interpolators can be implemented by
+macros to support compile-time checking of the syntax inside an
+interpolator.</p>
+
+<p>The goal of this project is to design and implement a macro-based
+generic XML string interpolator. It should be primarily designed as a
+replacement for the XML literal syntax of Scala, and hence would
+provide at least all the features of that syntax. For example, the XML
+literals</p>
+<div class="highlight"><pre><code class="language-" data-lang="">val name = "John"
+val span = &lt;span&gt;{ name }&lt;/span&gt;
+val node = &lt;div&gt;{ span }&lt;/div&gt;
+node match { case &lt;div&gt;&lt;span&gt;{ inner }&lt;/span&gt;&lt;/div&gt; =&gt; inner }
+</code></pre></div>
+<p>could be rewritten as</p>
+<div class="highlight"><pre><code class="language-" data-lang="">val name = "John"
+val span = xml"&lt;span&gt;$name&lt;/span&gt;"
+val node = xml"&lt;div&gt;$span&lt;/div&gt;"
+node match { case xml"&lt;div&gt;&lt;span&gt;$inner&lt;/span&gt;&lt;/div&gt;" =&gt; inner }
+</code></pre></div>
+<p>As an additional requirement, this interpolator should be generic with
+respect to the actual API that is called by the generated code, called
+the &quot;back-end&quot;. As a possible example, on <a href="http://www.scala-js.org/">Scala.js</a> we would
+like to have XML literals that create DOM elements directly instead of
+<code>scala.xml</code> objects. The details on how to make the interpolator
+generic are not specified, and you are encouraged to come up with a
+smart idea to solve that requirement. You are not required to actually
+provide a second back-end besides that targeting the <code>scala.xml</code> API,
+but your implementation should allow others to do so without modifying
+the code.</p>
+
+<p>Required skills:
+* Good working knowledge of Scala
+* Good knowledge of XML
+* Basic knowledge of <a href="http://docs.scala-lang.org/overviews/macros/overview.html">def macros</a></p>
+
+<p>Mentored by
+<a href="http://people.epfl.ch/sebastien.doeraene">Sébastien Doeraene</a></p>
+
+<h3>Slick: Type-checking of plain SQL</h3>
+
+<p>Slick supports the use of Plain SQL queries as a thin execution layer
+on top of JDBC. This requires that users not only write their own SQL
+code but also know the result type of the query and how to map that
+back to Scala types. There is also no compile-time checking for these
+kinds of queries.</p>
+
+<p>The goal of this project is to alleviate both issues with the use of
+macros. Plain SQL queries based on string interpolation have all the
+necessary information (query string, parameter types) available at
+compile-time to allow a macro-based implementation to send the query
+to a database for verification, get the result type from the database,
+and translate that back into a Scala type. As an implementer of such a
+feature you will have to come up with practical solutions for
+configuring the database access for the macro, caching the database
+results for good performance, and ensuring that the solution would be
+usable in environments that cannot expand the macro (e.g. some
+IDEs). You will have to work towards these goals with the Slick team
+and possibly the Scala Macros implementers.</p>
+
+<p>Related work has been done previously in
+<a href="https://github.com/jonifreeman/sqltyped">sqlTyped</a>.</p>
+
+<p>Mentored by <a href="mailto:stefan.zeiger@typesafe.com">Stefan Zeiger</a></p>
+
+<h3>Runtime Expansion for Scala Macros</h3>
+
+<p>Scala macros are functions called by the compiler during program
+compilation. Since their inception in Scala 2.10, macros are widely
+used in libraries and domain-specific languages to analyze and
+generate code.</p>
+
+<p>There&#39;s always been a number of interesting extensions to our macro
+system that we planned to experiment with, and here&#39;s one of
+them. Even though macros look and quack like normal methods, they are
+not first-class. This brings problems when compile-time information
+alone is not sufficient to perform macro expansion, preventing macros
+from being effectively used for runtime code generation. The main goal
+of this project is to remove this restriction and implement runtime
+macros - functions that produce executable code during program runtime
+using familiar macro APIs.</p>
+
+<p>When working on the project you will:</p>
+
+<ul>
+<li>Design syntax for designating runtime-expandable expressions in code</li>
+<li>Figure out changes to the macro engine and reflection APIs that are
+necessary to enable runtime macro expansion</li>
+<li>Experiment with and deliver runtime macro expansion for Scala macros</li>
+</ul>
+
+<p><em>Beware! There&#39;s already been a lot of applications for this project!
+Luckily there are other macro-related ideas to hack on during GSoC.
+Contact Eugene for more information.</em></p>
+
+<p>Mentored by <a href="http://people.epfl.ch/eugene.burmako">Eugene Burmako</a></p>
+
+<h3>Refactor Scaladoc&#39;s Scalac dependencies</h3>
+
+<p>Scaladoc currently has strong dependencies on the Scala compiler&#39;s internal classes.
+Large parts of it could be refactored to use reflection instead in order to loosen its ties
+with the compiler. Part of this task is identifying the smallest remaining required interface
+to the scala compiler classes.</p>
+
+<p>Mentored by @cvogt http://people.epfl.ch/christopher.vogt</p>
+
+<h3>Refactor Scaladoc to allow generating generate other documentation format</h3>
+
+<p>Scaladoc currently only generates the default html format. Other formats could be
+several of single file plain HTML, multi file plain HTML, pdf, CHM, dash doclet...
+This requires cooperation with the other Scaladoc project.
+This could help: https://github.com/szeiger/extradoc
+This is Scala compiler related project.</p>
+
+<p>Mentored by @cvogt http://people.epfl.ch/christopher.vogt</p>
+
+<h3>Projects with Breeze</h3>
+
+<p><a href="http://www.github.com/scalanlp/breeze">Breeze</a> is a high-performance
+linear algebra library for Scala that uses . The ideas here generally
+require a fairly advanced knowledge of Scala. In general, experience
+with frameworks like NumPy or languages like R, MatLab, and Julia
+would be immensely valuable as well. Other projects related to
+numerical computing and linear algebra are encouraged. Please
+introduce yourself on the <a href="http://groups.google.com/forum/#!forum/scala-breeze">group&#39;s mailing</a> list with any ideas.</p>
+
+<p>All Breeze projects are mentored by
+<a href="http://www.cs.berkeley.edu/%7Edlwh/">David Hall</a></p>
+
+<h4>Multi-dimensional Arrays</h4>
+
+<p>Breeze currently only supports 1-dimensional vectors and 2-dimensional
+matrices. Frameworks like <a href="http://www.numpy.org/">NumPy</a> support arbitrarily dimensioned
+arrays. This is easier in dynamically typed languages that don&#39;t
+enforce correctness at compile time, because Scala does not provide
+mechanisms for abstracting over the &quot;arity&quot; of types. Nevertheless,
+we&#39;d like to extend support to arbitrarily dimensioned arrays. This
+project would involve the creation of a new high-order array type,
+with keys based on a flexible data type, like Shapeless HLists, as
+well as support functions for manipulating these arrays, with the
+ultimate goal being parity with
+<a href="http://wiki.scipy.org/Tentative_NumPy_Tutorial#head-6a1bc005bd80e1b19f812e1e64e0d25d50f99fe2">NumPy&#39;s multidimensional arrays</a>.</p>
+
+<p>More concretely, the student would create the new data structure,
+along with array creation (e.g. zeros, ones) and manipulation routines
+(e.g. roll, ravel), as well as operator (e.g. addition and
+subtraction) and universal function (e.g. exp, sum) support, following
+the design patterns used in Breeze.</p>
+
+<p>The ideal student would have a strong command of Scala, familiarity
+with NumPy, and some familiarity with <a href="http://github.com/milessabin/shapeless">Shapeless</a>. The student
+would work closely with the maintainers of Breeze. Interested students
+should introduce themselves on the <a href="http://groups.google.com/forum/#!forum/scala-breeze">group&#39;s mailing list</a>.</p>
+
+<h4>Spire/Algebird Interoperability</h4>
+
+<p>There are currently a number of different math libraries for
+Scala. <a href="http://github.com/non/spire">Spire</a> (and, to a lesser extent, Algebird) have fairly
+fleshed out algebraic hierarchies for Rings, Semirings, Monoids, and
+the like. Breeze has its own parallel hierarchy, but it is less
+developed. In this project, the student would bridge these different
+libraries, either by integrating Spire&#39;s data types into Breeze, or by
+introducing implicit conversions to provide an interoperability
+layer. Students should have an intermediate knowledge of Scala
+(e.g. how to write implicits to provide implementation), and some
+familiarity with or interest in abstract algebra (i.e. what a ring is,
+and how it relates to a field). The deliverables for this project
+would include</p>
+
+<ol>
+<li>a proposed plan for either interoperability and integration with
+Spire and</li>
+<li>an implementation of the plan.</li>
+</ol>
+
+<p>If time permits, we would then consider adding interoperability with
+other libraries likes Algebird. The student would work closely with the
+maintainers of Breeze. Interested students should introduce themselves
+on the <a href="http://groups.google.com/forum/#!forum/scala-breeze">group&#39;s mailing list</a>.</p>
+
+<h4>GPU Extensions for Breeze</h4>
+
+<p>GPUs have recently become popular for scientific computing due to
+their high performance and ubiquity. In this project, the student
+would extend Breeze to provide wrappers for third-party GPU computing
+libraries like <a href="http://www.jcuda.org/jcuda/jcublas/JCublas.html">JCublas</a> or <a href="http://code.google.com/p/javacl/">JavaCL</a>. Breeze is designed to
+be flexible enough to support this kind of extension, so this project
+should not require changing too much of the core of Breeze, though of
+course it is a large undertaking nonetheless. The student would
+propose a design, backed by either of the two implementations, and
+then an implementation for common linear algebra operations, along
+with a design document for extending their work.</p>
+
+<p>This project requires intermediate knowledge of Scala (e.g. how to
+write implicits to provide implementation), access to either a CUDA-
+or OpenCL-compatible device, and some familiarity with GPU
+computing. The student would work closely with the maintainers of
+Breeze. Interested students should introduce themselves on the
+<a href="http://groups.google.com/forum/#!forum/scala-breeze">group&#39;s mailing list</a>.</p>
+
+<h4>Visualization Library</h4>
+
+<p>Languages for scientific computing are often accompanied by a great
+library for visualizing data. In this project, the student would
+design and implement such a framework for Scala and Breeze. There is
+<a href="http://github.com/scalanlp/breeze-viz">some work</a> in this direction, but this project would require a strong
+design sense from the student. Students should have an intermediate
+knowledge of Scala, and experience using or implementing visualization
+libraries like <a href="http://matplotlib.org/">matplotlib</a>, <a href="http://ggplot2.org/">ggplot2</a>, or <a href="http://dcjones.github.io/Gadfly.jl/">gadfly</a>.</p>
+
+<p>The deliverables include a specification of the overall design
+(e.g. API use cases, proposed architecture and backend), a
+proof-of-concept implementation that can be fleshed out into a more
+complete library, and a tutorial for using this library. The student
+would work closely with the maintainers of Breeze. Interested students
+should introduce themselves on the <a href="http://groups.google.com/forum/#!forum/scala-breeze">group&#39;s mailing list</a>.</p>
+
+<h2>Requirements and Guidelines</h2>
+
+<h3>General Student Application Requirements</h3>
+
+<p>This is the fifth time the Scala project has applied to the Summer of
+Code, and from last years experience, increased popularity of the
+language and stories of other mentor organizations we expect a high
+number of applications. First, be aware of the following:</p>
+
+<ul>
+<li>  Make sure that you understand, fulfill and agree to the general
+<a href="http://www.google-melange.com/gsoc/document/show/gsoc_program/google/gsoc2014/help_page">Google Summer of Code rules</a></li>
+<li>  The work done during GSoC requires some discipline from the
+students as they have to plan their day-to-day activities by
+themselves. Nevertheless we expect regular contact with the
+mentors by the usual forms of communication (mail, chat, phone) to
+make sure that the development is going according to the plan and
+students don&#39;t get stuck for weeks at a time (3 months may seem
+long, but in reality it is very easy to run out of time).</li>
+<li>  The <a href="http://www.google-melange.com/gsoc/events/google/gsoc2014">official SoC timetable</a>
+mentions May 19th as the official start of coding, but if you
+have time you are encouraged to research your proposals even
+before that (and definitely learn the basics of Scala, if you
+haven&#39;t done that already).</li>
+</ul>
+
+<h3>Student Application Guidelines</h3>
+
+<ul>
+<li>  Student proposals should be very specific. We want to see evidence
+that you can succeed in the project. Applications with one-liners
+and general descriptions definitely won&#39;t make the cut.</li>
+<li>  Because of the nature of our projects students must have at some
+knowledge of the Scala language. Applicants with Scala programming
+experience will be preferred. Alternatively, experience with
+functional programming could suffice, but in your application we
+want to see evidence that you can quickly be productive in Scala.</li>
+<li>  You can think of Google Summer of Code as a kind of independent
+internship. Therefore, we expect you to work full-time during the
+duration. Applicants with other time commitments are unlikely to
+be selected. From our previous experience we know that students&#39;
+finishing their studies (either Bachelor, Master of PhD) are
+likely to be overwhelmed by their final work, so please don&#39;t be
+too optimistic and carefully plan your time for the project.</li>
+<li>  If you are unsure whether your proposal is suitable, feel free to
+discuss it on our
+<a href="http://groups.google.com/group/scala-language">&quot;scala-language&quot;</a>
+mailing list. We have many community members on our mailing list
+who will quickly answer any of your questions regarding the
+project. Mentors are also constantly monitoring the mailing
+list. Don&#39;t be afraid of asking questions, we enjoy solving
+puzzles like that!</li>
+</ul>
+
+<h3>General Proposal Requirements</h3>
+
+<p>The proposal will be submitted via the standard web-interface at
+<a href="http://www.google-melange.com/gsoc/homepage/google/gsoc2014">http://www.google-melange.com/gsoc/homepage/google/gsoc2014</a>,
+therefore plain text is the best way to go. We expect your application
+to be in the range of 700-1500 words. Anything less than that will
+probably not contain enough information for us to determine whether
+you are the right person for the job.</p>
+
+<p>Your proposal should contain at least the following information, but
+feel free to include anything that you think is relevant:</p>
+
+<ul>
+<li>  Please include your name (weird as it may be, people do forget
+about it)</li>
+<li>  Title of your proposal</li>
+<li>  Abstract of your proposal</li>
+<li>  Detailed description of your idea including explanation on why is
+it innovative (maybe you already have some prototype?), what
+contribution do you expect to make to the Scala community and why
+do you think your project is needed, a rough plan of your
+development and possible architecture sketches.</li>
+<li>  Description of previous work, existing solutions (links to
+prototypes, bibliography are more than welcome!)</li>
+<li>  Write us about yourself and convince us that you are the right
+person for the job (linking to your resume/CV is good but not
+sufficient)
+
+<ul>
+<li>  Mention the details of your academic studies, any previous
+work, internships</li>
+<li>  Any relevant skills that will help you to achieve the goal
+(programming languages, frameworks)?</li>
+<li>  Any previous open-source projects (or even previous GSoC) you
+have contributed to?</li>
+<li>  Do you plan to have any other commitments during SoC that may
+affect you work? Any vacations/holidays planned? Please be
+specific as much as you can.</li>
+</ul></li>
+<li>  Contact details (<strong>very important!</strong>)</li>
+</ul>
+
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div class="contents">Contents</div>
+              <div id="toc"></div>
+              <br/>
+              <div class="alert-info">
+                <a href="/contribute/documentation.html#updating_scalalangorg"><p><strong>Problem with this page?</strong>
+                Please help us fix it!</p></a>
+              </div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

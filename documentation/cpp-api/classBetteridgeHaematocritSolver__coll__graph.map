@@ -1,0 +1,4 @@
+<map id="BetteridgeHaematocritSolver&lt; DIM &gt;" name="BetteridgeHaematocritSolver&lt; DIM &gt;">
+<area shape="rect" id="node2" href="$classAbstractHaematocritSolver.html" title="{AbstractHaematocritSolver\l\&lt; DIM \&gt;\n||+ AbstractHaematocritSolver()\l+ ~AbstractHaematocritSolver()\l+ Calculate()\l}" alt="" coords="25,345,232,467"/>
+<area shape="rect" id="node3" href="$classAbstractVesselNetworkCalculator.html" title="{AbstractVesselNetworkCalculator\l\&lt; DIM \&gt;\n||+ AbstractVesselNetworkCalculator()\l+ ~AbstractVesselNetworkCalculator()\l+ SetVesselNetwork()\l+ Calculate()\l}" alt="" coords="5,160,252,296"/>
+</map>

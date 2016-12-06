@@ -1,0 +1,267 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>microvessel_chaste.mesh package &mdash; Microvessel Chaste 3.4dev documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Microvessel Chaste 3.4dev documentation" href="index.html"/>
+        <link rel="up" title="microvessel_chaste package" href="microvessel_chaste.html"/>
+        <link rel="next" title="microvessel_chaste.pde package" href="microvessel_chaste.pde.html"/>
+        <link rel="prev" title="microvessel_chaste.geometry package" href="microvessel_chaste.geometry.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Microvessel Chaste
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="microvessel_chaste.html">microvessel_chaste package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="microvessel_chaste.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="microvessel_chaste.geometry.html">microvessel_chaste.geometry package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">microvessel_chaste.mesh package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-microvessel_chaste.mesh.numpy_tools">microvessel_chaste.mesh.numpy_tools module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-microvessel_chaste.mesh">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="microvessel_chaste.pde.html">microvessel_chaste.pde package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="microvessel_chaste.population.html">microvessel_chaste.population package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="microvessel_chaste.simulation.html">microvessel_chaste.simulation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="microvessel_chaste.utility.html">microvessel_chaste.utility package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="microvessel_chaste.visualization.html">microvessel_chaste.visualization package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="microvessel_chaste.html#module-microvessel_chaste">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Microvessel Chaste</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="microvessel_chaste.html">microvessel_chaste package</a> &raquo;</li>
+      
+    <li>microvessel_chaste.mesh package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/microvessel_chaste.mesh.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="microvessel-chaste-mesh-package">
+<h1>microvessel_chaste.mesh package<a class="headerlink" href="#microvessel-chaste-mesh-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-microvessel_chaste.mesh.numpy_tools">
+<span id="microvessel-chaste-mesh-numpy-tools-module"></span><h2>microvessel_chaste.mesh.numpy_tools module<a class="headerlink" href="#module-microvessel_chaste.mesh.numpy_tools" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="microvessel_chaste.mesh.numpy_tools.AddContourPlot">
+<code class="descclassname">microvessel_chaste.mesh.numpy_tools.</code><code class="descname">AddContourPlot</code><span class="sig-paren">(</span><em>fig</em>, <em>ax</em>, <em>grid</em>, <em>solution</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/microvessel_chaste/mesh/numpy_tools.html#AddContourPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#microvessel_chaste.mesh.numpy_tools.AddContourPlot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="microvessel_chaste.mesh.numpy_tools.GetLineSolution">
+<code class="descclassname">microvessel_chaste.mesh.numpy_tools.</code><code class="descname">GetLineSolution</code><span class="sig-paren">(</span><em>solution</em>, <em>grid</em>, <em>y_fraction</em>, <em>z_fraction</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/microvessel_chaste/mesh/numpy_tools.html#GetLineSolution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#microvessel_chaste.mesh.numpy_tools.GetLineSolution" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="microvessel_chaste.mesh.numpy_tools.GetMeshGrid2d">
+<code class="descclassname">microvessel_chaste.mesh.numpy_tools.</code><code class="descname">GetMeshGrid2d</code><span class="sig-paren">(</span><em>grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/microvessel_chaste/mesh/numpy_tools.html#GetMeshGrid2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#microvessel_chaste.mesh.numpy_tools.GetMeshGrid2d" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="microvessel_chaste.mesh.numpy_tools.GetMeshGridSolution">
+<code class="descclassname">microvessel_chaste.mesh.numpy_tools.</code><code class="descname">GetMeshGridSolution</code><span class="sig-paren">(</span><em>solution</em>, <em>grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/microvessel_chaste/mesh/numpy_tools.html#GetMeshGridSolution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#microvessel_chaste.mesh.numpy_tools.GetMeshGridSolution" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="microvessel_chaste.mesh.numpy_tools.GetPlaneSolution">
+<code class="descclassname">microvessel_chaste.mesh.numpy_tools.</code><code class="descname">GetPlaneSolution</code><span class="sig-paren">(</span><em>solution</em>, <em>grid</em>, <em>z_fraction</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/microvessel_chaste/mesh/numpy_tools.html#GetPlaneSolution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#microvessel_chaste.mesh.numpy_tools.GetPlaneSolution" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="microvessel_chaste.mesh.numpy_tools.GetXPoints">
+<code class="descclassname">microvessel_chaste.mesh.numpy_tools.</code><code class="descname">GetXPoints</code><span class="sig-paren">(</span><em>grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/microvessel_chaste/mesh/numpy_tools.html#GetXPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#microvessel_chaste.mesh.numpy_tools.GetXPoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-microvessel_chaste.mesh">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-microvessel_chaste.mesh" title="Permalink to this headline">¶</a></h2>
+<p>Mesh Module</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="microvessel_chaste.pde.html" class="btn btn-neutral float-right" title="microvessel_chaste.pde package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="microvessel_chaste.geometry.html" class="btn btn-neutral" title="microvessel_chaste.geometry package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, University of Oxford.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'3.4dev',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

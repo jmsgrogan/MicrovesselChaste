@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Scala: Next Steps | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Scala: Next Steps</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            
+            <div class="article-date">July 28, 2014</div>
+
+<p>As with every living programming language, Scala will continue to evolve. This document describes where the core Scala team sees the language going in the medium term and where we plan to invest our efforts.</p>
+
+<p>In a nutshell, our main goals are to make the language and its libraries simpler to understand, more robust, and better performing. The features described in this document span the next three major releases of the Scala distribution. Naturally, the planning for later releases is more tentative and fluid than for earlier ones.</p>
+
+<h2>Scala 2.12</h2>
+
+<p>Scala 2.12’s main theme is Java 8 interoperability. It will support Java 8 lambdas and streams and will allow easy cross calls with these features in both directions. We recently published a <a href="http://www.scala-lang.org/news/2.12-roadmap">detailed feature list and roadmap</a> for this release.</p>
+
+<p>We have not yet decided on version numbers for the releases beyond 2.12, so for the time being we will use opera names as designators.</p>
+
+<h2>Scala &quot;Aida&quot;</h2>
+
+<p>This release focuses on improving the standard library.</p>
+
+<ol>
+<li>Cleanups and simplification of the collections library: we plan to reduce the size of the collections library, providing some functionality as separate modules.  Generally, we want to make them even easier to use and structure them so that they are more amenable to optimizations. Where needed, breaking changes will be announced using deprecation in Scala 2.12; regular use of the collections will likely be unaffected, but custom collections may need to be adapted to the simplified hierarchy.
+
+<ol>
+<li>Reduce reliance on inheritance</li>
+<li>Make all default collections immutable (e.g. <code>scala.Seq</code> will be an alias of <code>scala.immutable.Seq</code>)</li>
+<li>Other small cleanups that are possible with a rewriting step (e.g. rename mapValues)</li>
+</ol></li>
+<li>Added functionality: We’d like to introduce several new modules, including a couple of spin-offs from the collections library.
+
+<ol>
+<li>Lazy collections through improved views, including Java 8 streams interop.</li>
+<li>Parallel collections with performance improvements obtained from operation fusion and more efficient parallel scheduling.</li>
+<li>An integrated abstraction to handle validation.</li>
+</ol></li>
+<li>The (independent) <a href="http://scalamacros.org/news/2014/07/16/roadmap-for-scala-macros.html">scala.meta</a> project aims to establish a new standard for reflection and macro programming. It will be considered for integration in the standard library once it is mature and stable.</li>
+<li>As in every Scala release, we’ll also work on improving compiler performance. Since this release focuses on the library, compiler changes will be strictly internal.</li>
+</ol>
+
+<p>Backwards compatibility and migration strategy: The changes to collections might require source code to be rewritten, even though this should be rare. However, we aim to maintain source code compatibility modulo an automatic migration tool (analogous to <code>go fix</code> for Go) that can do the rewriting automatically. Ideally, that tool should be robust and expressive enough to support cross-building.</p>
+
+<p>Prototypes of the new collection functionality and meta-programming libraries will be made available as separate libraries in the Scala 2.12 timeframe, so that projects can experiment with the new features early.</p>
+
+<h2>Scala &quot;Don Giovanni&quot;</h2>
+
+<p>The main focus for this release is the Scala programming language and its compiler. The new version should provide clear improvements in simplicity, usability and stability, while at the same time staying backwards compatible with current usage of the language.</p>
+
+<p>Areas that will be investigated include the following:</p>
+
+<ol>
+<li><strong>Cleaned-up syntax</strong>: The objective is to more clearly expose Scala&#39;s principle of having few orthogonally composable features.
+
+<ol>
+<li>Trait parameters instead of early definition syntax</li>
+<li>XML string interpolation instead of XML literals</li>
+<li>Procedure syntax is dropped in favor of always defining functions with <code>=</code></li>
+<li>Simplified and unified type syntax for all forms of information elision: existential types and partial type applications are both expressed with <code>_</code>, forSome syntax is eliminated.</li>
+</ol></li>
+<li><strong>Removing puzzlers</strong>: There are some features in Scala which are known to be prone to puzzlers, and which can be made safer by tweaking the language. In particular, the following changes would help:
+
+<ol>
+<li>Result types are mandatory for implicit definitions.</li>
+<li>Inherited explicit result types take precedence over locally-inferred ones.</li>
+<li>Universal toString conversion and concatenation via <code>+</code> should require explicit enabling.</li>
+<li>Avoid surprising behavior of auto-tupling.</li>
+</ol></li>
+<li><strong>Simple foundations</strong>: This continues the strive for simplicity on the type systems side. We will identify formerly disparate features as specific instances of a small set of concepts. This will help in understanding the individual features and how they hang together. It will also reduce unwanted feature interactions. In particular:
+
+<ol>
+<li>A single fundamental concept - type members - can give a precise meaning to generics, existential types, wildcards, and higher-kinded types.</li>
+<li>Intersection and union types make member selection more regular and avoid blow-ups when computing tight upper and lower bounds of sets of types.</li>
+<li>Tuples can be decomposed recursively, overcoming current limits to tuple size, and leading to simpler, streamlined native support for abstractions like <code>HList</code>s or <code>HMap</code>s which are currently implemented in some form or other in various libraries.</li>
+<li>The type system will have theoretical foundations that are given by a minimal core calculus (DOT).</li>
+</ol></li>
+<li><strong>Better tooling</strong>: We will continue to focus on the tooling side, with the goals to improve batch compiler speed and to make the compiler more adapted to fast incremental compilation and IDE presentation support.</li>
+<li><strong>Faster code</strong>: We plan to improve performance of generated code using optimizations including:
+
+<ol>
+<li>Robust specialization using Miniboxing techniques, applied to collections (a preview of this may already be available in Aida).</li>
+<li>Improvements to value classes: Can be array elements, can play part in specializations, can be multi-field.</li>
+<li>Optimized implementation of thread-local lazy vals.</li>
+</ol></li>
+</ol>
+
+<p>We will collaborate here with the Java effort in project Valhalla, which has similar goals.</p>
+
+<h2>Backwards compatibility</h2>
+
+<p>Since some features are superseded by others, some source code will have to be rewritten. However, using the migration tool described earlier, common Scala code should port automatically. In particular, we aim that all features described in the latest edition of &quot;Programming in Scala&quot; can be ported automatically. However, the porting guarantee will not extend to features that are labelled &quot;experimental&quot;. For some of these (e.g. macros and reflection), we aim to have a replacement that can fulfill analogous functionality, but using different notation and APIs.</p>
+
+<h2>Resourcing</h2>
+
+<p>Currently, having a feature on the list does not mean that we have already committed the resources to work on this. The roadmap is intended as a framework for the development of future Scala versions. We are happy to take contributions that implement parts of it that are lower on our priority list. Before starting work on a feature not listed here, it must first be accepted for inclusion in the roadmap.</p>
+
+
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div class="contents">Contents</div>
+              <div id="toc"></div>
+              <br/>
+              <div class="alert-info">
+                <a href="/contribute/documentation.html#updating_scalalangorg"><p><strong>Problem with this page?</strong>
+                Please help us fix it!</p></a>
+              </div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

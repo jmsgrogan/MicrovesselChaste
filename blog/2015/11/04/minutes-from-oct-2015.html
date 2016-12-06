@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Minutes from Oct 2015 SIP/SLIP Meeting | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/scala-logo-white-sm.png" alt="white Scala logo" /></a>
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Minutes from Oct 2015 SIP/SLIP Meeting</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            <div class="article-date">November 4, 2015</div>
+            
+              <div class="written">Written By: <span class="by">Hamish Dickson</span></div>
+            
+            <h2>SIP/SLIP meeting, October 2015</h2>
+
+<p>Thanks to <a href="http://github.com/hamishdickson">@hamishdickson</a> for compiling these extensive minutes.</p>
+
+<p><a href="https://www.youtube.com/watch?v=vonlAh2tmnw">A video recording of this meeting is available</a>.</p>
+
+<h2>Welcomes and apologies</h2>
+
+<ul>
+<li>Welcome to <a href="http://github.com/sjrd">@sjrd</a> who joins us</li>
+<li><a href="http://github.com/odersky">@odersky</a>, <a href="http://github.com/jsuereth">@jsuereth</a>, <a href="http://github.com/dickwall">@dickwall</a> and <a href="http://github.com/SethTisue">@SethTisue</a> are all there</li>
+<li><a href="http://github.com/dickwall">@dickwall</a> gloats about his holiday</li>
+<li><a href="http://github.com/non">@non</a> has the flu</li>
+<li><a href="http://github.com/heathermiller">@heathermiller</a> is &quot;otherwise engaged&quot;</li>
+</ul>
+
+<h2>1. New Google Calendar</h2>
+
+<p><a href="http://github.com/dickwall">@dickwall</a> has set up a google calendar for slip:</p>
+
+<ul>
+<li>So far it only has the monthly meetings on there, but that will grow</li>
+<li>It&#39;s public so people can know when the next slip meeting is</li>
+<li>The scalaslip@gmail.com calendar which you can add in google calendars under the &quot;add a friends calendar&quot; option</li>
+</ul>
+
+<h2>2. Expert groups</h2>
+
+<h3>2.1 Getting updates from expert groups</h3>
+
+<p><a href="http://github.com/dickwall">@dickwall</a> can&#39;t email everyone for expert groups, it&#39;s simply not a goer. One idea is to create an event
+in the new Google calendar (probably the Friday before the meeting) and ask an expert group representative
+to come to that and provide an update before the next slip meeting.</p>
+
+<h3>2.2 Role of expert groups</h3>
+
+<p><a href="http://github.com/dickwall">@dickwall</a> raises a point that was brought up on the IO overhaul discussion, where people feel they have
+been assigned to an expert group and given work to do without asking. This is entirely not what anyone
+intended and <a href="http://github.com/dickwall">@dickwall</a> is going to write a blog post about the aim of expert groups, how they are formed
+and what we would like them to do.</p>
+
+<p>Ideally, an expert group should be self-formed from people with the desire, knowledge and skills to work
+on a task, then go and do it.</p>
+
+<p>Actions:</p>
+
+<ul>
+<li><a href="http://github.com/dickwall">@dickwall</a> to create a blog post about this issue, he will send it to the Scala elders first so they
+can voice any opinions</li>
+<li>someone should check if misconstruisem is a word</li>
+</ul>
+
+<h2>3. SLIPs without recent activity</h2>
+
+<p>Some SLIPs have had no activity in the last couple of months, it would be good if we can somehow track
+this. <a href="http://github.com/dickwall">@dickwall</a> suggests are create a github tag to track SLIP issues like this. His initial idea is to
+use &quot;dormant&quot;, but thinks this is too passive-aggressive. People agree and <a href="http://github.com/odersky">@odersky</a> suggests &quot;hibernate&quot;
+(which sticks).</p>
+
+<h2>4. October milestone issues</h2>
+
+<h3>Scala Parser Combinators vs FastParse</h3>
+
+<p>Link to issue: https://github.com/scala/slip/issues/24</p>
+
+<p>Notes:</p>
+
+<ul>
+<li>Parser Combinators is not in the standard library, but is a standard module and while good, it has
+some issues.</li>
+<li><a href="http://github.com/lihaoyi">@lihaoyi</a> has a lib called FastParse (https://github.com/lihaoyi/fastparse), fairly similar in design
+to Parser Combinators but faster and currently better maintained.</li>
+<li><a href="http://github.com/odersky">@odersky</a> has invited <a href="http://github.com/lihaoyi">@lihaoyi</a> to submit it as a candidate for becoming a standard module</li>
+<li>Currently waiting for <a href="http://github.com/lihaoyi">@lihaoyi</a> to decide if he wants this to happen and if so to submit a SLIP for it</li>
+<li>Anton Gullett (I can&#39;t find him on github) the maintainer of the Parser Combinators module, should be
+consulted to see if FastParse meets all the needs met by Parser Combinators.</li>
+<li><a href="http://github.com/odersky">@odersky</a> points out that Parser Combinators isn&#39;t a central module, meaning we could actually have
+both modules for a while</li>
+<li>Note Parser Combinators are mainly community maintained, not primarily maintained by Typesafe or EPFL
+(obv retain an interest)</li>
+</ul>
+
+<p>Actions:
+- Talk to <a href="http://github.com/gourlaysama">@gourlaysama</a> about FastParse doing everything required by Parser Combinators
+- Invite <a href="http://github.com/lihaoyi">@lihaoyi</a> to take action if he wants to</p>
+
+<h3>SLIP 27</h3>
+
+<p>Link to issue: https://github.com/scala/slip/issues/23</p>
+
+<p>Owner: <a href="http://github.com/jsuereth">@jsuereth</a></p>
+
+<p>Notes:</p>
+
+<ul>
+<li><a href="http://github.com/jsuereth">@jsuereth</a> spent weekend on <a href="http://github.com/odersky">@odersky</a>&#39;s strawman proposal (as did Daniel)</li>
+<li>there are a few comments to take care of</li>
+<li>wants to get a fuller proposal out, comments from <a href="http://github.com/DarkDimius">@DarkDimius</a> (Dmitry)</li>
+<li>wants to flesh out what he has, but it&#39;s on a good path</li>
+<li>collections - <a href="http://github.com/jsuereth">@jsuereth</a> wants to do something similar to Java&#39;s collector which is a parallel reduction
+abstraction as the basis, on top of that have the iterator sequential base collections. <a href="http://github.com/jsuereth">@jsuereth</a> needs to
+spend more time on it, <a href="http://github.com/odersky">@odersky</a> is keen to see it</li>
+<li>re Views, <a href="http://github.com/odersky">@odersky</a> thinks we need more data on if it should be iterator based or transducer based -
+partly why he tried an iterator base</li>
+<li>iterator seems to be more general</li>
+<li><a href="http://github.com/jsuereth">@jsuereth</a> figured out how to do Zip with transducers - required rhs to be an iterator</li>
+<li><a href="http://github.com/jsuereth">@jsuereth</a>&#39;s proposal works on existing collections is fold based, wants to get that in place so we can
+deprecate the existing set of views asap and focus on longer term collections with less restrictions for
+view <a href="http://github.com/odersky">@odersky</a> says that&#39;s reasonable</li>
+<li><a href="http://github.com/sjrd">@sjrd</a> points out scala-js optimization issues</li>
+</ul>
+
+<p>Actions:</p>
+
+<ul>
+<li><a href="http://github.com/jsuereth">@jsuereth</a> and <a href="http://github.com/sjrd">@sjrd</a> to take scala-js optimization issues offline</li>
+<li><a href="http://github.com/dickwall">@dickwall</a> to create a new issue to track optimization issue</li>
+</ul>
+
+<h3>SLIP 22 - Async</h3>
+
+<p>Link to issue: https://github.com/scala/slip/issues/22</p>
+
+<p>Owner: <a href="http://github.com/retronym">@retronym</a></p>
+
+<p>Notes:</p>
+
+<ul>
+<li><a href="http://github.com/SethTisue">@SethTisue</a> is going to ask what <a href="http://github.com/retronym">@retronym</a> actually wanted/intended to happen with async with regards to
+the standard library, i.e. if he wanted to include it.</li>
+<li><a href="http://github.com/dickwall">@dickwall</a> thinks he heard something about issues on Windows, but no one else knew about this.</li>
+<li><a href="http://github.com/retronym">@retronym</a> thinks it&#39;s not quite ready for a SLIP yet. He has a round of work planned over the next
+few months that will include technical improvements to the lib and improved documentation.</li>
+<li>This is on hold for now, but expected to be in better shape in a few months.</li>
+</ul>
+
+<p>Actions:
+None discussed</p>
+
+<h3>Revisit by-name parameters</h3>
+
+<p>Link to issue: https://github.com/scala/slip/issues/21</p>
+
+<p>Notes:
+- <a href="http://github.com/dickwall">@dickwall</a> has had no time to look at it
+- <a href="http://github.com/dickwall">@dickwall</a> mentions he is wary of being perceived as the SLIP manager and working on issues. Could be seen
+as a conflict of interest</p>
+
+<p>Actions:
+None discussed</p>
+
+<h3>Scala IO fix/overhaul</h3>
+
+<p>Link to issue: https://github.com/scala/slip/issues/19</p>
+
+<p>Notes:</p>
+
+<ul>
+<li>This is a long thread. All agree that&#39;s a good thing</li>
+<li><a href="http://github.com/lihaoyi">@lihaoyi</a> came up with a good set of questions - first real step in getting this slip going</li>
+</ul>
+
+<p>Actions:</p>
+
+<ul>
+<li><a href="http://github.com/dickwall">@dickwall</a> will reach out to someone and say &quot;can you actually answer these questions?&quot;, maybe <a href="http://github.com/lihaoyi">@lihaoyi</a>
+or someone else in the thread</li>
+<li><a href="http://github.com/dickwall">@dickwall</a> to put all this in a blog post</li>
+</ul>
+
+<h3>SIP 24 and 25 - trait parameters and repeating by-names</h3>
+
+<p>Link to issue: https://github.com/scala/slip/issues/12</p>
+
+<p>Notes:</p>
+
+<ul>
+<li>nothing changed - on hold</li>
+</ul>
+
+<p>Actions:
+None discussed</p>
+
+<h3>Possible SIP for changes to escapes in string interpolation (double quotes inside of a string interpolation)</h3>
+
+<p>Link to issue: https://github.com/scala/slip/issues/10</p>
+
+<p>Notes:</p>
+
+<ul>
+<li>There has been little movement on this issue mainly for motivational reasons. It sounds like there
+are varying opinions about what the ideal outcome of this issue is.</li>
+<li><a href="http://github.com/SethTisue">@SethTisue</a> pointed out that escaping quotes in string interpolation is a common newbie FAQ, so there is
+probably value in completing this SLIP, but exactly what the right change is (if any) is unknown</li>
+<li><a href="http://github.com/jsuereth">@jsuereth</a> pointed out that perhaps we should aim to solve the new person experience rather than solve the
+whole world&#39;s problems.</li>
+<li>Note, there two similar issues here, one to do with quotes and another to do with backticks</li>
+</ul>
+
+<p>Actions:</p>
+
+<ul>
+<li>Allocate hibernate tag</li>
+<li><a href="http://github.com/jsuereth">@jsuereth</a> will reach out to <a href="http://github.com/som-snytt">@som-snytt</a> to talk about the next steps here</li>
+</ul>
+
+<h3>Binary Literals, Underscores in Literals SIP/SLIP tracking</h3>
+
+<p>Link to issue: https://github.com/scala/slip/issues/8</p>
+
+<p>Owner: <a href="http://github.com/non">@non</a></p>
+
+<p>Notes:</p>
+
+<ul>
+<li>General aim is to see what we can pull in from the Spire library (https://github.com/non/spire)</li>
+</ul>
+
+<p>Actions</p>
+
+<ul>
+<li>Allocate hibernate tag</li>
+<li>Probably an update from <a href="http://github.com/non">@non</a> would be good</li>
+</ul>
+
+<h3>Implicits in for comprehensions/pattern matches SIP tracking</h3>
+
+<p>Link to issue: https://github.com/scala/slip/issues/6</p>
+
+<p>Owner: <a href="http://github.com/haroldl">@haroldl</a></p>
+
+<p>Notes:</p>
+
+<ul>
+<li><a href="http://github.com/haroldl">@haroldl</a> is still keen on this</li>
+<li>nothing specific heard about progress, give the hibernate tag until more is known</li>
+</ul>
+
+<p>Actions:</p>
+
+<ul>
+<li><a href="http://github.com/dickwall">@dickwall</a> to reach out and chat to <a href="http://github.com/haroldl">@haroldl</a> and see how things are going</li>
+</ul>
+
+<h3>Gather, list, contact interested parties for an Either/Or/Xor/Validation etc SLIP and possible expert group</h3>
+
+<p>Link to issue: https://github.com/scala/slip/issues/5</p>
+
+<p>Notes:</p>
+
+<ul>
+<li>Either all the way through to validation</li>
+<li>From last meeting, the expert group had an action item of trying out each others libraries. This hasn&#39;t
+happened due to holidays etc, carry this over</li>
+</ul>
+
+<p>Actions:</p>
+
+<ul>
+<li>Expert group to try out each other&#39;s libraries</li>
+</ul>
+
+<h2>AOB</h2>
+
+<ul>
+<li>collections doesn&#39;t have any tracking - <a href="http://github.com/dickwall">@dickwall</a> to set something up and ping him with any links/info on
+Gitter and he will collect them and put them into an issue with some links. Expects lots of discussion</li>
+<li><a href="http://github.com/jsuereth">@jsuereth</a> theory: things will die down or start an expert group and actively working on it</li>
+<li>will be fun to analyse trade offs and performance</li>
+<li>issue will have experimentation label</li>
+<li><a href="http://github.com/jsuereth">@jsuereth</a> - call for help, for some sort of source compatibility checker for these libs where you can shove in
+these new libs and see if things still compile to give us a notion of what we&#39;re breaking</li>
+<li><a href="http://github.com/dickwall">@dickwall</a> - can we take existing unit tests for collections, clone them off and use them for new collection lib</li>
+<li><a href="http://github.com/Ichoran">@Ichoran</a> (Rex Kerr) has a collection test suite for Typesafe so he&#39;s on that - should be on expert group</li>
+</ul>
+
+            
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div id="toc"></div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

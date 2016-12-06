@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Google Summer of Code 2016 Scala Projects | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Google Summer of Code 2016 Scala Projects</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            
+            <h2>Google Summer of Code</h2>
+
+<p><strong>This year the Scala team applied again for the <a href="https://summerofcode.withgoogle.com/">Google Summer of
+  Code</a>
+  program to work with enthusiastic students on challenging Scala
+  projects</strong></p>
+
+<p>This page provides a list of project ideas. The suggestions are only a
+starting point for students. We expect students to explore the ideas
+in much more detail, preferably with their own suggestions and
+detailed plans on how they want to proceed. Don&#39;t feel constrained by
+the provided list! We welcome any of your own challenging ideas, but
+make sure that the proposed project satisfies the <a href="#requirements-and-guidelines">main
+requirements</a> mentioned below.</p>
+
+<h3>How to get involved</h3>
+
+<p>The best place to propose and discuss your proposals is our
+<a href="http://groups.google.com/group/scala-language">&quot;scala-language&quot;</a>
+mailing list. This way you will get quickly responses from the whole
+Scala community.</p>
+
+<h3>Previous Summer of Code</h3>
+
+<p>We encourage you to have a look at our
+<a href="http://www.scala-lang.org/gsoc/2015.html">2015</a>,
+<a href="http://www.scala-lang.org/gsoc/2014.html">2014</a>,
+<a href="http://www.scala-lang.org/news/2013/03/20/gsoc13.html">2013</a>,
+<a href="http://www.scala-lang.org/gsoc2012#">2012</a>,
+<a href="http://www.scala-lang.org/gsoc2011#">2011</a>,
+<a href="http://www.scala-lang.org/gsoc2010#">Summer of Code 2010</a>
+pages to get an idea on what we and you can expect while working on Scala.</p>
+
+<h2>Project Ideas</h2>
+
+<p>Here are some project ideas. The list is non-binding and any reasonable
+project related to Scala that is proposed by a student will be thoroughly
+reviewed.</p>
+
+<h3>Revamp Slick Code-generator</h3>
+
+<p>There is a long list of smaller and medium sized open tickets for the Slick code generator.
+Time to tackle them and give it another overhaul. This is going to be a very useful and somewhat easier project.</p>
+
+<p><a href="https://github.com/slick/slick/issues?q=is%3Aopen+is%3Aissue+label%3Atopic%3Atype-providers">https://github.com/slick/slick/issues?q=is%3Aopen+is%3Aissue+label%3Atopic%3Atype-providers
+</a></p>
+
+<p>Supervised by <a href="https://github.com/cvogt">@cvogt</a> and/or <a href="https://github.com/szeiger">@szeiger</a></p>
+
+<h3>Slick bug and feature hunt</h3>
+
+<p>There are lots of open tickets in the Slick issue tracker. Some which have long time fallen behind. This project would
+be about tackling as many of them as time permits. It will be a good chance to learn about the Slick code base
+and have an impact in this successful project. Some issues may be simple, but many issues may be challenging to fix and will require someone smart, dedicated and persistent enough to learn the details of how Slick works.</p>
+
+<p><a href="https://github.com/slick/slick/issues">https://github.com/slick/slick/issues</a></p>
+
+<p>Supervised by <a href="https://github.com/cvogt">@cvogt</a> and/or <a href="https://github.com/szeiger">@szeiger</a></p>
+
+<h3>Super-charged for-comprehensions</h3>
+
+<p>Super-charged for-comprehensions are an effort to implement an alternative direct-style dyntax for monadic comprehensions in Scala.
+The goals are reduction in syntax, enabling more control flow expressions, inline Monad value extraction and transformer operations on the Monad context (as in Comprehensive Comprehensions). At the time of writing the project is in heavy flux. Depending on its status there will likely be interesting idea how to take the project further. One likely topic would be exploring type changing comprehensive comprehension transformers, such as groupBy or aggregations. The implementation heavily relies on macros and will require learning how to work with Scala&#39;s compiler ASTs and make changes to the AST transformation stages.</p>
+
+<p>Work in progress: <a href="https://github.com/cvogt/flow-comprehensions">https://github.com/cvogt/flow-comprehensions</a></p>
+
+<p>Supervised by <a href="https://github.com/cvogt">@cvogt</a></p>
+
+<h3>A next generation Scala build tool</h3>
+
+<p>This project is about extending and contributing to the implementation of a vision that only exist in partial, unreleased prototypes right now. The idea is to build a tool for a intuitive, easy to use, composable, statically checked builds that is used like an ordinary Scala library with no surprises. Several pieces of the puzzle exist as prototypes, but need improvement and many other pieces are entirely missing. In particular this GSOC project could be about building an interface to interoperate with SBT builds and SBT plugins, using them as components in new style builds. Other features yet to be built include publishing artifacts, signing them using GPG, packaging and many more. The exact tasks will depend on the state of the project at the time GSOC applications happen. It will be a chance to work on tooling and contribute to something that has a chance to maybe some day change something fundamental in the Scala eco system.</p>
+
+<p>Supervised by <a href="https://github.com/cvogt">@cvogt</a></p>
+
+<h3>Pushing Scala Coroutines to the Next Level</h3>
+
+<p><a href="http://storm-enroute.com/coroutines/">Scala Coroutines</a> is a library-level extension for the Scala programming language that introduces first-class coroutines.</p>
+
+<p>Coroutines are a language abstraction that generalizes subroutines (i.e. procedures, methods or functions). Unlike a subroutine, which is invoked once and executes until it completed, a coroutine can pause execution and yield control back to the caller, or another coroutine. The caller can then resume the coroutine when appropriate. Coroutines have a number of use cases, including but not limited to:</p>
+
+<ul>
+<li>data structure iterators</li>
+<li>event-driven code without the inversion of control</li>
+<li>cooperative multitasking</li>
+<li>concurrency frameworks such as actors, async-await and dataflow networks</li>
+<li>expressing asynchrony, and better composition of asynchronous systems</li>
+<li>capturing continuations</li>
+<li>expressing backtracking</li>
+<li>AI agents such as behaviour trees</li>
+</ul>
+
+<p>The goal of this project is to extend documentation and tests of Scala Coroutines, potentially improve parts of the Coroutines implementation, and then implement a standard suite of extensions for Scala Coroutines. These extensions will be a separate module in the project, and will offer support for the use cases listed above: concisely creating collection iterators using coroutines, async-await support, continuation support, backtracking testing support, and/or a fiber library module. All the extensions will have to be documented.</p>
+
+<p>Supervised by <a href="https://github.com/axel22">@axel22</a></p>
+
+<h3>Better Scripts in Scala</h3>
+
+<p>There are several hacky, ad-hoc ways to write scripts in Scala already, e.g. SBT&#39;s script-runner, and the <a href="https://github.com/lihaoyi/Ammonite">Ammonite REPL</a>&#39;s script loader. Your task in this project would be to improve the experience writing scripts using Ammonite to be on-par with the experience writing scripts in any other language, as well as on-par with the experience writing Scala code in a large project. This includes:</p>
+
+<ul>
+<li>Improving startup time: SBT is terribly slow, and even Ammonite scripts take 1-2 seconds to boot up, This is speed-up-able.</li>
+<li>Improved error reporting: Ammonite&#39;s scripts currently report line-numbers and file-names based on the mangled compilation-unit. We should report based on the location within the source file a user wrote.</li>
+<li>Ammonite requires two steps to install (Java, Ammonite). There is no reason it should take more than 1 command to bootstrap the script-runner on a new system</li>
+<li>IDE support: Ammonite&#39;s syntax isn&#39;t supported by major IDEs, meaning you lose in-editor errors, autocomplete, and other things when writing your script. This can be added</li>
+<li>Windows support: the Ammonite-REPL does not currently work on windows due to terminal-interaction issues. We should make it work and put it in CI.</li>
+</ul>
+
+<p>Supervised by <a href="https://github.com/lihaoyi/">@lihaoyi</a></p>
+
+<h3>Flexible Fast Parser Combinators</h3>
+
+<p><a href="https://github.com/lihaoyi/fastparse">The FastParse library</a> is a modern replacement for Scala&#39;s old parser combinators library. It provides similar API, drops a lot of redundant operators, and runs 50-100x faster. However, right now it only parses Strings.</p>
+
+<p>This project would be to extend FastParse to parse other things. Cases to cover include:</p>
+
+<ul>
+<li>Binary data: <code>Array[Byte]</code>, <code>ByteBuffer</code>, <code>ByteString</code>, letting us parse things like binary files, network protocols, or other formats</li>
+<li>Streaming data: <code>Iterator[String]</code> and <code>Iterator[Char]</code>, letting us parse files while not materializing the entire contents in memory</li>
+<li>Pre-tokenized data: <code>Seq[T]</code> for an arbitrary <code>T</code>, letting you re-use a pre-written lexer before your parser</li>
+</ul>
+
+<p>Using virtual classes, we should be able to extend FastParse to do this while still re-using most of our code. Your task would be to:</p>
+
+<ul>
+<li>Make FastParse able to handle 2 or 3 of the above cases</li>
+<li>Demonstrate use-cases by using FastParse to write parsers for well-known formats: .zip, .class, streaming JSON or XML-SAX parsing</li>
+</ul>
+
+<p>Supervised by <a href="https://github.com/lihaoyi/">@lihaoyi</a></p>
+
+<h3>Fault Handling for Function-Passing</h3>
+
+<p>The <a href="https://infoscience.epfl.ch/record/205822">Function-Passing programming model</a>
+is a new programming model designed with distributed programming in mind. The
+model is formalized and comes with a prototype implementation, but while
+fault-handling is worked out and formalized, it is not yet implemented.</p>
+
+<p>This project would include implementing F-P&#39;s fault-handling specification, and
+empirically evaluating the model across different sorts of applications.</p>
+
+<p><em>(Note, there is already a waiting list for this project.)</em></p>
+
+<p>Supervised by <a href="https://github.com/heathercmiller/">@heathercmiller</a></p>
+
+<h3>DottyDoc: A Documentation Generator for Dotty</h3>
+
+<p>Dotty is a brand new Scala compiler, designed to help us try out concepts of
+future Scala language versions. The compiler is a new design intended to reflect
+the lessons we learned from work with the Scala compiler.</p>
+
+<p>Along with a new compiler and new foundation for Scala, we&#39;d also like to
+reimagine generated documentation for Scala. This project aims to build a new
+documentation generation tool (à la Scaladoc) for the Dotty compiler.</p>
+
+<p><em>(Note, there is already a waiting list for this project.)</em></p>
+
+<p>Supervised by <a href="https://github.com/heathercmiller/">@heathercmiller</a></p>
+
+<h3>DottyREPL: A Better REPL for Dotty</h3>
+
+<p>Apart from better documentation tool, we&#39;d also like to improve upon
+the REPL experience in Dotty. In this project you&#39;re going to expand
+current minimalistic REPL with advanced functionality to improve
+end-user&#39;s experience.</p>
+
+<p><a href="https://github.com/lampepfl/dotty/issues?utf8=%E2%9C%93&amp;q=is%3Aissue+is%3Aopen+repl">https://github.com/lampepfl/dotty/issues?utf8=✓&amp;q=is%3Aissue+is%3Aopen+repl</a></p>
+
+<p>Supervised by <a href="https://github.com/densh">@densh</a></p>
+
+<h3>Better off-heap collections for Scala</h3>
+
+<p><a href="https://github.com/densh/scala-offheap">scala-offheap</a> is a new project that
+exposes user-controllable memory management to Scala programmers. At the moment
+it has fairly limited array-based collection API. Your goal in this project
+would be:</p>
+
+<ul>
+<li>Expand existing functionality of combinator methods on <code>offheap.Array[T]</code></li>
+<li>Port implementation of maps to scala-offheap (<code>offheap.Map[K, V]</code>)</li>
+<li>Port implementation of sets to scala-offheap (<code>offheap.Set[T]</code>)</li>
+</ul>
+
+<p>Supervised by <a href="https://github.com/densh">@densh</a></p>
+
+<h3>Java source code (or bytecode) to Scala.js IR compiler</h3>
+
+<p><a href="https://www.scala-js.org/">Scala.js</a> is the Scala to JavaScript compiler.
+While it can compile any .scala source files to JavaScript, it is unable to
+compiler Java source files. This can be annoying to Scala.js developers, as
+they cannot reuse existing Java libraries like Scala/JVM developers do.</p>
+
+<p>This project consists in writing a compiler from Java source code to the
+Intermediate Representation (IR) of Scala.js. The later phases of the existing
+pipeline would then be reused to compile that IR to JavaScript.</p>
+
+<p>The Java-to-IR compiler should probably reuse an existing an existing Java
+parser and typechecker. From typechecked Java ASTs, it should be relatively
+straightforward to compile them down to the Scala.js IR (except some corner
+cases, but not <em>everything</em> needs to be supported).</p>
+
+<p><em>Alternative</em>: Writing a compiler from the JVM <em>bytecode</em> to the Scala.js IR.
+This is a priori much more difficult, but it might be easier for a student
+already familiar with the JVM bytecode.</p>
+
+<p>The compiler will be written in Scala for the JVM. Working knowledge of Scala
+is expected.</p>
+
+<p>The project requires a relatively good knowledge of compiler construction in
+general. <strong>Your application should include your background in compiler
+construction.</strong> Ideally, it should point to a compiler project you have written
+(e.g., a student project of a compiler course).</p>
+
+<p>Supervised by <a href="https://github.com/sjrd/">@sjrd</a></p>
+
+<h3>Scala Compiler Plugin for Parser Combinators</h3>
+
+<p>Parsing can be found everywhere in computing today: from log analysis to
+computer languages. Functional programming offers concise approach to
+parser generators development: a parsing grammar for generator is composed
+via higher-order functions -- <a href="http://www.cs.nott.ac.uk/%7Epszgmh/monparsing.pdf">parser combinators</a>.</p>
+
+<p>As a program, parser generator should be programmed easily and work fast.
+Popular parser generators in Scala (<a href="https://github.com/scala/scala-parser-combinators">Scala Combinator Parsers</a>,
+<a href="http://parboiled2.org">parboiled2</a>, <a href="https://github.com/lihaoyi/fastparse">FastParse</a>,
+<a href="http://lakhin.com/projects/papa-carlo/">PapaCarlo</a>, etc.) can be much faster
+or have complications in development.</p>
+
+<p>Scala Combinator Parsers library is most concise. It is implemented as plain
+library in Scala. And because of that has few facilities for optimizations.</p>
+
+<p>parboiled2 drops off most of algebraic sanity, and leaves a programmer with
+imperative-style parsing and Value Stack. That causes type soundness bugs,
+clumsy code that is hard to debug, and bad error reporting. FastParse fixes
+most critical issues of parboiled2. But both lacks can’t perform cross-rules
+analysis and deep optimisations.</p>
+
+<p>The proposed solution requires users to use SBT build system with external plugin.
+Scala compiler plugin should rewrite Scala AST of a parser: compile high-level
+concise monadic Scala Combinator Parsers to highly-effective runtime code.</p>
+
+<p>The plugin would be written in Scala. Existing projects written in Scala
+are expected. Ideally you should have understanding of compilers in
+general and Scala compiler inner parts.</p>
+
+<p>Supervised by <a href="https://github.com/alexander-myltsev">@alexander-myltsev</a>,
+<a href="https://github.com/sirthias/parboiled2/commits?author=alexander-myltsev">a core contributor to parboiled2 during GSoC&#39;2013</a>
+and <a href="https://github.com/GlobalNamesArchitecture/gnparser/commits?author=alexander-myltsev">biological names parser based or parboiled2</a>
+writing <a href="http://myltsev.com/tags/#parboiled2">notes sometimes in his blog</a>.</p>
+
+<h3>New XML for Scala</h3>
+
+<p>This project is going to be about new platform-independent (i.e. cross-compile to both JVM
+and Scala.js) implementation of XML library based on fastparse parser combinators.</p>
+
+<ul>
+<li>Finish the XML 1.0 parser</li>
+<li>Refine the AST model</li>
+<li>Implement quasiquotes based on the parser and AST model</li>
+</ul>
+
+<p>Original prototype is available at:</p>
+
+<p><a href="https://github.com/densh/scala-nxml">https://github.com/densh/scala-nxml</a></p>
+
+<p>Supervised by <a href="https://github.com/densh">@densh</a></p>
+
+<h2>ENSIME project ideas</h2>
+
+<p>ENSIME is a JVM process that indexes your dependencies and understands your source code
+using the scala interactive compiler - the same compiler that compiles your code.
+This brings IDE features to your favourite text editor.</p>
+
+<p>A number of project ideas around ENSIME project are listed on the following page:</p>
+
+<p><a href="http://ensime.github.io/contributing/ideas/">http://ensime.github.io/contributing/ideas/</a></p>
+
+<p>Mentored by <a href="https://github.com/fommil">@fommil</a> and/or
+<a href="https://twitter.com/a_dev_musing">@a<em>dev</em>musing</a>.</p>
+
+<h2>Requirements and Guidelines</h2>
+
+<h3>General Student Application Requirements</h3>
+
+<p>This is the sixth time the Scala project has applied to the Summer of
+Code, and from last years experience, increased popularity of the
+language and stories of other mentor organizations we expect a high
+number of applications. First, be aware of the following:</p>
+
+<ul>
+<li>  Make sure that you understand, fulfill and agree to the general
+<a href="https://summerofcode.withgoogle.com/rules/">Google Summer of Code rules</a></li>
+<li>  The work done during GSoC requires some discipline from the
+students as they have to plan their day-to-day activities by
+themselves. Nevertheless we expect regular contact with the
+mentors by the usual forms of communication (mail, chat, phone) to
+make sure that the development is going according to the plan and
+students don&#39;t get stuck for weeks at a time (3 months may seem
+long, but in reality it is very easy to run out of time).</li>
+<li>  The <a href="https://summerofcode.withgoogle.com/">official SoC timetable</a>
+mentions May 23 as the official start of coding, but if you
+have time you are encouraged to research your proposals even
+before that (and definitely learn the basics of Scala, if you
+haven&#39;t done that already).</li>
+</ul>
+
+<h3>Student Application Guidelines</h3>
+
+<ul>
+<li>  Student proposals should be very specific. We want to see evidence
+that you can succeed in the project. Applications with one-liners
+and general descriptions definitely won&#39;t make the cut.</li>
+<li>  Because of the nature of our projects students must have at some
+knowledge of the Scala language. Applicants with Scala programming
+experience will be preferred. Alternatively, experience with
+functional programming could suffice, but in your application we
+want to see evidence that you can quickly be productive in Scala.</li>
+<li>  You can think of Google Summer of Code as a kind of independent
+internship. Therefore, we expect you to work full-time during the
+duration. Applicants with other time commitments are unlikely to
+be selected. From our previous experience we know that students&#39;
+finishing their studies (either Bachelor, Master of PhD) are
+likely to be overwhelmed by their final work, so please don&#39;t be
+too optimistic and carefully plan your time for the project.</li>
+<li>  If you are unsure whether your proposal is suitable, feel free to
+discuss it on our
+<a href="http://groups.google.com/group/scala-language">&quot;scala-language&quot;</a>
+mailing list. We have many community members on our mailing list
+who will quickly answer any of your questions regarding the
+project. Mentors are also constantly monitoring the mailing
+list. Don&#39;t be afraid of asking questions, we enjoy solving
+puzzles like that!</li>
+</ul>
+
+<h3>General Proposal Requirements</h3>
+
+<p>The proposal will be submitted via the standard web-interface at
+<a href="https://summerofcode.withgoogle.com/">https://summerofcode.withgoogle.com/</a>,
+therefore plain text is the best way to go. We expect your application
+to be in the range of 700-1500 words. Anything less than that will
+probably not contain enough information for us to determine whether
+you are the right person for the job.</p>
+
+<p>Your proposal should contain at least the following information, but
+feel free to include anything that you think is relevant:</p>
+
+<ul>
+<li>  Please include your name (weird as it may be, people do forget
+about it)</li>
+<li>  Title of your proposal</li>
+<li>  Abstract of your proposal</li>
+<li>  Detailed description of your idea including explanation on why is
+it innovative (maybe you already have some prototype?), what
+contribution do you expect to make to the Scala community and why
+do you think your project is needed, a rough plan of your
+development and possible architecture sketches.</li>
+<li>  Description of previous work, existing solutions (links to
+prototypes, bibliography are more than welcome!)</li>
+<li>  Write us about yourself and convince us that you are the right
+person for the job (linking to your resume/CV is good but not
+sufficient)
+
+<ul>
+<li>  Mention the details of your academic studies, any previous
+work, internships</li>
+<li>  Any relevant skills that will help you to achieve the goal
+(programming languages, frameworks)?</li>
+<li>  Any previous open-source projects (or even previous GSoC) you
+have contributed to?</li>
+<li>  Do you plan to have any other commitments during SoC that may
+affect you work? Any vacations/holidays planned? Please be
+specific as much as you can.</li>
+</ul></li>
+<li>  If you apply to more than one GSoC project, especially if you also apply
+for a project in another organization, specify which project has your
+preference. In case two organizations choose to accept your applications,
+we can then give you the project that is most important to you.
+Preferring the project of another organization will <em>not</em> influence our
+decision whether to accept your application.</li>
+<li>  Contact details (<strong>very important!</strong>)</li>
+</ul>
+
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div class="contents">Contents</div>
+              <div id="toc"></div>
+              <br/>
+              <div class="alert-info">
+                <a href="/contribute/documentation.html#updating_scalalangorg"><p><strong>Problem with this page?</strong>
+                Please help us fix it!</p></a>
+              </div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

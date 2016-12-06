@@ -1,83 +1,246 @@
 <!DOCTYPE html>
 <html>
-
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Microvessel Chaste : An add-on for modelling microvessels with Chaste.">
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
     <title>Microvessel Chaste</title>
-  </head>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
   <body>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/jmsgrogan/MicrovesselChaste">View on GitHub</a>
 
-          <h1 id="project_title">Microvessel Chaste</h1>
-          <h2 id="project_tagline">An add-on for modelling microvessels with Chaste.</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/jmsgrogan/MicrovesselChaste/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/jmsgrogan/MicrovesselChaste/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <p><img src="http://people.maths.ox.ac.uk/grogan/images/landing.png" alt="landing_image"></p>
-
-<h3>
-<a id="features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h3>
-
-<ul>
-<li>2D and 3D on- and off-lattice agent based models of cells and microvessels</li>
-<li>Integration with <a href="http://www.cs.ox.ac.uk/chaste/">Chaste</a>
-</li>
-<li>Blood flow with haematocrit partitioning, structural adaptation and regression</li>
-<li>Sprouting angiogenesis</li>
-<li>Nutrient transport PDEs solved using finite difference or finite element methods</li>
+<div class="splash">
+  <div class="darkblue-overlay">&nbsp;</div>
+  <div class="container">
+    <div class="row">
+      <div class="span12">
+        <div class="scala-logo">
+          <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
 </ul>
 
-<h3>
-<a id="example-problems" class="anchor" href="#example-problems" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example Problems</h3>
-
-<p>A selection of sample problems are covered on the <a href="https://github.com/jmsgrogan/MicrovesselChaste/wiki">project wiki</a>. <em>Project contributor access is currently required.</em></p>
-
-<h3>
-<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h3>
-
-<p>Installation instructions are on the project <a href="https://github.com/jmsgrogan/MicrovesselChaste">README</a>. <em>Project contributor access is currently required.</em></p>
-
-<h3>
-<a id="support" class="anchor" href="#support" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support</h3>
-
-<p>First, read the <a href="https://github.com/jmsgrogan/MicrovesselChaste/wiki">project wiki</a>. Please visit the <a href="http://www.cs.ox.ac.uk/chaste/">Chaste</a> website for mailing list details.</p>
-
-<h3>
-<a id="acknowledgements" class="anchor" href="#acknowledgements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Acknowledgements</h3>
-
-<p>This project has received funding from the European Union's Seventh Framework Programme
-for research, technological development and demonstration 
-under grant agreement No 600841.</p>
-      </section>
+      </div>
     </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Microvessel Chaste maintained by <a href="https://github.com/jmsgrogan">jmsgrogan</a></p>
-        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
-      </footer>
+    <div class="row">
+      <div class="span12">
+        <div class="splash-text ontop">
+          <h2 style="font-weight: 700;">Microvessel Chaste</h2>
+          <p class="splash-pitch">
+            A Chaste plug-in library for 3D spatial modelling of vascularized tissue, including discrete cells and vessels, PDE solvers, meshing and geometry tools.
+          </p>
+          <a class="learn-more-btn" href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Learn More</a>
+          <p>&nbsp;</p>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+
+ <div class="bullet-point-box">
+
+  <div class="bullet-row-1-wrap">
+    <div class="container">
+      <div class="row">
+        <div class="span4 bullet-point" id="java-interop">
+          <h3>Network Analysis</h3>
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials/TestPythonBuildVesselNetworkTutorial.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/hex_networkr.png" alt="" /></a>
+          <p>Generate artificial networks.</p>
+        </div>
+        <div class="span4 bullet-point" id="type-inference">
+          <h3>Blood Flow</h3>
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials/TestPythonBiologicalNetworkLiteratePaper.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/blood_flowr.png" alt="" /></a>
+          <p>1-D models of blood flow.</p>
+        </div>
+        <div class="span4 bullet-point" id="concurrency-distribution">
+          <h3>Chemical Transport</h3>
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials/TestPythonLatticeBasedAngiogenesisTutorial.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/chemicalr.png" alt="" /></a>
+          <p>Reaction-diffusion equations.</p>
+        </div>
+      </div>
+      <div class="code-snippet-arrow"></div>
+    </div>
+  </div>
+
+  <div id="code-snippet-row1">
+    <div class="container">
+      <div class="row">
+      </div>
+    </div>
+  </div>
+
+  <div class="bullet-row-2-wrap">
+    <div class="container">
+      <div class="row">
+        <div class="span4 bullet-point" id="traits">
+          <h3>Angiogenesis</h3>
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials/TestPythonOffLatticeAngiogenesisLiteratePaper.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/angior.png" alt="" /></a>
+          <p>Sprouting angiogenesis using lattice and off-lattice models.</p>
+        </div>
+        <div class="span4 bullet-point" id="pattern-matching">
+          <h3>Discrete Cells</h3>
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials/TestPythonLatticeBasedAngiogenesisTutorial.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/discrete_cellsr.png" alt="" /></a>
+          <p>Cell cycle progression based on sub-cellular ODE models.</p>
+        </div>
+        <div class="span4 bullet-point" id="higher-order-functions">
+          <h3>Geometry and Meshing</h3>
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials/TestPythonOffLatticeAngiogenesisLiteratePaper.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/meshingr.png" alt="" /></a>
+          <p>Geometry manipulation and meshing for finite element analysis.</p>
+        </div>
+      </div>
+      <div class="code-snippet-arrow"></div>
+    </div>
+  </div>
+
+  <div id="code-snippet-row2">
+    <div class="container">
+      <div class="row">
+      </div>
+    </div>
+  </div>
+
+  <div class="where-to-learn-more">
+    <div class="container">
+      <div class="row">
+        <div class="span12">
+          <a class="learn-more-btn" href="https://jmsgrogan.github.io/MicrovesselChaste/documentation">Learn More</a>
+          <p>or visit the <a class="italicize" href="https://jmsgrogan.github.io/MicrovesselChaste/documentation">Microvessel Chaste Documentation</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
 
     
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
 
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
   </body>
 </html>
+

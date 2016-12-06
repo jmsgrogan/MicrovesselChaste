@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Test Biological Network Literate Paper | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Test Biological Network Literate Paper</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <div class="row">
+      <div class="span12">
+          <div class="main-page-column" style="width: 100%;">
+            
+            <p>This tutorial is automatically generated from the file test/tutorials//TestBiologicalNetworkLiteratePaper.hpp.
+Note that the code is given in full at the bottom of the page.</p>
+
+<h1>A Biological Network Demo</h1>
+
+<h2>The Test</h2>
+
+<p>Start by introducing the necessary header files. The first contain functionality for setting up unit tests,
+smart pointer tools and output management,</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;vector&gt;
+#include "SmartPointers.hpp"
+#include "FileFinder.hpp"
+#include "OutputFileHandler.hpp"
+#include "AbstractCellBasedWithTimingsTestSuite.hpp"
+#include "RandomNumberGenerator.hpp"
+</span></code></pre></div>
+<p>dimensional analysis,</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "DimensionalChastePoint.hpp"
+#include "UnitCollection.hpp"
+#include "Owen11Parameters.hpp"
+#include "Secomb04Parameters.hpp"
+#include "GenericParameters.hpp"
+#include "ParameterCollection.hpp"
+#include "BaseUnits.hpp"
+</span></code></pre></div>
+<p>vessel networks,</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "VesselNode.hpp"
+#include "VesselNetwork.hpp"
+#include "VesselNetworkReader.hpp"
+</span></code></pre></div>
+<p>cells,</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "CancerCellMutationState.hpp"
+#include "StalkCellMutationState.hpp"
+#include "QuiescentCancerCellMutationState.hpp"
+#include "WildTypeCellMutationState.hpp"
+#include "Owen11CellPopulationGenerator.hpp"
+#include "Owen2011TrackingModifier.hpp"
+#include "CaBasedCellPopulation.hpp"
+#include "ApoptoticCellKiller.hpp"
+</span></code></pre></div>
+<p>flow,</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "VesselImpedanceCalculator.hpp"
+#include "FlowSolver.hpp"
+#include "ConstantHaematocritSolver.hpp"
+#include "StructuralAdaptationSolver.hpp"
+#include "WallShearStressCalculator.hpp"
+#include "MechanicalStimulusCalculator.hpp"
+#include "MetabolicStimulusCalculator.hpp"
+#include "ShrinkingStimulusCalculator.hpp"
+#include "ViscosityCalculator.hpp"
+</span></code></pre></div>
+<p>grids and PDEs,</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "RegularGrid.hpp"
+#include "FiniteDifferenceSolver.hpp"
+#include "CellBasedDiscreteSource.hpp"
+#include "VesselBasedDiscreteSource.hpp"
+#include "CellStateDependentDiscreteSource.hpp"
+#include "DiscreteContinuumBoundaryCondition.hpp"
+#include "LinearSteadyStateDiffusionReactionPde.hpp"
+</span></code></pre></div>
+<p>angiogenesis and regression,</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "OffLatticeSproutingRule.hpp"
+#include "OffLatticeMigrationRule.hpp"
+#include "AngiogenesisSolver.hpp"
+#include "WallShearStressBasedRegressionSolver.hpp"
+</span></code></pre></div>
+<p>classes for managing the simulation,</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "MicrovesselSolver.hpp"
+#include "MicrovesselSimulationModifier.hpp"
+#include "OnLatticeSimulation.hpp"
+</span></code></pre></div>
+<p>Visualization</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "MicrovesselVtkScene.hpp"
+#include "VtkSceneMicrovesselModifier.hpp"
+</span></code></pre></div>
+<p>This should appear last.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "PetscSetupAndFinalize.hpp"
+</span><span class="k">class</span> <span class="nc">TestLatticeBasedAngiogenesisLiteratePaper</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AbstractCellBasedWithTimingsTestSuite</span>
+<span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="kt">void</span> <span class="n">Test3dLatticeBased</span><span class="p">()</span> <span class="k">throw</span> <span class="p">(</span><span class="n">Exception</span><span class="p">)</span>
+    <span class="p">{</span>
+</code></pre></div>
+<p>Set up output file management and seed the random number generator.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">MAKE_PTR_ARGS</span><span class="p">(</span><span class="n">OutputFileHandler</span><span class="p">,</span> <span class="n">p_handler</span><span class="p">,</span> <span class="p">(</span><span class="s">"TestBiologicalNetworkLiteratePaper"</span><span class="p">));</span>
+        <span class="n">RandomNumberGenerator</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Reseed</span><span class="p">(</span><span class="mi">12345</span><span class="p">);</span>
+</code></pre></div>
+<p>This component uses explicit dimensions for all quantities, but interfaces with solvers which take
+non-dimensional inputs. The <code>BaseUnits</code> singleton takes time, length and mass reference scales to
+allow non-dimensionalisation when sending quantities to external solvers and re-dimensionalisation of
+results. For our purposes microns for length and hours for time are suitable base units.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">reference_length</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">time</span><span class="o">&gt;</span> <span class="n">reference_time</span><span class="p">(</span><span class="mf">1.0</span><span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">hours</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">concentration</span><span class="o">&gt;</span> <span class="n">reference_concentration</span><span class="p">(</span><span class="mf">1.e-6</span><span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">mole_per_metre_cubed</span><span class="p">);</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceLengthScale</span><span class="p">(</span><span class="n">reference_length</span><span class="p">);</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceTimeScale</span><span class="p">(</span><span class="n">reference_time</span><span class="p">);</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceConcentrationScale</span><span class="p">(</span><span class="n">reference_concentration</span><span class="p">);</span>
+</code></pre></div>
+<p>Read a vessel network derived from biological images from file</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNetworkReader</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_vessel_reader</span> <span class="o">=</span>
+                <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNetworkReader</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">VesselNetworkReader</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="p">);</span>
+
+        <span class="n">FileFinder</span> <span class="n">file_finder</span> <span class="o">=</span> <span class="n">FileFinder</span><span class="p">(</span><span class="s">"/projects/MicrovesselChaste/test/data/bio_original.vtp"</span><span class="p">,</span> <span class="n">RelativeTo</span><span class="o">::</span><span class="n">ChasteSourceRoot</span><span class="p">);</span>
+        <span class="n">p_vessel_reader</span><span class="o">-&gt;</span><span class="n">SetFileName</span><span class="p">(</span><span class="n">file_finder</span><span class="p">.</span><span class="n">GetAbsolutePath</span><span class="p">());</span>
+        <span class="n">p_vessel_reader</span><span class="o">-&gt;</span><span class="n">SetMergeCoincidentPoints</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_vessel_reader</span><span class="o">-&gt;</span><span class="n">SetTargetSegmentLength</span><span class="p">(</span><span class="mf">40.0e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNetwork</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span>  <span class="n">p_network</span> <span class="o">=</span> <span class="n">p_vessel_reader</span><span class="o">-&gt;</span><span class="n">Read</span><span class="p">();</span>
+</code></pre></div>
+<p>The vessel network may contain short vessels due to image processing artifacts,
+we remove any vessels that are on the order of a single cell length and are not connected
+to other vessels at both ends. Note that units are explicitly specified for all quantities. It is
+ok to allow some small disconnected regions to remain for our purposes.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">short_vessel_cutoff</span> <span class="o">=</span> <span class="mf">40.0e-6</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">;</span>
+        <span class="n">bool</span> <span class="n">remove_end_vessels_only</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">RemoveShortVessels</span><span class="p">(</span><span class="n">short_vessel_cutoff</span><span class="p">,</span> <span class="n">remove_end_vessels_only</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">UpdateAll</span><span class="p">();</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">MergeCoincidentNodes</span><span class="p">();</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">UpdateAll</span><span class="p">();</span>
+</code></pre></div>
+<p>Write the modified network to file for inspection</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s">"cleaned_network.vtp"</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">MicrovesselVtkScene</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_scene</span> <span class="o">=</span> <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">MicrovesselVtkScene</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">MicrovesselVtkScene</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">SetIsInteractive</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">GetVesselNetworkActorGenerator</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetEdgeSize</span><span class="p">(</span><span class="mf">20.0</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">Start</span><span class="p">();</span>
+
+</code></pre></div>
+<p>Simulating tumour growth for the entire network would be prohibitive for this tutorial, so
+we sample a small region. We can use some geometry tools to help.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Part</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_cylinder</span> <span class="o">=</span> <span class="n">Part</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">centre</span><span class="p">(</span><span class="mf">2300.0</span><span class="p">,</span> <span class="mf">2300.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">radius</span> <span class="o">=</span> <span class="mf">600.0e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">;</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">depth</span> <span class="o">=</span> <span class="mf">205.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">;</span>
+        <span class="n">p_cylinder</span><span class="o">-&gt;</span><span class="n">AddCylinder</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">centre</span><span class="p">,</span> <span class="mi">24</span><span class="p">);</span>
+        <span class="n">p_cylinder</span><span class="o">-&gt;</span><span class="n">BooleanWithNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s">"cleaned_cut_network.vtp"</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">Start</span><span class="p">();</span>
+</code></pre></div>
+<p>We are ready to simulate tumour growth and angiogenesis. We will use a regular lattice for
+this purpose. We size and position the lattice according to the bounds of the vessel network.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">bbox</span><span class="p">;</span>
+        <span class="n">bbox</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="mf">1500.0</span><span class="p">,</span> <span class="mf">1600.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">));</span>
+        <span class="n">bbox</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="mf">3100.0</span><span class="p">,</span> <span class="mf">3000.0</span><span class="p">,</span> <span class="mf">300.0</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">));</span>
+</code></pre></div>
+<p>Set up the lattice (grid), we will use the same dimensions as <a href="http://www.ncbi.nlm.nih.gov/pubmed/21363914">Owen et al. 2011</a>.
+Note that we are using hard-coded parameters from that paper. You can see the values by inspecting <code>Owen11Parameters.cpp</code>.
+Alternatively each parameter supports the <code>&lt;&lt;</code> operator for streaming. When we get the value of the parameter by doing
+<code>Owen11Parameters::mpLatticeSpacing-&gt;GetValue(&quot;User&quot;)</code> a record is kept that this parameter has been used in the simulation.
+A record of all parameters used in a simulation can be dumped to file on completion, as will be shown below.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">RegularGrid</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_grid</span> <span class="o">=</span> <span class="n">RegularGrid</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">grid_spacing</span> <span class="o">=</span> <span class="mf">40.0e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">;</span>
+        <span class="n">p_grid</span><span class="o">-&gt;</span><span class="n">SetSpacing</span><span class="p">(</span><span class="n">grid_spacing</span><span class="p">);</span>
+</code></pre></div>
+<p>We can use the built-in dimensional analysis functionality to get the network extents in terms of grid units</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">c_vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">botom_front_left</span> <span class="o">=</span>  <span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">GetLocation</span><span class="p">(</span><span class="n">grid_spacing</span><span class="p">);</span>
+        <span class="n">c_vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">top_back_right</span> <span class="o">=</span>  <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">GetLocation</span><span class="p">(</span><span class="n">grid_spacing</span><span class="p">);</span>
+        <span class="n">c_vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">extents</span> <span class="o">=</span> <span class="n">top_back_right</span> <span class="o">-</span> <span class="n">botom_front_left</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span> <span class="n">grid_extents</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">idx</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">idx</span><span class="o">&lt;</span><span class="mi">3</span> <span class="p">;</span> <span class="n">idx</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">grid_extents</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">floor</span><span class="p">(</span><span class="n">extents</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">p_grid</span><span class="o">-&gt;</span><span class="n">SetExtents</span><span class="p">(</span><span class="n">grid_extents</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Translate</span><span class="p">(</span><span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="o">-</span><span class="mf">1500.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1600.0</span><span class="p">,</span> <span class="o">+</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">));</span>
+</code></pre></div>
+<p>We can write the lattice to file for quick visualization with Paraview. Rendering of this and subsequent images is performed
+using standard Paraview operations, not detailed here.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">p_grid</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">SetRegularGrid</span><span class="p">(</span><span class="n">p_grid</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">Start</span><span class="p">();</span>
+</code></pre></div>
+<p>Next we set the inflow and outflow boundary conditions for blood flow. Because the network connectivity
+is relatively low we assign all vessels near the top of the domain (z coord) as inflows and the bottom
+as outflows.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">idx</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">idx</span><span class="o">&lt;</span><span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNodes</span><span class="p">().</span><span class="n">size</span><span class="p">();</span> <span class="n">idx</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNodes</span><span class="p">()[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetNumberOfSegments</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNodes</span><span class="p">()[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">rGetLocation</span><span class="p">().</span><span class="n">GetLocation</span><span class="p">(</span><span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span>
+                        <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">GetLocation</span><span class="p">(</span><span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">80.0</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNodes</span><span class="p">()[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsInputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+                    <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNodes</span><span class="p">()[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpInletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+                <span class="p">}</span>
+                <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNodes</span><span class="p">()[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">rGetLocation</span><span class="p">().</span><span class="n">GetLocation</span><span class="p">(</span><span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span>
+                        <span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">GetLocation</span><span class="p">(</span><span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">80.0</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNodes</span><span class="p">()[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsOutputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+                    <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNodes</span><span class="p">()[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpOutletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+</code></pre></div>
+<p>Again, we can write the network to file for visualization</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s">"flow_boundary_labelled_network.vtp"</span><span class="p">);</span>
+</code></pre></div>
+<p>Next, set up the cell populations. We will setup up a population similar to that used in the Owen et al., 2011 paper. That is, a grid
+filled with normal cells and a tumour spheroid in the middle. We can use a generator for this purpose. The generator simply sets up
+the population using conventional Cell Based Chaste methods.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Owen11CellPopulationGenerator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_cell_population_genenerator</span> <span class="o">=</span> <span class="n">Owen11CellPopulationGenerator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_cell_population_genenerator</span><span class="o">-&gt;</span><span class="n">SetRegularGrid</span><span class="p">(</span><span class="n">p_grid</span><span class="p">);</span>
+        <span class="n">p_cell_population_genenerator</span><span class="o">-&gt;</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">tumour_radius</span><span class="p">(</span><span class="mf">300.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">p_cell_population_genenerator</span><span class="o">-&gt;</span><span class="n">SetTumourRadius</span><span class="p">(</span><span class="n">tumour_radius</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">CaBasedCellPopulation</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_cell_population</span> <span class="o">=</span> <span class="n">p_cell_population_genenerator</span><span class="o">-&gt;</span><span class="n">Update</span><span class="p">();</span>
+
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">SetCellPopulation</span><span class="p">(</span><span class="n">p_cell_population</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">GetCellPopulationActorGenerator</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetDiscreteColorTransferFunction</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">AddRGBPoint</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">GetCellPopulationActorGenerator</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPointSize</span><span class="p">(</span><span class="mf">20.0</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">GetCellPopulationActorGenerator</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetColorByCellMutationState</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">ResetRenderer</span><span class="p">();</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">Start</span><span class="p">();</span>
+</code></pre></div>
+<p>Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">LinearSteadyStateDiffusionReactionPde</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_oxygen_pde</span> <span class="o">=</span> <span class="n">LinearSteadyStateDiffusionReactionPde</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_oxygen_pde</span><span class="o">-&gt;</span><span class="n">SetIsotropicDiffusionConstant</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpOxygenDiffusivity</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">CellBasedDiscreteSource</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_cell_oxygen_sink</span> <span class="o">=</span> <span class="n">CellBasedDiscreteSource</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_cell_oxygen_sink</span><span class="o">-&gt;</span><span class="n">SetLinearInUConsumptionRatePerCell</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpCellOxygenConsumptionRate</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">p_oxygen_pde</span><span class="o">-&gt;</span><span class="n">AddDiscreteSource</span><span class="p">(</span><span class="n">p_cell_oxygen_sink</span><span class="p">);</span>
+</code></pre></div>
+<p>Vessels release oxygen depending on their haematocrit levels</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselBasedDiscreteSource</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_vessel_oxygen_source</span> <span class="o">=</span> <span class="n">VesselBasedDiscreteSource</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">solubility</span><span class="o">&gt;</span> <span class="n">oxygen_solubility_at_stp</span> <span class="o">=</span> <span class="n">Secomb04Parameters</span><span class="o">::</span><span class="n">mpOxygenVolumetricSolubility</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">)</span> <span class="o">*</span>
+                <span class="n">GenericParameters</span><span class="o">::</span><span class="n">mpGasConcentrationAtStp</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">concentration</span><span class="o">&gt;</span> <span class="n">vessel_oxygen_concentration</span> <span class="o">=</span> <span class="n">oxygen_solubility_at_stp</span> <span class="o">*</span>
+                <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpReferencePartialPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">);</span>
+        <span class="n">p_vessel_oxygen_source</span><span class="o">-&gt;</span><span class="n">SetReferenceConcentration</span><span class="p">(</span><span class="n">vessel_oxygen_concentration</span><span class="p">);</span>
+        <span class="n">p_vessel_oxygen_source</span><span class="o">-&gt;</span><span class="n">SetVesselPermeability</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpVesselOxygenPermeability</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">p_vessel_oxygen_source</span><span class="o">-&gt;</span><span class="n">SetReferenceHaematocrit</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpInflowHaematocrit</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">p_oxygen_pde</span><span class="o">-&gt;</span><span class="n">AddDiscreteSource</span><span class="p">(</span><span class="n">p_vessel_oxygen_source</span><span class="p">);</span>
+</code></pre></div>
+<p>Set up a finite difference solver and pass it the pde and grid.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">FiniteDifferenceSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_oxygen_solver</span> <span class="o">=</span> <span class="n">FiniteDifferenceSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_oxygen_solver</span><span class="o">-&gt;</span><span class="n">SetPde</span><span class="p">(</span><span class="n">p_oxygen_pde</span><span class="p">);</span>
+        <span class="n">p_oxygen_solver</span><span class="o">-&gt;</span><span class="n">SetLabel</span><span class="p">(</span><span class="s">"oxygen"</span><span class="p">);</span>
+        <span class="n">p_oxygen_solver</span><span class="o">-&gt;</span><span class="n">SetGrid</span><span class="p">(</span><span class="n">p_grid</span><span class="p">);</span>
+</code></pre></div>
+<p>The rate of VEGF release depends on the cell type and intracellular VEGF levels, so we need a more detailed
+type of discrete source.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">LinearSteadyStateDiffusionReactionPde</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_vegf_pde</span> <span class="o">=</span> <span class="n">LinearSteadyStateDiffusionReactionPde</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_vegf_pde</span><span class="o">-&gt;</span><span class="n">SetIsotropicDiffusionConstant</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpVegfDiffusivity</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">p_vegf_pde</span><span class="o">-&gt;</span><span class="n">SetContinuumLinearInUTerm</span><span class="p">(</span><span class="o">-</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpVegfDecayRate</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+</code></pre></div>
+<p>Set up a map for different release rates depending on cell type. Also include a threshold intracellular VEGF below which
+there is no release.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">CellStateDependentDiscreteSource</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_normal_and_quiescent_cell_source</span> <span class="o">=</span>
+                <span class="n">CellStateDependentDiscreteSource</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="p">,</span> <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">concentration_flow_rate</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">normal_and_quiescent_cell_rates</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="p">,</span> <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">concentration</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">normal_and_quiescent_cell_rate_thresholds</span><span class="p">;</span>
+        <span class="n">MAKE_PTR</span><span class="p">(</span><span class="n">QuiescentCancerCellMutationState</span><span class="p">,</span> <span class="n">p_quiescent_cancer_state</span><span class="p">);</span>
+        <span class="n">MAKE_PTR</span><span class="p">(</span><span class="n">WildTypeCellMutationState</span><span class="p">,</span> <span class="n">p_normal_cell_state</span><span class="p">);</span>
+        <span class="n">normal_and_quiescent_cell_rates</span><span class="p">[</span><span class="n">p_normal_cell_state</span><span class="o">-&gt;</span><span class="n">GetColour</span><span class="p">()]</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpCellVegfSecretionRate</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">);</span>
+        <span class="n">normal_and_quiescent_cell_rate_thresholds</span><span class="p">[</span><span class="n">p_normal_cell_state</span><span class="o">-&gt;</span><span class="n">GetColour</span><span class="p">()]</span> <span class="o">=</span> <span class="mf">0.27</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">mole_per_metre_cubed</span><span class="p">;</span>
+        <span class="n">normal_and_quiescent_cell_rates</span><span class="p">[</span><span class="n">p_quiescent_cancer_state</span><span class="o">-&gt;</span><span class="n">GetColour</span><span class="p">()]</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpCellVegfSecretionRate</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">);</span>
+        <span class="n">normal_and_quiescent_cell_rate_thresholds</span><span class="p">[</span><span class="n">p_quiescent_cancer_state</span><span class="o">-&gt;</span><span class="n">GetColour</span><span class="p">()]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">mole_per_metre_cubed</span><span class="p">;</span>
+        <span class="n">p_normal_and_quiescent_cell_source</span><span class="o">-&gt;</span><span class="n">SetStateRateMap</span><span class="p">(</span><span class="n">normal_and_quiescent_cell_rates</span><span class="p">);</span>
+        <span class="n">p_normal_and_quiescent_cell_source</span><span class="o">-&gt;</span><span class="n">SetLabelName</span><span class="p">(</span><span class="s">"VEGF"</span><span class="p">);</span>
+        <span class="n">p_normal_and_quiescent_cell_source</span><span class="o">-&gt;</span><span class="n">SetStateRateThresholdMap</span><span class="p">(</span><span class="n">normal_and_quiescent_cell_rate_thresholds</span><span class="p">);</span>
+        <span class="n">p_vegf_pde</span><span class="o">-&gt;</span><span class="n">AddDiscreteSource</span><span class="p">(</span><span class="n">p_normal_and_quiescent_cell_source</span><span class="p">);</span>
+</code></pre></div>
+<p>Add a vessel related VEGF sink</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselBasedDiscreteSource</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_vessel_vegf_sink</span> <span class="o">=</span> <span class="n">VesselBasedDiscreteSource</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_vessel_vegf_sink</span><span class="o">-&gt;</span><span class="n">SetReferenceConcentration</span><span class="p">(</span><span class="mf">0.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">mole_per_metre_cubed</span><span class="p">);</span>
+        <span class="n">p_vessel_vegf_sink</span><span class="o">-&gt;</span><span class="n">SetVesselPermeability</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpVesselVegfPermeability</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">p_vegf_pde</span><span class="o">-&gt;</span><span class="n">AddDiscreteSource</span><span class="p">(</span><span class="n">p_vessel_vegf_sink</span><span class="p">);</span>
+</code></pre></div>
+<p>Set up a finite difference solver as before.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">FiniteDifferenceSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_vegf_solver</span> <span class="o">=</span> <span class="n">FiniteDifferenceSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_vegf_solver</span><span class="o">-&gt;</span><span class="n">SetPde</span><span class="p">(</span><span class="n">p_vegf_pde</span><span class="p">);</span>
+        <span class="n">p_vegf_solver</span><span class="o">-&gt;</span><span class="n">SetLabel</span><span class="p">(</span><span class="s">"VEGF_Extracellular"</span><span class="p">);</span>
+        <span class="n">p_vegf_solver</span><span class="o">-&gt;</span><span class="n">SetGrid</span><span class="p">(</span><span class="n">p_grid</span><span class="p">);</span>
+</code></pre></div>
+<p>Next set up the flow problem. Assign a blood plasma viscosity to the vessels. The actual viscosity will
+depend on haematocrit and diameter. This solver manages growth and shrinkage of vessels in response to
+flow related stimuli.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">large_vessel_radius</span><span class="p">(</span><span class="mf">25.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentRadii</span><span class="p">(</span><span class="n">large_vessel_radius</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">dynamic_viscosity</span><span class="o">&gt;</span> <span class="n">viscosity</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpPlasmaViscosity</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentViscosity</span><span class="p">(</span><span class="n">viscosity</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s">"flow_boundary_labelled_network_flow.vtp"</span><span class="p">);</span>
+</code></pre></div>
+<p>Set up the pre- and post flow calculators.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_impedance_calculator</span> <span class="o">=</span> <span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ConstantHaematocritSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_haematocrit_calculator</span> <span class="o">=</span> <span class="n">ConstantHaematocritSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_haematocrit_calculator</span><span class="o">-&gt;</span><span class="n">SetHaematocrit</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpInflowHaematocrit</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">WallShearStressCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_wss_calculator</span> <span class="o">=</span> <span class="n">WallShearStressCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">MechanicalStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_mech_stimulus_calculator</span> <span class="o">=</span> <span class="n">MechanicalStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">MetabolicStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_metabolic_stim_calculator</span> <span class="o">=</span> <span class="n">MetabolicStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ShrinkingStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_shrinking_stimulus_calculator</span> <span class="o">=</span> <span class="n">ShrinkingStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ViscosityCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_viscosity_calculator</span> <span class="o">=</span> <span class="n">ViscosityCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+</code></pre></div>
+<p>Set up and configure the structural adaptation solver.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">StructuralAdaptationSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_structural_adaptation_solver</span> <span class="o">=</span> <span class="n">StructuralAdaptationSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetTolerance</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetMaxIterations</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetTimeIncrement</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpVesselRadiusUpdateTimestep</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPreFlowSolveCalculator</span><span class="p">(</span><span class="n">p_impedance_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_haematocrit_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_wss_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_metabolic_stim_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_mech_stimulus_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_viscosity_calculator</span><span class="p">);</span>
+</code></pre></div>
+<p>Set up a regression solver.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">WallShearStressBasedRegressionSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_regression_solver</span> <span class="o">=</span>
+                <span class="n">WallShearStressBasedRegressionSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+</code></pre></div>
+<p>Set up an angiogenesis solver and add sprouting and migration rules.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">AngiogenesisSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_angiogenesis_solver</span> <span class="o">=</span> <span class="n">AngiogenesisSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">OffLatticeSproutingRule</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_sprouting_rule</span> <span class="o">=</span> <span class="n">OffLatticeSproutingRule</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_sprouting_rule</span><span class="o">-&gt;</span><span class="n">SetSproutingProbability</span><span class="p">(</span><span class="mf">1.e-4</span><span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">per_second</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">OffLatticeMigrationRule</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_migration_rule</span> <span class="o">=</span> <span class="n">OffLatticeMigrationRule</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_migration_rule</span><span class="o">-&gt;</span><span class="n">SetChemotacticStrength</span><span class="p">(</span><span class="mf">0.1</span><span class="p">);</span>
+        <span class="n">p_migration_rule</span><span class="o">-&gt;</span><span class="n">SetAttractionStrength</span><span class="p">(</span><span class="mf">0.5</span><span class="p">);</span>
+
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">velocity</span><span class="o">&gt;</span> <span class="n">sprout_velocity</span><span class="p">(</span><span class="mf">40.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="o">/</span><span class="n">unit</span><span class="o">::</span><span class="n">hours</span><span class="p">);</span>
+        <span class="n">p_migration_rule</span><span class="o">-&gt;</span><span class="n">SetSproutingVelocity</span><span class="p">(</span><span class="n">sprout_velocity</span><span class="p">);</span>
+        <span class="n">p_angiogenesis_solver</span><span class="o">-&gt;</span><span class="n">SetMigrationRule</span><span class="p">(</span><span class="n">p_migration_rule</span><span class="p">);</span>
+        <span class="n">p_angiogenesis_solver</span><span class="o">-&gt;</span><span class="n">SetSproutingRule</span><span class="p">(</span><span class="n">p_sprouting_rule</span><span class="p">);</span>
+        <span class="n">p_sprouting_rule</span><span class="o">-&gt;</span><span class="n">SetDiscreteContinuumSolver</span><span class="p">(</span><span class="n">p_vegf_solver</span><span class="p">);</span>
+        <span class="n">p_migration_rule</span><span class="o">-&gt;</span><span class="n">SetDiscreteContinuumSolver</span><span class="p">(</span><span class="n">p_vegf_solver</span><span class="p">);</span>
+        <span class="c1">//p_angiogenesis_solver-&gt;SetVesselGrid(p_grid);
+</span>        <span class="n">p_angiogenesis_solver</span><span class="o">-&gt;</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+</code></pre></div>
+<p>The microvessel solver will manage all aspects of the vessel solve.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">MicrovesselSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_microvessel_solver</span> <span class="o">=</span> <span class="n">MicrovesselSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_microvessel_solver</span><span class="o">-&gt;</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">p_microvessel_solver</span><span class="o">-&gt;</span><span class="n">SetOutputFrequency</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="n">p_microvessel_solver</span><span class="o">-&gt;</span><span class="n">AddDiscreteContinuumSolver</span><span class="p">(</span><span class="n">p_oxygen_solver</span><span class="p">);</span>
+        <span class="n">p_microvessel_solver</span><span class="o">-&gt;</span><span class="n">AddDiscreteContinuumSolver</span><span class="p">(</span><span class="n">p_vegf_solver</span><span class="p">);</span>
+        <span class="n">p_microvessel_solver</span><span class="o">-&gt;</span><span class="n">SetStructuralAdaptationSolver</span><span class="p">(</span><span class="n">p_structural_adaptation_solver</span><span class="p">);</span>
+        <span class="n">p_microvessel_solver</span><span class="o">-&gt;</span><span class="n">SetRegressionSolver</span><span class="p">(</span><span class="n">p_regression_solver</span><span class="p">);</span>
+        <span class="n">p_microvessel_solver</span><span class="o">-&gt;</span><span class="n">SetAngiogenesisSolver</span><span class="p">(</span><span class="n">p_angiogenesis_solver</span><span class="p">);</span>
+</code></pre></div>
+<p>Set up real time plotting.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="c1">//p_scene-&gt;GetCellPopulationActorGenerator()-&gt;SetColorByCellData(true);
+</span>        <span class="c1">//p_scene-&gt;GetCellPopulationActorGenerator()-&gt;SetDataLabel("oxygen");
+</span>        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VtkSceneMicrovesselModifier</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_scene_modifier</span> <span class="o">=</span>
+                <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VtkSceneMicrovesselModifier</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">VtkSceneMicrovesselModifier</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">);</span>
+        <span class="n">p_scene_modifier</span><span class="o">-&gt;</span><span class="n">SetVtkScene</span><span class="p">(</span><span class="n">p_scene</span><span class="p">);</span>
+        <span class="n">p_scene_modifier</span><span class="o">-&gt;</span><span class="n">SetUpdateFrequency</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+        <span class="n">p_microvessel_solver</span><span class="o">-&gt;</span><span class="n">AddMicrovesselModifier</span><span class="p">(</span><span class="n">p_scene_modifier</span><span class="p">);</span>
+</code></pre></div>
+<p>The microvessel solution modifier will link the vessel and cell solvers. We need to explicitly tell is
+which extracellular fields to update based on PDE solutions.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">MicrovesselSimulationModifier</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_microvessel_modifier</span> <span class="o">=</span> <span class="n">MicrovesselSimulationModifier</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_microvessel_modifier</span><span class="o">-&gt;</span><span class="n">SetMicrovesselSolver</span><span class="p">(</span><span class="n">p_microvessel_solver</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">update_labels</span><span class="p">;</span>
+        <span class="n">update_labels</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">"oxygen"</span><span class="p">);</span>
+        <span class="n">update_labels</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">"VEGF_Extracellular"</span><span class="p">);</span>
+        <span class="n">p_microvessel_modifier</span><span class="o">-&gt;</span><span class="n">SetCellDataUpdateLabels</span><span class="p">(</span><span class="n">update_labels</span><span class="p">);</span>
+</code></pre></div>
+<p>The full simulation is run as a typical Cell Based Chaste simulation</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">OnLatticeSimulation</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">simulator</span><span class="p">(</span><span class="o">*</span><span class="n">p_cell_population</span><span class="p">);</span>
+        <span class="n">simulator</span><span class="p">.</span><span class="n">AddSimulationModifier</span><span class="p">(</span><span class="n">p_microvessel_modifier</span><span class="p">);</span>
+</code></pre></div>
+<p>Add a killer to remove apoptotic cells</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ApoptoticCellKiller</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_apoptotic_cell_killer</span><span class="p">(</span><span class="k">new</span> <span class="n">ApoptoticCellKiller</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="n">p_cell_population</span><span class="p">.</span><span class="n">get</span><span class="p">()));</span>
+        <span class="n">simulator</span><span class="p">.</span><span class="n">AddCellKiller</span><span class="p">(</span><span class="n">p_apoptotic_cell_killer</span><span class="p">);</span>
+</code></pre></div>
+<p>Add another modifier for updating cell cycle quantities.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Owen2011TrackingModifier</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_owen11_tracking_modifier</span><span class="p">(</span><span class="k">new</span> <span class="n">Owen2011TrackingModifier</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">);</span>
+        <span class="n">simulator</span><span class="p">.</span><span class="n">AddSimulationModifier</span><span class="p">(</span><span class="n">p_owen11_tracking_modifier</span><span class="p">);</span>
+</code></pre></div>
+<p>Set up the remainder of the simulation</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">simulator</span><span class="p">.</span><span class="n">SetOutputDirectory</span><span class="p">(</span><span class="s">"TestBiologicalNetworkLiteratePaper"</span><span class="p">);</span>
+        <span class="n">simulator</span><span class="p">.</span><span class="n">SetSamplingTimestepMultiple</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="n">simulator</span><span class="p">.</span><span class="n">SetDt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">);</span>
+</code></pre></div>
+<p>This end time corresponds to roughly 10 minutes run-time on a desktop PC. Increase it or decrease as
+preferred. The end time used in Owen et al. 2011 is 4800 hours.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">simulator</span><span class="p">.</span><span class="n">SetEndTime</span><span class="p">(</span><span class="mf">200.0</span><span class="p">);</span>
+</code></pre></div>
+<p>Do the solve.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">simulator</span><span class="p">.</span><span class="n">Solve</span><span class="p">();</span>
+</code></pre></div>
+<p>Dump the parameters to file for inspection.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">        <span class="n">ParameterCollection</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">DumpToFile</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s">"parameter_collection.xml"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+</code></pre></div>
+<h1>Code</h1>
+
+<p>The full code is given below</p>
+
+<h2>File name <code>TestBiologicalNetworkLiteratePaper.hpp</code></h2>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;vector&gt;
+#include "SmartPointers.hpp"
+#include "FileFinder.hpp"
+#include "OutputFileHandler.hpp"
+#include "AbstractCellBasedWithTimingsTestSuite.hpp"
+#include "RandomNumberGenerator.hpp"
+#include "DimensionalChastePoint.hpp"
+#include "UnitCollection.hpp"
+#include "Owen11Parameters.hpp"
+#include "Secomb04Parameters.hpp"
+#include "GenericParameters.hpp"
+#include "ParameterCollection.hpp"
+#include "BaseUnits.hpp"
+#include "VesselNode.hpp"
+#include "VesselNetwork.hpp"
+#include "VesselNetworkReader.hpp"
+#include "CancerCellMutationState.hpp"
+#include "StalkCellMutationState.hpp"
+#include "QuiescentCancerCellMutationState.hpp"
+#include "WildTypeCellMutationState.hpp"
+#include "Owen11CellPopulationGenerator.hpp"
+#include "Owen2011TrackingModifier.hpp"
+#include "CaBasedCellPopulation.hpp"
+#include "ApoptoticCellKiller.hpp"
+#include "VesselImpedanceCalculator.hpp"
+#include "FlowSolver.hpp"
+#include "ConstantHaematocritSolver.hpp"
+#include "StructuralAdaptationSolver.hpp"
+#include "WallShearStressCalculator.hpp"
+#include "MechanicalStimulusCalculator.hpp"
+#include "MetabolicStimulusCalculator.hpp"
+#include "ShrinkingStimulusCalculator.hpp"
+#include "ViscosityCalculator.hpp"
+#include "RegularGrid.hpp"
+#include "FiniteDifferenceSolver.hpp"
+#include "CellBasedDiscreteSource.hpp"
+#include "VesselBasedDiscreteSource.hpp"
+#include "CellStateDependentDiscreteSource.hpp"
+#include "DiscreteContinuumBoundaryCondition.hpp"
+#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "OffLatticeSproutingRule.hpp"
+#include "OffLatticeMigrationRule.hpp"
+#include "AngiogenesisSolver.hpp"
+#include "WallShearStressBasedRegressionSolver.hpp"
+#include "MicrovesselSolver.hpp"
+#include "MicrovesselSimulationModifier.hpp"
+#include "OnLatticeSimulation.hpp"
+#include "MicrovesselVtkScene.hpp"
+#include "VtkSceneMicrovesselModifier.hpp"
+#include "PetscSetupAndFinalize.hpp"
+</span><span class="k">class</span> <span class="nc">TestLatticeBasedAngiogenesisLiteratePaper</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AbstractCellBasedWithTimingsTestSuite</span>
+<span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="kt">void</span> <span class="n">Test3dLatticeBased</span><span class="p">()</span> <span class="k">throw</span> <span class="p">(</span><span class="n">Exception</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">MAKE_PTR_ARGS</span><span class="p">(</span><span class="n">OutputFileHandler</span><span class="p">,</span> <span class="n">p_handler</span><span class="p">,</span> <span class="p">(</span><span class="s">"TestBiologicalNetworkLiteratePaper"</span><span class="p">));</span>
+        <span class="n">RandomNumberGenerator</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Reseed</span><span class="p">(</span><span class="mi">12345</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">reference_length</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">time</span><span class="o">&gt;</span> <span class="n">reference_time</span><span class="p">(</span><span class="mf">1.0</span><span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">hours</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">concentration</span><span class="o">&gt;</span> <span class="n">reference_concentration</span><span class="p">(</span><span class="mf">1.e-6</span><span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">mole_per_metre_cubed</span><span class="p">);</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceLengthScale</span><span class="p">(</span><span class="n">reference_length</span><span class="p">);</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceTimeScale</span><span class="p">(</span><span class="n">reference_time</span><span class="p">);</span>
+        <span class="n">BaseUnits</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetReferenceConcentrationScale</span><span class="p">(</span><span class="n">reference_concentration</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNetworkReader</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_vessel_reader</span> <span class="o">=</span>
+                <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNetworkReader</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">VesselNetworkReader</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="p">);</span>
+
+        <span class="n">FileFinder</span> <span class="n">file_finder</span> <span class="o">=</span> <span class="n">FileFinder</span><span class="p">(</span><span class="s">"/projects/MicrovesselChaste/test/data/bio_original.vtp"</span><span class="p">,</span> <span class="n">RelativeTo</span><span class="o">::</span><span class="n">ChasteSourceRoot</span><span class="p">);</span>
+        <span class="n">p_vessel_reader</span><span class="o">-&gt;</span><span class="n">SetFileName</span><span class="p">(</span><span class="n">file_finder</span><span class="p">.</span><span class="n">GetAbsolutePath</span><span class="p">());</span>
+        <span class="n">p_vessel_reader</span><span class="o">-&gt;</span><span class="n">SetMergeCoincidentPoints</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_vessel_reader</span><span class="o">-&gt;</span><span class="n">SetTargetSegmentLength</span><span class="p">(</span><span class="mf">40.0e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselNetwork</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span>  <span class="n">p_network</span> <span class="o">=</span> <span class="n">p_vessel_reader</span><span class="o">-&gt;</span><span class="n">Read</span><span class="p">();</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">short_vessel_cutoff</span> <span class="o">=</span> <span class="mf">40.0e-6</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">;</span>
+        <span class="n">bool</span> <span class="n">remove_end_vessels_only</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">RemoveShortVessels</span><span class="p">(</span><span class="n">short_vessel_cutoff</span><span class="p">,</span> <span class="n">remove_end_vessels_only</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">UpdateAll</span><span class="p">();</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">MergeCoincidentNodes</span><span class="p">();</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">UpdateAll</span><span class="p">();</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s">"cleaned_network.vtp"</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">MicrovesselVtkScene</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_scene</span> <span class="o">=</span> <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">MicrovesselVtkScene</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">MicrovesselVtkScene</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">SetIsInteractive</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">GetVesselNetworkActorGenerator</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetEdgeSize</span><span class="p">(</span><span class="mf">20.0</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">Start</span><span class="p">();</span>
+
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Part</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_cylinder</span> <span class="o">=</span> <span class="n">Part</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">centre</span><span class="p">(</span><span class="mf">2300.0</span><span class="p">,</span> <span class="mf">2300.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">radius</span> <span class="o">=</span> <span class="mf">600.0e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">;</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">depth</span> <span class="o">=</span> <span class="mf">205.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">;</span>
+        <span class="n">p_cylinder</span><span class="o">-&gt;</span><span class="n">AddCylinder</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">centre</span><span class="p">,</span> <span class="mi">24</span><span class="p">);</span>
+        <span class="n">p_cylinder</span><span class="o">-&gt;</span><span class="n">BooleanWithNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s">"cleaned_cut_network.vtp"</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">Start</span><span class="p">();</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">bbox</span><span class="p">;</span>
+        <span class="n">bbox</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="mf">1500.0</span><span class="p">,</span> <span class="mf">1600.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">));</span>
+        <span class="n">bbox</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="mf">3100.0</span><span class="p">,</span> <span class="mf">3000.0</span><span class="p">,</span> <span class="mf">300.0</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">));</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">RegularGrid</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_grid</span> <span class="o">=</span> <span class="n">RegularGrid</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">grid_spacing</span> <span class="o">=</span> <span class="mf">40.0e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">;</span>
+        <span class="n">p_grid</span><span class="o">-&gt;</span><span class="n">SetSpacing</span><span class="p">(</span><span class="n">grid_spacing</span><span class="p">);</span>
+        <span class="n">c_vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">botom_front_left</span> <span class="o">=</span>  <span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">GetLocation</span><span class="p">(</span><span class="n">grid_spacing</span><span class="p">);</span>
+        <span class="n">c_vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">top_back_right</span> <span class="o">=</span>  <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">GetLocation</span><span class="p">(</span><span class="n">grid_spacing</span><span class="p">);</span>
+        <span class="n">c_vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">extents</span> <span class="o">=</span> <span class="n">top_back_right</span> <span class="o">-</span> <span class="n">botom_front_left</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span> <span class="n">grid_extents</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">idx</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">idx</span><span class="o">&lt;</span><span class="mi">3</span> <span class="p">;</span> <span class="n">idx</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">grid_extents</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">floor</span><span class="p">(</span><span class="n">extents</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">p_grid</span><span class="o">-&gt;</span><span class="n">SetExtents</span><span class="p">(</span><span class="n">grid_extents</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Translate</span><span class="p">(</span><span class="n">DimensionalChastePoint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="o">-</span><span class="mf">1500.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1600.0</span><span class="p">,</span> <span class="o">+</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">));</span>
+        <span class="n">p_grid</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">SetRegularGrid</span><span class="p">(</span><span class="n">p_grid</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">Start</span><span class="p">();</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">idx</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">idx</span><span class="o">&lt;</span><span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNodes</span><span class="p">().</span><span class="n">size</span><span class="p">();</span> <span class="n">idx</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNodes</span><span class="p">()[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetNumberOfSegments</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNodes</span><span class="p">()[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">rGetLocation</span><span class="p">().</span><span class="n">GetLocation</span><span class="p">(</span><span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span>
+                        <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">GetLocation</span><span class="p">(</span><span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">80.0</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNodes</span><span class="p">()[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsInputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+                    <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNodes</span><span class="p">()[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpInletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+                <span class="p">}</span>
+                <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNodes</span><span class="p">()[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">rGetLocation</span><span class="p">().</span><span class="n">GetLocation</span><span class="p">(</span><span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span>
+                        <span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">GetLocation</span><span class="p">(</span><span class="mf">1.e-6</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">metres</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">80.0</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNodes</span><span class="p">()[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetIsOutputNode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+                    <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">GetNodes</span><span class="p">()[</span><span class="n">idx</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpOutletPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s">"flow_boundary_labelled_network.vtp"</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Owen11CellPopulationGenerator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_cell_population_genenerator</span> <span class="o">=</span> <span class="n">Owen11CellPopulationGenerator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_cell_population_genenerator</span><span class="o">-&gt;</span><span class="n">SetRegularGrid</span><span class="p">(</span><span class="n">p_grid</span><span class="p">);</span>
+        <span class="n">p_cell_population_genenerator</span><span class="o">-&gt;</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">tumour_radius</span><span class="p">(</span><span class="mf">300.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">p_cell_population_genenerator</span><span class="o">-&gt;</span><span class="n">SetTumourRadius</span><span class="p">(</span><span class="n">tumour_radius</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">CaBasedCellPopulation</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_cell_population</span> <span class="o">=</span> <span class="n">p_cell_population_genenerator</span><span class="o">-&gt;</span><span class="n">Update</span><span class="p">();</span>
+
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">SetCellPopulation</span><span class="p">(</span><span class="n">p_cell_population</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">GetCellPopulationActorGenerator</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetDiscreteColorTransferFunction</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">AddRGBPoint</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">GetCellPopulationActorGenerator</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPointSize</span><span class="p">(</span><span class="mf">20.0</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">GetCellPopulationActorGenerator</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetColorByCellMutationState</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">ResetRenderer</span><span class="p">();</span>
+        <span class="n">p_scene</span><span class="o">-&gt;</span><span class="n">Start</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">LinearSteadyStateDiffusionReactionPde</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_oxygen_pde</span> <span class="o">=</span> <span class="n">LinearSteadyStateDiffusionReactionPde</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_oxygen_pde</span><span class="o">-&gt;</span><span class="n">SetIsotropicDiffusionConstant</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpOxygenDiffusivity</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">CellBasedDiscreteSource</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_cell_oxygen_sink</span> <span class="o">=</span> <span class="n">CellBasedDiscreteSource</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_cell_oxygen_sink</span><span class="o">-&gt;</span><span class="n">SetLinearInUConsumptionRatePerCell</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpCellOxygenConsumptionRate</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">p_oxygen_pde</span><span class="o">-&gt;</span><span class="n">AddDiscreteSource</span><span class="p">(</span><span class="n">p_cell_oxygen_sink</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselBasedDiscreteSource</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_vessel_oxygen_source</span> <span class="o">=</span> <span class="n">VesselBasedDiscreteSource</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">solubility</span><span class="o">&gt;</span> <span class="n">oxygen_solubility_at_stp</span> <span class="o">=</span> <span class="n">Secomb04Parameters</span><span class="o">::</span><span class="n">mpOxygenVolumetricSolubility</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">)</span> <span class="o">*</span>
+                <span class="n">GenericParameters</span><span class="o">::</span><span class="n">mpGasConcentrationAtStp</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">concentration</span><span class="o">&gt;</span> <span class="n">vessel_oxygen_concentration</span> <span class="o">=</span> <span class="n">oxygen_solubility_at_stp</span> <span class="o">*</span>
+                <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpReferencePartialPressure</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">);</span>
+        <span class="n">p_vessel_oxygen_source</span><span class="o">-&gt;</span><span class="n">SetReferenceConcentration</span><span class="p">(</span><span class="n">vessel_oxygen_concentration</span><span class="p">);</span>
+        <span class="n">p_vessel_oxygen_source</span><span class="o">-&gt;</span><span class="n">SetVesselPermeability</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpVesselOxygenPermeability</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">p_vessel_oxygen_source</span><span class="o">-&gt;</span><span class="n">SetReferenceHaematocrit</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpInflowHaematocrit</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">p_oxygen_pde</span><span class="o">-&gt;</span><span class="n">AddDiscreteSource</span><span class="p">(</span><span class="n">p_vessel_oxygen_source</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">FiniteDifferenceSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_oxygen_solver</span> <span class="o">=</span> <span class="n">FiniteDifferenceSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_oxygen_solver</span><span class="o">-&gt;</span><span class="n">SetPde</span><span class="p">(</span><span class="n">p_oxygen_pde</span><span class="p">);</span>
+        <span class="n">p_oxygen_solver</span><span class="o">-&gt;</span><span class="n">SetLabel</span><span class="p">(</span><span class="s">"oxygen"</span><span class="p">);</span>
+        <span class="n">p_oxygen_solver</span><span class="o">-&gt;</span><span class="n">SetGrid</span><span class="p">(</span><span class="n">p_grid</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">LinearSteadyStateDiffusionReactionPde</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_vegf_pde</span> <span class="o">=</span> <span class="n">LinearSteadyStateDiffusionReactionPde</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_vegf_pde</span><span class="o">-&gt;</span><span class="n">SetIsotropicDiffusionConstant</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpVegfDiffusivity</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">p_vegf_pde</span><span class="o">-&gt;</span><span class="n">SetContinuumLinearInUTerm</span><span class="p">(</span><span class="o">-</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpVegfDecayRate</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">CellStateDependentDiscreteSource</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_normal_and_quiescent_cell_source</span> <span class="o">=</span>
+                <span class="n">CellStateDependentDiscreteSource</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="p">,</span> <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">concentration_flow_rate</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">normal_and_quiescent_cell_rates</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="p">,</span> <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">concentration</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">normal_and_quiescent_cell_rate_thresholds</span><span class="p">;</span>
+        <span class="n">MAKE_PTR</span><span class="p">(</span><span class="n">QuiescentCancerCellMutationState</span><span class="p">,</span> <span class="n">p_quiescent_cancer_state</span><span class="p">);</span>
+        <span class="n">MAKE_PTR</span><span class="p">(</span><span class="n">WildTypeCellMutationState</span><span class="p">,</span> <span class="n">p_normal_cell_state</span><span class="p">);</span>
+        <span class="n">normal_and_quiescent_cell_rates</span><span class="p">[</span><span class="n">p_normal_cell_state</span><span class="o">-&gt;</span><span class="n">GetColour</span><span class="p">()]</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpCellVegfSecretionRate</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">);</span>
+        <span class="n">normal_and_quiescent_cell_rate_thresholds</span><span class="p">[</span><span class="n">p_normal_cell_state</span><span class="o">-&gt;</span><span class="n">GetColour</span><span class="p">()]</span> <span class="o">=</span> <span class="mf">0.27</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">mole_per_metre_cubed</span><span class="p">;</span>
+        <span class="n">normal_and_quiescent_cell_rates</span><span class="p">[</span><span class="n">p_quiescent_cancer_state</span><span class="o">-&gt;</span><span class="n">GetColour</span><span class="p">()]</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpCellVegfSecretionRate</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">);</span>
+        <span class="n">normal_and_quiescent_cell_rate_thresholds</span><span class="p">[</span><span class="n">p_quiescent_cancer_state</span><span class="o">-&gt;</span><span class="n">GetColour</span><span class="p">()]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">mole_per_metre_cubed</span><span class="p">;</span>
+        <span class="n">p_normal_and_quiescent_cell_source</span><span class="o">-&gt;</span><span class="n">SetStateRateMap</span><span class="p">(</span><span class="n">normal_and_quiescent_cell_rates</span><span class="p">);</span>
+        <span class="n">p_normal_and_quiescent_cell_source</span><span class="o">-&gt;</span><span class="n">SetLabelName</span><span class="p">(</span><span class="s">"VEGF"</span><span class="p">);</span>
+        <span class="n">p_normal_and_quiescent_cell_source</span><span class="o">-&gt;</span><span class="n">SetStateRateThresholdMap</span><span class="p">(</span><span class="n">normal_and_quiescent_cell_rate_thresholds</span><span class="p">);</span>
+        <span class="n">p_vegf_pde</span><span class="o">-&gt;</span><span class="n">AddDiscreteSource</span><span class="p">(</span><span class="n">p_normal_and_quiescent_cell_source</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselBasedDiscreteSource</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_vessel_vegf_sink</span> <span class="o">=</span> <span class="n">VesselBasedDiscreteSource</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_vessel_vegf_sink</span><span class="o">-&gt;</span><span class="n">SetReferenceConcentration</span><span class="p">(</span><span class="mf">0.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">mole_per_metre_cubed</span><span class="p">);</span>
+        <span class="n">p_vessel_vegf_sink</span><span class="o">-&gt;</span><span class="n">SetVesselPermeability</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpVesselVegfPermeability</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">p_vegf_pde</span><span class="o">-&gt;</span><span class="n">AddDiscreteSource</span><span class="p">(</span><span class="n">p_vessel_vegf_sink</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">FiniteDifferenceSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_vegf_solver</span> <span class="o">=</span> <span class="n">FiniteDifferenceSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_vegf_solver</span><span class="o">-&gt;</span><span class="n">SetPde</span><span class="p">(</span><span class="n">p_vegf_pde</span><span class="p">);</span>
+        <span class="n">p_vegf_solver</span><span class="o">-&gt;</span><span class="n">SetLabel</span><span class="p">(</span><span class="s">"VEGF_Extracellular"</span><span class="p">);</span>
+        <span class="n">p_vegf_solver</span><span class="o">-&gt;</span><span class="n">SetGrid</span><span class="p">(</span><span class="n">p_grid</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">length</span><span class="o">&gt;</span> <span class="n">large_vessel_radius</span><span class="p">(</span><span class="mf">25.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentRadii</span><span class="p">(</span><span class="n">large_vessel_radius</span><span class="p">);</span>
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">dynamic_viscosity</span><span class="o">&gt;</span> <span class="n">viscosity</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpPlasmaViscosity</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">SetSegmentViscosity</span><span class="p">(</span><span class="n">viscosity</span><span class="p">);</span>
+        <span class="n">p_network</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s">"flow_boundary_labelled_network_flow.vtp"</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_impedance_calculator</span> <span class="o">=</span> <span class="n">VesselImpedanceCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ConstantHaematocritSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_haematocrit_calculator</span> <span class="o">=</span> <span class="n">ConstantHaematocritSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_haematocrit_calculator</span><span class="o">-&gt;</span><span class="n">SetHaematocrit</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpInflowHaematocrit</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">WallShearStressCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_wss_calculator</span> <span class="o">=</span> <span class="n">WallShearStressCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">MechanicalStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_mech_stimulus_calculator</span> <span class="o">=</span> <span class="n">MechanicalStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">MetabolicStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_metabolic_stim_calculator</span> <span class="o">=</span> <span class="n">MetabolicStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ShrinkingStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_shrinking_stimulus_calculator</span> <span class="o">=</span> <span class="n">ShrinkingStimulusCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ViscosityCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_viscosity_calculator</span> <span class="o">=</span> <span class="n">ViscosityCalculator</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">StructuralAdaptationSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_structural_adaptation_solver</span> <span class="o">=</span> <span class="n">StructuralAdaptationSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetTolerance</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetMaxIterations</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">SetTimeIncrement</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">::</span><span class="n">mpVesselRadiusUpdateTimestep</span><span class="o">-&gt;</span><span class="n">GetValue</span><span class="p">(</span><span class="s">"User"</span><span class="p">));</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPreFlowSolveCalculator</span><span class="p">(</span><span class="n">p_impedance_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_haematocrit_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_wss_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_metabolic_stim_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_mech_stimulus_calculator</span><span class="p">);</span>
+        <span class="n">p_structural_adaptation_solver</span><span class="o">-&gt;</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">p_viscosity_calculator</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">WallShearStressBasedRegressionSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_regression_solver</span> <span class="o">=</span>
+                <span class="n">WallShearStressBasedRegressionSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">AngiogenesisSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_angiogenesis_solver</span> <span class="o">=</span> <span class="n">AngiogenesisSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">OffLatticeSproutingRule</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_sprouting_rule</span> <span class="o">=</span> <span class="n">OffLatticeSproutingRule</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_sprouting_rule</span><span class="o">-&gt;</span><span class="n">SetSproutingProbability</span><span class="p">(</span><span class="mf">1.e-4</span><span class="o">*</span> <span class="n">unit</span><span class="o">::</span><span class="n">per_second</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">OffLatticeMigrationRule</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_migration_rule</span> <span class="o">=</span> <span class="n">OffLatticeMigrationRule</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_migration_rule</span><span class="o">-&gt;</span><span class="n">SetChemotacticStrength</span><span class="p">(</span><span class="mf">0.1</span><span class="p">);</span>
+        <span class="n">p_migration_rule</span><span class="o">-&gt;</span><span class="n">SetAttractionStrength</span><span class="p">(</span><span class="mf">0.5</span><span class="p">);</span>
+
+        <span class="n">units</span><span class="o">::</span><span class="n">quantity</span><span class="o">&lt;</span><span class="n">unit</span><span class="o">::</span><span class="n">velocity</span><span class="o">&gt;</span> <span class="n">sprout_velocity</span><span class="p">(</span><span class="mf">40.0</span><span class="o">*</span><span class="n">unit</span><span class="o">::</span><span class="n">microns</span><span class="o">/</span><span class="n">unit</span><span class="o">::</span><span class="n">hours</span><span class="p">);</span>
+        <span class="n">p_migration_rule</span><span class="o">-&gt;</span><span class="n">SetSproutingVelocity</span><span class="p">(</span><span class="n">sprout_velocity</span><span class="p">);</span>
+        <span class="n">p_angiogenesis_solver</span><span class="o">-&gt;</span><span class="n">SetMigrationRule</span><span class="p">(</span><span class="n">p_migration_rule</span><span class="p">);</span>
+        <span class="n">p_angiogenesis_solver</span><span class="o">-&gt;</span><span class="n">SetSproutingRule</span><span class="p">(</span><span class="n">p_sprouting_rule</span><span class="p">);</span>
+        <span class="n">p_sprouting_rule</span><span class="o">-&gt;</span><span class="n">SetDiscreteContinuumSolver</span><span class="p">(</span><span class="n">p_vegf_solver</span><span class="p">);</span>
+        <span class="n">p_migration_rule</span><span class="o">-&gt;</span><span class="n">SetDiscreteContinuumSolver</span><span class="p">(</span><span class="n">p_vegf_solver</span><span class="p">);</span>
+        <span class="c1">//p_angiogenesis_solver-&gt;SetVesselGrid(p_grid);
+</span>        <span class="n">p_angiogenesis_solver</span><span class="o">-&gt;</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">MicrovesselSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_microvessel_solver</span> <span class="o">=</span> <span class="n">MicrovesselSolver</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_microvessel_solver</span><span class="o">-&gt;</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">p_network</span><span class="p">);</span>
+        <span class="n">p_microvessel_solver</span><span class="o">-&gt;</span><span class="n">SetOutputFrequency</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="n">p_microvessel_solver</span><span class="o">-&gt;</span><span class="n">AddDiscreteContinuumSolver</span><span class="p">(</span><span class="n">p_oxygen_solver</span><span class="p">);</span>
+        <span class="n">p_microvessel_solver</span><span class="o">-&gt;</span><span class="n">AddDiscreteContinuumSolver</span><span class="p">(</span><span class="n">p_vegf_solver</span><span class="p">);</span>
+        <span class="n">p_microvessel_solver</span><span class="o">-&gt;</span><span class="n">SetStructuralAdaptationSolver</span><span class="p">(</span><span class="n">p_structural_adaptation_solver</span><span class="p">);</span>
+        <span class="n">p_microvessel_solver</span><span class="o">-&gt;</span><span class="n">SetRegressionSolver</span><span class="p">(</span><span class="n">p_regression_solver</span><span class="p">);</span>
+        <span class="n">p_microvessel_solver</span><span class="o">-&gt;</span><span class="n">SetAngiogenesisSolver</span><span class="p">(</span><span class="n">p_angiogenesis_solver</span><span class="p">);</span>
+        <span class="c1">//p_scene-&gt;GetCellPopulationActorGenerator()-&gt;SetColorByCellData(true);
+</span>        <span class="c1">//p_scene-&gt;GetCellPopulationActorGenerator()-&gt;SetDataLabel("oxygen");
+</span>        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VtkSceneMicrovesselModifier</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_scene_modifier</span> <span class="o">=</span>
+                <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">VtkSceneMicrovesselModifier</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">VtkSceneMicrovesselModifier</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">);</span>
+        <span class="n">p_scene_modifier</span><span class="o">-&gt;</span><span class="n">SetVtkScene</span><span class="p">(</span><span class="n">p_scene</span><span class="p">);</span>
+        <span class="n">p_scene_modifier</span><span class="o">-&gt;</span><span class="n">SetUpdateFrequency</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+        <span class="n">p_microvessel_solver</span><span class="o">-&gt;</span><span class="n">AddMicrovesselModifier</span><span class="p">(</span><span class="n">p_scene_modifier</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">MicrovesselSimulationModifier</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_microvessel_modifier</span> <span class="o">=</span> <span class="n">MicrovesselSimulationModifier</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+        <span class="n">p_microvessel_modifier</span><span class="o">-&gt;</span><span class="n">SetMicrovesselSolver</span><span class="p">(</span><span class="n">p_microvessel_solver</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">update_labels</span><span class="p">;</span>
+        <span class="n">update_labels</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">"oxygen"</span><span class="p">);</span>
+        <span class="n">update_labels</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">"VEGF_Extracellular"</span><span class="p">);</span>
+        <span class="n">p_microvessel_modifier</span><span class="o">-&gt;</span><span class="n">SetCellDataUpdateLabels</span><span class="p">(</span><span class="n">update_labels</span><span class="p">);</span>
+        <span class="n">OnLatticeSimulation</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">simulator</span><span class="p">(</span><span class="o">*</span><span class="n">p_cell_population</span><span class="p">);</span>
+        <span class="n">simulator</span><span class="p">.</span><span class="n">AddSimulationModifier</span><span class="p">(</span><span class="n">p_microvessel_modifier</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ApoptoticCellKiller</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_apoptotic_cell_killer</span><span class="p">(</span><span class="k">new</span> <span class="n">ApoptoticCellKiller</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="n">p_cell_population</span><span class="p">.</span><span class="n">get</span><span class="p">()));</span>
+        <span class="n">simulator</span><span class="p">.</span><span class="n">AddCellKiller</span><span class="p">(</span><span class="n">p_apoptotic_cell_killer</span><span class="p">);</span>
+        <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Owen2011TrackingModifier</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">p_owen11_tracking_modifier</span><span class="p">(</span><span class="k">new</span> <span class="n">Owen2011TrackingModifier</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">);</span>
+        <span class="n">simulator</span><span class="p">.</span><span class="n">AddSimulationModifier</span><span class="p">(</span><span class="n">p_owen11_tracking_modifier</span><span class="p">);</span>
+        <span class="n">simulator</span><span class="p">.</span><span class="n">SetOutputDirectory</span><span class="p">(</span><span class="s">"TestBiologicalNetworkLiteratePaper"</span><span class="p">);</span>
+        <span class="n">simulator</span><span class="p">.</span><span class="n">SetSamplingTimestepMultiple</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="n">simulator</span><span class="p">.</span><span class="n">SetDt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">);</span>
+        <span class="n">simulator</span><span class="p">.</span><span class="n">SetEndTime</span><span class="p">(</span><span class="mf">200.0</span><span class="p">);</span>
+        <span class="n">simulator</span><span class="p">.</span><span class="n">Solve</span><span class="p">();</span>
+        <span class="n">ParameterCollection</span><span class="o">::</span><span class="n">Instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">DumpToFile</span><span class="p">(</span><span class="n">p_handler</span><span class="o">-&gt;</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s">"parameter_collection.xml"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+</code></pre></div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

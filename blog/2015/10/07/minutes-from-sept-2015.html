@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Minutes from Sept SIP/SLIP Meeting | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/scala-logo-white-sm.png" alt="white Scala logo" /></a>
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Minutes from Sept SIP/SLIP Meeting</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            <div class="article-date">October 7, 2015</div>
+            
+              <div class="written">Written By: <span class="by">Dick Wall</span></div>
+            
+            <h2>SIP/SLIP Meeting, Sept 10th 2015</h2>
+
+<h4>Next Committee Meeting:</h4>
+
+<p>Monday Oct 12th, 4.30pm GMT. <a href="https://plus.google.com/u/5/events/ci1hc0tn9jf0v45a9qdd7a520j8">Google Hangout Event</a></p>
+
+<h4>Video of Sept Meeting</h4>
+
+<p><a href="https://plus.google.com/u/5/events/cvv4in7eq5tf4rus2ve0jodvo5c">Video of last meeting</a></p>
+
+<h2>Opening Matters</h2>
+
+<h3>New Meeting Day</h3>
+
+<p>Due to scheduling conflicts in the committee, future meetings will be held monthly on the <strong>second Monday</strong> of each month, starting on Monday October 12th. The time has not changed and is still 4.30pm GMT.</p>
+
+<h3>SIP/SLIP/Contributor Calendar</h3>
+
+<p>There is now a shared Google calendar with upcoming meetings (and eventually other items of interest to contributors) on it. Please feel free to add it to your Google calendar. The calendar is simply scalaslip@gmail.com if you want to add it.</p>
+
+<h3>Scala Release Schedule</h3>
+
+<p>Several people asked prior to the meeting about the schedule of release dates for 2.12 and 2.13. We will attempt to get more accurate deadlines in place in the next meeting, but for now the feeling is that the time for 2.12 changes is now! 2.13 is still at least a year away and will probably be the target for most SIPs/SLIPs giving plenty of time for careful implementation, testing and trials.</p>
+
+<h2>SIP/SLIP Summary</h2>
+
+<p>A number of SIPs and SLIPs were considered, with the following decisions:</p>
+
+<ul>
+<li>The <a href="https://github.com/scala/slip/issues/3">Backticks in String Interpolation SIP</a> failed to get sufficient support and has been declined (will not be assigned a SIP number). See the video record of the meeting for the arguments for/against that. However, Kevin is invited to coordinate with Som Snytt for SIP 26 (below) to see if anything can be done there.</li>
+<li>The <a href="https://github.com/scala/slip/issues/10">Escaped Quotes in String Interpolation</a> SIP has been assigned SIP number 26, and will be shepherded by Josh Suereth.</li>
+<li><a href="http://docs.scala-lang.org/sips/pending/repeated-byname.html">SIP 24</a> and <a href="http://docs.scala-lang.org/sips/pending/trait-parameters.html">SIP 25</a> are both to be deferred until implementations are available before being considered further. Tracking for these SIPs can be found in <a href="https://github.com/scala/slip/issues/12">Issue 12</a></li>
+<li>Related to By-name functions (SIP 24). Josh and Dick both noted encountering common eagerness bugs in code using the current by-names in Scala, and wanted to open an investigation into by-names in general to see if those might be tackled. <a href="https://github.com/scala/slip/issues/21">A new issue 21</a> tracks that activity.</li>
+<li><a href="https://github.com/scala/slip/blob/master/text/0022-async.md">SLIP 22 - Async</a> is tracked in <a href="https://github.com/scala/slip/issues/22">Issue 22</a>. Seth is to obtain more info about the status of SLIP 22 for the next meeting.</li>
+<li>Either/Validation is proceeding but no SLIP proposal or number yet. Progress can be tracked in <a href="https://github.com/scala/slip/issues/5">Issue 5</a></li>
+<li>Scala IO improvements likewise are just getting started, but can be tracked in <a href="https://github.com/scala/slip/issues/19">Issue 19</a></li>
+<li><a href="https://github.com/scala/slip/blob/master/text/0027-collection-view-redesign.md">SLIP 27</a> has been assigned to a Views redesign proposed by Josh Suereth. Please note that this SLIP is now open for public review for the period of at least one month. This does not block implementation work in the meantime, but may require changes based on the outcome of the public review. The progress of this SLIP will be tracked under <a href="https://github.com/scala/slip/issues/23">Issue 23</a>.</li>
+</ul>
+
+            
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div id="toc"></div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

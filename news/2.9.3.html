@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Scala 2.9.3 is now available! | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Scala 2.9.3 is now available!</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            
+            <div class="article-date">February 28, 2013</div>
+
+<p>We are happy to announce the final release of 2.9.3 in the Scala 2.9.x maintenance series!</p>
+
+<p>This release includes the following improvements:</p>
+
+<ul>
+<li>a backport of the implementation of SIP-14 to Scala 2.9,</li>
+<li>numerous fixes that are leveraged by the Scala IDE to improve stability and responsiveness,</li>
+<li>compiler fixes to allow faster incremental compilation.</li>
+</ul>
+
+<!--break-->
+
+<h3>Scala IDE for Eclipse</h3>
+
+<p>You may install the Scala IDE 3.0-RC1 for Scala 2.9.3 through one of the following update-sites:</p>
+
+<ul>
+<li><a href="http://download.scala-ide.org/sdk/e37/scala29/dev/site/">for Eclipse 3.7 (Indigo)</a></li>
+<li><a href="http://download.scala-ide.org/sdk/e38/scala29/dev/site/">for Eclipse 3.8/4.2 (Juno)</a></li>
+</ul>
+
+<h4>A big thank you to all the contributors!</h4>
+
+<p># | Author
+---: | ---
+15 | <notextile>Philipp Haller</notextile>
+7 | <notextile>Adriaan Moors</notextile>
+7 | <notextile>Martin Odersky</notextile>
+6 | <notextile>Iulian Dragos</notextile>
+5 | <notextile>Paolo Giarrusso</notextile>
+4 | <notextile>James Iry</notextile>
+3 | <notextile>Paul Phillips</notextile>
+3 | <notextile>Josh Suereth</notextile>
+1 | <notextile>David Hall</notextile>
+1 | <notextile>Lukas Rytz</notextile>
+1 | <notextile>Mirco Dotta</notextile>
+1 | <notextile>Viktor Klang</notextile>
+1 | <notextile>Miguel Garcia</notextile>
+1 | <notextile>Nada Amin</notextile>
+1 | <notextile>smessmer</notextile></p>
+
+<h4>Commits and the issues they fixed since v2.9.2</h4>
+
+<p>Issue(s) | Commit | Message
+--- | --- | ---
+<a href="SI-6932">https://issues.scala-lang.org/browse/SI-6932</a> | <a href="4897063">https://github.com/scala/scala/commit/4897063</a> | <notextile>SI-6932 Remove Batchable trait, minor clean-ups, update build</notextile>
+<a href="SI-6932">https://issues.scala-lang.org/browse/SI-6932</a> | <a href="5713c1b">https://github.com/scala/scala/commit/5713c1b</a> | <notextile> Fix SI-6932 by enabling linearization of callback execution for the internal execution context of Future</notextile>
+<a href="SI-6766">https://issues.scala-lang.org/browse/SI-6766</a> | <a href="0bde246">https://github.com/scala/scala/commit/0bde246</a> | <notextile>SI-6766 Create a continuations project in eclipse</notextile>
+<a href="SI-6766">https://issues.scala-lang.org/browse/SI-6766</a> | <a href="a802ba9">https://github.com/scala/scala/commit/a802ba9</a> | <notextile>SI-6766 Makes the -Pcontinuations:enable flag a project specific preference</notextile>
+<a href="SI-6536">https://issues.scala-lang.org/browse/SI-6536</a> | <a href="af03afb">https://github.com/scala/scala/commit/af03afb</a> | <notextile>SI-6536 Cleanup code around determining accessor requirement</notextile>
+<a href="SI-6536">https://issues.scala-lang.org/browse/SI-6536</a> | <a href="2124b9d">https://github.com/scala/scala/commit/2124b9d</a> | <notextile>SI-6536 Generates super accessors X.super[Y].blah when Y is a class</notextile>
+<a href="SI-5958">https://issues.scala-lang.org/browse/SI-5958</a>, <a href="SI-5958">https://issues.scala-lang.org/browse/SI-5958</a> | <a href="61862d2">https://github.com/scala/scala/commit/61862d2</a> | <notextile>SIP-14 backport to 2.9.x</notextile>
+<a href="SI-6188">https://issues.scala-lang.org/browse/SI-6188</a>, <a href="SI-6188">https://issues.scala-lang.org/browse/SI-6188</a> | <a href="32782cd">https://github.com/scala/scala/commit/32782cd</a> | <notextile>SI-6188 backport (ICodeReader wrongly ignored exception handlers)</notextile>
+<a href="SI-5958">https://issues.scala-lang.org/browse/SI-5958</a> | <a href="98b16a6">https://github.com/scala/scala/commit/98b16a6</a> | <notextile>SI-5958 This deserves a stable type - backport to 2.9.x</notextile>
+<a href="SI-6692">https://issues.scala-lang.org/browse/SI-6692</a>, <a href="SI-6692">https://issues.scala-lang.org/browse/SI-6692</a> | <a href="c17b9b4">https://github.com/scala/scala/commit/c17b9b4</a> | <notextile>SI-6692 pickle one more flag bit: EXISTENTIAL</notextile>
+<a href="SI-5314">https://issues.scala-lang.org/browse/SI-5314</a> | <a href="2c00346">https://github.com/scala/scala/commit/2c00346</a> | <notextile>SI-5314 - CPS transform of return statement fails</notextile>
+<a href="SI-6384">https://issues.scala-lang.org/browse/SI-6384</a> | <a href="1b4af44">https://github.com/scala/scala/commit/1b4af44</a> | <notextile>SI-6384 - avoid setting owner of function argument explicitly</notextile>
+<a href="SI-6384">https://issues.scala-lang.org/browse/SI-6384</a> | <a href="3281830">https://github.com/scala/scala/commit/3281830</a> | <notextile>SI-6384 - correct owner of function argument</notextile>
+<a href="SI-6384">https://issues.scala-lang.org/browse/SI-6384</a> | <a href="b3d0a64">https://github.com/scala/scala/commit/b3d0a64</a> | <notextile>SI-6384 - avoid crash due to optimization in 2.10 CPS plugin</notextile>
+<a href="SI-6458">https://issues.scala-lang.org/browse/SI-6458</a> | <a href="340e28a">https://github.com/scala/scala/commit/340e28a</a> | <notextile>Deprecated instrumentation API</notextile>
+<a href="SI-6505">https://issues.scala-lang.org/browse/SI-6505</a> | <a href="e90fd5d">https://github.com/scala/scala/commit/e90fd5d</a> | <notextile>Fixed SI-6505. Respond to ask calls by immediate failure even after compiler shutdown.</notextile>
+<a href="SI-2296">https://issues.scala-lang.org/browse/SI-2296</a>, <a href="SI-6245">https://issues.scala-lang.org/browse/SI-6245</a>, <a href="SI-2296">https://issues.scala-lang.org/browse/SI-2296</a> | <a href="f6a2714">https://github.com/scala/scala/commit/f6a2714</a> | <notextile>Fix for SI-6245 with workaround for SI-2296.</notextile>
+<a href="SI-2296">https://issues.scala-lang.org/browse/SI-2296</a>, <a href="SI-2296">https://issues.scala-lang.org/browse/SI-2296</a> | <a href="de82f9a">https://github.com/scala/scala/commit/de82f9a</a> | <notextile>Overcame trait/protected/java limitation.</notextile>
+<a href="SI-5708">https://issues.scala-lang.org/browse/SI-5708</a> | <a href="39d8e5a">https://github.com/scala/scala/commit/39d8e5a</a> | <notextile>Fix SI-5708. (manually) Cherry-picked from 9d1bc68b78a76a18777a859816bcb1c7f81bf2dd</notextile>
+<a href="SI-4807">https://issues.scala-lang.org/browse/SI-4807</a> | <a href="8e7f44c">https://github.com/scala/scala/commit/8e7f44c</a> | <notextile>Helping Proxy equal itself.</notextile>
+<a href="SI-5632">https://issues.scala-lang.org/browse/SI-5632</a> | <a href="95f0de0">https://github.com/scala/scala/commit/95f0de0</a> | <notextile>Fixes SI-5632 (serialization of large HashTables)</notextile></p>
+
+<h4>Complete commit list!</h4>
+
+<p>sha | Title
+---: | ---
+<a href="4897063">https://github.com/scala/scala/commit/4897063</a> | <notextile>SI-6932 Remove Batchable trait, minor clean-ups, update build</notextile>
+<a href="5713c1b">https://github.com/scala/scala/commit/5713c1b</a> | <notextile> Fix SI-6932 by enabling linearization of callback execution for the internal execution context of Future</notextile>
+<a href="0bde246">https://github.com/scala/scala/commit/0bde246</a> | <notextile>SI-6766 Create a continuations project in eclipse</notextile>
+<a href="a802ba9">https://github.com/scala/scala/commit/a802ba9</a> | <notextile>SI-6766 Makes the -Pcontinuations:enable flag a project specific preference</notextile>
+<a href="7cd9ce3">https://github.com/scala/scala/commit/7cd9ce3</a> | <notextile>update mailmap</notextile>
+<a href="a224bb7">https://github.com/scala/scala/commit/a224bb7</a> | <notextile>binary compatibility compensation</notextile>
+<a href="af03afb">https://github.com/scala/scala/commit/af03afb</a> | <notextile>SI-6536 Cleanup code around determining accessor requirement</notextile>
+<a href="2124b9d">https://github.com/scala/scala/commit/2124b9d</a> | <notextile>SI-6536 Generates super accessors X.super[Y].blah when Y is a class</notextile>
+<a href="f0bc3f7">https://github.com/scala/scala/commit/f0bc3f7</a> | <notextile>use consistent scalac args in quick&amp;strap</notextile>
+<a href="61862d2">https://github.com/scala/scala/commit/61862d2</a> | <notextile>SIP-14 backport to 2.9.x</notextile>
+<a href="32782cd">https://github.com/scala/scala/commit/32782cd</a> | <notextile>SI-6188 backport (ICodeReader wrongly ignored exception handlers)</notextile>
+<a href="98b16a6">https://github.com/scala/scala/commit/98b16a6</a> | <notextile>SI-5958 This deserves a stable type - backport to 2.9.x</notextile>
+<a href="c17b9b4">https://github.com/scala/scala/commit/c17b9b4</a> | <notextile>SI-6692 pickle one more flag bit: EXISTENTIAL</notextile>
+<a href="b1ed32b">https://github.com/scala/scala/commit/b1ed32b</a> | <notextile>eclipse project files are now in src/eclipse</notextile>
+<a href="f028335">https://github.com/scala/scala/commit/f028335</a> | <notextile>show developer guidelines on opening pull request</notextile>
+<a href="b79e6f2">https://github.com/scala/scala/commit/b79e6f2</a> | <notextile>Improve doc comment on adaptTypeOfReturn in CPSAnnotationChecker</notextile>
+<a href="e25e7ab">https://github.com/scala/scala/commit/e25e7ab</a> | <notextile>Simplify the adaptation of types of return expressions</notextile>
+<a href="007eedf">https://github.com/scala/scala/commit/007eedf</a> | <notextile>Revert &quot;Add missing cases in tail return transform&quot;</notextile>
+<a href="e566ab3">https://github.com/scala/scala/commit/e566ab3</a> | <notextile>Add missing cases in tail return transform</notextile>
+<a href="4c5aa9b">https://github.com/scala/scala/commit/4c5aa9b</a> | <notextile>Replace CheckCPSMethodTraverser with additional parameter on transformer methods</notextile>
+<a href="2c00346">https://github.com/scala/scala/commit/2c00346</a> | <notextile>SI-5314 - CPS transform of return statement fails</notextile>
+<a href="1b4af44">https://github.com/scala/scala/commit/1b4af44</a> | <notextile>SI-6384 - avoid setting owner of function argument explicitly</notextile>
+<a href="3281830">https://github.com/scala/scala/commit/3281830</a> | <notextile>SI-6384 - correct owner of function argument</notextile>
+<a href="b3d0a64">https://github.com/scala/scala/commit/b3d0a64</a> | <notextile>SI-6384 - avoid crash due to optimization in 2.10 CPS plugin</notextile>
+<a href="340e28a">https://github.com/scala/scala/commit/340e28a</a> | <notextile>Deprecated instrumentation API</notextile>
+<a href="e90fd5d">https://github.com/scala/scala/commit/e90fd5d</a> | <notextile>Fixed SI-6505. Respond to ask calls by immediate failure even after compiler shutdown.</notextile>
+<a href="f98198e">https://github.com/scala/scala/commit/f98198e</a> | <notextile>Fixed instrumentation code so that it can deal with:</notextile>
+<a href="ed9e44b">https://github.com/scala/scala/commit/ed9e44b</a> | <notextile>Changed implementation comments from /** <em>/ to /</em> */, so ScalaDoc remains reasonable</notextile>
+<a href="f6a2714">https://github.com/scala/scala/commit/f6a2714</a> | <notextile>Fix for SI-6245 with workaround for SI-2296.</notextile>
+<a href="be9bab1">https://github.com/scala/scala/commit/be9bab1</a> | <notextile>Fixes binary repo push for new typesafe repo layouts.</notextile>
+<a href="f2caa77">https://github.com/scala/scala/commit/f2caa77</a> | <notextile>Allow nested calls to <code>askForResponse</code> in the presentation compiler.</notextile>
+<a href="e8e07aa">https://github.com/scala/scala/commit/e8e07aa</a> | <notextile>Removed previosuly uncommented code, added more diagnosis output to REPL. (cherry picked from commit bcf1d9a5f5c1d0319b51cd3dcce9ecebdeb12feb)</notextile>
+<a href="321d3f5">https://github.com/scala/scala/commit/321d3f5</a> | <notextile>Made instrumenter more robust by looking at tokens</notextile>
+<a href="a082aa2">https://github.com/scala/scala/commit/a082aa2</a> | <notextile>Removed dead code. (cherry picked from commit c03777b3acb3a4e921a27b58322d198e6d6c58f5)</notextile>
+<a href="694037d">https://github.com/scala/scala/commit/694037d</a> | <notextile>Manual Backport of 3415436b67ae7889a11ce2537576ca49b328aecc.</notextile>
+<a href="dc1e21e">https://github.com/scala/scala/commit/dc1e21e</a> | <notextile>Added more variants to achieve getLinkPos</notextile>
+<a href="10c4d82">https://github.com/scala/scala/commit/10c4d82</a> | <notextile>Two fixes for the worksheet instrumenter</notextile>
+<a href="6c54783">https://github.com/scala/scala/commit/6c54783</a> | <notextile>Backport.</notextile>
+<a href="6a8b913">https://github.com/scala/scala/commit/6a8b913</a> | <notextile>Initial cut at running binary compatibility tests on the 2.9.x series</notextile>
+<a href="e3bb6ba">https://github.com/scala/scala/commit/e3bb6ba</a> | <notextile>Also check that Stream.toSeq gives the right result.</notextile>
+<a href="33cdba5">https://github.com/scala/scala/commit/33cdba5</a> | <notextile>Improve test for Stream.withFilter.{map,flatMap}</notextile>
+<a href="15ed4f0">https://github.com/scala/scala/commit/15ed4f0</a> | <notextile>Cleanup testcase</notextile>
+<a href="096a08e">https://github.com/scala/scala/commit/096a08e</a> | <notextile>Remove commented out code</notextile>
+<a href="53130d2">https://github.com/scala/scala/commit/53130d2</a> | <notextile>Make Stream.withFilter.{map,flatMap} run in constant stack space</notextile>
+<a href="4c80b61">https://github.com/scala/scala/commit/4c80b61</a> | <notextile>worksheet support on 2.9</notextile>
+<a href="af26e24">https://github.com/scala/scala/commit/af26e24</a> | <notextile>Fix for exponential compile time in specialization.</notextile>
+<a href="8b8ebaa">https://github.com/scala/scala/commit/8b8ebaa</a> | <notextile>Revert &quot;Merge pull request #749 from phaller/backport/cps-ticket-1681&quot;</notextile>
+<a href="a0ed8c8">https://github.com/scala/scala/commit/a0ed8c8</a> | <notextile>Backport of fix for CPS ticket 1681</notextile>
+<a href="de82f9a">https://github.com/scala/scala/commit/de82f9a</a> | <notextile>Overcame trait/protected/java limitation.</notextile>
+<a href="f0b3613">https://github.com/scala/scala/commit/f0b3613</a> | <notextile>Removed dead local variable, per @hubertp&#39;s comment.</notextile>
+<a href="38f114f">https://github.com/scala/scala/commit/38f114f</a> | <notextile>Don&#39;t forget to execute pending interrupt requests when shutting down the presentation compiler.(cherry picked from commit 0d70c22279daa78b3fe58b5ea1be7f87b7079834)</notextile>
+<a href="39d8e5a">https://github.com/scala/scala/commit/39d8e5a</a> | <notextile>Fix SI-5708. (manually) Cherry-picked from 9d1bc68b78a76a18777a859816bcb1c7f81bf2dd</notextile>
+<a href="0c99e79">https://github.com/scala/scala/commit/0c99e79</a> | <notextile>CPS: test case for ticket 1684</notextile>
+<a href="ded6e2d">https://github.com/scala/scala/commit/ded6e2d</a> | <notextile>Backport of the 2.10 continuations plugin to 2.9</notextile>
+<a href="8e7f44c">https://github.com/scala/scala/commit/8e7f44c</a> | <notextile>Helping Proxy equal itself.</notextile>
+<a href="4531693">https://github.com/scala/scala/commit/4531693</a> | <notextile>Bumped build number for future 2.9.x work.</notextile>
+<a href="95f0de0">https://github.com/scala/scala/commit/95f0de0</a> | <notextile>Fixes SI-5632 (serialization of large HashTables)</notextile></p>
+
+
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div class="contents">Contents</div>
+              <div id="toc"></div>
+              <br/>
+              <div class="alert-info">
+                <a href="/contribute/documentation.html#updating_scalalangorg"><p><strong>Problem with this page?</strong>
+                Please help us fix it!</p></a>
+              </div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

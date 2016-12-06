@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>2016 Scala Release Schedule update | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">2016 Scala Release Schedule update</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            
+            <div class="article-date">December 9, 2015</div>
+
+<p>With 2016 rapidly approaching, it&#39;s time for an update on our plans for Scala next year!</p>
+
+<p><strong>Scala 2.11:</strong> We expect to conclude the 2.11.x series with 2.11.8 in Q1 2016 and 2.11.9 in Q3 2016.</p>
+
+<p><strong>Scala 2.12:</strong> Our current focus is to have 2.12.0-RC1 out by the end of Q2. First, we&#39;ll have two more 2.12 milestones:
+M4 by the end of January (new trait encoding!), and M5 before Scala Days NYC (feature freeze).
+Our <a href="https://github.com/scala/scala/milestones">GitHub milestones page</a> has projected dates,
+and will be updated with milestone details as they develop.</p>
+
+<p><a href="http://scala-lang.org/news/2.12-roadmap">Big compiler changes</a> are underway, between the new encodings for
+lambdas and traits that take full advantage of Java 8, and the new optimizer. Both milestones will be an excellent
+opportunity to give 2.12 a spin before we cut RC1 (expected end of May). We&#39;re eager to hear your experience with 2.12,
+both online and in person at Scala Days NYC and Berlin!</p>
+
+<h2>Participation</h2>
+
+<p>As always, getting new Scala versions out the door is a collective effort between Typesafe, EPFL, and the Scala user community.</p>
+
+<p>Areas where participation is welcome include:</p>
+
+<ul>
+<li>Library authors: we encourage you to publish your libraries for 2.12.0-M3 and later milestones.
+If you do publish, please <a href="https://github.com/scala/make-release-notes/blob/2.12.x/projects-2.12.md">list your library</a>.</li>
+<li>Library authors: if (the latest version of) your library isn&#39;t included in the 2.12 community build,
+we have <a href="https://github.com/scala/community-builds/wiki">documented</a> how to add it. We’ll be happy to help,
+as the community build is helping us catch more regressions than ever. As always, we&#39;re counting on your help with testing
+before we go into RC mode! (The <a href="https://github.com/scala/community-builds/blob/2.12.x/common.conf">2.12 community build config</a> 
+lists which version of each built project, and whether its test suite is being exercised.)</li>
+<li>Reviewing <a href="https://github.com/scala/scala/pulls">pull requests in the Scala repository</a>, where 2.12.x is now the default branch.
+Strong motivation will be needed before we merge anything but important bug fixes to the 2.11.x branch.</li>
+<li>Documentation updates and reviewing help are much appreciated at the <a href="https://github.com/scala/scala-lang/pulls">scala-lang</a> 
+and <a href="https://github.com/scala/scala.github.com/pulls">docs.scala-lang</a> repos.</li>
+</ul>
+
+<p>You can talk to us about 2.12 on the <a href="https://groups.google.com/forum/%23!forum/scala-internals">scala-internals mailing list</a> 
+and the <a href="https://gitter.im/scala/contributors">scala/contributors Gitter room</a>.
+(An <a href="http://www.scala-lang.org/community/">expanded community page</a> on the Scala site lists these and other forums and resources.)</p>
+
+<p>Your feedback will inform any revisions needed to the schedule described here.
+We&#39;ll keep you informed as we continue to refine <a href="https://github.com/scala/scala/milestones">our release schedule</a>.</p>
+
+<h2>Timing</h2>
+
+<p>Below is a recap of our timeline, future and past. The 2.12.x milestones follow 2.11.x&#39;s schedule,
+with about a year for development between M1 and RC1. Because 2.11.x will be the last release that supports Java 6,
+we&#39;ve worked extra hard to improve 2.11.x before shifting our focus to 2.12.x, with a half dozen releases in one year
+(the same number of 2.10.x releases took twice as long). For a while now, 2.11.x has had to take a back seat while we
+make the last push to complete 2.12.0-RC1 according to this schedule.</p>
+
+<p>|                   |                 |                                                                       |
+|-------------------|-----------------|-----------------------------------------------------------------------|
+| <strong>Future 2.12.x</strong> |                 |                                                                       |
+|                   |                 |                                                                       |
+|  2.12.0-M4        | <em>Jan 25, 2016</em>  | ca. 12 work-weeks after M3                                            |
+|  2.12.0-M5        | <em>Apr 25, 2016</em>  | one year after M1, as in 2.11.x                                       |
+|  2.12.0-RC1       | <em>May 30, 2016</em>  | one month after last milestone                                        |
+|                   |                 |                                                                       |
+| <strong>Future 2.11.x</strong> |                 |                                                                       |
+|                   |                 |                                                                       |
+|  2.11.8           | <em>Feb 8, 2016</em>   | between 2.12.0-M4 and M5                                              |
+|  2.11.9           | <em>Q3, 2016</em>      | last planned 2.11.x release, &gt;2 years after 2.11.1                    |
+|                   |                 |                                                                       |
+| <strong>Past 2.12.x</strong>   |                 |                                                                       |
+|                   |                 |                                                                       |
+|   2.12.0-M1       | <em>May 4, 2015</em>   |                                                                       |
+|   2.12.0-M2       | <em>Jul 15, 2015</em>  |                                                                       |
+|   2.12.0-M3       | <em>Oct 6, 2015</em>   |                                                                       |
+|                   |                 |                                                                       |
+| <strong>Past 2.11.x</strong>   |                 |                                                                       |
+|                   |                 |                                                                       |
+|   2.11.0-M1       | <em>Jan 7, 2013</em>   |                                                                       |
+|   2.11.0-M7       | <em>Nov 18, 2013</em>  |                                                                       |
+|   2.11.0-M8       | <em>Jan 21, 2014</em>  | one year after M1                                                     |
+|   2.11.0-RC1      | <em>Feb 28, 2014</em>  | one month after last milestone                                        |
+|   2.11.0          | <em>Apr 16, 2014</em>  | six weeks after RC1                                                   |
+|   2.11.1          | <em>May 20, 2014</em>  |                                                                       |
+|   2.11.7          | <em>Jun 23, 2015</em>  | just 1 year after 2.11.1! (2.10.1-2.10.5 took two years)              |
+|                   |                 |                                                                       |
+| <strong>2.10.x</strong>        |                 |                                                                       |
+|                   |                 |                                                                       |
+|   2.10.0          | <em>Dec 19, 2012</em>  |                                                                       |
+|   2.10.1          | <em>Mar 12, 2013</em>  |                                                                       |
+|   2.10.2          | <em>Jun 6, 2013</em>   |                                                                       |
+|   2.10.3          | <em>Sep 27, 2013</em>  |                                                                       |
+|   2.10.4          | <em>Mar 18, 2014</em>  |                                                                       |
+|   2.10.5          | <em>Mar 4, 2015</em>   | EOL two years after 2.10.1                                            |
+|   2.10.6          | <em>Sep 18, 2015</em>  | resolve license incompatibility                                       |</p>
+
+
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div class="contents">Contents</div>
+              <div id="toc"></div>
+              <br/>
+              <div class="alert-info">
+                <a href="/contribute/documentation.html#updating_scalalangorg"><p><strong>Problem with this page?</strong>
+                Please help us fix it!</p></a>
+              </div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

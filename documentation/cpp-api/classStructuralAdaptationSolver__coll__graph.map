@@ -1,0 +1,4 @@
+<map id="StructuralAdaptationSolver&lt; DIM &gt;" name="StructuralAdaptationSolver&lt; DIM &gt;">
+<area shape="rect" id="node2" href="$classAbstractStructuralAdaptationSolver.html" title="{AbstractStructuralAdaptation\lSolver\&lt; DIM \&gt;\n||+ AbstractStructuralAdaptation\lSolver()\l+ ~AbstractStructuralAdaptation\lSolver()\l+ GetTolerance()\l+ GetWriteOutput()\l+ GetOutputFileName()\l+ GetTimeIncrement()\l+ Iterate()\l+ SetTolerance()\l+ SetTimeIncrement()\l+ SetMaxIterations()\l+ SetWriteOutput()\l+ SetOutputFileName()\l+ SetVesselNetwork()\l+ Solve()\l+ Write()\l}" alt="" coords="326,175,535,501"/>
+<area shape="rect" id="node6" href="$classbool.html" title="{bool\n||}" alt="" coords="482,13,529,90"/>
+</map>

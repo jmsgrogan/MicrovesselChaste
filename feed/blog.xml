@@ -1,0 +1,2317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>http://www.scala-lang.org/blog/</id>
+  <title type="text" xml:lang="en">Microvessel Chaste :: Blog</title>
+  <link type="application/atom+xml" href="http://www.scala-lang.org/feed/blog.xml" rel="self"/>
+  <link type="text/html" href="http://www.scala-lang.org/blog/" rel="alternate"/>
+
+  <updated>2016-12-06T18:36:11+00:00</updated>
+  <author>
+    <name>École Polytechnique Fédérale de Lausanne</name>
+  </author>
+  <rights>Copyright (c) 2002-2016 École Polytechnique Fédérale de Lausanne (EPFL), Lausanne, Switzerland</rights>
+
+  
+  <entry>
+    <title>Introducing Scalafix: a code migration tool for Scala</title>
+    <link href="http://www.scala-lang.org/blog/2016/10/24/scalafix.html"/>
+    <updated>2016-10-24T00:00:00+01:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/10/24/scalafix</id>
+    <content type="html">&lt;p&gt;I am excited to announce the first release of
+&lt;a href=&quot;http://scalacenter.github.io/scalafix/&quot;&gt;scalafix&lt;/a&gt;, a new tool to
+prepare Scala code for future Scala versions, including Scala 2.13
+and beyond as well as &lt;a href=&quot;http://dotty.epfl.ch/&quot;&gt;Dotty&lt;/a&gt;, a next
+generation Scala compiler.&lt;/p&gt;
+
+&lt;p&gt;This effort follows the Scala Center Advisory
+Board proposal:
+&lt;a href=&quot;https://scala.epfl.ch/minutes/2016/06/06/may-9-2016.html#proposal-scp-002-clarification-of-scala-to-dotty-migration-path&quot;&gt;&amp;quot;Clarification of Scala to Dotty migration path&amp;quot;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2&gt;What can scalafix do?&lt;/h2&gt;
+
+&lt;p&gt;Scalafix takes care of easy, repetitive and tedious code transformations
+so you can focus on the changes that truly deserve your attention. In a
+nutshell, scalafix reads a source file, transforms usage of unsupported
+features into newer alternatives, and writes the final result back to
+the original source file. Scalafix aims to automate the migration of as
+many unsupported features as possible. There will be cases where
+scalafix is unable to perform automatic migration. In such situations,
+scalafix will point to the offending source line and provide
+instructions on how to refactor the code. The objective is that your
+existing Scala code base gets up and running faster with new Scala versions.&lt;/p&gt;
+
+&lt;h2&gt;Scalafix and Scala 2&lt;/h2&gt;
+
+&lt;p&gt;Scala 2.13 is still being planned, so we don&amp;#39;t know yet exactly what
+language changes it will include.  But with Scalafix available to help
+migrate existing code, changes could become possible that would
+previously have been considered too disruptive because they would
+require too much code to be updated by hand.  Possible examples include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Rewriting code to avoid the use of the now-disfavored
+&lt;code&gt;language.postfixOps&lt;/code&gt; syntax&lt;/li&gt;
+&lt;li&gt;Deprecation of &lt;code&gt;any2StringAdd&lt;/code&gt;, in favor of string interpolation&lt;/li&gt;
+&lt;li&gt;Deprecation of procedure syntax, as in Dotty&lt;/li&gt;
+&lt;li&gt;Changes to the Scala collections API&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Scalafix and Dotty&lt;/h2&gt;
+
+&lt;p&gt;There is a lot to be excited over in Dotty,
+&lt;a href=&quot;http://www.slideshare.net/Odersky/scala-days-nyc-2016&quot;&gt;faster compilation times&lt;/a&gt;,
+&lt;a href=&quot;https://d-d.me/talks/scaladays2015/#/&quot;&gt;faster+smaller binaries&lt;/a&gt; and
+&lt;a href=&quot;http://www.scala-lang.org/blog/2016/10/14/dotty-errors.html&quot;&gt;awesome error messages&lt;/a&gt;
+to name a few things. However, some Scala 2.x applications can&amp;#39;t
+immediately enjoy these benefits due to several breaking changes in
+Dotty. Scalafix is part of our strategy to smoothen the migration
+process for those applications.&lt;/p&gt;
+
+&lt;h2&gt;What can scalafix do?&lt;/h2&gt;
+
+&lt;p&gt;Scalafix comes with a command line interface and an SBT plugin. Running
+scalafix is as simple as:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# CLI
+scalafix Code.scala
+# SBT, after adding plugin to project/plugins.sbt
+sbt scalafix
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;More detailed instructions on how to setup scalafix are on the
+&lt;a href=&quot;http://scalacenter.github.io/scalafix/&quot;&gt;project website&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This initial release implements two rewrites: &lt;code&gt;ProcedureSyntax&lt;/code&gt; and
+&lt;code&gt;VolatileLazyVal&lt;/code&gt;. More rewrite rules are planned for future releases.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;ProcedureSyntax&lt;/code&gt; rewrite works like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-scala&quot; data-lang=&quot;scala&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// before
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// note lack of &#39;=&#39;
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello scalafix!&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// after
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Unit&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// note &#39;: Unit =&#39;
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello scalafix!&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Deprecating or dropping procedure syntax is part of a general effort to
+simplify the Scala language.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;VolatileLazyVal&lt;/code&gt; rewrite adds Dotty&amp;#39;s &lt;code&gt;@volatile&lt;/code&gt; annotation to lazy vals,
+like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-scala&quot; data-lang=&quot;scala&quot;&gt;&lt;span class=&quot;k&quot;&gt;lazy&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// before
+&lt;/span&gt;&lt;span class=&quot;nd&quot;&gt;@volatile&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;lazy&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// after
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;With &lt;code&gt;@volatile&lt;/code&gt;, Dotty uses a deadlock free scheme that is
+comparable-if-not-faster than the scheme used in scalac.&lt;/p&gt;
+
+&lt;h2&gt;How does scalafix work?&lt;/h2&gt;
+
+&lt;p&gt;All the heavy-lifting behind scalafix happens in
+&lt;a href=&quot;http://scalameta.org/&quot;&gt;scala.meta&lt;/a&gt;, a new metaprogramming toolkit
+aspiring to succeed scala.reflect. Scala.meta makes it easy to do
+non-trivial code transformations while preserving syntactic details in
+the original source file. This key attribute of scala.meta makes it
+suitable for both developer tools like scalafix as well as compile-time
+metaprograms like macros.&lt;/p&gt;
+
+&lt;p&gt;The grand vision of scala.meta is to provide a single interface to
+accomplish most common metaprogramming tasks in
+Scala.
+&lt;img src=&quot;https://jmsgrogan.github.io/MicrovesselChaste/resources/img/scalameta-sketch.jpg&quot; alt=&quot;scala.meta sketch&quot;&gt;
+ The idea is to untie metaprograms from compiler implementations, providing a
+platform-independent API that works both in the Scala compiler, Dotty
+and tools like IntelliJ IDEA. Metaprogram authors benefit from a
+user-friendly interface built on immutable ADTs and type classes.
+Compiler authors benefit from the fact that they don&amp;#39;t need to expose
+compiler internals in order to support popular features like macros.&lt;/p&gt;
+
+&lt;p&gt;In scalafix, we use the scala.meta API to parse Scala source files,
+traverse abstract syntax trees, inspect tokens (including comments!) and
+then perform the minimum required transformations to the source file.
+Thanks to scala.meta dialects, which abstract away syntactic differences
+between variants of Scala, we can use the same programs to manipulate
+regular Scala source files, SBT files as well as code that uses new
+Dotty syntax such as union types and trait parameters. All this powerful
+functionality is implemented behind a minimalistic interface.
+The NonVolatileLazyVal
+&lt;a href=&quot;https://github.com/scalacenter/scalafix/blob/master/core/src/main/scala/scalafix/rewrite/VolatileLazyVal.scala&quot;&gt;implementation&lt;/a&gt;
+is 15 lines of code. It could comfortably fit in three tweets.&lt;/p&gt;
+
+&lt;p&gt;We would not be able to achieve this level of expressiveness with
+scala.reflect, the current standard metaprogramming framework for Scala.
+Why? To name a few reasons, scala.reflect does not preserve syntactic
+details such as comments and scala.reflect has no notions of dialects,
+so it is bound to only support Scala 2.x.&lt;/p&gt;
+
+&lt;h2&gt;How does scalafix evolve?&lt;/h2&gt;
+
+&lt;p&gt;As we have seen above, the functionality of scalafix heavily relies on
+the infrastructure provided by scala.meta. However, in order to write
+more sophisticated scalafix rewrite rules, there are two main features
+missing in scala.meta, namely a &lt;em&gt;scalac converter&lt;/em&gt; and &lt;em&gt;semantic API&lt;/em&gt;.
+We are closely collaborating with Eugene Burmako, the lead developer of
+scala.meta, in the development efforts of these two features.&lt;/p&gt;
+
+&lt;h3&gt;Scalac converter&lt;/h3&gt;
+
+&lt;p&gt;The scalac converter is a key subsystem of scala.meta.
+For every Scala feature, the converter recognizes its representation in the Scala
+compiler and translates it into the corresponding data structures of the
+scala.meta API.&lt;/p&gt;
+
+&lt;p&gt;Over the last months, we’ve made great improvements to the converter,
+which is under development in the &lt;a href=&quot;https://github.com/scalameta/paradise&quot;&gt;scalameta/paradise&lt;/a&gt; repository.
+We have established a comprehensive test suite that consists of a sample of
+over 26.000 Scala source files collected from popular open-source
+projects. Thanks to the joint effort of the team of scala.meta
+&lt;a href=&quot;https://github.com/scalameta/paradise/graphs/contributors&quot;&gt;contributors&lt;/a&gt;,
+the converter now supports about 19.000 source files form the test
+corpus. We are continuously working to increase that number, aiming to
+bring language coverage to 100%.&lt;/p&gt;
+
+&lt;h3&gt;Semantic API&lt;/h3&gt;
+
+&lt;p&gt;The semantic API will enable scala.meta programs to inspect compiler information
+such as type inference, name resolution and other functionality that
+requires a compilation step. This opens opportunities for new scalafix rewrite
+rules that cannot be done on a purely syntactic level,
+like &lt;code&gt;NonVolatileLazyVal&lt;/code&gt; and &lt;code&gt;ProcedureSyntax&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;We already have a
+&lt;a href=&quot;https://github.com/scalacenter/scalafix/pull/14&quot;&gt;working prototype&lt;/a&gt; 
+of the first scalafix rewrite that uses the semantic API: &lt;code&gt;ExplicitImplicit&lt;/code&gt;.
+&lt;code&gt;ExplicitImplicit&lt;/code&gt; inserts type annotations for implicit definitions, like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-scala&quot; data-lang=&quot;scala&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// before
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;implicit&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;_:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// after
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;implicit&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Int&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;_:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;ExplicitImplicit&lt;/code&gt; requires the semantic API in order to get the inferred type
+annotations.&lt;/p&gt;
+
+&lt;h2&gt;Towards new-style macros&lt;/h2&gt;
+
+&lt;p&gt;One could say that by contributing to scala.meta, we get two features
+for the price of one. First, an improved converter and semantic API
+enables us to implement more sophisticated scalafix rewrite rules.
+Secondly, we accelerate the development of a new macro system that will
+work both with scalac and Dotty.&lt;/p&gt;
+
+&lt;p&gt;As announced at Scala Days 2016, the current macros based on
+scala.reflect will be going away. Such macros have a number of known
+issues, including over complicated API and lacking IDE support. More
+importantly, the deep coupling between old-style macros and scalac
+means macros written in the old system effectively cannot be
+ported to Dotty. The plan is to discontinue support for scala.reflect
+macros in favor of &lt;a href=&quot;https://github.com/scala/scala.github.com/pull/567&quot;&gt;a new macro system called
+inline/meta&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;A technology preview of the new-style macros came out this summer. This
+early release is still somewhat rough around the edges. Nevertheless,
+&lt;a href=&quot;https://olafurpg.github.io/scalafmt/&quot;&gt;scalafmt&lt;/a&gt; is already using
+these new macro annotations in production for more than a month now. If you
+are interested in learning more, the best place to get started is 
+&lt;a href=&quot;http://olafurpg.github.io/scala.meta-workshop&quot;&gt;my recent Scala World workshop&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Much like scalafix, new-style macros crucially rely on the
+infrastructure provided by scala.meta. Concretely, the converter and the
+semantic APIs constitute a significant chunk of the implementation
+effort behind the new macro system.&lt;/p&gt;
+
+&lt;p&gt;Interestingly, our contributions to scala.meta were originally motivated
+by the needs of scalafix. However, they are also immediately helping the
+development of this new universal macro system for Scala. We are excited
+that our open-source collaboration with the scala.meta team brings
+multiple benefits for the good of everyone!&lt;/p&gt;
+
+&lt;h2&gt;Get involved&lt;/h2&gt;
+
+&lt;p&gt;Are you interested in metaprogramming, developer tools and running
+experiments on millions of lines of Scala code? Come chat with us on
+&lt;a href=&quot;https://gitter.im/scalacenter/scalafix&quot;&gt;Gitter&lt;/a&gt;, and we’ll discuss how you can make a difference in shaping the
+developer tools of the future!&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Lars Hupel Joins the Scala Center Advisory Board</title>
+    <link href="http://www.scala-lang.org/blog/2016/10/24/lars-hupel-joins-sc-board.html"/>
+    <updated>2016-10-24T00:00:00+01:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/10/24/lars-hupel-joins-sc-board</id>
+    <content type="html">&lt;p&gt;It has been almost half a year since we kicked off our first Scala Center
+Advisory Board meeting in New York. With a board primarily made up of
+commercial sponsors, we decided then to offer Bill Venners the role of
+community representative, and Bill has ably filled this role in the two
+meetings so far.&lt;/p&gt;
+
+&lt;p&gt;But since then, the sponsors have grown to nine, and to maintain a
+proportionate representation for the community on the board, we decided — with
+the sponsors&amp;#39; unanimous agreement — to invite a second community representative
+to attend and vote in meetings.&lt;/p&gt;
+
+&lt;p&gt;We decided to offer the choice of candidate to
+&lt;a href=&quot;http://typelevel.org/&quot;&gt;Typelevel&lt;/a&gt;. This was a reflection of the incredible
+work Typelevel have done to nurture a friendly and open community of
+functionally-minded Scala users around a number of open-source projects. Their
+work is focussed around the Cats, Shapeless and Spire libraries, but has grown
+to include over a dozen other libraries, tools and compiler plugins, all with
+a shared philosophy.&lt;/p&gt;
+
+&lt;p&gt;Typelevel have been instrumental in helping to grow the Scala community, and
+the functional elements within it, through regular hacking sessions, and with a
+number of workshops and unconferences colocated with larger Scala events.&lt;/p&gt;
+
+&lt;p&gt;So we felt it was only appropriate — given Typelevel&amp;#39;s influence, its track
+record, and the philosophy of welcomeness it shares with the Scala Center —
+that they should choose the second community representative to the Advisory
+Board.&lt;/p&gt;
+
+&lt;p&gt;When we spoke to Typelevel, in typical style, they opened &lt;a href=&quot;https://github.com/typelevel/general/issues/42&quot;&gt;a GitHub
+issue&lt;/a&gt; to discuss the
+invitation, to decide whether to accept it, and to choose a representative.
+We&amp;#39;re very glad that they accepted, and selected Lars Hupel to sit on the Scala
+Center Advisory Board alongside Bill.&lt;/p&gt;
+
+&lt;p&gt;Lars has made a number of significant contributions to the Scala community in
+the last few years. His open-source contributions started with work as a
+maintainer of &lt;a href=&quot;https://github.com/scalaz/scalaz&quot;&gt;Scalaz&lt;/a&gt;, but he has since
+worked on the code verification tool, &lt;a href=&quot;http://leon.epfl.ch/&quot;&gt;Leon&lt;/a&gt;, and
+&lt;a href=&quot;http://lars.hupel.info/libisabelle/&quot;&gt;libisabelle&lt;/a&gt;, which facilitates
+interacting with the proof assistant, Isabelle, from Scala. All this experience
+gives Lars a deep understanding of Scala, both as a language and through some
+of its the most advanced applications.&lt;/p&gt;
+
+&lt;p&gt;The Scala Center shall be very happy to welcome Lars, as one of the founders of
+Typelevel, to the Advisory Board, and at the next meeting (currently scheduled
+for late November) we shall put his appointment to the existing membership for
+approval. We have every expectation he will be a valuable asset to the board!&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Use npm packages in Scala.js with scalajs-bundler</title>
+    <link href="http://www.scala-lang.org/blog/2016/10/19/scalajs-bundler.html"/>
+    <updated>2016-10-19T00:00:00+01:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/10/19/scalajs-bundler</id>
+    <content type="html">&lt;p&gt;This week we release the first version of
+&lt;a href=&quot;https://scalacenter.github.io/scalajs-bundler&quot;&gt;&lt;em&gt;scalajs-bundler&lt;/em&gt;&lt;/a&gt;, a tool that makes it easier
+to use &lt;a href=&quot;https://www.npmjs.com/&quot;&gt;npm&lt;/a&gt; packages for &lt;a href=&quot;https://www.scala-js.org/&quot;&gt;Scala.js&lt;/a&gt;
+developers. This effort is part of the Scala Center&amp;#39;s &lt;a href=&quot;https://scala.epfl.ch/minutes/2016/06/06/may-9-2016.html#proposal-scp-005-ensurance-of-continuity-of-scalajs-project&quot;&gt;initiative&lt;/a&gt; to ensure the
+continuity of the Scala.js project.&lt;/p&gt;
+
+&lt;h2&gt;Vision&lt;/h2&gt;
+
+&lt;p&gt;Our goal is to make npm dependencies management as easy as JVM dependencies management.&lt;/p&gt;
+
+&lt;p&gt;Basically, if your application needs to use an npm package &lt;code&gt;foo&lt;/code&gt;, all you have to do is to
+add to your build a line like the following:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-scala&quot; data-lang=&quot;scala&quot;&gt;&lt;span class=&quot;n&quot;&gt;npmDependencies&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Compile&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;foo&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;1.0&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And then the usual &lt;code&gt;run&lt;/code&gt; and &lt;code&gt;test&lt;/code&gt; sbt commands just work.&lt;/p&gt;
+
+&lt;h2&gt;Challenge&lt;/h2&gt;
+
+&lt;p&gt;npm is the most popular JavaScript package registry. How can Scala.js applications benefit from
+the many libraries published on npm? First, this requires to resolve and download these libraries
+including their transitive dependencies. Then, the artifacts
+need to be &lt;em&gt;linked&lt;/em&gt; with the Scala.js code. This last step is subtler than it seems
+because the linking process varies according to the target execution environment. For instance,
+Node.js expects artifacts to conform to the CommonJS format, whereas this format is not compatible
+with the execution from a web browser. Furthermore, in the case of web development, when the
+application is shipped to production it is better to pack all the code and its dependencies into a
+single bundle whose format is executable by web browsers.&lt;/p&gt;
+
+&lt;h2&gt;Existing solutions&lt;/h2&gt;
+
+&lt;p&gt;There are mainly two existing approaches to tackle these challenges: using
+&lt;a href=&quot;http://www.webjars.org/&quot;&gt;WebJars&lt;/a&gt; or combining two build systems (one for the Scala
+world and one for the npm world). Both of them require extra efforts from developers
+or have limitations (you can find more details about that in scalajs-bundler’s
+&lt;a href=&quot;https://scalacenter.github.io/scalajs-bundler/motivation.html&quot;&gt;documentation&lt;/a&gt;).&lt;/p&gt;
+
+&lt;h2&gt;Current state&lt;/h2&gt;
+
+&lt;p&gt;&lt;em&gt;scalajs-bundler&lt;/em&gt; leverages the
+&lt;a href=&quot;https://www.scala-js.org/doc/project/module.html&quot;&gt;CommonJS modules support&lt;/a&gt; brought by the latest
+Scala.js release.&lt;/p&gt;
+
+&lt;p&gt;The 0.1 release contains an sbt plugin that:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;lets developers define their npm dependencies (as in the introductory example),&lt;/li&gt;
+&lt;li&gt;keeps track of transitive npm dependencies between Scala.js artifacts,&lt;/li&gt;
+&lt;li&gt;fetches these dependencies from the npm registry,&lt;/li&gt;
+&lt;li&gt;provides tasks to bundle the application into a single artifact executable by web browsers.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The plugin uses &lt;a href=&quot;https://www.npmjs.com/&quot;&gt;npm&lt;/a&gt; and &lt;a href=&quot;https://webpack.github.io/&quot;&gt;webpack&lt;/a&gt;
+under the hood.&lt;/p&gt;
+
+&lt;p&gt;We also provide a second sbt plugin that integrates with
+&lt;a href=&quot;https://github.com/vmunier/sbt-web-scalajs&quot;&gt;sbt-web-scalajs&lt;/a&gt;: it basically turns bundles
+into sbt-web assets.&lt;/p&gt;
+
+&lt;h2&gt;Future work&lt;/h2&gt;
+
+&lt;p&gt;There is still some work to do (in particular to shorten the duration of the bundling process
+in the context of live reloading workflows) and we expect to release a
+&lt;a href=&quot;https://github.com/scalacenter/scalajs-bundler/milestone/1&quot;&gt;0.2 version&lt;/a&gt; soon, but this
+first release is already usable, so don’t hesitate to
+&lt;a href=&quot;https://scalacenter.github.io/scalajs-bundler/getting-started.html&quot;&gt;give it a try&lt;/a&gt;, we’d love
+to get your feedback!&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Awesome Error Messages for Dotty</title>
+    <link href="http://www.scala-lang.org/blog/2016/10/14/dotty-errors.html"/>
+    <updated>2016-10-14T00:00:00+01:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/10/14/dotty-errors</id>
+    <content type="html">&lt;p&gt;One thing that really excites me about being part of the core group of
+developers working on &lt;a href=&quot;http://lampepfl.github.io/dotty&quot;&gt;Dotty&lt;/a&gt; is my chance to
+impact usability. A lot of thought has gone into designing Dotty to be as fast
+and structurally sound as possible.  Now comes the next step - adding a new
+level of usability for the compiler and the surrounding tools.&lt;/p&gt;
+
+&lt;p&gt;We&amp;#39;ve looked at how other modern languages like
+&lt;a href=&quot;http://elm-lang.org/blog/compiler-errors-for-humans&quot;&gt;Elm&lt;/a&gt; and
+&lt;a href=&quot;https://blog.rust-lang.org/2016/08/10/Shape-of-errors-to-come.html&quot;&gt;Rust&lt;/a&gt;
+handle compiler warnings and error messages, and come to realize that Dotty is
+actually in great shape to provide comprehensive and easy to understand error
+messages in the same spirit.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s dive right into some examples, let&amp;#39;s say you have this code:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;try {
+  foo()
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It doesn&amp;#39;t really make sense to put this in a &lt;code&gt;try&lt;/code&gt;-block for two reasons:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;It doesn&amp;#39;t throw an exception&lt;/li&gt;
+&lt;li&gt;It doesn&amp;#39;t have a &lt;code&gt;catch&lt;/code&gt; or &lt;code&gt;finally&lt;/code&gt; clause&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;So let&amp;#39;s say we compile this file using scalac, we get something like:&lt;/p&gt;
+
+&lt;pre&gt;
+test.scala:2: warning: A try without a catch or finally is equivalent to putting
+its body in a block; no exceptions are handled.
+     try {
+       ^
+       one warning found
+&lt;/pre&gt;
+
+&lt;p&gt;This is helpful, but it has a couple of drawbacks:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;If we have a bazillion errors, it will be hard to read&lt;/li&gt;
+&lt;li&gt;If we don&amp;#39;t know about &lt;code&gt;catch&lt;/code&gt; or &lt;code&gt;finally&lt;/code&gt; blocks - we don&amp;#39;t know how to
+solve this (yes I know, most people do know what these are but - toy
+example!)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;So what do you get with Dotty? This:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/vNE706E.png&quot; alt=&quot;try-error&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;All errors are now visually separated, and the output is colorized so that you
+can find your mistakes quickly.&lt;/p&gt;
+
+&lt;p&gt;Another one of our goals is to be able to properly explain things when asked.
+As such, if you pass the flag &lt;code&gt;-explain&lt;/code&gt; when compiling the example above,
+you&amp;#39;ll get a more verbose explanation:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/pNhgsdf.png&quot; alt=&quot;try-error2&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;Mistyping members&lt;/h2&gt;
+
+&lt;p&gt;Sometimes, especially when you&amp;#39;re in a rush - you might mistype some members.
+Currently we offer you the following support when selecting on a type:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;class Foo {
+  def bar = ???
+}
+
+val foo = new Foo()
+foo.barr
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Will yield:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/iDnpB9O.png&quot; alt=&quot;mistype&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;In the future we want to be able to offer you these types of suggestions on
+other things like missing imports.&lt;/p&gt;
+
+&lt;h2&gt;Type diffs&lt;/h2&gt;
+
+&lt;p&gt;Sometimes when working with complex types - it&amp;#39;s hard to see exactly where the
+error occurs. The Dotty compiler will in these cases give you a colored diff:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/vlmwrmD.png&quot; alt=&quot;mismatch&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;It will not do this however if the differences are huge - but it will syntax
+highlight the found and expected type anyway.&lt;/p&gt;
+
+&lt;h2&gt;We want you!&lt;/h2&gt;
+
+&lt;p&gt;To make the transition to these new error messages as quick and pain-free as
+possible - we need help! This is a perfect entry-point into hacking on the
+compiler as you&amp;#39;ll need to create semantic objects that contain the relevant
+information for the error or warning.&lt;/p&gt;
+
+&lt;p&gt;So - this is what you do:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Go to the &lt;a href=&quot;https://github.com/lampepfl/dotty/issues/1589&quot;&gt;Error messages issue&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Read the howto on error messages&lt;/li&gt;
+&lt;li&gt;Choose an error message you want to help with and post a comment saying
+which one(s)&lt;/li&gt;
+&lt;li&gt;Get hacking&lt;/li&gt;
+&lt;li&gt;Submit a PR!&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>August SIP Meeting Results: 2 SIPs Rejected and 2 SIPs Updated</title>
+    <link href="http://www.scala-lang.org/blog/2016/08/15/sip-meeting-august-results.html"/>
+    <updated>2016-08-15T00:00:00+01:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/08/15/sip-meeting-august-results</id>
+    <content type="html">&lt;p&gt;On August 10, the Scala Improvement Process (SIP) Committee held
+their monthly meeting to discuss and give feedback on four proposals,
+both new and old. We&amp;#39;re happy that these discussions sparked so much
+interest and participation in the community. It&amp;#39;s comforting to see the
+new SIP process becoming fruitful!&lt;/p&gt;
+
+&lt;p&gt;Of the four discussed proposals, two were unanimously rejected.
+The other two progressed and will have a follow-up iteration.&lt;/p&gt;
+
+&lt;p&gt;The rejected proposals were:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;  &lt;a href=&quot;http://docs.scala-lang.org/sips/pending/uncluttering-control.html&quot;&gt;SIP-12: Uncluttering Scala&amp;#39;s syntax for control structures&lt;/a&gt;.
+Originally proposed in 2011. The proposal suggested syntax changes
+in if&amp;#39;s, for and while loops, moving Scala&amp;#39;s syntax away from Java
+and C-like languages. Whereas such changes may be arguably more
+beautiful, the Committee agreed that would give more problems
+than benefits. Seth Tisue, the appointed reviewer, fully explains
+the Committee&amp;#39;s reaction &lt;a href=&quot;https://github.com/scala/scala.github.com/issues/555&quot;&gt;here&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;  &lt;a href=&quot;http://docs.scala-lang.org/sips/pending/self-cleaning-macros.html&quot;&gt;SIP-16: Self-cleaning macros&lt;/a&gt;.
+Originally proposed in 2012. Macros add a whole new dimension to the
+Scala language. Their experimental implementation was adopted by a
+lot of Scala libraries and were immensely useful for the creation
+and evolution of first-class Scala tools. As described by his
+creator and reviewer, Eugene Burmako, they turned out to be a good
+experiment, but one that could be improved if major downsides in the
+design were addressed. With the intention of letting scala.meta
+eventually replace the old macros, he proposed rejecting SIP-16 to
+revisit its basic foundations and create a new proposal that would
+considerably enhance the metaprogramming experience in Scala. In the
+meantime, the experimental implementation will remain in place. If
+you&amp;#39;re interested in Eugene&amp;#39;s explanation, follow &lt;a href=&quot;https://github.com/scala/scala.github.com/pull/57&quot;&gt;this&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The two proposals that made it to the next iteration are
+&lt;a href=&quot;http://docs.scala-lang.org/sips/pending/42.type.html&quot;&gt;SIP-23: Literal-based singleton types&lt;/a&gt; (reviewer:
+Adriaan Moors) and &lt;a href=&quot;https://github.com/scala/scala.github.com/pull/533%23issuecomment-239422098&quot;&gt;SIP-27: Trailing
+Commas&lt;/a&gt; (reviewer:
+Eugene Burmako). The reviewers and committee members provided more feedback to
+iterate on. Both proposals already have
+provisional implementations and will continue to be discussed for
+inclusion in the language.&lt;/p&gt;
+
+&lt;p&gt;Overall, we&amp;#39;re happy to report these results and see Scala
+continue to move forward! We&amp;#39;re excited to see the Scala community
+speaking up and collaborating with the process—your vibrant
+responses will greatly enrich our future deliberations.&lt;/p&gt;
+
+&lt;p&gt;Next month, we’ll discuss five more proposals, including
+&lt;a href=&quot;http://docs.scala-lang.org/sips/pending/spores.html&quot;&gt;SIP-21: Spores&lt;/a&gt; and
+&lt;a href=&quot;http://docs.scala-lang.org/sips/pending/repeated-byname.html&quot;&gt;SIP-24: Repeated by-name
+parameters&lt;/a&gt;.
+We hope to finish off the list of old proposals in the queue and focus
+ourselves on the most recent proposals and the ones that are to
+come!&lt;/p&gt;
+
+&lt;p&gt;Did you know that each month, we conduct these SIP meetings
+on-air? You can tune in and ask questions to the SIP committee, and have
+them answered live. Videos of the meetings are then &lt;a href=&quot;https://plus.google.com/+ScalaProcess/posts&quot;&gt;archived on
+YouTube&lt;/a&gt;. Check the minutes of this
+meeting &lt;a href=&quot;http://docs.scala-lang.org/sips/minutes/sip-10th-august-minutes.html&quot;&gt;in the SIP website&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Scala Library Index Reaches Beta!</title>
+    <link href="http://www.scala-lang.org/blog/2016/08/09/the-scala-library-index-reaches-beta.html"/>
+    <updated>2016-08-09T00:00:00+01:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/08/09/the-scala-library-index-reaches-beta</id>
+    <content type="html">&lt;p&gt;Today, the Scala Center team is very proud to announce that &lt;a href=&quot;https://index.scala-lang.org/&quot;&gt;The Scala Package Index&lt;/a&gt;, or Scaladex for short, has reached beta v1! This means we&amp;#39;re now confident that Scaladex is now in state where it is ready for widespread use. Scaladex now supports most major features we planned for it, in addition to serving as an index of the known Scala ecosystem; self-updating, reindexing, user editing of published libraries (keywords, documentation links, and artifact deprecation), and more, even as we work to iron out user experience. In particular we&amp;#39;d like to thank contributors &lt;a href=&quot;https://github.com/Scyks&quot;&gt;Ronald Marske&lt;/a&gt;, and &lt;a href=&quot;https://github.com/rafaparadela&quot;&gt;Rafa Paradela&lt;/a&gt; and &lt;a href=&quot;https://github.com/israelperezglez&quot;&gt;Israel Pérez&lt;/a&gt; from &lt;a href=&quot;http://www.47deg.com/&quot;&gt;47 Degrees&lt;/a&gt; in helping us to reach this milestone!&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s a quick walkthrough we put together of some of Scaladex&amp;#39;s main features:&lt;/p&gt;
+
+&lt;iframe width=&quot;610&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/TBoJivIJsbU&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h2&gt;What can I do with the Scala Index?&lt;/h2&gt;
+
+&lt;p&gt;Scaladex is meant to represent a map of all published Scala libraries. With Scaladex, a developer can now query more than 100,000 releases of Scala libraries. We group those releases into projects, artifacts, targets, and versions. Scaladex indexes over 3,000 individual projects, which can each contain a number of artifacts, or jars.&lt;/p&gt;
+
+&lt;p&gt;For example the &lt;code&gt;akka&lt;/code&gt; project contains multiple artifacts, some that are quite different from one another, such as &lt;code&gt;akka-actor&lt;/code&gt; and &lt;code&gt;akka-http&lt;/code&gt;. You can explore all artifacts and versions from the unified project page, for example for the Akka project, the project page can be found at &lt;a href=&quot;https://index.scala-lang.org/akka/akka&quot;&gt;https://index.scala-lang.org/akka/akka&lt;/a&gt;. It&amp;#39;s even possible to explore the web of dependencies between artifacts by selecting an artifact on the main project page, for example, the &amp;quot;Artifact Dependents&amp;quot; section of the page shows all of the published artifacts that depend on the current version, 2.4.8, of the &lt;code&gt;akka-actor&lt;/code&gt; artifact.&lt;/p&gt;
+
+&lt;p&gt;You can even search for libraries based on targets such as those compiled for use with Scala.js, Scala 2.11.x, or even Scala 2.12.x.&lt;/p&gt;
+
+&lt;p&gt;Projects can also be edited and tagged with keywords, to help in searching, and indexing and to help users identify, at a glance, what a given library might do. Authors can also customize their project by indicating custom documentation to link to per version and artifact, or mark projects as deprecated so users know not to depend on a specific artifact in the future.&lt;/p&gt;
+
+&lt;p&gt;The Index is also similar to a DNS (Domain Name Server). With a project or artifact name, you can find the exact release to paste into your sbt, Gradle, or Maven builds.&lt;/p&gt;
+
+&lt;p&gt;One can imagine many more features for us to include in Scaladex– for example, an API that tools could query Scaladex for compatibility information between libraries. As always, if you have any ideas or wishes, let us know in our &lt;a href=&quot;https://gitter.im/scalacenter/scaladex&quot;&gt;Gitter channel&lt;/a&gt;!&lt;/p&gt;
+
+&lt;h2&gt;How does it work?&lt;/h2&gt;
+
+&lt;p&gt;We run a daily process to discover and download published releases (.pom files). We currently index artifacts found on Bintray and Maven Central via the &lt;a href=&quot;https://bintray.com/bintray/jcenter&quot;&gt;JCenter repository&lt;/a&gt;. Scala libraries normally include the Scala compiler major and minor version in the artifact name. We automatically find any library following this convention. (If you don&amp;#39;t follow it, you can create a pull request to &lt;a href=&quot;https://github.com/scalacenter/scaladex-data/edit/master/non-standard.json&quot;&gt;add your library to the index&lt;/a&gt;.)&lt;/p&gt;
+
+&lt;p&gt;When we have all the release information, we can group them by the GitHub repository they provide and we generate a project page from the combination of info found on GitHub and on Bintray/Maven Central. If you forgot to include your project&amp;#39;s GitHub URL you can always &lt;a href=&quot;https://github.com/scalacenter/scaladex-data/edit/master/claims.json&quot;&gt;claim your project manually&lt;/a&gt; via a pull request.&lt;/p&gt;
+
+&lt;p&gt;Scaladex has the advantage of performing well without manual intervention. However, with the help of library owners, we can improve the quality of our data.&lt;/p&gt;
+
+&lt;p&gt;So please head on over to &lt;a href=&quot;https://index.scala-lang.org/&quot;&gt;the Scala Library Index&lt;/a&gt;, login with your GitHub account, and start editing your projects! Project keywords, in particular, wanted! :-)&lt;/p&gt;
+
+&lt;h2&gt;What&amp;#39;s next?&lt;/h2&gt;
+
+&lt;p&gt;The Scala Center wants you! Ideas and feature requests are welcome on our &lt;a href=&quot;https://gitter.im/scalacenter/scaladex&quot;&gt;Gitter channel&lt;/a&gt;, and there&amp;#39;s a list of &lt;a href=&quot;https://github.com/scalacenter/scaladex/issues?q=is:open+is:issue+label:v2&quot;&gt;low-hanging fruit todos/issues&lt;/a&gt; on our issue tracker that we&amp;#39;d love help on! We love PRs, so, come on in and help us map the Scala ecosystem!&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>SIP Meeting Results: 2 SIPs Numbered and 3 SIPs Updated</title>
+    <link href="http://www.scala-lang.org/blog/2016/07/20/sip-summary-minutes.html"/>
+    <updated>2016-07-20T00:00:00+01:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/07/20/sip-summary-minutes</id>
+    <content type="html">&lt;p&gt;Last week, the Scala Center ran its first SIP meeting under the &lt;a href=&quot;http://docs.scala-lang.org/sips/sip-submission.html&quot;&gt;newly reformed SIP
+process&lt;/a&gt;, and we&amp;#39;re happy
+to report that several SIPs saw long-awaited decisions made, or received
+detailed feedback from the SIP committee!&lt;/p&gt;
+
+&lt;p&gt;In the new SIP process, each SIP is assigned a reviewer, who must be someone
+sitting on the SIP committee. The reviewer&amp;#39;s job is to carefully read and
+understand the SIP, and to present the SIP before the SIP committee. The
+reviewer must also present their analysis of the SIP to the committee, and then
+the floor is opened up for discussion on the SIP. An explicit goal of the new
+SIP process is for a decision and next steps to be determined for each SIP
+discussed.&lt;/p&gt;
+
+&lt;p&gt;The SIP committee went through five SIPs in the queue. Two new SIPs received a
+number, meaning they passed the first phase of acceptance – that is, the change
+to Scala is accepted in theory, so long as the the committee&amp;#39;s design and
+implementation concerns can be adequately addressed in subsequent discussions on
+the SIP. The two SIPs which received numbers (first-round accepted) include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;https://github.com/scala/slip/pull/30&quot;&gt;SIP-26 Unsigned Integer Data Types&lt;/a&gt;&lt;/strong&gt;, Reviewer: Martin Odersky (&lt;a href=&quot;https://github.com/scala/slip/pull/30#issuecomment-232399052&quot;&gt;review comments&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;https://github.com/scala/scala.github.com/pull/533&quot;&gt;SIP-27 Trailing Commas&lt;/a&gt;&lt;/strong&gt;, Reviewer: Eugene Burmako (&lt;a href=&quot;https://github.com/scala/scala.github.com/pull/533#issuecomment-232959066&quot;&gt;review comments&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Two other passed their first iteration as proposed by &lt;a href=&quot;http://docs.scala-lang.org/sips/sip-submission.html&quot;&gt;the new
+process&lt;/a&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;http://docs.scala-lang.org/sips/pending/trait-parameters.html&quot;&gt;SIP-25 Trait Parameters&lt;/a&gt;&lt;/strong&gt;, Reviewer: Adriaan Moors (&lt;a href=&quot;https://github.com/scala/scala.github.com/pull/428#issuecomment-233401911&quot;&gt;review comments&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;http://docs.scala-lang.org/sips/pending/improved-lazy-val-initialization.html&quot;&gt;SIP-20 Improved Lazy Val Initialization&lt;/a&gt;&lt;/strong&gt;, Reviewer: Sébastien Doeraene (&lt;a href=&quot;https://github.com/scala/scala.github.com/pull/206#issuecomment-232939781&quot;&gt;review comments&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The final SIP discussed one was postponed at the request of the authors:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;http://docs.scala-lang.org/sips/pending/async.html&quot;&gt;SIP-22 Async&lt;/a&gt;&lt;/strong&gt;, Reviewer: Eugene Burmako (&lt;a href=&quot;https://github.com/scala/scala.github.com/pull/213#issuecomment-232940053&quot;&gt;review comments&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In the case of SIP-22, the authors will reopen it when they feel like taking up
+the proposal again, and addressing the issues they must look into next; in
+particular, figuring out how async/await can be used inside of a try/catch
+block.&lt;/p&gt;
+
+&lt;p&gt;Overall, we&amp;#39;re happy to report that progress was made on a number of SIPs in the
+queue. In particular, we&amp;#39;re excited that 2 SIPs received a first-phase of
+acceptance in receiving their numbers, and look forward to the addition of these
+proposals to Scala soon!&lt;/p&gt;
+
+&lt;p&gt;Next month, we will propose a reformed SLIP process focused on shaping this new
+notion of the Scala &amp;quot;platform,&amp;quot; with a completely new committee, consisting of
+Scala community members. Keep an eye out for developments on the Scala library
+front this August!&lt;/p&gt;
+
+&lt;p&gt;Did you know that each month, we conduct our SIP meetings on-air? You can tune
+in and ask questions to the SIP committee, and have them answered live! You can
+even watch &lt;a href=&quot;https://plus.google.com/+ScalaProcess&quot;&gt;past SIP meetings&lt;/a&gt; at any
+time!&lt;/p&gt;
+
+&lt;p&gt;Check out the full meeting minutes from the July 13 SIP meeting
+&lt;a href=&quot;http://docs.scala-lang.org/sips/minutes/sip-minutes.html&quot;&gt;here&lt;/a&gt;, or watch the
+video of the meeting
+&lt;a href=&quot;https://plus.google.com/events/c11vhomo86lkejevfkrm6uls900&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>A Reformed Scala Improvement Process</title>
+    <link href="http://www.scala-lang.org/blog/2016/07/12/a-reformed-scala-improvement-process.html"/>
+    <updated>2016-07-12T00:00:00+01:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/07/12/a-reformed-scala-improvement-process</id>
+    <content type="html">&lt;p&gt;This past May, we held our first &lt;a href=&quot;http://scala-lang.org/blog/2016/05/30/scala-center-advisory-board.html&quot;&gt;advisory board meeting&lt;/a&gt;, to discuss some of the areas that the newly-formed Scala Center should focus on.&lt;/p&gt;
+
+&lt;p&gt;One initiative put forward by the members of the committee, and unanimously voted as an initiative that the Scala Center should &lt;em&gt;immediately&lt;/em&gt; undertake was to clarify the governance of Scala, and to in particular focus on ensuring that there is an open, collaborative process in place for evolving the language and standard libraries.&lt;/p&gt;
+
+&lt;p&gt;In pursuit of this goal, today, we&amp;#39;ve published a reformed &lt;a href=&quot;http://docs.scala-lang.org/sips/sip-submission.html&quot;&gt;Scala Improvement Specification and Submission Process&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;One major goal in reforming this process is to ensure that all submitted SIPs are reviewed in a timely manner, and that SIP authors receive regular feedback on how to improve their proposals. We&amp;#39;ve been hard at work in the past month collecting feedback from the community on what we could do to improve this process, and most feedback pointed to the tendency of submitted SIPs to get stuck in the queue— for example, regarding a particular SIP, the SIP committee may have unclarified concerns, and the SIP author, though willing to improve the proposal, may be unclear on what those concerns are, or on what concrete steps she should take next. Therefore, the new SIP process includes many provisions to guarantee that progress is made both on the side of the committee and on the side of the SIP author.&lt;/p&gt;
+
+&lt;p&gt;To briefly list a few highlights of the new SIP process; in the new process, each SIP will receive a reviewer who is a member of the SIP committee. This reviewer will analyze the submitted proposal, list pros and cons, raise important questions, and she will present the submitted SIP along with her analysis to the SIP committee. The new SIP process requires the SIP committee to adhere to a number of deadlines and possible states in which to categorize a SIP, along with the requirement to provide feedback to the SIP author on what she can do to move the SIP to the next stage of the process. More details can be found in the reformed &lt;a href=&quot;http://docs.scala-lang.org/sips/sip-submission.html&quot;&gt;Scala Improvement Specification and Submission Process&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;We hope that with the new process will enable a more straightforward path forward for both Scala core maintainers, and current or prospective SIP authors interested in collaborating on evolving the language and standard libraries.&lt;/p&gt;
+
+&lt;p&gt;Importantly, the new SIP process creates a &lt;em&gt;SIP process lead&lt;/em&gt; role, who&amp;#39;s responsible for enforcing and shaping these guidelines &lt;em&gt;in the broader interest of all Scala users/contributors&lt;/em&gt;. To fill that role, the Scala Center is happy to announce that we&amp;#39;ve hired &lt;a href=&quot;https://github.com/jvican&quot;&gt;Jorge Vicente Cantero&lt;/a&gt;. So far, Jorge is responsible for having collected community feedback on the current process, and for proposing the new and improved SIP process. Jorge will be taking over the reigns from the capable hands of Seth Tisue and previously Dick Wall, who created the SLIP process and spearheaded the SIP/SLIP process throughout much of 2015. We&amp;#39;re immensely grateful to Dick for kicking off this effort, and hope to make him proud with our additions in the future!&lt;/p&gt;
+
+&lt;h4&gt;Attend the next SIP meeting!&lt;/h4&gt;
+
+&lt;p&gt;Our first SIP meeting with the revised process will take place tomorrow. It&amp;#39;s open for anyone to watch or to participate in (it&amp;#39;s possible to ask questions, live!), via Google on-air Hangouts. Want to watch and/or participate? Just head over to our &lt;a href=&quot;https://plus.google.com/events/c11vhomo86lkejevfkrm6uls900&quot;&gt;G+ event&lt;/a&gt; and indicate that you&amp;#39;d like to attend.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;July 2016 SIP Meeting&lt;/strong&gt;: Wednesday, July 13, 17:00 CEST (European) / 8:00 PDT (Pacific)&lt;/p&gt;
+
+&lt;h4&gt;What will happen to the SLIP process?&lt;/h4&gt;
+
+&lt;p&gt;Starting next month, that too will see a reformed process mostly due to the fact that we hope to soon realize the split of the Scala standard library into &lt;code&gt;core&lt;/code&gt; and &lt;code&gt;platform&lt;/code&gt; modules, where &lt;code&gt;platform&lt;/code&gt; can be considered a &amp;quot;batteries included&amp;quot; Scala distribution, full of helpful libraries.&lt;/p&gt;
+
+&lt;h4&gt;Talk to us!&lt;/h4&gt;
+
+&lt;p&gt;Ideas? Questions? Concerns? Come on over to the &lt;a href=&quot;https://gitter.im/scala/center&quot;&gt;Scala Center gitter channel&lt;/a&gt; and holler at us! Or just come say hi :)&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Performance of trait methods</title>
+    <link href="http://www.scala-lang.org/blog/2016/07/08/trait-method-performance.html"/>
+    <updated>2016-07-08T00:00:00+01:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/07/08/trait-method-performance</id>
+    <content type="html">&lt;h1&gt;Performance of using default methods to compile Scala trait methods&lt;/h1&gt;
+
+&lt;h2&gt;[Update] New insights&lt;/h2&gt;
+
+&lt;p&gt;Since the writing of this post, we have made a lot of progress in narrowing down the performance
+issue described. The most important new insights:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Jason has written a JMH-based test harness for measuring cold and hot perfromance of the Scala
+compiler (&lt;a href=&quot;https://github.com/scala/compiler-benchmark&quot;&gt;scala/compiler-benchmark&lt;/a&gt;). He used this
+to show that the performance difference discussed in this post only affects cold performance,
+i.e., startup time.&lt;/li&gt;
+&lt;li&gt;Scala 2.12.0-RC2 (and the final Scala 2.12.0) emits all mixin forwarders by default to avoid
+the startup performance slowdown.&lt;/li&gt;
+&lt;li&gt;The micro-benchmark analyzed in this blog post is not the root cause of the performance
+regression observed when running the Scala compiler. It just shows one example where the use
+of default methods can have unexpected consequences on performance.&lt;/li&gt;
+&lt;li&gt;A significant amount of the observed slowdown seems to be happening during class loading, when
+the JVM performs lookup of default methods inherited by classes.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The more recent benchmarks are logged in the discussion of PR
+&lt;a href=&quot;https://github.com/scala/scala/pull/5429&quot;&gt;#5429&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The rest of this post is left mostly unchanged.&lt;/p&gt;
+
+&lt;h2&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Recently we observed that &lt;a href=&quot;https://github.com/scala/scala/commit/33e7106&quot;&gt;33e7106&lt;/a&gt; causes a 20%
+slowdown in cold performance of the Scala compiler. Hot performance, for example when using sbt,
+is not affected. This post logs what we learned in trying to understand the cause of this regression.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://twitter.com/darkdimius&quot;&gt;Dmitry Petrashko&lt;/a&gt; and
+&lt;a href=&quot;https://twitter.com/retronym&quot;&gt;Jason Zaugg&lt;/a&gt; for reviews, inputs, ideas, hints, suggestions and
+references.&lt;/p&gt;
+
+&lt;p&gt;If you have any feedback please post a comment below or &lt;a href=&quot;http://lrytz.flavors.me/#about&quot;&gt;contact me&lt;/a&gt;
+directly.&lt;/p&gt;
+
+&lt;h2&gt;Bytecode formats for trait methods&lt;/h2&gt;
+
+&lt;p&gt;In Scala 2.12, bodies of methods defined in traits will be compiled to default methods in the
+interface classfile. In short, we have the following bytecode formats for concrete trait methods:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;2.11.x: trait method bodies are in static methods in the trait&amp;#39;s &lt;code&gt;T$impl&lt;/code&gt; class. Classes
+extending a trait get a virtual method that implements the abstract method in the interface and
+forwards to the static implementation method.&lt;/li&gt;
+&lt;li&gt;2.12.0-M4: trait method bodies are in (non-static) interface default methods, subclasses get an
+virtual method (overridding the default method) that forwards to that default method using
+&lt;code&gt;invokespecial&lt;/code&gt; (a &lt;code&gt;super&lt;/code&gt; call).&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/scala/scala/commit/33e7106&quot;&gt;33e7106&lt;/a&gt;: in most cases, no more forwarders are
+generated in subclasses as they are not needed: the JVM will resolve the correct method.
+Concrete trait methods are invoked either using &lt;code&gt;invokeinterface&lt;/code&gt; (if the static receiver type
+is the trait) or &lt;code&gt;invokevirtual&lt;/code&gt; (if the static receiver type is the subclass).&lt;/li&gt;
+&lt;li&gt;2.12.0-M5: trait method bodies are emitted in static methods in the interface classfile. The
+default methods forward to the static methods.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Performance measurements&lt;/h2&gt;
+
+&lt;p&gt;Scala is unfortunately still lacking a proper infrastructure for montioring performance of the
+compiler and the bytecode it generates. Improving this situation will be one of the main tasks once
+Scala 2.12.0 out the door. But for now we are left with measuring performance and identifying
+regressions by hand.&lt;/p&gt;
+
+&lt;p&gt;In the particular case we were measuring the cold performance of the Scala compiler, i.e., the time
+it takes to run the compiler on a fresh JVM and compile some code. We tested by compiling the source
+code of &lt;a href=&quot;https://github.com/pathikrit/better-files&quot;&gt;better-files&lt;/a&gt;: the code is small, has no
+dependencies and compiles on 2.10, 2.11 and 2.12.&lt;/p&gt;
+
+&lt;p&gt;Measurements were performed by simply running the Scala compiler in a loop:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;for i in {1..10}; do time /path/to/scala/bin/scalac @files; done
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The numbers for various Scala versions are in
+&lt;a href=&quot;https://docs.google.com/spreadsheets/d/12-GILZectCueVLeyC0HjOlnlQRZPBcTADGf9sVmGAW0/edit#gid=37831420&quot;&gt;this spreadsheet&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Besides the 20% regression introduced in 33e7106, there are a number of other changes in compiler
+performance that we cannot explain at this point. For example, we don&amp;#39;t know why 2.12.0-M5 is 13%
+faster than 33e7106. We will continue to work on this during the Scala 2.12 release candidate cycle.&lt;/p&gt;
+
+&lt;p&gt;In this post we take a look at the changes introduced by 33e7106. A first observation is that the
+slowdown is not due to additional logic in the compiler, but the change in the bytecode of the
+compiler itself. This can be easily verified: a compiler built from revision 33e7106 using its
+parent (b932419) as STARR has no slowdown. Building it with itself as STARR, the resulting compiler
+runs slower.&lt;/p&gt;
+
+&lt;p&gt;This means that any Scala applications using concrete trait methods is likely to be affected by
+this problem.&lt;/p&gt;
+
+&lt;h2&gt;Some details on the HotSpot compiler&lt;/h2&gt;
+
+&lt;p&gt;This section explains some details of the HotSpot optimizer. It assembles information from various
+sources and own observations; it might contain mistakes and misunderstandings. It is certainly
+simplified and incomplete. More details are available in the linked resources.&lt;/p&gt;
+
+&lt;h3&gt;JITing&lt;/h3&gt;
+
+&lt;p&gt;My recommended reference for this first section is the talk &amp;quot;JVM Mechanics&amp;quot; by Doug Hawkins
+(&lt;a href=&quot;https://www.youtube.com/watch?v=E9i9NJeXGmM&quot;&gt;video&lt;/a&gt;,
+&lt;a href=&quot;http://www.slideshare.net/dougqh/jvm-mechanics-when-does-the&quot;&gt;slides&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;First of all, JVM 8 uses two JIT compilers: C1 and C2. C1 is fast but performs only basic
+optimizations, in particular it does not perform speculative optimizations based on profiling
+(frequency of branches, type profiles at callsites). C2 is profile-guided and speculative but
+slower.&lt;/p&gt;
+
+&lt;p&gt;The JVM starts by interpreting the program. It only compiles methods that are either called often
+enough or that have long enough loops. There are two counters for each method:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;the number of times it is invoked, and&lt;/li&gt;
+&lt;li&gt;the number of times a backwards branch is executed.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The decision to compile a method is based on these counters. A simplified (ignoring backwards
+branches), typical scenario: after 2000 invocations a method gets compiled by C1, after 15000 it
+gets re-compiled by C2 (see &lt;a href=&quot;http://stackoverflow.com/a/35614237/248998&quot;&gt;this answer on SO&lt;/a&gt; for more
+details). Note that the C1-generated assembly is instrumented to update the two counters (and also
+to collect other profiling data that will be used by the C2 optimizer). After compiling a method,
+new invocations of the method will use the newly generated assembly.&lt;/p&gt;
+
+&lt;p&gt;The above works well for a method that is invoked many times, but what happens to a long-running
+method that is invoked only once, but has a long loop? The decision to compile this method is taken
+when the counter of backwards branches passes a threshold. Once compilation is done, the JVM
+performs a so-called on-stack replacement (OSR): the stack frame of the running method is modified
+as necessary and execution continues using the new assembly.&lt;/p&gt;
+
+&lt;p&gt;An OSR / loop compilation of a method is always tied to a specific loop: the entry point of the
+generated assembly is at the end of the loop (locations are referred to by the index in the jvm
+bytecode, called &amp;quot;bytecode index&amp;quot; / &lt;code&gt;bci&lt;/code&gt;). If there are multiple hot loops within a method, the
+same method may get multiple OSR compiled versions. More details on this can be found in
+&lt;a href=&quot;https://gist.github.com/rednaxelafx/1165804#osr&quot;&gt;this post&lt;/a&gt; by Krystal Mok which explains the
+many details of the &lt;code&gt;-XX:+PrintCompilation&lt;/code&gt; output.&lt;/p&gt;
+
+&lt;h3&gt;Inlining&lt;/h3&gt;
+
+&lt;p&gt;For this section my reference s Aleksey Shipilёv&amp;#39;s extensive post
+&lt;a href=&quot;http://shipilev.net/blog/2015/black-magic-method-dispatch/&quot;&gt;The Black Magic of (Java) Method Dispatch&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Inlining is fundamental because it acts as an enabler for most other optimizations. The reason is
+that inlining duplicates the code of a method into a specific environment, which allows the
+optimizer to specialize the code. As Aleksey says in the conclusion: &amp;quot;inlining actually broadens the
+scope of other optimizations, and that alone is, in many cases, enough reason to inline&amp;quot;.&lt;/p&gt;
+
+&lt;p&gt;Both C1 and C2 perform inlining. The policy whether to inline a method is non-trivial and uses
+several heuristics (implemented in
+&lt;a href=&quot;http://hg.openjdk.java.net/jdk8u/jdk8u/hotspot/file/f22b5be95347/src/share/vm/opto/bytecodeInfo.cpp&quot;&gt;bytecodeInfo.cpp&lt;/a&gt;,
+methods &lt;code&gt;should_inline&lt;/code&gt;, &lt;code&gt;should_not_inline&lt;/code&gt; and &lt;code&gt;try_to_inline&lt;/code&gt;). A simplified summary:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Trivial methods (6 bytes by default, &lt;code&gt;MaxTrivialSize&lt;/code&gt;) are always inlined.&lt;/li&gt;
+&lt;li&gt;Methods up to 35 bytes (&lt;code&gt;MaxInlineSize&lt;/code&gt;) invoked more than 250 (&lt;code&gt;MinInliningThreshold&lt;/code&gt;) times are
+inlined.&lt;/li&gt;
+&lt;li&gt;Methods up to 325 bytes (&lt;code&gt;FreqInlineSize&lt;/code&gt;) are inlined if the callsite is &amp;quot;hot&amp;quot; (or &amp;quot;frequent&amp;quot;),
+which means it is invoked more than 20 times (no command-line flag in release versions) per one
+invocation of the caller method.&lt;/li&gt;
+&lt;li&gt;The inlining depth is limited (9 by default, &lt;code&gt;MaxInlineLevel&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;No inlining is performed if the callsite method is already very large.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The procedure is the same for C1 and C2, it uses the invocation counter that is also used for
+compilation decisions (previous section).&lt;/p&gt;
+
+&lt;p&gt;Dmitry points out that a method being inlined might already be compiled, in which case the compiled
+assembly will be inlined. The size limits for inlining are controlled by a different parameter in
+this case, see
+&lt;a href=&quot;https://groups.google.com/forum/#!msg/mechanical-sympathy/8ARGnMds7tU/p4rxkhi-vgcJ&quot;&gt;this thread&lt;/a&gt;
+and &lt;a href=&quot;https://bugs.openjdk.java.net/browse/JDK-6316156&quot;&gt;this ticket&lt;/a&gt; for reference.&lt;/p&gt;
+
+&lt;h3&gt;Inlining virtual methods&lt;/h3&gt;
+
+&lt;p&gt;In C1, a method can only be inlined if it can be statically resolved. This is the case for static
+and private methods, for constructors, but also for virtual methods that are never overridden. The
+JVM has full knowledge on code of the program it is executing. If a method is virtual and could
+in principle be overridden in a subclass, but no such subclass has been loaded (so far), an
+invocation of the method can only resolve to that single definition.&lt;/p&gt;
+
+&lt;p&gt;The process of analyzing the hierarchy of classes currently loaded in the VM is called &amp;quot;class
+hierarchy analysis&amp;quot; (CHA). Both C1 and C2 use the information computed by CHA to inline calls to
+virtual methods that are not overridden.&lt;/p&gt;
+
+&lt;p&gt;When the JVM loads a new class, a virtual method that was statically not overridden by CHA may get
+an override. All assembly code that made use of the now invalid assumption is discarded and
+execution of the corresponding methods is again performed by the interpreter. This process is called
+deoptimization. In case a deoptimized method is currently being executed, passing control to the
+interpreter requires adapting the stack frame from compiled code to what the interpreter expects.
+This process is similar to on-stack replacement, but in reverse.&lt;/p&gt;
+
+&lt;p&gt;If the stack frame contains return addresses that point to invalidated code, those addresses are
+re-written to code that will perform the deoptimization and pass control to the interpreter.&lt;/p&gt;
+
+&lt;p&gt;In addition to using CHA, the C2 compiler performs speculative inlining of virtual methods based on
+the type profiles gathered by the interpreter and the C1-generated assembly. If the receiver type
+at a callsite is always the same (the callsite is &amp;quot;monomorphic&amp;quot;) the method is inlined. The assembly
+contains a type test to validate the assumption, if it breaks the method gets deoptimized.&lt;/p&gt;
+
+&lt;p&gt;C2 will also inline bi-morphic callsites: the code of both callees is inlined, a type test is used
+to branch to the correct one (or to bail out). Finally, if the type profile shows a clear bias to
+a specific receiver type (for example 90%), its method is inlined and virtual dispatch is used for
+the other cases (shown in Aleksey&amp;#39;s post).&lt;/p&gt;
+
+&lt;p&gt;If a callsite has 3+ receiver types without a clear bias, C2 does not inline and an ordinary method
+lookup is performed at runtime.&lt;/p&gt;
+
+&lt;p&gt;Note that C2 performs other speculative optimizations than profile-based inlining, for example
+profile-based branch elimination, and it has a graph-coloring register allocator.&lt;/p&gt;
+
+&lt;h2&gt;Understanding the performance regression&lt;/h2&gt;
+
+&lt;p&gt;With the above knowledge at hand (I wish I had it when I started) we try to identify what causes
+the slowdown of eliminating forwarder methods.&lt;/p&gt;
+
+&lt;h3&gt;Call performance&lt;/h3&gt;
+
+&lt;p&gt;In a first step we measured the call performance of the various trait encodings.&lt;/p&gt;
+
+&lt;p&gt;The first
+&lt;a href=&quot;https://github.com/lrytz/benchmarks/blob/master/src/main/java/traitEncodings/CallPerformance.java&quot;&gt;benchmark &lt;code&gt;CallPerformance&lt;/code&gt;&lt;/a&gt;
+has roughly the following structure:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;interface I {
+    default int addDefault(int a, int b) { return a + b; }
+
+    static int addStatic(int a, int b) { return a + b; }
+    default int addDefaultStatic(int a, int b) { return addStatic(a, b); }
+
+    default int addForwarded(int a, int b) { return a + b; }
+
+    int addInherited(int a, int b);
+
+    int addVirtual(int a, int b);
+}
+
+static abstract class A implements I {
+    public int addInherited(int a, int b) { return a + b; }
+}
+
+static class C1 extends A implements I {
+    public int addForwarded(int a, int b) { return I.super.addForwarded(a, b); }
+
+    public int addVirtual(int a, int b) { return a + b; }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;There are identical copies of &lt;code&gt;C1&lt;/code&gt; (&lt;code&gt;C2&lt;/code&gt;, ...). The example encodes the following formats (we
+don&amp;#39;t test the 2.11.x format):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;addDefault&lt;/code&gt; for 33e7106&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;addDefaultStatic&lt;/code&gt; for 2.12.0-M5&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;addForwarded&lt;/code&gt; for 2.12.0-M4&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The methods &lt;code&gt;addInherited&lt;/code&gt; and &lt;code&gt;addVirtual&lt;/code&gt; don&amp;#39;t represent trait method encodings, they are for
+comparison. We test all encodings in a monomorphic callsite (receiver is always &lt;code&gt;C1&lt;/code&gt;) and in a
+polymorphic one.&lt;/p&gt;
+
+&lt;h4&gt;Monomorphic case&lt;/h4&gt;
+
+&lt;p&gt;In the monomorphic case all trait encodings are inlined and perform the same (there are tiny
+differences, if you are interested check Aleksey&amp;#39;s blog post).&lt;/p&gt;
+
+&lt;p&gt;If we annotate all methods with JMH&amp;#39;s &lt;code&gt;DONT_INLINE&lt;/code&gt; directive, encodings with a forwarder (either
+M4-style forwarder invoking the trait default method, or the upcoming M5-style default method
+forwarding to static) are a bit slower (so a default method without a forwarder is faster).
+The penalty for having either forwarder is similar.&lt;/p&gt;
+
+&lt;h4&gt;Polymorphic case&lt;/h4&gt;
+
+&lt;p&gt;If the callsite is polymorphic:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The M4 encoding (&lt;code&gt;addForwarded&lt;/code&gt;) is slow because the forwarder cannot be inlined. This the known
+issue of trait methods leading to megamorphic callsites that exists in Scala 2.11.x and older.&lt;/li&gt;
+&lt;li&gt;The 33e7106 (&lt;code&gt;addDefault&lt;/code&gt;) and M5 (&lt;code&gt;addDefaultStatic&lt;/code&gt;) encodings are also slow: the default
+method is not inlined (checked with &lt;code&gt;-XX:+PrintInlining&lt;/code&gt; and by comparing with a method marked
+&lt;code&gt;DONT_INLINE&lt;/code&gt;). We will explore this in detail later.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For comparison, an invocation of &lt;code&gt;addInherited&lt;/code&gt; is inlined and therefore much faster. So an
+inherited virtual method is not treated in the same way as an inherited default method. The next
+section goes into details why this is the case.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; for the question why the 33e7106 encoding causes a 20% performance regression, this cannot be
+the reason. We found out that &lt;code&gt;addDefault&lt;/code&gt; is slower than it could be in the polymorphic case, but
+it is not slower than the M4 encoding.&lt;/p&gt;
+
+&lt;h3&gt;CHA and default methods&lt;/h3&gt;
+
+&lt;p&gt;The reason &lt;code&gt;addDefault&lt;/code&gt; is not inlined while &lt;code&gt;addInherited&lt;/code&gt; in the previous example has to do with
+CHA: in fact, CHA is disabled altogether for default methods. This is logged in the JVM bugtracker
+under &lt;a href=&quot;https://bugs.openjdk.java.net/browse/JDK-8036580&quot;&gt;JDK-8036580&lt;/a&gt;. It was disabled in order to
+fix &lt;a href=&quot;https://bugs.openjdk.java.net/browse/JDK-8036100&quot;&gt;JDK-8036100&lt;/a&gt; which lead to the wrong method
+being inlined. (It was @retronym who initially suggested these tickets could be relevant).&lt;/p&gt;
+
+&lt;p&gt;The reason for &lt;code&gt;addInherited&lt;/code&gt; being inlined is that the VM knows (from CHA) the method is not
+overridden in any of the loaded classes. This is tested in the
+&lt;a href=&quot;https://github.com/lrytz/benchmarks/blob/master/src/main/java/traitEncodings/InliningCHA.java&quot;&gt;&lt;code&gt;InliningCHA&lt;/code&gt; benchmark&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The first benchmark measures a megamorphic call to &lt;code&gt;addInherited&lt;/code&gt;, just like in the previous
+section. This call is inlined. The second benchmark performs the exact same operation but makes sure
+that new subclass &lt;code&gt;CX&lt;/code&gt; is loaded which overrides &lt;code&gt;addInherited&lt;/code&gt;. CHA no longer returns a single
+target for the method and the call is not inlined. Note that no instance of &lt;code&gt;CX&lt;/code&gt; is created.&lt;/p&gt;
+
+&lt;p&gt;This seems to be a shortcoming in C2&amp;#39;s inliner implementation: based on the type profiling data,
+C2 knows that the only types reaching the callsites are &lt;code&gt;C1&lt;/code&gt;, &lt;code&gt;C2&lt;/code&gt;, &lt;code&gt;C3&lt;/code&gt; and &lt;code&gt;C4&lt;/code&gt;. Using CHA it
+could in principle find out that there is a single implementation of &lt;code&gt;addInherited&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Method lookup in classes implementing many interfaces&lt;/h3&gt;
+
+&lt;p&gt;We are still searching for an answer why 33e7106 caused a performance regression. Martin Thompson
+notes in a
+&lt;a href=&quot;http://mechanical-sympathy.blogspot.ch/2012/04/invoke-interface-optimisations.html&quot;&gt;blog post&lt;/a&gt;
+(dated 2012):&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;I have observed that when a class implements multiple interfaces, with multiple methods,
+performance can degrade significantly because the method dispatch involves a linear search of
+method list&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;We can reproduce this in the
+&lt;a href=&quot;https://github.com/lrytz/benchmarks/blob/master/src/main/java/traitEncodings/InterfaceManyMembers.java&quot;&gt;benchmark &lt;code&gt;InterfaceManyMembers&lt;/code&gt;&lt;/a&gt;.
+The basic example is the following:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;interface I1 { default int a1 ... }
+interface I2 { default int b1 ... ; default int b2 ... }
+...
+
+class A1 implements I1 { }
+class A2 implements I2 { }
+...
+
+class B1 implements I1 { }
+class B2 implements I1, I2 { }
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the benchmark, every class (&lt;code&gt;A1&lt;/code&gt;, &lt;code&gt;A2&lt;/code&gt;, &lt;code&gt;B1&lt;/code&gt;, ...) exists in four copies to make sure the
+callsite is megamorphic. We measure how much time an invocation of one default method takes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The number of default methods in an interface does not matter, so &lt;code&gt;A1.a1&lt;/code&gt; and &lt;code&gt;A2.b1&lt;/code&gt; perform
+the same.&lt;/li&gt;
+&lt;li&gt;The number of implemented interfaces matters, there&amp;#39;s a penalty for every additional interface.
+So &lt;code&gt;B1.a1&lt;/code&gt; is faster than &lt;code&gt;B2.b1&lt;/code&gt;, etc.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Adding an overriding forwarder method to the subclasses does not change this result, the slowdown
+per additional interface remains. So this seems not to be the reason for the performance regression.&lt;/p&gt;
+
+&lt;h3&gt;Back to default methods&lt;/h3&gt;
+
+&lt;p&gt;Googling a little bit more about the performance of default methods, I found a relevant
+&lt;a href=&quot;http://stackoverflow.com/questions/30312096/java-default-methods-is-slower-than-the-same-code-but-in-an-abstract-class&quot;&gt;post on SO&lt;/a&gt;
+containing a nice benchmark.&lt;/p&gt;
+
+&lt;p&gt;I simplified the example into the
+&lt;a href=&quot;https://github.com/lrytz/benchmarks/blob/master/src/main/java/traitEncodings/DefaultMethodPreventsOptimization.java&quot;&gt;benchmark &lt;code&gt;DefaultMethodPreventsOptimization&lt;/code&gt;&lt;/a&gt;,
+which is relatively small:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;interface I {
+    int getV();
+    default int accessDefault() { return getV(); }
+}
+
+abstract class A implements I {
+    public int accessVirtual() { return getV(); }
+    public int accessForward(){ return I.super.accessDefault(); }
+}
+
+class C extends A implements I {
+    public int v = 0;
+    public int getV() { return v; }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The benchmark shows that &lt;code&gt;c.v = x; c.accessDefault()&lt;/code&gt; is 3x slower than
+&lt;code&gt;c.v = x; c.accessVirtual()&lt;/code&gt; or &lt;code&gt;c.v = x; c.accessForward()&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h4&gt;A look at the assembly&lt;/h4&gt;
+
+&lt;p&gt;(This section was revised later, thanks to &lt;a href=&quot;https://twitter.com/blaisorblade&quot;&gt;Paolo Giarrusso&lt;/a&gt; for
+his feedback!)&lt;/p&gt;
+
+&lt;p&gt;As noted in comments on the StackOverflow thread, everything is inlined in all three benchmarks,
+so the difference is not due to inlining. We can observe that the assembly generated for the
+&lt;code&gt;accessDefault&lt;/code&gt; case is less optimized than in the other cases. Here is the output of JMH&amp;#39;s
+&lt;code&gt;-prof perfasm&lt;/code&gt; feature, it includes the assembly of the hottest regions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;for &lt;a href=&quot;https://gist.github.com/lrytz/f1c24e685b871639d7e618b56325e102#file-adefault-txt&quot;&gt;accessDefault&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;for &lt;a href=&quot;https://gist.github.com/lrytz/f1c24e685b871639d7e618b56325e102#file-bvirtual-txt&quot;&gt;accessVirtual&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;for &lt;a href=&quot;https://gist.github.com/lrytz/f1c24e685b871639d7e618b56325e102#file-cforward-txt&quot;&gt;accessForward&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In fact, the assembly for the &lt;code&gt;accessVirtual&lt;/code&gt; and &lt;code&gt;accessForward&lt;/code&gt; cases is identical.&lt;/p&gt;
+
+&lt;p&gt;One answer on the SO thread suggests that lack of CHA for the default method case prevents
+eliminating a type guard, which in turn prevents optimizations on the field write and read. A later
+comment points out that this does not seem to be the case.&lt;/p&gt;
+
+&lt;p&gt;The benchmark basically measures the following loop:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;int r = 0;
+for (int x = 0; x &amp;lt; N; x++) {
+  c.v = x;
+  r += c.v // field acces either through a default or a virtual method
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Comparing the assembly code of the loop when using the default method or the virtual method, Paolo
+identified one interesting difference. When using the default method, the loop body consists of the
+following instructions:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;mov  %edi,0x10(%rax)   ;*putfield v
+add  0x10(%r13),%edx   ;*iadd
+inc  %edi              ;*iinc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;By default the JVM outputs the AT&amp;amp;T assembly syntax, so instructions have the form
+&lt;code&gt;mnemonic src dst&lt;/code&gt;. The &lt;code&gt;%edi&lt;/code&gt; register contains the loop counter &lt;code&gt;x&lt;/code&gt;, &lt;code&gt;%edx&lt;/code&gt; contains the result
+&lt;code&gt;r&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The first instruction writes &lt;code&gt;x&lt;/code&gt; into the field &lt;code&gt;c.v&lt;/code&gt;: &lt;code&gt;%rax&lt;/code&gt; contains the address of object
+&lt;code&gt;c&lt;/code&gt;, the field &lt;code&gt;v&lt;/code&gt; is located at offset &lt;code&gt;0x10&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The second instruction reads the field &lt;code&gt;c.v&lt;/code&gt; and adds the value to &lt;code&gt;x&lt;/code&gt;. Note that this time,
+register &lt;code&gt;%r13&lt;/code&gt; is used to access object &lt;code&gt;c&lt;/code&gt;. There are two registers that contain the same
+object address, but the JIT compiler does not seem to know this fact.&lt;/li&gt;
+&lt;li&gt;The last line increases the loop counter.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Comparing that to the loop body assembly when using a virtual method to access the field:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;mov  %r8d,0x10(%r10)   ;*putfield v
+add  %r8d,%edx         ;*iadd
+inc  %r8d              ;*iinc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, &lt;code&gt;%r8d&lt;/code&gt; contains the loop counter &lt;code&gt;x&lt;/code&gt;. Note that there is only one memory access: the JIT
+compiler identified that the memory read accesses the same location that was just written, so it
+uses the register already containing the value.&lt;/p&gt;
+
+&lt;p&gt;The full assembly code is actually a lot larger than just a loop around the three instructions shown
+above. For one, there is infrastructure code added by JMH to measure times and to make sure values
+are consumed. But the main reason is loop unrolling. The faster assembly (when using the virtual
+method) contains the following loop:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;↗ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ add    %r8d,%edx
+│ mov    %r8d,%r11d
+│ add    $0xf,%r11d
+│ mov    %r11d,0x10(%r10)   ;*putfield v
+│ add    $0x78,%edx         ;*iadd
+│ add    $0x10,%r8d         ;*iinc
+│ cmp    $0x3d9,%r8d
+╰ jl     &amp;lt;loop-start&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This code does the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The register &lt;code&gt;%r8d&lt;/code&gt; still contains the loop counter &lt;code&gt;x&lt;/code&gt;, so the loop adds &lt;code&gt;x&lt;/code&gt; to &lt;code&gt;r&lt;/code&gt; (&lt;code&gt;%edx&lt;/code&gt;)
+16 times (without increasing &lt;code&gt;x&lt;/code&gt; in between).&lt;/li&gt;
+&lt;li&gt;Then it stores the value of &lt;code&gt;x&lt;/code&gt; into &lt;code&gt;%r11d&lt;/code&gt;, adds the constant &lt;code&gt;0xf&lt;/code&gt; (decimal 15) to make up
+for the folded iterations and stores that value into the field &lt;code&gt;c.v&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The constant &lt;code&gt;0x78&lt;/code&gt; (decimal 120) is added to the result &lt;code&gt;r&lt;/code&gt; to make up for the fact that the
+loop counter was not increased (0 + 1 + 2 + ... + 15 = 120).&lt;/li&gt;
+&lt;li&gt;The loop counter is increased by the constant &lt;code&gt;0x10&lt;/code&gt; (decimal 16), corresponding to the 16
+unfolded iterations.&lt;/li&gt;
+&lt;li&gt;The loop counter is compared against &lt;code&gt;0x3d9&lt;/code&gt; (decimal 985): if it is smaller, another round of
+the unfolded loop can be executed (the loop ends at 1000). Otherwise execution continues in
+a different location that performs single loop iterations.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The interesting observation here is that the field &lt;code&gt;c.v&lt;/code&gt; is only written once per 16 iterations.&lt;/p&gt;
+
+&lt;p&gt;The slower assembly (when using the default method) also contains an unfolded loop, but the memory
+location &lt;code&gt;c.x&lt;/code&gt; is written &lt;strong&gt;and&lt;/strong&gt; read in every iteration (instead of only written in every 16th).
+Again, the problem seems to be that the JIT compiler does not know that two registers contain the
+same memory address for object &lt;code&gt;c&lt;/code&gt;. The unfolded loop also uses a lot of registers, it even seems to
+make use of SSE registers (&lt;code&gt;%xmm1&lt;/code&gt;, ...) as 32 bit registers.&lt;/p&gt;
+
+&lt;h4&gt;And CHA, again&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://twitter.com/shipilev&quot;&gt;Aleksey Shipilёv&lt;/a&gt; kindly took a look at the example and managed to
+narrow it down further. Using the JVM option &lt;code&gt;-XX:-UseCHA&lt;/code&gt;, he observed that the C2 compiler
+generates the slower bytecode (with two memory accesses per iteration) also for virtual methods when
+CHA is disabled. This was reported in a &lt;a href=&quot;https://bugs.openjdk.java.net/browse/JDK-8161334&quot;&gt;new ticket&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This limitation may be accidental, i.e., the loop optimizer should probably perform the same no
+matter if inlining was CHA- or profile-based. But the example shows that for now, the lack of CHA
+for default methods causes optimizations (other than inlining) to fail, which may result in
+significant slowdowns.&lt;/p&gt;
+
+&lt;h2&gt;Summary&lt;/h2&gt;
+
+&lt;p&gt;We found a few interesting behaviors of the JVM optimizer.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;There are two possibilities for a method to be inlined:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+&lt;li&gt;The method is not overridden in any of the classes currently loaded, as determined by CHA. In
+ this case the method can be inlined by C1 and C2.&lt;/li&gt;
+&lt;li&gt;The type profile shows that the receiver type at the callsite has a clear bias towards one or
+ two types. In this case C2 will inline the corresponding implementation(s) speculatively.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Because CHA is not available for default methods, default methods can only be inlined by C2,
+  based on type profiling. This means that a default method at a megamorphic callsite is never
+  inlined, even if the method does not have any overrides.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;The JIT does not combine the knowledge of type profiles and CHA. Assume a type profile shows that
+a certain callsite has 3 receiver types at run-time, so it is megamorphic. Also assume that there
+exist multiple versions (overrides / implementations) of the selected method, but CHA shows that
+method resolution for the 3 types in question always yields the same implementation. In principle
+the method could be inlined in this case, but this is not currently implemented.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Interface method lookup slows down by the number of interfaces a class implements.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The JVM fails to perform certain optimizations when default methods are used. We could show in a
+benchmark that moving a method from a parent class into a parent interface can degrade performance
+significantly. Adding an override to a subclass which invokes the default method using a &lt;code&gt;super&lt;/code&gt;
+call restores the performance.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The assembly code reveals that the JVM fails to eliminate memory accesses when using the default
+  methods.&lt;/p&gt;
+
+&lt;p&gt;While we can reproduce certain slowdowns when using default methods in micro-benchmarks, this does
+not answer definitively why we observe a 20% performance regression when running the Scala compiler on
+default methods without forwarders. The fact that the JIT compiler fails to perform certain
+optimizations may be the reason, but we don&amp;#39;t have any evidence or proof to relate the two
+observations.&lt;/p&gt;
+
+&lt;h2&gt;References&lt;/h2&gt;
+
+&lt;p&gt;Besides the &lt;a href=&quot;http://shipilev.net/blog/2015/black-magic-method-dispatch/&quot;&gt;post&lt;/a&gt; already mentioned,
+Aleksey Shipilёv&amp;#39;s &lt;a href=&quot;http://shipilev.net/&quot;&gt;blog&lt;/a&gt; is an excellent resource for Java and JVM
+intrinsics.&lt;/p&gt;
+
+&lt;p&gt;The talk &amp;quot;JVM Mechanics&amp;quot; by Doug Hawkins was also mentioned above
+(&lt;a href=&quot;https://www.youtube.com/watch?v=E9i9NJeXGmM&quot;&gt;video&lt;/a&gt;,
+&lt;a href=&quot;http://www.slideshare.net/dougqh/jvm-mechanics-when-does-the&quot;&gt;slides&lt;/a&gt;),
+it is a great overview on the JIT, inliner and optimizer. For an overview I can also recommend a
+&lt;a href=&quot;http://middlewaresnippets.blogspot.ch/2014/11/java-virtual-machine-code-generation.html&quot;&gt;longer blog post&lt;/a&gt;
+by René van Wijk and a
+&lt;a href=&quot;https://www.lmax.com/blog/staff-blogs/2016/03/05/observing-jvm-warm-effects/&quot;&gt;shorter one&lt;/a&gt;
+by Mark Price focussing on the JIT compilers.&lt;/p&gt;
+
+&lt;p&gt;The JVM has an excessive number of flags for logging and tweaking:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Some flags are &lt;a href=&quot;https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html&quot;&gt;documented here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Many others are not documented, run &lt;code&gt;java -XX:+PrintFlagsFinal&lt;/code&gt; to get a list of all flags&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Some flags used in the examples of this post:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-XX:TieredStopAtLevel=1&lt;/code&gt; to disable C2&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-XX:+PrintCompilation&lt;/code&gt; logs methods being compiled (and deoptimized)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-XX:+PrintInlining&lt;/code&gt; logs callsites being inlined (or not), best used together with the above&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/AdoptOpenJDK/jitwatch&quot;&gt;JITWatch&lt;/a&gt; is a GUI tool that helps understanding what the
+JIT is doing (I haven&amp;#39;t tried it yet).&lt;/p&gt;
+
+&lt;p&gt;A
+&lt;a href=&quot;http://mail.openjdk.java.net/pipermail/hotspot-compiler-dev/2015-April/thread.html#17649&quot;&gt;thread&lt;/a&gt;
+on the hotspot-compiler-dev mailing list on why CHA is disabled for interfaces. Seems to discuss
+the situation before default methods were a common thing.&lt;/p&gt;
+
+&lt;p&gt;A &lt;a href=&quot;https://gist.github.com/rednaxelafx/1165804#file-notes-md&quot;&gt;gist&lt;/a&gt; by Krystal Mok explaining many
+details of the &lt;code&gt;-XX:+PrintCompilation&lt;/code&gt; output and other details of the JIT process.&lt;/p&gt;
+
+&lt;p&gt;The &lt;a href=&quot;http://openjdk.java.net/groups/hotspot/docs/HotSpotGlossary.html&quot;&gt;glossary&lt;/a&gt; on the HotSpot
+wiki contains some useful nomenclature.&lt;/p&gt;
+
+&lt;p&gt;Finally, a &lt;a href=&quot;https://www.cs.princeton.edu/picasso/mats/HotspotOverview.pdf&quot;&gt;slide deck&lt;/a&gt; by Paul
+Hohensee that covers many details of HotSpots internals.&lt;/p&gt;
+
+&lt;h1&gt;Discussion&lt;/h1&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>The Scala Center Advisory Board</title>
+    <link href="http://www.scala-lang.org/blog/2016/05/30/scala-center-advisory-board.html"/>
+    <updated>2016-05-30T00:00:00+01:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/05/30/scala-center-advisory-board</id>
+    <content type="html">&lt;p&gt;Part of the role of the Scala Center is to run the Advisory Board, a quarterly
+forum for our sponsors to discuss, guide and challenge the direction of the
+Scala Center and how it influences the Scala community and ecosystem.&lt;/p&gt;
+
+&lt;p&gt;It was never intentional, but it&amp;#39;s become a bit of a joke at EPFL that the
+&amp;quot;Scala Center Advisory Board&amp;quot; was born with an unfortunate acronym! So, when I
+chaired our inaugral meeting in New York two weeks ago, one of the first points
+I made to the attendees was that we have to exceed our acronym and earn the
+community&amp;#39;s trust and respect, ensuring we provide a worthwhile and beneficial
+service to all users of Scala.&lt;/p&gt;
+
+&lt;p&gt;This respect is not something to be assumed or taken for granted, though we
+have received a lot of support already from many Scala users. The Advisory
+Board&amp;#39;s legitimacy as a &amp;quot;guiding light&amp;quot; to the Scala Community is quite rightly
+something we should expect to be challenged on, so it is paramount that we do
+the best with the power we have been entrusted with.&lt;/p&gt;
+
+&lt;p&gt;So, what is the Advisory Board?&lt;/p&gt;
+
+&lt;h2&gt;About the Advisory Board&lt;/h2&gt;
+
+&lt;p&gt;The Advisory Board is a separate body from the Scala Center, much as many
+governments have separate legislative and executive branches: the Advisory
+Board makes recommendations to the Scala Center on the work we should do, but
+it&amp;#39;s the Scala Center&amp;#39;s job to execute those recommendations.&lt;/p&gt;
+
+&lt;p&gt;It currently has seven voting members: representatives from each of our six
+sponsors, plus Bill Venners, the community representative. Additionally the
+Executive Director of the Scala Center, Heather Miller, sits on the board to
+report on the Scala Center&amp;#39;s activities, and provide advice on the feasibility
+of the proposals under consideration, and Martin Odersky is the technical
+advisor to the board.&lt;/p&gt;
+
+&lt;p&gt;The board will meet four times a year, usually via a conference call to keep
+costs down, but when there&amp;#39;s an opportunity (hopefully at least once a year) we
+will hold physical meetings. We organized our first meeting to take place at
+Scala Days in New York, as most of the board members were attending. (Those who
+couldn&amp;#39;t be there in person this time joined the meeting over Google
+Hangouts.)&lt;/p&gt;
+
+&lt;p&gt;Before our first meeting, we were a little apprehensive - despite our
+preparations - about how the process would play out, but having now had our
+first successful meeting, we have more confidence in the format for typical
+meetings in the future.&lt;/p&gt;
+
+&lt;h2&gt;How does the board work?&lt;/h2&gt;
+
+&lt;p&gt;The main goal for each meeting is to define a set of tasks - we call these
+&amp;quot;recommendations&amp;quot; - for the Scala Center to undertake over the coming quarter.
+Each board member can submit proposals for discussion - short overviews of a
+change or project they would like to see the Scala Center use its resources to
+implement - and a few minutes (usually no more than ten) will be devoted to
+discussing that topic amongst the members.&lt;/p&gt;
+
+&lt;p&gt;An important aspect of the relationship between the Scala Center and the
+Advisory Board is that recommendations are not binding. This means that the
+Scala Center has the option to ignore recommendations, if it decides to, which
+may seem surprising, but is actually very important. It not only maintain
+independence between the two bodies, but also in ensuring that the
+recommendations received from the Advisory Board are within our budgetary and
+technical capabilities. And this is why Heather and Martin sit on the board, in
+a non-voting capacity: to offer advice to the members on the viability of each
+of the proposals under discussion, so that the debates can focus on making a
+coherent set of recommendations which is actually achievable.&lt;/p&gt;
+
+&lt;p&gt;For example, a recommendation to halve scalac compilation times may have the
+support of the entire Advisory Board, but the Scala Center would struggle to
+make it happen, so there would be little point in the Advisory Board making it
+a recommendation.&lt;/p&gt;
+
+&lt;p&gt;So the discussions we have around each proposal may more closely resemble a
+&lt;em&gt;negotiation&lt;/em&gt; whereby the scope of a proposal is narrowed (or maybe widened) to
+garner the support necessary from the board, and confirmation from the
+Executive Director and Technical Advisor that the idea is viable.&lt;/p&gt;
+
+&lt;p&gt;Once there&amp;#39;s some consensus around the table, we move to vote on the proposal
+and have a show-of-hands to formally decide whether to adopt the proposal as a
+recommendation. For some proposals, we may not reach any agreement amongst the
+members in the time available, in which case, the chairperson may decide to
+defer further discussion until the next meeting, or suggest that the proposal
+is rewritten and resubmitted at the next meeting.&lt;/p&gt;
+
+&lt;p&gt;I mentioned at the beginning that it&amp;#39;s important for the Advisory Board to make
+good on its promise, but it&amp;#39;s just as important that we are &lt;em&gt;seen&lt;/em&gt; to be doing
+so. So the whole Advisory Board process is open, and we will publish the
+proposals and minutes from each meeting. You will be able to see these in the
+Advisory Board&amp;#39;s &lt;a href=&quot;https://github.com/scalacenter/advisoryboard/&quot;&gt;Github
+repository&lt;/a&gt; in the next few
+days.&lt;/p&gt;
+
+&lt;h2&gt;The First Meeting&lt;/h2&gt;
+
+&lt;p&gt;As the process was new for all of the members and less time was available for
+preparing proposals, we made the concession to allow proposals to be presented
+&lt;em&gt;at&lt;/em&gt; the meeting (without prior submission), but in future, we will require
+that proposals be submitted to the repository at least a week before the
+meeting to give all the members an opportunity to consider them before meeting.&lt;/p&gt;
+
+&lt;p&gt;During the first meeting, we also elected Seth Tisue as the secretary, and his
+minutes ~~will be published in the next few days~~ have been published
+&lt;a href=&quot;https://scala.epfl.ch/records.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The meeting itself was a success! We deferred one proposal until the next
+meeting (which will take place in August), but adopted four others:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;to clarify the governance of Scala, including the SIP/SLIP process,&lt;/li&gt;
+&lt;li&gt;to define a migration path from Scala 2.x to Dotty,&lt;/li&gt;
+&lt;li&gt;to create a new unpaid &amp;quot;publicity chair&amp;quot; role for the Scala Center, and&lt;/li&gt;
+&lt;li&gt;to ensure continuation of support of Scala.js.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Over the coming weeks, we will be taking steps to ensure these recommendations
+come to fruition.&lt;/p&gt;
+
+&lt;p&gt;It was a lot of work to get this far, but, after our first successful meeting,
+I&amp;#39;m very much looking forward to the next one!&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Three Scala courses launched on Coursera!</title>
+    <link href="http://www.scala-lang.org/blog/2016/05/23/scala-moocs-specialization-launched.html"/>
+    <updated>2016-05-23T00:00:00+01:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/05/23/scala-moocs-specialization-launched</id>
+    <content type="html">&lt;p&gt;We&amp;#39;re very happy to announce that the first 3 out of 4 courses in our Scala
+specialization have launched on Coursera! The courses available today include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Functional Programming Principles in Scala&lt;/strong&gt;: discover the elements of the functional programming style and learn how to apply them usefully in your daily programming tasks.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Functional Program Design in Scala&lt;/strong&gt;: learn how to apply the functional programming style in the design of larger applications.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Parallel Programming&lt;/strong&gt;: learn the fundamentals of parallel programming, from task parallelism to data parallelism.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;As in the past, all courses feature the much-loved automatic grading of
+programming assignments!&lt;/p&gt;
+
+&lt;p&gt;The final course in the pipeline is &lt;em&gt;Big Data Analysis with Scala and Spark&lt;/em&gt;,
+which we&amp;#39;re hoping will follow in a couple of months along with the Scala
+capstone project – a ~4 week long project designed to push you to build a
+larger, more challenging Scala application.&lt;/p&gt;
+
+&lt;p&gt;All courses are available both for free and as part of the Scala specialization,
+which is a verified mini-degree from Coursera.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;b&gt;&lt;a href=&quot;https://www.coursera.org/specializations/scala&quot;&gt;Learn more about the Scala Specialization on Coursera!&lt;/a&gt;&lt;/b&gt;&lt;/center&gt;
+&lt;br/&gt;&lt;/p&gt;
+
+&lt;p&gt;Or to enroll in each course independently (for free, but without a certificate),
+you can visit each course&amp;#39;s landing page:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;https://www.coursera.org/learn/progfun1/&quot;&gt;Functional Programming Principles in Scala&lt;/a&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;https://www.coursera.org/learn/progfun2/&quot;&gt;Functional Program Design in Scala&lt;/a&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;https://www.coursera.org/learn/parprog1/&quot;&gt;Parallel Programming&lt;/a&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;More info about each course can be found on the &lt;a href=&quot;https://www.coursera.org/specializations/scala&quot;&gt;Scala Specialization page&lt;/a&gt;, or on
+the &lt;a href=&quot;https://scala.epfl.ch/&quot;&gt;Scala Center&amp;#39;s website&lt;/a&gt;. Questions, or to join the discussion about the Scala Center, visit us in the &lt;a href=&quot;gitter.im/scala/center&quot;&gt;Scala Center gitter channel&lt;/a&gt;!&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Multiversal Equality for Scala</title>
+    <link href="http://www.scala-lang.org/blog/2016/05/06/multiversal-equality.html"/>
+    <updated>2016-05-06T00:00:00+01:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/05/06/multiversal-equality</id>
+    <content type="html">&lt;p&gt;I have been working recently on making equality tests using &lt;code&gt;==&lt;/code&gt; and
+&lt;code&gt;!=&lt;/code&gt; safer in Scala. This has led to a &lt;a href=&quot;https://github.com/lampepfl/dotty/issues/1247&quot;&gt;Language Enhancement
+Proposal&lt;/a&gt; which I summarize in this blog.&lt;/p&gt;
+
+&lt;h2&gt;Why Change Equality?&lt;/h2&gt;
+
+&lt;p&gt;Scala prides itself of its strong static type system. Its type discipline is particularly useful when it comes to refactoring. Indeed, it&amp;#39;s possible to write programs in such a way that refactoring problems show up with very high probability as type errors. This is essential for being able to refactor with the confidence that nothing will break. And the ability to do such refactorings is in turn very important for keeping code bases from rotting.&lt;/p&gt;
+
+&lt;p&gt;Of course, getting such a robust code base requires the cooperation of the developers. They should avoid type &lt;code&gt;Any&lt;/code&gt;, casts, &lt;a href=&quot;http://c2.com/cgi/wiki?StringlyTyped&quot;&gt;stringly typed&lt;/a&gt; logic, and more generally any operation over loose types that do not capture the important properties of a value. Unfortunately, there is one area in Scala where such loose types are very hard to avoid: That&amp;#39;s equality. Comparisons with &lt;code&gt;==&lt;/code&gt; and &lt;code&gt;!=&lt;/code&gt; are &lt;em&gt;universal&lt;/em&gt;. They compare any two values, no matter what their types are. This causes real problems for writing code and more problems for refactoring it.&lt;/p&gt;
+
+&lt;p&gt;For instance, one might want to introduce a proxy for some data structure so that instead of accessing the data structure directly one goes through the proxy. The proxy and the underlying data would have different types. Normally this should be an easy refactoring. If one passes by accident a proxy for the underlying type or &lt;em&gt;vice versa&lt;/em&gt; the type checker will flag the error. However, if one accidentally compares a proxy with the underlying type using &lt;code&gt;==&lt;/code&gt; or a pattern match, the program is still valid, but will just always say &lt;code&gt;false&lt;/code&gt;. This is a real worry in practice. I recently abandoned a desirable extensive refactoring because I feared that it would be too hard to track down such errors.&lt;/p&gt;
+
+&lt;h2&gt;Where Are We Today?&lt;/h2&gt;
+
+&lt;p&gt;The problems of universal equality in Scala are of course well
+known. Some libraries have tried to fix it by adding another equality
+operator with more restricted typing. Most often this safer equality
+is written &lt;code&gt;===&lt;/code&gt;. While &lt;code&gt;===&lt;/code&gt; is certainly useful, I am not a fan of
+adding another equality operator to the language and core
+libraries. It would be much better if we could fix &lt;code&gt;==&lt;/code&gt; instead. This
+would be both simpler and would catch all potential equality problems
+including those related to pattern matching.&lt;/p&gt;
+
+&lt;p&gt;How can &lt;code&gt;==&lt;/code&gt; be fixed? It looks much harder to do this than adding an
+alternate equality operator. First, we have to keep backwards
+compatibility. The ability to compare everything to everything is by
+now baked into lots of code and libraries.
+Second, with just one equality operator
+we need to make this operator work in all cases where it makes
+sense. An alternative &lt;code&gt;===&lt;/code&gt; operator can choose to refuse some
+comparisons that should be valid because there&amp;#39;s always &lt;code&gt;==&lt;/code&gt;
+to fall back to. With a unique &lt;code&gt;==&lt;/code&gt; operator we do not have this
+luxury.&lt;/p&gt;
+
+&lt;p&gt;The current status in Scala is that the compiler will give warnings
+for &lt;em&gt;some&lt;/em&gt; comparisons that are always &lt;code&gt;false&lt;/code&gt;. But the coverage is
+weak. For instance this will give a warning:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;scala&amp;gt; 1 == &quot;abc&quot;
+&amp;lt;console&amp;gt;:12: warning: comparing values of types Int and String using `==&#39; will always yield false
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But this will not:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;scala&amp;gt; &quot;abc&quot; == 1
+res2: Boolean = false
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;There are also cases where a warning is given for a valid equality
+test that actually makes sense because the result could be &lt;code&gt;true&lt;/code&gt;. In
+summary, the current checking catches some obvious bugs, which is
+nice. But it is far too weak and fickle to be an effective refactoring
+aid.&lt;/p&gt;
+
+&lt;h2&gt;What&amp;#39;s Proposed?&lt;/h2&gt;
+
+&lt;p&gt;I believe to do better, we need to enlist the cooperation of
+developers. Ultimately it&amp;#39;s the developer who provides implementations
+of equality methods and who is therefore best placed to characterize
+which equalities make sense. Sometimes this characterization can be
+involved. For instance, an &lt;code&gt;Int&lt;/code&gt; can be compared to other primitive
+numeric values or to instances of type &lt;code&gt;java.lang.Number&lt;/code&gt; but any other
+comparison will always yield &lt;code&gt;false&lt;/code&gt;. Or, it makes sense to compare
+two &lt;code&gt;Option&lt;/code&gt; values if and only if it makes sense to compare the optional
+element values.&lt;/p&gt;
+
+&lt;p&gt;The best known way to characterize such relationships is with type
+classes. Implicit values of a trait &lt;code&gt;Eq[T, U]&lt;/code&gt; can capture the
+property that values of type &lt;code&gt;T&lt;/code&gt; can be compared to values of type
+&lt;code&gt;U&lt;/code&gt;. Here&amp;#39;s the definition of &lt;code&gt;Eq&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;package scala
+
+trait Eq[-T, -U]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That is, &lt;code&gt;Eq&lt;/code&gt; is a pure marker trait with two type parameters and without
+any members.  Developers can define equality classes by giving
+implicit &lt;code&gt;Eq&lt;/code&gt; instances. Here is a simple one:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;   implicit def eqString: Eq[String, String] = Eq
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This states that strings can be only compared to strings, not to values of other types.
+Here&amp;#39;s a more complicated &lt;code&gt;Eq&lt;/code&gt; instance:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  implicit def eqOption[T, U](implicit _eq: Eq[T, U]): Eq[Option[T], Option[U]] = Eq
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This states that &lt;code&gt;Option&lt;/code&gt; values can be compared if their elements can be compared.&lt;/p&gt;
+
+&lt;p&gt;It&amp;#39;s foreseen that such &lt;code&gt;Eq&lt;/code&gt; instances can be generated automatically. If we add
+an annotation &lt;code&gt;@equalityClass&lt;/code&gt; to &lt;code&gt;Option&lt;/code&gt; like this&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  @equalityClass class Option[+T] { ... }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;then the &lt;code&gt;eqOption&lt;/code&gt; definition above would be generated automatically in &lt;code&gt;Option&lt;/code&gt;&amp;#39;s companion object.&lt;/p&gt;
+
+&lt;p&gt;Given a set of &lt;code&gt;Eq&lt;/code&gt; instances, the idea is that the Scala
+compiler will check every time it encounters a &lt;em&gt;potentially
+problematic&lt;/em&gt; comparison between values of types &lt;code&gt;T&lt;/code&gt; and &lt;code&gt;U&lt;/code&gt; that there
+is an implicit instance of &lt;code&gt;Eq[T, U]&lt;/code&gt;. A comparison is &lt;em&gt;potentially
+problematic&lt;/em&gt; if it is between incompatible types. As long as &lt;code&gt;T &amp;lt;: U&lt;/code&gt;
+or &lt;code&gt;U &amp;lt;: T&lt;/code&gt; the equality could make sense because both sides can
+potentially be the same value.&lt;/p&gt;
+
+&lt;p&gt;So this means we still keep universal equality as it is in Scala now
+- we don&amp;#39;t have a choice here anyway, because of backwards
+compatibility. But we render it safe by checking that for each
+comparison the corresponding &lt;code&gt;Eq&lt;/code&gt; instance exists.&lt;/p&gt;
+
+&lt;p&gt;What about types for which no &lt;code&gt;Eq&lt;/code&gt; instance exists? To maintain
+backwards compatibility, we allow comparisons of such types as well,
+by means of a fall-back &lt;code&gt;eqAny&lt;/code&gt; instance. But we do not allow comparisons
+between types that have an &lt;code&gt;Eq&lt;/code&gt; instance and types that have none.
+Details are explained in the
+&lt;a href=&quot;https://github.com/lampepfl/dotty/issues/1247&quot;&gt;proposal&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2&gt;Properties&lt;/h2&gt;
+
+&lt;p&gt;Here are some nice properties of the proposal&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;It is &lt;em&gt;opt-in&lt;/em&gt;. To get safe checking, developers have to annotate with &lt;code&gt;@equalityClass&lt;/code&gt; classes that should
+ allow comparisons only between their instances, or they have to define implicit
+&lt;code&gt;Eq&lt;/code&gt; instances by hand.&lt;/li&gt;
+&lt;li&gt;It is backwards compatible. Without developer-provided &lt;code&gt;Eq&lt;/code&gt; instances, equality works as before.&lt;/li&gt;
+&lt;li&gt;It carries no run-time cost compared to universal equality. Indeed the run-time behavior of
+ equality is not affected at all.&lt;/li&gt;
+&lt;li&gt;It has no problems with parametricity, variance, or bottom types.&lt;/li&gt;
+&lt;li&gt;Depending on the actual &lt;code&gt;Eq&lt;/code&gt; instances given, it can be very precise. That is,
+ no comparisons that might yield &lt;code&gt;true&lt;/code&gt; need to be rejected, and most comparisons that
+will always yield &lt;code&gt;false&lt;/code&gt; are in fact rejected.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The scheme effectively leads to a partition of the former universe of
+types into sets of types. Values with types in the same partition can
+be compared among themselves but values with types in different
+partitions cannot.
+An &lt;code&gt;@equalityClass&lt;/code&gt; annotation on a type creates a new partition. All
+types that do not have any &lt;code&gt;Eq&lt;/code&gt; instances (except &lt;code&gt;eqAny&lt;/code&gt;, that is)
+form together another partition.
+So instead of a single &lt;em&gt;universe&lt;/em&gt; of values that can be compared to
+each other we get a &lt;em&gt;multiverse&lt;/em&gt; of partitions. Hence the name of the
+proposal: &lt;strong&gt;Multiversal Equality&lt;/strong&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Scala Center Appoints Bill Venners as Community Representative to the Advisory Board</title>
+    <link href="http://www.scala-lang.org/blog/2016/04/29/sc-community-representative.html"/>
+    <updated>2016-04-29T00:00:00+01:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/04/29/sc-community-representative</id>
+    <content type="html">&lt;p&gt;At Scala Days, the &lt;a href=&quot;https://scala.epfl.ch/&quot;&gt;Scala Center&lt;/a&gt; will hold its first
+Advisory Board meeting. The Advisory Board comprises primarily of delegates
+from our sponsors. But, we exist as an organization to support the &lt;em&gt;entire&lt;/em&gt;
+Scala community, so for that reason, our founding documents allow for a
+&amp;quot;community representative&amp;quot; to sit on the board; someone who can speak for the
+whole community.&lt;/p&gt;
+
+&lt;h2&gt;A Community Representative&lt;/h2&gt;
+
+&lt;p&gt;Who should fulfil the role of community representative is an important choice
+for The Scala Center to make. The Scala community needs someone independent,
+technically capable, and universally respected. So Heather, Martin and I
+considered a few names we thought could take on the task.  It&amp;#39;s an indication
+of the wealth of great people who actively involve themselves in our community
+that the three of us came up with so many potential candidates, but close to
+the top of everyone&amp;#39;s shortlist was one person: Bill Venners. And we&amp;#39;re
+delighted to announce today that Bill has accepted our invitation, and will be
+the community representative on the Advisory Board.&lt;/p&gt;
+
+&lt;p&gt;Bill is best known as the author of the &lt;a href=&quot;http://www.scalatest.org/&quot;&gt;ScalaTest&lt;/a&gt;
+testing framework and co-author of the Programming in Scala book, soon to have
+its third edition published. But he also develops the Scalactic library, is a
+frequent speaker at Scala conferences, and offers training in Scala through
+&lt;a href=&quot;http://www.artima.com/&quot;&gt;Artima&lt;/a&gt; and &lt;a href=&quot;http://www.escalatesoft.com/&quot;&gt;Escalate
+Software&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Bill has a long history of involvement in Scala, and I remember back to the
+early days of Scala&amp;#39;s development when Bill would take the time to engage in
+long discussions with the other members on the Scala mailing lists as we tried,
+together, to figure out Scala, its various features, and how we could best
+employ them to our advantage. Looking back, I can&amp;#39;t think of anyone who devoted
+more time to listening to and trying to understand the various different ideas
+(and Scala is a language that accommodates alternative perspectives more than
+almost any other!) being discussed within the Scala community.&lt;/p&gt;
+
+&lt;p&gt;We are extremely happy that Bill is going to join the advisory board and
+continue providing his valued guidance on some of the important issues that
+Scala will face in the future.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>47 Degrees Joins the Scala Center Advisory Board!</title>
+    <link href="http://www.scala-lang.org/blog/2016/04/05/47deg-joins-scala-center-advisory-board.html"/>
+    <updated>2016-04-05T00:00:00+01:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/04/05/47deg-joins-scala-center-advisory-board</id>
+    <content type="html">&lt;p&gt;Today, the Scala Center is very proud to welcome &lt;a href=&quot;http://www.47deg.com/&quot;&gt;47
+Degrees&lt;/a&gt;, an independent functional programming
+consultancy and certified Lightbend Partner, as an advisory board member. You
+might know 47 Degrees as the folks behind the popular &lt;a href=&quot;http://scala-exercises.47deg.com/&quot;&gt;Scala
+Exercises&lt;/a&gt;, an interactive, web-based
+collection of Scala Koans, which are small bite-size lessons that build up a
+full understanding of Scala. Scala Exercises will go v2 this year, and with it,
+it will bring better support for saving progress on exercises across devices,
+more koans, better evaluation, and the ability to write exercises. We hope to
+work with 47 Degrees to make efforts like Scala Exercises a first-class, go-to
+educational offering for new newcomers to Scala.&lt;/p&gt;
+
+&lt;p&gt;“Providing valuable open sourced content to the  Scala ecosystem has always been
+a priority for our company,” said 47 Degrees CEO &lt;a href=&quot;https://twitter.com/nickelsberry&quot;&gt;Nick
+Elsberry&lt;/a&gt;. “The opportunity to work alongside
+the Scala Center gives us the ability to hone our efforts and focus our
+contributions on projects that will be most beneficial to the evolution of the
+language and its growing user base.”&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://twitter.com/raulraja&quot;&gt;Raúl Raja&lt;/a&gt;, co-founder and CTO of 47 Degrees,
+will represent 47 Degrees on the Scala Center advisory board.&lt;/p&gt;
+
+&lt;p&gt;As the folks behind important efforts focused on the benefit of the entire Scala
+community like Scala Exercises, 47 Degrees truly embodies the “for good of all”
+spirit at the core of the Scala Center’s mission. We’re thrilled to have them on
+board to share this journey with us.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Getting into Scaladoc Development</title>
+    <link href="http://www.scala-lang.org/blog/2016/03/17/getting-into-scaladoc-dev.html"/>
+    <updated>2016-03-17T00:00:00+00:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/03/17/getting-into-scaladoc-dev</id>
+    <content type="html">&lt;p&gt;Over the past months I&amp;#39;ve been working on the new Scaladoc - and it&amp;#39;s coming
+along nicely. Together with
+&lt;a href=&quot;http://twitter.com/heathercmiller&quot;&gt;@heathercmiller&lt;/a&gt; and
+&lt;a href=&quot;http://twitter.com/vladureche&quot;&gt;@vladureche&lt;/a&gt; we&amp;#39;ve overhauled the overall look
+of Scaladoc as well as having added a bunch of useful features - like complete
+member search!&lt;/p&gt;
+
+&lt;p&gt;With the new Scala Center recently announced, one of the things discussed has
+been how to lower the entry barrier on important open source projects. This blog
+post aims to do exactly that for Scaladoc. There are a lot of things we want
+to do with the docs - and we&amp;#39;d love help! If that piques your interest - read on.&lt;/p&gt;
+
+&lt;h2&gt;Scaladoc for 2.12.x&lt;/h2&gt;
+
+&lt;p&gt;The new major version of Scala is scheduled for later this year, and currently
+its doc tool generates sites like this one:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/TOkD4JF.png&quot; alt=&quot;Scala Collections&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The new search functionality allows you to not only look for so called
+&amp;quot;top-level entities&amp;quot; (&lt;code&gt;class&lt;/code&gt;, &lt;code&gt;trait&lt;/code&gt;, &lt;code&gt;object&lt;/code&gt; and &lt;code&gt;package&lt;/code&gt;) but members like
+methods and even &lt;code&gt;val&lt;/code&gt; and &lt;code&gt;var&lt;/code&gt;s. The new search is not at all taxing, on a
+big library like the collections - the results are shown almost
+instantaneously. Nevertheless, we&amp;#39;ve got a progress bar showing you something&amp;#39;s
+actually happening:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://imgur.com/jLxcRpx.png&quot; alt=&quot;Scala Collections&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;How does Scaladoc work?&lt;/h2&gt;
+
+&lt;p&gt;The Scaladoc tool is quite easy to understand - there are basically three things
+that happen once you&amp;#39;ve specified what you want documented:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Scaladoc compiles the sources using the first step of the compiler (the
+frontend). This will fill a tree structure known as &lt;code&gt;Universe&lt;/code&gt; with all the
+information about the sources (classes, members, doc string etc).&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;See:&lt;/strong&gt; &lt;a href=&quot;https://github.com/scala/scala/blob/2.12.x/src/scaladoc/scala/tools/nsc/doc/DocFactory.scala&quot;&gt;DocFactory.scala&lt;/a&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Copy all needed assets to out location (i.e. scripts and CSS-files)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;See:&lt;/strong&gt; &lt;a href=&quot;https://github.com/scala/scala/blob/2.12.x/src/scaladoc/scala/tools/nsc/doc/html/HtmlFactory.scala&quot;&gt;HtmlFactory.scala&lt;/a&gt;.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Traverse the &lt;code&gt;Universe&lt;/code&gt; tree and for each top-level entity create an
+HTML-page using the &lt;code&gt;Entity&lt;/code&gt; class.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;See:&lt;/strong&gt; &lt;a href=&quot;https://github.com/scala/scala/blob/2.12.x/src/scaladoc/scala/tools/nsc/doc/html/page/Entity.scala&quot;&gt;Entity.scala&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The bulk of these steps are carried out inside the &lt;code&gt;HtmlFactory&lt;/code&gt; class in
+&lt;a href=&quot;https://github.com/scala/scala/blob/2.12.x/src/scaladoc/scala/tools/nsc/doc/html/HtmlFactory.scala&quot;&gt;HtmlFactory.scala&lt;/a&gt;.
+Have a look there for a more complete overview.&lt;/p&gt;
+
+&lt;h2&gt;How do I generate the docs?&lt;/h2&gt;
+
+&lt;p&gt;Simple:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;$ git clone git@github.com:scala/scala.git &amp;amp;&amp;amp; cd scala
+$ ant docs # &quot;ant docs.lib&quot; if you just want the standard library
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Where to begin&lt;/h2&gt;
+
+&lt;p&gt;The markup of the entity page is defined in
+&lt;a href=&quot;https://github.com/scala/scala/blob/2.12.x/src/scaladoc/scala/tools/nsc/doc/html/page/Entity.scala&quot;&gt;Entity.scala&lt;/a&gt;.
+If you&amp;#39;re looking to change the HTML that&amp;#39;s where you will want to look first.&lt;/p&gt;
+
+&lt;p&gt;If you want to add some static asset, remember that &lt;code&gt;HtmlFactory&lt;/code&gt; needs to copy
+it to the destination. So be sure to add your new resource to &lt;code&gt;libResources&lt;/code&gt; in
+&lt;a href=&quot;https://github.com/scala/scala/blob/2.12.x/src/scaladoc/scala/tools/nsc/doc/html/HtmlFactory.scala&quot;&gt;HtmlFactory.scala&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;All the current static assets are located in the
+&lt;a href=&quot;https://github.com/scala/scala/tree/2.12.x/src/scaladoc/scala/tools/nsc/doc/html/resource/lib&quot;&gt;lib&lt;/a&gt; directory.
+That&amp;#39;s where you&amp;#39;d want to put new things (it is also where &lt;code&gt;index.js&lt;/code&gt; etc live!)&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;How can I see my changes?&lt;/strong&gt; You have two options, if you changed the markup -
+you&amp;#39;ll need to regenerate the docs:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;$ ant docs.clean &amp;amp;&amp;amp; ant docs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When the changes are to scripts or style sheets I use a small &lt;code&gt;Makefile&lt;/code&gt; in the
+root of the project. This makefile will simply copy the resources to the same location
+as the generated docs:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;all:
+    cp src/scaladoc/scala/tools/nsc/doc/html/resource/lib/{index.css,index.js,template.css,template.js,diagrams.css,diagrams.js} build/scaladoc/library/lib/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Regenerating the docs all the time is a pain - if you just want to generate
+them for a single file, do this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;$ ant quick.bin
+$ build/quick/bin/scaladoc path/to/source/File.scala
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Lastly, before you open your pull request - test your changes!&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;$ ant test.scaladoc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Where to really begin&lt;/h2&gt;
+
+&lt;p&gt;There&amp;#39;s still a lot of things to do before this can be considered release ready.
+Here&amp;#39;s a laundry list of things we need to do:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;General
+
+&lt;ul&gt;
+&lt;li&gt;Async all the things! We should be able to parallelize the generation of
+the doc pages&lt;/li&gt;
+&lt;li&gt;CSS cleanup! There are a lot of things not necessary anymore, these could
+simply be deleted&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Mobile, the docs look decent on mobile - but there&amp;#39;s still a ton to do!
+
+&lt;ul&gt;
+&lt;li&gt;Landscape kills some of our layout&lt;/li&gt;
+&lt;li&gt;There is no good package overview (list on the right) - ideas welcome!&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Desktop
+
+&lt;ul&gt;
+&lt;li&gt;Keyboard navigation on entity pages (i.e. between members)&lt;/li&gt;
+&lt;li&gt;Better keyboard navigation on search results&lt;/li&gt;
+&lt;li&gt;Minor layout issues&lt;/li&gt;
+&lt;li&gt;Showing existence of companion &lt;code&gt;class&lt;/code&gt;/&lt;code&gt;trait&lt;/code&gt;/&lt;code&gt;object&lt;/code&gt; (maybe &lt;em&gt;&amp;quot;You
+won&amp;#39;t believe who&lt;/em&gt; &lt;code&gt;Companion object Boolean&lt;/code&gt; &lt;em&gt;is going home with
+tonight!&amp;quot;&lt;/em&gt;)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The full list of ideas and things to do can be found on
+&lt;a href=&quot;https://github.com/scala/scala-dev/issues/84&quot;&gt;scala-dev&lt;/a&gt;. Comment on the issue
+or reach out to one of us (@felixmulder, @heathermiller, @vladureche) on the
+&lt;a href=&quot;https://gitter.im/scala/contributors&quot;&gt;scala/contributors gitter&lt;/a&gt; if you&amp;#39;re
+interested in knowing more!&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>The Scala Center</title>
+    <link href="http://www.scala-lang.org/blog/2016/03/14/announcing-the-scala-center.html"/>
+    <updated>2016-03-14T00:00:00+00:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/03/14/announcing-the-scala-center</id>
+    <content type="html">&lt;p&gt;Today we have launched a new initiative: &lt;a href=&quot;http://scala.epfl.ch&quot;&gt;The Scala Center&lt;/a&gt; will
+act as an open source foundation for Scala.
+It will engage with developers in the open-source community in the effort to
+improve the language, its tools and its documentation. It will also help developers
+learn the language through massive open online courses, seminars and other activities.&lt;/p&gt;
+
+&lt;h2&gt;Why a Center?&lt;/h2&gt;
+
+&lt;p&gt;Scala has seen a steady rise in adoption. This is reflected in the
+&lt;a href=&quot;http://www.indeed.com/jobtrends/scala.html&quot;&gt;number of open Scala jobs&lt;/a&gt; and in Google&amp;#39;s
+&lt;a href=&quot;https://www.google.com/trends/explore#q=scala%20tutorial&amp;amp;cmpt=q&amp;amp;tz=Etc%2FGMT-1&quot;&gt;search trends&lt;/a&gt;.
+In the &lt;a href=&quot;http://sogrady-media.redmonk.com/sogrady/files/2016/02/lang-rank-944px-wm-e1456601438269.png&quot;&gt;Redmonk rankings&lt;/a&gt;,
+the language currently ranks 14th. Overall, we estimate that more than
+half a million developers are using Scala.&lt;/p&gt;
+
+&lt;p&gt;Scala is the technology of choice for a vibrant open-source ecosystem,
+including popular platforms and frameworks such as
+&lt;a href=&quot;http://spark.apache.org/&quot;&gt;Spark&lt;/a&gt;, &lt;a href=&quot;http://kafka.apache.org/&quot;&gt;Kafka&lt;/a&gt;,
+&lt;a href=&quot;akka.io&quot;&gt;Akka&lt;/a&gt;, &lt;a href=&quot;https://twitter.github.io/finagle&quot;&gt;Finagle&lt;/a&gt;,
+&lt;a href=&quot;http://typelevel.org/cats/&quot;&gt;Cats&lt;/a&gt;, and
+&lt;a href=&quot;https://www.playframework.com/&quot;&gt;Play&lt;/a&gt;, to name just a few.&lt;/p&gt;
+
+&lt;p&gt;The large user base and the diversity of projects built on Scala mean
+that there are many demands on the language and its tool set. There is also a large pool of capable and motivated contributors. The first mission of the Scala Center is to consult with
+the user community, define common goals, and organize contributions
+and its own resources to achieve these goals.&lt;/p&gt;
+
+&lt;p&gt;Scala is quite unique in the way it combines functional and
+object-oriented programming elements. This makes it quite different
+from other languages and requires some conscious investment in
+learning the language to reap most of it benefits. Learning Scala, if
+done right, is much more than just internalizing syntax. It usually
+deeply affects the way developers think about their activity. We have
+pioneered open online education, with more than 400,000 registrations
+to our MOOCs on Coursera. The Scala Center will take over and enlarge
+these efforts, integrating them in a specialization that teaches
+functional programming and data analysis using Scala and Spark.&lt;/p&gt;
+
+&lt;h2&gt;Structure of the Center&lt;/h2&gt;
+
+&lt;p&gt;The Scala Center is a designated unit at EPFL, independent from the
+Scala research group (LAMP). Its first two officers are executive director Heather Miller,
+and principal engineer Jon Pretty. The Center is funded by EPFL and a group of industrial
+members. The initial industrial founding members of the center are:
+Goldman Sachs, IBM, Lightbend, Nitro, and Verizon. We are keen to
+welcome other members in the future.&lt;/p&gt;
+
+&lt;h2&gt;Relationship with the community&lt;/h2&gt;
+
+&lt;p&gt;The Center aims in helping and complementing existing entities in the
+Scala ecosystem. In particular:&lt;/p&gt;
+
+&lt;p&gt;Lightbend (formerly Typesafe) will continue to maintain and evolve the
+stable Scala distribution. Lightbend is a founding member of the
+center and its engineers are looking forward to participating in its
+projects.&lt;/p&gt;
+
+&lt;p&gt;Existing open source projects and platforms will work as before. The
+Center will help in making open source libraries more discoverable
+using a package index. It will also step up to take over the evolution
+of projects of common interest, subject to its available resources.&lt;/p&gt;
+
+&lt;p&gt;One specific project where it looks like we have enough interest and
+pledges of funding is &lt;a href=&quot;http://www.scala-js.org/&quot;&gt;Scala.js&lt;/a&gt;.  Scala.js
+is developed so far by the lab at EPFL (specifically Sébastien Doeraene
+and Nicolas Stucki) with the help of outside contributors, including Lightbend.
+The Scala Center should be a
+logical platform to put this great work on a more stable basis.&lt;/p&gt;
+
+&lt;h2&gt;Please contribute!&lt;/h2&gt;
+
+&lt;p&gt;We are starting out now with a rough direction and expect that most details of the Center’s working will become clearer once we have gained some experience in our activities. For now, we are soliciting the community for help.&lt;/p&gt;
+
+&lt;p&gt;If you have time or funding to contribute, and would like to work on a project that is useful to the community at large, please join us in the &lt;a href=&quot;https://gitter.im/scala/center&quot;&gt;Scala Center gitter channel&lt;/a&gt; and get involved!&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Scaling DOT to Scala - Soundness</title>
+    <link href="http://www.scala-lang.org/blog/2016/02/17/scaling-dot-soundness.html"/>
+    <updated>2016-02-17T00:00:00+00:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/02/17/scaling-dot-soundness</id>
+    <content type="html">&lt;p&gt;In my &lt;a href=&quot;http://www.scala-lang.org/blog/2016/02/03/essence-of-scala.html&quot;&gt;last
+blog post&lt;/a&gt;
+I introduced DOT, a minimal calculus that underlies much of Scala.
+DOT is much more than an academic exercise, because it gives us
+guidelines on how to design a sound type system for full Scala.&lt;/p&gt;
+
+&lt;h2&gt;Recap: The Problem of Bad Bounds&lt;/h2&gt;
+
+&lt;p&gt;As was argued in the previous blog post, the danger a path-dependent type
+system like Scala&amp;#39;s faces is inconsistent bounds or aliases. For
+instance, you might have a type alias&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  type T = String
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;in scope in some part of the program, but in another part the same
+type member &lt;code&gt;T&lt;/code&gt; is known as&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  type T = Int
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you connect the two parts, you end up allowing assigning a &lt;code&gt;String&lt;/code&gt;
+to an &lt;code&gt;Int&lt;/code&gt; and vice versa, which is unsound - it will crash at
+runtime with a &lt;code&gt;ClassCastException&lt;/code&gt;. The problem is that there
+is no obvious, practical, compile time analysis for DOT or
+Scala that ensures that all types have good bounds. Types can contain
+abstract type members with bounds that can be refined elsewhere and
+several independent refinements might lead together to a bad bound
+problem.  Barring a whole program analysis there is no specific
+point in the program where we can figure this out straightforwardly.&lt;/p&gt;
+
+&lt;p&gt;In DOT, the problem is resolved by insisting that every path prefix &lt;code&gt;p&lt;/code&gt;
+of a type &lt;code&gt;p.T&lt;/code&gt; is at runtime a concrete value. That way, we only have
+to check for good bounds when objects are &lt;em&gt;created&lt;/em&gt; with &lt;code&gt;new&lt;/code&gt;, and
+that check is easy: When objects are created, we know their class and
+we can insist that all nested types in that class are aliases or
+have consistent bounds. So far so good.&lt;/p&gt;
+
+&lt;h2&gt;Loopholes Caused by Scaling Up&lt;/h2&gt;
+
+&lt;p&gt;But if we want to scale up the DOT result for full Scala, several
+loopholes open up. These come all down to the fact that the prefix of
+a type selection might &lt;em&gt;not&lt;/em&gt; be a value that&amp;#39;s constructed with a
+&lt;code&gt;new&lt;/code&gt; at run time.  The loopholes can be classified into three
+categories:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;The prefix value might be lazy, and never instantiated to anything, as in:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;lazy val p: S = p
+... p.T ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note that trying to access the lazy value &lt;code&gt;p&lt;/code&gt; would result in an infinite loop. But using &lt;code&gt;p&lt;/code&gt; in a type does not force its evaluation, so we might never evaluate &lt;code&gt;p&lt;/code&gt;. Since &lt;code&gt;p&lt;/code&gt; is not initialized with a &lt;code&gt;new&lt;/code&gt;, bad bounds for &lt;code&gt;T&lt;/code&gt; would go undetected.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The prefix value might be initialized to &lt;code&gt;null&lt;/code&gt;, as in&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;val p: S = null
+... p.T ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The problem here is similar to the first one. &lt;code&gt;p&lt;/code&gt; is not initialized
+with a &lt;code&gt;new&lt;/code&gt; so we know nothing about the bounds of &lt;code&gt;T&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The prefix might be a type &lt;code&gt;T&lt;/code&gt; in a type projection &lt;code&gt;T # A&lt;/code&gt;, where &lt;code&gt;T&lt;/code&gt;
+is not associated with a runtime value.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;We can in fact construct soundness issues in all of these cases. Look
+at the discussion for issues &lt;a href=&quot;https://github.com/lampepfl/dotty/issues/50&quot;&gt;#50&lt;/a&gt;
+and &lt;a href=&quot;https://github.com/lampepfl/dotty/issues/1050&quot;&gt;#1050&lt;/a&gt; in the
+&lt;a href=&quot;https://github.com/lampepfl/dotty/issues/1050&quot;&gt;dotty&lt;/a&gt; repository
+on GitHub. All issues work fundamentally in the same way: Construct a type &lt;code&gt;S&lt;/code&gt;
+which has a type member &lt;code&gt;T&lt;/code&gt; with bad bounds, say&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Any &amp;lt;: T &amp;lt;: Nothing
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then, use the left subtyping to turn an expression of type &lt;code&gt;Any&lt;/code&gt; into
+an expression of type &lt;code&gt;T&lt;/code&gt; and use the right subtyping to turn that
+expression into an expression of type &lt;code&gt;Nothing&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;def f(x: Any): p.T = x
+def g(x: p.T): Nothing = x
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Taken together, &lt;code&gt;g(f(x))&lt;/code&gt; will convert every expression into an
+expression of type &lt;code&gt;Nothing&lt;/code&gt;. Since &lt;code&gt;Nothing&lt;/code&gt; is a subtype of every
+other type, this means you can convert an arbitrary expression to have
+any type you choose. Such a feat is an impossible promise, of
+course. The promise is usually broken at run-time by failing with a
+&lt;code&gt;ClassCastException&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2&gt;Plugging the Loopholes&lt;/h2&gt;
+
+&lt;p&gt;To get back to soundness we need to plug the loopholes. Some of the
+necessary measures are taken in pull request &lt;a href=&quot;https://github.com/lampepfl/dotty/issues/1051&quot;&gt;#1051&lt;/a&gt;.
+That pull request&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;tightens the rules for overrides of lazy values: lazy values
+cannot override or implement non-lazy values,&lt;/li&gt;
+&lt;li&gt;tightens the rules which lazy values can appear in paths: they
+must be final and must have concrete types with known consistent bounds,&lt;/li&gt;
+&lt;li&gt;allows type projections &lt;code&gt;T # A&lt;/code&gt; only if &lt;code&gt;T&lt;/code&gt; is a concrete type
+with known consistent bounds.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It looks like this is sufficient to plug soundness problems (1) and
+(3). To plug (2), we need to make the type system track nullability in
+more detail than we do it now. Nullability tracking is a nice feature
+in its own right, but now we have an added incentive for implementing
+it: it would help to ensure type soundness.&lt;/p&gt;
+
+&lt;p&gt;There&amp;#39;s one sub-case of nullability checking which is much harder to do
+than the others. An object reference &lt;code&gt;x.f&lt;/code&gt; might be &lt;code&gt;null&lt;/code&gt; at run time
+because the field &lt;code&gt;f&lt;/code&gt; is not yet initialized. This can lead to a
+soundness problem, but in a more roundabout way than the other issues
+we have identified. In fact, Scala guarantees that in a program that
+runs to completion without aborting, every field will eventually be
+initialized, so every non-null field will have good bounds. Therefore,
+the only way an initialized field &lt;code&gt;f&lt;/code&gt; could cause a soundness problem
+is if the program in question would never get to initialize &lt;code&gt;f&lt;/code&gt;,
+either because it goes into an infinite loop or because it aborts with
+an exception or &lt;code&gt;System.exit&lt;/code&gt; call before reaching the initialization
+point of &lt;code&gt;f&lt;/code&gt;. It&amp;#39;s a valid question whether type soundness guarantees
+should extend to this class of &amp;quot;strange&amp;quot; programs. We might want to
+draw the line here and resort to runtime checks or exclude &amp;quot;strange&amp;quot;
+programs from any soundness guarantees we can give. The research community
+has coined the term &lt;a href=&quot;http://soundiness.org/&quot;&gt;soundiness&lt;/a&gt; for
+this kind of approach and has &lt;a href=&quot;http://cacm.acm.org/magazines/2015/2/182650-in-defense-of-soundiness/fulltext&quot;&gt;advocated&lt;/a&gt; for it.&lt;/p&gt;
+
+&lt;p&gt;The necessary restrictions on type projection &lt;code&gt;T # A&lt;/code&gt; are problematic
+because they invalidate some idioms in type-level programming. For
+instance, the cute trick of making Scala&amp;#39;s type system Turing complete
+by having it &lt;a href=&quot;https://michid.wordpress.com/2010/01/29/scala-type-level-encoding-of-the-ski-calculus/&quot;&gt;simulate SK
+combinators&lt;/a&gt;
+would no longer work since that one relies on unrestricted type
+projections. The same holds for some of the encodings of type-level
+arithmetic.&lt;/p&gt;
+
+&lt;p&gt;To ease the transition, we will continue for a while to allow unrestricted type
+projections under a flag, even though they are potentially
+unsound. In the current dotty compiler, that flag is a language import
+&lt;code&gt;-language:Scala2&lt;/code&gt;, but it could be something different for other
+compilers, e.g. &lt;code&gt;-unsafe&lt;/code&gt;.  Maybe we can find rules that are less
+restrictive than the ones we have now, and are still sound.  But one
+aspect should be non-negotiable: Any fundamental deviations from the
+principles laid down by DOT needs to be proven mechanically correct
+just like DOT was. We have achieved a lot with the DOT proofs, so we
+should make sure not to back-slide. And if the experience of the past
+10 years has taught us one thing, it is that the meta theory of type
+systems has many more surprises in store than one might think. That&amp;#39;s
+why mechanical proofs are essential.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>The Essence of Scala</title>
+    <link href="http://www.scala-lang.org/blog/2016/02/03/essence-of-scala.html"/>
+    <updated>2016-02-03T00:00:00+00:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/02/03/essence-of-scala</id>
+    <content type="html">&lt;p&gt;What do you get if you boil Scala on a slow flame and wait until all
+incidental features evaporate and only the most concentrated essence
+remains? After doing this for 8 years we believe we have the answer:
+it&amp;#39;s DOT, the calculus of dependent object types, that underlies Scala.&lt;/p&gt;
+
+&lt;p&gt;A &lt;a href=&quot;http://infoscience.epfl.ch/record/215280&quot;&gt;paper on DOT&lt;/a&gt; will be
+presented in April at &lt;a href=&quot;http://events.inf.ed.ac.uk/wf2016&quot;&gt;Wadlerfest&lt;/a&gt;,
+an event celebrating Phil Wadler&amp;#39;s 60th birthday. There&amp;#39;s also a prior
+technical report (&lt;a href=&quot;http://arxiv.org/abs/1510.05216&quot;&gt;From F to DOT&lt;/a&gt;)
+by Tiark Rompf and Nada Amin describing a slightly different version
+of the calculus. Each paper describes a proof of type soundness that
+has been machine-checked for correctness.&lt;/p&gt;
+
+&lt;h2&gt;The DOT calculus&lt;/h2&gt;
+
+&lt;p&gt;A calculus is a kind of mini-language that is small enough to be
+studied formally. Translated to Scala notation, the language covered
+by DOT is described by the following abstract grammar:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Value       v  =  (x: T) =&amp;gt; t            Function
+                  new { x: T =&amp;gt; ds }     Object
+
+Definition  d  =  def a = t              Method definition
+                  type A = T             Type
+
+Term        t  =  v                      Value
+                  x                      Variable
+                  t1(t2)                 Application
+                  t.a                    Selection
+                  { val x = t1; t2 }     Local definition
+
+Type        T  =  Any                    Top type
+                  Nothing                Bottom type
+                  x.A                    Selection
+                  (x: T1) =&amp;gt; T2          Function
+                  { def a: T }           Method declaration
+                  { type T &amp;gt;: T1 &amp;lt;: T2 } Type declaration
+                  T1 &amp;amp; T2                Intersection
+                  { x =&amp;gt; T }             Recursion
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The grammar uses several kinds of names:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;x      for (immutable) variables
+a      for (parameterless) methods
+A      for types
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The full calculus adds to this syntax formal &lt;em&gt;typing rules&lt;/em&gt; that
+assign types &lt;code&gt;T&lt;/code&gt; to terms &lt;code&gt;t&lt;/code&gt; and formal &lt;em&gt;evaluation rules&lt;/em&gt; that
+describe how a program is evaluated. The following &lt;em&gt;type soundness&lt;/em&gt;
+property was shown with a mechanized, (i.e. machine-checked) proof:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;If a term &lt;code&gt;t&lt;/code&gt; has type &lt;code&gt;T&lt;/code&gt;, and the evaluation of &lt;code&gt;t&lt;/code&gt; terminates, then
+  the result of the evaluation will be a value &lt;code&gt;v&lt;/code&gt; of type &lt;code&gt;T&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;Difficulties&lt;/h2&gt;
+
+&lt;p&gt;Formulating the precise soundness theorem and proving it was unexpectedly hard,
+because it uncovered some technical challenges that had not been
+studied in depth before. In DOT - as well as in many programming languages -
+you can have conflicting definitions. For instance you might have an abstract
+type declaration in a base class with two conflicting aliases in subclasses:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt; trait Base { type A }
+ trait Sub1 extends Base { type A = String }
+ trait Sub2 extends Base { type A = Int }
+ trait Bad extends Sub1 with Sub2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now, if you combine &lt;code&gt;Sub1&lt;/code&gt; and &lt;code&gt;Sub2&lt;/code&gt; in trait &lt;code&gt;Bad&lt;/code&gt; you get a conflict,
+since the type &lt;code&gt;A&lt;/code&gt; is supposed to be equal to both &lt;code&gt;String&lt;/code&gt; and &lt;code&gt;Int&lt;/code&gt;. If you do
+not detect the conflict and assume the equalities at face value you
+get &lt;code&gt;String = A = Int&lt;/code&gt;, hence by transitivity &lt;code&gt;String = Int&lt;/code&gt;! Once you
+are that far, you can of course engineer all sorts of situations where
+a program will typecheck but cause a wrong execution at runtime. In
+other words, type soundness is violated.&lt;/p&gt;
+
+&lt;p&gt;Now, the problem is that one cannot always detect these
+inconsistencies, at least not by a local analysis that does not need
+to look at the whole program. What&amp;#39;s worse, once you have an
+inconsistent set of definitions you can use these definitions to
+&amp;quot;prove&amp;quot; their own consistency - much like a mathematical theory that
+assumes &lt;code&gt;true = false&lt;/code&gt; can &amp;quot;prove&amp;quot; every proposition including its own
+correctness.&lt;/p&gt;
+
+&lt;p&gt;The crucial reason why type soundness still holds is this: If one
+compares &lt;code&gt;T&lt;/code&gt; with an alias, one does so always relative to some &lt;em&gt;path&lt;/em&gt;
+&lt;code&gt;x&lt;/code&gt; that refers to the object containing &lt;code&gt;T&lt;/code&gt;.  So it&amp;#39;s really &lt;code&gt;x.T =
+Int&lt;/code&gt;. Now, we can show that during evaluation every such path refers
+to some object that was created with a &lt;code&gt;new&lt;/code&gt;, and that, furthermore,
+every such object has consistent type definitions. The tricky bit is
+to carefully distinguish between the full typing rules, which allow
+inconsistencies, and the typing rules arising from runtime values,
+which do not.&lt;/p&gt;
+
+&lt;h2&gt;Why is This Important?&lt;/h2&gt;
+
+&lt;p&gt;There are at least four reasons why insights obtained in the DOT
+project are important.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;They give us a well-founded explanation of &lt;em&gt;nominal typing&lt;/em&gt;.
+Nominal typing means that a type is distinguished from others
+simply by having a different name.
+For instance, given two trait definitions&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  trait A extends AnyRef { def f: Int }
+  trait B extends AnyRef { def f: Int }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;we consider &lt;code&gt;A&lt;/code&gt; and &lt;code&gt;B&lt;/code&gt; to be different types, even though both
+traits have the same parents and both define the same members.
+The opposite of
+nominal typing is structural typing, which treats types
+that have the same structure as being the same. Most programming
+languages are at least in part nominal whereas most formal type systems,
+including DOT, are structural. But the abstract types in DOT
+provide a way to express nominal types such as classes and traits.
+The Wadlerfest paper contains examples that show how
+one can express classes for standard types such as &lt;code&gt;Boolean&lt;/code&gt; and &lt;code&gt;List&lt;/code&gt; in DOT.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;They give us a stable basis on which we can study richer languages
+that resemble Scala more closely. For instance, we can encode
+type parameters as type members of objects in DOT. This encoding
+can give us a better understanding of the interactions of
+subtyping and generics. It can explain why variance rules
+are the way they are and what the precise typing rules for
+wildcard parameters &lt;code&gt;[_ &amp;lt;: T]&lt;/code&gt;, &lt;code&gt;[_ &amp;gt;: T]&lt;/code&gt; should be.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;DOT also provides a blueprint for Scala compilation. The new Scala
+compiler &lt;em&gt;dotty&lt;/em&gt; has internal data structures that closely resemble DOT.
+In particular, type parameters are immediately mapped to type members,
+in the way we propose to encode them also in the calculus.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Finally, the proof principles explored in the DOT work give us guidelines
+to assess and treat other possible soundness issues. We now know much
+better what conditions must be fulfilled to ensure type soundness.
+This lets us put other constructs of the Scala language to the test,
+either to increase our confidence that they are indeed sound, or
+to show that they are unsound. In my next blog I will
+present some of the issues we have discovered through that exercise.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Minutes from Jan 2016 SIP/SLIP Meeting</title>
+    <link href="http://www.scala-lang.org/blog/2016/01/11/minutes-from-jan-2016.html"/>
+    <updated>2016-01-11T00:00:00+00:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/01/11/minutes-from-jan-2016</id>
+    <content type="html">&lt;h2&gt;SIP/SLIP meeting, January 2016&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=Kp4Ev-2xjWU&quot;&gt;A video recording of this meeting&lt;/a&gt; is available.&lt;/p&gt;
+
+&lt;h2&gt;Welcomes and apologies&lt;/h2&gt;
+
+&lt;p&gt;Today we have &lt;a href=&quot;http://github.com/SethTisue&quot;&gt;@SethTisue&lt;/a&gt;, &lt;a href=&quot;http://github.com/sjrd&quot;&gt;@sjrd&lt;/a&gt;, &lt;a href=&quot;http://github.com/heathermiller&quot;&gt;@heathermiller&lt;/a&gt;, &lt;a href=&quot;http://github.com/non&quot;&gt;@non&lt;/a&gt; and &lt;a href=&quot;http://github.com/odersky&quot;&gt;@odersky&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2&gt;January milestone issues&lt;/h2&gt;
+
+&lt;h3&gt;SIP for supporting named type arguments and partial type argument lists&lt;/h3&gt;
+
+&lt;p&gt;Link to SIP: &lt;a href=&quot;https://github.com/scala/scala.github.com/pull/456&quot;&gt;https://github.com/scala/scala.github.com/pull/456&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Proposal by &lt;a href=&quot;https://github.com/ahmadsalim&quot;&gt;@ahmadsalim&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Notes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The SIP is a design proposal about the syntax and what the semantics of these features might be, but at this point has no code.&lt;/li&gt;
+&lt;li&gt;This idea has come up a few times over the years and is based on those previous discussions.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This proposal and &lt;a href=&quot;https://github.com/lampepfl/dotty&quot;&gt;dotty&lt;/a&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://github.com/odersky&quot;&gt;@odersky&lt;/a&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;have considering something like this in &lt;a href=&quot;https://github.com/lampepfl/dotty&quot;&gt;dotty&lt;/a&gt;. Doing this involves considering quite a few rules (and their corner cases), which this SIP doesn&amp;#39;t cover.&lt;/li&gt;
+&lt;li&gt;generally sympathetic, but not sure this has the format for a SIP.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://github.com/odersky&quot;&gt;@odersky&lt;/a&gt; thinks there should be a wider discussion about this, involving:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;for partial type application how do we want to support this?&lt;/li&gt;
+&lt;li&gt;named parameters one way to do this, but there are possibly other ways and we want to use the same approach.&lt;/li&gt;
+&lt;li&gt;for example another way of doing this is &lt;a href=&quot;https://github.com/non/kind-projector&quot;&gt;kind-projector&lt;/a&gt;, do we want to put something like that in the language (and if yes, under what syntax?)?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Conclusion:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://github.com/odersky&quot;&gt;@odersky&lt;/a&gt; thinks this is promising, but needs to be fleshed out for a SIP. He also notes that &lt;a href=&quot;https://github.com/lampepfl/dotty&quot;&gt;dotty&lt;/a&gt; wants to do this, so we might want to wait and synchronize rather than have &lt;a href=&quot;https://github.com/ahmadsalim&quot;&gt;@ahmadsalim&lt;/a&gt; spend a lot of time working on this, only to find a different approach has been made in dotty.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://github.com/non&quot;&gt;@non&lt;/a&gt;, it&amp;#39;s good to be clear that there are two things people want here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;partial application&lt;/li&gt;
+&lt;li&gt;partial specification, where want to apply all the types but only want to specify some of them and infer the rest&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://github.com/SethTisue&quot;&gt;@SethTisue&lt;/a&gt; sums up:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;partial application part could go in Scala before dotty&lt;/li&gt;
+&lt;li&gt;the named type parameter feature would need to be tried in dotty first (it&amp;#39;s much more experimental) before any back port.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Actions:&lt;/p&gt;
+
+&lt;p&gt;Ask &lt;a href=&quot;https://github.com/ahmadsalim&quot;&gt;@ahmadsalim&lt;/a&gt; to talk to the &lt;a href=&quot;https://github.com/lampepfl/dotty&quot;&gt;dotty&lt;/a&gt; team about this.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>New Year Resolutions</title>
+    <link href="http://www.scala-lang.org/blog/2016/01/02/new-year-resolutions.html"/>
+    <updated>2016-01-02T00:00:00+00:00</updated>
+    <id>http://www.scala-lang.org/blog/2016/01/02/new-year-resolutions</id>
+    <content type="html">&lt;p&gt;For most of us, the change of the year is an occasion for thinking
+about what we missed doing last year and where we want to improve. I decided
+there are a couple of things where I would like to do better in 2016
+than in 2015. The first is that I would like to do more blogging and
+writing in general. I have been pretty silent for most of the last
+year. This was mostly caused by the fact that I had been heads down to
+work on DOT, Scala&amp;#39;s foundations, and &lt;em&gt;dotty&lt;/em&gt;, the new Scala compiler
+platform we are working on. It&amp;#39;s been a lot of work, but we are finally
+getting good results. DOT now has a mechanized proof of type soundness
+and the dotty compiler &lt;a href=&quot;http://www.scala-lang.org/blog/2015/10/23/dotty-compiler-bootstraps.html&quot;&gt;can now compile
+itself&lt;/a&gt;
+as well as large parts of Scala&amp;#39;s standard library.&lt;/p&gt;
+
+&lt;p&gt;The dotty compiler has a completely new and quite unusual
+architecture, which makes it resemble a functional database or a
+functional reactive program. My &lt;a href=&quot;https://www.youtube.com/watch?v=WxyyJyB_Ssc&quot;&gt;talk at the JVM language
+summit&lt;/a&gt; gives an
+overview. In the coming months I want to write together with my
+collaborators a series of blog posts
+ that explain details of the code base. The
+aim of these posts will be to present the new architectural patterns
+to a larger audience and also to help existing and potential
+contributors get familiar with the code base.&lt;/p&gt;
+
+&lt;p&gt;My second resolution is to take a larger effort to promote simplicity
+in Scala. I believe the recent &lt;a href=&quot;http://jimplush.com/talk/2015/12/19/moving-a-team-from-scala-to-golang/&quot;&gt;blog post by Jim
+Plush&lt;/a&gt; should be a wakeup call for our
+community. Scala is a very powerful and un-opinionated language.  This
+means we have a large spectrum of choice how to write a Scala
+application or library. It&amp;#39;s very important for all of us to use this
+power wisely, and to promote simplicity of usage wherever possible.
+Unfortunately, most of us fall all too easily into the complexity
+trap, as Alex Payne&amp;#39;s tweet sums it up very nicely.&lt;/p&gt;
+
+&lt;blockquote class=&quot;twitter-tweet&quot; lang=&quot;en&quot;&gt;&lt;p lang=&quot;en&quot; dir=&quot;ltr&quot;&gt;“Complexity is like a bug light for smart people. We can&amp;#39;t resist it, even though we know it&amp;#39;s bad for us.” &lt;a href=&quot;https://t.co/V9Izi573CF&quot;&gt;https://t.co/V9Izi573CF&lt;/a&gt;&lt;/p&gt;&amp;mdash; Alex Payne (@al3x) &lt;a href=&quot;https://twitter.com/al3x/status/683036775942496256&quot;&gt;January 1, 2016&lt;/a&gt;&lt;/blockquote&gt;
+
+&lt;script async src=&quot;//platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;I have been as guilty of complication as everybody else. Is
+&lt;code&gt;CanBuildFrom&lt;/code&gt; the most appropriate solution to deal with the
+constraints of embedding special types such as arrays and strings in a
+collection library? It achieves its purpose of providing a uniform
+user-level API on disparate datatypes. But I now think with more
+effort we might be able come up with a solution that works as well and
+is simpler. Another example, where I have doubts if not regrets are
+the &lt;code&gt;/:&lt;/code&gt; and &lt;code&gt;:\&lt;/code&gt; operators in scala.collections.  They are cute
+synonyms for folds, and I am still fond of the analogy with falling
+dominoes they evoke. But in retrospect I think maybe they did give a
+bad example for others to go overboard with symbolic operators.&lt;/p&gt;
+
+&lt;p&gt;So my main agenda for the coming year is to work on making Scala
+simpler: The language, its foundations, its libraries. I hope you
+will join me in that venture.&lt;/p&gt;
+
+&lt;p&gt;With that thought, I wish you a happy new year 2016.&lt;/p&gt;
+</content>
+  </entry>
+  
+</feed>

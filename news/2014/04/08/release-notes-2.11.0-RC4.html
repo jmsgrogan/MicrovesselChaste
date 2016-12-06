@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Scala 2.11.0-RC4 is now available! | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Scala 2.11.0-RC4 is now available!</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            
+            <div class="article-date">April 8, 2014</div>
+
+<p>We are very pleased to announce Scala 2.11.0-RC4, the next release candidate of Scala 2.11.0! Download it now from <a href="http://scala-lang.org/download/2.11.0-RC4.html">scala-lang.org</a> or via <a href="http://search.maven.org/%23search%7Cga%7C1%7Cg%3A%22org.scala-lang%22%20AND%20v%3A%222.11.0-RC4%22">Maven Central</a>.</p>
+
+<p>Since RC3, we&#39;ve fixed two blocker bugs, and admitted some final polish for macros and quasiquotes. Here&#39;s the <a href="https://github.com/scala/scala/compare/v2.11.0-RC3...v2.11.0-RC4">difference between RC4 and RC3</a>.</p>
+
+<p>Please do try out this release candidate to help us find any serious regressions before the final release. The next release candidate (or the final) will be cut on Friday April 11, if there are no unresolved blocker bugs. Our goal is to have the next release be the final -- please help us make sure there are no important regressions!</p>
+
+<p>Code that compiled on 2.10.x without deprecation warnings should compile on 2.11.x (we do no guarantee this for experimental APIs, such as reflection). If not, <a href="https://issues.scala-lang.org/secure/CreateIssueDetails!init.jspa?pid=10005&amp;issuetype=1&amp;versions=11311&amp;labels=regression">please file a regression</a>. We are working with the community to ensure availability of the core projects of the Scala 2.11.x eco-system, please see below for a list. This release is <em>not</em> binary compatible with the 2.10.x series, to allow us to keep improving the Scala standard library.</p>
+
+<p>For production use, we recommend the latest stable release, 2.10.4.</p>
+
+<!--break-->
+
+<p>The Scala 2.11.x series targets Java 6, with (evolving) experimental support for Java 8. In 2.11.0, Java 8 support is mostly limited to reading Java 8 bytecode and parsing Java 8 source. Stay tuned for more complete (experimental) Java 8 support.</p>
+
+<p>The Scala team and contributors <a href="https://issues.scala-lang.org/issues/?jql=project%20%3D%20SI%20and%20fixVersion%20%3E%3D%20%22Scala%202.11.0-M1%22%20and%20fixVersion%20%3C%3D%20%22Scala%202.11.0-RC4%22%20and%20resolution%20%3D%20fixed">fixed 613 bugs</a> that are exclusive to Scala 2.11.0-RC4! We also backported as many as possible. With the release of 2.11, 2.10 backports will be dialed back.</p>
+
+<p>Since the last RC, we fixed <a href="https://issues.scala-lang.org/issues/?jql=project%20%3D%20SI%20AND%20fixVersion%20%3D%20%22Scala%202.11.0-RC4%22%20AND%20resolution%20%3D%20fixed%20ORDER%20BY%20priority%20DESC">11 issues</a> via <a href="https://github.com/scala/scala/issues?milestone=36&amp;state=closed">37 merged pull requests</a>.</p>
+
+<p>A big thank you to everyone who&#39;s helped improve Scala by reporting bugs, improving our documentation, participating in mailing lists and other public fora, and -- of course -- submitting and reviewing pull requests! You are all awesome.</p>
+
+<p>Concretely, according to <code>git log --no-merges --oneline master --not 2.10.x --format=&#39;%aN&#39;  | sort | uniq -c | sort -rn</code>, 111 people contributed code, tests, and/or documentation to Scala 2.11.x: Paul Phillips,  Jason Zaugg,  Eugene Burmako,  Adriaan Moors,  Den Shabalin,  Simon Ochsenreither,  A. P. Marki,  Miguel Garcia,  James Iry,  Denys Shabalin,  Rex Kerr,  Grzegorz Kossakowski,  Vladimir Nikolaev,  Eugene Vigdorchik,  François Garillot,  Mirco Dotta,  Rüdiger Klaehn,  Raphael Jolly,  Kenji Yoshida,  Paolo Giarrusso,  Antoine Gourlay,  Hubert Plociniczak,  Aleksandar Prokopec,  Simon Schaefer,  Lex Spoon,  Andrew Phillips,  Sébastien Doeraene,  Luc Bourlier,  Josh Suereth,  Jean-Remi Desjardins,  Vojin Jovanovic,  Vlad Ureche,  Viktor Klang,  Valerian,  Prashant Sharma,  Pavel Pavlov,  Michael Thorpe,  Jan Niehusmann,  Heejong Lee,  George Leontiev,  Daniel C. Sobral,  Christoffer Sawicki,  yllan,  rjfwhite,  Volkan Yazıcı,  Ruslan Shevchenko,  Robin Green,  Olivier Blanvillain,  Lukas Rytz,  Iulian Dragos,  Ilya Maykov,  Eugene Yokota,  Erik Osheim,  Dan Hopkins,  Chris Hodapp,  Antonio Cunei,  Andriy Polishchuk,  Alexander Clare,  杨博,  srinivasreddy,  secwall,  nermin,  martijnhoekstra,  jinfu-leng,  folone,  Yaroslav Klymko,  Xusen Yin,  Trent Ogren,  Tobias Schlatter,  Thomas Geier,  Stuart Golodetz,  Stefan Zeiger,  Scott Carey,  Samy Dindane,  Sagie Davidovich,  Runar Bjarnason,  Roland Kuhn,  Roberto Tyley,  Robert Nix,  Robert Ladstätter,  Rike-Benjamin Schuppner,  Rajiv,  Philipp Haller,  Nada Amin,  Mike Morearty,  Michael Bayne,  Mark Harrah,  Luke Cycon,  Lee Mighdoll,  Konstantin Fedorov,  Julio Santos,  Julien Richard-Foy,  Juha Heljoranta,  Johannes Rudolph,  Jiawei Li,  Jentsch,  Jason Swartz,  James Ward,  James Roper,  Havoc Pennington,  Evgeny Kotelnikov,  Dmitry Petrashko,  Dmitry Bushev,  David Hall,  Daniel Darabos,  Dan Rosen,  Cody Allen,  Carlo Dapor,  Brian McKenna,  Andrey Kutejko,  Alden Torres.</p>
+
+<p>Thank you all very much.</p>
+
+<p>If you find any errors or omissions in these relates notes, <a href="https://github.com/scala/make-release-notes/blob/master/hand-written.md">please submit a PR</a>!</p>
+
+<h3>Reporting Bugs / Known Issues</h3>
+
+<p>Please <a href="https://issues.scala-lang.org/secure/CreateIssueDetails!init.jspa?pid=10005&amp;issuetype=1&amp;versions=11311">file any bugs you encounter</a>. If you&#39;re unsure whether something is a bug, please contact the <a href="https://groups.google.com/forum/?fromgroups#!forum/scala-user">scala-user</a> mailing list.</p>
+
+<p>Before reporting a bug, please have a look at these <a href="https://issues.scala-lang.org/issues/?jql=project%20%3D%20SI%20AND%20fixVersion%20%21%3D%20%22Scala%202.11.0-RC3%22%20AND%20affectedVersion%20%3D%20%22Scala%202.11.0-RC4%22%20%20and%20resolution%20%3D%20unresolved%20ORDER%20BY%20priority%20DESC">known issues</a>.</p>
+
+<h3>Scala IDE for Eclipse</h3>
+
+<p>The Scala IDE with this release built in is <a href="http://download.scala-ide.org/sdk/helium/e38/scala211/dev/site/">available from this update site</a> for <a href="http://www.eclipse.org/downloads/packages/eclipse-ide-java-developers/keplersr2">Eclipse 4.2/4.3 (Juno/Kepler)</a>. Please have a look at the <a href="http://scala-ide.org/docs/user/gettingstarted.html">getting started guide</a> for more info.</p>
+
+<h3>Available projects</h3>
+
+<p>The following Scala projects have already been released against 2.11.0-RC4! We&#39;d love to include yours in this list as soon as it&#39;s available -- please submit a PR to update <a href="https://github.com/scala/make-release-notes/blob/master/hand-written.md">these release notes</a>.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">"org.scalacheck"         %% "scalacheck"         % "1.11.3"
+"com.typesafe.akka"      %% "akka-actor"         % "2.3.0"
+"org.scalatest"          %% "scalatest"          % "2.1.3"
+"org.scala-lang.modules" %% "scala-async"        % "0.9.1"
+"org.scalafx"            %% "scalafx"            % "8.0.0-R4"
+"com.chuusai"            %% "shapeless"          % "1.2.4"
+"com.chuusai"            %% "shapeless"          % "2.0.0"
+"org.scalamacros"        %% "paradise"           % "2.0.0-M7"
+"org.scalaz"             %% "scalaz-core"        % "7.0.6"
+"org.specs2"             %% "specs2"             % "2.3.10"
+</code></pre></div>
+<p>The following projects were released against 2.11.0-RC3, with an RC4 build hopefully following soon:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">"org.scalafx"            %% "scalafx"            % "1.0.0-R8"
+"com.github.scopt"       %% "scopt"              % "3.2.0"
+"com.nocandysw"          %% "platform-executing" % "0.5.0"
+"io.argonaut"            %% "argonaut"           % "6.0.3"
+"com.clarifi"            %% "f0"                 % "1.1.1"
+"org.parboiled"          %% "parboiled-scala"    % "1.1.6"
+"com.sksamuel.scrimage"  %% "scrimage"           % "1.3.16"
+"org.scala-stm"          %% "scala-stm"          % "0.7"
+"org.monifu"             %% "monifu"             % "0.4"
+</code></pre></div>
+<h3>Cross-building with sbt 0.13</h3>
+
+<p>When cross-building between Scala versions, you often need to vary the versions of your dependencies. In particular, the new scala modules (such as scala-xml) are no longer included in scala-library, so you&#39;ll have to add an explicit dependency on it to use Scala&#39;s xml support.</p>
+
+<p>Here&#39;s how we recommend handling this in sbt 0.13. For the full build and Maven build, see <a href="https://github.com/scala/scala-module-dependency-sample">example</a>.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">scalaVersion        := "2.11.0-RC4"
+
+crossScalaVersions  := Seq("2.11.0-RC4", "2.10.3")
+
+// add scala-xml dependency when needed (for Scala 2.11 and newer)
+// this mechanism supports cross-version publishing
+libraryDependencies := {
+  CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, scalaMajor)) if scalaMajor &gt;= 11 =&gt;
+      libraryDependencies.value :+ "org.scala-lang.modules" %% "scala-xml" % "1.0.1"
+    case _ =&gt;
+      libraryDependencies.value
+  }
+}
+</code></pre></div>
+<h3>Important changes</h3>
+
+<p>For most cases, code that compiled under 2.10.x without deprecation warnings should not be affected. We&#39;ve verified this by <a href="https://jenkins-dbuild.typesafe.com:8499/job/Community-2.11.x">compiling</a> a <a href="https://github.com/typesafehub/community-builds/blob/master/common-2.11.x.conf#L43">sizeable number of open source projects</a>. </p>
+
+<p>Changes to the reflection API may cause breakages, but these breakages can be easily fixed in a manner that is source-compatible with Scala 2.10.x. Follow our reflection/macro changelog for <a href="http://docs.scala-lang.org/overviews/macros/changelog211.html#how_to_make_your_210x_macros_work_in_2110">detailed instructions</a>.</p>
+
+<p>We&#39;ve decided to fix the following more obscure deviations from specified behavior without deprecating them first.</p>
+
+<ul>
+<li><a href="https://issues.scala-lang.org/browse/SI-4577">SI-4577</a> Compile <code>x match { case _ : Foo.type =&gt; }</code> to <code>Foo eq x</code>, as specified. It used to be <code>Foo == x</code> (without warning). If that&#39;s what you meant, write <code>case Foo =&gt;</code>.</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-7475">SI-7475</a> Improvements to access checks, aligned with the spec (see also the linked issues). Most importantly, private members are no longer inherited. Thus, this does not type check: <code>class Foo[T] { private val bar: T = ???; new Foo[String] { bar: String } }</code>, as the <code>bar</code> in <code>bar: String</code> refers to the <code>bar</code> with type <code>T</code>. The <code>Foo[String]</code>&#39;s <code>bar</code> is not inherited, and thus not in scope, in the refinement. (Example from <a href="https://issues.scala-lang.org/browse/SI-8371">SI-8371</a>, see also <a href="https://issues.scala-lang.org/browse/SI-8426">SI-8426</a>.)</li>
+</ul>
+
+<p>The following changes were made after a deprecation cycle (Thank you, <a href="https://github.com/soc">@soc</a>, for leading the deprecation effort!)</p>
+
+<ul>
+<li><a href="https://issues.scala-lang.org/browse/SI-6809">SI-6809</a> Case classes without a parameter list are no longer allowed.</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-7618">SI-7618</a> Octal number literals no longer supported.</li>
+</ul>
+
+<p>Finally, some notable improvements and bug fixes:</p>
+
+<ul>
+<li><a href="https://issues.scala-lang.org/browse/SI-7296">SI-7296</a> Case classes with &gt; 22 parameters are now allowed.</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-3346">SI-3346</a> Implicit arguments of implicit conversions now guide type inference.</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-6240">SI-6240</a> Thread safety of reflection API.</li>
+<li><a href="https://github.com/scala/scala/pull/3037">#3037</a> Experimental support for SAM synthesis.</li>
+<li><a href="https://github.com/scala/scala/pull/2848">#2848</a> Name-based pattern-matching.</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-6169">SI-6169</a> Infer bounds of Java-defined existential types.</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-6566">SI-6566</a> Right-hand sides of type aliases are now considered invariant for variance checking.</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-5917">SI-5917</a> Improve public AST creation facilities.</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-8063">SI-8063</a> Expose much needed methods in public reflection/macro API.</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-8126">SI-8126</a> Add -Xsource option (make 2.11 type checker behave like 2.10 where possible).</li>
+</ul>
+
+<p>To catch future changes like this early, you can run the compiler under -Xfuture, which makes it behave like the next major version, where possible, to alert you to upcoming breaking changes.</p>
+
+<h3>Deprecations</h3>
+
+<p>Deprecation is essential to two of the 2.11.x series&#39; three themes (<a href="http://java.dzone.com/articles/state-scala-2013">faster/smaller/stabler</a>). They make the language and the libraries smaller, and thus easier to use and maintain, which ultimately improves stability. We are very proud of Scala&#39;s first decade, which brought us to where we are, and we are actively working on minimizing the downsides of this legacy, as exemplified by 2.11.x&#39;s focus on deprecation, modularization and infrastructure work.</p>
+
+<p>The following language &quot;warts&quot; have been deprecated:</p>
+
+<ul>
+<li><a href="https://issues.scala-lang.org/browse/SI-7605">SI-7605</a> Procedure syntax (only under -Xfuture).</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-5479">SI-5479</a> DelayedInit. We will continue support for the important <code>extends App</code> idiom. We won&#39;t drop <code>DelayedInit</code> until there&#39;s a replacement for important use cases. (<a href="https://issues.scala-lang.org/browse/SI-4330?jql=labels%20%3D%20delayedinit%20AND%20resolution%20%3D%20unresolved">More details and a proposed alternative.</a>)</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-6455">SI-6455</a> Rewrite of <code>.withFilter</code> to <code>.filter</code>: you must implement <code>withFilter</code> to be compatible with for-comprehensions.</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-8035">SI-8035</a> Automatic insertion of <code>()</code> on missing argument lists.</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-6675">SI-6675</a> Auto-tupling in patterns.</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-7247">SI-7247</a> NotNull, which was never fully implemented -- slated for removal in 2.12.</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-1503">SI-1503</a> Unsound type assumption for stable identifier and literal patterns.</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-7629">SI-7629</a> View bounds (<em>under -Xfuture</em>).</li>
+</ul>
+
+<p>We&#39;d like to emphasize the following library deprecations:</p>
+
+<ul>
+<li><a href="https://github.com/scala/scala/pull/3103">#3103</a>, <a href="https://github.com/scala/scala/pull/3191">#3191</a>, <a href="https://github.com/scala/scala/pull/3582">#3582</a> Collection classes and methods that are (very) difficult to extend safely have been slated for being marked <code>final</code>. Proxies and wrappers that were not adequately implemented or kept up-to-date have been deprecated, along with other minor inconsistencies.</li>
+<li>scala-actors is now deprecated and will be removed in 2.12; please follow the steps in the <a href="http://docs.scala-lang.org/overviews/core/actors-migration-guide.html">Actors Migration Guide</a> to port to Akka Actors</li>
+<li><a href="https://issues.scala-lang.org/browse/SI-7958">SI-7958</a> Deprecate <code>scala.concurrent.future</code> and <code>scala.concurrent.promise</code></li>
+<li><a href="https://issues.scala-lang.org/browse/SI-3235">SI-3235</a> Deprecate <code>round</code> on <code>Int</code> and <code>Long</code> (<a href="https://github.com/scala/scala/pull/3581">#3581</a>).</li>
+<li>We are looking for maintainers to take over the following modules: <a href="https://github.com/scala/scala-swing">scala-swing</a>, <a href="https://github.com/scala/scala-continuations">scala-continuations</a>. 2.12 will not include them if no new maintainer is found.
+We will likely keep maintaining the other modules (scala-xml, scala-parser-combinators), but help is still greatly appreciated.</li>
+</ul>
+
+<p>Deprecation is closely linked to source and binary compatibility. We say two versions are source compatible when they compile the same programs with the same results. Deprecation requires qualifying this statement: &quot;assuming there are no deprecation warnings&quot;. This is what allows us to evolve the Scala platform and keep it healthy. We move slowly to guarantee smooth upgrades, but we want to keep improving as well!</p>
+
+<h3>Binary Compatibility</h3>
+
+<p>When two versions of Scala are binary compatible, it is safe to compile your project on one Scala version and link against another Scala version at run time. Safe run-time linkage (only!) means that the JVM does not throw a (subclass of) <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/LinkageError.html"><code>LinkageError</code></a> when executing your program in the mixed scenario, assuming that none arise when compiling and running on the same version of Scala. Concretely, this means you may have external dependencies on your run-time classpath that use a different version of Scala than the one you&#39;re compiling with, as long as they&#39;re binary compatibile. In other words, separate compilation on different binary compatible versions does not introduce problems compared to compiling and running everything on the same version of Scala.</p>
+
+<p>We check binary compatibility automatically with <a href="https://github.com/typesafehub/migration-manager">MiMa</a>. We strive to maintain a similar invariant for the <code>behavior</code> (as opposed to just linkage) of the standard library, but this is not checked mechanically (Scala is not a proof assistant so this is out of reach for its type system).</p>
+
+<h4>Forwards and Back</h4>
+
+<p>We distinguish forwards and backwards compatibility (think of these as properties of a sequence of versions, not of an individual version). Maintaining backwards compatibility means code compiled on an older version will link with code compiled with newer ones. Forwards compatibility allows you to compile on new versions and run on older ones.</p>
+
+<p>Thus, backwards compatibility precludes the removal of (non-private) methods, as older versions could call them, not knowing they would be removed, whereas forwards compatibility disallows adding new (non-private) methods, because newer programs may come to depend on them, which would prevent them from running on older versions (private methods are exempted here as well, as their definition and call sites must be in the same compilation unit).</p>
+
+<p>These are strict constraints, but they have worked well for us in the Scala 2.10.x series. They didn&#39;t stop us from fixing <a href="https://issues.scala-lang.org/issues/?jql=project%20%3D%20%22SI%22%20AND%20resolution%3D%22fixed%22%20and%20fixVersion%20%3E%20%22Scala%202.10.0%22%20and%20fixVersion%20%3C%3D%20%22Scala%202.10.4%22">372 issues</a> in the 2.10.x series post 2.10.0. The advantages are clear, so we will maintain this policy in the 2.11.x series, and are looking (but not yet commiting!) to extend it to include major versions in the future.</p>
+
+<h4>Meta</h4>
+
+<p>Note that so far we&#39;ve only talked about the jars generated by scalac for the standard library and reflection.
+Our policies do not extend to the meta-issue: ensuring binary compatibility for bytecode generated from identical sources, by different version of scalac? (The same problem exists for compiling on different JDKs.) While we strive to achieve this, it&#39;s not something we can test in general. Notable examples where we know meta-binary compatibility is hard to achieve: specialisation and the optimizer.</p>
+
+<p>In short, if binary compatibility of your library is important to you, use <a href="https://github.com/typesafehub/migration-manager">MiMa</a> to verify compatibility before releasing.
+Compiling identical sources with different versions of the scala compiler (or on different JVM versions!) could result in binary incompatible bytecode. This is rare, and we try to avoid it, but we can&#39;t guarantee it will never happen.</p>
+
+<h4>Concretely</h4>
+
+<p>Just like the 2.10.x series, we guarantee forwards and backwards compatibility of the <code>&quot;org.scala-lang&quot; % &quot;scala-library&quot; % &quot;2.11.x&quot;</code> and <code>&quot;org.scala-lang&quot; % &quot;scala-reflect&quot; % &quot;2.11.x&quot;</code> artifacts, except for anything under the <code>scala.reflect.internal</code> package, as scala-reflect is still experimental. We also strongly discourage relying on the stability of <code>scala.concurrent.impl</code> and <code>scala.reflect.runtime</code>, though we will only break compatibility for severe bugs here.</p>
+
+<p>Note that we will only enforce <em>backwards</em> binary compatibility for the new modules (artifacts under the groupId <code>org.scala-lang.modules</code>). As they are opt-in, it&#39;s less of a burden to require having the latest version on the classpath. (Without forward compatibility, the latest version of the artifact must be on the run-time classpath to avoid linkage errors.)</p>
+
+<p>Finally, Scala 2.11.0 introduces <code>scala-library-all</code> to aggregate the modules that constitute a Scala release. Note that this means it does not provide forward binary compatibility, whereas the core <code>scala-library</code> artifact does. We consider the versions of the modules that <code>&quot;scala-library-all&quot; % &quot;2.11.x&quot;</code> depends on to be the canonical ones, that are part of the official Scala distribution. (The distribution itself is defined by the new <code>scala-dist</code> maven artifact.)</p>
+
+<h3>New features in the 2.11 series</h3>
+
+<p>This release contains all of the bug fixes and improvements made in the 2.10 series, as well as:</p>
+
+<ul>
+<li>Collections
+
+<ul>
+<li>Immutable <code>HashMap</code>s and <code>HashSet</code>s perform faster filters, unions, and the like, with improved structural sharing (lower memory usage or churn).</li>
+<li>Mutable <code>LongMap</code> and <code>AnyRefMap</code> have been added to provide improved performance when keys are <code>Long</code> or <code>AnyRef</code> (performance enhancement of up to 4x or 2x respectively).</li>
+<li><code>BigDecimal</code> is more explicit about rounding and numeric representations, and better handles very large values without exhausting memory (by avoiding unnecessary conversions to <code>BigInt</code>).</li>
+<li><code>List</code> has improved performance on <code>map</code>, <code>flatMap</code>, and <code>collect</code>.</li>
+<li>See also Deprecation above: we have slated many classes and methods to become final, to clarify which classes are not meant to be subclassed and to facilitate future maintenance and performance improvements.</li>
+</ul></li>
+<li>Modularization
+
+<ul>
+<li>The core Scala standard library jar has shed 20% of its bytecode. The modules for xml, parsing, swing as well as the (unsupported) continuations plugin and library are available individually or via <a href="http://search.maven.org/#artifactdetails%7Corg.scala-lang%7Cscala-library-all%7C2.11.0-RC4%7Cpom">scala-library-all</a>. Note that this artifact has weaker binary compatibility guarantees than <code>scala-library</code> -- as explained above.</li>
+<li>The compiler has been modularized internally, to separate the presentation compiler, scaladoc and the REPL. We hope this will make it easier to contribute. In this release, all of these modules are still packaged in scala-compiler.jar. We plan to ship them in separate JARs in 2.12.x.</li>
+</ul></li>
+<li>Reflection, macros and quasiquotes
+
+<ul>
+<li>Please see <a href="http://docs.scala-lang.org/overviews/macros/changelog211.html">this detailed changelog</a> that lists all significant changes and provides advice on forward and backward compatibility.</li>
+<li>See also this <a href="http://scalamacros.org/news/index.html">summary</a> of the experimental side of the 2.11 development cycle.</li>
+<li><a href="https://github.com/scala/scala/pull/3321">#3321</a> introduced <a href="http://vladimirnik.github.io/sprinter/">Sprinter</a>, a new AST pretty-printing library! Very useful for tools that deal with source code.</li>
+</ul></li>
+<li>Back-end
+
+<ul>
+<li>The <a href="https://github.com/scala/scala/pull/2620">GenBCode back-end</a> (experimental in 2.11). See <a href="http://magarciaepfl.github.io/scala/">@magarciaepfl&#39;s extensive documentation</a>.</li>
+<li>A new experimental way of compiling closures, implemented by <a href="https://github.com/JamesIry">@JamesIry</a>. With <code>-Ydelambdafy:method</code> anonymous functions are compiled faster, with a smaller bytecode footprint. This works by keeping the function body as a private (static, if no <code>this</code> reference is needed) method of the enclosing class, and at the last moment during compilation emitting a small anonymous class that <code>extends FunctionN</code> and delegates to it. This sets the scene for a smooth migration to Java 8-style lambdas (not yet implemented).</li>
+<li>Branch elimination through constant analysis <a href="https://github.com/scala/scala/pull/2214">#2214</a></li>
+</ul></li>
+<li>Compiler Performance
+
+<ul>
+<li>Incremental compilation has been improved significantly. To try it out, upgrade to sbt 0.13.2-M2 and add <code>incOptions := incOptions.value.withNameHashing(true)</code> to your build! Other build tools are also supported. More info at <a href="https://github.com/sbt/sbt/issues/1010">this sbt issue</a> -- that&#39;s where most of the work happened. More features are planned, e.g. <a href="https://github.com/sbt/sbt/issues/1104">class-based tracking</a>.</li>
+<li>We&#39;ve been optimizing the batch compiler&#39;s performance as well, and will continue to work on this during the 2.11.x cycle.</li>
+<li>Improve performance of reflection <a href="https://issues.scala-lang.org/browse/SI-6638">SI-6638</a><br></li>
+</ul></li>
+<li>IDE
+
+<ul>
+<li><a href="https://issues.scala-lang.org/browse/SI-8085?jql=component%20%3D%20%22Presentation%20Compiler%22%20AND%20project%20%3D%20SI%20AND%20resolution%20%3D%20fixed%20and%20fixVersion%20%3E%3D%20%22Scala%202.11.0-M1%22%20and%20fixVersion%20%3C%3D%20%20%22Scala%202.11.0-RC4%22%20ORDER%20BY%20updated%20DESC">Numerous bug fixes and improvements!</a></li>
+</ul></li>
+<li>REPL
+
+<ul>
+<li>The bytecode decompiler command, :javap, now works with Java 7 <a href="https://issues.scala-lang.org/browse/SI-4936">SI-4936</a> and has sprouted new options <a href="https://issues.scala-lang.org/browse/SI-6894">SI-6894</a> (Thanks, <a href="https://github.com/som-snytt">@som-snytt</a>!)</li>
+<li>Added command :kind to help to tell ground types from type constructors. <a href="https://github.com/scala/scala/pull/2340">#2340</a> (Thanks, <a href="https://github.com/folone">George Leontiev</a> and <a href="https://github.com/eed3si9n">Eugene Yokota</a>!)</li>
+<li>The interpreter can now be embedded as a JSR-223 Scripting Engine <a href="https://issues.scala-lang.org/browse/SI-874">SI-874</a>. (Thanks, <a href="https://github.com/rjolly">Raphael Jolly</a>!)</li>
+</ul></li>
+<li>Warnings
+
+<ul>
+<li>Warn about unused private / local terms and types, and unused imports, under <code>-Xlint</code>. This will even tell you when a local <code>var</code> could be a <code>val</code>.</li>
+</ul></li>
+<li>Slimming down the compiler
+
+<ul>
+<li>The experimental .NET backend has been removed from the compiler.</li>
+<li>Scala 2.10 shipped with new implementations of the Pattern Matcher and the Bytecode Emitter. We have removed the old implementations.</li>
+<li>Search and destroy mission for ~5000 chunks of dead code. <a href="https://github.com/scala/scala/pull/1648/files">#1648</a></li>
+</ul></li>
+</ul>
+
+<h3>License clarification</h3>
+
+<p>Scala is now distributed under the standard 3-clause BSD license. Originally, the same 3-clause BSD license was adopted, but slightly reworded over the years, and the &quot;Scala License&quot; was born. We&#39;re now back to the standard formulation to avoid confusion.</p>
+
+<h4>A big thank you to all the contributors!</h4>
+
+<p># | Author
+---: | ---
+68 | <notextile>Adriaan Moors</notextile>
+40 | <notextile>Iain McGinniss</notextile>
+9 | <notextile>Jason Zaugg</notextile>
+7 | <notextile>Denys Shabalin</notextile>
+5 | <notextile>Eugene Burmako</notextile>
+5 | <notextile>Simon Ochsenreither</notextile>
+4 | <notextile>A. P. Marki</notextile>
+1 | <notextile>Grzegorz Kossakowski</notextile>
+1 | <notextile>Fran&ccedil;ois Garillot</notextile></p>
+
+<h4>Commits and the issues they fixed since v2.11.0-RC3</h4>
+
+<p>Issue(s) | Commit | Message
+--- | --- | ---
+<a href="https://issues.scala-lang.org/browse/SI-8466">SI-8466</a> | <a href="https://github.com/scala/scala/commit/9fbac09">9fbac09</a> | <notextile>SI-8466 fix quasiquote crash on recursively iterable unlifting</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7291">SI-7291</a>, <a href="https://issues.scala-lang.org/browse/SI-8460">SI-8460</a> | <a href="https://github.com/scala/scala/commit/1c330e6">1c330e6</a> | <notextile>SI-8460 Fix regression in divergent implicit recovery</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8460">SI-8460</a> | <a href="https://github.com/scala/scala/commit/5e795fc">5e795fc</a> | <notextile>Refactor handling of failures in implicit search</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-6054">SI-6054</a> | <a href="https://github.com/scala/scala/commit/91fb5c0">91fb5c0</a> | <notextile>SI-6054 Modern eta-expansion examples that almost run</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-5610">SI-5610</a>, <a href="https://issues.scala-lang.org/browse/SI-6069">SI-6069</a> | <a href="https://github.com/scala/scala/commit/b3adae6">b3adae6</a> | <notextile>SI-6069 Preserve by-name during eta-expansion</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-6054">SI-6054</a> | <a href="https://github.com/scala/scala/commit/3fb5acc">3fb5acc</a> | <notextile>SI-6054 don&#39;t use the defunct List.map2 in example</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-5136">SI-5136</a> | <a href="https://github.com/scala/scala/commit/71e45e0">71e45e0</a> | <notextile>SI-5136 correct return type for unapplySeq</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-6195">SI-6195</a> | <a href="https://github.com/scala/scala/commit/aa6e4b3">aa6e4b3</a> | <notextile>SI-6195 stable members can only be overridden by stable members</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-5605">SI-5605</a> | <a href="https://github.com/scala/scala/commit/1921528">1921528</a> | <notextile>SI-5605 case class equals only considers first param section</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-6054">SI-6054</a> | <a href="https://github.com/scala/scala/commit/51f3ac1">51f3ac1</a> | <notextile>SI-6054 correct eta-expansion in method value using placeholder syntax</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-5155">SI-5155</a> | <a href="https://github.com/scala/scala/commit/3c0d964">3c0d964</a> | <notextile>SI-5155 xml patterns do not support cdata, entity refs or comments</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-5089">SI-5089</a> | <a href="https://github.com/scala/scala/commit/84bba26">84bba26</a> | <notextile>SI-5089 update definition implicit scope in terms of parts of a type</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7313">SI-7313</a> | <a href="https://github.com/scala/scala/commit/227e11d">227e11d</a> | <notextile>SI-7313 method types of implicit and non-implicit parameter sections are never e</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7672">SI-7672</a> | <a href="https://github.com/scala/scala/commit/7be2a6c">7be2a6c</a> | <notextile>SI-7672 explicit top-level import of Predef precludes implicit one</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-5370">SI-5370</a> | <a href="https://github.com/scala/scala/commit/aa64187">aa64187</a> | <notextile>SI-5370 PartialFunction is a Function with queryable domain</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-4980">SI-4980</a> | <a href="https://github.com/scala/scala/commit/4615ec5">4615ec5</a> | <notextile>SI-4980 isInstanceOf does not do outer checks</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-1972">SI-1972</a> | <a href="https://github.com/scala/scala/commit/f0b37c2">f0b37c2</a> | <notextile>SI-1972 clarify getter and setter must be declared together</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-5086">SI-5086</a> | <a href="https://github.com/scala/scala/commit/5135bae">5135bae</a> | <notextile>SI-5086 clean up EBNF</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-5065">SI-5065</a> | <a href="https://github.com/scala/scala/commit/32e0943">32e0943</a> | <notextile>SI-5065 val/var is optional for a constructor parameter</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-5209">SI-5209</a> | <a href="https://github.com/scala/scala/commit/64b7338">64b7338</a> | <notextile>SI-5209 correct precedence of infix operators starting with ! =</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-4249">SI-4249</a> | <a href="https://github.com/scala/scala/commit/e197cf8">e197cf8</a> | <notextile>SI-4249 try/catch accepts expression</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7937">SI-7937</a> | <a href="https://github.com/scala/scala/commit/d614228">d614228</a> | <notextile>SI-7937 In for, semi before guard never required</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-4583">SI-4583</a> | <a href="https://github.com/scala/scala/commit/19ab789">19ab789</a> | <notextile>SI-4583 UnicodeEscape does not allow multiple backslashes</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8388">SI-8388</a> | <a href="https://github.com/scala/scala/commit/0bac64d">0bac64d</a> | <notextile>SI-8388 consistently match type trees by originals</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8387">SI-8387</a> | <a href="https://github.com/scala/scala/commit/f10d754">f10d754</a> | <notextile>SI-8387 don&#39;t match new as a function application</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8350">SI-8350</a> | <a href="https://github.com/scala/scala/commit/2fea950">2fea950</a> | <notextile>SI-8350 treat single parens equivalently to no-parens in new</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8451">SI-8451</a> | <a href="https://github.com/scala/scala/commit/a0c3bbd">a0c3bbd</a> | <notextile>SI-8451 quasiquotes now handle quirks of secondary constructors</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8437">SI-8437</a> | <a href="https://github.com/scala/scala/commit/9326264">9326264</a> | <notextile>SI-8437 macro runtime now also picks inherited macro implementations</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8411">SI-8411</a> | <a href="https://github.com/scala/scala/commit/5e23a6a">5e23a6a</a> | <notextile>SI-8411 match desugared partial functions</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8200">SI-8200</a> | <a href="https://github.com/scala/scala/commit/fa91b17">fa91b17</a> | <notextile>SI-8200 provide an identity liftable for trees</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-7902">SI-7902</a> | <a href="https://github.com/scala/scala/commit/5f4011e">5f4011e</a> | <notextile>[backport] SI-7902 Fix spurious kind error due to an unitialized symbol</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8205">SI-8205</a> | <a href="https://github.com/scala/scala/commit/8ee165c">8ee165c</a> | <notextile>SI-8205 [nomaster] backport test pos.lineContent</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8126">SI-8126</a>, <a href="https://issues.scala-lang.org/browse/SI-6566">SI-6566</a> | <a href="https://github.com/scala/scala/commit/806b6e4">806b6e4</a> | <notextile>Backports library changes related to SI-6566 from a419799</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8146">SI-8146</a>, <a href="https://issues.scala-lang.org/browse/SI-8146">SI-8146</a>, <a href="https://issues.scala-lang.org/browse/SI-8146">SI-8146</a>, <a href="https://issues.scala-lang.org/browse/SI-8146">SI-8146</a> | <a href="https://github.com/scala/scala/commit/ff13742">ff13742</a> | <notextile>[nomaster] SI-8146 Fix non-deterministic &lt;:&lt; for deeply nested types</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8420">SI-8420</a> | <a href="https://github.com/scala/scala/commit/b6a54a8">b6a54a8</a> | <notextile>SI-8420 don&#39;t crash on unquoting of non-liftable native type</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8428">SI-8428</a> | <a href="https://github.com/scala/scala/commit/aa1e1d0">aa1e1d0</a> | <notextile>SI-8428 Refactor ConcatIterator</notextile>
+<a href="https://issues.scala-lang.org/browse/SI-8428">SI-8428</a> | <a href="https://github.com/scala/scala/commit/1fa46a5">1fa46a5</a> | <notextile>SI-8428 Fix regression in iterator concatenation</notextile></p>
+
+<h4>Complete commit list!</h4>
+
+<p>sha | Title
+---: | ---
+<a href="https://github.com/scala/scala/commit/2ba0453">2ba0453</a> | <notextile>Further tweak version of continuations plugin in scala-dist.pom</notextile>
+<a href="https://github.com/scala/scala/commit/9fbac09">9fbac09</a> | <notextile>SI-8466 fix quasiquote crash on recursively iterable unlifting</notextile>
+<a href="https://github.com/scala/scala/commit/afccae6">afccae6</a> | <notextile>Refactor rankImplicits, add some more docs</notextile>
+<a href="https://github.com/scala/scala/commit/d345424">d345424</a> | <notextile>Refactor: keep DivergentImplicitRecovery logic together.</notextile>
+<a href="https://github.com/scala/scala/commit/1c330e6">1c330e6</a> | <notextile>SI-8460 Fix regression in divergent implicit recovery</notextile>
+<a href="https://github.com/scala/scala/commit/5e795fc">5e795fc</a> | <notextile>Refactor handling of failures in implicit search</notextile>
+<a href="https://github.com/scala/scala/commit/8489be1">8489be1</a> | <notextile>Rebase #3665</notextile>
+<a href="https://github.com/scala/scala/commit/63783f5">63783f5</a> | <notextile>Disable more of the Travis spec build for PR validation</notextile>
+<a href="https://github.com/scala/scala/commit/9cc0911">9cc0911</a> | <notextile>Minor typographical fixes for lexical syntax chapter</notextile>
+<a href="https://github.com/scala/scala/commit/f40d63a">f40d63a</a> | <notextile>Don&#39;t mention C#</notextile>
+<a href="https://github.com/scala/scala/commit/bb2a952">bb2a952</a> | <notextile>Reducing overlap of code and math.</notextile>
+<a href="https://github.com/scala/scala/commit/3a75252">3a75252</a> | <notextile>Simplify CSS, bigger monospace to match math</notextile>
+<a href="https://github.com/scala/scala/commit/91fb5c0">91fb5c0</a> | <notextile>SI-6054 Modern eta-expansion examples that almost run</notextile>
+<a href="https://github.com/scala/scala/commit/b3adae6">b3adae6</a> | <notextile>SI-6069 Preserve by-name during eta-expansion</notextile>
+<a href="https://github.com/scala/scala/commit/a89157f">a89157f</a> | <notextile>Stubs for references chapter, remains TODO</notextile>
+<a href="https://github.com/scala/scala/commit/0b48dc2">0b48dc2</a> | <notextile>Number files like chapters. Consolidate toc &amp; preface.</notextile>
+<a href="https://github.com/scala/scala/commit/0f1dcc4">0f1dcc4</a> | <notextile>Minor cleanup in aisle README</notextile>
+<a href="https://github.com/scala/scala/commit/6ec6990">6ec6990</a> | <notextile>Skip step bound to fail in Travis PR validation</notextile>
+<a href="https://github.com/scala/scala/commit/12720e6">12720e6</a> | <notextile>Remove scala-continuations-plugin from scala-library-all</notextile>
+<a href="https://github.com/scala/scala/commit/3560ddc">3560ddc</a> | <notextile>Start ssh-agent</notextile>
+<a href="https://github.com/scala/scala/commit/b102ffc">b102ffc</a> | <notextile>Disable strict host checking</notextile>
+<a href="https://github.com/scala/scala/commit/0261598">0261598</a> | <notextile>Jekyll generated html in spec/ directory</notextile>
+<a href="https://github.com/scala/scala/commit/71c1716">71c1716</a> | <notextile>Add language to code blocks. Shorter Example title.</notextile>
+<a href="https://github.com/scala/scala/commit/abd0895">abd0895</a> | <notextile>Fix #6: automatic section numbering.</notextile>
+<a href="https://github.com/scala/scala/commit/5997e32">5997e32</a> | <notextile>#9 try to avoid double slashes in url</notextile>
+<a href="https://github.com/scala/scala/commit/09f2a26">09f2a26</a> | <notextile>require redcarpet 3.1 for user-friendly anchors</notextile>
+<a href="https://github.com/scala/scala/commit/f16ab43">f16ab43</a> | <notextile>use simple quotes, fix indent, escape dollar</notextile>
+<a href="https://github.com/scala/scala/commit/5629529">5629529</a> | <notextile>liquid requires SSA?</notextile>
+<a href="https://github.com/scala/scala/commit/128c5e8">128c5e8</a> | <notextile>sort pages in index</notextile>
+<a href="https://github.com/scala/scala/commit/8dba297">8dba297</a> | <notextile>base url</notextile>
+<a href="https://github.com/scala/scala/commit/3df5773">3df5773</a> | <notextile>formatting</notextile>
+<a href="https://github.com/scala/scala/commit/7307a03">7307a03</a> | <notextile>TODO: number headings using css</notextile>
+<a href="https://github.com/scala/scala/commit/617bdf8">617bdf8</a> | <notextile>mathjax escape dollar</notextile>
+<a href="https://github.com/scala/scala/commit/a1275c4">a1275c4</a> | <notextile>TODO: binding example</notextile>
+<a href="https://github.com/scala/scala/commit/c61f554">c61f554</a> | <notextile>fix indentation for footnotes</notextile>
+<a href="https://github.com/scala/scala/commit/52898fa">52898fa</a> | <notextile>allow math in code</notextile>
+<a href="https://github.com/scala/scala/commit/827f5f6">827f5f6</a> | <notextile>redcarpet</notextile>
+<a href="https://github.com/scala/scala/commit/0bc3ec9">0bc3ec9</a> | <notextile>formatting</notextile>
+<a href="https://github.com/scala/scala/commit/2f3d0fd">2f3d0fd</a> | <notextile>Jekyll 2 config for redcarpet 3.1.1</notextile>
+<a href="https://github.com/scala/scala/commit/e6ecfd0">e6ecfd0</a> | <notextile>That was fun: fix internal links.</notextile>
+<a href="https://github.com/scala/scala/commit/d8a09e2">d8a09e2</a> | <notextile>formatting</notextile>
+<a href="https://github.com/scala/scala/commit/9c757bb">9c757bb</a> | <notextile>fix some links</notextile>
+<a href="https://github.com/scala/scala/commit/453625e">453625e</a> | <notextile>wip: jekyllify</notextile>
+<a href="https://github.com/scala/scala/commit/3fb5acc">3fb5acc</a> | <notextile>SI-6054 don&#39;t use the defunct List.map2 in example</notextile>
+<a href="https://github.com/scala/scala/commit/71e45e0">71e45e0</a> | <notextile>SI-5136 correct return type for unapplySeq</notextile>
+<a href="https://github.com/scala/scala/commit/aa6e4b3">aa6e4b3</a> | <notextile>SI-6195 stable members can only be overridden by stable members</notextile>
+<a href="https://github.com/scala/scala/commit/1921528">1921528</a> | <notextile>SI-5605 case class equals only considers first param section</notextile>
+<a href="https://github.com/scala/scala/commit/51f3ac1">51f3ac1</a> | <notextile>SI-6054 correct eta-expansion in method value using placeholder syntax</notextile>
+<a href="https://github.com/scala/scala/commit/78d96ea">78d96ea</a> | <notextile>formatting: tables and headings</notextile>
+<a href="https://github.com/scala/scala/commit/3c0d964">3c0d964</a> | <notextile>SI-5155 xml patterns do not support cdata, entity refs or comments</notextile>
+<a href="https://github.com/scala/scala/commit/84bba26">84bba26</a> | <notextile>SI-5089 update definition implicit scope in terms of parts of a type</notextile>
+<a href="https://github.com/scala/scala/commit/227e11d">227e11d</a> | <notextile>SI-7313 method types of implicit and non-implicit parameter sections are never e</notextile>
+<a href="https://github.com/scala/scala/commit/7be2a6c">7be2a6c</a> | <notextile>SI-7672 explicit top-level import of Predef precludes implicit one</notextile>
+<a href="https://github.com/scala/scala/commit/aa64187">aa64187</a> | <notextile>SI-5370 PartialFunction is a Function with queryable domain</notextile>
+<a href="https://github.com/scala/scala/commit/4615ec5">4615ec5</a> | <notextile>SI-4980 isInstanceOf does not do outer checks</notextile>
+<a href="https://github.com/scala/scala/commit/f0b37c2">f0b37c2</a> | <notextile>SI-1972 clarify getter and setter must be declared together</notextile>
+<a href="https://github.com/scala/scala/commit/5135bae">5135bae</a> | <notextile>SI-5086 clean up EBNF</notextile>
+<a href="https://github.com/scala/scala/commit/32e0943">32e0943</a> | <notextile>SI-5065 val/var is optional for a constructor parameter</notextile>
+<a href="https://github.com/scala/scala/commit/64b7338">64b7338</a> | <notextile>SI-5209 correct precedence of infix operators starting with ! =</notextile>
+<a href="https://github.com/scala/scala/commit/1130d10">1130d10</a> | <notextile>formatting</notextile>
+<a href="https://github.com/scala/scala/commit/e197cf8">e197cf8</a> | <notextile>SI-4249 try/catch accepts expression</notextile>
+<a href="https://github.com/scala/scala/commit/622ffd4">622ffd4</a> | <notextile>wip</notextile>
+<a href="https://github.com/scala/scala/commit/d614228">d614228</a> | <notextile>SI-7937 In for, semi before guard never required</notextile>
+<a href="https://github.com/scala/scala/commit/507e58b">507e58b</a> | <notextile>github markdown: tables</notextile>
+<a href="https://github.com/scala/scala/commit/09c957b">09c957b</a> | <notextile>github markdown: use ###### for definitions and notes</notextile>
+<a href="https://github.com/scala/scala/commit/9fb8276">9fb8276</a> | <notextile>github markdown: use ###### for examples</notextile>
+<a href="https://github.com/scala/scala/commit/19ab789">19ab789</a> | <notextile>SI-4583 UnicodeEscape does not allow multiple backslashes</notextile>
+<a href="https://github.com/scala/scala/commit/1ca2095">1ca2095</a> | <notextile>formatting</notextile>
+<a href="https://github.com/scala/scala/commit/b75812d">b75812d</a> | <notextile>Mention WIP in README</notextile>
+<a href="https://github.com/scala/scala/commit/9031467">9031467</a> | <notextile>Catch up with latex spec.</notextile>
+<a href="https://github.com/scala/scala/commit/21ca2cf">21ca2cf</a> | <notextile>convert {\em } to <em>...</em></notextile>
+<a href="https://github.com/scala/scala/commit/37ef8a2">37ef8a2</a> | <notextile>github markdown: numbered definition</notextile>
+<a href="https://github.com/scala/scala/commit/b44c598">b44c598</a> | <notextile>github markdown: code blocks</notextile>
+<a href="https://github.com/scala/scala/commit/9dec37b">9dec37b</a> | <notextile>github markdown: drop css classes</notextile>
+<a href="https://github.com/scala/scala/commit/df2f3f7">df2f3f7</a> | <notextile>github markdown: headers</notextile>
+<a href="https://github.com/scala/scala/commit/839fd6e">839fd6e</a> | <notextile>github markdown: numbered lists</notextile>
+<a href="https://github.com/scala/scala/commit/fa4aba5">fa4aba5</a> | <notextile>new build options</notextile>
+<a href="https://github.com/scala/scala/commit/b71a2c1">b71a2c1</a> | <notextile>updated README.md</notextile>
+<a href="https://github.com/scala/scala/commit/d8f0a93">d8f0a93</a> | <notextile>rendering error fix</notextile>
+<a href="https://github.com/scala/scala/commit/ab8f966">ab8f966</a> | <notextile>added tex source build</notextile>
+<a href="https://github.com/scala/scala/commit/a80a894">a80a894</a> | <notextile>Typographical adjustments</notextile>
+<a href="https://github.com/scala/scala/commit/34eb920">34eb920</a> | <notextile>Fix fonts to enable both old-style and lining numerals</notextile>
+<a href="https://github.com/scala/scala/commit/8f1bd7f">8f1bd7f</a> | <notextile>Over-wide line fix for types grammar</notextile>
+<a href="https://github.com/scala/scala/commit/9cee383">9cee383</a> | <notextile>Replaced build script with make file</notextile>
+<a href="https://github.com/scala/scala/commit/3f339c8">3f339c8</a> | <notextile>Minor pagination tweak</notextile>
+<a href="https://github.com/scala/scala/commit/50ce322">50ce322</a> | <notextile>Miscellaneous cleanups:</notextile>
+<a href="https://github.com/scala/scala/commit/2311e34">2311e34</a> | <notextile>fix poorly labeled section links fix over-wide grammar text</notextile>
+<a href="https://github.com/scala/scala/commit/e7ade69">e7ade69</a> | <notextile>Use the original type faces</notextile>
+<a href="https://github.com/scala/scala/commit/2c21733">2c21733</a> | <notextile>Adjust layout</notextile>
+<a href="https://github.com/scala/scala/commit/54273a3">54273a3</a> | <notextile>set Luxi Mono and Heuristica (Utopia) as the default fonts for monospace and mai</notextile>
+<a href="https://github.com/scala/scala/commit/1352994">1352994</a> | <notextile>use \sigma instead of raw unicode character in math mode, as it does not render </notextile>
+<a href="https://github.com/scala/scala/commit/7691d7f">7691d7f</a> | <notextile>added build step for ebook</notextile>
+<a href="https://github.com/scala/scala/commit/9a8134a">9a8134a</a> | <notextile>PDF building now working with pandoc 1.10.1</notextile>
+<a href="https://github.com/scala/scala/commit/ab50eec">ab50eec</a> | <notextile>using standard markdown for numbered lists (hopefully better rendering on github</notextile>
+<a href="https://github.com/scala/scala/commit/94198c7">94198c7</a> | <notextile>fixed reference to class diagram fixed undefined macro</notextile>
+<a href="https://github.com/scala/scala/commit/ea177a2">ea177a2</a> | <notextile>fixed inline code block</notextile>
+<a href="https://github.com/scala/scala/commit/cdaeb84">cdaeb84</a> | <notextile>fixed inline code blocks fixed math array for PDF output</notextile>
+<a href="https://github.com/scala/scala/commit/1ec5965">1ec5965</a> | <notextile>fixed inline code blocks removed LaTeX labels converted TODOs to comments</notextile>
+<a href="https://github.com/scala/scala/commit/3404f54">3404f54</a> | <notextile>fix for undefined macro</notextile>
+<a href="https://github.com/scala/scala/commit/990d4f0">990d4f0</a> | <notextile>fixed undefined macros and converted comment block</notextile>
+<a href="https://github.com/scala/scala/commit/580d5d6">580d5d6</a> | <notextile>fix for unicode character conversion error in producing PDF fix for grammar code</notextile>
+<a href="https://github.com/scala/scala/commit/1847283">1847283</a> | <notextile>standard library chapter converted</notextile>
+<a href="https://github.com/scala/scala/commit/7066c70">7066c70</a> | <notextile>converted xml expressions and user defined annotations chapters</notextile>
+<a href="https://github.com/scala/scala/commit/dc958b2">dc958b2</a> | <notextile>fixed minor math layout and unsupported commands</notextile>
+<a href="https://github.com/scala/scala/commit/2f67c76">2f67c76</a> | <notextile>Converted pattern matching chapter</notextile>
+<a href="https://github.com/scala/scala/commit/a327584">a327584</a> | <notextile>Implicit Parameters and Values chapter converted</notextile>
+<a href="https://github.com/scala/scala/commit/a368e9c">a368e9c</a> | <notextile>expressions chapter converted, some math-mode errors still exist</notextile>
+<a href="https://github.com/scala/scala/commit/fd283b6">fd283b6</a> | <notextile>conversion of classes and objects chapter</notextile>
+<a href="https://github.com/scala/scala/commit/79833dc">79833dc</a> | <notextile>converted syntax summary</notextile>
+<a href="https://github.com/scala/scala/commit/b871ec6">b871ec6</a> | <notextile>basic declarations and definitions chapter converted, needs second-pass review.</notextile>
+<a href="https://github.com/scala/scala/commit/bb53357">bb53357</a> | <notextile>types chapter fully converted. Added link to jquery and some experimental code f</notextile>
+<a href="https://github.com/scala/scala/commit/3340862">3340862</a> | <notextile>accidentally committed OS resource</notextile>
+<a href="https://github.com/scala/scala/commit/eb3e02a">eb3e02a</a> | <notextile>MathJAX configuration for inline math inside code blocks</notextile>
+<a href="https://github.com/scala/scala/commit/a805b04">a805b04</a> | <notextile>interim commit of conversion of types chapter</notextile>
+<a href="https://github.com/scala/scala/commit/7d50d8f">7d50d8f</a> | <notextile>- Grouping of text for examples in Lexical Syntax chapter fixed - Style of examp</notextile>
+<a href="https://github.com/scala/scala/commit/f938a7c">f938a7c</a> | <notextile>Identifiers, Names and Scopes chapter converted. Minor CSS tweaks to make exampl</notextile>
+<a href="https://github.com/scala/scala/commit/7c16776">7c16776</a> | <notextile>removed some stray LaTeX commands from Lexical Syntax chapter, and a back-refere</notextile>
+<a href="https://github.com/scala/scala/commit/82435f1">82435f1</a> | <notextile>experimental restyling of examples to try and look a bit more like the original </notextile>
+<a href="https://github.com/scala/scala/commit/4f86c27">4f86c27</a> | <notextile>fixed missing newline between example text and delimited code expression</notextile>
+<a href="https://github.com/scala/scala/commit/5e2a788">5e2a788</a> | <notextile>preface and lexical syntax chapter converted, other chapters split into their ow</notextile>
+<a href="https://github.com/scala/scala/commit/0bac64d">0bac64d</a> | <notextile>SI-8388 consistently match type trees by originals</notextile>
+<a href="https://github.com/scala/scala/commit/f10d754">f10d754</a> | <notextile>SI-8387 don&#39;t match new as a function application</notextile>
+<a href="https://github.com/scala/scala/commit/2fea950">2fea950</a> | <notextile>SI-8350 treat single parens equivalently to no-parens in new</notextile>
+<a href="https://github.com/scala/scala/commit/a0c3bbd">a0c3bbd</a> | <notextile>SI-8451 quasiquotes now handle quirks of secondary constructors</notextile>
+<a href="https://github.com/scala/scala/commit/9326264">9326264</a> | <notextile>SI-8437 macro runtime now also picks inherited macro implementations</notextile>
+<a href="https://github.com/scala/scala/commit/5e23a6a">5e23a6a</a> | <notextile>SI-8411 match desugared partial functions</notextile>
+<a href="https://github.com/scala/scala/commit/f9a5880">f9a5880</a> | <notextile>introduces Mirror.typeOf</notextile>
+<a href="https://github.com/scala/scala/commit/fa91b17">fa91b17</a> | <notextile>SI-8200 provide an identity liftable for trees</notextile>
+<a href="https://github.com/scala/scala/commit/db300d4">db300d4</a> | <notextile>[backport] no longer warns on calls to vampire macros</notextile>
+<a href="https://github.com/scala/scala/commit/a16e003">a16e003</a> | <notextile>Bump version to 2.10.5 for nightly builds.</notextile>
+<a href="https://github.com/scala/scala/commit/5f4011e">5f4011e</a> | <notextile>[backport] SI-7902 Fix spurious kind error due to an unitialized symbol</notextile>
+<a href="https://github.com/scala/scala/commit/8ee165c">8ee165c</a> | <notextile>SI-8205 [nomaster] backport test pos.lineContent</notextile>
+<a href="https://github.com/scala/scala/commit/d167f14">d167f14</a> | <notextile>[nomaster] corrects an error in reify&rsquo;s documentation</notextile>
+<a href="https://github.com/scala/scala/commit/806b6e4">806b6e4</a> | <notextile>Backports library changes related to SI-6566 from a419799</notextile>
+<a href="https://github.com/scala/scala/commit/ff13742">ff13742</a> | <notextile>[nomaster] SI-8146 Fix non-deterministic &lt;:&lt; for deeply nested types</notextile>
+<a href="https://github.com/scala/scala/commit/cbb88ac">cbb88ac</a> | <notextile>[nomaster] Update MiMa and use new wildcard filter</notextile>
+<a href="https://github.com/scala/scala/commit/b6a54a8">b6a54a8</a> | <notextile>SI-8420 don&#39;t crash on unquoting of non-liftable native type</notextile>
+<a href="https://github.com/scala/scala/commit/aa1e1d0">aa1e1d0</a> | <notextile>SI-8428 Refactor ConcatIterator</notextile>
+<a href="https://github.com/scala/scala/commit/1fa46a5">1fa46a5</a> | <notextile>SI-8428 Fix regression in iterator concatenation</notextile>
+<a href="https://github.com/scala/scala/commit/ff02fda">ff02fda</a> | <notextile>Bump versions for 2.11.0-RC3</notextile></p>
+
+
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div class="contents">Contents</div>
+              <div id="toc"></div>
+              <br/>
+              <div class="alert-info">
+                <a href="/contribute/documentation.html#updating_scalalangorg"><p><strong>Problem with this page?</strong>
+                Please help us fix it!</p></a>
+              </div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

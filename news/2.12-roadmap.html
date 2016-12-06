@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Scala 2.12 roadmap | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Scala 2.12 roadmap</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            
+            <div class="article-date">June 30, 2014</div>
+
+<p>Scala 2.12 will require Java 8. 
+Here’s how we plan to make this transition as smooth as possible.</p>
+
+<h2>Goals</h2>
+
+<ul>
+<li>Minimize overhead of the transition for both users and library maintainers.</li>
+<li>Continue Java 6 support for a while longer (only in Scala 2.11).</li>
+<li>Track the Java platform evolution.</li>
+</ul>
+
+<h2>How</h2>
+
+<ul>
+<li>Upcoming 2.11.x releases will introduce the following experimental features (under a flag): Java 8-style closure compilation, <a href="http://magarciaepfl.github.io/scala/">Miguel’s new back-end &amp; optimizer</a>.</li>
+<li>Hassle-free cross-building between 2.11 and 2.12 through full backward source compatibility (we won’t remove deprecated methods, but will support optional deprecation errors). Closely align 2.11 and 2.12 compiler and standard library code bases.</li>
+<li>The official Scala 2.12 distribution will be built for Java 8 (and thus require it). The new back-end (and optimizer) will become the default.</li>
+</ul>
+
+<h2>Background</h2>
+
+<ul>
+<li>We can’t have one Scala binary version target two different Java versions without further artifactId name mangling. Even if maven did have support for specifying the required Java version, this fork would be a big burden on the eco-system. Thus, the split between required Java versions has to align with the Scala (binary) version.</li>
+<li>We’ll check 2.11/2.12 cross-building by running the same community build on both versions. To improve backwards source compatibility, Scala 2.12 will not remove deprecated members. The 2.12 compiler will however (by default) emit deprecation errors for usage of members deprecated &lt;= 2.11.0. (In principle, if we <em>were</em> to compile the 2.12 library for Java 6, it should be backwards binary compatible with 2.11.)</li>
+<li>It’s important to keep up with the platform, even though Java 8’s MethodHandle-based support for closures may not immediately yield significant performance benefits (definitely reduces bytecode size, and thus likely compilation times, though). For platforms that don’t support Java 8 bytecode yet, two projects exist that rewrite Java 8 invokedynamic bytecode to Java 6 (<a href="https://github.com/orfjackal/retrolambda">retrolambda</a> or <a href="https://code.google.com/p/jvm-language-runtime/source/browse/trunk/invokedynamic-backport/src/jsr292/weaver/opt/OptimizerWeaver.java?r=254">Forax’s JSR292 backport</a>). I’m not aware of the equivalent for default methods, but it’s feasible.</li>
+</ul>
+
+<h2>Shared features between Scala 2.11 (under a flag) &amp; 2.12</h2>
+
+<ul>
+<li>Compile lambdas efficiently using method handles. (Separate compatibility module needed on 2.11 – see below.)</li>
+<li>Java 8 interop (bidirectional):
+
+<ul>
+<li>Improve support for reading Java 8 bytecode (already in 2.11)</li>
+<li>Improve and turn on SAM support by default (synthesize anonymous class java 8-style). This allows calling Java 8 higher-order methods seamlessly from Scala (already in 2.11 under -Xexperimental).</li>
+<li><a href="https://github.com/scala/scala-java8-compat">Compatibility module</a> to let Java 8 call Scala higher-order methods.</li>
+</ul></li>
+<li>Fully integrate <a href="http://magarciaepfl.github.io/scala/">Miguel’s new back-end &amp; optimizer</a> (refactor code, test &amp; document in-depth, remove old back-end).</li>
+<li>Style checker: an efficient, community-driven, platform for accurate coding style checking (built on top of the compiler).</li>
+<li>Collections: improve test coverage, performance, documentation (&amp; modularize?)</li>
+<li>Improve documentation: focus on content. (This is a great place to start contributing, as well as on the tooling side of documentation.)</li>
+<li>Continue infrastructure improvements (sbt build, improve pull request validation &amp; release automation, bug tracker cleanup and automation).</li>
+</ul>
+
+<h2>Features exclusive to Scala 2.12: more Java 8 fun</h2>
+
+<p>Development of the following features starts in 2015. Since they are binary incompatible, they can’t be backported to 2.11.</p>
+
+<ul>
+<li>Turn FunctionN into <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterface.html">Functional Interfaces</a>, so that Java 8 code can call higher-order methods in Scala without a <a href="https://github.com/scala/scala-java8-compat">wrapper</a>.</li>
+<li>Support for @interface traits, which are guaranteed to compile to Java interfaces (useful for interop, performance and binary compatibility). This is a generalization of the above feature.</li>
+<li>Streams: integrate into Scala collections? (Anywhere from providing converters to replacing existing functionality.)</li>
+<li>Use the JDK’s forkjoin library instead of embedding our own. (Switch the global default ExecutionContext to be backed by the ForkJoinPool.commonPool().)</li>
+<li><a href="http://docs.scala-lang.org/sips/pending/improved-lazy-val-initialization.html">SIP-20</a> Improved lazy val initialization (if time allows).</li>
+</ul>
+
+<h2>Timing</h2>
+
+<p>Scala 2.10.5 (Q4 2014) will be the last 2.10 release. We’re planning five 2.11.x releases in 2014, and a few more in 2015 (we&#39;re still deciding on when to EOL 2.11.x). At Typesafe, 2.12 development will begin with infrastructure work in Q4 2014, with our development focus shifting to 2.12 in 2015.</p>
+
+<p>|                 |                 |                                    |
+|-----------------|-----------------|------------------------------------|
+| 2.10.0          | <em>04/01/2013</em>    | First 2.10.x release               |
+| 2.11.0          | <em>16/04/2014</em>    | First 2.11.x release               |
+| 2.11.1          | <em>19/05/2014</em>    |                                    |
+| 2.11.2          | <em>21/07/2014</em>    |                                    |
+| 2.11.3          | <em>29/09/2014</em>    |                                    |
+| 2.10.5          | <em>Q4 2014</em>       | Last 2.10.x release                |
+| 2.12.0-M1       | <em>24/11/2014</em>    |                                    |
+| 2.11.4          | <em>Dec 2014</em>      |                                    |
+| 2.12.0-M{2,3,4} | <em>Q{1,2,3} 2015</em> | quarterly 2.12.0-Mx releases       |
+| 2.12.0-M5       | <em>Oct 2015</em>      |                                    |
+| 2.12.0-RC1      | <em>Nov 2015</em>      | (1 year after M1)                  |
+| 2.12.0          | <em>Jan 2016</em>      |                                    |</p>
+
+<p>During the development of Scala 2.11, we&#39;ve made big steps forward in automating our <a href="https://scala-webapps.epfl.ch/jenkins/view/scala-release-2.11.x/job/scala-release-2.11.x/">release process</a> and regression testing via our <a href="https://jenkins-dbuild.typesafe.com:8499/view/Shared/">Community Build</a> which builds 1M LOC of popular open source projects. Both the release script and the community builds are also run on a nightly basis.</p>
+
+<p>As such, as of Scala 2.11.1, we&#39;ve decided to skip Release Candidates for 2.x.y releases where y &gt; 0. This enables more frequent minor releases on a predictable schedule.</p>
+
+<p>(This roadmap was published on 30 June 2014.)</p>
+
+
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div class="contents">Contents</div>
+              <div id="toc"></div>
+              <br/>
+              <div class="alert-info">
+                <a href="/contribute/documentation.html#updating_scalalangorg"><p><strong>Problem with this page?</strong>
+                Please help us fix it!</p></a>
+              </div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

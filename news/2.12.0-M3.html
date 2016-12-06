@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Scala 2.12.0-M3 is now available! | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Scala 2.12.0-M3 is now available!</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            
+            <div class="article-date">October 6, 2015</div>
+
+<p>We are pleased to announce the availability of Scala 2.12.0-M3!</p>
+
+<p>Significant changes since M2 include:</p>
+
+<ul>
+<li>The REPL received a robust and flexible implementation of tab-completion (details below) - a fruitful collaboration between @som-snytt and @retronym</li>
+<li>The <code>@implicitAmbiguous</code> annotation allows customizing the error message when an implicit search finds multiple ambiguous values (details below) - thanks @puffnfresh!</li>
+<li>Enabling <code>-Ywarn-unused-import</code> now correctly warns about unused imports that were considered but discarded during an implicit search - thanks @som-snytt!</li>
+<li>The optimizer now attempts to inline invocations of higher-order methods if the argument function is statically known, eliminating polymorphic callsites. (This work will be refined further in later milestones.)</li>
+<li>The standard library no longer contains a clone of Java&#39;s fork/join library, but uses the one bundled in Java 8</li>
+</ul>
+
+<p>Compared to M2, this release resolves <a href="https://issues.scala-lang.org/issues/?jql=project%20%3D%20SI%20AND%20status%20%3D%20CLOSED%20AND%20resolution%20%3D%20Fixed%20AND%20fixVersion%20%3D%20%22Scala%202.12.0-M3%22%20ORDER%20BY%20component%20ASC%2C%20priority%20DESC">21 issues</a>. We merged <a href="https://github.com/scala/scala/pulls?q=is%3Apr+is%3Amerged+milestone%3A2.12.0-M3">49 pull requests</a>.
+&lt;!-- Before upgrading, please also check the <a href="https://issues.scala-lang.org/issues/?jql=project%20%3D%20SI%20AND%20status%3Dopen%20AND%20affectedVersion%20%3D%20%22Scala%202.11.7%22%20and%20fixVersion%20%3E%3D%20%22Scala%202.11.7%22%20ORDER%20BY%20component%20ASC%2C%20priority%20DESC">known issues</a> for this release.--&gt;</p>
+
+<p>As usual for milestones, 2.12.0-M3 is not binary compatible with any other Scala release, including other 2.12 milestones.</p>
+
+<h2>About Scala 2.12</h2>
+
+<p>The Scala 2.12 series targets Java 8. Programs written in Scala 2.12 must be compiled and run on Java 8 or newer.</p>
+
+<h3>Source compatibility</h3>
+
+<p>Scala 2.12 is mostly source compatible with 2.11.  Code that compiles on 2.11.x without deprecation warnings should compile on 2.12.x too, unless you use experimental APIs such as reflection.  If you find incompatibilities, please <a href="https://issues.scala-lang.org">file an issue</a>.</p>
+
+<h3>Binary compatibility</h3>
+
+<p>Since Scala 2.11, minor releases of Scala are binary compatible with each other.
+Scala 2.12 will continue this tradition: every 2.12.x release will be binary compatible with 2.12.0.
+Milestone releases and release candidates, however, are <strong>not</strong> binary compatible with any other release.</p>
+
+<p>Scala 2.12 is not and will not be binary compatible with the 2.11.x series.  This allows us to keep improving the Scala compiler and standard library.  We are working with the community to ensure that core projects in the Scala eco-system become available for 2.12.  Please refer to this growing <a href="https://github.com/scala/make-release-notes/blob/2.12.x/projects-2.12.md">list of libraries and frameworks</a>.</p>
+
+<p>The <a href="http://scala-lang.org/news/2.11.1">Scala 2.11.1 release notes</a> explain in more detail on how binary compatibility works in Scala.  The same policies apply to 2.12 as well.</p>
+
+<h3>New features</h3>
+
+<p>Future 2.12 milestones will include additional new features. For now, M3 includes the following major changes:</p>
+
+<h4>New backend</h4>
+
+<p>Scala 2.12 enables the &quot;GenBCode&quot; backend by default.</p>
+
+<p>The new backend is more efficient than the default backend of Scala 2.11, because it directly generates ASM bytecode from Scala compiler trees, while the previous backend used an intermediate representation called &quot;ICode&quot;.</p>
+
+<h4>Java 8 style closure classes</h4>
+
+<p>Scala 2.12 emits closures in the same style as Java 8.</p>
+
+<p>For each lambda the compiler generates a method containing the lambda body.
+At runtime, this method is passed as an argument to the LambdaMetaFactory provided by the JDK, which creates a closure object.</p>
+
+<p>Compared to Scala 2.11, the new scheme has the advantage that the compiler does not generate an anonymous class for each lambda anymore.
+This leads to significantly smaller JAR files.</p>
+
+<h4>Lambda syntax for SAM types (experimental)</h4>
+
+<p>As of M3, this feature is not yet on by default.  You can enable it with the <code>-Xexperimental</code> compiler option.</p>
+
+<p>When the option is enabled, then similar to Java 8, Scala 2.12 allows instantiating any type with one single abstract method by passing a lambda.  This improves the experience of using libraries written for Java 8 in Scala.</p>
+
+<p>This feature was also available in Scala 2.11, also via <code>-Xexperimental</code>.</p>
+
+<h4>New tab-completion in the Scala REPL</h4>
+
+<p>The implementation of tab-completion in the Scala REPL has been rewritten and now uses the same infrastruture as for example the Scala IDE or Ensime. Note that this feature will also be available in 2.11.8.</p>
+
+<p>There are a number of improvements:
+* Reliable completion, also in partial expressions and syntactically incorrect programs: try <code>class C { def f(l: List[Int]) = l.&lt;TAB&gt;</code>
+* CamelCase completion: try <code>(l: List[Int]).rro&lt;TAB&gt;</code>, it expands to <code>(l: List[Int]).reduceRightOption</code>
+* Show desugarings performed by the compiler by adding <code>//print</code>: try <code>for (x &lt;- 1 to 10) println(x) //print&lt;TAB&gt;</code>
+* Complete bean getters without typing <code>get</code>: try <code>(d: java.util.Date).day&lt;TAB&gt;</code>
+* Find members by typing any CamelCased part of the name: try <code>classOf[String].typ&lt;TAB&gt;</code> to get <code>getAnnotationsByType</code>, <code>getComponentType</code> and others
+* Complete non-qualified names, including types: try <code>def f(s: Str&lt;TAB&gt;</code>
+* Press tab twice to see the method signature: try <code>List(1,2,3).part&lt;TAB&gt;</code>, which completes to <code>List(1,2,3).partition</code>; press tab again to display <code>def partition(p: Int =&gt; Boolean): (List[Int], List[Int])</code></p>
+
+<p>Thanks to @som-snytt for helping out with this work!</p>
+
+<h4>New bytecode optimizer</h4>
+
+<p>The GenBCode backend includes a new inliner and bytecode optimizer.
+The optimizer is enabled using the <code>-Yopt:l:classpath</code> compiler option.
+Check <code>-Yopt:help</code> to see the full list of available options for the optimizer.</p>
+
+<p>As of M3, the following optimizations are available:</p>
+
+<ul>
+<li>Inlining final methods, including methods defined in objects and final methods defined in traits</li>
+<li>If a closure is allocated and invoked within the same method, the closure invocation is replaced by an invocations of the corresponding lambda body method</li>
+<li>Dead code elimination and a small number of cleanup optimizations</li>
+</ul>
+
+<p>The work on the new optimizer is still ongoing.  You can track it in the <a href="https://github.com/scala/scala-dev/labels/t%3Aoptimizer">scala-dev repository issue tracker</a>.</p>
+
+<h4>The <code>@implicitAmbiguous</code> annotation</h4>
+
+<p>The <code>@implicitAmbiguous</code> annotation allows customizing the error message when an implicit search finds multiple ambiguous values. Refer to the <a href="http://www.scala-lang.org/api/2.12.x/#scala.annotation.implicitAmbiguous">Scaladoc of the annotation class</a> for an example.</p>
+
+<p>Thanks to @puffnfresh for this contribution!</p>
+
+<h3>Unbundled features</h3>
+
+<p>The following modules have been removed from the Scala 2.12 distribution:</p>
+
+<ul>
+<li>Scala standard library actors.
+We recommend <a href="http://akka.io/">Akka actors</a> instead.
+See the <a href="http://docs.scala-lang.org/overviews/core/actors-migration-guide.html">Scala actors migration guide</a>.</li>
+<li>Akka actors.
+The Scala distribution and the <code>scala-library-all</code> dependency no longer include Akka actors.
+To use Akka, <a href="http://doc.akka.io/docs/akka/2.4.0/intro/getting-started.html">add it as a dependency</a>.</li>
+<li>Continuations plugin.
+(<a href="https://github.com/scala/scala-continuations">Community maintainers sought</a>.)</li>
+</ul>
+
+<h3>Breaking changes</h3>
+
+<h4>Changed syntax trees (affects macro and compiler plugin authors)</h4>
+
+<p>PR <a href="https://github.com/scala/scala/pull/4749">#4794</a> changed the syntax trees for selections of statically accessible symbols. For example, a selection of <code>Predef</code> no longer has the shape <code>q&quot;scala.this.Predef&quot;</code> but simply <code>q&quot;scala.Predef&quot;</code>. Macros and compiler plugins matching on the old tree shape need to be adjusted.</p>
+
+<h2>Contributors</h2>
+
+<p>A big thank you to everyone who&#39;s helped improve Scala by reporting bugs, improving our documentation, spreading kindness in mailing lists and other public fora, and submitting and reviewing pull requests! You are all magnificent.</p>
+
+<p>According to <code>git shortlog -sn --no-merges 2.11.x..v2.12.0-M3</code>, 44 people have contributed to Scala 2.12 so far: Lukas Rytz, Jason Zaugg, A. P. Marki, Rex Kerr, Adriaan Moors, Seth Tisue, Kato Kazuyoshi, Rui Gonçalves, Simon Ochsenreither, Max Bileschi, François Garillot, qilab gamma, jxcoder, Masato Sogame, Dominik Gruntz, Simon Schäfer, Kenji Yoshida, Todd Vierling, Viktor Klang, Alexey Romanov, Evgeny Vereshchagin, rubyu, Marc Siegel, dgruntz, Aleksandar Prokopec, Antoine Gourlay, Brian McKenna, Denis Rosset, Denton Cockburn, Erlend Hamnaberg, Eugene Dzhurinsky, Janek Bogucki, Lukas Elmer, Maks Atygaev, Malte Isberner, Nicolas Stucki, Paolo Giarrusso, Roman Hargrave, Shadaj, Steven Scott, Vojin Jovanovic, cchantep, harryhuk, martijnhoekstra. Thank you!</p>
+
+<p>Thanks also to Miguel Garcia and James Iry for their substantial prior work on the new compiler backend.</p>
+
+<h2>Release notes</h2>
+
+<p>You can propose edits to these release notes <a href="https://github.com/scala/make-release-notes/blob/2.12.x/hand-written.md">on GitHub</a>.</p>
+
+<h2>Obtaining Scala</h2>
+
+<p>Scala releases are available various ways, such as:</p>
+
+<!-- re-add for 2.12.0 final?
+* Get started with the [Hello Scala 2.12 template](https://typesafe.com/activator/template/hello-scala-2_12) in [Typesafe Activator](https://typesafe.com/platform/getstarted)
+-->
+
+<ul>
+<li>Download a distribution from <a href="http://scala-lang.org/download/2.12.0-M3.html">scala-lang.org</a></li>
+<li>Bump the <code>scalaVersion</code> setting in your SBT-based project</li>
+<li>Obtain JARs via <a href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.scala-lang%22%20AND%20v%3A%222.12.0-M3%22">Maven Central</a></li>
+</ul>
+
+
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div class="contents">Contents</div>
+              <div id="toc"></div>
+              <br/>
+              <div class="alert-info">
+                <a href="/contribute/documentation.html#updating_scalalangorg"><p><strong>Problem with this page?</strong>
+                Please help us fix it!</p></a>
+              </div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

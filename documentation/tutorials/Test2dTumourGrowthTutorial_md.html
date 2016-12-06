@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Test2d Tumour Growth Tutorial | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Test2d Tumour Growth Tutorial</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <div class="row">
+      <div class="span12">
+          <div class="main-page-column" style="width: 100%;">
+            
+            <p>This tutorial is automatically generated from the file test/tutorials//Test2dTumourGrowthTutorial.hpp.
+Note that the code is given in full at the bottom of the page.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;cxxtest/TestSuite.h&gt;
+#include &lt;vector&gt;
+#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "SmartPointers.hpp"
+#include "AbstractCellBasedWithTimingsTestSuite.hpp"
+#include "HoneycombMeshGenerator.hpp"
+#include "GeneralisedLinearSpringForce.hpp"
+#include "Owen2011OxygenBasedCellCycleModel.hpp"
+#include "CellProliferativeTypesWriter.hpp"
+#include "CellProliferativePhasesWriter.hpp"
+#include "CellMutationStatesWriter.hpp"
+#include "CellLabelWriter.hpp"
+#include "CellProliferativePhasesCountWriter.hpp"
+#include "OffLatticeSimulation.hpp"
+#include "VoronoiDataWriter.hpp"
+#include "Owen2011TrackingModifier.hpp"
+#include "QuiescentCancerCellMutationState.hpp"
+#include "CancerCellMutationState.hpp"
+#include "ApoptoticCellProperty.hpp"
+#include "WildTypeCellMutationState.hpp"
+#include "CancerCellMutationState.hpp"
+#include "StemCellProliferativeType.hpp"
+#include "RegularGrid.hpp"
+#include "FiniteDifferenceSolver.hpp"
+#include "DiscreteContinuumBoundaryCondition.hpp"
+#include "CellStateDependentDiscreteSource.hpp"
+#include "DiscreteSource.hpp"
+#include "MicrovesselSimulationModifier.hpp"
+#include "CaBasedCellPopulation.hpp"
+#include "PottsMeshGenerator.hpp"
+#include "PottsMesh.hpp"
+#include "OnLatticeSimulation.hpp"
+#include "ApoptoticCellKiller.hpp"
+#include "VesselNetworkGenerator.hpp"
+#include "VesselNetwork.hpp"
+#include "CaBasedCellPopulation.hpp"
+#include "AngiogenesisSolver.hpp"
+#include "FlowSolver.hpp"
+#include "UnitCollection.hpp"
+#include "VesselNetworkCellPopulationInteractor.hpp"
+#include "StalkCellMutationState.hpp"
+#include "TipCellMutationState.hpp"
+#include "CancerCellMutationState.hpp"
+#include "MacrophageMutationState.hpp"
+</span>
+<span class="cp">#include "PetscSetupAndFinalize.hpp"
+</span>
+<span class="k">class</span> <span class="nc">Test2dVascularTumourGrowth</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AbstractCellBasedWithTimingsTestSuite</span>
+<span class="p">{</span>
+<span class="c1">//    boost::shared_ptr&lt;LinearSteadyStateDiffusionReactionPde&lt;2&gt; &gt; GetOxygenPde()
+//    {
+//        boost::shared_ptr&lt;LinearSteadyStateDiffusionReactionPde&lt;2&gt; &gt; p_pde = LinearSteadyStateDiffusionReactionPde&lt;2&gt;::Create();
+//
+//        units::quantity&lt;unit::diffusivity&gt; oxygen_diffusivity(8700000.0/400.0 * unit::metre_squared_per_second);
+//        p_pde-&gt;SetIsotropicDiffusionConstant(oxygen_diffusivity); // assume cell width is 20 microns
+//
+//        // Add a cell state specific discrete source for cells consuming oxygen
+//        boost::shared_ptr&lt;CellStateDependentDiscreteSource&lt;2&gt; &gt; p_cell_sink = CellStateDependentDiscreteSource&lt;2&gt;::Create();
+//        std::map&lt;unsigned, units::quantity&lt;unit::molar_flow_rate&gt; &gt; state_specific_rates;
+//        MAKE_PTR(WildTypeCellMutationState, p_normal_cell_state);
+//        MAKE_PTR(CancerCellMutationState, p_cancer_state);
+//        MAKE_PTR(QuiescentCancerCellMutationState, p_quiescent_cancer_state);
+//        MAKE_PTR(ApoptoticCellProperty, p_apoptotic_property);
+//        MAKE_PTR(TipCellMutationState, p_tip_state);
+//        MAKE_PTR(StalkCellMutationState, p_stalk_state);
+//        state_specific_rates[p_apoptotic_property-&gt;GetColour()] = 0.0*unit::mole_per_second;
+//        state_specific_rates[p_cancer_state-&gt;GetColour()] = -7800.0*unit::mole_per_second;
+//        state_specific_rates[p_quiescent_cancer_state-&gt;GetColour()] = -7800.0*unit::mole_per_second;
+//        state_specific_rates[p_tip_state-&gt;GetColour()] = -5000.0*unit::mole_per_second;
+//        state_specific_rates[p_stalk_state-&gt;GetColour()] = -5000.0*unit::mole_per_second;
+//        state_specific_rates[p_normal_cell_state-&gt;GetColour()] = -5000.0*unit::mole_per_second;
+//        p_cell_sink-&gt;SetStateRateMap(state_specific_rates);
+//        p_pde-&gt;AddDiscreteSource(p_cell_sink);
+//
+//        // todo this needs to be updated so that source strength is proportional to haematocrit level
+//        boost::shared_ptr&lt;CellStateDependentDiscreteSource&lt;2&gt; &gt; p_cell_source = CellStateDependentDiscreteSource&lt;2&gt;::Create();
+//        std::map&lt;unsigned, units::quantity&lt;unit::molar_flow_rate&gt; &gt; state_specific_rates2;
+//        double segment_radius = 0.5;
+//        double segment_length = 1.0;
+//        double segment_surface_area = 2 * M_PI * segment_radius * segment_length;
+//        double permeability = 20000.0;
+//        double inter_vessel_O2_level = 5.0;
+//        state_specific_rates2[p_stalk_state-&gt;GetColour()] = segment_surface_area * permeability * inter_vessel_O2_level / pow(segment_length, 3.0)*unit::mole_per_second;
+//        state_specific_rates2[p_tip_state-&gt;GetColour()] = segment_surface_area * permeability * inter_vessel_O2_level / pow(segment_length, 3.0)*unit::mole_per_second;
+//        p_cell_source-&gt;SetStateRateMap(state_specific_rates2);
+//        p_pde-&gt;AddDiscreteSource(p_cell_source);
+//        return p_pde;
+//    }
+//
+//    // todo need to check parameters in sink/source terms in here
+//    boost::shared_ptr&lt;LinearSteadyStateDiffusionReactionPde&lt;2&gt; &gt; GetVegfPde()
+//    {
+//        boost::shared_ptr&lt;LinearSteadyStateDiffusionReactionPde&lt;2&gt; &gt; p_pde = LinearSteadyStateDiffusionReactionPde&lt;2&gt;::Create();
+//        units::quantity&lt;unit::diffusivity&gt; vegf_diffusivity(60000.0 / 400.0 * unit::metre_squared_per_second);
+//        p_pde-&gt;SetIsotropicDiffusionConstant(vegf_diffusivity); // assume cell width is 20 microns
+//        p_pde-&gt;SetContinuumLinearInUTerm(-0.8*unit::per_second); //Vegf decay
+//
+//        // VEGF release for normal cells and quiescent cancer cells:
+//        // normal cells release only when intracellular vegf reaches a certain value
+//        // quiescent cancer cells always release vegf
+//        boost::shared_ptr&lt;CellStateDependentDiscreteSource&lt;2&gt; &gt; p_normal_and_quiescent_cell_source = CellStateDependentDiscreteSource&lt;2&gt;::Create();
+//
+//        // Set mutation specific source strengths and thresholds
+//        std::map&lt;unsigned, units::quantity&lt;unit::molar_flow_rate&gt; &gt; normal_and_quiescent_cell_rates;
+//        std::map&lt;unsigned, units::quantity&lt;unit::concentration&gt; &gt; normal_and_quiescent_cell_rate_thresholds;
+//        MAKE_PTR(QuiescentCancerCellMutationState, p_quiescent_cancer_state);
+//        MAKE_PTR(WildTypeCellMutationState, p_normal_cell_state);
+//        normal_and_quiescent_cell_rates[p_normal_cell_state-&gt;GetColour()] = 0.6*unit::mole_per_second;
+//        normal_and_quiescent_cell_rate_thresholds[p_normal_cell_state-&gt;GetColour()] = 0.27*unit::mole_per_metre_cubed;
+//        normal_and_quiescent_cell_rates[p_quiescent_cancer_state-&gt;GetColour()] = 0.6*unit::mole_per_second;
+//        normal_and_quiescent_cell_rate_thresholds[p_quiescent_cancer_state-&gt;GetColour()] = 0.0*unit::mole_per_metre_cubed;
+//
+//        p_normal_and_quiescent_cell_source-&gt;SetStateRateMap(normal_and_quiescent_cell_rates);
+//        p_normal_and_quiescent_cell_source-&gt;SetLabelName("VEGF");
+//        p_normal_and_quiescent_cell_source-&gt;SetStateRateThresholdMap(normal_and_quiescent_cell_rate_thresholds);
+//        p_pde-&gt;AddDiscreteSource(p_normal_and_quiescent_cell_source);
+//
+//        // VEGF release for cancer cells and tip cells, now there is no threshold so we use a different source
+//        boost::shared_ptr&lt;CellStateDependentDiscreteSource&lt;2&gt; &gt; p_other_cell_sinks = CellStateDependentDiscreteSource&lt;2&gt;::Create();
+//
+//        std::map&lt;unsigned, units::quantity&lt;unit::molar_flow_rate&gt; &gt; other_cell_rates;
+//        double segment_radius = 0.5;
+//        double segment_length = 1.0;
+//        double permeability = 15;
+//        MAKE_PTR(TipCellMutationState, p_tip_state);
+//        MAKE_PTR(StalkCellMutationState, p_stalk_state);
+//        other_cell_rates[p_tip_state-&gt;GetColour()] = -2 * M_PI * segment_radius * segment_length * permeability / pow(segment_length, 3.0)*unit::mole_per_second; // tip cell mutation state
+//        other_cell_rates[p_stalk_state-&gt;GetColour()] = -2 * M_PI * segment_radius * segment_length * permeability / pow(segment_length, 3.0)*unit::mole_per_second; // stalk cell mutation state
+//        p_other_cell_sinks-&gt;SetStateRateMap(other_cell_rates);
+//        p_pde-&gt;AddDiscreteSource(p_other_cell_sinks);
+//        return p_pde;
+//    }
+</span>
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="kt">void</span> <span class="n">TestOnLattice2dVascularTumourGrowth</span><span class="p">()</span> <span class="k">throw</span> <span class="p">(</span><span class="n">Exception</span><span class="p">)</span>
+    <span class="p">{</span>
+<span class="c1">//
+//        // set volume fractions occupied by each cell
+//        boost::shared_ptr&lt;WildTypeCellMutationState&gt; wild_mutation_state(new WildTypeCellMutationState);
+//        boost::shared_ptr&lt;CancerCellMutationState&gt; cancer_mutation_state(new CancerCellMutationState);
+//        boost::shared_ptr&lt;QuiescentCancerCellMutationState&gt; quiescent_cancer_mutation_state(new QuiescentCancerCellMutationState);
+//        boost::shared_ptr&lt;StalkCellMutationState&gt; stalk_mutation_state(new StalkCellMutationState);
+//        boost::shared_ptr&lt;TipCellMutationState&gt; tip_mutation_state(new TipCellMutationState);
+</span>
+<span class="c1">////        cell_population.SetVolumeFraction(wild_mutation_state, 0.6);
+////        cell_population.SetVolumeFraction(cancer_mutation_state, 0.6);
+////        cell_population.SetVolumeFraction(quiescent_cancer_mutation_state, 0.6);
+////        cell_population.SetVolumeFraction(stalk_mutation_state, 0.4);
+////        cell_population.SetVolumeFraction(tip_mutation_state, 0.4);
+//
+</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+</code></pre></div>
+<h1>Code</h1>
+
+<p>The full code is given below</p>
+
+<h2>File name <code>Test2dTumourGrowthTutorial.hpp</code></h2>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;cxxtest/TestSuite.h&gt;
+#include &lt;vector&gt;
+#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "SmartPointers.hpp"
+#include "AbstractCellBasedWithTimingsTestSuite.hpp"
+#include "HoneycombMeshGenerator.hpp"
+#include "GeneralisedLinearSpringForce.hpp"
+#include "Owen2011OxygenBasedCellCycleModel.hpp"
+#include "CellProliferativeTypesWriter.hpp"
+#include "CellProliferativePhasesWriter.hpp"
+#include "CellMutationStatesWriter.hpp"
+#include "CellLabelWriter.hpp"
+#include "CellProliferativePhasesCountWriter.hpp"
+#include "OffLatticeSimulation.hpp"
+#include "VoronoiDataWriter.hpp"
+#include "Owen2011TrackingModifier.hpp"
+#include "QuiescentCancerCellMutationState.hpp"
+#include "CancerCellMutationState.hpp"
+#include "ApoptoticCellProperty.hpp"
+#include "WildTypeCellMutationState.hpp"
+#include "CancerCellMutationState.hpp"
+#include "StemCellProliferativeType.hpp"
+#include "RegularGrid.hpp"
+#include "FiniteDifferenceSolver.hpp"
+#include "DiscreteContinuumBoundaryCondition.hpp"
+#include "CellStateDependentDiscreteSource.hpp"
+#include "DiscreteSource.hpp"
+#include "MicrovesselSimulationModifier.hpp"
+#include "CaBasedCellPopulation.hpp"
+#include "PottsMeshGenerator.hpp"
+#include "PottsMesh.hpp"
+#include "OnLatticeSimulation.hpp"
+#include "ApoptoticCellKiller.hpp"
+#include "VesselNetworkGenerator.hpp"
+#include "VesselNetwork.hpp"
+#include "CaBasedCellPopulation.hpp"
+#include "AngiogenesisSolver.hpp"
+#include "FlowSolver.hpp"
+#include "UnitCollection.hpp"
+#include "VesselNetworkCellPopulationInteractor.hpp"
+#include "StalkCellMutationState.hpp"
+#include "TipCellMutationState.hpp"
+#include "CancerCellMutationState.hpp"
+#include "MacrophageMutationState.hpp"
+</span>
+<span class="cp">#include "PetscSetupAndFinalize.hpp"
+</span>
+<span class="k">class</span> <span class="nc">Test2dVascularTumourGrowth</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AbstractCellBasedWithTimingsTestSuite</span>
+<span class="p">{</span>
+<span class="c1">//    boost::shared_ptr&lt;LinearSteadyStateDiffusionReactionPde&lt;2&gt; &gt; GetOxygenPde()
+//    {
+//        boost::shared_ptr&lt;LinearSteadyStateDiffusionReactionPde&lt;2&gt; &gt; p_pde = LinearSteadyStateDiffusionReactionPde&lt;2&gt;::Create();
+//
+//        units::quantity&lt;unit::diffusivity&gt; oxygen_diffusivity(8700000.0/400.0 * unit::metre_squared_per_second);
+//        p_pde-&gt;SetIsotropicDiffusionConstant(oxygen_diffusivity); // assume cell width is 20 microns
+//
+//        // Add a cell state specific discrete source for cells consuming oxygen
+//        boost::shared_ptr&lt;CellStateDependentDiscreteSource&lt;2&gt; &gt; p_cell_sink = CellStateDependentDiscreteSource&lt;2&gt;::Create();
+//        std::map&lt;unsigned, units::quantity&lt;unit::molar_flow_rate&gt; &gt; state_specific_rates;
+//        MAKE_PTR(WildTypeCellMutationState, p_normal_cell_state);
+//        MAKE_PTR(CancerCellMutationState, p_cancer_state);
+//        MAKE_PTR(QuiescentCancerCellMutationState, p_quiescent_cancer_state);
+//        MAKE_PTR(ApoptoticCellProperty, p_apoptotic_property);
+//        MAKE_PTR(TipCellMutationState, p_tip_state);
+//        MAKE_PTR(StalkCellMutationState, p_stalk_state);
+//        state_specific_rates[p_apoptotic_property-&gt;GetColour()] = 0.0*unit::mole_per_second;
+//        state_specific_rates[p_cancer_state-&gt;GetColour()] = -7800.0*unit::mole_per_second;
+//        state_specific_rates[p_quiescent_cancer_state-&gt;GetColour()] = -7800.0*unit::mole_per_second;
+//        state_specific_rates[p_tip_state-&gt;GetColour()] = -5000.0*unit::mole_per_second;
+//        state_specific_rates[p_stalk_state-&gt;GetColour()] = -5000.0*unit::mole_per_second;
+//        state_specific_rates[p_normal_cell_state-&gt;GetColour()] = -5000.0*unit::mole_per_second;
+//        p_cell_sink-&gt;SetStateRateMap(state_specific_rates);
+//        p_pde-&gt;AddDiscreteSource(p_cell_sink);
+//
+//        // todo this needs to be updated so that source strength is proportional to haematocrit level
+//        boost::shared_ptr&lt;CellStateDependentDiscreteSource&lt;2&gt; &gt; p_cell_source = CellStateDependentDiscreteSource&lt;2&gt;::Create();
+//        std::map&lt;unsigned, units::quantity&lt;unit::molar_flow_rate&gt; &gt; state_specific_rates2;
+//        double segment_radius = 0.5;
+//        double segment_length = 1.0;
+//        double segment_surface_area = 2 * M_PI * segment_radius * segment_length;
+//        double permeability = 20000.0;
+//        double inter_vessel_O2_level = 5.0;
+//        state_specific_rates2[p_stalk_state-&gt;GetColour()] = segment_surface_area * permeability * inter_vessel_O2_level / pow(segment_length, 3.0)*unit::mole_per_second;
+//        state_specific_rates2[p_tip_state-&gt;GetColour()] = segment_surface_area * permeability * inter_vessel_O2_level / pow(segment_length, 3.0)*unit::mole_per_second;
+//        p_cell_source-&gt;SetStateRateMap(state_specific_rates2);
+//        p_pde-&gt;AddDiscreteSource(p_cell_source);
+//        return p_pde;
+//    }
+//
+//    // todo need to check parameters in sink/source terms in here
+//    boost::shared_ptr&lt;LinearSteadyStateDiffusionReactionPde&lt;2&gt; &gt; GetVegfPde()
+//    {
+//        boost::shared_ptr&lt;LinearSteadyStateDiffusionReactionPde&lt;2&gt; &gt; p_pde = LinearSteadyStateDiffusionReactionPde&lt;2&gt;::Create();
+//        units::quantity&lt;unit::diffusivity&gt; vegf_diffusivity(60000.0 / 400.0 * unit::metre_squared_per_second);
+//        p_pde-&gt;SetIsotropicDiffusionConstant(vegf_diffusivity); // assume cell width is 20 microns
+//        p_pde-&gt;SetContinuumLinearInUTerm(-0.8*unit::per_second); //Vegf decay
+//
+//        // VEGF release for normal cells and quiescent cancer cells:
+//        // normal cells release only when intracellular vegf reaches a certain value
+//        // quiescent cancer cells always release vegf
+//        boost::shared_ptr&lt;CellStateDependentDiscreteSource&lt;2&gt; &gt; p_normal_and_quiescent_cell_source = CellStateDependentDiscreteSource&lt;2&gt;::Create();
+//
+//        // Set mutation specific source strengths and thresholds
+//        std::map&lt;unsigned, units::quantity&lt;unit::molar_flow_rate&gt; &gt; normal_and_quiescent_cell_rates;
+//        std::map&lt;unsigned, units::quantity&lt;unit::concentration&gt; &gt; normal_and_quiescent_cell_rate_thresholds;
+//        MAKE_PTR(QuiescentCancerCellMutationState, p_quiescent_cancer_state);
+//        MAKE_PTR(WildTypeCellMutationState, p_normal_cell_state);
+//        normal_and_quiescent_cell_rates[p_normal_cell_state-&gt;GetColour()] = 0.6*unit::mole_per_second;
+//        normal_and_quiescent_cell_rate_thresholds[p_normal_cell_state-&gt;GetColour()] = 0.27*unit::mole_per_metre_cubed;
+//        normal_and_quiescent_cell_rates[p_quiescent_cancer_state-&gt;GetColour()] = 0.6*unit::mole_per_second;
+//        normal_and_quiescent_cell_rate_thresholds[p_quiescent_cancer_state-&gt;GetColour()] = 0.0*unit::mole_per_metre_cubed;
+//
+//        p_normal_and_quiescent_cell_source-&gt;SetStateRateMap(normal_and_quiescent_cell_rates);
+//        p_normal_and_quiescent_cell_source-&gt;SetLabelName("VEGF");
+//        p_normal_and_quiescent_cell_source-&gt;SetStateRateThresholdMap(normal_and_quiescent_cell_rate_thresholds);
+//        p_pde-&gt;AddDiscreteSource(p_normal_and_quiescent_cell_source);
+//
+//        // VEGF release for cancer cells and tip cells, now there is no threshold so we use a different source
+//        boost::shared_ptr&lt;CellStateDependentDiscreteSource&lt;2&gt; &gt; p_other_cell_sinks = CellStateDependentDiscreteSource&lt;2&gt;::Create();
+//
+//        std::map&lt;unsigned, units::quantity&lt;unit::molar_flow_rate&gt; &gt; other_cell_rates;
+//        double segment_radius = 0.5;
+//        double segment_length = 1.0;
+//        double permeability = 15;
+//        MAKE_PTR(TipCellMutationState, p_tip_state);
+//        MAKE_PTR(StalkCellMutationState, p_stalk_state);
+//        other_cell_rates[p_tip_state-&gt;GetColour()] = -2 * M_PI * segment_radius * segment_length * permeability / pow(segment_length, 3.0)*unit::mole_per_second; // tip cell mutation state
+//        other_cell_rates[p_stalk_state-&gt;GetColour()] = -2 * M_PI * segment_radius * segment_length * permeability / pow(segment_length, 3.0)*unit::mole_per_second; // stalk cell mutation state
+//        p_other_cell_sinks-&gt;SetStateRateMap(other_cell_rates);
+//        p_pde-&gt;AddDiscreteSource(p_other_cell_sinks);
+//        return p_pde;
+//    }
+</span>
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="kt">void</span> <span class="n">TestOnLattice2dVascularTumourGrowth</span><span class="p">()</span> <span class="k">throw</span> <span class="p">(</span><span class="n">Exception</span><span class="p">)</span>
+    <span class="p">{</span>
+<span class="c1">//
+//        // set volume fractions occupied by each cell
+//        boost::shared_ptr&lt;WildTypeCellMutationState&gt; wild_mutation_state(new WildTypeCellMutationState);
+//        boost::shared_ptr&lt;CancerCellMutationState&gt; cancer_mutation_state(new CancerCellMutationState);
+//        boost::shared_ptr&lt;QuiescentCancerCellMutationState&gt; quiescent_cancer_mutation_state(new QuiescentCancerCellMutationState);
+//        boost::shared_ptr&lt;StalkCellMutationState&gt; stalk_mutation_state(new StalkCellMutationState);
+//        boost::shared_ptr&lt;TipCellMutationState&gt; tip_mutation_state(new TipCellMutationState);
+</span>
+<span class="c1">////        cell_population.SetVolumeFraction(wild_mutation_state, 0.6);
+////        cell_population.SetVolumeFraction(cancer_mutation_state, 0.6);
+////        cell_population.SetVolumeFraction(quiescent_cancer_mutation_state, 0.6);
+////        cell_population.SetVolumeFraction(stalk_mutation_state, 0.4);
+////        cell_population.SetVolumeFraction(tip_mutation_state, 0.4);
+//
+</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+</code></pre></div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

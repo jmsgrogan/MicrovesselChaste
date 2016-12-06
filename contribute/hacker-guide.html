@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Scala hacker guide | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">Scala hacker guide</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            
+              <div class="written">Written By: <span class="by">Eugene Burmako</span></div>
+            
+            <p><br>
+This guide is intended to help you get from an idea of fixing a bug or implementing a new feature into a nightly Scala build, and, ultimately, to a production release of Scala incorporating your idea.</p>
+
+<p>This guide covers the entire process, from the conception of your idea or bugfix to the point where it is merged into Scala. Throughout, we will use a running example of an idea or bugfix one might wish to contribute.</p>
+
+<p>Other good starting points for first-time contributors include the <a href="https://github.com/scala/scala#get-in-touch">Scala README</a> and <a href="https://github.com/scala/scala/blob/2.11.x/CONTRIBUTING.md">contributor&#39;s guidelines</a>.</p>
+
+<h2>The Running Example</h2>
+
+<p>Let&#39;s say that you particularly enjoy the new string interpolation language feature introduced in Scala 2.10.0, and you use it quite heavily.</p>
+
+<p>Though, there&#39;s an annoying issue
+which you occasionally stumble upon: the formatting string interpolator <code>f</code> <a href="https://issues.scala-lang.org/browse/SI-6725">does not support</a>
+new line tokens <code>%n</code>.</p>
+
+<p>One approach would be to go the mailing list, request that the bug be fixed, and then to wait indefinitely for the fix arrive. Another approach would be to instead patch Scala oneself, and to submit the fix to the Scala repository in hopes that it might make it into a subsequent release.</p>
+
+<p><strong><em>Of note</em></strong>: There are several types of releases/builds. Nightly builds are produced every night at a fixed time. Minor releases happen once every few months. Major releases typically happen once per year.</p>
+
+<h2>1. Connect</h2>
+
+<p>Sometimes it&#39;s appealing to hack alone and not to have to interact with others out of fear, or out of comfort. However, in the context a big project such as Scala,
+this might not be the very best idea. There are people in the Scala community who have spent years accumulating knowledge about Scala libraries and internals. They might provide
+unique insights and, what&#39;s even better, direct assistance in their areas, so it is not only advantageous, but recommended to communicate with the community about your new patch.</p>
+
+<p>Typically bug fixes and new features start out as an idea or an experiment posted on one of <a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing_lists">our mailing lists</a> to find out how people feel
+about things you want to implement. People proficient in certain areas of Scala usually monitor mailing lists, so you&#39;ll often get some help
+by simply posting a message. But the most efficient way to connect is to cc your message to one of the people responsible for maintaining the aspect of Scala which you wish to contribute to.</p>
+
+<p>A list of language features/libraries along with their maintainer&#39;s full names and GitHub usernames is <a href="https://github.com/scala/scala#get-in-touch">in the Scala repo README</a>.</p>
+
+<p>In our running example, since Martin is the person who submitted the string interpolation Scala Improvement Proposal and implemented this language feature for Scala 2.10.0, he might be interested in learning of new bugfixes to that feature.</p>
+
+<p>As alluded to earlier, one must also choose an appropriate mailing list. Typically, one would use the scala-internals mailing list, as it is devoted to discussions about the core internal design and implementation of the Scala system. However, since this issue has been discussed previously on the scala-user mailing list,
+in this example, we post to the <a href="http://groups.google.com/group/scala-user">the scala-user mailing list</a> about our issue.</p>
+
+<p><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/01-post.png" alt="Posting to scala-user" class="centerclear" />
+<img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/02-post.png" alt="Response from Martin" class="centerclear" /></p>
+
+<p>Now that we have the approval of the feature&#39;s author, we can get to work!</p>
+
+<h2>2. Set up</h2>
+
+<p>Hacking Scala begins with creating a branch for your work item. To develop Scala we use <a href="http://git-scm.com/">Git</a>
+and <a href="http://github.com/">GitHub</a>. This section of the guide provides a short walkthrough, but if you are new to Git,
+it probably makes sense to familiarize yourself with Git first. We recommend</p>
+
+<ul>
+<li>the <a href="http://git-scm.com/book/en/">Git Pro</a> online book.</li>
+<li>the help page on <a href="https://help.github.com/articles/fork-a-repo">Forking a Git Repository</a>.</li>
+<li>this great training tool <a href="http://pcottle.github.io/learnGitBranching/">LearnGitBranching</a>. One hour hands-on training helps more than 1000 hours reading. </li>
+</ul>
+
+<h3>Fork</h3>
+
+<p>Log into <a href="http://github.com/">GitHub</a>, go to <a href="https://github.com/scala/scala">https://github.com/scala/scala</a> and click the <code>Fork</code>
+button in the top right corner of the page. This will create your own copy of our repository that will serve as a scratchpad for your work.</p>
+
+<p>If you&#39;re new to Git, don&#39;t be afraid of messing up-- there is no way you can corrupt our repository.</p>
+
+<p><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/03-fork.png" alt="Fork scala/scala" class="centerclear" /></p>
+
+<h3>Clone</h3>
+
+<p>If everything went okay, you will be redirected to your own fork at <code>https://github.com/username/scala</code>, where <code>username</code>
+is your github user name. You might find it helpful to read <a href="http://help.github.com/fork-a-repo/">http://help.github.com/fork-a-repo/</a>,
+which covers some of the things that will follow below. Then, <em>clone</em> your repository (i.e. pull a copy from GitHub to your local machine) by running the following on the command line:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">16:35 ~/Projects$ git clone https://github.com/xeno-by/scala
+Cloning into 'scala'...
+remote: Counting objects: 258564, done.
+remote: Compressing objects: 100% (58239/58239), done.
+remote: Total 258564 (delta 182155), reused 254094 (delta 178356)
+Receiving objects: 100% (258564/258564), 46.91 MiB | 700 KiB/s, done.
+Resolving deltas: 100% (182155/182155), done.
+</code></pre></div>
+<p>This will create a local directory called <code>scala</code>, which contains a clone of your own copy of our repository. The changes that you make
+in this directory can be propagated back to your copy hosted on GitHub and, ultimately, pushed into Scala when your patch is ready.</p>
+
+<h3>Branch</h3>
+
+<p>Before you start making changes, always create your own branch. Never work on the <code>master</code> branch. Think of a name that describes
+the changes you plan on making. Use a prefix that describes the nature of your change. There are essentially two kinds of changes:
+bug fixes and new features.</p>
+
+<ul>
+<li>For bug fixes, use <code>issue/NNNN</code> or <code>ticket/NNNN</code> for bug NNNN from the <a href="https://issues.scala-lang.org/">Scala issue tracker</a>.</li>
+<li>For new feature use <code>topic/XXX</code> for feature XXX. Use feature names that make sense in the context of the whole Scala project and not just to you personally. For example, if you work on diagrams in Scaladoc, use <code>topic/scaladoc-diagrams</code> instead of just <code>topic/diagrams</code> would be a good branch name.</li>
+</ul>
+
+<p>Since in our example, we&#39;re going to fix an existing bug <a href="https://issues.scala-lang.org/browse/SI-6725">SI-6725</a>, we&#39;ll create a branch named <code>ticket/6725</code>.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">16:39 ~/Projects/scala (master)$ git checkout -b ticket/6725
+Switched to a new branch 'ticket/6725'
+</code></pre></div>
+<p>If you are new to Git and branching, read the <a href="http://git-scm.com/book/en/Git-Branching">Branching Chapter</a> in the Git Pro book.</p>
+
+<h3>Build</h3>
+
+<p>The next step after cloning your fork is setting up your machine to build Scala.</p>
+
+<p>You need the following tools:</p>
+
+<ul>
+<li>A Java SDK. The baseline version is 6 for 2.11.x and 8 for 2.12.x. It&#39;s possible to use a later SDK for local development, but the continuous integration builds will verify against the baseline version.</li>
+<li><code>sbt</code>, an interactive build tool commonly used in Scala projects. Acquiring sbt manually is not necessary -- the recommended approach is to download the <a href="https://github.com/paulp/sbt-extras/blob/master/sbt">sbt-extras runner script</a> and use it in place of <code>sbt</code>. The script will download and run the correct version of sbt when run from the Scala repository&#39;s root directory.</li>
+<li><code>curl</code> -- the build uses <code>curl</code> in the <code>pull-binary-libs.sh</code> script to download bootstrap libs.</li>
+</ul>
+
+<p>OS X and Linux builds should work. Windows is supported, but it might have issues. Please report to <a href="https://issues.scala-lang.org/">the issue tracker</a> if you encounter any.</p>
+
+<p>Building Scala is as easy as running <code>sbt dist/mkPack</code> in the root of your cloned repository. In general, it&#39;s much more efficient to enter the <code>sbt</code> shell once and run the various tasks from there, instead of running each task by launching <code>sbt some-task</code> on your command prompt.</p>
+
+<p>Be prepared to wait for a while -- a full &quot;clean&quot; build takes 5+ minutes depending on your machine (longer on older machines with less memory). On a recent laptop, incremental builds usually complete within 10-30 seconds.</p>
+
+<h3>IDE</h3>
+
+<p>There&#39;s no single editor of choice for working with Scala sources, as there are trade-offs associated with each available tool.</p>
+
+<p>Both Eclipse and IntelliJ IDEA have Scala plugins, which are known to work with our codebase.
+Both of those Scala plugins provide navigation, refactoring, error reporting functionality, and integrated debugging.
+See <a href="https://github.com/scala/scala#ide-setup">the Scala README</a> for instructions on using Eclipse and IntelliJ IDEA with the Scala repository.</p>
+
+<p>There also exist lighter-weight editors such as Emacs, Sublime or jEdit which are faster and much less memory/compute-intensive to run, while
+lacking semantic services and debugging. To address this shortcoming, they can integrate with ENSIME,
+a helper program, which hosts a resident Scala compiler providing some of the features implemented in traditional IDEs. However despite
+having significantly matured over the last year, support for our particular code base is still being improved, and is not as mature as for Eclipse and IntelliJ.</p>
+
+<p>Due to the immense variability in personal preference between IDE/editor experience, it&#39;s difficult to recommend a particular tool, and your choice should boil down to your personal preferences.</p>
+
+<h2>3. Hack</h2>
+
+<p>When hacking on your topic of choice, you&#39;ll be modifying Scala, compiling it and testing it on relevant input files.
+Typically you would want to first make sure that your changes work on a small example and afterwards verify that nothing break
+by running a comprehensive test suite.</p>
+
+<p>We&#39;ll start by creating a <code>sandbox</code> directory (<code>./sandbox is listed in the .gitignore of the Scala repository), which will hold a single test file and its compilation results. First, let&#39;s make sure that
+[the bug](https://issues.scala-lang.org/browse/SI-6725) is indeed reproducible by putting together a simple test and compiling and running it with the Scala compiler that we built using</code>sbt<code>. The Scala compiler that we just built is located in</code>build/pack/bin`.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">17:25 ~/Projects/scala (ticket/6725)$ mkdir sandbox
+17:26 ~/Projects/scala (ticket/6725)$ cd sandbox
+17:26 ~/Projects/scala/sandbox (ticket/6725)$ edit Test.scala
+17:26 ~/Projects/scala/sandbox (ticket/6725)$ cat Test.scala
+object Test extends App {
+  val a = 1
+  val s = f"$a%s%n$a%s"
+  println(s)
+}
+17:27 ~/Projects/scala/sandbox (ticket/6725)$ ../build/pack/bin/scalac Test.scala
+17:28 ~/Projects/scala/sandbox (ticket/6725)$ ../build/pack/bin/scala Test
+1%n1 // %n should've been replaced by a newline here
+</code></pre></div>
+<h3>Implement</h3>
+
+<p>Now, implement your bugfix or new feature!</p>
+
+<p>Here are also some tips &amp; tricks that have proven useful in Scala development:</p>
+
+<ul>
+<li>After building your working copy with the <code>compile</code> sbt task, there&#39;s no need to leave the comfort of your sbt shell to try it out: the REPL is available as the <code>scala</code> task, and you can also run the compiler using the <code>scalac</code> task. If you prefer to run the REPL outside sbt, you can generate the scripts in <code>build/quick/bin</code> using the <code>dist/mkQuick</code> task.</li>
+<li>The sbt workflow is also great for debugging, as you can simply create a remote debugging session in your favorite IDE, and then activate the JVM options for the next time you run the <code>scala</code> or <code>scalac</code> tasks using:</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">&gt; set javaOptions in compiler := List("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8002")
+&gt; scalac test.scala
+[info] Running scala.tools.nsc.Main -usejavacp test.scala
+Listening for transport dt_socket at address: 8002
+</code></pre></div>
+<ul>
+<li>Also see <a href="https://github.com/scala/scala#incremental-compilation">the Scala README</a> for tips on speeding up compile times.</li>
+<li>If after introducing changes or updating your clone, you get <code>AbstractMethodError</code> or other linkage exceptions, try the <code>clean</code> task and building again.</li>
+<li>Don&#39;t underestimate the power of <code>print</code>. When starting with Scala, I spent a lot of time in the debugger trying to figure out how
+things work. However later I found out that print-based debugging is often more effective than jumping around. While it might be obvious
+to some, I&#39;d like to explicitly mention that it&#39;s also useful to print stack traces to understand the flow of execution. When working with <code>Trees</code>, you might want to use <code>showRaw</code> to get the <code>AST</code> representation.</li>
+<li>You can publish your newly-built scala version locally using the <code>publishLocal</code> task in sbt.</li>
+<li><p>It&#39;s convenient to enable the following local settings to speed up your workflow (put these in <code>local.sbt</code> in your working copy):
+<code>
+// skip docs for local publishing
+publishArtifact in (Compile, packageDoc) in ThisBuild := false
+// set version based on current sha, so that you can easily consume this build from another sbt project
+baseVersionSuffix := s&quot;local-${Process(&quot;tools/get-scala-commit-sha&quot;).lines.head.substring(0, 7)}&quot;
+// show more logging during a partest run
+testOptions in IntegrationTest in LocalProject(&quot;test&quot;) ++= Seq(Tests.Argument(&quot;--show-log&quot;), Tests.Argument(&quot;--show-diff&quot;))
+// if incremental compilation is compiling too much (should be fine under sbt 0.13.13)
+// antStyle := true
+</code></p></li>
+<li><p>Adding a macro to the <code>Predef</code> object is a pretty involved task. Due to bootstrapping, you cannot just throw a macro into it. For this reason, the process is more involved. You might want to follow the way <code>StringContext.f</code> itself is added. In short, you need to define your macro under <code>src/compiler/scala/tools/reflect/</code> and provide no implementation in <code>Predef</code> (<code>def fn = macro ???</code>). Now you have to set up the wiring. Add the name of your macro to <code>src/reflect/scala/reflect/internal/StdNames.scala</code>, add the needed links to it to <code>src/reflect/scala/reflect/internal/Definitions.scala</code>, and finally specify the bindings in <code>src/compiler/scala/tools/reflect/FastTrack.scala</code>. <a href="https://github.com/folone/scala/commit/59536ea833ca16c985339727baed5d70e577b0fe">Here&#39;s</a> an example of adding a macro.</p></li>
+</ul>
+
+<h3>Documentation</h3>
+
+<p>There are several areas that one could contribute to -- there is the Scala library, the Scala compiler, and other tools such as Scaladoc. Each area has varying amounts of documentation.</p>
+
+<h5>The Scala Library</h5>
+
+<p>Contributing to the Scala standard library is about the same as working on one of your own libraries. Beyond the Scala collections hierarchy, there are no complex internals or architectures to have to worry about. Just make sure that you code in a &quot;don&#39;t-repeat-yourself&quot; (DRY) style, obeying the &quot;boy scout principle&quot; (i.e. make sure you&#39;ve left the code cleaner than you found it).</p>
+
+<p>If documentation is necessary for some trait/class/object/method/etc in the Scala standard library, typically maintainers will include inline comments describing their design decisions or rationale for implementing things the way they have, if it is not straightforward.</p>
+
+<p>If you intend on contributing to Scala collections, please make sure you&#39;re familiar with the design of the Scala collections library. It can be easy to put an implementation in the wrong location if you are unfamiliar with the collections architecture. There is an excellent and very detailed guide covering <a href="http://docs.scala-lang.org/overviews/core/architecture-of-scala-collections.html">the Architecture of Scala Collections</a>, as well as a larger more general <a href="http://docs.scala-lang.org/overviews/collections/introduction.html">Scala collections Guide</a> covering the sequential portion of collections. For parallel collections, there also exists a detailed <a href="http://docs.scala-lang.org/overviews/parallel-collections/overview.html">Scala Parallel Collections Guide</a>.</p>
+
+<h5>The Scala Compiler</h5>
+
+<p>Documentation about the internal workings of the Scala compiler is scarce, and most of the knowledge is passed around by email (scala-internals mailing list), ticket, or word of mouth. However the situation is steadily improving. Here are the resources that might help:</p>
+
+<ul>
+<li><a href="http://www.scala-lang.org/old/node/598.html">Compiler internals videos by Martin Odersky</a> are quite dated, but still very useful. In this three-video
+series Martin explains the general architecture of the compiler, and the basics of the front-end, which has recently become Scala reflection API.</li>
+<li><a href="http://docs.scala-lang.org/overviews/reflection/overview.html">Reflection documentation</a> describes fundamental data structures (like <code>Tree</code>s, <code>Symbol</code>s, and <code>Types</code>) that
+are used to represent Scala programs and operations defined on then. Since much of the compiler has been factored out and made accessible via the Reflection API, all of the fundamentals needed for reflection are the same for the compiler.</li>
+<li><a href="http://channel9.msdn.com/Events/Lang-NEXT/Lang-NEXT-2012/Reflection-and-Compilers">Reflection and Compilers by Martin Odersky</a>, a talk
+at Lang.NEXT 2012 in which Martin elaborates on the design of scalac and the architecture of the reflection API.</li>
+<li><a href="http://lampwww.epfl.ch/%7Emagarcia/ScalaCompilerCornerReloaded/">Scala compiler corner</a> contains extensive documentation about
+most of the post-typer phases (i.e. the backend) in the Scala compiler.</li>
+<li><a href="http://groups.google.com/group/scala-internals">scala-internals</a>, a mailing list which hosts discussions about the core
+internal design and implementation of the Scala system.</li>
+</ul>
+
+<h5>Other Projects</h5>
+
+<p>Tools like Scaladoc also welcome contributions. Unfortunately these smaller projects have less developer documentation. In these cases, the best thing to do is to directly explore the code base (which often contains documentation as inline comments) or to write to the appropriate maintainers for pointers.</p>
+
+<h3>Interlude</h3>
+
+<p>To fix <a href="https://issues.scala-lang.org/browse/SI-6725">the bug we&#39;re interested in</a> we&#39;ve tracked the <code>StringContext.f</code> interpolator
+down to a macro implemented in <code>MacroImplementations.scala</code> There we notice that the interpolator only processes conversions,
+but not tokens like <code>%n</code>. Looks like an easy fix.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">18:44 ~/Projects/scala/sandbox (ticket/6725)$ git diff
+diff --git a/src/compiler/scala/tools/reflect/MacroImplementations.scala b/src/compiler/scala/tools/
+index 002a3fce82..4e8f02084d 100644
+--- a/src/compiler/scala/tools/reflect/MacroImplementations.scala
++++ b/src/compiler/scala/tools/reflect/MacroImplementations.scala
+@@ -117,7 +117,8 @@ abstract class MacroImplementations {
+       if (!strIsEmpty) {
+         val len = str.length
+         while (idx &lt; len) {
+-          if (str(idx) == '%') {
++          def notPercentN = str(idx) != '%' || (idx + 1 &lt; len &amp;&amp; str(idx + 1) != 'n')
++          if (str(idx) == '%' &amp;&amp; notPercentN) {
+             bldr append (str substring (start, idx)) append "%%"
+             start = idx + 1
+           }
+</code></pre></div>
+<p>After applying the fix and running <code>sbt compile</code>, our simple test case in <code>sandbox/Test.scala</code> started working!</p>
+<div class="highlight"><pre><code class="language-" data-lang="">18:51 ~/Projects/scala/sandbox (ticket/6725)$ cd ..
+18:51 ~/Projects/scala (ticket/6725)$ sbt compile
+...
+[success] Total time: 18 s, completed Jun 6, 2016 9:03:02 PM
+Total time: 18 seconds
+
+18:51 ~/Projects/scala (ticket/6725)$ cd sandbox
+18:51 ~/Projects/scala/sandbox (ticket/6725)$ ../build/pack/bin/scalac Test.scala
+18:51 ~/Projects/scala/sandbox (ticket/6725)$ ../build/pack/bin/scala Test
+1
+1 // no longer getting the %n here - it got transformed into a newline
+</code></pre></div>
+<h3>Test</h3>
+
+<p>To guard your change against accidental breakage in the future, it is important to add tests.
+I have already written one test earlier, so that&#39;s a good start but not enough! Apart from obvious usages of our new functionality, we need to cover corner-cases as well.</p>
+
+<p>Adding tests to the test suite is as easy as moving them to the appropriate directory:</p>
+
+<ul>
+<li>Code which should compile successfully, but doesn&#39;t need to be executed, needs to go into the <a href="https://github.com/scala/scala/tree/2.12.x/test/files/pos">“pos” directory</a>.</li>
+<li>Code which should not compile needs to go into the <a href="https://github.com/scala/scala/tree/2.12.x/test/files/neg">“neg” directory</a>.</li>
+<li>Code which should compile and get executed by the test suite needs to go into the <a href="https://github.com/scala/scala/tree/2.12.x/test/files/run">“run” directory</a> and have a corresponding <code>.check</code> file with the expected output. You will get test failures if the content of a <code>.check</code> file is different from what the test produces while running. If the change in the output is an expected product of your work, you might not want to change the <code>.check</code> file by hand. To make partest change the <code>.check</code> file, run it with a <code>--update-check</code> flag, like so <code>./test/partest --update-check path/to/test.scala</code>. For more information on partest, please refer to its <a href="http://docs.scala-lang.org/tutorials/partest-guide.html">documentation</a>.</li>
+<li>Everything that can be unit-tested should go to <a href="https://github.com/scala/scala/tree/2.12.x/test/junit">&quot;junit&quot; directory</a></li>
+<li>Property-based tests go to the <a href="https://github.com/scala/scala/tree/2.12.x/test/files/scalacheck">&quot;scalacheck&quot; directory</a></li>
+</ul>
+
+<p>Here are some more testing tips:</p>
+
+<ul>
+<li>If you have several tests, and want a tool for only running tests that conform to some regular expression, you can use <code>partest-ack</code> in the <code>tools</code> directory: <code>./tools/partest-ack &quot;dottype&quot;</code></li>
+<li><p>If your tests fail in the following way:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">test.bc:
+   [echo] Checking backward binary compatibility for scala-library (against 2.11.0)
+   [mima] Found 2 binary incompatibiities
+   [mima] ================================
+   [mima]  * synthetic method
+   [mima]    scala$package$Class$method(java.lang.String)Unit in trait
+   [mima]    scala.package.Class does not have a correspondent in old version
+   [mima]  * synthetic method
+   [mima]    scala$package$AnotherClass$anotherMethod(java.lang.String)Unit in trait
+   [mima]    scala.package.AnotherClass does not have a correspondent in old version
+   [mima] Generated filter config definition
+   [mima] ==================================
+   [mima]
+   [mima]     filter {
+   [mima]         problems=[
+   [mima]             {
+   [mima]                 matchName="scala.package.Class$method"
+   [mima]                 problemName=MissingMethodProblem
+   [mima]             },
+   [mima]             {
+   [mima]                 matchName="scala.package.AnotherClass$anotherMethod"
+   [mima]                 problemName=MissingMethodProblem
+   [mima]             }
+   [mima]         ]
+   [mima]     }
+   [mima]
+
+ ...
+ Finished: FAILURE
+</code></pre></div></li>
+</ul>
+
+<p>This means your change is backward or forward binary incompatible with the specified version (the check is performed by the <a href="https://github.com/typesafehub/migration-manager">migration manager</a>). The error message is actually saying what you need to add to <code>bincompat-backward.whitelist.conf</code> or <code>bincompat-forward.whitelist.conf</code> to make the error go away. If you are getting this on an internal/experimental api, it should be safe to add suggested sections to the config. Otherwise, you might want to target a newer version of scala for this change.</p>
+
+<h3>Verify</h3>
+
+<p>Now to make sure that my fix doesn&#39;t break anything I need to run the test suite. The Scala test suite uses <a href="http://junit.org/junit4/">JUnit</a> and <a href="partest-guide.html">partest</a>, a tool we wrote for testing Scala.
+Run <code>sbt test</code> and <code>sbt partest</code> to run all of the JUnit and partest tests, respectively.
+<code>partest</code> (not <code>sbt partest</code>) also allows you to run a subset of the tests using wildcards:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">18:52 ~/Projects/scala/sandbox (ticket/6725)$ cd ../test
+18:56 ~/Projects/scala/test (ticket/6725)$ partest files/run/*interpol*
+Testing individual files
+testing: [...]/files/run/interpolationArgs.scala                      [  OK  ]
+testing: [...]/files/run/interpolationMultiline1.scala                [  OK  ]
+testing: [...]/files/run/interpolationMultiline2.scala                [  OK  ]
+testing: [...]/files/run/sm-interpolator.scala                        [  OK  ]
+testing: [...]/files/run/interpolation.scala                          [  OK  ]
+testing: [...]/files/run/stringinterpolation_macro-run.scala          [  OK  ]
+All of 6 tests were successful (elapsed time: 00:00:08)
+</code></pre></div>
+<h2>4. Publish</h2>
+
+<p>After development is finished, it&#39;s time to publish the code and submit your patch for discussion and potential inclusion into Scala.
+In a nutshell, this involves:</p>
+
+<ol>
+<li>making sure that your code and commit messages are of high quality,</li>
+<li>clicking a few buttons in the GitHub interface,</li>
+<li>assigning one or more reviewers who will look through your pull request.</li>
+</ol>
+
+<p>Let&#39;s go into each of these points in more detail.</p>
+
+<h3>Commit</h3>
+
+<p>The <a href="http://git-scm.com/book/en/Git-Basics">Git Basics</a> chapter in the Git online book covers most of the basic workflow during this stage.
+There are two things you should know here:</p>
+
+<ol>
+<li>Commit messages are often the only way to understand the intentions of authors of code written a few years ago. Thus, writing a quality is of utmost importance. The more context you provide for the change you&#39;ve introduced, the larger the chance that some future maintainer understand your intentions. Consult <a href="https://github.com/scala/scala/blob/2.11.x/CONTRIBUTING.md">the pull request policies</a> for more information about the desired style of your commits.</li>
+<li>Keeping Scala&#39;s git history clean is also important. Therefore we won&#39;t accept pull requests for bug fixes that have more than one commit. For features, it is okay to have several commits, but all tests need to pass after every single commit. To clean up your commit structure, you want to <a href="http://git-scm.com/book/en/Git-Branching-Rebasing">rewrite history</a> using <code>git rebase</code> so that your commits are against the latest revision of <code>master</code>.</li>
+</ol>
+
+<p>Once you are satisfied with your work, synced with <code>master</code> and cleaned up your commits you are ready to submit a patch to the central Scala repository. Before proceeding make sure you have pushed all of your local changes to your fork on GitHub.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">19:22 ~/Projects/scala/test (ticket/6725)$ git add ../src/compiler/scala/tools/reflect/MacroImplementations.scala
+19:22 ~/Projects/scala/test (ticket/6725)$ git commit
+[ticket/6725 3c3098693b] SI-6725 `f` interpolator now supports %n tokens
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+19:34 ~/Projects/scala/test (ticket/6725)$ git push origin ticket/6725
+Username for 'https://github.com': xeno-by
+Password for 'https://xeno-by@github.com':
+Counting objects: 15, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (8/8), done.
+Writing objects: 100% (8/8), 1.00 KiB, done.
+Total 8 (delta 5), reused 0 (delta 0)
+To https://github.com/xeno-by/scala
+ * [new branch]            ticket/6725 -&gt; ticket/6725
+</code></pre></div>
+<h3>Submit</h3>
+
+<p>Now, we must simply submit our proposed patch. Navigate to your branch in GitHub (for me it was <code>https://github.com/xeno-by/scala/tree/ticket/6725</code>)
+and click the pull request button to submit your patch as a pull request to Scala. If you&#39;ve never submitted patches to Scala, you will
+need to sign the contributor license agreement, which <a href="http://www.lightbend.com/contribute/cla/scala">can be done online</a> within a few minutes.</p>
+
+<p><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/04-submit.png" alt="Submit a pull request" class="centerclear" /></p>
+
+<h3>Review</h3>
+
+<p>After the pull request has been submitted, you need to pick a reviewer (usually the person you&#39;ve contacted in the beginning of your
+workflow) and be ready to elaborate and adjust your patch if necessary. In this example, we picked Martin, because we had such a nice chat on the mailing list:</p>
+
+<p><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/05-review.png" alt="SAssign the reviewer" class="centerclear" /></p>
+
+<h2>Merge</h2>
+
+<p>After your reviewer is happy with your code (usually signaled by a LGTM — “Looks good to me”), your job is done.
+Note that there can be a gap between a successful review and the merge, because not every reviewer has merge rights. In that case, someone else from the team will pick up your pull request and merge it.
+So don&#39;t be confused if your reviewer says “LGTM”, but your code doesn&#39;t get merged immediately.</p>
+
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div class="contents">Contents</div>
+              <div id="toc"></div>
+              <br/>
+              <div class="alert-info">
+                <a href="/contribute/documentation.html#updating_scalalangorg"><p><strong>Problem with this page?</strong>
+                Please help us fix it!</p></a>
+              </div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

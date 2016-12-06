@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>The Essence of Scala | Microvessel Chaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <!--<link rel="icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+      <!--<link rel="shortcut icon" type="image/png" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/favicon.ico">-->
+
+    <!-- prettify CSS (corresponding js at footer)-->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/prettify.css" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/bootstrap.css" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="https://jmsgrogan.github.io/MicrovesselChaste/resources/css/main.css" type="text/css" />
+
+    <!-- Typekit (should stay at top of page, do not move to footer)-->
+    <script type="text/javascript" src="//use.typekit.net/abh3wgk.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <!-- Atom feeds -->
+    <link rel="alternate" type="application/atom+xml" title="News Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/index.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Blog Feed" href="https://jmsgrogan.github.io/MicrovesselChaste/feed/blog.xml" />
+
+
+  </head>
+  <body>
+
+
+<div class="darkstrip"></div>
+
+<div class="darkbluetopbar">
+  <div class="container" style="height: 100%">
+    <div class="navbar-wrap">
+      <div class="container" style="position: relative; height: 100%;">
+        <div class="scala-logo">
+          <a href="https://jmsgrogan.github.io/MicrovesselChaste/index.html"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/scala-logo-white-sm.png" alt="white Scala logo" /></a>
+        </div>
+        <ul class="nav">
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/">Documentation</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation/">Download</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+  <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Contribute</a></li>
+  <li id="source-code" >
+    <a href="https://github.com/jmsgrogan/MicrovesselChaste"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/github-logo.png" alt="GitHub Logo" /></a>
+    <div class="toptip">Source Code</div>
+  </li>
+  <li id="scala-lang-twitter">
+    <a href="https://twitter.com/chaste_project"><img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/twitter-logo-white.png" alt="Twitter Logo" /></a>
+    <div class="toptip">Chaste on Twitter</div>
+  </li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="midbluebar">
+  <div class="container">
+    <h1 id="page-title">The Essence of Scala</h1>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="container" style="min-height: 540px;">
+    <!-- <div class="row"> -->
+      <!-- <div class="span12"> -->
+          <div class="main-page-column">
+            <div class="article-date">February 3, 2016</div>
+            
+              <div class="written">Written By: <span class="by">Martin Odersky</span></div>
+            
+            <p>What do you get if you boil Scala on a slow flame and wait until all
+incidental features evaporate and only the most concentrated essence
+remains? After doing this for 8 years we believe we have the answer:
+it&#39;s DOT, the calculus of dependent object types, that underlies Scala.</p>
+
+<p>A <a href="http://infoscience.epfl.ch/record/215280">paper on DOT</a> will be
+presented in April at <a href="http://events.inf.ed.ac.uk/wf2016">Wadlerfest</a>,
+an event celebrating Phil Wadler&#39;s 60th birthday. There&#39;s also a prior
+technical report (<a href="http://arxiv.org/abs/1510.05216">From F to DOT</a>)
+by Tiark Rompf and Nada Amin describing a slightly different version
+of the calculus. Each paper describes a proof of type soundness that
+has been machine-checked for correctness.</p>
+
+<h2>The DOT calculus</h2>
+
+<p>A calculus is a kind of mini-language that is small enough to be
+studied formally. Translated to Scala notation, the language covered
+by DOT is described by the following abstract grammar:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">Value       v  =  (x: T) =&gt; t            Function
+                  new { x: T =&gt; ds }     Object
+
+Definition  d  =  def a = t              Method definition
+                  type A = T             Type
+
+Term        t  =  v                      Value
+                  x                      Variable
+                  t1(t2)                 Application
+                  t.a                    Selection
+                  { val x = t1; t2 }     Local definition
+
+Type        T  =  Any                    Top type
+                  Nothing                Bottom type
+                  x.A                    Selection
+                  (x: T1) =&gt; T2          Function
+                  { def a: T }           Method declaration
+                  { type T &gt;: T1 &lt;: T2 } Type declaration
+                  T1 &amp; T2                Intersection
+                  { x =&gt; T }             Recursion
+</code></pre></div>
+<p>The grammar uses several kinds of names:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">x      for (immutable) variables
+a      for (parameterless) methods
+A      for types
+</code></pre></div>
+<p>The full calculus adds to this syntax formal <em>typing rules</em> that
+assign types <code>T</code> to terms <code>t</code> and formal <em>evaluation rules</em> that
+describe how a program is evaluated. The following <em>type soundness</em>
+property was shown with a mechanized, (i.e. machine-checked) proof:</p>
+
+<blockquote>
+<p>If a term <code>t</code> has type <code>T</code>, and the evaluation of <code>t</code> terminates, then
+  the result of the evaluation will be a value <code>v</code> of type <code>T</code>.</p>
+</blockquote>
+
+<h2>Difficulties</h2>
+
+<p>Formulating the precise soundness theorem and proving it was unexpectedly hard,
+because it uncovered some technical challenges that had not been
+studied in depth before. In DOT - as well as in many programming languages -
+you can have conflicting definitions. For instance you might have an abstract
+type declaration in a base class with two conflicting aliases in subclasses:</p>
+<div class="highlight"><pre><code class="language-" data-lang=""> trait Base { type A }
+ trait Sub1 extends Base { type A = String }
+ trait Sub2 extends Base { type A = Int }
+ trait Bad extends Sub1 with Sub2
+</code></pre></div>
+<p>Now, if you combine <code>Sub1</code> and <code>Sub2</code> in trait <code>Bad</code> you get a conflict,
+since the type <code>A</code> is supposed to be equal to both <code>String</code> and <code>Int</code>. If you do
+not detect the conflict and assume the equalities at face value you
+get <code>String = A = Int</code>, hence by transitivity <code>String = Int</code>! Once you
+are that far, you can of course engineer all sorts of situations where
+a program will typecheck but cause a wrong execution at runtime. In
+other words, type soundness is violated.</p>
+
+<p>Now, the problem is that one cannot always detect these
+inconsistencies, at least not by a local analysis that does not need
+to look at the whole program. What&#39;s worse, once you have an
+inconsistent set of definitions you can use these definitions to
+&quot;prove&quot; their own consistency - much like a mathematical theory that
+assumes <code>true = false</code> can &quot;prove&quot; every proposition including its own
+correctness.</p>
+
+<p>The crucial reason why type soundness still holds is this: If one
+compares <code>T</code> with an alias, one does so always relative to some <em>path</em>
+<code>x</code> that refers to the object containing <code>T</code>.  So it&#39;s really <code>x.T =
+Int</code>. Now, we can show that during evaluation every such path refers
+to some object that was created with a <code>new</code>, and that, furthermore,
+every such object has consistent type definitions. The tricky bit is
+to carefully distinguish between the full typing rules, which allow
+inconsistencies, and the typing rules arising from runtime values,
+which do not.</p>
+
+<h2>Why is This Important?</h2>
+
+<p>There are at least four reasons why insights obtained in the DOT
+project are important.</p>
+
+<ol>
+<li><p>They give us a well-founded explanation of <em>nominal typing</em>.
+Nominal typing means that a type is distinguished from others
+simply by having a different name.
+For instance, given two trait definitions</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  trait A extends AnyRef { def f: Int }
+  trait B extends AnyRef { def f: Int }
+</code></pre></div>
+<p>we consider <code>A</code> and <code>B</code> to be different types, even though both
+traits have the same parents and both define the same members.
+The opposite of
+nominal typing is structural typing, which treats types
+that have the same structure as being the same. Most programming
+languages are at least in part nominal whereas most formal type systems,
+including DOT, are structural. But the abstract types in DOT
+provide a way to express nominal types such as classes and traits.
+The Wadlerfest paper contains examples that show how
+one can express classes for standard types such as <code>Boolean</code> and <code>List</code> in DOT.</p></li>
+<li><p>They give us a stable basis on which we can study richer languages
+that resemble Scala more closely. For instance, we can encode
+type parameters as type members of objects in DOT. This encoding
+can give us a better understanding of the interactions of
+subtyping and generics. It can explain why variance rules
+are the way they are and what the precise typing rules for
+wildcard parameters <code>[_ &lt;: T]</code>, <code>[_ &gt;: T]</code> should be.</p></li>
+<li><p>DOT also provides a blueprint for Scala compilation. The new Scala
+compiler <em>dotty</em> has internal data structures that closely resemble DOT.
+In particular, type parameters are immediately mapped to type members,
+in the way we propose to encode them also in the calculus.</p></li>
+<li><p>Finally, the proof principles explored in the DOT work give us guidelines
+to assess and treat other possible soundness issues. We now know much
+better what conditions must be fulfilled to ensure type soundness.
+This lets us put other constructs of the Scala language to the test,
+either to increase our confidence that they are indeed sound, or
+to show that they are unsound. In my next blog I will
+present some of the issues we have discovered through that exercise.</p></li>
+</ol>
+
+            
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  
+    var disqus_shortname = 'scalasip'; // required: replace example with your forum shortname
+  
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-inner">
+              <div id="toc"></div>
+            </div>
+          </div>
+          <div style="clear:both"></div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+
+
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Documentation</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/getting-started.html">Getting Started</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/python-api/index.html">Python API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/cpp-api/index.html">C++ API</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/tutorials.html">Tutorials</a></li>
+    </ul>
+    <ul>
+      <li><h5>Download</h5></li>
+        <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/documentation/installation.html">Instructions</a></li>
+    </ul>
+    <ul>
+      <li><h5>Community</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/">Community</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/community/index.html#mailing-lists">Mailing Lists</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute">How to Help</a></li>
+      <li><a href="https://jmsgrogan.github.io/MicrovesselChaste/contribute/">Report an Issue</a></li>
+    </ul>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p style="float: left;"><br/>Copyright &copy; 2015-<span class="current-year"></span> University of Oxford<br/> Oxford, United Kingdom. Released under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.<br />
+Source code for this website was modified from the <a href="https://www.scala-lang.org/">scala website</a> on <a href="https://www.scala-lang.org/">github</a>. <br />
+See <a href="https://raw.github.com/scala/scala-lang/master/license.md">original license</a> for details. </p>
+      </div>
+      <div class="scala-logo-footer">
+        <img src="https://jmsgrogan.github.io/MicrovesselChaste/resources/img/mvc_logo_25.png" alt="Microvessel Chaste Logo" />
+      </div>
+    </div> <!-- container -->
+    </div> <!-- footer -->
+
+    <!-- prettify  js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/prettify.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/prettify/lang-scala.js" type="text/javascript" ></script>
+
+    <!-- jquery js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery-1.8.3.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.stellar.min.js" type="text/javascript" ></script>
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/tweetMachine.min.js" type="text/javascript" ></script>
+
+    <!-- modernizr js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" type="text/javascript" ></script>
+
+    <!-- retina js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/retina.js" type="text/javascript" ></script>
+
+    <!-- backstretch js -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/jquery.backstretch.min.js" type="text/javascript" ></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/bootstrap.min.js" type="text/javascript" ></script>
+
+    
+    <!-- table of contents JS -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/vendor/toc.js" type="text/javascript" ></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#toc').toc({exclude: 'h1, h5, h6', context: '', autoId: true, numerate: false});
+        function moveScroller() {
+          if ($(".sidebar").length == 0)
+            return;
+          var a = function() {
+            var topOfScroll = $(window).scrollTop();
+            var topOfSidebar = $(".sidebar").offset().top;
+            var sidebarInner = $(".sidebar-inner");
+            var bottomOfSidebarInner = $(".sidebar-inner").offset().top + $(".sidebar-inner").outerHeight();
+            var topOfFooter = $(".footer").offset().top - 10;
+            var footerHeight = $(".footer").outerHeight();
+            if (topOfScroll > topOfSidebar) {
+              if (bottomOfSidebarInner > topOfFooter) {
+                sidebarInner.css({position:"fixed",bottom:footerHeight,top:""});
+              } else {
+                sidebarInner.css({position:"fixed",top:"10px",bottom:""});
+              }
+            } else {
+              sidebarInner.css({position:"relative",top:""});
+            }
+          };
+          $(window).scroll(a);a()
+        }
+        moveScroller();
+      })
+    </script>
+    
+
+    <!-- Custom javascript -->
+    <script src="https://jmsgrogan.github.io/MicrovesselChaste/resources/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+

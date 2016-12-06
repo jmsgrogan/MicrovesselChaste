@@ -1,0 +1,6 @@
+<map id="AbstractHaematocritSolver&lt; DIM &gt;" name="AbstractHaematocritSolver&lt; DIM &gt;">
+<area shape="rect" id="node3" href="$classAlarconHaematocritSolver.html" title="{AlarconHaematocritSolver\l\&lt; DIM \&gt;\n|&#45; mTHR\l&#45; mAlpha\l&#45; mHaematocrit\l|+ AlarconHaematocritSolver()\l+ ~AlarconHaematocritSolver()\l+ Calculate()\l+ SetTHR()\l+ SetAlpha()\l+ SetHaematocrit()\l}" alt="" coords="5,359,208,553"/>
+<area shape="rect" id="node4" href="$classBetteridgeHaematocritSolver.html" title="{BetteridgeHaematocritSolver\l\&lt; DIM \&gt;\n|&#45; mTHR\l&#45; mAlpha\l&#45; mHaematocrit\l|+ BetteridgeHaematocritSolver()\l+ ~BetteridgeHaematocritSolver()\l+ Calculate()\l+ SetTHR()\l+ SetAlpha()\l+ SetHaematocrit()\l}" alt="" coords="233,359,450,553"/>
+<area shape="rect" id="node5" href="$classConstantHaematocritSolver.html" title="{ConstantHaematocritSolver\l\&lt; DIM \&gt;\n|&#45; mHaematocrit\l|+ ConstantHaematocritSolver()\l+ ~ConstantHaematocritSolver()\l+ Calculate()\l+ SetHaematocrit()\l+ Create()\l}" alt="" coords="475,381,685,531"/>
+<area shape="rect" id="node2" href="$classAbstractVesselNetworkCalculator.html" title="{AbstractVesselNetworkCalculator\l\&lt; DIM \&gt;\n|# mpNetwork\l|+ AbstractVesselNetworkCalculator()\l+ ~AbstractVesselNetworkCalculator()\l+ SetVesselNetwork()\l+ Calculate()\l}" alt="" coords="218,5,465,141"/>
+</map>
