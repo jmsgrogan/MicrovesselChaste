@@ -47,13 +47,17 @@ def update_builder(builder):
                        "VesselNetworkActorGenerator<2>",
                        "PartActorGenerator<2>",
                        "AbstractActorGenerator<2>",
+                       "AbstractMicrovesselModifier<2>",
+                       "VtkSceneMicrovesselModifier<2>",
                        "MicrovesselVtkScene<3>", 
                        "CellPopulationActorGenerator<3>", 
                        "DiscreteContinuumMeshActorGenerator<3>", 
                        "RegularGridActorGenerator<3>",
                        "VesselNetworkActorGenerator<3>",
                        "PartActorGenerator<3>",
-                       "AbstractActorGenerator<3>",
+                       "AbstractActorGenerator<3>", 
+                       "AbstractMicrovesselModifier<3>",
+                       "VtkSceneMicrovesselModifier<3>"
                        ]
     
     class_collection = []

@@ -120,7 +120,7 @@ MicrovesselVtkScene<DIM>::MicrovesselVtkScene()
       mAnimationWriter(vtkSmartPointer<vtkOggTheoraWriter>::New()),
     #endif
       mWindowToImageFilter(vtkSmartPointer<vtkWindowToImageFilter>::New()),
-      mIsInteractive(true),
+      mIsInteractive(false),
       mSaveAsAnimation(false),
       mSaveAsImages(false),
       mHasStarted(false),
@@ -177,6 +177,28 @@ template<unsigned DIM>
 boost::shared_ptr<CellPopulationActorGenerator<DIM> > MicrovesselVtkScene<DIM>::GetCellPopulationActorGenerator()
 {
     return mpCellPopulationGenerator;
+}
+
+template<unsigned DIM>
+vtkSmartPointer<vtkRenderer> MicrovesselVtkScene<DIM>::GetRenderer()
+{
+    return mpRenderer;
+}
+
+template<unsigned DIM>
+vtkSmartPointer<vtkUnsignedCharArray> MicrovesselVtkScene<DIM>::GetSceneAsCharBuffer()
+{
+    ResetRenderer(0);
+
+    mpRenderWindow->SetOffScreenRendering(1);
+    mpRenderWindow->Render();
+    mWindowToImageFilter->Modified();
+    vtkSmartPointer<vtkPNGWriter> p_writer = vtkSmartPointer<vtkPNGWriter>::New();
+    p_writer->SetWriteToMemory(1);
+    p_writer->SetInputConnection(mWindowToImageFilter->GetOutputPort());
+    p_writer->Write();
+
+    return p_writer->GetResult();
 }
 
 template<unsigned DIM>
@@ -346,6 +368,11 @@ void MicrovesselVtkScene<DIM>::Start()
     if(DIM==3)
     {
         mpRenderer->GetActiveCamera()->Azimuth(45.0);
+    }
+
+    if(!mIsInteractive)
+    {
+        mpRenderWindow->SetOffScreenRendering(1);
     }
 
     if(mSaveAsImages or mSaveAsAnimation)

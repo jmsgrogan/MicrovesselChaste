@@ -138,25 +138,28 @@ class MicrovesselVtkScene
      */
     unsigned mOutputFrequency;
 
+    /**
+     * Whether to include orientation axes
+     */
     bool mIncludeAxes;
 
     /**
-     * The cell population
+     * The cell population actor generator
      */
     boost::shared_ptr<CellPopulationActorGenerator<DIM> > mpCellPopulationGenerator;
 
     /**
-     * The part generator
+     * The part actor generator
      */
     boost::shared_ptr<PartActorGenerator<DIM> > mpPartGenerator;
 
     /**
-     * The vessel network
+     * The vessel network actor generator
      */
     boost::shared_ptr<VesselNetworkActorGenerator<DIM> > mpNetworkGenerator;
 
     /**
-     * The mesh
+     * The mesh actor generator
      */
     boost::shared_ptr<DiscreteContinuumMeshActorGenerator<DIM> > mpDiscreteContinuumMeshGenerator;
 
@@ -188,14 +191,42 @@ public:
      */
     void End();
 
+    /**
+     * Render the current scene and return is as a char array, can be passed
+     * into a Python buffer for display.
+     * @return the scene as a char array
+     */
+    vtkSmartPointer<vtkUnsignedCharArray> GetSceneAsCharBuffer();
+
+    /**
+     * Return the renderer
+     * @return the vtk renderer
+     */
+    vtkSmartPointer<vtkRenderer> GetRenderer();
+
+    /**
+     * @return the part actor generator
+     */
     boost::shared_ptr<PartActorGenerator<DIM> > GetPartActorGenerator();
 
+    /**
+     * @return the mesh actor generator
+     */
     boost::shared_ptr<DiscreteContinuumMeshActorGenerator<DIM> > GetDiscreteContinuumMeshActorGenerator();
 
+    /**
+     * @return the grid actor generator
+     */
     boost::shared_ptr<RegularGridActorGenerator<DIM> > GetRegularGridActorGenerator();
 
+    /**
+     * @return the vessel network actor generator
+     */
     boost::shared_ptr<VesselNetworkActorGenerator<DIM> > GetVesselNetworkActorGenerator();
 
+    /**
+     * @return the cell population actor generator
+     */
     boost::shared_ptr<CellPopulationActorGenerator<DIM> > GetCellPopulationActorGenerator();
 
     /**
@@ -216,26 +247,57 @@ public:
     void SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation);
 
     /**
+    * Set the cell population
+    * @param pCellPopulation the cell population for rendering
+    */
+    void SetPart(boost::shared_ptr<Part<DIM> > pPart);
+
+    /**
+    * Set the vessel network
+    * @param pNetwork the vessel network for rendering
+    */
+    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+
+    /**
+    * Set the grid
+    * @param pGrid the grid for rendering
+    */
+    void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
+
+    /**
+    * Set the mesh
+    * @param pMesh the mesh for rendering
+    */
+    void SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh);
+
+    /**
      * Set the path for output
      * @param rPath the path for output
      */
     void SetOutputFilePath(const std::string& rPath);
 
+    /**
+     * Set run as an interactive window
+     * @param isInteractive run as an interactive window
+     */
     void SetIsInteractive(bool isInteractive);
 
+    /**
+     * Whether to save as an animation
+     * @param saveAsAnimation save as an animation
+     */
     void SetSaveAsAnimation(bool saveAsAnimation);
 
+    /**
+     * Whether to save as images (default)
+     * @param saveAsImages save as images
+     */
     void SetSaveAsImages(bool saveAsImages);
 
+    /**
+     * Start the event handler for window interaction
+     */
     void StartInteractiveEventHandler();
-
-    void SetPart(boost::shared_ptr<Part<DIM> > pPart);
-
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
-
-    void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
-
-    void SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh);
 
 };
 

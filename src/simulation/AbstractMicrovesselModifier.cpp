@@ -37,12 +37,64 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 template<unsigned DIM>
 AbstractMicrovesselModifier<DIM>::AbstractMicrovesselModifier()
+    : mpNetwork(),
+      mpCellPopulation(),
+      mDiscreteContinuumSolvers()
 {
 }
 
 template<unsigned DIM>
 AbstractMicrovesselModifier<DIM>::~AbstractMicrovesselModifier()
 {
+}
+
+template<unsigned DIM>
+boost::shared_ptr<AbstractCellPopulation<DIM> > AbstractMicrovesselModifier<DIM>::GetCellPopulation()
+{
+    return mpCellPopulation;
+}
+
+template<unsigned DIM>
+boost::shared_ptr<VesselNetwork<DIM> > AbstractMicrovesselModifier<DIM>::GetVesselNetwork()
+{
+    return mpNetwork;
+}
+
+template<unsigned DIM>
+void AbstractMicrovesselModifier<DIM>::AddDiscreteContinuumSolver(boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pDiscreteContinuumSolver)
+{
+    mDiscreteContinuumSolvers.push_back(pDiscreteContinuumSolver);
+}
+
+template<unsigned DIM>
+unsigned AbstractMicrovesselModifier<DIM>::GetNumberOfDiscreteContinuumSolvers()
+{
+    return mDiscreteContinuumSolvers.size();
+}
+
+template<unsigned DIM>
+boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > AbstractMicrovesselModifier<DIM>::GetDiscreteContinuumSolver(unsigned index)
+{
+    if(index<mDiscreteContinuumSolvers.size())
+    {
+        return mDiscreteContinuumSolvers[index];
+    }
+    else
+    {
+        EXCEPTION("INDEX OUT OF BOUNDS");
+    }
+}
+
+template<unsigned DIM>
+void AbstractMicrovesselModifier<DIM>::SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > pCellPopulation)
+{
+    mpCellPopulation = pCellPopulation;
+}
+
+template<unsigned DIM>
+void AbstractMicrovesselModifier<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+{
+    mpNetwork = pNetwork;
 }
 
 // Explicit instantiation

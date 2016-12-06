@@ -11763,7 +11763,7 @@ div#notebook {
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Jupyter notebook specific imports </span>
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span> 
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span> 
+<span class="kn">from</span> <span class="nn">IPython</span> <span class="k">import</span> <span class="n">display</span> 
 <span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 
@@ -11777,13 +11777,12 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="A-Lattice-Based-Angiogenesis-Tutorial">A Lattice Based Angiogenesis Tutorial<a class="anchor-link" href="#A-Lattice-Based-Angiogenesis-Tutorial">&#182;</a></h1><p>This tutorial is designed to introduce a lattice based angiogenesis problem based on a simplified version of the
+<h1 id="A-Lattice-Based-Angiogenesis-Tutorial">A Lattice Based Angiogenesis Tutorial<a class="anchor-link" href="#A-Lattice-Based-Angiogenesis-Tutorial">&#182;</a></h1><p>This tutorial introduces a lattice based angiogenesis problem based on a simplified version of the
 vascular tumour application described in
 <a href="http://www.ncbi.nlm.nih.gov/pubmed/21363914">Owen et al. 2011</a>.</p>
 <p>It is a 2D simulation using cellular automaton
-for cells, a regular grid for vessel movement and the same grid for the solution of partial differential equations
-for oxygen and VEGF transport using the finite difference method.</p>
-<p><img src="https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/landing.png" alt="Lattice Based Angiogenesis Image"></p>
+for cells, a regular grid for vessel movement and the same grid for the solution of
+partial differential equations for oxygen and VEGF transport using the finite difference method.</p>
 <h2 id="The-Test">The Test<a class="anchor-link" href="#The-Test">&#182;</a></h2>
 </div>
 </div>
@@ -11793,17 +11792,19 @@ for oxygen and VEGF transport using the finite difference method.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">chaste.core</span>
-<span class="kn">import</span> <span class="nn">chaste.cell_based</span>
-<span class="n">chaste</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
-<span class="kn">import</span> <span class="nn">microvessel_chaste</span>
-<span class="kn">import</span> <span class="nn">microvessel_chaste.geometry</span>
-<span class="kn">import</span> <span class="nn">microvessel_chaste.mesh</span>
-<span class="kn">import</span> <span class="nn">microvessel_chaste.population.vessel</span>
-<span class="kn">import</span> <span class="nn">microvessel_chaste.pde</span>
-<span class="kn">import</span> <span class="nn">microvessel_chaste.simulation</span>
-<span class="kn">import</span> <span class="nn">microvessel_chaste.visualization</span>
-<span class="kn">from</span> <span class="nn">microvessel_chaste.utility</span> <span class="k">import</span> <span class="o">*</span> <span class="c1"># bring in all units for convenience</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">chaste</span> <span class="c1"># Core Chaste functionality</span>
+<span class="kn">import</span> <span class="nn">chaste.cell_based</span> <span class="c1"># Chaste Cell Populations</span>
+<span class="n">chaste</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1"># Initialize MPI and PETSc</span>
+<span class="kn">import</span> <span class="nn">microvessel_chaste</span> <span class="c1"># Core Microvessel Chaste functionality</span>
+<span class="kn">import</span> <span class="nn">microvessel_chaste.geometry</span> <span class="c1"># Geometry tools</span>
+<span class="kn">import</span> <span class="nn">microvessel_chaste.mesh</span> <span class="c1"># Meshing</span>
+<span class="kn">import</span> <span class="nn">microvessel_chaste.population.vessel</span> <span class="c1"># Vessel tools</span>
+<span class="kn">import</span> <span class="nn">microvessel_chaste.pde</span> <span class="c1"># PDE and solvers</span>
+<span class="kn">import</span> <span class="nn">microvessel_chaste.simulation</span> <span class="c1"># Flow and angiogenesis solvers</span>
+<span class="kn">import</span> <span class="nn">microvessel_chaste.visualization</span> <span class="c1"># Visualization</span>
+<span class="kn">from</span> <span class="nn">microvessel_chaste.utility</span> <span class="k">import</span> <span class="o">*</span> <span class="c1"># Dimensional analysis: bring in all units for convenience</span>
+<span class="c1"># Set up the test </span>
+<span class="n">chaste</span><span class="o">.</span><span class="n">cell_based</span><span class="o">.</span><span class="n">SetupNotebookTest</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -11872,8 +11873,9 @@ results. For our purposes microns for length and hours for time are suitable bas
 <p>Set up the lattice (grid), we will use the same dimensions as <a href="http://www.ncbi.nlm.nih.gov/pubmed/21363914">Owen et al. 2011</a>.
 Note that we are using hard-coded parameters from that paper. You can see the values by printing.
 When we get the value of the parameter by doing
-<code>Owen11Parameters.mpLatticeSpacing.GetValue("User")</code> a record is kept that this parameter has been used in the simulation.
-A record of all parameters used in a simulation can be dumped to file on completion, as will be shown below.</p>
+<code>Owen11Parameters.mpLatticeSpacing.GetValue("User")</code> a record is kept that this parameter has been used
+in the simulation. A record of all parameters used in a simulation can be dumped to file on completion,
+as will be shown below.</p>
 
 </div>
 </div>
@@ -11899,9 +11901,7 @@ A record of all parameters used in a simulation can be dumped to file on complet
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can write the lattice to file for quick visualization with Paraview. Rendering of this and subsequent images is performed
-using standard Paraview operations, not detailed here.</p>
-<p><img src="https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/Lattice_Tutorial_Initial_Grid.png" alt="Lattice Based Angiogenesis Image"></p>
+<p>We can write and visualize the grid.</p>
 
 </div>
 </div>
@@ -11912,34 +11912,12 @@ using standard Paraview operations, not detailed here.</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">grid</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We can visualize the grid</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scene</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">MicrovesselVtkScene2</span><span class="p">()</span>
-<span class="c1">#scene.SetRegularGrid(grid)</span>
-<span class="c1">#scene.GetRegularGridActorGenerator().SetVolumeOpacity(0.1)</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">MicrovesselVtkScene2</span><span class="p">()</span>
 <span class="n">scene</span><span class="o">.</span><span class="n">SetIsInteractive</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">scene</span><span class="o">.</span><span class="n">SetOutputFilePath</span><span class="p">(</span><span class="n">file_handler</span><span class="o">.</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot;render&quot;</span><span class="p">)</span>
-<span class="n">scene</span><span class="o">.</span><span class="n">Start</span><span class="p">()</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">SetRegularGrid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">GetRegularGridActorGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">SetVolumeOpacity</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">nb_manager</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">JupyterNotebookManager</span><span class="p">()</span>
+<span class="n">nb_manager</span><span class="o">.</span><span class="n">vtk_show</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -11992,9 +11970,7 @@ and outlet pressures and flags.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Again, we can write the network to file for quick visualization with Paraview.</p>
-<p><img src="https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/Lattice_Angiogenesis_Tutorial_Grid_Vessels.png" alt="Lattice Based Angiogenesis Image"></p>
-<p>We can visualize the network</p>
+<p>Again, we can visualize and write the network</p>
 
 </div>
 </div>
@@ -12006,8 +11982,8 @@ and outlet pressures and flags.</p>
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">scene</span><span class="o">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">network</span><span class="p">)</span>
 <span class="n">scene</span><span class="o">.</span><span class="n">GetVesselNetworkActorGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">SetEdgeSize</span><span class="p">(</span><span class="mf">20.0</span><span class="p">)</span>
-<span class="n">scene</span><span class="o">.</span><span class="n">ResetRenderer</span><span class="p">()</span>
 <span class="n">network</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">file_handler</span><span class="o">.</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;initial_network.vtp&quot;</span><span class="p">)</span>
+<span class="n">nb_manager</span><span class="o">.</span><span class="n">vtk_show</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12020,8 +11996,9 @@ and outlet pressures and flags.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Next, set up the cell populations. We will setup up a population similar to that used in the Owen et al., 2011 paper. That is, a grid
-filled with normal cells and a tumour spheroid in the middle. We can use a generator for this purpose. The generator simply sets up
+<p>Next, set up the cell populations. We will setup up a population similar to that used in
+the Owen et al., 2011 paper. That is, a grid filled with normal cells and a tumour spheroid
+in the middle. We can use a generator for this purpose. The generator simply sets up
 the population using conventional Cell Based Chaste methods.</p>
 
 </div>
@@ -12038,10 +12015,6 @@ the population using conventional Cell Based Chaste methods.</p>
 <span class="n">tumour_radius</span> <span class="o">=</span> <span class="mf">300.0</span> <span class="o">*</span> <span class="mf">1.e-6</span> <span class="o">*</span> <span class="n">metre</span><span class="p">()</span>
 <span class="n">cell_population_genenerator</span><span class="o">.</span><span class="n">SetTumourRadius</span><span class="p">(</span><span class="n">tumour_radius</span><span class="p">)</span>
 <span class="n">cell_population</span> <span class="o">=</span> <span class="n">cell_population_genenerator</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
-<span class="n">scene</span><span class="o">.</span><span class="n">SetCellPopulation</span><span class="p">(</span><span class="n">cell_population</span><span class="p">)</span>
-<span class="n">scene</span><span class="o">.</span><span class="n">GetCellPopulationActorGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">SetPointSize</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">scene</span><span class="o">.</span><span class="n">ResetRenderer</span><span class="p">()</span>
-<span class="n">scene</span><span class="o">.</span><span class="n">StartInteractiveEventHandler</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -12054,11 +12027,37 @@ the population using conventional Cell Based Chaste methods.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>At this point the simulation domain will look as follows:</p>
-<p><img src="https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/Lattice_Based_Tutorial_Cell_Setup.png" alt="Lattice Based Angiogenesis Image"></p>
-<p>Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources. A sample PDE solution for
-oxygen is shown below:</p>
-<p><img src="https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/LatticeTutorialSampleOxygen.png" alt="Lattice Based Angiogenesis Image"></p>
+<p>Again, we visualize. First turn off the grid edges so it is easier to see the cells.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scene</span><span class="o">.</span><span class="n">GetRegularGridActorGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">SetShowEdges</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">GetRegularGridActorGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">SetVolumeOpacity</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">SetCellPopulation</span><span class="p">(</span><span class="n">cell_population</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">GetCellPopulationActorGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">GetDiscreteColorTransferFunction</span><span class="p">()</span><span class="o">.</span><span class="n">AddRGBPoint</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">GetCellPopulationActorGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">SetPointSize</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">GetCellPopulationActorGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">SetColorByCellMutationState</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">ResetRenderer</span><span class="p">()</span>
+<span class="n">nb_manager</span><span class="o">.</span><span class="n">vtk_show</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources.</p>
 
 </div>
 </div>
@@ -12142,8 +12141,7 @@ oxygen is shown below:</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The rate of VEGF release depends on the cell type and intracellular VEGF levels, so we need a more detailed
-type of discrete source. A sample PDE solution for VEGF is shown below.</p>
-<p><img src="https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/LatticeTutorialSampleVegf.png" alt="Lattice Based Angiogenesis Image"></p>
+type of discrete source.</p>
 
 </div>
 </div>
@@ -12168,8 +12166,8 @@ type of discrete source. A sample PDE solution for VEGF is shown below.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Set up a map for different release rates depending on cell type. Also include a threshold intracellular VEGF below which
-there is no release.</p>
+<p>Set up a map for different release rates depending on cell type. Also include a threshold intracellular
+VEGF below which there is no release.</p>
 
 </div>
 </div>
@@ -12231,7 +12229,6 @@ there is no release.</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Set up a finite difference solver as before.</p>
-<p>vegf_solver = microvessel_chaste.pde.FiniteDifferenceSolver2()</p>
 
 </div>
 </div>
@@ -12241,7 +12238,8 @@ there is no release.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vegf_solver</span><span class="o">.</span><span class="n">SetPde</span><span class="p">(</span><span class="n">vegf_pde</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vegf_solver</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">FiniteDifferenceSolver2</span><span class="p">()</span>
+<span class="n">vegf_solver</span><span class="o">.</span><span class="n">SetPde</span><span class="p">(</span><span class="n">vegf_pde</span><span class="p">)</span>
 <span class="n">vegf_solver</span><span class="o">.</span><span class="n">SetLabel</span><span class="p">(</span><span class="s2">&quot;VEGF_Extracellular&quot;</span><span class="p">)</span>
 <span class="n">vegf_solver</span><span class="o">.</span><span class="n">SetGrid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
 </pre></div>
@@ -12258,8 +12256,7 @@ there is no release.</p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Next set up the flow problem. Assign a blood plasma viscosity to the vessels. The actual viscosity will
 depend on haematocrit and diameter. This solver manages growth and shrinkage of vessels in response to
-flow related stimuli. A sample plot of the stimulus distrbution during a simulation is shown below:</p>
-<p><img src="https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/LatticeTutorialSampleGrowth.png" alt="Lattice Based Angiogenesis Image"></p>
+flow related stimuli.</p>
 
 </div>
 </div>
@@ -12431,7 +12428,35 @@ flow related stimuli. A sample plot of the stimulus distrbution during a simulat
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The microvessel solution modifier will link the vessel and cell solvers. We need to explicitly tell is
+<p>Set up plotting</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#scene.GetCellPopulationActorGenerator().SetColorByCellData(True)</span>
+<span class="c1">#scene.GetCellPopulationActorGenerator().SetDataLabel(&quot;oxygen&quot;)</span>
+<span class="n">scene_modifier</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">JupyterMicrovesselSceneModifier2</span><span class="p">(</span><span class="n">nb_manager</span><span class="p">)</span>
+<span class="n">scene_modifier</span><span class="o">.</span><span class="n">SetVtkScene</span><span class="p">(</span><span class="n">scene</span><span class="p">)</span>
+<span class="n">scene_modifier</span><span class="o">.</span><span class="n">SetUpdateFrequency</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">microvessel_solver</span><span class="o">.</span><span class="n">AddMicrovesselModifier</span><span class="p">(</span><span class="n">scene_modifier</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The microvessel solution modifier will link the vessel and cell solvers. We need to explicitly tell it
 which extracellular fields to update based on PDE solutions.</p>
 
 </div>
@@ -12615,6 +12640,9 @@ preferred. The end time used in Owen et al. 2011 is 4800 hours.</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">ParameterCollection</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">DumpToFile</span><span class="p">(</span><span class="n">file_handler</span><span class="o">.</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot;parameter_collection.xml&quot;</span><span class="p">)</span>
+<span class="n">nb_manager</span><span class="o">.</span><span class="n">add_parameter_table</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
+<span class="c1"># Tear down the test </span>
+<span class="n">chaste</span><span class="o">.</span><span class="n">cell_based</span><span class="o">.</span><span class="n">TearDownNotebookTest</span><span class="p">()</span>
 </pre></div>
 
 </div>

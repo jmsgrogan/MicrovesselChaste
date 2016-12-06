@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>TestPythonBuildVesselNetworkTutorial</title>
+<title>TestPythonBiologicalNetworkLiteratePaper</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -11751,7 +11751,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This tutorial is automatically generated from the file test/python/tutorials//TestPythonBuildVesselNetworkTutorial.py.</p>
+<p>This tutorial is automatically generated from the file test/python/tutorials//TestPythonBiologicalNetworkLiteratePaper.py.</p>
 
 </div>
 </div>
@@ -11763,7 +11763,7 @@ div#notebook {
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Jupyter notebook specific imports </span>
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span> 
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span> 
+<span class="kn">from</span> <span class="nn">IPython</span> <span class="k">import</span> <span class="n">display</span> 
 <span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 
@@ -11777,17 +11777,12 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>= Introduction =
-This tutorial is designed to introduce the Python interface for modelling vessel networks. An equivalent C++ tutorial
-is [wiki:PaperTutorials/Angiogenesis/BuildVesselNetwork here].</p>
-<p>This tutorial covers:</p>
-<ul>
-<li>Building a network from a collection of nodes, segments and vessels</li>
-<li>Writing networks to file and visualizing with Paraview</li>
-<li>Building a network using a network generator</li>
-<li>Reading a network from file</li>
-</ul>
-<p>Further functionality is gradually introduced over the course of subsequent tutorials.</p>
+<h1 id="A-Lattice-Based-Angiogenesis-Tutorial-With-A-Real-Network">A Lattice Based Angiogenesis Tutorial With A Real Network<a class="anchor-link" href="#A-Lattice-Based-Angiogenesis-Tutorial-With-A-Real-Network">&#182;</a></h1><p>This tutorial is designed to introduce a lattice based angiogenesis problem based on a simplified version of the
+vascular tumour application described in
+<a href="http://www.ncbi.nlm.nih.gov/pubmed/21363914">Owen et al. 2011</a>.</p>
+<p>It is a 3D simulation using cellular automaton
+for cells, a regular grid for vessel movement and the same grid for the solution of partial differential equations
+for oxygen and VEGF transport using the finite difference method.</p>
 <h2 id="The-Test">The Test<a class="anchor-link" href="#The-Test">&#182;</a></h2>
 </div>
 </div>
@@ -11797,13 +11792,19 @@ is [wiki:PaperTutorials/Angiogenesis/BuildVesselNetwork here].</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">chaste.core</span>
-<span class="kn">import</span> <span class="nn">microvessel_chaste</span>
-<span class="kn">import</span> <span class="nn">microvessel_chaste.geometry</span>
-<span class="kn">import</span> <span class="nn">microvessel_chaste.mesh</span>
-<span class="kn">import</span> <span class="nn">microvessel_chaste.population.vessel</span>
-<span class="kn">import</span> <span class="nn">microvessel_chaste.visualization</span>
-<span class="kn">from</span> <span class="nn">microvessel_chaste.utility</span> <span class="k">import</span> <span class="o">*</span> <span class="c1"># bring in all units for convenience</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">chaste</span> <span class="c1"># Core Chaste functionality</span>
+<span class="kn">import</span> <span class="nn">chaste.cell_based</span> <span class="c1"># Chaste Cell Populations</span>
+<span class="n">chaste</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1"># Initialize MPI and PETSc</span>
+<span class="kn">import</span> <span class="nn">microvessel_chaste</span> <span class="c1"># Core Microvessel Chaste functionality</span>
+<span class="kn">import</span> <span class="nn">microvessel_chaste.geometry</span> <span class="c1"># Geometry tools</span>
+<span class="kn">import</span> <span class="nn">microvessel_chaste.mesh</span> <span class="c1"># Meshing</span>
+<span class="kn">import</span> <span class="nn">microvessel_chaste.population.vessel</span> <span class="c1"># Vessel tools</span>
+<span class="kn">import</span> <span class="nn">microvessel_chaste.pde</span> <span class="c1"># PDE and solvers</span>
+<span class="kn">import</span> <span class="nn">microvessel_chaste.simulation</span> <span class="c1"># Flow and angiogenesis solvers</span>
+<span class="kn">import</span> <span class="nn">microvessel_chaste.visualization</span> <span class="c1"># Visualization</span>
+<span class="kn">from</span> <span class="nn">microvessel_chaste.utility</span> <span class="k">import</span> <span class="o">*</span> <span class="c1"># Dimensional analysis: bring in all units for convenience</span>
+<span class="c1"># Set up the test </span>
+<span class="n">chaste</span><span class="o">.</span><span class="n">cell_based</span><span class="o">.</span><span class="n">SetupNotebookTest</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -11816,8 +11817,7 @@ is [wiki:PaperTutorials/Angiogenesis/BuildVesselNetwork here].</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Test-1---Building-a-vessel-network-manually,-writing-it-to-file-and-visualizing-it">Test 1 - Building a vessel network manually, writing it to file and visualizing it<a class="anchor-link" href="#Test-1---Building-a-vessel-network-manually,-writing-it-to-file-and-visualizing-it">&#182;</a></h2><p>In the first test we will build a vessel network from its constituent components; nodes, segments and vessels. We will do some
-simple tests to make sure the network has been formed as expected. Then we write the network to file and visualize it in Paraview.</p>
+<p>Set up output file management and seed the random number generator.</p>
 
 </div>
 </div>
@@ -11827,7 +11827,8 @@ simple tests to make sure the network has been formed as expected. Then we write
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file_handler</span> <span class="o">=</span> <span class="n">chaste</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">OutputFileHandler</span><span class="p">(</span><span class="s2">&quot;Python/TestBiologicalNetworkLiteratePaper&quot;</span><span class="p">)</span>
+<span class="n">chaste</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">RandomNumberGenerator</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">Reseed</span><span class="p">(</span><span class="mi">12345</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -11840,10 +11841,10 @@ simple tests to make sure the network has been formed as expected. Then we write
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>First we make some nodes, which are point features from which vessels can be constructed. They are initialized with a location.
-All vessel network components are created using special factory methods which return shared pointers, rather than being created
-directly through their constructors. Vessel network components are templated over spatial dimension, and can be 2D or 3D. We will
-create a Y shaped network. Later we will learn how to build up networks in a more efficient manner.</p>
+<p>This component uses explicit dimensions for all quantities, but interfaces with solvers which take
+non-dimensional inputs. The <code>BaseUnits</code> singleton takes time, length and mass reference scales to
+allow non-dimensionalisation when sending quantities to external solvers and re-dimensionalisation of
+results. For our purposes microns for length and hours for time are suitable base units.</p>
 
 </div>
 </div>
@@ -11853,13 +11854,12 @@ create a Y shaped network. Later we will learn how to build up networks in a mor
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file_handler</span> <span class="o">=</span> <span class="n">chaste</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">OutputFileHandler</span><span class="p">(</span><span class="s2">&quot;Python/TestPythonBuildVesselNetworkLiteratePaper&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-<span class="n">length_scale</span> <span class="o">=</span> <span class="mf">1.e-6</span><span class="o">*</span><span class="n">metre</span><span class="p">()</span>
-<span class="n">length</span> <span class="o">=</span> <span class="mf">100.0</span>
-<span class="n">n1</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">vessel</span><span class="o">.</span><span class="n">VesselNode3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span> <span class="p">,</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">length_scale</span><span class="p">)</span>
-<span class="n">n2</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">vessel</span><span class="o">.</span><span class="n">VesselNode3</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">length_scale</span><span class="p">)</span>
-<span class="n">n3</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">vessel</span><span class="o">.</span><span class="n">VesselNode3</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">length</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">length_scale</span><span class="p">)</span>
-<span class="n">n4</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">vessel</span><span class="o">.</span><span class="n">VesselNode3</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">length</span><span class="p">,</span> <span class="o">-</span><span class="n">length</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">length_scale</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">reference_length</span> <span class="o">=</span> <span class="mf">1.e-6</span><span class="o">*</span><span class="n">metre</span><span class="p">()</span>
+<span class="n">reference_time</span> <span class="o">=</span> <span class="mf">3600.0</span><span class="o">*</span><span class="n">second</span><span class="p">()</span>
+<span class="n">reference_concentration</span> <span class="o">=</span> <span class="mf">1.e-6</span><span class="o">*</span><span class="n">mole_per_metre_cubed</span><span class="p">()</span>
+<span class="n">BaseUnits</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">SetReferenceLengthScale</span><span class="p">(</span><span class="n">reference_length</span><span class="p">)</span>
+<span class="n">BaseUnits</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">SetReferenceTimeScale</span><span class="p">(</span><span class="n">reference_time</span><span class="p">)</span>
+<span class="n">BaseUnits</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">SetReferenceConcentrationScale</span><span class="p">(</span><span class="n">reference_concentration</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -11872,8 +11872,7 @@ create a Y shaped network. Later we will learn how to build up networks in a mor
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Next we make vessel segments and vessels. Vessel segments are straight-line features which contain a vascular node at each end. Vessels
-can be constructed from multiple vessel segments, but in this case each vessel just has a single segment.</p>
+<p>Read a vessel network derived from biological images from file</p>
 
 </div>
 </div>
@@ -11883,9 +11882,13 @@ can be constructed from multiple vessel segments, but in this case each vessel j
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">v1</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">vessel</span><span class="o">.</span><span class="n">Vessel3</span><span class="p">([</span><span class="n">n1</span> <span class="p">,</span><span class="n">n2</span><span class="p">])</span>
-<span class="n">v2</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">vessel</span><span class="o">.</span><span class="n">Vessel3</span><span class="p">([</span><span class="n">n2</span><span class="p">,</span> <span class="n">n3</span><span class="p">])</span>
-<span class="n">v3</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">vessel</span><span class="o">.</span><span class="n">Vessel3</span><span class="p">([</span><span class="n">n2</span><span class="p">,</span> <span class="n">n4</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vessel_reader</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">vessel</span><span class="o">.</span><span class="n">VesselNetworkReader3</span><span class="p">()</span>
+<span class="n">file_finder</span> <span class="o">=</span> <span class="n">chaste</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">FileFinder</span><span class="p">(</span><span class="s2">&quot;/projects/MicrovesselChaste/test/data/bio_original.vtp&quot;</span><span class="p">,</span>
+                                     <span class="n">chaste</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">RelativeTo</span><span class="o">.</span><span class="n">ChasteSourceRoot</span><span class="p">)</span>
+<span class="n">vessel_reader</span><span class="o">.</span><span class="n">SetFileName</span><span class="p">(</span><span class="n">file_finder</span><span class="o">.</span><span class="n">GetAbsolutePath</span><span class="p">())</span>
+<span class="n">vessel_reader</span><span class="o">.</span><span class="n">SetMergeCoincidentPoints</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">vessel_reader</span><span class="o">.</span><span class="n">SetTargetSegmentLength</span><span class="p">(</span><span class="mf">40.0e-6</span><span class="o">*</span><span class="n">metre</span><span class="p">())</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">vessel_reader</span><span class="o">.</span><span class="n">Read</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -11898,7 +11901,10 @@ can be constructed from multiple vessel segments, but in this case each vessel j
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now we can add our vessels to a vessel network.</p>
+<p>The vessel network may contain short vessels due to image processing artifacts,
+we remove any vessels that are on the order of a single cell length and are not connected
+to other vessels at both ends. Note that units are explicitly specified for all quantities. It is
+ok to allow some small disconnected regions to remain for our purposes.</p>
 
 </div>
 </div>
@@ -11908,12 +11914,12 @@ can be constructed from multiple vessel segments, but in this case each vessel j
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">network</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">vessel</span><span class="o">.</span><span class="n">VesselNetwork3</span><span class="o">.</span><span class="n">Create</span><span class="p">()</span>
-<span class="n">network</span><span class="o">.</span><span class="n">AddVessel</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span>
-<span class="n">network</span><span class="o">.</span><span class="n">AddVessel</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span>
-<span class="n">network</span><span class="o">.</span><span class="n">AddVessel</span><span class="p">(</span><span class="n">v3</span><span class="p">)</span>
-<span class="n">network</span><span class="o">.</span><span class="n">SetSegmentRadii</span><span class="p">(</span><span class="mf">10.0</span><span class="o">*</span><span class="n">length_scale</span><span class="p">)</span>
-<span class="n">network</span><span class="o">.</span><span class="n">SetNodeRadii</span><span class="p">(</span><span class="mf">10.0</span><span class="o">*</span><span class="n">length_scale</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">short_vessel_cutoff</span> <span class="o">=</span> <span class="mf">40.0e-6</span> <span class="o">*</span> <span class="n">metre</span><span class="p">()</span>
+<span class="n">remove_end_vessels_only</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">network</span><span class="o">.</span><span class="n">RemoveShortVessels</span><span class="p">(</span><span class="n">short_vessel_cutoff</span><span class="p">,</span> <span class="n">remove_end_vessels_only</span><span class="p">)</span>
+<span class="n">network</span><span class="o">.</span><span class="n">UpdateAll</span><span class="p">()</span>
+<span class="n">network</span><span class="o">.</span><span class="n">MergeCoincidentNodes</span><span class="p">()</span>
+<span class="n">network</span><span class="o">.</span><span class="n">UpdateAll</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -11926,7 +11932,7 @@ can be constructed from multiple vessel segments, but in this case each vessel j
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We use our test framework to make sure that the network has been created correctly by checking the number of vessels and nodes</p>
+<p>Write the modified network to file for inspection and visualize it.</p>
 
 </div>
 </div>
@@ -11936,35 +11942,13 @@ can be constructed from multiple vessel segments, but in this case each vessel j
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We can visualize the network</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scene</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">MicrovesselVtkScene3</span><span class="p">()</span>
-<span class="n">scene</span><span class="o">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">network</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">network</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">file_handler</span><span class="o">.</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;cleaned_network.vtp&quot;</span><span class="p">)</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">MicrovesselVtkScene3</span><span class="p">()</span>
 <span class="n">scene</span><span class="o">.</span><span class="n">SetIsInteractive</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">scene</span><span class="o">.</span><span class="n">SetOutputFilePath</span><span class="p">(</span><span class="n">file_handler</span><span class="o">.</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot;render&quot;</span><span class="p">)</span>
-<span class="n">scene</span><span class="o">.</span><span class="n">Start</span><span class="p">()</span>
-<span class="n">scene</span><span class="o">.</span><span class="n">StartInteractiveEventHandler</span><span class="p">()</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">network</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">GetVesselNetworkActorGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">SetEdgeSize</span><span class="p">(</span><span class="mf">20.0</span><span class="p">)</span>
+<span class="n">nb_manager</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">JupyterNotebookManager</span><span class="p">()</span>
+<span class="n">nb_manager</span><span class="o">.</span><span class="n">vtk_show</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -11977,8 +11961,8 @@ can be constructed from multiple vessel segments, but in this case each vessel j
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Next we write out network to file. We use the Chaste <code>OutputFileHandler</code> functionality to management the output location
-Networks are written using VTKs PolyData format, which should have a .vtp extension.</p>
+<p>Simulating tumour growth for the entire network would be prohibitive for this tutorial, so
+we sample a small region. We can use some geometry tools to help.</p>
 
 </div>
 </div>
@@ -11988,10 +11972,12 @@ Networks are written using VTKs PolyData format, which should have a .vtp extens
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">writer</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">vessel</span><span class="o">.</span><span class="n">VesselNetworkWriter3</span><span class="p">()</span>
-<span class="n">writer</span><span class="o">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">network</span><span class="p">)</span>
-<span class="n">writer</span><span class="o">.</span><span class="n">SetFileName</span><span class="p">(</span><span class="n">file_handler</span><span class="o">.</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;bifurcating_network.vtp&quot;</span><span class="p">)</span>
-<span class="n">writer</span><span class="o">.</span><span class="n">Write</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cylinder</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Part3</span><span class="p">()</span>
+<span class="n">centre</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">DimensionalChastePoint3</span><span class="p">(</span><span class="mf">2300.0</span><span class="p">,</span> <span class="mf">2300.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="o">*</span><span class="n">metre</span><span class="p">())</span>
+<span class="n">radius</span> <span class="o">=</span> <span class="mf">600.0e-6</span><span class="o">*</span><span class="n">metre</span><span class="p">()</span>
+<span class="n">depth</span> <span class="o">=</span> <span class="mf">205.e-6</span><span class="o">*</span><span class="n">metre</span><span class="p">()</span>
+<span class="n">cylinder</span><span class="o">.</span><span class="n">AddCylinder</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">centre</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>
+<span class="n">cylinder</span><span class="o">.</span><span class="n">BooleanWithNetwork</span><span class="p">(</span><span class="n">network</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12004,11 +11990,822 @@ Networks are written using VTKs PolyData format, which should have a .vtp extens
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now we can visualize then network in Paraview. See the tutorial [wiki:UserTutorials/VisualizingWithParaview here], to get started. To view the network import the file
-<code>TestPythonBuildVesselNetworkLiteratePaper\bifurcating_network.vtp</code> into Paraview. For a nicer rendering you can do <code>Filters-&gt;Alphabetical-&gt;Tube</code>.</p>
+<p>We visualize the smaller region
+network.Write(file_handler.GetOutputDirectoryFullPath() + "cleaned_cut_network.vtp")</p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">nb_manager</span><span class="o">.</span><span class="n">vtk_show</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We are ready to simulate tumour growth and angiogenesis. We will use a regular lattice for
+this purpose. We size and position the lattice according to the bounds of the vessel network.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">network_bounding_box</span> <span class="o">=</span> <span class="p">[</span><span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">DimensionalChastePoint3</span><span class="p">(</span><span class="mf">1500.0</span><span class="p">,</span> <span class="mf">1600.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="o">*</span><span class="n">metre</span><span class="p">()),</span>
+                        <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">DimensionalChastePoint3</span><span class="p">(</span><span class="mf">3100.0</span><span class="p">,</span> <span class="mf">3000.0</span><span class="p">,</span> <span class="mf">300.0</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="o">*</span><span class="n">metre</span><span class="p">())]</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">RegularGrid3</span><span class="p">()</span>
+<span class="n">grid_spacing</span> <span class="o">=</span> <span class="mf">40.0e-6</span><span class="o">*</span> <span class="n">metre</span><span class="p">()</span>
+<span class="n">grid</span><span class="o">.</span><span class="n">SetSpacing</span><span class="p">(</span><span class="n">grid_spacing</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can use the built-in dimensional analysis functionality to get the network extents in terms of grid units</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">botom_front_left</span> <span class="o">=</span>  <span class="n">network_bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">GetLocation</span><span class="p">(</span><span class="n">grid_spacing</span><span class="p">)</span>
+<span class="n">top_back_right</span> <span class="o">=</span>  <span class="n">network_bounding_box</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">GetLocation</span><span class="p">(</span><span class="n">grid_spacing</span><span class="p">)</span>
+<span class="n">extents</span> <span class="o">=</span> <span class="n">top_back_right</span> <span class="o">-</span> <span class="n">botom_front_left</span>
+<span class="n">extents</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">extents</span><span class="p">]</span> <span class="c1"># snap to the nearest unit, overestimate size if needed</span>
+<span class="n">grid</span><span class="o">.</span><span class="n">SetExtents</span><span class="p">(</span><span class="n">extents</span><span class="p">)</span>
+<span class="n">network</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">DimensionalChastePoint3</span><span class="p">(</span><span class="o">-</span><span class="mf">1500.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1600.0</span><span class="p">,</span> <span class="o">+</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="o">*</span><span class="n">metre</span><span class="p">()))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can write the lattice to file for quick visualization.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">grid</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">SetRegularGrid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+<span class="n">nb_manager</span><span class="o">.</span><span class="n">vtk_show</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next we set the inflow and outflow boundary conditions for blood flow. Because the network connectivity
+is relatively low we assign all vessels near the top of the domain (z coord) as inflows and the bottom
+as outflows.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">eachNode</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">GetNodes</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">eachNode</span><span class="o">.</span><span class="n">GetNumberOfSegments</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">eachNode</span><span class="o">.</span><span class="n">rGetLocation</span><span class="p">()</span><span class="o">.</span><span class="n">GetLocation</span><span class="p">(</span><span class="mf">1.e-6</span><span class="o">*</span><span class="n">metre</span><span class="p">())[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span>
+               <span class="n">network_bounding_box</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">GetLocation</span><span class="p">(</span><span class="mf">1.e-6</span><span class="o">*</span><span class="n">metre</span><span class="p">())[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">80.0</span><span class="p">:</span>
+            <span class="n">eachNode</span><span class="o">.</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">.</span><span class="n">SetIsInputNode</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">eachNode</span><span class="o">.</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">.</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">.</span><span class="n">mpInletPressure</span><span class="o">.</span><span class="n">GetValue</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">abs</span><span class="p">(</span><span class="n">eachNode</span><span class="o">.</span><span class="n">rGetLocation</span><span class="p">()</span><span class="o">.</span><span class="n">GetLocation</span><span class="p">(</span><span class="mf">1.e-6</span><span class="o">*</span><span class="n">metre</span><span class="p">())[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span>
+                 <span class="n">network_bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">GetLocation</span><span class="p">(</span><span class="mf">1.e-6</span><span class="o">*</span><span class="n">metre</span><span class="p">())[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">80.0</span><span class="p">:</span>
+            <span class="n">eachNode</span><span class="o">.</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">.</span><span class="n">SetIsOutputNode</span><span class="p">(</span><span class="kc">True</span><span class="p">);</span>
+            <span class="n">eachNode</span><span class="o">.</span><span class="n">GetFlowProperties</span><span class="p">()</span><span class="o">.</span><span class="n">SetPressure</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">.</span><span class="n">mpOutletPressure</span><span class="o">.</span><span class="n">GetValue</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Again, we can write the network to file for visualization</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">network</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">file_handler</span><span class="o">.</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;flow_boundary_labelled_network.vtp&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next, set up the cell populations. We will setup up a population similar to that used in the Owen et al., 2011 paper. That is, a grid
+filled with normal cells and a tumour spheroid in the middle. We can use a generator for this purpose.
+The generator simply sets up the population using conventional Cell Based Chaste methods.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cell_population_genenerator</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">Owen11CellPopulationGenerator3</span><span class="p">()</span>
+<span class="n">cell_population_genenerator</span><span class="o">.</span><span class="n">SetRegularGrid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+<span class="n">cell_population_genenerator</span><span class="o">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">network</span><span class="p">)</span>
+<span class="n">tumour_radius</span> <span class="o">=</span> <span class="mf">300.0</span> <span class="o">*</span> <span class="mf">1.e-6</span> <span class="o">*</span> <span class="n">metre</span><span class="p">()</span>
+<span class="n">cell_population_genenerator</span><span class="o">.</span><span class="n">SetTumourRadius</span><span class="p">(</span><span class="n">tumour_radius</span><span class="p">)</span>
+<span class="n">cell_population</span> <span class="o">=</span> <span class="n">cell_population_genenerator</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can visualize the population</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scene</span><span class="o">.</span><span class="n">SetCellPopulation</span><span class="p">(</span><span class="n">cell_population</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">GetCellPopulationActorGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">GetDiscreteColorTransferFunction</span><span class="p">()</span><span class="o">.</span><span class="n">AddRGBPoint</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">GetCellPopulationActorGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">SetPointSize</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">GetCellPopulationActorGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">SetColorByCellMutationState</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">ResetRenderer</span><span class="p">()</span>
+<span class="n">nb_manager</span><span class="o">.</span><span class="n">vtk_show</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">oxygen_pde</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">LinearSteadyStateDiffusionReactionPde3_3</span><span class="p">()</span>
+<span class="n">oxygen_pde</span><span class="o">.</span><span class="n">SetIsotropicDiffusionConstant</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">.</span><span class="n">mpOxygenDiffusivity</span><span class="o">.</span><span class="n">GetValue</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">))</span>
+<span class="n">cell_oxygen_sink</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">CellBasedDiscreteSource3</span><span class="p">()</span>
+<span class="n">cell_oxygen_sink</span><span class="o">.</span><span class="n">SetLinearInUConsumptionRatePerCell</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">.</span><span class="n">mpCellOxygenConsumptionRate</span><span class="o">.</span><span class="n">GetValue</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">))</span>
+<span class="n">oxygen_pde</span><span class="o">.</span><span class="n">AddDiscreteSource</span><span class="p">(</span><span class="n">cell_oxygen_sink</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Vessels release oxygen depending on their haematocrit levels</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vessel_oxygen_source</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">VesselBasedDiscreteSource3</span><span class="p">()</span>
+<span class="c1">#oxygen_solubility_at_stp = Secomb04Parameters.mpOxygenVolumetricSolubility.GetValue(&quot;User&quot;) * GenericParameters.mpGasConcentrationAtStp.GetValue(&quot;User&quot;)</span>
+<span class="c1">#vessel_oxygen_concentration = oxygen_solubility_at_stp * Owen11Parameters.mpReferencePartialPressure.GetValue(&quot;User&quot;)</span>
+<span class="n">vessel_oxygen_concentration</span> <span class="o">=</span> <span class="mf">0.03</span> <span class="o">*</span> <span class="n">mole_per_metre_cubed</span><span class="p">()</span>
+<span class="n">vessel_oxygen_source</span><span class="o">.</span><span class="n">SetReferenceConcentration</span><span class="p">(</span><span class="n">vessel_oxygen_concentration</span><span class="p">)</span>
+<span class="n">vessel_oxygen_source</span><span class="o">.</span><span class="n">SetVesselPermeability</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">.</span><span class="n">mpVesselOxygenPermeability</span><span class="o">.</span><span class="n">GetValue</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">))</span>
+<span class="n">vessel_oxygen_source</span><span class="o">.</span><span class="n">SetReferenceHaematocrit</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">.</span><span class="n">mpInflowHaematocrit</span><span class="o">.</span><span class="n">GetValue</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">))</span>
+<span class="n">oxygen_pde</span><span class="o">.</span><span class="n">AddDiscreteSource</span><span class="p">(</span><span class="n">vessel_oxygen_source</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Set up a finite difference solver and pass it the pde and grid.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">oxygen_solver</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">FiniteDifferenceSolver3</span><span class="p">()</span>
+<span class="n">oxygen_solver</span><span class="o">.</span><span class="n">SetPde</span><span class="p">(</span><span class="n">oxygen_pde</span><span class="p">)</span>
+<span class="n">oxygen_solver</span><span class="o">.</span><span class="n">SetLabel</span><span class="p">(</span><span class="s2">&quot;oxygen&quot;</span><span class="p">)</span>
+<span class="n">oxygen_solver</span><span class="o">.</span><span class="n">SetGrid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The rate of VEGF release depends on the cell type and intracellular VEGF levels, so we need a more detailed
+type of discrete source.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vegf_pde</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">LinearSteadyStateDiffusionReactionPde3_3</span><span class="p">()</span>
+<span class="n">vegf_pde</span><span class="o">.</span><span class="n">SetIsotropicDiffusionConstant</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">.</span><span class="n">mpVegfDiffusivity</span><span class="o">.</span><span class="n">GetValue</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">))</span>
+<span class="n">vegf_pde</span><span class="o">.</span><span class="n">SetContinuumLinearInUTerm</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">Owen11Parameters</span><span class="o">.</span><span class="n">mpVegfDecayRate</span><span class="o">.</span><span class="n">GetValue</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Set up a map for different release rates depending on cell type. Also include a threshold intracellular
+VEGF below which there is no release.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">normal_and_quiescent_cell_source</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">CellStateDependentDiscreteSource3</span><span class="p">()</span>
+<span class="n">normal_and_quiescent_cell_rates</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">MapUnsigned_ConcentrationFlowRate</span><span class="p">()</span>
+<span class="n">normal_and_quiescent_cell_rate_thresholds</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">MapUnsigned_Concentration</span><span class="p">()</span>
+<span class="n">quiescent_cancer_state</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">QuiescentCancerCellMutationState</span><span class="p">()</span>
+<span class="n">normal_cell_state</span> <span class="o">=</span> <span class="n">chaste</span><span class="o">.</span><span class="n">cell_based</span><span class="o">.</span><span class="n">WildTypeCellMutationState</span><span class="p">()</span>
+<span class="n">normal_and_quiescent_cell_rates</span><span class="p">[</span><span class="n">normal_cell_state</span><span class="o">.</span><span class="n">GetColour</span><span class="p">()]</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">.</span><span class="n">mpCellVegfSecretionRate</span><span class="o">.</span><span class="n">GetValue</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">)</span>
+<span class="n">normal_and_quiescent_cell_rate_thresholds</span><span class="p">[</span><span class="n">normal_cell_state</span><span class="o">.</span><span class="n">GetColour</span><span class="p">()]</span> <span class="o">=</span> <span class="mf">0.27</span><span class="o">*</span><span class="n">mole_per_metre_cubed</span><span class="p">()</span>
+<span class="n">normal_and_quiescent_cell_rates</span><span class="p">[</span><span class="n">quiescent_cancer_state</span><span class="o">.</span><span class="n">GetColour</span><span class="p">()]</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">.</span><span class="n">mpCellVegfSecretionRate</span><span class="o">.</span><span class="n">GetValue</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">)</span>
+<span class="n">normal_and_quiescent_cell_rate_thresholds</span><span class="p">[</span><span class="n">quiescent_cancer_state</span><span class="o">.</span><span class="n">GetColour</span><span class="p">()]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">*</span><span class="n">mole_per_metre_cubed</span><span class="p">()</span>
+<span class="n">normal_and_quiescent_cell_source</span><span class="o">.</span><span class="n">SetStateRateMap</span><span class="p">(</span><span class="n">normal_and_quiescent_cell_rates</span><span class="p">)</span>
+<span class="n">normal_and_quiescent_cell_source</span><span class="o">.</span><span class="n">SetLabelName</span><span class="p">(</span><span class="s2">&quot;VEGF&quot;</span><span class="p">)</span>
+<span class="n">normal_and_quiescent_cell_source</span><span class="o">.</span><span class="n">SetStateRateThresholdMap</span><span class="p">(</span><span class="n">normal_and_quiescent_cell_rate_thresholds</span><span class="p">)</span>
+<span class="n">vegf_pde</span><span class="o">.</span><span class="n">AddDiscreteSource</span><span class="p">(</span><span class="n">normal_and_quiescent_cell_source</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Add a vessel related VEGF sink</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vessel_vegf_sink</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">VesselBasedDiscreteSource3</span><span class="p">()</span>
+<span class="n">vessel_vegf_sink</span><span class="o">.</span><span class="n">SetReferenceConcentration</span><span class="p">(</span><span class="mf">0.0</span><span class="o">*</span><span class="n">mole_per_metre_cubed</span><span class="p">())</span>
+<span class="n">vessel_vegf_sink</span><span class="o">.</span><span class="n">SetVesselPermeability</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">.</span><span class="n">mpVesselVegfPermeability</span><span class="o">.</span><span class="n">GetValue</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">))</span>
+<span class="n">vegf_pde</span><span class="o">.</span><span class="n">AddDiscreteSource</span><span class="p">(</span><span class="n">vessel_vegf_sink</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Set up a finite difference solver as before.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vegf_solver</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">FiniteDifferenceSolver3</span><span class="p">()</span>
+<span class="n">vegf_solver</span><span class="o">.</span><span class="n">SetPde</span><span class="p">(</span><span class="n">vegf_pde</span><span class="p">)</span>
+<span class="n">vegf_solver</span><span class="o">.</span><span class="n">SetLabel</span><span class="p">(</span><span class="s2">&quot;VEGF_Extracellular&quot;</span><span class="p">)</span>
+<span class="n">vegf_solver</span><span class="o">.</span><span class="n">SetGrid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next set up the flow problem. Assign a blood plasma viscosity to the vessels. The actual viscosity will
+depend on haematocrit and diameter. This solver manages growth and shrinkage of vessels in response to
+flow related stimuli.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">large_vessel_radius</span> <span class="o">=</span> <span class="mf">25.0e-6</span> <span class="o">*</span> <span class="n">metre</span><span class="p">()</span>
+<span class="n">network</span><span class="o">.</span><span class="n">SetSegmentRadii</span><span class="p">(</span><span class="n">large_vessel_radius</span><span class="p">)</span>
+<span class="n">viscosity</span> <span class="o">=</span> <span class="n">Owen11Parameters</span><span class="o">.</span><span class="n">mpPlasmaViscosity</span><span class="o">.</span><span class="n">GetValue</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">)</span>
+<span class="n">network</span><span class="o">.</span><span class="n">SetSegmentViscosity</span><span class="p">(</span><span class="n">viscosity</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Set up the pre- and post flow calculators.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">impedance_calculator</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">VesselImpedanceCalculator3</span><span class="p">()</span>
+<span class="n">haematocrit_calculator</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">ConstantHaematocritSolver3</span><span class="p">()</span>
+<span class="n">haematocrit_calculator</span><span class="o">.</span><span class="n">SetHaematocrit</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">.</span><span class="n">mpInflowHaematocrit</span><span class="o">.</span><span class="n">GetValue</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">))</span>
+<span class="n">wss_calculator</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">WallShearStressCalculator3</span><span class="p">()</span>
+<span class="n">mech_stimulus_calculator</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">MechanicalStimulusCalculator3</span><span class="p">()</span>
+<span class="n">metabolic_stim_calculator</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">MetabolicStimulusCalculator3</span><span class="p">()</span>
+<span class="n">shrinking_stimulus_calculator</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">ShrinkingStimulusCalculator3</span><span class="p">()</span>
+<span class="n">viscosity_calculator</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">ViscosityCalculator3</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Set up and configure the structural adaptation solver.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">structural_adaptation_solver</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">StructuralAdaptationSolver3</span><span class="p">()</span>
+<span class="n">structural_adaptation_solver</span><span class="o">.</span><span class="n">SetTolerance</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">)</span>
+<span class="n">structural_adaptation_solver</span><span class="o">.</span><span class="n">SetMaxIterations</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">structural_adaptation_solver</span><span class="o">.</span><span class="n">SetTimeIncrement</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">.</span><span class="n">mpVesselRadiusUpdateTimestep</span><span class="o">.</span><span class="n">GetValue</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">));</span>
+<span class="n">structural_adaptation_solver</span><span class="o">.</span><span class="n">AddPreFlowSolveCalculator</span><span class="p">(</span><span class="n">impedance_calculator</span><span class="p">)</span>
+<span class="n">structural_adaptation_solver</span><span class="o">.</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">haematocrit_calculator</span><span class="p">)</span>
+<span class="n">structural_adaptation_solver</span><span class="o">.</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">wss_calculator</span><span class="p">)</span>
+<span class="n">structural_adaptation_solver</span><span class="o">.</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">metabolic_stim_calculator</span><span class="p">)</span>
+<span class="n">structural_adaptation_solver</span><span class="o">.</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">mech_stimulus_calculator</span><span class="p">)</span>
+<span class="n">structural_adaptation_solver</span><span class="o">.</span><span class="n">AddPostFlowSolveCalculator</span><span class="p">(</span><span class="n">viscosity_calculator</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Set up a regression solver.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">regression_solver</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">WallShearStressBasedRegressionSolver3</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Set up an angiogenesis solver and add sprouting and migration rules.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">angiogenesis_solver</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">AngiogenesisSolver3</span><span class="p">()</span>
+<span class="n">sprouting_rule</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">Owen2011SproutingRule3</span><span class="p">()</span>
+<span class="n">sprouting_rule</span><span class="o">.</span><span class="n">SetSproutingProbability</span><span class="p">(</span><span class="mf">1.e-4</span><span class="o">*</span><span class="n">per_second</span><span class="p">())</span>
+<span class="n">migration_rule</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">Owen2011MigrationRule3</span><span class="p">()</span>
+<span class="n">angiogenesis_solver</span><span class="o">.</span><span class="n">SetMigrationRule</span><span class="p">(</span><span class="n">migration_rule</span><span class="p">)</span>
+<span class="n">angiogenesis_solver</span><span class="o">.</span><span class="n">SetSproutingRule</span><span class="p">(</span><span class="n">sprouting_rule</span><span class="p">)</span>
+<span class="n">sprouting_rule</span><span class="o">.</span><span class="n">SetDiscreteContinuumSolver</span><span class="p">(</span><span class="n">vegf_solver</span><span class="p">)</span>
+<span class="n">migration_rule</span><span class="o">.</span><span class="n">SetDiscreteContinuumSolver</span><span class="p">(</span><span class="n">vegf_solver</span><span class="p">)</span>
+<span class="n">angiogenesis_solver</span><span class="o">.</span><span class="n">SetVesselGrid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+<span class="n">angiogenesis_solver</span><span class="o">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">network</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The microvessel solver will manage all aspects of the vessel solve.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">microvessel_solver</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">MicrovesselSolver3</span><span class="p">()</span>
+<span class="n">microvessel_solver</span><span class="o">.</span><span class="n">SetVesselNetwork</span><span class="p">(</span><span class="n">network</span><span class="p">)</span>
+<span class="n">microvessel_solver</span><span class="o">.</span><span class="n">SetOutputFrequency</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">microvessel_solver</span><span class="o">.</span><span class="n">AddDiscreteContinuumSolver</span><span class="p">(</span><span class="n">oxygen_solver</span><span class="p">)</span>
+<span class="n">microvessel_solver</span><span class="o">.</span><span class="n">AddDiscreteContinuumSolver</span><span class="p">(</span><span class="n">vegf_solver</span><span class="p">)</span>
+<span class="n">microvessel_solver</span><span class="o">.</span><span class="n">SetStructuralAdaptationSolver</span><span class="p">(</span><span class="n">structural_adaptation_solver</span><span class="p">)</span>
+<span class="n">microvessel_solver</span><span class="o">.</span><span class="n">SetRegressionSolver</span><span class="p">(</span><span class="n">regression_solver</span><span class="p">)</span>
+<span class="n">microvessel_solver</span><span class="o">.</span><span class="n">SetAngiogenesisSolver</span><span class="p">(</span><span class="n">angiogenesis_solver</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The microvessel solution modifier will link the vessel and cell solvers. We need to explicitly tell is
+which extracellular fields to update based on PDE solutions.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">microvessel_modifier</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">MicrovesselSimulationModifier3</span><span class="p">()</span>
+<span class="n">microvessel_modifier</span><span class="o">.</span><span class="n">SetMicrovesselSolver</span><span class="p">(</span><span class="n">microvessel_solver</span><span class="p">)</span>
+<span class="n">update_labels</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">VecString</span><span class="p">()</span>
+<span class="n">update_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;oxygen&quot;</span><span class="p">)</span>
+<span class="n">update_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;VEGF_Extracellular&quot;</span><span class="p">)</span>
+<span class="n">microvessel_modifier</span><span class="o">.</span><span class="n">SetCellDataUpdateLabels</span><span class="p">(</span><span class="n">update_labels</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Set up plotting</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#scene.GetCellPopulationActorGenerator().SetColorByCellData(True)</span>
+<span class="c1">#scene.GetCellPopulationActorGenerator().SetDataLabel(&quot;oxygen&quot;)</span>
+<span class="n">scene_modifier</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">JupyterMicrovesselSceneModifier2</span><span class="p">(</span><span class="n">nb_manager</span><span class="p">)</span>
+<span class="n">scene_modifier</span><span class="o">.</span><span class="n">SetVtkScene</span><span class="p">(</span><span class="n">scene</span><span class="p">)</span>
+<span class="n">scene_modifier</span><span class="o">.</span><span class="n">SetUpdateFrequency</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">microvessel_solver</span><span class="o">.</span><span class="n">AddMicrovesselModifier</span><span class="p">(</span><span class="n">scene_modifier</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The full simulation is run as a typical Cell Based Chaste simulation</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">simulator</span> <span class="o">=</span> <span class="n">chaste</span><span class="o">.</span><span class="n">cell_based</span><span class="o">.</span><span class="n">OnLatticeSimulation3</span><span class="p">(</span><span class="n">cell_population</span><span class="p">)</span>
+<span class="n">simulator</span><span class="o">.</span><span class="n">AddSimulationModifier</span><span class="p">(</span><span class="n">microvessel_modifier</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Add a killer to remove apoptotic cells</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">apoptotic_cell_killer</span> <span class="o">=</span> <span class="n">chaste</span><span class="o">.</span><span class="n">cell_based</span><span class="o">.</span><span class="n">ApoptoticCellKiller3</span><span class="p">(</span><span class="n">cell_population</span><span class="p">)</span>
+<span class="n">simulator</span><span class="o">.</span><span class="n">AddCellKiller</span><span class="p">(</span><span class="n">apoptotic_cell_killer</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Add another modifier for updating cell cycle quantities.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">owen11_tracking_modifier</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">Owen2011TrackingModifier3</span><span class="p">()</span>
+<span class="n">simulator</span><span class="o">.</span><span class="n">AddSimulationModifier</span><span class="p">(</span><span class="n">owen11_tracking_modifier</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Set up the remainder of the simulation</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">simulator</span><span class="o">.</span><span class="n">SetOutputDirectory</span><span class="p">(</span><span class="s2">&quot;Python/TestBiologicalNetworkLiteratePaper&quot;</span><span class="p">)</span>
+<span class="n">simulator</span><span class="o">.</span><span class="n">SetSamplingTimestepMultiple</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">simulator</span><span class="o">.</span><span class="n">SetDt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This end time corresponds to roughly 10 minutes run-time on a desktop PC. Increase it or decrease as
+preferred. The end time used in Owen et al. 2011 is 4800 hours.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">simulator</span><span class="o">.</span><span class="n">SetEndTime</span><span class="p">(</span><span class="mf">20.0</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Do the solve. A sample solution is shown at the top of this test.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">simulator</span><span class="o">.</span><span class="n">Solve</span><span class="p">()</span>
+<span class="k">except</span> <span class="n">chaste</span><span class="o">.</span><span class="n">ChasteException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="n">e</span><span class="o">.</span><span class="n">GetMessage</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Dump the parameters to file for inspection.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ParameterCollection</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">DumpToFile</span><span class="p">(</span><span class="n">file_handler</span><span class="o">.</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot;parameter_collection.xml&quot;</span><span class="p">)</span>
+<span class="n">nb_manager</span><span class="o">.</span><span class="n">add_parameter_table</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
+<span class="c1"># Tear down the test </span>
+<span class="n">chaste</span><span class="o">.</span><span class="n">cell_based</span><span class="o">.</span><span class="n">TearDownNotebookTest</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
 </div>
     </div>
   </div>

@@ -121,14 +121,14 @@ struct AbstractMicrovesselModifier_less__2__greater__wrapper : AbstractMicrovess
     
     }
 
-    virtual void SetupSolve( ::boost::shared_ptr< VesselNetwork< 2 > > pNetwork, ::boost::shared_ptr< AbstractCellPopulation< 2, 2 > > pCellPopulation, ::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<2> > > discreteContinuumSolvers, ::std::string outputDirectory ){
+    virtual void SetupSolve( ::std::string outputDirectory ){
         bp::override func_SetupSolve = this->get_override( "SetupSolve" );
-        func_SetupSolve( pNetwork, pCellPopulation, discreteContinuumSolvers, outputDirectory );
+        func_SetupSolve( outputDirectory );
     }
 
-    virtual void UpdateAtEndOfTimeStep( ::boost::shared_ptr< VesselNetwork< 2 > > pNetwork, ::boost::shared_ptr< AbstractCellPopulation< 2, 2 > > pCellPopulation, ::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<2> > > discreteContinuumSolvers ){
+    virtual void UpdateAtEndOfTimeStep(  ){
         bp::override func_UpdateAtEndOfTimeStep = this->get_override( "UpdateAtEndOfTimeStep" );
-        func_UpdateAtEndOfTimeStep( pNetwork, pCellPopulation, discreteContinuumSolvers );
+        func_UpdateAtEndOfTimeStep(  );
     }
 
 };
@@ -142,14 +142,14 @@ struct AbstractMicrovesselModifier_less__3__greater__wrapper : AbstractMicrovess
     
     }
 
-    virtual void SetupSolve( ::boost::shared_ptr< VesselNetwork< 3 > > pNetwork, ::boost::shared_ptr< AbstractCellPopulation< 3, 3 > > pCellPopulation, ::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<3> > > discreteContinuumSolvers, ::std::string outputDirectory ){
+    virtual void SetupSolve( ::std::string outputDirectory ){
         bp::override func_SetupSolve = this->get_override( "SetupSolve" );
-        func_SetupSolve( pNetwork, pCellPopulation, discreteContinuumSolvers, outputDirectory );
+        func_SetupSolve( outputDirectory );
     }
 
-    virtual void UpdateAtEndOfTimeStep( ::boost::shared_ptr< VesselNetwork< 3 > > pNetwork, ::boost::shared_ptr< AbstractCellPopulation< 3, 3 > > pCellPopulation, ::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<3> > > discreteContinuumSolvers ){
+    virtual void UpdateAtEndOfTimeStep(  ){
         bp::override func_UpdateAtEndOfTimeStep = this->get_override( "UpdateAtEndOfTimeStep" );
-        func_UpdateAtEndOfTimeStep( pNetwork, pCellPopulation, discreteContinuumSolvers );
+        func_UpdateAtEndOfTimeStep(  );
     }
 
 };
@@ -482,28 +482,28 @@ struct VtkSceneMicrovesselModifier_less__2__greater__wrapper : VtkSceneMicrovess
     
     }
 
-    virtual void SetupSolve( ::boost::shared_ptr< VesselNetwork< 2 > > pNetwork, ::boost::shared_ptr< AbstractCellPopulation< 2, 2 > > pCellPopulation, ::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<2> > > discreteContinuumSolvers, ::std::string outputDirectory ) {
+    virtual void SetupSolve( ::std::string outputDirectory ) {
         if( bp::override func_SetupSolve = this->get_override( "SetupSolve" ) )
-            func_SetupSolve( pNetwork, pCellPopulation, discreteContinuumSolvers, outputDirectory );
+            func_SetupSolve( outputDirectory );
         else{
-            this->VtkSceneMicrovesselModifier< 2 >::SetupSolve( pNetwork, pCellPopulation, discreteContinuumSolvers, outputDirectory );
+            this->VtkSceneMicrovesselModifier< 2 >::SetupSolve( outputDirectory );
         }
     }
     
-    void default_SetupSolve( ::boost::shared_ptr< VesselNetwork< 2 > > pNetwork, ::boost::shared_ptr< AbstractCellPopulation< 2, 2 > > pCellPopulation, ::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<2> > > discreteContinuumSolvers, ::std::string outputDirectory ) {
-        VtkSceneMicrovesselModifier< 2 >::SetupSolve( pNetwork, pCellPopulation, discreteContinuumSolvers, outputDirectory );
+    void default_SetupSolve( ::std::string outputDirectory ) {
+        VtkSceneMicrovesselModifier< 2 >::SetupSolve( outputDirectory );
     }
 
-    virtual void UpdateAtEndOfTimeStep( ::boost::shared_ptr< VesselNetwork< 2 > > pNetwork, ::boost::shared_ptr< AbstractCellPopulation< 2, 2 > > pCellPopulation, ::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<2> > > discreteContinuumSolvers ) {
+    virtual void UpdateAtEndOfTimeStep(  ) {
         if( bp::override func_UpdateAtEndOfTimeStep = this->get_override( "UpdateAtEndOfTimeStep" ) )
-            func_UpdateAtEndOfTimeStep( pNetwork, pCellPopulation, discreteContinuumSolvers );
+            func_UpdateAtEndOfTimeStep(  );
         else{
-            this->VtkSceneMicrovesselModifier< 2 >::UpdateAtEndOfTimeStep( pNetwork, pCellPopulation, discreteContinuumSolvers );
+            this->VtkSceneMicrovesselModifier< 2 >::UpdateAtEndOfTimeStep(  );
         }
     }
     
-    void default_UpdateAtEndOfTimeStep( ::boost::shared_ptr< VesselNetwork< 2 > > pNetwork, ::boost::shared_ptr< AbstractCellPopulation< 2, 2 > > pCellPopulation, ::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<2> > > discreteContinuumSolvers ) {
-        VtkSceneMicrovesselModifier< 2 >::UpdateAtEndOfTimeStep( pNetwork, pCellPopulation, discreteContinuumSolvers );
+    void default_UpdateAtEndOfTimeStep(  ) {
+        VtkSceneMicrovesselModifier< 2 >::UpdateAtEndOfTimeStep( );
     }
 
 };
@@ -524,28 +524,28 @@ struct VtkSceneMicrovesselModifier_less__3__greater__wrapper : VtkSceneMicrovess
     
     }
 
-    virtual void SetupSolve( ::boost::shared_ptr< VesselNetwork< 3 > > pNetwork, ::boost::shared_ptr< AbstractCellPopulation< 3, 3 > > pCellPopulation, ::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<3> > > discreteContinuumSolvers, ::std::string outputDirectory ) {
+    virtual void SetupSolve( ::std::string outputDirectory ) {
         if( bp::override func_SetupSolve = this->get_override( "SetupSolve" ) )
-            func_SetupSolve( pNetwork, pCellPopulation, discreteContinuumSolvers, outputDirectory );
+            func_SetupSolve( outputDirectory );
         else{
-            this->VtkSceneMicrovesselModifier< 3 >::SetupSolve( pNetwork, pCellPopulation, discreteContinuumSolvers, outputDirectory );
+            this->VtkSceneMicrovesselModifier< 3 >::SetupSolve( outputDirectory );
         }
     }
     
-    void default_SetupSolve( ::boost::shared_ptr< VesselNetwork< 3 > > pNetwork, ::boost::shared_ptr< AbstractCellPopulation< 3, 3 > > pCellPopulation, ::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<3> > > discreteContinuumSolvers, ::std::string outputDirectory ) {
-        VtkSceneMicrovesselModifier< 3 >::SetupSolve( pNetwork, pCellPopulation, discreteContinuumSolvers, outputDirectory );
+    void default_SetupSolve( ::std::string outputDirectory ) {
+        VtkSceneMicrovesselModifier< 3 >::SetupSolve( outputDirectory );
     }
 
-    virtual void UpdateAtEndOfTimeStep( ::boost::shared_ptr< VesselNetwork< 3 > > pNetwork, ::boost::shared_ptr< AbstractCellPopulation< 3, 3 > > pCellPopulation, ::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<3> > > discreteContinuumSolvers ) {
+    virtual void UpdateAtEndOfTimeStep(  ) {
         if( bp::override func_UpdateAtEndOfTimeStep = this->get_override( "UpdateAtEndOfTimeStep" ) )
-            func_UpdateAtEndOfTimeStep( pNetwork, pCellPopulation, discreteContinuumSolvers );
+            func_UpdateAtEndOfTimeStep(  );
         else{
-            this->VtkSceneMicrovesselModifier< 3 >::UpdateAtEndOfTimeStep( pNetwork, pCellPopulation, discreteContinuumSolvers );
+            this->VtkSceneMicrovesselModifier< 3 >::UpdateAtEndOfTimeStep(  );
         }
     }
     
-    void default_UpdateAtEndOfTimeStep( ::boost::shared_ptr< VesselNetwork< 3 > > pNetwork, ::boost::shared_ptr< AbstractCellPopulation< 3, 3 > > pCellPopulation, ::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<3> > > discreteContinuumSolvers ) {
-        VtkSceneMicrovesselModifier< 3 >::UpdateAtEndOfTimeStep( pNetwork, pCellPopulation, discreteContinuumSolvers );
+    void default_UpdateAtEndOfTimeStep(  ) {
+        VtkSceneMicrovesselModifier< 3 >::UpdateAtEndOfTimeStep( );
     }
 
 };
@@ -672,26 +672,99 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
         typedef bp::class_< AbstractMicrovesselModifier_less__2__greater__wrapper, boost::noncopyable > AbstractMicrovesselModifier2_exposer_t;
         AbstractMicrovesselModifier2_exposer_t AbstractMicrovesselModifier2_exposer = AbstractMicrovesselModifier2_exposer_t( "AbstractMicrovesselModifier2", bp::init< >() );
         bp::scope AbstractMicrovesselModifier2_scope( AbstractMicrovesselModifier2_exposer );
+        { //::AbstractMicrovesselModifier< 2 >::AddDiscreteContinuumSolver
+        
+            typedef AbstractMicrovesselModifier< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AddDiscreteContinuumSolver_function_type)( ::boost::shared_ptr< AbstractDiscreteContinuumSolver< 2 > > ) ;
+            
+            AbstractMicrovesselModifier2_exposer.def( 
+                "AddDiscreteContinuumSolver"
+                , AddDiscreteContinuumSolver_function_type( &::AbstractMicrovesselModifier< 2 >::AddDiscreteContinuumSolver )
+                , ( bp::arg("pDiscreteContinuumSolver") ) );
+        
+        }
+        { //::AbstractMicrovesselModifier< 2 >::GetCellPopulation
+        
+            typedef AbstractMicrovesselModifier< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< AbstractCellPopulation< 2, 2 > > ( exported_class_t::*GetCellPopulation_function_type)(  ) ;
+            
+            AbstractMicrovesselModifier2_exposer.def( 
+                "GetCellPopulation"
+                , GetCellPopulation_function_type( &::AbstractMicrovesselModifier< 2 >::GetCellPopulation ) );
+        
+        }
+        { //::AbstractMicrovesselModifier< 2 >::GetDiscreteContinuumSolver
+        
+            typedef AbstractMicrovesselModifier< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< AbstractDiscreteContinuumSolver< 2 > > ( exported_class_t::*GetDiscreteContinuumSolver_function_type)( unsigned int ) ;
+            
+            AbstractMicrovesselModifier2_exposer.def( 
+                "GetDiscreteContinuumSolver"
+                , GetDiscreteContinuumSolver_function_type( &::AbstractMicrovesselModifier< 2 >::GetDiscreteContinuumSolver )
+                , ( bp::arg("index") ) );
+        
+        }
+        { //::AbstractMicrovesselModifier< 2 >::GetNumberOfDiscreteContinuumSolvers
+        
+            typedef AbstractMicrovesselModifier< 2 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetNumberOfDiscreteContinuumSolvers_function_type)(  ) ;
+            
+            AbstractMicrovesselModifier2_exposer.def( 
+                "GetNumberOfDiscreteContinuumSolvers"
+                , GetNumberOfDiscreteContinuumSolvers_function_type( &::AbstractMicrovesselModifier< 2 >::GetNumberOfDiscreteContinuumSolvers ) );
+        
+        }
+        { //::AbstractMicrovesselModifier< 2 >::GetVesselNetwork
+        
+            typedef AbstractMicrovesselModifier< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< VesselNetwork< 2 > > ( exported_class_t::*GetVesselNetwork_function_type)(  ) ;
+            
+            AbstractMicrovesselModifier2_exposer.def( 
+                "GetVesselNetwork"
+                , GetVesselNetwork_function_type( &::AbstractMicrovesselModifier< 2 >::GetVesselNetwork ) );
+        
+        }
+        { //::AbstractMicrovesselModifier< 2 >::SetCellPopulation
+        
+            typedef AbstractMicrovesselModifier< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetCellPopulation_function_type)( ::boost::shared_ptr< AbstractCellPopulation< 2, 2 > > ) ;
+            
+            AbstractMicrovesselModifier2_exposer.def( 
+                "SetCellPopulation"
+                , SetCellPopulation_function_type( &::AbstractMicrovesselModifier< 2 >::SetCellPopulation )
+                , ( bp::arg("pCellPopulation") ) );
+        
+        }
+        { //::AbstractMicrovesselModifier< 2 >::SetVesselNetwork
+        
+            typedef AbstractMicrovesselModifier< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetVesselNetwork_function_type)( ::boost::shared_ptr< VesselNetwork< 2 > > ) ;
+            
+            AbstractMicrovesselModifier2_exposer.def( 
+                "SetVesselNetwork"
+                , SetVesselNetwork_function_type( &::AbstractMicrovesselModifier< 2 >::SetVesselNetwork )
+                , ( bp::arg("pNetwork") ) );
+        
+        }
         { //::AbstractMicrovesselModifier< 2 >::SetupSolve
         
             typedef AbstractMicrovesselModifier< 2 > exported_class_t;
-            typedef void ( exported_class_t::*SetupSolve_function_type)( ::boost::shared_ptr<VesselNetwork<2> >,::boost::shared_ptr<AbstractCellPopulation<2, 2> >,::std::vector<boost::shared_ptr<AbstractDiscreteContinuumSolver<2> >, std::allocator<boost::shared_ptr<AbstractDiscreteContinuumSolver<2> > > >,::std::string ) ;
+            typedef void ( exported_class_t::*SetupSolve_function_type)( ::std::string ) ;
             
             AbstractMicrovesselModifier2_exposer.def( 
                 "SetupSolve"
                 , bp::pure_virtual( SetupSolve_function_type(&::AbstractMicrovesselModifier< 2 >::SetupSolve) )
-                , ( bp::arg("pNetwork"), bp::arg("pCellPopulation"), bp::arg("discreteContinuumSolvers"), bp::arg("outputDirectory") ) );
+                , ( bp::arg("outputDirectory") ) );
         
         }
         { //::AbstractMicrovesselModifier< 2 >::UpdateAtEndOfTimeStep
         
             typedef AbstractMicrovesselModifier< 2 > exported_class_t;
-            typedef void ( exported_class_t::*UpdateAtEndOfTimeStep_function_type)( ::boost::shared_ptr<VesselNetwork<2> >,::boost::shared_ptr<AbstractCellPopulation<2, 2> >,::std::vector<boost::shared_ptr<AbstractDiscreteContinuumSolver<2> >, std::allocator<boost::shared_ptr<AbstractDiscreteContinuumSolver<2> > > > ) ;
+            typedef void ( exported_class_t::*UpdateAtEndOfTimeStep_function_type)(  ) ;
             
             AbstractMicrovesselModifier2_exposer.def( 
                 "UpdateAtEndOfTimeStep"
-                , bp::pure_virtual( UpdateAtEndOfTimeStep_function_type(&::AbstractMicrovesselModifier< 2 >::UpdateAtEndOfTimeStep) )
-                , ( bp::arg("pNetwork"), bp::arg("pCellPopulation"), bp::arg("discreteContinuumSolvers") ) );
+                , bp::pure_virtual( UpdateAtEndOfTimeStep_function_type(&::AbstractMicrovesselModifier< 2 >::UpdateAtEndOfTimeStep) ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< AbstractMicrovesselModifier<2> > >();
@@ -701,26 +774,99 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
         typedef bp::class_< AbstractMicrovesselModifier_less__3__greater__wrapper, boost::noncopyable > AbstractMicrovesselModifier3_exposer_t;
         AbstractMicrovesselModifier3_exposer_t AbstractMicrovesselModifier3_exposer = AbstractMicrovesselModifier3_exposer_t( "AbstractMicrovesselModifier3", bp::init< >() );
         bp::scope AbstractMicrovesselModifier3_scope( AbstractMicrovesselModifier3_exposer );
+        { //::AbstractMicrovesselModifier< 3 >::AddDiscreteContinuumSolver
+        
+            typedef AbstractMicrovesselModifier< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddDiscreteContinuumSolver_function_type)( ::boost::shared_ptr< AbstractDiscreteContinuumSolver< 3 > > ) ;
+            
+            AbstractMicrovesselModifier3_exposer.def( 
+                "AddDiscreteContinuumSolver"
+                , AddDiscreteContinuumSolver_function_type( &::AbstractMicrovesselModifier< 3 >::AddDiscreteContinuumSolver )
+                , ( bp::arg("pDiscreteContinuumSolver") ) );
+        
+        }
+        { //::AbstractMicrovesselModifier< 3 >::GetCellPopulation
+        
+            typedef AbstractMicrovesselModifier< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< AbstractCellPopulation< 3, 3 > > ( exported_class_t::*GetCellPopulation_function_type)(  ) ;
+            
+            AbstractMicrovesselModifier3_exposer.def( 
+                "GetCellPopulation"
+                , GetCellPopulation_function_type( &::AbstractMicrovesselModifier< 3 >::GetCellPopulation ) );
+        
+        }
+        { //::AbstractMicrovesselModifier< 3 >::GetDiscreteContinuumSolver
+        
+            typedef AbstractMicrovesselModifier< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< AbstractDiscreteContinuumSolver< 3 > > ( exported_class_t::*GetDiscreteContinuumSolver_function_type)( unsigned int ) ;
+            
+            AbstractMicrovesselModifier3_exposer.def( 
+                "GetDiscreteContinuumSolver"
+                , GetDiscreteContinuumSolver_function_type( &::AbstractMicrovesselModifier< 3 >::GetDiscreteContinuumSolver )
+                , ( bp::arg("index") ) );
+        
+        }
+        { //::AbstractMicrovesselModifier< 3 >::GetNumberOfDiscreteContinuumSolvers
+        
+            typedef AbstractMicrovesselModifier< 3 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetNumberOfDiscreteContinuumSolvers_function_type)(  ) ;
+            
+            AbstractMicrovesselModifier3_exposer.def( 
+                "GetNumberOfDiscreteContinuumSolvers"
+                , GetNumberOfDiscreteContinuumSolvers_function_type( &::AbstractMicrovesselModifier< 3 >::GetNumberOfDiscreteContinuumSolvers ) );
+        
+        }
+        { //::AbstractMicrovesselModifier< 3 >::GetVesselNetwork
+        
+            typedef AbstractMicrovesselModifier< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< VesselNetwork< 3 > > ( exported_class_t::*GetVesselNetwork_function_type)(  ) ;
+            
+            AbstractMicrovesselModifier3_exposer.def( 
+                "GetVesselNetwork"
+                , GetVesselNetwork_function_type( &::AbstractMicrovesselModifier< 3 >::GetVesselNetwork ) );
+        
+        }
+        { //::AbstractMicrovesselModifier< 3 >::SetCellPopulation
+        
+            typedef AbstractMicrovesselModifier< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetCellPopulation_function_type)( ::boost::shared_ptr< AbstractCellPopulation< 3, 3 > > ) ;
+            
+            AbstractMicrovesselModifier3_exposer.def( 
+                "SetCellPopulation"
+                , SetCellPopulation_function_type( &::AbstractMicrovesselModifier< 3 >::SetCellPopulation )
+                , ( bp::arg("pCellPopulation") ) );
+        
+        }
+        { //::AbstractMicrovesselModifier< 3 >::SetVesselNetwork
+        
+            typedef AbstractMicrovesselModifier< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetVesselNetwork_function_type)( ::boost::shared_ptr< VesselNetwork< 3 > > ) ;
+            
+            AbstractMicrovesselModifier3_exposer.def( 
+                "SetVesselNetwork"
+                , SetVesselNetwork_function_type( &::AbstractMicrovesselModifier< 3 >::SetVesselNetwork )
+                , ( bp::arg("pNetwork") ) );
+        
+        }
         { //::AbstractMicrovesselModifier< 3 >::SetupSolve
         
             typedef AbstractMicrovesselModifier< 3 > exported_class_t;
-            typedef void ( exported_class_t::*SetupSolve_function_type)( ::boost::shared_ptr<VesselNetwork<3> >,::boost::shared_ptr<AbstractCellPopulation<3, 3> >,::std::vector<boost::shared_ptr<AbstractDiscreteContinuumSolver<3> >, std::allocator<boost::shared_ptr<AbstractDiscreteContinuumSolver<3> > > >,::std::string ) ;
+            typedef void ( exported_class_t::*SetupSolve_function_type)( ::std::string ) ;
             
             AbstractMicrovesselModifier3_exposer.def( 
                 "SetupSolve"
                 , bp::pure_virtual( SetupSolve_function_type(&::AbstractMicrovesselModifier< 3 >::SetupSolve) )
-                , ( bp::arg("pNetwork"), bp::arg("pCellPopulation"), bp::arg("discreteContinuumSolvers"), bp::arg("outputDirectory") ) );
+                , ( bp::arg("outputDirectory") ) );
         
         }
         { //::AbstractMicrovesselModifier< 3 >::UpdateAtEndOfTimeStep
         
             typedef AbstractMicrovesselModifier< 3 > exported_class_t;
-            typedef void ( exported_class_t::*UpdateAtEndOfTimeStep_function_type)( ::boost::shared_ptr<VesselNetwork<3> >,::boost::shared_ptr<AbstractCellPopulation<3, 3> >,::std::vector<boost::shared_ptr<AbstractDiscreteContinuumSolver<3> >, std::allocator<boost::shared_ptr<AbstractDiscreteContinuumSolver<3> > > > ) ;
+            typedef void ( exported_class_t::*UpdateAtEndOfTimeStep_function_type)(  ) ;
             
             AbstractMicrovesselModifier3_exposer.def( 
                 "UpdateAtEndOfTimeStep"
-                , bp::pure_virtual( UpdateAtEndOfTimeStep_function_type(&::AbstractMicrovesselModifier< 3 >::UpdateAtEndOfTimeStep) )
-                , ( bp::arg("pNetwork"), bp::arg("pCellPopulation"), bp::arg("discreteContinuumSolvers") ) );
+                , bp::pure_virtual( UpdateAtEndOfTimeStep_function_type(&::AbstractMicrovesselModifier< 3 >::UpdateAtEndOfTimeStep) ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< AbstractMicrovesselModifier<3> > >();
@@ -1472,6 +1618,9 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
 
     bp::class_< VtkSceneMicrovesselModifier_less__2__greater__wrapper, bp::bases< AbstractMicrovesselModifier< 2 > > >( "VtkSceneMicrovesselModifier2", bp::init< >() )    
         .def( 
+            "GetVtkScene"
+            , (::boost::shared_ptr< MicrovesselVtkScene< 2 > > ( ::VtkSceneMicrovesselModifier<2>::* )(  ))( &::VtkSceneMicrovesselModifier< 2 >::GetVtkScene ) )    
+        .def( 
             "SetUpdateFrequency"
             , (void ( ::VtkSceneMicrovesselModifier<2>::* )( unsigned int ))( &::VtkSceneMicrovesselModifier< 2 >::SetUpdateFrequency )
             , ( bp::arg("frequency") ) )    
@@ -1481,16 +1630,18 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
             , ( bp::arg("pScene") ) )    
         .def( 
             "SetupSolve"
-            , (void ( ::VtkSceneMicrovesselModifier<2>::* )( ::boost::shared_ptr< VesselNetwork< 2 > >,::boost::shared_ptr< AbstractCellPopulation< 2, 2 > >,::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<2> > >,::std::string ))(&::VtkSceneMicrovesselModifier< 2 >::SetupSolve)
-            , (void ( VtkSceneMicrovesselModifier_less__2__greater__wrapper::* )( ::boost::shared_ptr< VesselNetwork< 2 > >,::boost::shared_ptr< AbstractCellPopulation< 2, 2 > >,::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<2> > >,::std::string ))(&VtkSceneMicrovesselModifier_less__2__greater__wrapper::default_SetupSolve)
-            , ( bp::arg("pNetwork"), bp::arg("pCellPopulation"), bp::arg("discreteContinuumSolvers"), bp::arg("outputDirectory") ) )    
+            , (void ( ::VtkSceneMicrovesselModifier<2>::* )( ::std::string ))(&::VtkSceneMicrovesselModifier< 2 >::SetupSolve)
+            , (void ( VtkSceneMicrovesselModifier_less__2__greater__wrapper::* )( ::std::string ))(&VtkSceneMicrovesselModifier_less__2__greater__wrapper::default_SetupSolve)
+            , ( bp::arg("outputDirectory") ) )    
         .def( 
             "UpdateAtEndOfTimeStep"
-            , (void ( ::VtkSceneMicrovesselModifier<2>::* )( ::boost::shared_ptr< VesselNetwork< 2 > >,::boost::shared_ptr< AbstractCellPopulation< 2, 2 > >,::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<2> > > ))(&::VtkSceneMicrovesselModifier< 2 >::UpdateAtEndOfTimeStep)
-            , (void ( VtkSceneMicrovesselModifier_less__2__greater__wrapper::* )( ::boost::shared_ptr< VesselNetwork< 2 > >,::boost::shared_ptr< AbstractCellPopulation< 2, 2 > >,::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<2> > > ))(&VtkSceneMicrovesselModifier_less__2__greater__wrapper::default_UpdateAtEndOfTimeStep)
-            , ( bp::arg("pNetwork"), bp::arg("pCellPopulation"), bp::arg("discreteContinuumSolvers") ) );
+            , (void ( ::VtkSceneMicrovesselModifier<2>::* )(  ))(&::VtkSceneMicrovesselModifier< 2 >::UpdateAtEndOfTimeStep)
+            , (void ( VtkSceneMicrovesselModifier_less__2__greater__wrapper::* )(  ))(&VtkSceneMicrovesselModifier_less__2__greater__wrapper::default_UpdateAtEndOfTimeStep) );
 
     bp::class_< VtkSceneMicrovesselModifier_less__3__greater__wrapper, bp::bases< AbstractMicrovesselModifier< 3 > > >( "VtkSceneMicrovesselModifier3", bp::init< >() )    
+        .def( 
+            "GetVtkScene"
+            , (::boost::shared_ptr< MicrovesselVtkScene< 3 > > ( ::VtkSceneMicrovesselModifier<3>::* )(  ))( &::VtkSceneMicrovesselModifier< 3 >::GetVtkScene ) )    
         .def( 
             "SetUpdateFrequency"
             , (void ( ::VtkSceneMicrovesselModifier<3>::* )( unsigned int ))( &::VtkSceneMicrovesselModifier< 3 >::SetUpdateFrequency )
@@ -1501,12 +1652,11 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_simulation){
             , ( bp::arg("pScene") ) )    
         .def( 
             "SetupSolve"
-            , (void ( ::VtkSceneMicrovesselModifier<3>::* )( ::boost::shared_ptr< VesselNetwork< 3 > >,::boost::shared_ptr< AbstractCellPopulation< 3, 3 > >,::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<3> > >,::std::string ))(&::VtkSceneMicrovesselModifier< 3 >::SetupSolve)
-            , (void ( VtkSceneMicrovesselModifier_less__3__greater__wrapper::* )( ::boost::shared_ptr< VesselNetwork< 3 > >,::boost::shared_ptr< AbstractCellPopulation< 3, 3 > >,::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<3> > >,::std::string ))(&VtkSceneMicrovesselModifier_less__3__greater__wrapper::default_SetupSolve)
-            , ( bp::arg("pNetwork"), bp::arg("pCellPopulation"), bp::arg("discreteContinuumSolvers"), bp::arg("outputDirectory") ) )    
+            , (void ( ::VtkSceneMicrovesselModifier<3>::* )( ::std::string ))(&::VtkSceneMicrovesselModifier< 3 >::SetupSolve)
+            , (void ( VtkSceneMicrovesselModifier_less__3__greater__wrapper::* )( ::std::string ))(&VtkSceneMicrovesselModifier_less__3__greater__wrapper::default_SetupSolve)
+            , ( bp::arg("outputDirectory") ) )    
         .def( 
             "UpdateAtEndOfTimeStep"
-            , (void ( ::VtkSceneMicrovesselModifier<3>::* )( ::boost::shared_ptr< VesselNetwork< 3 > >,::boost::shared_ptr< AbstractCellPopulation< 3, 3 > >,::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<3> > > ))(&::VtkSceneMicrovesselModifier< 3 >::UpdateAtEndOfTimeStep)
-            , (void ( VtkSceneMicrovesselModifier_less__3__greater__wrapper::* )( ::boost::shared_ptr< VesselNetwork< 3 > >,::boost::shared_ptr< AbstractCellPopulation< 3, 3 > >,::std::vector< boost::shared_ptr<AbstractDiscreteContinuumSolver<3> > > ))(&VtkSceneMicrovesselModifier_less__3__greater__wrapper::default_UpdateAtEndOfTimeStep)
-            , ( bp::arg("pNetwork"), bp::arg("pCellPopulation"), bp::arg("discreteContinuumSolvers") ) );
+            , (void ( ::VtkSceneMicrovesselModifier<3>::* )(  ))(&::VtkSceneMicrovesselModifier< 3 >::UpdateAtEndOfTimeStep)
+            , (void ( VtkSceneMicrovesselModifier_less__3__greater__wrapper::* )(  ))(&VtkSceneMicrovesselModifier_less__3__greater__wrapper::default_UpdateAtEndOfTimeStep) );
 }

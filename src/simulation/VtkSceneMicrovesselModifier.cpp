@@ -52,10 +52,7 @@ VtkSceneMicrovesselModifier<DIM>::~VtkSceneMicrovesselModifier()
 }
 
 template<unsigned DIM>
-void VtkSceneMicrovesselModifier<DIM>::SetupSolve(boost::shared_ptr<VesselNetwork<DIM> > pNetwork,
-        boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > pCellPopulation,
-        std::vector<boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > > discreteContinuumSolvers,
-        std::string outputDirectory)
+void VtkSceneMicrovesselModifier<DIM>::SetupSolve(std::string outputDirectory)
 {
     if(mpScene and SimulationTime::Instance()->GetTimeStepsElapsed()%mUpdateFrequency==0)
     {
@@ -64,9 +61,7 @@ void VtkSceneMicrovesselModifier<DIM>::SetupSolve(boost::shared_ptr<VesselNetwor
 }
 
 template<unsigned DIM>
-void VtkSceneMicrovesselModifier<DIM>::UpdateAtEndOfTimeStep(boost::shared_ptr<VesselNetwork<DIM> > pNetwork,
-        boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > pCellPopulation,
-        std::vector<boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > > discreteContinuumSolvers)
+void VtkSceneMicrovesselModifier<DIM>::UpdateAtEndOfTimeStep()
 {
     if(DIM>1)
     {
@@ -75,6 +70,12 @@ void VtkSceneMicrovesselModifier<DIM>::UpdateAtEndOfTimeStep(boost::shared_ptr<V
             mpScene->ResetRenderer(SimulationTime::Instance()->GetTimeStepsElapsed());
         }
     }
+}
+
+template<unsigned DIM>
+boost::shared_ptr<MicrovesselVtkScene<DIM> > VtkSceneMicrovesselModifier<DIM>::GetVtkScene()
+{
+    return mpScene;
 }
 
 template<unsigned DIM>

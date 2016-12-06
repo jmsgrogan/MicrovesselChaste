@@ -35,3 +35,4 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 from _chaste_project_MicrovesselChaste_visualization import *
+from fortests import *

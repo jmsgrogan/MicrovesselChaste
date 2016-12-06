@@ -93,6 +93,11 @@ def ConvertFileToJupyterNotebook(fileobj, filepath, nb):
     test_teardown_string = '# Tear down the test \n'
     test_teardown_string += 'chaste.cell_based.TearDownNotebookTest()\n'
     
+    jupyter_show_first_string = "nb_manager = microvessel_chaste.visualization.JupyterNotebookManager()\n"
+    jupyter_show_string = "nb_manager.vtk_show(scene, height=600)\n"
+    
+    jupyter_parameter_dump_string = "nb_manager.add_parameter_table(file_handler)"
+    
     # Output
     last_line = ''
     last_block = ''
@@ -190,23 +195,45 @@ def ConvertFileToJupyterNotebook(fileobj, filepath, nb):
             
             # Strip out class and function calls, unittest and main and left-align all lines
             output_lines = []
-            ignore_lines_contain = ["class", "def", "unittest", "main", "self.assert"]
+            ignore_lines_contain = ["unittest", "main", "self.assert"]
             for eachLine in block_list:
                 if not any(ignore_string in eachLine for ignore_string in ignore_lines_contain):
-                    output_lines.append(eachLine.strip())
+                    right_stripped = eachLine.rstrip()
+                    if right_stripped[:5] != "class":
+                        
+                        if "def" in right_stripped:
+                            if not len(right_stripped) - len(right_stripped.lstrip(' ')) == 4:
+                                if right_stripped[:8].isspace():
+                                    output_lines.append(right_stripped[8:])
+                                else:
+                                    output_lines.append(right_stripped)
+                        else:
+                            if right_stripped[:8].isspace():
+                                output_lines.append(right_stripped[8:])
+                            else:
+                                output_lines.append(right_stripped)
                     
             # Look for the setup and teardown marks
             for idx, eachLine in enumerate(output_lines):
+                output_lines[idx] = output_lines[idx].replace("VtkSceneMicrovesselModifier2()", "JupyterMicrovesselSceneModifier2(nb_manager)")
+                output_lines[idx] = output_lines[idx].replace("VtkSceneMicrovesselModifier3()", "JupyterMicrovesselSceneModifier3(nb_manager)")
                 if "JUPYTER_SETUP" in eachLine:
                     output_lines[idx] = test_setup_string
                 if "JUPYTER_TEARDOWN" in eachLine:
                     output_lines[idx] = test_teardown_string
+                if "JUPYTER_SHOW_FIRST" in eachLine:
+                    output_lines[idx] = jupyter_show_first_string
+                elif "JUPYTER_SHOW" in eachLine:
+                    output_lines[idx] = jupyter_show_string
+                if "JUPYTER_PARAMETER_DUMP" in eachLine:
+                    output_lines[idx] = jupyter_parameter_dump_string
             
             # Reassemble the block as a single string, strip empty lines
             if len(output_lines)>0:
                 out_string = "\n".join(output_lines) 
                 out_string = os.linesep.join([s for s in out_string.splitlines() if s])
-                nb['cells'].append(nbf.v4.new_code_cell(out_string))  
+                if out_string.strip():
+                    nb['cells'].append(nbf.v4.new_code_cell(out_string))  
         else:
             nb['cells'].append(nbf.v4.new_markdown_cell(eachBlock[0]))                
         
@@ -230,8 +257,8 @@ def ConvertTutorialToJupyterNotebook(test_file_path, test_file, other_files, rev
                                                 test_file_path + revision + '.\n\n'))
     
     # Notebook specific imports
-    notebook_header = '# Jupyter notebook specific imports \nimport matplotlib as mpl \n'
-    notebook_header += 'import matplotlib.pyplot as plt \n%matplotlib inline'
+    notebook_header = '# Jupyter notebook specific imports \nimport matplotlib as mpl \nfrom IPython import display \n'
+    notebook_header += '%matplotlib inline'
     nb['cells'].append(nbf.v4.new_code_cell(notebook_header))
         
     # Convert each file in turn

@@ -37,44 +37,40 @@
 ## This tutorial demonstrates functionality for modelling 3D off-lattice angiogenesis in a corneal micro
 ## pocket application, similar to that described in [Connor et al. 2015](http://rsif.royalsocietypublishing.org/content/12/110/20150546.abstract).
 ##
-## It is a 3D simulation modelling VEGF diffusion and decay from an implanted pellet using finite element methods and lattice-free angiogenesis
-## from a large limbal vessel towards the pellet.
-##
-## ![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/OffLatticeMidPoint.png)
+## It is a 3D simulation modelling VEGF diffusion and decay from an implanted pellet using finite element methods and 
+## lattice-free angiogenesis from a large limbal vessel towards the pellet.
 ##
 ## # The Test
 
-import unittest
+import unittest # Testing framework
 import numpy as np
-import chaste.core
-import chaste.cell_based
-chaste.init()
-import microvessel_chaste
-import microvessel_chaste.geometry
-import microvessel_chaste.mesh 
-import microvessel_chaste.population.vessel
-import microvessel_chaste.pde
-import microvessel_chaste.simulation
-import microvessel_chaste.visualization
-from microvessel_chaste.utility import * # bring in all units for convenience
+import chaste # Core Chaste functionality
+import chaste.cell_based # Chaste Cell Populations
+chaste.init() # Initialize MPI and PETSc
+import microvessel_chaste # Core Microvessel Chaste functionality
+import microvessel_chaste.geometry # Geometry tools
+import microvessel_chaste.mesh # Meshing
+import microvessel_chaste.population.vessel # Vessel tools
+import microvessel_chaste.pde # PDE and solvers
+import microvessel_chaste.simulation # Flow and angiogenesis solvers
+import microvessel_chaste.visualization # Visualization
+from microvessel_chaste.utility import * # Dimensional analysis: bring in all units for convenience
 
 class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
           
     def test_fixed_outer_boundary(self):
         
-        ##
+        # JUPYTER_SETUP 
+                
         ## Set up output file management.
-        ##
         
         file_handler = chaste.core.OutputFileHandler("Python/TestOffLatticeAngiogenesisLiteratePaper")
         chaste.core.RandomNumberGenerator.Instance().Reseed(12345)
         
-        ##
         ## This component uses explicit dimensions for all quantities, but interfaces with solvers which take
         ## non-dimensional inputs. The `BaseUnits` singleton takes time, length and mass reference scales to
         ## allow non-dimensionalisation when sending quantities to external solvers and re-dimensionalisation of
         ## results. For our purposes microns for length and hours for time are suitable base units.
-        ##
         
         reference_length = 1.e-6 * metre()
         reference_time = 3600.0 * second()
@@ -83,10 +79,8 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         BaseUnits.Instance().SetReferenceTimeScale(reference_time)
         BaseUnits.Instance().SetReferenceConcentrationScale(reference_concentration)
         
-        ##
         ## Set up the domain representing the cornea. This is a thin hemispherical shell. We assume some symmetry to
         ## reduce computational expense.
-        ##
         
         hemisphere_generator = microvessel_chaste.geometry.MappableGridGenerator()
         radius = 1400.0e-6*metre()
@@ -95,7 +89,7 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         num_divisions_y = 10
         azimuth_angle = 1.0 * np.pi
         polar_angle = 0.5 * np.pi
-        domain = hemisphere_generator.GenerateHemisphere(radius/reference_length,
+        cornea = hemisphere_generator.GenerateHemisphere(radius/reference_length,
                                                          thickness/reference_length,
                                                          num_divisions_x,
                                                          num_divisions_y,
@@ -105,15 +99,15 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         ## We can visualize the part
         
         scene = microvessel_chaste.visualization.MicrovesselVtkScene3()
-        #scene.SetPart(domain)
-        #scene.GetPartActorGenerator().SetVolumeOpacity(0.7)
-        #scene.GetPartActorGenerator().SetVolumeColor((255.0, 255.0, 255.0))
+        scene.SetPart(cornea)
+        scene.GetPartActorGenerator().SetVolumeOpacity(0.7)
+        scene.GetPartActorGenerator().SetVolumeColor((255.0, 255.0, 255.0))
         scene.SetIsInteractive(True)
-        scene.SetOutputFilePath(file_handler.GetOutputDirectoryFullPath()+"render")
+        # JUPYTER_SHOW_FIRST
+        scene.Start()  # JUPYTER_SHOW
         
-        ##
-        ## Set up a vessel network, with divisions roughly every 'cell length'. Initially it is straight. We will map it onto the hemisphere.
-        ##
+        ## Set up a vessel network, with divisions roughly every 'cell length'. Initially it is straight. 
+        ## We will map it onto the hemisphere.
         
         network_generator = microvessel_chaste.population.vessel.VesselNetworkGenerator3()
         vessel_length = np.pi * radius
@@ -125,6 +119,7 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         network.GetNode(0).GetFlowProperties().SetPressure(Owen11Parameters.mpInletPressure.GetValue("User"))
         network.GetNode(network.GetNumberOfNodes()-1).GetFlowProperties().SetIsOutputNode(True)
         network.GetNode(network.GetNumberOfNodes()-1).GetFlowProperties().SetPressure(Owen11Parameters.mpOutletPressure.GetValue("User"))
+        
         nodes = network.GetNodes();
         for eachNode in nodes:
         
@@ -137,42 +132,38 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
                                                                            reference_length)
             eachNode.SetLocation(new_position)
         
+        ## Visualize the network
+        
         scene.SetVesselNetwork(network)
         scene.GetVesselNetworkActorGenerator().SetEdgeSize(20.0)   
-
-        ## The initial domain and vessel network now look as follows:
-        ##
-        ## ![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/OffLatticeTurorialHemisphere.png)
-        ##
+        scene.Start()  # JUPYTER_SHOW
+        
         ## In the experimental assay a pellet containing VEGF is implanted near the top of the cornea. We model this
         ## as a fixed concentration of VEGF in a cuboidal region. First set up the vegf sub domain.
-        ##
         
-        vegf_domain = microvessel_chaste.geometry.Part3()
+        pellet = microvessel_chaste.geometry.Part3()
         pellet_side_length = 300.0e-6 * metre()
         origin = microvessel_chaste.mesh.DimensionalChastePoint3(-150.0,900.0,0.0)
-        vegf_domain.AddCuboid(pellet_side_length, pellet_side_length, 5.0*pellet_side_length, origin)      
+        pellet.AddCuboid(pellet_side_length, pellet_side_length, 5.0*pellet_side_length, origin)      
+        pellet.Write(file_handler.GetOutputDirectoryFullPath()+"initial_vegf_pellet.vtp", 
+                     microvessel_chaste.geometry.GeometryFormat.VTP)
         
-        vegf_domain.Write(file_handler.GetOutputDirectoryFullPath()+"initial_vegf_domain.vtp", microvessel_chaste.geometry.GeometryFormat.VTP)
-        
-        ##
         ## Now make a finite element mesh on the cornea.
-        ##
         
         mesh_generator = microvessel_chaste.mesh.DiscreteContinuumMeshGenerator3_3()
-        mesh_generator.SetDomain(domain)
+        mesh_generator.SetDomain(cornea)
         mesh_generator.SetMaxElementArea(1e-6 * metre_cubed())
         mesh_generator.Update()
         mesh = mesh_generator.GetMesh()
 
+        ## We can visualize the mesh
+        
+        scene.GetPartActorGenerator().SetVolumeOpacity(0.0)
         scene.SetMesh(mesh)
+        scene.Start() # JUPYTER_SHOW
         
-        scene.Start()
-        scene.StartInteractiveEventHandler()
-        
-        ##
-        ## Set up the vegf pde
-        ##
+        ## Set up the vegf pde. Note the scaling of the refernece concentration to nM to avoid numerical
+        ## precision problems.
         
         vegf_pde = microvessel_chaste.pde.LinearSteadyStateDiffusionReactionPde3_3()
         vegf_pde.SetIsotropicDiffusionConstant(Owen11Parameters.mpVegfDiffusivity.GetValue("User"))
@@ -181,20 +172,15 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         vegf_pde.SetUseRegularGrid(False)
         vegf_pde.SetReferenceConcentration(1.e-9*mole_per_metre_cubed())
         
-        ##
         ## Add a boundary condition to fix the VEGF concentration in the vegf subdomain.
-        ##
         
         vegf_boundary = microvessel_chaste.pde.DiscreteContinuumBoundaryCondition3()
         vegf_boundary.SetType(microvessel_chaste.pde.BoundaryConditionType.IN_PART)
         vegf_boundary.SetSource(microvessel_chaste.pde.BoundaryConditionSource.PRESCRIBED)
         vegf_boundary.SetValue(3.e-9*mole_per_metre_cubed())
-        vegf_boundary.SetDomain(vegf_domain)
+        vegf_boundary.SetDomain(pellet)
         
-        ##
-        ## Set up the PDE solvers for the vegf problem. Note the scaling of the concentration to nM to avoid numerical
-        ## precision problems.
-        ##
+        ## Set up the PDE solvers for the vegf problem. 
         
         vegf_solver = microvessel_chaste.pde.FiniteElementSolver3()
         vegf_solver.SetPde(vegf_pde)
@@ -202,13 +188,8 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         vegf_solver.SetMesh(mesh)
         vegf_solver.AddBoundaryCondition(vegf_boundary)        
         
-        ##
-        ## An example of the VEGF solution is shown here:
-        ##
-        ## ![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/OffLatticeTutorialVegf.png)
-        ##
         ## Set up an angiogenesis solver and add sprouting and migration rules.
-        ##
+
         angiogenesis_solver = microvessel_chaste.simulation.AngiogenesisSolver3()
         sprouting_rule = microvessel_chaste.simulation.OffLatticeSproutingRule3()
         sprouting_rule.SetSproutingProbability(1.e6* per_second())
@@ -224,12 +205,9 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         sprouting_rule.SetDiscreteContinuumSolver(vegf_solver)
         migration_rule.SetDiscreteContinuumSolver(vegf_solver)
         angiogenesis_solver.SetVesselNetwork(network)
-        angiogenesis_solver.SetBoundingDomain(domain)
+        angiogenesis_solver.SetBoundingDomain(cornea)
         
-        ##
-        ## Set up the `MicrovesselSolver` which coordinates all solves. Note that for sequentially
-        ## coupled PDE solves, the solution propagates in the order that the PDE solvers are added to the `MicrovesselSolver`.
-        ##
+        ## Set up the `MicrovesselSolver` which coordinates all solves. 
         
         microvessel_solver = microvessel_chaste.simulation.MicrovesselSolver3()
         microvessel_solver.SetVesselNetwork(network)
@@ -239,14 +217,30 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         microvessel_solver.SetAngiogenesisSolver(angiogenesis_solver)
         microvessel_solver.SetUpdatePdeEachSolve(False)
         
-        ##
-        ## Set the simulation time and run the solver. The result is shown at the top of the tutorial.
-        ##
+        ## Set up plotting
+        
+        scene.GetDiscreteContinuumMeshActorGenerator().SetVolumeOpacity(0.6)
+        #scene.GetDiscreteContinuumMeshActorGenerator().SetDataLabel("vegf")
+        scene.GetVesselNetworkActorGenerator().SetEdgeSize(5.0)
+        
+        scene_modifier = microvessel_chaste.visualization.VtkSceneMicrovesselModifier3()
+        scene_modifier.SetVtkScene(scene)
+        scene_modifier.SetUpdateFrequency(2)
+        microvessel_solver.AddMicrovesselModifier(scene_modifier)
+        
+        ## Set the simulation time and run the solver.
         
         chaste.cell_based.SimulationTime.Instance().SetEndTimeAndNumberOfTimeSteps(100.0, 10)
         microvessel_solver.Run()
         
-            
+        ## Dump the parameters to file for inspection.
+        
+        ParameterCollection.Instance().DumpToFile(file_handler.GetOutputDirectoryFullPath()+"parameter_collection.xml")
+
+        # JUPYTER_PARAMETER_DUMP
+
+        # JUPYTER_TEARDOWN 
+        
 if __name__ == '__main__':
     unittest.main()
     

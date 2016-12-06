@@ -89,6 +89,16 @@ class CellPopulationActorGenerator : public AbstractActorGenerator<DIM>
     bool mColorByCellData;
 
     /**
+     * Color the cells by mutation state
+     */
+    bool mColorByCellMutationState;
+
+    /**
+     * Color the cells by label
+     */
+    bool mColorByCellLabel;
+
+    /**
      * Whether to show the cell centres
      */
     bool mShowCellCentres;
@@ -172,10 +182,19 @@ public:
     void SetColorByCellType(bool colorByCellType);
 
     /**
+     * @param colorByCellType color cells by mutation state
+     */
+    void SetColorByCellMutationState(bool colorByCellMutationState);
+
+    /**
+     * @param colorByCellType color cells by label
+     */
+    void SetColorByCellLabel(bool colorByCellLabel);
+
+    /**
      * @param colorByCellType color cells by the user defined point color
      */
     void SetColorByUserDefined(bool colorByCellUserDefined);
-
 
     /**
      * @param colorByCellData color cells by data

@@ -73,6 +73,12 @@ public:
     virtual ~VtkSceneMicrovesselModifier();
 
     /**
+     * Return the scene
+     * @return the scene
+     */
+    boost::shared_ptr<MicrovesselVtkScene<DIM> > GetVtkScene();
+
+    /**
      * Overridden SetupSolve() method.
      * Specify what to do in the simulation before the start of the time loop.
      *
@@ -81,10 +87,7 @@ public:
      * @param discreteContinuumSolvers collection of discrete continuum solvers
      * @param outputDirectory the output directory, relative to where Chaste output is stored
      */
-    void SetupSolve(boost::shared_ptr<VesselNetwork<DIM> > pNetwork,
-            boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > pCellPopulation,
-            std::vector<boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > > discreteContinuumSolvers,
-            std::string outputDirectory);
+    void SetupSolve(std::string outputDirectory);
 
     /**
      * Overridden UpdateAtEndOfTimeStep() method.
@@ -94,9 +97,7 @@ public:
      * @param rCellPopulation pointer to the cell population
      * @param discreteContinuumSolvers collection of discrete continuum solvers
      */
-    void UpdateAtEndOfTimeStep(boost::shared_ptr<VesselNetwork<DIM> > pNetwork,
-            boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > pCellPopulation,
-            std::vector<boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > > discreteContinuumSolvers);
+    void UpdateAtEndOfTimeStep();
 
     /**
      * Set the scene

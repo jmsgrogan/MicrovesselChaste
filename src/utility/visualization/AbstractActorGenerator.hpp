@@ -42,6 +42,8 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkSmartPointer.h>
 #include <vtkRenderer.h>
 #include <vtkColorTransferFunction.h>
+#include <vtkScalarBarActor.h>
+#include <vtkTextProperty.h>
 #include "UnitCollection.hpp"
 #include "UblasVectorInclude.hpp"
 
@@ -120,6 +122,16 @@ protected:
      */
     std::string mDataLabel;
 
+    /**
+     * The scale bar
+     */
+    vtkSmartPointer<vtkScalarBarActor> mpScaleBar;
+
+    /**
+     * Show the scale bar
+     */
+    bool mShowScaleBar;
+
 public:
 
     /**
@@ -147,6 +159,11 @@ public:
      * @return return the discrete color transfer function
      */
     vtkSmartPointer<vtkColorTransferFunction> GetDiscreteColorTransferFunction();
+
+    /**
+     * @return return the scale bar
+     */
+    vtkSmartPointer<vtkScalarBarActor> GetScaleBar();
 
     /**
      * Set whether to show the edges
@@ -189,6 +206,12 @@ public:
      * @param opacity the opacity for the volume
      */
     void SetVolumeOpacity(double opacity);
+
+    /**
+     * Set show scale bar
+     * @param show show scale bar
+     */
+    void SetShowScaleBar(double show);
 
     /**
      * Set the default point size

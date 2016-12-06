@@ -19,6 +19,12 @@
 .. autoclass:: microvessel_chaste.visualization.AbstractActorGenerator2
 	:members:
 
+.. autoclass:: microvessel_chaste.visualization.AbstractMicrovesselModifier2
+	:members:
+
+.. autoclass:: microvessel_chaste.visualization.VtkSceneMicrovesselModifier2
+	:members:
+
 .. autoclass:: microvessel_chaste.visualization.MicrovesselVtkScene3
 	:members:
 
@@ -38,5 +44,11 @@
 	:members:
 
 .. autoclass:: microvessel_chaste.visualization.AbstractActorGenerator3
+	:members:
+
+.. autoclass:: microvessel_chaste.visualization.AbstractMicrovesselModifier3
+	:members:
+
+.. autoclass:: microvessel_chaste.visualization.VtkSceneMicrovesselModifier3
 	:members:
 

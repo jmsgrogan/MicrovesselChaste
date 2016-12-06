@@ -109,8 +109,13 @@ void MicrovesselSolver<DIM>::Increment()
     {
         for(unsigned idx=0;idx<mMicrovesselModifiers.size(); idx++)
         {
-            mMicrovesselModifiers[idx]->SetupSolve(mpNetwork, mpCellPopulation,
-                    mDiscreteContinuumSolvers, mpOutputFileHandler->GetOutputDirectoryFullPath());
+            mMicrovesselModifiers[idx]->SetVesselNetwork(mpNetwork);
+            mMicrovesselModifiers[idx]->SetCellPopulation(mpCellPopulation);
+            for(unsigned jdx=0; jdx<mDiscreteContinuumSolvers.size(); jdx++)
+            {
+                mMicrovesselModifiers[idx]->AddDiscreteContinuumSolver(mDiscreteContinuumSolvers[jdx]);
+            }
+            mMicrovesselModifiers[idx]->SetupSolve(mpOutputFileHandler->GetOutputDirectoryFullPath());
         }
     }
 
@@ -196,7 +201,7 @@ void MicrovesselSolver<DIM>::Increment()
 
     for(unsigned idx=0;idx<mMicrovesselModifiers.size(); idx++)
     {
-        mMicrovesselModifiers[idx]->UpdateAtEndOfTimeStep(mpNetwork, mpCellPopulation, mDiscreteContinuumSolvers);
+        mMicrovesselModifiers[idx]->UpdateAtEndOfTimeStep();
     }
 }
 

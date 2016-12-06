@@ -79,7 +79,9 @@ AbstractActorGenerator<DIM>::AbstractActorGenerator()
       mVolumeOpacity(0.8),
       mPointSize(1.0),
       mEdgeSize(0.5),
-      mDataLabel()
+      mDataLabel(),
+      mpScaleBar(vtkSmartPointer<vtkScalarBarActor>::New()),
+      mShowScaleBar(false)
 {
     mPointColor*=255.0;
     mVolumeColor*=255.0;
@@ -615,6 +617,21 @@ AbstractActorGenerator<DIM>::AbstractActorGenerator()
                                                accent_colors[idx][1],
                                                accent_colors[idx][2]);
     }
+
+    mpScaleBar->SetOrientationToHorizontal();
+    mpScaleBar->GetPositionCoordinate()->SetCoordinateSystemToNormalizedViewport();
+    mpScaleBar->GetPositionCoordinate()->SetValue(0.25, 0.84);
+    mpScaleBar->SetWidth(0.5);
+    mpScaleBar->SetHeight(0.1);
+    mpScaleBar->GetTitleTextProperty()->ItalicOff();
+    mpScaleBar->GetLabelTextProperty()->ItalicOff();
+    mpScaleBar->GetTitleTextProperty()->BoldOff();
+    mpScaleBar->GetLabelTextProperty()->BoldOff();
+    mpScaleBar->SetLabelFormat("%.2g");
+    mpScaleBar->GetTitleTextProperty()->SetFontSize(5.0);
+    mpScaleBar->GetLabelTextProperty()->SetFontSize(5.0);
+    mpScaleBar->GetTitleTextProperty()->SetColor(0.0, 0.0, 0.0);
+    mpScaleBar->GetLabelTextProperty()->SetColor(0.0, 0.0, 0.0);
 }
 
 template<unsigned DIM>
@@ -627,6 +644,12 @@ template<unsigned DIM>
 vtkSmartPointer<vtkColorTransferFunction> AbstractActorGenerator<DIM>::GetColorTransferFunction()
 {
     return mpColorTransferFunction;
+}
+
+template<unsigned DIM>
+vtkSmartPointer<vtkScalarBarActor> AbstractActorGenerator<DIM>::GetScaleBar()
+{
+    return mpScaleBar;
 }
 
 template<unsigned DIM>
@@ -663,6 +686,12 @@ template<unsigned DIM>
 void AbstractActorGenerator<DIM>::SetShowVolume(bool show)
 {
     mShowVolume = show;
+}
+
+template<unsigned DIM>
+void AbstractActorGenerator<DIM>::SetShowScaleBar(double show)
+{
+    mShowScaleBar = show;
 }
 
 template<unsigned DIM>

@@ -38,6 +38,48 @@ struct AbstractActorGenerator_less__3__greater__wrapper : AbstractActorGenerator
 
 };
 
+struct AbstractMicrovesselModifier_less__2__greater__wrapper : AbstractMicrovesselModifier< 2 >, bp::wrapper< AbstractMicrovesselModifier< 2 > > {
+
+    AbstractMicrovesselModifier_less__2__greater__wrapper( )
+    : AbstractMicrovesselModifier<2>( )
+      , bp::wrapper< AbstractMicrovesselModifier< 2 > >(){
+        // null constructor
+    
+    }
+
+    virtual void SetupSolve( ::std::string outputDirectory ){
+        bp::override func_SetupSolve = this->get_override( "SetupSolve" );
+        func_SetupSolve( outputDirectory );
+    }
+
+    virtual void UpdateAtEndOfTimeStep(  ){
+        bp::override func_UpdateAtEndOfTimeStep = this->get_override( "UpdateAtEndOfTimeStep" );
+        func_UpdateAtEndOfTimeStep(  );
+    }
+
+};
+
+struct AbstractMicrovesselModifier_less__3__greater__wrapper : AbstractMicrovesselModifier< 3 >, bp::wrapper< AbstractMicrovesselModifier< 3 > > {
+
+    AbstractMicrovesselModifier_less__3__greater__wrapper( )
+    : AbstractMicrovesselModifier<3>( )
+      , bp::wrapper< AbstractMicrovesselModifier< 3 > >(){
+        // null constructor
+    
+    }
+
+    virtual void SetupSolve( ::std::string outputDirectory ){
+        bp::override func_SetupSolve = this->get_override( "SetupSolve" );
+        func_SetupSolve( outputDirectory );
+    }
+
+    virtual void UpdateAtEndOfTimeStep(  ){
+        bp::override func_UpdateAtEndOfTimeStep = this->get_override( "UpdateAtEndOfTimeStep" );
+        func_UpdateAtEndOfTimeStep(  );
+    }
+
+};
+
 struct CellPopulationActorGenerator_less__2__greater__wrapper : CellPopulationActorGenerator< 2 >, bp::wrapper< CellPopulationActorGenerator< 2 > > {
 
     CellPopulationActorGenerator_less__2__greater__wrapper(CellPopulationActorGenerator<2> const & arg )
@@ -338,140 +380,280 @@ struct VesselNetworkActorGenerator_less__3__greater__wrapper : VesselNetworkActo
 
 };
 
+struct VtkSceneMicrovesselModifier_less__2__greater__wrapper : VtkSceneMicrovesselModifier< 2 >, bp::wrapper< VtkSceneMicrovesselModifier< 2 > > {
+
+    VtkSceneMicrovesselModifier_less__2__greater__wrapper(VtkSceneMicrovesselModifier<2> const & arg )
+    : VtkSceneMicrovesselModifier<2>( arg )
+      , bp::wrapper< VtkSceneMicrovesselModifier< 2 > >(){
+        // copy constructor
+        
+    }
+
+    VtkSceneMicrovesselModifier_less__2__greater__wrapper( )
+    : VtkSceneMicrovesselModifier<2>( )
+      , bp::wrapper< VtkSceneMicrovesselModifier< 2 > >(){
+        // null constructor
+    
+    }
+
+    virtual void SetupSolve( ::std::string outputDirectory ) {
+        if( bp::override func_SetupSolve = this->get_override( "SetupSolve" ) )
+            func_SetupSolve( outputDirectory );
+        else{
+            this->VtkSceneMicrovesselModifier< 2 >::SetupSolve( outputDirectory );
+        }
+    }
+    
+    void default_SetupSolve( ::std::string outputDirectory ) {
+        VtkSceneMicrovesselModifier< 2 >::SetupSolve( outputDirectory );
+    }
+
+    virtual void UpdateAtEndOfTimeStep(  ) {
+        if( bp::override func_UpdateAtEndOfTimeStep = this->get_override( "UpdateAtEndOfTimeStep" ) )
+            func_UpdateAtEndOfTimeStep(  );
+        else{
+            this->VtkSceneMicrovesselModifier< 2 >::UpdateAtEndOfTimeStep(  );
+        }
+    }
+    
+    void default_UpdateAtEndOfTimeStep(  ) {
+        VtkSceneMicrovesselModifier< 2 >::UpdateAtEndOfTimeStep( );
+    }
+
+};
+
+struct VtkSceneMicrovesselModifier_less__3__greater__wrapper : VtkSceneMicrovesselModifier< 3 >, bp::wrapper< VtkSceneMicrovesselModifier< 3 > > {
+
+    VtkSceneMicrovesselModifier_less__3__greater__wrapper(VtkSceneMicrovesselModifier<3> const & arg )
+    : VtkSceneMicrovesselModifier<3>( arg )
+      , bp::wrapper< VtkSceneMicrovesselModifier< 3 > >(){
+        // copy constructor
+        
+    }
+
+    VtkSceneMicrovesselModifier_less__3__greater__wrapper( )
+    : VtkSceneMicrovesselModifier<3>( )
+      , bp::wrapper< VtkSceneMicrovesselModifier< 3 > >(){
+        // null constructor
+    
+    }
+
+    virtual void SetupSolve( ::std::string outputDirectory ) {
+        if( bp::override func_SetupSolve = this->get_override( "SetupSolve" ) )
+            func_SetupSolve( outputDirectory );
+        else{
+            this->VtkSceneMicrovesselModifier< 3 >::SetupSolve( outputDirectory );
+        }
+    }
+    
+    void default_SetupSolve( ::std::string outputDirectory ) {
+        VtkSceneMicrovesselModifier< 3 >::SetupSolve( outputDirectory );
+    }
+
+    virtual void UpdateAtEndOfTimeStep(  ) {
+        if( bp::override func_UpdateAtEndOfTimeStep = this->get_override( "UpdateAtEndOfTimeStep" ) )
+            func_UpdateAtEndOfTimeStep(  );
+        else{
+            this->VtkSceneMicrovesselModifier< 3 >::UpdateAtEndOfTimeStep(  );
+        }
+    }
+    
+    void default_UpdateAtEndOfTimeStep(  ) {
+        VtkSceneMicrovesselModifier< 3 >::UpdateAtEndOfTimeStep( );
+    }
+
+};
+
 BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
-    bp::class_< AbstractActorGenerator_less__2__greater__wrapper, boost::noncopyable >( "AbstractActorGenerator2", "", bp::init< >("Constructor\n/") )    
+    bp::class_< AbstractActorGenerator_less__2__greater__wrapper, boost::noncopyable >( "AbstractActorGenerator2", bp::init< >() )    
         .def( 
             "AddActor"
             , bp::pure_virtual( (void ( ::AbstractActorGenerator<2>::* )( ::vtkSmartPointer< vtkRenderer > ))(&::AbstractActorGenerator< 2 >::AddActor) )
-            , ( bp::arg("pRenderer") )
-            , "Add the Abstract actor to the renderer\n@param pRenderer the current renderer\n/" )    
+            , ( bp::arg("pRenderer") ) )    
         .def( 
             "GetColorTransferFunction"
-            , (::vtkSmartPointer< vtkColorTransferFunction > ( ::AbstractActorGenerator<2>::* )(  ))( &::AbstractActorGenerator< 2 >::GetColorTransferFunction )
-            , "@return return the color transfer function\n/" )    
+            , (::vtkSmartPointer< vtkColorTransferFunction > ( ::AbstractActorGenerator<2>::* )(  ))( &::AbstractActorGenerator< 2 >::GetColorTransferFunction ) )    
         .def( 
             "GetDiscreteColorTransferFunction"
-            , (::vtkSmartPointer< vtkColorTransferFunction > ( ::AbstractActorGenerator<2>::* )(  ))( &::AbstractActorGenerator< 2 >::GetDiscreteColorTransferFunction )
-            , "@return return the discrete color transfer function\n/" )    
+            , (::vtkSmartPointer< vtkColorTransferFunction > ( ::AbstractActorGenerator<2>::* )(  ))( &::AbstractActorGenerator< 2 >::GetDiscreteColorTransferFunction ) )    
+        .def( 
+            "GetScaleBar"
+            , (::vtkSmartPointer< vtkScalarBarActor > ( ::AbstractActorGenerator<2>::* )(  ))( &::AbstractActorGenerator< 2 >::GetScaleBar ) )    
         .def( 
             "SetDataLabel"
             , (void ( ::AbstractActorGenerator<2>::* )( ::std::string const & ))( &::AbstractActorGenerator< 2 >::SetDataLabel )
-            , ( bp::arg("rLabel") )
-            , "Set the label for contouring data\n@param rLabel the label for contouring data\n/" )    
+            , ( bp::arg("rLabel") ) )    
         .def( 
             "SetEdgeColor"
             , (void ( ::AbstractActorGenerator<2>::* )( ::boost::numeric::ublas::c_vector< double, 3 > const & ))( &::AbstractActorGenerator< 2 >::SetEdgeColor )
-            , ( bp::arg("rColor") )
-            , "Set the edge color in RGB (e.g. (255,255,255) is white)\n@param rColor the edge color\n/" )    
+            , ( bp::arg("rColor") ) )    
         .def( 
             "SetEdgeSize"
             , (void ( ::AbstractActorGenerator<2>::* )( double ))( &::AbstractActorGenerator< 2 >::SetEdgeSize )
-            , ( bp::arg("size") )
-            , "Set the default edge size\n@param size the default edge size\n/" )    
+            , ( bp::arg("size") ) )    
         .def( 
             "SetPointColor"
             , (void ( ::AbstractActorGenerator<2>::* )( ::boost::numeric::ublas::c_vector< double, 3 > const & ))( &::AbstractActorGenerator< 2 >::SetPointColor )
-            , ( bp::arg("rColor") )
-            , "Set the point color in RGB (e.g. (255,255,255) is white)\n@param rColor the point color\n/" )    
+            , ( bp::arg("rColor") ) )    
         .def( 
             "SetPointSize"
             , (void ( ::AbstractActorGenerator<2>::* )( double ))( &::AbstractActorGenerator< 2 >::SetPointSize )
-            , ( bp::arg("size") )
-            , "Set the default point size\n@param size the default point size\n/" )    
+            , ( bp::arg("size") ) )    
         .def( 
             "SetShowEdges"
             , (void ( ::AbstractActorGenerator<2>::* )( bool ))( &::AbstractActorGenerator< 2 >::SetShowEdges )
-            , ( bp::arg("show") )
-            , "Set whether to show the edges\n@param show whether to show the edges\n/" )    
+            , ( bp::arg("show") ) )    
         .def( 
             "SetShowPoints"
             , (void ( ::AbstractActorGenerator<2>::* )( bool ))( &::AbstractActorGenerator< 2 >::SetShowPoints )
-            , ( bp::arg("show") )
-            , "Set whether to show the points\n@param show whether to show the points\n/" )    
+            , ( bp::arg("show") ) )    
+        .def( 
+            "SetShowScaleBar"
+            , (void ( ::AbstractActorGenerator<2>::* )( double ))( &::AbstractActorGenerator< 2 >::SetShowScaleBar )
+            , ( bp::arg("show") ) )    
         .def( 
             "SetShowVolume"
             , (void ( ::AbstractActorGenerator<2>::* )( bool ))( &::AbstractActorGenerator< 2 >::SetShowVolume )
-            , ( bp::arg("show") )
-            , "Set whether to show the volume\n@param show whether to show the volumes\n/" )    
+            , ( bp::arg("show") ) )    
         .def( 
             "SetVolumeColor"
             , (void ( ::AbstractActorGenerator<2>::* )( ::boost::numeric::ublas::c_vector< double, 3 > const & ))( &::AbstractActorGenerator< 2 >::SetVolumeColor )
-            , ( bp::arg("rColor") )
-            , "Set the volume color in RGB (e.g. (255,255,255) is white)\n@param rColor the volume color\n/" )    
+            , ( bp::arg("rColor") ) )    
         .def( 
             "SetVolumeOpacity"
             , (void ( ::AbstractActorGenerator<2>::* )( double ))( &::AbstractActorGenerator< 2 >::SetVolumeOpacity )
-            , ( bp::arg("opacity") )
-            , "Set the opacity for the volume\n@param opacity the opacity for the volume\n/" );
+            , ( bp::arg("opacity") ) );
 
-    bp::class_< AbstractActorGenerator_less__3__greater__wrapper, boost::noncopyable >( "AbstractActorGenerator3", "", bp::init< >("Constructor\n/") )    
+    bp::class_< AbstractActorGenerator_less__3__greater__wrapper, boost::noncopyable >( "AbstractActorGenerator3", bp::init< >() )    
         .def( 
             "AddActor"
             , bp::pure_virtual( (void ( ::AbstractActorGenerator<3>::* )( ::vtkSmartPointer< vtkRenderer > ))(&::AbstractActorGenerator< 3 >::AddActor) )
-            , ( bp::arg("pRenderer") )
-            , "Add the Abstract actor to the renderer\n@param pRenderer the current renderer\n/" )    
+            , ( bp::arg("pRenderer") ) )    
         .def( 
             "GetColorTransferFunction"
-            , (::vtkSmartPointer< vtkColorTransferFunction > ( ::AbstractActorGenerator<3>::* )(  ))( &::AbstractActorGenerator< 3 >::GetColorTransferFunction )
-            , "@return return the color transfer function\n/" )    
+            , (::vtkSmartPointer< vtkColorTransferFunction > ( ::AbstractActorGenerator<3>::* )(  ))( &::AbstractActorGenerator< 3 >::GetColorTransferFunction ) )    
         .def( 
             "GetDiscreteColorTransferFunction"
-            , (::vtkSmartPointer< vtkColorTransferFunction > ( ::AbstractActorGenerator<3>::* )(  ))( &::AbstractActorGenerator< 3 >::GetDiscreteColorTransferFunction )
-            , "@return return the discrete color transfer function\n/" )    
+            , (::vtkSmartPointer< vtkColorTransferFunction > ( ::AbstractActorGenerator<3>::* )(  ))( &::AbstractActorGenerator< 3 >::GetDiscreteColorTransferFunction ) )    
+        .def( 
+            "GetScaleBar"
+            , (::vtkSmartPointer< vtkScalarBarActor > ( ::AbstractActorGenerator<3>::* )(  ))( &::AbstractActorGenerator< 3 >::GetScaleBar ) )    
         .def( 
             "SetDataLabel"
             , (void ( ::AbstractActorGenerator<3>::* )( ::std::string const & ))( &::AbstractActorGenerator< 3 >::SetDataLabel )
-            , ( bp::arg("rLabel") )
-            , "Set the label for contouring data\n@param rLabel the label for contouring data\n/" )    
+            , ( bp::arg("rLabel") ) )    
         .def( 
             "SetEdgeColor"
             , (void ( ::AbstractActorGenerator<3>::* )( ::boost::numeric::ublas::c_vector< double, 3 > const & ))( &::AbstractActorGenerator< 3 >::SetEdgeColor )
-            , ( bp::arg("rColor") )
-            , "Set the edge color in RGB (e.g. (255,255,255) is white)\n@param rColor the edge color\n/" )    
+            , ( bp::arg("rColor") ) )    
         .def( 
             "SetEdgeSize"
             , (void ( ::AbstractActorGenerator<3>::* )( double ))( &::AbstractActorGenerator< 3 >::SetEdgeSize )
-            , ( bp::arg("size") )
-            , "Set the default edge size\n@param size the default edge size\n/" )    
+            , ( bp::arg("size") ) )    
         .def( 
             "SetPointColor"
             , (void ( ::AbstractActorGenerator<3>::* )( ::boost::numeric::ublas::c_vector< double, 3 > const & ))( &::AbstractActorGenerator< 3 >::SetPointColor )
-            , ( bp::arg("rColor") )
-            , "Set the point color in RGB (e.g. (255,255,255) is white)\n@param rColor the point color\n/" )    
+            , ( bp::arg("rColor") ) )    
         .def( 
             "SetPointSize"
             , (void ( ::AbstractActorGenerator<3>::* )( double ))( &::AbstractActorGenerator< 3 >::SetPointSize )
-            , ( bp::arg("size") )
-            , "Set the default point size\n@param size the default point size\n/" )    
+            , ( bp::arg("size") ) )    
         .def( 
             "SetShowEdges"
             , (void ( ::AbstractActorGenerator<3>::* )( bool ))( &::AbstractActorGenerator< 3 >::SetShowEdges )
-            , ( bp::arg("show") )
-            , "Set whether to show the edges\n@param show whether to show the edges\n/" )    
+            , ( bp::arg("show") ) )    
         .def( 
             "SetShowPoints"
             , (void ( ::AbstractActorGenerator<3>::* )( bool ))( &::AbstractActorGenerator< 3 >::SetShowPoints )
-            , ( bp::arg("show") )
-            , "Set whether to show the points\n@param show whether to show the points\n/" )    
+            , ( bp::arg("show") ) )    
+        .def( 
+            "SetShowScaleBar"
+            , (void ( ::AbstractActorGenerator<3>::* )( double ))( &::AbstractActorGenerator< 3 >::SetShowScaleBar )
+            , ( bp::arg("show") ) )    
         .def( 
             "SetShowVolume"
             , (void ( ::AbstractActorGenerator<3>::* )( bool ))( &::AbstractActorGenerator< 3 >::SetShowVolume )
-            , ( bp::arg("show") )
-            , "Set whether to show the volume\n@param show whether to show the volumes\n/" )    
+            , ( bp::arg("show") ) )    
         .def( 
             "SetVolumeColor"
             , (void ( ::AbstractActorGenerator<3>::* )( ::boost::numeric::ublas::c_vector< double, 3 > const & ))( &::AbstractActorGenerator< 3 >::SetVolumeColor )
-            , ( bp::arg("rColor") )
-            , "Set the volume color in RGB (e.g. (255,255,255) is white)\n@param rColor the volume color\n/" )    
+            , ( bp::arg("rColor") ) )    
         .def( 
             "SetVolumeOpacity"
             , (void ( ::AbstractActorGenerator<3>::* )( double ))( &::AbstractActorGenerator< 3 >::SetVolumeOpacity )
-            , ( bp::arg("opacity") )
-            , "Set the opacity for the volume\n@param opacity the opacity for the volume\n/" );
+            , ( bp::arg("opacity") ) );
+
+    bp::class_< AbstractMicrovesselModifier_less__2__greater__wrapper, boost::noncopyable >( "AbstractMicrovesselModifier2", bp::init< >() )    
+        .def( 
+            "AddDiscreteContinuumSolver"
+            , (void ( ::AbstractMicrovesselModifier<2>::* )( ::boost::shared_ptr< AbstractDiscreteContinuumSolver< 2 > > ))( &::AbstractMicrovesselModifier< 2 >::AddDiscreteContinuumSolver )
+            , ( bp::arg("pDiscreteContinuumSolver") ) )    
+        .def( 
+            "GetCellPopulation"
+            , (::boost::shared_ptr< AbstractCellPopulation< 2, 2 > > ( ::AbstractMicrovesselModifier<2>::* )(  ))( &::AbstractMicrovesselModifier< 2 >::GetCellPopulation ) )    
+        .def( 
+            "GetDiscreteContinuumSolver"
+            , (::boost::shared_ptr< AbstractDiscreteContinuumSolver< 2 > > ( ::AbstractMicrovesselModifier<2>::* )( unsigned int ))( &::AbstractMicrovesselModifier< 2 >::GetDiscreteContinuumSolver )
+            , ( bp::arg("index") ) )    
+        .def( 
+            "GetNumberOfDiscreteContinuumSolvers"
+            , (unsigned int ( ::AbstractMicrovesselModifier<2>::* )(  ))( &::AbstractMicrovesselModifier< 2 >::GetNumberOfDiscreteContinuumSolvers ) )    
+        .def( 
+            "GetVesselNetwork"
+            , (::boost::shared_ptr< VesselNetwork< 2 > > ( ::AbstractMicrovesselModifier<2>::* )(  ))( &::AbstractMicrovesselModifier< 2 >::GetVesselNetwork ) )    
+        .def( 
+            "SetCellPopulation"
+            , (void ( ::AbstractMicrovesselModifier<2>::* )( ::boost::shared_ptr< AbstractCellPopulation< 2, 2 > > ))( &::AbstractMicrovesselModifier< 2 >::SetCellPopulation )
+            , ( bp::arg("pCellPopulation") ) )    
+        .def( 
+            "SetVesselNetwork"
+            , (void ( ::AbstractMicrovesselModifier<2>::* )( ::boost::shared_ptr< VesselNetwork< 2 > > ))( &::AbstractMicrovesselModifier< 2 >::SetVesselNetwork )
+            , ( bp::arg("pNetwork") ) )    
+        .def( 
+            "SetupSolve"
+            , bp::pure_virtual( (void ( ::AbstractMicrovesselModifier<2>::* )( ::std::string ))(&::AbstractMicrovesselModifier< 2 >::SetupSolve) )
+            , ( bp::arg("outputDirectory") ) )    
+        .def( 
+            "UpdateAtEndOfTimeStep"
+            , bp::pure_virtual( (void ( ::AbstractMicrovesselModifier<2>::* )(  ))(&::AbstractMicrovesselModifier< 2 >::UpdateAtEndOfTimeStep) ) );
+
+    bp::class_< AbstractMicrovesselModifier_less__3__greater__wrapper, boost::noncopyable >( "AbstractMicrovesselModifier3", bp::init< >() )    
+        .def( 
+            "AddDiscreteContinuumSolver"
+            , (void ( ::AbstractMicrovesselModifier<3>::* )( ::boost::shared_ptr< AbstractDiscreteContinuumSolver< 3 > > ))( &::AbstractMicrovesselModifier< 3 >::AddDiscreteContinuumSolver )
+            , ( bp::arg("pDiscreteContinuumSolver") ) )    
+        .def( 
+            "GetCellPopulation"
+            , (::boost::shared_ptr< AbstractCellPopulation< 3, 3 > > ( ::AbstractMicrovesselModifier<3>::* )(  ))( &::AbstractMicrovesselModifier< 3 >::GetCellPopulation ) )    
+        .def( 
+            "GetDiscreteContinuumSolver"
+            , (::boost::shared_ptr< AbstractDiscreteContinuumSolver< 3 > > ( ::AbstractMicrovesselModifier<3>::* )( unsigned int ))( &::AbstractMicrovesselModifier< 3 >::GetDiscreteContinuumSolver )
+            , ( bp::arg("index") ) )    
+        .def( 
+            "GetNumberOfDiscreteContinuumSolvers"
+            , (unsigned int ( ::AbstractMicrovesselModifier<3>::* )(  ))( &::AbstractMicrovesselModifier< 3 >::GetNumberOfDiscreteContinuumSolvers ) )    
+        .def( 
+            "GetVesselNetwork"
+            , (::boost::shared_ptr< VesselNetwork< 3 > > ( ::AbstractMicrovesselModifier<3>::* )(  ))( &::AbstractMicrovesselModifier< 3 >::GetVesselNetwork ) )    
+        .def( 
+            "SetCellPopulation"
+            , (void ( ::AbstractMicrovesselModifier<3>::* )( ::boost::shared_ptr< AbstractCellPopulation< 3, 3 > > ))( &::AbstractMicrovesselModifier< 3 >::SetCellPopulation )
+            , ( bp::arg("pCellPopulation") ) )    
+        .def( 
+            "SetVesselNetwork"
+            , (void ( ::AbstractMicrovesselModifier<3>::* )( ::boost::shared_ptr< VesselNetwork< 3 > > ))( &::AbstractMicrovesselModifier< 3 >::SetVesselNetwork )
+            , ( bp::arg("pNetwork") ) )    
+        .def( 
+            "SetupSolve"
+            , bp::pure_virtual( (void ( ::AbstractMicrovesselModifier<3>::* )( ::std::string ))(&::AbstractMicrovesselModifier< 3 >::SetupSolve) )
+            , ( bp::arg("outputDirectory") ) )    
+        .def( 
+            "UpdateAtEndOfTimeStep"
+            , bp::pure_virtual( (void ( ::AbstractMicrovesselModifier<3>::* )(  ))(&::AbstractMicrovesselModifier< 3 >::UpdateAtEndOfTimeStep) ) );
 
     { //::CellPopulationActorGenerator< 2 >
         typedef bp::class_< CellPopulationActorGenerator_less__2__greater__wrapper, bp::bases< AbstractActorGenerator< 2 > > > CellPopulationActorGenerator2_exposer_t;
-        CellPopulationActorGenerator2_exposer_t CellPopulationActorGenerator2_exposer = CellPopulationActorGenerator2_exposer_t( "CellPopulationActorGenerator2", "", bp::init< >("Constructor\n/") );
+        CellPopulationActorGenerator2_exposer_t CellPopulationActorGenerator2_exposer = CellPopulationActorGenerator2_exposer_t( "CellPopulationActorGenerator2", bp::init< >() );
         bp::scope CellPopulationActorGenerator2_scope( CellPopulationActorGenerator2_exposer );
         { //::CellPopulationActorGenerator< 2 >::AddActor
         
@@ -494,8 +676,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator2_exposer.def( 
                 "AddCaBasedCellPopulationActor"
                 , AddCaBasedCellPopulationActor_function_type( &::CellPopulationActorGenerator< 2 >::AddCaBasedCellPopulationActor )
-                , ( bp::arg("pRenderer") )
-                , "Specialized class for adding Ca based population\n@param pRenderer the current renderer\n/" );
+                , ( bp::arg("pRenderer") ) );
         
         }
         { //::CellPopulationActorGenerator< 2 >::AddMeshBasedCellPopulationActor
@@ -506,8 +687,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator2_exposer.def( 
                 "AddMeshBasedCellPopulationActor"
                 , AddMeshBasedCellPopulationActor_function_type( &::CellPopulationActorGenerator< 2 >::AddMeshBasedCellPopulationActor )
-                , ( bp::arg("pRenderer") )
-                , "Specialized class for adding Mesh based population\n@param pRenderer the current renderer\n/" );
+                , ( bp::arg("pRenderer") ) );
         
         }
         { //::CellPopulationActorGenerator< 2 >::AddPottsBasedCellPopulationActor
@@ -518,8 +698,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator2_exposer.def( 
                 "AddPottsBasedCellPopulationActor"
                 , AddPottsBasedCellPopulationActor_function_type( &::CellPopulationActorGenerator< 2 >::AddPottsBasedCellPopulationActor )
-                , ( bp::arg("pRenderer") )
-                , "Specialized class for adding Potts based population\n@param pRenderer the current renderer\n/" );
+                , ( bp::arg("pRenderer") ) );
         
         }
         { //::CellPopulationActorGenerator< 2 >::AddVertexBasedCellPopulationActor
@@ -530,8 +709,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator2_exposer.def( 
                 "AddVertexBasedCellPopulationActor"
                 , AddVertexBasedCellPopulationActor_function_type( &::CellPopulationActorGenerator< 2 >::AddVertexBasedCellPopulationActor )
-                , ( bp::arg("pRenderer") )
-                , "Specialized class for adding Mesh based population\n@param pRenderer the current renderer\n/" );
+                , ( bp::arg("pRenderer") ) );
         
         }
         { //::CellPopulationActorGenerator< 2 >::SetCellPopulation
@@ -542,8 +720,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator2_exposer.def( 
                 "SetCellPopulation"
                 , SetCellPopulation_function_type( &::CellPopulationActorGenerator< 2 >::SetCellPopulation )
-                , ( bp::arg("pCellPopulation") )
-                , "Set the CellPopulation\n@param pCellPopulation the CellPopulation to render\n/" );
+                , ( bp::arg("pCellPopulation") ) );
         
         }
         { //::CellPopulationActorGenerator< 2 >::SetColorByCellData
@@ -554,8 +731,29 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator2_exposer.def( 
                 "SetColorByCellData"
                 , SetColorByCellData_function_type( &::CellPopulationActorGenerator< 2 >::SetColorByCellData )
-                , ( bp::arg("colorByCellData") )
-                , "@param colorByCellData color cells by data\n/" );
+                , ( bp::arg("colorByCellData") ) );
+        
+        }
+        { //::CellPopulationActorGenerator< 2 >::SetColorByCellLabel
+        
+            typedef CellPopulationActorGenerator< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetColorByCellLabel_function_type)( bool ) ;
+            
+            CellPopulationActorGenerator2_exposer.def( 
+                "SetColorByCellLabel"
+                , SetColorByCellLabel_function_type( &::CellPopulationActorGenerator< 2 >::SetColorByCellLabel )
+                , ( bp::arg("colorByCellLabel") ) );
+        
+        }
+        { //::CellPopulationActorGenerator< 2 >::SetColorByCellMutationState
+        
+            typedef CellPopulationActorGenerator< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetColorByCellMutationState_function_type)( bool ) ;
+            
+            CellPopulationActorGenerator2_exposer.def( 
+                "SetColorByCellMutationState"
+                , SetColorByCellMutationState_function_type( &::CellPopulationActorGenerator< 2 >::SetColorByCellMutationState )
+                , ( bp::arg("colorByCellMutationState") ) );
         
         }
         { //::CellPopulationActorGenerator< 2 >::SetColorByCellType
@@ -566,8 +764,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator2_exposer.def( 
                 "SetColorByCellType"
                 , SetColorByCellType_function_type( &::CellPopulationActorGenerator< 2 >::SetColorByCellType )
-                , ( bp::arg("colorByCellType") )
-                , "@param colorByCellType color cells by type\n/" );
+                , ( bp::arg("colorByCellType") ) );
         
         }
         { //::CellPopulationActorGenerator< 2 >::SetColorByUserDefined
@@ -578,8 +775,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator2_exposer.def( 
                 "SetColorByUserDefined"
                 , SetColorByUserDefined_function_type( &::CellPopulationActorGenerator< 2 >::SetColorByUserDefined )
-                , ( bp::arg("colorByCellUserDefined") )
-                , "@param colorByCellType color cells by the user defined point color\n/" );
+                , ( bp::arg("colorByCellUserDefined") ) );
         
         }
         { //::CellPopulationActorGenerator< 2 >::SetShowCellCentres
@@ -590,8 +786,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator2_exposer.def( 
                 "SetShowCellCentres"
                 , SetShowCellCentres_function_type( &::CellPopulationActorGenerator< 2 >::SetShowCellCentres )
-                , ( bp::arg("showCentres") )
-                , "@param showCentres show cell centres\n/" );
+                , ( bp::arg("showCentres") ) );
         
         }
         { //::CellPopulationActorGenerator< 2 >::SetShowMutableMeshEdges
@@ -602,8 +797,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator2_exposer.def( 
                 "SetShowMutableMeshEdges"
                 , SetShowMutableMeshEdges_function_type( &::CellPopulationActorGenerator< 2 >::SetShowMutableMeshEdges )
-                , ( bp::arg("showEdges") )
-                , "@param showEdges show the mutable mesh\n/" );
+                , ( bp::arg("showEdges") ) );
         
         }
         { //::CellPopulationActorGenerator< 2 >::SetShowPottsMeshEdges
@@ -614,8 +808,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator2_exposer.def( 
                 "SetShowPottsMeshEdges"
                 , SetShowPottsMeshEdges_function_type( &::CellPopulationActorGenerator< 2 >::SetShowPottsMeshEdges )
-                , ( bp::arg("showEdges") )
-                , "@param showEdges show the potts mesh\n/" );
+                , ( bp::arg("showEdges") ) );
         
         }
         { //::CellPopulationActorGenerator< 2 >::SetShowPottsMeshOutlines
@@ -626,8 +819,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator2_exposer.def( 
                 "SetShowPottsMeshOutlines"
                 , SetShowPottsMeshOutlines_function_type( &::CellPopulationActorGenerator< 2 >::SetShowPottsMeshOutlines )
-                , ( bp::arg("showOutlines") )
-                , "@param showOutlines show the outlines of Potts cells\n/" );
+                , ( bp::arg("showOutlines") ) );
         
         }
         { //::CellPopulationActorGenerator< 2 >::SetShowVoronoiMeshEdges
@@ -638,8 +830,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator2_exposer.def( 
                 "SetShowVoronoiMeshEdges"
                 , SetShowVoronoiMeshEdges_function_type( &::CellPopulationActorGenerator< 2 >::SetShowVoronoiMeshEdges )
-                , ( bp::arg("showEdges") )
-                , "@param showEdges show the voronoi mesh\n/" );
+                , ( bp::arg("showEdges") ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< CellPopulationActorGenerator<2> > >();
@@ -648,7 +839,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
 
     { //::CellPopulationActorGenerator< 3 >
         typedef bp::class_< CellPopulationActorGenerator_less__3__greater__wrapper, bp::bases< AbstractActorGenerator< 3 > > > CellPopulationActorGenerator3_exposer_t;
-        CellPopulationActorGenerator3_exposer_t CellPopulationActorGenerator3_exposer = CellPopulationActorGenerator3_exposer_t( "CellPopulationActorGenerator3", "", bp::init< >("Constructor\n/") );
+        CellPopulationActorGenerator3_exposer_t CellPopulationActorGenerator3_exposer = CellPopulationActorGenerator3_exposer_t( "CellPopulationActorGenerator3", bp::init< >() );
         bp::scope CellPopulationActorGenerator3_scope( CellPopulationActorGenerator3_exposer );
         { //::CellPopulationActorGenerator< 3 >::AddActor
         
@@ -671,8 +862,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator3_exposer.def( 
                 "AddCaBasedCellPopulationActor"
                 , AddCaBasedCellPopulationActor_function_type( &::CellPopulationActorGenerator< 3 >::AddCaBasedCellPopulationActor )
-                , ( bp::arg("pRenderer") )
-                , "Specialized class for adding Ca based population\n@param pRenderer the current renderer\n/" );
+                , ( bp::arg("pRenderer") ) );
         
         }
         { //::CellPopulationActorGenerator< 3 >::AddMeshBasedCellPopulationActor
@@ -683,8 +873,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator3_exposer.def( 
                 "AddMeshBasedCellPopulationActor"
                 , AddMeshBasedCellPopulationActor_function_type( &::CellPopulationActorGenerator< 3 >::AddMeshBasedCellPopulationActor )
-                , ( bp::arg("pRenderer") )
-                , "Specialized class for adding Mesh based population\n@param pRenderer the current renderer\n/" );
+                , ( bp::arg("pRenderer") ) );
         
         }
         { //::CellPopulationActorGenerator< 3 >::AddPottsBasedCellPopulationActor
@@ -695,8 +884,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator3_exposer.def( 
                 "AddPottsBasedCellPopulationActor"
                 , AddPottsBasedCellPopulationActor_function_type( &::CellPopulationActorGenerator< 3 >::AddPottsBasedCellPopulationActor )
-                , ( bp::arg("pRenderer") )
-                , "Specialized class for adding Potts based population\n@param pRenderer the current renderer\n/" );
+                , ( bp::arg("pRenderer") ) );
         
         }
         { //::CellPopulationActorGenerator< 3 >::AddVertexBasedCellPopulationActor
@@ -707,8 +895,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator3_exposer.def( 
                 "AddVertexBasedCellPopulationActor"
                 , AddVertexBasedCellPopulationActor_function_type( &::CellPopulationActorGenerator< 3 >::AddVertexBasedCellPopulationActor )
-                , ( bp::arg("pRenderer") )
-                , "Specialized class for adding Mesh based population\n@param pRenderer the current renderer\n/" );
+                , ( bp::arg("pRenderer") ) );
         
         }
         { //::CellPopulationActorGenerator< 3 >::SetCellPopulation
@@ -719,8 +906,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator3_exposer.def( 
                 "SetCellPopulation"
                 , SetCellPopulation_function_type( &::CellPopulationActorGenerator< 3 >::SetCellPopulation )
-                , ( bp::arg("pCellPopulation") )
-                , "Set the CellPopulation\n@param pCellPopulation the CellPopulation to render\n/" );
+                , ( bp::arg("pCellPopulation") ) );
         
         }
         { //::CellPopulationActorGenerator< 3 >::SetColorByCellData
@@ -731,8 +917,29 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator3_exposer.def( 
                 "SetColorByCellData"
                 , SetColorByCellData_function_type( &::CellPopulationActorGenerator< 3 >::SetColorByCellData )
-                , ( bp::arg("colorByCellData") )
-                , "@param colorByCellData color cells by data\n/" );
+                , ( bp::arg("colorByCellData") ) );
+        
+        }
+        { //::CellPopulationActorGenerator< 3 >::SetColorByCellLabel
+        
+            typedef CellPopulationActorGenerator< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetColorByCellLabel_function_type)( bool ) ;
+            
+            CellPopulationActorGenerator3_exposer.def( 
+                "SetColorByCellLabel"
+                , SetColorByCellLabel_function_type( &::CellPopulationActorGenerator< 3 >::SetColorByCellLabel )
+                , ( bp::arg("colorByCellLabel") ) );
+        
+        }
+        { //::CellPopulationActorGenerator< 3 >::SetColorByCellMutationState
+        
+            typedef CellPopulationActorGenerator< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetColorByCellMutationState_function_type)( bool ) ;
+            
+            CellPopulationActorGenerator3_exposer.def( 
+                "SetColorByCellMutationState"
+                , SetColorByCellMutationState_function_type( &::CellPopulationActorGenerator< 3 >::SetColorByCellMutationState )
+                , ( bp::arg("colorByCellMutationState") ) );
         
         }
         { //::CellPopulationActorGenerator< 3 >::SetColorByCellType
@@ -743,8 +950,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator3_exposer.def( 
                 "SetColorByCellType"
                 , SetColorByCellType_function_type( &::CellPopulationActorGenerator< 3 >::SetColorByCellType )
-                , ( bp::arg("colorByCellType") )
-                , "@param colorByCellType color cells by type\n/" );
+                , ( bp::arg("colorByCellType") ) );
         
         }
         { //::CellPopulationActorGenerator< 3 >::SetColorByUserDefined
@@ -755,8 +961,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator3_exposer.def( 
                 "SetColorByUserDefined"
                 , SetColorByUserDefined_function_type( &::CellPopulationActorGenerator< 3 >::SetColorByUserDefined )
-                , ( bp::arg("colorByCellUserDefined") )
-                , "@param colorByCellType color cells by the user defined point color\n/" );
+                , ( bp::arg("colorByCellUserDefined") ) );
         
         }
         { //::CellPopulationActorGenerator< 3 >::SetShowCellCentres
@@ -767,8 +972,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator3_exposer.def( 
                 "SetShowCellCentres"
                 , SetShowCellCentres_function_type( &::CellPopulationActorGenerator< 3 >::SetShowCellCentres )
-                , ( bp::arg("showCentres") )
-                , "@param showCentres show cell centres\n/" );
+                , ( bp::arg("showCentres") ) );
         
         }
         { //::CellPopulationActorGenerator< 3 >::SetShowMutableMeshEdges
@@ -779,8 +983,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator3_exposer.def( 
                 "SetShowMutableMeshEdges"
                 , SetShowMutableMeshEdges_function_type( &::CellPopulationActorGenerator< 3 >::SetShowMutableMeshEdges )
-                , ( bp::arg("showEdges") )
-                , "@param showEdges show the mutable mesh\n/" );
+                , ( bp::arg("showEdges") ) );
         
         }
         { //::CellPopulationActorGenerator< 3 >::SetShowPottsMeshEdges
@@ -791,8 +994,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator3_exposer.def( 
                 "SetShowPottsMeshEdges"
                 , SetShowPottsMeshEdges_function_type( &::CellPopulationActorGenerator< 3 >::SetShowPottsMeshEdges )
-                , ( bp::arg("showEdges") )
-                , "@param showEdges show the potts mesh\n/" );
+                , ( bp::arg("showEdges") ) );
         
         }
         { //::CellPopulationActorGenerator< 3 >::SetShowPottsMeshOutlines
@@ -803,8 +1005,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator3_exposer.def( 
                 "SetShowPottsMeshOutlines"
                 , SetShowPottsMeshOutlines_function_type( &::CellPopulationActorGenerator< 3 >::SetShowPottsMeshOutlines )
-                , ( bp::arg("showOutlines") )
-                , "@param showOutlines show the outlines of Potts cells\n/" );
+                , ( bp::arg("showOutlines") ) );
         
         }
         { //::CellPopulationActorGenerator< 3 >::SetShowVoronoiMeshEdges
@@ -815,8 +1016,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             CellPopulationActorGenerator3_exposer.def( 
                 "SetShowVoronoiMeshEdges"
                 , SetShowVoronoiMeshEdges_function_type( &::CellPopulationActorGenerator< 3 >::SetShowVoronoiMeshEdges )
-                , ( bp::arg("showEdges") )
-                , "@param showEdges show the voronoi mesh\n/" );
+                , ( bp::arg("showEdges") ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< CellPopulationActorGenerator<3> > >();
@@ -825,7 +1025,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
 
     { //::DiscreteContinuumMeshActorGenerator< 2 >
         typedef bp::class_< DiscreteContinuumMeshActorGenerator_less__2__greater__wrapper, bp::bases< AbstractActorGenerator< 2 > > > DiscreteContinuumMeshActorGenerator2_exposer_t;
-        DiscreteContinuumMeshActorGenerator2_exposer_t DiscreteContinuumMeshActorGenerator2_exposer = DiscreteContinuumMeshActorGenerator2_exposer_t( "DiscreteContinuumMeshActorGenerator2", "", bp::init< >("Constructor\n/") );
+        DiscreteContinuumMeshActorGenerator2_exposer_t DiscreteContinuumMeshActorGenerator2_exposer = DiscreteContinuumMeshActorGenerator2_exposer_t( "DiscreteContinuumMeshActorGenerator2", bp::init< >() );
         bp::scope DiscreteContinuumMeshActorGenerator2_scope( DiscreteContinuumMeshActorGenerator2_exposer );
         { //::DiscreteContinuumMeshActorGenerator< 2 >::AddActor
         
@@ -848,8 +1048,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             DiscreteContinuumMeshActorGenerator2_exposer.def( 
                 "SetDiscreteContinuumMesh"
                 , SetDiscreteContinuumMesh_function_type( &::DiscreteContinuumMeshActorGenerator< 2 >::SetDiscreteContinuumMesh )
-                , ( bp::arg("pDiscreteContinuumMesh") )
-                , "Set the DiscreteContinuumMesh\n@param pDiscreteContinuumMesh the DiscreteContinuumMesh to render\n/" );
+                , ( bp::arg("pDiscreteContinuumMesh") ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< DiscreteContinuumMeshActorGenerator<2> > >();
@@ -858,7 +1057,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
 
     { //::DiscreteContinuumMeshActorGenerator< 3 >
         typedef bp::class_< DiscreteContinuumMeshActorGenerator_less__3__greater__wrapper, bp::bases< AbstractActorGenerator< 3 > > > DiscreteContinuumMeshActorGenerator3_exposer_t;
-        DiscreteContinuumMeshActorGenerator3_exposer_t DiscreteContinuumMeshActorGenerator3_exposer = DiscreteContinuumMeshActorGenerator3_exposer_t( "DiscreteContinuumMeshActorGenerator3", "", bp::init< >("Constructor\n/") );
+        DiscreteContinuumMeshActorGenerator3_exposer_t DiscreteContinuumMeshActorGenerator3_exposer = DiscreteContinuumMeshActorGenerator3_exposer_t( "DiscreteContinuumMeshActorGenerator3", bp::init< >() );
         bp::scope DiscreteContinuumMeshActorGenerator3_scope( DiscreteContinuumMeshActorGenerator3_exposer );
         { //::DiscreteContinuumMeshActorGenerator< 3 >::AddActor
         
@@ -881,185 +1080,450 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             DiscreteContinuumMeshActorGenerator3_exposer.def( 
                 "SetDiscreteContinuumMesh"
                 , SetDiscreteContinuumMesh_function_type( &::DiscreteContinuumMeshActorGenerator< 3 >::SetDiscreteContinuumMesh )
-                , ( bp::arg("pDiscreteContinuumMesh") )
-                , "Set the DiscreteContinuumMesh\n@param pDiscreteContinuumMesh the DiscreteContinuumMesh to render\n/" );
+                , ( bp::arg("pDiscreteContinuumMesh") ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< DiscreteContinuumMeshActorGenerator<3> > >();
         bp::implicitly_convertible< boost::shared_ptr< DiscreteContinuumMeshActorGenerator< 3 > >, boost::shared_ptr< AbstractActorGenerator< 3 > > >();
     }
 
-    bp::class_< MicrovesselVtkScene< 2 > >( "MicrovesselVtkScene2", "", bp::init< >("Constructor\n/") )    
-        .def( 
-            "End"
-            , (void ( ::MicrovesselVtkScene<2>::* )(  ))( &::MicrovesselVtkScene< 2 >::End )
-            , "Shut down the scene and close the animation\n/" )    
-        .def( 
-            "GetCellPopulationActorGenerator"
-            , (::boost::shared_ptr< CellPopulationActorGenerator< 2 > > ( ::MicrovesselVtkScene<2>::* )(  ))( &::MicrovesselVtkScene< 2 >::GetCellPopulationActorGenerator )
-            , "" )    
-        .def( 
-            "GetDiscreteContinuumMeshActorGenerator"
-            , (::boost::shared_ptr< DiscreteContinuumMeshActorGenerator< 2 > > ( ::MicrovesselVtkScene<2>::* )(  ))( &::MicrovesselVtkScene< 2 >::GetDiscreteContinuumMeshActorGenerator )
-            , "" )    
-        .def( 
-            "GetPartActorGenerator"
-            , (::boost::shared_ptr< PartActorGenerator< 2 > > ( ::MicrovesselVtkScene<2>::* )(  ))( &::MicrovesselVtkScene< 2 >::GetPartActorGenerator )
-            , "" )    
-        .def( 
-            "GetRegularGridActorGenerator"
-            , (::boost::shared_ptr< RegularGridActorGenerator< 2 > > ( ::MicrovesselVtkScene<2>::* )(  ))( &::MicrovesselVtkScene< 2 >::GetRegularGridActorGenerator )
-            , "" )    
-        .def( 
-            "GetVesselNetworkActorGenerator"
-            , (::boost::shared_ptr< VesselNetworkActorGenerator< 2 > > ( ::MicrovesselVtkScene<2>::* )(  ))( &::MicrovesselVtkScene< 2 >::GetVesselNetworkActorGenerator )
-            , "" )    
-        .def( 
-            "ResetRenderer"
-            , (void ( ::MicrovesselVtkScene<2>::* )( unsigned int ))( &::MicrovesselVtkScene< 2 >::ResetRenderer )
-            , ( bp::arg("timeStep")=(unsigned int)(0) )
-            , "Update the renderer, this will update the population actor and write output images\n@param timeStep the curren time step, for annotating output files\n/" )    
-        .def( 
-            "SetCellPopulation"
-            , (void ( ::MicrovesselVtkScene<2>::* )( ::boost::shared_ptr< AbstractCellPopulation< 2, 2 > > ))( &::MicrovesselVtkScene< 2 >::SetCellPopulation )
-            , ( bp::arg("pCellPopulation") )
-            , "Set the cell population\n@param pCellPopulation the cell population for rendering\n/" )    
-        .def( 
-            "SetIsInteractive"
-            , (void ( ::MicrovesselVtkScene<2>::* )( bool ))( &::MicrovesselVtkScene< 2 >::SetIsInteractive )
-            , ( bp::arg("isInteractive") )
-            , "" )    
-        .def( 
-            "SetMesh"
-            , (void ( ::MicrovesselVtkScene<2>::* )( ::boost::shared_ptr< DiscreteContinuumMesh< 2, 2 > > ))( &::MicrovesselVtkScene< 2 >::SetMesh )
-            , ( bp::arg("pMesh") )
-            , "" )    
-        .def( 
-            "SetOutputFilePath"
-            , (void ( ::MicrovesselVtkScene<2>::* )( ::std::string const & ))( &::MicrovesselVtkScene< 2 >::SetOutputFilePath )
-            , ( bp::arg("rPath") )
-            , "Set the path for output\n@param rPath the path for output\n/" )    
-        .def( 
-            "SetPart"
-            , (void ( ::MicrovesselVtkScene<2>::* )( ::boost::shared_ptr< Part< 2 > > ))( &::MicrovesselVtkScene< 2 >::SetPart )
-            , ( bp::arg("pPart") )
-            , "" )    
-        .def( 
-            "SetRegularGrid"
-            , (void ( ::MicrovesselVtkScene<2>::* )( ::boost::shared_ptr< RegularGrid< 2 > > ))( &::MicrovesselVtkScene< 2 >::SetRegularGrid )
-            , ( bp::arg("pGrid") )
-            , "" )    
-        .def( 
-            "SetSaveAsAnimation"
-            , (void ( ::MicrovesselVtkScene<2>::* )( bool ))( &::MicrovesselVtkScene< 2 >::SetSaveAsAnimation )
-            , ( bp::arg("saveAsAnimation") )
-            , "" )    
-        .def( 
-            "SetSaveAsImages"
-            , (void ( ::MicrovesselVtkScene<2>::* )( bool ))( &::MicrovesselVtkScene< 2 >::SetSaveAsImages )
-            , ( bp::arg("saveAsImages") )
-            , "" )    
-        .def( 
-            "SetVesselNetwork"
-            , (void ( ::MicrovesselVtkScene<2>::* )( ::boost::shared_ptr< VesselNetwork< 2 > > ))( &::MicrovesselVtkScene< 2 >::SetVesselNetwork )
-            , ( bp::arg("pNetwork") )
-            , "" )    
-        .def( 
-            "Start"
-            , (void ( ::MicrovesselVtkScene<2>::* )(  ))( &::MicrovesselVtkScene< 2 >::Start )
-            , "Render the scene\n/" )    
-        .def( 
-            "StartInteractiveEventHandler"
-            , (void ( ::MicrovesselVtkScene<2>::* )(  ))( &::MicrovesselVtkScene< 2 >::StartInteractiveEventHandler )
-            , "" );
+    { //::MicrovesselVtkScene< 2 >
+        typedef bp::class_< MicrovesselVtkScene< 2 > > MicrovesselVtkScene2_exposer_t;
+        MicrovesselVtkScene2_exposer_t MicrovesselVtkScene2_exposer = MicrovesselVtkScene2_exposer_t( "MicrovesselVtkScene2", bp::init< >() );
+        bp::scope MicrovesselVtkScene2_scope( MicrovesselVtkScene2_exposer );
+        { //::MicrovesselVtkScene< 2 >::End
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef void ( exported_class_t::*End_function_type)(  ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "End"
+                , End_function_type( &::MicrovesselVtkScene< 2 >::End ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::GetCellPopulationActorGenerator
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< CellPopulationActorGenerator< 2 > > ( exported_class_t::*GetCellPopulationActorGenerator_function_type)(  ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "GetCellPopulationActorGenerator"
+                , GetCellPopulationActorGenerator_function_type( &::MicrovesselVtkScene< 2 >::GetCellPopulationActorGenerator ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::GetDiscreteContinuumMeshActorGenerator
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< DiscreteContinuumMeshActorGenerator< 2 > > ( exported_class_t::*GetDiscreteContinuumMeshActorGenerator_function_type)(  ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "GetDiscreteContinuumMeshActorGenerator"
+                , GetDiscreteContinuumMeshActorGenerator_function_type( &::MicrovesselVtkScene< 2 >::GetDiscreteContinuumMeshActorGenerator ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::GetPartActorGenerator
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< PartActorGenerator< 2 > > ( exported_class_t::*GetPartActorGenerator_function_type)(  ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "GetPartActorGenerator"
+                , GetPartActorGenerator_function_type( &::MicrovesselVtkScene< 2 >::GetPartActorGenerator ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::GetRegularGridActorGenerator
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< RegularGridActorGenerator< 2 > > ( exported_class_t::*GetRegularGridActorGenerator_function_type)(  ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "GetRegularGridActorGenerator"
+                , GetRegularGridActorGenerator_function_type( &::MicrovesselVtkScene< 2 >::GetRegularGridActorGenerator ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::GetRenderer
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef ::vtkSmartPointer< vtkRenderer > ( exported_class_t::*GetRenderer_function_type)(  ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "GetRenderer"
+                , GetRenderer_function_type( &::MicrovesselVtkScene< 2 >::GetRenderer ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::GetSceneAsCharBuffer
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef ::vtkSmartPointer< vtkUnsignedCharArray > ( exported_class_t::*GetSceneAsCharBuffer_function_type)(  ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "GetSceneAsCharBuffer"
+                , GetSceneAsCharBuffer_function_type( &::MicrovesselVtkScene< 2 >::GetSceneAsCharBuffer ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::GetVesselNetworkActorGenerator
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< VesselNetworkActorGenerator< 2 > > ( exported_class_t::*GetVesselNetworkActorGenerator_function_type)(  ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "GetVesselNetworkActorGenerator"
+                , GetVesselNetworkActorGenerator_function_type( &::MicrovesselVtkScene< 2 >::GetVesselNetworkActorGenerator ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::ResetRenderer
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef void ( exported_class_t::*ResetRenderer_function_type)( unsigned int ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "ResetRenderer"
+                , ResetRenderer_function_type( &::MicrovesselVtkScene< 2 >::ResetRenderer )
+                , ( bp::arg("timeStep")=(unsigned int)(0) ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::SetCellPopulation
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetCellPopulation_function_type)( ::boost::shared_ptr< AbstractCellPopulation< 2, 2 > > ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "SetCellPopulation"
+                , SetCellPopulation_function_type( &::MicrovesselVtkScene< 2 >::SetCellPopulation )
+                , ( bp::arg("pCellPopulation") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::SetIsInteractive
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetIsInteractive_function_type)( bool ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "SetIsInteractive"
+                , SetIsInteractive_function_type( &::MicrovesselVtkScene< 2 >::SetIsInteractive )
+                , ( bp::arg("isInteractive") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::SetMesh
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetMesh_function_type)( ::boost::shared_ptr< DiscreteContinuumMesh< 2, 2 > > ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "SetMesh"
+                , SetMesh_function_type( &::MicrovesselVtkScene< 2 >::SetMesh )
+                , ( bp::arg("pMesh") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::SetOutputFilePath
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetOutputFilePath_function_type)( ::std::string const & ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "SetOutputFilePath"
+                , SetOutputFilePath_function_type( &::MicrovesselVtkScene< 2 >::SetOutputFilePath )
+                , ( bp::arg("rPath") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::SetPart
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetPart_function_type)( ::boost::shared_ptr< Part< 2 > > ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "SetPart"
+                , SetPart_function_type( &::MicrovesselVtkScene< 2 >::SetPart )
+                , ( bp::arg("pPart") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::SetRegularGrid
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetRegularGrid_function_type)( ::boost::shared_ptr< RegularGrid< 2 > > ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "SetRegularGrid"
+                , SetRegularGrid_function_type( &::MicrovesselVtkScene< 2 >::SetRegularGrid )
+                , ( bp::arg("pGrid") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::SetSaveAsAnimation
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetSaveAsAnimation_function_type)( bool ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "SetSaveAsAnimation"
+                , SetSaveAsAnimation_function_type( &::MicrovesselVtkScene< 2 >::SetSaveAsAnimation )
+                , ( bp::arg("saveAsAnimation") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::SetSaveAsImages
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetSaveAsImages_function_type)( bool ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "SetSaveAsImages"
+                , SetSaveAsImages_function_type( &::MicrovesselVtkScene< 2 >::SetSaveAsImages )
+                , ( bp::arg("saveAsImages") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::SetVesselNetwork
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetVesselNetwork_function_type)( ::boost::shared_ptr< VesselNetwork< 2 > > ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "SetVesselNetwork"
+                , SetVesselNetwork_function_type( &::MicrovesselVtkScene< 2 >::SetVesselNetwork )
+                , ( bp::arg("pNetwork") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::Start
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef void ( exported_class_t::*Start_function_type)(  ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "Start"
+                , Start_function_type( &::MicrovesselVtkScene< 2 >::Start ) );
+        
+        }
+        { //::MicrovesselVtkScene< 2 >::StartInteractiveEventHandler
+        
+            typedef MicrovesselVtkScene< 2 > exported_class_t;
+            typedef void ( exported_class_t::*StartInteractiveEventHandler_function_type)(  ) ;
+            
+            MicrovesselVtkScene2_exposer.def( 
+                "StartInteractiveEventHandler"
+                , StartInteractiveEventHandler_function_type( &::MicrovesselVtkScene< 2 >::StartInteractiveEventHandler ) );
+        
+        }
+        bp::register_ptr_to_python< boost::shared_ptr< MicrovesselVtkScene<2> > >();
+    }
 
-    bp::class_< MicrovesselVtkScene< 3 > >( "MicrovesselVtkScene3", "", bp::init< >("Constructor\n/") )    
-        .def( 
-            "End"
-            , (void ( ::MicrovesselVtkScene<3>::* )(  ))( &::MicrovesselVtkScene< 3 >::End )
-            , "Shut down the scene and close the animation\n/" )    
-        .def( 
-            "GetCellPopulationActorGenerator"
-            , (::boost::shared_ptr< CellPopulationActorGenerator< 3 > > ( ::MicrovesselVtkScene<3>::* )(  ))( &::MicrovesselVtkScene< 3 >::GetCellPopulationActorGenerator )
-            , "" )    
-        .def( 
-            "GetDiscreteContinuumMeshActorGenerator"
-            , (::boost::shared_ptr< DiscreteContinuumMeshActorGenerator< 3 > > ( ::MicrovesselVtkScene<3>::* )(  ))( &::MicrovesselVtkScene< 3 >::GetDiscreteContinuumMeshActorGenerator )
-            , "" )    
-        .def( 
-            "GetPartActorGenerator"
-            , (::boost::shared_ptr< PartActorGenerator< 3 > > ( ::MicrovesselVtkScene<3>::* )(  ))( &::MicrovesselVtkScene< 3 >::GetPartActorGenerator )
-            , "" )    
-        .def( 
-            "GetRegularGridActorGenerator"
-            , (::boost::shared_ptr< RegularGridActorGenerator< 3 > > ( ::MicrovesselVtkScene<3>::* )(  ))( &::MicrovesselVtkScene< 3 >::GetRegularGridActorGenerator )
-            , "" )    
-        .def( 
-            "GetVesselNetworkActorGenerator"
-            , (::boost::shared_ptr< VesselNetworkActorGenerator< 3 > > ( ::MicrovesselVtkScene<3>::* )(  ))( &::MicrovesselVtkScene< 3 >::GetVesselNetworkActorGenerator )
-            , "" )    
-        .def( 
-            "ResetRenderer"
-            , (void ( ::MicrovesselVtkScene<3>::* )( unsigned int ))( &::MicrovesselVtkScene< 3 >::ResetRenderer )
-            , ( bp::arg("timeStep")=(unsigned int)(0) )
-            , "Update the renderer, this will update the population actor and write output images\n@param timeStep the curren time step, for annotating output files\n/" )    
-        .def( 
-            "SetCellPopulation"
-            , (void ( ::MicrovesselVtkScene<3>::* )( ::boost::shared_ptr< AbstractCellPopulation< 3, 3 > > ))( &::MicrovesselVtkScene< 3 >::SetCellPopulation )
-            , ( bp::arg("pCellPopulation") )
-            , "Set the cell population\n@param pCellPopulation the cell population for rendering\n/" )    
-        .def( 
-            "SetIsInteractive"
-            , (void ( ::MicrovesselVtkScene<3>::* )( bool ))( &::MicrovesselVtkScene< 3 >::SetIsInteractive )
-            , ( bp::arg("isInteractive") )
-            , "" )    
-        .def( 
-            "SetMesh"
-            , (void ( ::MicrovesselVtkScene<3>::* )( ::boost::shared_ptr< DiscreteContinuumMesh< 3, 3 > > ))( &::MicrovesselVtkScene< 3 >::SetMesh )
-            , ( bp::arg("pMesh") )
-            , "" )    
-        .def( 
-            "SetOutputFilePath"
-            , (void ( ::MicrovesselVtkScene<3>::* )( ::std::string const & ))( &::MicrovesselVtkScene< 3 >::SetOutputFilePath )
-            , ( bp::arg("rPath") )
-            , "Set the path for output\n@param rPath the path for output\n/" )    
-        .def( 
-            "SetPart"
-            , (void ( ::MicrovesselVtkScene<3>::* )( ::boost::shared_ptr< Part< 3 > > ))( &::MicrovesselVtkScene< 3 >::SetPart )
-            , ( bp::arg("pPart") )
-            , "" )    
-        .def( 
-            "SetRegularGrid"
-            , (void ( ::MicrovesselVtkScene<3>::* )( ::boost::shared_ptr< RegularGrid< 3 > > ))( &::MicrovesselVtkScene< 3 >::SetRegularGrid )
-            , ( bp::arg("pGrid") )
-            , "" )    
-        .def( 
-            "SetSaveAsAnimation"
-            , (void ( ::MicrovesselVtkScene<3>::* )( bool ))( &::MicrovesselVtkScene< 3 >::SetSaveAsAnimation )
-            , ( bp::arg("saveAsAnimation") )
-            , "" )    
-        .def( 
-            "SetSaveAsImages"
-            , (void ( ::MicrovesselVtkScene<3>::* )( bool ))( &::MicrovesselVtkScene< 3 >::SetSaveAsImages )
-            , ( bp::arg("saveAsImages") )
-            , "" )    
-        .def( 
-            "SetVesselNetwork"
-            , (void ( ::MicrovesselVtkScene<3>::* )( ::boost::shared_ptr< VesselNetwork< 3 > > ))( &::MicrovesselVtkScene< 3 >::SetVesselNetwork )
-            , ( bp::arg("pNetwork") )
-            , "" )    
-        .def( 
-            "Start"
-            , (void ( ::MicrovesselVtkScene<3>::* )(  ))( &::MicrovesselVtkScene< 3 >::Start )
-            , "Render the scene\n/" )    
-        .def( 
-            "StartInteractiveEventHandler"
-            , (void ( ::MicrovesselVtkScene<3>::* )(  ))( &::MicrovesselVtkScene< 3 >::StartInteractiveEventHandler )
-            , "" );
+    { //::MicrovesselVtkScene< 3 >
+        typedef bp::class_< MicrovesselVtkScene< 3 > > MicrovesselVtkScene3_exposer_t;
+        MicrovesselVtkScene3_exposer_t MicrovesselVtkScene3_exposer = MicrovesselVtkScene3_exposer_t( "MicrovesselVtkScene3", bp::init< >() );
+        bp::scope MicrovesselVtkScene3_scope( MicrovesselVtkScene3_exposer );
+        { //::MicrovesselVtkScene< 3 >::End
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef void ( exported_class_t::*End_function_type)(  ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "End"
+                , End_function_type( &::MicrovesselVtkScene< 3 >::End ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::GetCellPopulationActorGenerator
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< CellPopulationActorGenerator< 3 > > ( exported_class_t::*GetCellPopulationActorGenerator_function_type)(  ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "GetCellPopulationActorGenerator"
+                , GetCellPopulationActorGenerator_function_type( &::MicrovesselVtkScene< 3 >::GetCellPopulationActorGenerator ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::GetDiscreteContinuumMeshActorGenerator
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< DiscreteContinuumMeshActorGenerator< 3 > > ( exported_class_t::*GetDiscreteContinuumMeshActorGenerator_function_type)(  ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "GetDiscreteContinuumMeshActorGenerator"
+                , GetDiscreteContinuumMeshActorGenerator_function_type( &::MicrovesselVtkScene< 3 >::GetDiscreteContinuumMeshActorGenerator ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::GetPartActorGenerator
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< PartActorGenerator< 3 > > ( exported_class_t::*GetPartActorGenerator_function_type)(  ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "GetPartActorGenerator"
+                , GetPartActorGenerator_function_type( &::MicrovesselVtkScene< 3 >::GetPartActorGenerator ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::GetRegularGridActorGenerator
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< RegularGridActorGenerator< 3 > > ( exported_class_t::*GetRegularGridActorGenerator_function_type)(  ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "GetRegularGridActorGenerator"
+                , GetRegularGridActorGenerator_function_type( &::MicrovesselVtkScene< 3 >::GetRegularGridActorGenerator ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::GetRenderer
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef ::vtkSmartPointer< vtkRenderer > ( exported_class_t::*GetRenderer_function_type)(  ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "GetRenderer"
+                , GetRenderer_function_type( &::MicrovesselVtkScene< 3 >::GetRenderer ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::GetSceneAsCharBuffer
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef ::vtkSmartPointer< vtkUnsignedCharArray > ( exported_class_t::*GetSceneAsCharBuffer_function_type)(  ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "GetSceneAsCharBuffer"
+                , GetSceneAsCharBuffer_function_type( &::MicrovesselVtkScene< 3 >::GetSceneAsCharBuffer ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::GetVesselNetworkActorGenerator
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< VesselNetworkActorGenerator< 3 > > ( exported_class_t::*GetVesselNetworkActorGenerator_function_type)(  ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "GetVesselNetworkActorGenerator"
+                , GetVesselNetworkActorGenerator_function_type( &::MicrovesselVtkScene< 3 >::GetVesselNetworkActorGenerator ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::ResetRenderer
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef void ( exported_class_t::*ResetRenderer_function_type)( unsigned int ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "ResetRenderer"
+                , ResetRenderer_function_type( &::MicrovesselVtkScene< 3 >::ResetRenderer )
+                , ( bp::arg("timeStep")=(unsigned int)(0) ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::SetCellPopulation
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetCellPopulation_function_type)( ::boost::shared_ptr< AbstractCellPopulation< 3, 3 > > ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "SetCellPopulation"
+                , SetCellPopulation_function_type( &::MicrovesselVtkScene< 3 >::SetCellPopulation )
+                , ( bp::arg("pCellPopulation") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::SetIsInteractive
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetIsInteractive_function_type)( bool ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "SetIsInteractive"
+                , SetIsInteractive_function_type( &::MicrovesselVtkScene< 3 >::SetIsInteractive )
+                , ( bp::arg("isInteractive") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::SetMesh
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetMesh_function_type)( ::boost::shared_ptr< DiscreteContinuumMesh< 3, 3 > > ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "SetMesh"
+                , SetMesh_function_type( &::MicrovesselVtkScene< 3 >::SetMesh )
+                , ( bp::arg("pMesh") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::SetOutputFilePath
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetOutputFilePath_function_type)( ::std::string const & ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "SetOutputFilePath"
+                , SetOutputFilePath_function_type( &::MicrovesselVtkScene< 3 >::SetOutputFilePath )
+                , ( bp::arg("rPath") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::SetPart
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetPart_function_type)( ::boost::shared_ptr< Part< 3 > > ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "SetPart"
+                , SetPart_function_type( &::MicrovesselVtkScene< 3 >::SetPart )
+                , ( bp::arg("pPart") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::SetRegularGrid
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetRegularGrid_function_type)( ::boost::shared_ptr< RegularGrid< 3 > > ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "SetRegularGrid"
+                , SetRegularGrid_function_type( &::MicrovesselVtkScene< 3 >::SetRegularGrid )
+                , ( bp::arg("pGrid") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::SetSaveAsAnimation
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetSaveAsAnimation_function_type)( bool ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "SetSaveAsAnimation"
+                , SetSaveAsAnimation_function_type( &::MicrovesselVtkScene< 3 >::SetSaveAsAnimation )
+                , ( bp::arg("saveAsAnimation") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::SetSaveAsImages
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetSaveAsImages_function_type)( bool ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "SetSaveAsImages"
+                , SetSaveAsImages_function_type( &::MicrovesselVtkScene< 3 >::SetSaveAsImages )
+                , ( bp::arg("saveAsImages") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::SetVesselNetwork
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetVesselNetwork_function_type)( ::boost::shared_ptr< VesselNetwork< 3 > > ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "SetVesselNetwork"
+                , SetVesselNetwork_function_type( &::MicrovesselVtkScene< 3 >::SetVesselNetwork )
+                , ( bp::arg("pNetwork") ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::Start
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef void ( exported_class_t::*Start_function_type)(  ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "Start"
+                , Start_function_type( &::MicrovesselVtkScene< 3 >::Start ) );
+        
+        }
+        { //::MicrovesselVtkScene< 3 >::StartInteractiveEventHandler
+        
+            typedef MicrovesselVtkScene< 3 > exported_class_t;
+            typedef void ( exported_class_t::*StartInteractiveEventHandler_function_type)(  ) ;
+            
+            MicrovesselVtkScene3_exposer.def( 
+                "StartInteractiveEventHandler"
+                , StartInteractiveEventHandler_function_type( &::MicrovesselVtkScene< 3 >::StartInteractiveEventHandler ) );
+        
+        }
+        bp::register_ptr_to_python< boost::shared_ptr< MicrovesselVtkScene<3> > >();
+    }
 
     { //::PartActorGenerator< 2 >
         typedef bp::class_< PartActorGenerator_less__2__greater__wrapper, bp::bases< AbstractActorGenerator< 2 > > > PartActorGenerator2_exposer_t;
-        PartActorGenerator2_exposer_t PartActorGenerator2_exposer = PartActorGenerator2_exposer_t( "PartActorGenerator2", "", bp::init< >("Constructor\n/") );
+        PartActorGenerator2_exposer_t PartActorGenerator2_exposer = PartActorGenerator2_exposer_t( "PartActorGenerator2", bp::init< >() );
         bp::scope PartActorGenerator2_scope( PartActorGenerator2_exposer );
         { //::PartActorGenerator< 2 >::AddActor
         
@@ -1082,8 +1546,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             PartActorGenerator2_exposer.def( 
                 "SetPart"
                 , SetPart_function_type( &::PartActorGenerator< 2 >::SetPart )
-                , ( bp::arg("pPart") )
-                , "Set the part\n@param pPart the part to render\n/" );
+                , ( bp::arg("pPart") ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< PartActorGenerator<2> > >();
@@ -1092,7 +1555,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
 
     { //::PartActorGenerator< 3 >
         typedef bp::class_< PartActorGenerator_less__3__greater__wrapper, bp::bases< AbstractActorGenerator< 3 > > > PartActorGenerator3_exposer_t;
-        PartActorGenerator3_exposer_t PartActorGenerator3_exposer = PartActorGenerator3_exposer_t( "PartActorGenerator3", "", bp::init< >("Constructor\n/") );
+        PartActorGenerator3_exposer_t PartActorGenerator3_exposer = PartActorGenerator3_exposer_t( "PartActorGenerator3", bp::init< >() );
         bp::scope PartActorGenerator3_scope( PartActorGenerator3_exposer );
         { //::PartActorGenerator< 3 >::AddActor
         
@@ -1115,8 +1578,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             PartActorGenerator3_exposer.def( 
                 "SetPart"
                 , SetPart_function_type( &::PartActorGenerator< 3 >::SetPart )
-                , ( bp::arg("pPart") )
-                , "Set the part\n@param pPart the part to render\n/" );
+                , ( bp::arg("pPart") ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< PartActorGenerator<3> > >();
@@ -1125,7 +1587,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
 
     { //::RegularGridActorGenerator< 2 >
         typedef bp::class_< RegularGridActorGenerator_less__2__greater__wrapper, bp::bases< AbstractActorGenerator< 2 > > > RegularGridActorGenerator2_exposer_t;
-        RegularGridActorGenerator2_exposer_t RegularGridActorGenerator2_exposer = RegularGridActorGenerator2_exposer_t( "RegularGridActorGenerator2", "", bp::init< >("Constructor\n/") );
+        RegularGridActorGenerator2_exposer_t RegularGridActorGenerator2_exposer = RegularGridActorGenerator2_exposer_t( "RegularGridActorGenerator2", bp::init< >() );
         bp::scope RegularGridActorGenerator2_scope( RegularGridActorGenerator2_exposer );
         { //::RegularGridActorGenerator< 2 >::AddActor
         
@@ -1148,8 +1610,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             RegularGridActorGenerator2_exposer.def( 
                 "SetEdgeOpacity"
                 , SetEdgeOpacity_function_type( &::RegularGridActorGenerator< 2 >::SetEdgeOpacity )
-                , ( bp::arg("opacity") )
-                , "Set the opacity for the edges\n@param opacity the opacity for the edges\n/" );
+                , ( bp::arg("opacity") ) );
         
         }
         { //::RegularGridActorGenerator< 2 >::SetRegularGrid
@@ -1160,8 +1621,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             RegularGridActorGenerator2_exposer.def( 
                 "SetRegularGrid"
                 , SetRegularGrid_function_type( &::RegularGridActorGenerator< 2 >::SetRegularGrid )
-                , ( bp::arg("pRegularGrid") )
-                , "Set the RegularGrid\n@param pRegularGrid the RegularGrid to render\n/" );
+                , ( bp::arg("pRegularGrid") ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< RegularGridActorGenerator<2> > >();
@@ -1170,7 +1630,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
 
     { //::RegularGridActorGenerator< 3 >
         typedef bp::class_< RegularGridActorGenerator_less__3__greater__wrapper, bp::bases< AbstractActorGenerator< 3 > > > RegularGridActorGenerator3_exposer_t;
-        RegularGridActorGenerator3_exposer_t RegularGridActorGenerator3_exposer = RegularGridActorGenerator3_exposer_t( "RegularGridActorGenerator3", "", bp::init< >("Constructor\n/") );
+        RegularGridActorGenerator3_exposer_t RegularGridActorGenerator3_exposer = RegularGridActorGenerator3_exposer_t( "RegularGridActorGenerator3", bp::init< >() );
         bp::scope RegularGridActorGenerator3_scope( RegularGridActorGenerator3_exposer );
         { //::RegularGridActorGenerator< 3 >::AddActor
         
@@ -1193,8 +1653,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             RegularGridActorGenerator3_exposer.def( 
                 "SetEdgeOpacity"
                 , SetEdgeOpacity_function_type( &::RegularGridActorGenerator< 3 >::SetEdgeOpacity )
-                , ( bp::arg("opacity") )
-                , "Set the opacity for the edges\n@param opacity the opacity for the edges\n/" );
+                , ( bp::arg("opacity") ) );
         
         }
         { //::RegularGridActorGenerator< 3 >::SetRegularGrid
@@ -1205,8 +1664,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             RegularGridActorGenerator3_exposer.def( 
                 "SetRegularGrid"
                 , SetRegularGrid_function_type( &::RegularGridActorGenerator< 3 >::SetRegularGrid )
-                , ( bp::arg("pRegularGrid") )
-                , "Set the RegularGrid\n@param pRegularGrid the RegularGrid to render\n/" );
+                , ( bp::arg("pRegularGrid") ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< RegularGridActorGenerator<3> > >();
@@ -1215,7 +1673,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
 
     { //::VesselNetworkActorGenerator< 2 >
         typedef bp::class_< VesselNetworkActorGenerator_less__2__greater__wrapper, bp::bases< AbstractActorGenerator< 2 > > > VesselNetworkActorGenerator2_exposer_t;
-        VesselNetworkActorGenerator2_exposer_t VesselNetworkActorGenerator2_exposer = VesselNetworkActorGenerator2_exposer_t( "VesselNetworkActorGenerator2", "", bp::init< >("Constructor\n/") );
+        VesselNetworkActorGenerator2_exposer_t VesselNetworkActorGenerator2_exposer = VesselNetworkActorGenerator2_exposer_t( "VesselNetworkActorGenerator2", bp::init< >() );
         bp::scope VesselNetworkActorGenerator2_scope( VesselNetworkActorGenerator2_exposer );
         { //::VesselNetworkActorGenerator< 2 >::AddActor
         
@@ -1238,8 +1696,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             VesselNetworkActorGenerator2_exposer.def( 
                 "SetVesselNetwork"
                 , SetVesselNetwork_function_type( &::VesselNetworkActorGenerator< 2 >::SetVesselNetwork )
-                , ( bp::arg("pVesselNetwork") )
-                , "Set the VesselNetwork\n@param pVesselNetwork the VesselNetwork to render\n/" );
+                , ( bp::arg("pVesselNetwork") ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< VesselNetworkActorGenerator<2> > >();
@@ -1248,7 +1705,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
 
     { //::VesselNetworkActorGenerator< 3 >
         typedef bp::class_< VesselNetworkActorGenerator_less__3__greater__wrapper, bp::bases< AbstractActorGenerator< 3 > > > VesselNetworkActorGenerator3_exposer_t;
-        VesselNetworkActorGenerator3_exposer_t VesselNetworkActorGenerator3_exposer = VesselNetworkActorGenerator3_exposer_t( "VesselNetworkActorGenerator3", "", bp::init< >("Constructor\n/") );
+        VesselNetworkActorGenerator3_exposer_t VesselNetworkActorGenerator3_exposer = VesselNetworkActorGenerator3_exposer_t( "VesselNetworkActorGenerator3", bp::init< >() );
         bp::scope VesselNetworkActorGenerator3_scope( VesselNetworkActorGenerator3_exposer );
         { //::VesselNetworkActorGenerator< 3 >::AddActor
         
@@ -1271,11 +1728,54 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_visualization){
             VesselNetworkActorGenerator3_exposer.def( 
                 "SetVesselNetwork"
                 , SetVesselNetwork_function_type( &::VesselNetworkActorGenerator< 3 >::SetVesselNetwork )
-                , ( bp::arg("pVesselNetwork") )
-                , "Set the VesselNetwork\n@param pVesselNetwork the VesselNetwork to render\n/" );
+                , ( bp::arg("pVesselNetwork") ) );
         
         }
         bp::register_ptr_to_python< boost::shared_ptr< VesselNetworkActorGenerator<3> > >();
         bp::implicitly_convertible< boost::shared_ptr< VesselNetworkActorGenerator< 3 > >, boost::shared_ptr< AbstractActorGenerator< 3 > > >();
     }
+
+    bp::class_< VtkSceneMicrovesselModifier_less__2__greater__wrapper, bp::bases< AbstractMicrovesselModifier< 2 > > >( "VtkSceneMicrovesselModifier2", bp::init< >() )    
+        .def( 
+            "GetVtkScene"
+            , (::boost::shared_ptr< MicrovesselVtkScene< 2 > > ( ::VtkSceneMicrovesselModifier<2>::* )(  ))( &::VtkSceneMicrovesselModifier< 2 >::GetVtkScene ) )    
+        .def( 
+            "SetUpdateFrequency"
+            , (void ( ::VtkSceneMicrovesselModifier<2>::* )( unsigned int ))( &::VtkSceneMicrovesselModifier< 2 >::SetUpdateFrequency )
+            , ( bp::arg("frequency") ) )    
+        .def( 
+            "SetVtkScene"
+            , (void ( ::VtkSceneMicrovesselModifier<2>::* )( ::boost::shared_ptr< MicrovesselVtkScene< 2 > > ))( &::VtkSceneMicrovesselModifier< 2 >::SetVtkScene )
+            , ( bp::arg("pScene") ) )    
+        .def( 
+            "SetupSolve"
+            , (void ( ::VtkSceneMicrovesselModifier<2>::* )( ::std::string ))(&::VtkSceneMicrovesselModifier< 2 >::SetupSolve)
+            , (void ( VtkSceneMicrovesselModifier_less__2__greater__wrapper::* )( ::std::string ))(&VtkSceneMicrovesselModifier_less__2__greater__wrapper::default_SetupSolve)
+            , ( bp::arg("outputDirectory") ) )    
+        .def( 
+            "UpdateAtEndOfTimeStep"
+            , (void ( ::VtkSceneMicrovesselModifier<2>::* )(  ))(&::VtkSceneMicrovesselModifier< 2 >::UpdateAtEndOfTimeStep)
+            , (void ( VtkSceneMicrovesselModifier_less__2__greater__wrapper::* )(  ))(&VtkSceneMicrovesselModifier_less__2__greater__wrapper::default_UpdateAtEndOfTimeStep) );
+
+    bp::class_< VtkSceneMicrovesselModifier_less__3__greater__wrapper, bp::bases< AbstractMicrovesselModifier< 3 > > >( "VtkSceneMicrovesselModifier3", bp::init< >() )    
+        .def( 
+            "GetVtkScene"
+            , (::boost::shared_ptr< MicrovesselVtkScene< 3 > > ( ::VtkSceneMicrovesselModifier<3>::* )(  ))( &::VtkSceneMicrovesselModifier< 3 >::GetVtkScene ) )    
+        .def( 
+            "SetUpdateFrequency"
+            , (void ( ::VtkSceneMicrovesselModifier<3>::* )( unsigned int ))( &::VtkSceneMicrovesselModifier< 3 >::SetUpdateFrequency )
+            , ( bp::arg("frequency") ) )    
+        .def( 
+            "SetVtkScene"
+            , (void ( ::VtkSceneMicrovesselModifier<3>::* )( ::boost::shared_ptr< MicrovesselVtkScene< 3 > > ))( &::VtkSceneMicrovesselModifier< 3 >::SetVtkScene )
+            , ( bp::arg("pScene") ) )    
+        .def( 
+            "SetupSolve"
+            , (void ( ::VtkSceneMicrovesselModifier<3>::* )( ::std::string ))(&::VtkSceneMicrovesselModifier< 3 >::SetupSolve)
+            , (void ( VtkSceneMicrovesselModifier_less__3__greater__wrapper::* )( ::std::string ))(&VtkSceneMicrovesselModifier_less__3__greater__wrapper::default_SetupSolve)
+            , ( bp::arg("outputDirectory") ) )    
+        .def( 
+            "UpdateAtEndOfTimeStep"
+            , (void ( ::VtkSceneMicrovesselModifier<3>::* )(  ))(&::VtkSceneMicrovesselModifier< 3 >::UpdateAtEndOfTimeStep)
+            , (void ( VtkSceneMicrovesselModifier_less__3__greater__wrapper::* )(  ))(&VtkSceneMicrovesselModifier_less__3__greater__wrapper::default_UpdateAtEndOfTimeStep) );
 }
