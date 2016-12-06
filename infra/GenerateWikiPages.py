@@ -55,15 +55,16 @@ if __name__ == '__main__':
                     if not fnmatch.fnmatch(file, '*.pyc'):
                         tutorial_files.append([eachSearchPath, file])
                         
-    output_format = "jupyter"
+    output_format = "markdown"
     
     if output_format == "markdown":           
         # Generate the markdown for each
         for eachFile in tutorial_files:
-            outfile = " doc/tutorials/" + os.path.splitext(ntpath.basename(eachFile[1]))[0] +".md"
+            outfile = " doc/tutorials/" + os.path.splitext(ntpath.basename(eachFile[1]))[0] +"_md.md"
             inputfile = eachFile[0] + "/" + eachFile[1]
-            launch_string = "infra/CreateMarkdownTutorial.py " + inputfile + outfile 
-            os.system(launch_string)
+            if fnmatch.fnmatch(inputfile, '*.hpp'):
+                launch_string = "infra/CreateMarkdownTutorial.py " + inputfile + outfile 
+                os.system(launch_string)
     
     elif output_format == "jupyter": 
         # Generate the jupyter notebooks for each

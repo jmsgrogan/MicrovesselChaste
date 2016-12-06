@@ -43,6 +43,7 @@ Copyright (c) 2005-2016, University of Oxford.
  */
 #include <vector>
 #include "SmartPointers.hpp"
+#include "FileFinder.hpp"
 #include "OutputFileHandler.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
 #include "RandomNumberGenerator.hpp"
@@ -103,11 +104,16 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "AngiogenesisSolver.hpp"
 #include "WallShearStressBasedRegressionSolver.hpp"
 /*
- * and classes for managing the simulation.
+ * classes for managing the simulation,
  */
 #include "MicrovesselSolver.hpp"
 #include "MicrovesselSimulationModifier.hpp"
 #include "OnLatticeSimulation.hpp"
+/*
+ * Visualization
+ */
+#include "MicrovesselVtkScene.hpp"
+#include "VtkSceneMicrovesselModifier.hpp"
 /*
  * This should appear last.
  */
@@ -141,11 +147,12 @@ public:
          */
         boost::shared_ptr<VesselNetworkReader<3> > p_vessel_reader =
                 boost::shared_ptr<VesselNetworkReader<3> >(new VesselNetworkReader<3> );
-        p_vessel_reader->SetFileName("/home/grogan/bio_original.vtp");
+
+        FileFinder file_finder = FileFinder("/projects/MicrovesselChaste/test/data/bio_original.vtp", RelativeTo::ChasteSourceRoot);
+        p_vessel_reader->SetFileName(file_finder.GetAbsolutePath());
         p_vessel_reader->SetMergeCoincidentPoints(true);
         p_vessel_reader->SetTargetSegmentLength(40.0e-6*unit::metres);
         boost::shared_ptr<VesselNetwork<3> >  p_network = p_vessel_reader->Read();
-
         /* The vessel network may contain short vessels due to image processing artifacts,
          * we remove any vessels that are on the order of a single cell length and are not connected
          * to other vessels at both ends. Note that units are explicitly specified for all quantities. It is
@@ -161,6 +168,12 @@ public:
          * Write the modified network to file for inspection
          */
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "cleaned_network.vtp");
+        boost::shared_ptr<MicrovesselVtkScene<3> > p_scene = boost::shared_ptr<MicrovesselVtkScene<3> >(new MicrovesselVtkScene<3>);
+        p_scene->SetIsInteractive(true);
+        p_scene->SetVesselNetwork(p_network);
+        p_scene->GetVesselNetworkActorGenerator()->SetEdgeSize(20.0);
+        p_scene->Start();
+
         /* Simulating tumour growth for the entire network would be prohibitive for this tutorial, so
          * we sample a small region. We can use some geometry tools to help.
          */
@@ -171,6 +184,7 @@ public:
         p_cylinder->AddCylinder(radius, depth, centre, 24);
         p_cylinder->BooleanWithNetwork(p_network);
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "cleaned_cut_network.vtp");
+        p_scene->Start();
         /*
          * We are ready to simulate tumour growth and angiogenesis. We will use a regular lattice for
          * this purpose. We size and position the lattice according to the bounds of the vessel network.
@@ -204,11 +218,10 @@ public:
         /*
          * We can write the lattice to file for quick visualization with Paraview. Rendering of this and subsequent images is performed
          * using standard Paraview operations, not detailed here.
-         *
-         * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/Lattice_Tutorial_Initial_Grid.png)
-         *
          */
         p_grid->Write(p_handler);
+        p_scene->SetRegularGrid(p_grid);
+        p_scene->Start();
         /*
         * Next we set the inflow and outflow boundary conditions for blood flow. Because the network connectivity
         * is relatively low we assign all vessels near the top of the domain (z coord) as inflows and the bottom
@@ -247,15 +260,15 @@ public:
         units::quantity<unit::length> tumour_radius(300.0 * unit::microns);
         p_cell_population_genenerator->SetTumourRadius(tumour_radius);
         boost::shared_ptr<CaBasedCellPopulation<3> > p_cell_population = p_cell_population_genenerator->Update();
+
+        p_scene->SetCellPopulation(p_cell_population);
+        p_scene->GetCellPopulationActorGenerator()->GetDiscreteColorTransferFunction()->AddRGBPoint(1.0, 0.0, 0.0, 0.6);
+        p_scene->GetCellPopulationActorGenerator()->SetPointSize(20.0);
+        p_scene->GetCellPopulationActorGenerator()->SetColorByCellMutationState(true);
+        p_scene->ResetRenderer();
+        p_scene->Start();
         /*
-         * At this point the simulation domain will look as follows:
-         *
-         * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/Lattice_Based_Tutorial_Cell_Setup.png)
-         *
-         * Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources. A sample PDE solution for
-         * oxygen is shown below:
-         *
-         * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/LatticeTutorialSampleOxygen.png)
+         * Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources.
          */
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_oxygen_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
         p_oxygen_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpOxygenDiffusivity->GetValue("User"));
@@ -283,9 +296,7 @@ public:
         p_oxygen_solver->SetGrid(p_grid);
         /*
         * The rate of VEGF release depends on the cell type and intracellular VEGF levels, so we need a more detailed
-        * type of discrete source. A sample PDE solution for VEGF is shown below.
-        *
-        * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/LatticeTutorialSampleVegf.png)
+        * type of discrete source.
         */
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_vegf_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
         p_vegf_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpVegfDiffusivity->GetValue("User"));
@@ -325,9 +336,7 @@ public:
         /*
          * Next set up the flow problem. Assign a blood plasma viscosity to the vessels. The actual viscosity will
          * depend on haematocrit and diameter. This solver manages growth and shrinkage of vessels in response to
-         * flow related stimuli. A sample plot of the stimulus distrbution during a simulation is shown below:
-         *
-         * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/LatticeTutorialSampleGrowth.png)
+         * flow related stimuli.
          */
         units::quantity<unit::length> large_vessel_radius(25.0 * unit::microns);
         p_network->SetSegmentRadii(large_vessel_radius);
@@ -368,7 +377,7 @@ public:
          */
         boost::shared_ptr<AngiogenesisSolver<3> > p_angiogenesis_solver = AngiogenesisSolver<3>::Create();
         boost::shared_ptr<OffLatticeSproutingRule<3> > p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
-        p_sprouting_rule->SetSproutingProbability(1.e-3* unit::per_second);
+        p_sprouting_rule->SetSproutingProbability(1.e-4* unit::per_second);
         boost::shared_ptr<OffLatticeMigrationRule<3> > p_migration_rule = OffLatticeMigrationRule<3>::Create();
         p_migration_rule->SetChemotacticStrength(0.1);
         p_migration_rule->SetAttractionStrength(0.5);
@@ -392,6 +401,16 @@ public:
         p_microvessel_solver->SetStructuralAdaptationSolver(p_structural_adaptation_solver);
         p_microvessel_solver->SetRegressionSolver(p_regression_solver);
         p_microvessel_solver->SetAngiogenesisSolver(p_angiogenesis_solver);
+        /*
+        * Set up real time plotting.
+        */
+        //p_scene->GetCellPopulationActorGenerator()->SetColorByCellData(true);
+        //p_scene->GetCellPopulationActorGenerator()->SetDataLabel("oxygen");
+        boost::shared_ptr<VtkSceneMicrovesselModifier<3> > p_scene_modifier =
+                boost::shared_ptr<VtkSceneMicrovesselModifier<3> >(new VtkSceneMicrovesselModifier<3>);
+        p_scene_modifier->SetVtkScene(p_scene);
+        p_scene_modifier->SetUpdateFrequency(3);
+        p_microvessel_solver->AddMicrovesselModifier(p_scene_modifier);
         /*
          * The microvessel solution modifier will link the vessel and cell solvers. We need to explicitly tell is
          * which extracellular fields to update based on PDE solutions.
@@ -420,7 +439,7 @@ public:
         /*
          * Set up the remainder of the simulation
          */
-        simulator.SetOutputDirectory("TestLatticeBasedAngiogenesisLiteratePaper");
+        simulator.SetOutputDirectory("TestBiologicalNetworkLiteratePaper");
         simulator.SetSamplingTimestepMultiple(1);
         simulator.SetDt(0.5);
         /*
@@ -429,7 +448,7 @@ public:
          */
         simulator.SetEndTime(200.0);
         /*
-         * Do the solve. A sample solution is shown at the top of this test.
+         * Do the solve.
          */
         simulator.Solve();
         /*

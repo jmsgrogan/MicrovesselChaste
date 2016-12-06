@@ -300,6 +300,7 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateSolution(const 
         pPointData->SetValue(i, data[i]);
     }
     this->mpVtkSolution->GetPointData()->AddArray(pPointData);
+    this->mpMesh->SetNodalData(data);
 
     // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
     this->mSolution = std::vector<double>(data.size(), 0.0);

@@ -82,6 +82,10 @@ Copyright (c) 2005-2016, University of Oxford.
  */
 #include "VesselNetworkGenerator.hpp"
 /*
+ * Visualization
+ */
+#include "MicrovesselVtkScene.hpp"
+/*
  * Used to initialize MPI/PETSc in unit tests.
  */
 #include "PetscSetupAndFinalize.hpp"
@@ -94,10 +98,7 @@ class TestBuildVesselNetworkLiteratePaper : public AbstractCellBasedWithTimingsT
 {
 public:
     /*
-     * ## Test 1 - Building a vessel network manually, writing it to file and visualizing it =
-     *
-     * ![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/bifurcating_network.png)
-     *
+     * ## Test 1 - Building a vessel network manually, writing it to file and visualizing it
      * In the first test build a vessel network from its constituent components; nodes, segments and vessels. Do some
      * simple tests to make sure the network has been formed as expected. Then write the network to file and visualize it in Paraview. The
      * network will be built manually, which is tedious and not done much in practice. Later examples will used automatic generators.
@@ -180,7 +181,14 @@ public:
         writer.SetFileName(p_handler->GetOutputDirectoryFullPath() + "bifurcating_network.vtp");
         writer.SetVesselNetwork(p_network);
         writer.Write();
-
+        /*
+         * We can also view the network
+         */
+        boost::shared_ptr<MicrovesselVtkScene<2> > p_scene = boost::shared_ptr<MicrovesselVtkScene<2> >(new MicrovesselVtkScene<2> );
+        p_scene->SetVesselNetwork(p_network);
+        p_scene->SetSaveAsImages(true);
+        p_scene->SetOutputFilePath(p_handler->GetOutputDirectoryFullPath() + "network");
+        p_scene->Start();
         BaseUnits::Instance()->Destroy();
     }
     /*
@@ -190,8 +198,6 @@ public:
 
     /*
      * # Test 2 - Building a vessel network using a generator and reading from file
-     *
-     * ![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/hexagonal_network.png)
      *
      * It is usually tedious to build a vessel network from scratch. In this test we use a generator to automatically construct a network.
      * We then write it to file, read it back in and check that it is restored as expected.
@@ -238,6 +244,14 @@ public:
         network_reader.SetReferenceLengthScale(micron_length_scale);
         network_reader.SetFileName(p_handler->GetOutputDirectoryFullPath() + "hexagonal_network.vtp");
         boost::shared_ptr<VesselNetwork<3> > p_network_from_file = network_reader.Read();
+        /*
+         * We can also view the network
+         */
+        boost::shared_ptr<MicrovesselVtkScene<3> > p_scene = boost::shared_ptr<MicrovesselVtkScene<3> >(new MicrovesselVtkScene<3>);
+        p_scene->SetVesselNetwork(p_network_from_file);
+        p_scene->SetSaveAsImages(true);
+        p_scene->SetOutputFilePath(p_handler->GetOutputDirectoryFullPath() + "hexagonal_network");
+        p_scene->Start();
         /*
          * Finally we check that the network has been correctly read back in using our unit test framework
          */

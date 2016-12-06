@@ -101,7 +101,7 @@ void DiscreteContinuumMeshActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRende
         p_geom_filter->Update();
 
         vtkSmartPointer<vtkColorTransferFunction> p_scaled_ctf = vtkSmartPointer<vtkColorTransferFunction>::New();
-        if(!this->mDataLabel.empty())
+        if(!this->mDataLabel.empty() and p_grid->GetPointData()->HasArray(this->mDataLabel.c_str()))
         {
             double range[2];
             p_grid->GetPointData()->GetArray(this->mDataLabel.c_str())->GetRange(range);
@@ -119,7 +119,7 @@ void DiscreteContinuumMeshActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRende
         #else
             p_mapper->SetInputData(p_geom_filter->GetOutput());
         #endif
-        if(!this->mDataLabel.empty())
+        if(!this->mDataLabel.empty() and p_grid->GetPointData()->HasArray(this->mDataLabel.c_str()))
         {
             p_mapper->SetLookupTable(p_scaled_ctf);
             p_mapper->ScalarVisibilityOn();
@@ -141,11 +141,10 @@ void DiscreteContinuumMeshActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRende
         {
             p_actor->GetProperty()->SetColor(this->mVolumeColor[0],this->mVolumeColor[1], this->mVolumeColor[2]);
         }
-
         p_actor->GetProperty()->SetOpacity(this->mVolumeOpacity);
         pRenderer->AddActor(p_actor);
 
-        if(!this->mDataLabel.empty())
+        if(!this->mDataLabel.empty() and p_grid->GetPointData()->HasArray(this->mDataLabel.c_str()))
         {
             vtkSmartPointer<vtkScalarBarActor> p_scale_bar = vtkSmartPointer<vtkScalarBarActor>::New();
             p_scale_bar->SetLookupTable(p_scaled_ctf);

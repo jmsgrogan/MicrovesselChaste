@@ -94,7 +94,7 @@ def ConvertFileToJupyterNotebook(fileobj, filepath, nb):
     test_teardown_string += 'chaste.cell_based.TearDownNotebookTest()\n'
     
     jupyter_show_first_string = "nb_manager = microvessel_chaste.visualization.JupyterNotebookManager()\n"
-    jupyter_show_string = "nb_manager.vtk_show(scene, height=600)\n"
+    jupyter_show_string = "nb_manager.vtk_show(scene, height=600, width = 1000)\n"
     
     jupyter_parameter_dump_string = "nb_manager.add_parameter_table(file_handler)"
     
@@ -195,7 +195,7 @@ def ConvertFileToJupyterNotebook(fileobj, filepath, nb):
             
             # Strip out class and function calls, unittest and main and left-align all lines
             output_lines = []
-            ignore_lines_contain = ["unittest", "main", "self.assert"]
+            ignore_lines_contain = ["unittest", "__main__", "self.assert"]
             for eachLine in block_list:
                 if not any(ignore_string in eachLine for ignore_string in ignore_lines_contain):
                     right_stripped = eachLine.rstrip()

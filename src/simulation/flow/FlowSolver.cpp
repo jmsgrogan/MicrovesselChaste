@@ -96,6 +96,7 @@ void FlowSolver<DIM>::SetUp()
     }
 
     // Get the boundary condition nodes
+    mBoundaryConditionNodeIndices.clear();
     std::vector<boost::shared_ptr<VesselNode<DIM> > > boundary_condition_nodes;
     for (unsigned node_index = 0; node_index < num_nodes; node_index++)
     {
@@ -203,10 +204,16 @@ void FlowSolver<DIM>::Update(bool runSetup)
                 mpLinearSystem->AddToMatrixElement(node_index, mNodeNodeConnectivity[node_index][vessel_index], multiplier / impedance); // Aij
             }
         }
+
     }
 
     mpLinearSystem->AssembleIntermediateLinearSystem();
     // Update the RHS
+
+    if(mBoundaryConditionNodeIndices.size()>mNodes.size())
+    {
+        EXCEPTION("Indexing problem in flow solver");
+    }
 
     for (unsigned bc_index = 0; bc_index < mBoundaryConditionNodeIndices.size(); bc_index++)
     {

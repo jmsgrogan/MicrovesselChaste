@@ -842,6 +842,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_mesh){
                 , ( bp::arg("rCellPopulation"), bp::arg("cellLengthScale") ) );
         
         }
+        { //::DiscreteContinuumMesh< 2, 2 >::SetNodalData
+        
+            typedef DiscreteContinuumMesh< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetNodalData_function_type)( ::std::vector< double > ) ;
+            
+            DiscreteContinuumMesh2_2_exposer.def( 
+                "SetNodalData"
+                , SetNodalData_function_type( &::DiscreteContinuumMesh< 2, 2 >::SetNodalData )
+                , ( bp::arg("rNodalValues") ) );
+        
+        }
         { //::DiscreteContinuumMesh< 2, 2 >::SetVesselNetwork
         
             typedef DiscreteContinuumMesh< 2, 2 > exported_class_t;
@@ -1009,6 +1020,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_mesh){
                 "SetCellPopulation"
                 , SetCellPopulation_function_type( &::DiscreteContinuumMesh< 3, 3 >::SetCellPopulation )
                 , ( bp::arg("rCellPopulation"), bp::arg("cellLengthScale") ) );
+        
+        }
+        { //::DiscreteContinuumMesh< 3, 3 >::SetNodalData
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetNodalData_function_type)( ::std::vector< double > ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "SetNodalData"
+                , SetNodalData_function_type( &::DiscreteContinuumMesh< 3, 3 >::SetNodalData )
+                , ( bp::arg("rNodalValues") ) );
         
         }
         { //::DiscreteContinuumMesh< 3, 3 >::SetVesselNetwork

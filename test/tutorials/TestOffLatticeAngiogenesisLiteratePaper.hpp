@@ -43,8 +43,6 @@ Copyright (c) 2005-2016, University of Oxford.
  * It is a 3D simulation modelling VEGF diffusion and decay from an implanted pellet using finite element methods and lattice-free angiogenesis
  * from a large limbal vessel towards the pellet.
  *
- * ![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/OffLatticeMidPoint.png)
- *
  * # The Test
  * Start by introducing the necessary header files. The first contain functionality for setting up unit tests,
  * smart pointer tools and output management,
@@ -102,9 +100,14 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "OffLatticeMigrationRule.hpp"
 #include "AngiogenesisSolver.hpp"
 /*
- * and classes for managing the simulation.
+ * classes for managing the simulation.
  */
 #include "MicrovesselSolver.hpp"
+/*
+ * Visualization
+ */
+#include "MicrovesselVtkScene.hpp"
+#include "VtkSceneMicrovesselModifier.hpp"
 /*
  * This should appear last.
  */
@@ -148,6 +151,12 @@ public:
                                                                                          num_divisions_y,
                                                                                          azimuth_angle,
                                                                                          polar_angle);
+
+        boost::shared_ptr<MicrovesselVtkScene<3> > p_scene = boost::shared_ptr<MicrovesselVtkScene<3> >(new MicrovesselVtkScene<3>);
+        p_scene->SetPart(p_domain);
+        p_scene->GetPartActorGenerator()->SetVolumeOpacity(0.7);
+        p_scene->SetIsInteractive(true);
+        p_scene->Start();
         /*
          * Set up a vessel network, with divisions roughly every 'cell length'. Initially it is straight. We will map it onto the hemisphere.
          */
@@ -174,11 +183,11 @@ public:
                                                   reference_length);
             nodes[idx]->SetLocation(new_position);
         }
-        /* The initial domain and vessel network now look as follows:
-         *
-         * ![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/OffLatticeTurorialHemisphere.png)
-         *
-         * In the experimental assay a pellet containing VEGF is implanted near the top of the cornea. We model this
+        p_scene->SetVesselNetwork(p_network);
+        p_scene->GetVesselNetworkActorGenerator()->SetEdgeSize(20.0);
+        p_scene->Start();
+
+        /* In the experimental assay a pellet containing VEGF is implanted near the top of the cornea. We model this
          * as a fixed concentration of VEGF in a cuboidal region. First set up the vegf sub domain.
          */
         boost::shared_ptr<Part<3> > p_vegf_domain = Part<3> ::Create();
@@ -195,7 +204,9 @@ public:
 //        mesh_generator.SetMaxElementArea(100000.0*(units::pow<3>(1.e-6*unit::metres)));
         mesh_generator.Update();
         boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = mesh_generator.GetMesh();
-
+        p_scene->GetPartActorGenerator()->SetVolumeOpacity(0.0);
+        p_scene->SetMesh(p_mesh);
+        p_scene->Start();
         /*
          * Set up the vegf pde
          */
@@ -223,10 +234,6 @@ public:
         p_vegf_solver->SetMesh(p_mesh);
         p_vegf_solver->AddBoundaryCondition(p_vegf_boundary);
         /*
-         * An example of the VEGF solution is shown here:
-         *
-         * ![Off Lattice Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/OffLatticeTutorialVegf.png)
-         *
          * Set up an angiogenesis solver and add sprouting and migration rules.
          */
         boost::shared_ptr<AngiogenesisSolver<3> > p_angiogenesis_solver = AngiogenesisSolver<3>::Create();
@@ -256,6 +263,17 @@ public:
         p_microvessel_solver->SetOutputFrequency(5);
         p_microvessel_solver->SetAngiogenesisSolver(p_angiogenesis_solver);
         p_microvessel_solver->SetUpdatePdeEachSolve(false);
+        /*
+         * Set up real time plotting.
+         */
+        p_scene->GetDiscreteContinuumMeshActorGenerator()->SetVolumeOpacity(0.4);
+        p_scene->GetDiscreteContinuumMeshActorGenerator()->SetDataLabel("Nodal Values");
+        p_scene->GetVesselNetworkActorGenerator()->SetEdgeSize(5.0);
+        boost::shared_ptr<VtkSceneMicrovesselModifier<3> > p_scene_modifier =
+                boost::shared_ptr<VtkSceneMicrovesselModifier<3> >(new VtkSceneMicrovesselModifier<3>);
+        p_scene_modifier->SetVtkScene(p_scene);
+        p_scene_modifier->SetUpdateFrequency(2);
+        p_microvessel_solver->AddMicrovesselModifier(p_scene_modifier);
         /*
          * Set the simulation time and run the solver. The result is shown at the top of the tutorial.
          */

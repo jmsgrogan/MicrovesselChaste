@@ -45,8 +45,6 @@ Copyright (c) 2005-2016, University of Oxford.
  * for cells, a regular grid for vessel movement and the same grid for the solution of partial differential equations
  * for oxygen and VEGF transport using the finite difference method.
  *
- * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/landing.png)
- *
  * ## The Test
  * Start by introducing the necessary header files. The first contain functionality for setting up unit tests,
  * smart pointer tools and output management,
@@ -118,6 +116,11 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "MicrovesselSimulationModifier.hpp"
 #include "OnLatticeSimulation.hpp"
 /*
+ * Visualization
+ */
+#include "MicrovesselVtkScene.hpp"
+#include "VtkSceneMicrovesselModifier.hpp"
+/*
  * This should appear last.
  */
 #include "PetscSetupAndFinalize.hpp"
@@ -160,11 +163,13 @@ public:
         /*
          * We can write the lattice to file for quick visualization with Paraview. Rendering of this and subsequent images is performed
          * using standard Paraview operations, not detailed here.
-         *
-         * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/Lattice_Tutorial_Initial_Grid.png)
-         *
          */
         p_grid->Write(p_handler);
+        boost::shared_ptr<MicrovesselVtkScene<2> > p_scene = boost::shared_ptr<MicrovesselVtkScene<2> >(new MicrovesselVtkScene<2> );
+        p_scene->SetRegularGrid(p_grid);
+        p_scene->GetRegularGridActorGenerator()->SetVolumeOpacity(0.1);
+        p_scene->SetIsInteractive(true);
+        p_scene->Start();
         /*
          * Next, set up the vessel network, this will initially consist of two, large counter-flowing vessels. Also set the inlet
          * and outlet pressures and flags.
@@ -188,11 +193,11 @@ public:
         p_network->AddVessel(p_vessel2);
         /*
          * Again, we can write the network to file for quick visualization with Paraview.
-         *
-         * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/Lattice_Angiogenesis_Tutorial_Grid_Vessels.png)
-         *
          */
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "initial_network.vtp");
+        p_scene->SetVesselNetwork(p_network);
+        p_scene->GetVesselNetworkActorGenerator()->SetEdgeSize(20.0);
+        p_scene->Start();
         /*
          * Next, set up the cell populations. We will setup up a population similar to that used in the Owen et al., 2011 paper. That is, a grid
          * filled with normal cells and a tumour spheroid in the middle. We can use a generator for this purpose. The generator simply sets up
@@ -204,15 +209,17 @@ public:
         units::quantity<unit::length> tumour_radius(300.0 * unit::microns);
         p_cell_population_genenerator->SetTumourRadius(tumour_radius);
         boost::shared_ptr<CaBasedCellPopulation<2> > p_cell_population = p_cell_population_genenerator->Update();
+
+        p_scene->GetRegularGridActorGenerator()->SetShowEdges(false);
+        p_scene->GetRegularGridActorGenerator()->SetVolumeOpacity(0.0);
+        p_scene->SetCellPopulation(p_cell_population);
+        p_scene->GetCellPopulationActorGenerator()->GetDiscreteColorTransferFunction()->AddRGBPoint(1.0, 0.0, 0.0, 0.6);
+        p_scene->GetCellPopulationActorGenerator()->SetPointSize(20.0);
+        p_scene->GetCellPopulationActorGenerator()->SetColorByCellMutationState(true);
+        p_scene->ResetRenderer();
+        p_scene->Start();
         /*
-         * At this point the simulation domain will look as follows:
-         *
-         * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/Lattice_Based_Tutorial_Cell_Setup.png)
-         *
-         * Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources. A sample PDE solution for
-         * oxygen is shown below:
-         *
-         * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/LatticeTutorialSampleOxygen.png)
+         * Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources.
          */
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_oxygen_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
         p_oxygen_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpOxygenDiffusivity->GetValue("User"));
@@ -240,9 +247,7 @@ public:
         p_oxygen_solver->SetGrid(p_grid);
         /*
         * The rate of VEGF release depends on the cell type and intracellular VEGF levels, so we need a more detailed
-        * type of discrete source. A sample PDE solution for VEGF is shown below.
-        *
-        * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/LatticeTutorialSampleVegf.png)
+        * type of discrete source.
         */
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_vegf_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
         p_vegf_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpVegfDiffusivity->GetValue("User"));
@@ -281,9 +286,7 @@ public:
         /*
          * Next set up the flow problem. Assign a blood plasma viscosity to the vessels. The actual viscosity will
          * depend on haematocrit and diameter. This solver manages growth and shrinkage of vessels in response to
-         * flow related stimuli. A sample plot of the stimulus distrbution during a simulation is shown below:
-         *
-         * ![Lattice Based Angiogenesis Image](https://github.com/jmsgrogan/MicrovesselChaste/raw/master/test/tutorials/images/LatticeTutorialSampleGrowth.png)
+         * flow related stimuli.
          */
         units::quantity<unit::length> large_vessel_radius(25.0 * unit::microns);
         p_network->SetSegmentRadii(large_vessel_radius);
@@ -341,6 +344,16 @@ public:
         p_microvessel_solver->SetStructuralAdaptationSolver(p_structural_adaptation_solver);
         p_microvessel_solver->SetRegressionSolver(p_regression_solver);
         p_microvessel_solver->SetAngiogenesisSolver(p_angiogenesis_solver);
+        /*
+        * Set up real time plotting.
+        */
+        //p_scene->GetCellPopulationActorGenerator()->SetColorByCellData(true);
+        //p_scene->GetCellPopulationActorGenerator()->SetDataLabel("oxygen");
+        boost::shared_ptr<VtkSceneMicrovesselModifier<2> > p_scene_modifier =
+                boost::shared_ptr<VtkSceneMicrovesselModifier<2> >(new VtkSceneMicrovesselModifier<2>);
+        p_scene_modifier->SetVtkScene(p_scene);
+        p_scene_modifier->SetUpdateFrequency(2);
+        p_microvessel_solver->AddMicrovesselModifier(p_scene_modifier);
         /*
          * The microvessel solution modifier will link the vessel and cell solvers. We need to explicitly tell is
          * which extracellular fields to update based on PDE solutions.

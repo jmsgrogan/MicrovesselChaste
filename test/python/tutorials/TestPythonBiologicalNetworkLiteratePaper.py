@@ -33,13 +33,13 @@
 #ifndef
 #define TRIGGER_WIKI
 
-## # A Lattice Based Angiogenesis Tutorial With A Real Network
-## This tutorial is designed to introduce a lattice based angiogenesis problem based on a simplified version of the
+## # A Tumour Growth Tutorial With A Real Network
+## This tutorial is designed to introduce a tumour growth problem based on a simplified version of the
 ## vascular tumour application described in
 ##  [Owen et al. 2011](http://www.ncbi.nlm.nih.gov/pubmed/21363914).
 ##
 ## It is a 3D simulation using cellular automaton
-## for cells, a regular grid for vessel movement and the same grid for the solution of partial differential equations
+## for cells, lattice free migration for vessel movement and a regular grid for the solution of partial differential equations
 ## for oxygen and VEGF transport using the finite difference method.
 ##
 ## ## The Test
@@ -108,7 +108,6 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         network.Write(file_handler.GetOutputDirectoryFullPath() + "cleaned_network.vtp")
         
         scene = microvessel_chaste.visualization.MicrovesselVtkScene3()
-        scene.SetIsInteractive(True)
         scene.SetVesselNetwork(network)
         scene.GetVesselNetworkActorGenerator().SetEdgeSize(20.0)
         # JUPYTER_SHOW_FIRST
@@ -125,6 +124,7 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         cylinder.BooleanWithNetwork(network)
         
         ## We visualize the smaller region
+        
         network.Write(file_handler.GetOutputDirectoryFullPath() + "cleaned_cut_network.vtp")
         scene.Start()  # JUPYTER_SHOW
 
@@ -145,12 +145,6 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         extents = [int(x)+1 for x in extents] # snap to the nearest unit, overestimate size if needed
         grid.SetExtents(extents)
         network.Translate(microvessel_chaste.mesh.DimensionalChastePoint3(-1500.0, -1600.0, +10.0, 1.e-6*metre()))
-         
-        ## We can write the lattice to file for quick visualization.
-         
-        grid.Write(file_handler) 
-        scene.SetRegularGrid(grid)
-        scene.Start()  # JUPYTER_SHOW
              
         ## Next we set the inflow and outflow boundary conditions for blood flow. Because the network connectivity
         ## is relatively low we assign all vessels near the top of the domain (z coord) as inflows and the bottom
@@ -206,7 +200,7 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         vessel_oxygen_source = microvessel_chaste.pde.VesselBasedDiscreteSource3()
         #oxygen_solubility_at_stp = Secomb04Parameters.mpOxygenVolumetricSolubility.GetValue("User") * GenericParameters.mpGasConcentrationAtStp.GetValue("User")
         #vessel_oxygen_concentration = oxygen_solubility_at_stp * Owen11Parameters.mpReferencePartialPressure.GetValue("User")
-        vessel_oxygen_concentration = 0.03 * mole_per_metre_cubed()
+        vessel_oxygen_concentration = 0.02768 * mole_per_metre_cubed()
         vessel_oxygen_source.SetReferenceConcentration(vessel_oxygen_concentration)
         vessel_oxygen_source.SetVesselPermeability(Owen11Parameters.mpVesselOxygenPermeability.GetValue("User"))
         vessel_oxygen_source.SetReferenceHaematocrit(Owen11Parameters.mpInflowHaematocrit.GetValue("User"))
@@ -298,21 +292,24 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         ## Set up an angiogenesis solver and add sprouting and migration rules.
          
         angiogenesis_solver = microvessel_chaste.simulation.AngiogenesisSolver3()
-        sprouting_rule = microvessel_chaste.simulation.Owen2011SproutingRule3()
-        sprouting_rule.SetSproutingProbability(1.e-4*per_second())
-        migration_rule = microvessel_chaste.simulation.Owen2011MigrationRule3()
+        sprouting_rule = microvessel_chaste.simulation.OffLatticeSproutingRule3()
+        sprouting_rule.SetSproutingProbability(1.e-5*per_second())
+        migration_rule = microvessel_chaste.simulation.OffLatticeMigrationRule3()
+        migration_rule.SetChemotacticStrength(0.1)
+        migration_rule.SetAttractionStrength(0.5)
+        migration_rule.SetSproutingVelocity((40.0*1.e-6/3600.0)*metre_per_second())
+        
         angiogenesis_solver.SetMigrationRule(migration_rule)
         angiogenesis_solver.SetSproutingRule(sprouting_rule)
         sprouting_rule.SetDiscreteContinuumSolver(vegf_solver)
         migration_rule.SetDiscreteContinuumSolver(vegf_solver)
-        angiogenesis_solver.SetVesselGrid(grid)
         angiogenesis_solver.SetVesselNetwork(network)
          
         ## The microvessel solver will manage all aspects of the vessel solve.
          
         microvessel_solver = microvessel_chaste.simulation.MicrovesselSolver3()
         microvessel_solver.SetVesselNetwork(network)
-        microvessel_solver.SetOutputFrequency(5)
+        microvessel_solver.SetOutputFrequency(1)
         microvessel_solver.AddDiscreteContinuumSolver(oxygen_solver)
         microvessel_solver.AddDiscreteContinuumSolver(vegf_solver)
         microvessel_solver.SetStructuralAdaptationSolver(structural_adaptation_solver)
@@ -331,12 +328,12 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         
         ## Set up plotting
         
-        #scene.GetCellPopulationActorGenerator().SetColorByCellData(True)
-        #scene.GetCellPopulationActorGenerator().SetDataLabel("oxygen")
+        scene.GetCellPopulationActorGenerator().SetColorByCellData(True)
+        scene.GetCellPopulationActorGenerator().SetDataLabel("oxygen")
         scene_modifier = microvessel_chaste.visualization.VtkSceneMicrovesselModifier3()
 
         scene_modifier.SetVtkScene(scene)
-        scene_modifier.SetUpdateFrequency(2)
+        scene_modifier.SetUpdateFrequency(1)
         microvessel_solver.AddMicrovesselModifier(scene_modifier)
          
         ## The full simulation is run as a typical Cell Based Chaste simulation
@@ -357,20 +354,17 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         ## Set up the remainder of the simulation
          
         simulator.SetOutputDirectory("Python/TestBiologicalNetworkLiteratePaper")
-        simulator.SetSamplingTimestepMultiple(5)
+        simulator.SetSamplingTimestepMultiple(1)
         simulator.SetDt(0.5)
          
         ## This end time corresponds to roughly 10 minutes run-time on a desktop PC. Increase it or decrease as
         ## preferred. The end time used in Owen et al. 2011 is 4800 hours.
          
-        simulator.SetEndTime(20.0)
+        simulator.SetEndTime(1.5)
          
         ## Do the solve. A sample solution is shown at the top of this test.
 
-        try:
-            simulator.Solve()
-        except chaste.ChasteException as e:
-            print e.GetMessage
+        simulator.Solve()
          
         ## Dump the parameters to file for inspection.
          

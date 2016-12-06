@@ -13,3 +13,4 @@ dynamic/exposed_decl.pypp.txt
 .idea
 doc/api/build/*
 
+/Debug/

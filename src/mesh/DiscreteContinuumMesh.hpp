@@ -233,6 +233,12 @@ public:
     void SetVesselNetwork(boost::shared_ptr<VesselNetwork<SPACE_DIM> > pNetwork);
 
     /**
+     * Set nodal data
+     * @param rNodalValues the nodal values
+     */
+    void SetNodalData(std::vector<double> rNodalValues);
+
+    /**
      * This is the same as the TetrahedralMesh implementation of ImportFromMesher but avoids some templating
      * @param mesherOutput tetgen output
      * @param numberOfElements the number of elements

@@ -266,6 +266,17 @@ const std::vector<std::vector<CellPtr> >& DiscreteContinuumMesh<ELEMENT_DIM, SPA
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetNodalData(std::vector<double> rNodalValues)
+{
+    mNodalData.clear();
+    for(unsigned idx=0; idx<rNodalValues.size(); idx++)
+    {
+        mNodalData.push_back(rNodalValues[idx]);
+    }
+    mVtkRepresentationUpToDate = false;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetElementSegmentMap(bool update,
                                                                                                         bool useVesselSurface)
 {

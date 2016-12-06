@@ -102,7 +102,6 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         scene.SetPart(cornea)
         scene.GetPartActorGenerator().SetVolumeOpacity(0.7)
         scene.GetPartActorGenerator().SetVolumeColor((255.0, 255.0, 255.0))
-        scene.SetIsInteractive(True)
         # JUPYTER_SHOW_FIRST
         scene.Start()  # JUPYTER_SHOW
         
@@ -219,8 +218,8 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         
         ## Set up plotting
         
-        scene.GetDiscreteContinuumMeshActorGenerator().SetVolumeOpacity(0.6)
-        #scene.GetDiscreteContinuumMeshActorGenerator().SetDataLabel("vegf")
+        scene.GetDiscreteContinuumMeshActorGenerator().SetVolumeOpacity(0.3)
+        scene.GetDiscreteContinuumMeshActorGenerator().SetDataLabel("Nodal Values")
         scene.GetVesselNetworkActorGenerator().SetEdgeSize(5.0)
         
         scene_modifier = microvessel_chaste.visualization.VtkSceneMicrovesselModifier3()

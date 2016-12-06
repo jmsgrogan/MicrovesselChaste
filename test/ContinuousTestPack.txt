@@ -71,6 +71,7 @@ image/TestImageToSurface.hpp
 image/TestNetworkToImage.hpp
 tutorials/TestBiologicalNetworkLiteratePaper.hpp
 tutorials/TestOffLatticeAngiogenesisLiteratePaper.hpp
+tutorials/TestLatticeBasedAngiogenesisTutorial.hpp
 tutorials/TestBuildVesselNetworkTutorial.hpp
 tutorials/TestBloodFlowTutorial.hpp
 tutorials/TestSolvingPdesTutorial.hpp

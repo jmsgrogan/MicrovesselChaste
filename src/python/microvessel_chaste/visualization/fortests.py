@@ -59,7 +59,7 @@ if PYCHASTE_CAN_IMPORT_IPYTHON:
     from IPython.display import Image, HTML, display
     
     
-    def vtk_show_basic(scene, width=800, height=600):
+    def vtk_show_basic(scene, width=1000, height=800):
         
         """
         Takes a Scene instance and returns an IPython Image with the rendering.
@@ -147,7 +147,7 @@ if PYCHASTE_CAN_IMPORT_IPYTHON:
 
                 display(HTML(html_source))
         
-            def vtk_show(self, scene, width=400, height=300, output_format = "png", increment = True):
+            def vtk_show(self, scene, width=1000, height=800, output_format = "png", increment = True):
                 
                 """
                 Takes vtkRenderer instance and returns an IPython Image with the rendering.

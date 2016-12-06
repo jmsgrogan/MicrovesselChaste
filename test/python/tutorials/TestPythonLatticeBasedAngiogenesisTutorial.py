@@ -94,7 +94,6 @@ class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite)
         
         grid.Write(file_handler) 
         scene = microvessel_chaste.visualization.MicrovesselVtkScene2()
-        scene.SetIsInteractive(True)
         scene.SetRegularGrid(grid)
         scene.GetRegularGridActorGenerator().SetVolumeOpacity(0.1)
         # JUPYTER_SHOW_FIRST
@@ -148,7 +147,6 @@ class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite)
         scene.GetCellPopulationActorGenerator().GetDiscreteColorTransferFunction().AddRGBPoint(1.0, 0.0, 0.0, 0.6)
         scene.GetCellPopulationActorGenerator().SetPointSize(20)
         scene.GetCellPopulationActorGenerator().SetColorByCellMutationState(True)
-        scene.ResetRenderer()
         scene.Start()  # JUPYTER_SHOW
         
         ## Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources. 
@@ -164,7 +162,7 @@ class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite)
         vessel_oxygen_source = microvessel_chaste.pde.VesselBasedDiscreteSource2()
         #oxygen_solubility_at_stp = Secomb04Parameters.mpOxygenVolumetricSolubility.GetValue("User") * GenericParameters.mpGasConcentrationAtStp.GetValue("User")
         #vessel_oxygen_concentration = oxygen_solubility_at_stp * Owen11Parameters.mpReferencePartialPressure.GetValue("User")
-        vessel_oxygen_concentration = 0.03 * mole_per_metre_cubed()
+        vessel_oxygen_concentration = 0.02768 * mole_per_metre_cubed()
         vessel_oxygen_source.SetReferenceConcentration(vessel_oxygen_concentration)
         vessel_oxygen_source.SetVesselPermeability(Owen11Parameters.mpVesselOxygenPermeability.GetValue("User"))
         vessel_oxygen_source.SetReferenceHaematocrit(Owen11Parameters.mpInflowHaematocrit.GetValue("User"))
@@ -278,8 +276,8 @@ class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite)
         
         ## Set up plotting
         
-        #scene.GetCellPopulationActorGenerator().SetColorByCellData(True)
-        #scene.GetCellPopulationActorGenerator().SetDataLabel("oxygen")
+        scene.GetCellPopulationActorGenerator().SetColorByCellData(True)
+        scene.GetCellPopulationActorGenerator().SetDataLabel("oxygen")
         scene_modifier = microvessel_chaste.visualization.VtkSceneMicrovesselModifier2()
 
         scene_modifier.SetVtkScene(scene)
