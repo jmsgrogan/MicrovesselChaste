@@ -41,7 +41,7 @@ class BinaryDistribution(Distribution):
 
 setup(
     name = "microvessel_chaste",
-    version = "3.4.dev0",
+    version = "3.4.1",
     packages = find_packages(),
     #install_requires = ['petsc4py==3.7', 'matplotlib', 'numpy'],
     package_data={
@@ -60,8 +60,8 @@ setup(
     data_files = [('tutorials', ['doc/tutorials/TestPythonOffLatticeAngiogenesisLiteratePaper.ipynb', 
                                 'doc/tutorials/TestPythonLatticeBasedAngiogenesisTutorial.ipynb',
                                 'doc/tutorials/TestPythonBuildVesselNetworkTutorial.ipynb',
-                                'doc/tutorials/TestPythonBiologicalNetworkLiteratePaper.ipynb',])],
-      
+                                'doc/tutorials/TestPythonBiologicalNetworkLiteratePaper.ipynb',
+                                'doc/tutorials/bio_original.vtp',])],
       
     include_package_data=True,
     zip_safe = False,

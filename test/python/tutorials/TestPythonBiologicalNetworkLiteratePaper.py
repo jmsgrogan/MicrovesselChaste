@@ -309,7 +309,7 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
          
         microvessel_solver = microvessel_chaste.simulation.MicrovesselSolver3()
         microvessel_solver.SetVesselNetwork(network)
-        microvessel_solver.SetOutputFrequency(1)
+        microvessel_solver.SetOutputFrequency(5)
         microvessel_solver.AddDiscreteContinuumSolver(oxygen_solver)
         microvessel_solver.AddDiscreteContinuumSolver(vegf_solver)
         microvessel_solver.SetStructuralAdaptationSolver(structural_adaptation_solver)
@@ -333,7 +333,7 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         scene_modifier = microvessel_chaste.visualization.VtkSceneMicrovesselModifier3()
 
         scene_modifier.SetVtkScene(scene)
-        scene_modifier.SetUpdateFrequency(1)
+        scene_modifier.SetUpdateFrequency(5)
         microvessel_solver.AddMicrovesselModifier(scene_modifier)
          
         ## The full simulation is run as a typical Cell Based Chaste simulation
@@ -354,13 +354,13 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         ## Set up the remainder of the simulation
          
         simulator.SetOutputDirectory("Python/TestBiologicalNetworkLiteratePaper")
-        simulator.SetSamplingTimestepMultiple(1)
+        simulator.SetSamplingTimestepMultiple(5)
         simulator.SetDt(0.5)
          
         ## This end time corresponds to roughly 10 minutes run-time on a desktop PC. Increase it or decrease as
         ## preferred. The end time used in Owen et al. 2011 is 4800 hours.
          
-        simulator.SetEndTime(1.5)
+        simulator.SetEndTime(4800.0)
          
         ## Do the solve. A sample solution is shown at the top of this test.
 

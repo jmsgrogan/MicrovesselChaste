@@ -1,12 +1,12 @@
 package:
   name: microvessel-chaste
-  version: 3.4
+  version: 3.4.1
 
 source:
   path: /home/grogan/Chaste
 
 build:
-  number: 1
+  number: 3
 
 requirements:
   build:
@@ -17,7 +17,6 @@ requirements:
     - petsc ==3.7.4
     - boost
     - lxml
-    - amara ==1.2.0.2
     - rdflib
     - setuptools
     - distribute
@@ -35,15 +34,12 @@ requirements:
     - vtk ==7.0
     - petsc ==3.7.4
     - boost
-    - scipy
     - matplotlib
     - petsc4py ==3.7
     - jupyter
     - lxml
-    - amara ==1.2.0.2
     - rdflib
     - numpy
-    - matplotlib
     - curl
     - blas 1.* openblas
 

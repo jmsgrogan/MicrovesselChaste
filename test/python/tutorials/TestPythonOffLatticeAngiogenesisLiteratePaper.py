@@ -191,7 +191,7 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
 
         angiogenesis_solver = microvessel_chaste.simulation.AngiogenesisSolver3()
         sprouting_rule = microvessel_chaste.simulation.OffLatticeSproutingRule3()
-        sprouting_rule.SetSproutingProbability(1.e6* per_second())
+        sprouting_rule.SetSproutingProbability(1.e-4* per_second())
         migration_rule = microvessel_chaste.simulation.OffLatticeMigrationRule3()
         migration_rule.SetChemotacticStrength(0.1)
         migration_rule.SetAttractionStrength(0.5)
@@ -212,7 +212,7 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         microvessel_solver.SetVesselNetwork(network)
         microvessel_solver.AddDiscreteContinuumSolver(vegf_solver)
         microvessel_solver.SetOutputFileHandler(file_handler)
-        microvessel_solver.SetOutputFrequency(5)
+        microvessel_solver.SetOutputFrequency(1)
         microvessel_solver.SetAngiogenesisSolver(angiogenesis_solver)
         microvessel_solver.SetUpdatePdeEachSolve(False)
         
@@ -224,12 +224,12 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         
         scene_modifier = microvessel_chaste.visualization.VtkSceneMicrovesselModifier3()
         scene_modifier.SetVtkScene(scene)
-        scene_modifier.SetUpdateFrequency(2)
-        microvessel_solver.AddMicrovesselModifier(scene_modifier)
+        scene_modifier.SetUpdateFrequency(1)
+        #microvessel_solver.AddMicrovesselModifier(scene_modifier)
         
         ## Set the simulation time and run the solver.
         
-        chaste.cell_based.SimulationTime.Instance().SetEndTimeAndNumberOfTimeSteps(100.0, 10)
+        chaste.cell_based.SimulationTime.Instance().SetEndTimeAndNumberOfTimeSteps(300.0, 25)
         microvessel_solver.Run()
         
         ## Dump the parameters to file for inspection.
