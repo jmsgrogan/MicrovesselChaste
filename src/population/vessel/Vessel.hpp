@@ -313,7 +313,7 @@ public:
      * Set the radius
      * @param radius the radius
      */
-    void SetRadius(units::quantity<unit::length>  radius);
+    void SetRadius(units::quantity<unit::length> radius);
 
     /**
      * Set the flow properties of the vessel

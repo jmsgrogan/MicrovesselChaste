@@ -38,6 +38,7 @@ mesh/TestDiscreteContinuumMesh.hpp
 mesh/TestMeshReaderAndWriter.hpp
 pde/TestFiniteDifferenceSolver.hpp
 pde/TestNonLinearFiniteDifferenceSolver.hpp
+pde/TestTimeDependentFiniteDifferenceSolver.hpp
 pde/TestGreensFunctionSolver.hpp
 pde/TestFiniteElementSolver.hpp
 pde/TestNonLinearFiniteElementSolver.hpp
@@ -75,6 +76,7 @@ tutorials/TestLatticeBasedAngiogenesisTutorial.hpp
 tutorials/TestBuildVesselNetworkTutorial.hpp
 tutorials/TestBloodFlowTutorial.hpp
 tutorials/TestSolvingPdesTutorial.hpp
+tutorials/TestTipSensingPaper.hpp
 python/population/TestVesselNodePython.py
 python/geometry/TestPolygonPython.py
 python/geometry/TestFacetPython.py

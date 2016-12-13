@@ -69,6 +69,21 @@ protected:
      */
     units::quantity<unit::dimensionless> mReferenceHaematocrit;
 
+    /**
+     * Uptake rate per cell (nonlinear model only)
+     */
+    units::quantity<unit::molar_flow_rate> mUptakeRatePerCell;
+
+    /**
+     * Cell per metre (nonlinear model only)
+     */
+    units::quantity<unit::per_length> mCellsPerMetre;
+
+    /**
+     * Is the vessel acting as a sink or source
+     */
+    bool mVesselIsSource;
+
 public:
 
     /**
@@ -112,6 +127,12 @@ public:
     std::vector<units::quantity<unit::rate> > GetLinearInURegularGridValues();
 
     /**
+     * Return the values of the source strengths sampled on the regular grid
+     * @return a vector of source strengths
+     */
+    std::vector<units::quantity<unit::concentration_flow_rate> > GetNonlinearTermRegularGridValues();
+
+    /**
      * Set the value of the source for PRESCRIBED type sources
      * @param value the value of the source
      */
@@ -123,11 +144,17 @@ public:
      */
     void SetReferenceConcentration(units::quantity<unit::concentration> value);
 
+    void SetVesselIsSource(bool mVesselIsSource);
+
     /**
      * Set the value of the source for PRESCRIBED type sources
      * @param value the value of the source
      */
     void SetReferenceHaematocrit(units::quantity<unit::dimensionless> value);
+
+    void SetUptakeRatePerCell(units::quantity<unit::molar_flow_rate> ratePerCell);
+
+    void SetNumberOfCellsPerLength(units::quantity<unit::per_length> cellsPerLength);
 
 };
 

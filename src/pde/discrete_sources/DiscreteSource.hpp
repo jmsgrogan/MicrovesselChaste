@@ -129,6 +129,12 @@ public:
     virtual std::vector<units::quantity<unit::rate> > GetLinearInURegularGridValues();
 
     /**
+     * Return the values of the source strengths sampled on the regular grid
+     * @return a vector of source strengths
+     */
+    virtual std::vector<units::quantity<unit::concentration_flow_rate> > GetNonlinearTermRegularGridValues();
+
+    /**
      * Set the name of the label used in LABEL type sources
      * @param rLabel the label for the source strength value
      */

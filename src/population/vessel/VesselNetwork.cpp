@@ -216,6 +216,7 @@ void VesselNetwork<DIM>::ExtendVessel(boost::shared_ptr<Vessel<DIM> > pVessel, b
         boost::shared_ptr<VesselSegment<DIM> > p_segment = VesselSegment<DIM>::Create(pNewNode, pEndNode);
         p_segment->SetFlowProperties(*(pEndNode->GetSegments()[0]->GetFlowProperties()));
         p_segment->SetRadius(pEndNode->GetSegments()[0]->GetRadius());
+        p_segment->SetMaturity(0.0);
         pVessel->AddSegment(p_segment);
     }
     else
@@ -223,6 +224,7 @@ void VesselNetwork<DIM>::ExtendVessel(boost::shared_ptr<Vessel<DIM> > pVessel, b
         boost::shared_ptr<VesselSegment<DIM> > p_segment = VesselSegment<DIM>::Create(pEndNode, pNewNode);
         p_segment->SetFlowProperties(*(pEndNode->GetSegments()[0]->GetFlowProperties()));
         p_segment->SetRadius(pEndNode->GetSegments()[0]->GetRadius());
+        p_segment->SetMaturity(0.0);
         pVessel->AddSegment(p_segment);
     }
 
@@ -257,6 +259,7 @@ boost::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::FormSprout(const Dimensional
     p_new_segment->GetFlowProperties()->SetImpedance(0.0*unit::pascal_second_per_metre_cubed);
     p_new_segment->GetFlowProperties()->SetHaematocrit(0.0);
     p_new_segment->GetFlowProperties()->SetGrowthStimulus(0.0*unit::per_second);
+    p_new_segment->SetMaturity(0.0);
 
     boost::shared_ptr<Vessel<DIM> > p_new_vessel = Vessel<DIM>::Create(p_new_segment);
     // Sprouting won't save you.

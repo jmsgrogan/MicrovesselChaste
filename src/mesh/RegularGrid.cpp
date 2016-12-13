@@ -123,11 +123,155 @@ void RegularGrid<DIM>::CalculateNeighbourData()
 }
 
 template<unsigned DIM>
+void RegularGrid<DIM>::CalculateMooreNeighbourData()
+{
+    mNeighbourData = std::vector<std::vector<unsigned> >(GetNumberOfPoints());
+    for (unsigned kdx = 0; kdx < mExtents[2]; kdx++)
+    {
+        for (unsigned jdx = 0; jdx < mExtents[1]; jdx++)
+        {
+            for (unsigned idx = 0; idx < mExtents[0]; idx++)
+            {
+                unsigned index = Get1dGridIndex(idx, jdx, kdx);
+                if (idx > 0)
+                {
+                    mNeighbourData[index].push_back(Get1dGridIndex(idx - 1, jdx, kdx));
+                }
+                if (idx < mExtents[0] - 1)
+                {
+                    mNeighbourData[index].push_back(Get1dGridIndex(idx + 1, jdx, kdx));
+                }
+                if (jdx > 0)
+                {
+                    mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx - 1, kdx));
+                }
+                if (jdx < mExtents[1] - 1)
+                {
+                    mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx + 1, kdx));
+                }
+                if (kdx > 0)
+                {
+                    mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx, kdx - 1));
+                }
+                if (kdx < mExtents[2] - 1)
+                {
+                    mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx, kdx + 1));
+                }
+
+                if (idx > 0)
+                {
+                    if(jdx>0)
+                    {
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx - 1, jdx-1, kdx));
+                        if(kdx>0)
+                        {
+                            mNeighbourData[index].push_back(Get1dGridIndex(idx - 1, jdx-1, kdx-1));
+                        }
+                        if(kdx<mExtents[2] - 1)
+                        {
+                            mNeighbourData[index].push_back(Get1dGridIndex(idx - 1, jdx-1, kdx+1));
+                        }
+                    }
+                    if(kdx>0)
+                    {
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx-1, kdx-1));
+                    }
+                    if(kdx<mExtents[2] - 1)
+                    {
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx-1, kdx+1));
+                    }
+                }
+                if (idx > 0)
+                {
+                    if(jdx<mExtents[1] - 1)
+                    {
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx - 1, jdx+1, kdx));
+                        if(kdx>0)
+                        {
+                            mNeighbourData[index].push_back(Get1dGridIndex(idx - 1, jdx+1, kdx-1));
+                        }
+                        if(kdx<mExtents[2] - 1)
+                        {
+                            mNeighbourData[index].push_back(Get1dGridIndex(idx - 1, jdx+1, kdx+1));
+                        }
+                    }
+                    if(kdx>0)
+                    {
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx+1, kdx-1));
+                    }
+                    if(kdx<mExtents[2] - 1)
+                    {
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx+1, kdx+1));
+                    }
+                }
+
+                if (idx < mExtents[0] - 1)
+                {
+                    if(jdx>0)
+                    {
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx + 1, jdx-1, kdx));
+                        if(kdx>0)
+                        {
+                            mNeighbourData[index].push_back(Get1dGridIndex(idx + 1, jdx-1, kdx-1));
+                        }
+                        if(kdx<mExtents[2] - 1)
+                        {
+                            mNeighbourData[index].push_back(Get1dGridIndex(idx + 1, jdx-1, kdx+1));
+                        }
+                    }
+                    if(kdx>0)
+                    {
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx+1, jdx, kdx-1));
+                    }
+                    if(kdx<mExtents[2] - 1)
+                    {
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx+1, jdx, kdx+1));
+                    }
+                }
+                if (idx < mExtents[0] - 1)
+                {
+                    if(jdx<mExtents[1] - 1)
+                    {
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx + 1, jdx+1, kdx));
+                        if(kdx>0)
+                        {
+                            mNeighbourData[index].push_back(Get1dGridIndex(idx + 1, jdx+1, kdx-1));
+                        }
+                        if(kdx<mExtents[2] - 1)
+                        {
+                            mNeighbourData[index].push_back(Get1dGridIndex(idx + 1, jdx+1, kdx+1));
+                        }
+                    }
+                    if(kdx>0)
+                    {
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx+1, jdx, kdx-1));
+                    }
+                    if(kdx<mExtents[2] - 1)
+                    {
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx+1, jdx, kdx+1));
+                    }
+                }
+            }
+        }
+    }
+}
+
+template<unsigned DIM>
 const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::GetNeighbourData()
 {
     if (mNeighbourData.size() == 0 or mNeighbourData.size() != GetNumberOfPoints())
     {
         CalculateNeighbourData();
+    }
+    return mNeighbourData;
+}
+
+template<unsigned DIM>
+const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::GetMooreNeighbourData()
+{
+    if (mNeighbourData.size() == 0 or mNeighbourData.size() != GetNumberOfPoints())
+    {
+        CalculateMooreNeighbourData();
     }
     return mNeighbourData;
 }
