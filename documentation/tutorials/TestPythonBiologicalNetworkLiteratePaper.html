@@ -11883,9 +11883,7 @@ results. For our purposes microns for length and hours for time are suitable bas
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">vessel_reader</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">vessel</span><span class="o">.</span><span class="n">VesselNetworkReader3</span><span class="p">()</span>
-<span class="n">file_finder</span> <span class="o">=</span> <span class="n">chaste</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">FileFinder</span><span class="p">(</span><span class="s2">&quot;/projects/MicrovesselChaste/test/data/bio_original.vtp&quot;</span><span class="p">,</span>
-                                     <span class="n">chaste</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">RelativeTo</span><span class="o">.</span><span class="n">ChasteSourceRoot</span><span class="p">)</span>
-<span class="n">vessel_reader</span><span class="o">.</span><span class="n">SetFileName</span><span class="p">(</span><span class="n">file_finder</span><span class="o">.</span><span class="n">GetAbsolutePath</span><span class="p">())</span>
+<span class="n">vessel_reader</span><span class="o">.</span><span class="n">SetFileName</span><span class="p">(</span><span class="s2">&quot;bio_original.vtp&quot;</span><span class="p">)</span>
 <span class="n">vessel_reader</span><span class="o">.</span><span class="n">SetMergeCoincidentPoints</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">vessel_reader</span><span class="o">.</span><span class="n">SetTargetSegmentLength</span><span class="p">(</span><span class="mf">40.0e-6</span><span class="o">*</span><span class="n">metre</span><span class="p">())</span>
 <span class="n">network</span> <span class="o">=</span> <span class="n">vessel_reader</span><span class="o">.</span><span class="n">Read</span><span class="p">()</span>
@@ -17119,7 +17117,7 @@ as outflows.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">eachNode</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">GetNodes</span><span class="p">():</span>
@@ -17151,7 +17149,7 @@ as outflows.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">network</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">file_handler</span><span class="o">.</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;flow_boundary_labelled_network.vtp&quot;</span><span class="p">)</span>
@@ -17177,7 +17175,7 @@ take a few seconds to set up the population.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cell_population_genenerator</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">Owen11CellPopulationGenerator3</span><span class="p">()</span>
@@ -17206,7 +17204,7 @@ at this point. The model can be better visualized in Paraview using the files we
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">scene</span><span class="o">.</span><span class="n">SetCellPopulation</span><span class="p">(</span><span class="n">cell_population</span><span class="p">)</span>
@@ -17225,7 +17223,7 @@ at this point. The model can be better visualized in Paraview using the files we
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[16]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[15]:</div>
 
 
 <div class="output_png output_subarea output_execute_result">
@@ -21067,7 +21065,7 @@ AElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">oxygen_pde</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">LinearSteadyStateDiffusionReactionPde3_3</span><span class="p">()</span>
@@ -21094,7 +21092,7 @@ AElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">vessel_oxygen_source</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">VesselBasedDiscreteSource3</span><span class="p">()</span>
@@ -21124,7 +21122,7 @@ AElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">oxygen_solver</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">FiniteDifferenceSolver3</span><span class="p">()</span>
@@ -21151,7 +21149,7 @@ type of discrete source.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">vegf_pde</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">LinearSteadyStateDiffusionReactionPde3_3</span><span class="p">()</span>
@@ -21177,7 +21175,7 @@ VEGF below which there is no release.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">normal_and_quiescent_cell_source</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">CellStateDependentDiscreteSource3</span><span class="p">()</span>
@@ -21212,7 +21210,7 @@ VEGF below which there is no release.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">vessel_vegf_sink</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">VesselBasedDiscreteSource3</span><span class="p">()</span>
@@ -21238,7 +21236,7 @@ VEGF below which there is no release.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">vegf_solver</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">FiniteDifferenceSolver3</span><span class="p">()</span>
@@ -21266,7 +21264,7 @@ flow related stimuli.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">large_vessel_radius</span> <span class="o">=</span> <span class="mf">25.0e-6</span> <span class="o">*</span> <span class="n">metre</span><span class="p">()</span>
@@ -21292,7 +21290,7 @@ flow related stimuli.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">impedance_calculator</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">VesselImpedanceCalculator3</span><span class="p">()</span>
@@ -21322,7 +21320,7 @@ flow related stimuli.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">structural_adaptation_solver</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">StructuralAdaptationSolver3</span><span class="p">()</span>
@@ -21354,7 +21352,7 @@ flow related stimuli.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">regression_solver</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">WallShearStressBasedRegressionSolver3</span><span class="p">()</span>
@@ -21377,7 +21375,7 @@ flow related stimuli.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">angiogenesis_solver</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">AngiogenesisSolver3</span><span class="p">()</span>
@@ -21411,7 +21409,7 @@ flow related stimuli.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">microvessel_solver</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">MicrovesselSolver3</span><span class="p">()</span>
@@ -21442,7 +21440,7 @@ which extracellular fields to update based on PDE solutions.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">microvessel_modifier</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">MicrovesselSimulationModifier3</span><span class="p">()</span>
@@ -21470,7 +21468,7 @@ which extracellular fields to update based on PDE solutions.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">scene</span><span class="o">.</span><span class="n">GetCellPopulationActorGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">SetColorByCellData</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -21498,7 +21496,7 @@ which extracellular fields to update based on PDE solutions.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">simulator</span> <span class="o">=</span> <span class="n">chaste</span><span class="o">.</span><span class="n">cell_based</span><span class="o">.</span><span class="n">OnLatticeSimulation3</span><span class="p">(</span><span class="n">cell_population</span><span class="p">)</span>
@@ -21522,7 +21520,7 @@ which extracellular fields to update based on PDE solutions.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="prompt input_prompt">In&nbsp;[32]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">apoptotic_cell_killer</span> <span class="o">=</span> <span class="n">chaste</span><span class="o">.</span><span class="n">cell_based</span><span class="o">.</span><span class="n">ApoptoticCellKiller3</span><span class="p">(</span><span class="n">cell_population</span><span class="p">)</span>
@@ -21546,7 +21544,7 @@ which extracellular fields to update based on PDE solutions.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="prompt input_prompt">In&nbsp;[33]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">owen11_tracking_modifier</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">Owen2011TrackingModifier3</span><span class="p">()</span>
@@ -21570,7 +21568,7 @@ which extracellular fields to update based on PDE solutions.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="prompt input_prompt">In&nbsp;[34]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">simulator</span><span class="o">.</span><span class="n">SetOutputDirectory</span><span class="p">(</span><span class="s2">&quot;Python/TestBiologicalNetworkLiteratePaper&quot;</span><span class="p">)</span>
@@ -21596,7 +21594,7 @@ preferred. The end time used in Owen et al. 2011 is 4800 hours.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[35]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">simulator</span><span class="o">.</span><span class="n">SetEndTime</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
@@ -21619,7 +21617,7 @@ preferred. The end time used in Owen et al. 2011 is 4800 hours.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="prompt input_prompt">In&nbsp;[36]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">simulator</span><span class="o">.</span><span class="n">Solve</span><span class="p">()</span>
@@ -28556,7 +28554,7 @@ YEDcAQBgQNwBAGBA3AEAYEDcAQBgQNwBAGAgz6WyCcmnR30AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="prompt input_prompt">In&nbsp;[37]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">ParameterCollection</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">DumpToFile</span><span class="p">(</span><span class="n">file_handler</span><span class="o">.</span><span class="n">GetOutputDirectoryFullPath</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot;parameter_collection.xml&quot;</span><span class="p">)</span>
@@ -28650,7 +28648,7 @@ YEDcAQBgQNwBAGBA3AEAYEDcAQBgQNwBAGAgz6WyCcmnR30AAAAASUVORK5CYII=
 <tr>
 <td>Owen11_MaxCellVegfProductionRate</td>
 <td>0.000166667 Hz</td>
-<td>$$k_8_dash$$</td>
+<td>$$k_{8*}$$</td>
 <td>Owen2011OxygenBasedCellCycleOdeSystem</td>
 <td>Max VEGF production rate in cell</td>
 </tr>
@@ -28678,14 +28676,14 @@ YEDcAQBgQNwBAGBA3AEAYEDcAQBgQNwBAGAgz6WyCcmnR30AAAAASUVORK5CYII=
 <tr>
 <td>Owen11_MinCellCycleCancer</td>
 <td>96000 s</td>
-<td>$$T_{min}_{cancer}$$</td>
+<td>$$T_{min}^{cancer}$$</td>
 <td>Owen2011OxygenBasedCellCycleOdeSystem</td>
 <td>Minimum cell cycle period cancer</td>
 </tr>
 <tr>
 <td>Owen11_MinCellCycleNormal</td>
 <td>180000 s</td>
-<td>$$T_{min}_{normal}$$</td>
+<td>$$T_{min}^{normal}$$</td>
 <td>Owen2011OxygenBasedCellCycleOdeSystem</td>
 <td>Minimum cell cycle period normal</td>
 </tr>
@@ -28706,14 +28704,14 @@ YEDcAQBgQNwBAGBA3AEAYEDcAQBgQNwBAGAgz6WyCcmnR30AAAAASUVORK5CYII=
 <tr>
 <td>Owen11_OxygenAtHalfMaxCycleRateCancer</td>
 <td>186.651 Pa</td>
-<td>$$C_{\phi}_{cancer}$$</td>
+<td>$$C_{\phi}^{cancer}$$</td>
 <td>Owen2011OxygenBasedCellCycleOdeSystem</td>
 <td>Oxygen partial pressure at half max cell cycle rate cancer</td>
 </tr>
 <tr>
 <td>Owen11_OxygenAtHalfMaxCycleRateNormal</td>
 <td>399.966 Pa</td>
-<td>$$C_{\phi}_{normal}$$</td>
+<td>$$C_{\phi}^{normal}$$</td>
 <td>Owen2011OxygenBasedCellCycleOdeSystem</td>
 <td>Oxygen partial pressure at half max cell cycle rate normal</td>
 </tr>
@@ -28755,14 +28753,14 @@ YEDcAQBgQNwBAGBA3AEAYEDcAQBgQNwBAGAgz6WyCcmnR30AAAAASUVORK5CYII=
 <tr>
 <td>Owen11_P53EffectOnVegfProduction</td>
 <td>-3.33333e-05 Hz</td>
-<td>$$k_8_dash_dash$$</td>
+<td>$$k_{8**}$$</td>
 <td>Owen2011OxygenBasedCellCycleOdeSystem</td>
 <td>Effect of P53 on VEGF production</td>
 </tr>
 <tr>
 <td>Owen11_P53MaxDegradationRate</td>
 <td>0.000166667 Hz</td>
-<td>$$k_dash_7$$</td>
+<td>$$k_{*7}$$</td>
 <td>Owen2011OxygenBasedCellCycleOdeSystem</td>
 <td>Max p53 degradation rate</td>
 </tr>

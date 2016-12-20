@@ -362,25 +362,7 @@ $(document).ready(function(){
   
   
   
-    {
-      "title": "F(by) 2016",
-      "logo": "/resources/img/fby.png",
-      "location": "Minsk, Belarus",
-      "start": "10 Dec 2016",
-      "end": "10 Dec 2016",
-      "url": "http://fby.by/en/",
-    },
   
-  
-  
-    {
-      "title": "Scala Exchange 2016",
-      "logo": "/resources/img/scalaexchange.png",
-      "location": "London, UK",
-      "start": "8 December 2016",
-      "end": "9 December 2016",
-      "url": "https://skillsmatter.com/conferences/7432-scala-exchange-2016",
-    },
   
   
   

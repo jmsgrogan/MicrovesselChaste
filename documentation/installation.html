@@ -82,6 +82,7 @@
 <div class="highlight"><pre><code class="language-" data-lang="">conda config --add channels conda-forge
 conda config --add channels jmsgrogan
 conda install microvessel-chaste
+conda install libgcc
 </code></pre></div>
 <p>You should then be able to do:</p>
 <div class="highlight"><pre><code class="language-" data-lang="">import microvessel_chaste
@@ -90,6 +91,9 @@ conda install microvessel-chaste
 
 <p>If you need to install <code>conda</code>, the <a href="http://conda.pydata.org/miniconda.html">Miniconda</a> package will suffice. </p>
 
+<p>It may be necessary to run the following if you are starting with a &#39;clean&#39; version of Ubuntu to install some typical packages:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">sudo apt-get install build-essential lsb-release libgl1-mesa-dev:amd64 libxt-dev:amd64 libatlas-base-dev
+</code></pre></div>
 <h3>Docker</h3>
 
 <p>A Docker image is also available. This image will launch a Jupyter notebook at <a href="http://localhost::8888">http://localhost::8888</a> in a web browser, which can be used to try out the package. If you already have docker installed do:</p>
@@ -160,7 +164,8 @@ python setup.py install
 <ul>
 <li>Missing Boost Python when building from source: If you are building from source you may need to install Boost Python in addition to the Chaste dependencies. Do <code>sudo apt-get install libboost-python-dev</code> on Ubuntu to obtain it.</li>
 <li>Missing librt.so when loading conda package: this is a problem with the version of VTK in conda-forge. Make sure you have added the conda channels in the order above.</li>
-<li>Missing liblapack.so when loading conda package: libatlas is needed on the system. Do <code>sudo apt-get install libatlas-base-dev</code> on Ubuntu.</li>
+<li>GCC ABI errors when importing chaste from the conda package. The conda package is built with GCC 5 and needs the corresponding version of libstdc++. This library is easily hidden by the system version or other conda packages. It is suggested that chaste is
+run in its own conda environment and that the conda &#39;libgcc&#39; package is installed on its own after chaste.</li>
 </ul>
 
           </div>
