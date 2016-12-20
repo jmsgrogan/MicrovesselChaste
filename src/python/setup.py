@@ -41,7 +41,7 @@ class BinaryDistribution(Distribution):
 
 setup(
     name = "microvessel_chaste",
-    version = "3.4.1",
+    version = "3.4.2",
     packages = find_packages(),
     #install_requires = ['petsc4py==3.7', 'matplotlib', 'numpy'],
     package_data={

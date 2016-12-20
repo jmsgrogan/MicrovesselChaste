@@ -2,14 +2,16 @@
 
 This is an add-on for agent-based modelling of microvessels with [Chaste](http://www.cs.ox.ac.uk/chaste/). See the [project website](https://jmsgrogan.github.io/MicrovesselChaste/) for more details.
 
-# Installation 
+## Install from Source (Linux Only)
 
 The project can be used directly as a typical C++ Chaste project. First, Chaste dependencies need to be built following the [Chaste Install Guide](https://chaste.cs.ox.ac.uk/trac/wiki/InstallGuides/InstallGuide). 
 
-The project only supports the development version of Chaste. This can be obtained by doing:
+The project only supports a specific development version of Chaste. It will eventually match the next Chaste release.
+
+This can be obtained by doing:
 
 ```bash
-git clone -b develop https://chaste.cs.ox.ac.uk/git/chaste.git $CHASTE_SOURCE_DIR
+git clone --branch paper/MicrovesselChaste  https://chaste.cs.ox.ac.uk/git/chaste.git $CHASTE_SOURCE_DIR
 ```
 
 The project code itself can be obtained by doing: 
@@ -30,13 +32,27 @@ The C++ libraries can be built using the [Chaste CMake build system](https://cha
 ```bash
 cd $CHASTE_BUILD_DIR
 cmake $CHASTE_SOURCE_DIR
-make project_Microvessel -j $NUM_AVAILABLE_CPUS
+make project_MicrovesselChaste -j $NUM_AVAILABLE_CPUS
 ```
 
 This will build the C++ library and all tests. To avoid building tests do:
 
 ```bash
-make chaste_project_Microvessel -j $NUM_AVAILABLE_CPUS
+make chaste_project_MicrovesselChaste -j $NUM_AVAILABLE_CPUS
 ```
 
 as the final command. The [Chaste CMake build system guide](https://chaste.cs.ox.ac.uk/trac/wiki/ChasteGuides/CmakeBuildGuide) should be consulted for options related to generating optimized builds, running other types of test and installation as a system library.
+
+To build the Python package it is necessary to first build PyChaste following the instructions [here](https://jmsgrogan.github.io/PyChaste/documentation/installation.html). The MicrovesselChaste package can then be built in a similar way.
+
+```bash
+cd $BUILD_DIR
+make project_MicrovesselChaste_Python
+``` 
+
+The Python package `microvessel-chaste` will be in `$BUILD_DIR` under `projects/MicrovesselChaste/python`. You can either add `$BUILD_DIR/projects/MicrovesselChaste/python` to your PYTHONPATH or do:
+
+```bash
+cd $BUILD_DIR/projects/MicrovesselChaste/python
+python setup.py install
+``` 

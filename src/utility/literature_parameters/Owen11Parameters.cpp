@@ -72,14 +72,14 @@ const boost::shared_ptr<ParameterInstance<unit::time> > Owen11Parameters::mpMini
         boost::shared_ptr<ParameterInstance<unit::time> >(new ParameterInstance<unit::time> (3000.0*min,
                                                                                    "Owen11_MinCellCycleNormal",
                                                                                    "Minimum cell cycle period normal",
-                                                                                   "T_{min}_{normal}",
+                                                                                   "T_{min}^{normal}",
                                                                                    bib_info));
 
 const boost::shared_ptr<ParameterInstance<unit::time> > Owen11Parameters::mpMinimumCellCyclePeriodCancer =
         boost::shared_ptr<ParameterInstance<unit::time> >(new ParameterInstance<unit::time> (1600.0*min,
                                                                                    "Owen11_MinCellCycleCancer",
                                                                                    "Minimum cell cycle period cancer",
-                                                                                   "T_{min}_{cancer}",
+                                                                                   "T_{min}^{cancer}",
                                                                                    bib_info));
 
 const boost::shared_ptr<ParameterInstance<unit::time> > Owen11Parameters::mpTimeToDeathDueToQuiescence =
@@ -93,14 +93,14 @@ const boost::shared_ptr<ParameterInstance<unit::pressure> > Owen11Parameters::mp
         boost::shared_ptr<ParameterInstance<unit::pressure> >(new ParameterInstance<unit::pressure> (3.0*mmHg,
                                                                                    "Owen11_OxygenAtHalfMaxCycleRateNormal",
                                                                                    "Oxygen partial pressure at half max cell cycle rate normal",
-                                                                                   "C_{\\phi}_{normal}",
+                                                                                   "C_{\\phi}^{normal}",
                                                                                    bib_info));
 
 const boost::shared_ptr<ParameterInstance<unit::pressure> > Owen11Parameters::mpOxygenPartialPressureAtHalfMaxCycleRateCancer =
         boost::shared_ptr<ParameterInstance<unit::pressure> >(new ParameterInstance<unit::pressure> (1.4*mmHg,
                                                                                    "Owen11_OxygenAtHalfMaxCycleRateCancer",
                                                                                    "Oxygen partial pressure at half max cell cycle rate cancer",
-                                                                                   "C_{\\phi}_{cancer}",
+                                                                                   "C_{\\phi}^{cancer}",
                                                                                    bib_info));
 
 const boost::shared_ptr<ParameterInstance<unit::pressure> > Owen11Parameters::mpOxygenPartialPressureAtQuiescence =
@@ -124,7 +124,7 @@ const boost::shared_ptr<ParameterInstance<unit::diffusivity_per_concentration> >
         boost::shared_ptr<ParameterInstance<unit::diffusivity_per_concentration> >(new ParameterInstance<unit::diffusivity_per_concentration> (chemotactic_sensitivty,
                                                                                    "Owen11_ChemotacticSensitivity",
                                                                                    "Chemotactic sensitivity",
-                                                                                   "\\Chi",
+                                                                                   "\\chi",
                                                                                    bib_info));
 
 const boost::shared_ptr<ParameterInstance<unit::diffusivity> > Owen11Parameters::mpCellMotilityNormal =
@@ -267,7 +267,7 @@ const boost::shared_ptr<ParameterInstance<unit::rate> > Owen11Parameters::mpP53M
         boost::shared_ptr<ParameterInstance<unit::rate> >(new ParameterInstance<unit::rate> (0.01/min,
                                                                                    "Owen11_P53MaxDegradationRate",
                                                                                    "Max p53 degradation rate",
-                                                                                   "k_dash_7",
+                                                                                   "k_{*7}",
                                                                                    bib_info));
 
 const boost::shared_ptr<ParameterInstance<unit::pressure> > Owen11Parameters::mpOxygenTensionForHalfMaxP53Degradation =
@@ -288,14 +288,14 @@ const boost::shared_ptr<ParameterInstance<unit::rate> > Owen11Parameters::mpMaxC
         boost::shared_ptr<ParameterInstance<unit::rate> >(new ParameterInstance<unit::rate> (0.01/min,
                                                                                    "Owen11_MaxCellVegfProductionRate",
                                                                                    "Max VEGF production rate in cell",
-                                                                                   "k_8_dash",
+                                                                                   "k_{8*}",
                                                                                    bib_info));
 
 const boost::shared_ptr<ParameterInstance<unit::rate> > Owen11Parameters::mpP53EffectOnVegfProduction =
         boost::shared_ptr<ParameterInstance<unit::rate> >(new ParameterInstance<unit::rate> (-0.002/min,
                                                                                    "Owen11_P53EffectOnVegfProduction",
                                                                                    "Effect of P53 on VEGF production",
-                                                                                   "k_8_dash_dash",
+                                                                                   "k_{8**}",
                                                                                    bib_info));
 
 const boost::shared_ptr<ParameterInstance<unit::dimensionless> > Owen11Parameters::mpVegfEffectOnVegfProduction =

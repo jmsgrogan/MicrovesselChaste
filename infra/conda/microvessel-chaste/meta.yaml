@@ -1,12 +1,12 @@
 package:
   name: microvessel-chaste
-  version: 3.4.1
+  version: 3.4.2
 
 source:
   path: /home/grogan/Chaste
 
 build:
-  number: 3
+  number: 1
 
 requirements:
   build:
