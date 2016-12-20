@@ -133,122 +133,114 @@ void RegularGrid<DIM>::CalculateMooreNeighbourData()
             for (unsigned idx = 0; idx < mExtents[0]; idx++)
             {
                 unsigned index = Get1dGridIndex(idx, jdx, kdx);
-                if (idx > 0)
-                {
-                    mNeighbourData[index].push_back(Get1dGridIndex(idx - 1, jdx, kdx));
-                }
-                if (idx < mExtents[0] - 1)
-                {
-                    mNeighbourData[index].push_back(Get1dGridIndex(idx + 1, jdx, kdx));
-                }
-                if (jdx > 0)
-                {
-                    mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx - 1, kdx));
-                }
-                if (jdx < mExtents[1] - 1)
-                {
-                    mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx + 1, kdx));
-                }
-                if (kdx > 0)
-                {
-                    mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx, kdx - 1));
-                }
-                if (kdx < mExtents[2] - 1)
-                {
-                    mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx, kdx + 1));
-                }
 
+                // i-1 plane
                 if (idx > 0)
                 {
                     if(jdx>0)
                     {
-                        mNeighbourData[index].push_back(Get1dGridIndex(idx - 1, jdx-1, kdx));
                         if(kdx>0)
                         {
-                            mNeighbourData[index].push_back(Get1dGridIndex(idx - 1, jdx-1, kdx-1));
+                            mNeighbourData[index].push_back(Get1dGridIndex(idx-1, jdx-1, kdx-1));
                         }
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx-1, jdx-1, kdx));
                         if(kdx<mExtents[2] - 1)
                         {
-                            mNeighbourData[index].push_back(Get1dGridIndex(idx - 1, jdx-1, kdx+1));
+                            mNeighbourData[index].push_back(Get1dGridIndex(idx-1, jdx-1, kdx+1));
                         }
                     }
                     if(kdx>0)
                     {
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx-1, jdx, kdx-1));
+                    }
+                    mNeighbourData[index].push_back(Get1dGridIndex(idx-1, jdx, kdx));
+                    if(kdx<mExtents[2] - 1)
+                    {
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx-1, jdx, kdx+1));
+                    }
+                    if(jdx< mExtents[1] - 1)
+                    {
+                        if(kdx>0)
+                        {
+                            mNeighbourData[index].push_back(Get1dGridIndex(idx-1, jdx+1, kdx-1));
+                        }
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx-1, jdx+1, kdx));
+                        if(kdx<mExtents[2] - 1)
+                        {
+                            mNeighbourData[index].push_back(Get1dGridIndex(idx-1, jdx+1, kdx+1));
+                        }
+                    }
+                }
+
+                // i plane
+                if(jdx>0)
+                {
+                    if(kdx>0)
+                    {
                         mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx-1, kdx-1));
                     }
+                    mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx-1, kdx));
                     if(kdx<mExtents[2] - 1)
                     {
                         mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx-1, kdx+1));
                     }
                 }
-                if (idx > 0)
+                if(kdx>0)
                 {
-                    if(jdx<mExtents[1] - 1)
-                    {
-                        mNeighbourData[index].push_back(Get1dGridIndex(idx - 1, jdx+1, kdx));
-                        if(kdx>0)
-                        {
-                            mNeighbourData[index].push_back(Get1dGridIndex(idx - 1, jdx+1, kdx-1));
-                        }
-                        if(kdx<mExtents[2] - 1)
-                        {
-                            mNeighbourData[index].push_back(Get1dGridIndex(idx - 1, jdx+1, kdx+1));
-                        }
-                    }
+                    mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx, kdx-1));
+                }
+                if(kdx<mExtents[2] - 1)
+                {
+                    mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx, kdx+1));
+                }
+                if(jdx< mExtents[1] - 1)
+                {
                     if(kdx>0)
                     {
                         mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx+1, kdx-1));
                     }
+                    mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx+1, kdx));
                     if(kdx<mExtents[2] - 1)
                     {
                         mNeighbourData[index].push_back(Get1dGridIndex(idx, jdx+1, kdx+1));
                     }
                 }
 
-                if (idx < mExtents[0] - 1)
+                // i+1 plane
+                if (idx < mExtents[0]-1)
                 {
                     if(jdx>0)
                     {
-                        mNeighbourData[index].push_back(Get1dGridIndex(idx + 1, jdx-1, kdx));
                         if(kdx>0)
                         {
-                            mNeighbourData[index].push_back(Get1dGridIndex(idx + 1, jdx-1, kdx-1));
+                            mNeighbourData[index].push_back(Get1dGridIndex(idx+1, jdx-1, kdx-1));
                         }
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx+1, jdx-1, kdx));
                         if(kdx<mExtents[2] - 1)
                         {
-                            mNeighbourData[index].push_back(Get1dGridIndex(idx + 1, jdx-1, kdx+1));
+                            mNeighbourData[index].push_back(Get1dGridIndex(idx+1, jdx-1, kdx+1));
                         }
                     }
                     if(kdx>0)
                     {
                         mNeighbourData[index].push_back(Get1dGridIndex(idx+1, jdx, kdx-1));
                     }
+                    mNeighbourData[index].push_back(Get1dGridIndex(idx+1, jdx, kdx));
                     if(kdx<mExtents[2] - 1)
                     {
                         mNeighbourData[index].push_back(Get1dGridIndex(idx+1, jdx, kdx+1));
                     }
-                }
-                if (idx < mExtents[0] - 1)
-                {
-                    if(jdx<mExtents[1] - 1)
+                    if(jdx< mExtents[1] - 1)
                     {
-                        mNeighbourData[index].push_back(Get1dGridIndex(idx + 1, jdx+1, kdx));
                         if(kdx>0)
                         {
-                            mNeighbourData[index].push_back(Get1dGridIndex(idx + 1, jdx+1, kdx-1));
+                            mNeighbourData[index].push_back(Get1dGridIndex(idx+1, jdx+1, kdx-1));
                         }
+                        mNeighbourData[index].push_back(Get1dGridIndex(idx+1, jdx+1, kdx));
                         if(kdx<mExtents[2] - 1)
                         {
-                            mNeighbourData[index].push_back(Get1dGridIndex(idx + 1, jdx+1, kdx+1));
+                            mNeighbourData[index].push_back(Get1dGridIndex(idx+1, jdx+1, kdx+1));
                         }
-                    }
-                    if(kdx>0)
-                    {
-                        mNeighbourData[index].push_back(Get1dGridIndex(idx+1, jdx, kdx-1));
-                    }
-                    if(kdx<mExtents[2] - 1)
-                    {
-                        mNeighbourData[index].push_back(Get1dGridIndex(idx+1, jdx, kdx+1));
                     }
                 }
             }

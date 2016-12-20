@@ -68,6 +68,12 @@ void LatticeBasedSproutingRule<DIM>::SetGrid(boost::shared_ptr<RegularGrid<DIM> 
 }
 
 template<unsigned DIM>
+void LatticeBasedSproutingRule<DIM>::SetTipExclusionRadius(units::quantity<unit::length> tipExclusionRadius)
+{
+    mTipExclusionRadius = tipExclusionRadius;
+}
+
+template<unsigned DIM>
 std::vector<boost::shared_ptr<VesselNode<DIM> > > LatticeBasedSproutingRule<DIM>::GetSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     if(!this->mpVesselNetwork)

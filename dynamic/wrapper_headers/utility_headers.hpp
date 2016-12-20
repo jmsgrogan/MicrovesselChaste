@@ -38,6 +38,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "ParameterCollection.hpp"
 #include "BaseParameterInstance.hpp"
 #include "Owen11Parameters.hpp"
+#include "Connor17Parameters.hpp"
 #include "Secomb04Parameters.hpp"
 #include "GenericParameters.hpp"
 

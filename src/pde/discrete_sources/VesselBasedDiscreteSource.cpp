@@ -38,6 +38,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselNetwork.hpp"
 #include "GeometryTools.hpp"
 #include "Element.hpp"
+#include "Connor17Parameters.hpp"
 
 template<unsigned DIM>
 VesselBasedDiscreteSource<DIM>::VesselBasedDiscreteSource()
@@ -45,9 +46,8 @@ VesselBasedDiscreteSource<DIM>::VesselBasedDiscreteSource()
         mVesselPermeability(0.0*unit::metre_per_second),
         mReferenceConcentration(0.0*unit::mole_per_metre_cubed),
         mReferenceHaematocrit(1.0),
-        mUptakeRatePerCell(-(4.e-22/3600.0)*unit::mole_per_second),
-        mCellsPerMetre(1.2e5*unit::per_metre),
-        mVesselIsSource(true)
+        mUptakeRatePerCell(-Connor17Parameters::mpReductionInVegfPerCell->GetValue("VesselBasedDiscreteSource")),
+        mCellsPerMetre(Connor17Parameters::mpEcsPerLength->GetValue("VesselBasedDiscreteSource"))
 {
 
 }
@@ -63,12 +63,6 @@ boost::shared_ptr<VesselBasedDiscreteSource<DIM> > VesselBasedDiscreteSource<DIM
 {
     MAKE_PTR(VesselBasedDiscreteSource<DIM>, pSelf);
     return pSelf;
-}
-
-template<unsigned DIM>
-void VesselBasedDiscreteSource<DIM>::SetVesselIsSource(bool vesselIsSource)
-{
-    mVesselIsSource = vesselIsSource;
 }
 
 template<unsigned DIM>
@@ -173,11 +167,6 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
     std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = this->mpRegularGrid->GetPointSegmentMap();
     units::quantity<unit::length> grid_spacing = this->mpRegularGrid->GetSpacing();
     units::quantity<unit::volume> grid_volume = units::pow<3>(grid_spacing);
-    double source_type_multiplier = 1.0;
-    if(!mVesselIsSource)
-    {
-        source_type_multiplier = -1.0;
-    }
 
     for(unsigned idx=0; idx<point_segment_map.size(); idx++)
     {
@@ -186,11 +175,9 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
             units::quantity<unit::length> length_in_box = LengthOfLineInBox<DIM>(point_segment_map[idx][jdx]->GetNode(0)->rGetLocation(),
                                                                          point_segment_map[idx][jdx]->GetNode(1)->rGetLocation(),
                                                                          this->mpRegularGrid->GetLocationOf1dIndex(idx), grid_spacing);
-
             units::quantity<unit::area> surface_area = 2.0*M_PI*point_segment_map[idx][jdx]->GetRadius()*length_in_box;
-
             double haematocrit_ratio = point_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit()/mReferenceHaematocrit;
-            values[idx] += source_type_multiplier*mVesselPermeability * (surface_area/grid_volume) * mReferenceConcentration * haematocrit_ratio;
+            values[idx] += mVesselPermeability * (surface_area/grid_volume) * mReferenceConcentration * haematocrit_ratio;
         }
     }
     return values;
@@ -238,11 +225,6 @@ std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLin
     std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = this->mpRegularGrid->GetPointSegmentMap(false);
     units::quantity<unit::length> grid_spacing = this->mpRegularGrid->GetSpacing();
     units::quantity<unit::volume> grid_volume = units::pow<3>(grid_spacing);
-    double source_type_multiplier = 1.0;
-    if(!mVesselIsSource)
-    {
-        source_type_multiplier = -1.0;
-    }
 
     for(unsigned idx=0; idx<point_segment_map.size(); idx++)
     {
@@ -256,7 +238,7 @@ std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLin
             double haematocrit = point_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit();
             if(haematocrit>0.0)
             {
-                values[idx] -= source_type_multiplier* mVesselPermeability * (surface_area/grid_volume);
+                values[idx] -= mVesselPermeability * (surface_area/grid_volume);
             }
         }
     }

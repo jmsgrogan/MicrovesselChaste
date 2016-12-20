@@ -46,7 +46,6 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "AbstractCellPopulation.hpp"
 #include "AngiogenesisSolver.hpp"
 #include "RegressionSolver.hpp"
-#include "MaturityCalculator.hpp"
 #include "AbstractMicrovesselModifier.hpp"
 
 /**
@@ -91,11 +90,6 @@ class MicrovesselSolver
      * The regression solver for the vessel network
      */
     boost::shared_ptr<RegressionSolver<DIM> > mpRegressionSolver;
-
-    /**
-     * The maturity calculator for the vessel network
-     */
-    boost::shared_ptr<MaturityCalculator<DIM> > mpMaturityCalculator;
 
     /**
      * Can the solution from one DiscreteContinuumSolver be sent directly to
@@ -234,12 +228,6 @@ public:
      * @param pRegressionSolver the regression solver for the network
      */
     void SetRegressionSolver(boost::shared_ptr<RegressionSolver<DIM> > pRegressionSolver);
-
-    /**
-     * Set the maturity calculator
-     * @param pMaturityCalculator the maturity calculator for the network
-     */
-    void SetMaturityCalculator(boost::shared_ptr<MaturityCalculator<DIM> > pMaturityCalculator);
 
     /**
      * Update the cell data with any PDE solutions corresponding to the supplied labels

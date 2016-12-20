@@ -38,6 +38,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
 
 #include <vector>
+
+#include "TipAttractionLatticeBasedMigrationRule.hpp"
 #include "SmartPointers.hpp"
 #include "OutputFileHandler.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
@@ -70,26 +72,160 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "Owen2011SproutingRule.hpp"
 #include "Owen2011MigrationRule.hpp"
 #include "AngiogenesisSolver.hpp"
-#include "WallShearStressBasedRegressionSolver.hpp"
 #include "MicrovesselSolver.hpp"
 #include "MicrovesselSimulationModifier.hpp"
 #include "OnLatticeSimulation.hpp"
 #include "MicrovesselVtkScene.hpp"
 #include "VtkSceneMicrovesselModifier.hpp"
 #include "CoupledVegfPelletDiffusionReactionPde.hpp"
-#include "MaturityCalculator.hpp"
-#include "Connor2017SproutingRule.hpp"
-
-/*
- * This should appear last.
- */
 #include "PetscSetupAndFinalize.hpp"
+
 class TestTipSensingPaper : public AbstractCellBasedWithTimingsTestSuite
 {
 
 public:
 
-    void TestLatticeBased() throw (Exception)
+    void Test2dLatticeBased() throw (Exception)
+    {
+        /*
+         * Set up output file management and seed the random number generator.
+         */
+        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestTipSensingPaper2d_b"));
+        RandomNumberGenerator::Instance()->Reseed(12345);
+
+        /*
+         * Set up units
+         */
+        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        units::quantity<unit::time> reference_time(1.0* unit::hours);
+        BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
+        BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
+        BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-6*unit::mole_per_metre_cubed);
+
+        /*
+         * Set up the lattice (grid)
+         */
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(2.0e-3*unit::metres, 1.24e-3*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        p_grid->GenerateFromPart(p_domain, 20.0e-6*unit::metres);
+
+        /*
+         * Set up the vessel network
+         */
+        std::vector<boost::shared_ptr<VesselNode<2> > > nodes;
+        for (unsigned idx=0; idx<100; idx++)
+        {
+            nodes.push_back(VesselNode<2>::Create(float(idx)*20.0, 200.0, 0.0, reference_length));
+        }
+
+        nodes[0]->GetFlowProperties()->SetIsInputNode(true);
+        nodes[0]->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue("User"));
+        nodes[nodes.size()-1]->GetFlowProperties()->SetIsOutputNode(true);
+        nodes[nodes.size()-1]->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue("User"));
+        boost::shared_ptr<Vessel<2> > p_vessel1 = Vessel<2>::Create(nodes);
+        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        p_network->AddVessel(p_vessel1);
+
+        /*
+         * Write to file
+         */
+        p_network->Write(p_handler->GetOutputDirectoryFullPath() + "initial_network.vtp");
+
+        /*
+         * Next set up the PDE for VEGF.
+         */
+        boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_vegf_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
+        units::quantity<unit::diffusivity> vegf_diffusivity(6.94e-11 * unit::metre_squared_per_second);
+        units::quantity<unit::rate> vegf_decay_rate((-0.8/3600.0) * unit::per_second);
+        p_vegf_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
+        p_vegf_pde->SetContinuumLinearInUTerm(vegf_decay_rate);
+        units::quantity<unit::concentration> initial_vegf_concentration(3.93e-4*unit::mole_per_metre_cubed);
+        p_vegf_pde->SetMultiplierValue(initial_vegf_concentration);
+
+        /*
+        * Vessels bind to vegf
+        */
+        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_vegf_sink = VesselBasedDiscreteSource<2>::Create();
+        units::quantity<unit::concentration> vegf_blood_concentration(0.0*unit::mole_per_metre_cubed);
+        p_vessel_vegf_sink->SetReferenceConcentration(vegf_blood_concentration);
+        p_vessel_vegf_sink->SetVesselPermeability((3.e-4/3600.0)*unit::metre_per_second);
+        p_vessel_vegf_sink->SetReferenceHaematocrit(0.45);
+        p_vessel_vegf_sink->SetUptakeRatePerCell(-(4.e-22/3600.0)*unit::mole_per_second);
+        p_vegf_pde->AddDiscreteSource(p_vessel_vegf_sink);
+
+        /*
+        * Set up a finite difference solver and pass it the pde and grid.
+        */
+        boost::shared_ptr<FiniteDifferenceSolver<2> > p_vegf_solver = FiniteDifferenceSolver<2>::Create();
+        p_vegf_solver->SetParabolicPde(p_vegf_pde);
+        p_vegf_solver->SetLabel("vegf");
+        p_vegf_solver->SetGrid(p_grid);
+
+        /*
+         * Next set up the flow problem. Assign a blood plasma viscosity to the vessels. The actual viscosity will
+         * depend on haematocrit and diameter. This solver manages growth and shrinkage of vessels in response to
+         * flow related stimuli.
+         */
+        units::quantity<unit::length> max_vessel_radius(5.0 * unit::microns);
+        p_network->SetSegmentRadii(max_vessel_radius);
+        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
+        p_network->SetSegmentViscosity(viscosity);
+        /*
+        * Set up the pre- and post flow calculators.
+        */
+        boost::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+        boost::shared_ptr<ConstantHaematocritSolver<2> > p_haematocrit_calculator = ConstantHaematocritSolver<2>::Create();
+        p_haematocrit_calculator->SetHaematocrit(0.45);
+        /*
+        * Set up and configure the structural adaptation solver.
+        */
+        boost::shared_ptr<StructuralAdaptationSolver<2> > p_structural_adaptation_solver = StructuralAdaptationSolver<2>::Create();
+        p_structural_adaptation_solver->SetTolerance(0.0001);
+        p_structural_adaptation_solver->SetMaxIterations(2);
+        p_structural_adaptation_solver->SetTimeIncrement(Owen11Parameters::mpVesselRadiusUpdateTimestep->GetValue("User"));
+        p_structural_adaptation_solver->AddPreFlowSolveCalculator(p_impedance_calculator);
+        p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_haematocrit_calculator);
+
+        /*
+         * Set up an angiogenesis solver and add sprouting and migration rules.
+         */
+        boost::shared_ptr<AngiogenesisSolver<2> > p_angiogenesis_solver = AngiogenesisSolver<2>::Create();
+        boost::shared_ptr<TipAttractionLatticeBasedMigrationRule<2> > p_migration_rule = TipAttractionLatticeBasedMigrationRule<2>::Create();
+        boost::shared_ptr<Owen2011SproutingRule<2> > p_sprouting_rule = Owen2011SproutingRule<2>::Create();
+        p_angiogenesis_solver->SetMigrationRule(p_migration_rule);
+        p_angiogenesis_solver->SetSproutingRule(p_sprouting_rule);
+        p_sprouting_rule->SetDiscreteContinuumSolver(p_vegf_solver);
+        p_sprouting_rule->SetSproutingProbability(1000.0*unit::per_second);
+        p_migration_rule->SetDiscreteContinuumSolver(p_vegf_solver);
+        p_migration_rule->SetUseMooreNeighbourhood(true);
+        p_migration_rule->SetUseTipAttraction(true);
+        p_angiogenesis_solver->SetVesselGrid(p_grid);
+        p_angiogenesis_solver->SetVesselNetwork(p_network);
+
+         /*
+         * The microvessel solver will manage all aspects of the vessel solve.
+         */
+        boost::shared_ptr<MicrovesselSolver<2> > p_microvessel_solver = MicrovesselSolver<2>::Create();
+        p_microvessel_solver->SetVesselNetwork(p_network);
+        p_microvessel_solver->SetOutputFrequency(1);
+        p_microvessel_solver->SetOutputFileHandler(p_handler);
+        p_microvessel_solver->AddDiscreteContinuumSolver(p_vegf_solver);
+        p_microvessel_solver->SetStructuralAdaptationSolver(p_structural_adaptation_solver);
+        p_microvessel_solver->SetAngiogenesisSolver(p_angiogenesis_solver);
+
+        /*
+         * Set the simulation time and run the solver. The result is shown at the top of the tutorial.
+         */
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(10.0, 100.0);
+        p_microvessel_solver->Run();
+        /*
+         * Dump the parameters to file for inspection.
+         */
+        ParameterCollection::Instance()->DumpToFile(p_handler->GetOutputDirectoryFullPath()+"parameter_collection.xml");
+    }
+
+    void xTestLatticeBased() throw (Exception)
     {
         /*
          * Set up output file management and seed the random number generator.
@@ -155,7 +291,7 @@ public:
         p_vessel_vegf_sink->SetReferenceConcentration(vegf_blood_concentration);
         p_vessel_vegf_sink->SetVesselPermeability((3.e-4/3600.0)*unit::metre_per_second);
         p_vessel_vegf_sink->SetReferenceHaematocrit(0.45);
-        p_vessel_vegf_sink->SetVesselIsSource(false);
+
         p_vegf_pde->AddDiscreteSource(p_vessel_vegf_sink);
 
         /*
@@ -192,21 +328,11 @@ public:
         p_structural_adaptation_solver->AddPostFlowSolveCalculator(p_haematocrit_calculator);
 
         /*
-         * Set up a regression solver.
-         */
-        boost::shared_ptr<WallShearStressBasedRegressionSolver<3> > p_regression_solver =
-                WallShearStressBasedRegressionSolver<3>::Create();
-
-        boost::shared_ptr<MaturityCalculator<3> > p_maturity_calculator =
-                boost::shared_ptr<MaturityCalculator<3> >(new MaturityCalculator<3> );
-        p_maturity_calculator->SetVegfSolver(p_vegf_solver);
-
-        /*
          * Set up an angiogenesis solver and add sprouting and migration rules.
          */
         boost::shared_ptr<AngiogenesisSolver<3> > p_angiogenesis_solver = AngiogenesisSolver<3>::Create();
-        boost::shared_ptr<Connor2017SproutingRule<3> > p_sprouting_rule = Connor2017SproutingRule<3>::Create();
-        boost::shared_ptr<Owen2011MigrationRule<3> > p_migration_rule = Owen2011MigrationRule<3>::Create();
+        boost::shared_ptr<Owen2011SproutingRule<3> > p_sprouting_rule = Owen2011SproutingRule<3>::Create();
+        boost::shared_ptr<TipAttractionLatticeBasedMigrationRule<3> > p_migration_rule = TipAttractionLatticeBasedMigrationRule<3>::Create();
         p_angiogenesis_solver->SetMigrationRule(p_migration_rule);
         p_angiogenesis_solver->SetSproutingRule(p_sprouting_rule);
         p_sprouting_rule->SetDiscreteContinuumSolver(p_vegf_solver);
@@ -223,14 +349,12 @@ public:
         p_microvessel_solver->SetOutputFileHandler(p_handler);
         p_microvessel_solver->AddDiscreteContinuumSolver(p_vegf_solver);
         p_microvessel_solver->SetStructuralAdaptationSolver(p_structural_adaptation_solver);
-        p_microvessel_solver->SetMaturityCalculator(p_maturity_calculator);
-        //p_microvessel_solver->SetRegressionSolver(p_regression_solver);
         p_microvessel_solver->SetAngiogenesisSolver(p_angiogenesis_solver);
 
         /*
          * Set the simulation time and run the solver. The result is shown at the top of the tutorial.
          */
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(10.0, 100);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(40.0, 200);
         p_microvessel_solver->Run();
         /*
          * Dump the parameters to file for inspection.

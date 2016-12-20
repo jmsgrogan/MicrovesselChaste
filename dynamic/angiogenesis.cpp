@@ -1080,6 +1080,114 @@ struct RegressionSolver_less__3__greater__wrapper : RegressionSolver< 3 >, bp::w
 
 };
 
+struct TipAttractionLatticeBasedMigrationRule_less__2__greater__wrapper : TipAttractionLatticeBasedMigrationRule< 2 >, bp::wrapper< TipAttractionLatticeBasedMigrationRule< 2 > > {
+
+    TipAttractionLatticeBasedMigrationRule_less__2__greater__wrapper(TipAttractionLatticeBasedMigrationRule<2> const & arg )
+    : TipAttractionLatticeBasedMigrationRule<2>( arg )
+      , bp::wrapper< TipAttractionLatticeBasedMigrationRule< 2 > >(){
+        // copy constructor
+        
+    }
+
+    TipAttractionLatticeBasedMigrationRule_less__2__greater__wrapper( )
+    : TipAttractionLatticeBasedMigrationRule<2>( )
+      , bp::wrapper< TipAttractionLatticeBasedMigrationRule< 2 > >(){
+        // null constructor
+    
+    }
+
+    virtual ::std::vector< int > GetIndices( ::std::vector< boost::shared_ptr<VesselNode<2> > > const & rNodes ) {
+        if( bp::override func_GetIndices = this->get_override( "GetIndices" ) )
+            return func_GetIndices( boost::ref(rNodes) );
+        else{
+            return this->TipAttractionLatticeBasedMigrationRule< 2 >::GetIndices( boost::ref(rNodes) );
+        }
+    }
+    
+    ::std::vector< int > default_GetIndices( ::std::vector< boost::shared_ptr<VesselNode<2> > > const & rNodes ) {
+        return TipAttractionLatticeBasedMigrationRule< 2 >::GetIndices( boost::ref(rNodes) );
+    }
+
+    virtual ::std::vector< DimensionalChastePoint<2> > GetDirections( ::std::vector< boost::shared_ptr<VesselNode<2> > > const & rNodes ) {
+        if( bp::override func_GetDirections = this->get_override( "GetDirections" ) )
+            return func_GetDirections( boost::ref(rNodes) );
+        else{
+            return this->AbstractMigrationRule< 2 >::GetDirections( boost::ref(rNodes) );
+        }
+    }
+    
+    ::std::vector< DimensionalChastePoint<2> > default_GetDirections( ::std::vector< boost::shared_ptr<VesselNode<2> > > const & rNodes ) {
+        return AbstractMigrationRule< 2 >::GetDirections( boost::ref(rNodes) );
+    }
+
+    virtual int GetNeighbourMovementIndex( ::std::vector< double > movementProbabilities, ::std::vector< unsigned int > neighbourIndices ){
+        if( bp::override func_GetNeighbourMovementIndex = this->get_override( "GetNeighbourMovementIndex" ) )
+            return func_GetNeighbourMovementIndex( movementProbabilities, neighbourIndices );
+        else{
+            return this->LatticeBasedMigrationRule< 2 >::GetNeighbourMovementIndex( movementProbabilities, neighbourIndices );
+        }
+    }
+    
+    virtual int default_GetNeighbourMovementIndex( ::std::vector< double > movementProbabilities, ::std::vector< unsigned int > neighbourIndices ){
+        return LatticeBasedMigrationRule< 2 >::GetNeighbourMovementIndex( movementProbabilities, neighbourIndices );
+    }
+
+};
+
+struct TipAttractionLatticeBasedMigrationRule_less__3__greater__wrapper : TipAttractionLatticeBasedMigrationRule< 3 >, bp::wrapper< TipAttractionLatticeBasedMigrationRule< 3 > > {
+
+    TipAttractionLatticeBasedMigrationRule_less__3__greater__wrapper(TipAttractionLatticeBasedMigrationRule<3> const & arg )
+    : TipAttractionLatticeBasedMigrationRule<3>( arg )
+      , bp::wrapper< TipAttractionLatticeBasedMigrationRule< 3 > >(){
+        // copy constructor
+        
+    }
+
+    TipAttractionLatticeBasedMigrationRule_less__3__greater__wrapper( )
+    : TipAttractionLatticeBasedMigrationRule<3>( )
+      , bp::wrapper< TipAttractionLatticeBasedMigrationRule< 3 > >(){
+        // null constructor
+    
+    }
+
+    virtual ::std::vector< int > GetIndices( ::std::vector< boost::shared_ptr<VesselNode<3> > > const & rNodes ) {
+        if( bp::override func_GetIndices = this->get_override( "GetIndices" ) )
+            return func_GetIndices( boost::ref(rNodes) );
+        else{
+            return this->TipAttractionLatticeBasedMigrationRule< 3 >::GetIndices( boost::ref(rNodes) );
+        }
+    }
+    
+    ::std::vector< int > default_GetIndices( ::std::vector< boost::shared_ptr<VesselNode<3> > > const & rNodes ) {
+        return TipAttractionLatticeBasedMigrationRule< 3 >::GetIndices( boost::ref(rNodes) );
+    }
+
+    virtual ::std::vector< DimensionalChastePoint<3> > GetDirections( ::std::vector< boost::shared_ptr<VesselNode<3> > > const & rNodes ) {
+        if( bp::override func_GetDirections = this->get_override( "GetDirections" ) )
+            return func_GetDirections( boost::ref(rNodes) );
+        else{
+            return this->AbstractMigrationRule< 3 >::GetDirections( boost::ref(rNodes) );
+        }
+    }
+    
+    ::std::vector< DimensionalChastePoint<3> > default_GetDirections( ::std::vector< boost::shared_ptr<VesselNode<3> > > const & rNodes ) {
+        return AbstractMigrationRule< 3 >::GetDirections( boost::ref(rNodes) );
+    }
+
+    virtual int GetNeighbourMovementIndex( ::std::vector< double > movementProbabilities, ::std::vector< unsigned int > neighbourIndices ){
+        if( bp::override func_GetNeighbourMovementIndex = this->get_override( "GetNeighbourMovementIndex" ) )
+            return func_GetNeighbourMovementIndex( movementProbabilities, neighbourIndices );
+        else{
+            return this->LatticeBasedMigrationRule< 3 >::GetNeighbourMovementIndex( movementProbabilities, neighbourIndices );
+        }
+    }
+    
+    virtual int default_GetNeighbourMovementIndex( ::std::vector< double > movementProbabilities, ::std::vector< unsigned int > neighbourIndices ){
+        return LatticeBasedMigrationRule< 3 >::GetNeighbourMovementIndex( movementProbabilities, neighbourIndices );
+    }
+
+};
+
 struct WallShearStressBasedRegressionSolver_less__2__greater__wrapper : WallShearStressBasedRegressionSolver< 2 >, bp::wrapper< WallShearStressBasedRegressionSolver< 2 > > {
 
     WallShearStressBasedRegressionSolver_less__2__greater__wrapper(WallShearStressBasedRegressionSolver<2> const & arg )
@@ -1356,6 +1464,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_angiogenesis){
                 , ( bp::arg("pNetwork") ) );
         
         }
+        { //::AbstractMigrationRule< 2 >::SetUseMooreNeighbourhood
+        
+            typedef AbstractMigrationRule< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetUseMooreNeighbourhood_function_type)( bool ) ;
+            
+            AbstractMigrationRule2_exposer.def( 
+                "SetUseMooreNeighbourhood"
+                , SetUseMooreNeighbourhood_function_type( &::AbstractMigrationRule< 2 >::SetUseMooreNeighbourhood )
+                , ( bp::arg("useMooreNeighbourhood") ) );
+        
+        }
         AbstractMigrationRule2_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< AbstractMigrationRule<2> > >();
     }
@@ -1464,6 +1583,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_angiogenesis){
                 "SetNetwork"
                 , SetNetwork_function_type( &::AbstractMigrationRule< 3 >::SetNetwork )
                 , ( bp::arg("pNetwork") ) );
+        
+        }
+        { //::AbstractMigrationRule< 3 >::SetUseMooreNeighbourhood
+        
+            typedef AbstractMigrationRule< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetUseMooreNeighbourhood_function_type)( bool ) ;
+            
+            AbstractMigrationRule3_exposer.def( 
+                "SetUseMooreNeighbourhood"
+                , SetUseMooreNeighbourhood_function_type( &::AbstractMigrationRule< 3 >::SetUseMooreNeighbourhood )
+                , ( bp::arg("useMooreNeighbourhood") ) );
         
         }
         AbstractMigrationRule3_exposer.staticmethod( "Create" );
@@ -2040,6 +2170,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_angiogenesis){
         LatticeBasedMigrationRule2_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< LatticeBasedMigrationRule<2> > >();
         bp::implicitly_convertible< boost::shared_ptr< LatticeBasedMigrationRule< 2 > >, boost::shared_ptr< AbstractMigrationRule< 2 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< TipAttractionLatticeBasedMigrationRule< 2 > >, boost::shared_ptr< LatticeBasedMigrationRule< 2 > > >();
         bp::implicitly_convertible< boost::shared_ptr< CellPopulationMigrationRule< 2 > >, boost::shared_ptr< LatticeBasedMigrationRule< 2 > > >();
         bp::implicitly_convertible< boost::shared_ptr< Owen2011MigrationRule< 2 > >, boost::shared_ptr< LatticeBasedMigrationRule< 2 > > >();
     }
@@ -2209,8 +2340,9 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_angiogenesis){
         LatticeBasedMigrationRule3_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< LatticeBasedMigrationRule<3> > >();
         bp::implicitly_convertible< boost::shared_ptr< LatticeBasedMigrationRule< 3 > >, boost::shared_ptr< AbstractMigrationRule< 3 > > >();
-        bp::implicitly_convertible< boost::shared_ptr< Owen2011MigrationRule< 3 > >, boost::shared_ptr< LatticeBasedMigrationRule< 3 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< TipAttractionLatticeBasedMigrationRule< 3 > >, boost::shared_ptr< LatticeBasedMigrationRule< 3 > > >();
         bp::implicitly_convertible< boost::shared_ptr< CellPopulationMigrationRule< 3 > >, boost::shared_ptr< LatticeBasedMigrationRule< 3 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< Owen2011MigrationRule< 3 > >, boost::shared_ptr< LatticeBasedMigrationRule< 3 > > >();
     }
 
     { //::CellPopulationMigrationRule< 3 >
@@ -2342,6 +2474,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_angiogenesis){
                 , ( bp::arg("pGrid") ) );
         
         }
+        { //::LatticeBasedSproutingRule< 2 >::SetTipExclusionRadius
+        
+            typedef LatticeBasedSproutingRule< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetTipExclusionRadius_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            LatticeBasedSproutingRule2_exposer.def( 
+                "SetTipExclusionRadius"
+                , SetTipExclusionRadius_function_type( &::LatticeBasedSproutingRule< 2 >::SetTipExclusionRadius )
+                , ( bp::arg("tipExclusionRadius") ) );
+        
+        }
         LatticeBasedSproutingRule2_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< LatticeBasedSproutingRule<2> > >();
         bp::implicitly_convertible< boost::shared_ptr< LatticeBasedSproutingRule< 2 > >, boost::shared_ptr< AbstractSproutingRule< 2 > > >();
@@ -2386,6 +2529,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_angiogenesis){
                 , SetGrid_function_type(&::LatticeBasedSproutingRule< 3 >::SetGrid)
                 , default_SetGrid_function_type(&LatticeBasedSproutingRule_less__3__greater__wrapper::default_SetGrid)
                 , ( bp::arg("pGrid") ) );
+        
+        }
+        { //::LatticeBasedSproutingRule< 3 >::SetTipExclusionRadius
+        
+            typedef LatticeBasedSproutingRule< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetTipExclusionRadius_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            LatticeBasedSproutingRule3_exposer.def( 
+                "SetTipExclusionRadius"
+                , SetTipExclusionRadius_function_type( &::LatticeBasedSproutingRule< 3 >::SetTipExclusionRadius )
+                , ( bp::arg("tipExclusionRadius") ) );
         
         }
         LatticeBasedSproutingRule3_exposer.staticmethod( "Create" );
@@ -2949,6 +3103,184 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_angiogenesis){
             "SetVesselNetwork"
             , (void ( ::RegressionSolver<3>::* )( ::boost::shared_ptr< VesselNetwork< 3 > > ))( &::RegressionSolver< 3 >::SetVesselNetwork )
             , ( bp::arg("pNetwork") ) );
+
+    { //::TipAttractionLatticeBasedMigrationRule< 2 >
+        typedef bp::class_< TipAttractionLatticeBasedMigrationRule_less__2__greater__wrapper, bp::bases< LatticeBasedMigrationRule< 2 > > > TipAttractionLatticeBasedMigrationRule2_exposer_t;
+        TipAttractionLatticeBasedMigrationRule2_exposer_t TipAttractionLatticeBasedMigrationRule2_exposer = TipAttractionLatticeBasedMigrationRule2_exposer_t( "TipAttractionLatticeBasedMigrationRule2", bp::init< >() );
+        bp::scope TipAttractionLatticeBasedMigrationRule2_scope( TipAttractionLatticeBasedMigrationRule2_exposer );
+        { //::TipAttractionLatticeBasedMigrationRule< 2 >::Create
+        
+            typedef TipAttractionLatticeBasedMigrationRule< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< TipAttractionLatticeBasedMigrationRule< 2 > > ( *Create_function_type )(  );
+            
+            TipAttractionLatticeBasedMigrationRule2_exposer.def( 
+                "Create"
+                , Create_function_type( &::TipAttractionLatticeBasedMigrationRule< 2 >::Create ) );
+        
+        }
+        { //::TipAttractionLatticeBasedMigrationRule< 2 >::GetIndices
+        
+            typedef TipAttractionLatticeBasedMigrationRule< 2 > exported_class_t;
+            typedef ::std::vector< int > ( exported_class_t::*GetIndices_function_type)( ::std::vector< boost::shared_ptr<VesselNode<2> > > const & ) ;
+            typedef ::std::vector< int > ( TipAttractionLatticeBasedMigrationRule_less__2__greater__wrapper::*default_GetIndices_function_type)( ::std::vector< boost::shared_ptr<VesselNode<2> > > const & ) ;
+            
+            TipAttractionLatticeBasedMigrationRule2_exposer.def( 
+                "GetIndices"
+                , GetIndices_function_type(&::TipAttractionLatticeBasedMigrationRule< 2 >::GetIndices)
+                , default_GetIndices_function_type(&TipAttractionLatticeBasedMigrationRule_less__2__greater__wrapper::default_GetIndices)
+                , ( bp::arg("rNodes") ) );
+        
+        }
+        { //::TipAttractionLatticeBasedMigrationRule< 2 >::SetCellChemotacticParameter
+        
+            typedef TipAttractionLatticeBasedMigrationRule< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetCellChemotacticParameter_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 5, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            TipAttractionLatticeBasedMigrationRule2_exposer.def( 
+                "SetCellChemotacticParameter"
+                , SetCellChemotacticParameter_function_type( &::TipAttractionLatticeBasedMigrationRule< 2 >::SetCellChemotacticParameter )
+                , ( bp::arg("cellChemotacticParameter") ) );
+        
+        }
+        { //::TipAttractionLatticeBasedMigrationRule< 2 >::SetCellMotilityParameter
+        
+            typedef TipAttractionLatticeBasedMigrationRule< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetCellMotilityParameter_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            TipAttractionLatticeBasedMigrationRule2_exposer.def( 
+                "SetCellMotilityParameter"
+                , SetCellMotilityParameter_function_type( &::TipAttractionLatticeBasedMigrationRule< 2 >::SetCellMotilityParameter )
+                , ( bp::arg("cellMotility") ) );
+        
+        }
+        { //::TipAttractionLatticeBasedMigrationRule< 2 >::SetUseTipAttraction
+        
+            typedef TipAttractionLatticeBasedMigrationRule< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetUseTipAttraction_function_type)( bool ) ;
+            
+            TipAttractionLatticeBasedMigrationRule2_exposer.def( 
+                "SetUseTipAttraction"
+                , SetUseTipAttraction_function_type( &::TipAttractionLatticeBasedMigrationRule< 2 >::SetUseTipAttraction )
+                , ( bp::arg("useTipAttraction") ) );
+        
+        }
+        { //::AbstractMigrationRule< 2 >::GetDirections
+        
+            typedef TipAttractionLatticeBasedMigrationRule< 2 > exported_class_t;
+            typedef ::std::vector< DimensionalChastePoint<2> > ( exported_class_t::*GetDirections_function_type)( ::std::vector< boost::shared_ptr<VesselNode<2> > > const & ) ;
+            typedef ::std::vector< DimensionalChastePoint<2> > ( TipAttractionLatticeBasedMigrationRule_less__2__greater__wrapper::*default_GetDirections_function_type)( ::std::vector< boost::shared_ptr<VesselNode<2> > > const & ) ;
+            
+            TipAttractionLatticeBasedMigrationRule2_exposer.def( 
+                "GetDirections"
+                , GetDirections_function_type(&::AbstractMigrationRule< 2 >::GetDirections)
+                , default_GetDirections_function_type(&TipAttractionLatticeBasedMigrationRule_less__2__greater__wrapper::default_GetDirections)
+                , ( bp::arg("rNodes") ) );
+        
+        }
+        { //::LatticeBasedMigrationRule< 2 >::GetNeighbourMovementIndex
+        
+            typedef TipAttractionLatticeBasedMigrationRule< 2 > exported_class_t;
+            typedef int ( TipAttractionLatticeBasedMigrationRule_less__2__greater__wrapper::*GetNeighbourMovementIndex_function_type)( ::std::vector< double >,::std::vector< unsigned int > ) ;
+            
+            TipAttractionLatticeBasedMigrationRule2_exposer.def( 
+                "GetNeighbourMovementIndex"
+                , GetNeighbourMovementIndex_function_type( &TipAttractionLatticeBasedMigrationRule_less__2__greater__wrapper::default_GetNeighbourMovementIndex )
+                , ( bp::arg("movementProbabilities"), bp::arg("neighbourIndices") ) );
+        
+        }
+        TipAttractionLatticeBasedMigrationRule2_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< TipAttractionLatticeBasedMigrationRule<2> > >();
+        bp::implicitly_convertible< boost::shared_ptr< TipAttractionLatticeBasedMigrationRule< 2 > >, boost::shared_ptr< AbstractMigrationRule< 2 > > >();
+    }
+
+    { //::TipAttractionLatticeBasedMigrationRule< 3 >
+        typedef bp::class_< TipAttractionLatticeBasedMigrationRule_less__3__greater__wrapper, bp::bases< LatticeBasedMigrationRule< 3 > > > TipAttractionLatticeBasedMigrationRule3_exposer_t;
+        TipAttractionLatticeBasedMigrationRule3_exposer_t TipAttractionLatticeBasedMigrationRule3_exposer = TipAttractionLatticeBasedMigrationRule3_exposer_t( "TipAttractionLatticeBasedMigrationRule3", bp::init< >() );
+        bp::scope TipAttractionLatticeBasedMigrationRule3_scope( TipAttractionLatticeBasedMigrationRule3_exposer );
+        { //::TipAttractionLatticeBasedMigrationRule< 3 >::Create
+        
+            typedef TipAttractionLatticeBasedMigrationRule< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< TipAttractionLatticeBasedMigrationRule< 3 > > ( *Create_function_type )(  );
+            
+            TipAttractionLatticeBasedMigrationRule3_exposer.def( 
+                "Create"
+                , Create_function_type( &::TipAttractionLatticeBasedMigrationRule< 3 >::Create ) );
+        
+        }
+        { //::TipAttractionLatticeBasedMigrationRule< 3 >::GetIndices
+        
+            typedef TipAttractionLatticeBasedMigrationRule< 3 > exported_class_t;
+            typedef ::std::vector< int > ( exported_class_t::*GetIndices_function_type)( ::std::vector< boost::shared_ptr<VesselNode<3> > > const & ) ;
+            typedef ::std::vector< int > ( TipAttractionLatticeBasedMigrationRule_less__3__greater__wrapper::*default_GetIndices_function_type)( ::std::vector< boost::shared_ptr<VesselNode<3> > > const & ) ;
+            
+            TipAttractionLatticeBasedMigrationRule3_exposer.def( 
+                "GetIndices"
+                , GetIndices_function_type(&::TipAttractionLatticeBasedMigrationRule< 3 >::GetIndices)
+                , default_GetIndices_function_type(&TipAttractionLatticeBasedMigrationRule_less__3__greater__wrapper::default_GetIndices)
+                , ( bp::arg("rNodes") ) );
+        
+        }
+        { //::TipAttractionLatticeBasedMigrationRule< 3 >::SetCellChemotacticParameter
+        
+            typedef TipAttractionLatticeBasedMigrationRule< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetCellChemotacticParameter_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 5, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            TipAttractionLatticeBasedMigrationRule3_exposer.def( 
+                "SetCellChemotacticParameter"
+                , SetCellChemotacticParameter_function_type( &::TipAttractionLatticeBasedMigrationRule< 3 >::SetCellChemotacticParameter )
+                , ( bp::arg("cellChemotacticParameter") ) );
+        
+        }
+        { //::TipAttractionLatticeBasedMigrationRule< 3 >::SetCellMotilityParameter
+        
+            typedef TipAttractionLatticeBasedMigrationRule< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetCellMotilityParameter_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            TipAttractionLatticeBasedMigrationRule3_exposer.def( 
+                "SetCellMotilityParameter"
+                , SetCellMotilityParameter_function_type( &::TipAttractionLatticeBasedMigrationRule< 3 >::SetCellMotilityParameter )
+                , ( bp::arg("cellMotility") ) );
+        
+        }
+        { //::TipAttractionLatticeBasedMigrationRule< 3 >::SetUseTipAttraction
+        
+            typedef TipAttractionLatticeBasedMigrationRule< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetUseTipAttraction_function_type)( bool ) ;
+            
+            TipAttractionLatticeBasedMigrationRule3_exposer.def( 
+                "SetUseTipAttraction"
+                , SetUseTipAttraction_function_type( &::TipAttractionLatticeBasedMigrationRule< 3 >::SetUseTipAttraction )
+                , ( bp::arg("useTipAttraction") ) );
+        
+        }
+        { //::AbstractMigrationRule< 3 >::GetDirections
+        
+            typedef TipAttractionLatticeBasedMigrationRule< 3 > exported_class_t;
+            typedef ::std::vector< DimensionalChastePoint<3> > ( exported_class_t::*GetDirections_function_type)( ::std::vector< boost::shared_ptr<VesselNode<3> > > const & ) ;
+            typedef ::std::vector< DimensionalChastePoint<3> > ( TipAttractionLatticeBasedMigrationRule_less__3__greater__wrapper::*default_GetDirections_function_type)( ::std::vector< boost::shared_ptr<VesselNode<3> > > const & ) ;
+            
+            TipAttractionLatticeBasedMigrationRule3_exposer.def( 
+                "GetDirections"
+                , GetDirections_function_type(&::AbstractMigrationRule< 3 >::GetDirections)
+                , default_GetDirections_function_type(&TipAttractionLatticeBasedMigrationRule_less__3__greater__wrapper::default_GetDirections)
+                , ( bp::arg("rNodes") ) );
+        
+        }
+        { //::LatticeBasedMigrationRule< 3 >::GetNeighbourMovementIndex
+        
+            typedef TipAttractionLatticeBasedMigrationRule< 3 > exported_class_t;
+            typedef int ( TipAttractionLatticeBasedMigrationRule_less__3__greater__wrapper::*GetNeighbourMovementIndex_function_type)( ::std::vector< double >,::std::vector< unsigned int > ) ;
+            
+            TipAttractionLatticeBasedMigrationRule3_exposer.def( 
+                "GetNeighbourMovementIndex"
+                , GetNeighbourMovementIndex_function_type( &TipAttractionLatticeBasedMigrationRule_less__3__greater__wrapper::default_GetNeighbourMovementIndex )
+                , ( bp::arg("movementProbabilities"), bp::arg("neighbourIndices") ) );
+        
+        }
+        TipAttractionLatticeBasedMigrationRule3_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< TipAttractionLatticeBasedMigrationRule<3> > >();
+        bp::implicitly_convertible< boost::shared_ptr< TipAttractionLatticeBasedMigrationRule< 3 > >, boost::shared_ptr< AbstractMigrationRule< 3 > > >();
+    }
 
     { //::WallShearStressBasedRegressionSolver< 2 >
         typedef bp::class_< WallShearStressBasedRegressionSolver_less__2__greater__wrapper, bp::bases< RegressionSolver< 2 > > > WallShearStressBasedRegressionSolver2_exposer_t;

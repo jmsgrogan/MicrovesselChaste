@@ -36,6 +36,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <algorithm>
 #include "CoupledVegfPelletDiffusionReactionPde.hpp"
 #include "BaseUnits.hpp"
+#include "Connor17Parameters.hpp"
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::CoupledVegfPelletDiffusionReactionPde() :
@@ -43,13 +44,13 @@ CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::CoupledVegfPellet
             mLinearInUTerm(0.0 * unit::per_second),
             mDiscreteLinearSourceStrengths(),
             mDiscreteNonLinearSourceStrengths(),
-            mPelletFreeDecayRate((0.8/3600.0)*unit::per_second),
-            mPelletVegfBindingConstant(50.0),
-            mInitialVegfInPellet(3.93e-4*unit::mole_per_metre_cubed),
-            mCorneaPelletPermeability((1.67e-7/3600.0)*unit::metre_per_second),
-            mPelletSurfaceArea(6.79e-7*unit::metres_squared),
-            mPelletVolume(1.7e-11*unit::metres_cubed),
-            mHalfMaxVegf(6.5e-10*unit::mole_per_metre_cubed)
+            mPelletFreeDecayRate(Connor17Parameters::mpVegfDecayRateInPellet->GetValue("CoupledVegfPelletDiffusionReactionPde")),
+            mPelletVegfBindingConstant(Connor17Parameters::mpVegfBindingConstant->GetValue("CoupledVegfPelletDiffusionReactionPde")),
+            mInitialVegfInPellet(Connor17Parameters::mpInitialVegfConcentrationInPellet->GetValue("CoupledVegfPelletDiffusionReactionPde")),
+            mCorneaPelletPermeability(Connor17Parameters::mpCorneaVegfPermeability->GetValue("CoupledVegfPelletDiffusionReactionPde")),
+            mPelletSurfaceArea(Connor17Parameters::mpPelletSurfaceArea->GetValue("CoupledVegfPelletDiffusionReactionPde")),
+            mPelletVolume(Connor17Parameters::mpPelletVolume->GetValue("CoupledVegfPelletDiffusionReactionPde")),
+            mHalfMaxVegf(Connor17Parameters::mpVegfAtHalfReceptorOccupancy->GetValue("CoupledVegfPelletDiffusionReactionPde"))
 {
 
 }
@@ -195,6 +196,7 @@ units::quantity<unit::concentration_flow_rate> CoupledVegfPelletDiffusionReactio
     units::quantity<unit::concentration_flow_rate> rate = mLinearInUTerm*u +
             this->mDiscreteConstantSourceStrengths[gridIndex] + this->mDiscreteLinearSourceStrengths[gridIndex]*u;
     rate+= this->mDiscreteNonLinearSourceStrengths[gridIndex]*(u/(u+mHalfMaxVegf));
+
     return rate;
 }
 

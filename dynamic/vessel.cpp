@@ -2911,6 +2911,16 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
                 , GetLength_function_type( &::Vessel< 2 >::GetLength ) );
         
         }
+        { //::Vessel< 2 >::GetMaturity
+        
+            typedef Vessel< 2 > exported_class_t;
+            typedef double ( exported_class_t::*GetMaturity_function_type)(  ) const;
+            
+            Vessel2_exposer.def( 
+                "GetMaturity"
+                , GetMaturity_function_type( &::Vessel< 2 >::GetMaturity ) );
+        
+        }
         { //::Vessel< 2 >::GetNode
         
             typedef Vessel< 2 > exported_class_t;
@@ -3316,6 +3326,16 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
             Vessel3_exposer.def( 
                 "GetLength"
                 , GetLength_function_type( &::Vessel< 3 >::GetLength ) );
+        
+        }
+        { //::Vessel< 3 >::GetMaturity
+        
+            typedef Vessel< 3 > exported_class_t;
+            typedef double ( exported_class_t::*GetMaturity_function_type)(  ) const;
+            
+            Vessel3_exposer.def( 
+                "GetMaturity"
+                , GetMaturity_function_type( &::Vessel< 3 >::GetMaturity ) );
         
         }
         { //::Vessel< 3 >::GetNode
@@ -4318,6 +4338,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
                 , GetNodes_function_type( &::VesselNetwork< 2 >::GetNodes ) );
         
         }
+        { //::VesselNetwork< 2 >::GetNodesInSphere
+        
+            typedef VesselNetwork< 2 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<VesselNode<2> > > ( exported_class_t::*GetNodesInSphere_function_type)( ::DimensionalChastePoint< 2 > const &,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            VesselNetwork2_exposer.def( 
+                "GetNodesInSphere"
+                , GetNodesInSphere_function_type( &::VesselNetwork< 2 >::GetNodesInSphere )
+                , ( bp::arg("rCentre"), bp::arg("radius") ) );
+        
+        }
         { //::VesselNetwork< 2 >::GetNumberOfNodes
         
             typedef VesselNetwork< 2 > exported_class_t;
@@ -4989,6 +5020,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
             VesselNetwork3_exposer.def( 
                 "GetNodes"
                 , GetNodes_function_type( &::VesselNetwork< 3 >::GetNodes ) );
+        
+        }
+        { //::VesselNetwork< 3 >::GetNodesInSphere
+        
+            typedef VesselNetwork< 3 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<VesselNode<3> > > ( exported_class_t::*GetNodesInSphere_function_type)( ::DimensionalChastePoint< 3 > const &,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            VesselNetwork3_exposer.def( 
+                "GetNodesInSphere"
+                , GetNodesInSphere_function_type( &::VesselNetwork< 3 >::GetNodesInSphere )
+                , ( bp::arg("rCentre"), bp::arg("radius") ) );
         
         }
         { //::VesselNetwork< 3 >::GetNumberOfNodes
@@ -7014,6 +7056,16 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
                 , GetLength_function_type( &::VesselSegment< 2 >::GetLength ) );
         
         }
+        { //::VesselSegment< 2 >::GetMaturity
+        
+            typedef VesselSegment< 2 > exported_class_t;
+            typedef double ( exported_class_t::*GetMaturity_function_type)(  ) const;
+            
+            VesselSegment2_exposer.def( 
+                "GetMaturity"
+                , GetMaturity_function_type( &::VesselSegment< 2 >::GetMaturity ) );
+        
+        }
         { //::VesselSegment< 2 >::GetMidPoint
         
             typedef VesselSegment< 2 > exported_class_t;
@@ -7151,6 +7203,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
                 "SetFlowProperties"
                 , SetFlowProperties_function_type( &::VesselSegment< 2 >::SetFlowProperties )
                 , ( bp::arg("rFlowProperties") ) );
+        
+        }
+        { //::VesselSegment< 2 >::SetMaturity
+        
+            typedef VesselSegment< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetMaturity_function_type)( double ) ;
+            
+            VesselSegment2_exposer.def( 
+                "SetMaturity"
+                , SetMaturity_function_type( &::VesselSegment< 2 >::SetMaturity )
+                , ( bp::arg("maturity") ) );
         
         }
         { //::AbstractVesselNetworkComponent< 2 >::GetId
@@ -7316,6 +7379,16 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
                 , GetLength_function_type( &::VesselSegment< 3 >::GetLength ) );
         
         }
+        { //::VesselSegment< 3 >::GetMaturity
+        
+            typedef VesselSegment< 3 > exported_class_t;
+            typedef double ( exported_class_t::*GetMaturity_function_type)(  ) const;
+            
+            VesselSegment3_exposer.def( 
+                "GetMaturity"
+                , GetMaturity_function_type( &::VesselSegment< 3 >::GetMaturity ) );
+        
+        }
         { //::VesselSegment< 3 >::GetMidPoint
         
             typedef VesselSegment< 3 > exported_class_t;
@@ -7453,6 +7526,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
                 "SetFlowProperties"
                 , SetFlowProperties_function_type( &::VesselSegment< 3 >::SetFlowProperties )
                 , ( bp::arg("rFlowProperties") ) );
+        
+        }
+        { //::VesselSegment< 3 >::SetMaturity
+        
+            typedef VesselSegment< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetMaturity_function_type)( double ) ;
+            
+            VesselSegment3_exposer.def( 
+                "SetMaturity"
+                , SetMaturity_function_type( &::VesselSegment< 3 >::SetMaturity )
+                , ( bp::arg("maturity") ) );
         
         }
         { //::AbstractVesselNetworkComponent< 3 >::GetId

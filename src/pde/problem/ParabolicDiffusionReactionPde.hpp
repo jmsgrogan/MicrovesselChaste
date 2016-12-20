@@ -43,7 +43,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "AbstractDiscreteContinuumParabolicPde.hpp"
 
 /**
- * Linear reaction diffusion PDE
+ * Parabolic reaction diffusion PDE
  */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM = ELEMENT_DIM>
 class ParabolicDiffusionReactionPde : public AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>

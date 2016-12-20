@@ -33,8 +33,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef CONNOR2017MIGRATIONRULE_HPP_
-#define CONNOR2017MIGRATIONRULE_HPP_
+#ifndef TIPATTRACTIONLATTICEBASEDMIGRATIONRULE_HPP_
+#define TIPATTRACTIONLATTICEBASEDMIGRATIONRULE_HPP_
 
 #include <vector>
 #include <string>
@@ -45,12 +45,11 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UnitCollection.hpp"
 
 /**
- * A concrete migration rule for lattice based simulations based on
- * a model described in Owen et al. 2011. Default parameter values are taken
- * from that study.
+ * A concrete migration rule for lattice based simulations with proximity based
+ * mechanical attraction between tips.
  */
 template<unsigned DIM>
-class Connor2017MigrationRule : public LatticeBasedMigrationRule<DIM>
+class TipAttractionLatticeBasedMigrationRule : public LatticeBasedMigrationRule<DIM>
 {
 
 protected:
@@ -70,23 +69,48 @@ protected:
      */
     std::vector<units::quantity<unit::concentration> > mVegfField;
 
+    /**
+     * The tip attraction radius
+     */
+    units::quantity<unit::length> mTipAttractionRadius;
+
+    /**
+     * The tip attraction angle
+     */
+    double mTipAttractionAngle;
+
+    /**
+     * The tip sprout attraction strength
+     */
+    units::quantity<unit::velocity> mTipSproutAttractionStrength;
+
+    /**
+     * The tip tip attraction strength
+     */
+    units::quantity<unit::velocity> mTipTipAttractionStrength;
+
+    /**
+     * Turn tip attraction on or off
+     */
+    bool mUseTipAttraction;
+
 public:
 
     /**
      * Constructor.
      */
-    Connor2017MigrationRule();
+    TipAttractionLatticeBasedMigrationRule();
 
     /**
      * Destructor.
      */
-    virtual ~Connor2017MigrationRule();
+    virtual ~TipAttractionLatticeBasedMigrationRule();
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to a new instance of the class
      */
-    static boost::shared_ptr<Connor2017MigrationRule<DIM> > Create();
+    static boost::shared_ptr<TipAttractionLatticeBasedMigrationRule<DIM> > Create();
 
     /**
      * Calculate the grid index that each migrating node will move into. Set to -1 if the
@@ -108,6 +132,12 @@ public:
      */
     void SetCellMotilityParameter(units::quantity<unit::diffusivity> cellMotility);
 
+    /**
+     * Set whether to use tip attraction
+     * @param useTipAttraction whether to use tip attraction
+     */
+    void SetUseTipAttraction(bool useTipAttraction);
+
 private:
 
     /**
@@ -122,4 +152,4 @@ private:
                                                            std::vector<unsigned> neighbourIndices, unsigned gridIndex);
 };
 
-#endif /* CONNOR2017MIGRATIONRULE_HPP_ */
+#endif /* TipAttractionLatticeBasedMigrationRule_HPP_ */

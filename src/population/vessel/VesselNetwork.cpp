@@ -369,6 +369,23 @@ std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > VesselNetwo
 }
 
 template<unsigned DIM>
+std::vector<boost::shared_ptr<VesselNode<DIM> > > VesselNetwork<DIM>::GetNodesInSphere(const DimensionalChastePoint<DIM>&  rCentre,
+units::quantity<unit::length> radius)
+{
+    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = GetNodes();
+    std::vector<boost::shared_ptr<VesselNode<DIM> > > inside_nodes;
+
+    for(unsigned idx = 0; idx < nodes.size(); idx++)
+    {
+        if(nodes[idx]->GetDistance(rCentre) <= radius)
+        {
+            inside_nodes.push_back(nodes[idx]);
+        }
+    }
+    return inside_nodes;
+}
+
+template<unsigned DIM>
 std::map<std::string, double> VesselNetwork<DIM>::GetOutputData()
 {
     this->mOutputData.clear();

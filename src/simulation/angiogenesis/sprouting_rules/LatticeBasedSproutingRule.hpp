@@ -93,6 +93,12 @@ public:
      * @param pGrid the grid for the vessel network
      */
     void SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
+
+    /**
+     * Set the minimum distance from an existing tip that a sprout can form
+     * @param tipExclusionRadius the minimum distance from an existing tip that a sprout can form
+     */
+    void SetTipExclusionRadius(units::quantity<unit::length> tipExclusionRadius);
 };
 
 #endif /* LATTICEBASEDSPROUTINGRULE_HPP_ */

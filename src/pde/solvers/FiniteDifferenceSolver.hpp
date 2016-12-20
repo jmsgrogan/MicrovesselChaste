@@ -113,6 +113,12 @@ public:
      */
     void UpdateBoundaryConditionsEachSolve(bool doUpdate);
 
+    /**
+     * Dimensionless time increment for the parabolic solver
+     * @param timeIncrement Dimensionless time increment for the parabolic solver
+     */
+    void SetParabolicSolverTimeIncrement(double timeIncrement);
+
 private:
 
     /**

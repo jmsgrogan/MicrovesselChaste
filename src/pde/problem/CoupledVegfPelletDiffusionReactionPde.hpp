@@ -43,7 +43,8 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "AbstractDiscreteContinuumParabolicPde.hpp"
 
 /**
- * Linear reaction diffusion PDE
+ * Reaction diffusion PDE for VEGF leakage from a pellet. The pellet is treated as
+ * a seperate non-spatial compartment.
  */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM = ELEMENT_DIM>
 class CoupledVegfPelletDiffusionReactionPde : public AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>
@@ -69,7 +70,7 @@ class CoupledVegfPelletDiffusionReactionPde : public AbstractDiscreteContinuumPa
     units::quantity<unit::rate> mPelletFreeDecayRate;
 
     /**
-     * The decay rate of free VEGF in the pellet
+     * The binding constant for VEGF in the pellet
      */
     units::quantity<unit::dimensionless> mPelletVegfBindingConstant;
 
@@ -163,30 +164,76 @@ public:
      */
     virtual void UpdateMultiplierValue();
 
+    /**
+     * @return the free vegf decay rate
+     */
     units::quantity<unit::rate>  GetPelletFreeDecayRate();
 
+    /**
+     * @return the pellet binding constant
+     */
     units::quantity<unit::dimensionless>  GetPelletBindingConstant();
 
+    /**
+     * @return the initial vegf in the pellet
+     */
     units::quantity<unit::concentration> GetInitialVegfInPellet();
 
+    /**
+     * @return the cornea pellet permeability
+     */
     units::quantity<unit::membrane_permeability> GetCorneaPelletPermeability();
 
+    /**
+     * @return the pellet surface area
+     */
     units::quantity<unit::area> GetPelletSurfaceArea();
 
+    /**
+     * @return the pellet volume
+     */
     units::quantity<unit::volume> GetPelletVolume();
 
+    /**
+     * Set the vegf decay rate
+     * @param rate the vegf decay rate
+     */
     void SetPelletFreeDecayRate(units::quantity<unit::rate> rate);
 
+    /**
+     * Set the vegf binding constant
+     * @param bindingConstant the vegf binding constant
+     */
     void SetPelletBindingConstant(units::quantity<unit::dimensionless> bindingConstant);
 
+    /**
+     * Set the initial vegf
+     * @param initialVegf the initial vegf
+     */
     void SetInitialVegfInPellet(units::quantity<unit::concentration> initialVegf);
 
+    /**
+     * Set cornea pellet permeability
+     * @param permeability the cornea pellet permeability
+     */
     void SetCorneaPelletPermeability(units::quantity<unit::membrane_permeability> permeability);
 
+    /**
+     * Set the pellet surface area
+     * @param surfaceArea the pellet surface area
+     */
     void SetPelletSurfaceArea(units::quantity<unit::area> surfaceArea);
 
+    /**
+     * Set the pellet volume
+     * @param volume the pellet volume
+     */
     void SetPelletVolume(units::quantity<unit::volume> volume);
 
+    /**
+     * Set the half max vegf concentration
+     * @param halfMax the half max vegf concentration
+     */
     void SetHalfMaxVegfConcentration(units::quantity<unit::concentration> halfMax);
 
 };

@@ -44,6 +44,7 @@ def update_builder(builder):
                        "BaseParameterInstance", 
                        "BaseUnits",
                        "Owen11Parameters",
+                       "Connor17Parameters",
                        "Secomb04Parameters",
                        "GenericParameters"]
 
@@ -218,4 +219,4 @@ def update_builder(builder):
             var_gen_cls.add_registration_code('def(double() / bp::self)')
             var_gen_cls.add_registration_code('def(bp::self_ns::str(bp::self))')
 
-    return builder
+    return builder, []

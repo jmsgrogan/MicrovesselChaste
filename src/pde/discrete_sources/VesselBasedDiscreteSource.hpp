@@ -79,11 +79,6 @@ protected:
      */
     units::quantity<unit::per_length> mCellsPerMetre;
 
-    /**
-     * Is the vessel acting as a sink or source
-     */
-    bool mVesselIsSource;
-
 public:
 
     /**
@@ -144,16 +139,22 @@ public:
      */
     void SetReferenceConcentration(units::quantity<unit::concentration> value);
 
-    void SetVesselIsSource(bool mVesselIsSource);
-
     /**
      * Set the value of the source for PRESCRIBED type sources
      * @param value the value of the source
      */
     void SetReferenceHaematocrit(units::quantity<unit::dimensionless> value);
 
+    /**
+     * Set the rate of uptake per cell, non-linear model only
+     * @param ratePerCell the rate of uptake per cell
+     */
     void SetUptakeRatePerCell(units::quantity<unit::molar_flow_rate> ratePerCell);
 
+    /**
+     * Set the number of cells per unit vessel length, non-linear model only
+     * @param cellsPerLength the number of cells per unit vessel length
+     */
     void SetNumberOfCellsPerLength(units::quantity<unit::per_length> cellsPerLength);
 
 };

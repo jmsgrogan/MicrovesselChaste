@@ -811,6 +811,30 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_utility){
         bp::implicitly_convertible< boost::shared_ptr< BaseUnits >, boost::shared_ptr< SerializableSingleton< BaseUnits > > >();
     }
 
+    bp::class_< Connor17Parameters >( "Connor17Parameters" )    
+        .def_readonly( "mpChemotacticCoefficient", &Connor17Parameters::mpChemotacticCoefficient )    
+        .def_readonly( "mpCorneaVegfPermeability", &Connor17Parameters::mpCorneaVegfPermeability )    
+        .def_readonly( "mpEcsPerLength", &Connor17Parameters::mpEcsPerLength )    
+        .def_readonly( "mpFilopodiaProbeDistance", &Connor17Parameters::mpFilopodiaProbeDistance )    
+        .def_readonly( "mpFilopodiaSensingAngle", &Connor17Parameters::mpFilopodiaSensingAngle )    
+        .def_readonly( "mpInitialVegfConcentrationInPellet", &Connor17Parameters::mpInitialVegfConcentrationInPellet )    
+        .def_readonly( "mpLatticeSpacing", &Connor17Parameters::mpLatticeSpacing )    
+        .def_readonly( "mpMotilityCoefficient", &Connor17Parameters::mpMotilityCoefficient )    
+        .def_readonly( "mpPelletSurfaceArea", &Connor17Parameters::mpPelletSurfaceArea )    
+        .def_readonly( "mpPelletVolume", &Connor17Parameters::mpPelletVolume )    
+        .def_readonly( "mpReductionInVegfPerCell", &Connor17Parameters::mpReductionInVegfPerCell )    
+        .def_readonly( "mpTimeStep", &Connor17Parameters::mpTimeStep )    
+        .def_readonly( "mpTipTipAttractionStrength", &Connor17Parameters::mpTipTipAttractionStrength )    
+        .def_readonly( "mpTipVesselAttractionStrength", &Connor17Parameters::mpTipVesselAttractionStrength )    
+        .def_readonly( "mpVegfAtHalfReceptorOccupancy", &Connor17Parameters::mpVegfAtHalfReceptorOccupancy )    
+        .def_readonly( "mpVegfBindingConstant", &Connor17Parameters::mpVegfBindingConstant )    
+        .def_readonly( "mpVegfBloodConcentration", &Connor17Parameters::mpVegfBloodConcentration )    
+        .def_readonly( "mpVegfDecayConstant", &Connor17Parameters::mpVegfDecayConstant )    
+        .def_readonly( "mpVegfDecayRateInPellet", &Connor17Parameters::mpVegfDecayRateInPellet )    
+        .def_readonly( "mpVegfDiffusionConstant", &Connor17Parameters::mpVegfDiffusionConstant )    
+        .def_readonly( "mpVesselRadius", &Connor17Parameters::mpVesselRadius )    
+        .def_readonly( "mpVesselVegfPermeability", &Connor17Parameters::mpVesselVegfPermeability );
+
     bp::class_< GenericParameters >( "GenericParameters" )    
         .def_readonly( "mpCapillaryRadius", &GenericParameters::mpCapillaryRadius )    
         .def_readonly( "mpGasConcentrationAtStp", &GenericParameters::mpGasConcentrationAtStp );

@@ -149,7 +149,15 @@ std::vector<int> LatticeBasedMigrationRule<DIM>::GetIndices(const std::vector<bo
     std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > point_node_map = this->mpGrid->GetPointNodeMap();
 
     // Get the neighbour data from the regular grid
-    std::vector<std::vector<unsigned> > neighbour_indices = this->mpGrid->GetNeighbourData();
+    std::vector<std::vector<unsigned> > neighbour_indices;
+    if(this->mUseMooreNeighbourhood)
+    {
+        neighbour_indices = this->mpGrid->GetMooreNeighbourData();
+    }
+    else
+    {
+        neighbour_indices = this->mpGrid->GetNeighbourData();
+    }
 
     // Loop over all nodes, if they can move set the index
     for(unsigned idx = 0; idx < rNodes.size(); idx++)

@@ -88,6 +88,12 @@ FiniteDifferenceSolver<DIM>::~FiniteDifferenceSolver()
 }
 
 template<unsigned DIM>
+void FiniteDifferenceSolver<DIM>::SetParabolicSolverTimeIncrement(double timeIncrement)
+{
+    mParabolicSolverTimeIncrement = timeIncrement;
+}
+
+template<unsigned DIM>
 boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > FiniteDifferenceSolver<DIM>::GetRGBoundaryConditions()
 {
     return mpBoundaryConditions;

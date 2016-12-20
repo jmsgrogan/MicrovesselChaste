@@ -86,6 +86,10 @@ protected:
      */
     boost::shared_ptr<Part<DIM> > mpBoundingDomain;
 
+    /**
+     * Use Moore neighbourhood
+     */
+    bool mUseMooreNeighbourhood;
 
 public:
 
@@ -154,6 +158,12 @@ public:
      * @param pCellPopulation the cell population
      */
     void SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation);
+
+    /**
+     * Set whether to use a Moore or Von Neumann neighbourhood
+     * @param useMooreNeighbourhood whether to use a Moore or Von Neumann neighbourhood
+     */
+    void SetUseMooreNeighbourhood(bool useMooreNeighbourhood);
 
 };
 

@@ -33,6 +33,7 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
+#include "TipAttractionLatticeBasedMigrationRule.hpp"
 #include "AngiogenesisSolver.hpp"
 #include "Owen2011MigrationRule.hpp"
 #include "Owen2011SproutingRule.hpp"
@@ -49,6 +50,7 @@ Copyright (c) 2005-2016, University of Oxford.
 template class AngiogenesisSolver<3>;
 template class Owen2011MigrationRule<3>;
 template class Owen2011SproutingRule<3>;
+template class TipAttractionLatticeBasedMigrationRule<3>;
 template class OffLatticeMigrationRule<3>;
 template class OffLatticeSproutingRule<3>;
 template class AbstractMigrationRule<3>;
@@ -60,6 +62,7 @@ template class CellPopulationMigrationRule<3>;
 template class AngiogenesisSolver<2>;
 template class Owen2011MigrationRule<2>;
 template class Owen2011SproutingRule<2>;
+template class TipAttractionLatticeBasedMigrationRule<2>;
 template class OffLatticeMigrationRule<2>;
 template class OffLatticeSproutingRule<2>;
 template class AbstractMigrationRule<2>;

@@ -455,6 +455,7 @@ std::map<std::string, double> Vessel<DIM>::GetOutputData()
     this->mOutputData.insert(flow_data.begin(), flow_data.end());
     this->mOutputData["Vessel Id"] = double(this->GetId());
     this->mOutputData["Vessel Radius m"] = this->GetRadius() / unit::metres;
+    this->mOutputData["Vessel Maturity"] = this->GetMaturity();
     return this->mOutputData;
 }
 
@@ -568,6 +569,17 @@ units::quantity<unit::length> Vessel<DIM>::GetRadius() const
         radius += mSegments[i]->GetRadius();
     }
     return radius / (double(mSegments.size()));
+}
+
+template<unsigned DIM>
+double Vessel<DIM>::GetMaturity() const
+{
+    double maturity = 0.0;
+    for (unsigned i = 0; i < mSegments.size(); i++)
+    {
+        maturity += mSegments[i]->GetMaturity();
+    }
+    return maturity / (double(mSegments.size()));
 }
 
 template<unsigned DIM>

@@ -50,7 +50,6 @@ MicrovesselSolver<DIM>::MicrovesselSolver() :
         mpStructuralAdaptationSolver(),
         mpAngiogenesisSolver(),
         mpRegressionSolver(),
-        mpMaturityCalculator(),
         mDiscreteContinuumSolversHaveCompatibleGridIndexing(false),
         mUpdatePdeEachSolve(true),
         mMicrovesselModifiers(),
@@ -185,12 +184,6 @@ void MicrovesselSolver<DIM>::Increment()
         mpRegressionSolver->Increment();
     }
 
-    if(mpMaturityCalculator && this->mpNetwork)
-    {
-        mpMaturityCalculator->Update();
-    }
-
-
     // Manage vessel network output
     if (this->mpNetwork)
     {
@@ -312,11 +305,6 @@ void MicrovesselSolver<DIM>::Setup()
         mpRegressionSolver->SetVesselNetwork(mpNetwork);
     }
 
-    if(mpMaturityCalculator)
-    {
-        mpMaturityCalculator->SetVesselNetwork(mpNetwork);
-    }
-
 }
 
 template<unsigned DIM>
@@ -353,12 +341,6 @@ template<unsigned DIM>
 void MicrovesselSolver<DIM>::SetRegressionSolver(boost::shared_ptr<RegressionSolver<DIM> > pRegressionSolver)
 {
     mpRegressionSolver = pRegressionSolver;
-}
-
-template<unsigned DIM>
-void MicrovesselSolver<DIM>::SetMaturityCalculator(boost::shared_ptr<MaturityCalculator<DIM> > pMaturityCalculator)
-{
-    mpMaturityCalculator = pMaturityCalculator;
 }
 
 // Explicit instantiation

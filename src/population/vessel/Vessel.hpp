@@ -239,6 +239,13 @@ public:
     units::quantity<unit::length> GetRadius() const;
 
     /**
+     * Return the maturity
+     *
+     * @return the maturity
+     */
+    double GetMaturity() const;
+
+    /**
      * Return the vessel node
      * @param index the query index
      * @return the vessel node

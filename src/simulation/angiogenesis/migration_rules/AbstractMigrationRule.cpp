@@ -42,7 +42,8 @@ AbstractMigrationRule<DIM>::AbstractMigrationRule()
       mIsSprouting(false),
       mpCellPopulation(),
       mpGrid(),
-      mpBoundingDomain()
+      mpBoundingDomain(),
+      mUseMooreNeighbourhood(false)
 {
 
 }
@@ -58,6 +59,12 @@ boost::shared_ptr<AbstractMigrationRule<DIM> > AbstractMigrationRule<DIM>::Creat
 {
     MAKE_PTR(AbstractMigrationRule<DIM>, pSelf);
     return pSelf;
+}
+
+template <unsigned DIM>
+void AbstractMigrationRule<DIM>::SetUseMooreNeighbourhood(bool useMooreNeighbourhood)
+{
+    mUseMooreNeighbourhood = useMooreNeighbourhood;
 }
 
 template <unsigned DIM>

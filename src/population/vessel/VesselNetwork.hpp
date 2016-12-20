@@ -233,6 +233,15 @@ public:
     unsigned NumberOfNodesNearLocation(const DimensionalChastePoint<DIM>&  rLocation, double tolerance = 0.0);
 
     /**
+     * Return the nodes inside a sphere
+     * @param rCentre the centre of the sphere
+     * @param radius the sphere radius
+     * @return the nodes in the sphere
+     */
+    std::vector<boost::shared_ptr<VesselNode<DIM> > > GetNodesInSphere(const DimensionalChastePoint<DIM>&  rCentre,
+            units::quantity<unit::length>  radius);
+
+    /**
      * Return the extents of the vessel network in the form ((xmin, xmax), (ymin, ymax), (zmin, zmax))
      * @param useRadii use the vessel radii in calculations
      * @return the extents of the vessel network in the form ((xmin, xmax), (ymin, ymax), (zmin, zmax))
