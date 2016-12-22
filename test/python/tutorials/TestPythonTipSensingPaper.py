@@ -44,131 +44,7 @@ import microvessel_chaste.simulation # Flow and angiogenesis solvers
 import microvessel_chaste.visualization # Visualization
 from microvessel_chaste.utility import * # Dimensional analysis: bring in all units for convenience
 
-# Record vessel network details
-class VesselNetworkRecorder2(microvessel_chaste.simulation.AbstractMicrovesselModifier2):
-
-    def __init__(self, network, grid):
-        
-        super(VesselNetworkRecorder2, self).__init__()
-        self.network = network
-        self.grid = grid
-        self.line_density_file = None
-        self.branch_density_file = None
-        self.perfusion_density_file = None
-        
-    def SetupSolve(self, outputDirectory):
-        pass
-        
-    def UpdateAtEndOfTimeStep(self):
-        
-        """ Update the Jupyter notebook plot with the new scene
-        
-        """
-        
-        if chaste.cell_based.SimulationTime.Instance().GetTimeStepsElapsed()%6.0==0:
-        
-            # Get line density
-            length_density_bins = np.zeros(int(1240.0/20.0) + 1)
-            branch_density_bins = np.zeros(int(1240.0/20.0) + 1)
-            perfusion_density_bins = np.zeros(int(1240.0/20.0) + 1)
-            
-            point_segment_map = self.grid.GetPointNodeMap(False)
-            for idx, eachPoint in enumerate(point_segment_map):
-                if(len(eachPoint)>0):
-                    y_loc = self.grid.GetLocationOf1dIndex(idx).GetLocation(1.e-6*metre())[1]
-                    length_density_bins[int(y_loc/20.0)] += len(eachPoint)
-                    for eachNode in eachPoint:
-                        if eachNode.GetNumberOfSegments()>2:
-                            branch_density_bins[int(y_loc/20.0)] += 1.0
-#                         if eachNode.GetSegment(0).GetFlowProperties().GetHaematocrit()>0.0:
-#                             perfusion_density_bins[int(y_loc/20.0)] += 1.0                    
-                    
-            out_string = str(chaste.cell_based.SimulationTime.Instance().GetTime()) + ","
-            for idx, eachValue in enumerate(length_density_bins):
-                if idx != len(length_density_bins)-1:
-                    out_string += str(eachValue) + ","
-                else:
-                    out_string += str(eachValue)
-            self.line_density_file.write(out_string + "\n")
-            
-            out_string = str(chaste.cell_based.SimulationTime.Instance().GetTime()) + ","
-            for idx, eachValue in enumerate(branch_density_bins):
-                if idx != len(branch_density_bins)-1:
-                    out_string += str(eachValue) + ","
-                else:
-                    out_string += str(eachValue)
-            self.branch_density_file.write(out_string + "\n")
-            
-            out_string = str(chaste.cell_based.SimulationTime.Instance().GetTime()) + ","
-            for idx, eachValue in enumerate(perfusion_density_bins):
-                if idx != len(perfusion_density_bins)-1:
-                    out_string += str(eachValue) + ","
-                else:
-                    out_string += str(eachValue)
-            self.perfusion_density_file.write(out_string + "\n")
-            
-class VesselNetworkRecorder3(microvessel_chaste.simulation.AbstractMicrovesselModifier3):
-
-    def __init__(self, network, grid):
-        
-        super(VesselNetworkRecorder3, self).__init__()
-        self.network = network
-        self.grid = grid
-        self.line_density_file = None
-        self.branch_density_file = None
-        self.perfusion_density_file = None
-        
-    def SetupSolve(self, outputDirectory):
-        pass
-        
-    def UpdateAtEndOfTimeStep(self):
-        
-        """ Update the Jupyter notebook plot with the new scene
-        
-        """
-        
-        if chaste.cell_based.SimulationTime.Instance().GetTimeStepsElapsed()%6.0==0:
-        
-            # Get line density
-            length_density_bins = np.zeros(int(1240.0/20.0) + 1)
-            branch_density_bins = np.zeros(int(1240.0/20.0) + 1)
-            perfusion_density_bins = np.zeros(int(1240.0/20.0) + 1)
-            
-            point_segment_map = self.grid.GetPointNodeMap(False)
-            for idx, eachPoint in enumerate(point_segment_map):
-                if(len(eachPoint)>0):
-                    y_loc = self.grid.GetLocationOf1dIndex(idx).GetLocation(1.e-6*metre())[1]
-                    length_density_bins[int(y_loc/20.0)] += len(eachPoint)
-                    for eachNode in eachPoint:
-                        if eachNode.GetNumberOfSegments()>2:
-                            branch_density_bins[int(y_loc/20.0)] += 1.0
-#                         if eachNode.GetSegment(0).GetFlowProperties().GetHaematocrit()>0.0:
-#                             perfusion_density_bins[int(y_loc/20.0)] += 1.0                    
-                    
-            out_string = str(chaste.cell_based.SimulationTime.Instance().GetTime()) + ","
-            for idx, eachValue in enumerate(length_density_bins):
-                if idx != len(length_density_bins)-1:
-                    out_string += str(eachValue) + ","
-                else:
-                    out_string += str(eachValue)
-            self.line_density_file.write(out_string + "\n")
-            
-            out_string = str(chaste.cell_based.SimulationTime.Instance().GetTime()) + ","
-            for idx, eachValue in enumerate(branch_density_bins):
-                if idx != len(branch_density_bins)-1:
-                    out_string += str(eachValue) + ","
-                else:
-                    out_string += str(eachValue)
-            self.branch_density_file.write(out_string + "\n")
-            
-            out_string = str(chaste.cell_based.SimulationTime.Instance().GetTime()) + ","
-            for idx, eachValue in enumerate(perfusion_density_bins):
-                if idx != len(perfusion_density_bins)-1:
-                    out_string += str(eachValue) + ","
-                else:
-                    out_string += str(eachValue)
-            self.perfusion_density_file.write(out_string + "\n")
-                
+           
 def do_2d_run(work_dir, num_runs, rand_seed, parameter_values, sensing = False, moore = False):
     
     chaste.core.RandomNumberGenerator.Instance().Reseed(rand_seed)
@@ -212,6 +88,7 @@ def do_2d_run(work_dir, num_runs, rand_seed, parameter_values, sensing = False, 
         vessel_vegf_sink.SetReferenceConcentration(0.0*mole_per_metre_cubed())
         vessel_vegf_sink.SetVesselPermeability(parameter_values["VEGF Permeability"])
         vessel_vegf_sink.SetReferenceHaematocrit(0.45*dimensionless())
+        vegf_pde.SetPelletBindingConstant(30000.0*dimensionless())
         #vessel_vegf_sink.SetUptakeRatePerCell(-(4.e-22/3600.0)*mole_per_second())
         vegf_pde.AddDiscreteSource(vessel_vegf_sink)
         vegf_solver = microvessel_chaste.pde.FiniteDifferenceSolver2()
@@ -256,25 +133,18 @@ def do_2d_run(work_dir, num_runs, rand_seed, parameter_values, sensing = False, 
         sprouting_rule.SetTipExclusionRadius(60.e-6*metre())
         sprouting_rule.SetVesselEndCutoff(0.0*metre())
         #sprouting_rule.SetSproutingProbability(7.5e-4*per_second())
-        sprouting_rule.SetSproutingProbability(2.0e-4*per_second())
+        sprouting_rule.SetSproutingProbability(.75e-3*per_second())
         #sprouting_rule.SetHalfMaxVegf(0.5e-9*mole_per_metre_cubed())
-        sprouting_rule.SetHalfMaxVegf(0.65e-9*mole_per_metre_cubed())
+        sprouting_rule.SetHalfMaxVegf(0.5e-9*mole_per_metre_cubed())
         migration_rule.SetDiscreteContinuumSolver(vegf_solver)
         migration_rule.SetUseMooreNeighbourhood(moore)
         migration_rule.SetUseTipAttraction(sensing)
+        migration_rule.SetCellChemotacticParameter((5.7/3600.0)*metre_pow5_per_second_per_mole())
         
         angiogenesis_solver.SetMigrationRule(migration_rule)
         angiogenesis_solver.SetSproutingRule(sprouting_rule)
         angiogenesis_solver.SetVesselGrid(grid)
         angiogenesis_solver.SetVesselNetwork(network)
-        
-        network_recorder = VesselNetworkRecorder2(network, grid)
-        network_recorder.line_density_file = open(file_handler.GetOutputDirectoryFullPath()+
-                                                  'LineDensityProfiles.dat','w')
-        network_recorder.branch_density_file = open(file_handler.GetOutputDirectoryFullPath()+
-                                                    'BranchDensityProfiles.dat','w')
-        network_recorder.perfusion_density_file = open(file_handler.GetOutputDirectoryFullPath()+
-                                                       'PerfusionDensityProfiles.dat','w')
 
         ## The microvessel solver will manage all aspects of the vessel solve.
         microvessel_solver = microvessel_chaste.simulation.MicrovesselSolver2()
@@ -285,7 +155,6 @@ def do_2d_run(work_dir, num_runs, rand_seed, parameter_values, sensing = False, 
         microvessel_solver.SetStructuralAdaptationSolver(structural_adaptation_solver)
         microvessel_solver.SetRegressionSolver(regression_solver)
         microvessel_solver.SetAngiogenesisSolver(angiogenesis_solver)
-        microvessel_solver.AddMicrovesselModifier(network_recorder)
         
         chaste.cell_based.SimulationTime.Instance().SetEndTimeAndNumberOfTimeSteps(parameter_values["End Time"], 
                                                                                    parameter_values["Time Steps"])
@@ -339,6 +208,7 @@ def do_3d_run(work_dir, num_runs, rand_seed, parameter_values, sensing = False, 
         vegf_pde.SetIsotropicDiffusionConstant(parameter_values["VEGF Diffusivity"])
         vegf_pde.SetContinuumLinearInUTerm(parameter_values["VEGF Decay Rate"])
         vegf_pde.SetMultiplierValue(parameter_values["Initial VEGF Concentration"])
+        vegf_pde.SetPelletBindingConstant(30000.0*dimensionless())
         vessel_vegf_sink = microvessel_chaste.pde.VesselBasedDiscreteSource3()
         vessel_vegf_sink.SetReferenceConcentration(0.0*mole_per_metre_cubed())
         vessel_vegf_sink.SetVesselPermeability(parameter_values["VEGF Permeability"])
@@ -400,14 +270,6 @@ def do_3d_run(work_dir, num_runs, rand_seed, parameter_values, sensing = False, 
         angiogenesis_solver.SetSproutingRule(sprouting_rule)
         angiogenesis_solver.SetVesselGrid(grid)
         angiogenesis_solver.SetVesselNetwork(network)
-        
-        network_recorder = VesselNetworkRecorder3(network, grid)
-        network_recorder.line_density_file = open(file_handler.GetOutputDirectoryFullPath()+
-                                                  'LineDensityProfiles.dat','w')
-        network_recorder.branch_density_file = open(file_handler.GetOutputDirectoryFullPath()+
-                                                    'BranchDensityProfiles.dat','w')
-        network_recorder.perfusion_density_file = open(file_handler.GetOutputDirectoryFullPath()+
-                                                       'PerfusionDensityProfiles.dat','w')
 
         ## The microvessel solver will manage all aspects of the vessel solve.
         microvessel_solver = microvessel_chaste.simulation.MicrovesselSolver3()
@@ -418,7 +280,6 @@ def do_3d_run(work_dir, num_runs, rand_seed, parameter_values, sensing = False, 
         microvessel_solver.SetStructuralAdaptationSolver(structural_adaptation_solver)
         microvessel_solver.SetRegressionSolver(regression_solver)
         microvessel_solver.SetAngiogenesisSolver(angiogenesis_solver)
-        microvessel_solver.AddMicrovesselModifier(network_recorder)
         
         chaste.cell_based.SimulationTime.Instance().SetEndTimeAndNumberOfTimeSteps(parameter_values["End Time"], 
                                                                                    parameter_values["Time Steps"])
@@ -435,13 +296,13 @@ def do_3d_run(work_dir, num_runs, rand_seed, parameter_values, sensing = False, 
         
 if __name__ == '__main__':
     
-    work_dir = "Python/TestTipSensingPaper_ThesisParams"
+    work_dir = "Python/TestTipSensingPaper_ThesisParamsWed"
     num_runs = 10
     rand_seed = 1234
     
     parameter_values = {"VEGF Diffusivity":6.94e-11 * metre_squared_per_second(),
                         "VEGF Decay Rate":(-0.8/3600.0) * per_second(),
-                        "Initial VEGF Concentration":3.93e-4*mole_per_metre_cubed(),
+                        "Initial VEGF Concentration":3.93e-1*mole_per_metre_cubed(),
                         "VEGF Permeability": (3.e-4/3600.0)*metre_per_second(),
                         "End Time": 120.0,
                         "Time Steps": 720,
@@ -454,10 +315,10 @@ if __name__ == '__main__':
     #do_2d_run(work_dir+"/2D_VN_Sense", num_runs, rand_seed, parameter_values, sensing = True, moore = False)
     
     # 2D, moore, sensing
-    do_2d_run(work_dir+"/2D_Moore_Sense", num_runs, rand_seed, parameter_values, sensing = True, moore = True)
+    #do_2d_run(work_dir+"/2D_Moore_Sense", num_runs, rand_seed, parameter_values, sensing = True, moore = True)
     
     # 2D, moore, no sensing
-    #do_2d_run(work_dir+"/2D_Moore_NoSense", num_runs, rand_seed, parameter_values, sensing = False, moore = True)
+    do_2d_run(work_dir+"/2D_Moore_NoSense", num_runs, rand_seed, parameter_values, sensing = False, moore = True)
     
     # 3D, von neumann, no sensing
     #do_3d_run(work_dir+"/3D_VN_NoSense", num_runs, rand_seed, parameter_values, sensing = False, moore = False)
