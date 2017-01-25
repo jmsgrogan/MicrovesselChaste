@@ -76,7 +76,6 @@ tutorials/TestLatticeBasedAngiogenesisTutorial.hpp
 tutorials/TestBuildVesselNetworkTutorial.hpp
 tutorials/TestBloodFlowTutorial.hpp
 tutorials/TestSolvingPdesTutorial.hpp
-tutorials/TestTipSensingPaper.hpp
 python/population/TestVesselNodePython.py
 python/geometry/TestPolygonPython.py
 python/geometry/TestFacetPython.py
