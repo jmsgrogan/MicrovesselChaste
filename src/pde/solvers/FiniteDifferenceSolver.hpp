@@ -63,6 +63,11 @@ class FiniteDifferenceSolver : public AbstractRegularGridDiscreteContinuumSolver
      */
     bool mBoundaryConditionsSet;
 
+    /**
+     * Time increment for the parabolic solver
+     */
+    double mParabolicSolverTimeIncrement;
+
 public:
 
     /**
@@ -108,12 +113,23 @@ public:
      */
     void UpdateBoundaryConditionsEachSolve(bool doUpdate);
 
+    /**
+     * Dimensionless time increment for the parabolic solver
+     * @param timeIncrement Dimensionless time increment for the parabolic solver
+     */
+    void SetParabolicSolverTimeIncrement(double timeIncrement);
+
 private:
 
     /**
      * Do a linear PDE solve
      */
     void DoLinearSolve();
+
+    /**
+     * Do a parabolic PDE solve
+     */
+    void DoParabolicSolve();
 };
 
 #endif /* FINITEDIFFERENCESOLVER_HPP_ */

@@ -1,72 +1,78 @@
 .. autoclass:: microvessel_chaste.angiogenesis.AngiogenesisSolver3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.Owen2011MigrationRule3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.Owen2011SproutingRule3
-:members:
+	:members:
+
+.. autoclass:: microvessel_chaste.angiogenesis.TipAttractionLatticeBasedMigrationRule3
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.OffLatticeMigrationRule3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.OffLatticeSproutingRule3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.AbstractMigrationRule3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.AbstractSproutingRule3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.AngiogenesisSolver2
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.Owen2011MigrationRule2
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.Owen2011SproutingRule2
-:members:
+	:members:
+
+.. autoclass:: microvessel_chaste.angiogenesis.TipAttractionLatticeBasedMigrationRule2
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.OffLatticeMigrationRule2
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.OffLatticeSproutingRule2
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.AbstractMigrationRule2
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.AbstractSproutingRule2
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.LatticeBasedMigrationRule2
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.CellPopulationMigrationRule2
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.RegressionSolver2
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.WallShearStressBasedRegressionSolver2
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.LatticeBasedMigrationRule3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.CellPopulationMigrationRule3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.RegressionSolver3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.WallShearStressBasedRegressionSolver3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.LatticeBasedSproutingRule3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.angiogenesis.LatticeBasedSproutingRule2
-:members:
+	:members:
 

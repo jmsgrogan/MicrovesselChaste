@@ -114,31 +114,31 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkReader<DIM>::Read()
 
     vtkSmartPointer<vtkPolyData> p_polydata = p_reader->GetOutput();
 
-    if(mMergeCoincidentPoints)
-    {
-    	vtkSmartPointer<vtkCleanPolyData> p_cleaner = vtkSmartPointer<vtkCleanPolyData>::New();
-        #if VTK_MAJOR_VERSION <= 5
-            p_cleaner->SetInput(p_polydata);
-        #else
-            p_cleaner->SetInputData(p_polydata);
-        #endif
-    	p_cleaner->Update();
-    	p_polydata = p_cleaner->GetOutput();
+    if (mMergeCoincidentPoints) {
+        vtkSmartPointer<vtkCleanPolyData> p_cleaner = vtkSmartPointer<
+                vtkCleanPolyData>::New();
+#if VTK_MAJOR_VERSION <= 5
+        p_cleaner->SetInput(p_polydata);
+#else
+        p_cleaner->SetInputData(p_polydata);
+#endif
+        p_cleaner->Update();
+        p_polydata = p_cleaner->GetOutput();
     }
 
-	if(mTargetSegmentLength != 0.0*unit::metres)
-	{
-	   	vtkSmartPointer<vtkSplineFilter> p_spline_filter = vtkSmartPointer<vtkSplineFilter>::New();
-        #if VTK_MAJOR_VERSION <= 5
-            p_spline_filter->SetInput(p_polydata);
-        #else
-            p_spline_filter->SetInputData(p_polydata);
-        #endif
-	   	p_spline_filter->SetSubdivideToLength();
-	   	p_spline_filter->SetLength(mTargetSegmentLength/mReferenceLength);
-	   	p_spline_filter->Update();
-    	p_polydata = p_spline_filter->GetOutput();
-	}
+    if (mTargetSegmentLength != 0.0 * unit::metres) {
+        vtkSmartPointer<vtkSplineFilter> p_spline_filter = vtkSmartPointer<
+                vtkSplineFilter>::New();
+#if VTK_MAJOR_VERSION <= 5
+        p_spline_filter->SetInput(p_polydata);
+#else
+        p_spline_filter->SetInputData(p_polydata);
+#endif
+        p_spline_filter->SetSubdivideToLength();
+        p_spline_filter->SetLength(mTargetSegmentLength / mReferenceLength);
+        p_spline_filter->Update();
+        p_polydata = p_spline_filter->GetOutput();
+    }
 
     // Create the nodes
     vtkSmartPointer<vtkPointData> p_point_data = vtkSmartPointer<vtkPointData>::New();

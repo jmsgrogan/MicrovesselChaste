@@ -49,6 +49,7 @@ AbstractDiscreteContinuumSolver<DIM>::AbstractDiscreteContinuumSolver()
         mWriteSolution(false),
         mpPde(),
         mpNonLinearPde(),
+        mpParabolicPde(),
         mBoundaryConditions(),
         mReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale()),
         mSolution(),
@@ -107,6 +108,16 @@ boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > Abst
         EXCEPTION("A nonlinear pde has not been set.");
     }
     return mpNonLinearPde;
+}
+
+template<unsigned DIM>
+boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > AbstractDiscreteContinuumSolver<DIM>::GetParabolicPde()
+{
+    if(!mpParabolicPde)
+    {
+        EXCEPTION("A parabolic pde has not been set.");
+    }
+    return mpParabolicPde;
 }
 
 template<unsigned DIM>
@@ -171,6 +182,12 @@ template<unsigned DIM>
 void AbstractDiscreteContinuumSolver<DIM>::SetNonLinearPde(boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > pPde)
 {
     mpNonLinearPde = pPde;
+}
+
+template<unsigned DIM>
+void AbstractDiscreteContinuumSolver<DIM>::SetParabolicPde(boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > pPde)
+{
+    mpParabolicPde = pPde;
 }
 
 template<unsigned DIM>

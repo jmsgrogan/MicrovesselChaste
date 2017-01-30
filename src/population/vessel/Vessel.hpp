@@ -239,6 +239,13 @@ public:
     units::quantity<unit::length> GetRadius() const;
 
     /**
+     * Return the maturity
+     *
+     * @return the maturity
+     */
+    double GetMaturity() const;
+
+    /**
      * Return the vessel node
      * @param index the query index
      * @return the vessel node
@@ -313,7 +320,7 @@ public:
      * Set the radius
      * @param radius the radius
      */
-    void SetRadius(units::quantity<unit::length>  radius);
+    void SetRadius(units::quantity<unit::length> radius);
 
     /**
      * Set the flow properties of the vessel

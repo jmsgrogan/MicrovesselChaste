@@ -92,6 +92,11 @@ private:
      */
     VesselSegment(boost::shared_ptr<VesselNode<DIM> > pNode1, boost::shared_ptr<VesselNode<DIM> > pNode2);
 
+    /**
+     * A measure of vessel maturity
+     */
+    double mMaturity;
+
 public:
 
     /**
@@ -170,6 +175,13 @@ public:
      * @return a point midway along the segment
      */
     DimensionalChastePoint<DIM> GetMidPoint() const;
+
+    /**
+     * Return the maturiy
+     *
+     * @return the maturiy
+     */
+    double GetMaturity() const;
 
     /**
      * Return a pointer to the node specified by the index
@@ -251,6 +263,12 @@ public:
      * @param rFlowProperties the flow properties to be set
      */
     void SetFlowProperties(const SegmentFlowProperties<DIM>& rFlowProperties);
+
+    /**
+     * Set the maturity
+     * @param maturity the maturity
+     */
+    void SetMaturity(double maturity);
 
 private:
 

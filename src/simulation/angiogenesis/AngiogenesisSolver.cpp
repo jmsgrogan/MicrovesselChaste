@@ -169,6 +169,8 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
     // Do lattice or off lattice movement
     if (mpVesselGrid)
     {
+        mpMigrationRule->SetIsSprouting(sprouting);
+
         // If we have a cell population update the cell-point map
         std::vector<int> indices = mpMigrationRule->GetIndices(tips);
 

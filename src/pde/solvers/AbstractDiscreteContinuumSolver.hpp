@@ -47,6 +47,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "RegularGrid.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "UnitCollection.hpp"
+#include "AbstractDiscreteContinuumParabolicPde.hpp"
 
 /**
  * An abstract solver class for continuum-discrete field problems.
@@ -115,6 +116,11 @@ protected:
      * The non-linear PDE to be solved
      */
     boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > mpNonLinearPde;
+
+    /**
+     * The time dependent (parabolic) PDE to be solved
+     */
+    boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > mpParabolicPde;
 
     /**
      * The DiscreteContinuum boundary conditions, optional
@@ -218,6 +224,12 @@ public:
     boost::shared_ptr<AbstractDiscreteContinuumLinearEllipticPde<DIM, DIM> > GetPde();
 
     /**
+     * Return the parabolic PDE
+     * @return the DiscreteContinuum parabolic pde
+     */
+    boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > GetParabolicPde();
+
+    /**
      * Return the reference concentration value.
      * @return the reference concentration value
      */
@@ -301,6 +313,12 @@ public:
      * @param pPde the pde to be solved
      */
     void SetNonLinearPde(boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > pPde);
+
+    /**
+     *  Set the parabolic PDE to be solved
+     * @param pPde the pde to be solved
+     */
+    void SetParabolicPde(boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > pPde);
 
     /**
      * Operations to be performed prior to the first solve

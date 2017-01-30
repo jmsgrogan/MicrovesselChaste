@@ -157,6 +157,11 @@ public:
     void CalculateNeighbourData();
 
     /**
+     * Calculate neighbour indices for each grid point
+     */
+    void CalculateMooreNeighbourData();
+
+    /**
      * Generate a grid based on the bounding box of the supplied part
      * @param pPart the part from which to get the bounding box
      * @param gridSize the grid spacing
@@ -184,6 +189,12 @@ public:
      * @return a vector of neighbour indices for each grid point
      */
     const std::vector<std::vector<unsigned> >& GetNeighbourData();
+
+    /**
+     * Calculate neighbour indices for each grid point
+     * @return a vector of neighbour indices for each grid point
+     */
+    const std::vector<std::vector<unsigned> >& GetMooreNeighbourData();
 
     /**
      * Return the grid extents in x, y, z. Always dimension 3.

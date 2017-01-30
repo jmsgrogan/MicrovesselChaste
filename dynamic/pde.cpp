@@ -292,6 +292,106 @@ struct AbstractDiscreteContinuumNonLinearEllipticPde_less__3_comma__3__greater__
 
 };
 
+struct AbstractDiscreteContinuumParabolicPde_less__2_comma__2__greater__wrapper : AbstractDiscreteContinuumParabolicPde< 2, 2 >, bp::wrapper< AbstractDiscreteContinuumParabolicPde< 2, 2 > > {
+
+    AbstractDiscreteContinuumParabolicPde_less__2_comma__2__greater__wrapper( )
+    : AbstractDiscreteContinuumParabolicPde<2, 2>( )
+      , bp::wrapper< AbstractDiscreteContinuumParabolicPde< 2, 2 > >(){
+        // null constructor
+    
+    }
+
+    virtual ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ComputeLinearInUCoeffInSourceTerm( unsigned int gridIndex=0 ){
+        bp::override func_ComputeLinearInUCoeffInSourceTerm = this->get_override( "ComputeLinearInUCoeffInSourceTerm" );
+        return func_ComputeLinearInUCoeffInSourceTerm( gridIndex );
+    }
+
+    virtual ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ComputeNonlinearSourceTerm( unsigned int gridIndex, ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > u ){
+        bp::override func_ComputeNonlinearSourceTerm = this->get_override( "ComputeNonlinearSourceTerm" );
+        return func_ComputeNonlinearSourceTerm( gridIndex, u );
+    }
+
+    virtual ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ComputeNonlinearSourceTermPrime( unsigned int gridIndex, ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > u ){
+        bp::override func_ComputeNonlinearSourceTermPrime = this->get_override( "ComputeNonlinearSourceTermPrime" );
+        return func_ComputeNonlinearSourceTermPrime( gridIndex, u );
+    }
+
+    virtual void UpdateDiscreteSourceStrengths(  ) {
+        if( bp::override func_UpdateDiscreteSourceStrengths = this->get_override( "UpdateDiscreteSourceStrengths" ) )
+            func_UpdateDiscreteSourceStrengths(  );
+        else{
+            this->AbstractDiscreteContinuumParabolicPde< 2, 2 >::UpdateDiscreteSourceStrengths(  );
+        }
+    }
+    
+    void default_UpdateDiscreteSourceStrengths(  ) {
+        AbstractDiscreteContinuumParabolicPde< 2, 2 >::UpdateDiscreteSourceStrengths( );
+    }
+
+    virtual void UpdateMultiplierValue(  ) {
+        if( bp::override func_UpdateMultiplierValue = this->get_override( "UpdateMultiplierValue" ) )
+            func_UpdateMultiplierValue(  );
+        else{
+            this->AbstractDiscreteContinuumParabolicPde< 2, 2 >::UpdateMultiplierValue(  );
+        }
+    }
+    
+    void default_UpdateMultiplierValue(  ) {
+        AbstractDiscreteContinuumParabolicPde< 2, 2 >::UpdateMultiplierValue( );
+    }
+
+};
+
+struct AbstractDiscreteContinuumParabolicPde_less__3_comma__3__greater__wrapper : AbstractDiscreteContinuumParabolicPde< 3, 3 >, bp::wrapper< AbstractDiscreteContinuumParabolicPde< 3, 3 > > {
+
+    AbstractDiscreteContinuumParabolicPde_less__3_comma__3__greater__wrapper( )
+    : AbstractDiscreteContinuumParabolicPde<3, 3>( )
+      , bp::wrapper< AbstractDiscreteContinuumParabolicPde< 3, 3 > >(){
+        // null constructor
+    
+    }
+
+    virtual ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ComputeLinearInUCoeffInSourceTerm( unsigned int gridIndex=0 ){
+        bp::override func_ComputeLinearInUCoeffInSourceTerm = this->get_override( "ComputeLinearInUCoeffInSourceTerm" );
+        return func_ComputeLinearInUCoeffInSourceTerm( gridIndex );
+    }
+
+    virtual ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ComputeNonlinearSourceTerm( unsigned int gridIndex, ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > u ){
+        bp::override func_ComputeNonlinearSourceTerm = this->get_override( "ComputeNonlinearSourceTerm" );
+        return func_ComputeNonlinearSourceTerm( gridIndex, u );
+    }
+
+    virtual ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ComputeNonlinearSourceTermPrime( unsigned int gridIndex, ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > u ){
+        bp::override func_ComputeNonlinearSourceTermPrime = this->get_override( "ComputeNonlinearSourceTermPrime" );
+        return func_ComputeNonlinearSourceTermPrime( gridIndex, u );
+    }
+
+    virtual void UpdateDiscreteSourceStrengths(  ) {
+        if( bp::override func_UpdateDiscreteSourceStrengths = this->get_override( "UpdateDiscreteSourceStrengths" ) )
+            func_UpdateDiscreteSourceStrengths(  );
+        else{
+            this->AbstractDiscreteContinuumParabolicPde< 3, 3 >::UpdateDiscreteSourceStrengths(  );
+        }
+    }
+    
+    void default_UpdateDiscreteSourceStrengths(  ) {
+        AbstractDiscreteContinuumParabolicPde< 3, 3 >::UpdateDiscreteSourceStrengths( );
+    }
+
+    virtual void UpdateMultiplierValue(  ) {
+        if( bp::override func_UpdateMultiplierValue = this->get_override( "UpdateMultiplierValue" ) )
+            func_UpdateMultiplierValue(  );
+        else{
+            this->AbstractDiscreteContinuumParabolicPde< 3, 3 >::UpdateMultiplierValue(  );
+        }
+    }
+    
+    void default_UpdateMultiplierValue(  ) {
+        AbstractDiscreteContinuumParabolicPde< 3, 3 >::UpdateMultiplierValue( );
+    }
+
+};
+
 struct AbstractDiscreteContinuumSolver_less__2__greater__wrapper : AbstractDiscreteContinuumSolver< 2 >, bp::wrapper< AbstractDiscreteContinuumSolver< 2 > > {
 
     AbstractDiscreteContinuumSolver_less__2__greater__wrapper( )
@@ -1464,6 +1564,18 @@ struct DiscreteSource_less__2__greater__wrapper : DiscreteSource< 2 >, bp::wrapp
         return DiscreteSource< 2 >::GetLinearInURegularGridValues( );
     }
 
+    virtual ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > GetNonlinearTermRegularGridValues(  ) {
+        if( bp::override func_GetNonlinearTermRegularGridValues = this->get_override( "GetNonlinearTermRegularGridValues" ) )
+            return func_GetNonlinearTermRegularGridValues(  );
+        else{
+            return this->DiscreteSource< 2 >::GetNonlinearTermRegularGridValues(  );
+        }
+    }
+    
+    ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > default_GetNonlinearTermRegularGridValues(  ) {
+        return DiscreteSource< 2 >::GetNonlinearTermRegularGridValues( );
+    }
+
 };
 
 struct CellBasedDiscreteSource_less__2__greater__wrapper : CellBasedDiscreteSource< 2 >, bp::wrapper< CellBasedDiscreteSource< 2 > > {
@@ -1528,6 +1640,18 @@ struct CellBasedDiscreteSource_less__2__greater__wrapper : CellBasedDiscreteSour
     
     ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > default_GetLinearInURegularGridValues(  ) {
         return CellBasedDiscreteSource< 2 >::GetLinearInURegularGridValues( );
+    }
+
+    virtual ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > GetNonlinearTermRegularGridValues(  ) {
+        if( bp::override func_GetNonlinearTermRegularGridValues = this->get_override( "GetNonlinearTermRegularGridValues" ) )
+            return func_GetNonlinearTermRegularGridValues(  );
+        else{
+            return this->DiscreteSource< 2 >::GetNonlinearTermRegularGridValues(  );
+        }
+    }
+    
+    ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > default_GetNonlinearTermRegularGridValues(  ) {
+        return DiscreteSource< 2 >::GetNonlinearTermRegularGridValues( );
     }
 
 };
@@ -1596,6 +1720,18 @@ struct DiscreteSource_less__3__greater__wrapper : DiscreteSource< 3 >, bp::wrapp
         return DiscreteSource< 3 >::GetLinearInURegularGridValues( );
     }
 
+    virtual ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > GetNonlinearTermRegularGridValues(  ) {
+        if( bp::override func_GetNonlinearTermRegularGridValues = this->get_override( "GetNonlinearTermRegularGridValues" ) )
+            return func_GetNonlinearTermRegularGridValues(  );
+        else{
+            return this->DiscreteSource< 3 >::GetNonlinearTermRegularGridValues(  );
+        }
+    }
+    
+    ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > default_GetNonlinearTermRegularGridValues(  ) {
+        return DiscreteSource< 3 >::GetNonlinearTermRegularGridValues( );
+    }
+
 };
 
 struct CellBasedDiscreteSource_less__3__greater__wrapper : CellBasedDiscreteSource< 3 >, bp::wrapper< CellBasedDiscreteSource< 3 > > {
@@ -1660,6 +1796,18 @@ struct CellBasedDiscreteSource_less__3__greater__wrapper : CellBasedDiscreteSour
     
     ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > default_GetLinearInURegularGridValues(  ) {
         return CellBasedDiscreteSource< 3 >::GetLinearInURegularGridValues( );
+    }
+
+    virtual ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > GetNonlinearTermRegularGridValues(  ) {
+        if( bp::override func_GetNonlinearTermRegularGridValues = this->get_override( "GetNonlinearTermRegularGridValues" ) )
+            return func_GetNonlinearTermRegularGridValues(  );
+        else{
+            return this->DiscreteSource< 3 >::GetNonlinearTermRegularGridValues(  );
+        }
+    }
+    
+    ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > default_GetNonlinearTermRegularGridValues(  ) {
+        return DiscreteSource< 3 >::GetNonlinearTermRegularGridValues( );
     }
 
 };
@@ -1728,6 +1876,18 @@ struct CellStateDependentDiscreteSource_less__2__greater__wrapper : CellStateDep
         return CellStateDependentDiscreteSource< 2 >::GetLinearInURegularGridValues( );
     }
 
+    virtual ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > GetNonlinearTermRegularGridValues(  ) {
+        if( bp::override func_GetNonlinearTermRegularGridValues = this->get_override( "GetNonlinearTermRegularGridValues" ) )
+            return func_GetNonlinearTermRegularGridValues(  );
+        else{
+            return this->DiscreteSource< 2 >::GetNonlinearTermRegularGridValues(  );
+        }
+    }
+    
+    ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > default_GetNonlinearTermRegularGridValues(  ) {
+        return DiscreteSource< 2 >::GetNonlinearTermRegularGridValues( );
+    }
+
 };
 
 struct CellStateDependentDiscreteSource_less__3__greater__wrapper : CellStateDependentDiscreteSource< 3 >, bp::wrapper< CellStateDependentDiscreteSource< 3 > > {
@@ -1792,6 +1952,174 @@ struct CellStateDependentDiscreteSource_less__3__greater__wrapper : CellStateDep
     
     ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > default_GetLinearInURegularGridValues(  ) {
         return CellStateDependentDiscreteSource< 3 >::GetLinearInURegularGridValues( );
+    }
+
+    virtual ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > GetNonlinearTermRegularGridValues(  ) {
+        if( bp::override func_GetNonlinearTermRegularGridValues = this->get_override( "GetNonlinearTermRegularGridValues" ) )
+            return func_GetNonlinearTermRegularGridValues(  );
+        else{
+            return this->DiscreteSource< 3 >::GetNonlinearTermRegularGridValues(  );
+        }
+    }
+    
+    ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > default_GetNonlinearTermRegularGridValues(  ) {
+        return DiscreteSource< 3 >::GetNonlinearTermRegularGridValues( );
+    }
+
+};
+
+struct CoupledVegfPelletDiffusionReactionPde_less__2_comma__2__greater__wrapper : CoupledVegfPelletDiffusionReactionPde< 2, 2 >, bp::wrapper< CoupledVegfPelletDiffusionReactionPde< 2, 2 > > {
+
+    CoupledVegfPelletDiffusionReactionPde_less__2_comma__2__greater__wrapper(CoupledVegfPelletDiffusionReactionPde<2, 2> const & arg )
+    : CoupledVegfPelletDiffusionReactionPde<2, 2>( arg )
+      , bp::wrapper< CoupledVegfPelletDiffusionReactionPde< 2, 2 > >(){
+        // copy constructor
+        
+    }
+
+    CoupledVegfPelletDiffusionReactionPde_less__2_comma__2__greater__wrapper( )
+    : CoupledVegfPelletDiffusionReactionPde<2, 2>( )
+      , bp::wrapper< CoupledVegfPelletDiffusionReactionPde< 2, 2 > >(){
+        // null constructor
+    
+    }
+
+    virtual ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ComputeLinearInUCoeffInSourceTerm( unsigned int gridIndex=0 ) {
+        if( bp::override func_ComputeLinearInUCoeffInSourceTerm = this->get_override( "ComputeLinearInUCoeffInSourceTerm" ) )
+            return func_ComputeLinearInUCoeffInSourceTerm( gridIndex );
+        else{
+            return this->CoupledVegfPelletDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm( gridIndex );
+        }
+    }
+    
+    ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > default_ComputeLinearInUCoeffInSourceTerm( unsigned int gridIndex=0 ) {
+        return CoupledVegfPelletDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm( gridIndex );
+    }
+
+    virtual ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ComputeNonlinearSourceTerm( unsigned int gridIndex, ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > u ) {
+        if( bp::override func_ComputeNonlinearSourceTerm = this->get_override( "ComputeNonlinearSourceTerm" ) )
+            return func_ComputeNonlinearSourceTerm( gridIndex, u );
+        else{
+            return this->CoupledVegfPelletDiffusionReactionPde< 2, 2 >::ComputeNonlinearSourceTerm( gridIndex, u );
+        }
+    }
+    
+    ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > default_ComputeNonlinearSourceTerm( unsigned int gridIndex, ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > u ) {
+        return CoupledVegfPelletDiffusionReactionPde< 2, 2 >::ComputeNonlinearSourceTerm( gridIndex, u );
+    }
+
+    virtual ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ComputeNonlinearSourceTermPrime( unsigned int gridIndex, ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > u ) {
+        if( bp::override func_ComputeNonlinearSourceTermPrime = this->get_override( "ComputeNonlinearSourceTermPrime" ) )
+            return func_ComputeNonlinearSourceTermPrime( gridIndex, u );
+        else{
+            return this->CoupledVegfPelletDiffusionReactionPde< 2, 2 >::ComputeNonlinearSourceTermPrime( gridIndex, u );
+        }
+    }
+    
+    ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > default_ComputeNonlinearSourceTermPrime( unsigned int gridIndex, ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > u ) {
+        return CoupledVegfPelletDiffusionReactionPde< 2, 2 >::ComputeNonlinearSourceTermPrime( gridIndex, u );
+    }
+
+    virtual void UpdateDiscreteSourceStrengths(  ) {
+        if( bp::override func_UpdateDiscreteSourceStrengths = this->get_override( "UpdateDiscreteSourceStrengths" ) )
+            func_UpdateDiscreteSourceStrengths(  );
+        else{
+            this->CoupledVegfPelletDiffusionReactionPde< 2, 2 >::UpdateDiscreteSourceStrengths(  );
+        }
+    }
+    
+    void default_UpdateDiscreteSourceStrengths(  ) {
+        CoupledVegfPelletDiffusionReactionPde< 2, 2 >::UpdateDiscreteSourceStrengths( );
+    }
+
+    virtual void UpdateMultiplierValue(  ) {
+        if( bp::override func_UpdateMultiplierValue = this->get_override( "UpdateMultiplierValue" ) )
+            func_UpdateMultiplierValue(  );
+        else{
+            this->CoupledVegfPelletDiffusionReactionPde< 2, 2 >::UpdateMultiplierValue(  );
+        }
+    }
+    
+    void default_UpdateMultiplierValue(  ) {
+        CoupledVegfPelletDiffusionReactionPde< 2, 2 >::UpdateMultiplierValue( );
+    }
+
+};
+
+struct CoupledVegfPelletDiffusionReactionPde_less__3_comma__3__greater__wrapper : CoupledVegfPelletDiffusionReactionPde< 3, 3 >, bp::wrapper< CoupledVegfPelletDiffusionReactionPde< 3, 3 > > {
+
+    CoupledVegfPelletDiffusionReactionPde_less__3_comma__3__greater__wrapper(CoupledVegfPelletDiffusionReactionPde<3, 3> const & arg )
+    : CoupledVegfPelletDiffusionReactionPde<3, 3>( arg )
+      , bp::wrapper< CoupledVegfPelletDiffusionReactionPde< 3, 3 > >(){
+        // copy constructor
+        
+    }
+
+    CoupledVegfPelletDiffusionReactionPde_less__3_comma__3__greater__wrapper( )
+    : CoupledVegfPelletDiffusionReactionPde<3, 3>( )
+      , bp::wrapper< CoupledVegfPelletDiffusionReactionPde< 3, 3 > >(){
+        // null constructor
+    
+    }
+
+    virtual ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ComputeLinearInUCoeffInSourceTerm( unsigned int gridIndex=0 ) {
+        if( bp::override func_ComputeLinearInUCoeffInSourceTerm = this->get_override( "ComputeLinearInUCoeffInSourceTerm" ) )
+            return func_ComputeLinearInUCoeffInSourceTerm( gridIndex );
+        else{
+            return this->CoupledVegfPelletDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm( gridIndex );
+        }
+    }
+    
+    ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > default_ComputeLinearInUCoeffInSourceTerm( unsigned int gridIndex=0 ) {
+        return CoupledVegfPelletDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm( gridIndex );
+    }
+
+    virtual ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ComputeNonlinearSourceTerm( unsigned int gridIndex, ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > u ) {
+        if( bp::override func_ComputeNonlinearSourceTerm = this->get_override( "ComputeNonlinearSourceTerm" ) )
+            return func_ComputeNonlinearSourceTerm( gridIndex, u );
+        else{
+            return this->CoupledVegfPelletDiffusionReactionPde< 3, 3 >::ComputeNonlinearSourceTerm( gridIndex, u );
+        }
+    }
+    
+    ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > default_ComputeNonlinearSourceTerm( unsigned int gridIndex, ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > u ) {
+        return CoupledVegfPelletDiffusionReactionPde< 3, 3 >::ComputeNonlinearSourceTerm( gridIndex, u );
+    }
+
+    virtual ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ComputeNonlinearSourceTermPrime( unsigned int gridIndex, ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > u ) {
+        if( bp::override func_ComputeNonlinearSourceTermPrime = this->get_override( "ComputeNonlinearSourceTermPrime" ) )
+            return func_ComputeNonlinearSourceTermPrime( gridIndex, u );
+        else{
+            return this->CoupledVegfPelletDiffusionReactionPde< 3, 3 >::ComputeNonlinearSourceTermPrime( gridIndex, u );
+        }
+    }
+    
+    ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > default_ComputeNonlinearSourceTermPrime( unsigned int gridIndex, ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > u ) {
+        return CoupledVegfPelletDiffusionReactionPde< 3, 3 >::ComputeNonlinearSourceTermPrime( gridIndex, u );
+    }
+
+    virtual void UpdateDiscreteSourceStrengths(  ) {
+        if( bp::override func_UpdateDiscreteSourceStrengths = this->get_override( "UpdateDiscreteSourceStrengths" ) )
+            func_UpdateDiscreteSourceStrengths(  );
+        else{
+            this->CoupledVegfPelletDiffusionReactionPde< 3, 3 >::UpdateDiscreteSourceStrengths(  );
+        }
+    }
+    
+    void default_UpdateDiscreteSourceStrengths(  ) {
+        CoupledVegfPelletDiffusionReactionPde< 3, 3 >::UpdateDiscreteSourceStrengths( );
+    }
+
+    virtual void UpdateMultiplierValue(  ) {
+        if( bp::override func_UpdateMultiplierValue = this->get_override( "UpdateMultiplierValue" ) )
+            func_UpdateMultiplierValue(  );
+        else{
+            this->CoupledVegfPelletDiffusionReactionPde< 3, 3 >::UpdateMultiplierValue(  );
+        }
+    }
+    
+    void default_UpdateMultiplierValue(  ) {
+        CoupledVegfPelletDiffusionReactionPde< 3, 3 >::UpdateMultiplierValue( );
     }
 
 };
@@ -4164,6 +4492,18 @@ struct SolutionDependentDiscreteSource_less__2__greater__wrapper : SolutionDepen
         return SolutionDependentDiscreteSource< 2 >::GetLinearInURegularGridValues( );
     }
 
+    virtual ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > GetNonlinearTermRegularGridValues(  ) {
+        if( bp::override func_GetNonlinearTermRegularGridValues = this->get_override( "GetNonlinearTermRegularGridValues" ) )
+            return func_GetNonlinearTermRegularGridValues(  );
+        else{
+            return this->DiscreteSource< 2 >::GetNonlinearTermRegularGridValues(  );
+        }
+    }
+    
+    ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > default_GetNonlinearTermRegularGridValues(  ) {
+        return DiscreteSource< 2 >::GetNonlinearTermRegularGridValues( );
+    }
+
 };
 
 struct SolutionDependentDiscreteSource_less__3__greater__wrapper : SolutionDependentDiscreteSource< 3 >, bp::wrapper< SolutionDependentDiscreteSource< 3 > > {
@@ -4228,6 +4568,18 @@ struct SolutionDependentDiscreteSource_less__3__greater__wrapper : SolutionDepen
     
     ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > default_GetLinearInURegularGridValues(  ) {
         return SolutionDependentDiscreteSource< 3 >::GetLinearInURegularGridValues( );
+    }
+
+    virtual ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > GetNonlinearTermRegularGridValues(  ) {
+        if( bp::override func_GetNonlinearTermRegularGridValues = this->get_override( "GetNonlinearTermRegularGridValues" ) )
+            return func_GetNonlinearTermRegularGridValues(  );
+        else{
+            return this->DiscreteSource< 3 >::GetNonlinearTermRegularGridValues(  );
+        }
+    }
+    
+    ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > default_GetNonlinearTermRegularGridValues(  ) {
+        return DiscreteSource< 3 >::GetNonlinearTermRegularGridValues( );
     }
 
 };
@@ -4296,6 +4648,18 @@ struct VesselBasedDiscreteSource_less__2__greater__wrapper : VesselBasedDiscrete
         return VesselBasedDiscreteSource< 2 >::GetLinearInURegularGridValues( );
     }
 
+    virtual ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > GetNonlinearTermRegularGridValues(  ) {
+        if( bp::override func_GetNonlinearTermRegularGridValues = this->get_override( "GetNonlinearTermRegularGridValues" ) )
+            return func_GetNonlinearTermRegularGridValues(  );
+        else{
+            return this->VesselBasedDiscreteSource< 2 >::GetNonlinearTermRegularGridValues(  );
+        }
+    }
+    
+    ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > default_GetNonlinearTermRegularGridValues(  ) {
+        return VesselBasedDiscreteSource< 2 >::GetNonlinearTermRegularGridValues( );
+    }
+
 };
 
 struct VesselBasedDiscreteSource_less__3__greater__wrapper : VesselBasedDiscreteSource< 3 >, bp::wrapper< VesselBasedDiscreteSource< 3 > > {
@@ -4360,6 +4724,18 @@ struct VesselBasedDiscreteSource_less__3__greater__wrapper : VesselBasedDiscrete
     
     ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > default_GetLinearInURegularGridValues(  ) {
         return VesselBasedDiscreteSource< 3 >::GetLinearInURegularGridValues( );
+    }
+
+    virtual ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > GetNonlinearTermRegularGridValues(  ) {
+        if( bp::override func_GetNonlinearTermRegularGridValues = this->get_override( "GetNonlinearTermRegularGridValues" ) )
+            return func_GetNonlinearTermRegularGridValues(  );
+        else{
+            return this->VesselBasedDiscreteSource< 3 >::GetNonlinearTermRegularGridValues(  );
+        }
+    }
+    
+    ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > default_GetNonlinearTermRegularGridValues(  ) {
+        return VesselBasedDiscreteSource< 3 >::GetNonlinearTermRegularGridValues( );
     }
 
 };
@@ -5373,6 +5749,436 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         bp::implicitly_convertible< boost::shared_ptr< MichaelisMentenSteadyStateDiffusionReactionPde< 3, 3 > >, boost::shared_ptr< AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 > > >();
     }
 
+    { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >
+        typedef bp::class_< AbstractDiscreteContinuumParabolicPde_less__2_comma__2__greater__wrapper, boost::noncopyable > AbstractDiscreteContinuumParabolicPde2_2_exposer_t;
+        AbstractDiscreteContinuumParabolicPde2_2_exposer_t AbstractDiscreteContinuumParabolicPde2_2_exposer = AbstractDiscreteContinuumParabolicPde2_2_exposer_t( "AbstractDiscreteContinuumParabolicPde2_2", bp::init< >() );
+        bp::scope AbstractDiscreteContinuumParabolicPde2_2_scope( AbstractDiscreteContinuumParabolicPde2_2_exposer );
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::AddDiscreteSource
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*AddDiscreteSource_function_type)( ::boost::shared_ptr< DiscreteSource< 2 > > ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "AddDiscreteSource"
+                , AddDiscreteSource_function_type( &::AbstractDiscreteContinuumParabolicPde< 2, 2 >::AddDiscreteSource )
+                , ( bp::arg("pDiscreteSource") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::ComputeConstantInUSourceTerm
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef double ( exported_class_t::*ComputeConstantInUSourceTerm_function_type)( ::ChastePoint< 2 > const &,::Element< 2, 2 > * ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "ComputeConstantInUSourceTerm"
+                , ComputeConstantInUSourceTerm_function_type( &::AbstractDiscreteContinuumParabolicPde< 2, 2 >::ComputeConstantInUSourceTerm )
+                , ( bp::arg("rX"), bp::arg("pElement") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::ComputeConstantInUSourceTerm
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*ComputeConstantInUSourceTerm_function_type)( unsigned int ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "ComputeConstantInUSourceTerm"
+                , ComputeConstantInUSourceTerm_function_type( &::AbstractDiscreteContinuumParabolicPde< 2, 2 >::ComputeConstantInUSourceTerm )
+                , ( bp::arg("gridIndex")=(unsigned int)(0) ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::ComputeDiffusionTerm
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef ::boost::numeric::ublas::c_matrix< double, 2, 2 > ( exported_class_t::*ComputeDiffusionTerm_function_type)( ::ChastePoint< 2 > const & ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "ComputeDiffusionTerm"
+                , ComputeDiffusionTerm_function_type( &::AbstractDiscreteContinuumParabolicPde< 2, 2 >::ComputeDiffusionTerm )
+                , ( bp::arg("arg0") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::ComputeIsotropicDiffusionTerm
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*ComputeIsotropicDiffusionTerm_function_type)(  ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "ComputeIsotropicDiffusionTerm"
+                , ComputeIsotropicDiffusionTerm_function_type( &::AbstractDiscreteContinuumParabolicPde< 2, 2 >::ComputeIsotropicDiffusionTerm ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef ::boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> ( exported_class_t::*ComputeLinearInUCoeffInSourceTerm_function_type)( unsigned int ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "ComputeLinearInUCoeffInSourceTerm"
+                , bp::pure_virtual( ComputeLinearInUCoeffInSourceTerm_function_type(&::AbstractDiscreteContinuumParabolicPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm) )
+                , ( bp::arg("gridIndex")=(unsigned int)(0) ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::ComputeNonlinearSourceTerm
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef ::boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> ( exported_class_t::*ComputeNonlinearSourceTerm_function_type)( unsigned int,::boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "ComputeNonlinearSourceTerm"
+                , bp::pure_virtual( ComputeNonlinearSourceTerm_function_type(&::AbstractDiscreteContinuumParabolicPde< 2, 2 >::ComputeNonlinearSourceTerm) )
+                , ( bp::arg("gridIndex"), bp::arg("u") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::ComputeNonlinearSourceTermPrime
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef ::boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> ( exported_class_t::*ComputeNonlinearSourceTermPrime_function_type)( unsigned int,::boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "ComputeNonlinearSourceTermPrime"
+                , bp::pure_virtual( ComputeNonlinearSourceTermPrime_function_type(&::AbstractDiscreteContinuumParabolicPde< 2, 2 >::ComputeNonlinearSourceTermPrime) )
+                , ( bp::arg("gridIndex"), bp::arg("u") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::GetDiscreteSources
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<DiscreteSource<2> > > ( exported_class_t::*GetDiscreteSources_function_type)(  ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "GetDiscreteSources"
+                , GetDiscreteSources_function_type( &::AbstractDiscreteContinuumParabolicPde< 2, 2 >::GetDiscreteSources ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::GetMultiplierValue
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetMultiplierValue_function_type)(  ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "GetMultiplierValue"
+                , GetMultiplierValue_function_type( &::AbstractDiscreteContinuumParabolicPde< 2, 2 >::GetMultiplierValue ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::SetContinuumConstantInUTerm
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetContinuumConstantInUTerm_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "SetContinuumConstantInUTerm"
+                , SetContinuumConstantInUTerm_function_type( &::AbstractDiscreteContinuumParabolicPde< 2, 2 >::SetContinuumConstantInUTerm )
+                , ( bp::arg("constantInUTerm") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::SetIsotropicDiffusionConstant
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetIsotropicDiffusionConstant_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "SetIsotropicDiffusionConstant"
+                , SetIsotropicDiffusionConstant_function_type( &::AbstractDiscreteContinuumParabolicPde< 2, 2 >::SetIsotropicDiffusionConstant )
+                , ( bp::arg("diffusivity") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::SetMesh
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetMesh_function_type)( ::boost::shared_ptr< DiscreteContinuumMesh< 2, 2 > > ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "SetMesh"
+                , SetMesh_function_type( &::AbstractDiscreteContinuumParabolicPde< 2, 2 >::SetMesh )
+                , ( bp::arg("pMesh") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::SetMultiplierValue
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetMultiplierValue_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "SetMultiplierValue"
+                , SetMultiplierValue_function_type( &::AbstractDiscreteContinuumParabolicPde< 2, 2 >::SetMultiplierValue )
+                , ( bp::arg("multiplier") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::SetReferenceConcentration
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetReferenceConcentration_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "SetReferenceConcentration"
+                , SetReferenceConcentration_function_type( &::AbstractDiscreteContinuumParabolicPde< 2, 2 >::SetReferenceConcentration )
+                , ( bp::arg("referenceConcentration") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::SetRegularGrid
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetRegularGrid_function_type)( ::boost::shared_ptr< RegularGrid< 2 > > ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "SetRegularGrid"
+                , SetRegularGrid_function_type( &::AbstractDiscreteContinuumParabolicPde< 2, 2 >::SetRegularGrid )
+                , ( bp::arg("pRegularGrid") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::SetUseRegularGrid
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetUseRegularGrid_function_type)( bool ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "SetUseRegularGrid"
+                , SetUseRegularGrid_function_type( &::AbstractDiscreteContinuumParabolicPde< 2, 2 >::SetUseRegularGrid )
+                , ( bp::arg("useRegularGrid") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::UpdateDiscreteSourceStrengths
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateDiscreteSourceStrengths_function_type)(  ) ;
+            typedef void ( AbstractDiscreteContinuumParabolicPde_less__2_comma__2__greater__wrapper::*default_UpdateDiscreteSourceStrengths_function_type)(  ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "UpdateDiscreteSourceStrengths"
+                , UpdateDiscreteSourceStrengths_function_type(&::AbstractDiscreteContinuumParabolicPde< 2, 2 >::UpdateDiscreteSourceStrengths)
+                , default_UpdateDiscreteSourceStrengths_function_type(&AbstractDiscreteContinuumParabolicPde_less__2_comma__2__greater__wrapper::default_UpdateDiscreteSourceStrengths) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 2, 2 >::UpdateMultiplierValue
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateMultiplierValue_function_type)(  ) ;
+            typedef void ( AbstractDiscreteContinuumParabolicPde_less__2_comma__2__greater__wrapper::*default_UpdateMultiplierValue_function_type)(  ) ;
+            
+            AbstractDiscreteContinuumParabolicPde2_2_exposer.def( 
+                "UpdateMultiplierValue"
+                , UpdateMultiplierValue_function_type(&::AbstractDiscreteContinuumParabolicPde< 2, 2 >::UpdateMultiplierValue)
+                , default_UpdateMultiplierValue_function_type(&AbstractDiscreteContinuumParabolicPde_less__2_comma__2__greater__wrapper::default_UpdateMultiplierValue) );
+        
+        }
+        bp::register_ptr_to_python< boost::shared_ptr< AbstractDiscreteContinuumParabolicPde<2, 2> > >();
+    }
+
+    { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >
+        typedef bp::class_< AbstractDiscreteContinuumParabolicPde_less__3_comma__3__greater__wrapper, boost::noncopyable > AbstractDiscreteContinuumParabolicPde3_3_exposer_t;
+        AbstractDiscreteContinuumParabolicPde3_3_exposer_t AbstractDiscreteContinuumParabolicPde3_3_exposer = AbstractDiscreteContinuumParabolicPde3_3_exposer_t( "AbstractDiscreteContinuumParabolicPde3_3", bp::init< >() );
+        bp::scope AbstractDiscreteContinuumParabolicPde3_3_scope( AbstractDiscreteContinuumParabolicPde3_3_exposer );
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::AddDiscreteSource
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddDiscreteSource_function_type)( ::boost::shared_ptr< DiscreteSource< 3 > > ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "AddDiscreteSource"
+                , AddDiscreteSource_function_type( &::AbstractDiscreteContinuumParabolicPde< 3, 3 >::AddDiscreteSource )
+                , ( bp::arg("pDiscreteSource") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::ComputeConstantInUSourceTerm
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef double ( exported_class_t::*ComputeConstantInUSourceTerm_function_type)( ::ChastePoint< 3 > const &,::Element< 3, 3 > * ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "ComputeConstantInUSourceTerm"
+                , ComputeConstantInUSourceTerm_function_type( &::AbstractDiscreteContinuumParabolicPde< 3, 3 >::ComputeConstantInUSourceTerm )
+                , ( bp::arg("rX"), bp::arg("pElement") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::ComputeConstantInUSourceTerm
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*ComputeConstantInUSourceTerm_function_type)( unsigned int ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "ComputeConstantInUSourceTerm"
+                , ComputeConstantInUSourceTerm_function_type( &::AbstractDiscreteContinuumParabolicPde< 3, 3 >::ComputeConstantInUSourceTerm )
+                , ( bp::arg("gridIndex")=(unsigned int)(0) ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::ComputeDiffusionTerm
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef ::boost::numeric::ublas::c_matrix< double, 3, 3 > ( exported_class_t::*ComputeDiffusionTerm_function_type)( ::ChastePoint< 3 > const & ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "ComputeDiffusionTerm"
+                , ComputeDiffusionTerm_function_type( &::AbstractDiscreteContinuumParabolicPde< 3, 3 >::ComputeDiffusionTerm )
+                , ( bp::arg("arg0") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::ComputeIsotropicDiffusionTerm
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*ComputeIsotropicDiffusionTerm_function_type)(  ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "ComputeIsotropicDiffusionTerm"
+                , ComputeIsotropicDiffusionTerm_function_type( &::AbstractDiscreteContinuumParabolicPde< 3, 3 >::ComputeIsotropicDiffusionTerm ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef ::boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> ( exported_class_t::*ComputeLinearInUCoeffInSourceTerm_function_type)( unsigned int ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "ComputeLinearInUCoeffInSourceTerm"
+                , bp::pure_virtual( ComputeLinearInUCoeffInSourceTerm_function_type(&::AbstractDiscreteContinuumParabolicPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm) )
+                , ( bp::arg("gridIndex")=(unsigned int)(0) ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::ComputeNonlinearSourceTerm
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef ::boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> ( exported_class_t::*ComputeNonlinearSourceTerm_function_type)( unsigned int,::boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "ComputeNonlinearSourceTerm"
+                , bp::pure_virtual( ComputeNonlinearSourceTerm_function_type(&::AbstractDiscreteContinuumParabolicPde< 3, 3 >::ComputeNonlinearSourceTerm) )
+                , ( bp::arg("gridIndex"), bp::arg("u") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::ComputeNonlinearSourceTermPrime
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef ::boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> ( exported_class_t::*ComputeNonlinearSourceTermPrime_function_type)( unsigned int,::boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "ComputeNonlinearSourceTermPrime"
+                , bp::pure_virtual( ComputeNonlinearSourceTermPrime_function_type(&::AbstractDiscreteContinuumParabolicPde< 3, 3 >::ComputeNonlinearSourceTermPrime) )
+                , ( bp::arg("gridIndex"), bp::arg("u") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::GetDiscreteSources
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<DiscreteSource<3> > > ( exported_class_t::*GetDiscreteSources_function_type)(  ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "GetDiscreteSources"
+                , GetDiscreteSources_function_type( &::AbstractDiscreteContinuumParabolicPde< 3, 3 >::GetDiscreteSources ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::GetMultiplierValue
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetMultiplierValue_function_type)(  ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "GetMultiplierValue"
+                , GetMultiplierValue_function_type( &::AbstractDiscreteContinuumParabolicPde< 3, 3 >::GetMultiplierValue ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::SetContinuumConstantInUTerm
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetContinuumConstantInUTerm_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "SetContinuumConstantInUTerm"
+                , SetContinuumConstantInUTerm_function_type( &::AbstractDiscreteContinuumParabolicPde< 3, 3 >::SetContinuumConstantInUTerm )
+                , ( bp::arg("constantInUTerm") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::SetIsotropicDiffusionConstant
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetIsotropicDiffusionConstant_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "SetIsotropicDiffusionConstant"
+                , SetIsotropicDiffusionConstant_function_type( &::AbstractDiscreteContinuumParabolicPde< 3, 3 >::SetIsotropicDiffusionConstant )
+                , ( bp::arg("diffusivity") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::SetMesh
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetMesh_function_type)( ::boost::shared_ptr< DiscreteContinuumMesh< 3, 3 > > ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "SetMesh"
+                , SetMesh_function_type( &::AbstractDiscreteContinuumParabolicPde< 3, 3 >::SetMesh )
+                , ( bp::arg("pMesh") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::SetMultiplierValue
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetMultiplierValue_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "SetMultiplierValue"
+                , SetMultiplierValue_function_type( &::AbstractDiscreteContinuumParabolicPde< 3, 3 >::SetMultiplierValue )
+                , ( bp::arg("multiplier") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::SetReferenceConcentration
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetReferenceConcentration_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "SetReferenceConcentration"
+                , SetReferenceConcentration_function_type( &::AbstractDiscreteContinuumParabolicPde< 3, 3 >::SetReferenceConcentration )
+                , ( bp::arg("referenceConcentration") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::SetRegularGrid
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetRegularGrid_function_type)( ::boost::shared_ptr< RegularGrid< 3 > > ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "SetRegularGrid"
+                , SetRegularGrid_function_type( &::AbstractDiscreteContinuumParabolicPde< 3, 3 >::SetRegularGrid )
+                , ( bp::arg("pRegularGrid") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::SetUseRegularGrid
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetUseRegularGrid_function_type)( bool ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "SetUseRegularGrid"
+                , SetUseRegularGrid_function_type( &::AbstractDiscreteContinuumParabolicPde< 3, 3 >::SetUseRegularGrid )
+                , ( bp::arg("useRegularGrid") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::UpdateDiscreteSourceStrengths
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateDiscreteSourceStrengths_function_type)(  ) ;
+            typedef void ( AbstractDiscreteContinuumParabolicPde_less__3_comma__3__greater__wrapper::*default_UpdateDiscreteSourceStrengths_function_type)(  ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "UpdateDiscreteSourceStrengths"
+                , UpdateDiscreteSourceStrengths_function_type(&::AbstractDiscreteContinuumParabolicPde< 3, 3 >::UpdateDiscreteSourceStrengths)
+                , default_UpdateDiscreteSourceStrengths_function_type(&AbstractDiscreteContinuumParabolicPde_less__3_comma__3__greater__wrapper::default_UpdateDiscreteSourceStrengths) );
+        
+        }
+        { //::AbstractDiscreteContinuumParabolicPde< 3, 3 >::UpdateMultiplierValue
+        
+            typedef AbstractDiscreteContinuumParabolicPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateMultiplierValue_function_type)(  ) ;
+            typedef void ( AbstractDiscreteContinuumParabolicPde_less__3_comma__3__greater__wrapper::*default_UpdateMultiplierValue_function_type)(  ) ;
+            
+            AbstractDiscreteContinuumParabolicPde3_3_exposer.def( 
+                "UpdateMultiplierValue"
+                , UpdateMultiplierValue_function_type(&::AbstractDiscreteContinuumParabolicPde< 3, 3 >::UpdateMultiplierValue)
+                , default_UpdateMultiplierValue_function_type(&AbstractDiscreteContinuumParabolicPde_less__3_comma__3__greater__wrapper::default_UpdateMultiplierValue) );
+        
+        }
+        bp::register_ptr_to_python< boost::shared_ptr< AbstractDiscreteContinuumParabolicPde<3, 3> > >();
+    }
+
     bp::class_< AbstractDiscreteContinuumSolver_less__2__greater__wrapper, boost::noncopyable >( "AbstractDiscreteContinuumSolver2", bp::init< >() )    
         .def( 
             "AddBoundaryCondition"
@@ -5404,6 +6210,9 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         .def( 
             "GetNonLinearPde"
             , (::boost::shared_ptr< AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 > > ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))( &::AbstractDiscreteContinuumSolver< 2 >::GetNonLinearPde ) )    
+        .def( 
+            "GetParabolicPde"
+            , (::boost::shared_ptr< AbstractDiscreteContinuumParabolicPde< 2, 2 > > ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))( &::AbstractDiscreteContinuumSolver< 2 >::GetParabolicPde ) )    
         .def( 
             "GetPde"
             , (::boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde< 2, 2 > > ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))( &::AbstractDiscreteContinuumSolver< 2 >::GetPde ) )    
@@ -5451,6 +6260,10 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         .def( 
             "SetNonLinearPde"
             , (void ( ::AbstractDiscreteContinuumSolver<2>::* )( ::boost::shared_ptr< AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 > > ))( &::AbstractDiscreteContinuumSolver< 2 >::SetNonLinearPde )
+            , ( bp::arg("pPde") ) )    
+        .def( 
+            "SetParabolicPde"
+            , (void ( ::AbstractDiscreteContinuumSolver<2>::* )( ::boost::shared_ptr< AbstractDiscreteContinuumParabolicPde< 2, 2 > > ))( &::AbstractDiscreteContinuumSolver< 2 >::SetParabolicPde )
             , ( bp::arg("pPde") ) )    
         .def( 
             "SetPde"
@@ -5526,6 +6339,9 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             "GetNonLinearPde"
             , (::boost::shared_ptr< AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 > > ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))( &::AbstractDiscreteContinuumSolver< 3 >::GetNonLinearPde ) )    
         .def( 
+            "GetParabolicPde"
+            , (::boost::shared_ptr< AbstractDiscreteContinuumParabolicPde< 3, 3 > > ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))( &::AbstractDiscreteContinuumSolver< 3 >::GetParabolicPde ) )    
+        .def( 
             "GetPde"
             , (::boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde< 3, 3 > > ( ::AbstractDiscreteContinuumSolver<3>::* )(  ))( &::AbstractDiscreteContinuumSolver< 3 >::GetPde ) )    
         .def( 
@@ -5572,6 +6388,10 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         .def( 
             "SetNonLinearPde"
             , (void ( ::AbstractDiscreteContinuumSolver<3>::* )( ::boost::shared_ptr< AbstractDiscreteContinuumNonLinearEllipticPde< 3, 3 > > ))( &::AbstractDiscreteContinuumSolver< 3 >::SetNonLinearPde )
+            , ( bp::arg("pPde") ) )    
+        .def( 
+            "SetParabolicPde"
+            , (void ( ::AbstractDiscreteContinuumSolver<3>::* )( ::boost::shared_ptr< AbstractDiscreteContinuumParabolicPde< 3, 3 > > ))( &::AbstractDiscreteContinuumSolver< 3 >::SetParabolicPde )
             , ( bp::arg("pPde") ) )    
         .def( 
             "SetPde"
@@ -6062,6 +6882,18 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
                 , default_GetLinearInURegularGridValues_function_type(&DiscreteSource_less__2__greater__wrapper::default_GetLinearInURegularGridValues) );
         
         }
+        { //::DiscreteSource< 2 >::GetNonlinearTermRegularGridValues
+        
+            typedef DiscreteSource< 2 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( DiscreteSource_less__2__greater__wrapper::*default_GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            
+            DiscreteSource2_exposer.def( 
+                "GetNonlinearTermRegularGridValues"
+                , GetNonlinearTermRegularGridValues_function_type(&::DiscreteSource< 2 >::GetNonlinearTermRegularGridValues)
+                , default_GetNonlinearTermRegularGridValues_function_type(&DiscreteSource_less__2__greater__wrapper::default_GetNonlinearTermRegularGridValues) );
+        
+        }
         { //::DiscreteSource< 2 >::SetConstantInUValue
         
             typedef DiscreteSource< 2 > exported_class_t;
@@ -6216,6 +7048,18 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
                 , ( bp::arg("value") ) );
         
         }
+        { //::DiscreteSource< 2 >::GetNonlinearTermRegularGridValues
+        
+            typedef CellBasedDiscreteSource< 2 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( CellBasedDiscreteSource_less__2__greater__wrapper::*default_GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            
+            CellBasedDiscreteSource2_exposer.def( 
+                "GetNonlinearTermRegularGridValues"
+                , GetNonlinearTermRegularGridValues_function_type(&::DiscreteSource< 2 >::GetNonlinearTermRegularGridValues)
+                , default_GetNonlinearTermRegularGridValues_function_type(&CellBasedDiscreteSource_less__2__greater__wrapper::default_GetNonlinearTermRegularGridValues) );
+        
+        }
         CellBasedDiscreteSource2_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< CellBasedDiscreteSource<2> > >();
         bp::implicitly_convertible< boost::shared_ptr< CellBasedDiscreteSource< 2 > >, boost::shared_ptr< DiscreteSource< 2 > > >();
@@ -6281,6 +7125,18 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
                 "GetLinearInURegularGridValues"
                 , GetLinearInURegularGridValues_function_type(&::DiscreteSource< 3 >::GetLinearInURegularGridValues)
                 , default_GetLinearInURegularGridValues_function_type(&DiscreteSource_less__3__greater__wrapper::default_GetLinearInURegularGridValues) );
+        
+        }
+        { //::DiscreteSource< 3 >::GetNonlinearTermRegularGridValues
+        
+            typedef DiscreteSource< 3 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( DiscreteSource_less__3__greater__wrapper::*default_GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            
+            DiscreteSource3_exposer.def( 
+                "GetNonlinearTermRegularGridValues"
+                , GetNonlinearTermRegularGridValues_function_type(&::DiscreteSource< 3 >::GetNonlinearTermRegularGridValues)
+                , default_GetNonlinearTermRegularGridValues_function_type(&DiscreteSource_less__3__greater__wrapper::default_GetNonlinearTermRegularGridValues) );
         
         }
         { //::DiscreteSource< 3 >::SetConstantInUValue
@@ -6437,6 +7293,18 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
                 , ( bp::arg("value") ) );
         
         }
+        { //::DiscreteSource< 3 >::GetNonlinearTermRegularGridValues
+        
+            typedef CellBasedDiscreteSource< 3 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( CellBasedDiscreteSource_less__3__greater__wrapper::*default_GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            
+            CellBasedDiscreteSource3_exposer.def( 
+                "GetNonlinearTermRegularGridValues"
+                , GetNonlinearTermRegularGridValues_function_type(&::DiscreteSource< 3 >::GetNonlinearTermRegularGridValues)
+                , default_GetNonlinearTermRegularGridValues_function_type(&CellBasedDiscreteSource_less__3__greater__wrapper::default_GetNonlinearTermRegularGridValues) );
+        
+        }
         CellBasedDiscreteSource3_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< CellBasedDiscreteSource<3> > >();
         bp::implicitly_convertible< boost::shared_ptr< CellBasedDiscreteSource< 3 > >, boost::shared_ptr< DiscreteSource< 3 > > >();
@@ -6524,6 +7392,18 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
                 "SetStateRateThresholdMap"
                 , SetStateRateThresholdMap_function_type( &::CellStateDependentDiscreteSource< 2 >::SetStateRateThresholdMap )
                 , ( bp::arg("stateThresholdMap") ) );
+        
+        }
+        { //::DiscreteSource< 2 >::GetNonlinearTermRegularGridValues
+        
+            typedef CellStateDependentDiscreteSource< 2 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( CellStateDependentDiscreteSource_less__2__greater__wrapper::*default_GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            
+            CellStateDependentDiscreteSource2_exposer.def( 
+                "GetNonlinearTermRegularGridValues"
+                , GetNonlinearTermRegularGridValues_function_type(&::DiscreteSource< 2 >::GetNonlinearTermRegularGridValues)
+                , default_GetNonlinearTermRegularGridValues_function_type(&CellStateDependentDiscreteSource_less__2__greater__wrapper::default_GetNonlinearTermRegularGridValues) );
         
         }
         CellStateDependentDiscreteSource2_exposer.staticmethod( "Create" );
@@ -6615,9 +7495,503 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
                 , ( bp::arg("stateThresholdMap") ) );
         
         }
+        { //::DiscreteSource< 3 >::GetNonlinearTermRegularGridValues
+        
+            typedef CellStateDependentDiscreteSource< 3 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( CellStateDependentDiscreteSource_less__3__greater__wrapper::*default_GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            
+            CellStateDependentDiscreteSource3_exposer.def( 
+                "GetNonlinearTermRegularGridValues"
+                , GetNonlinearTermRegularGridValues_function_type(&::DiscreteSource< 3 >::GetNonlinearTermRegularGridValues)
+                , default_GetNonlinearTermRegularGridValues_function_type(&CellStateDependentDiscreteSource_less__3__greater__wrapper::default_GetNonlinearTermRegularGridValues) );
+        
+        }
         CellStateDependentDiscreteSource3_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< CellStateDependentDiscreteSource<3> > >();
         bp::implicitly_convertible< boost::shared_ptr< CellStateDependentDiscreteSource< 3 > >, boost::shared_ptr< DiscreteSource< 3 > > >();
+    }
+
+    { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >
+        typedef bp::class_< CoupledVegfPelletDiffusionReactionPde_less__2_comma__2__greater__wrapper, bp::bases< AbstractDiscreteContinuumParabolicPde< 2, 2 > > > CoupledVegfPelletDiffusionReactionPde2_2_exposer_t;
+        CoupledVegfPelletDiffusionReactionPde2_2_exposer_t CoupledVegfPelletDiffusionReactionPde2_2_exposer = CoupledVegfPelletDiffusionReactionPde2_2_exposer_t( "CoupledVegfPelletDiffusionReactionPde2_2", bp::init< >() );
+        bp::scope CoupledVegfPelletDiffusionReactionPde2_2_scope( CoupledVegfPelletDiffusionReactionPde2_2_exposer );
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef double ( exported_class_t::*ComputeLinearInUCoeffInSourceTerm_function_type)( ::ChastePoint< 2 > const &,::Element< 2, 2 > * ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "ComputeLinearInUCoeffInSourceTerm"
+                , ComputeLinearInUCoeffInSourceTerm_function_type( &::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm )
+                , ( bp::arg("rX"), bp::arg("pElement") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*ComputeLinearInUCoeffInSourceTerm_function_type)( unsigned int ) ;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( CoupledVegfPelletDiffusionReactionPde_less__2_comma__2__greater__wrapper::*default_ComputeLinearInUCoeffInSourceTerm_function_type)( unsigned int ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "ComputeLinearInUCoeffInSourceTerm"
+                , ComputeLinearInUCoeffInSourceTerm_function_type(&::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm)
+                , default_ComputeLinearInUCoeffInSourceTerm_function_type(&CoupledVegfPelletDiffusionReactionPde_less__2_comma__2__greater__wrapper::default_ComputeLinearInUCoeffInSourceTerm)
+                , ( bp::arg("gridIndex")=(unsigned int)(0) ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::ComputeNonlinearSourceTerm
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*ComputeNonlinearSourceTerm_function_type)( unsigned int,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( CoupledVegfPelletDiffusionReactionPde_less__2_comma__2__greater__wrapper::*default_ComputeNonlinearSourceTerm_function_type)( unsigned int,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "ComputeNonlinearSourceTerm"
+                , ComputeNonlinearSourceTerm_function_type(&::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::ComputeNonlinearSourceTerm)
+                , default_ComputeNonlinearSourceTerm_function_type(&CoupledVegfPelletDiffusionReactionPde_less__2_comma__2__greater__wrapper::default_ComputeNonlinearSourceTerm)
+                , ( bp::arg("gridIndex"), bp::arg("u") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::ComputeNonlinearSourceTermPrime
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*ComputeNonlinearSourceTermPrime_function_type)( unsigned int,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( CoupledVegfPelletDiffusionReactionPde_less__2_comma__2__greater__wrapper::*default_ComputeNonlinearSourceTermPrime_function_type)( unsigned int,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "ComputeNonlinearSourceTermPrime"
+                , ComputeNonlinearSourceTermPrime_function_type(&::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::ComputeNonlinearSourceTermPrime)
+                , default_ComputeNonlinearSourceTermPrime_function_type(&CoupledVegfPelletDiffusionReactionPde_less__2_comma__2__greater__wrapper::default_ComputeNonlinearSourceTermPrime)
+                , ( bp::arg("gridIndex"), bp::arg("u") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::Create
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef ::boost::shared_ptr< CoupledVegfPelletDiffusionReactionPde< 2, 2 > > ( *Create_function_type )(  );
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "Create"
+                , Create_function_type( &::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::Create ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::GetCorneaPelletPermeability
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetCorneaPelletPermeability_function_type)(  ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "GetCorneaPelletPermeability"
+                , GetCorneaPelletPermeability_function_type( &::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::GetCorneaPelletPermeability ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::GetInitialVegfInPellet
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetInitialVegfInPellet_function_type)(  ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "GetInitialVegfInPellet"
+                , GetInitialVegfInPellet_function_type( &::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::GetInitialVegfInPellet ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::GetPelletBindingConstant
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetPelletBindingConstant_function_type)(  ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "GetPelletBindingConstant"
+                , GetPelletBindingConstant_function_type( &::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::GetPelletBindingConstant ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::GetPelletFreeDecayRate
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetPelletFreeDecayRate_function_type)(  ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "GetPelletFreeDecayRate"
+                , GetPelletFreeDecayRate_function_type( &::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::GetPelletFreeDecayRate ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::GetPelletSurfaceArea
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetPelletSurfaceArea_function_type)(  ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "GetPelletSurfaceArea"
+                , GetPelletSurfaceArea_function_type( &::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::GetPelletSurfaceArea ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::GetPelletVolume
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 3, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetPelletVolume_function_type)(  ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "GetPelletVolume"
+                , GetPelletVolume_function_type( &::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::GetPelletVolume ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::SetContinuumLinearInUTerm
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetContinuumLinearInUTerm_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "SetContinuumLinearInUTerm"
+                , SetContinuumLinearInUTerm_function_type( &::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::SetContinuumLinearInUTerm )
+                , ( bp::arg("linearInUTerm") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::SetCorneaPelletPermeability
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetCorneaPelletPermeability_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "SetCorneaPelletPermeability"
+                , SetCorneaPelletPermeability_function_type( &::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::SetCorneaPelletPermeability )
+                , ( bp::arg("permeability") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::SetHalfMaxVegfConcentration
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetHalfMaxVegfConcentration_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "SetHalfMaxVegfConcentration"
+                , SetHalfMaxVegfConcentration_function_type( &::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::SetHalfMaxVegfConcentration )
+                , ( bp::arg("halfMax") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::SetInitialVegfInPellet
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetInitialVegfInPellet_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "SetInitialVegfInPellet"
+                , SetInitialVegfInPellet_function_type( &::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::SetInitialVegfInPellet )
+                , ( bp::arg("initialVegf") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::SetPelletBindingConstant
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetPelletBindingConstant_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "SetPelletBindingConstant"
+                , SetPelletBindingConstant_function_type( &::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::SetPelletBindingConstant )
+                , ( bp::arg("bindingConstant") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::SetPelletFreeDecayRate
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetPelletFreeDecayRate_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "SetPelletFreeDecayRate"
+                , SetPelletFreeDecayRate_function_type( &::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::SetPelletFreeDecayRate )
+                , ( bp::arg("rate") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::SetPelletSurfaceArea
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetPelletSurfaceArea_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "SetPelletSurfaceArea"
+                , SetPelletSurfaceArea_function_type( &::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::SetPelletSurfaceArea )
+                , ( bp::arg("surfaceArea") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::SetPelletVolume
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetPelletVolume_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 3, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "SetPelletVolume"
+                , SetPelletVolume_function_type( &::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::SetPelletVolume )
+                , ( bp::arg("volume") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::UpdateDiscreteSourceStrengths
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateDiscreteSourceStrengths_function_type)(  ) ;
+            typedef void ( CoupledVegfPelletDiffusionReactionPde_less__2_comma__2__greater__wrapper::*default_UpdateDiscreteSourceStrengths_function_type)(  ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "UpdateDiscreteSourceStrengths"
+                , UpdateDiscreteSourceStrengths_function_type(&::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::UpdateDiscreteSourceStrengths)
+                , default_UpdateDiscreteSourceStrengths_function_type(&CoupledVegfPelletDiffusionReactionPde_less__2_comma__2__greater__wrapper::default_UpdateDiscreteSourceStrengths) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::UpdateMultiplierValue
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateMultiplierValue_function_type)(  ) ;
+            typedef void ( CoupledVegfPelletDiffusionReactionPde_less__2_comma__2__greater__wrapper::*default_UpdateMultiplierValue_function_type)(  ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde2_2_exposer.def( 
+                "UpdateMultiplierValue"
+                , UpdateMultiplierValue_function_type(&::CoupledVegfPelletDiffusionReactionPde< 2, 2 >::UpdateMultiplierValue)
+                , default_UpdateMultiplierValue_function_type(&CoupledVegfPelletDiffusionReactionPde_less__2_comma__2__greater__wrapper::default_UpdateMultiplierValue) );
+        
+        }
+        CoupledVegfPelletDiffusionReactionPde2_2_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< CoupledVegfPelletDiffusionReactionPde<2, 2> > >();
+        bp::implicitly_convertible< boost::shared_ptr< CoupledVegfPelletDiffusionReactionPde< 2, 2 > >, boost::shared_ptr< AbstractDiscreteContinuumParabolicPde< 2, 2 > > >();
+    }
+
+    { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >
+        typedef bp::class_< CoupledVegfPelletDiffusionReactionPde_less__3_comma__3__greater__wrapper, bp::bases< AbstractDiscreteContinuumParabolicPde< 3, 3 > > > CoupledVegfPelletDiffusionReactionPde3_3_exposer_t;
+        CoupledVegfPelletDiffusionReactionPde3_3_exposer_t CoupledVegfPelletDiffusionReactionPde3_3_exposer = CoupledVegfPelletDiffusionReactionPde3_3_exposer_t( "CoupledVegfPelletDiffusionReactionPde3_3", bp::init< >() );
+        bp::scope CoupledVegfPelletDiffusionReactionPde3_3_scope( CoupledVegfPelletDiffusionReactionPde3_3_exposer );
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef double ( exported_class_t::*ComputeLinearInUCoeffInSourceTerm_function_type)( ::ChastePoint< 3 > const &,::Element< 3, 3 > * ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "ComputeLinearInUCoeffInSourceTerm"
+                , ComputeLinearInUCoeffInSourceTerm_function_type( &::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm )
+                , ( bp::arg("rX"), bp::arg("pElement") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*ComputeLinearInUCoeffInSourceTerm_function_type)( unsigned int ) ;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( CoupledVegfPelletDiffusionReactionPde_less__3_comma__3__greater__wrapper::*default_ComputeLinearInUCoeffInSourceTerm_function_type)( unsigned int ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "ComputeLinearInUCoeffInSourceTerm"
+                , ComputeLinearInUCoeffInSourceTerm_function_type(&::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm)
+                , default_ComputeLinearInUCoeffInSourceTerm_function_type(&CoupledVegfPelletDiffusionReactionPde_less__3_comma__3__greater__wrapper::default_ComputeLinearInUCoeffInSourceTerm)
+                , ( bp::arg("gridIndex")=(unsigned int)(0) ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::ComputeNonlinearSourceTerm
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*ComputeNonlinearSourceTerm_function_type)( unsigned int,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( CoupledVegfPelletDiffusionReactionPde_less__3_comma__3__greater__wrapper::*default_ComputeNonlinearSourceTerm_function_type)( unsigned int,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "ComputeNonlinearSourceTerm"
+                , ComputeNonlinearSourceTerm_function_type(&::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::ComputeNonlinearSourceTerm)
+                , default_ComputeNonlinearSourceTerm_function_type(&CoupledVegfPelletDiffusionReactionPde_less__3_comma__3__greater__wrapper::default_ComputeNonlinearSourceTerm)
+                , ( bp::arg("gridIndex"), bp::arg("u") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::ComputeNonlinearSourceTermPrime
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*ComputeNonlinearSourceTermPrime_function_type)( unsigned int,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( CoupledVegfPelletDiffusionReactionPde_less__3_comma__3__greater__wrapper::*default_ComputeNonlinearSourceTermPrime_function_type)( unsigned int,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "ComputeNonlinearSourceTermPrime"
+                , ComputeNonlinearSourceTermPrime_function_type(&::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::ComputeNonlinearSourceTermPrime)
+                , default_ComputeNonlinearSourceTermPrime_function_type(&CoupledVegfPelletDiffusionReactionPde_less__3_comma__3__greater__wrapper::default_ComputeNonlinearSourceTermPrime)
+                , ( bp::arg("gridIndex"), bp::arg("u") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::Create
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef ::boost::shared_ptr< CoupledVegfPelletDiffusionReactionPde< 3, 3 > > ( *Create_function_type )(  );
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "Create"
+                , Create_function_type( &::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::Create ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::GetCorneaPelletPermeability
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetCorneaPelletPermeability_function_type)(  ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "GetCorneaPelletPermeability"
+                , GetCorneaPelletPermeability_function_type( &::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::GetCorneaPelletPermeability ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::GetInitialVegfInPellet
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetInitialVegfInPellet_function_type)(  ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "GetInitialVegfInPellet"
+                , GetInitialVegfInPellet_function_type( &::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::GetInitialVegfInPellet ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::GetPelletBindingConstant
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetPelletBindingConstant_function_type)(  ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "GetPelletBindingConstant"
+                , GetPelletBindingConstant_function_type( &::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::GetPelletBindingConstant ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::GetPelletFreeDecayRate
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetPelletFreeDecayRate_function_type)(  ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "GetPelletFreeDecayRate"
+                , GetPelletFreeDecayRate_function_type( &::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::GetPelletFreeDecayRate ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::GetPelletSurfaceArea
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetPelletSurfaceArea_function_type)(  ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "GetPelletSurfaceArea"
+                , GetPelletSurfaceArea_function_type( &::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::GetPelletSurfaceArea ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::GetPelletVolume
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 3, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetPelletVolume_function_type)(  ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "GetPelletVolume"
+                , GetPelletVolume_function_type( &::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::GetPelletVolume ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::SetContinuumLinearInUTerm
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetContinuumLinearInUTerm_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "SetContinuumLinearInUTerm"
+                , SetContinuumLinearInUTerm_function_type( &::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::SetContinuumLinearInUTerm )
+                , ( bp::arg("linearInUTerm") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::SetCorneaPelletPermeability
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetCorneaPelletPermeability_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "SetCorneaPelletPermeability"
+                , SetCorneaPelletPermeability_function_type( &::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::SetCorneaPelletPermeability )
+                , ( bp::arg("permeability") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::SetHalfMaxVegfConcentration
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetHalfMaxVegfConcentration_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "SetHalfMaxVegfConcentration"
+                , SetHalfMaxVegfConcentration_function_type( &::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::SetHalfMaxVegfConcentration )
+                , ( bp::arg("halfMax") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::SetInitialVegfInPellet
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetInitialVegfInPellet_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "SetInitialVegfInPellet"
+                , SetInitialVegfInPellet_function_type( &::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::SetInitialVegfInPellet )
+                , ( bp::arg("initialVegf") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::SetPelletBindingConstant
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetPelletBindingConstant_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "SetPelletBindingConstant"
+                , SetPelletBindingConstant_function_type( &::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::SetPelletBindingConstant )
+                , ( bp::arg("bindingConstant") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::SetPelletFreeDecayRate
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetPelletFreeDecayRate_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "SetPelletFreeDecayRate"
+                , SetPelletFreeDecayRate_function_type( &::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::SetPelletFreeDecayRate )
+                , ( bp::arg("rate") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::SetPelletSurfaceArea
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetPelletSurfaceArea_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "SetPelletSurfaceArea"
+                , SetPelletSurfaceArea_function_type( &::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::SetPelletSurfaceArea )
+                , ( bp::arg("surfaceArea") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::SetPelletVolume
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetPelletVolume_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 3, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "SetPelletVolume"
+                , SetPelletVolume_function_type( &::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::SetPelletVolume )
+                , ( bp::arg("volume") ) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::UpdateDiscreteSourceStrengths
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateDiscreteSourceStrengths_function_type)(  ) ;
+            typedef void ( CoupledVegfPelletDiffusionReactionPde_less__3_comma__3__greater__wrapper::*default_UpdateDiscreteSourceStrengths_function_type)(  ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "UpdateDiscreteSourceStrengths"
+                , UpdateDiscreteSourceStrengths_function_type(&::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::UpdateDiscreteSourceStrengths)
+                , default_UpdateDiscreteSourceStrengths_function_type(&CoupledVegfPelletDiffusionReactionPde_less__3_comma__3__greater__wrapper::default_UpdateDiscreteSourceStrengths) );
+        
+        }
+        { //::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::UpdateMultiplierValue
+        
+            typedef CoupledVegfPelletDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateMultiplierValue_function_type)(  ) ;
+            typedef void ( CoupledVegfPelletDiffusionReactionPde_less__3_comma__3__greater__wrapper::*default_UpdateMultiplierValue_function_type)(  ) ;
+            
+            CoupledVegfPelletDiffusionReactionPde3_3_exposer.def( 
+                "UpdateMultiplierValue"
+                , UpdateMultiplierValue_function_type(&::CoupledVegfPelletDiffusionReactionPde< 3, 3 >::UpdateMultiplierValue)
+                , default_UpdateMultiplierValue_function_type(&CoupledVegfPelletDiffusionReactionPde_less__3_comma__3__greater__wrapper::default_UpdateMultiplierValue) );
+        
+        }
+        CoupledVegfPelletDiffusionReactionPde3_3_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< CoupledVegfPelletDiffusionReactionPde<3, 3> > >();
+        bp::implicitly_convertible< boost::shared_ptr< CoupledVegfPelletDiffusionReactionPde< 3, 3 > >, boost::shared_ptr< AbstractDiscreteContinuumParabolicPde< 3, 3 > > >();
     }
 
     { //::DiscreteContinuumBoundaryCondition< 2 >
@@ -7094,6 +8468,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
                 , GetRGBoundaryConditions_function_type( &::FiniteDifferenceSolver< 2 >::GetRGBoundaryConditions ) );
         
         }
+        { //::FiniteDifferenceSolver< 2 >::SetParabolicSolverTimeIncrement
+        
+            typedef FiniteDifferenceSolver< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetParabolicSolverTimeIncrement_function_type)( double ) ;
+            
+            FiniteDifferenceSolver2_exposer.def( 
+                "SetParabolicSolverTimeIncrement"
+                , SetParabolicSolverTimeIncrement_function_type( &::FiniteDifferenceSolver< 2 >::SetParabolicSolverTimeIncrement )
+                , ( bp::arg("timeIncrement") ) );
+        
+        }
         { //::FiniteDifferenceSolver< 2 >::Setup
         
             typedef FiniteDifferenceSolver< 2 > exported_class_t;
@@ -7359,6 +8744,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             FiniteDifferenceSolver3_exposer.def( 
                 "GetRGBoundaryConditions"
                 , GetRGBoundaryConditions_function_type( &::FiniteDifferenceSolver< 3 >::GetRGBoundaryConditions ) );
+        
+        }
+        { //::FiniteDifferenceSolver< 3 >::SetParabolicSolverTimeIncrement
+        
+            typedef FiniteDifferenceSolver< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetParabolicSolverTimeIncrement_function_type)( double ) ;
+            
+            FiniteDifferenceSolver3_exposer.def( 
+                "SetParabolicSolverTimeIncrement"
+                , SetParabolicSolverTimeIncrement_function_type( &::FiniteDifferenceSolver< 3 >::SetParabolicSolverTimeIncrement )
+                , ( bp::arg("timeIncrement") ) );
         
         }
         { //::FiniteDifferenceSolver< 3 >::Setup
@@ -9517,6 +10913,18 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
                 , ( bp::arg("solution") ) );
         
         }
+        { //::DiscreteSource< 2 >::GetNonlinearTermRegularGridValues
+        
+            typedef SolutionDependentDiscreteSource< 2 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( SolutionDependentDiscreteSource_less__2__greater__wrapper::*default_GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            
+            SolutionDependentDiscreteSource2_exposer.def( 
+                "GetNonlinearTermRegularGridValues"
+                , GetNonlinearTermRegularGridValues_function_type(&::DiscreteSource< 2 >::GetNonlinearTermRegularGridValues)
+                , default_GetNonlinearTermRegularGridValues_function_type(&SolutionDependentDiscreteSource_less__2__greater__wrapper::default_GetNonlinearTermRegularGridValues) );
+        
+        }
         SolutionDependentDiscreteSource2_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< SolutionDependentDiscreteSource<2> > >();
         bp::implicitly_convertible< boost::shared_ptr< SolutionDependentDiscreteSource< 2 > >, boost::shared_ptr< DiscreteSource< 2 > > >();
@@ -9617,6 +11025,18 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
                 , ( bp::arg("solution") ) );
         
         }
+        { //::DiscreteSource< 3 >::GetNonlinearTermRegularGridValues
+        
+            typedef SolutionDependentDiscreteSource< 3 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( SolutionDependentDiscreteSource_less__3__greater__wrapper::*default_GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            
+            SolutionDependentDiscreteSource3_exposer.def( 
+                "GetNonlinearTermRegularGridValues"
+                , GetNonlinearTermRegularGridValues_function_type(&::DiscreteSource< 3 >::GetNonlinearTermRegularGridValues)
+                , default_GetNonlinearTermRegularGridValues_function_type(&SolutionDependentDiscreteSource_less__3__greater__wrapper::default_GetNonlinearTermRegularGridValues) );
+        
+        }
         SolutionDependentDiscreteSource3_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< SolutionDependentDiscreteSource<3> > >();
         bp::implicitly_convertible< boost::shared_ptr< SolutionDependentDiscreteSource< 3 > >, boost::shared_ptr< DiscreteSource< 3 > > >();
@@ -9684,6 +11104,29 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
                 , default_GetLinearInURegularGridValues_function_type(&VesselBasedDiscreteSource_less__2__greater__wrapper::default_GetLinearInURegularGridValues) );
         
         }
+        { //::VesselBasedDiscreteSource< 2 >::GetNonlinearTermRegularGridValues
+        
+            typedef VesselBasedDiscreteSource< 2 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( VesselBasedDiscreteSource_less__2__greater__wrapper::*default_GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            
+            VesselBasedDiscreteSource2_exposer.def( 
+                "GetNonlinearTermRegularGridValues"
+                , GetNonlinearTermRegularGridValues_function_type(&::VesselBasedDiscreteSource< 2 >::GetNonlinearTermRegularGridValues)
+                , default_GetNonlinearTermRegularGridValues_function_type(&VesselBasedDiscreteSource_less__2__greater__wrapper::default_GetNonlinearTermRegularGridValues) );
+        
+        }
+        { //::VesselBasedDiscreteSource< 2 >::SetNumberOfCellsPerLength
+        
+            typedef VesselBasedDiscreteSource< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetNumberOfCellsPerLength_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            VesselBasedDiscreteSource2_exposer.def( 
+                "SetNumberOfCellsPerLength"
+                , SetNumberOfCellsPerLength_function_type( &::VesselBasedDiscreteSource< 2 >::SetNumberOfCellsPerLength )
+                , ( bp::arg("cellsPerLength") ) );
+        
+        }
         { //::VesselBasedDiscreteSource< 2 >::SetReferenceConcentration
         
             typedef VesselBasedDiscreteSource< 2 > exported_class_t;
@@ -9704,6 +11147,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
                 "SetReferenceHaematocrit"
                 , SetReferenceHaematocrit_function_type( &::VesselBasedDiscreteSource< 2 >::SetReferenceHaematocrit )
                 , ( bp::arg("value") ) );
+        
+        }
+        { //::VesselBasedDiscreteSource< 2 >::SetUptakeRatePerCell
+        
+            typedef VesselBasedDiscreteSource< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetUptakeRatePerCell_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            VesselBasedDiscreteSource2_exposer.def( 
+                "SetUptakeRatePerCell"
+                , SetUptakeRatePerCell_function_type( &::VesselBasedDiscreteSource< 2 >::SetUptakeRatePerCell )
+                , ( bp::arg("ratePerCell") ) );
         
         }
         { //::VesselBasedDiscreteSource< 2 >::SetVesselPermeability
@@ -9784,6 +11238,29 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
                 , default_GetLinearInURegularGridValues_function_type(&VesselBasedDiscreteSource_less__3__greater__wrapper::default_GetLinearInURegularGridValues) );
         
         }
+        { //::VesselBasedDiscreteSource< 3 >::GetNonlinearTermRegularGridValues
+        
+            typedef VesselBasedDiscreteSource< 3 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<-1, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> > >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( VesselBasedDiscreteSource_less__3__greater__wrapper::*default_GetNonlinearTermRegularGridValues_function_type)(  ) ;
+            
+            VesselBasedDiscreteSource3_exposer.def( 
+                "GetNonlinearTermRegularGridValues"
+                , GetNonlinearTermRegularGridValues_function_type(&::VesselBasedDiscreteSource< 3 >::GetNonlinearTermRegularGridValues)
+                , default_GetNonlinearTermRegularGridValues_function_type(&VesselBasedDiscreteSource_less__3__greater__wrapper::default_GetNonlinearTermRegularGridValues) );
+        
+        }
+        { //::VesselBasedDiscreteSource< 3 >::SetNumberOfCellsPerLength
+        
+            typedef VesselBasedDiscreteSource< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetNumberOfCellsPerLength_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            VesselBasedDiscreteSource3_exposer.def( 
+                "SetNumberOfCellsPerLength"
+                , SetNumberOfCellsPerLength_function_type( &::VesselBasedDiscreteSource< 3 >::SetNumberOfCellsPerLength )
+                , ( bp::arg("cellsPerLength") ) );
+        
+        }
         { //::VesselBasedDiscreteSource< 3 >::SetReferenceConcentration
         
             typedef VesselBasedDiscreteSource< 3 > exported_class_t;
@@ -9804,6 +11281,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
                 "SetReferenceHaematocrit"
                 , SetReferenceHaematocrit_function_type( &::VesselBasedDiscreteSource< 3 >::SetReferenceHaematocrit )
                 , ( bp::arg("value") ) );
+        
+        }
+        { //::VesselBasedDiscreteSource< 3 >::SetUptakeRatePerCell
+        
+            typedef VesselBasedDiscreteSource< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetUptakeRatePerCell_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            VesselBasedDiscreteSource3_exposer.def( 
+                "SetUptakeRatePerCell"
+                , SetUptakeRatePerCell_function_type( &::VesselBasedDiscreteSource< 3 >::SetUptakeRatePerCell )
+                , ( bp::arg("ratePerCell") ) );
         
         }
         { //::VesselBasedDiscreteSource< 3 >::SetVesselPermeability

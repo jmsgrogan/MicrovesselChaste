@@ -146,6 +146,21 @@ std::vector<units::quantity<unit::rate> > DiscreteSource<DIM>::GetLinearInURegul
 }
 
 template<unsigned DIM>
+std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>::GetNonlinearTermRegularGridValues()
+{
+    if(!mpRegularGrid)
+    {
+        EXCEPTION("A regular grid is required for this type of source");
+    }
+
+    // Return an empty vector
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(mpRegularGrid->GetNumberOfPoints(),
+            0.0*unit::mole_per_metre_cubed_per_second);
+
+    return values;
+}
+
+template<unsigned DIM>
 void DiscreteSource<DIM>::SetLabelName(const std::string& label)
 {
     mLabel = label;

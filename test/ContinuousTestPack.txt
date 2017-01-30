@@ -38,6 +38,7 @@ mesh/TestDiscreteContinuumMesh.hpp
 mesh/TestMeshReaderAndWriter.hpp
 pde/TestFiniteDifferenceSolver.hpp
 pde/TestNonLinearFiniteDifferenceSolver.hpp
+pde/TestTimeDependentFiniteDifferenceSolver.hpp
 pde/TestGreensFunctionSolver.hpp
 pde/TestFiniteElementSolver.hpp
 pde/TestNonLinearFiniteElementSolver.hpp

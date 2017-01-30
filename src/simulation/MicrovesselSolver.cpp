@@ -304,6 +304,7 @@ void MicrovesselSolver<DIM>::Setup()
     {
         mpRegressionSolver->SetVesselNetwork(mpNetwork);
     }
+
 }
 
 template<unsigned DIM>

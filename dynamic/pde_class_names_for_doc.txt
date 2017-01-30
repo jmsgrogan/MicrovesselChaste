@@ -52,7 +52,13 @@
 .. autoclass:: microvessel_chaste.pde.AbstractDiscreteContinuumNonLinearEllipticPde3_3
 	:members:
 
+.. autoclass:: microvessel_chaste.pde.AbstractDiscreteContinuumParabolicPde3_3
+	:members:
+
 .. autoclass:: microvessel_chaste.pde.MichaelisMentenSteadyStateDiffusionReactionPde3_3
+	:members:
+
+.. autoclass:: microvessel_chaste.pde.CoupledVegfPelletDiffusionReactionPde3_3
 	:members:
 
 .. autoclass:: microvessel_chaste.pde.AbstractDiscreteContinuumSolver3
@@ -85,10 +91,16 @@
 .. autoclass:: microvessel_chaste.pde.AbstractDiscreteContinuumNonLinearEllipticPde2_2
 	:members:
 
+.. autoclass:: microvessel_chaste.pde.AbstractDiscreteContinuumParabolicPde2_2
+	:members:
+
 .. autoclass:: microvessel_chaste.pde.LinearSteadyStateDiffusionReactionPde2_2
 	:members:
 
 .. autoclass:: microvessel_chaste.pde.MichaelisMentenSteadyStateDiffusionReactionPde2_2
+	:members:
+
+.. autoclass:: microvessel_chaste.pde.CoupledVegfPelletDiffusionReactionPde2_2
 	:members:
 
 .. autoclass:: microvessel_chaste.pde.AbstractDiscreteContinuumSolver2

@@ -50,6 +50,8 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "FiniteElementSolver.hpp"
 #include "FunctionMap.hpp"
 #include "GreensFunctionSolver.hpp"
+#include "AbstractDiscreteContinuumParabolicPde.hpp"
+#include "CoupledVegfPelletDiffusionReactionPde.hpp"
 
 
 //// Typdef in this namespace so that pyplusplus uses the nicer typedef'd name for the class
@@ -74,8 +76,10 @@ namespace chaste
                     sizeof(DiscreteContinuumBoundaryCondition<3>) +
                     sizeof(AbstractDiscreteContinuumLinearEllipticPde<3, 3>) +
                     sizeof(AbstractDiscreteContinuumNonLinearEllipticPde<3, 3>) +
+                    sizeof(AbstractDiscreteContinuumParabolicPde<3, 3>) +
                     sizeof(LinearSteadyStateDiffusionReactionPde<3, 3>) +
                     sizeof(MichaelisMentenSteadyStateDiffusionReactionPde<3, 3>) +
+                    sizeof(CoupledVegfPelletDiffusionReactionPde<3, 3>) +
                     sizeof(LinearSteadyStateDiffusionReactionPde<3, 3>) +
                     sizeof(AbstractDiscreteContinuumSolver<3>) +
                     sizeof(AbstractRegularGridDiscreteContinuumSolver<3>) +
@@ -92,8 +96,10 @@ namespace chaste
                     sizeof(DiscreteContinuumBoundaryCondition<2>) +
                     sizeof(AbstractDiscreteContinuumLinearEllipticPde<2, 2>) +
                     sizeof(AbstractDiscreteContinuumNonLinearEllipticPde<2, 2>) +
+                    sizeof(AbstractDiscreteContinuumParabolicPde<2, 2>) +
                     sizeof(LinearSteadyStateDiffusionReactionPde<2, 2>) +
                     sizeof(MichaelisMentenSteadyStateDiffusionReactionPde<2, 2>) +
+                    sizeof(CoupledVegfPelletDiffusionReactionPde<2, 2>) +
                     sizeof(LinearSteadyStateDiffusionReactionPde<2, 2>) +
                     sizeof(AbstractDiscreteContinuumSolver<2>) +
                     sizeof(AbstractRegularGridDiscreteContinuumSolver<2>) +

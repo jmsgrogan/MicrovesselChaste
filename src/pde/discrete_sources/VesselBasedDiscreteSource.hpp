@@ -69,6 +69,16 @@ protected:
      */
     units::quantity<unit::dimensionless> mReferenceHaematocrit;
 
+    /**
+     * Uptake rate per cell (nonlinear model only)
+     */
+    units::quantity<unit::molar_flow_rate> mUptakeRatePerCell;
+
+    /**
+     * Cell per metre (nonlinear model only)
+     */
+    units::quantity<unit::per_length> mCellsPerMetre;
+
 public:
 
     /**
@@ -112,6 +122,12 @@ public:
     std::vector<units::quantity<unit::rate> > GetLinearInURegularGridValues();
 
     /**
+     * Return the values of the source strengths sampled on the regular grid
+     * @return a vector of source strengths
+     */
+    std::vector<units::quantity<unit::concentration_flow_rate> > GetNonlinearTermRegularGridValues();
+
+    /**
      * Set the value of the source for PRESCRIBED type sources
      * @param value the value of the source
      */
@@ -128,6 +144,18 @@ public:
      * @param value the value of the source
      */
     void SetReferenceHaematocrit(units::quantity<unit::dimensionless> value);
+
+    /**
+     * Set the rate of uptake per cell, non-linear model only
+     * @param ratePerCell the rate of uptake per cell
+     */
+    void SetUptakeRatePerCell(units::quantity<unit::molar_flow_rate> ratePerCell);
+
+    /**
+     * Set the number of cells per unit vessel length, non-linear model only
+     * @param cellsPerLength the number of cells per unit vessel length
+     */
+    void SetNumberOfCellsPerLength(units::quantity<unit::per_length> cellsPerLength);
 
 };
 

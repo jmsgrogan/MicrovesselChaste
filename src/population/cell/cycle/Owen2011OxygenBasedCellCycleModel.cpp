@@ -52,6 +52,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "GenericParameters.hpp"
 #include "Owen11Parameters.hpp"
 #include "BaseUnits.hpp"
+#include "BackwardEulerIvpOdeSolver.hpp"
 
 Owen2011OxygenBasedCellCycleModel::Owen2011OxygenBasedCellCycleModel(boost::shared_ptr<AbstractCellCycleModelOdeSolver> pOdeSolver)
 : AbstractOdeBasedPhaseBasedCellCycleModel(SimulationTime::Instance()->GetTime(), pOdeSolver),
@@ -73,7 +74,11 @@ Owen2011OxygenBasedCellCycleModel::Owen2011OxygenBasedCellCycleModel(boost::shar
 {
     if (!mpOdeSolver)
     {
-        mpOdeSolver = CellCycleModelOdeSolver<Owen2011OxygenBasedCellCycleModel, CvodeAdaptor>::Instance();
+        #ifdef CHASTE_CVODE
+            mpOdeSolver = CellCycleModelOdeSolver<Owen2011OxygenBasedCellCycleModel, CvodeAdaptor>::Instance();
+        #else
+            mpOdeSolver = CellCycleModelOdeSolver<Owen2011OxygenBasedCellCycleModel, BackwardEulerIvpOdeSolver>::Instance();
+        #endif
         mpOdeSolver->Initialise();
     }
 
@@ -405,9 +410,11 @@ void Owen2011OxygenBasedCellCycleModel::UpdateCellCyclePhase()
         UpdateQuiescentDuration();
     }
 
+    #ifdef CHASTE_CVODE
     // must do this because we are using CVode and by
     // default stopping events are not found
     mpOdeSolver->CheckForStoppingEvents();
+    #endif
 
     assert(mpOdeSystem != NULL);
     double current_time = SimulationTime::Instance()->GetTime();

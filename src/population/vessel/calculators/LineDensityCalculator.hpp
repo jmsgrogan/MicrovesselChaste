@@ -33,72 +33,42 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef LATTICEBASEDSPROUTINGRULE_HPP_
-#define LATTICEBASEDSPROUTINGRULE_HPP_
+#ifndef DENSITYMAP_HPP_
+#define DENSITYMAP_HPP_
 
-#include <vector>
-#include <string>
-#include "VesselNode.hpp"
 #include "SmartPointers.hpp"
-#include "AbstractSproutingRule.hpp"
-#include "RegularGrid.hpp"
 #include "AbstractRegularGridDiscreteContinuumSolver.hpp"
 
 /**
- * A simple random lattice based sprouting rule, useful for code testing.
+ * Calculate the density of vessels on a regular grid
  */
 template<unsigned DIM>
-class LatticeBasedSproutingRule : public AbstractSproutingRule<DIM>
+class DensityMap : public AbstractRegularGridDiscreteContinuumSolver<DIM>
 {
-
-protected:
-
-    /**
-     * The lattice/grid for the vessel simulation
-     */
-    boost::shared_ptr<RegularGrid<DIM> > mpGrid;
-
-    /**
-     * Tip exclusion radius
-     */
-    units::quantity<unit::length> mTipExclusionRadius;
 
 public:
 
     /**
-     * Constructor.
+     * Constructor
      */
-    LatticeBasedSproutingRule();
+    DensityMap();
 
     /**
-     * Destructor.
+     * Factory constructor method
+     * @return a shared pointer to a new solver
      */
-    virtual ~LatticeBasedSproutingRule();
+    static boost::shared_ptr<DensityMap<DIM> > Create();
 
     /**
-     * Construct a new instance of the class and return a shared pointer to it.
-     * @return a pointer to a new instance of the class
+     * Destructor
      */
-    static boost::shared_ptr<LatticeBasedSproutingRule<DIM> > Create();
+    ~DensityMap();
 
     /**
-     * Overwritten method to return nodes which may sprout
-     * @param rNodes nodes to check for sprouting
-     * @return a vector of nodes which may sprout
+     * Calculate the map
      */
-    virtual std::vector<boost::shared_ptr<VesselNode<DIM> > > GetSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
+    void Solve();
 
-    /**
-     * Set the lattice/grid for the vessel network
-     * @param pGrid the grid for the vessel network
-     */
-    void SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
-
-    /**
-     * Set the minimum distance from an existing tip that a sprout can form
-     * @param tipExclusionRadius the minimum distance from an existing tip that a sprout can form
-     */
-    void SetTipExclusionRadius(units::quantity<unit::length> tipExclusionRadius);
 };
 
-#endif /* LATTICEBASEDSPROUTINGRULE_HPP_ */
+#endif /* DENSITYMAP_HPP_ */

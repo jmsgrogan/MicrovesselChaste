@@ -216,6 +216,7 @@ void VesselNetwork<DIM>::ExtendVessel(boost::shared_ptr<Vessel<DIM> > pVessel, b
         boost::shared_ptr<VesselSegment<DIM> > p_segment = VesselSegment<DIM>::Create(pNewNode, pEndNode);
         p_segment->SetFlowProperties(*(pEndNode->GetSegments()[0]->GetFlowProperties()));
         p_segment->SetRadius(pEndNode->GetSegments()[0]->GetRadius());
+        p_segment->SetMaturity(0.0);
         pVessel->AddSegment(p_segment);
     }
     else
@@ -223,6 +224,7 @@ void VesselNetwork<DIM>::ExtendVessel(boost::shared_ptr<Vessel<DIM> > pVessel, b
         boost::shared_ptr<VesselSegment<DIM> > p_segment = VesselSegment<DIM>::Create(pEndNode, pNewNode);
         p_segment->SetFlowProperties(*(pEndNode->GetSegments()[0]->GetFlowProperties()));
         p_segment->SetRadius(pEndNode->GetSegments()[0]->GetRadius());
+        p_segment->SetMaturity(0.0);
         pVessel->AddSegment(p_segment);
     }
 
@@ -257,6 +259,7 @@ boost::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::FormSprout(const Dimensional
     p_new_segment->GetFlowProperties()->SetImpedance(0.0*unit::pascal_second_per_metre_cubed);
     p_new_segment->GetFlowProperties()->SetHaematocrit(0.0);
     p_new_segment->GetFlowProperties()->SetGrowthStimulus(0.0*unit::per_second);
+    p_new_segment->SetMaturity(0.0);
 
     boost::shared_ptr<Vessel<DIM> > p_new_vessel = Vessel<DIM>::Create(p_new_segment);
     // Sprouting won't save you.
@@ -363,6 +366,23 @@ std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > VesselNetwo
     std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > bbox(DimensionalChastePoint<DIM>(x_min/base_length, y_min/base_length, z_min/base_length, base_length),
                                                                               DimensionalChastePoint<DIM>(x_max/base_length, y_max/base_length, z_max/base_length, base_length));
     return bbox;
+}
+
+template<unsigned DIM>
+std::vector<boost::shared_ptr<VesselNode<DIM> > > VesselNetwork<DIM>::GetNodesInSphere(const DimensionalChastePoint<DIM>&  rCentre,
+units::quantity<unit::length> radius)
+{
+    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = GetNodes();
+    std::vector<boost::shared_ptr<VesselNode<DIM> > > inside_nodes;
+
+    for(unsigned idx = 0; idx < nodes.size(); idx++)
+    {
+        if(nodes[idx]->GetDistance(rCentre) <= radius)
+        {
+            inside_nodes.push_back(nodes[idx]);
+        }
+    }
+    return inside_nodes;
 }
 
 template<unsigned DIM>

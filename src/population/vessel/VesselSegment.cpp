@@ -45,7 +45,8 @@ VesselSegment<DIM>::VesselSegment(boost::shared_ptr<VesselNode<DIM> > pNode1, bo
         AbstractVesselNetworkComponent<DIM>(),
         mNodes(std::pair<boost::shared_ptr<VesselNode<DIM> >, boost::shared_ptr<VesselNode<DIM> > >(pNode1, pNode2)),
         mVessel(boost::weak_ptr<Vessel<DIM> >()),
-        mpFlowProperties(boost::shared_ptr<SegmentFlowProperties<DIM> >(new SegmentFlowProperties<DIM>()))
+        mpFlowProperties(boost::shared_ptr<SegmentFlowProperties<DIM> >(new SegmentFlowProperties<DIM>())),
+        mMaturity(1.0)
 {
 }
 
@@ -54,7 +55,8 @@ VesselSegment<DIM>::VesselSegment(const VesselSegment<DIM>& rSegment) :
     boost::enable_shared_from_this<VesselSegment<DIM> >(), AbstractVesselNetworkComponent<DIM>(),
     mNodes(rSegment.GetNodes()),
     mVessel(boost::weak_ptr<Vessel<DIM> >()),
-    mpFlowProperties(boost::shared_ptr<SegmentFlowProperties<DIM> >(new SegmentFlowProperties<DIM>()))
+    mpFlowProperties(boost::shared_ptr<SegmentFlowProperties<DIM> >(new SegmentFlowProperties<DIM>())),
+    mMaturity(1.0)
 {
     this->SetFlowProperties(*(rSegment.GetFlowProperties()));
 }
@@ -129,6 +131,12 @@ units::quantity<unit::length> VesselSegment<DIM>::GetLength() const
 }
 
 template<unsigned DIM>
+double VesselSegment<DIM>::GetMaturity() const
+{
+    return mMaturity;
+}
+
+template<unsigned DIM>
 std::map<std::string, double> VesselSegment<DIM>::GetOutputData()
 {
     this->mOutputData.clear();
@@ -136,6 +144,7 @@ std::map<std::string, double> VesselSegment<DIM>::GetOutputData()
     this->mOutputData.insert(flow_data.begin(), flow_data.end());
     this->mOutputData["Segment Id"] = double(this->GetId());
     this->mOutputData["Segment Radius m: "] = this->GetRadius() / unit::metres;
+    this->mOutputData["Maturity"] = this->GetMaturity();
     return this->mOutputData;
 }
 
@@ -267,6 +276,12 @@ void VesselSegment<DIM>::ReplaceNode(unsigned oldNodeIndex, boost::shared_ptr<Ve
     {
         mVessel.lock()->UpdateNodes();
     }
+}
+
+template<unsigned DIM>
+void VesselSegment<DIM>::SetMaturity(double maturity)
+{
+    mMaturity = maturity;
 }
 
 template<unsigned DIM>
