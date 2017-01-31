@@ -59,19 +59,15 @@ public:
         p_mesh_reader->Read();
 
         // Write it out in vtk format
-        MultiFormatMeshWriter<3> mesh_writer;
-        mesh_writer.SetFilename(file_handler1.GetOutputDirectoryFullPath()+"bifurcation_mesh");
-        mesh_writer.SetMesh(p_mesh_reader->GetMesh());
-        mesh_writer.SetOutputFormat(MeshFormat::VTU);
-        mesh_writer.Write();
-
-        // Write it out in dolfin format
-//        mesh_writer.SetOutputFormat(MeshFormat::DOLFIN);
-//        mesh_writer.Write();
+        boost::shared_ptr<MultiFormatMeshWriter<3> > p_mesh_writer = MultiFormatMeshWriter<3>::Create();
+        p_mesh_writer->SetFilename(file_handler1.GetOutputDirectoryFullPath()+"bifurcation_mesh");
+        p_mesh_writer->SetMesh(p_mesh_reader->GetMesh());
+        p_mesh_writer->SetOutputFormat(MeshFormat::VTU);
+        p_mesh_writer->Write();
 
         // Write it out in stl format
-        mesh_writer.SetOutputFormat(MeshFormat::STL);
-        mesh_writer.Write();
+        p_mesh_writer->SetOutputFormat(MeshFormat::STL);
+        p_mesh_writer->Write();
     }
 
     void Test2dMeshIO()
@@ -90,10 +86,6 @@ public:
         mesh_writer.SetFilename(file_handler1.GetOutputDirectoryFullPath()+"retinal_2d");
         mesh_writer.SetMesh(mesh_reader.GetMesh());
         mesh_writer.Write();
-
-        // Write it out in dolfin format
-//        mesh_writer.SetOutputFormat(MeshFormat::DOLFIN);
-//        mesh_writer.Write();
     }
 };
 #endif

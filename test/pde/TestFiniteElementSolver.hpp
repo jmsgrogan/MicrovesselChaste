@@ -60,51 +60,6 @@ class TestFiniteElementSolver : public CxxTest::TestSuite
 {
 public:
 
-    // Vessel line meshing no longer supported
-    void DontTest3dKroghCylinderNetwork() throw(Exception)
-    {
-        // Set up the vessel network
-        units::quantity<unit::length> micron_length_scale = 1.e-6*unit::metres;
-        units::quantity<unit::length> vessel_length = 100.0 * micron_length_scale;
-        VesselNetworkGenerator<3> generator;
-        DimensionalChastePoint<3> centre(vessel_length/(2.0*micron_length_scale), vessel_length/(2.0*micron_length_scale), 0.0, micron_length_scale);
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre);
-
-        // Set up the mesh
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(vessel_length, vessel_length, vessel_length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
-        p_domain->AddVesselNetwork(p_network);
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3, 3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3, 3>::Create();
-        p_mesh_generator->SetDomain(p_domain);
-        p_mesh_generator->SetMaxElementArea(500.0*units::pow<3>(micron_length_scale));
-        p_mesh_generator->Update();
-
-        // Choose the PDE
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
-        units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
-        units::quantity<unit::rate> consumption_rate(-2.e-7 * unit::per_second);
-        p_pde->SetIsotropicDiffusionConstant(diffusivity);
-        p_pde->SetContinuumLinearInUTerm(consumption_rate);
-
-        // Choose the Boundary conditions
-        units::quantity<unit::concentration> boundary_concentration(40.0 * unit::mole_per_metre_cubed);
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_vessel_ox_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
-        p_vessel_ox_boundary_condition->SetValue(boundary_concentration);
-        p_vessel_ox_boundary_condition->SetType(BoundaryConditionType::VESSEL_LINE);
-        p_vessel_ox_boundary_condition->SetSource(BoundaryConditionSource::PRESCRIBED);
-        p_vessel_ox_boundary_condition->SetNetwork(p_network);
-
-        // Set up and run the solver
-        FiniteElementSolver<3> solver;
-        solver.SetMesh(p_mesh_generator->GetMesh());
-        solver.SetPde(p_pde);
-        solver.AddBoundaryCondition(p_vessel_ox_boundary_condition);
-
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestFiniteElementSolver/KroghCylinder3d", false));
-        solver.SetFileHandler(p_output_file_handler);
-        solver.Solve();
-    }
-
     void Test3dKroghCylinderNetworkSurface() throw(Exception)
     {
         // Set up the vessel network

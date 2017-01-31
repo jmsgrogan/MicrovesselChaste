@@ -70,7 +70,6 @@ public:
 
         // Do the meshing
         boost::shared_ptr<ImageToMesh<2> > p_image_mesher = ImageToMesh<2>::Create();
-
         TS_ASSERT_THROWS_THIS(p_image_mesher->GetMesh(), "No mesh set. Did you run 'Update()' ?");
         p_image_mesher->SetInput(reader.GetImage());
         p_image_mesher->SetElementSize(5.e6*units::pow<3>(1.e-6*unit::metres));
@@ -80,50 +79,5 @@ public:
         mesh_writer.WriteFilesUsingMesh(*(p_image_mesher->GetMesh()));
     }
 
-    void DontTest2dMeshTissue()
-    {
-        // Read the image from file
-        OutputFileHandler file_handler1 = OutputFileHandler("TestImageToMesh/", false);
-        FileFinder finder = FileFinder("projects/MicrovesselChaste/test/data/median.tif", RelativeTo::ChasteSourceRoot);
-
-        ImageReader reader = ImageReader();
-        reader.SetFilename(finder.GetAbsolutePath());
-        reader.SetImageResizeFactors(0.5, 0.5, 1.0);
-        reader.Read();
-
-        RegularGridWriter writer = RegularGridWriter();
-        writer.SetFilename(file_handler1.GetOutputDirectoryFullPath() + "/resized_image.vti");
-        writer.SetImage(reader.GetImage());
-        writer.Write();
-
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        c_vector<double, 2> origin;
-        origin[0] = 200.0;
-        origin[1] = 200.0;
-        p_domain->AddRectangle(2000.0*unit::metres, 1400.0*unit::metres, DimensionalChastePoint<2>(origin, 1.e-6*unit::metres));
-
-        // Do the meshing
-        ImageToMesh<2> image_mesher = ImageToMesh<2>();
-        image_mesher.SetInput(reader.GetImage());
-        image_mesher.SetElementSize(2.e6*units::pow<3>(1.e-6*unit::metres));
-        image_mesher.SetTissueDomain(p_domain);
-        image_mesher.Update();
-
-        VtkMeshWriter<2, 2> mesh_writer("TestImageToMesh", "Image2dTissue", false);
-        mesh_writer.WriteFilesUsingMesh(*(image_mesher.GetMesh()));
-
-        MultiFormatMeshWriter<2> dolfin_mesh_writer;
-        dolfin_mesh_writer.SetMesh(image_mesher.GetMesh());
-        dolfin_mesh_writer.SetFilename(file_handler1.GetOutputDirectoryFullPath() + "/RetinalTissue");
-//        dolfin_mesh_writer.SetOutputFormat(MeshFormat::DOLFIN);
-        dolfin_mesh_writer.SetOutputFormat(MeshFormat::STL);
-        dolfin_mesh_writer.Write();
-
-//        LabelDolfinMesh<2> labeller;
-//        labeller.SetInputFilename(file_handler1.GetOutputDirectoryFullPath() + "/RetinalTissue.xml");
-//        labeller.SetOutputFilename(file_handler1.GetOutputDirectoryFullPath() + "/RetinalTissueLabel");
-//        labeller.SetElementAttributes(image_mesher.GetMesh2d()->GetElementRegionMarkers());
-//        labeller.Update();
-    }
 };
 #endif

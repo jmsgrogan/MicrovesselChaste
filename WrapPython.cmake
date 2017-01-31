@@ -37,6 +37,8 @@ find_package(PythonLibs REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIRS})
 
 # Find the Chaste and third party dependency header files.
+# Add any cmake modules defined in this project
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)
 include_directories(${Chaste_INCLUDE_DIRS} ${Chaste_THIRD_PARTY_INCLUDE_DIRS})
 
 # Any non-wrapper code (code in the src folder) in this project needs to be put in its own shared library. 
@@ -46,11 +48,13 @@ set(PROJECT_MicrovesselChaste_LIB ${CMAKE_CURRENT_BINARY_DIR}/libchaste_project_
 #find_python_module(pyplusplus 1.6.0)
 #find_python_module(pygccxml 1.7.2)
 #find_package(castxml)
+# Numpy is needed for wrapping
+find_package(NumPy)
 set(CASTXML_EXE_LOC "/usr/bin/castxml" CACHE FILEPATH "Path to the castxml executable.")
 
 # Collect the header directories for this project
 include(${CMAKE_CURRENT_SOURCE_DIR}/ProjectIncludes.cmake)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dynamic/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dynamic/  ${PYTHON_NUMPY_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrapper_headers)
 include_directories(${CMAKE_SOURCE_DIR}/projects/PyChaste/src)
 

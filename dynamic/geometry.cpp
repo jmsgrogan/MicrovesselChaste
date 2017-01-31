@@ -2100,10 +2100,4 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_geometry){
         
         }
     }
-
-    bp::class_< VoronoiGenerator< 3 > >( "VoronoiGenerator3", bp::init< >() )    
-        .def( 
-            "Generate"
-            , (::boost::shared_ptr< Part< 3 > > ( ::VoronoiGenerator<3>::* )( ::boost::shared_ptr< Part< 3 > >,::std::vector< boost::shared_ptr<DimensionalChastePoint<3> > >,unsigned int ))( &::VoronoiGenerator< 3 >::Generate )
-            , ( bp::arg("pPart"), bp::arg("seeds"), bp::arg("numSeeds") ) );
 }

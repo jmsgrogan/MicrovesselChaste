@@ -51,8 +51,6 @@ def update_builder(builder):
                         "NetworkToSurface<3>",
                         "VesselSurfaceGenerator<3>",
                         "VesselSurfaceGenerator<2>",
-                        "VoronoiGenerator<3>",
-                        "VoronoiGenerator<2>",
                         "BoundaryExtractor",
                         "SurfaceCleaner",
                         "GeometryWriter",
@@ -74,8 +72,5 @@ def update_builder(builder):
     builder.class_('Part<2>').calldefs().use_default_arguments=False   
     builder.class_('Facet<2>').calldefs().use_default_arguments=False    
     builder.class_('Polygon<2>').calldefs().use_default_arguments=False  
-    builder.class_('VoronoiGenerator<3>').calldefs().use_default_arguments=False        
-    builder.class_('VoronoiGenerator<2>').calldefs().use_default_arguments=False 
-    builder.class_('VoronoiGenerator<2>').exclude()   
   
     return builder, class_collection

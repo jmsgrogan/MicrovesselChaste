@@ -76,6 +76,7 @@ public:
      * @param pTipMutationState the mutation state for vessel tips
      * @param pStalkState the mutation state for non tip regions
      * @param threshold the max distance from a cell location to vessel centre for labelling
+     * @param cellLengthScale the cell population length scale
      */
     void LabelVesselsInCellPopulation(AbstractCellPopulation<DIM>& cellPopulation,  units::quantity<unit::length> cellLengthScale,
                                       boost::shared_ptr<AbstractCellMutationState> pTipMutationState,

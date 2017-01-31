@@ -42,7 +42,6 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "MappableGridGenerator.hpp"
 #include "NetworkToSurface.hpp"
 #include "VesselSurfaceGenerator.hpp"
-#include "VoronoiGenerator.hpp"
 #include "BoundaryExtractor.hpp"
 #include "SurfaceCleaner.hpp"
 #include "GeometryWriter.hpp"
@@ -59,10 +58,8 @@ typedef Polygon<3> Polygon3;
 typedef Polygon<2> Polygon2;
 typedef NetworkToSurface<3> NetworkToSurface3;
 typedef VesselSurfaceGenerator<3> VesselSurfaceGenerator3;
-typedef VoronoiGenerator<3> VoronoiGenerator3;
 typedef NetworkToSurface<2> NetworkToSurface2;
 typedef VesselSurfaceGenerator<2> VesselSurfaceGenerator2;
-typedef VoronoiGenerator<2> VoronoiGenerator2;
 typedef std::vector<std::vector<boost::shared_ptr<Polygon<2> >, std::allocator<boost::shared_ptr<Polygon<2> > > > > VecVecPolygonPtr2;
 typedef std::vector<std::vector<boost::shared_ptr<Polygon<3> >, std::allocator<boost::shared_ptr<Polygon<3> > > > > VecVecPolygonPtr3;
 typedef std::vector<boost::shared_ptr<Polygon<2> >, std::allocator<boost::shared_ptr<Polygon<2> > > > VecPolygonPtr2;
@@ -94,9 +91,7 @@ template class Polygon<3>;
 template class Polygon<2>;
 template class NetworkToSurface<3>;
 template class VesselSurfaceGenerator<3>;
-template class VoronoiGenerator<3>;
 template class NetworkToSurface<2>;
 template class VesselSurfaceGenerator<2>;
-template class VoronoiGenerator<2>;
 
 #endif

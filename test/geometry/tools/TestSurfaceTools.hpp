@@ -72,7 +72,7 @@ public:
         p_writer->Write();
 
         p_extractor->SetDoSmoothing(true);
-        p_extractor->SetSmoothingLength(200.0);
+        p_extractor->SetSmoothingLength(10.0);
         p_extractor->Update();
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"boundary_smoothed.vtp").c_str());
         p_writer->SetInput(p_extractor->GetOutput());

@@ -182,7 +182,7 @@ public:
     void SetColorByCellType(bool colorByCellType);
 
     /**
-     * @param colorByCellType color cells by mutation state
+     * @param colorByCellMutationState color cells by mutation state
      */
     void SetColorByCellMutationState(bool colorByCellMutationState);
 

@@ -130,6 +130,29 @@ public:
          }
     }
 
+    void TestMooreNeighbourCalculation()
+    {
+        // Set up a grid
+        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::vector<unsigned> extents(3);
+        extents[0] = 5;
+        extents[1] = 7;
+        extents[2] = 1;
+        p_grid->SetExtents(extents);
+
+        // Get neighbours
+        std::vector<std::vector<unsigned> > neighbours =  p_grid->GetMooreNeighbourData();
+        for(unsigned idx=0; idx<3; idx++)
+        {
+            TS_ASSERT(neighbours[0][idx] == 1 or neighbours[0][idx] == 5 or neighbours[0][idx] == 6)
+        }
+        for(unsigned idx=0; idx<8; idx++)
+        {
+            TS_ASSERT(neighbours[8][idx] == 13 or neighbours[8][idx] == 9 or neighbours[8][idx] == 3 or neighbours[8][idx] == 7
+                    or neighbours[8][idx] == 12 or neighbours[8][idx] == 14 or neighbours[8][idx] == 2 or neighbours[8][idx] == 4)
+        }
+    }
+
     void TestPointPointMapGeneration()
     {
         // Set up a grid

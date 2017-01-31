@@ -1,51 +1,45 @@
 .. autoclass:: microvessel_chaste.geometry.Facet3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.geometry.Polygon3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.geometry.Part3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.geometry.Facet2
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.geometry.Polygon2
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.geometry.Part2
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.geometry.GeometryFormat
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.geometry.NetworkToSurface3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.geometry.NetworkToSurface3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.geometry.VesselSurfaceGenerator3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.geometry.VesselSurfaceGenerator2
-:members:
-
-.. autoclass:: microvessel_chaste.geometry.VoronoiGenerator3
-:members:
-
-.. autoclass:: microvessel_chaste.geometry.VoronoiGenerator2
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.geometry.BoundaryExtractor
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.geometry.SurfaceCleaner
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.geometry.GeometryWriter
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.geometry.MappableGridGenerator
-:members:
+	:members:
 

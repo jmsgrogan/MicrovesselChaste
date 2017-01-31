@@ -107,30 +107,6 @@ public:
         mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
     }
 
-    // Not Supported With Tetgen <1.5
-    void DontTestMeshCylinderWithVesselLine()
-    {
-        units::quantity<unit::length> vessel_length = 100.0* 1.e-6 * unit::metres;
-        VesselNetworkGenerator<3> generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
-                                                                                        DimensionalChastePoint<3>(0.0, 0.0));
-        p_network->GetVessels()[0]->GetStartNode()->SetRadius(5.0 * 1.e-6 * unit::metres);
-        p_network->GetVessels()[0]->GetEndNode()->SetRadius(5.0 * 1.e-6 * unit::metres);
-
-        boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        boost::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(100.0* 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
-        p_part->Extrude(p_circle, 100.0*1.e-6*unit::metres);
-        p_part->AddVesselNetwork(p_network);
-
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
-        p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(100.0*units::pow<3>(1.e-6 * unit::metres));
-        p_mesh_generator->Update();
-
-        VtkMeshWriter<3, 3> mesh_writer("TestDiscreteContinuumMesh", "CylinderWithVesselLine", false);
-        mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
-    }
-
     void TestMeshCylinderWithVesselSurface()
     {
         units::quantity<unit::length> vessel_length = 100.0* 1.e-6 * unit::metres;
@@ -151,29 +127,6 @@ public:
         p_mesh_generator->Update();
 
         VtkMeshWriter < 3, 3 > mesh_writer("TestDiscreteContinuumMesh", "CylinderWithVesselSurface", false);
-        mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
-    }
-
-    // Not Supported With Tetgen <1.5
-    void DontTestMeshCubeWithVesselLine()
-    {
-        units::quantity<unit::length> vessel_length = 100.0* 1.e-6 * unit::metres;
-        VesselNetworkGenerator<3> generator;
-        DimensionalChastePoint<3> centre(vessel_length/(2.0* 1.e-6 * unit::metres), vessel_length/(2.0* 1.e-6 * unit::metres));
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre);
-        p_network->GetVessels()[0]->GetStartNode()->SetRadius(5.0 * 1.e-6 * unit::metres);
-        p_network->GetVessels()[0]->GetEndNode()->SetRadius(5.0 * 1.e-6 * unit::metres);
-
-        boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        p_part->AddCuboid(vessel_length, vessel_length, vessel_length, DimensionalChastePoint<3>(0.0, 0.0));
-        p_part->AddVesselNetwork(p_network);
-
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
-        p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(100.0*units::pow<3>(1.e-6 * unit::metres));
-        p_mesh_generator->Update();
-
-        VtkMeshWriter <3, 3> mesh_writer("TestDiscreteContinuumMesh", "CubeWithVesselLine", false);
         mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
     }
 
@@ -200,7 +153,7 @@ public:
         mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
     }
 
-    void DontTestMeshCubeWithVesselSurfaceInternal()
+    void TestMeshCubeWithVesselSurfaceInternal()
     {
         units::quantity<unit::length> vessel_length = 100.0* 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
@@ -224,7 +177,7 @@ public:
         mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
     }
 
-    void DontTestParrallelVesselSurfaceCube()
+    void TestParrallelVesselSurfaceCube()
     {
         units::quantity<unit::length> vessel_length = 100.0* 1.e-6 * unit::metres;
         double radius = 10.0;
