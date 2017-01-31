@@ -70,7 +70,6 @@ image/TestImageReaderAndWriter.hpp
 image/TestImageToMesh.hpp
 image/TestImageToSurface.hpp
 image/TestNetworkToImage.hpp
-tutorials/TestBiologicalNetworkLiteratePaper.hpp
 tutorials/TestOffLatticeAngiogenesisLiteratePaper.hpp
 tutorials/TestLatticeBasedAngiogenesisTutorial.hpp
 tutorials/TestBuildVesselNetworkTutorial.hpp
