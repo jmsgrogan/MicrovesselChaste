@@ -77,6 +77,7 @@ public:
 
     /**
      * Get the mesh in vtu format
+     * @return the mesh in vtu format
      */
     vtkSmartPointer<vtkUnstructuredGrid> GetMesh();
 

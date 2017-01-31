@@ -277,6 +277,8 @@ public:
     void TestFlowThroughBifurcation() throw (Exception)
     {
 
+        EXIT_IF_PARALLEL;    // Need a larger network to run in parallel
+
         // Make some nodes
         std::vector<NodePtr3> nodes;
         nodes.push_back(NodePtr3(VesselNode<3>::Create(0.0, 0, 0)));
@@ -354,6 +356,8 @@ public:
 
     void TestFlowThroughBifurcationHavingSwappedNodeLabels() throw (Exception)
     {
+        EXIT_IF_PARALLEL;    // Need a larger network to run in parallel
+
         std::vector<NodePtr3> nodes;
         nodes.push_back(NodePtr3(VesselNode<3>::Create(0.0, 0, 0)));
         nodes.push_back(NodePtr3(VesselNode<3>::Create(0.0, 1, 0)));
@@ -541,6 +545,8 @@ public:
 
     void TestLoop() throw(Exception)
     {
+        EXIT_IF_PARALLEL;    // Need a larger network to run in parallel
+
         // Make a network
         std::vector<boost::shared_ptr<VesselNode<3> > > bottom_nodes;
         for(unsigned idx=0; idx<5; idx++)
@@ -598,6 +604,8 @@ public:
 
     void TestSproutingWithFlow() throw(Exception)
     {
+        EXIT_IF_PARALLEL;    // Need a larger network to run in parallel
+
         // Make a network
         std::vector<boost::shared_ptr<VesselNode<3> > > bottom_nodes;
         for(unsigned idx=0; idx<6; idx++)

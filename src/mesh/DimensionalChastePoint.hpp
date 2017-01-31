@@ -113,6 +113,7 @@ public:
      * @param y y position of vertex
      * @param z z position of vertex
      * @param referenceLength the reference length
+     * @return a pointer to the point
      */
     static boost::shared_ptr<DimensionalChastePoint<DIM> > Create(double x, double y, double z, units::quantity<unit::length> referenceLength);
 
@@ -120,6 +121,7 @@ public:
      * Factory Constructor
      * @param coords a vector of x, y, z coordinates
      * @param referenceLength the reference length
+     * @return a pointer to the point
      */
     static boost::shared_ptr<DimensionalChastePoint<DIM> > Create(c_vector<double, DIM> coords, units::quantity<unit::length> referenceLength);
 
@@ -197,15 +199,13 @@ public:
     /**
      * Overload division from self
      * @return the resultant point
-     *
-     * @param rLocation the vector to be added to
+     * @param factor the vector to be added to
      */
     DimensionalChastePoint<DIM>& operator/=(double factor);
 
     /**
      * Overload multiplication with self
      * @return the resultant point
-     *
      * @param factor the scalar to be multiplied
      */
     DimensionalChastePoint<DIM>& operator*=(double factor);
@@ -213,7 +213,6 @@ public:
     /**
      * Overload addition to SELF
      * @return the resultant point
-     *
      * @param rLocation the vector to add
      */
     DimensionalChastePoint<DIM>& operator+=(const DimensionalChastePoint<DIM>& rLocation);
@@ -221,7 +220,6 @@ public:
     /**
      * Overload subraction from self
      * @return the resultant point
-     *
      * @param rLocation the vector to subtract
      */
     DimensionalChastePoint<DIM>& operator-=(const DimensionalChastePoint<DIM>& rLocation);

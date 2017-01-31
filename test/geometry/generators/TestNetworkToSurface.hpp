@@ -50,6 +50,34 @@ class TestNetworkToSurface : public CxxTest::TestSuite
 {
 public:
 
+    void TestSingleVessel2d()
+    {
+        // Set up the network
+        double length = 100.0;
+        double radius = 20.0;
+        boost::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, length/2.0, 0.0);
+        boost::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(length, length/2.0, 0.0);
+        boost::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(p_node1, p_node2);
+        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        p_network->AddVessel(p_vessel);
+        p_network->SetSegmentRadii(radius* 1.e-6 * unit::metres);
+        p_network->SetNodeRadiiFromSegments();
+
+        // Convert it to a surface
+        boost::shared_ptr<NetworkToSurface<2> > p_converter = NetworkToSurface<2>::Create();
+        p_converter->SetVesselNetwork(p_network);
+        p_converter->SetResamplingSplineSize(10.0 * 1.e-6 * unit::metres);
+        p_converter->SetResamplingGridSize(2.0 * 1.e-6 * unit::metres);
+        p_converter->Update();
+
+        // Write out the image
+        OutputFileHandler file_handler1("TestNetworkToSurface/");
+        GeometryWriter writer;
+        writer.SetInput(p_converter->GetSurface());
+        writer.SetFileName(file_handler1.GetOutputDirectoryFullPath()+"single_vessel_2d.vtp");
+        writer.Write();
+    }
+
     void TestSingleVessel()
     {
         // Set up the network
@@ -64,15 +92,59 @@ public:
         p_network->SetNodeRadiiFromSegments();
 
         // Convert it to a surface
-        NetworkToSurface<3> converter;
+        boost::shared_ptr<NetworkToSurface<3> > p_converter = NetworkToSurface<3>::Create();
+        p_converter->SetVesselNetwork(p_network);
+        p_converter->SetResamplingSplineSize(10.0 * 1.e-6 * unit::metres);
+        p_converter->SetResamplingGridSize(2.0 * 1.e-6 * unit::metres);
+        p_converter->Update();
+
+        // Write out the image
+        OutputFileHandler file_handler1("TestNetworkToSurface/", false);
+        GeometryWriter writer;
+        writer.SetInput(p_converter->GetSurface());
+        writer.SetFileName(file_handler1.GetOutputDirectoryFullPath()+"single_vessel.vtp");
+        writer.Write();
+    }
+
+    void TestBifurcationVessel2d()
+    {
+        // Set up the network
+        double length = 100.0;
+        double radius = 20.0;
+
+        boost::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, length, 0.0);
+        boost::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(length, length, 0.0);
+        boost::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(2.0 * length, 2.0*length, 0.0);
+        boost::shared_ptr<VesselNode<2> > p_node4 = VesselNode<2>::Create(2.0 * length, 0.0, 0.0);
+        boost::shared_ptr<VesselNode<2> > p_node5 = VesselNode<2>::Create(3.0 * length, length, 0.0);
+        boost::shared_ptr<VesselNode<2> > p_node6 = VesselNode<2>::Create(4.0 * length, length, 0.0);
+        boost::shared_ptr<Vessel<2> > p_vessel1 = Vessel<2>::Create(p_node1, p_node2);
+        boost::shared_ptr<Vessel<2> > p_vessel2 = Vessel<2>::Create(p_node2, p_node3);
+        boost::shared_ptr<Vessel<2> > p_vessel3 = Vessel<2>::Create(p_node2, p_node4);
+        boost::shared_ptr<Vessel<2> > p_vessel4 = Vessel<2>::Create(p_node3, p_node5);
+        boost::shared_ptr<Vessel<2> > p_vessel5 = Vessel<2>::Create(p_node4, p_node5);
+        boost::shared_ptr<Vessel<2> > p_vessel6 = Vessel<2>::Create(p_node5, p_node6);
+        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        p_network->AddVessel(p_vessel1);
+        p_network->AddVessel(p_vessel2);
+        p_network->AddVessel(p_vessel3);
+        p_network->AddVessel(p_vessel4);
+        p_network->AddVessel(p_vessel5);
+        p_network->AddVessel(p_vessel6);
+        p_network->SetSegmentRadii(radius* 1.e-6 * unit::metres);
+        p_network->SetNodeRadiiFromSegments();
+
+        // Convert it to a surface
+        NetworkToSurface<2> converter;
         converter.SetVesselNetwork(p_network);
+        converter.SetResamplingGridSize(5.0 * 1.e-6 * unit::metres);
         converter.Update();
 
         // Write out the image
-        OutputFileHandler file_handler1("TestNetworkToSurface/");
+        OutputFileHandler file_handler1("TestNetworkToSurface/", false);
         GeometryWriter writer;
         writer.SetInput(converter.GetSurface());
-        writer.SetFileName(file_handler1.GetOutputDirectoryFullPath()+"single_vessel.vti");
+        writer.SetFileName(file_handler1.GetOutputDirectoryFullPath()+"bifrucation_vessel_2d.vtp");
         writer.Write();
     }
 
@@ -107,13 +179,14 @@ public:
         // Convert it to a surface
         NetworkToSurface<3> converter;
         converter.SetVesselNetwork(p_network);
+        converter.SetResamplingGridSize(5.0 * 1.e-6 * unit::metres);
         converter.Update();
 
         // Write out the image
         OutputFileHandler file_handler1("TestNetworkToSurface/", false);
         GeometryWriter writer;
         writer.SetInput(converter.GetSurface());
-        writer.SetFileName(file_handler1.GetOutputDirectoryFullPath()+"bifrucation_vessel.vti");
+        writer.SetFileName(file_handler1.GetOutputDirectoryFullPath()+"bifrucation_vessel.vtp");
         writer.Write();
     }
 };

@@ -83,26 +83,31 @@ public:
 
     /**
      * Factory constructor method
+     * @return a pointer to the converter
      */
     static boost::shared_ptr<ImageToMesh<DIM> > Create();
 
     /**
      * Get the mesh
+     * @return the finite element mesh
      */
     boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > GetMesh();
 
     /**
      * Set the element size
+     * @param elementSize the element volume
      */
     void SetElementSize(units::quantity<unit::volume> elementSize);
 
     /**
      * Set the image to be meshed
+     * @param pImage the input image
      */
     void SetInput(vtkSmartPointer<vtkImageData> pImage);
 
     /**
      * Set the image to be meshed using a raw pointer, needed for Python wrapping
+     * @param pImage a raw pointer to the input image
      */
     void SetInputRaw(vtkImageData* pImage);
 

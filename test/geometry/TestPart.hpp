@@ -53,42 +53,6 @@ Copyright (c) 2005-2016, University of Oxford.
 class TestPart : public CxxTest::TestSuite
 {
 
-private:
-
-    boost::shared_ptr<VesselNetwork<3> > SetUpNetwork()
-    {
-        double vessel_length = 100;
-        double radius = 10.0;
-        double spacing = 3.0 * radius;
-        unsigned num_vessels_per_row = 5;
-        std::vector<boost::shared_ptr<VesselNode<3> > > start_nodes;
-        std::vector<boost::shared_ptr<VesselNode<3> > > end_nodes;
-
-        for(unsigned idx =0; idx<num_vessels_per_row; idx++)
-        {
-            for(unsigned jdx =0; jdx<num_vessels_per_row; jdx++)
-            {
-                double x_position = (spacing+2.0*radius) * double(idx) + spacing/2.0 + radius;
-                double y_position = (spacing+2.0*radius) * double(jdx) + spacing/2.0 + radius;
-                start_nodes.push_back(VesselNode<3>::Create(x_position, y_position, 0.0));
-                end_nodes.push_back(VesselNode<3>::Create(x_position, y_position, vessel_length));
-            }
-        }
-
-        std::vector<boost::shared_ptr<Vessel<3> > > vessels;
-        for(unsigned idx = 0; idx<start_nodes.size(); idx++)
-        {
-            start_nodes[idx]->SetRadius(radius * 1.e-6 * unit::metres);
-            end_nodes[idx]->SetRadius(radius * 1.e-6 * unit::metres);
-            vessels.push_back(Vessel<3>::Create(VesselSegment<3>::Create(start_nodes[idx], end_nodes[idx])));
-            vessels[idx]->GetSegments()[0]->SetRadius(10.0 * 1.e-6 * unit::metres);
-        }
-
-        boost::shared_ptr<VesselNetwork<3> > p_network = boost::shared_ptr<VesselNetwork<3> >(new VesselNetwork<3>);
-        p_network->AddVessels(vessels);
-        return p_network;
-    }
-
 public:
 
     void TestAddRectangle()
@@ -136,7 +100,15 @@ public:
 
         boost::shared_ptr<Part<3> > p_part2 = Part<3>::Create();
         p_part2->AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
-        p_part2->AddPolygon(p_part->GetPolygons()[1], p_part2->GetFacets()[0]);
+        p_part2->AddPolygon(p_part->GetPolygons()[1], true);
+
+        boost::shared_ptr<Part<3> > p_part3 = Part<3>::Create();
+        p_part3->AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
+        p_part3->AddPolygon(p_part->GetPolygons()[1], false);
+
+        boost::shared_ptr<Part<3> > p_part4 = Part<3>::Create();
+        p_part4->AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
+        p_part4->AddPolygon(p_part->GetPolygons()[1], false, p_part4->GetFacets()[0]);
 
         OutputFileHandler output_file_handler("TestPart", false);
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath().append("Composite2DPart.vtp"));
@@ -155,55 +127,108 @@ public:
         TS_ASSERT_THROWS_THIS(p_part2->Extrude(p_circle2, 1.e-6*unit::metres), "Only parts in 3D space can be extruded.");
     }
 
-    void DontTestAddParrallelVessels3d()
+    void TestAddParrallelVesselsLines2d()
     {
-        boost::shared_ptr<VesselNetwork<3> > p_network = SetUpNetwork();
+        boost::shared_ptr<VesselNode<2> > p_start_top = VesselNode<2>::Create(0.0, 60.0, 0.0);
+        boost::shared_ptr<VesselNode<2> > p_end_top = VesselNode<2>::Create(90.0, 60.0, 0.0);
+        boost::shared_ptr<VesselNode<2> > p_start_bottom = VesselNode<2>::Create(10.0, 20.0, 0.0);
+        boost::shared_ptr<VesselNode<2> > p_end_bottom = VesselNode<2>::Create(100.0, 20.0, 0.0);
+        boost::shared_ptr<Vessel<2> > p_top_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_top, p_end_top));
+        boost::shared_ptr<Vessel<2> > p_bottom_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_bottom, p_end_bottom));
+        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        p_network->AddVessel(p_top_vessel);
+        p_network->AddVessel(p_bottom_vessel);
 
-        double vessel_length = 100;
-        double radius = 10.0;
-        double spacing = 3.0 * radius;
-        unsigned num_vessels_per_row = 5;
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(100.0*1.e-6*unit::metres,
+                            100.0*1.e-6*unit::metres,
+                            DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        p_domain->AddVesselNetwork(p_network);
 
-        double domain_width = num_vessels_per_row * (spacing + 2.0* radius);
-        double domain_height = num_vessels_per_row * (spacing + 2.0* radius);
+        OutputFileHandler output_file_handler("TestPart", false);
+        p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselLines2d.vtp"));
+
+        std::vector<std::pair<unsigned, unsigned> > segment_indices = p_domain->GetSegmentIndices();
+        TS_ASSERT_EQUALS(segment_indices.size(), 4u);
+    }
+
+    void TestAddParrallelVesselLines3d()
+    {
+        boost::shared_ptr<VesselNode<3> > p_start_top = VesselNode<3>::Create(10.0, 60.0, 50.0);
+        boost::shared_ptr<VesselNode<3> > p_end_top = VesselNode<3>::Create(90.0, 60.0, 50.0);
+        boost::shared_ptr<VesselNode<3> > p_start_bottom = VesselNode<3>::Create(10.0, 20.0, 50.0);
+        boost::shared_ptr<VesselNode<3> > p_end_bottom = VesselNode<3>::Create(90.0, 20.0, 50.0);
+        boost::shared_ptr<Vessel<3> > p_top_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_top, p_end_top));
+        boost::shared_ptr<Vessel<3> > p_bottom_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_bottom, p_end_bottom));
+        boost::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        p_network->AddVessel(p_top_vessel);
+        p_network->AddVessel(p_bottom_vessel);
+
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(domain_width*1.e-6*unit::metres,
-                            domain_height*1.e-6*unit::metres,
-                            vessel_length*1.e-6*unit::metres,
+        p_domain->AddCuboid(100.0*1.e-6*unit::metres,
+                            100.0*1.e-6*unit::metres,
+                            100.0*1.e-6*unit::metres,
                             DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         p_domain->AddVesselNetwork(p_network);
 
         OutputFileHandler output_file_handler("TestPart", false);
-        p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVessels3d.vtp"));
+        p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselLines3d.vtp"));
     }
 
-    void DontTestAddParrallelVesselSurfaces3d()
+    void TestAddParrallelVesselsSurfaces2d()
     {
-        boost::shared_ptr<VesselNetwork<3> > p_network = SetUpNetwork();
+        boost::shared_ptr<VesselNode<2> > p_start_top = VesselNode<2>::Create(10.0, 60.0, 0.0);
+        boost::shared_ptr<VesselNode<2> > p_end_top = VesselNode<2>::Create(90.0, 60.0, 0.0);
+        boost::shared_ptr<VesselNode<2> > p_start_bottom = VesselNode<2>::Create(10.0, 20.0, 0.0);
+        boost::shared_ptr<VesselNode<2> > p_end_bottom = VesselNode<2>::Create(90.0, 20.0, 0.0);
+        boost::shared_ptr<Vessel<2> > p_top_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_top, p_end_top));
+        boost::shared_ptr<Vessel<2> > p_bottom_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_bottom, p_end_bottom));
+        p_top_vessel->GetSegment(0)->SetRadius(10.0*1.e-6*unit::metres);
+        p_bottom_vessel->GetSegment(0)->SetRadius(10.0*1.e-6*unit::metres);
 
-        double vessel_length = 100;
-        double radius = 10.0;
-        double spacing = 3.0 * radius;
-        unsigned num_vessels_per_row = 5;
+        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        p_network->AddVessel(p_top_vessel);
+        p_network->AddVessel(p_bottom_vessel);
 
-        double domain_width = num_vessels_per_row * (spacing + 2.0* radius);
-        double domain_height = num_vessels_per_row * (spacing + 2.0* radius);
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(100.0*1.e-6*unit::metres,
+                            100.0*1.e-6*unit::metres,
+                            DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+
+        TS_ASSERT_THROWS_THIS(p_domain->AddVesselNetwork(p_network, true), "The surface generator currently only works in 3D");
+    }
+
+    void TestAddParrallelVesselSurface3d()
+    {
+        boost::shared_ptr<VesselNode<3> > p_start_top = VesselNode<3>::Create(10.0, 60.0, 50.0);
+        boost::shared_ptr<VesselNode<3> > p_end_top = VesselNode<3>::Create(90.0, 60.0, 50.0);
+        boost::shared_ptr<VesselNode<3> > p_start_bottom = VesselNode<3>::Create(10.0, 20.0, 50.0);
+        boost::shared_ptr<VesselNode<3> > p_end_bottom = VesselNode<3>::Create(90.0, 20.0, 50.0);
+        boost::shared_ptr<Vessel<3> > p_top_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_top, p_end_top));
+        boost::shared_ptr<Vessel<3> > p_bottom_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_bottom, p_end_bottom));
+        p_top_vessel->GetSegment(0)->SetRadius(10.0*1.e-6*unit::metres);
+        p_bottom_vessel->GetSegment(0)->SetRadius(10.0*1.e-6*unit::metres);
+        boost::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        p_network->AddVessel(p_top_vessel);
+        p_network->AddVessel(p_bottom_vessel);
+
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(domain_width*1.e-6*unit::metres,
-                            domain_height*1.e-6*unit::metres,
-                            vessel_length*1.e-6*unit::metres,
+        p_domain->AddCuboid(100.0*1.e-6*unit::metres,
+                            100.0*1.e-6*unit::metres,
+                            100.0*1.e-6*unit::metres,
                             DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         p_domain->AddVesselNetwork(p_network, true);
 
         OutputFileHandler output_file_handler("TestPart", false);
-        p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselSurfaces3d.vtp"));
+        p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselSurface3d.vtp"));
     }
 
-    void DontTestAddVesselsSurface3dCylinder()
+    void TestAddVesselsSurface3dCylinder()
     {
         units::quantity<unit::length> vessel_length = 100.0 * 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
+                DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         p_network->GetVessels()[0]->GetStartNode()->SetRadius(5.0e-6 * unit::metres);
         p_network->GetVessels()[0]->GetEndNode()->SetRadius(5.0e-6 * unit::metres);
 
@@ -216,24 +241,25 @@ public:
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Vessels3dCylinderSurface.vtp"));
     }
 
-    void DontTestBooleanWithNetwork()
+    void TestBooleanWithNetwork()
     {
-        boost::shared_ptr<VesselNetwork<3> > p_network = SetUpNetwork();
+        boost::shared_ptr<VesselNode<2> > p_start_top = VesselNode<2>::Create(10.0, 60.0, 0.0);
+        boost::shared_ptr<VesselNode<2> > p_end_top = VesselNode<2>::Create(90.0, 60.0, 0.0);
+        boost::shared_ptr<VesselNode<2> > p_start_bottom = VesselNode<2>::Create(10.0, 20.0, 0.0);
+        boost::shared_ptr<VesselNode<2> > p_end_bottom = VesselNode<2>::Create(90.0, 20.0, 0.0);
+        boost::shared_ptr<Vessel<2> > p_top_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_top, p_end_top));
+        boost::shared_ptr<Vessel<2> > p_bottom_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_bottom, p_end_bottom));
+        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        p_network->AddVessel(p_top_vessel);
+        p_network->AddVessel(p_bottom_vessel);
 
-        double vessel_length = 100;
-        double radius = 10.0;
-        double spacing = 3.0 * radius;
-        unsigned num_vessels_per_row = 5;
-
-        double domain_width = num_vessels_per_row * (spacing + 2.0* radius);
-        double domain_height = num_vessels_per_row * (spacing + 2.0* radius);
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(domain_width*1.e-6*unit::metres,
-                            domain_height*1.e-6*unit::metres,
-                            vessel_length*1.e-6*unit::metres,
-                            DimensionalChastePoint<3>(0.0, 0.0, 0.0));
-
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(50.0*1.e-6*unit::metres,
+                            50.0*1.e-6*unit::metres,
+                            DimensionalChastePoint<2>(0.0, 0.0, 0.0));
         p_domain->BooleanWithNetwork(p_network);
+
+        TS_ASSERT_EQUALS(p_network->GetNumberOfVessels(), 1u);
     }
 
     void TestContainingGridIndices()

@@ -116,7 +116,7 @@ std::vector<std::vector<boost::shared_ptr<Polygon<DIM> > > > VesselSurfaceGenera
         {
             c_vector<double, DIM> node_location = p_start_node->rGetLocation().GetLocation(mReferenceLength);
             vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
-            if(DIM==2)
+            if(DIM==3)
             {
                 p_plane->SetOrigin(node_location[0], node_location[1], node_location[2]);
                 p_plane->SetNormal(segment_tangent[0], segment_tangent[1], segment_tangent[2]);

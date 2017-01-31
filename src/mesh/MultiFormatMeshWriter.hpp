@@ -47,6 +47,10 @@ Copyright (c) 2005-2016, University of Oxford.
  */
 struct MeshFormat
 {
+
+    /**
+     *  The available options, VTK, Dolfin or STL
+     */
     enum Value
     {
         VTU, DOLFIN, STL

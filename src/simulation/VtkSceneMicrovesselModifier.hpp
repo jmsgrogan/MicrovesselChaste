@@ -82,9 +82,6 @@ public:
      * Overridden SetupSolve() method.
      * Specify what to do in the simulation before the start of the time loop.
      *
-     * @param pNetwork pointer to the vessel network
-     * @param rCellPopulation pointer to the cell population
-     * @param discreteContinuumSolvers collection of discrete continuum solvers
      * @param outputDirectory the output directory, relative to where Chaste output is stored
      */
     void SetupSolve(std::string outputDirectory);
@@ -93,9 +90,6 @@ public:
      * Overridden UpdateAtEndOfTimeStep() method.
      * Specify what to do in the simulation at the end of each time step.
      *
-     * @param pNetwork pointer to the vessel network
-     * @param rCellPopulation pointer to the cell population
-     * @param discreteContinuumSolvers collection of discrete continuum solvers
      */
     void UpdateAtEndOfTimeStep();
 

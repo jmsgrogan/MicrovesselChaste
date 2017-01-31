@@ -62,6 +62,9 @@ class RegularGridActorGenerator : public AbstractActorGenerator<DIM>
      */
     double mEdgeOpacity;
 
+    /**
+     * Whether to use tubes for edges
+     */
     bool mUseTubesForEdges;
 
 public:

@@ -229,7 +229,7 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         
         ## Set the simulation time and run the solver.
         
-        chaste.cell_based.SimulationTime.Instance().SetEndTimeAndNumberOfTimeSteps(600.0, 50)
+        chaste.cell_based.SimulationTime.Instance().SetEndTimeAndNumberOfTimeSteps(60.0, 5)
         microvessel_solver.Run()
         
         ## Dump the parameters to file for inspection.

@@ -217,6 +217,25 @@ public:
         boost::shared_ptr<Facet<3> > p_short_facet = Facet<3>::Create(p_short_polygon);
         TS_ASSERT_THROWS_THIS(p_short_facet->GetNormal(), "At least 3 vertices are required to generate a normal.");
     }
+
+    void Test2DMethods()
+    {
+        std::vector<boost::shared_ptr<DimensionalChastePoint<2> > > vertices;
+        vertices.push_back(DimensionalChastePoint<2>::Create(-0.5, 0.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<2>::Create(1.0, 0.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<2>::Create(1.0, 1.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<2>::Create(-0.5, 1.0, 0.0, 1.e-6*unit::metres));
+        boost::shared_ptr<Polygon<2> > p_polygon = Polygon<2>::Create(vertices);
+        boost::shared_ptr<Facet<2> > p_facet = Facet<2>::Create(p_polygon);
+
+        std::vector<units::quantity<unit::length> > bbox = p_facet->GetBoundingBox();
+        TS_ASSERT_DELTA(bbox[0].value(), -0.5e-6, 1.e-8);
+        TS_ASSERT_DELTA(bbox[1].value(), 1.e-6, 1.e-8);
+        TS_ASSERT_DELTA(bbox[2].value(), 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[3].value(), 1.e-6, 1.e-8);
+
+        TS_ASSERT_DELTA(p_facet->GetDistance(DimensionalChastePoint<2>(1.5, 0.5, 0.0,1.e-6*unit::metres )).value(), 0.0e-6, 1.e-8);
+    }
 };
 
 #endif /*TESTPLCFACET_HPP_*/

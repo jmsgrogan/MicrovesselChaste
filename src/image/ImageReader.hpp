@@ -95,6 +95,7 @@ public:
 
     /**
      * Get the image in vti format
+     * @return the image in vti format
      */
     vtkSmartPointer<vtkImageData> GetImage();
 

@@ -47,9 +47,14 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned DIM>
 class CsvVesselNetworkReader
 {
-
+    /**
+     * The input file name
+     */
     std::string mFileName;
 
+    /**
+     * The label for radii
+     */
     std::string mRadiusLabel;
 
 public:
@@ -66,11 +71,20 @@ public:
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
+     * @return a new reader
      */
     static boost::shared_ptr<CsvVesselNetworkReader<DIM> > Create();
 
+    /**
+     * Set the input file name
+     * @param rFileName the input file name
+     */
     void SetFileName(const std::string& rFileName);
 
+    /**
+     * Do the read and return the vessel network
+     * @return the vessel network
+     */
     boost::shared_ptr<VesselNetwork<DIM> > Read();
 
 };

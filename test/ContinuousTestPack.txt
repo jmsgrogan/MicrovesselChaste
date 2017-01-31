@@ -28,7 +28,6 @@ geometry/tools/TestGeometryTools.hpp
 geometry/tools/TestSurfaceTools.hpp
 geometry/generators/TestMappableGridGenerator.hpp
 geometry/generators/TestVesselSurfaceGenerator.hpp
-geometry/generators/TestVoronoiGenerator.hpp
 geometry/generators/TestNetworkToSurface.hpp
 geometry/writers/TestGeometryWriter.hpp
 mesh/TestDimensionalChastePoint.hpp
@@ -83,6 +82,6 @@ python/mesh/TestDimensionalChastePointPython.py
 python/flow/TestFlowSolverPython.py
 python/flow/TestHaematocritCalculatorsPython.py
 python/pde/TestPythonFiniteDifferenceSolver.py
-python/tutorials/TestPythonBuildVesselNetworkLiteratePaper.py
+python/tutorials/TestPythonBuildVesselNetworkTutorial.py
 python/tutorials/TestPythonBiologicalNetworkLiteratePaper.py
 python/tutorials/TestPythonOffLatticeAngiogenesisLiteratePaper.py

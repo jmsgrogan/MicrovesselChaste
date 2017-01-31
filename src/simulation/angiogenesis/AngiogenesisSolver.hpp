@@ -157,6 +157,7 @@ public:
     /**
      * Set a cell population for discrete cell solves
      * @param pCellPopulation the cell population for discrete cell solves
+     * @param cellPopulationReferenceLength the cell population reference length
      */
     void SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation, units::quantity<unit::length> cellPopulationReferenceLength);
 

@@ -165,6 +165,8 @@ public:
 
     void TestPointCellMapGeneration()
     {
+        EXIT_IF_PARALLEL;    // HoneycombMeshGenerator doesn't work in parallel
+
         // Set up a grid
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         std::vector<unsigned> extents(3);

@@ -187,12 +187,12 @@ public:
     void SetColorByCellMutationState(bool colorByCellMutationState);
 
     /**
-     * @param colorByCellType color cells by label
+     * @param colorByCellLabel color cells by label
      */
     void SetColorByCellLabel(bool colorByCellLabel);
 
     /**
-     * @param colorByCellType color cells by the user defined point color
+     * @param colorByCellUserDefined color cells by the user defined point color
      */
     void SetColorByUserDefined(bool colorByCellUserDefined);
 

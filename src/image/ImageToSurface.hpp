@@ -33,8 +33,8 @@
 
  */
 
-#ifndef ImageToSurface_HPP_
-#define ImageToSurface_HPP_
+#ifndef IMAGETOSURFACE_HPP_
+#define IMAGETOSURFACE_HPP_
 #include "SmartPointers.hpp"
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkImageData.h>
@@ -50,41 +50,84 @@
 class ImageToSurface
 {
     /**
-     *  The image
+     * The image
      */
     vtkSmartPointer<vtkImageData> mpImage;
 
+    /**
+     * Whether to segment above a certain threshold
+     */
     bool mSegmentAboveThreshold;
 
+    /**
+     * The segmentation threshold
+     */
     double mThreshold;
 
+    /**
+     * The output surface
+     */
     vtkSmartPointer<vtkPolyData> mpSurface;
 
+    /**
+     * Whether to use marching cubes
+     */
     bool mUseMarchingCubes;
 
 public:
 
-    /* Constructor
+    /**
+     * Constructor
      */
     ImageToSurface();
 
+    /**
+     * Destructor
+     */
     ~ImageToSurface();
 
-    /* Factory constructor method
+    /**
+     * Factory constructor method
+     * @return a pointer to the converter
      */
     static boost::shared_ptr<ImageToSurface> Create();
 
+    /**
+     * Return the filter output
+     * @return the filter output
+     */
+    vtkSmartPointer<vtkPolyData> GetOutput();
+
+    /**
+     * Set the image
+     * @param pImage the input image
+     */
     void SetInput(vtkSmartPointer<vtkImageData> pImage);
 
+    /**
+     * Set the image
+     * @param pImage the input image
+     */
     void SetInputRaw(vtkImageData* pImage);
 
+    /**
+     * Set the threshold value for segmentation
+     * @param threshold the threshold value for segmentation
+     * @param segmentAboveThreshold whether to segment above the threshold
+     */
     void SetThreshold(double threshold, bool segmentAboveThreshold);
 
+    /**
+     * Set whether to use marching cubes for the segmentation
+     * @param useMarchingCubes whether to use marching cubes for the segmentation
+     */
     void SetUseMarchingCubes(bool useMarchingCubes);
 
+    /**
+     * Run the update
+     */
     void Update();
 
-    vtkSmartPointer<vtkPolyData> GetOutput();
 };
 
 #endif /*ImageToSurface_HPP_*/

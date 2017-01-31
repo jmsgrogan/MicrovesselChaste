@@ -48,10 +48,19 @@ template<unsigned DIM>
 class AbstractMicrovesselModifier
 {
 
+    /**
+     * The vessel network
+     */
     boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
 
+    /**
+     * The cell population
+     */
     boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > mpCellPopulation;
 
+    /**
+     * A discrete continuum solver
+     */
     std::vector<boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > > mDiscreteContinuumSolvers;
 
 public:
@@ -66,27 +75,50 @@ public:
      */
     virtual ~AbstractMicrovesselModifier();
 
-    boost::shared_ptr<AbstractCellPopulation<DIM> > GetCellPopulation();
-
-    boost::shared_ptr<VesselNetwork<DIM> > GetVesselNetwork();
-
+    /**
+     * Add a discrete continuum solver
+     * @param pDiscreteContinuumSolver a discrete continuum solver
+     */
     void AddDiscreteContinuumSolver(boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pDiscreteContinuumSolver);
 
+    /**
+     * @return the cell population
+     */
+    boost::shared_ptr<AbstractCellPopulation<DIM> > GetCellPopulation();
+
+    /**
+     * @return the vessel network
+     */
+    boost::shared_ptr<VesselNetwork<DIM> > GetVesselNetwork();
+
+    /**
+     * @return the number of solvers
+     */
     unsigned GetNumberOfDiscreteContinuumSolvers();
 
+    /**
+     * Return the indexed solver
+     * @param index the indexed solver
+     * @return the number of solvers
+     */
     boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > GetDiscreteContinuumSolver(unsigned index);
 
+    /**
+     * Set the cell population
+     * @param pCellPopulation the cell population
+     */
     void SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > pCellPopulation);
 
+    /**
+     * Set the vessel network
+     * @param pNetwork the vessel network
+     */
     void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Overridden SetupSolve() method.
      * Specify what to do in the simulation before the start of the time loop.
      *
-     * @param pNetwork pointer to the vessel network
-     * @param rCellPopulation pointer to the cell population
-     * @param discreteContinuumSolvers collection of discrete continuum solvers
      * @param outputDirectory the output directory, relative to where Chaste output is stored
      */
     virtual void SetupSolve(std::string outputDirectory)=0;
@@ -94,10 +126,6 @@ public:
     /**
      * Overridden UpdateAtEndOfTimeStep() method.
      * Specify what to do in the simulation at the end of each time step.
-     *
-     * @param pNetwork pointer to the vessel network
-     * @param rCellPopulation pointer to the cell population
-     * @param discreteContinuumSolvers collection of discrete continuum solvers
      */
     virtual void UpdateAtEndOfTimeStep()=0;
 };

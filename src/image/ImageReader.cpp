@@ -147,44 +147,6 @@ void ImageReader::Read()
             mpVtkImage = p_lum->GetOutput();
         }
     }
-    else if(file_extension == ".jpg" or file_extension == ".JPG")
-    {
-        vtkSmartPointer<vtkJPEGReader> p_reader = vtkSmartPointer<vtkJPEGReader>::New();
-        p_reader->SetFileName(mFilepath.c_str());
-        if(mResizeX==1.0 and mResizeY==1.0 and mResizeZ==1.0)
-        {
-            p_reader->Update();
-            mpVtkImage = p_reader->GetOutput();
-        }
-        else
-        {
-            vtkSmartPointer<vtkImageResize> p_resize = vtkSmartPointer<vtkImageResize>::New();
-            p_resize->SetInputConnection(p_reader->GetOutputPort());
-            p_resize->SetMagnificationFactors(mResizeX, mResizeY, mResizeZ);
-            p_resize->SetResizeMethodToMagnificationFactors();
-            p_resize->Update();
-            mpVtkImage = p_resize->GetOutput();
-        }
-    }
-    else if(file_extension == ".bmp" or file_extension == ".BMP")
-    {
-        vtkSmartPointer<vtkBMPReader> p_reader = vtkSmartPointer<vtkBMPReader>::New();
-        p_reader->SetFileName(mFilepath.c_str());
-        if(mResizeX==1.0 and mResizeY==1.0 and mResizeZ==1.0)
-        {
-            p_reader->Update();
-            mpVtkImage = p_reader->GetOutput();
-        }
-        else
-        {
-            vtkSmartPointer<vtkImageResize> p_resize = vtkSmartPointer<vtkImageResize>::New();
-            p_resize->SetInputConnection(p_reader->GetOutputPort());
-            p_resize->SetMagnificationFactors(mResizeX, mResizeY, mResizeZ);
-            p_resize->SetResizeMethodToMagnificationFactors();
-            p_resize->Update();
-            mpVtkImage = p_resize->GetOutput();
-        }
-    }
     else
     {
         EXCEPTION("Input file extension not recognized");

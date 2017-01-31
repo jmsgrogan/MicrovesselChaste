@@ -331,6 +331,7 @@ public:
     /**
      * Set the cell population
      * @param rCellPopulation a reference to the cell population
+     * @param cellPopulationLengthScale the length scale for the cell population
      */
     void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation, units::quantity<unit::length> cellPopulationLengthScale);
 

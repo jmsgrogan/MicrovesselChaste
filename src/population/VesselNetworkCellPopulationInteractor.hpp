@@ -86,6 +86,7 @@ public:
      * Divide vessels in the network between cell locations in the cell population by adding new nodes at locations
      * coincident with cells.
      * @param rCellPopulation the cell population
+     * @param cellLengthScale the cell population length scale
      * @param threshold tolerance for point to vessel calculation
      */
     void PartitionNetworkOverCells(AbstractCellPopulation<DIM>& rCellPopulation, units::quantity<unit::length> cellLengthScale, double threshold = 1.25e-6);
@@ -93,6 +94,7 @@ public:
     /**
      * Remove any cells not overlapping with the vessel network. Does not label the cells.
      * @param rCellPopulation the cell population
+     * @param cellLengthScale the cell population length scale
      * @param threshold the max distance from a cell location to vessel centre for killing.
      */
     void KillNonVesselOverlappingCells(AbstractCellPopulation<DIM>& rCellPopulation,  units::quantity<unit::length> cellLengthScale, double threshold = 1.25e-6);
@@ -100,6 +102,7 @@ public:
     /**
      * Remove any cells overlapping with the vessel network. Does not label the cells.
      * @param rCellPopulation the cell population
+     * @param cellLengthScale the cell population length scale
      * @param threshold the max distance from a cell location to vessel centre for killing.
      */
     void KillOverlappingVesselCells(AbstractCellPopulation<DIM>& rCellPopulation,  units::quantity<unit::length> cellLengthScale, double threshold = 1.25e-6);

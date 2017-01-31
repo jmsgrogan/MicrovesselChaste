@@ -181,12 +181,12 @@ std::string Facet<DIM>::GetLabel()
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> Facet<DIM>::GetDistance(const DimensionalChastePoint<DIM>& location)
+units::quantity<unit::length> Facet<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation)
 {
     double location_array[3];
     for(unsigned idx=0; idx<DIM;idx++)
     {
-        location_array[idx] = location.GetLocation(mReferenceLength)[idx];
+        location_array[idx] = rLocation.GetLocation(mReferenceLength)[idx];
     }
     if(DIM==2)
     {

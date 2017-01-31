@@ -247,8 +247,8 @@ public:
     void SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation);
 
     /**
-    * Set the cell population
-    * @param pCellPopulation the cell population for rendering
+    * Set the part
+    * @param pPart the part rendering
     */
     void SetPart(boost::shared_ptr<Part<DIM> > pPart);
 
