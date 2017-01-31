@@ -450,7 +450,7 @@ public:
         /*
          * Do the solve.
          */
-        simulator.Solve();
+        //simulator.Solve();
         /*
          * Dump the parameters to file for inspection.
          */
