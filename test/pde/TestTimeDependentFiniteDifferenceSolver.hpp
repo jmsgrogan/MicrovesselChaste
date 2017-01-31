@@ -66,10 +66,11 @@ public:
 
         // Set up the mesh
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(2.0e-3*unit::metres, 1.24e-3*unit::metres, 100.0e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        p_domain->AddCuboid(2.0e-3*unit::metres, 1.24e-3*unit::metres,
+                100.0e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
 
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        p_grid->GenerateFromPart(p_domain, 20.0e-6*unit::metres);
+        p_grid->GenerateFromPart(p_domain, 50.0e-6*unit::metres);
 
         // Choose the PDE
         boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<3> > p_pde = CoupledVegfPelletDiffusionReactionPde<3>::Create();
@@ -90,7 +91,7 @@ public:
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
 
-        for(unsigned idx=0; idx<120; idx++) // 5 days
+        for(unsigned idx=0; idx<10; idx++)
         {
             solver.SetFileName("output_nl_fd_" + boost::lexical_cast<std::string>(idx));
             solver.Solve();

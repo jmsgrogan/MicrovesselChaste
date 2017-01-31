@@ -331,7 +331,7 @@ public:
         OffLatticeSimulation<3> simulator(cell_population);
         simulator.SetOutputDirectory("TestMicrovesselSimulationModifier/NodeBased");
         simulator.SetDt(0.02);
-        simulator.SetEndTime(0.5);
+        simulator.SetEndTime(0.08);
         simulator.AddSimulationModifier(p_simulation_modifier);
 
         MAKE_PTR(GeneralisedLinearSpringForce<3>, p_force);

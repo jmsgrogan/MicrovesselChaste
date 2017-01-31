@@ -116,7 +116,7 @@ public:
         angiogenesis_solver.SetSproutingRule(p_sprouting_rule);
         angiogenesis_solver.SetOutputFileHandler(p_handler);
 
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(20.0 * 60.0, 20);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(5.0 * 60.0, 5);
         angiogenesis_solver.Run(true);
     }
 
@@ -174,7 +174,7 @@ public:
         angiogenesis_solver.SetSproutingRule(p_sprouting_rule);
         angiogenesis_solver.SetOutputFileHandler(p_handler);
 
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(20.0*60.0, 20);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(5.0*60.0, 5);
         angiogenesis_solver.Run(true);
     }
 };

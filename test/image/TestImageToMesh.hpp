@@ -73,7 +73,7 @@ public:
 
         TS_ASSERT_THROWS_THIS(p_image_mesher->GetMesh(), "No mesh set. Did you run 'Update()' ?");
         p_image_mesher->SetInput(reader.GetImage());
-        p_image_mesher->SetElementSize(2.e6*units::pow<3>(1.e-6*unit::metres));
+        p_image_mesher->SetElementSize(5.e6*units::pow<3>(1.e-6*unit::metres));
         p_image_mesher->Update();
 
         VtkMeshWriter<2, 2> mesh_writer("TestImageToMesh", "Image2d", false);

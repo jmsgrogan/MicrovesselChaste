@@ -82,7 +82,7 @@ public:
         MicrovesselSolver<3> vascular_tumour_solver;
         vascular_tumour_solver.SetVesselNetwork(p_network);
 
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(10.0, 10);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(5.0, 5);
         MAKE_PTR_ARGS(OutputFileHandler, p_file_handler, ("TestMicrovesselSolver/SingleVesselGrowth/"));
         vascular_tumour_solver.SetOutputFileHandler(p_file_handler);
         vascular_tumour_solver.Run();

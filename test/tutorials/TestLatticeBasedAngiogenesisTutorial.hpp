@@ -389,7 +389,7 @@ public:
          * This end time corresponds to roughly 10 minutes run-time on a desktop PC. Increase it or decrease as
          * preferred. The end time used in Owen et al. 2011 is 4800 hours.
          */
-        simulator.SetEndTime(20.0);
+        simulator.SetEndTime(5.0);
         /*
          * Do the solve. A sample solution is shown at the top of this test.
          */
