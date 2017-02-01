@@ -325,26 +325,24 @@ void CellPopulationActorGenerator<DIM>::AddPottsBasedCellPopulationActor(vtkSmar
             }
         }
 
-        vtkSmartPointer<vtkGeometryFilter> imageDataGeometryFilter =
+        vtkSmartPointer<vtkGeometryFilter> p_geometry_filter_pre =
           vtkSmartPointer<vtkGeometryFilter>::New();
-        imageDataGeometryFilter->SetInputData(p_potts_grid);
-        imageDataGeometryFilter->Update();
+        #if VTK_MAJOR_VERSION <= 5
+            p_geometry_filter_pre->SetInput(p_potts_grid);
+        #else
+            p_geometry_filter_pre->SetInputData(p_potts_grid);
+        #endif
 
         vtkSmartPointer<vtkThreshold> p_threshold = vtkSmartPointer<vtkThreshold>::New();
-        #if VTK_MAJOR_VERSION <= 5
-        p_threshold->SetInput(imageDataGeometryFilter->GetOutput());
-        #else
-        p_threshold->SetInputData(imageDataGeometryFilter->GetOutput());
-        #endif
+        p_threshold->SetInputConnection(p_geometry_filter_pre->GetOutputPort());
         p_threshold->ThresholdByUpper(0.0);
         p_threshold->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_CELLS, "Cell Id");
 
         vtkSmartPointer<vtkGeometryFilter> p_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
         p_geom_filter->SetInputConnection(p_threshold->GetOutputPort());
-        p_geom_filter->Update();
 
         vtkSmartPointer<vtkPolyDataMapper> p_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-        p_mapper->SetInputData(p_geom_filter->GetOutput());
+        p_mapper->SetInputConnection(p_geom_filter->GetOutputPort());
         p_mapper->SetLookupTable(p_scaled_ctf);
         p_mapper->ScalarVisibilityOn();
         p_mapper->SelectColorArray("Cell Id");
@@ -385,14 +383,23 @@ void CellPopulationActorGenerator<DIM>::AddPottsBasedCellPopulationActor(vtkSmar
                 p_features->Update();
 
                 vtkSmartPointer<vtkAppendPolyData> p_append = vtkSmartPointer<vtkAppendPolyData>::New();
-                p_append->AddInputData(p_bounds);
-                p_append->AddInputData(p_features->GetOutput());
+                #if VTK_MAJOR_VERSION <= 5
+                    p_append->AddInput(p_bounds);
+                    p_append->AddInput(p_features->GetOutput());
+                #else
+                    p_append->AddInputData(p_bounds);
+                    p_append->AddInputData(p_features->GetOutput());
+                #endif
                 p_append->Update();
                 p_bounds = p_append->GetOutput();
             }
 
             vtkSmartPointer<vtkPolyDataMapper> p_mapper2 = vtkSmartPointer<vtkPolyDataMapper>::New();
-            p_mapper2->SetInputData(p_bounds);
+            #if VTK_MAJOR_VERSION <= 5
+                p_mapper2->SetInput(p_bounds);
+            #else
+                p_mapper2->SetInputData(p_bounds);
+            #endif
 
             vtkSmartPointer<vtkActor> p_volume_actor2 = vtkSmartPointer<vtkActor>::New();
             p_volume_actor2->SetMapper(p_mapper2);
