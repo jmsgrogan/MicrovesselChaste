@@ -47,18 +47,54 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "OutputFileHandler.hpp"
 #include "RegularGrid.hpp"
 
+#include "PetscSetupAndFinalize.hpp"
+
 class TestDensityMap : public CxxTest::TestSuite
 {
 
 public:
 
+    void TestSingleVessel()
+    {
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDensityMap/SingleVessel"));
+
+        // Set up the vessel network
+        units::quantity<unit::length> vessel_length = 100 * 1.e-6 * unit::metres;
+        VesselNetworkGenerator<2> generator;
+        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length,
+                DimensionalChastePoint<2>(40.0, 0.0, 0.0, 1.e-6 * unit::metres));
+
+        p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"/network.vtp");
+
+        // Set up the grid
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(1.0 * vessel_length,
+                            1.0 * vessel_length,
+                            DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        p_grid->GenerateFromPart(p_domain, 20.0e-6 * unit::metres);
+
+        // Get the map
+        DensityMap<2> solver;
+        solver.SetVesselNetwork(p_network);
+        solver.SetGrid(p_grid);
+
+        solver.SetFileHandler(p_output_file_handler);
+        solver.SetWriteSolution(true);
+        solver.Setup();
+        solver.Solve();
+    }
+
     void TestBifurcationNetwork()
     {
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDensityMap/ Bifurcation", false));
+
         // Set up the vessel network
         units::quantity<unit::length> vessel_length = 100 * 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateBifurcationUnit(vessel_length,
                                                                                            DimensionalChastePoint<3>(0.0, vessel_length/(1.e-6*unit::metres), 0.0));
+        p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"/network.vtp");
 
         // Set up the tissue domain
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
@@ -70,14 +106,12 @@ public:
         p_grid->GenerateFromPart(p_domain, 20.0e-6 * unit::metres);
 
         // Get the map
-        DensityMap<3> solver;
-        solver.SetVesselNetwork(p_network);
-        solver.SetGrid(p_grid);
-
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDensityMap", false));
-        solver.SetFileHandler(p_output_file_handler);
-        solver.Setup();
-        solver.Solve();
+        DensityMap<3> calculator;
+        calculator.SetVesselNetwork(p_network);
+        calculator.SetGrid(p_grid);
+        calculator.SetFileHandler(p_output_file_handler);
+        calculator.SetWriteSolution(true);
+        calculator.Solve();
     }
 };
 

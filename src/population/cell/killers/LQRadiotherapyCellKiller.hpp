@@ -101,9 +101,9 @@ class LQRadiotherapyCellKiller : public AbstractCellKiller<DIM>
     double mOerBetaMin;
 
     /**
-     * Oer constant K term
+     * Oer constant K term: as a concentration rather than mmHg
      */
-    double mKOer;
+    units::quantity<unit::concentration> mKOer;
 
     /**
      * Radiotherapy alpha_max term
@@ -148,6 +148,12 @@ public:
      * @param pCellPopulation pointer to the cell population
      */
     LQRadiotherapyCellKiller(AbstractCellPopulation<DIM>* pCellPopulation);
+
+    /**
+     * Add a radiation time to the collection
+     * @param time a radiation time
+     */
+    void AddTimeOfRadiation(units::quantity<unit::time> time);
 
     /**
      * Overridden method to test a given cell for apoptosis.
@@ -225,7 +231,7 @@ public:
      * Sets K OER value
      * @param value K OER value
      */
-    void SetOerConstant(double value);
+    void SetOerConstant(units::quantity<unit::concentration> value);
 
     /**
      * Sets alpha_max radiotherapy value

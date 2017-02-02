@@ -37,6 +37,8 @@
 #include "CancerCellMutationState.hpp"
 #include "StalkCellMutationState.hpp"
 #include "BaseUnits.hpp"
+#include "Secomb04Parameters.hpp"
+#include "GenericParameters.hpp"
 
 template<unsigned DIM>
 LQRadiotherapyCellKiller<DIM>::LQRadiotherapyCellKiller(AbstractCellPopulation<DIM>* pCellPopulation) :
@@ -51,12 +53,20 @@ LQRadiotherapyCellKiller<DIM>::LQRadiotherapyCellKiller(AbstractCellPopulation<D
         mOerAlphaMin(1.0),
         mOerBetaMax(3.25),
         mOerBetaMin(1.0),
-        mKOer(3.28),
+        mKOer(0.0*unit::mole_per_metre_cubed),
         mAlphaMax(0.3 * unit::per_gray),
         mBetaMax(0.03 * unit::per_gray_squared),
         mUseOer(false)
 {
+    units::quantity<unit::solubility> oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("LQRadiotherapyCellKiller") *
+            GenericParameters::mpGasConcentrationAtStp->GetValue("LQRadiotherapyCellKiller");
+    mKOer = oxygen_solubility_at_stp * 3.28 * unit::pascals;
+}
 
+template<unsigned DIM>
+void LQRadiotherapyCellKiller<DIM>::AddTimeOfRadiation(units::quantity<unit::time> time)
+{
+    mRadiationTimes.push_back(time);
 }
 
 template<unsigned DIM>
@@ -96,7 +106,7 @@ void LQRadiotherapyCellKiller<DIM>::SetOerBetaMin(double value)
 }
 
 template<unsigned DIM>
-void LQRadiotherapyCellKiller<DIM>::SetOerConstant(double value)
+void LQRadiotherapyCellKiller<DIM>::SetOerConstant(units::quantity<unit::concentration> value)
 {
     mKOer = value;
 }
@@ -145,30 +155,25 @@ void LQRadiotherapyCellKiller<DIM>::CheckAndLabelSingleCellForApoptosis(CellPtr 
             if (SimulationTime::Instance()->GetTime()*BaseUnits::Instance()->GetReferenceTimeScale() == mRadiationTimes[idx])
             {
                 // Model radiation hit
+                double death_probability = 0.0;
                 if (mUseOer)
                 {
-                    double oxygen = pCell->GetCellData()->GetItem("oxygen");
+                    units::quantity<unit::concentration> oxygen =
+                            pCell->GetCellData()->GetItem("oxygen")*BaseUnits::Instance()->GetReferenceConcentrationScale();
                     double oer_alpha = (mOerAlphaMax - mOerAlphaMin) * mKOer / (oxygen + mKOer) + mOerAlphaMin;
                     double oer_beta = (mOerBetaMax - mOerBetaMin) * mKOer / (oxygen + mKOer) + mOerBetaMin;
                     units::quantity<unit::per_absorbed_dose> alpha = mAlphaMax / oer_alpha;
                     units::quantity<unit::per_absorbed_dose_squared> beta = mBetaMax / (oer_beta * oer_beta);
-                    double death_prob = (1.0 - exp(-alpha * mDose - beta * mDose * mDose));
-
-                    if (!pCell->HasApoptosisBegun() && RandomNumberGenerator::Instance()->ranf() < death_prob)
-                    {
-                        pCell->StartApoptosis();
-                    }
+                    death_probability = 1.0 - exp(-alpha * mDose - beta * mDose * mDose);
                 }
                 else
                 {
-                    double death_prob = (1.0
-                            - exp(-cancerousLinearRadiosensitivity * mDose
-                                    - cancerousQuadraticRadiosensitivity * mDose * mDose));
-
-                    if (!pCell->HasApoptosisBegun() && RandomNumberGenerator::Instance()->ranf() < death_prob)
-                    {
-                        pCell->StartApoptosis();
-                    }
+                    death_probability = 1.0 - exp(-cancerousLinearRadiosensitivity * mDose
+                                    - cancerousQuadraticRadiosensitivity * mDose * mDose);
+                }
+                if (!pCell->HasApoptosisBegun() && RandomNumberGenerator::Instance()->ranf() < death_probability)
+                {
+                    pCell->StartApoptosis();
                 }
             }
         }

@@ -91,7 +91,7 @@ void DensityMap<DIM>::Solve()
                                                                          segments[idx]->GetNode(1)->rGetLocation(),
                                                                          this->mpRegularGrid->GetLocation(k ,j, i), spacing)/this->mpRegularGrid->GetReferenceLengthScale();
                     }
-                    vessel_solution[grid_index] /= std::pow(dimensionless_spacing,3);
+                    vessel_solution[grid_index] /= std::pow(dimensionless_spacing, 3);
                 }
             }
         }

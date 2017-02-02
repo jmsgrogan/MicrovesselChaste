@@ -163,6 +163,7 @@ public:
 
     /**
      * Generate a grid based on the bounding box of the supplied part
+     * Important: The grid spacing is maintained, so the final geometry may differ from the part.
      * @param pPart the part from which to get the bounding box
      * @param gridSize the grid spacing
      */

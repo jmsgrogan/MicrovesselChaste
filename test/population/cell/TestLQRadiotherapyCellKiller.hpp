@@ -39,8 +39,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cxxtest/TestSuite.h>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
-#include <stdio.h>
-#include <ctime>
 #include <vector>
 #include <iostream>
 #include "AbstractCellBasedTestSuite.hpp"
@@ -49,15 +47,18 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "CancerCellMutationState.hpp"
 #include "UnitCollection.hpp"
 #include "BaseUnits.hpp"
-#include "Owen11Parameters.hpp"
+#include "Secomb04Parameters.hpp"
 #include "GenericParameters.hpp"
-#include "Owen11CaBasedDivisionRule.hpp"
 #include "PottsMeshGenerator.hpp"
 #include "PottsMesh.hpp"
 #include "CaBasedCellPopulation.hpp"
 #include "CellsGenerator.hpp"
 #include "SimpleOxygenBasedCellCycleModel.hpp"
 #include "LQRadiotherapyCellKiller.hpp"
+#include "OnLatticeSimulation.hpp"
+#include "ApoptoticCellKiller.hpp"
+
+#include "PetscSetupAndFinalize.hpp"
 
 /**
  * Test RT cell killer
@@ -66,73 +67,146 @@ class TestLQRadiotherapyCellKiller : public AbstractCellBasedTestSuite
 {
 public:
 
-    void TestSimpleMethods()
+    void TestSimulationWithOer()
     {
-        PottsMeshGenerator<3> generator(10, 0, 0, 10, 0, 0, 1, 0, 0);
-        PottsMesh<3>* p_mesh = generator.GetMesh();
+        PottsMeshGenerator<2> generator(5, 0, 0, 5, 0, 0);
+        PottsMesh<2>* p_mesh = generator.GetMesh();
 
-        // Create a tumour cells in a cylinder in the middle of the domain
+        // Fill the domain with tumour cells
         std::vector<unsigned> location_indices;
-        for(unsigned idx=0; idx<100; idx++)
+        for(unsigned idx=0; idx<25; idx++)
         {
             location_indices.push_back(idx);
         }
 
         std::vector<CellPtr> cells;
-        CellsGenerator<SimpleOxygenBasedCellCycleModel, 3> cells_generator;
+        CellsGenerator<SimpleOxygenBasedCellCycleModel, 2> cells_generator;
         cells_generator.GenerateBasic(cells, location_indices.size());
 
+        units::quantity<unit::concentration> reference_concentration = 1.e-3*unit::mole_per_metre_cubed;
+        units::quantity<unit::time> reference_time = 3600.0*unit::seconds;
+        BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
+        BaseUnits::Instance()->SetReferenceConcentrationScale(reference_concentration);
+        units::quantity<unit::solubility> oxygen_solubility_at_stp =
+                Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
+                GenericParameters::mpGasConcentrationAtStp->GetValue("User");
+        units::quantity<unit::concentration> oxygen_concentration = 40.0*unit::pascals*oxygen_solubility_at_stp;
         for(unsigned idx=0;idx<cells.size(); idx++)
         {
-            cells[idx]->GetCellData()->SetItem("oxygen", 1.0);
+            cells[idx]->GetCellData()->SetItem("oxygen", oxygen_concentration/reference_concentration);
         }
-
 
         // Create cell population
-        boost::shared_ptr<CaBasedCellPopulation<3> > p_cell_population =
-                boost::shared_ptr<CaBasedCellPopulation<3> >(new CaBasedCellPopulation<3>(*p_mesh, cells, location_indices));
+        boost::shared_ptr<CaBasedCellPopulation<2> > p_cell_population =
+                boost::shared_ptr<CaBasedCellPopulation<2> >(new CaBasedCellPopulation<2>(*p_mesh, cells, location_indices));
 
-        LQRadiotherapyCellKiller<3> rt_killer(p_cell_population.get());
-        rt_killer.SetAlphaMax(0.3*unit::per_gray);
-        rt_killer.SetBetaMax(0.03*unit::per_gray_squared);
-        rt_killer.SetDoseInjected(2.0*unit::gray);
+        boost::shared_ptr<LQRadiotherapyCellKiller<2> > p_rt_killer =
+                boost::shared_ptr<LQRadiotherapyCellKiller<2> >(new LQRadiotherapyCellKiller<2> (p_cell_population.get()));
+        p_rt_killer->SetAlphaMax(0.3*unit::per_gray);
+        p_rt_killer->SetBetaMax(0.03*unit::per_gray_squared);
+        p_rt_killer->SetDoseInjected(2.0*unit::gray);
+        p_rt_killer->SetCancerousRadiosensitivity(0.3 * unit::per_gray, 0.03 * unit::per_gray_squared);
+        p_rt_killer->SetNormalRadiosensitivity(0.15 * unit::per_gray, 0.05 * unit::per_gray_squared);
+        p_rt_killer->SetOerAlphaMax(1.75);
+        p_rt_killer->SetOerAlphaMin(1.0);
+        p_rt_killer->SetOerBetaMax(3.25);
+        p_rt_killer->SetOerBetaMin(1.0);
+        p_rt_killer->SetOerConstant(oxygen_solubility_at_stp * 3.28 * unit::pascals);
+        p_rt_killer->SetAlphaMax(0.3 * unit::per_gray);
+        p_rt_killer->SetBetaMax(0.03 * unit::per_gray_squared);
+        p_rt_killer->UseOer(true);
 
+        // Set Up the Radiation Times
+        std::vector<units::quantity<unit::time> > rt_times;
+        rt_times.push_back(3600.0*24.0*unit::seconds);
+        rt_times.push_back(3600.0*48.0*unit::seconds);
+        rt_times.push_back(3600.0*72.0*unit::seconds);
+        p_rt_killer->SetTimeOfRadiation(rt_times);
+        p_rt_killer->AddTimeOfRadiation(3600.0*96.0*unit::seconds);
 
+        OnLatticeSimulation<2> simulator(*p_cell_population);
+        /*
+         * Add a killer for RT and to remove apoptotic cells
+         */
+        boost::shared_ptr<ApoptoticCellKiller<2> > p_apoptotic_cell_killer(new ApoptoticCellKiller<2>(p_cell_population.get()));
+        simulator.AddCellKiller(p_apoptotic_cell_killer);
+        simulator.AddCellKiller(p_rt_killer);
+        simulator.SetOutputDirectory("TestLQRadiotherapyCellKiller/WithOer");
+        simulator.SetSamplingTimestepMultiple(1);
+        simulator.SetDt(2.0);
+        simulator.SetEndTime(96.0); // hours
+        simulator.Solve();
     }
 
-    void TestArchiving()
+    void TestSimulationWithoutOer()
     {
-        OutputFileHandler handler("archive", false);
-        std::string archive_filename = handler.GetOutputDirectoryFullPath() + "TestLQRadiotherapyCellKiller.arch";
+        PottsMeshGenerator<2> generator(5, 0, 0, 5, 0, 0);
+        PottsMesh<2>* p_mesh = generator.GetMesh();
+
+        // Fill the domain with tumour cells
+        std::vector<unsigned> location_indices;
+        for(unsigned idx=0; idx<25; idx++)
         {
-            Owen11CaBasedDivisionRule<3> division_rule;
-
-            // Create an output archive
-            std::ofstream ofs(archive_filename.c_str());
-            boost::archive::text_oarchive output_arch(ofs);
-
-            // Archive ODE system
-            AbstractCaBasedDivisionRule<3>* const p_division_rule = &division_rule;
-            output_arch << p_division_rule;
+            location_indices.push_back(idx);
         }
 
+        std::vector<CellPtr> cells;
+        CellsGenerator<SimpleOxygenBasedCellCycleModel, 2> cells_generator;
+        cells_generator.GenerateBasic(cells, location_indices.size());
+
+        units::quantity<unit::concentration> reference_concentration = 1.e-3*unit::mole_per_metre_cubed;
+        units::quantity<unit::time> reference_time = 3600.0*unit::seconds;
+        BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
+        BaseUnits::Instance()->SetReferenceConcentrationScale(reference_concentration);
+        units::quantity<unit::solubility> oxygen_solubility_at_stp =
+                Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
+                GenericParameters::mpGasConcentrationAtStp->GetValue("User");
+        units::quantity<unit::concentration> oxygen_concentration = 40.0*unit::pascals*oxygen_solubility_at_stp;
+        for(unsigned idx=0;idx<cells.size(); idx++)
         {
-            AbstractCaBasedDivisionRule<3>* p_division_rule;
-
-            // Create an input archive
-            std::ifstream ifs(archive_filename.c_str(), std::ios::binary);
-            boost::archive::text_iarchive input_arch(ifs);
-
-            // Restore from the archive
-            input_arch >> p_division_rule;
-
-            // No archived members, check that we can cast.
-            bool can_cast = static_cast<Owen11CaBasedDivisionRule<3> *>(p_division_rule);
-            TS_ASSERT(can_cast);
-
-            // Tidy up
-            delete p_division_rule;
+            cells[idx]->GetCellData()->SetItem("oxygen", oxygen_concentration/reference_concentration);
         }
+
+        // Create cell population
+        boost::shared_ptr<CaBasedCellPopulation<2> > p_cell_population =
+                boost::shared_ptr<CaBasedCellPopulation<2> >(new CaBasedCellPopulation<2>(*p_mesh, cells, location_indices));
+
+        boost::shared_ptr<LQRadiotherapyCellKiller<2> > p_rt_killer =
+                boost::shared_ptr<LQRadiotherapyCellKiller<2> >(new LQRadiotherapyCellKiller<2> (p_cell_population.get()));
+        p_rt_killer->SetAlphaMax(0.3*unit::per_gray);
+        p_rt_killer->SetBetaMax(0.03*unit::per_gray_squared);
+        p_rt_killer->SetDoseInjected(2.0*unit::gray);
+        p_rt_killer->SetCancerousRadiosensitivity(0.3 * unit::per_gray, 0.03 * unit::per_gray_squared);
+        p_rt_killer->SetNormalRadiosensitivity(0.15 * unit::per_gray, 0.05 * unit::per_gray_squared);
+        p_rt_killer->SetOerAlphaMax(1.75);
+        p_rt_killer->SetOerAlphaMin(1.0);
+        p_rt_killer->SetOerBetaMax(3.25);
+        p_rt_killer->SetOerBetaMin(1.0);
+        p_rt_killer->SetOerConstant(oxygen_solubility_at_stp * 3.28 * unit::pascals);
+        p_rt_killer->SetAlphaMax(0.3 * unit::per_gray);
+        p_rt_killer->SetBetaMax(0.03 * unit::per_gray_squared);
+        p_rt_killer->UseOer(false);
+
+        // Set Up the Radiation Times
+        std::vector<units::quantity<unit::time> > rt_times;
+        rt_times.push_back(3600.0*24.0*unit::seconds);
+        rt_times.push_back(3600.0*48.0*unit::seconds);
+        rt_times.push_back(3600.0*72.0*unit::seconds);
+        rt_times.push_back(3600.0*96.0*unit::seconds);
+        p_rt_killer->SetTimeOfRadiation(rt_times);
+
+        OnLatticeSimulation<2> simulator(*p_cell_population);
+        /*
+         * Add a killer for RT and to remove apoptotic cells
+         */
+        boost::shared_ptr<ApoptoticCellKiller<2> > p_apoptotic_cell_killer(new ApoptoticCellKiller<2>(p_cell_population.get()));
+        simulator.AddCellKiller(p_apoptotic_cell_killer);
+        simulator.AddCellKiller(p_rt_killer);
+        simulator.SetOutputDirectory("TestLQRadiotherapyCellKiller/WithoutOer");
+        simulator.SetSamplingTimestepMultiple(1);
+        simulator.SetDt(2.0);
+        simulator.SetEndTime(96.0); // hours
+        simulator.Solve();
     }
 };
 

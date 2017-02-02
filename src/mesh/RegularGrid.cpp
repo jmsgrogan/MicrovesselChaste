@@ -43,6 +43,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkPoints.h>
 #include <vtkSmartPointer.h>
 #include <vtkLine.h>
+#include <boost/math/special_functions/round.hpp>
 #include "Exception.hpp"
 #include "RegularGrid.hpp"
 #include "RegularGridWriter.hpp"
@@ -289,11 +290,14 @@ void RegularGrid<DIM>::GenerateFromPart(boost::shared_ptr<Part<DIM> > pPart, uni
 {
     mSpacing = gridSize;
     std::vector<units::quantity<unit::length> > spatial_extents = pPart->GetBoundingBox();
-    mExtents[0] = unsigned(std::floor((spatial_extents[1] - spatial_extents[0]) / gridSize))+1;
-    mExtents[1] = unsigned(std::floor((spatial_extents[3] - spatial_extents[2]) / gridSize))+1;
+    double norm_x = (spatial_extents[1] - spatial_extents[0]) / gridSize;
+    double norm_y = (spatial_extents[3] - spatial_extents[2]) / gridSize;
+    mExtents[0] = unsigned(boost::math::iround(norm_x))+1;
+    mExtents[1] = unsigned(boost::math::iround(norm_y))+1;
     if (DIM == 3)
     {
-        mExtents[2] = unsigned(std::floor((spatial_extents[5] - spatial_extents[4]) / gridSize))+1;
+        double norm_z = (spatial_extents[5] - spatial_extents[4]) / gridSize;
+        mExtents[2] = unsigned(boost::math::iround(norm_z))+1;
         mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0]/mReferenceLength, spatial_extents[2]/mReferenceLength, spatial_extents[4]/mReferenceLength, mReferenceLength);
     }
     else

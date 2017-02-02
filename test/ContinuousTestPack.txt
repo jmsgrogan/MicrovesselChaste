@@ -46,6 +46,7 @@ pde/TestSolutionDependentDiscreteSource.hpp
 pde/TestDiscreteSource.hpp
 pde/TestVesselBasedDiscreteSource.hpp
 pde/TestDiscreteContinuumBoundaryCondition.hpp
+population/cell/TestLQRadiotherapyCellKiller.hpp
 population/cell/TestOwen2011OxygenBasedCellCycleModelWithOde.hpp
 population/cell/TestOwen2011OxygenBasedCellCycleOdeSystem.hpp
 population/cell/TestOwen2011CaBasedDivisionRule.hpp
