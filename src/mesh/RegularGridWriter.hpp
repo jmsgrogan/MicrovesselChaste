@@ -60,6 +60,11 @@ private:
      */
     std::string mFilepath;
 
+    /**
+     * The whole extents, used for the parallel writer
+     */
+    std::vector<unsigned> mWholeExtents;
+
 public:
 
     /**
@@ -83,6 +88,12 @@ public:
      * @param rFilename the file name
      */
     void SetFilename(const std::string& rFilename);
+
+    /**
+     * Set whole extents for any image data. This is used for multi-piece writing.
+     * @param rFilename the file name
+     */
+    void SetWholeExtents(std::vector<unsigned> wholeExtents);
 
     /**
      * Set the image in vti format

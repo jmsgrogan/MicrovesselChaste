@@ -230,11 +230,21 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Setup()
 
     if(DIM==3)
     {
-        this->mpVtkSolution->SetDimensions(this->mpRegularGrid->GetExtents()[0], this->mpRegularGrid->GetExtents()[1], this->mpRegularGrid->GetExtents()[2]);
+        this->mpVtkSolution->SetExtent(this->mpRegularGrid->GetLocalIndexExtents()[0],
+                this->mpRegularGrid->GetLocalIndexExtents()[1],
+                this->mpRegularGrid->GetLocalIndexExtents()[2],
+                this->mpRegularGrid->GetLocalIndexExtents()[3],
+                this->mpRegularGrid->GetLocalIndexExtents()[4],
+                this->mpRegularGrid->GetLocalIndexExtents()[5]);
     }
     else
     {
-        this->mpVtkSolution->SetDimensions(this->mpRegularGrid->GetExtents()[0], this->mpRegularGrid->GetExtents()[1], 1);
+        this->mpVtkSolution->SetExtent(this->mpRegularGrid->GetLocalIndexExtents()[0],
+                this->mpRegularGrid->GetLocalIndexExtents()[1],
+                this->mpRegularGrid->GetLocalIndexExtents()[2],
+                this->mpRegularGrid->GetLocalIndexExtents()[3],
+                0,
+                0);
     }
 
     double spacing = this->mpRegularGrid->GetSpacing()/this->mpRegularGrid->GetReferenceLengthScale();
@@ -250,7 +260,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Setup()
         this->mpVtkSolution->SetOrigin(origin[0], origin[1], 0.0);
     }
 
-    this->mSolution = std::vector<double>(0.0, this->mpRegularGrid->GetNumberOfPoints());
+    this->mSolution = std::vector<double>(0.0, this->mpRegularGrid->GetNumberOfLocalPoints());
 }
 
 template<unsigned DIM>
@@ -357,12 +367,18 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Write()
     RegularGridWriter writer;
     if(!this->mFilename.empty())
     {
-        writer.SetFilename((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/" + this->mFilename+".vti"));
+        writer.SetFilename((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/" + this->mFilename+".pvti"));
     }
     else
     {
-        writer.SetFilename((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/solution.vti"));
+        writer.SetFilename((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/solution.pvti"));
     }
+
+    std::vector<unsigned> whole_extents(6,0);
+    whole_extents[1] = this->mpRegularGrid->GetExtents()[0]-1;
+    whole_extents[3] = this->mpRegularGrid->GetExtents()[1]-1;
+    whole_extents[5] = this->mpRegularGrid->GetExtents()[2]-1;
+    writer.SetWholeExtents(whole_extents);
     writer.SetImage(this->mpVtkSolution);
     writer.Write();
 }

@@ -69,6 +69,11 @@ class RegularGrid
     std::vector<unsigned> mExtents;
 
     /**
+     * The extents of indices on each processor
+     */
+    std::vector<unsigned> mLocalIndexExtents;
+
+    /**
      * The origin of the grid in x,y,z. Corresponds to location of front, bottom, left corner.
      */
     DimensionalChastePoint<DIM> mOrigin;
@@ -179,6 +184,15 @@ public:
     unsigned Get1dGridIndex(unsigned xIndex, unsigned yIndex, unsigned zIndex);
 
     /**
+     * Get the 1-D grid index for given x,y,z indices local on this process
+     * @param xIndex the grid x index
+     * @param yIndex the grid y index
+     * @param zIndex the grid z index
+     * @return the grid 1-d index
+     */
+    unsigned GetLocal1dGridIndex(unsigned xIndex, unsigned yIndex, unsigned zIndex);
+
+    /**
      * Get the 1-D grid index for given x,y,z indices
      * @param rLocation the point to get the nearest index to
      * @return the 1-d index of the nearest grid point
@@ -202,6 +216,12 @@ public:
      * @return the grid extents
      */
     std::vector<unsigned> GetExtents();
+
+    /**
+     * Return the grid extents on this processor
+     * @return the grid extents on this processor
+     */
+    std::vector<unsigned> GetLocalIndexExtents();
 
     /**
      * Get the location of a point on the grid for given x, y ,z indices
@@ -230,6 +250,12 @@ public:
      * @return the number of points in the grid
      */
     unsigned GetNumberOfPoints();
+
+    /**
+     * Return the number of points on this process
+     * @return the number of points on this process
+     */
+    unsigned GetNumberOfLocalPoints();
 
     /**
      * Return the origin in x, y, z
@@ -370,6 +396,11 @@ public:
      * @param pNetwork the vessel network
      */
     void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+
+    /**
+     * Update the local index extents
+     */
+    void UpdateLocalIndexExtents();
 
     /**
      * Write the grid and any field to file as a VTI file

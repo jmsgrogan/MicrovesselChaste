@@ -36,14 +36,16 @@
 #include "Exception.hpp"
 #include <boost/filesystem.hpp>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
-#include <vtkXMLImageDataWriter.h>
+#include <vtkXMLPImageDataWriter.h>
 #include <vtkVersion.h>
+#include <vtkTrivialProducer.h>
 #include "PetscTools.hpp"
 #include "RegularGridWriter.hpp"
 
 RegularGridWriter::RegularGridWriter()
     : mpVtkImage(vtkSmartPointer<vtkImageData>::New()),
-      mFilepath()
+      mFilepath(),
+      mWholeExtents()
 {
 
 }
@@ -69,6 +71,11 @@ void RegularGridWriter::SetFilename(const std::string& filename)
     mFilepath = filename;
 }
 
+void RegularGridWriter::SetWholeExtents(std::vector<unsigned> wholeExtents)
+{
+    mWholeExtents = wholeExtents;
+}
+
 void RegularGridWriter::Write()
 {
     if(mFilepath == "")
@@ -81,16 +88,34 @@ void RegularGridWriter::Write()
         EXCEPTION("Output image not set for image writer.");
     }
 
-    if(PetscTools::AmMaster())
+    vtkSmartPointer<vtkTrivialProducer> tp = vtkSmartPointer<vtkTrivialProducer>::New();
+    tp->SetOutput(mpVtkImage);
+    if(PetscTools::IsSequential())
     {
-        vtkSmartPointer<vtkXMLImageDataWriter> p_writer1 = vtkSmartPointer<vtkXMLImageDataWriter>::New();
-        p_writer1->SetFileName(mFilepath.c_str());
-        #if VTK_MAJOR_VERSION <= 5
-            p_writer1->SetInput(mpVtkImage);
-        #else
-            p_writer1->SetInputData(mpVtkImage);
-        #endif
-        p_writer1->Update();
-        p_writer1->Write();
+        tp->SetWholeExtent(mpVtkImage->GetExtent());
     }
+    else
+    {
+        if(mWholeExtents.size()!=6)
+        {
+            EXCEPTION("Writing in parallel requires the whole extents to be set.");
+        }
+        tp->SetWholeExtent(mWholeExtents[0], mWholeExtents[1], mWholeExtents[2],
+                mWholeExtents[3], mWholeExtents[4], mWholeExtents[5]);
+    }
+
+    vtkSmartPointer<vtkXMLPImageDataWriter> p_writer1 = vtkSmartPointer<vtkXMLPImageDataWriter>::New();
+
+    p_writer1->SetFileName(mFilepath.c_str());
+
+//        #if VTK_MAJOR_VERSION <= 5
+//            p_writer1->SetInput(mpVtkImage);
+//        #else
+//            p_writer1->SetInputData(mpVtkImage);
+//        #endif
+    p_writer1->SetNumberOfPieces(PetscTools::GetNumProcs());
+    p_writer1->SetEndPiece(PetscTools::GetMyRank());
+    p_writer1->SetStartPiece(PetscTools::GetMyRank());
+    p_writer1->SetInputConnection(tp->GetOutputPort());
+    p_writer1->Write();
 }

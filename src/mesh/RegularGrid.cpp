@@ -44,6 +44,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkSmartPointer.h>
 #include <vtkLine.h>
 #include <boost/math/special_functions/round.hpp>
+#include "PetscTools.hpp"
 #include "Exception.hpp"
 #include "RegularGrid.hpp"
 #include "RegularGridWriter.hpp"
@@ -52,7 +53,8 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned DIM>
 RegularGrid<DIM>::RegularGrid() :
         mSpacing(BaseUnits::Instance()->GetReferenceLengthScale()),
-        mExtents(std::vector<unsigned>(3, 10)),
+        mExtents(),
+        mLocalIndexExtents(),
         mOrigin(DimensionalChastePoint<DIM>(zero_vector<double>(DIM), BaseUnits::Instance()->GetReferenceLengthScale())),
         mpNetwork(),
         mpCellPopulation(),
@@ -250,6 +252,12 @@ void RegularGrid<DIM>::CalculateMooreNeighbourData()
 }
 
 template<unsigned DIM>
+std::vector<unsigned> RegularGrid<DIM>::GetLocalIndexExtents()
+{
+    return mLocalIndexExtents;
+}
+
+template<unsigned DIM>
 const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::GetNeighbourData()
 {
     if (mNeighbourData.size() == 0 or mNeighbourData.size() != GetNumberOfPoints())
@@ -292,25 +300,38 @@ void RegularGrid<DIM>::GenerateFromPart(boost::shared_ptr<Part<DIM> > pPart, uni
     std::vector<units::quantity<unit::length> > spatial_extents = pPart->GetBoundingBox();
     double norm_x = (spatial_extents[1] - spatial_extents[0]) / gridSize;
     double norm_y = (spatial_extents[3] - spatial_extents[2]) / gridSize;
-    mExtents[0] = unsigned(boost::math::iround(norm_x))+1;
-    mExtents[1] = unsigned(boost::math::iround(norm_y))+1;
+    mExtents.push_back(unsigned(boost::math::iround(norm_x))+1);
+    mExtents.push_back(unsigned(boost::math::iround(norm_y))+1);
     if (DIM == 3)
     {
         double norm_z = (spatial_extents[5] - spatial_extents[4]) / gridSize;
-        mExtents[2] = unsigned(boost::math::iround(norm_z))+1;
+        mExtents.push_back(unsigned(boost::math::iround(norm_z))+1);
         mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0]/mReferenceLength, spatial_extents[2]/mReferenceLength, spatial_extents[4]/mReferenceLength, mReferenceLength);
     }
     else
     {
-        mExtents[2] = 1;
+        mExtents.push_back(1);
         mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0]/mReferenceLength, spatial_extents[2]/mReferenceLength, 0.0, mReferenceLength);
     }
+    UpdateLocalIndexExtents();
 }
 
 template<unsigned DIM>
 unsigned RegularGrid<DIM>::Get1dGridIndex(unsigned x_index, unsigned y_index, unsigned z_index)
 {
     return x_index + mExtents[0] * y_index + mExtents[0] * mExtents[1] * z_index;
+}
+
+template<unsigned DIM>
+unsigned RegularGrid<DIM>::GetLocal1dGridIndex(unsigned x_index, unsigned y_index, unsigned z_index)
+{
+    if(x_index<mLocalIndexExtents[0] or x_index>mLocalIndexExtents[1])
+    {
+        EXCEPTION("Requested local grid index not found on this processor.");
+    }
+
+    unsigned slice_width = 1 + mLocalIndexExtents[1] - mLocalIndexExtents[0];
+    return (x_index-mLocalIndexExtents[0]) + slice_width* y_index + slice_width * mExtents[1] * z_index;
 }
 
 template<unsigned DIM>
@@ -680,6 +701,14 @@ unsigned RegularGrid<DIM>::GetNumberOfPoints()
 }
 
 template<unsigned DIM>
+unsigned RegularGrid<DIM>::GetNumberOfLocalPoints()
+{
+    return (1+ mLocalIndexExtents[1]- mLocalIndexExtents[0])*
+            (1+ mLocalIndexExtents[3]- mLocalIndexExtents[2])*
+            (1 + mLocalIndexExtents[5]- mLocalIndexExtents[4]);
+}
+
+template<unsigned DIM>
 DimensionalChastePoint<DIM> RegularGrid<DIM>::GetOrigin()
 {
     return mOrigin;
@@ -780,6 +809,7 @@ void RegularGrid<DIM>::SetExtents(std::vector<unsigned> extents)
         EXCEPTION("The extents should be of dimension 3, regardless of element or space dimension");
     }
     mExtents = extents;
+    UpdateLocalIndexExtents();
 }
 
 template<unsigned DIM>
@@ -848,6 +878,33 @@ vtkSmartPointer<vtkImageData> RegularGrid<DIM>::GetVtkGrid()
         mpVtkGrid->GetPointData()->AddArray(pPointData);
     }
     return mpVtkGrid;
+}
+
+template<unsigned DIM>
+void RegularGrid<DIM>::UpdateLocalIndexExtents()
+{
+    // Slice based decomposition, assuming x is the long axis
+    unsigned piece_size = unsigned(std::floor(mExtents[0]/PetscTools::GetNumProcs()));
+    unsigned local_piece_size = piece_size;
+    if (PetscTools::AmTopMost())
+    {
+        local_piece_size = (mExtents[0] - piece_size*PetscTools::GetNumProcs()) + piece_size;
+    }
+
+    if(PetscTools::AmMaster())
+    {
+        mLocalIndexExtents.push_back(PetscTools::GetMyRank()*piece_size);
+    }
+    else
+    {
+        mLocalIndexExtents.push_back(PetscTools::GetMyRank()*piece_size-1);
+    }
+
+    mLocalIndexExtents.push_back(PetscTools::GetMyRank()*piece_size + local_piece_size-1);
+    mLocalIndexExtents.push_back(0);
+    mLocalIndexExtents.push_back(mExtents[1]-1);
+    mLocalIndexExtents.push_back(0);
+    mLocalIndexExtents.push_back(mExtents[2]-1);
 }
 
 template<unsigned DIM>
