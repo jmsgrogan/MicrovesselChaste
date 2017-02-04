@@ -351,15 +351,6 @@ $(document).ready(function(){
   
   
   
-    {
-      "title": "LambdaConf Winter Retreat",
-      "logo": "/resources/img/winterretreat2016.png",
-      "location": "Crested Butte, US-CO",
-      "start": "08 January 2017",
-      "end": "11 January 2017",
-      "url": "http://lambdaconf.us",
-    },
-  
   
   
   
