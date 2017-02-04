@@ -829,13 +829,22 @@ void RegularGrid<DIM>::SetUpVtkGrid()
 {
     // Set up a VTK grid
     mpVtkGrid = vtkSmartPointer<vtkImageData>::New();
+
     if (DIM == 3)
     {
-        mpVtkGrid->SetDimensions(mExtents[0], mExtents[1], mExtents[2]);
+        mpVtkGrid->SetExtent(mLocalIndexExtents[0],
+                mLocalIndexExtents[1],
+                mLocalIndexExtents[2],
+                mLocalIndexExtents[3],
+                mLocalIndexExtents[4],
+                mLocalIndexExtents[5]);
     }
     else
     {
-        mpVtkGrid->SetDimensions(mExtents[0], mExtents[1], 1);
+        mpVtkGrid->SetExtent(mLocalIndexExtents[0],
+                mLocalIndexExtents[1],
+                mLocalIndexExtents[2],
+                mLocalIndexExtents[3], 0, 0);
     }
     mpVtkGrid->SetSpacing(mSpacing/mReferenceLength, mSpacing/mReferenceLength, mSpacing/mReferenceLength);
 
@@ -865,7 +874,7 @@ vtkSmartPointer<vtkImageData> RegularGrid<DIM>::GetVtkGrid()
         SetUpVtkGrid();
     }
 
-    if (mPointSolution.size() == GetNumberOfPoints())
+    if (mPointSolution.size() == GetNumberOfLocalPoints())
     {
         vtkSmartPointer<vtkDoubleArray> pPointData = vtkSmartPointer<vtkDoubleArray>::New();
         pPointData->SetNumberOfComponents(1);

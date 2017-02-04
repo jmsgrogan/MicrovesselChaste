@@ -46,6 +46,9 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselNode.hpp"
 #include "VesselNetwork.hpp"
 #include "Vessel.hpp"
+#include "PetscTools.hpp"
+
+#include "PetscSetupAndFinalize.hpp"
 
 class TestNetworkToImage : public CxxTest::TestSuite
 {
@@ -53,6 +56,13 @@ public:
 
     void TestSingleVessel()
     {
+        std::string output_path = "TestNetworkToImage";
+        if(PetscTools::IsParallel())
+        {
+            output_path += "Parallel";
+        }
+        OutputFileHandler file_handler1 = OutputFileHandler(output_path);
+
         // Set up the network
         double length = 100.0;
         double radius = 20.0;
@@ -72,7 +82,6 @@ public:
         p_converter->Update();
 
         // Write out the image
-        OutputFileHandler file_handler1 = OutputFileHandler("TestNetworkToImage/");
         RegularGridWriter writer;
         writer.SetImage(p_converter->GetOutput());
         writer.SetFilename(file_handler1.GetOutputDirectoryFullPath()+"single_vessel.vti");

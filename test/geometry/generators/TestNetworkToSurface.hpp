@@ -45,6 +45,9 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "OutputFileHandler.hpp"
 #include "NetworkToSurface.hpp"
 #include "GeometryWriter.hpp"
+#include "PetscTools.hpp"
+
+#include "PetscSetupAndFinalize.hpp"
 
 class TestNetworkToSurface : public CxxTest::TestSuite
 {
@@ -52,6 +55,12 @@ public:
 
     void TestSingleVessel2d()
     {
+        std::string output_path = "TestNetworkToSurface";
+        if(PetscTools::IsParallel())
+        {
+            output_path += "Parallel";
+        }
+
         // Set up the network
         double length = 100.0;
         double radius = 20.0;
@@ -71,7 +80,7 @@ public:
         p_converter->Update();
 
         // Write out the image
-        OutputFileHandler file_handler1("TestNetworkToSurface/");
+        OutputFileHandler file_handler1(output_path);
         GeometryWriter writer;
         writer.SetInput(p_converter->GetSurface());
         writer.SetFileName(file_handler1.GetOutputDirectoryFullPath()+"single_vessel_2d.vtp");

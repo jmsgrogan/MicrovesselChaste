@@ -46,6 +46,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "SmartPointers.hpp"
 #include "OutputFileHandler.hpp"
 #include "RegularGrid.hpp"
+#include "PetscTools.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
@@ -56,7 +57,12 @@ public:
 
     void TestSingleVessel()
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDistanceMap/SingleVessel"));
+        std::string output_path = "TestDistanceMap/SingleVessel";
+        if(PetscTools::IsParallel())
+        {
+            output_path += "Parallel";
+        }
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, (output_path));
 
         // Set up the vessel network
         units::quantity<unit::length> vessel_length = 100 * 1.e-6 * unit::metres;
@@ -84,7 +90,12 @@ public:
 
     void Test3dBifurcationNetwork()
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDistanceMap/Test3dBifurcationNetwork", false));
+        std::string output_path = "TestDistanceMap/3dBifurcationNetwork";
+        if(PetscTools::IsParallel())
+        {
+            output_path += "Parallel";
+        }
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, (output_path, false));
 
         // Set up the vessel network
         units::quantity<unit::length> vessel_length = 100 * 1.e-6 * unit::metres;

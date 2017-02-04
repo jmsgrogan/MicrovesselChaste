@@ -54,6 +54,9 @@ public:
 
     void TestWriteSimpleGrid() throw(Exception)
     {
+        OutputFileHandler output_file_handler("TestRegularGridWriter", false);
+        std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("SimpleGrid.vti");
+
         // Set up a 3d grid
         boost::shared_ptr<RegularGrid<3> > p_grid_3d = RegularGrid<3>::Create();
         std::vector<unsigned> extents_3d(3);
@@ -65,9 +68,6 @@ public:
         TS_ASSERT_EQUALS(p_grid_3d->Get1dGridIndex(0,0,0), 0u)
         TS_ASSERT_EQUALS(p_grid_3d->Get1dGridIndex(3,1,2), 78u)
         TS_ASSERT_EQUALS(p_grid_3d->Get1dGridIndex(0,3,3), 120u)
-
-        OutputFileHandler output_file_handler("TestRegularGridWriter", false);
-        std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("SimpleGrid.vti");
 
         boost::shared_ptr<RegularGridWriter> p_writer = RegularGridWriter::Create();
         TS_ASSERT_THROWS_THIS(p_writer->Write(), "Output file not specified for image writer.");

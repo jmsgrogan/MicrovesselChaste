@@ -365,13 +365,19 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Write()
     }
 
     RegularGridWriter writer;
+    std::string extension = ".vti";
+    if(PetscTools::IsParallel())
+    {
+        extension = ".pvti";
+    }
+
     if(!this->mFilename.empty())
     {
-        writer.SetFilename((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/" + this->mFilename+".pvti"));
+        writer.SetFilename((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/" + this->mFilename+extension));
     }
     else
     {
-        writer.SetFilename((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/solution.pvti"));
+        writer.SetFilename((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/solution" + extension));
     }
 
     std::vector<unsigned> whole_extents(6,0);

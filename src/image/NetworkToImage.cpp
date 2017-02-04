@@ -159,6 +159,7 @@ void NetworkToImage<DIM>::Update()
     p_grid->SetUpVtkGrid();
     p_grid->SetPointValues(point_solution);
     mpImage = p_grid->GetVtkGrid();
+
     mpImage->GetPointData()->SetScalars(mpImage->GetPointData()->GetArray("Point Values"));
 }
 
