@@ -1,0 +1,19 @@
+# Enable C++ support
+language: cpp
+sudo: required
+dist: trusty
+# Compiler selection
+compiler:
+  - gcc
+# Build steps
+before_script:
+  - sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 422C4D99
+  - echo "deb http://www.cs.ox.ac.uk/chaste/ubuntu trusty/" | sudo tee -a /etc/apt/sources.list
+  - sudo apt-get update -qq
+  - sudo apt-get install libpq-dev libboost-all-dev python-numpy -y
+  - sudo cp /usr/lib/x86_64-linux-gnu/libpq.so /usr/lib/
+  - sudo apt-get install chaste-source -y
+  - git clone --depth=10 -b develop https://chaste.cs.ox.ac.uk/git/chaste.git chaste-source
+script:
+  - ln -s $PWD chaste-source/projects/ && mkdir chaste-build && cd chaste-build
+  - cmake ../chaste-source && make project_MicrovesselChaste && ctest -L project_MicrovesselChaste
