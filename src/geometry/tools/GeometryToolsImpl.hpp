@@ -216,6 +216,32 @@ bool IsPointInCone(const DimensionalChastePoint<DIM>& rPoint,
 
 template<unsigned DIM>
 bool IsPointInBox(const DimensionalChastePoint<DIM>& rPoint,
+        const c_vector<double, 6>& rBoundingBox, units::quantity<unit::length> lengthScale)
+{
+    bool point_in_box = false;
+    c_vector<double, DIM> dimensionless_point = rPoint.GetLocation(lengthScale);
+
+    bool inside_left = dimensionless_point[0] >= rBoundingBox[0];
+    bool inside_right = dimensionless_point[0] <= rBoundingBox[1];
+    if(inside_left && inside_right)
+    {
+        if(dimensionless_point[1] >= rBoundingBox[2] && dimensionless_point[1] <= rBoundingBox[3])
+        {
+            if(DIM==3)
+            {
+                return (dimensionless_point[2] >= rBoundingBox[4] && dimensionless_point[2] <= rBoundingBox[5]);
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }
+    return point_in_box;
+}
+
+template<unsigned DIM>
+bool IsPointInBox(const DimensionalChastePoint<DIM>& rPoint,
                   const DimensionalChastePoint<DIM>& rLocation, units::quantity<unit::length> spacing)
 {
     bool point_in_box = false;
@@ -292,68 +318,93 @@ bool IsPointInTetra(const DimensionalChastePoint<DIM>& rPoint, const std::vector
 template<unsigned DIM>
 units::quantity<unit::length> LengthOfLineInBox(const DimensionalChastePoint<DIM>& rStartPoint,
                          const DimensionalChastePoint<DIM>& rEndPoint,
-                         const DimensionalChastePoint<DIM>& rLocation, units::quantity<unit::length> spacing)
+                         const c_vector<double, 6>& rBoundingBox,
+                         units::quantity<unit::length> lengthScale)
 {
-    // If the line is fully in the box return its length
-    bool point1_in_box = IsPointInBox<DIM>(rStartPoint, rLocation, spacing);
-    bool point2_in_box = IsPointInBox<DIM>(rEndPoint, rLocation, spacing);
-    if(point1_in_box && point2_in_box)
+    // If neither point is in the box return 0
+    bool point1_in_box = IsPointInBox<DIM>(rStartPoint, rBoundingBox, lengthScale);
+    bool point2_in_box = IsPointInBox<DIM>(rEndPoint, rBoundingBox, lengthScale);
+
+    double t1;
+    double t2;
+    int plane1;
+    int plane2;
+    c_vector<double,3> intercept_1;
+    c_vector<double,3> intercept_2;
+    c_vector<double,3> dimensionless_start;
+    dimensionless_start[0] = rStartPoint.GetLocation(lengthScale)[0];
+    dimensionless_start[1] = rStartPoint.GetLocation(lengthScale)[1];
+    if(DIM==3)
     {
-        return GetDistance(rEndPoint, rStartPoint);
+        dimensionless_start[2] = rStartPoint.GetLocation(lengthScale)[2];
     }
     else
     {
-        units::quantity<unit::length> scale_factor = rLocation.GetReferenceLengthScale();
-        double dimensionless_spacing = spacing/scale_factor;
-
-        c_vector<double,6> dimensionless_bounds;
-        c_vector<double, DIM> dimensionless_location = rLocation.GetLocation(scale_factor);
-        dimensionless_bounds[0] = dimensionless_location[0] - dimensionless_spacing/2.0;
-        dimensionless_bounds[1] = dimensionless_location[0] + dimensionless_spacing/2.0;
-        dimensionless_bounds[2] = dimensionless_location[1] - dimensionless_spacing/2.0;
-        dimensionless_bounds[3] = dimensionless_location[1] + dimensionless_spacing/2.0;
-        if(DIM==3)
-        {
-            dimensionless_bounds[4] = dimensionless_location[2] - dimensionless_spacing/2.0;
-            dimensionless_bounds[5] = dimensionless_location[2] + dimensionless_spacing/2.0;
-        }
-        else
-        {
-            dimensionless_bounds[4] = 0.0;
-            dimensionless_bounds[5] = 0.0;
-        }
-
-        double t1;
-        double t2;
-        int plane1;
-        int plane2;
-        c_vector<double,DIM> intercept_1;
-        c_vector<double,DIM> intercept_2;
-
-        c_vector<double,3> dimensionless_start = rStartPoint.GetLocation(scale_factor);
-        c_vector<double,3> dimensionless_end = rEndPoint.GetLocation(scale_factor);
-        int in_box = vtkBox::IntersectWithLine(&dimensionless_bounds[0], &dimensionless_start[0], &dimensionless_end[0],
-                                               t1, t2, &intercept_1[0], &intercept_2[0], plane1, plane2);
-
-        if(point1_in_box)
-        {
-            return norm_2(intercept_2 - dimensionless_start)*scale_factor;
-        }
-
-        if(point2_in_box)
-        {
-            return norm_2(intercept_1 - dimensionless_end)*scale_factor;
-        }
-
-        if(in_box)
-        {
-            return norm_2(intercept_2 - intercept_1)*scale_factor;
-        }
-        else
-        {
-            return 0.0*scale_factor;
-        }
+        dimensionless_start[2] = 0.0;
     }
+    c_vector<double,3> dimensionless_end;
+    dimensionless_end[0] = rEndPoint.GetLocation(lengthScale)[0];
+    dimensionless_end[1] = rEndPoint.GetLocation(lengthScale)[1];
+    if(DIM==3)
+    {
+        dimensionless_end[2] = rEndPoint.GetLocation(lengthScale)[2];
+    }
+    else
+    {
+        dimensionless_end[2] = 0.0;
+    }
+    int crosses = vtkBox::IntersectWithLine(&rBoundingBox[0], &dimensionless_start[0], &dimensionless_end[0],
+            t1, t2, &intercept_1[0], &intercept_2[0], plane1, plane2);
+
+    if(!point1_in_box && !point2_in_box and !crosses)
+    {
+        return 0.0*lengthScale;
+    }
+    else
+    {
+        return norm_2(dimensionless_start - dimensionless_end)*(t2-t1)*lengthScale;
+    }
+}
+
+template<unsigned DIM>
+units::quantity<unit::length> LengthOfLineInBox(const DimensionalChastePoint<DIM>& rStartPoint,
+                         const DimensionalChastePoint<DIM>& rEndPoint,
+                         const DimensionalChastePoint<DIM>& rLocation,
+                         units::quantity<unit::length> spacing)
+{
+
+    units::quantity<unit::length> scale_factor = rLocation.GetReferenceLengthScale();
+
+    double dimensionless_spacing = spacing/scale_factor;
+    c_vector<double, 3> dimensionless_location;
+    dimensionless_location[0] = rLocation.GetLocation(scale_factor)[0];
+    dimensionless_location[1] = rLocation.GetLocation(scale_factor)[1];
+    if(DIM==3)
+    {
+        dimensionless_location[2] = rLocation.GetLocation(scale_factor)[2];
+    }
+    else
+    {
+        dimensionless_location[2] = 0.0;
+    }
+
+    c_vector<double,6> dimensionless_bounds;
+    dimensionless_bounds[0] = dimensionless_location[0] - dimensionless_spacing/2.0;
+    dimensionless_bounds[1] = dimensionless_location[0] + dimensionless_spacing/2.0;
+    dimensionless_bounds[2] = dimensionless_location[1] - dimensionless_spacing/2.0;
+    dimensionless_bounds[3] = dimensionless_location[1] + dimensionless_spacing/2.0;
+    if(DIM==3)
+    {
+        dimensionless_bounds[4] = dimensionless_location[2] - dimensionless_spacing/2.0;
+        dimensionless_bounds[5] = dimensionless_location[2] + dimensionless_spacing/2.0;
+    }
+    else
+    {
+        dimensionless_bounds[4] = 1.0;
+        dimensionless_bounds[5] = -1.0;
+    }
+
+    return LengthOfLineInBox(rStartPoint,rEndPoint,dimensionless_bounds, scale_factor);
 }
 
 template<unsigned DIM>
@@ -361,6 +412,10 @@ units::quantity<unit::length> LengthOfLineInTetra(const DimensionalChastePoint<D
                            const DimensionalChastePoint<DIM>& rEndPoint,
                            const std::vector<DimensionalChastePoint<DIM> >& locations)
 {
+    if (DIM==2)
+    {
+        EXCEPTION("This method expects 3D inputs");
+    }
     bool point1_in_tetra = IsPointInTetra<DIM>(rStartPoint, locations);
     bool point2_in_tetra = IsPointInTetra<DIM>(rEndPoint, locations);
 

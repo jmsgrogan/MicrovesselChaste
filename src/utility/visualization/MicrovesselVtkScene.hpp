@@ -40,10 +40,15 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "SmartPointers.hpp"
 #include <vtkVersion.h>
 #if VTK_MAJOR_VERSION > 5
-    #include <vtkAutoInit.h>
-    VTK_MODULE_INIT(vtkRenderingOpenGL);
-    VTK_MODULE_INIT(vtkRenderingFreeType);
-    #include <vtkOggTheoraWriter.h>
+    #if VTK_MINOR_VERSION > 0
+        #include <vtkAutoInit.h>
+        VTK_MODULE_INIT(vtkRenderingOpenGL);
+        VTK_MODULE_INIT(vtkRenderingFreeType);
+        #include <vtkOggTheoraWriter.h>
+    #else
+        #define vtkRenderingCore_AUTOINIT 4(vtkInteractionStyle,vtkRenderingFreeType,vtkRenderingFreeTypeOpenGL,vtkRenderingOpenGL)
+        #define vtkRenderingVolume_AUTOINIT 1(vtkRenderingVolumeOpenGL)
+    #endif
 #endif
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>

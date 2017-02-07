@@ -40,7 +40,17 @@ Copyright (c) 2005-2016, University of Oxford.
 
 template<unsigned DIM>
 DensityMap<DIM>::DensityMap()
-    :   AbstractRegularGridDiscreteContinuumSolver<DIM>()
+    :   AbstractRegularGridDiscreteContinuumSolver<DIM>(),
+        mUseSurfaceBasedVesselDensity(false),
+        mUseLineBasedVesselDensity(true),
+        mUsePointBasedVesselDensity(false),
+        mUseCellDensity(false),
+        m2dProjectedDensity(),
+        m1dProjectedDensity(),
+        mUseBranchDensity(false),
+        mUseTipDensity(false),
+        mUsePerfusedDensity(false),
+        mRegressingDensity(false)
 {
 
 }
@@ -56,6 +66,66 @@ template<unsigned DIM>
 DensityMap<DIM>::~DensityMap()
 {
 
+}
+
+template<unsigned DIM>
+std::vector<double> DensityMap<DIM>::Get2dProjectedDensity()
+{
+    return m2dProjectedDensity;
+}
+
+template<unsigned DIM>
+std::vector<double> DensityMap<DIM>::Get1dProjectedDensity()
+{
+    return m1dProjectedDensity;
+}
+
+template<unsigned DIM>
+void DensityMap<DIM>::SetUseLineBasedVesselDensity(bool useLineBased)
+{
+    mUseLineBasedVesselDensity = useLineBased;
+}
+
+template<unsigned DIM>
+void DensityMap<DIM>::SetUseSurfaceBasedVesselDensity(bool useSurfaceBased)
+{
+    mUseSurfaceBasedVesselDensity = useSurfaceBased;
+}
+
+template<unsigned DIM>
+void DensityMap<DIM>::SetUsePointBasedVesselDensity(bool usePointBased)
+{
+    mUsePointBasedVesselDensity = usePointBased;
+}
+
+template<unsigned DIM>
+void DensityMap<DIM>::SetUseCellDensity(bool useCellBased)
+{
+    mUseCellDensity = useCellBased;
+}
+
+template<unsigned DIM>
+void DensityMap<DIM>::SetUseBranchDensity(bool useBranchBased)
+{
+    mUseBranchDensity = useBranchBased;
+}
+
+template<unsigned DIM>
+void DensityMap<DIM>::SetUseTipDensity(bool useTipBased)
+{
+    mUseTipDensity = useTipBased;
+}
+
+template<unsigned DIM>
+void DensityMap<DIM>::SetUsePerfusedDensity(bool usePerfusedBased)
+{
+    mUsePerfusedDensity = usePerfusedBased;
+}
+
+template<unsigned DIM>
+void DensityMap<DIM>::SetUseRegressingDensity(bool useRegressingBased)
+{
+    mRegressingDensity = useRegressingBased;
 }
 
 template<unsigned DIM>
@@ -89,7 +159,8 @@ void DensityMap<DIM>::Solve()
                     {
                         vessel_solution[grid_index] += LengthOfLineInBox(segments[idx]->GetNode(0)->rGetLocation(),
                                                                          segments[idx]->GetNode(1)->rGetLocation(),
-                                                                         this->mpRegularGrid->GetLocation(k ,j, i), spacing)/this->mpRegularGrid->GetReferenceLengthScale();
+                                                                         this->mpRegularGrid->GetPointBoundingBox(k ,j, i),
+                                                                         this->mpRegularGrid->GetReferenceLengthScale())/this->mpRegularGrid->GetReferenceLengthScale();
                     }
                     vessel_solution[grid_index] /= std::pow(dimensionless_spacing, 3);
                 }

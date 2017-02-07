@@ -55,6 +55,9 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned DIM>
 class AbstractRegularGridDiscreteContinuumSolver : public AbstractDiscreteContinuumSolver<DIM>
 {
+
+public:
+
     using AbstractDiscreteContinuumSolver<DIM>::GetConcentrations;
     using AbstractDiscreteContinuumSolver<DIM>::GetSolution;
     using AbstractDiscreteContinuumSolver<DIM>::UpdateSolution;

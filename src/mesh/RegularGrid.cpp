@@ -753,6 +753,74 @@ bool RegularGrid<DIM>::IsOnBoundary(unsigned x_index, unsigned y_index, unsigned
 }
 
 template<unsigned DIM>
+c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsigned yIndex, unsigned zIndex)
+{
+    units::quantity<unit::length> scale_factor = GetReferenceLengthScale();
+    double dimensionless_spacing = GetSpacing()/scale_factor;
+
+    c_vector<double, 3> dimensionless_location;
+    dimensionless_location[0] = GetLocation(xIndex ,yIndex, zIndex).GetLocation(scale_factor)[0];
+    dimensionless_location[1] = GetLocation(xIndex ,yIndex, zIndex).GetLocation(scale_factor)[1];
+    if(DIM==3)
+    {
+        dimensionless_location[2] = GetLocation(xIndex ,yIndex, zIndex).GetLocation(scale_factor)[2];
+    }
+    else
+    {
+        dimensionless_location[2] = 0.0;
+    }
+
+    double x_min_offset = dimensionless_spacing/2.0;
+    double x_max_offset = dimensionless_spacing/2.0;
+    double y_min_offset = dimensionless_spacing/2.0;
+    double y_max_offset = dimensionless_spacing/2.0;
+    if (xIndex == 0)
+    {
+        x_min_offset = 0.0;
+    }
+    if (xIndex == mExtents[0] - 1)
+    {
+        x_max_offset = 0.0;
+    }
+    if (yIndex == 0)
+    {
+        y_min_offset = 0.0;
+    }
+    if (yIndex == mExtents[1] - 1)
+    {
+        y_max_offset = 0.0;
+    }
+
+    c_vector<double,6> dimensionless_bounds;
+    dimensionless_bounds[0] = dimensionless_location[0] - x_min_offset;
+    dimensionless_bounds[1] = dimensionless_location[0] + x_max_offset;
+    dimensionless_bounds[2] = dimensionless_location[1] - y_min_offset;
+    dimensionless_bounds[3] = dimensionless_location[1] + y_max_offset;
+    if(DIM==3)
+    {
+        double z_min_offset = dimensionless_spacing/2.0;
+        double z_max_offset = dimensionless_spacing/2.0;
+        if (zIndex == 0)
+        {
+            z_min_offset = 0.0;
+        }
+        if (zIndex == mExtents[2] - 1)
+        {
+            z_max_offset = 0.0;
+        }
+
+        dimensionless_bounds[4] = dimensionless_location[2] - z_min_offset;
+        dimensionless_bounds[5] = dimensionless_location[2] + z_max_offset;
+    }
+    else
+    {
+        dimensionless_bounds[4] = 1.0;
+        dimensionless_bounds[5] = -1.0;
+    }
+    return dimensionless_bounds;
+}
+
+template<unsigned DIM>
 bool RegularGrid<DIM>::IsLocationInPointVolume(DimensionalChastePoint<DIM> point, unsigned gridIndex)
 {
     bool point_in_box = false;

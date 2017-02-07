@@ -46,6 +46,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "SmartPointers.hpp"
 #include "OutputFileHandler.hpp"
 #include "RegularGrid.hpp"
+#include "BaseUnits.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
@@ -54,40 +55,115 @@ class TestDensityMap : public CxxTest::TestSuite
 
 public:
 
-    void TestSingleVessel()
+    void TestAllInsideBoxAndAllOutsideBox2d()
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDensityMap/SingleVessel"));
-
         // Set up the vessel network
-        units::quantity<unit::length> vessel_length = 100 * 1.e-6 * unit::metres;
+        BaseUnits::Instance()->SetReferenceLengthScale(1.0 * unit::metres);
+        units::quantity<unit::length> vessel_length = 0.15 * unit::metres;
         VesselNetworkGenerator<2> generator;
-        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length,
-                DimensionalChastePoint<2>(40.0, 0.0, 0.0, 1.e-6 * unit::metres));
-
-        p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"/network.vtp");
+        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(
+                vessel_length, DimensionalChastePoint<2>(0.25, 0.05, 0.0, 1.0*unit::metres));
 
         // Set up the grid
         boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(1.0 * vessel_length,
-                            1.0 * vessel_length,
-                            DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        p_domain->AddRectangle(2.0 * unit::metres, 2.0 * unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        p_grid->GenerateFromPart(p_domain, 20.0e-6 * unit::metres);
+        p_grid->GenerateFromPart(p_domain, 1.0 * unit::metres);
 
         // Get the map
         DensityMap<2> solver;
         solver.SetVesselNetwork(p_network);
         solver.SetGrid(p_grid);
-
-        solver.SetFileHandler(p_output_file_handler);
-        solver.SetWriteSolution(true);
-        solver.Setup();
         solver.Solve();
+
+        // Check the density
+        TS_ASSERT_DELTA(solver.GetSolution()[0], 0.15/(1.0*1.0), 1e-6);
+        TS_ASSERT_DELTA(solver.GetSolution()[1], 0.0, 1e-6);
+    }
+
+    void TestCrossingBoxes2d()
+    {
+        // Set up the vessel network
+        units::quantity<unit::length> vessel_length = 0.5 * unit::metres;
+        VesselNetworkGenerator<2> generator;
+        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(
+                vessel_length, DimensionalChastePoint<2>(0.25, 0.25, 0.0, 1.0*unit::metres));
+
+        // Set up the grid
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(2.0 * unit::metres, 2.0 * unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        p_grid->GenerateFromPart(p_domain, 1.0 * unit::metres);
+
+        // Get the map
+        DensityMap<2> solver;
+        solver.SetVesselNetwork(p_network);
+        solver.SetGrid(p_grid);
+        solver.Solve();
+
+        // Check the density
+        TS_ASSERT_DELTA(solver.GetSolution()[0], 0.25/(1.0*1.0), 1e-6);
+        TS_ASSERT_DELTA(solver.GetSolution()[3], 0.25/(1.0*1.0), 1e-6);
+    }
+
+    void TestAllInsideBoxAndAllOutsideBox3d()
+    {
+        // Set up the vessel network
+        BaseUnits::Instance()->SetReferenceLengthScale(1.0 * unit::metres);
+        units::quantity<unit::length> vessel_length = 0.15 * unit::metres;
+        VesselNetworkGenerator<3> generator;
+        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(
+                vessel_length, DimensionalChastePoint<3>(0.25, 0.05, 0.05, 1.0*unit::metres));
+
+        // Set up the grid
+        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
+        p_domain->AddCuboid(2.0 * unit::metres, 2.0 * unit::metres, 2.0 * unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        p_grid->GenerateFromPart(p_domain, 1.0 * unit::metres);
+
+        // Get the map
+        DensityMap<3> solver;
+        solver.SetVesselNetwork(p_network);
+        solver.SetGrid(p_grid);
+        solver.Solve();
+
+        // Check the density
+        TS_ASSERT_DELTA(solver.GetSolution()[0], 0.15/(1.0*1.0), 1e-6);
+        TS_ASSERT_DELTA(solver.GetSolution()[1], 0.0, 1e-6);
+        TS_ASSERT_DELTA(solver.GetSolution()[2], 0.0, 1e-6);
+        TS_ASSERT_DELTA(solver.GetSolution()[3], 0.0, 1e-6);
+        TS_ASSERT_DELTA(solver.GetSolution()[4], 0.0, 1e-6);
+    }
+
+    void TestCrossingBoxes3d()
+    {
+        // Set up the vessel network
+        units::quantity<unit::length> vessel_length = 0.5 * unit::metres;
+        VesselNetworkGenerator<3> generator;
+        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(
+                vessel_length, DimensionalChastePoint<3>(0.25, 0.25, 0.0, 1.0*unit::metres), 1, 1);
+
+        // Set up the grid
+        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
+        p_domain->AddCuboid(2.0 * unit::metres, 2.0 * unit::metres, 2.0 * unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        p_grid->GenerateFromPart(p_domain, 1.0 * unit::metres);
+
+        // Get the map
+        DensityMap<3> solver;
+        solver.SetVesselNetwork(p_network);
+        solver.SetGrid(p_grid);
+        solver.Solve();
+
+        // Check the density
+        TS_ASSERT_DELTA(solver.GetSolution()[0], 0.25/(1.0*1.0), 1e-6);
+        TS_ASSERT_DELTA(solver.GetSolution()[3], 0.25/(1.0*1.0), 1e-6);
+        TS_ASSERT_DELTA(solver.GetSolution()[4], 0.0, 1e-6);
     }
 
     void TestBifurcationNetwork()
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDensityMap/ Bifurcation", false));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDensityMap/Bifurcation", false));
 
         // Set up the vessel network
         units::quantity<unit::length> vessel_length = 100 * 1.e-6 * unit::metres;

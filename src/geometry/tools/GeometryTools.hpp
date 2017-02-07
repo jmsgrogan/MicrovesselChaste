@@ -151,6 +151,17 @@ bool IsPointInBox(const DimensionalChastePoint<DIM>& rPoint,
                   const DimensionalChastePoint<DIM>& rLocation, units::quantity<unit::length> spacing);
 
 /**
+ * Is the point inside the cube box defined by a centre location and bounds
+ * @param rPoint the point
+ * @param rBoundingBox the dimensionless bounds
+ * @param lengthScale the reference length scale
+ * @return is the point inside the box
+ */
+template<unsigned DIM>
+bool IsPointInBox(const DimensionalChastePoint<DIM>& rPoint,
+        const c_vector<double, 6>& rBoundingBox, units::quantity<unit::length> lengthScale);
+
+/**
  * Is the point inside the tetrahedron given by the vector of vertex locations
  * @param rPoint the point
  * @param locations the tetrahedron vertices
@@ -170,6 +181,20 @@ template<unsigned DIM>
 units::quantity<unit::length> LengthOfLineInBox(const DimensionalChastePoint<DIM>& rStartPoint,
                          const DimensionalChastePoint<DIM>& rEndPoint,
                          const DimensionalChastePoint<DIM>& rBoxCentre, units::quantity<unit::length> spacing);
+
+/**
+ * Return the length of the line given by a start point and end point
+ * @param rStartPoint the line start
+ * @param rEndPoint the line end
+ * @param bounding_box the dimensionless box dimensions
+ * @param reference_length length scale for the box dimensions
+ * @return the length of the line in the box
+ */
+template<unsigned DIM>
+units::quantity<unit::length> LengthOfLineInBox(const DimensionalChastePoint<DIM>& rStartPoint,
+                         const DimensionalChastePoint<DIM>& rEndPoint,
+                         const c_vector<double, 6>& rBoundingBox,
+                         units::quantity<unit::length> lengthScale);
 
 /**
  * Return the length of the line given by a start point and end point in the tetrahedron given by vertex locations
