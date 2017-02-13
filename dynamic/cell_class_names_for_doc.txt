@@ -1,36 +1,48 @@
 .. autoclass:: microvessel_chaste.cell.AbstractCellMutationState
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.cell.CancerCellMutationState
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.cell.Owen2011OxygenBasedCellCycleModel
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.cell.Owen11CellPopulationGenerator2
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.cell.Owen11CellPopulationGenerator3
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.cell.QuiescentCancerCellMutationState
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.cell.StalkCellMutationState
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.cell.TipCellMutationState
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.cell.VesselCellMutationState
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.cell.MacrophageMutationState
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.cell.CaBasedCellPopulation2
-:members:
+	:members:
 
 .. autoclass:: microvessel_chaste.cell.CaBasedCellPopulation3
-:members:
+	:members:
+
+.. autoclass:: microvessel_chaste.cell.LQRadiotherapyCellKiller2
+	:members:
+
+.. autoclass:: microvessel_chaste.cell.LQRadiotherapyCellKiller3
+	:members:
+
+.. autoclass:: microvessel_chaste.cell.AbstractCellKiller2
+	:members:
+
+.. autoclass:: microvessel_chaste.cell.AbstractCellKiller3
+	:members:
 

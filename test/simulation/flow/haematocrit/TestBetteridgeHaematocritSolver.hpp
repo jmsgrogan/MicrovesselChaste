@@ -111,6 +111,47 @@ void TestBifurcationInflowNetwork() throw(Exception)
     TS_ASSERT_DELTA(p_vessel3->GetSegments()[0]->GetFlowProperties()->GetHaematocrit(),5.0*0.45, 1e-6);
 }
 
+void TestTwoInTwoOutNetwork() throw(Exception)
+{
+    boost::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 0.0);
+    boost::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(100.0e-6, 100.0e-6);
+    boost::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(0.0e-6, 100.0e-6);
+    boost::shared_ptr<VesselNode<2> > p_node4 = VesselNode<2>::Create(200.0e-6, 100.0e-6);
+    boost::shared_ptr<VesselNode<2> > p_node5 = VesselNode<2>::Create(200.0e-6, 0.0);
+    p_node1->GetFlowProperties()->SetIsInputNode(true);
+    p_node3->GetFlowProperties()->SetIsInputNode(true);
+
+    boost::shared_ptr<VesselSegment<2> > p_segment1(VesselSegment<2>::Create(p_node1, p_node2));
+    boost::shared_ptr<VesselSegment<2> > p_segment2(VesselSegment<2>::Create(p_node3, p_node2));
+    boost::shared_ptr<VesselSegment<2> > p_segment3(VesselSegment<2>::Create(p_node2, p_node4));
+    boost::shared_ptr<VesselSegment<2> > p_segment4(VesselSegment<2>::Create(p_node2, p_node5));
+
+    boost::shared_ptr<Vessel<2> > p_vessel1(Vessel<2>::Create(p_segment1));
+    boost::shared_ptr<Vessel<2> > p_vessel2(Vessel<2>::Create(p_segment2));
+    boost::shared_ptr<Vessel<2> > p_vessel3(Vessel<2>::Create(p_segment3));
+    boost::shared_ptr<Vessel<2> > p_vessel4(Vessel<2>::Create(p_segment4));
+    p_vessel1->GetSegments()[0]->GetFlowProperties()->SetFlowRate(1.0 * unit::metre_cubed_per_second);
+    p_vessel2->GetSegments()[0]->GetFlowProperties()->SetFlowRate(1.0 * unit::metre_cubed_per_second);
+    p_vessel3->GetSegments()[0]->GetFlowProperties()->SetFlowRate(1.0 * unit::metre_cubed_per_second);
+    p_vessel4->GetSegments()[0]->GetFlowProperties()->SetFlowRate(1.0 * unit::metre_cubed_per_second);
+
+    boost::shared_ptr<VesselNetwork<2> > p_network = boost::shared_ptr<VesselNetwork<2> >(new VesselNetwork<2>);
+    p_network->AddVessel(p_vessel1);
+    p_network->AddVessel(p_vessel2);
+    p_network->AddVessel(p_vessel3);
+    p_network->AddVessel(p_vessel4);
+
+    boost::shared_ptr<BetteridgeHaematocritSolver<2> > p_haematocrit_calculator(new BetteridgeHaematocritSolver<2>());
+    p_haematocrit_calculator->SetVesselNetwork(p_network);
+    p_haematocrit_calculator->SetUseHigherConnectivityBranches(true);
+    p_haematocrit_calculator->Calculate();
+
+    TS_ASSERT_DELTA(double(p_vessel1->GetSegments()[0]->GetFlowProperties()->GetHaematocrit()),0.45, 1e-6);
+    TS_ASSERT_DELTA(double(p_vessel2->GetSegments()[0]->GetFlowProperties()->GetHaematocrit()),0.45, 1e-6);
+    TS_ASSERT_DELTA(double(p_vessel3->GetSegments()[0]->GetFlowProperties()->GetHaematocrit()),0.45, 1e-6);
+    TS_ASSERT_DELTA(double(p_vessel4->GetSegments()[0]->GetFlowProperties()->GetHaematocrit()),0.45, 1e-6);
+}
+
 void TestBifurcationOutflowNetwork() throw(Exception)
 {
     boost::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 0.0);

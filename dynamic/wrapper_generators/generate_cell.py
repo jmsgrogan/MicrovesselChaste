@@ -51,7 +51,11 @@ def update_builder(builder):
                        "VesselCellMutationState",
                        "MacrophageMutationState",
                        "CaBasedCellPopulation<2>",
-                       "CaBasedCellPopulation<3>"]
+                       "CaBasedCellPopulation<3>",
+                       "LQRadiotherapyCellKiller<2>",
+                       "LQRadiotherapyCellKiller<3>",
+                       "AbstractCellKiller<2>",
+                       "AbstractCellKiller<3>"]
             
     class_collection = []
 
@@ -63,8 +67,10 @@ def update_builder(builder):
             builder.class_(eachClass).rename(new_name) 
             
     builder.class_("Owen2011OxygenBasedCellCycleModel").member_function("CreateCellCycleModel").call_policies = call_policies.return_value_policy(call_policies.manage_new_object)
-    
+    default_pointer_policy = call_policies.return_value_policy(call_policies.manage_new_object)
+      
     for eachTemplate in ["<2>", "<3>"]:
+        builder.class_("AbstractCellKiller"+eachTemplate).member_functions('GetCellPopulation').call_policies = default_pointer_policy 
         builder.class_("CaBasedCellPopulation"+eachTemplate).member_functions("GetNode").exclude()
         builder.class_("CaBasedCellPopulation"+eachTemplate).member_functions(lambda decl: decl.name.startswith("rGetMesh")).exclude()
         builder.class_("CaBasedCellPopulation"+eachTemplate).member_functions(lambda decl: decl.name.startswith("GetTetrahedralMeshForPdeModifier")).exclude()

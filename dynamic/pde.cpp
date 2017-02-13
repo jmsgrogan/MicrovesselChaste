@@ -9582,6 +9582,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
                 , default_Solve_function_type(&FunctionMap_less__2__greater__wrapper::default_Solve) );
         
         }
+        { //::FunctionMap< 2 >::UpdateFunctionSolution
+        
+            typedef FunctionMap< 2 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateFunctionSolution_function_type)( ::std::vector< double > & ) ;
+            
+            FunctionMap2_exposer.def( 
+                "UpdateFunctionSolution"
+                , UpdateFunctionSolution_function_type( &::FunctionMap< 2 >::UpdateFunctionSolution )
+                , ( bp::arg("rData") ) );
+        
+        }
         { //::AbstractDiscreteContinuumSolver< 2 >::GetConcentrations
         
             typedef FunctionMap< 2 > exported_class_t;
@@ -9826,6 +9837,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
                 "Solve"
                 , Solve_function_type(&::FunctionMap< 3 >::Solve)
                 , default_Solve_function_type(&FunctionMap_less__3__greater__wrapper::default_Solve) );
+        
+        }
+        { //::FunctionMap< 3 >::UpdateFunctionSolution
+        
+            typedef FunctionMap< 3 > exported_class_t;
+            typedef void ( exported_class_t::*UpdateFunctionSolution_function_type)( ::std::vector< double > & ) ;
+            
+            FunctionMap3_exposer.def( 
+                "UpdateFunctionSolution"
+                , UpdateFunctionSolution_function_type( &::FunctionMap< 3 >::UpdateFunctionSolution )
+                , ( bp::arg("rData") ) );
         
         }
         { //::AbstractDiscreteContinuumSolver< 3 >::GetConcentrations

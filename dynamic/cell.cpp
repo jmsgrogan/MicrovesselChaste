@@ -14,6 +14,48 @@
 
 namespace bp = boost::python;
 
+struct AbstractCellKiller_less__2__greater__wrapper : AbstractCellKiller< 2 >, bp::wrapper< AbstractCellKiller< 2 > > {
+
+    AbstractCellKiller_less__2__greater__wrapper(::AbstractCellPopulation< 2, 2 > * pCellPopulation )
+    : AbstractCellKiller<2>( boost::python::ptr(pCellPopulation) )
+      , bp::wrapper< AbstractCellKiller< 2 > >(){
+        // constructor
+    
+    }
+
+    virtual void CheckAndLabelCellsForApoptosisOrDeath(  ){
+        bp::override func_CheckAndLabelCellsForApoptosisOrDeath = this->get_override( "CheckAndLabelCellsForApoptosisOrDeath" );
+        func_CheckAndLabelCellsForApoptosisOrDeath(  );
+    }
+
+    virtual void OutputCellKillerParameters( ::out_stream & rParamsFile ){
+        bp::override func_OutputCellKillerParameters = this->get_override( "OutputCellKillerParameters" );
+        func_OutputCellKillerParameters( boost::ref(rParamsFile) );
+    }
+
+};
+
+struct AbstractCellKiller_less__3__greater__wrapper : AbstractCellKiller< 3 >, bp::wrapper< AbstractCellKiller< 3 > > {
+
+    AbstractCellKiller_less__3__greater__wrapper(::AbstractCellPopulation< 3, 3 > * pCellPopulation )
+    : AbstractCellKiller<3>( boost::python::ptr(pCellPopulation) )
+      , bp::wrapper< AbstractCellKiller< 3 > >(){
+        // constructor
+    
+    }
+
+    virtual void CheckAndLabelCellsForApoptosisOrDeath(  ){
+        bp::override func_CheckAndLabelCellsForApoptosisOrDeath = this->get_override( "CheckAndLabelCellsForApoptosisOrDeath" );
+        func_CheckAndLabelCellsForApoptosisOrDeath(  );
+    }
+
+    virtual void OutputCellKillerParameters( ::out_stream & rParamsFile ){
+        bp::override func_OutputCellKillerParameters = this->get_override( "OutputCellKillerParameters" );
+        func_OutputCellKillerParameters( boost::ref(rParamsFile) );
+    }
+
+};
+
 struct CaBasedCellPopulation_less__2__greater__wrapper : CaBasedCellPopulation< 2 >, bp::wrapper< CaBasedCellPopulation< 2 > > {
 
     CaBasedCellPopulation_less__2__greater__wrapper(::PottsMesh< 2 > & rMesh, ::std::vector< boost::shared_ptr<Cell> > & rCells, ::std::vector< unsigned int > const locationIndices, unsigned int latticeCarryingCapacity=1U, bool deleteMesh=false, bool validate=false )
@@ -650,6 +692,90 @@ struct CaBasedCellPopulation_less__3__greater__wrapper : CaBasedCellPopulation< 
 
 };
 
+struct LQRadiotherapyCellKiller_less__2__greater__wrapper : LQRadiotherapyCellKiller< 2 >, bp::wrapper< LQRadiotherapyCellKiller< 2 > > {
+
+    LQRadiotherapyCellKiller_less__2__greater__wrapper(LQRadiotherapyCellKiller<2> const & arg )
+    : LQRadiotherapyCellKiller<2>( arg )
+      , bp::wrapper< LQRadiotherapyCellKiller< 2 > >(){
+        // copy constructor
+        
+    }
+
+    LQRadiotherapyCellKiller_less__2__greater__wrapper(::AbstractCellPopulation< 2, 2 > * pCellPopulation )
+    : LQRadiotherapyCellKiller<2>( boost::python::ptr(pCellPopulation) )
+      , bp::wrapper< LQRadiotherapyCellKiller< 2 > >(){
+        // constructor
+    
+    }
+
+    virtual void CheckAndLabelCellsForApoptosisOrDeath(  ) {
+        if( bp::override func_CheckAndLabelCellsForApoptosisOrDeath = this->get_override( "CheckAndLabelCellsForApoptosisOrDeath" ) )
+            func_CheckAndLabelCellsForApoptosisOrDeath(  );
+        else{
+            this->LQRadiotherapyCellKiller< 2 >::CheckAndLabelCellsForApoptosisOrDeath(  );
+        }
+    }
+    
+    void default_CheckAndLabelCellsForApoptosisOrDeath(  ) {
+        LQRadiotherapyCellKiller< 2 >::CheckAndLabelCellsForApoptosisOrDeath( );
+    }
+
+    virtual void OutputCellKillerParameters( ::out_stream & rParamsFile ) {
+        if( bp::override func_OutputCellKillerParameters = this->get_override( "OutputCellKillerParameters" ) )
+            func_OutputCellKillerParameters( boost::ref(rParamsFile) );
+        else{
+            this->LQRadiotherapyCellKiller< 2 >::OutputCellKillerParameters( boost::ref(rParamsFile) );
+        }
+    }
+    
+    void default_OutputCellKillerParameters( ::out_stream & rParamsFile ) {
+        LQRadiotherapyCellKiller< 2 >::OutputCellKillerParameters( boost::ref(rParamsFile) );
+    }
+
+};
+
+struct LQRadiotherapyCellKiller_less__3__greater__wrapper : LQRadiotherapyCellKiller< 3 >, bp::wrapper< LQRadiotherapyCellKiller< 3 > > {
+
+    LQRadiotherapyCellKiller_less__3__greater__wrapper(LQRadiotherapyCellKiller<3> const & arg )
+    : LQRadiotherapyCellKiller<3>( arg )
+      , bp::wrapper< LQRadiotherapyCellKiller< 3 > >(){
+        // copy constructor
+        
+    }
+
+    LQRadiotherapyCellKiller_less__3__greater__wrapper(::AbstractCellPopulation< 3, 3 > * pCellPopulation )
+    : LQRadiotherapyCellKiller<3>( boost::python::ptr(pCellPopulation) )
+      , bp::wrapper< LQRadiotherapyCellKiller< 3 > >(){
+        // constructor
+    
+    }
+
+    virtual void CheckAndLabelCellsForApoptosisOrDeath(  ) {
+        if( bp::override func_CheckAndLabelCellsForApoptosisOrDeath = this->get_override( "CheckAndLabelCellsForApoptosisOrDeath" ) )
+            func_CheckAndLabelCellsForApoptosisOrDeath(  );
+        else{
+            this->LQRadiotherapyCellKiller< 3 >::CheckAndLabelCellsForApoptosisOrDeath(  );
+        }
+    }
+    
+    void default_CheckAndLabelCellsForApoptosisOrDeath(  ) {
+        LQRadiotherapyCellKiller< 3 >::CheckAndLabelCellsForApoptosisOrDeath( );
+    }
+
+    virtual void OutputCellKillerParameters( ::out_stream & rParamsFile ) {
+        if( bp::override func_OutputCellKillerParameters = this->get_override( "OutputCellKillerParameters" ) )
+            func_OutputCellKillerParameters( boost::ref(rParamsFile) );
+        else{
+            this->LQRadiotherapyCellKiller< 3 >::OutputCellKillerParameters( boost::ref(rParamsFile) );
+        }
+    }
+    
+    void default_OutputCellKillerParameters( ::out_stream & rParamsFile ) {
+        LQRadiotherapyCellKiller< 3 >::OutputCellKillerParameters( boost::ref(rParamsFile) );
+    }
+
+};
+
 struct Owen2011OxygenBasedCellCycleModel_wrapper : Owen2011OxygenBasedCellCycleModel, bp::wrapper< Owen2011OxygenBasedCellCycleModel > {
 
     Owen2011OxygenBasedCellCycleModel_wrapper(Owen2011OxygenBasedCellCycleModel const & arg )
@@ -848,12 +974,39 @@ struct value_traits< boost::shared_ptr< Cell > >{
 
 }/*indexing*/ } /*python*/ } /*boost*/
 
+namespace boost { namespace python { namespace indexing {
+
+template<>
+struct value_traits< boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > >{
+
+    static bool const equality_comparable = false;
+    
+
+    static bool const less_than_comparable = false;
+    
+
+    template<typename PythonClass, typename Policy>
+    static void visit_container_class(PythonClass &, Policy const &){
+        
+    }
+
+};
+
+}/*indexing*/ } /*python*/ } /*boost*/
+
 BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
     { //::std::vector< unsigned int >
         typedef bp::class_< std::vector< unsigned int > > vector_less__unsigned_int__greater__exposer_t;
         vector_less__unsigned_int__greater__exposer_t vector_less__unsigned_int__greater__exposer = vector_less__unsigned_int__greater__exposer_t( "vector_less__unsigned_int__greater_" );
         bp::scope vector_less__unsigned_int__greater__scope( vector_less__unsigned_int__greater__exposer );
         vector_less__unsigned_int__greater__exposer.def( bp::indexing::vector_suite< std::vector< unsigned int > >() );
+    }
+
+    { //::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> >
+        typedef bp::class_< std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > > __type_exposer_t;
+        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
+        bp::scope __type_scope( __type_exposer );
+        __type_exposer.def( bp::indexing::vector_suite< std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > >() );
     }
 
     { //::std::vector< boost::shared_ptr<Cell> >
@@ -883,6 +1036,40 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
         bp::scope set_less__unsigned_int__greater__scope( set_less__unsigned_int__greater__exposer );
         set_less__unsigned_int__greater__exposer.def( bp::indexing::set_suite< std::set< unsigned int > >() );
     }
+
+    bp::class_< AbstractCellKiller_less__2__greater__wrapper, boost::noncopyable >( "AbstractCellKiller2", bp::init< AbstractCellPopulation< 2, 2 > * >(( bp::arg("pCellPopulation") )) )    
+        .def( 
+            "CheckAndLabelCellsForApoptosisOrDeath"
+            , bp::pure_virtual( (void ( ::AbstractCellKiller<2>::* )(  ))(&::AbstractCellKiller< 2 >::CheckAndLabelCellsForApoptosisOrDeath) ) )    
+        .def( 
+            "GetCellPopulation"
+            , (::AbstractCellPopulation< 2, 2 > const * ( ::AbstractCellKiller<2>::* )(  )const)( &::AbstractCellKiller< 2 >::GetCellPopulation )
+            , bp::return_value_policy< bp::manage_new_object >() )    
+        .def( 
+            "OutputCellKillerInfo"
+            , (void ( ::AbstractCellKiller<2>::* )( ::out_stream & ))( &::AbstractCellKiller< 2 >::OutputCellKillerInfo )
+            , ( bp::arg("rParamsFile") ) )    
+        .def( 
+            "OutputCellKillerParameters"
+            , bp::pure_virtual( (void ( ::AbstractCellKiller<2>::* )( ::out_stream & ))(&::AbstractCellKiller< 2 >::OutputCellKillerParameters) )
+            , ( bp::arg("rParamsFile") ) );
+
+    bp::class_< AbstractCellKiller_less__3__greater__wrapper, boost::noncopyable >( "AbstractCellKiller3", bp::init< AbstractCellPopulation< 3, 3 > * >(( bp::arg("pCellPopulation") )) )    
+        .def( 
+            "CheckAndLabelCellsForApoptosisOrDeath"
+            , bp::pure_virtual( (void ( ::AbstractCellKiller<3>::* )(  ))(&::AbstractCellKiller< 3 >::CheckAndLabelCellsForApoptosisOrDeath) ) )    
+        .def( 
+            "GetCellPopulation"
+            , (::AbstractCellPopulation< 3, 3 > const * ( ::AbstractCellKiller<3>::* )(  )const)( &::AbstractCellKiller< 3 >::GetCellPopulation )
+            , bp::return_value_policy< bp::manage_new_object >() )    
+        .def( 
+            "OutputCellKillerInfo"
+            , (void ( ::AbstractCellKiller<3>::* )( ::out_stream & ))( &::AbstractCellKiller< 3 >::OutputCellKillerInfo )
+            , ( bp::arg("rParamsFile") ) )    
+        .def( 
+            "OutputCellKillerParameters"
+            , bp::pure_virtual( (void ( ::AbstractCellKiller<3>::* )( ::out_stream & ))(&::AbstractCellKiller< 3 >::OutputCellKillerParameters) )
+            , ( bp::arg("rParamsFile") ) );
 
     { //::AbstractCellMutationState
         typedef bp::class_< AbstractCellMutationState > AbstractCellMutationState_exposer_t;
@@ -1609,6 +1796,378 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
     }
 
     bp::class_< CancerCellMutationState, bp::bases< AbstractCellMutationState > >( "CancerCellMutationState", bp::init< >() );
+
+    { //::LQRadiotherapyCellKiller< 2 >
+        typedef bp::class_< LQRadiotherapyCellKiller_less__2__greater__wrapper, bp::bases< AbstractCellKiller< 2 > > > LQRadiotherapyCellKiller2_exposer_t;
+        LQRadiotherapyCellKiller2_exposer_t LQRadiotherapyCellKiller2_exposer = LQRadiotherapyCellKiller2_exposer_t( "LQRadiotherapyCellKiller2", bp::init< AbstractCellPopulation< 2, 2 > * >(( bp::arg("pCellPopulation") )) );
+        bp::scope LQRadiotherapyCellKiller2_scope( LQRadiotherapyCellKiller2_exposer );
+        bp::implicitly_convertible< AbstractCellPopulation< 2, 2 > *, LQRadiotherapyCellKiller< 2 > >();
+        { //::LQRadiotherapyCellKiller< 2 >::AddTimeOfRadiation
+        
+            typedef LQRadiotherapyCellKiller< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AddTimeOfRadiation_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            LQRadiotherapyCellKiller2_exposer.def( 
+                "AddTimeOfRadiation"
+                , AddTimeOfRadiation_function_type( &::LQRadiotherapyCellKiller< 2 >::AddTimeOfRadiation )
+                , ( bp::arg("time") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 2 >::CheckAndLabelCellsForApoptosisOrDeath
+        
+            typedef LQRadiotherapyCellKiller< 2 > exported_class_t;
+            typedef void ( exported_class_t::*CheckAndLabelCellsForApoptosisOrDeath_function_type)(  ) ;
+            typedef void ( LQRadiotherapyCellKiller_less__2__greater__wrapper::*default_CheckAndLabelCellsForApoptosisOrDeath_function_type)(  ) ;
+            
+            LQRadiotherapyCellKiller2_exposer.def( 
+                "CheckAndLabelCellsForApoptosisOrDeath"
+                , CheckAndLabelCellsForApoptosisOrDeath_function_type(&::LQRadiotherapyCellKiller< 2 >::CheckAndLabelCellsForApoptosisOrDeath)
+                , default_CheckAndLabelCellsForApoptosisOrDeath_function_type(&LQRadiotherapyCellKiller_less__2__greater__wrapper::default_CheckAndLabelCellsForApoptosisOrDeath) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 2 >::CheckAndLabelSingleCellForApoptosis
+        
+            typedef LQRadiotherapyCellKiller< 2 > exported_class_t;
+            typedef void ( exported_class_t::*CheckAndLabelSingleCellForApoptosis_function_type)( ::CellPtr ) ;
+            
+            LQRadiotherapyCellKiller2_exposer.def( 
+                "CheckAndLabelSingleCellForApoptosis"
+                , CheckAndLabelSingleCellForApoptosis_function_type( &::LQRadiotherapyCellKiller< 2 >::CheckAndLabelSingleCellForApoptosis )
+                , ( bp::arg("pCell") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 2 >::OutputCellKillerParameters
+        
+            typedef LQRadiotherapyCellKiller< 2 > exported_class_t;
+            typedef void ( exported_class_t::*OutputCellKillerParameters_function_type)( ::out_stream & ) ;
+            typedef void ( LQRadiotherapyCellKiller_less__2__greater__wrapper::*default_OutputCellKillerParameters_function_type)( ::out_stream & ) ;
+            
+            LQRadiotherapyCellKiller2_exposer.def( 
+                "OutputCellKillerParameters"
+                , OutputCellKillerParameters_function_type(&::LQRadiotherapyCellKiller< 2 >::OutputCellKillerParameters)
+                , default_OutputCellKillerParameters_function_type(&LQRadiotherapyCellKiller_less__2__greater__wrapper::default_OutputCellKillerParameters)
+                , ( bp::arg("rParamsFile") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 2 >::SetAlphaMax
+        
+            typedef LQRadiotherapyCellKiller< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetAlphaMax_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            LQRadiotherapyCellKiller2_exposer.def( 
+                "SetAlphaMax"
+                , SetAlphaMax_function_type( &::LQRadiotherapyCellKiller< 2 >::SetAlphaMax )
+                , ( bp::arg("value") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 2 >::SetBetaMax
+        
+            typedef LQRadiotherapyCellKiller< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetBetaMax_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -4, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 4, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            LQRadiotherapyCellKiller2_exposer.def( 
+                "SetBetaMax"
+                , SetBetaMax_function_type( &::LQRadiotherapyCellKiller< 2 >::SetBetaMax )
+                , ( bp::arg("value") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 2 >::SetCancerousRadiosensitivity
+        
+            typedef LQRadiotherapyCellKiller< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetCancerousRadiosensitivity_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -4, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 4, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            LQRadiotherapyCellKiller2_exposer.def( 
+                "SetCancerousRadiosensitivity"
+                , SetCancerousRadiosensitivity_function_type( &::LQRadiotherapyCellKiller< 2 >::SetCancerousRadiosensitivity )
+                , ( bp::arg("alpha"), bp::arg("beta") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 2 >::SetDoseInjected
+        
+            typedef LQRadiotherapyCellKiller< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetDoseInjected_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            LQRadiotherapyCellKiller2_exposer.def( 
+                "SetDoseInjected"
+                , SetDoseInjected_function_type( &::LQRadiotherapyCellKiller< 2 >::SetDoseInjected )
+                , ( bp::arg("d") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 2 >::SetNormalRadiosensitivity
+        
+            typedef LQRadiotherapyCellKiller< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetNormalRadiosensitivity_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -4, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 4, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            LQRadiotherapyCellKiller2_exposer.def( 
+                "SetNormalRadiosensitivity"
+                , SetNormalRadiosensitivity_function_type( &::LQRadiotherapyCellKiller< 2 >::SetNormalRadiosensitivity )
+                , ( bp::arg("alpha"), bp::arg("beta") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 2 >::SetOerAlphaMax
+        
+            typedef LQRadiotherapyCellKiller< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetOerAlphaMax_function_type)( double ) ;
+            
+            LQRadiotherapyCellKiller2_exposer.def( 
+                "SetOerAlphaMax"
+                , SetOerAlphaMax_function_type( &::LQRadiotherapyCellKiller< 2 >::SetOerAlphaMax )
+                , ( bp::arg("value") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 2 >::SetOerAlphaMin
+        
+            typedef LQRadiotherapyCellKiller< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetOerAlphaMin_function_type)( double ) ;
+            
+            LQRadiotherapyCellKiller2_exposer.def( 
+                "SetOerAlphaMin"
+                , SetOerAlphaMin_function_type( &::LQRadiotherapyCellKiller< 2 >::SetOerAlphaMin )
+                , ( bp::arg("value") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 2 >::SetOerBetaMax
+        
+            typedef LQRadiotherapyCellKiller< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetOerBetaMax_function_type)( double ) ;
+            
+            LQRadiotherapyCellKiller2_exposer.def( 
+                "SetOerBetaMax"
+                , SetOerBetaMax_function_type( &::LQRadiotherapyCellKiller< 2 >::SetOerBetaMax )
+                , ( bp::arg("value") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 2 >::SetOerBetaMin
+        
+            typedef LQRadiotherapyCellKiller< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetOerBetaMin_function_type)( double ) ;
+            
+            LQRadiotherapyCellKiller2_exposer.def( 
+                "SetOerBetaMin"
+                , SetOerBetaMin_function_type( &::LQRadiotherapyCellKiller< 2 >::SetOerBetaMin )
+                , ( bp::arg("value") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 2 >::SetOerConstant
+        
+            typedef LQRadiotherapyCellKiller< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetOerConstant_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            LQRadiotherapyCellKiller2_exposer.def( 
+                "SetOerConstant"
+                , SetOerConstant_function_type( &::LQRadiotherapyCellKiller< 2 >::SetOerConstant )
+                , ( bp::arg("value") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 2 >::SetTimeOfRadiation
+        
+            typedef LQRadiotherapyCellKiller< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetTimeOfRadiation_function_type)( ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ) ;
+            
+            LQRadiotherapyCellKiller2_exposer.def( 
+                "SetTimeOfRadiation"
+                , SetTimeOfRadiation_function_type( &::LQRadiotherapyCellKiller< 2 >::SetTimeOfRadiation )
+                , ( bp::arg("t") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 2 >::UseOer
+        
+            typedef LQRadiotherapyCellKiller< 2 > exported_class_t;
+            typedef void ( exported_class_t::*UseOer_function_type)( bool ) ;
+            
+            LQRadiotherapyCellKiller2_exposer.def( 
+                "UseOer"
+                , UseOer_function_type( &::LQRadiotherapyCellKiller< 2 >::UseOer )
+                , ( bp::arg("useOer") ) );
+        
+        }
+    }
+
+    { //::LQRadiotherapyCellKiller< 3 >
+        typedef bp::class_< LQRadiotherapyCellKiller_less__3__greater__wrapper, bp::bases< AbstractCellKiller< 3 > > > LQRadiotherapyCellKiller3_exposer_t;
+        LQRadiotherapyCellKiller3_exposer_t LQRadiotherapyCellKiller3_exposer = LQRadiotherapyCellKiller3_exposer_t( "LQRadiotherapyCellKiller3", bp::init< AbstractCellPopulation< 3, 3 > * >(( bp::arg("pCellPopulation") )) );
+        bp::scope LQRadiotherapyCellKiller3_scope( LQRadiotherapyCellKiller3_exposer );
+        bp::implicitly_convertible< AbstractCellPopulation< 3, 3 > *, LQRadiotherapyCellKiller< 3 > >();
+        { //::LQRadiotherapyCellKiller< 3 >::AddTimeOfRadiation
+        
+            typedef LQRadiotherapyCellKiller< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddTimeOfRadiation_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            LQRadiotherapyCellKiller3_exposer.def( 
+                "AddTimeOfRadiation"
+                , AddTimeOfRadiation_function_type( &::LQRadiotherapyCellKiller< 3 >::AddTimeOfRadiation )
+                , ( bp::arg("time") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 3 >::CheckAndLabelCellsForApoptosisOrDeath
+        
+            typedef LQRadiotherapyCellKiller< 3 > exported_class_t;
+            typedef void ( exported_class_t::*CheckAndLabelCellsForApoptosisOrDeath_function_type)(  ) ;
+            typedef void ( LQRadiotherapyCellKiller_less__3__greater__wrapper::*default_CheckAndLabelCellsForApoptosisOrDeath_function_type)(  ) ;
+            
+            LQRadiotherapyCellKiller3_exposer.def( 
+                "CheckAndLabelCellsForApoptosisOrDeath"
+                , CheckAndLabelCellsForApoptosisOrDeath_function_type(&::LQRadiotherapyCellKiller< 3 >::CheckAndLabelCellsForApoptosisOrDeath)
+                , default_CheckAndLabelCellsForApoptosisOrDeath_function_type(&LQRadiotherapyCellKiller_less__3__greater__wrapper::default_CheckAndLabelCellsForApoptosisOrDeath) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 3 >::CheckAndLabelSingleCellForApoptosis
+        
+            typedef LQRadiotherapyCellKiller< 3 > exported_class_t;
+            typedef void ( exported_class_t::*CheckAndLabelSingleCellForApoptosis_function_type)( ::CellPtr ) ;
+            
+            LQRadiotherapyCellKiller3_exposer.def( 
+                "CheckAndLabelSingleCellForApoptosis"
+                , CheckAndLabelSingleCellForApoptosis_function_type( &::LQRadiotherapyCellKiller< 3 >::CheckAndLabelSingleCellForApoptosis )
+                , ( bp::arg("pCell") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 3 >::OutputCellKillerParameters
+        
+            typedef LQRadiotherapyCellKiller< 3 > exported_class_t;
+            typedef void ( exported_class_t::*OutputCellKillerParameters_function_type)( ::out_stream & ) ;
+            typedef void ( LQRadiotherapyCellKiller_less__3__greater__wrapper::*default_OutputCellKillerParameters_function_type)( ::out_stream & ) ;
+            
+            LQRadiotherapyCellKiller3_exposer.def( 
+                "OutputCellKillerParameters"
+                , OutputCellKillerParameters_function_type(&::LQRadiotherapyCellKiller< 3 >::OutputCellKillerParameters)
+                , default_OutputCellKillerParameters_function_type(&LQRadiotherapyCellKiller_less__3__greater__wrapper::default_OutputCellKillerParameters)
+                , ( bp::arg("rParamsFile") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 3 >::SetAlphaMax
+        
+            typedef LQRadiotherapyCellKiller< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetAlphaMax_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            LQRadiotherapyCellKiller3_exposer.def( 
+                "SetAlphaMax"
+                , SetAlphaMax_function_type( &::LQRadiotherapyCellKiller< 3 >::SetAlphaMax )
+                , ( bp::arg("value") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 3 >::SetBetaMax
+        
+            typedef LQRadiotherapyCellKiller< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetBetaMax_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -4, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 4, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            LQRadiotherapyCellKiller3_exposer.def( 
+                "SetBetaMax"
+                , SetBetaMax_function_type( &::LQRadiotherapyCellKiller< 3 >::SetBetaMax )
+                , ( bp::arg("value") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 3 >::SetCancerousRadiosensitivity
+        
+            typedef LQRadiotherapyCellKiller< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetCancerousRadiosensitivity_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -4, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 4, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            LQRadiotherapyCellKiller3_exposer.def( 
+                "SetCancerousRadiosensitivity"
+                , SetCancerousRadiosensitivity_function_type( &::LQRadiotherapyCellKiller< 3 >::SetCancerousRadiosensitivity )
+                , ( bp::arg("alpha"), bp::arg("beta") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 3 >::SetDoseInjected
+        
+            typedef LQRadiotherapyCellKiller< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetDoseInjected_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            LQRadiotherapyCellKiller3_exposer.def( 
+                "SetDoseInjected"
+                , SetDoseInjected_function_type( &::LQRadiotherapyCellKiller< 3 >::SetDoseInjected )
+                , ( bp::arg("d") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 3 >::SetNormalRadiosensitivity
+        
+            typedef LQRadiotherapyCellKiller< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetNormalRadiosensitivity_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -4, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 4, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            LQRadiotherapyCellKiller3_exposer.def( 
+                "SetNormalRadiosensitivity"
+                , SetNormalRadiosensitivity_function_type( &::LQRadiotherapyCellKiller< 3 >::SetNormalRadiosensitivity )
+                , ( bp::arg("alpha"), bp::arg("beta") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 3 >::SetOerAlphaMax
+        
+            typedef LQRadiotherapyCellKiller< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetOerAlphaMax_function_type)( double ) ;
+            
+            LQRadiotherapyCellKiller3_exposer.def( 
+                "SetOerAlphaMax"
+                , SetOerAlphaMax_function_type( &::LQRadiotherapyCellKiller< 3 >::SetOerAlphaMax )
+                , ( bp::arg("value") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 3 >::SetOerAlphaMin
+        
+            typedef LQRadiotherapyCellKiller< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetOerAlphaMin_function_type)( double ) ;
+            
+            LQRadiotherapyCellKiller3_exposer.def( 
+                "SetOerAlphaMin"
+                , SetOerAlphaMin_function_type( &::LQRadiotherapyCellKiller< 3 >::SetOerAlphaMin )
+                , ( bp::arg("value") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 3 >::SetOerBetaMax
+        
+            typedef LQRadiotherapyCellKiller< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetOerBetaMax_function_type)( double ) ;
+            
+            LQRadiotherapyCellKiller3_exposer.def( 
+                "SetOerBetaMax"
+                , SetOerBetaMax_function_type( &::LQRadiotherapyCellKiller< 3 >::SetOerBetaMax )
+                , ( bp::arg("value") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 3 >::SetOerBetaMin
+        
+            typedef LQRadiotherapyCellKiller< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetOerBetaMin_function_type)( double ) ;
+            
+            LQRadiotherapyCellKiller3_exposer.def( 
+                "SetOerBetaMin"
+                , SetOerBetaMin_function_type( &::LQRadiotherapyCellKiller< 3 >::SetOerBetaMin )
+                , ( bp::arg("value") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 3 >::SetOerConstant
+        
+            typedef LQRadiotherapyCellKiller< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetOerConstant_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            LQRadiotherapyCellKiller3_exposer.def( 
+                "SetOerConstant"
+                , SetOerConstant_function_type( &::LQRadiotherapyCellKiller< 3 >::SetOerConstant )
+                , ( bp::arg("value") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 3 >::SetTimeOfRadiation
+        
+            typedef LQRadiotherapyCellKiller< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetTimeOfRadiation_function_type)( ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::time_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ) ;
+            
+            LQRadiotherapyCellKiller3_exposer.def( 
+                "SetTimeOfRadiation"
+                , SetTimeOfRadiation_function_type( &::LQRadiotherapyCellKiller< 3 >::SetTimeOfRadiation )
+                , ( bp::arg("t") ) );
+        
+        }
+        { //::LQRadiotherapyCellKiller< 3 >::UseOer
+        
+            typedef LQRadiotherapyCellKiller< 3 > exported_class_t;
+            typedef void ( exported_class_t::*UseOer_function_type)( bool ) ;
+            
+            LQRadiotherapyCellKiller3_exposer.def( 
+                "UseOer"
+                , UseOer_function_type( &::LQRadiotherapyCellKiller< 3 >::UseOer )
+                , ( bp::arg("useOer") ) );
+        
+        }
+    }
 
     bp::class_< MacrophageMutationState, bp::bases< AbstractCellMutationState > >( "MacrophageMutationState", bp::init< >() );
 

@@ -56,6 +56,12 @@ public:
 
     void Solve();
 
+    /**
+     * Update the solution using dimensionless data
+     * @param rData the data
+     */
+    void UpdateFunctionSolution(std::vector<double>& rData);
+
 };
 
 #endif /* FunctionMap_HPP_ */

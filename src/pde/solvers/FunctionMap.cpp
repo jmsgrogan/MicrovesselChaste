@@ -61,6 +61,40 @@ void FunctionMap<DIM>::Solve()
 
 }
 
+template<unsigned DIM>
+void FunctionMap<DIM>::UpdateFunctionSolution(std::vector<double>& data)
+{
+    if(!this->mpVtkSolution)
+    {
+        this->Setup();
+    }
+
+    vtkSmartPointer<vtkDoubleArray> pPointData = vtkSmartPointer<vtkDoubleArray>::New();
+    pPointData->SetNumberOfComponents(1);
+    pPointData->SetNumberOfTuples(data.size());
+    pPointData->SetName(this->GetLabel().c_str());
+    std::cout << "fn in" << std::endl;
+    std::cout << this->GetLabel() << std::endl;
+    for (unsigned i = 0; i < data.size(); i++)
+    {
+        pPointData->SetValue(i, data[i]);
+    }
+    this->mpVtkSolution->GetPointData()->AddArray(pPointData);
+
+    // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
+    this->mSolution = std::vector<double>(data.size(), 0.0);
+    for (unsigned i = 0; i < data.size(); i++)
+    {
+        this->mSolution[i] = data[i];
+    }
+
+    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*this->mReferenceConcentration);
+    for (unsigned i = 0; i < data.size(); i++)
+    {
+        this->mConcentrations[i] = data[i]*this->mReferenceConcentration;
+    }
+}
+
 // Explicit instantiation
 template class FunctionMap<2> ;
 template class FunctionMap<3> ;

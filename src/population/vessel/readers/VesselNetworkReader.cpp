@@ -53,8 +53,8 @@ VesselNetworkReader<DIM>::VesselNetworkReader()
     : mFileName(),
       mRadiusLabel("Node Radius"),
       mRadiusConversionFactor(1.0),
-	  mMergeCoincidentPoints(false),
-	  mTargetSegmentLength(0.0*unit::metres),
+      mMergeCoincidentPoints(false),
+      mTargetSegmentLength(0.0*unit::metres),
       mReferenceLength(1.e-6 * unit::metres)
 {
 

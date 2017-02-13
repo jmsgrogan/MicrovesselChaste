@@ -977,7 +977,19 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_flow){
         .def( 
             "SetTHR"
             , (void ( ::BetteridgeHaematocritSolver<2>::* )( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::BetteridgeHaematocritSolver< 2 >::SetTHR )
-            , ( bp::arg("thr") ) );
+            , ( bp::arg("thr") ) )    
+        .def( 
+            "SetTurnOffFungModel"
+            , (void ( ::BetteridgeHaematocritSolver<2>::* )( bool ))( &::BetteridgeHaematocritSolver< 2 >::SetTurnOffFungModel )
+            , ( bp::arg("turnOffFungModel") ) )    
+        .def( 
+            "SetUseHigherConnectivityBranches"
+            , (void ( ::BetteridgeHaematocritSolver<2>::* )( bool ))( &::BetteridgeHaematocritSolver< 2 >::SetUseHigherConnectivityBranches )
+            , ( bp::arg("useHighConnectivity") ) )    
+        .def( 
+            "SetUseRandomSplittingModel"
+            , (void ( ::BetteridgeHaematocritSolver<2>::* )( bool ))( &::BetteridgeHaematocritSolver< 2 >::SetUseRandomSplittingModel )
+            , ( bp::arg("useRandomSplittingModel") ) );
 
     bp::class_< BetteridgeHaematocritSolver_less__3__greater__wrapper, bp::bases< AbstractHaematocritSolver< 3 > > >( "BetteridgeHaematocritSolver3", bp::init< >() )    
         .def( 
@@ -995,7 +1007,19 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_flow){
         .def( 
             "SetTHR"
             , (void ( ::BetteridgeHaematocritSolver<3>::* )( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::BetteridgeHaematocritSolver< 3 >::SetTHR )
-            , ( bp::arg("thr") ) );
+            , ( bp::arg("thr") ) )    
+        .def( 
+            "SetTurnOffFungModel"
+            , (void ( ::BetteridgeHaematocritSolver<3>::* )( bool ))( &::BetteridgeHaematocritSolver< 3 >::SetTurnOffFungModel )
+            , ( bp::arg("turnOffFungModel") ) )    
+        .def( 
+            "SetUseHigherConnectivityBranches"
+            , (void ( ::BetteridgeHaematocritSolver<3>::* )( bool ))( &::BetteridgeHaematocritSolver< 3 >::SetUseHigherConnectivityBranches )
+            , ( bp::arg("useHighConnectivity") ) )    
+        .def( 
+            "SetUseRandomSplittingModel"
+            , (void ( ::BetteridgeHaematocritSolver<3>::* )( bool ))( &::BetteridgeHaematocritSolver< 3 >::SetUseRandomSplittingModel )
+            , ( bp::arg("useRandomSplittingModel") ) );
 
     { //::ConstantHaematocritSolver< 2 >
         typedef bp::class_< ConstantHaematocritSolver_less__2__greater__wrapper, bp::bases< AbstractHaematocritSolver< 2 > > > ConstantHaematocritSolver2_exposer_t;
