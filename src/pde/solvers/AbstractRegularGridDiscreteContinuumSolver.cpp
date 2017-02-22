@@ -380,7 +380,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Write()
         writer.SetFilename((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/solution" + extension));
     }
 
-    std::vector<unsigned> whole_extents(6,0);
+    std::vector<unsigned> whole_extents(6, 0);
     whole_extents[1] = this->mpRegularGrid->GetExtents()[0]-1;
     whole_extents[3] = this->mpRegularGrid->GetExtents()[1]-1;
     whole_extents[5] = this->mpRegularGrid->GetExtents()[2]-1;

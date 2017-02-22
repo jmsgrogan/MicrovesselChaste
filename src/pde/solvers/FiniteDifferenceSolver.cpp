@@ -64,9 +64,9 @@ template<unsigned DIM>
 PetscErrorCode ParabolicFiniteDifferenceSolver_ComputeJacobian(TS ts, PetscReal t, Vec currentSolution, Mat pGlobalJacobian,
                                                                Mat pPreconditioner, void *pContext);
 #else
+template<unsigned DIM>
 PetscErrorCode ParabolicFiniteDifferenceSolver_ComputeJacobian(TS ts, PetscReal t, Vec currentSolution ,Mat* pJacobian ,
         Mat* pPreconditioner, MatStructure* pMatStructure ,void* pContext);
-
 #endif
 
 template<unsigned DIM>
@@ -854,6 +854,7 @@ PetscErrorCode ParabolicFiniteDifferenceSolver_ComputeJacobian(TS ts, PetscReal 
                                                                Mat pGlobalJacobian, Mat pPreconditioner, void *pContext)
 {
 #else
+template<unsigned DIM>
 PetscErrorCode ParabolicFiniteDifferenceSolver_ComputeJacobian(TS ts, PetscReal t, Vec currentSolution, Mat* pJacobian,
         Mat* pPreconditioner, MatStructure* pMatStructure, void* pContext)
 {

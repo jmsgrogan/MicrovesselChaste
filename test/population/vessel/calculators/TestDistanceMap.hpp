@@ -88,7 +88,7 @@ public:
         solver.Solve();
     }
 
-    void Test3dBifurcationNetwork()
+    void xTest3dBifurcationNetwork()
     {
         std::string output_path = "TestDistanceMap/3dBifurcationNetwork";
         if(PetscTools::IsParallel())
