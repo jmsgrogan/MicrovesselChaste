@@ -136,33 +136,34 @@ void DensityMap<DIM>::Solve()
         this->Setup();
     }
 
-    unsigned number_of_points = this->mpRegularGrid->GetNumberOfPoints();
-    unsigned extents_x = this->mpRegularGrid->GetExtents()[0];
-    unsigned extents_y = this->mpRegularGrid->GetExtents()[1];
-    unsigned extents_z = this->mpRegularGrid->GetExtents()[2];
-    units::quantity<unit::length> spacing = this->mpRegularGrid->GetSpacing();
-    double dimensionless_spacing = spacing/this->mpRegularGrid->GetReferenceLengthScale();
+    std::vector<unsigned> local_extents = this->mpRegularGrid->GetLocalIndexExtents();
+    std::vector<double> vessel_solution(this->mpRegularGrid->GetNumberOfLocalPoints(), 0.0);
+    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
 
-    std::vector<double> vessel_solution(number_of_points, 0.0);
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments;
     if (this->mpNetwork)
     {
-        segments = this->mpNetwork->GetVesselSegments();
-        for (unsigned i = 0; i < extents_z; i++) // Z
+        for (unsigned i = local_extents[4]; i < local_extents[5] + 1; i++) // Z
         {
-            for (unsigned j = 0; j < extents_y; j++) // Y
+            for (unsigned j = local_extents[2]; j < local_extents[3] + 1; j++) // Y
             {
-                for (unsigned k = 0; k < extents_x; k++) // X
+                for (unsigned k = local_extents[0]; k < local_extents[1] + 1; k++) // X
                 {
-                    unsigned grid_index = this->mpRegularGrid->Get1dGridIndex(k, j, i);
+                    unsigned grid_index = this->mpRegularGrid->GetLocal1dGridIndex(k, j, i);
+                    c_vector<double, 6> bbox = this->mpRegularGrid->GetPointBoundingBox(k ,j, i, true);
+
                     for (unsigned idx = 0; idx <  segments.size(); idx++)
                     {
                         vessel_solution[grid_index] += LengthOfLineInBox(segments[idx]->GetNode(0)->rGetLocation(),
                                                                          segments[idx]->GetNode(1)->rGetLocation(),
-                                                                         this->mpRegularGrid->GetPointBoundingBox(k ,j, i),
+                                                                         bbox,
                                                                          this->mpRegularGrid->GetReferenceLengthScale())/this->mpRegularGrid->GetReferenceLengthScale();
                     }
-                    vessel_solution[grid_index] /= std::pow(dimensionless_spacing, 3);
+                    double box_volume = (bbox[1]-bbox[0])*(bbox[3]-bbox[2]);
+                    if(DIM==3)
+                    {
+                        box_volume*=(bbox[5]-bbox[4]);
+                    }
+                    vessel_solution[grid_index] /= box_volume;
                 }
             }
         }

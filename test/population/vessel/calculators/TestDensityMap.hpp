@@ -39,6 +39,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <cxxtest/TestSuite.h>
 #include <vector>
 #include <string>
+#include <boost/lexical_cast.hpp>
 #include "Part.hpp"
 #include "DensityMap.hpp"
 #include "VesselNetwork.hpp"
@@ -47,6 +48,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "OutputFileHandler.hpp"
 #include "RegularGrid.hpp"
 #include "BaseUnits.hpp"
+#include "PetscTools.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
@@ -57,6 +59,8 @@ public:
 
     void TestAllInsideBoxAndAllOutsideBox2d()
     {
+        EXIT_IF_PARALLEL;
+
         // Set up the vessel network
         BaseUnits::Instance()->SetReferenceLengthScale(1.0 * unit::metres);
         units::quantity<unit::length> vessel_length = 0.15 * unit::metres;
@@ -77,13 +81,17 @@ public:
         solver.Solve();
 
         // Check the density
-        TS_ASSERT_DELTA(solver.GetSolution()[0], 0.15/(1.0*1.0), 1e-6);
+        TS_ASSERT_DELTA(solver.GetSolution()[0], 0.15/(0.501*0.501), 1e-6);
         TS_ASSERT_DELTA(solver.GetSolution()[1], 0.0, 1e-6);
+        BaseUnits::Instance()->Destroy();
     }
 
     void TestCrossingBoxes2d()
     {
+        EXIT_IF_PARALLEL;
+
         // Set up the vessel network
+        BaseUnits::Instance()->SetReferenceLengthScale(1.0 * unit::metres);
         units::quantity<unit::length> vessel_length = 0.5 * unit::metres;
         VesselNetworkGenerator<2> generator;
         boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(
@@ -102,13 +110,17 @@ public:
         solver.Solve();
 
         // Check the density
-        TS_ASSERT_DELTA(solver.GetSolution()[0], 0.25/(1.0*1.0), 1e-6);
-        TS_ASSERT_DELTA(solver.GetSolution()[3], 0.25/(1.0*1.0), 1e-6);
+        TS_ASSERT_DELTA(solver.GetSolution()[0], 0.251/(0.501*0.501), 1e-6);
+        TS_ASSERT_DELTA(solver.GetSolution()[3], 0.249/(0.501*1.000), 1e-6);
+        BaseUnits::Instance()->Destroy();
     }
 
     void TestAllInsideBoxAndAllOutsideBox3d()
     {
+        EXIT_IF_PARALLEL;
+
         // Set up the vessel network
+        BaseUnits::Instance()->SetReferenceLengthScale(1.0 * unit::metres);
         BaseUnits::Instance()->SetReferenceLengthScale(1.0 * unit::metres);
         units::quantity<unit::length> vessel_length = 0.15 * unit::metres;
         VesselNetworkGenerator<3> generator;
@@ -128,16 +140,20 @@ public:
         solver.Solve();
 
         // Check the density
-        TS_ASSERT_DELTA(solver.GetSolution()[0], 0.15/(1.0*1.0), 1e-6);
+        TS_ASSERT_DELTA(solver.GetSolution()[0], 0.15/(0.501*0.501*0.501), 1e-6);
         TS_ASSERT_DELTA(solver.GetSolution()[1], 0.0, 1e-6);
         TS_ASSERT_DELTA(solver.GetSolution()[2], 0.0, 1e-6);
         TS_ASSERT_DELTA(solver.GetSolution()[3], 0.0, 1e-6);
         TS_ASSERT_DELTA(solver.GetSolution()[4], 0.0, 1e-6);
+        BaseUnits::Instance()->Destroy();
     }
 
     void TestCrossingBoxes3d()
     {
+        EXIT_IF_PARALLEL;
+
         // Set up the vessel network
+        BaseUnits::Instance()->SetReferenceLengthScale(1.0 * unit::metres);
         units::quantity<unit::length> vessel_length = 0.5 * unit::metres;
         VesselNetworkGenerator<3> generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(
@@ -156,14 +172,20 @@ public:
         solver.Solve();
 
         // Check the density
-        TS_ASSERT_DELTA(solver.GetSolution()[0], 0.25/(1.0*1.0), 1e-6);
-        TS_ASSERT_DELTA(solver.GetSolution()[3], 0.25/(1.0*1.0), 1e-6);
+        TS_ASSERT_DELTA(solver.GetSolution()[0], 0.251/(0.501*0.501*0.501), 1e-2);
+        TS_ASSERT_DELTA(solver.GetSolution()[3], 0.249/(0.501*0.501*1.0), 1e-3);
         TS_ASSERT_DELTA(solver.GetSolution()[4], 0.0, 1e-6);
+        BaseUnits::Instance()->Destroy();
     }
 
     void TestBifurcationNetwork()
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDensityMap/Bifurcation", false));
+        std::string output_path = "TestDensityMap/Bifurcation";
+        if(PetscTools::IsParallel())
+        {
+            output_path += "Parallel";
+        }
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, (output_path, true));
 
         // Set up the vessel network
         units::quantity<unit::length> vessel_length = 100 * 1.e-6 * unit::metres;
@@ -188,6 +210,88 @@ public:
         calculator.SetFileHandler(p_output_file_handler);
         calculator.SetWriteSolution(true);
         calculator.Solve();
+    }
+
+    void TestBifurcationNetwork2d()
+    {
+        std::string output_path = "TestDensityMap/Bifurcation2d";
+        if(PetscTools::IsParallel())
+        {
+            output_path += "Parallel";
+        }
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, (output_path, true));
+
+        // Set up the vessel network
+        units::quantity<unit::length> vessel_length = 100 * 1.e-6 * unit::metres;
+        VesselNetworkGenerator<2> generator;
+        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateBifurcationUnit(vessel_length,
+                                                                                           DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"/network.vtp");
+
+        // Set up the tissue domain
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(4.0 * vessel_length,
+                            2.0 * vessel_length,
+                            DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        p_grid->GenerateFromPart(p_domain, 20.0e-6 * unit::metres);
+
+        // Get the map
+        DensityMap<2> calculator;
+        calculator.SetVesselNetwork(p_network);
+        calculator.SetGrid(p_grid);
+        calculator.SetFileHandler(p_output_file_handler);
+        calculator.SetWriteSolution(true);
+        calculator.Solve();
+    }
+
+    void TestConservationOverBoxSize()
+    {
+        EXIT_IF_PARALLEL;
+
+        // Set up the vessel network
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDensityMap/TestConservationOverBoxSize", false));
+        units::quantity<unit::length> vessel_length = 100 * 1.e-6 * unit::metres;
+        VesselNetworkGenerator<2> generator;
+        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateBifurcationUnit(vessel_length,
+                                                                                           DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+
+        p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"/network.vtp");
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(4.0 * vessel_length, 2.0 * vessel_length, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+
+        std::vector<double> densities;
+        double grid_size = 5.0;
+        for(unsigned idx=0; idx<5; idx++)
+        {
+            // Set up the tissue domain
+            boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+            p_grid->GenerateFromPart(p_domain, grid_size*1.e-6* unit::metres);
+
+            // Get the map
+            DensityMap<2> calculator;
+            calculator.SetVesselNetwork(p_network);
+            calculator.SetGrid(p_grid);
+            calculator.SetFileHandler(p_output_file_handler);
+            calculator.SetWriteSolution(true);
+            calculator.SetFileName("grid"+boost::lexical_cast<std::string>(grid_size));
+            calculator.Solve();
+
+            double running_total = 0.0;
+            for(unsigned jdx=0; jdx<calculator.GetSolution().size(); jdx++)
+            {
+                c_vector<double, 6> bbox = p_grid->GetPointBoundingBox(jdx);
+                running_total+= calculator.GetSolution()[jdx]*(bbox[1]-bbox[0])*(bbox[3]-bbox[2]);
+            }
+
+            densities.push_back(running_total);
+            grid_size*=2.0;
+        }
+
+        for(unsigned idx=1; idx<5; idx++)
+        {
+            TS_ASSERT_DELTA(densities[0]/densities[idx], 1.0, 1.e-3);
+        }
     }
 };
 

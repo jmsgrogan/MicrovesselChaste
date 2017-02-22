@@ -753,10 +753,22 @@ bool RegularGrid<DIM>::IsOnBoundary(unsigned x_index, unsigned y_index, unsigned
 }
 
 template<unsigned DIM>
-c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsigned yIndex, unsigned zIndex)
+c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned gridIndex, bool jiggle)
+{
+    unsigned mod_z = gridIndex % (mExtents[0] * mExtents[1]);
+    unsigned z_index = (gridIndex - mod_z) / (mExtents[0] * mExtents[1]);
+    unsigned mod_y = mod_z % mExtents[0];
+    unsigned y_index = (mod_z - mod_y) / mExtents[0];
+    unsigned x_index = mod_y;
+    return GetPointBoundingBox(x_index, y_index, z_index, jiggle);
+}
+
+template<unsigned DIM>
+c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsigned yIndex, unsigned zIndex, bool jiggle)
 {
     units::quantity<unit::length> scale_factor = GetReferenceLengthScale();
     double dimensionless_spacing = GetSpacing()/scale_factor;
+    double jiggle_size = 1.e-3 * dimensionless_spacing;
 
     c_vector<double, 3> dimensionless_location;
     dimensionless_location[0] = GetLocation(xIndex ,yIndex, zIndex).GetLocation(scale_factor)[0];
@@ -772,8 +784,19 @@ c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsign
 
     double x_min_offset = dimensionless_spacing/2.0;
     double x_max_offset = dimensionless_spacing/2.0;
+    if (jiggle)
+    {
+        x_min_offset -= jiggle_size;
+        x_max_offset += jiggle_size;
+    }
+
     double y_min_offset = dimensionless_spacing/2.0;
     double y_max_offset = dimensionless_spacing/2.0;
+    if (jiggle)
+    {
+        y_min_offset -= jiggle_size;
+        y_max_offset += jiggle_size;
+    }
     if (xIndex == 0)
     {
         x_min_offset = 0.0;
@@ -800,6 +823,11 @@ c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsign
     {
         double z_min_offset = dimensionless_spacing/2.0;
         double z_max_offset = dimensionless_spacing/2.0;
+        if (jiggle)
+        {
+            z_min_offset -= jiggle_size;
+            z_max_offset += jiggle_size;
+        }
         if (zIndex == 0)
         {
             z_min_offset = 0.0;
@@ -814,8 +842,8 @@ c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsign
     }
     else
     {
-        dimensionless_bounds[4] = 1.0;
-        dimensionless_bounds[5] = -1.0;
+        dimensionless_bounds[4] = -1.0;
+        dimensionless_bounds[5] = 1.0;
     }
     return dimensionless_bounds;
 }

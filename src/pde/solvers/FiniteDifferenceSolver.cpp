@@ -59,9 +59,15 @@ PetscErrorCode HyrbidFiniteDifference_ComputeJacobian(SNES snes,Vec input,Mat* p
 template<unsigned DIM>
 PetscErrorCode ParabolicFiniteDifferenceSolver_RHSFunction(TS ts, PetscReal t, Vec currentSolution, Vec dUdt, void* pContext);
 
+#if ( PETSC_VERSION_MAJOR==3 && PETSC_VERSION_MINOR>=5 )
 template<unsigned DIM>
 PetscErrorCode ParabolicFiniteDifferenceSolver_ComputeJacobian(TS ts, PetscReal t, Vec currentSolution, Mat pGlobalJacobian,
                                                                Mat pPreconditioner, void *pContext);
+#else
+PetscErrorCode ParabolicFiniteDifferenceSolver_ComputeJacobian(TS ts, PetscReal t, Vec currentSolution ,Mat* pJacobian ,
+        Mat* pPreconditioner, MatStructure* pMatStructure ,void* pContext);
+
+#endif
 
 template<unsigned DIM>
 FiniteDifferenceSolver<DIM>::FiniteDifferenceSolver()
@@ -842,10 +848,18 @@ PetscErrorCode ParabolicFiniteDifferenceSolver_RHSFunction(TS ts, PetscReal t, V
     return 0;
 }
 
+#if ( PETSC_VERSION_MAJOR==3 && PETSC_VERSION_MINOR>=5 )
 template<unsigned DIM>
 PetscErrorCode ParabolicFiniteDifferenceSolver_ComputeJacobian(TS ts, PetscReal t, Vec currentSolution,
                                                                Mat pGlobalJacobian, Mat pPreconditioner, void *pContext)
 {
+#else
+PetscErrorCode ParabolicFiniteDifferenceSolver_ComputeJacobian(TS ts, PetscReal t, Vec currentSolution, Mat* pJacobian,
+        Mat* pPreconditioner, MatStructure* pMatStructure, void* pContext)
+{
+    Mat pGlobalJacobian = *pJacobian;
+#endif
+
     // extract solver from void so that we can use locally set values from the calculator object
     FiniteDifferenceSolver<DIM>* p_solver = (FiniteDifferenceSolver<DIM>*) pContext;
     unsigned extents_x = p_solver->GetGrid()->GetExtents()[0];

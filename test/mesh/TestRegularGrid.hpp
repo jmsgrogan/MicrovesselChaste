@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2005-2016, University of Oxford.
+Copyright (c) 2005-2017, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -279,7 +279,6 @@ public:
         }
 
         // Set up some sample points
-        // Set up some sample points
         std::vector<DimensionalChastePoint<3> > points(100);
         for (unsigned idx = 0; idx < 100; idx++)
         {
@@ -309,6 +308,74 @@ public:
         }
         std::cout << "Max Error: " << max_error << std::endl;
         TS_ASSERT(max_error < 0.1);
+    }
+
+    void TestGetPointBoundingBox2d()
+    {
+        BaseUnits::Instance()->SetReferenceLengthScale(1.0 * unit::metres);
+        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::vector<unsigned> extents(3);
+        extents[0] = 11;
+        extents[1] = 11;
+        extents[2] = 1;
+        p_grid->SetExtents(extents);
+        p_grid->SetSpacing(1.0*unit::metres);
+
+        c_vector<double,6> bbox1 = p_grid->GetPointBoundingBox(0, 0, 0);
+        TS_ASSERT_DELTA(bbox1[0], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox1[1], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox1[2], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox1[3], 0.5, 1.e-6);
+
+        c_vector<double,6> bbox2 = p_grid->GetPointBoundingBox(1, 0, 0);
+        TS_ASSERT_DELTA(bbox2[0], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox2[1], 1.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox2[2], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox2[3], 0.5, 1.e-6);
+
+        c_vector<double,6> bbox3 = p_grid->GetPointBoundingBox(1, 1, 0);
+        TS_ASSERT_DELTA(bbox3[0], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox3[1], 1.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox3[2], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox3[3], 1.5, 1.e-6);
+        BaseUnits::Instance()->Destroy();
+    }
+
+    void TestGetPointBoundingBox3d()
+    {
+        BaseUnits::Instance()->SetReferenceLengthScale(1.0 * unit::metres);
+        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        std::vector<unsigned> extents(3);
+        extents[0] = 11;
+        extents[1] = 11;
+        extents[2] = 11;
+        p_grid->SetExtents(extents);
+        p_grid->SetSpacing(1.0*unit::metres);
+
+        c_vector<double,6> bbox1 = p_grid->GetPointBoundingBox(0, 0, 0);
+        TS_ASSERT_DELTA(bbox1[0], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox1[1], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox1[2], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox1[3], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox1[4], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox1[5], 0.5, 1.e-6);
+
+        c_vector<double,6> bbox2 = p_grid->GetPointBoundingBox(1, 0, 1);
+        TS_ASSERT_DELTA(bbox2[0], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox2[1], 1.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox2[2], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox2[3], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox2[4], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox2[5], 1.5, 1.e-6);
+
+        c_vector<double,6> bbox3 = p_grid->GetPointBoundingBox(1, 1, 1);
+        TS_ASSERT_DELTA(bbox3[0], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox3[1], 1.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox3[2], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox3[3], 1.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox3[4], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(bbox3[5], 1.5, 1.e-6);
+        BaseUnits::Instance()->Destroy();
     }
 };
 

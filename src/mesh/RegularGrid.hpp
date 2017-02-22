@@ -361,9 +361,19 @@ public:
      * @param xIndex the grid x index
      * @param yIndex the grid y index
      * @param zIndex the grid z index
+     * @param jiggle increase the box size by a small amount to catch features half way between grid points
      * @return the bounding box for this point
      */
-    c_vector<double,6> GetPointBoundingBox(unsigned xIndex, unsigned yIndex, unsigned zIndex);
+    c_vector<double,6> GetPointBoundingBox(unsigned xIndex, unsigned yIndex, unsigned zIndex, bool jiggle=false);
+
+    /**
+     * The bounding box for the grid point. In 2D the z bounds are +1 and -1 to
+     * all the use of VTK filters. The scale is the grid's reference length scale.
+     * @param gridIndex the grid index
+     * @param jiggle increase the box size by a small amount to catch features half way between grid points
+     * @return the bounding box for this point
+     */
+    c_vector<double,6> GetPointBoundingBox(unsigned gridIndex, bool jiggle=false);
 
     /**
      * Set the cell population

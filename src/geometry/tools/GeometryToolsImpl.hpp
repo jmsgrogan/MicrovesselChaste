@@ -353,6 +353,7 @@ units::quantity<unit::length> LengthOfLineInBox(const DimensionalChastePoint<DIM
     {
         dimensionless_end[2] = 0.0;
     }
+
     int crosses = vtkBox::IntersectWithLine(&rBoundingBox[0], &dimensionless_start[0], &dimensionless_end[0],
             t1, t2, &intercept_1[0], &intercept_2[0], plane1, plane2);
 
@@ -400,8 +401,8 @@ units::quantity<unit::length> LengthOfLineInBox(const DimensionalChastePoint<DIM
     }
     else
     {
-        dimensionless_bounds[4] = 1.0;
-        dimensionless_bounds[5] = -1.0;
+        dimensionless_bounds[4] = -1.0;
+        dimensionless_bounds[5] = 1.0;
     }
 
     return LengthOfLineInBox(rStartPoint,rEndPoint,dimensionless_bounds, scale_factor);

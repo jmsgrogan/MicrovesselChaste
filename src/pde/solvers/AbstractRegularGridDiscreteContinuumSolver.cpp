@@ -275,7 +275,6 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector
     pPointData->SetNumberOfComponents(1);
     pPointData->SetNumberOfTuples(data.size());
     pPointData->SetName(this->GetLabel().c_str());
-    std::cout << this->GetLabel() << std::endl;
     for (unsigned i = 0; i < data.size(); i++)
     {
         pPointData->SetValue(i, data[i]);
@@ -357,11 +356,9 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Write()
 {
     if(!this->mpVtkSolution)
     {
-        std::cout << "setup called" << std::endl;
         this->Setup();
     }
 
-    std::cout << this->mpVtkSolution << std::endl;
     if(!this->mpOutputFileHandler)
     {
         EXCEPTION("An output file handler has not been set for the DiscreteContinuum solver.");
