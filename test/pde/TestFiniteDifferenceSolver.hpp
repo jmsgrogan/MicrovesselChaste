@@ -59,23 +59,23 @@ public:
     {
         // Set up the grid
         boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(10*1.e-6*unit::metres,
-                               20*1.e-6*unit::metres,
+        p_domain->AddRectangle(100*1.e-6*unit::metres,
+                               200*1.e-6*unit::metres,
                                DimensionalChastePoint<2>(0.0, 0.0, 0.0));
 
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        p_grid->GenerateFromPart(p_domain, 1.e-6*unit::metres);
+        p_grid->GenerateFromPart(p_domain, 10.e-6*unit::metres);
 
         // Choose the PDE
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
-        units::quantity<unit::diffusivity> diffusivity(1.e-6 * unit::metre_squared_per_second);
-        units::quantity<unit::rate> consumption_rate(-2.e-5 * unit::per_second);
+        units::quantity<unit::diffusivity> diffusivity(1.e-3 * unit::metre_squared_per_second);
+        units::quantity<unit::rate> consumption_rate(-2.e6 * unit::per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
         p_pde->SetContinuumLinearInUTerm(consumption_rate);
 
         // Prescribe a value on the domain boundaries
         boost::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition = DiscreteContinuumBoundaryCondition<2>::Create();
-        units::quantity<unit::concentration> boundary_concentration(1.0 * unit::mole_per_metre_cubed);
+        units::quantity<unit::concentration> boundary_concentration(1.e-3 * unit::mole_per_metre_cubed);
         p_boundary_condition->SetValue(boundary_concentration);
 
         // Set up and run the solver
@@ -84,8 +84,9 @@ public:
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_boundary_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestFiniteDifferenceSolver/RectangleDomain", false));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestFiniteDifferenceSolver/RectangleDomain", true));
         solver.SetFileHandler(p_output_file_handler);
+        solver.SetWriteSolution(true);
         solver.Solve();
     }
 
@@ -93,17 +94,17 @@ public:
     {
         // Set up the grid
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(1.0*1.e-6*unit::metres,
-                            2.0*1.e-6*unit::metres,
-                            1.0*1.e-6*unit::metres,
+        p_domain->AddCuboid(100.0*1.e-6*unit::metres,
+                            200.0*1.e-6*unit::metres,
+                            100.0*1.e-6*unit::metres,
                             DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        p_grid->GenerateFromPart(p_domain, 0.1*1.e-6*unit::metres);
+        p_grid->GenerateFromPart(p_domain, 10.0*1.e-6*unit::metres);
 
         // Choose the PDE
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
-        units::quantity<unit::diffusivity> diffusivity(1.e-6 * unit::metre_squared_per_second);
-        units::quantity<unit::rate> consumption_rate(-2.e-5 * unit::per_second);
+        units::quantity<unit::diffusivity> diffusivity(1.e-3 * unit::metre_squared_per_second);
+        units::quantity<unit::rate> consumption_rate(-2.e6 * unit::per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
         p_pde->SetContinuumLinearInUTerm(consumption_rate);
 
@@ -118,8 +119,9 @@ public:
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_boundary_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestFiniteDifferenceSolver/CuboidalDomain", false));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestFiniteDifferenceSolver/CuboidalDomain", true));
         solver.SetFileHandler(p_output_file_handler);
+        solver.SetWriteSolution(true);
         solver.Solve();
     }
 
@@ -140,13 +142,13 @@ public:
         // Choose the PDE
         boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
         units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
-        units::quantity<unit::rate> consumption_rate(-2.e-7 * unit::per_second);
+        units::quantity<unit::rate> consumption_rate(-2.e6 * unit::per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
         p_pde->SetContinuumLinearInUTerm(consumption_rate);
 
         // Set up the boundary condition
         boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_vessel_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
-        units::quantity<unit::concentration> boundary_concentration(1.0 * unit::mole_per_metre_cubed);
+        units::quantity<unit::concentration> boundary_concentration(1.e-3 * unit::mole_per_metre_cubed);
         p_vessel_boundary_condition->SetValue(boundary_concentration);
         p_vessel_boundary_condition->SetType(BoundaryConditionType::VESSEL_LINE);
         p_vessel_boundary_condition->SetSource(BoundaryConditionSource::PRESCRIBED);
@@ -158,8 +160,9 @@ public:
         solver.AddBoundaryCondition(p_vessel_boundary_condition);
         solver.SetVesselNetwork(p_network);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestFiniteDifferenceSolver/WithVessels", false));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestFiniteDifferenceSolver/WithVessels", true));
         solver.SetFileHandler(p_output_file_handler);
+        solver.SetWriteSolution(true);
         solver.Solve();
     }
 };

@@ -42,9 +42,6 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkActor.h>
 #include <vtkProperty.h>
 #include <vtkUnsignedCharArray.h>
-#if VTK_MAJOR_VERSION > 5
-    #include <vtkNamedColors.h>
-#endif
 #include <vtkSphereSource.h>
 #include <vtkGlyph3D.h>
 #include <vtkGlyph2D.h>
