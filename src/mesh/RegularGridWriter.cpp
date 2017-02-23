@@ -78,39 +78,39 @@ void RegularGridWriter::SetWholeExtents(std::vector<unsigned> wholeExtents)
     mWholeExtents = wholeExtents;
 }
 
-// Helper method to correctly set parallel output extents
-void SetParallelExtents(void* arguments)
-{
-    vtkProgrammableFilter* p_programmable_filter =
-          static_cast<vtkProgrammableFilter*>(arguments);
-    vtkImageData* p_input_image = static_cast<vtkImageData*>(p_programmable_filter->GetInput());
-
-    int local_extents[6];
-    unsigned piece_size = unsigned(std::floor(p_input_image->GetDimensions()[0]/PetscTools::GetNumProcs()));
-    unsigned local_piece_size = piece_size;
-    if (PetscTools::AmTopMost())
-    {
-        local_piece_size = (p_input_image->GetDimensions()[0] - piece_size*PetscTools::GetNumProcs()) + piece_size;
-    }
-
-    if(PetscTools::AmMaster())
-    {
-        local_extents[0] = PetscTools::GetMyRank()*piece_size;
-    }
-    else
-    {
-        local_extents[0] = PetscTools::GetMyRank()*piece_size-1;
-    }
-
-    local_extents[1] = PetscTools::GetMyRank()*piece_size + local_piece_size-1;
-    local_extents[2] = 0;
-    local_extents[3] = p_input_image->GetDimensions()[1]-1;
-    local_extents[4] = 0;
-    local_extents[5] = p_input_image->GetDimensions()[2]-1;
-
-    p_programmable_filter->GetOutput()->ShallowCopy(p_programmable_filter->GetInput());
-    p_programmable_filter->GetOutput()->Crop(local_extents);
-}
+//// Helper method to correctly set parallel output extents
+//void SetParallelExtents(void* arguments)
+//{
+//    vtkProgrammableFilter* p_programmable_filter =
+//          static_cast<vtkProgrammableFilter*>(arguments);
+//    vtkImageData* p_input_image = static_cast<vtkImageData*>(p_programmable_filter->GetInput());
+//
+//    int local_extents[6];
+//    unsigned piece_size = unsigned(std::floor(p_input_image->GetDimensions()[0]/PetscTools::GetNumProcs()));
+//    unsigned local_piece_size = piece_size;
+//    if (PetscTools::AmTopMost())
+//    {
+//        local_piece_size = (p_input_image->GetDimensions()[0] - piece_size*PetscTools::GetNumProcs()) + piece_size;
+//    }
+//
+//    if(PetscTools::AmMaster())
+//    {
+//        local_extents[0] = PetscTools::GetMyRank()*piece_size;
+//    }
+//    else
+//    {
+//        local_extents[0] = PetscTools::GetMyRank()*piece_size-1;
+//    }
+//
+//    local_extents[1] = PetscTools::GetMyRank()*piece_size + local_piece_size-1;
+//    local_extents[2] = 0;
+//    local_extents[3] = p_input_image->GetDimensions()[1]-1;
+//    local_extents[4] = 0;
+//    local_extents[5] = p_input_image->GetDimensions()[2]-1;
+//
+//    p_programmable_filter->GetOutput()->ShallowCopy(p_programmable_filter->GetInput());
+//    p_programmable_filter->GetOutput()->Crop(local_extents);
+//}
 void RegularGridWriter::Write()
 {
     if(mFilepath == "")
@@ -144,9 +144,20 @@ void RegularGridWriter::Write()
 //        }
 //        mpVtkImage->SetExtent(mWholeExtents[0], mWholeExtents[1], mWholeExtents[2],
 //                mWholeExtents[3], mWholeExtents[4], mWholeExtents[5]);
-        tp->SetWholeExtent(mWholeExtents[0], mWholeExtents[1], mWholeExtents[2],
-                mWholeExtents[3], mWholeExtents[4], mWholeExtents[5]);
 
+        //        #if VTK_MAJOR_VERSION <= 5
+        //            p_writer1->SetInput(mpVtkImage);
+        //        #else
+        //            p_writer1->SetInputData(mpVtkImage);
+        //        #endif
+        // Method below only in 6.1 + it seems. This is ok for now since the PVTI file
+        // is broken anyway!
+        #if VTK_MAJOR_VERSION > 5
+            #if VTK_MINOR_VERSION > 0
+            tp->SetWholeExtent(mWholeExtents[0], mWholeExtents[1], mWholeExtents[2],
+                    mWholeExtents[3], mWholeExtents[4], mWholeExtents[5]);
+            #endif
+        #endif
 //        vtkSmartPointer<vtkProgrammableFilter> p_programmable_filter =
 //            vtkSmartPointer<vtkProgrammableFilter>::New();
 //        p_programmable_filter->SetInputData(mpVtkImage);
