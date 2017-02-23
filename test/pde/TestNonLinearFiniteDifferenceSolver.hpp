@@ -44,7 +44,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UblasIncludes.hpp"
 #include "Part.hpp"
 #include "UnitCollection.hpp"
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "FiniteDifferenceSolver.hpp"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
 #include "VesselNetwork.hpp"
@@ -88,7 +88,7 @@ public:
 
         FiniteDifferenceSolver<3> solver;
         solver.SetGrid(p_grid);
-        solver.SetNonLinearPde(p_non_linear_pde);
+        solver.SetPde(p_non_linear_pde);
         solver.AddBoundaryCondition(p_outer_boundary_condition);
 
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestNonLinearFiniteDifferenceSolver/Box", false));

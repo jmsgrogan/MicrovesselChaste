@@ -39,18 +39,9 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::AbstractDiscreteContinuumNonLinearEllipticPde() :
             AbstractNonlinearEllipticPde<SPACE_DIM>(),
-            mDiffusionTensor(identity_matrix<double>(SPACE_DIM)),
-            mDiffusivity(1.0*unit::metre_squared_per_second),
-            mConstantInUTerm(),
-            mLinearInUTerm(),
-            mDiscreteSources(),
-            mpRegularGrid(),
-            mpMesh(),
-            mUseRegularGrid(true),
-            mDiscreteConstantSourceStrengths(),
-            mDiscreteLinearSourceStrengths()
+            AbstractDiscreteContinuumPde<ELEMENT_DIM, ELEMENT_DIM>()
 {
-    mDiffusionTensor *= mDiffusivity.value();
+    mDiffusionTensor *= this->mDiffusivity.value();
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -60,124 +51,36 @@ AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::~Abstract
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::AddDiscreteSource(boost::shared_ptr<DiscreteSource<SPACE_DIM> > pDiscreteSource)
-{
-    mDiscreteSources.push_back(pDiscreteSource);
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::diffusivity> AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeIsotropicDiffusionTerm()
-{
-    return mDiffusivity;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::concentration_flow_rate> AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeConstantInUSourceTerm(unsigned gridIndex)
 {
-    if(mDiscreteConstantSourceStrengths.size()>0)
+    if(this->mDiscreteConstantSourceStrengths.size()>0)
     {
-        if(gridIndex >= mDiscreteConstantSourceStrengths.size())
+        if(gridIndex >= this->mDiscreteConstantSourceStrengths.size())
         {
             EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
         }
-        return mConstantInUTerm + mDiscreteConstantSourceStrengths[gridIndex];
+        return this->mConstantInUTerm + this->mDiscreteConstantSourceStrengths[gridIndex];
     }
     else
     {
-        return mConstantInUTerm;
+        return this->mConstantInUTerm;
     }
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::rate> AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex)
 {
-    if(mDiscreteLinearSourceStrengths.size()>0)
+    if(this->mDiscreteLinearSourceStrengths.size()>0)
     {
-        if(gridIndex >= mDiscreteLinearSourceStrengths.size())
+        if(gridIndex >= this->mDiscreteLinearSourceStrengths.size())
         {
             EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
         }
-        return mLinearInUTerm + mDiscreteLinearSourceStrengths[gridIndex];
+        return this->mLinearInUTerm + this->mDiscreteLinearSourceStrengths[gridIndex];
     }
     else
     {
-        return mLinearInUTerm;
-    }
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-std::vector<boost::shared_ptr<DiscreteSource<SPACE_DIM> > > AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::GetDiscreteSources()
-{
-    return mDiscreteSources;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetContinuumConstantInUTerm(units::quantity<unit::concentration_flow_rate> constantInUTerm)
-{
-    mConstantInUTerm = constantInUTerm;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetIsotropicDiffusionConstant(units::quantity<unit::diffusivity> diffusivity)
-{
-    mDiffusivity = diffusivity;
-    mDiffusionTensor = identity_matrix<double>(SPACE_DIM)* double(mDiffusivity/unit::metre_squared_per_second);
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetContinuumLinearInUTerm(units::quantity<unit::rate> linearInUTerm)
-{
-    mLinearInUTerm = linearInUTerm;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetRegularGrid(boost::shared_ptr<RegularGrid<SPACE_DIM> > pRegularGrid)
-{
-    mpRegularGrid = pRegularGrid;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetMesh(boost::shared_ptr<TetrahedralMesh<ELEMENT_DIM, SPACE_DIM> > pMesh)
-{
-    mpMesh = pMesh;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetUseRegularGrid(bool useRegularGrid)
-{
-    mUseRegularGrid = useRegularGrid;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSourceStrengths()
-{
-    if(mUseRegularGrid)
-    {
-        if(!mpRegularGrid)
-        {
-            EXCEPTION("A grid has not been set for the determination of source strengths.");
-        }
-        mDiscreteConstantSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(mpRegularGrid->GetNumberOfPoints(), 0.0*unit::mole_per_metre_cubed_per_second);
-        mDiscreteLinearSourceStrengths = std::vector<units::quantity<unit::rate> >(mpRegularGrid->GetNumberOfPoints(), 0.0*unit::per_second);
-
-        for(unsigned idx=0; idx<mDiscreteSources.size(); idx++)
-        {
-            mDiscreteSources[idx]->SetRegularGrid(mpRegularGrid);
-            std::vector<units::quantity<unit::rate> > result = mDiscreteSources[idx]->GetLinearInURegularGridValues();
-            std::transform(mDiscreteLinearSourceStrengths.begin( ), mDiscreteLinearSourceStrengths.end( ),
-                           result.begin( ), mDiscreteLinearSourceStrengths.begin( ),std::plus<units::quantity<unit::rate> >( ));
-
-            std::vector<units::quantity<unit::concentration_flow_rate> > result2 = mDiscreteSources[idx]->GetConstantInURegularGridValues();
-            std::transform(mDiscreteConstantSourceStrengths.begin( ), mDiscreteConstantSourceStrengths.end( ),
-                           result2.begin( ), mDiscreteConstantSourceStrengths.begin( ),std::plus<units::quantity<unit::concentration_flow_rate> >( ));
-        }
-    }
-    else
-    {
-        if(!mpMesh)
-        {
-            EXCEPTION("A mesh has not been set for the determination of source strengths.");
-        }
+        return this->mLinearInUTerm;
     }
 }
 

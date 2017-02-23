@@ -72,21 +72,6 @@ public:
     static boost::shared_ptr<MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM> > Create();
 
     /**
-     * Over-ridden method to return the constant in U contribution to the Chaste FE solver
-     * @param rX grid location
-     * @param pElement pointer to containing element
-     * @return source strength
-     */
-    double ComputeConstantInUSourceTerm(const ChastePoint<SPACE_DIM>& rX, Element<ELEMENT_DIM, SPACE_DIM>* pElement);
-
-    /**
-     * Over-ridden method to return the constant in U contribution to the regular grid solvers
-     * @param gridIndex grid index
-     * @return source strength
-     */
-    units::quantity<unit::concentration_flow_rate> ComputeConstantInUSourceTerm(unsigned gridIndex=0);
-
-    /**
      * Over-ridden method to return the diffusion term to the Chaste FE solver
      * @param rX the grid location
      * @param u the solution value
@@ -108,21 +93,6 @@ public:
      * @return source strength
      */
     double ComputeLinearSourceTerm(const ChastePoint<SPACE_DIM>& rX);
-
-    /**
-     * Over-ridden method to return the linear in U contribution to the Chaste FE solver
-     * @param rX grid location
-     * @param pElement pointer to containing element
-     * @return source strength
-     */
-    double ComputeLinearInUCoeffInSourceTerm(const ChastePoint<SPACE_DIM>& rX, Element<ELEMENT_DIM, SPACE_DIM>* pElement);
-
-    /**
-     * Over-ridden method to return the linear in U contribution to the regular grid solvers
-     * @param gridIndex grid index
-     * @return source strength
-     */
-    virtual units::quantity<unit::rate> ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex=0);
 
     /**
      * Over-ridden method to return the nonlinear in U contribution to the Chaste FE solver

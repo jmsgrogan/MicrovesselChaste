@@ -48,8 +48,6 @@ AbstractDiscreteContinuumSolver<DIM>::AbstractDiscreteContinuumSolver()
         IsSetupForSolve(false),
         mWriteSolution(false),
         mpPde(),
-        mpNonLinearPde(),
-        mpParabolicPde(),
         mBoundaryConditions(),
         mReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale()),
         mSolution(),
@@ -91,33 +89,13 @@ const std::string& AbstractDiscreteContinuumSolver<DIM>::GetLabel()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<AbstractDiscreteContinuumLinearEllipticPde<DIM, DIM> > AbstractDiscreteContinuumSolver<DIM>::GetPde()
+boost::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > AbstractDiscreteContinuumSolver<DIM>::GetPde()
 {
     if(!mpPde)
     {
         EXCEPTION("A pde has not been set.");
     }
     return mpPde;
-}
-
-template<unsigned DIM>
-boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > AbstractDiscreteContinuumSolver<DIM>::GetNonLinearPde()
-{
-    if(!mpNonLinearPde)
-    {
-        EXCEPTION("A nonlinear pde has not been set.");
-    }
-    return mpNonLinearPde;
-}
-
-template<unsigned DIM>
-boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > AbstractDiscreteContinuumSolver<DIM>::GetParabolicPde()
-{
-    if(!mpParabolicPde)
-    {
-        EXCEPTION("A parabolic pde has not been set.");
-    }
-    return mpParabolicPde;
 }
 
 template<unsigned DIM>
@@ -173,21 +151,9 @@ void AbstractDiscreteContinuumSolver<DIM>::SetLabel(const std::string& rLabel)
 }
 
 template<unsigned DIM>
-void AbstractDiscreteContinuumSolver<DIM>::SetPde(boost::shared_ptr<AbstractDiscreteContinuumLinearEllipticPde<DIM, DIM> > pPde)
+void AbstractDiscreteContinuumSolver<DIM>::SetPde(boost::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > pPde)
 {
     mpPde = pPde;
-}
-
-template<unsigned DIM>
-void AbstractDiscreteContinuumSolver<DIM>::SetNonLinearPde(boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > pPde)
-{
-    mpNonLinearPde = pPde;
-}
-
-template<unsigned DIM>
-void AbstractDiscreteContinuumSolver<DIM>::SetParabolicPde(boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > pPde)
-{
-    mpParabolicPde = pPde;
 }
 
 template<unsigned DIM>

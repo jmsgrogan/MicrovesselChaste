@@ -33,31 +33,36 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef ABSTRACTDISCRETECONTINUUMNONLINEARELLIPTICPDE_HPP_
-#define ABSTRACTDISCRETECONTINUUMNONLINEARELLIPTICPDE_HPP_
+#ifndef DISCRETECONTINUUMLINEARELLIPTICPDE_HPP_
+#define DISCRETECONTINUUMLINEARELLIPTICPDE_HPP_
 
 #include <string>
 #include "ChastePoint.hpp"
 #include "UblasIncludes.hpp"
 #include "SmartPointers.hpp"
 #include "UblasVectorInclude.hpp"
+#include "AbstractLinearEllipticPde.hpp"
 #include "DiscreteSource.hpp"
 #include "GeometryTools.hpp"
 #include "RegularGrid.hpp"
-#include "TetrahedralMesh.hpp"
-#include "AbstractNonlinearEllipticPde.hpp"
+#include "DiscreteContinuumMesh.hpp"
+#include "UnitCollection.hpp"
 #include "AbstractDiscreteContinuumPde.hpp"
 
 /**
- * Non-Linear Elliptic PDE with both continuum and discrete source terms. There is repition with
- * DiscreteContinuumLinearEllipticPde to avoid multiple inheritance.
+ * Base PDE class for managing discrete entities on the computational grid. Child classes need to
+ * implement methods for calculating the 'LinearInU' source terms, which will have units related to
+ * the field quantity being solved for.
  */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM = ELEMENT_DIM>
-class AbstractDiscreteContinuumNonLinearEllipticPde : public AbstractNonlinearEllipticPde<SPACE_DIM>,
+class DiscreteContinuumLinearEllipticPde : public AbstractLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>,
     public AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>
 {
-    using AbstractNonlinearEllipticPde<SPACE_DIM>::ComputeNonlinearSourceTermPrime;
-    using AbstractNonlinearEllipticPde<SPACE_DIM>::ComputeNonlinearSourceTerm;
+
+public:
+
+    using AbstractLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm;
+
     using AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm;
 
 protected:
@@ -72,43 +77,55 @@ public:
     /**
      * Constructor
      */
-    AbstractDiscreteContinuumNonLinearEllipticPde();
+    DiscreteContinuumLinearEllipticPde();
 
     /**
-     * Desctructor
+     * Destructor
      */
-    virtual ~AbstractDiscreteContinuumNonLinearEllipticPde();
+    virtual ~DiscreteContinuumLinearEllipticPde();
 
     /**
-     * Abstract method to return the constant in U contribution to the regular grid solvers
+     * Factory Constructor
+     * @return a pointer to an instance of the pde
+     */
+    static boost::shared_ptr<DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM> > Create();
+
+    /**
+     * Overwritten method to return the constant in U contribution to the Chaste FE solver
+     * @param rX grid location
+     * @param pElement pointer to containing element
+     * @return source strength
+     */
+    double ComputeConstantInUSourceTerm(const ChastePoint<SPACE_DIM>& rX, Element<ELEMENT_DIM, SPACE_DIM>* pElement);
+
+    /**
+     * Overwritten method to return the constant in U contribution to the regular grid solvers
      * @param gridIndex grid index
      * @return source strength
      */
-    virtual units::quantity<unit::concentration_flow_rate> ComputeConstantInUSourceTerm(unsigned gridIndex=0);
+    units::quantity<unit::concentration_flow_rate> ComputeConstantInUSourceTerm(unsigned gridIndex=0);
 
     /**
-     * Abstract method to return the linear in U contribution to the regular grid solvers
+     * Overwritten method to return the diffusion term to the Chaste FE solver
+     * @return the diffusion matrix
+     */
+    c_matrix<double, SPACE_DIM, SPACE_DIM> ComputeDiffusionTerm(const ChastePoint<SPACE_DIM>&);
+
+    /**
+     * Overwritten method to return the linear in U contribution to the Chaste FE solver
+     * @param rX grid location
+     * @param pElement pointer to containing element
+     * @return source strength
+     */
+    double ComputeLinearInUCoeffInSourceTerm(const ChastePoint<SPACE_DIM>& rX, Element<ELEMENT_DIM, SPACE_DIM>* pElement);
+
+    /**
+     * Overwritten method to return the linear in U contribution to the regular grid solvers
      * @param gridIndex grid index
      * @return source strength
      */
-    virtual units::quantity<unit::rate> ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex=0);
-
-    /**
-     * Abstract method to return the non linear contribution to the regular grid solvers
-     * @param gridIndex grid index
-     * @param u the concentration
-     * @return source strength
-     */
-    virtual units::quantity<unit::concentration_flow_rate> ComputeNonlinearSourceTerm(unsigned gridIndex, units::quantity<unit::concentration> u)=0;
-
-    /**
-     * Abstract method to return the non linear prime contribution to the regular grid solvers
-     * @param gridIndex grid index
-     * @param u the concentration
-     * @return source strength
-     */
-    virtual units::quantity<unit::rate> ComputeNonlinearSourceTermPrime(unsigned gridIndex, units::quantity<unit::concentration> u)=0;
+    units::quantity<unit::rate> ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex=0);
 
 };
 
-#endif /*ABSTRACTDISCRETECONTINUUMNONLINEARELLIPTICPDE_HPP_*/
+#endif /*DISCRETECONTINUUMLINEARELLIPTICPDE_HPP_*/

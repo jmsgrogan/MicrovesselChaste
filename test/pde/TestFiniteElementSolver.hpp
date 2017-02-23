@@ -41,7 +41,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <string>
 #include <boost/lexical_cast.hpp>
 #include "SmartPointers.hpp"
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "FiniteElementSolver.hpp"
 #include "UblasIncludes.hpp"
 #include "Part.hpp"
@@ -82,7 +82,7 @@ public:
         p_mesh_generator->Update();
 
         // Choose the PDE
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         units::quantity<unit::diffusivity> diffusivity(Owen11Parameters::mpVegfDiffusivity->GetValue());
         units::quantity<unit::rate> consumption_rate(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
         p_pde->SetIsotropicDiffusionConstant(diffusivity);

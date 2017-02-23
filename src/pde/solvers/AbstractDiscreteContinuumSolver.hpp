@@ -38,16 +38,15 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include <vector>
 #include <string>
+
 #include "OutputFileHandler.hpp"
 #include "VesselNetwork.hpp"
 #include "AbstractCellPopulation.hpp"
-#include "AbstractDiscreteContinuumLinearEllipticPde.hpp"
-#include "AbstractDiscreteContinuumNonLinearEllipticPde.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
 #include "RegularGrid.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "UnitCollection.hpp"
-#include "AbstractDiscreteContinuumParabolicPde.hpp"
+#include "AbstractDiscreteContinuumPde.hpp"
 
 /**
  * An abstract solver class for continuum-discrete field problems.
@@ -110,17 +109,7 @@ protected:
     /**
      * The PDE to be solved
      */
-    boost::shared_ptr<AbstractDiscreteContinuumLinearEllipticPde<DIM, DIM> > mpPde;
-
-    /**
-     * The non-linear PDE to be solved
-     */
-    boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > mpNonLinearPde;
-
-    /**
-     * The time dependent (parabolic) PDE to be solved
-     */
-    boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > mpParabolicPde;
+    boost::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > mpPde;
 
     /**
      * The DiscreteContinuum boundary conditions, optional
@@ -212,22 +201,10 @@ public:
     const std::string& GetLabel();
 
     /**
-     * Return the nonlinear PDE
-     * @return the DiscreteContinuum nonlinear elliptic pde
-     */
-    boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > GetNonLinearPde();
-
-    /**
      * Return the PDE
      * @return the DiscreteContinuum linear elliptic pde
      */
-    boost::shared_ptr<AbstractDiscreteContinuumLinearEllipticPde<DIM, DIM> > GetPde();
-
-    /**
-     * Return the parabolic PDE
-     * @return the DiscreteContinuum parabolic pde
-     */
-    boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > GetParabolicPde();
+    boost::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > GetPde();
 
     /**
      * Return the reference concentration value.
@@ -306,19 +283,7 @@ public:
      *  Set the PDE to be solved
      * @param pPde the pde to be solved
      */
-    void SetPde(boost::shared_ptr<AbstractDiscreteContinuumLinearEllipticPde<DIM, DIM> > pPde);
-
-    /**
-     *  Set the nonlinear PDE to be solved
-     * @param pPde the pde to be solved
-     */
-    void SetNonLinearPde(boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > pPde);
-
-    /**
-     *  Set the parabolic PDE to be solved
-     * @param pPde the pde to be solved
-     */
-    void SetParabolicPde(boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > pPde);
+    void SetPde(boost::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > pPde);
 
     /**
      * Operations to be performed prior to the first solve

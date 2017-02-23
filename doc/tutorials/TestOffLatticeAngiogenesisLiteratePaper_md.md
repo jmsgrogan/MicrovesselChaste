@@ -73,7 +73,7 @@ grids and PDEs,
 #include "DiscreteSource.hpp"
 #include "VesselBasedDiscreteSource.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
 ```
 
@@ -214,7 +214,7 @@ Now make a finite element mesh on the cornea.
 Set up the vegf pde
 
 ```cpp
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_vegf_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_vegf_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         p_vegf_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpVegfDiffusivity->GetValue("User"));
         p_vegf_pde->SetContinuumLinearInUTerm(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
         p_vegf_pde->SetMesh(p_mesh);
@@ -337,7 +337,7 @@ The full code is given below
 #include "DiscreteSource.hpp"
 #include "VesselBasedDiscreteSource.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
 #include "OffLatticeSproutingRule.hpp"
 #include "OffLatticeMigrationRule.hpp"
@@ -419,7 +419,7 @@ public:
         p_scene->GetPartActorGenerator()->SetVolumeOpacity(0.0);
         p_scene->SetMesh(p_mesh);
         p_scene->Start();
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_vegf_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_vegf_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         p_vegf_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpVegfDiffusivity->GetValue("User"));
         p_vegf_pde->SetContinuumLinearInUTerm(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
         p_vegf_pde->SetMesh(p_mesh);

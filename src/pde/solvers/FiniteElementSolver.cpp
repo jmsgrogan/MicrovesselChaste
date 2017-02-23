@@ -35,9 +35,14 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include <math.h>
 #include "SimpleLinearEllipticSolver.hpp"
+#include "SimpleLinearParabolicSolver.hpp"
 #include "SimpleNonlinearEllipticSolver.hpp"
 #include "SimpleNewtonNonlinearSolver.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
+#include "AbstractDiscreteContinuumParabolicPde.hpp"
+#include "AbstractDiscreteContinuumNonLinearEllipticPde.hpp"
 #include "FiniteElementSolver.hpp"
+#include "Exception.hpp"
 
 template<unsigned DIM>
 FiniteElementSolver<DIM>::FiniteElementSolver()
@@ -71,7 +76,7 @@ void FiniteElementSolver<DIM>::Update()
     }
     else
     {
-        this->mpNonLinearPde->UpdateDiscreteSourceStrengths();
+        EXCEPTION("A PDE has not been set in the finite element solver");
     }
 }
 
@@ -113,13 +118,14 @@ void FiniteElementSolver<DIM>::Solve()
 
     // Do the solve
     // Check the type of pde
-    if(this->mpPde and !this->mpNonLinearPde)
+    if(boost::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
+            boost::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde))
     {
-        this->mpPde->SetUseRegularGrid(false);
-        this->mpPde->SetMesh(this->mpMesh);
-        this->mpPde->UpdateDiscreteSourceStrengths();
+        p_linear_pde->SetUseRegularGrid(false);
+        p_linear_pde->SetMesh(this->mpMesh);
+        p_linear_pde->UpdateDiscreteSourceStrengths();
 
-        SimpleLinearEllipticSolver<DIM, DIM> static_solver(this->mpMesh.get(), this->mpPde.get(), p_bcc.get());
+        SimpleLinearEllipticSolver<DIM, DIM> static_solver(this->mpMesh.get(), p_linear_pde.get(), p_bcc.get());
         ReplicatableVector solution_repl(static_solver.Solve());
 
         this->mSolution = std::vector<double>(solution_repl.GetSize());
@@ -131,82 +137,83 @@ void FiniteElementSolver<DIM>::Solve()
         }
         this->UpdateSolution(this->mSolution);
     }
-    else if(this->mpNonLinearPde)
+    else if(boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > p_nonlinear_pde =
+            boost::dynamic_pointer_cast<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> >(this->mpPde))
     {
-        this->mpNonLinearPde->SetUseRegularGrid(false);
-        this->mpNonLinearPde->SetMesh(this->mpMesh);
-        this->mpNonLinearPde->UpdateDiscreteSourceStrengths();
+        p_nonlinear_pde->SetUseRegularGrid(false);
+        p_nonlinear_pde->SetMesh(this->mpMesh);
+        p_nonlinear_pde->UpdateDiscreteSourceStrengths();
 
-        if (this->mpPde)
+//        if (1=0)
+//        {
+//            this->mpPde->SetUseRegularGrid(false);
+//            this->mpPde->SetMesh(this->mpMesh);
+//            this->mpPde->UpdateDiscreteSourceStrengths();
+//
+//            SimpleLinearEllipticSolver<DIM, DIM> static_solver(this->mpMesh.get(), this->mpPde.get(), p_bcc.get());
+//            ReplicatableVector static_solution_repl(static_solver.Solve());
+//
+//            std::vector<double> solution = std::vector<double>(static_solution_repl.GetSize());
+//            for(unsigned idx = 0; idx < static_solution_repl.GetSize(); idx++)
+//            {
+//                solution[idx]= static_solution_repl[idx];
+//                // Dont want negative solutions going into the initial guess
+//                if(solution[idx]<0.0)
+//                {
+//                    solution[idx] = 0.0;
+//                }
+//            }
+//
+//            Vec initial_guess = PetscTools::CreateVec(this->mpMesh->GetNumNodes());
+//            for(unsigned idx=0; idx<solution.size();idx++)
+//            {
+//                PetscVecTools::SetElement(initial_guess, idx, solution[idx]);
+//            }
+//            PetscVecTools::Finalise(initial_guess);
+//
+//            SimpleNonlinearEllipticSolver<DIM, DIM> solver(this->mpMesh.get(), this->mpNonLinearPde.get(), p_bcc.get());
+//            SimpleNewtonNonlinearSolver newton_solver;
+//            if(mUseNewton)
+//            {
+//                solver.SetNonlinearSolver(&newton_solver);
+//                newton_solver.SetTolerance(1e-5);
+//                newton_solver.SetWriteStats();
+//            }
+//
+//            ReplicatableVector solution_repl(solver.Solve(initial_guess));
+//            this->mSolution = std::vector<double>(solution_repl.GetSize());
+//            this->mConcentrations = std::vector<units::quantity<unit::concentration> >(solution_repl.GetSize());
+//            for(unsigned idx = 0; idx < solution_repl.GetSize(); idx++)
+//            {
+//                this->mSolution[idx] = solution_repl[idx];
+//                this->mConcentrations[idx] = solution_repl[idx]*this->mReferenceConcentration;
+//            }
+//            this->UpdateSolution(this->mSolution);
+//            PetscTools::Destroy(initial_guess);
+//        }
+//        else
+//        {
+        Vec initial_guess = PetscTools::CreateAndSetVec(this->mpMesh->GetNumNodes(), this->mBoundaryConditions[0]->GetValue()/this->mReferenceConcentration);
+        SimpleNonlinearEllipticSolver<DIM, DIM> solver(this->mpMesh.get(), p_nonlinear_pde.get(), p_bcc.get());
+        SimpleNewtonNonlinearSolver newton_solver;
+        if(mUseNewton)
         {
-            this->mpPde->SetUseRegularGrid(false);
-            this->mpPde->SetMesh(this->mpMesh);
-            this->mpPde->UpdateDiscreteSourceStrengths();
-
-            SimpleLinearEllipticSolver<DIM, DIM> static_solver(this->mpMesh.get(), this->mpPde.get(), p_bcc.get());
-            ReplicatableVector static_solution_repl(static_solver.Solve());
-
-            std::vector<double> solution = std::vector<double>(static_solution_repl.GetSize());
-            for(unsigned idx = 0; idx < static_solution_repl.GetSize(); idx++)
-            {
-                solution[idx]= static_solution_repl[idx];
-                // Dont want negative solutions going into the initial guess
-                if(solution[idx]<0.0)
-                {
-                    solution[idx] = 0.0;
-                }
-            }
-
-            Vec initial_guess = PetscTools::CreateVec(this->mpMesh->GetNumNodes());
-            for(unsigned idx=0; idx<solution.size();idx++)
-            {
-                PetscVecTools::SetElement(initial_guess, idx, solution[idx]);
-            }
-            PetscVecTools::Finalise(initial_guess);
-
-            SimpleNonlinearEllipticSolver<DIM, DIM> solver(this->mpMesh.get(), this->mpNonLinearPde.get(), p_bcc.get());
-            SimpleNewtonNonlinearSolver newton_solver;
-            if(mUseNewton)
-            {
-                solver.SetNonlinearSolver(&newton_solver);
-                newton_solver.SetTolerance(1e-5);
-                newton_solver.SetWriteStats();
-            }
-
-            ReplicatableVector solution_repl(solver.Solve(initial_guess));
-            this->mSolution = std::vector<double>(solution_repl.GetSize());
-            this->mConcentrations = std::vector<units::quantity<unit::concentration> >(solution_repl.GetSize());
-            for(unsigned idx = 0; idx < solution_repl.GetSize(); idx++)
-            {
-                this->mSolution[idx] = solution_repl[idx];
-                this->mConcentrations[idx] = solution_repl[idx]*this->mReferenceConcentration;
-            }
-            this->UpdateSolution(this->mSolution);
-            PetscTools::Destroy(initial_guess);
+            solver.SetNonlinearSolver(&newton_solver);
+            newton_solver.SetTolerance(1e-5);
+            newton_solver.SetWriteStats();
         }
-        else
+
+        ReplicatableVector solution_repl(solver.Solve(initial_guess));
+        this->mSolution = std::vector<double>(solution_repl.GetSize());
+        this->mConcentrations = std::vector<units::quantity<unit::concentration> >(solution_repl.GetSize());
+        for(unsigned idx = 0; idx < solution_repl.GetSize(); idx++)
         {
-            Vec initial_guess = PetscTools::CreateAndSetVec(this->mpMesh->GetNumNodes(), this->mBoundaryConditions[0]->GetValue()/this->mReferenceConcentration);
-            SimpleNonlinearEllipticSolver<DIM, DIM> solver(this->mpMesh.get(), this->mpNonLinearPde.get(), p_bcc.get());
-            SimpleNewtonNonlinearSolver newton_solver;
-            if(mUseNewton)
-            {
-                solver.SetNonlinearSolver(&newton_solver);
-                newton_solver.SetTolerance(1e-5);
-                newton_solver.SetWriteStats();
-            }
-
-            ReplicatableVector solution_repl(solver.Solve(initial_guess));
-            this->mSolution = std::vector<double>(solution_repl.GetSize());
-            this->mConcentrations = std::vector<units::quantity<unit::concentration> >(solution_repl.GetSize());
-            for(unsigned idx = 0; idx < solution_repl.GetSize(); idx++)
-            {
-                this->mSolution[idx] = solution_repl[idx];
-                this->mConcentrations[idx] = solution_repl[idx]*this->mReferenceConcentration;
-            }
-            this->UpdateSolution(this->mSolution);
-            PetscTools::Destroy(initial_guess);
+            this->mSolution[idx] = solution_repl[idx];
+            this->mConcentrations[idx] = solution_repl[idx]*this->mReferenceConcentration;
         }
+        this->UpdateSolution(this->mSolution);
+        PetscTools::Destroy(initial_guess);
+//        }
     }
     else
     {

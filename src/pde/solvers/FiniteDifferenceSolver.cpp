@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2005-2016, University of Oxford.
+Copyright (c) 2005-2017, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -39,7 +39,6 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "ReplicatableVector.hpp"
 #include "VesselSegment.hpp"
 #include "FiniteDifferenceSolver.hpp"
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
 #include "SimplePetscNonlinearSolver.hpp"
 #include "BaseUnits.hpp"
 #include "CoupledVegfPelletDiffusionReactionPde.hpp"
@@ -120,11 +119,6 @@ void FiniteDifferenceSolver<DIM>::Setup()
         EXCEPTION("This solver needs a regular grid to be set before calling Setup.");
     }
 
-    if(!this->mpPde and !this->mpNonLinearPde and !this->mpParabolicPde)
-    {
-        EXCEPTION("This solver needs a PDE to be set before calling Setup.");
-    }
-
     if(this->CellPopulationIsSet())
     {
         this->mpRegularGrid->SetCellPopulation(*(this->mpCellPopulation), this->mCellPopulationReferenceLength);
@@ -139,13 +133,9 @@ void FiniteDifferenceSolver<DIM>::Setup()
     {
         this->mpPde->SetRegularGrid(this->mpRegularGrid);
     }
-    else if(this->mpNonLinearPde)
+    else
     {
-        this->mpNonLinearPde->SetRegularGrid(this->mpRegularGrid);
-    }
-    else if(this->mpParabolicPde)
-    {
-        this->mpParabolicPde->SetRegularGrid(this->mpRegularGrid);
+        EXCEPTION("This solver needs a PDE to be set before calling Setup.");
     }
 
     // Set up the boundary conditions. Use a different description from normal DiscreteContinuum BCs for efficiency.
@@ -176,14 +166,6 @@ void FiniteDifferenceSolver<DIM>::Update()
     {
         this->mpPde->UpdateDiscreteSourceStrengths();
     }
-    else if(this->mpNonLinearPde)
-    {
-        this->mpNonLinearPde->UpdateDiscreteSourceStrengths();
-    }
-    else if(this->mpParabolicPde)
-    {
-        this->mpParabolicPde->UpdateDiscreteSourceStrengths();
-    }
 
     // Update the boundary conditions
     if(mUpdateBoundaryConditionsEachSolve or !mBoundaryConditionsSet)
@@ -197,7 +179,7 @@ void FiniteDifferenceSolver<DIM>::Update()
 }
 
 template<unsigned DIM>
-void FiniteDifferenceSolver<DIM>::DoParabolicSolve()
+void FiniteDifferenceSolver<DIM>::DoParabolicSolve(boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > p_pde)
 {
     // Set up the system
     unsigned number_of_points = this->mpRegularGrid->GetNumberOfPoints();
@@ -213,8 +195,7 @@ void FiniteDifferenceSolver<DIM>::DoParabolicSolve()
     {
         PetscVecTools::SetElement(previous_solution, idx, this->mSolution[idx]);
     }
-    PetscVecTools::SetElement(previous_solution, number_of_points,
-            this->mpParabolicPde->GetMultiplierValue()/this->mReferenceConcentration);
+    PetscVecTools::SetElement(previous_solution, number_of_points, p_pde->GetMultiplierValue()/this->mReferenceConcentration);
 
     TS ts; // time stepper
     SNES snes; // nonlinear solver
@@ -233,8 +214,8 @@ void FiniteDifferenceSolver<DIM>::DoParabolicSolve()
     TSSetRHSJacobian(ts, jacobian, jacobian, ParabolicFiniteDifferenceSolver_ComputeJacobian<DIM>,this);
 
     // Time stepping and SNES settings
-    PetscInt       time_steps_max = 1e7;
-    PetscReal      time_total_max = SimulationTime::Instance()->GetTimeStep();
+    PetscInt time_steps_max = 1e7;
+    PetscReal time_total_max = SimulationTime::Instance()->GetTimeStep();
     TSGetSNES(ts,&snes);
     PetscReal abstol = 1.0e-50;
     PetscReal reltol = 1.0e-10;
@@ -267,7 +248,7 @@ void FiniteDifferenceSolver<DIM>::DoParabolicSolve()
     {
         solution[row] = soln_repl[row];
     }
-    this->mpParabolicPde->SetMultiplierValue(soln_repl[number_of_points]*this->mReferenceConcentration);
+    p_pde->SetMultiplierValue(soln_repl[number_of_points]*this->mReferenceConcentration);
 
     this->UpdateSolution(solution);
 
@@ -282,7 +263,7 @@ void FiniteDifferenceSolver<DIM>::DoParabolicSolve()
 }
 
 template<unsigned DIM>
-void FiniteDifferenceSolver<DIM>::DoLinearSolve()
+void FiniteDifferenceSolver<DIM>::DoLinearSolve(boost::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_pde)
 {
     // Set up the system
     unsigned number_of_points = this->mpRegularGrid->GetNumberOfPoints();
@@ -293,15 +274,7 @@ void FiniteDifferenceSolver<DIM>::DoLinearSolve()
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     units::quantity<unit::length> spacing = this->mpRegularGrid->GetSpacing();
 
-    double diffusion_term = 0.0;
-    if(this->mpPde)
-    {
-        diffusion_term = (this->mpPde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
-    }
-    else
-    {
-        diffusion_term = (this->mpNonLinearPde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
-    }
+    double diffusion_term = (p_pde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
 
     LinearSystem linear_system(number_of_points, 7);
     for (unsigned i = 0; i < extents_z; i++) // Z
@@ -312,7 +285,7 @@ void FiniteDifferenceSolver<DIM>::DoLinearSolve()
             {
                 unsigned grid_index = this->mpRegularGrid->Get1dGridIndex(k, j, i);
 
-                linear_system.AddToMatrixElement(grid_index, grid_index, this->mpPde->ComputeLinearInUCoeffInSourceTerm(grid_index)*reference_time - 6.0 * diffusion_term);
+                linear_system.AddToMatrixElement(grid_index, grid_index, p_pde->ComputeLinearInUCoeffInSourceTerm(grid_index)*reference_time - 6.0 * diffusion_term);
 
                 // Assume no flux on domain boundaries by default
                 // No flux at x bottom
@@ -374,7 +347,7 @@ void FiniteDifferenceSolver<DIM>::DoLinearSolve()
                 {
                     linear_system.AddToMatrixElement(grid_index, grid_index, diffusion_term);
                 }
-                linear_system.SetRhsVectorElement(grid_index, -this->mpPde->ComputeConstantInUSourceTerm(grid_index)*(reference_time/this->mReferenceConcentration));
+                linear_system.SetRhsVectorElement(grid_index, -p_pde->ComputeConstantInUSourceTerm(grid_index)*(reference_time/this->mReferenceConcentration));
             }
         }
     }
@@ -412,6 +385,36 @@ void FiniteDifferenceSolver<DIM>::DoLinearSolve()
 }
 
 template<unsigned DIM>
+void FiniteDifferenceSolver<DIM>::DoNonLinearSolve(boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > p_pde)
+{
+    // Set up initial Guess
+    unsigned number_of_points = this->mpRegularGrid->GetNumberOfPoints();
+    Vec initial_guess=PetscTools::CreateAndSetVec(number_of_points, 1.0);
+
+    SimplePetscNonlinearSolver solver_petsc;
+    int length = 7;
+    Vec answer_petsc = solver_petsc.Solve(&HyrbidFiniteDifference_ComputeResidual<DIM>,
+                                          &HyrbidFiniteDifference_ComputeJacobian<DIM>, initial_guess, length, this);
+
+    ReplicatableVector soln_repl(answer_petsc);
+
+    // Populate the solution vector
+    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(number_of_points,
+                                                                               0.0*this->mReferenceConcentration);
+    for (unsigned row = 0; row < number_of_points; row++)
+    {
+       this->mConcentrations[row] = soln_repl[row]*this->mReferenceConcentration;
+    }
+
+    this->UpdateSolution(this->mConcentrations);
+
+    if (this->mWriteSolution)
+    {
+        this->Write();
+    }
+}
+
+template<unsigned DIM>
 void FiniteDifferenceSolver<DIM>::Solve()
 {
     if(!this->IsSetupForSolve)
@@ -419,41 +422,24 @@ void FiniteDifferenceSolver<DIM>::Solve()
         Setup();
     }
 
-    if(this->mpPde)
+    if(boost::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
+            boost::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde))
     {
-        DoLinearSolve();
+        DoLinearSolve(p_linear_pde);
     }
-    else if(this->mpParabolicPde)
+    else if(boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > p_parabolic_pde =
+            boost::dynamic_pointer_cast<AbstractDiscreteContinuumParabolicPde<DIM, DIM> >(this->mpPde))
     {
-        DoParabolicSolve();
+        DoParabolicSolve(p_parabolic_pde);
+    }
+    else if(boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > p_nonlinear_pde =
+            boost::dynamic_pointer_cast<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> >(this->mpPde))
+    {
+        DoNonLinearSolve(p_nonlinear_pde);
     }
     else
     {
-        // Set up initial Guess
-        unsigned number_of_points = this->mpRegularGrid->GetNumberOfPoints();
-        Vec initial_guess=PetscTools::CreateAndSetVec(number_of_points, 1.0);
-
-        SimplePetscNonlinearSolver solver_petsc;
-        int length = 7;
-        Vec answer_petsc = solver_petsc.Solve(&HyrbidFiniteDifference_ComputeResidual<DIM>,
-                                              &HyrbidFiniteDifference_ComputeJacobian<DIM>, initial_guess, length, this);
-
-        ReplicatableVector soln_repl(answer_petsc);
-
-        // Populate the solution vector
-        this->mConcentrations = std::vector<units::quantity<unit::concentration> >(number_of_points,
-                                                                                   0.0*this->mReferenceConcentration);
-        for (unsigned row = 0; row < number_of_points; row++)
-        {
-           this->mConcentrations[row] = soln_repl[row]*this->mReferenceConcentration;
-        }
-
-        this->UpdateSolution(this->mConcentrations);
-
-        if (this->mWriteSolution)
-        {
-            this->Write();
-        }
+        EXCEPTION("PDE Type could not be identified, did you set a PDE?");
     }
 }
 
@@ -468,7 +454,11 @@ PetscErrorCode HyrbidFiniteDifference_ComputeResidual(SNES snes, Vec solution_gu
 
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     units::quantity<unit::length> spacing = solver->GetGrid()->GetSpacing();
-    double diffusion_term = (solver->GetNonLinearPde()->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
+
+    boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > p_nonlinear_pde =
+                boost::dynamic_pointer_cast<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> >(solver->GetPde());
+
+    double diffusion_term = (p_nonlinear_pde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
 
     // It used to be possible to work directly with the solution_guess Vec, but now it seems to give read only errors.
     // Copy the vector for now.
@@ -487,7 +477,7 @@ PetscErrorCode HyrbidFiniteDifference_ComputeResidual(SNES snes, Vec solution_gu
                 units::quantity<unit::concentration> scale_grid_guess = grid_guess*solver->GetReferenceConcentration();
 
                 PetscVecTools::AddToElement(residual, grid_index, grid_guess * (- 6.0 * diffusion_term) +
-                                                solver->GetNonLinearPde()->ComputeNonlinearSourceTerm(grid_index, scale_grid_guess)*(reference_time/solver->GetReferenceConcentration()));
+                        p_nonlinear_pde->ComputeNonlinearSourceTerm(grid_index, scale_grid_guess)*(reference_time/solver->GetReferenceConcentration()));
 
                 // Assume no flux on domain boundaries by default
                 // No flux at x bottom
@@ -598,7 +588,10 @@ PetscErrorCode HyrbidFiniteDifference_ComputeJacobian(SNES snes, Vec input, Mat*
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     units::quantity<unit::length> spacing = solver->GetGrid()->GetSpacing();
 
-    double diffusion_term = (solver->GetNonLinearPde()->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
+    boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > p_nonlinear_pde =
+                boost::dynamic_pointer_cast<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> >(solver->GetPde());
+
+    double diffusion_term = (p_nonlinear_pde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
 
     // Get the residual vector
     for (unsigned i = 0; i < extents_z; i++) // Z
@@ -612,7 +605,7 @@ PetscErrorCode HyrbidFiniteDifference_ComputeJacobian(SNES snes, Vec input, Mat*
                 units::quantity<unit::concentration> scale_grid_guess = grid_guess*solver->GetReferenceConcentration();
 
                 PetscMatTools::AddToElement(jacobian, grid_index, grid_index, - 6.0 * diffusion_term +
-                                            solver->GetNonLinearPde()->ComputeNonlinearSourceTermPrime(grid_index, scale_grid_guess)*reference_time);
+                        p_nonlinear_pde->ComputeNonlinearSourceTermPrime(grid_index, scale_grid_guess)*reference_time);
 
                 // Assume no flux on domain boundaries by default
                 // No flux at x bottom
@@ -704,14 +697,17 @@ PetscErrorCode ParabolicFiniteDifferenceSolver_RHSFunction(TS ts, PetscReal t, V
     unsigned extents_z = p_solver->GetGrid()->GetExtents()[2];
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     units::quantity<unit::length> spacing = p_solver->GetGrid()->GetSpacing();
-    double diffusion_term = (p_solver->GetParabolicPde()->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
+
+    boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > p_parabolic_pde =
+                boost::dynamic_pointer_cast<AbstractDiscreteContinuumParabolicPde<DIM, DIM> >(p_solver->GetPde());
+    double diffusion_term = (p_parabolic_pde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
 
     // compute function value, given current guess
     PetscVecTools::Zero(dUdt);
 
     // Check for VEGF specific PDE
     boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_vegf_pde =
-            boost::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM> >(p_solver->GetParabolicPde());
+            boost::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM> >(p_parabolic_pde);
 
     for (unsigned i = 0; i < extents_z; i++) // Z
     {
@@ -724,7 +720,7 @@ PetscErrorCode ParabolicFiniteDifferenceSolver_RHSFunction(TS ts, PetscReal t, V
                 units::quantity<unit::concentration>  current_dimensional_solution =
                         current_solution*p_solver->GetReferenceConcentration();
                 units::quantity<unit::concentration_flow_rate> sink_terms =
-                        p_solver->GetParabolicPde()->ComputeNonlinearSourceTerm(grid_index, current_dimensional_solution);
+                        p_parabolic_pde->ComputeNonlinearSourceTerm(grid_index, current_dimensional_solution);
                 double nondim_sink_terms = sink_terms*(reference_time/p_solver->GetReferenceConcentration());
                 PetscVecTools::AddToElement(dUdt, grid_index, nondim_sink_terms);
                 PetscVecTools::AddToElement(dUdt, grid_index,-2.0*double(DIM)*diffusion_term*current_solution);
@@ -869,10 +865,13 @@ PetscErrorCode ParabolicFiniteDifferenceSolver_ComputeJacobian(TS ts, PetscReal 
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     units::quantity<unit::length> spacing = p_solver->GetGrid()->GetSpacing();
 
-    boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_vegf_pde =
-            boost::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM> >(p_solver->GetParabolicPde());
+    boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > p_parabolic_pde =
+                boost::dynamic_pointer_cast<AbstractDiscreteContinuumParabolicPde<DIM, DIM> >(p_solver->GetPde());
 
-    double diffusion_term = (p_solver->GetParabolicPde()->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
+    boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_vegf_pde =
+            boost::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM> >(p_parabolic_pde);
+
+    double diffusion_term = (p_parabolic_pde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
     PetscMatTools::Zero(pGlobalJacobian);
     PetscMatTools::SwitchWriteMode(pGlobalJacobian);
 
@@ -887,7 +886,7 @@ PetscErrorCode ParabolicFiniteDifferenceSolver_ComputeJacobian(TS ts, PetscReal 
                 units::quantity<unit::concentration>  current_dimensional_solution =
                         current_solution*p_solver->GetReferenceConcentration();
                 units::quantity<unit::rate> sink_terms =
-                        p_solver->GetParabolicPde()->ComputeNonlinearSourceTermPrime(grid_index, current_dimensional_solution);
+                        p_parabolic_pde->ComputeNonlinearSourceTermPrime(grid_index, current_dimensional_solution);
                 double nondim_sink_terms = sink_terms*reference_time;
                 PetscMatTools::AddToElement(pGlobalJacobian, grid_index, grid_index, nondim_sink_terms);
                 PetscMatTools::AddToElement(pGlobalJacobian, grid_index, grid_index,-2.0*double(DIM)*diffusion_term);

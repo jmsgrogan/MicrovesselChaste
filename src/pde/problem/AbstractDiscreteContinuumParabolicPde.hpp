@@ -47,6 +47,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "RegularGrid.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "UnitCollection.hpp"
+#include "AbstractDiscreteContinuumPde.hpp"
 
 /**
  * Base PDE class for managing discrete entities on the computational grid. Child classes need to
@@ -54,7 +55,7 @@ Copyright (c) 2005-2016, University of Oxford.
  * the field quantity being solved for.
  */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM = ELEMENT_DIM>
-class AbstractDiscreteContinuumParabolicPde
+class AbstractDiscreteContinuumParabolicPde : public AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>
 {
 protected:
 
@@ -62,48 +63,6 @@ protected:
      * The diffusion tensor
      */
     c_matrix<double, SPACE_DIM, SPACE_DIM> mDiffusionTensor;
-
-    /**
-     * The diffusion constant for isotropic diffusion
-     */
-    units::quantity<unit::diffusivity> mDiffusivity;
-
-    /**
-     * The continuum constant in U term, discrete terms are added to this.
-     */
-    units::quantity<unit::concentration_flow_rate> mConstantInUTerm;
-
-    /**
-     * The collection of discrete sources for addition to the continuum terms
-     */
-    std::vector<boost::shared_ptr<DiscreteSource<SPACE_DIM> > > mDiscreteSources;
-
-    /**
-     * The grid for solvers using regular grids
-     */
-    boost::shared_ptr<RegularGrid<SPACE_DIM> > mpRegularGrid;
-
-    /**
-     * The mesh for solvers using finite element meshes
-     */
-    boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > mpMesh;
-
-    /**
-     * Whether to use a regular grid or mesh for discrete source calculations
-     */
-    bool mUseRegularGrid;
-
-    /**
-     * The constant source strengths for each point on the grid or element in the mesh
-     */
-    std::vector<units::quantity<unit::concentration_flow_rate> > mDiscreteConstantSourceStrengths;
-
-    /**
-     * This is used internally to scale concentrations before and after linear system solves, reads and writes.
-     * Since those functions don't use Boost Units. It should not affect the solution, but can be judiciously chosen
-     * to avoid precision problems.
-     */
-    units::quantity<unit::concentration> mReferenceConcentration;
 
     /**
      * An optional extra degree of freedom value for simple coupled problems.
@@ -121,12 +80,6 @@ public:
      * Destructor
      */
     virtual ~AbstractDiscreteContinuumParabolicPde();
-
-    /**
-     * Add a discrete source to the pde
-     * @param pDiscreteSource a pointer the discrete source
-     */
-    void AddDiscreteSource(boost::shared_ptr<DiscreteSource<SPACE_DIM> > pDiscreteSource);
 
     /**
      * Overwritten method to return the constant in U contribution to the Chaste FE solver
@@ -148,12 +101,6 @@ public:
      * @return the diffusion matrix
      */
     c_matrix<double, SPACE_DIM, SPACE_DIM> ComputeDiffusionTerm(const ChastePoint<SPACE_DIM>&);
-
-    /**
-     * Return the diffusion constant for isotropic diffusion
-     * @return the diffusion constant
-     */
-    units::quantity<unit::diffusivity> ComputeIsotropicDiffusionTerm();
 
     /**
      * Abstract method to return the linear in U contribution to the regular grid solvers
@@ -179,40 +126,10 @@ public:
     virtual units::quantity<unit::rate> ComputeNonlinearSourceTermPrime(unsigned gridIndex, units::quantity<unit::concentration> u)=0;
 
     /**
-     * Return the collection of discrete sources
-     * @return vector of pointers to the discrete sources
-     */
-    std::vector<boost::shared_ptr<DiscreteSource<SPACE_DIM> > > GetDiscreteSources();
-
-    /**
      * Get the value of the optional coupling parameter
      * @return the value of an optional coupling parameter
      */
     units::quantity<unit::concentration> GetMultiplierValue();
-
-    /**
-     * Set the continuum constant in U term
-     * @param constantInUTerm the continuum constant in U term
-     */
-    void SetContinuumConstantInUTerm(units::quantity<unit::concentration_flow_rate> constantInUTerm);
-
-    /**
-     * Set the isotropic diffusion constant
-     * @param diffusivity the isotropic diffusion constant
-     */
-    void SetIsotropicDiffusionConstant(units::quantity<unit::diffusivity> diffusivity);
-
-    /**
-     * Set the regular grid
-     * @param pRegularGrid the regular grid
-     */
-    void SetRegularGrid(boost::shared_ptr<RegularGrid<SPACE_DIM> > pRegularGrid);
-
-    /**
-     * Set the finite element mesh
-     * @param pMesh the finite element mesh
-     */
-    void SetMesh(boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > pMesh);
 
     /**
      * Set the value of an optional coupling parameter
@@ -230,17 +147,6 @@ public:
      * @param referenceConcentration the reference concentration
      */
     void SetReferenceConcentration(units::quantity<unit::concentration> referenceConcentration);
-
-    /**
-     * Set whether to use a regular grid
-     * @param useRegularGrid whether to use a regular grid
-     */
-    void SetUseRegularGrid(bool useRegularGrid);
-
-    /**
-     * Update the discrete source strengths
-     */
-    virtual void UpdateDiscreteSourceStrengths();
 
 };
 

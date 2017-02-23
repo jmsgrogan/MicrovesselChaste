@@ -49,19 +49,9 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM = ELEMENT_DIM>
 class ParabolicDiffusionReactionPde : public AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>
 {
     /**
-     * The continuum linear in U term, discrete terms are added to this.
-     */
-    units::quantity<unit::rate> mLinearInUTerm;
-
-    /**
      * The non-linear source strengths for each point on the grid or mesh
      */
     std::vector<units::quantity<unit::concentration_flow_rate> > mDiscreteNonLinearSourceStrengths;
-
-    /**
-     * The linear source strengths for each point on the grid or mesh
-     */
-    std::vector<units::quantity<unit::rate> > mDiscreteLinearSourceStrengths;
 
 public:
 
@@ -112,11 +102,6 @@ public:
      */
     virtual units::quantity<unit::rate> ComputeNonlinearSourceTermPrime(unsigned gridIndex, units::quantity<unit::concentration> u);
 
-    /**
-     * Set the linear constant in U term
-     * @param linearInUTerm the linear constant in U term
-     */
-    void SetContinuumLinearInUTerm(units::quantity<unit::rate> linearInUTerm);
 
     /**
      * Update the discrete source strengths

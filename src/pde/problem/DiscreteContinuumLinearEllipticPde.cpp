@@ -34,25 +34,31 @@ Copyright (c) 2005-2016, University of Oxford.
  */
 
 #include <algorithm>
-#include "AbstractDiscreteContinuumParabolicPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "BaseUnits.hpp"
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>::AbstractDiscreteContinuumParabolicPde()
-            : AbstractDiscreteContinuumPde<ELEMENT_DIM, ELEMENT_DIM>(),
-              mDiffusionTensor(identity_matrix<double>(SPACE_DIM)),
-              mMultiplierSolution(0.0 * unit::mole_per_metre_cubed)
+DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::DiscreteContinuumLinearEllipticPde() :
+            AbstractLinearEllipticPde<ELEMENT_DIM, ELEMENT_DIM>(),
+            AbstractDiscreteContinuumPde<ELEMENT_DIM, ELEMENT_DIM>()
 {
     mDiffusionTensor *= this->mDiffusivity.value();
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>::~AbstractDiscreteContinuumParabolicPde()
+DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::~DiscreteContinuumLinearEllipticPde()
 {
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>::ComputeConstantInUSourceTerm(const ChastePoint<SPACE_DIM>& rX,
+boost::shared_ptr<DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM> > DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::Create()
+{
+    MAKE_PTR(DiscreteContinuumLinearEllipticPde<ELEMENT_DIM>, pSelf);
+    return pSelf;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+double DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeConstantInUSourceTerm(const ChastePoint<SPACE_DIM>& rX,
                                                                                                         Element<ELEMENT_DIM, SPACE_DIM>* pElement)
 {
     if(this->mDiscreteConstantSourceStrengths.size()>0)
@@ -72,7 +78,7 @@ double AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>::ComputeCon
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::concentration_flow_rate> AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>::ComputeConstantInUSourceTerm(unsigned gridIndex)
+units::quantity<unit::concentration_flow_rate> DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeConstantInUSourceTerm(unsigned gridIndex)
 {
     if(this->mDiscreteConstantSourceStrengths.size()>0)
     {
@@ -89,29 +95,48 @@ units::quantity<unit::concentration_flow_rate> AbstractDiscreteContinuumParaboli
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-c_matrix<double, SPACE_DIM, SPACE_DIM> AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiffusionTerm(const ChastePoint<SPACE_DIM>&)
+c_matrix<double, SPACE_DIM, SPACE_DIM> DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiffusionTerm(const ChastePoint<SPACE_DIM>&)
 {
     return mDiffusionTensor;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::concentration> AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>::GetMultiplierValue()
+double DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm(const ChastePoint<SPACE_DIM>& rX,
+                                                                                                        Element<ELEMENT_DIM, SPACE_DIM>* pElement)
 {
-    return mMultiplierSolution;
+    if(this->mDiscreteLinearSourceStrengths.size()>0)
+    {
+        if(pElement->GetIndex() >= this->mDiscreteLinearSourceStrengths.size())
+        {
+            EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
+        }
+        units::quantity<unit::rate> scaling_factor = (1.0/BaseUnits::Instance()->GetReferenceTimeScale());
+        return (this->mLinearInUTerm + this->mDiscreteLinearSourceStrengths[pElement->GetIndex()])/scaling_factor;
+    }
+    else
+    {
+        units::quantity<unit::rate> scaling_factor = (1.0/BaseUnits::Instance()->GetReferenceTimeScale());
+        return this->mLinearInUTerm/scaling_factor;
+    }
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>::SetMultiplierValue(units::quantity<unit::concentration> multiplier)
+units::quantity<unit::rate> DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex)
 {
-    mMultiplierSolution = multiplier;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>::UpdateMultiplierValue()
-{
-
+    if(this->mDiscreteLinearSourceStrengths.size()>0)
+    {
+        if(gridIndex >= this->mDiscreteLinearSourceStrengths.size())
+        {
+            EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
+        }
+        return this->mLinearInUTerm + this->mDiscreteLinearSourceStrengths[gridIndex];
+    }
+    else
+    {
+        return this->mLinearInUTerm;
+    }
 }
 
 // Explicit instantiation
-template class AbstractDiscreteContinuumParabolicPde<2>;
-template class AbstractDiscreteContinuumParabolicPde<3>;
+template class DiscreteContinuumLinearEllipticPde<2>;
+template class DiscreteContinuumLinearEllipticPde<3>;

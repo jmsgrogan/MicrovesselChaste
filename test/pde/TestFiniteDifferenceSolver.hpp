@@ -39,7 +39,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <cxxtest/TestSuite.h>
 #include <vector>
 #include <string>
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "SmartPointers.hpp"
 #include "Part.hpp"
 #include "FiniteDifferenceSolver.hpp"
@@ -67,7 +67,7 @@ public:
         p_grid->GenerateFromPart(p_domain, 10.e-6*unit::metres);
 
         // Choose the PDE
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
         units::quantity<unit::diffusivity> diffusivity(1.e-3 * unit::metre_squared_per_second);
         units::quantity<unit::rate> consumption_rate(-2.e6 * unit::per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
@@ -102,7 +102,7 @@ public:
         p_grid->GenerateFromPart(p_domain, 10.0*1.e-6*unit::metres);
 
         // Choose the PDE
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         units::quantity<unit::diffusivity> diffusivity(1.e-3 * unit::metre_squared_per_second);
         units::quantity<unit::rate> consumption_rate(-2.e6 * unit::per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
@@ -140,7 +140,7 @@ public:
         p_grid->GenerateFromPart(p_domain, 10.0*1.e-6*unit::metres);
 
         // Choose the PDE
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
         units::quantity<unit::rate> consumption_rate(-2.e6 * unit::per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);

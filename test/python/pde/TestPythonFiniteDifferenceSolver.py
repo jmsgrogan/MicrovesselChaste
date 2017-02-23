@@ -57,7 +57,7 @@ class TestFiniteDifferenceSolver(unittest.TestCase):
         grid = microvessel_chaste.mesh.RegularGrid3()
         grid.GenerateFromPart(domain, 10.e-6*metre())
         
-        pde = microvessel_chaste.pde.LinearSteadyStateDiffusionReactionPde3_3()
+        pde = microvessel_chaste.pde.DiscreteContinuumLinearEllipticPde3_3()
         pde.SetIsotropicDiffusionConstant(0.003*metre_squared_per_second())
         pde.SetContinuumLinearInUTerm(-1.0*per_second())
         
@@ -83,7 +83,7 @@ class TestFiniteDifferenceSolver(unittest.TestCase):
 #         grid = chaste.projects.microvessel.mesh.RegularGrid3()
 #         grid.GenerateFromPart(domain, 10.e-6*utility.metre())
 #         
-#         pde = chaste.projects.microvessel.pde.LinearSteadyStateDiffusionReactionPde3_3()
+#         pde = chaste.projects.microvessel.pde.DiscreteContinuumLinearEllipticPde3_3()
 #         pde.SetIsotropicDiffusionConstant(0.003*utility.metre_squared_per_second())
 #         pde.SetContinuumLinearInUTerm(-1.e-5*utility.per_second())
 #         
@@ -115,7 +115,7 @@ class TestFiniteDifferenceSolver(unittest.TestCase):
 #         grid = chaste.projects.microvessel.mesh.RegularGrid3()
 #         grid.GenerateFromPart(domain, 10.e-6*utility.metre())
 #         
-#         pde = chaste.projects.microvessel.pde.LinearSteadyStateDiffusionReactionPde3_3()
+#         pde = chaste.projects.microvessel.pde.DiscreteContinuumLinearEllipticPde3_3()
 #         pde.SetIsotropicDiffusionConstant(0.003*utility.metre_squared_per_second())
 #         pde.SetContinuumLinearInUTerm(-1.e-5*utility.per_second())
 #         

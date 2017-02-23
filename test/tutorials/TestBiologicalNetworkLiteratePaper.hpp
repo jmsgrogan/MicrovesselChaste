@@ -95,7 +95,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselBasedDiscreteSource.hpp"
 #include "CellStateDependentDiscreteSource.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 /*
  * angiogenesis and regression,
  */
@@ -270,7 +270,7 @@ public:
 //        /*
 //         * Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources.
 //         */
-//        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_oxygen_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
+//        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
 //        p_oxygen_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpOxygenDiffusivity->GetValue("User"));
 //        boost::shared_ptr<CellBasedDiscreteSource<3> > p_cell_oxygen_sink = CellBasedDiscreteSource<3>::Create();
 //        p_cell_oxygen_sink->SetLinearInUConsumptionRatePerCell(Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
@@ -298,7 +298,7 @@ public:
 //        * The rate of VEGF release depends on the cell type and intracellular VEGF levels, so we need a more detailed
 //        * type of discrete source.
 //        */
-//        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_vegf_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
+//        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_vegf_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
 //        p_vegf_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpVegfDiffusivity->GetValue("User"));
 //        p_vegf_pde->SetContinuumLinearInUTerm(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
 //        /*

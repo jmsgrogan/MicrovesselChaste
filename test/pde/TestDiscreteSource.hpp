@@ -39,7 +39,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <cxxtest/TestSuite.h>
 #include <vector>
 #include <string>
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "SmartPointers.hpp"
 #include "Part.hpp"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
@@ -182,7 +182,7 @@ public:
         p_grid->GenerateFromPart(p_domain, grid_spacing);
 
         // Choose the PDE
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
 
@@ -272,7 +272,7 @@ public:
         // Set up and run the solver
         FiniteDifferenceSolver<3> solver;
         solver.SetGrid(p_grid);
-        solver.SetNonLinearPde(p_pde);
+        solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_boundary2);
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteSource/TestNonLinearGridPde", false));
         solver.SetFileHandler(p_output_file_handler);

@@ -39,7 +39,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <cxxtest/TestSuite.h>
 #include <vector>
 #include <string>
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "SmartPointers.hpp"
 #include "Part.hpp"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"

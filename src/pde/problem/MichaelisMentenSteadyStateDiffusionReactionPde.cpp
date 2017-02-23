@@ -58,22 +58,6 @@ MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::~Michael
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeConstantInUSourceTerm(const ChastePoint<SPACE_DIM>& rX, Element<ELEMENT_DIM, SPACE_DIM>* pElement)
-{
-    return this->mConstantInUTerm/(1.0*unit::mole_per_metre_cubed_per_second);
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::concentration_flow_rate> MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeConstantInUSourceTerm(unsigned gridIndex)
-{
-    if(gridIndex >= this->mDiscreteLinearSourceStrengths.size())
-    {
-        EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
-    }
-    return this->mConstantInUTerm + this->mDiscreteConstantSourceStrengths[gridIndex];
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 c_matrix<double, SPACE_DIM, SPACE_DIM> MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiffusionTerm(const ChastePoint<SPACE_DIM>&, double u)
 {
     return this->mDiffusionTensor;
@@ -83,22 +67,6 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 c_matrix<double, SPACE_DIM, SPACE_DIM> MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiffusionTermPrime(const ChastePoint<SPACE_DIM>& rX, double u)
 {
     return zero_matrix<double>(SPACE_DIM);
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm(const ChastePoint<SPACE_DIM>& rX, Element<ELEMENT_DIM, SPACE_DIM>* pElement)
-{
-    return this->mLinearInUTerm/(1.0*unit::per_second);
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::rate> MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex)
-{
-    if(gridIndex >= this->mDiscreteLinearSourceStrengths.size())
-    {
-        EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
-    }
-    return this->mLinearInUTerm + this->mDiscreteLinearSourceStrengths[gridIndex];
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

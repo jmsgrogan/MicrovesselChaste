@@ -3996,18 +3996,18 @@ struct GreensFunctionSolver_less__3__greater__wrapper : GreensFunctionSolver< 3 
 
 };
 
-struct LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper : LinearSteadyStateDiffusionReactionPde< 2, 2 >, bp::wrapper< LinearSteadyStateDiffusionReactionPde< 2, 2 > > {
+struct DiscreteContinuumLinearEllipticPde_less__2_comma__2__greater__wrapper : DiscreteContinuumLinearEllipticPde< 2, 2 >, bp::wrapper< DiscreteContinuumLinearEllipticPde< 2, 2 > > {
 
-    LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper(LinearSteadyStateDiffusionReactionPde<2, 2> const & arg )
-    : LinearSteadyStateDiffusionReactionPde<2, 2>( arg )
-      , bp::wrapper< LinearSteadyStateDiffusionReactionPde< 2, 2 > >(){
+    DiscreteContinuumLinearEllipticPde_less__2_comma__2__greater__wrapper(DiscreteContinuumLinearEllipticPde<2, 2> const & arg )
+    : DiscreteContinuumLinearEllipticPde<2, 2>( arg )
+      , bp::wrapper< DiscreteContinuumLinearEllipticPde< 2, 2 > >(){
         // copy constructor
         
     }
 
-    LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper( )
-    : LinearSteadyStateDiffusionReactionPde<2, 2>( )
-      , bp::wrapper< LinearSteadyStateDiffusionReactionPde< 2, 2 > >(){
+    DiscreteContinuumLinearEllipticPde_less__2_comma__2__greater__wrapper( )
+    : DiscreteContinuumLinearEllipticPde<2, 2>( )
+      , bp::wrapper< DiscreteContinuumLinearEllipticPde< 2, 2 > >(){
         // null constructor
     
     }
@@ -4016,36 +4016,36 @@ struct LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper 
         if( bp::override func_ComputeLinearInUCoeffInSourceTerm = this->get_override( "ComputeLinearInUCoeffInSourceTerm" ) )
             return func_ComputeLinearInUCoeffInSourceTerm( boost::ref(rX), boost::python::ptr(pElement) );
         else{
-            return this->LinearSteadyStateDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm( boost::ref(rX), boost::python::ptr(pElement) );
+            return this->DiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm( boost::ref(rX), boost::python::ptr(pElement) );
         }
     }
     
     double default_ComputeLinearInUCoeffInSourceTerm( ::ChastePoint< 2 > const & rX, ::Element< 2, 2 > * pElement ) {
-        return LinearSteadyStateDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm( boost::ref(rX), boost::python::ptr(pElement) );
+        return DiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm( boost::ref(rX), boost::python::ptr(pElement) );
     }
 
     virtual ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ComputeLinearInUCoeffInSourceTerm( unsigned int gridIndex=0 ) {
         if( bp::override func_ComputeLinearInUCoeffInSourceTerm = this->get_override( "ComputeLinearInUCoeffInSourceTerm" ) )
             return func_ComputeLinearInUCoeffInSourceTerm( gridIndex );
         else{
-            return this->LinearSteadyStateDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm( gridIndex );
+            return this->DiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm( gridIndex );
         }
     }
     
     ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > default_ComputeLinearInUCoeffInSourceTerm( unsigned int gridIndex=0 ) {
-        return LinearSteadyStateDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm( gridIndex );
+        return DiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm( gridIndex );
     }
 
     virtual void UpdateDiscreteSourceStrengths(  ) {
         if( bp::override func_UpdateDiscreteSourceStrengths = this->get_override( "UpdateDiscreteSourceStrengths" ) )
             func_UpdateDiscreteSourceStrengths(  );
         else{
-            this->LinearSteadyStateDiffusionReactionPde< 2, 2 >::UpdateDiscreteSourceStrengths(  );
+            this->DiscreteContinuumLinearEllipticPde< 2, 2 >::UpdateDiscreteSourceStrengths(  );
         }
     }
     
     void default_UpdateDiscreteSourceStrengths(  ) {
-        LinearSteadyStateDiffusionReactionPde< 2, 2 >::UpdateDiscreteSourceStrengths( );
+        DiscreteContinuumLinearEllipticPde< 2, 2 >::UpdateDiscreteSourceStrengths( );
     }
 
     virtual double ComputeConstantInUSourceTerm( ::ChastePoint< 2 > const & rX, ::Element< 2, 2 > * pElement ) {
@@ -4074,18 +4074,18 @@ struct LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper 
 
 };
 
-struct LinearSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper : LinearSteadyStateDiffusionReactionPde< 3, 3 >, bp::wrapper< LinearSteadyStateDiffusionReactionPde< 3, 3 > > {
+struct DiscreteContinuumLinearEllipticPde_less__3_comma__3__greater__wrapper : DiscreteContinuumLinearEllipticPde< 3, 3 >, bp::wrapper< DiscreteContinuumLinearEllipticPde< 3, 3 > > {
 
-    LinearSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper(LinearSteadyStateDiffusionReactionPde<3, 3> const & arg )
-    : LinearSteadyStateDiffusionReactionPde<3, 3>( arg )
-      , bp::wrapper< LinearSteadyStateDiffusionReactionPde< 3, 3 > >(){
+    DiscreteContinuumLinearEllipticPde_less__3_comma__3__greater__wrapper(DiscreteContinuumLinearEllipticPde<3, 3> const & arg )
+    : DiscreteContinuumLinearEllipticPde<3, 3>( arg )
+      , bp::wrapper< DiscreteContinuumLinearEllipticPde< 3, 3 > >(){
         // copy constructor
         
     }
 
-    LinearSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper( )
-    : LinearSteadyStateDiffusionReactionPde<3, 3>( )
-      , bp::wrapper< LinearSteadyStateDiffusionReactionPde< 3, 3 > >(){
+    DiscreteContinuumLinearEllipticPde_less__3_comma__3__greater__wrapper( )
+    : DiscreteContinuumLinearEllipticPde<3, 3>( )
+      , bp::wrapper< DiscreteContinuumLinearEllipticPde< 3, 3 > >(){
         // null constructor
     
     }
@@ -4094,36 +4094,36 @@ struct LinearSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper 
         if( bp::override func_ComputeLinearInUCoeffInSourceTerm = this->get_override( "ComputeLinearInUCoeffInSourceTerm" ) )
             return func_ComputeLinearInUCoeffInSourceTerm( boost::ref(rX), boost::python::ptr(pElement) );
         else{
-            return this->LinearSteadyStateDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm( boost::ref(rX), boost::python::ptr(pElement) );
+            return this->DiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm( boost::ref(rX), boost::python::ptr(pElement) );
         }
     }
     
     double default_ComputeLinearInUCoeffInSourceTerm( ::ChastePoint< 3 > const & rX, ::Element< 3, 3 > * pElement ) {
-        return LinearSteadyStateDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm( boost::ref(rX), boost::python::ptr(pElement) );
+        return DiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm( boost::ref(rX), boost::python::ptr(pElement) );
     }
 
     virtual ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ComputeLinearInUCoeffInSourceTerm( unsigned int gridIndex=0 ) {
         if( bp::override func_ComputeLinearInUCoeffInSourceTerm = this->get_override( "ComputeLinearInUCoeffInSourceTerm" ) )
             return func_ComputeLinearInUCoeffInSourceTerm( gridIndex );
         else{
-            return this->LinearSteadyStateDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm( gridIndex );
+            return this->DiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm( gridIndex );
         }
     }
     
     ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > default_ComputeLinearInUCoeffInSourceTerm( unsigned int gridIndex=0 ) {
-        return LinearSteadyStateDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm( gridIndex );
+        return DiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm( gridIndex );
     }
 
     virtual void UpdateDiscreteSourceStrengths(  ) {
         if( bp::override func_UpdateDiscreteSourceStrengths = this->get_override( "UpdateDiscreteSourceStrengths" ) )
             func_UpdateDiscreteSourceStrengths(  );
         else{
-            this->LinearSteadyStateDiffusionReactionPde< 3, 3 >::UpdateDiscreteSourceStrengths(  );
+            this->DiscreteContinuumLinearEllipticPde< 3, 3 >::UpdateDiscreteSourceStrengths(  );
         }
     }
     
     void default_UpdateDiscreteSourceStrengths(  ) {
-        LinearSteadyStateDiffusionReactionPde< 3, 3 >::UpdateDiscreteSourceStrengths( );
+        DiscreteContinuumLinearEllipticPde< 3, 3 >::UpdateDiscreteSourceStrengths( );
     }
 
     virtual double ComputeConstantInUSourceTerm( ::ChastePoint< 3 > const & rX, ::Element< 3, 3 > * pElement ) {
@@ -5126,7 +5126,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         bp::register_ptr_to_python< boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde<2, 2> > >();
         bp::implicitly_convertible< boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde< 2, 2 > >, boost::shared_ptr< AbstractLinearEllipticPde< 2, 2 > > >();
         bp::implicitly_convertible< boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde< 2, 2 > >, boost::shared_ptr< AbstractLinearPde< 2, 2 > > >();
-        bp::implicitly_convertible< boost::shared_ptr< LinearSteadyStateDiffusionReactionPde< 2, 2 > >, boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde< 2, 2 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< DiscreteContinuumLinearEllipticPde< 2, 2 > >, boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde< 2, 2 > > >();
     }
 
     { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >
@@ -5304,7 +5304,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         bp::register_ptr_to_python< boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde<3, 3> > >();
         bp::implicitly_convertible< boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde< 3, 3 > >, boost::shared_ptr< AbstractLinearEllipticPde< 3, 3 > > >();
         bp::implicitly_convertible< boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde< 3, 3 > >, boost::shared_ptr< AbstractLinearPde< 3, 3 > > >();
-        bp::implicitly_convertible< boost::shared_ptr< LinearSteadyStateDiffusionReactionPde< 3, 3 > >, boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde< 3, 3 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< DiscreteContinuumLinearEllipticPde< 3, 3 > >, boost::shared_ptr< AbstractDiscreteContinuumLinearEllipticPde< 3, 3 > > >();
     }
 
     { //::AbstractDiscreteContinuumNonLinearEllipticPde< 2, 2 >
@@ -10246,88 +10246,88 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
             , (void ( ::AbstractRegularGridDiscreteContinuumSolver<3>::* )(  ))(&::AbstractRegularGridDiscreteContinuumSolver< 3 >::Write)
             , (void ( GreensFunctionSolver_less__3__greater__wrapper::* )(  ))(&GreensFunctionSolver_less__3__greater__wrapper::default_Write) );
 
-    { //::LinearSteadyStateDiffusionReactionPde< 2, 2 >
-        typedef bp::class_< LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper, bp::bases< AbstractDiscreteContinuumLinearEllipticPde< 2, 2 > > > LinearSteadyStateDiffusionReactionPde2_2_exposer_t;
-        LinearSteadyStateDiffusionReactionPde2_2_exposer_t LinearSteadyStateDiffusionReactionPde2_2_exposer = LinearSteadyStateDiffusionReactionPde2_2_exposer_t( "LinearSteadyStateDiffusionReactionPde2_2", bp::init< >() );
-        bp::scope LinearSteadyStateDiffusionReactionPde2_2_scope( LinearSteadyStateDiffusionReactionPde2_2_exposer );
-        { //::LinearSteadyStateDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm
+    { //::DiscreteContinuumLinearEllipticPde< 2, 2 >
+        typedef bp::class_< DiscreteContinuumLinearEllipticPde_less__2_comma__2__greater__wrapper, bp::bases< AbstractDiscreteContinuumLinearEllipticPde< 2, 2 > > > DiscreteContinuumLinearEllipticPde2_2_exposer_t;
+        DiscreteContinuumLinearEllipticPde2_2_exposer_t DiscreteContinuumLinearEllipticPde2_2_exposer = DiscreteContinuumLinearEllipticPde2_2_exposer_t( "DiscreteContinuumLinearEllipticPde2_2", bp::init< >() );
+        bp::scope DiscreteContinuumLinearEllipticPde2_2_scope( DiscreteContinuumLinearEllipticPde2_2_exposer );
+        { //::DiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm
         
-            typedef LinearSteadyStateDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef DiscreteContinuumLinearEllipticPde< 2, 2 > exported_class_t;
             typedef double ( exported_class_t::*ComputeLinearInUCoeffInSourceTerm_function_type)( ::ChastePoint< 2 > const &,::Element< 2, 2 > * ) ;
-            typedef double ( LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper::*default_ComputeLinearInUCoeffInSourceTerm_function_type)( ::ChastePoint< 2 > const &,::Element< 2, 2 > * ) ;
+            typedef double ( DiscreteContinuumLinearEllipticPde_less__2_comma__2__greater__wrapper::*default_ComputeLinearInUCoeffInSourceTerm_function_type)( ::ChastePoint< 2 > const &,::Element< 2, 2 > * ) ;
             
-            LinearSteadyStateDiffusionReactionPde2_2_exposer.def( 
+            DiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "ComputeLinearInUCoeffInSourceTerm"
-                , ComputeLinearInUCoeffInSourceTerm_function_type(&::LinearSteadyStateDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm)
-                , default_ComputeLinearInUCoeffInSourceTerm_function_type(&LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper::default_ComputeLinearInUCoeffInSourceTerm)
+                , ComputeLinearInUCoeffInSourceTerm_function_type(&::DiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm)
+                , default_ComputeLinearInUCoeffInSourceTerm_function_type(&DiscreteContinuumLinearEllipticPde_less__2_comma__2__greater__wrapper::default_ComputeLinearInUCoeffInSourceTerm)
                 , ( bp::arg("rX"), bp::arg("pElement") ) );
         
         }
-        { //::LinearSteadyStateDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm
+        { //::DiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm
         
-            typedef LinearSteadyStateDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef DiscreteContinuumLinearEllipticPde< 2, 2 > exported_class_t;
             typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*ComputeLinearInUCoeffInSourceTerm_function_type)( unsigned int ) ;
-            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper::*default_ComputeLinearInUCoeffInSourceTerm_function_type)( unsigned int ) ;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( DiscreteContinuumLinearEllipticPde_less__2_comma__2__greater__wrapper::*default_ComputeLinearInUCoeffInSourceTerm_function_type)( unsigned int ) ;
             
-            LinearSteadyStateDiffusionReactionPde2_2_exposer.def( 
+            DiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "ComputeLinearInUCoeffInSourceTerm"
-                , ComputeLinearInUCoeffInSourceTerm_function_type(&::LinearSteadyStateDiffusionReactionPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm)
-                , default_ComputeLinearInUCoeffInSourceTerm_function_type(&LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper::default_ComputeLinearInUCoeffInSourceTerm)
+                , ComputeLinearInUCoeffInSourceTerm_function_type(&::DiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeLinearInUCoeffInSourceTerm)
+                , default_ComputeLinearInUCoeffInSourceTerm_function_type(&DiscreteContinuumLinearEllipticPde_less__2_comma__2__greater__wrapper::default_ComputeLinearInUCoeffInSourceTerm)
                 , ( bp::arg("gridIndex")=(unsigned int)(0) ) );
         
         }
-        { //::LinearSteadyStateDiffusionReactionPde< 2, 2 >::Create
+        { //::DiscreteContinuumLinearEllipticPde< 2, 2 >::Create
         
-            typedef LinearSteadyStateDiffusionReactionPde< 2, 2 > exported_class_t;
-            typedef ::boost::shared_ptr< LinearSteadyStateDiffusionReactionPde< 2, 2 > > ( *Create_function_type )(  );
+            typedef DiscreteContinuumLinearEllipticPde< 2, 2 > exported_class_t;
+            typedef ::boost::shared_ptr< DiscreteContinuumLinearEllipticPde< 2, 2 > > ( *Create_function_type )(  );
             
-            LinearSteadyStateDiffusionReactionPde2_2_exposer.def( 
+            DiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "Create"
-                , Create_function_type( &::LinearSteadyStateDiffusionReactionPde< 2, 2 >::Create ) );
+                , Create_function_type( &::DiscreteContinuumLinearEllipticPde< 2, 2 >::Create ) );
         
         }
-        { //::LinearSteadyStateDiffusionReactionPde< 2, 2 >::SetContinuumLinearInUTerm
+        { //::DiscreteContinuumLinearEllipticPde< 2, 2 >::SetContinuumLinearInUTerm
         
-            typedef LinearSteadyStateDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef DiscreteContinuumLinearEllipticPde< 2, 2 > exported_class_t;
             typedef void ( exported_class_t::*SetContinuumLinearInUTerm_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
             
-            LinearSteadyStateDiffusionReactionPde2_2_exposer.def( 
+            DiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "SetContinuumLinearInUTerm"
-                , SetContinuumLinearInUTerm_function_type( &::LinearSteadyStateDiffusionReactionPde< 2, 2 >::SetContinuumLinearInUTerm )
+                , SetContinuumLinearInUTerm_function_type( &::DiscreteContinuumLinearEllipticPde< 2, 2 >::SetContinuumLinearInUTerm )
                 , ( bp::arg("linearInUTerm") ) );
         
         }
-        { //::LinearSteadyStateDiffusionReactionPde< 2, 2 >::UpdateDiscreteSourceStrengths
+        { //::DiscreteContinuumLinearEllipticPde< 2, 2 >::UpdateDiscreteSourceStrengths
         
-            typedef LinearSteadyStateDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef DiscreteContinuumLinearEllipticPde< 2, 2 > exported_class_t;
             typedef void ( exported_class_t::*UpdateDiscreteSourceStrengths_function_type)(  ) ;
-            typedef void ( LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper::*default_UpdateDiscreteSourceStrengths_function_type)(  ) ;
+            typedef void ( DiscreteContinuumLinearEllipticPde_less__2_comma__2__greater__wrapper::*default_UpdateDiscreteSourceStrengths_function_type)(  ) ;
             
-            LinearSteadyStateDiffusionReactionPde2_2_exposer.def( 
+            DiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "UpdateDiscreteSourceStrengths"
-                , UpdateDiscreteSourceStrengths_function_type(&::LinearSteadyStateDiffusionReactionPde< 2, 2 >::UpdateDiscreteSourceStrengths)
-                , default_UpdateDiscreteSourceStrengths_function_type(&LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper::default_UpdateDiscreteSourceStrengths) );
+                , UpdateDiscreteSourceStrengths_function_type(&::DiscreteContinuumLinearEllipticPde< 2, 2 >::UpdateDiscreteSourceStrengths)
+                , default_UpdateDiscreteSourceStrengths_function_type(&DiscreteContinuumLinearEllipticPde_less__2_comma__2__greater__wrapper::default_UpdateDiscreteSourceStrengths) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeConstantInUSourceTerm
         
-            typedef LinearSteadyStateDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef DiscreteContinuumLinearEllipticPde< 2, 2 > exported_class_t;
             typedef double ( exported_class_t::*ComputeConstantInUSourceTerm_function_type)( ::ChastePoint< 2 > const &,::Element< 2, 2 > * ) ;
-            typedef double ( LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper::*default_ComputeConstantInUSourceTerm_function_type)( ::ChastePoint< 2 > const &,::Element< 2, 2 > * ) ;
+            typedef double ( DiscreteContinuumLinearEllipticPde_less__2_comma__2__greater__wrapper::*default_ComputeConstantInUSourceTerm_function_type)( ::ChastePoint< 2 > const &,::Element< 2, 2 > * ) ;
             
-            LinearSteadyStateDiffusionReactionPde2_2_exposer.def( 
+            DiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "ComputeConstantInUSourceTerm"
                 , ComputeConstantInUSourceTerm_function_type(&::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeConstantInUSourceTerm)
-                , default_ComputeConstantInUSourceTerm_function_type(&LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper::default_ComputeConstantInUSourceTerm)
+                , default_ComputeConstantInUSourceTerm_function_type(&DiscreteContinuumLinearEllipticPde_less__2_comma__2__greater__wrapper::default_ComputeConstantInUSourceTerm)
                 , ( bp::arg("rX"), bp::arg("pElement") ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeConstantInUSourceTerm
         
-            typedef LinearSteadyStateDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef DiscreteContinuumLinearEllipticPde< 2, 2 > exported_class_t;
             typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*ComputeConstantInUSourceTerm_function_type)( unsigned int ) ;
             
-            LinearSteadyStateDiffusionReactionPde2_2_exposer.def( 
+            DiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "ComputeConstantInUSourceTerm"
                 , ComputeConstantInUSourceTerm_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeConstantInUSourceTerm )
                 , ( bp::arg("gridIndex")=(unsigned int)(0) ) );
@@ -10335,105 +10335,105 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeDiffusionTerm
         
-            typedef LinearSteadyStateDiffusionReactionPde< 2, 2 > exported_class_t;
+            typedef DiscreteContinuumLinearEllipticPde< 2, 2 > exported_class_t;
             typedef ::boost::numeric::ublas::c_matrix< double, 2, 2 > ( exported_class_t::*ComputeDiffusionTerm_function_type)( ::ChastePoint< 2 > const & ) ;
-            typedef ::boost::numeric::ublas::c_matrix< double, 2, 2 > ( LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper::*default_ComputeDiffusionTerm_function_type)( ::ChastePoint< 2 > const & ) ;
+            typedef ::boost::numeric::ublas::c_matrix< double, 2, 2 > ( DiscreteContinuumLinearEllipticPde_less__2_comma__2__greater__wrapper::*default_ComputeDiffusionTerm_function_type)( ::ChastePoint< 2 > const & ) ;
             
-            LinearSteadyStateDiffusionReactionPde2_2_exposer.def( 
+            DiscreteContinuumLinearEllipticPde2_2_exposer.def( 
                 "ComputeDiffusionTerm"
                 , ComputeDiffusionTerm_function_type(&::AbstractDiscreteContinuumLinearEllipticPde< 2, 2 >::ComputeDiffusionTerm)
-                , default_ComputeDiffusionTerm_function_type(&LinearSteadyStateDiffusionReactionPde_less__2_comma__2__greater__wrapper::default_ComputeDiffusionTerm)
+                , default_ComputeDiffusionTerm_function_type(&DiscreteContinuumLinearEllipticPde_less__2_comma__2__greater__wrapper::default_ComputeDiffusionTerm)
                 , ( bp::arg("arg0") ) );
         
         }
-        LinearSteadyStateDiffusionReactionPde2_2_exposer.staticmethod( "Create" );
-        bp::register_ptr_to_python< boost::shared_ptr< LinearSteadyStateDiffusionReactionPde<2, 2> > >();
-        bp::implicitly_convertible< boost::shared_ptr< LinearSteadyStateDiffusionReactionPde< 2, 2 > >, boost::shared_ptr< AbstractLinearEllipticPde< 2, 2 > > >();
-        bp::implicitly_convertible< boost::shared_ptr< LinearSteadyStateDiffusionReactionPde< 2, 2 > >, boost::shared_ptr< AbstractLinearPde< 2, 2 > > >();
+        DiscreteContinuumLinearEllipticPde2_2_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< DiscreteContinuumLinearEllipticPde<2, 2> > >();
+        bp::implicitly_convertible< boost::shared_ptr< DiscreteContinuumLinearEllipticPde< 2, 2 > >, boost::shared_ptr< AbstractLinearEllipticPde< 2, 2 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< DiscreteContinuumLinearEllipticPde< 2, 2 > >, boost::shared_ptr< AbstractLinearPde< 2, 2 > > >();
     }
 
-    { //::LinearSteadyStateDiffusionReactionPde< 3, 3 >
-        typedef bp::class_< LinearSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper, bp::bases< AbstractDiscreteContinuumLinearEllipticPde< 3, 3 > > > LinearSteadyStateDiffusionReactionPde3_3_exposer_t;
-        LinearSteadyStateDiffusionReactionPde3_3_exposer_t LinearSteadyStateDiffusionReactionPde3_3_exposer = LinearSteadyStateDiffusionReactionPde3_3_exposer_t( "LinearSteadyStateDiffusionReactionPde3_3", bp::init< >() );
-        bp::scope LinearSteadyStateDiffusionReactionPde3_3_scope( LinearSteadyStateDiffusionReactionPde3_3_exposer );
-        { //::LinearSteadyStateDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm
+    { //::DiscreteContinuumLinearEllipticPde< 3, 3 >
+        typedef bp::class_< DiscreteContinuumLinearEllipticPde_less__3_comma__3__greater__wrapper, bp::bases< AbstractDiscreteContinuumLinearEllipticPde< 3, 3 > > > DiscreteContinuumLinearEllipticPde3_3_exposer_t;
+        DiscreteContinuumLinearEllipticPde3_3_exposer_t DiscreteContinuumLinearEllipticPde3_3_exposer = DiscreteContinuumLinearEllipticPde3_3_exposer_t( "DiscreteContinuumLinearEllipticPde3_3", bp::init< >() );
+        bp::scope DiscreteContinuumLinearEllipticPde3_3_scope( DiscreteContinuumLinearEllipticPde3_3_exposer );
+        { //::DiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm
         
-            typedef LinearSteadyStateDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef DiscreteContinuumLinearEllipticPde< 3, 3 > exported_class_t;
             typedef double ( exported_class_t::*ComputeLinearInUCoeffInSourceTerm_function_type)( ::ChastePoint< 3 > const &,::Element< 3, 3 > * ) ;
-            typedef double ( LinearSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper::*default_ComputeLinearInUCoeffInSourceTerm_function_type)( ::ChastePoint< 3 > const &,::Element< 3, 3 > * ) ;
+            typedef double ( DiscreteContinuumLinearEllipticPde_less__3_comma__3__greater__wrapper::*default_ComputeLinearInUCoeffInSourceTerm_function_type)( ::ChastePoint< 3 > const &,::Element< 3, 3 > * ) ;
             
-            LinearSteadyStateDiffusionReactionPde3_3_exposer.def( 
+            DiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "ComputeLinearInUCoeffInSourceTerm"
-                , ComputeLinearInUCoeffInSourceTerm_function_type(&::LinearSteadyStateDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm)
-                , default_ComputeLinearInUCoeffInSourceTerm_function_type(&LinearSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper::default_ComputeLinearInUCoeffInSourceTerm)
+                , ComputeLinearInUCoeffInSourceTerm_function_type(&::DiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm)
+                , default_ComputeLinearInUCoeffInSourceTerm_function_type(&DiscreteContinuumLinearEllipticPde_less__3_comma__3__greater__wrapper::default_ComputeLinearInUCoeffInSourceTerm)
                 , ( bp::arg("rX"), bp::arg("pElement") ) );
         
         }
-        { //::LinearSteadyStateDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm
+        { //::DiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm
         
-            typedef LinearSteadyStateDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef DiscreteContinuumLinearEllipticPde< 3, 3 > exported_class_t;
             typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*ComputeLinearInUCoeffInSourceTerm_function_type)( unsigned int ) ;
-            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( LinearSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper::*default_ComputeLinearInUCoeffInSourceTerm_function_type)( unsigned int ) ;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( DiscreteContinuumLinearEllipticPde_less__3_comma__3__greater__wrapper::*default_ComputeLinearInUCoeffInSourceTerm_function_type)( unsigned int ) ;
             
-            LinearSteadyStateDiffusionReactionPde3_3_exposer.def( 
+            DiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "ComputeLinearInUCoeffInSourceTerm"
-                , ComputeLinearInUCoeffInSourceTerm_function_type(&::LinearSteadyStateDiffusionReactionPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm)
-                , default_ComputeLinearInUCoeffInSourceTerm_function_type(&LinearSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper::default_ComputeLinearInUCoeffInSourceTerm)
+                , ComputeLinearInUCoeffInSourceTerm_function_type(&::DiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeLinearInUCoeffInSourceTerm)
+                , default_ComputeLinearInUCoeffInSourceTerm_function_type(&DiscreteContinuumLinearEllipticPde_less__3_comma__3__greater__wrapper::default_ComputeLinearInUCoeffInSourceTerm)
                 , ( bp::arg("gridIndex")=(unsigned int)(0) ) );
         
         }
-        { //::LinearSteadyStateDiffusionReactionPde< 3, 3 >::Create
+        { //::DiscreteContinuumLinearEllipticPde< 3, 3 >::Create
         
-            typedef LinearSteadyStateDiffusionReactionPde< 3, 3 > exported_class_t;
-            typedef ::boost::shared_ptr< LinearSteadyStateDiffusionReactionPde< 3, 3 > > ( *Create_function_type )(  );
+            typedef DiscreteContinuumLinearEllipticPde< 3, 3 > exported_class_t;
+            typedef ::boost::shared_ptr< DiscreteContinuumLinearEllipticPde< 3, 3 > > ( *Create_function_type )(  );
             
-            LinearSteadyStateDiffusionReactionPde3_3_exposer.def( 
+            DiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "Create"
-                , Create_function_type( &::LinearSteadyStateDiffusionReactionPde< 3, 3 >::Create ) );
+                , Create_function_type( &::DiscreteContinuumLinearEllipticPde< 3, 3 >::Create ) );
         
         }
-        { //::LinearSteadyStateDiffusionReactionPde< 3, 3 >::SetContinuumLinearInUTerm
+        { //::DiscreteContinuumLinearEllipticPde< 3, 3 >::SetContinuumLinearInUTerm
         
-            typedef LinearSteadyStateDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef DiscreteContinuumLinearEllipticPde< 3, 3 > exported_class_t;
             typedef void ( exported_class_t::*SetContinuumLinearInUTerm_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
             
-            LinearSteadyStateDiffusionReactionPde3_3_exposer.def( 
+            DiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "SetContinuumLinearInUTerm"
-                , SetContinuumLinearInUTerm_function_type( &::LinearSteadyStateDiffusionReactionPde< 3, 3 >::SetContinuumLinearInUTerm )
+                , SetContinuumLinearInUTerm_function_type( &::DiscreteContinuumLinearEllipticPde< 3, 3 >::SetContinuumLinearInUTerm )
                 , ( bp::arg("linearInUTerm") ) );
         
         }
-        { //::LinearSteadyStateDiffusionReactionPde< 3, 3 >::UpdateDiscreteSourceStrengths
+        { //::DiscreteContinuumLinearEllipticPde< 3, 3 >::UpdateDiscreteSourceStrengths
         
-            typedef LinearSteadyStateDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef DiscreteContinuumLinearEllipticPde< 3, 3 > exported_class_t;
             typedef void ( exported_class_t::*UpdateDiscreteSourceStrengths_function_type)(  ) ;
-            typedef void ( LinearSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper::*default_UpdateDiscreteSourceStrengths_function_type)(  ) ;
+            typedef void ( DiscreteContinuumLinearEllipticPde_less__3_comma__3__greater__wrapper::*default_UpdateDiscreteSourceStrengths_function_type)(  ) ;
             
-            LinearSteadyStateDiffusionReactionPde3_3_exposer.def( 
+            DiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "UpdateDiscreteSourceStrengths"
-                , UpdateDiscreteSourceStrengths_function_type(&::LinearSteadyStateDiffusionReactionPde< 3, 3 >::UpdateDiscreteSourceStrengths)
-                , default_UpdateDiscreteSourceStrengths_function_type(&LinearSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper::default_UpdateDiscreteSourceStrengths) );
+                , UpdateDiscreteSourceStrengths_function_type(&::DiscreteContinuumLinearEllipticPde< 3, 3 >::UpdateDiscreteSourceStrengths)
+                , default_UpdateDiscreteSourceStrengths_function_type(&DiscreteContinuumLinearEllipticPde_less__3_comma__3__greater__wrapper::default_UpdateDiscreteSourceStrengths) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeConstantInUSourceTerm
         
-            typedef LinearSteadyStateDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef DiscreteContinuumLinearEllipticPde< 3, 3 > exported_class_t;
             typedef double ( exported_class_t::*ComputeConstantInUSourceTerm_function_type)( ::ChastePoint< 3 > const &,::Element< 3, 3 > * ) ;
-            typedef double ( LinearSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper::*default_ComputeConstantInUSourceTerm_function_type)( ::ChastePoint< 3 > const &,::Element< 3, 3 > * ) ;
+            typedef double ( DiscreteContinuumLinearEllipticPde_less__3_comma__3__greater__wrapper::*default_ComputeConstantInUSourceTerm_function_type)( ::ChastePoint< 3 > const &,::Element< 3, 3 > * ) ;
             
-            LinearSteadyStateDiffusionReactionPde3_3_exposer.def( 
+            DiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "ComputeConstantInUSourceTerm"
                 , ComputeConstantInUSourceTerm_function_type(&::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeConstantInUSourceTerm)
-                , default_ComputeConstantInUSourceTerm_function_type(&LinearSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper::default_ComputeConstantInUSourceTerm)
+                , default_ComputeConstantInUSourceTerm_function_type(&DiscreteContinuumLinearEllipticPde_less__3_comma__3__greater__wrapper::default_ComputeConstantInUSourceTerm)
                 , ( bp::arg("rX"), bp::arg("pElement") ) );
         
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeConstantInUSourceTerm
         
-            typedef LinearSteadyStateDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef DiscreteContinuumLinearEllipticPde< 3, 3 > exported_class_t;
             typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*ComputeConstantInUSourceTerm_function_type)( unsigned int ) ;
             
-            LinearSteadyStateDiffusionReactionPde3_3_exposer.def( 
+            DiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "ComputeConstantInUSourceTerm"
                 , ComputeConstantInUSourceTerm_function_type( &::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeConstantInUSourceTerm )
                 , ( bp::arg("gridIndex")=(unsigned int)(0) ) );
@@ -10441,21 +10441,21 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
         }
         { //::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeDiffusionTerm
         
-            typedef LinearSteadyStateDiffusionReactionPde< 3, 3 > exported_class_t;
+            typedef DiscreteContinuumLinearEllipticPde< 3, 3 > exported_class_t;
             typedef ::boost::numeric::ublas::c_matrix< double, 3, 3 > ( exported_class_t::*ComputeDiffusionTerm_function_type)( ::ChastePoint< 3 > const & ) ;
-            typedef ::boost::numeric::ublas::c_matrix< double, 3, 3 > ( LinearSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper::*default_ComputeDiffusionTerm_function_type)( ::ChastePoint< 3 > const & ) ;
+            typedef ::boost::numeric::ublas::c_matrix< double, 3, 3 > ( DiscreteContinuumLinearEllipticPde_less__3_comma__3__greater__wrapper::*default_ComputeDiffusionTerm_function_type)( ::ChastePoint< 3 > const & ) ;
             
-            LinearSteadyStateDiffusionReactionPde3_3_exposer.def( 
+            DiscreteContinuumLinearEllipticPde3_3_exposer.def( 
                 "ComputeDiffusionTerm"
                 , ComputeDiffusionTerm_function_type(&::AbstractDiscreteContinuumLinearEllipticPde< 3, 3 >::ComputeDiffusionTerm)
-                , default_ComputeDiffusionTerm_function_type(&LinearSteadyStateDiffusionReactionPde_less__3_comma__3__greater__wrapper::default_ComputeDiffusionTerm)
+                , default_ComputeDiffusionTerm_function_type(&DiscreteContinuumLinearEllipticPde_less__3_comma__3__greater__wrapper::default_ComputeDiffusionTerm)
                 , ( bp::arg("arg0") ) );
         
         }
-        LinearSteadyStateDiffusionReactionPde3_3_exposer.staticmethod( "Create" );
-        bp::register_ptr_to_python< boost::shared_ptr< LinearSteadyStateDiffusionReactionPde<3, 3> > >();
-        bp::implicitly_convertible< boost::shared_ptr< LinearSteadyStateDiffusionReactionPde< 3, 3 > >, boost::shared_ptr< AbstractLinearEllipticPde< 3, 3 > > >();
-        bp::implicitly_convertible< boost::shared_ptr< LinearSteadyStateDiffusionReactionPde< 3, 3 > >, boost::shared_ptr< AbstractLinearPde< 3, 3 > > >();
+        DiscreteContinuumLinearEllipticPde3_3_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< DiscreteContinuumLinearEllipticPde<3, 3> > >();
+        bp::implicitly_convertible< boost::shared_ptr< DiscreteContinuumLinearEllipticPde< 3, 3 > >, boost::shared_ptr< AbstractLinearEllipticPde< 3, 3 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< DiscreteContinuumLinearEllipticPde< 3, 3 > >, boost::shared_ptr< AbstractLinearPde< 3, 3 > > >();
     }
 
     { //::MichaelisMentenSteadyStateDiffusionReactionPde< 2, 2 >

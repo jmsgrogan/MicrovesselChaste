@@ -83,7 +83,7 @@ grids and PDEs,
 #include "VesselBasedDiscreteSource.hpp"
 #include "CellStateDependentDiscreteSource.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 ```
 
 angiogenesis and regression,
@@ -227,7 +227,7 @@ the population using conventional Cell Based Chaste methods.
 Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources.
 
 ```cpp
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_oxygen_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
         p_oxygen_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpOxygenDiffusivity->GetValue("User"));
         boost::shared_ptr<CellBasedDiscreteSource<2> > p_cell_oxygen_sink = CellBasedDiscreteSource<2>::Create();
         p_cell_oxygen_sink->SetLinearInUConsumptionRatePerCell(Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
@@ -261,7 +261,7 @@ The rate of VEGF release depends on the cell type and intracellular VEGF levels,
 type of discrete source.
 
 ```cpp
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_vegf_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_vegf_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
         p_vegf_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpVegfDiffusivity->GetValue("User"));
         p_vegf_pde->SetContinuumLinearInUTerm(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
 ```
@@ -496,7 +496,7 @@ The full code is given below
 #include "VesselBasedDiscreteSource.hpp"
 #include "CellStateDependentDiscreteSource.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "Owen2011SproutingRule.hpp"
 #include "Owen2011MigrationRule.hpp"
 #include "AngiogenesisSolver.hpp"
@@ -569,7 +569,7 @@ public:
         p_scene->GetCellPopulationActorGenerator()->SetColorByCellMutationState(true);
         p_scene->ResetRenderer();
         p_scene->Start();
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_oxygen_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
         p_oxygen_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpOxygenDiffusivity->GetValue("User"));
         boost::shared_ptr<CellBasedDiscreteSource<2> > p_cell_oxygen_sink = CellBasedDiscreteSource<2>::Create();
         p_cell_oxygen_sink->SetLinearInUConsumptionRatePerCell(Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
@@ -587,7 +587,7 @@ public:
         p_oxygen_solver->SetPde(p_oxygen_pde);
         p_oxygen_solver->SetLabel("oxygen");
         p_oxygen_solver->SetGrid(p_grid);
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_vegf_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_vegf_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
         p_vegf_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpVegfDiffusivity->GetValue("User"));
         p_vegf_pde->SetContinuumLinearInUTerm(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
         boost::shared_ptr<CellStateDependentDiscreteSource<2> > p_normal_and_quiescent_cell_source = CellStateDependentDiscreteSource<2>::Create();

@@ -10,7 +10,7 @@ Note that the code is given in full at the bottom of the page.
 ```cpp
 #include <cxxtest/TestSuite.h>
 #include <vector>
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "SmartPointers.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
 #include "HoneycombMeshGenerator.hpp"
@@ -57,9 +57,9 @@ Note that the code is given in full at the bottom of the page.
 
 class Test2dVascularTumourGrowth : public AbstractCellBasedWithTimingsTestSuite
 {
-//    boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > GetOxygenPde()
+//    boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > GetOxygenPde()
 //    {
-//        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
+//        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
 //
 //        units::quantity<unit::diffusivity> oxygen_diffusivity(8700000.0/400.0 * unit::metre_squared_per_second);
 //        p_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity); // assume cell width is 20 microns
@@ -98,9 +98,9 @@ class Test2dVascularTumourGrowth : public AbstractCellBasedWithTimingsTestSuite
 //    }
 //
 //    // todo need to check parameters in sink/source terms in here
-//    boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > GetVegfPde()
+//    boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > GetVegfPde()
 //    {
-//        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
+//        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
 //        units::quantity<unit::diffusivity> vegf_diffusivity(60000.0 / 400.0 * unit::metre_squared_per_second);
 //        p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity); // assume cell width is 20 microns
 //        p_pde->SetContinuumLinearInUTerm(-0.8*unit::per_second); //Vegf decay
@@ -175,7 +175,7 @@ The full code is given below
 ```cpp
 #include <cxxtest/TestSuite.h>
 #include <vector>
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "SmartPointers.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
 #include "HoneycombMeshGenerator.hpp"
@@ -222,9 +222,9 @@ The full code is given below
 
 class Test2dVascularTumourGrowth : public AbstractCellBasedWithTimingsTestSuite
 {
-//    boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > GetOxygenPde()
+//    boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > GetOxygenPde()
 //    {
-//        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
+//        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
 //
 //        units::quantity<unit::diffusivity> oxygen_diffusivity(8700000.0/400.0 * unit::metre_squared_per_second);
 //        p_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity); // assume cell width is 20 microns
@@ -263,9 +263,9 @@ class Test2dVascularTumourGrowth : public AbstractCellBasedWithTimingsTestSuite
 //    }
 //
 //    // todo need to check parameters in sink/source terms in here
-//    boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > GetVegfPde()
+//    boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > GetVegfPde()
 //    {
-//        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<2> > p_pde = LinearSteadyStateDiffusionReactionPde<2>::Create();
+//        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
 //        units::quantity<unit::diffusivity> vegf_diffusivity(60000.0 / 400.0 * unit::metre_squared_per_second);
 //        p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity); // assume cell width is 20 microns
 //        p_pde->SetContinuumLinearInUTerm(-0.8*unit::per_second); //Vegf decay

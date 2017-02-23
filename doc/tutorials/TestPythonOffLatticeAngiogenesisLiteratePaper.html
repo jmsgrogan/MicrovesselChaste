@@ -13638,7 +13638,7 @@ precision problems.</p>
 <div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vegf_pde</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">LinearSteadyStateDiffusionReactionPde3_3</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vegf_pde</span> <span class="o">=</span> <span class="n">microvessel_chaste</span><span class="o">.</span><span class="n">pde</span><span class="o">.</span><span class="n">DiscreteContinuumLinearEllipticPde3_3</span><span class="p">()</span>
 <span class="n">vegf_pde</span><span class="o">.</span><span class="n">SetIsotropicDiffusionConstant</span><span class="p">(</span><span class="n">Owen11Parameters</span><span class="o">.</span><span class="n">mpVegfDiffusivity</span><span class="o">.</span><span class="n">GetValue</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">))</span>
 <span class="n">vegf_pde</span><span class="o">.</span><span class="n">SetContinuumLinearInUTerm</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="o">*</span><span class="n">Owen11Parameters</span><span class="o">.</span><span class="n">mpVegfDecayRate</span><span class="o">.</span><span class="n">GetValue</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">))</span>
 <span class="n">vegf_pde</span><span class="o">.</span><span class="n">SetMesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>

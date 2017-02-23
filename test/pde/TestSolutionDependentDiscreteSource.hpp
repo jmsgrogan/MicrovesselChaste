@@ -39,7 +39,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <cxxtest/TestSuite.h>
 #include <vector>
 #include <string>
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "SmartPointers.hpp"
 #include "Part.hpp"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
@@ -70,7 +70,7 @@ public:
         p_grid->GenerateFromPart(p_domain, spacing);
 
         // Choose the PDE
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_pde1 = LinearSteadyStateDiffusionReactionPde<3>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde1 = DiscreteContinuumLinearEllipticPde<3>::Create();
         units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
         units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e-7 * unit::mole_per_metre_cubed_per_second);
         p_pde1->SetIsotropicDiffusionConstant(diffusivity);
@@ -89,7 +89,7 @@ public:
         solver.SetWriteSolution(true);
         solver.Solve();
 
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_pde2 = LinearSteadyStateDiffusionReactionPde<3>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde2 = DiscreteContinuumLinearEllipticPde<3>::Create();
         p_pde2->SetIsotropicDiffusionConstant(diffusivity);
         p_pde2->SetContinuumConstantInUTerm(consumption_rate);
 

@@ -66,7 +66,7 @@ Grids and PDEs.
 #include "DiscreteSource.hpp"
 #include "VesselBasedDiscreteSource.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
 ```
 
@@ -116,7 +116,7 @@ Make a regular grid on the domain
 Set up a PDE, we will model oxygen diffusion.
 
 ```cpp
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_oxygen_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         units::quantity<unit::diffusivity> oxygen_diffusivity(1.e-6*unit::metre_squared_per_second);
         p_oxygen_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity);
 ```
@@ -189,7 +189,7 @@ The full code is given below
 #include "DiscreteSource.hpp"
 #include "VesselBasedDiscreteSource.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
 #include "PetscSetupAndFinalize.hpp"
 class TestSolvingPdesLiteratePaper : public AbstractCellBasedWithTimingsTestSuite
@@ -207,7 +207,7 @@ public:
         p_domain->AddCuboid(domain_width, domain_height, domain_depth, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 10.0*reference_length);
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_oxygen_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         units::quantity<unit::diffusivity> oxygen_diffusivity(1.e-6*unit::metre_squared_per_second);
         p_oxygen_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity);
         units::quantity<unit::rate> oxygen_consumption_rate(1.e-6*unit::per_second);

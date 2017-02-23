@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2005-2016, University of Oxford.
+Copyright (c) 2005-2017, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -39,6 +39,10 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "SmartPointers.hpp"
 #include "AbstractRegularGridDiscreteContinuumSolver.hpp"
 #include "UnitCollection.hpp"
+#include "PetscTools.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
+#include "AbstractDiscreteContinuumParabolicPde.hpp"
+#include "AbstractDiscreteContinuumNonLinearEllipticPde.hpp"
 
 /**
  * Finite difference solver for concentration based reaction diffusion PDEs. It can include
@@ -59,7 +63,7 @@ class FiniteDifferenceSolver : public AbstractRegularGridDiscreteContinuumSolver
     bool mUpdateBoundaryConditionsEachSolve;
 
     /**
-     * Do the boundary conditions need to be udpated each solve.
+     * Have boundary conditions been set.
      */
     bool mBoundaryConditionsSet;
 
@@ -67,6 +71,16 @@ class FiniteDifferenceSolver : public AbstractRegularGridDiscreteContinuumSolver
      * Time increment for the parabolic solver
      */
     double mParabolicSolverTimeIncrement;
+
+    /**
+     * The initial LHS matrix, before discrete terms are added.
+     */
+    Mat mInitialLhsMatrix;
+
+    /**
+     * The initial RHS vector, before discrete terms are added.
+     */
+    Vec mInitialRhsVector;
 
 public:
 
@@ -124,12 +138,17 @@ private:
     /**
      * Do a linear PDE solve
      */
-    void DoLinearSolve();
+    void DoLinearSolve(boost::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_pde);
+
+    /**
+     * Do a nonlinear PDE solve
+     */
+    void DoNonLinearSolve(boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > p_pde);
 
     /**
      * Do a parabolic PDE solve
      */
-    void DoParabolicSolve();
+    void DoParabolicSolve(boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > p_pde);
 };
 
 #endif /* FINITEDIFFERENCESOLVER_HPP_ */

@@ -40,10 +40,7 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ParabolicDiffusionReactionPde() :
             AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, ELEMENT_DIM>(),
-            mLinearInUTerm(0.0 * unit::per_second),
-            mDiscreteNonLinearSourceStrengths(),
-            mDiscreteLinearSourceStrengths()
-
+            mDiscreteNonLinearSourceStrengths()
 {
 
 }
@@ -65,36 +62,36 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 double ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm(const ChastePoint<SPACE_DIM>& rX,
                                                                                                         Element<ELEMENT_DIM, SPACE_DIM>* pElement)
 {
-    if(mDiscreteLinearSourceStrengths.size()>0)
+    if(this->mDiscreteLinearSourceStrengths.size()>0)
     {
-        if(pElement->GetIndex() >= mDiscreteLinearSourceStrengths.size())
+        if(pElement->GetIndex() >= this->mDiscreteLinearSourceStrengths.size())
         {
             EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
         }
         units::quantity<unit::rate> scaling_factor = (1.0/BaseUnits::Instance()->GetReferenceTimeScale());
-        return (mLinearInUTerm + mDiscreteLinearSourceStrengths[pElement->GetIndex()])/scaling_factor;
+        return (this->mLinearInUTerm + this->mDiscreteLinearSourceStrengths[pElement->GetIndex()])/scaling_factor;
     }
     else
     {
         units::quantity<unit::rate> scaling_factor = (1.0/BaseUnits::Instance()->GetReferenceTimeScale());
-        return mLinearInUTerm/scaling_factor;
+        return this->mLinearInUTerm/scaling_factor;
     }
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::rate> ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex)
 {
-    if(mDiscreteLinearSourceStrengths.size()>0)
+    if(this->mDiscreteLinearSourceStrengths.size()>0)
     {
-        if(gridIndex >= mDiscreteLinearSourceStrengths.size())
+        if(gridIndex >= this->mDiscreteLinearSourceStrengths.size())
         {
             EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
         }
-        return mLinearInUTerm + mDiscreteLinearSourceStrengths[gridIndex];
+        return this->mLinearInUTerm + this->mDiscreteLinearSourceStrengths[gridIndex];
     }
     else
     {
-        return mLinearInUTerm;
+        return this->mLinearInUTerm;
     }
 }
 
@@ -102,7 +99,7 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::concentration_flow_rate> ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeNonlinearSourceTerm(unsigned gridIndex,
                                                                                                                                                   units::quantity<unit::concentration> u)
 {
-    units::quantity<unit::concentration_flow_rate> rate = mLinearInUTerm*u +
+    units::quantity<unit::concentration_flow_rate> rate = this->mLinearInUTerm*u +
             this->mDiscreteConstantSourceStrengths[gridIndex] + this->mDiscreteLinearSourceStrengths[gridIndex]*u;
     return rate;
 }
@@ -111,33 +108,19 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::rate> ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeNonlinearSourceTermPrime(unsigned gridIndex,
                                                                                                                                     units::quantity<unit::concentration> u)
 {
-    units::quantity<unit::rate> rate = mLinearInUTerm + this->mDiscreteLinearSourceStrengths[gridIndex];
+    units::quantity<unit::rate> rate = this->mLinearInUTerm + this->mDiscreteLinearSourceStrengths[gridIndex];
     return rate;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetContinuumLinearInUTerm(units::quantity<unit::rate> linearInUTerm)
-{
-    mLinearInUTerm = linearInUTerm;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSourceStrengths()
 {
-    AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSourceStrengths();
+    AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSourceStrengths();
     if(this->mUseRegularGrid)
     {
         if(!this->mpRegularGrid)
         {
             EXCEPTION("A grid has not been set for the determination of source strengths.");
-        }
-        mDiscreteLinearSourceStrengths = std::vector<units::quantity<unit::rate> >(this->mpRegularGrid->GetNumberOfPoints(), 0.0*unit::per_second);
-        for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
-        {
-            this->mDiscreteSources[idx]->SetRegularGrid(this->mpRegularGrid);
-            std::vector<units::quantity<unit::rate> > result = this->mDiscreteSources[idx]->GetLinearInURegularGridValues();
-            std::transform(mDiscreteLinearSourceStrengths.begin( ), mDiscreteLinearSourceStrengths.end( ),
-                           result.begin( ), mDiscreteLinearSourceStrengths.begin( ),std::plus<units::quantity<unit::rate> >( ));
         }
         mDiscreteNonLinearSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(this->mpRegularGrid->GetNumberOfPoints(), 0.0*unit::mole_per_metre_cubed_per_second);
         for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
@@ -153,14 +136,6 @@ void ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSource
         if(!this->mpMesh)
         {
             EXCEPTION("A mesh has not been set for the determination of source strengths.");
-        }
-        mDiscreteLinearSourceStrengths = std::vector<units::quantity<unit::rate> >(this->mpMesh->GetNumElements(), 0.0*unit::per_second);
-        for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
-        {
-            this->mDiscreteSources[idx]->SetMesh(this->mpMesh);
-            std::vector<units::quantity<unit::rate> > result = this->mDiscreteSources[idx]->GetLinearInUMeshValues();
-            std::transform(mDiscreteLinearSourceStrengths.begin( ), mDiscreteLinearSourceStrengths.end( ),
-                           result.begin( ), mDiscreteLinearSourceStrengths.begin( ),std::plus<units::quantity<unit::rate> >( ));
         }
     }
 }

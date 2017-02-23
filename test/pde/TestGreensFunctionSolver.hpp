@@ -37,7 +37,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #define TESTGREENSFUNCTIONSOLVER_HPP_
 
 #include <cxxtest/TestSuite.h>
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "GreensFunctionSolver.hpp"
 #include "VesselNetwork.hpp"
 #include "VesselNetworkGenerator.hpp"
@@ -67,7 +67,7 @@ public:
         p_grid->GenerateFromPart(p_domain, 0.1*1.e-6*unit::metres);
 
         // Choose the PDE
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
         units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e-7 * unit::mole_per_metre_cubed_per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);

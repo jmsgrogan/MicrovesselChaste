@@ -49,15 +49,6 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM = ELEMENT_DIM>
 class CoupledVegfPelletDiffusionReactionPde : public AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>
 {
-    /**
-     * The continuum linear in U term, discrete terms are added to this.
-     */
-    units::quantity<unit::rate> mLinearInUTerm;
-
-    /**
-     * The linear source strengths for each point on the grid or mesh
-     */
-    std::vector<units::quantity<unit::rate> > mDiscreteLinearSourceStrengths;
 
     /**
      * The non-linear source strengths for each point on the grid or mesh
@@ -131,12 +122,6 @@ public:
      * @return source strength
      */
     units::quantity<unit::rate> ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex=0);
-
-    /**
-     * Set the linear constant in U term
-     * @param linearInUTerm the linear constant in U term
-     */
-    void SetContinuumLinearInUTerm(units::quantity<unit::rate> linearInUTerm);
 
     /**
      * Abstract method to return the non linear contribution to the regular grid solvers

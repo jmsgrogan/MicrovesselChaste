@@ -189,7 +189,7 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
 # 
 #         ## Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources. 
 #          
-#         oxygen_pde = microvessel_chaste.pde.LinearSteadyStateDiffusionReactionPde3_3()
+#         oxygen_pde = microvessel_chaste.pde.DiscreteContinuumLinearEllipticPde3_3()
 #         oxygen_pde.SetIsotropicDiffusionConstant(Owen11Parameters.mpOxygenDiffusivity.GetValue("User"))
 #         cell_oxygen_sink = microvessel_chaste.pde.CellBasedDiscreteSource3()
 #         cell_oxygen_sink.SetLinearInUConsumptionRatePerCell(Owen11Parameters.mpCellOxygenConsumptionRate.GetValue("User"))
@@ -216,7 +216,7 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
 #         ## The rate of VEGF release depends on the cell type and intracellular VEGF levels, so we need a more detailed
 #         ## type of discrete source. 
 #          
-#         vegf_pde = microvessel_chaste.pde.LinearSteadyStateDiffusionReactionPde3_3()
+#         vegf_pde = microvessel_chaste.pde.DiscreteContinuumLinearEllipticPde3_3()
 #         vegf_pde.SetIsotropicDiffusionConstant(Owen11Parameters.mpVegfDiffusivity.GetValue("User"))
 #         vegf_pde.SetContinuumLinearInUTerm(-1.0 * Owen11Parameters.mpVegfDecayRate.GetValue("User"))
 #          

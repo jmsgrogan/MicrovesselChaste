@@ -18,7 +18,7 @@ Module contents
 .. autoclass:: microvessel_chaste.pde.AbstractDiscreteContinuumNonLinearEllipticPde3_3
         :members:
 
-.. autoclass:: microvessel_chaste.pde.LinearSteadyStateDiffusionReactionPde3_3
+.. autoclass:: microvessel_chaste.pde.DiscreteContinuumLinearEllipticPde3_3
         :members:
 
 .. autoclass:: microvessel_chaste.pde.AbstractRegularGridDiscreteContinuumSolver3
@@ -96,7 +96,7 @@ Module contents
 .. autoclass:: microvessel_chaste.pde.AbstractDiscreteContinuumNonLinearEllipticPde2_2
         :members:
 
-.. autoclass:: microvessel_chaste.pde.LinearSteadyStateDiffusionReactionPde2_2
+.. autoclass:: microvessel_chaste.pde.DiscreteContinuumLinearEllipticPde2_2
         :members:
 
 .. autoclass:: microvessel_chaste.pde.MichaelisMentenSteadyStateDiffusionReactionPde2_2

@@ -44,7 +44,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UblasIncludes.hpp"
 #include "Part.hpp"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "VesselNetwork.hpp"
 #include "VesselNetworkGenerator.hpp"
 #include "SmartPointers.hpp"
@@ -69,7 +69,7 @@ public:
         p_mesh_generator->Update();
 
         // Choose the PDE
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_linear_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_linear_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         units::quantity<unit::diffusivity> diffusivity(1.e-6 * unit::metre_squared_per_second);
         units::quantity<unit::rate> consumption_rate(-2.e-5 * unit::per_second);
         p_linear_pde->SetIsotropicDiffusionConstant(diffusivity);
@@ -87,7 +87,7 @@ public:
         FiniteElementSolver<3> solver;
         solver.SetMesh(p_mesh_generator->GetMesh());
         solver.SetPde(p_linear_pde);
-        solver.SetNonLinearPde(p_non_linear_pde);
+        solver.SetPde(p_non_linear_pde);
         solver.AddBoundaryCondition(p_outer_boundary_condition);
 
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestNonLinearFiniteElementSolver/Box", false));

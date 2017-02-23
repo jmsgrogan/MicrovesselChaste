@@ -164,7 +164,7 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         ## Set up the vegf pde. Note the scaling of the refernece concentration to nM to avoid numerical
         ## precision problems.
         
-        vegf_pde = microvessel_chaste.pde.LinearSteadyStateDiffusionReactionPde3_3()
+        vegf_pde = microvessel_chaste.pde.DiscreteContinuumLinearEllipticPde3_3()
         vegf_pde.SetIsotropicDiffusionConstant(Owen11Parameters.mpVegfDiffusivity.GetValue("User"))
         vegf_pde.SetContinuumLinearInUTerm(-1.0*Owen11Parameters.mpVegfDecayRate.GetValue("User"))
         vegf_pde.SetMesh(mesh)

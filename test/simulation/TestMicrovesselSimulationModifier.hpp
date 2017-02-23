@@ -37,7 +37,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define TESTMICROVESSELSIMULATIONMODIFIER_HPP_
 
 #include <cxxtest/TestSuite.h>
-#include "LinearSteadyStateDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "OffLatticeMigrationRule.hpp"
 #include "OffLatticeSproutingRule.hpp"
 #include "MicrovesselSimulationModifier.hpp"
@@ -146,7 +146,7 @@ class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
     boost::shared_ptr<FiniteDifferenceSolver<3> > GetOxygenSolver(boost::shared_ptr<Part<3> > p_domain,
                                                                   boost::shared_ptr<VesselNetwork<3> > p_network)
     {
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_oxygen_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         units::quantity<unit::diffusivity> oxygen_diffusivity(0.0033 * unit::metre_squared_per_second);
         p_oxygen_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity);
 
@@ -171,7 +171,7 @@ class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
     boost::shared_ptr<FiniteDifferenceSolver<3> > GetVegfSolver(boost::shared_ptr<Part<3> > p_domain,
                                                                   boost::shared_ptr<VesselNetwork<3> > p_network)
     {
-        boost::shared_ptr<LinearSteadyStateDiffusionReactionPde<3> > p_vegf_pde = LinearSteadyStateDiffusionReactionPde<3>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_vegf_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         units::quantity<unit::diffusivity> vegf_diffusivity(0.0033 * unit::metre_squared_per_second);
 
         p_vegf_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
