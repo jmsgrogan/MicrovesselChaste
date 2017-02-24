@@ -41,7 +41,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselNetwork.hpp"
 #include "VesselNode.hpp"
 #include "SmartPointers.hpp"
-#include "RegularGrid.hpp"
+#include "RegularGridCalculator.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
 #include "UnitCollection.hpp"
 
@@ -122,7 +122,7 @@ public:
      * Set a grid for the vessel network, implemented in some, but not all, child classes.
      * @param pGrid the grid for the vessel network
      */
-    virtual void SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
+    virtual void SetGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pGrid);
 };
 
 #endif /* ABSTRACTSPROUTINGRULE_HPP_ */

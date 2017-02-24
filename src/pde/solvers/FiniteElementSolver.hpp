@@ -57,11 +57,6 @@ class FiniteElementSolver : public AbstractUnstructuredGridDiscreteContinuumSolv
     bool mUseNewton;
 
     /**
-     * Use the linear solution as a guess
-     */
-    bool mUseLinearSolveForGuess;
-
-    /**
      * An initial guess
      */
     std::vector<double> mGuess;
@@ -100,12 +95,6 @@ public:
      * @param useNewton use Chaste's simple newton solve
      */
     void SetUseSimpleNetonSolver(bool useNewton);
-
-    /**
-     * Use the solution from a linear solver as the initial guess
-     * @param useLinearSolve use the solution from a linear solver as the initial guess
-     */
-    void SetUseLinearSolveForGuess(bool useLinearSolve);
 
     /**
      * Overridden update method

@@ -48,7 +48,7 @@ DiscreteContinuumBoundaryCondition<DIM>::DiscreteContinuumBoundaryCondition()
         mSource(BoundaryConditionSource::PRESCRIBED),
         mLabel("Default"),
         mValue(),
-        mpRegularGrid(),
+        mpRegularGridCalculator(),
         mpMesh(),
         mpNetwork(),
         mReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale())
@@ -300,7 +300,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateRegularGridPointBoundaryCond
     }
     else
     {
-        std::vector<std::vector<unsigned> > point_point_map = mpRegularGrid->GetPointPointMap(mPoints);
+        std::vector<std::vector<unsigned> > point_point_map = mpRegularGridCalculator->GetPointPointMap(mPoints);
         for(unsigned idx=0; idx<point_point_map.size(); idx++)
         {
             if(point_point_map[idx].size()>0)
@@ -320,10 +320,10 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateRegularGridFacetBoundaryCond
     }
     else
     {
-        double y_max = double(mpRegularGrid->GetExtents()[1]-1) * mpRegularGrid->GetSpacing()/mpRegularGrid->GetReferenceLengthScale();
-        for(unsigned idx=0; idx<mpRegularGrid->GetNumberOfPoints(); idx++)
+        double y_max = double(mpRegularGridCalculator->GetGrid()->GetDimensions()[1]-1) * mpRegularGridCalculator->GetGrid()->GetSpacing()/mpRegularGridCalculator->GetGrid()->GetReferenceLengthScale();
+        for(unsigned idx=0; idx<mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(); idx++)
         {
-            if(mpRegularGrid->GetLocationOf1dIndex(idx).GetLocation(mpRegularGrid->GetReferenceLengthScale())[1] == y_max)
+            if(mpRegularGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(idx).GetLocation(mpRegularGridCalculator->GetGrid()->GetReferenceLengthScale())[1] == y_max)
             {
                 (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
             }
@@ -355,7 +355,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateRegularGridFacetBoundaryCond
 template<unsigned DIM>
 void DiscreteContinuumBoundaryCondition<DIM>::UpdateRegularGridSegmentBoundaryConditions(boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > >pBoundaryConditions)
 {
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = mpRegularGrid->GetPointSegmentMap(true, !(mType == BoundaryConditionType::VESSEL_LINE));
+    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = mpRegularGridCalculator->GetPointSegmentMap(true, !(mType == BoundaryConditionType::VESSEL_LINE));
     for(unsigned idx=0; idx<point_segment_map.size(); idx++)
     {
         if(point_segment_map[idx].size()>0)
@@ -383,9 +383,9 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateRegularGridPartBoundaryCondi
     }
     else
     {
-        for(unsigned idx=0; idx<mpRegularGrid->GetNumberOfPoints(); idx++)
+        for(unsigned idx=0; idx<mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(); idx++)
         {
-            if(mpDomain->IsPointInPart(mpRegularGrid->GetLocationOf1dIndex(idx)))
+            if(mpDomain->IsPointInPart(mpRegularGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(idx)))
             {
                 if(BoundaryConditionSource::PRESCRIBED)
                 {
@@ -405,17 +405,17 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateRegularGridPartBoundaryCondi
 template<unsigned DIM>
 void DiscreteContinuumBoundaryCondition<DIM>::UpdateRegularGridBoundaryConditions(boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > >pBoundaryConditions)
 {
-    if(! mpRegularGrid)
+    if(! mpRegularGridCalculator)
     {
-        EXCEPTION("A grid has not been set for the determination of boundary condition values. For FE solvers use GetBoundaryConditionContainer()");
+        EXCEPTION("A grid calculator has not been set for the determination of boundary condition values. For FE solvers use GetBoundaryConditionContainer()");
     }
 
     // Check the boundary condition type
     if(mType == BoundaryConditionType::OUTER)
     {
-        for(unsigned idx=0; idx<mpRegularGrid->GetNumberOfPoints(); idx++)
+        for(unsigned idx=0; idx<mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(); idx++)
         {
-            (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> > (mpRegularGrid->IsOnBoundary(idx), mValue);
+            (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> > (mpRegularGridCalculator->GetGrid()->IsGlobalIndexOnBoundary(idx), mValue);
         }
     }
     else if(mType == BoundaryConditionType::POINT)
@@ -465,9 +465,9 @@ void DiscreteContinuumBoundaryCondition<DIM>::SetType(BoundaryConditionType::Val
 }
 
 template<unsigned DIM>
-void DiscreteContinuumBoundaryCondition<DIM>::SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pRegularGrid)
+void DiscreteContinuumBoundaryCondition<DIM>::SetRegularGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pRegularGrid)
 {
-    mpRegularGrid = pRegularGrid;
+    mpRegularGridCalculator = pRegularGrid;
 }
 
 template<unsigned DIM>

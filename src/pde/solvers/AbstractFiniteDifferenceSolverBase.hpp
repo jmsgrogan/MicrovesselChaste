@@ -33,46 +33,64 @@ Copyright (c) 2005-2017, University of Oxford.
 
  */
 
-#ifndef FINITEDIFFERENCESOLVER_HPP_
-#define FINITEDIFFERENCESOLVER_HPP_
+#ifndef ABSTRACTFINITEDIFFERENCESOLVERBASE_HPP_
+#define ABSTRACTFINITEDIFFERENCESOLVERBASE_HPP_
 
 #include "SmartPointers.hpp"
-#include "AbstractFiniteDifferenceSolverBase.hpp"
+#include "AbstractRegularGridDiscreteContinuumSolver.hpp"
 #include "UnitCollection.hpp"
 #include "PetscTools.hpp"
-#include "DiscreteContinuumLinearEllipticPde.hpp"
-#include "AbstractDiscreteContinuumParabolicPde.hpp"
-#include "AbstractDiscreteContinuumNonLinearEllipticPde.hpp"
+#include "LinearSystem.hpp"
 
 /**
- * Finite difference solver for concentration based reaction diffusion PDEs. It can include
- * discrete representations of cells and vessels.
+ * Base class for finite difference solvers.
  */
 template<unsigned DIM>
-class FiniteDifferenceSolver : public AbstractFiniteDifferenceSolverBase<DIM>
+class AbstractFiniteDifferenceSolverBase : public AbstractRegularGridDiscreteContinuumSolver<DIM>
 {
     /**
-     * Time increment for the parabolic solver
+     * Solver specific copy of boundary condition information, used for efficiency. It is a
+     * vector of pairs of whether to apply-concentration values ordered by grid index.
      */
-    double mParabolicSolverTimeIncrement;
+    boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > mpBoundaryConditions;
+
+    /**
+     * Do the boundary conditions need to be udpated each solve.
+     */
+    bool mUpdateBoundaryConditionsEachSolve;
+
+    /**
+     * Have boundary conditions been set.
+     */
+    bool mBoundaryConditionsSet;
+
+    /**
+     * The system to be solved.
+     */
+    boost::shared_ptr<LinearSystem> mpLinearSystem;
 
 public:
 
     /**
      * Constructor
      */
-    FiniteDifferenceSolver();
-
-    /**
-     * Factory constructor method
-     * @return a shared pointer to a new solver
-     */
-    static boost::shared_ptr<FiniteDifferenceSolver<DIM> > Create();
+    AbstractFiniteDifferenceSolverBase();
 
     /**
      * Destructor
      */
-    virtual ~FiniteDifferenceSolver();
+    virtual ~AbstractFiniteDifferenceSolverBase();
+
+    /**
+     * @return the linear system
+     */
+    virtual boost::shared_ptr<LinearSystem> GetLinearSystem();
+
+    /**
+     * Get the boundary conditions in the finite difference representation
+     * @return pointer to the vector of boundary conditions, which is pairs of whether to apply-concentration values ordered by grid index.
+     */
+    boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > GetRGBoundaryConditions();
 
     /**
      * Overridden solve method
@@ -82,30 +100,18 @@ public:
     /**
      * Overridden setup method
      */
-    void Setup();
+    virtual void Setup();
 
     /**
-     * Dimensionless time increment for the parabolic solver
-     * @param timeIncrement Dimensionless time increment for the parabolic solver
+     * Overridden update method
      */
-    void SetParabolicSolverTimeIncrement(double timeIncrement);
-
-private:
+    virtual void Update();
 
     /**
-     * Do a linear PDE solve
+     * Whether to update the boundary conditions on each solve
+     * @param doUpdate update the boundary conditions on each solve
      */
-    void DoLinearSolve(boost::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_pde);
-
-    /**
-     * Do a nonlinear PDE solve
-     */
-    void DoNonLinearSolve(boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > p_pde);
-
-    /**
-     * Do a parabolic PDE solve
-     */
-    void DoParabolicSolve(boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > p_pde);
+    void UpdateBoundaryConditionsEachSolve(bool doUpdate);
 };
 
-#endif /* FINITEDIFFERENCESOLVER_HPP_ */
+#endif /* ABSTRACTFINITEDIFFERENCESOLVERBASE_HPP_ */

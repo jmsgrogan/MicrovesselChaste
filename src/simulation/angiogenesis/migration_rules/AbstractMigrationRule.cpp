@@ -41,7 +41,7 @@ AbstractMigrationRule<DIM>::AbstractMigrationRule()
       mpVesselNetwork(),
       mIsSprouting(false),
       mpCellPopulation(),
-      mpGrid(),
+      mpRegularGridCalculator(),
       mpBoundingDomain(),
       mUseMooreNeighbourhood(false)
 {
@@ -92,9 +92,9 @@ void AbstractMigrationRule<DIM>::SetIsSprouting(bool isSprouting)
 }
 
 template<unsigned DIM>
-void AbstractMigrationRule<DIM>::SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid)
+void AbstractMigrationRule<DIM>::SetGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pGrid)
 {
-    mpGrid = pGrid;
+    mpRegularGridCalculator = pGrid;
 }
 
 template<unsigned DIM>

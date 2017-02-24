@@ -52,7 +52,7 @@ AbstractDiscreteContinuumSolver<DIM>::AbstractDiscreteContinuumSolver()
         mReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale()),
         mSolution(),
         mConcentrations(),
-        mHasRegularGrid(false),
+        mHasRegularGridCalculator(false),
         mHasUnstructuredGrid(false)
 {
 
@@ -111,9 +111,9 @@ std::vector<double> AbstractDiscreteContinuumSolver<DIM>::GetSolution()
 }
 
 template<unsigned DIM>
-bool AbstractDiscreteContinuumSolver<DIM>::HasRegularGrid()
+bool AbstractDiscreteContinuumSolver<DIM>::HasRegularGridCalculator()
 {
-    return mHasRegularGrid;
+    return mHasRegularGridCalculator;
 }
 
 template<unsigned DIM>

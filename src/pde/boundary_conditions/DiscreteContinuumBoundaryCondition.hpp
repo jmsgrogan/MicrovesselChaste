@@ -41,7 +41,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UblasIncludes.hpp"
 #include "Part.hpp"
 #include "BoundaryConditionsContainer.hpp"
-#include "RegularGrid.hpp"
+#include "RegularGridCalculator.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "DimensionalChastePoint.hpp"
 
@@ -114,15 +114,21 @@ protected:
     /**
      * The grid for solvers using regular grids
      */
-    boost::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
+    boost::shared_ptr<RegularGridCalculator<DIM> > mpRegularGridCalculator;
 
     /**
      * The mesh for solvers using finite element meshes
      */
     boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > mpMesh;
 
+    /**
+     * The vessel network
+     */
     boost::shared_ptr<VesselNetwork <DIM> > mpNetwork;
 
+    /**
+     * The reference concentration
+     */
     units::quantity<unit::concentration> mReferenceConcentration;
 
 public:
@@ -215,7 +221,7 @@ public:
      * Set the regular grid
      * @param pRegularGrid the regular grid
      */
-    void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pRegularGrid);
+    void SetRegularGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pRegularGrid);
 
     /**
      * Set where the value of the boundary condition is obtained, e.g. LABEL, PRESCRIBED

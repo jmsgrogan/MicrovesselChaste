@@ -37,6 +37,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <boost/lexical_cast.hpp>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkPoints.h>
+#include <vtkPointData.h>
 #include <vtkPolyData.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
@@ -87,7 +88,7 @@ void RegularGridActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRenderer> pRend
 {
     if(mpRegularGrid)
     {
-        vtkSmartPointer<vtkImageData> p_grid = mpRegularGrid->GetVtkGrid();
+        vtkSmartPointer<vtkImageData> p_grid = mpRegularGrid->GetGlobalVtkGrid();
 
         vtkSmartPointer<vtkGeometryFilter> p_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
         #if VTK_MAJOR_VERSION <= 5

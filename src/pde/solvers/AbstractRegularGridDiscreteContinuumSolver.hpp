@@ -44,7 +44,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
-#include "RegularGrid.hpp"
+#include "RegularGridCalculator.hpp"
 #include "UnitCollection.hpp"
 
 /**
@@ -72,7 +72,7 @@ protected:
     /**
      * The structured grid
      */
-    boost::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
+    boost::shared_ptr<RegularGridCalculator<DIM> > mpRegularGridCalculator;
 
 public:
 
@@ -90,7 +90,7 @@ public:
      * Return the grid
      * @return a pointer to the structured grid
      */
-    boost::shared_ptr<RegularGrid<DIM> > GetGrid();
+    boost::shared_ptr<RegularGridCalculator<DIM> > GetGridCalculator();
 
     /**
      * Return the value of the field at the requested points
@@ -143,7 +143,7 @@ public:
      * Set the structured grid
      * @param pRegularGrid the structured grid
      */
-    void SetGrid(boost::shared_ptr<RegularGrid<DIM> > pRegularGrid);
+    void SetGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pRegularGridCalculator);
 
     /**
      * Overridden Setup method.

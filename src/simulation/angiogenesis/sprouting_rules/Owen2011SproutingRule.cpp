@@ -75,7 +75,7 @@ void Owen2011SproutingRule<DIM>::SetHalfMaxVegf(units::quantity<unit::concentrat
 template<unsigned DIM>
 std::vector<boost::shared_ptr<VesselNode<DIM> > > Owen2011SproutingRule<DIM>::GetSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
-    if(!this->mpGrid)
+    if(!this->mpRegularGridCalculator)
     {
         EXCEPTION("A regular grid is required for this type of sprouting rule.");
     }
@@ -86,7 +86,7 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > Owen2011SproutingRule<DIM>::Ge
     }
 
     // Get the VEGF field
-    this->mVegfField = this->mpSolver->GetConcentrations(this->mpGrid);
+    this->mVegfField = this->mpSolver->GetConcentrations(this->mpRegularGridCalculator->GetGrid());
 
     // Set up the output sprouts vector
     std::vector<boost::shared_ptr<VesselNode<DIM> > > sprouts;
@@ -130,7 +130,7 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > Owen2011SproutingRule<DIM>::Ge
         }
 
         // Get the grid index of the node
-        unsigned grid_index = this->mpGrid->GetNearestGridIndex(rNodes[idx]->rGetLocation());
+        unsigned grid_index = this->mpRegularGridCalculator->GetGrid()->GetNearestGlobalGridIndex(rNodes[idx]->rGetLocation());
         units::quantity<unit::concentration> vegf_conc = this->mVegfField[grid_index];
         double vegf_fraction = vegf_conc/(vegf_conc + mHalfMaxVegf);
         double max_prob_per_time_step = this->mSproutingProbability*SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();

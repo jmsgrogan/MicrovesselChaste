@@ -35,6 +35,7 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include "Exception.hpp"
 #include "RegularGrid.hpp"
+#include "RegularGridCalculator.hpp"
 #include "DistanceMap.hpp"
 #include "NetworkToImage.hpp"
 #include "UnitCollection.hpp"
@@ -122,23 +123,26 @@ void NetworkToImage<DIM>::Update()
 
     boost::shared_ptr<RegularGrid<DIM> > p_grid = RegularGrid<DIM>::Create();
     p_grid->SetSpacing(mGridSpacing);
-    std::vector<unsigned> final_extents;
-    final_extents.push_back(unsigned(range[0])+1);
-    final_extents.push_back(unsigned(range[1])+1);
+    c_vector<double, 3> dimensions;
+    dimensions[0] = unsigned(range[0])+1;
+    dimensions[1] = unsigned(range[1])+1;
     if(mImageDimension == 3 and DIM==3)
     {
-        final_extents.push_back(unsigned(range[2])+1);
+        dimensions[2] = unsigned(range[2])+1;
     }
     else
     {
-        final_extents.push_back(1);
+        dimensions[2] = 1;
     }
-    p_grid->SetExtents(final_extents);
+    p_grid->SetDimensions(dimensions);
     p_grid->SetOrigin(DimensionalChastePoint<DIM>(origin, mGridSpacing));
+
+    boost::shared_ptr<RegularGridCalculator<DIM> > p_grid_calculator = RegularGridCalculator<DIM>::Create();
+    p_grid_calculator->SetRegularGrid(p_grid);
 
     boost::shared_ptr<DistanceMap<DIM> > p_distance_map = DistanceMap<DIM>::Create();
     p_distance_map->SetVesselNetwork(mpNetwork);
-    p_distance_map->SetGrid(p_grid);
+    p_distance_map->SetGridCalculator(p_grid_calculator);
     p_distance_map->SetUseSegmentRadii(true);
     p_distance_map->Setup();
     p_distance_map->Solve();
@@ -158,8 +162,7 @@ void NetworkToImage<DIM>::Update()
 
     p_grid->SetUpVtkGrid();
     p_grid->SetPointValues(point_solution);
-    mpImage = p_grid->GetVtkGrid();
-
+    mpImage = p_grid->GetGlobalVtkGrid();
     mpImage->GetPointData()->SetScalars(mpImage->GetPointData()->GetArray("Point Values"));
 }
 

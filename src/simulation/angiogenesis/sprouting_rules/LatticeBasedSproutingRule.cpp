@@ -42,7 +42,7 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned DIM>
 LatticeBasedSproutingRule<DIM>::LatticeBasedSproutingRule()
     : AbstractSproutingRule<DIM>(),
-      mpGrid(),
+      mpRegularGridCalculator(),
       mTipExclusionRadius(0.0 * unit::metres)
 {
 
@@ -62,9 +62,9 @@ LatticeBasedSproutingRule<DIM>::~LatticeBasedSproutingRule()
 }
 
 template<unsigned DIM>
-void LatticeBasedSproutingRule<DIM>::SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid)
+void LatticeBasedSproutingRule<DIM>::SetGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pGrid)
 {
-    mpGrid = pGrid;
+    mpRegularGridCalculator = pGrid;
 }
 
 template<unsigned DIM>

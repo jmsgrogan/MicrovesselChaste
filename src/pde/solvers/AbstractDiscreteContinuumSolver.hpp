@@ -136,7 +136,7 @@ protected:
     /**
      * Used to check the type of solver
      */
-    bool mHasRegularGrid;
+    bool mHasRegularGridCalculator;
 
     /**
      * Used to check the type of solver
@@ -243,7 +243,7 @@ public:
      * Return true if the solver uses a regular grid to store solutions
      * @return true if the solver uses a regular grid to store solutions
      */
-    bool HasRegularGrid();
+    bool HasRegularGridCalculator();
 
     /**
      * Return true if the solver uses a unstructured grid to store solutions

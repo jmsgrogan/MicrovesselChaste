@@ -70,10 +70,7 @@ PetscErrorCode ParabolicFiniteDifferenceSolver_ComputeJacobian(TS ts, PetscReal 
 
 template<unsigned DIM>
 FiniteDifferenceSolver<DIM>::FiniteDifferenceSolver()
-    :   AbstractRegularGridDiscreteContinuumSolver<DIM>(),
-        mpBoundaryConditions(),
-        mUpdateBoundaryConditionsEachSolve(true),
-        mBoundaryConditionsSet(false),
+    :   AbstractFiniteDifferenceSolverBase<DIM>(),
         mParabolicSolverTimeIncrement(0.05)
 {
 
@@ -99,83 +96,9 @@ void FiniteDifferenceSolver<DIM>::SetParabolicSolverTimeIncrement(double timeInc
 }
 
 template<unsigned DIM>
-boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > FiniteDifferenceSolver<DIM>::GetRGBoundaryConditions()
-{
-    return mpBoundaryConditions;
-}
-
-template<unsigned DIM>
-void FiniteDifferenceSolver<DIM>::UpdateBoundaryConditionsEachSolve(bool doUpdate)
-{
-    mUpdateBoundaryConditionsEachSolve = doUpdate;
-}
-
-template<unsigned DIM>
 void FiniteDifferenceSolver<DIM>::Setup()
 {
-    // Set up the grid and PDE
-    if(!this->mpRegularGrid)
-    {
-        EXCEPTION("This solver needs a regular grid to be set before calling Setup.");
-    }
-
-    if(this->CellPopulationIsSet())
-    {
-        this->mpRegularGrid->SetCellPopulation(*(this->mpCellPopulation), this->mCellPopulationReferenceLength);
-    }
-
-    if(this->mpNetwork)
-    {
-    	this->mpRegularGrid->SetVesselNetwork(this->mpNetwork);
-    }
-
-    if(this->mpPde)
-    {
-        this->mpPde->SetRegularGrid(this->mpRegularGrid);
-    }
-    else
-    {
-        EXCEPTION("This solver needs a PDE to be set before calling Setup.");
-    }
-
-    // Set up the boundary conditions. Use a different description from normal DiscreteContinuum BCs for efficiency.
-    mpBoundaryConditions = boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > (new std::vector<std::pair<bool, units::quantity<unit::concentration> > >(this->mpRegularGrid->GetNumberOfPoints()));
-    for(unsigned idx=0; idx<this->mpRegularGrid->GetNumberOfPoints(); idx++)
-    {
-        (*mpBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(false, 0.0*this->mReferenceConcentration);
-    }
-    for(unsigned bound_index=0; bound_index<this->mBoundaryConditions.size(); bound_index++)
-    {
-        this->mBoundaryConditions[bound_index]->SetRegularGrid(this->mpRegularGrid);
-    }
-
-    // Set up the vtk solution grid
-    AbstractRegularGridDiscreteContinuumSolver<DIM>::Setup();
-
-    // Update the source strengths and boundary conditions;
-    Update();
-
-    this->IsSetupForSolve = true;
-}
-
-template<unsigned DIM>
-void FiniteDifferenceSolver<DIM>::Update()
-{
-    // Update the PDE source strengths
-    if(this->mpPde)
-    {
-        this->mpPde->UpdateDiscreteSourceStrengths();
-    }
-
-    // Update the boundary conditions
-    if(mUpdateBoundaryConditionsEachSolve or !mBoundaryConditionsSet)
-    {
-        for(unsigned bound_index=0; bound_index<this->mBoundaryConditions.size(); bound_index++)
-        {
-            this->mBoundaryConditions[bound_index]->UpdateRegularGridBoundaryConditions(mpBoundaryConditions);
-        }
-        mBoundaryConditionsSet = true;
-    }
+    AbstractFiniteDifferenceSolverBase<DIM>::Setup();
 }
 
 template<unsigned DIM>
@@ -419,7 +342,7 @@ void FiniteDifferenceSolver<DIM>::Solve()
 {
     if(!this->IsSetupForSolve)
     {
-        Setup();
+        this->Setup();
     }
 
     if(boost::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
@@ -448,12 +371,12 @@ PetscErrorCode HyrbidFiniteDifference_ComputeResidual(SNES snes, Vec solution_gu
 {
     FiniteDifferenceSolver<DIM>* solver = (FiniteDifferenceSolver<DIM>*) pContext;
 
-    unsigned extents_x = solver->GetGrid()->GetExtents()[0];
-    unsigned extents_y = solver->GetGrid()->GetExtents()[1];
-    unsigned extents_z = solver->GetGrid()->GetExtents()[2];
+    unsigned extents_x = solver->GetGridCalculator()->GetGrid()->GetDimensions()[0];
+    unsigned extents_y = solver->GetGridCalculator()->GetGrid()->GetDimensions()[1];
+    unsigned extents_z = solver->GetGridCalculator()->GetGrid()->GetDimensions()[2];
 
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
-    units::quantity<unit::length> spacing = solver->GetGrid()->GetSpacing();
+    units::quantity<unit::length> spacing = solver->GetGridCalculator()->GetGrid()->GetSpacing();
 
     boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > p_nonlinear_pde =
                 boost::dynamic_pointer_cast<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> >(solver->GetPde());

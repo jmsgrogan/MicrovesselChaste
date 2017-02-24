@@ -48,9 +48,9 @@ template<unsigned DIM>
 AbstractRegularGridDiscreteContinuumSolver<DIM>::AbstractRegularGridDiscreteContinuumSolver()
     :   AbstractDiscreteContinuumSolver<DIM>(),
         mpVtkSolution(),
-        mpRegularGrid()
+        mpRegularGridCalculator()
 {
-    this->mHasRegularGrid = true;
+    this->mHasRegularGridCalculator = true;
 }
 
 template<unsigned DIM>
@@ -60,13 +60,13 @@ AbstractRegularGridDiscreteContinuumSolver<DIM>::~AbstractRegularGridDiscreteCon
 }
 
 template<unsigned DIM>
-boost::shared_ptr<RegularGrid<DIM> > AbstractRegularGridDiscreteContinuumSolver<DIM>::GetGrid()
+boost::shared_ptr<RegularGridCalculator<DIM> > AbstractRegularGridDiscreteContinuumSolver<DIM>::GetGridCalculator()
 {
-    if(!this->mpRegularGrid)
+    if(!this->mpRegularGridCalculator)
     {
         EXCEPTION("A regular grid has not been set.");
     }
-    return this->mpRegularGrid;
+    return this->mpRegularGridCalculator;
 }
 
 template<unsigned DIM>
@@ -85,7 +85,7 @@ std::vector<units::quantity<unit::concentration> > AbstractRegularGridDiscreteCo
     p_points->SetNumberOfPoints(samplePoints.size());
     for(unsigned idx=0; idx< samplePoints.size(); idx++)
     {
-        c_vector<double, DIM> location = samplePoints[idx].GetLocation(this->mpRegularGrid->GetReferenceLengthScale());
+        c_vector<double, DIM> location = samplePoints[idx].GetLocation(this->mpRegularGridCalculator->GetGrid()->GetReferenceLengthScale());
         if(DIM==3)
         {
             p_points->SetPoint(idx, location[0], location[1], location[2]);
@@ -119,7 +119,7 @@ std::vector<units::quantity<unit::concentration> > AbstractRegularGridDiscreteCo
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration> > AbstractRegularGridDiscreteContinuumSolver<DIM>::GetConcentrations(boost::shared_ptr<RegularGrid<DIM> > pGrid)
 {
-    if(this->mpRegularGrid == pGrid)
+    if(this->mpRegularGridCalculator->GetGrid() == pGrid)
     {
         return this->GetConcentrations();
     }
@@ -151,7 +151,7 @@ std::vector<double> AbstractRegularGridDiscreteContinuumSolver<DIM>::GetSolution
     p_points->SetNumberOfPoints(rSamplePoints.size());
     for(unsigned idx=0; idx< rSamplePoints.size(); idx++)
     {
-        c_vector<double, DIM> location = rSamplePoints[idx].GetLocation(this->mpRegularGrid->GetReferenceLengthScale());
+        c_vector<double, DIM> location = rSamplePoints[idx].GetLocation(this->mpRegularGridCalculator->GetGrid()->GetReferenceLengthScale());
         if(DIM==3)
         {
             p_points->SetPoint(idx, location[0], location[1], location[2]);
@@ -185,7 +185,7 @@ std::vector<double> AbstractRegularGridDiscreteContinuumSolver<DIM>::GetSolution
 template<unsigned DIM>
 std::vector<double> AbstractRegularGridDiscreteContinuumSolver<DIM>::GetSolution(boost::shared_ptr<RegularGrid<DIM> > pGrid)
 {
-    if(this->mpRegularGrid == pGrid)
+    if(this->mpRegularGridCalculator->GetGrid() == pGrid)
     {
         return this->GetSolution();
     }
@@ -212,15 +212,15 @@ vtkSmartPointer<vtkImageData> AbstractRegularGridDiscreteContinuumSolver<DIM>::G
 }
 
 template<unsigned DIM>
-void AbstractRegularGridDiscreteContinuumSolver<DIM>::SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid)
+void AbstractRegularGridDiscreteContinuumSolver<DIM>::SetGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pGrid)
 {
-    this->mpRegularGrid = pGrid;
+    this->mpRegularGridCalculator = pGrid;
 }
 
 template<unsigned DIM>
 void AbstractRegularGridDiscreteContinuumSolver<DIM>::Setup()
 {
-    if(!this->mpRegularGrid)
+    if(!this->mpRegularGridCalculator)
     {
         EXCEPTION("Regular grid DiscreteContinuum solvers need a grid before Setup can be called.");
     }
@@ -230,27 +230,27 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Setup()
 
     if(DIM==3)
     {
-        this->mpVtkSolution->SetExtent(this->mpRegularGrid->GetLocalIndexExtents()[0],
-                this->mpRegularGrid->GetLocalIndexExtents()[1],
-                this->mpRegularGrid->GetLocalIndexExtents()[2],
-                this->mpRegularGrid->GetLocalIndexExtents()[3],
-                this->mpRegularGrid->GetLocalIndexExtents()[4],
-                this->mpRegularGrid->GetLocalIndexExtents()[5]);
+        this->mpVtkSolution->SetExtent(this->mpRegularGridCalculator->GetGrid()->GetExtents()[0],
+                this->mpRegularGridCalculator->GetGrid()->GetExtents()[1],
+                this->mpRegularGridCalculator->GetGrid()->GetExtents()[2],
+                this->mpRegularGridCalculator->GetGrid()->GetExtents()[3],
+                this->mpRegularGridCalculator->GetGrid()->GetExtents()[4],
+                this->mpRegularGridCalculator->GetGrid()->GetExtents()[5]);
     }
     else
     {
-        this->mpVtkSolution->SetExtent(this->mpRegularGrid->GetLocalIndexExtents()[0],
-                this->mpRegularGrid->GetLocalIndexExtents()[1],
-                this->mpRegularGrid->GetLocalIndexExtents()[2],
-                this->mpRegularGrid->GetLocalIndexExtents()[3],
+        this->mpVtkSolution->SetExtent(this->mpRegularGridCalculator->GetGrid()->GetExtents()[0],
+                this->mpRegularGridCalculator->GetGrid()->GetExtents()[1],
+                this->mpRegularGridCalculator->GetGrid()->GetExtents()[2],
+                this->mpRegularGridCalculator->GetGrid()->GetExtents()[3],
                 0,
                 0);
     }
 
-    double spacing = this->mpRegularGrid->GetSpacing()/this->mpRegularGrid->GetReferenceLengthScale();
+    double spacing = this->mpRegularGridCalculator->GetGrid()->GetSpacing()/this->mpRegularGridCalculator->GetGrid()->GetReferenceLengthScale();
     this->mpVtkSolution->SetSpacing(spacing, spacing, spacing);
 
-    c_vector<double,DIM> origin = this->mpRegularGrid->GetOrigin().GetLocation(this->mpRegularGrid->GetReferenceLengthScale());
+    c_vector<double,DIM> origin = this->mpRegularGridCalculator->GetGrid()->GetOrigin().GetLocation(this->mpRegularGridCalculator->GetGrid()->GetReferenceLengthScale());
     if(DIM==3)
     {
         this->mpVtkSolution->SetOrigin(origin[0], origin[1], origin[2]);
@@ -260,7 +260,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Setup()
         this->mpVtkSolution->SetOrigin(origin[0], origin[1], 0.0);
     }
 
-    this->mSolution = std::vector<double>(0.0, this->mpRegularGrid->GetNumberOfLocalPoints());
+    this->mSolution = std::vector<double>(0.0, this->mpRegularGridCalculator->GetGrid()->GetNumberOfLocalPoints());
 }
 
 template<unsigned DIM>
@@ -335,7 +335,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateCellData()
     }
 
     this->mpRegularGrid->SetCellPopulation(*(this->mpCellPopulation), this->mCellPopulationReferenceLength);
-    std::vector<std::vector<CellPtr> > point_cell_map = this->mpRegularGrid->GetPointCellMap();
+    std::vector<std::vector<CellPtr> > point_cell_map = this->mpRegularGridCalculator->GetPointCellMap();
     for(unsigned idx=0; idx<point_cell_map.size(); idx++)
     {
         for(unsigned jdx=0; jdx<point_cell_map[idx].size(); jdx++)
@@ -381,9 +381,9 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Write()
     }
 
     std::vector<unsigned> whole_extents(6, 0);
-    whole_extents[1] = this->mpRegularGrid->GetExtents()[0]-1;
-    whole_extents[3] = this->mpRegularGrid->GetExtents()[1]-1;
-    whole_extents[5] = this->mpRegularGrid->GetExtents()[2]-1;
+    whole_extents[1] = this->mpRegularGridCalculator->GetGrid()->GetDimensions()[0]-1;
+    whole_extents[3] = this->mpRegularGrid->GetGrid()->GetExtents()[1]-1;
+    whole_extents[5] = this->mpRegularGrid->GetGrid()->GetExtents()[2]-1;
     writer.SetWholeExtents(whole_extents);
     writer.SetImage(this->mpVtkSolution);
     writer.Write();

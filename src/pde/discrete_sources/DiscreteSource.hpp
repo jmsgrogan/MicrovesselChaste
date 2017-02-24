@@ -40,7 +40,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <string>
 #include <map>
 #include "UblasIncludes.hpp"
-#include "RegularGrid.hpp"
+#include "RegularGridCalculator.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "UnitCollection.hpp"
 
@@ -58,7 +58,7 @@ protected:
     /**
      * The grid for solvers using regular grids
      */
-    boost::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
+    boost::shared_ptr<RegularGridCalculator<DIM> > mpRegularGridCalculator;
 
     /**
      * The mesh for the finite element solver
@@ -150,7 +150,7 @@ public:
      * Set the regular grid
      * @param pRegularGrid the regular grid
      */
-    void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pRegularGrid);
+    void SetRegularGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pRegularGridCalculator);
 
     /**
      * Set the finite element mesh

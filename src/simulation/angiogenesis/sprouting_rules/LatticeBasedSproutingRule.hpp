@@ -41,7 +41,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselNode.hpp"
 #include "SmartPointers.hpp"
 #include "AbstractSproutingRule.hpp"
-#include "RegularGrid.hpp"
+#include "RegularGridCalculator.hpp"
 #include "AbstractRegularGridDiscreteContinuumSolver.hpp"
 
 /**
@@ -56,7 +56,7 @@ protected:
     /**
      * The lattice/grid for the vessel simulation
      */
-    boost::shared_ptr<RegularGrid<DIM> > mpGrid;
+    boost::shared_ptr<RegularGridCalculator<DIM> > mpRegularGridCalculator;
 
     /**
      * Tip exclusion radius
@@ -92,7 +92,7 @@ public:
      * Set the lattice/grid for the vessel network
      * @param pGrid the grid for the vessel network
      */
-    void SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
+    void SetGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pGrid);
 
     /**
      * Set the minimum distance from an existing tip that a sprout can form
