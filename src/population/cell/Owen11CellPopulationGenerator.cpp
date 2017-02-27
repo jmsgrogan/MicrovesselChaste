@@ -60,7 +60,7 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned DIM>
 Owen11CellPopulationGenerator<DIM>::Owen11CellPopulationGenerator() :
     mpVesselNetwork(),
-    mpRegularGrid(),
+    mpRegularGridCalculator(),
     mpPottsMeshGenerator(),
     mpCancerCellMutationState(boost::shared_ptr<CancerCellMutationState>(new CancerCellMutationState)),
     mpNormalCellMutationState(),
@@ -92,9 +92,9 @@ void Owen11CellPopulationGenerator<DIM>::SetVesselNetwork(boost::shared_ptr<Vess
 }
 
 template<unsigned DIM>
-void Owen11CellPopulationGenerator<DIM>::SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid)
+void Owen11CellPopulationGenerator<DIM>::SetRegularGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pGrid)
 {
-    mpRegularGrid = pGrid;
+    mpRegularGridCalculator = pGrid;
 }
 
 template<unsigned DIM>
@@ -112,35 +112,36 @@ void Owen11CellPopulationGenerator<DIM>::SetTumourRadius(units::quantity<unit::l
 template<unsigned DIM>
 boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM>::Update()
 {
-    if(!mpRegularGrid)
+    if(!mpRegularGridCalculator)
     {
         EXCEPTION("A regular grid is required to set of the cell population");
     }
 
+    c_vector<unsigned, 3> dimensions = mpRegularGridCalculator->GetGrid()->GetDimensions();
     unsigned extents_z = 1;
     if(DIM==3)
     {
-        extents_z = mpRegularGrid->GetExtents()[2];
+        extents_z = dimensions[2];
     }
 
-    mpPottsMeshGenerator = boost::shared_ptr<PottsMeshGenerator<DIM> >(new PottsMeshGenerator<DIM>(mpRegularGrid->GetExtents()[0], 0, 0,
-                                                                                                   mpRegularGrid->GetExtents()[1], 0, 0,
+    mpPottsMeshGenerator = boost::shared_ptr<PottsMeshGenerator<DIM> >(new PottsMeshGenerator<DIM>(dimensions[0], 0, 0,
+            dimensions[1], 0, 0,
                                                                                                    extents_z, 0, 0));
 
     PottsMesh<DIM>* p_mesh = mpPottsMeshGenerator->GetMesh();
 
     // There is a bug in Chaste causing index out of bounds for large grid spacing. It may be better to use a scaling here
     // so grid spacing is always one.
+
+    units::quantity<unit::length> spacing = mpRegularGridCalculator->GetGrid()->GetSpacing();
     if(DIM==2)
     {
-        p_mesh->Scale(mpRegularGrid->GetSpacing()/mCellPopulationReferenceLength,
-        		mpRegularGrid->GetSpacing()/mCellPopulationReferenceLength);
+        p_mesh->Scale(spacing/mCellPopulationReferenceLength, spacing/mCellPopulationReferenceLength);
     }
     else
 	{
-        p_mesh->Scale(mpRegularGrid->GetSpacing()/mCellPopulationReferenceLength,
-        		mpRegularGrid->GetSpacing()/mCellPopulationReferenceLength,
-				mpRegularGrid->GetSpacing()/mCellPopulationReferenceLength);
+        p_mesh->Scale(spacing/mCellPopulationReferenceLength, spacing/mCellPopulationReferenceLength,
+                spacing/mCellPopulationReferenceLength);
 	}
 
     std::vector<unsigned> location_indices;
@@ -204,8 +205,8 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
     // Set up tumour cells in the centre of the domain
     if(DIM==2)
     {
-        DimensionalChastePoint<DIM> origin(double(mpRegularGrid->GetExtents()[0])*mpRegularGrid->GetSpacing()/(2.0*mReferenceLength),
-                                         double(mpRegularGrid->GetExtents()[1])*mpRegularGrid->GetSpacing()/(2.0*mReferenceLength),
+        DimensionalChastePoint<DIM> origin(double(dimensions[0])*spacing/(2.0*mReferenceLength),
+                                         double(dimensions[1])*spacing/(2.0*mReferenceLength),
                                          0.0, mReferenceLength);
         boost::shared_ptr<Part<DIM> > p_sub_domain = Part<DIM>::Create();
         boost::shared_ptr<Polygon<DIM> > circle = p_sub_domain->AddCircle(mTumourRadius, origin);
@@ -219,17 +220,17 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
     }
     else
     {
-        double dimensionless_spacing = mpRegularGrid->GetSpacing()/mReferenceLength;
-        c_vector<double, DIM> dimensionless_origin = mpRegularGrid->GetOrigin().GetLocation(mReferenceLength);
+        double dimensionless_spacing = spacing/mReferenceLength;
+        c_vector<double, DIM> dimensionless_origin = mpRegularGridCalculator->GetGrid()->GetOrigin().GetLocation(mReferenceLength);
 
-        DimensionalChastePoint<DIM> origin(double(mpRegularGrid->GetExtents()[0])*dimensionless_spacing/2.0 + dimensionless_origin[0],
-                                         double(mpRegularGrid->GetExtents()[1])*dimensionless_spacing/2.0 + dimensionless_origin[0],
-                                         double(mpRegularGrid->GetExtents()[2])*dimensionless_spacing/2.0 + dimensionless_origin[0],
+        DimensionalChastePoint<DIM> origin(double(dimensions[0])*dimensionless_spacing/2.0 + dimensionless_origin[0],
+                                         double(dimensions[1])*dimensionless_spacing/2.0 + dimensionless_origin[0],
+                                         double(dimensions[2])*dimensionless_spacing/2.0 + dimensionless_origin[0],
 										 mReferenceLength);
 
-        for(unsigned idx=0; idx<mpRegularGrid->GetNumberOfPoints(); idx++)
+        for(unsigned idx=0; idx<mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(); idx++)
         {
-            units::quantity<unit::length> distance = mpRegularGrid->GetLocationOf1dIndex(idx).GetDistance(origin);
+            units::quantity<unit::length> distance = mpRegularGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(idx).GetDistance(origin);
             if(distance<=mTumourRadius)
             {
                 p_cell_population->GetCellUsingLocationIndex(idx)->SetMutationState(mpCancerCellMutationState);
@@ -259,11 +260,11 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
     // Specify an update rule
     MAKE_PTR(Owen11CaUpdateRule<DIM>, p_update_rule);
     p_update_rule->SetVesselNetwork(mpVesselNetwork);
-    p_update_rule->SetRegularGrid(mpRegularGrid);
+    p_update_rule->SetRegularGridCalculator(mpRegularGridCalculator);
 
     MAKE_PTR(Owen11CaBasedDivisionRule<DIM>, p_division_rule);
     p_division_rule->SetVesselNetwork(mpVesselNetwork);
-    p_division_rule->SetRegularGrid(mpRegularGrid);
+    p_division_rule->SetRegularGridCalculator(mpRegularGridCalculator);
 
     p_cell_population->RemoveAllUpdateRules();
     p_cell_population->AddUpdateRule(p_update_rule);

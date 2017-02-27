@@ -40,7 +40,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "Part.hpp"
 #include "SmartPointers.hpp"
 #include "VesselNetwork.hpp"
-#include "RegularGrid.hpp"
+#include "RegularGridCalculator.hpp"
 #include "UnitCollection.hpp"
 #include "AbstractCellMutationState.hpp"
 #include "CaBasedCellPopulation.hpp"
@@ -61,7 +61,7 @@ class Owen11CellPopulationGenerator
     /**
      * A grid for the cells
      */
-    boost::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
+    boost::shared_ptr<RegularGridCalculator<DIM> > mpRegularGridCalculator;
 
     /**
      * A potts mesh generator. We store this because we can't let it go out of scope in the
@@ -132,7 +132,7 @@ public:
      *
      * @param pGrid the regular grid
      */
-    void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
+    void SetRegularGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pGrid);
 
     /**
      * Set the reference length

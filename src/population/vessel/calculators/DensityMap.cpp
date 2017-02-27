@@ -136,27 +136,27 @@ void DensityMap<DIM>::Solve()
         this->Setup();
     }
 
-    std::vector<unsigned> local_extents = this->mpRegularGrid->GetLocalIndexExtents();
-    std::vector<double> vessel_solution(this->mpRegularGrid->GetNumberOfLocalPoints(), 0.0);
+    c_vector<unsigned, 6> extents = this->mpRegularGridCalculator->GetGrid()->GetExtents();
+    std::vector<double> vessel_solution(this->mpRegularGridCalculator->GetGrid()->GetNumberOfLocalPoints(), 0.0);
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
+    units::quantity<unit::length> length_Scale = this->mpRegularGridCalculator->GetGrid()->GetReferenceLengthScale();
 
     if (this->mpNetwork)
     {
-        for (unsigned i = local_extents[4]; i < local_extents[5] + 1; i++) // Z
+        for (unsigned i = extents[4]; i < extents[5] + 1; i++) // Z
         {
-            for (unsigned j = local_extents[2]; j < local_extents[3] + 1; j++) // Y
+            for (unsigned j = extents[2]; j < extents[3] + 1; j++) // Y
             {
-                for (unsigned k = local_extents[0]; k < local_extents[1] + 1; k++) // X
+                for (unsigned k = extents[0]; k < extents[1] + 1; k++) // X
                 {
-                    unsigned grid_index = this->mpRegularGrid->GetLocal1dGridIndex(k, j, i);
-                    c_vector<double, 6> bbox = this->mpRegularGrid->GetPointBoundingBox(k ,j, i, true);
+                    unsigned grid_index = this->mpRegularGridCalculator->GetGrid()->GetLocal1dGridIndex(k, j, i);
+                    c_vector<double, 6> bbox = this->mpRegularGridCalculator->GetGrid()->GetPointBoundingBox(k ,j, i, true);
 
                     for (unsigned idx = 0; idx <  segments.size(); idx++)
                     {
                         vessel_solution[grid_index] += LengthOfLineInBox(segments[idx]->GetNode(0)->rGetLocation(),
                                                                          segments[idx]->GetNode(1)->rGetLocation(),
-                                                                         bbox,
-                                                                         this->mpRegularGrid->GetReferenceLengthScale())/this->mpRegularGrid->GetReferenceLengthScale();
+                                                                         bbox,length_Scale)/length_Scale;
                     }
                     double box_volume = (bbox[1]-bbox[0])*(bbox[3]-bbox[2]);
                     if(DIM==3)

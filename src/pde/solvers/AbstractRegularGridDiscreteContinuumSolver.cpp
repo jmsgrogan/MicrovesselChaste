@@ -125,7 +125,7 @@ std::vector<units::quantity<unit::concentration> > AbstractRegularGridDiscreteCo
     }
     else
     {
-        return this->GetConcentrations(pGrid->GetLocations());
+        return this->GetConcentrations(pGrid->GetGlobalLocations());
     }
 }
 
@@ -191,7 +191,7 @@ std::vector<double> AbstractRegularGridDiscreteContinuumSolver<DIM>::GetSolution
     }
     else
     {
-        return this->GetSolution(pGrid->GetLocations());
+        return this->GetSolution(pGrid->GetGlobalLocations());
     }
 }
 
@@ -334,7 +334,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateCellData()
         EXCEPTION("The DiscreteContinuum solver needs a cell population for this operation.");
     }
 
-    this->mpRegularGrid->SetCellPopulation(*(this->mpCellPopulation), this->mCellPopulationReferenceLength);
+    this->mpRegularGridCalculator->SetCellPopulation(*(this->mpCellPopulation), this->mCellPopulationReferenceLength);
     std::vector<std::vector<CellPtr> > point_cell_map = this->mpRegularGridCalculator->GetPointCellMap();
     for(unsigned idx=0; idx<point_cell_map.size(); idx++)
     {
@@ -382,8 +382,8 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Write()
 
     std::vector<unsigned> whole_extents(6, 0);
     whole_extents[1] = this->mpRegularGridCalculator->GetGrid()->GetDimensions()[0]-1;
-    whole_extents[3] = this->mpRegularGrid->GetGrid()->GetExtents()[1]-1;
-    whole_extents[5] = this->mpRegularGrid->GetGrid()->GetExtents()[2]-1;
+    whole_extents[3] = this->mpRegularGridCalculator->GetGrid()->GetDimensions()[1]-1;
+    whole_extents[5] = this->mpRegularGridCalculator->GetGrid()->GetDimensions()[2]-1;
     writer.SetWholeExtents(whole_extents);
     writer.SetImage(this->mpVtkSolution);
     writer.Write();

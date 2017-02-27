@@ -103,16 +103,16 @@ std::vector<units::quantity<unit::rate> > CellBasedDiscreteSource<DIM>::GetLinea
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration_flow_rate> > CellBasedDiscreteSource<DIM>::GetConstantInURegularGridValues()
 {
-    if(!this->mpRegularGrid)
+    if(!this->mpRegularGridCalculator)
     {
         EXCEPTION("A regular grid is required for this type of source");
     }
 
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpRegularGrid->GetNumberOfPoints(), 0.0*unit::mole_per_metre_cubed_per_second);
-    units::quantity<unit::length> grid_spacing = this->mpRegularGrid->GetSpacing();
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(), 0.0*unit::mole_per_metre_cubed_per_second);
+    units::quantity<unit::length> grid_spacing = this->mpRegularGridCalculator->GetGrid()->GetSpacing();
     units::quantity<unit::volume> grid_volume = units::pow<3>(grid_spacing);
 
-    std::vector<std::vector<CellPtr> > point_cell_map = this->mpRegularGrid->GetPointCellMap();
+    std::vector<std::vector<CellPtr> > point_cell_map = this->mpRegularGridCalculator->GetPointCellMap();
     for(unsigned idx=0; idx<point_cell_map.size(); idx++)
     {
         values[idx] += mCellConstantInUValue * double(point_cell_map[idx].size())/grid_volume;
@@ -124,13 +124,13 @@ std::vector<units::quantity<unit::concentration_flow_rate> > CellBasedDiscreteSo
 template<unsigned DIM>
 std::vector<units::quantity<unit::rate> > CellBasedDiscreteSource<DIM>::GetLinearInURegularGridValues()
 {
-    if(!this->mpRegularGrid)
+    if(!this->mpRegularGridCalculator)
     {
         EXCEPTION("A regular grid is required for this type of source");
     }
 
-    std::vector<units::quantity<unit::rate> > values(this->mpRegularGrid->GetNumberOfPoints(), 0.0*unit::per_second);
-    std::vector<std::vector<CellPtr> > point_cell_map = this->mpRegularGrid->GetPointCellMap();
+    std::vector<units::quantity<unit::rate> > values(this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(), 0.0*unit::per_second);
+    std::vector<std::vector<CellPtr> > point_cell_map = this->mpRegularGridCalculator->GetPointCellMap();
     for(unsigned idx=0; idx<point_cell_map.size(); idx++)
     {
         values[idx] += mCellLinearInUValue * double(point_cell_map[idx].size());

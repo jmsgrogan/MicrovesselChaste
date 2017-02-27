@@ -42,7 +42,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "CaBasedCellPopulation.hpp"
 #include "VesselNetwork.hpp"
 #include "UnitCollection.hpp"
-#include "RegularGrid.hpp"
+#include "RegularGridCalculator.hpp"
 
 template<unsigned SPACE_DIM> class CaBasedCellPopulation;
 template<unsigned SPACE_DIM> class AbstractCaBasedDivisionRule;
@@ -64,7 +64,7 @@ private:
     /**
      * Regular Grid
      */
-    boost::shared_ptr<RegularGrid<SPACE_DIM> > mpRegularGrid;
+    boost::shared_ptr<RegularGridCalculator<SPACE_DIM> > mpRegularGridCalculator;
 
     /**
      * Reference length scale
@@ -123,7 +123,7 @@ public:
      *
      * @param mpRegularGrid The regular grid
      */
-    void SetRegularGrid(boost::shared_ptr<RegularGrid<SPACE_DIM> > mpRegularGrid);
+    void SetRegularGridCalculator(boost::shared_ptr<RegularGridCalculator<SPACE_DIM> > mpRegularGridCalculator);
 
     /**
      * Set the reference length scale

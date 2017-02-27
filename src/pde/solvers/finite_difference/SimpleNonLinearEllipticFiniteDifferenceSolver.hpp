@@ -33,85 +33,71 @@ Copyright (c) 2005-2017, University of Oxford.
 
  */
 
-#ifndef ABSTRACTFINITEDIFFERENCESOLVERBASE_HPP_
-#define ABSTRACTFINITEDIFFERENCESOLVERBASE_HPP_
+#ifndef SIMPLENONLINEARELLIPTICFINITEDIFFERENCESOLVER_HPP_
+#define SIMPLENONLINEARELLIPTICFINITEDIFFERENCESOLVER_HPP_
 
 #include "SmartPointers.hpp"
-#include "AbstractRegularGridDiscreteContinuumSolver.hpp"
+#include "AbstractFiniteDifferenceSolverBase.hpp"
 #include "UnitCollection.hpp"
 #include "PetscTools.hpp"
-#include "LinearSystem.hpp"
 
 /**
  * Base class for finite difference solvers.
  */
 template<unsigned DIM>
-class AbstractFiniteDifferenceSolverBase : public AbstractRegularGridDiscreteContinuumSolver<DIM>
+class SimpleNonLinearEllipticFiniteDifferenceSolver : public AbstractFiniteDifferenceSolverBase<DIM>
 {
-    /**
-     * Solver specific copy of boundary condition information, used for efficiency. It is a
-     * vector of pairs of whether to apply-concentration values ordered by grid index.
-     */
-    boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > mpBoundaryConditions;
-
-    /**
-     * Do the boundary conditions need to be udpated each solve.
-     */
-    bool mUpdateBoundaryConditionsEachSolve;
-
-    /**
-     * Have boundary conditions been set.
-     */
-    bool mBoundaryConditionsSet;
-
-    /**
-     * The system to be solved.
-     */
-    boost::shared_ptr<LinearSystem> mpLinearSystem;
 
 public:
 
     /**
      * Constructor
      */
-    AbstractFiniteDifferenceSolverBase();
+    SimpleNonLinearEllipticFiniteDifferenceSolver();
 
     /**
      * Destructor
      */
-    virtual ~AbstractFiniteDifferenceSolverBase();
+    virtual ~SimpleNonLinearEllipticFiniteDifferenceSolver();
 
     /**
-     * @return the linear system
+     * Assemble the system matrix
      */
-    virtual boost::shared_ptr<LinearSystem> GetLinearSystem();
+    virtual void AssembleMatrix();
 
     /**
-     * Get the boundary conditions in the finite difference representation
-     * @return pointer to the vector of boundary conditions, which is pairs of whether to apply-concentration values ordered by grid index.
+     * Assemble the system vector
      */
-    boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > GetRGBoundaryConditions();
+    virtual void AssembleVector();
+
+    /**
+     * Compute the residual vector given the current solution guess.
+     *
+     * @param currentGuess The solution guess for the current nonlinear solve iteration.
+     * @param residualVector We fill this with the residual vector.
+     *
+     * NOTE: this method is called indirectly by the PETSc iterative
+     * solvers, so must be public.
+     */
+    void ComputeResidual(const Vec currentGuess, Vec residualVector);
+
+    /**
+     * Compute the Jacobian matrix given a current guess at the solution.
+     * Choose whether to use a numerical or analytical method based on a flag
+     * provided by the user (in Solve()).
+     *
+     * @param currentGuess The solution guess for the current iteration.
+     * @param pJacobian Pointer to object to fill with the Jacobian matrix.
+     *
+     * NOTE: this method is called indirectly by the PETSc iterative
+     * solvers, so must be public.
+     */
+    void ComputeJacobian(const Vec currentGuess, Mat* pJacobian);
 
     /**
      * Overridden solve method
      */
     virtual void Solve();
-
-    /**
-     * Overridden setup method
-     */
-    virtual void Setup();
-
-    /**
-     * Overridden update method
-     */
-    virtual void Update();
-
-    /**
-     * Whether to update the boundary conditions on each solve
-     * @param doUpdate update the boundary conditions on each solve
-     */
-    void UpdateBoundaryConditionsEachSolve(bool doUpdate);
 };
 
-#endif /* ABSTRACTFINITEDIFFERENCESOLVERBASE_HPP_ */
+#endif /* SIMPLENONLINEARELLIPTICFINITEDIFFERENCESOLVER_HPP_ */

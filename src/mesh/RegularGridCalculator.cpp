@@ -38,6 +38,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "Exception.hpp"
 #include "RegularGridCalculator.hpp"
 #include "BaseUnits.hpp"
+#include <vtkLine.h>
 
 template<unsigned DIM>
 RegularGridCalculator<DIM>::RegularGridCalculator() :
@@ -84,7 +85,7 @@ std::vector<std::vector<unsigned> > RegularGridCalculator<DIM>::GetPointPointMap
     }
 
     double scale_factor = mReferenceLength / mpRegularGrid->GetSpacing();
-    std::vector<std::vector<unsigned> > point_point_map(mpRegularGrid->GetNumberOfPoints());
+    std::vector<std::vector<unsigned> > point_point_map(mpRegularGrid->GetNumberOfGlobalPoints());
     for (unsigned idx = 0; idx < inputPoints.size(); idx++)
     {
         c_vector<double, DIM> offsets = (inputPoints[idx] - mpRegularGrid->GetOrigin()).GetLocation(mReferenceLength);
@@ -96,10 +97,10 @@ std::vector<std::vector<unsigned> > RegularGridCalculator<DIM>::GetPointPointMap
             z_index = round(offsets[2]*scale_factor);
         }
 
-        if (x_index <= mpRegularGrid->GetExtents()[0] && y_index <= mpRegularGrid->GetExtents()[1] && z_index <= mpRegularGrid->GetExtents()[2])
+        if (x_index <= mpRegularGrid->GetDimensions()[0] && y_index <= mpRegularGrid->GetDimensions()[1] && z_index <= mpRegularGrid->GetDimensions()[2])
         {
-            unsigned grid_index = x_index + y_index * mpRegularGrid->GetExtents()[0] +
-                    z_index * mpRegularGrid->GetExtents()[0] * mpRegularGrid->GetExtents()[1];
+            unsigned grid_index = x_index + y_index * mpRegularGrid->GetDimensions()[0] +
+                    z_index * mpRegularGrid->GetDimensions()[0] * mpRegularGrid->GetDimensions()[1];
             point_point_map[grid_index].push_back(idx);
         }
     }
@@ -126,7 +127,7 @@ const std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >& RegularGr
 
     // Loop over all nodes and associate cells with the points
     mPointNodeMap.clear();
-    for (unsigned idx = 0; idx < mpRegularGrid->GetNumberOfPoints(); idx++)
+    for (unsigned idx = 0; idx < mpRegularGrid->GetNumberOfGlobalPoints(); idx++)
     {
         std::vector<boost::shared_ptr<VesselNode<DIM> > > empty_node_pointers;
         mPointNodeMap.push_back(empty_node_pointers);
@@ -146,10 +147,10 @@ const std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >& RegularGr
             z_index = round(offsets[2]*scale_factor);
         }
 
-        if (x_index <= mpRegularGrid->GetExtents()[0] && y_index <= mpRegularGrid->GetExtents()[1] && z_index <= mpRegularGrid->GetExtents()[2])
+        if (x_index <= mpRegularGrid->GetDimensions()[0] && y_index <= mpRegularGrid->GetDimensions()[1] && z_index <= mpRegularGrid->GetDimensions()[2])
         {
-            unsigned grid_index = x_index + y_index * mpRegularGrid->GetExtents()[0] +
-                    z_index * mpRegularGrid->GetExtents()[0] * mpRegularGrid->GetExtents()[1];
+            unsigned grid_index = x_index + y_index * mpRegularGrid->GetDimensions()[0] +
+                    z_index * mpRegularGrid->GetDimensions()[0] * mpRegularGrid->GetDimensions()[1];
             if(grid_index<mPointNodeMap.size())
             {
                 mPointNodeMap[grid_index].push_back(nodes[idx]);
@@ -182,7 +183,7 @@ const std::vector<std::vector<CellPtr> >& RegularGridCalculator<DIM>::GetPointCe
     double cell_scale_factor = mCellPopulationReferenceLength / mReferenceLength;
 
     mPointCellMap.clear();
-    for (unsigned idx = 0; idx < mpRegularGrid->GetNumberOfPoints(); idx++)
+    for (unsigned idx = 0; idx < mpRegularGrid->GetNumberOfGlobalPoints(); idx++)
     {
         std::vector<CellPtr> empty_cell_pointers;
         mPointCellMap.push_back(empty_cell_pointers);
@@ -201,10 +202,10 @@ const std::vector<std::vector<CellPtr> >& RegularGridCalculator<DIM>::GetPointCe
             z_index = round(offsets[2]*scale_factor);
         }
 
-        if (x_index <= mpRegularGrid->GetExtents()[0] && y_index <= mpRegularGrid->GetExtents()[1] && z_index <= mpRegularGrid->GetExtents()[2])
+        if (x_index <= mpRegularGrid->GetDimensions()[0] && y_index <= mpRegularGrid->GetDimensions()[1] && z_index <= mpRegularGrid->GetDimensions()[2])
         {
-            unsigned grid_index = x_index + y_index * mpRegularGrid->GetExtents()[0] +
-                    z_index * mpRegularGrid->GetExtents()[0] * mpRegularGrid->GetExtents()[1];
+            unsigned grid_index = x_index + y_index * mpRegularGrid->GetDimensions()[0] +
+                    z_index * mpRegularGrid->GetDimensions()[0] * mpRegularGrid->GetDimensions()[1];
             if(grid_index<mPointCellMap.size())
             {
                 mPointCellMap[grid_index].push_back(*cell_iter);
@@ -251,14 +252,14 @@ std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > RegularGridCa
 
     // Loop over all points and segments and associate segments with the points
     mPointSegmentMap.clear();
-    for (unsigned idx = 0; idx < mpRegularGrid->GetNumberOfPoints(); idx++)
+    for (unsigned idx = 0; idx < mpRegularGrid->GetNumberOfGlobalPoints(); idx++)
     {
         std::vector<boost::shared_ptr<VesselSegment<DIM> > > empty_seg_pointers;
         mPointSegmentMap.push_back(empty_seg_pointers);
     }
 
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = mpNetwork->GetVesselSegments();
-    unsigned num_points = mpRegularGrid->GetNumberOfPoints();
+    unsigned num_points = mpRegularGrid->GetNumberOfGlobalPoints();
     units::quantity<unit::length> cut_off_length = sqrt(1.0 / 2.0) * mpRegularGrid->GetSpacing();
     for (unsigned jdx = 0; jdx < segments.size(); jdx++)
     {
@@ -294,7 +295,7 @@ std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > RegularGridCa
                 double parametric_distance = 0.0;
                 double closest_point[3];
                 double grid_point[3];
-                c_vector<double,DIM> grid_location = mpRegularGrid->GetLocationOf1dIndex(idx).GetLocation(mReferenceLength);
+                c_vector<double,DIM> grid_location = mpRegularGrid->GetLocationOfGlobal1dIndex(idx).GetLocation(mReferenceLength);
                 grid_point[0] = grid_location[0];
                 grid_point[1] = grid_location[1];
                 if(DIM==3)
@@ -317,7 +318,7 @@ std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > RegularGridCa
             }
             else
             {
-                if (segments[jdx]->GetDistance(mpRegularGrid->GetLocationOf1dIndex(idx))< (segments[jdx]->GetRadius() + cut_off_length))
+                if (segments[jdx]->GetDistance(mpRegularGrid->GetLocationOfGlobal1dIndex(idx))< (segments[jdx]->GetRadius() + cut_off_length))
                 {
                     mPointSegmentMap[idx].push_back(segments[jdx]);
                 }

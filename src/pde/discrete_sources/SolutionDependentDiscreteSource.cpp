@@ -104,12 +104,13 @@ std::vector<units::quantity<unit::rate> > SolutionDependentDiscreteSource<DIM>::
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration_flow_rate> > SolutionDependentDiscreteSource<DIM>::GetConstantInURegularGridValues()
 {
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpRegularGrid->GetNumberOfPoints(), 0.0*unit::mole_per_metre_cubed_per_second);
-    if(mpSolution.size() != this->mpRegularGrid->GetNumberOfPoints())
+    unsigned num_points = this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints();
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(num_points, 0.0*unit::mole_per_metre_cubed_per_second);
+    if(mpSolution.size() != num_points)
     {
         EXCEPTION("A solution sampled on the grid is required for this type of source");
     }
-    for(unsigned idx=0; idx<this->mpRegularGrid->GetNumberOfPoints(); idx++)
+    for(unsigned idx=0; idx<num_points; idx++)
     {
         values[idx] = mpSolution[idx]*mConstantInUSinkRatePerSolutionQuantity;
     }
@@ -119,12 +120,13 @@ std::vector<units::quantity<unit::concentration_flow_rate> > SolutionDependentDi
 template<unsigned DIM>
 std::vector<units::quantity<unit::rate> > SolutionDependentDiscreteSource<DIM>::GetLinearInURegularGridValues()
 {
-    std::vector<units::quantity<unit::rate> > values(this->mpRegularGrid->GetNumberOfPoints(), 0.0*unit::per_second);
-    if(mpSolution.size() != this->mpRegularGrid->GetNumberOfPoints())
+    unsigned num_points = this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints();
+    std::vector<units::quantity<unit::rate> > values(num_points, 0.0*unit::per_second);
+    if(mpSolution.size() != num_points)
     {
         EXCEPTION("A solution sampled on the grid is required for this type of source");
     }
-    for(unsigned idx=0; idx<this->mpRegularGrid->GetNumberOfPoints(); idx++)
+    for(unsigned idx=0; idx<num_points; idx++)
     {
         values[idx] = mpSolution[idx]*mLinearInUSinkRatePerSolutionQuantity;
     }

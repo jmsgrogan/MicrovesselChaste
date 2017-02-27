@@ -33,49 +33,77 @@ Copyright (c) 2005-2017, University of Oxford.
 
  */
 
-#ifndef FINITEDIFFERENCESOLVER_HPP_
-#define FINITEDIFFERENCESOLVER_HPP_
+#ifndef SIMPLELINEARELLIPTICFINITEDIFFERENCESOLVER_HPP_
+#define SIMPLELINEARELLIPTICFINITEDIFFERENCESOLVER_HPP_
 
 #include "SmartPointers.hpp"
-#include "AbstractRegularGridDiscreteContinuumSolver.hpp"
 #include "AbstractFiniteDifferenceSolverBase.hpp"
 #include "UnitCollection.hpp"
+#include "PetscTools.hpp"
+#include "LinearSystem.hpp"
 
 /**
- * Finite difference solver for concentration based reaction diffusion PDEs. It can include
- * discrete representations of cells and vessels.
+ * Base class for finite difference solvers.
  */
 template<unsigned DIM>
-class FiniteDifferenceSolver : public AbstractRegularGridDiscreteContinuumSolver<DIM>
+class SimpleLinearEllipticFiniteDifferenceSolver : public AbstractFiniteDifferenceSolverBase<DIM>
 {
     /**
-     * The actual solver to use
+     * The system to be solved.
      */
-    boost::shared_ptr<AbstractFiniteDifferenceSolverBase<DIM> > mpSolver;
+    boost::shared_ptr<LinearSystem> mpLinearSystem;
+
+    /**
+     * The initial matrix without discrete terms
+     */
+    Mat mpInitialLhs;
+
+    /**
+     * The initial rhs without discrete terms
+     */
+    Vec mpInitialRhs;
 
 public:
 
     /**
      * Constructor
      */
-    FiniteDifferenceSolver();
-
-    /**
-     * Factory constructor method
-     * @return a shared pointer to a new solver
-     */
-    static boost::shared_ptr<FiniteDifferenceSolver<DIM> > Create();
+    SimpleLinearEllipticFiniteDifferenceSolver();
 
     /**
      * Destructor
      */
-    virtual ~FiniteDifferenceSolver();
+    virtual ~SimpleLinearEllipticFiniteDifferenceSolver();
 
     /**
-     * Set the underlying solver
-     * @param pSolver the underlying solver
+     * Over-ridden method to add discrete terms
      */
-    void SetSolver(boost::shared_ptr<AbstractFiniteDifferenceSolverBase<DIM> > pSolver);
+    virtual void AddDiscreteTermsToMatrix();
+
+    /**
+     * Over-ridden method to add discrete terms
+     */
+    virtual void AddDiscreteTermsToRhs();
+
+    /**
+     * Assemble the system matrix
+     */
+    virtual void AssembleMatrix();
+
+    /**
+     * Assemble the system rhs
+     */
+    virtual void AssembleVector();
+
+    /**
+     * @return the linear system
+     */
+    virtual boost::shared_ptr<LinearSystem> GetLinearSystem();
+
+    /**
+     * Overridden setup method
+     */
+    virtual void Setup();
 
     /**
      * Overridden solve method
@@ -83,9 +111,9 @@ public:
     virtual void Solve();
 
     /**
-     * Overridden setup method
+     * Overridden update method
      */
-    void Setup();
+    virtual void Update();
 };
 
-#endif /* FINITEDIFFERENCESOLVER_HPP_ */
+#endif /* SIMPLELINEARELLIPTICFINITEDIFFERENCESOLVER_HPP_ */

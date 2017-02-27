@@ -75,20 +75,20 @@ std::vector<units::quantity<unit::rate> > CellStateDependentDiscreteSource<DIM>:
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration_flow_rate> > CellStateDependentDiscreteSource<DIM>::GetConstantInURegularGridValues()
 {
-    if(!this->mpRegularGrid)
+    if(!this->mpRegularGridCalculator)
     {
         EXCEPTION("A regular grid is required for this type of source");
     }
 
 //    units::quantity<unit::length> grid_spacing = this->mpRegularGrid->GetSpacing();
 //    units::quantity<unit::volume> grid_volume = units::pow<3>(grid_spacing);
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpRegularGrid->GetNumberOfPoints(), 0.0*unit::mole_per_metre_cubed_per_second);
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(), 0.0*unit::mole_per_metre_cubed_per_second);
 
     boost::shared_ptr<ApoptoticCellProperty> apoptotic_property(new ApoptoticCellProperty);
     unsigned apoptotic_label = apoptotic_property->GetColour();
 
     // Loop through all points
-    std::vector<std::vector<CellPtr> > point_cell_map = this->mpRegularGrid->GetPointCellMap();
+    std::vector<std::vector<CellPtr> > point_cell_map = this->mpRegularGridCalculator->GetPointCellMap();
     for(unsigned idx=0; idx<point_cell_map.size(); idx++)
     {
         for(unsigned jdx=0; jdx<point_cell_map[idx].size(); jdx++)
@@ -159,7 +159,7 @@ template<unsigned DIM>
 std::vector<units::quantity<unit::rate> > CellStateDependentDiscreteSource<DIM>::GetLinearInURegularGridValues()
 {
     // This map is only for constant values
-    return std::vector<units::quantity<unit::rate> >(this->mpRegularGrid->GetNumberOfPoints(), 0.0*unit::per_second);
+    return std::vector<units::quantity<unit::rate> >(this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(), 0.0*unit::per_second);
 }
 
 template<unsigned DIM>

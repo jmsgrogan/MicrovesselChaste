@@ -44,7 +44,7 @@ Owen11CaUpdateRule<DIM>::Owen11CaUpdateRule()
     : AbstractCaUpdateRule<DIM>(),
       mDiffusionParameter(Owen11Parameters::mpCellMotilityCancer->GetValue("Owen11CaUpdateRule")),
       mpVesselNetwork(),
-      mpRegularGrid(),
+      mpRegularGridCalculator(),
       mReferenceLengthScale(BaseUnits::Instance()->GetReferenceLengthScale()),
       mCancerCellCarryingCapacity(2)
 
@@ -71,11 +71,11 @@ double Owen11CaUpdateRule<DIM>::EvaluateProbability(unsigned currentNodeIndex,
 
        if(mpVesselNetwork and DIM>1)
        {
-           if(!mpRegularGrid)
+           if(!mpRegularGridCalculator)
            {
                EXCEPTION("A regular grid is required for determining vessel based lattice occupancy");
            }
-           if(mpRegularGrid->IsSegmentAtLatticeSite(targetNodeIndex, false))
+           if(mpRegularGridCalculator->IsSegmentAtLatticeSite(targetNodeIndex, false))
            {
                num_cells_at_site = 1;
            }
@@ -133,9 +133,9 @@ void Owen11CaUpdateRule<DIM>::SetReferenceLengthScale(units::quantity<unit::leng
 }
 
 template<unsigned DIM>
-void Owen11CaUpdateRule<DIM>::SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pRegularGrid)
+void Owen11CaUpdateRule<DIM>::SetRegularGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pRegularGrid)
 {
-    mpRegularGrid = pRegularGrid;
+    mpRegularGridCalculator = pRegularGrid;
 }
 
 template<unsigned DIM>

@@ -43,7 +43,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 template<unsigned DIM>
 DistanceMap<DIM>::DistanceMap()
-
     :   AbstractRegularGridDiscreteContinuumSolver<DIM>(),
         mUseSegmentRadii(false)
 {
@@ -78,22 +77,22 @@ void DistanceMap<DIM>::Solve()
         this->Setup();
     }
 
-    std::vector<unsigned> local_extents = this->mpRegularGrid->GetLocalIndexExtents();
-    std::vector<double> distances(this->mpRegularGrid->GetNumberOfLocalPoints(), 0.0);
+    c_vector<unsigned, 6> extents = this->mpRegularGridCalculator->GetGrid()->GetExtents();
+    std::vector<double> distances(this->mpRegularGridCalculator->GetGrid()->GetNumberOfLocalPoints(), 0.0);
 
     if (this->mpNetwork)
     {
         std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments;
         segments = this->mpNetwork->GetVesselSegments();
 
-        for (unsigned i = local_extents[4]; i < local_extents[5] + 1; i++) // Z
+        for (unsigned i = extents[4]; i < extents[5] + 1; i++) // Z
         {
-            for (unsigned j = local_extents[2]; j < local_extents[3] + 1; j++) // Y
+            for (unsigned j = extents[2]; j < extents[3] + 1; j++) // Y
             {
-                for (unsigned k = local_extents[0]; k < local_extents[1] + 1; k++) // X
+                for (unsigned k = extents[0]; k < extents[1] + 1; k++) // X
                 {
-                    unsigned grid_index = this->mpRegularGrid->GetLocal1dGridIndex(k, j, i);
-                    DimensionalChastePoint<DIM> location = this->mpRegularGrid->GetLocation(k ,j, i);
+                    unsigned grid_index = this->mpRegularGridCalculator->GetGrid()->GetLocal1dGridIndex(k, j, i);
+                    DimensionalChastePoint<DIM> location = this->mpRegularGridCalculator->GetGrid()->GetLocation(k ,j, i);
                     units::quantity<unit::length> min_distance = DBL_MAX * unit::metres;
                     for (unsigned idx = 0; idx <  segments.size(); idx++)
                     {
@@ -107,7 +106,7 @@ void DistanceMap<DIM>::Solve()
                             min_distance = seg_dist;
                         }
                     }
-                    distances[grid_index] = min_distance/this->mpRegularGrid->GetReferenceLengthScale();
+                    distances[grid_index] = min_distance/this->mpRegularGridCalculator->GetGrid()->GetReferenceLengthScale();
                 }
             }
         }

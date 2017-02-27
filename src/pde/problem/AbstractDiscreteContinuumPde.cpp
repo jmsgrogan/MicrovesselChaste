@@ -43,7 +43,7 @@ AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::AbstractDiscreteContinuumP
             mConstantInUTerm(0.0 * unit::mole_per_metre_cubed_per_second),
             mLinearInUTerm(0.0 * unit::per_second),
             mDiscreteSources(),
-            mpRegularGrid(),
+            mpRegularGridCalculator(),
             mpMesh(),
             mUseRegularGrid(true),
             mDiscreteConstantSourceStrengths(),
@@ -78,6 +78,18 @@ std::vector<boost::shared_ptr<DiscreteSource<SPACE_DIM> > > AbstractDiscreteCont
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+units::quantity<unit::concentration_flow_rate> AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiscreteConstantInUSourceTerm(unsigned gridIndex)
+{
+    return 0.0*unit::mole_per_metre_cubed_per_second;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+units::quantity<unit::rate> AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiscreteLinearInUCoeffInSourceTerm(unsigned gridIndex)
+{
+    return 0.0 * unit::per_second;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetContinuumConstantInUTerm(units::quantity<unit::concentration_flow_rate> constantInUTerm)
 {
     mConstantInUTerm = constantInUTerm;
@@ -96,9 +108,9 @@ void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetIsotropicDiffusion
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetRegularGrid(boost::shared_ptr<RegularGrid<SPACE_DIM> > pRegularGrid)
+void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetRegularGridCalculator(boost::shared_ptr<RegularGridCalculator<SPACE_DIM> > pRegularGrid)
 {
-    mpRegularGrid = pRegularGrid;
+    mpRegularGridCalculator = pRegularGrid;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -124,16 +136,16 @@ void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSourceS
 {
     if(mUseRegularGrid)
     {
-        if(!mpRegularGrid)
+        if(!mpRegularGridCalculator)
         {
             EXCEPTION("A grid has not been set for the determination of source strengths.");
         }
-        mDiscreteConstantSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(mpRegularGrid->GetNumberOfPoints(), 0.0*unit::mole_per_metre_cubed_per_second);
-        mDiscreteLinearSourceStrengths = std::vector<units::quantity<unit::rate> >(mpRegularGrid->GetNumberOfPoints(), 0.0*unit::per_second);
+        mDiscreteConstantSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(), 0.0*unit::mole_per_metre_cubed_per_second);
+        mDiscreteLinearSourceStrengths = std::vector<units::quantity<unit::rate> >(mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(), 0.0*unit::per_second);
 
         for(unsigned idx=0; idx<mDiscreteSources.size(); idx++)
         {
-            mDiscreteSources[idx]->SetRegularGrid(mpRegularGrid);
+            mDiscreteSources[idx]->SetRegularGridCalculator(mpRegularGridCalculator);
             std::vector<units::quantity<unit::rate> > result = mDiscreteSources[idx]->GetLinearInURegularGridValues();
             std::transform(mDiscreteLinearSourceStrengths.begin( ), mDiscreteLinearSourceStrengths.end( ),
                            result.begin( ), mDiscreteLinearSourceStrengths.begin( ),std::plus<units::quantity<unit::rate> >( ));

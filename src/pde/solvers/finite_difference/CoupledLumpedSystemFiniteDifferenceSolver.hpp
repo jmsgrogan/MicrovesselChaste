@@ -33,59 +33,72 @@ Copyright (c) 2005-2017, University of Oxford.
 
  */
 
-#ifndef FINITEDIFFERENCESOLVER_HPP_
-#define FINITEDIFFERENCESOLVER_HPP_
+#ifndef COUPLEDLUMPEDSYSTEMFINITEDIFFERENCESOLVER_HPP_
+#define COUPLEDLUMPEDSYSTEMFINITEDIFFERENCESOLVER_HPP_
 
 #include "SmartPointers.hpp"
-#include "AbstractRegularGridDiscreteContinuumSolver.hpp"
 #include "AbstractFiniteDifferenceSolverBase.hpp"
 #include "UnitCollection.hpp"
+#include "PetscTools.hpp"
+#include "SimpleParabolicFiniteDifferenceSolver.hpp"
 
 /**
- * Finite difference solver for concentration based reaction diffusion PDEs. It can include
- * discrete representations of cells and vessels.
+ * Base class for finite difference solvers.
  */
 template<unsigned DIM>
-class FiniteDifferenceSolver : public AbstractRegularGridDiscreteContinuumSolver<DIM>
+class CoupledLumpedSystemFiniteDifferenceSolver : public SimpleParabolicFiniteDifferenceSolver<DIM>
 {
-    /**
-     * The actual solver to use
-     */
-    boost::shared_ptr<AbstractFiniteDifferenceSolverBase<DIM> > mpSolver;
 
 public:
 
     /**
      * Constructor
      */
-    FiniteDifferenceSolver();
-
-    /**
-     * Factory constructor method
-     * @return a shared pointer to a new solver
-     */
-    static boost::shared_ptr<FiniteDifferenceSolver<DIM> > Create();
+    CoupledLumpedSystemFiniteDifferenceSolver();
 
     /**
      * Destructor
      */
-    virtual ~FiniteDifferenceSolver();
+    virtual ~CoupledLumpedSystemFiniteDifferenceSolver();
 
     /**
-     * Set the underlying solver
-     * @param pSolver the underlying solver
+     * Assemble the system matrix
      */
-    void SetSolver(boost::shared_ptr<AbstractFiniteDifferenceSolverBase<DIM> > pSolver);
+    virtual void AssembleMatrix();
+
+    /**
+     * Assemble the system vector
+     */
+    virtual void AssembleVector();
+
+    /**
+     * Compute the residual vector given the current solution guess.
+     *
+     * @param currentGuess The solution guess for the current nonlinear solve iteration.
+     * @param residualVector We fill this with the residual vector.
+     *
+     * NOTE: this method is called indirectly by the PETSc iterative
+     * solvers, so must be public.
+     */
+    void ComputeRHSFunction(const Vec currentGuess, Vec dUdt);
+
+    /**
+     * Compute the Jacobian matrix given a current guess at the solution.
+     * Choose whether to use a numerical or analytical method based on a flag
+     * provided by the user (in Solve()).
+     *
+     * @param currentGuess The solution guess for the current iteration.
+     * @param pJacobian Pointer to object to fill with the Jacobian matrix.
+     *
+     * NOTE: this method is called indirectly by the PETSc iterative
+     * solvers, so must be public.
+     */
+    void ComputeJacobian(const Vec currentGuess, Mat* pJacobian);
 
     /**
      * Overridden solve method
      */
     virtual void Solve();
-
-    /**
-     * Overridden setup method
-     */
-    void Setup();
 };
 
-#endif /* FINITEDIFFERENCESOLVER_HPP_ */
+#endif /* COUPLEDLUMPEDSYSTEMFINITEDIFFERENCESOLVER_HPP_ */

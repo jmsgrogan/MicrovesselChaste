@@ -33,8 +33,7 @@ Copyright (c) 2005-2017, University of Oxford.
 
  */
 
-#include <petscts.h>
-#include <petscdmda.h>
+#include <petscmat.h>
 #include "ReplicatableVector.hpp"
 #include "VesselSegment.hpp"
 #include "AbstractFiniteDifferenceSolverBase.hpp"
@@ -46,7 +45,9 @@ AbstractFiniteDifferenceSolverBase<DIM>::AbstractFiniteDifferenceSolverBase()
         mpBoundaryConditions(),
         mUpdateBoundaryConditionsEachSolve(true),
         mBoundaryConditionsSet(false),
-        mpLinearSystem()
+        mMatrixToAssemble(),
+        mVectorToAssemble(),
+        mCurrentSolution()
 {
 
 }
@@ -58,15 +59,39 @@ AbstractFiniteDifferenceSolverBase<DIM>::~AbstractFiniteDifferenceSolverBase()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<LinearSystem> AbstractFiniteDifferenceSolverBase<DIM>::GetLinearSystem()
+void AbstractFiniteDifferenceSolverBase<DIM>::AddDiscreteTermsToMatrix()
 {
-    return mpLinearSystem;
+
+}
+
+template<unsigned DIM>
+void AbstractFiniteDifferenceSolverBase<DIM>::AddDiscreteTermsToRhs()
+{
+
 }
 
 template<unsigned DIM>
 boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > AbstractFiniteDifferenceSolverBase<DIM>::GetRGBoundaryConditions()
 {
     return mpBoundaryConditions;
+}
+
+template<unsigned DIM>
+void AbstractFiniteDifferenceSolverBase<DIM>::SetMatrixToAssemble(Mat& rMatToAssemble)
+{
+    mMatrixToAssemble = rMatToAssemble;
+}
+
+template<unsigned DIM>
+void AbstractFiniteDifferenceSolverBase<DIM>::SetVectorToAssemble(Vec& rVecToAssemble)
+{
+    mVectorToAssemble = rVecToAssemble;
+}
+
+template<unsigned DIM>
+void AbstractFiniteDifferenceSolverBase<DIM>::SetCurrentSolution(const Vec& rCurrentSolution)
+{
+    mCurrentSolution = rCurrentSolution;
 }
 
 template<unsigned DIM>
@@ -96,7 +121,7 @@ void AbstractFiniteDifferenceSolverBase<DIM>::Setup()
 
     if(this->mpPde)
     {
-        this->mpPde->SetRegularGrid(this->mpRegularGridCalculator->GetGrid());
+        this->mpPde->SetRegularGridCalculator(this->mpRegularGridCalculator);
     }
     else
     {
@@ -117,13 +142,6 @@ void AbstractFiniteDifferenceSolverBase<DIM>::Setup()
 
     // Set up the vtk solution grid
     AbstractRegularGridDiscreteContinuumSolver<DIM>::Setup();
-
-    // Update the source strengths and boundary conditions;
-    Update();
-
-    // Set up the linear system
-
-    this->IsSetupForSolve = true;
 }
 
 template<unsigned DIM>

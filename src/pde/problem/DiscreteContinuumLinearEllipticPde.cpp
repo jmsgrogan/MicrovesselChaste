@@ -80,17 +80,23 @@ double DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeConsta
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::concentration_flow_rate> DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeConstantInUSourceTerm(unsigned gridIndex)
 {
+    return this->mConstantInUTerm;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+units::quantity<unit::concentration_flow_rate> DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiscreteConstantInUSourceTerm(unsigned gridIndex)
+{
     if(this->mDiscreteConstantSourceStrengths.size()>0)
     {
         if(gridIndex >= this->mDiscreteConstantSourceStrengths.size())
         {
             EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
         }
-        return this->mConstantInUTerm + this->mDiscreteConstantSourceStrengths[gridIndex];
+        return this->mDiscreteConstantSourceStrengths[gridIndex];
     }
     else
     {
-        return this->mConstantInUTerm;
+        return 0.0*unit::mole_per_metre_cubed_per_second;
     }
 }
 
@@ -123,17 +129,23 @@ double DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinear
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::rate> DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex)
 {
+    return this->mLinearInUTerm;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+units::quantity<unit::rate> DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiscreteLinearInUCoeffInSourceTerm(unsigned gridIndex)
+{
     if(this->mDiscreteLinearSourceStrengths.size()>0)
     {
         if(gridIndex >= this->mDiscreteLinearSourceStrengths.size())
         {
             EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
         }
-        return this->mLinearInUTerm + this->mDiscreteLinearSourceStrengths[gridIndex];
+        return this->mDiscreteLinearSourceStrengths[gridIndex];
     }
     else
     {
-        return this->mLinearInUTerm;
+        return 0.0 * unit::per_second;
     }
 }
 

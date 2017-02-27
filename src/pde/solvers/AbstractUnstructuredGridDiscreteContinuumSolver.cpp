@@ -165,7 +165,7 @@ std::vector<units::quantity<unit::concentration> > AbstractUnstructuredGridDiscr
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration> > AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetConcentrations(boost::shared_ptr<RegularGrid<DIM> > pGrid)
 {
-    return this->GetConcentrations(pGrid->GetLocations());
+    return this->GetConcentrations(pGrid->GetGlobalLocations());
 }
 
 template<unsigned DIM>
@@ -231,7 +231,7 @@ std::vector<double> AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetSol
 template<unsigned DIM>
 std::vector<double> AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetSolution(boost::shared_ptr<RegularGrid<DIM> > pGrid)
 {
-    return this->GetSolution(pGrid->GetLocations());
+    return this->GetSolution(pGrid->GetGlobalLocations());
 }
 
 template<unsigned DIM>

@@ -62,7 +62,6 @@ class DiscreteContinuumLinearEllipticPde : public AbstractLinearEllipticPde<ELEM
 public:
 
     using AbstractLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm;
-
     using AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm;
 
 protected:
@@ -106,6 +105,13 @@ public:
     units::quantity<unit::concentration_flow_rate> ComputeConstantInUSourceTerm(unsigned gridIndex=0);
 
     /**
+     * Overwritten method to return the constant in U contribution to the regular grid solvers
+     * @param gridIndex grid index
+     * @return source strength
+     */
+    units::quantity<unit::concentration_flow_rate> ComputeDiscreteConstantInUSourceTerm(unsigned gridIndex=0);
+
+    /**
      * Overwritten method to return the diffusion term to the Chaste FE solver
      * @return the diffusion matrix
      */
@@ -125,6 +131,13 @@ public:
      * @return source strength
      */
     units::quantity<unit::rate> ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex=0);
+
+    /**
+     * Overwritten method to return the linear in U contribution to the regular grid solvers
+     * @param gridIndex grid index
+     * @return source strength
+     */
+    units::quantity<unit::rate> ComputeDiscreteLinearInUCoeffInSourceTerm(unsigned gridIndex=0);
 
 };
 

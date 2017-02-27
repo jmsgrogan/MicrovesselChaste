@@ -42,7 +42,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UblasVectorInclude.hpp"
 #include "DiscreteSource.hpp"
 #include "GeometryTools.hpp"
-#include "RegularGrid.hpp"
+#include "RegularGridCalculator.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "UnitCollection.hpp"
 
@@ -81,7 +81,7 @@ protected:
     /**
      * The grid for solvers using regular grids
      */
-    boost::shared_ptr<RegularGrid<SPACE_DIM> > mpRegularGrid;
+    boost::shared_ptr<RegularGridCalculator<SPACE_DIM> > mpRegularGridCalculator;
 
     /**
      * The mesh for solvers using finite element meshes
@@ -136,6 +136,13 @@ public:
     virtual units::quantity<unit::concentration_flow_rate> ComputeConstantInUSourceTerm(unsigned gridIndex=0) = 0;
 
     /**
+     * Virtual method to return the constant in U contribution to the regular grid solvers
+     * @param gridIndex grid index
+     * @return source strength
+     */
+    virtual units::quantity<unit::concentration_flow_rate> ComputeDiscreteConstantInUSourceTerm(unsigned gridIndex=0);
+
+    /**
      * Return the diffusion constant for isotropic diffusion
      * @return the diffusion constant
      */
@@ -147,6 +154,13 @@ public:
      * @return source strength
      */
     virtual units::quantity<unit::rate> ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex=0) = 0;
+
+    /**
+     * Virtual method to return the linear in U contribution to the regular grid solvers
+     * @param gridIndex grid index
+     * @return source strength
+     */
+    virtual units::quantity<unit::rate> ComputeDiscreteLinearInUCoeffInSourceTerm(unsigned gridIndex=0);
 
     /**
      * Return the collection of discrete sources
@@ -176,7 +190,7 @@ public:
      * Set the regular grid
      * @param pRegularGrid the regular grid
      */
-    void SetRegularGrid(boost::shared_ptr<RegularGrid<SPACE_DIM> > pRegularGrid);
+    void SetRegularGridCalculator(boost::shared_ptr<RegularGridCalculator<SPACE_DIM> > pRegularGridCalculator);
 
     /**
      * Set the finite element mesh
