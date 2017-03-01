@@ -55,6 +55,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Owen2011MigrationRule.hpp"
 #include "FlowSolver.hpp"
 #include "UnitCollection.hpp"
+#include "GridCalculator.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
@@ -69,11 +70,14 @@ public:
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         double spacing = 100.0;
         p_grid->SetSpacing(spacing * 1.e-6*unit::metres);
-        std::vector<unsigned> extents(3, 1);
-        extents[0] = 7; // num x
-        extents[1] = 5; // num_y
-        extents[2] = 1; // num_z
-        p_grid->SetExtents(extents);
+        c_vector<double, 3> dimensions;
+        dimensions[0] = 7; // num x
+        dimensions[1] = 5; // num_y
+        dimensions[2] = 1; // num_z
+        p_grid->SetDimensions(dimensions);
+
+        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        p_grid_calc->SetGrid(p_grid);
 
         // Make a vessel
         boost::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 2.0*spacing);
@@ -82,11 +86,11 @@ public:
         boost::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(p_node1, p_node2);
         boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel);
-        p_grid->SetVesselNetwork(p_network);
+        p_grid_calc->SetVesselNetwork(p_network);
 
         // Set up the migration rule
         boost::shared_ptr<LatticeBasedMigrationRule<2> > p_migration_rule = LatticeBasedMigrationRule<2>::Create();
-        p_migration_rule->SetGrid(p_grid);
+        p_migration_rule->SetGridCalculator(p_grid_calc);
         p_migration_rule->SetMovementProbability(0.1);
         p_migration_rule->SetNetwork(p_network);
 
@@ -117,11 +121,14 @@ public:
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         double spacing = 100.0; //um
         p_grid->SetSpacing(spacing* 1.e-6*unit::metres);
-        std::vector<unsigned> extents(3, 1);
-        extents[0] = 7; // num x
-        extents[1] = 5; // num_y
-        extents[2] = 1; // num_z
-        p_grid->SetExtents(extents);
+        c_vector<double, 3> dimensions;
+        dimensions[0] = 7; // num x
+        dimensions[1] = 5; // num_y
+        dimensions[2] = 1; // num_z
+        p_grid->SetDimensions(dimensions);
+
+        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        p_grid_calc->SetGrid(p_grid);
 
         // Make a vessel
         boost::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 2.0*spacing);
@@ -130,24 +137,24 @@ public:
         boost::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(p_node1, p_node2);
         boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel);
-        p_grid->SetVesselNetwork(p_network);
+        p_grid_calc->SetVesselNetwork(p_network);
 
         // Set up a vegf field
         boost::shared_ptr<FunctionMap<2> > p_funciton_map = FunctionMap<2>::Create();
         p_funciton_map->SetGrid(p_grid);
         std::vector<units::quantity<unit::concentration> > vegf_field =
-                std::vector<units::quantity<unit::concentration> >(extents[0]*extents[1], 0.0*unit::mole_per_metre_cubed);
+                std::vector<units::quantity<unit::concentration> >(dimensions[0]*dimensions[1], 0.0*unit::mole_per_metre_cubed);
 
         units::quantity<unit::concentration> max_vegf(0.2e-9*unit::mole_per_metre_cubed);
-        for(unsigned idx=0; idx<p_grid->GetNumberOfPoints(); idx++)
+        for(unsigned idx=0; idx<p_grid_calc->GetNumberOfLocations(); idx++)
         {
-            vegf_field[idx] = max_vegf * p_grid->GetLocationOf1dIndex(idx).GetLocation(1.e-6*unit::metres)[0] / (float(extents[0]) * spacing);
+            vegf_field[idx] = max_vegf * p_grid->GetLocationOfGlobal1dIndex(idx).GetLocation(1.e-6*unit::metres)[0] / (float(dimensions[0]) * spacing);
         }
         p_funciton_map->UpdateSolution(vegf_field);
 
         // Set up the migration rule
         boost::shared_ptr<Owen2011MigrationRule<2> > p_migration_rule = Owen2011MigrationRule<2>::Create();
-        p_migration_rule->SetGrid(p_grid);
+        p_migration_rule->SetGridCalculator(p_grid_calc);
         p_migration_rule->SetMovementProbability(1.0);
         p_migration_rule->SetNetwork(p_network);
         p_migration_rule->SetDiscreteContinuumSolver(p_funciton_map);
@@ -189,11 +196,14 @@ public:
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         double spacing = 100.0; //um
         p_grid->SetSpacing(spacing* 1.e-6*unit::metres);
-        std::vector<unsigned> extents(3, 1);
-        extents[0] = 7; // num x
-        extents[1] = 5; // num_y
-        extents[2] = 1; // num_z
-        p_grid->SetExtents(extents);
+        c_vector<double, 3> dimensions;
+        dimensions[0] = 7; // num x
+        dimensions[1] = 5; // num_y
+        dimensions[2] = 1; // num_z
+        p_grid->SetDimensions(dimensions);
+
+        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        p_grid_calc->SetGrid(p_grid);
 
         boost::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 2.0*spacing);
         boost::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(spacing, 2.0*spacing);
@@ -211,7 +221,7 @@ public:
         p_network->AddVessel(p_vessel2);
         p_network->AddVessel(p_vessel3);
         p_network->AddVessel(p_vessel4);
-        p_grid->SetVesselNetwork(p_network);
+        p_grid_calc->SetVesselNetwork(p_network);
 
         p_node1->GetFlowProperties()->SetIsInputNode(true);
         p_node1->GetFlowProperties()->SetPressure(3000*unit::pascals);
@@ -226,7 +236,7 @@ public:
         }
 
         boost::shared_ptr<LatticeBasedMigrationRule<2> > p_migration_rule = LatticeBasedMigrationRule<2>::Create();
-        p_migration_rule->SetGrid(p_grid);
+        p_migration_rule->SetGridCalculator(p_grid_calc);
         p_migration_rule->SetMovementProbability(0.5);
         p_migration_rule->SetNetwork(p_network);
 
@@ -244,7 +254,7 @@ public:
         AngiogenesisSolver<2> angiogenesis_solver;
         angiogenesis_solver.SetVesselNetwork(p_network);
         angiogenesis_solver.SetMigrationRule(p_migration_rule);
-        angiogenesis_solver.SetVesselGrid(p_grid);
+        angiogenesis_solver.SetVesselGridCalculator(p_grid_calc);
 
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestLatticeBasedMigrationRulesWithFlow"));
         angiogenesis_solver.SetOutputFileHandler(p_handler);

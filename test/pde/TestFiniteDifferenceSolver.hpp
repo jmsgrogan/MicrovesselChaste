@@ -46,7 +46,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselNetwork.hpp"
 #include "VesselNetworkGenerator.hpp"
 #include "OutputFileHandler.hpp"
-#include "RegularGridCalculator.hpp"
+#include "RegularGrid.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
@@ -79,11 +79,8 @@ public:
         p_boundary_condition->SetValue(boundary_concentration);
 
         // Set up and run the solver
-        boost::shared_ptr<RegularGridCalculator<2> > p_grid_calc = RegularGridCalculator<2>::Create();
-        p_grid_calc->SetRegularGrid(p_grid);
-
         FiniteDifferenceSolver<2> solver;
-        solver.SetGridCalculator(p_grid_calc);
+        solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_boundary_condition);
 
@@ -117,11 +114,9 @@ public:
         p_boundary_condition->SetValue(boundary_concentration);
 
         // Set up and run the solver
-        boost::shared_ptr<RegularGridCalculator<3> > p_grid_calc = RegularGridCalculator<3>::Create();
-        p_grid_calc->SetRegularGrid(p_grid);
 
         FiniteDifferenceSolver<3> solver;
-        solver.SetGridCalculator(p_grid_calc);
+        solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_boundary_condition);
 
@@ -160,11 +155,8 @@ public:
         p_vessel_boundary_condition->SetSource(BoundaryConditionSource::PRESCRIBED);
 
         // Set up and run the solver
-        boost::shared_ptr<RegularGridCalculator<3> > p_grid_calc = RegularGridCalculator<3>::Create();
-        p_grid_calc->SetRegularGrid(p_grid);
-
         FiniteDifferenceSolver<3> solver;
-        solver.SetGridCalculator(p_grid_calc);
+        solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_vessel_boundary_condition);
         solver.SetVesselNetwork(p_network);

@@ -60,6 +60,7 @@ RegularGrid<DIM>::RegularGrid() :
         mpLocalVtkGrid(),
         mVtkGridIsSetUp(false),
         mNeighbourData(),
+        mPointVolumes(),
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
         mpDistributedVectorFactory()
 {
@@ -522,6 +523,30 @@ units::quantity<unit::length> RegularGrid<DIM>::GetSpacing()
 }
 
 template<unsigned DIM>
+std::vector<double> RegularGrid<DIM>::GetPointVolumes(bool update, bool jiggle)
+{
+    unsigned num_points = GetNumberOfGlobalPoints();
+    if(update)
+    {
+        mPointVolumes.clear();
+        for (unsigned idx=0;idx<num_points; idx++)
+        {
+            c_vector<double,6> bbox = GetPointBoundingBox(idx, jiggle);
+            double area = (bbox[3]-bbox[2])*(bbox[1]-bbox[0]);
+            if(DIM==2)
+            {
+                mPointVolumes.push_back(area);
+            }
+            else
+            {
+                mPointVolumes.push_back(area*(bbox[5]-bbox[4]));
+            }
+        }
+    }
+    return mPointVolumes;
+}
+
+template<unsigned DIM>
 bool RegularGrid<DIM>::IsGlobalIndexOnBoundary(unsigned grid_index)
 {
     unsigned mod_z = grid_index % (mDimensions[0] * mDimensions[1]);
@@ -736,6 +761,8 @@ template<unsigned DIM>
 void RegularGrid<DIM>::SetSpacing(units::quantity<unit::length> spacing)
 {
     mSpacing = spacing;
+    GetPointVolumes(true, false);
+
     if(mVtkGridIsSetUp)
     {
         SetUpVtkGrid();
@@ -747,6 +774,8 @@ void RegularGrid<DIM>::SetDimensions(c_vector<unsigned, 3> dimensions)
 {
     mDimensions = dimensions;
     UpdateExtents();
+
+    GetPointVolumes(true, false);
     if(mVtkGridIsSetUp)
     {
         SetUpVtkGrid();

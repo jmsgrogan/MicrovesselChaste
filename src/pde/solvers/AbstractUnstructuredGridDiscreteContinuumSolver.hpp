@@ -38,9 +38,6 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include <vector>
 #include <string>
-#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
-#include <vtkUnstructuredGrid.h>
-#include <vtkSmartPointer.h>
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
@@ -63,11 +60,6 @@ class AbstractUnstructuredGridDiscreteContinuumSolver : public AbstractDiscreteC
 protected:
 
     /**
-     * The solution in VTK form
-     */
-    vtkSmartPointer<vtkUnstructuredGrid> mpVtkSolution;
-
-    /**
      * The finite element mesh
      */
     boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > mpMesh;
@@ -83,12 +75,6 @@ public:
      * Destructor
      */
     virtual ~AbstractUnstructuredGridDiscreteContinuumSolver();
-
-    /**
-     * Return the mesh
-     * @return a pointer to the mesh
-     */
-    boost::shared_ptr<DiscreteContinuumMesh<DIM> > GetMesh();
 
     /**
      * Return the value of the field at the requested points
@@ -136,18 +122,6 @@ public:
      * @return the value of the field ordered according to mesh node order
      */
     virtual std::vector<double> GetSolution(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh);
-
-    /**
-     * Return the solution as vtk image data
-     * @return the solution in vtk format
-     */
-    virtual vtkSmartPointer<vtkUnstructuredGrid> GetVtkSolution();
-
-    /**
-     * Set the mesh
-     * @param pMesh the finite element mesh
-     */
-    void SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > pMesh);
 
     /**
      * Overridden Setup method.

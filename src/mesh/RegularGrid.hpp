@@ -95,6 +95,13 @@ class RegularGrid
     std::vector<std::vector<unsigned> > mNeighbourData;
 
     /**
+     * The dimensionless volume of the bounding region for each point.
+     * This is not dimensionalised because we might be dealing with area or
+     * volume-like quantities, depending on dimension.
+     */
+    std::vector<double> mPointVolumes;
+
+    /**
      * The reference length scale, default in microns.
      */
     units::quantity<unit::length> mReferenceLength;
@@ -295,6 +302,15 @@ public:
      * @return the bounding box for this point
      */
     c_vector<double,6> GetPointBoundingBox(unsigned gridIndex, bool jiggle=false);
+
+    /**
+     * Return the DIMENSIONLESS volume for each point in the grid, accounts for smaller
+     * corner and edge volumes.
+     * @param update recalculate from scatch
+     * @param jiggle increase the box size by a small amount to catch features half way between grid points
+     * @return the DIMENSIONLESS volume for each point in the grid
+     */
+    std::vector<double> GetPointVolumes(bool update=false, bool jiggle=false);
 
     /**
      * Sample a function specified on the grid at the specified locations

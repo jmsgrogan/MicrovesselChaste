@@ -84,7 +84,7 @@ std::vector<int> Owen2011MigrationRule<DIM>::GetIndices(const std::vector<boost:
         EXCEPTION("A DiscreteContinuum solver is required for this type of sprouting rule.");
     }
 
-    mVegfField = this->mpSolver->GetConcentrations(this->mpRegularGridCalculator->GetGrid());
+    mVegfField = this->mpSolver->GetConcentrations(this->mpGridCalculator->GetGrid());
 
     // Use the base class for the rest
     return LatticeBasedMigrationRule<DIM>::GetIndices(rNodes);
@@ -99,7 +99,7 @@ std::vector<double> Owen2011MigrationRule<DIM>::GetNeighbourMovementProbabilitie
     {
         // make sure that tip cell does not try to move into a location already occupied by the vessel that it comes from
         // i.e. that it doesn't loop back around
-        DimensionalChastePoint<DIM> neighbour_location = this->mpRegularGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(neighbourIndices[jdx]);
+        DimensionalChastePoint<DIM> neighbour_location = this->mpGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(neighbourIndices[jdx]);
 
         bool sprout_already_attached_to_vessel_at_location = false;
 

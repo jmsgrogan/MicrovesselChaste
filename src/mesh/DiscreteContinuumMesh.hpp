@@ -45,13 +45,9 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkUnstructuredGrid.h>
 #include <vtkCellLocator.h>
 #include "Part.hpp"
-#include "Cell.hpp"
 #include "Element.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
-#include "VesselSegment.hpp"
-#include "VesselNetwork.hpp"
-#include "AbstractCellPopulation.hpp"
 #include "UnitCollection.hpp"
 
 // Forward declaration
@@ -77,6 +73,11 @@ class DiscreteContinuumMesh : public TetrahedralMesh<ELEMENT_DIM, SPACE_DIM>
     std::vector<unsigned> mAttributes;
 
     /**
+     * Store element-wise dimensionless volumes
+     */
+    std::vector<double> mVolumes;
+
+    /**
      * The reference length scale for the mesh
      */
     units::quantity<unit::length> mReferenceLength;
@@ -95,36 +96,6 @@ class DiscreteContinuumMesh : public TetrahedralMesh<ELEMENT_DIM, SPACE_DIM>
      * Is the vtk representation up to date
      */
     bool mVtkRepresentationUpToDate;
-
-    /**
-     * The point element map
-     */
-    std::vector<std::vector<unsigned> > mPointElementMap;
-
-    /**
-     * The segment element map
-     */
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > mSegmentElementMap;
-
-    /**
-     * The cell element map
-     */
-    std::vector<std::vector<CellPtr > > mCellElementMap;
-
-    /**
-     * The vessel network
-     */
-    boost::shared_ptr<VesselNetwork<SPACE_DIM> > mpNetwork;
-
-    /**
-     * The cell population. This memory pointed to is not managed in this class.
-     */
-    AbstractCellPopulation<SPACE_DIM>* mpCellPopulation;
-
-    /**
-     * The reference length scale for the mesh
-     */
-    units::quantity<unit::length> mCellPopulationReferenceLength;
 
     /**
      * Optional nodal data
@@ -180,33 +151,16 @@ public:
     std::vector<unsigned> GetElementRegionMarkers();
 
     /**
+     * Return the element-dimensionless volumes
+     * @return the element-dimensionless volumes
+     */
+    std::vector<double> GetElementVolumes();
+
+    /**
      * Return the reference length scale
      * @return the reference length scale
      */
     units::quantity<unit::length> GetReferenceLengthScale();
-
-    /**
-     * Return a map of element indices corresponding to the input points
-     * @param points the input points
-     * @return a map of element indices corresponding to the input points
-     */
-    std::vector<std::vector<unsigned> > GetPointElementMap(std::vector<DimensionalChastePoint<SPACE_DIM> > points);
-
-    /**
-     * Return the point cell map
-     * @param update update the map
-     * @return the point cell map
-     */
-    const std::vector<std::vector<CellPtr> >& GetElementCellMap(bool update = true);
-
-    /**
-     * Return the point segments map
-     * @param update update the map
-     * @param useVesselSurface use a surface based representation for vessels
-     * @return the point segment map
-     */
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<SPACE_DIM> > > > GetElementSegmentMap(bool update = true,
-                                                                                                  bool useVesselSurface = false);
 
     /**
      * Return the mesh as a vtk unstructured grid
@@ -215,23 +169,16 @@ public:
     vtkSmartPointer<vtkUnstructuredGrid> GetAsVtkUnstructuredGrid();
 
     /**
+     * Return a vtk cell locator for quickly finding elements
+     * @return a vtk cell locator for quickly finding elements
+     */
+    vtkSmartPointer<vtkCellLocator> GetVtkCellLocator();
+
+    /**
      * Set element attributes
      * @param attributes the element attributes
      */
     void SetAttributes(std::vector<unsigned> attributes);
-
-    /**
-     * Set the cell population
-     * @param rCellPopulation a reference to the cell population
-     * @param cellLengthScale the cell population length scale
-     */
-    void SetCellPopulation(AbstractCellPopulation<SPACE_DIM>& rCellPopulation, units::quantity<unit::length> cellLengthScale);
-
-    /**
-     * Set the vessel network
-     * @param pNetwork the vessel network
-     */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<SPACE_DIM> > pNetwork);
 
     /**
      * Set nodal data

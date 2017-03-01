@@ -35,7 +35,7 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include "Exception.hpp"
 #include "RegularGrid.hpp"
-#include "RegularGridCalculator.hpp"
+#include "GridCalculator.hpp"
 #include "DistanceMap.hpp"
 #include "NetworkToImage.hpp"
 #include "UnitCollection.hpp"
@@ -137,12 +137,9 @@ void NetworkToImage<DIM>::Update()
     p_grid->SetDimensions(dimensions);
     p_grid->SetOrigin(DimensionalChastePoint<DIM>(origin, mGridSpacing));
 
-    boost::shared_ptr<RegularGridCalculator<DIM> > p_grid_calculator = RegularGridCalculator<DIM>::Create();
-    p_grid_calculator->SetRegularGrid(p_grid);
-
     boost::shared_ptr<DistanceMap<DIM> > p_distance_map = DistanceMap<DIM>::Create();
     p_distance_map->SetVesselNetwork(mpNetwork);
-    p_distance_map->SetGridCalculator(p_grid_calculator);
+    p_distance_map->SetGrid(p_grid);
     p_distance_map->SetUseSegmentRadii(true);
     p_distance_map->Setup();
     p_distance_map->Solve();

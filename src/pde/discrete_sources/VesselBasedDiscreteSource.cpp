@@ -66,121 +66,76 @@ boost::shared_ptr<VesselBasedDiscreteSource<DIM> > VesselBasedDiscreteSource<DIM
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscreteSource<DIM>::GetConstantInUMeshValues()
+std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscreteSource<DIM>::GetConstantInUValues()
 {
-    if(!this->mpMesh)
+    if(!this->mpGridCalculator)
     {
-        EXCEPTION("A mesh is required for this type of source");
+        EXCEPTION("A regular grid is required for this type of source");
     }
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpMesh->GetNumElements(), 0.0*unit::mole_per_metre_cubed_per_second);
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > element_segment_map = this->mpMesh->GetElementSegmentMap();
 
-    for(unsigned idx=0; idx<element_segment_map.size(); idx++)
+    if(this->mpGridCalculator->HasStructuredGrid())
     {
-        if(element_segment_map[idx].size()>0)
+        std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpGridCalculator->GetNumberOfLocations(),
+                0.0*unit::mole_per_metre_cubed_per_second);
+        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = this->mpGridCalculator->GetSegmentMap();
+        units::quantity<unit::length> grid_spacing = this->mpGridCalculator->GetGrid()->GetSpacing();
+        units::quantity<unit::volume> grid_volume = units::pow<3>(grid_spacing);
+
+        for(unsigned idx=0; idx<point_segment_map.size(); idx++)
         {
-            // Get the element nodal locations and element volume
-            Element<DIM, DIM>* p_element = this->mpMesh->GetElement(idx);
-            std::vector<DimensionalChastePoint<DIM> > element_vertices(4);
-            double determinant = 0.0;
-            c_matrix<double, DIM, DIM> jacobian;
-            p_element->CalculateJacobian(jacobian, determinant);
-            units::quantity<unit::volume> element_volume = p_element->GetVolume(determinant) * units::pow<3>(this->mpMesh->GetReferenceLengthScale());
-            if(p_element->GetNumNodes() != 4)
+            for (unsigned jdx = 0; jdx < point_segment_map[idx].size(); jdx++)
             {
-                EXCEPTION("Vessel mesh mapping only supported for linear tetrahedral elements.");
-            }
-            for (unsigned jdx = 0; jdx < 4; jdx++)
-            {
-                element_vertices[jdx] = DimensionalChastePoint<DIM>(p_element->GetNodeLocation(jdx), this->mpMesh->GetReferenceLengthScale());
-            }
-
-            for (unsigned jdx = 0; jdx < element_segment_map[idx].size(); jdx++)
-            {
-
-                units::quantity<unit::length> length_in_box = LengthOfLineInTetra<DIM>(element_segment_map[idx][jdx]->GetNode(0)->rGetLocation(),
-                                                                element_segment_map[idx][jdx]->GetNode(1)->rGetLocation(), element_vertices);
-
-                units::quantity<unit::area> surface_area = 2.0*M_PI*element_segment_map[idx][jdx]->GetRadius()*length_in_box;
-
-                double haematocrit_Ratio = element_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit()/mReferenceHaematocrit;
-                values[idx] += mVesselPermeability * (surface_area/element_volume) * mReferenceConcentration * haematocrit_Ratio;
+                units::quantity<unit::length> length_in_box = LengthOfLineInBox<DIM>(point_segment_map[idx][jdx]->GetNode(0)->rGetLocation(),
+                                                                             point_segment_map[idx][jdx]->GetNode(1)->rGetLocation(),
+                                                                             this->mpGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(idx), grid_spacing);
+                units::quantity<unit::area> surface_area = 2.0*M_PI*point_segment_map[idx][jdx]->GetRadius()*length_in_box;
+                double haematocrit_ratio = point_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit()/mReferenceHaematocrit;
+                values[idx] += mVesselPermeability * (surface_area/grid_volume) * mReferenceConcentration * haematocrit_ratio;
             }
         }
+        return values;
     }
-
-    return values;
-}
-
-template<unsigned DIM>
-std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLinearInUMeshValues()
-{
-    if(!this->mpMesh)
+    else
     {
-        EXCEPTION("A mesh is required for this type of source");
-    }
-    std::vector<units::quantity<unit::rate> > values(this->mpMesh->GetNumElements(), 0.0*unit::per_second);
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > element_segment_map = this->mpMesh->GetElementSegmentMap();
+        std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpGridCalculator->GetNumberOfLocations(),
+                0.0*unit::mole_per_metre_cubed_per_second);
+        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > element_segment_map = this->mpGridCalculator->GetSegmentMap();
+        units::quantity<unit::length> mesh_length = this->mpGridCalculator->GetMesh()->GetReferenceLengthScale();
+        units::quantity<unit::volume> mesh_volume_multiplier = units::pow<3>(mesh_length);
 
-    for(unsigned idx=0; idx<element_segment_map.size(); idx++)
-    {
-        if(element_segment_map[idx].size()>0)
+        for(unsigned idx=0; idx<element_segment_map.size(); idx++)
         {
-            // Get the element nodal locations and element volume
-            Element<DIM, DIM>* p_element = this->mpMesh->GetElement(idx);
-            std::vector<DimensionalChastePoint<DIM> > element_vertices(4);
-            double determinant = 0.0;
-            c_matrix<double, DIM, DIM> jacobian;
-            p_element->CalculateJacobian(jacobian, determinant);
-            units::quantity<unit::volume> element_volume = p_element->GetVolume(determinant) * units::pow<3>(this->mpMesh->GetReferenceLengthScale());
-            if(p_element->GetNumNodes() != 4)
+            if(element_segment_map[idx].size()>0)
             {
-                EXCEPTION("Vessel mesh mapping only supported for linear tetrahedral elements.");
-            }
-            for (unsigned jdx = 0; jdx < 4; jdx++)
-            {
-                element_vertices[jdx] = DimensionalChastePoint<DIM>(p_element->GetNodeLocation(jdx), this->mpMesh->GetReferenceLengthScale());
-            }
-
-            for (unsigned jdx = 0; jdx < element_segment_map[idx].size(); jdx++)
-            {
-                units::quantity<unit::length> length_in_box = LengthOfLineInTetra<DIM>(element_segment_map[idx][jdx]->GetNode(0)->rGetLocation(),
-                                                                element_segment_map[idx][jdx]->GetNode(1)->rGetLocation(), element_vertices);
-
-                units::quantity<unit::area> surface_area = 2.0*M_PI*element_segment_map[idx][jdx]->GetRadius()*length_in_box;
-                double haematocrit = element_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit();
-                if(haematocrit>0.0)
+                // Get the element nodal locations and element volume
+                Element<DIM, DIM>* p_element = this->mpGridCalculator->GetMesh()->GetElement(idx);
+                std::vector<DimensionalChastePoint<DIM> > element_vertices(4);
+                double determinant = 0.0;
+                c_matrix<double, DIM, DIM> jacobian;
+                p_element->CalculateJacobian(jacobian, determinant);
+                units::quantity<unit::volume> element_volume = p_element->GetVolume(determinant) * mesh_volume_multiplier;
+                if(p_element->GetNumNodes() != 4)
                 {
-                    values[idx] += mVesselPermeability * (surface_area/element_volume);
+                    EXCEPTION("Vessel mesh mapping only supported for linear tetrahedral elements.");
+                }
+                for (unsigned jdx = 0; jdx < 4; jdx++)
+                {
+                    element_vertices[jdx] = DimensionalChastePoint<DIM>(p_element->GetNodeLocation(jdx), mesh_length);
+                }
+
+                for (unsigned jdx = 0; jdx < element_segment_map[idx].size(); jdx++)
+                {
+
+                    units::quantity<unit::length> length_in_box = LengthOfLineInTetra<DIM>(element_segment_map[idx][jdx]->GetNode(0)->rGetLocation(),
+                                                                    element_segment_map[idx][jdx]->GetNode(1)->rGetLocation(), element_vertices);
+                    units::quantity<unit::area> surface_area = 2.0*M_PI*element_segment_map[idx][jdx]->GetRadius()*length_in_box;
+                    double haematocrit_Ratio = element_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit()/mReferenceHaematocrit;
+                    values[idx] += mVesselPermeability * (surface_area/element_volume) * mReferenceConcentration * haematocrit_Ratio;
                 }
             }
         }
+        return values;
     }
-
-    return values;
-}
-
-template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscreteSource<DIM>::GetConstantInURegularGridValues()
-{
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(), 0.0*unit::mole_per_metre_cubed_per_second);
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = this->mpRegularGridCalculator->GetPointSegmentMap();
-    units::quantity<unit::length> grid_spacing = this->mpRegularGridCalculator->GetGrid()->GetSpacing();
-    units::quantity<unit::volume> grid_volume = units::pow<3>(grid_spacing);
-
-    for(unsigned idx=0; idx<point_segment_map.size(); idx++)
-    {
-        for (unsigned jdx = 0; jdx < point_segment_map[idx].size(); jdx++)
-        {
-            units::quantity<unit::length> length_in_box = LengthOfLineInBox<DIM>(point_segment_map[idx][jdx]->GetNode(0)->rGetLocation(),
-                                                                         point_segment_map[idx][jdx]->GetNode(1)->rGetLocation(),
-                                                                         this->mpRegularGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(idx), grid_spacing);
-            units::quantity<unit::area> surface_area = 2.0*M_PI*point_segment_map[idx][jdx]->GetRadius()*length_in_box;
-            double haematocrit_ratio = point_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit()/mReferenceHaematocrit;
-            values[idx] += mVesselPermeability * (surface_area/grid_volume) * mReferenceConcentration * haematocrit_ratio;
-        }
-    }
-    return values;
 }
 
 template<unsigned DIM>
@@ -196,11 +151,12 @@ void VesselBasedDiscreteSource<DIM>::SetNumberOfCellsPerLength(units::quantity<u
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscreteSource<DIM>::GetNonlinearTermRegularGridValues()
+std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscreteSource<DIM>::GetNonlinearTermValues()
 {
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(), 0.0*unit::mole_per_metre_cubed_per_second);
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = this->mpRegularGridCalculator->GetPointSegmentMap();
-    units::quantity<unit::length> grid_spacing = this->mpRegularGridCalculator->GetGrid()->GetSpacing();
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpGridCalculator->GetNumberOfLocations(),
+            0.0*unit::mole_per_metre_cubed_per_second);
+    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = this->mpGridCalculator->GetSegmentMap();
+    units::quantity<unit::length> grid_spacing = this->mpGridCalculator->GetGrid()->GetSpacing();
     units::quantity<unit::volume> grid_volume = units::pow<3>(grid_spacing);
 
     for(unsigned idx=0; idx<point_segment_map.size(); idx++)
@@ -209,8 +165,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
         {
             units::quantity<unit::length> length_in_box = LengthOfLineInBox<DIM>(point_segment_map[idx][jdx]->GetNode(0)->rGetLocation(),
                                                                          point_segment_map[idx][jdx]->GetNode(1)->rGetLocation(),
-                                                                         this->mpRegularGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(idx), grid_spacing);
-
+                                                                         this->mpGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(idx), grid_spacing);
             double num_cells = length_in_box*mCellsPerMetre;
             values[idx] += mUptakeRatePerCell * (num_cells/grid_volume);
         }
@@ -219,30 +174,82 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLinearInURegularGridValues()
+std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLinearInUValues()
 {
-    std::vector<units::quantity<unit::rate> > values(this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(), 0.0*unit::per_second);
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = this->mpRegularGridCalculator->GetPointSegmentMap(false);
-    units::quantity<unit::length> grid_spacing = this->mpRegularGridCalculator->GetGrid()->GetSpacing();
-    units::quantity<unit::volume> grid_volume = units::pow<3>(grid_spacing);
-
-    for(unsigned idx=0; idx<point_segment_map.size(); idx++)
+    if(!this->mpGridCalculator)
     {
-        for (unsigned jdx = 0; jdx < point_segment_map[idx].size(); jdx++)
-        {
-            units::quantity<unit::length> length_in_box = LengthOfLineInBox<DIM>(point_segment_map[idx][jdx]->GetNode(0)->rGetLocation(),
-                                                                         point_segment_map[idx][jdx]->GetNode(1)->rGetLocation(),
-                                                                         this->mpRegularGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(idx), grid_spacing);
+        EXCEPTION("A regular grid is required for this type of source");
+    }
 
-            units::quantity<unit::area> surface_area = 2.0*M_PI*point_segment_map[idx][jdx]->GetRadius()*length_in_box;
-            double haematocrit = point_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit();
-            if(haematocrit>0.0)
+    if(this->mpGridCalculator->HasStructuredGrid())
+    {
+        std::vector<units::quantity<unit::rate> > values(this->mpGridCalculator->GetNumberOfLocations(),
+                0.0*unit::per_second);
+        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = this->mpGridCalculator->GetSegmentMap(false);
+        units::quantity<unit::length> grid_spacing = this->mpGridCalculator->GetGrid()->GetSpacing();
+        units::quantity<unit::volume> grid_volume = units::pow<3>(grid_spacing);
+
+        for(unsigned idx=0; idx<point_segment_map.size(); idx++)
+        {
+            for (unsigned jdx = 0; jdx < point_segment_map[idx].size(); jdx++)
             {
-                values[idx] -= mVesselPermeability * (surface_area/grid_volume);
+                units::quantity<unit::length> length_in_box = LengthOfLineInBox<DIM>(point_segment_map[idx][jdx]->GetNode(0)->rGetLocation(),
+                                                                             point_segment_map[idx][jdx]->GetNode(1)->rGetLocation(),
+                                                                             this->mpGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(idx), grid_spacing);
+
+                units::quantity<unit::area> surface_area = 2.0*M_PI*point_segment_map[idx][jdx]->GetRadius()*length_in_box;
+                double haematocrit = point_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit();
+                if(haematocrit>0.0)
+                {
+                    values[idx] -= mVesselPermeability * (surface_area/grid_volume);
+                }
             }
         }
+        return values;
     }
-    return values;
+    else
+    {
+        std::vector<units::quantity<unit::rate> > values(this->mpGridCalculator->GetNumberOfLocations(), 0.0*unit::per_second);
+        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > element_segment_map = this->mpGridCalculator->GetSegmentMap();
+        units::quantity<unit::length> mesh_length = this->mpGridCalculator->GetMesh()->GetReferenceLengthScale();
+        units::quantity<unit::volume> mesh_volume_multiplier = units::pow<3>(mesh_length);
+
+        for(unsigned idx=0; idx<element_segment_map.size(); idx++)
+        {
+            if(element_segment_map[idx].size()>0)
+            {
+                // Get the element nodal locations and element volume
+                Element<DIM, DIM>* p_element = this->mpGridCalculator->GetMesh()->GetElement(idx);
+                std::vector<DimensionalChastePoint<DIM> > element_vertices(4);
+                double determinant = 0.0;
+                c_matrix<double, DIM, DIM> jacobian;
+                p_element->CalculateJacobian(jacobian, determinant);
+                units::quantity<unit::volume> element_volume = p_element->GetVolume(determinant) * mesh_volume_multiplier;
+                if(p_element->GetNumNodes() != 4)
+                {
+                    EXCEPTION("Vessel mesh mapping only supported for linear tetrahedral elements.");
+                }
+                for (unsigned jdx = 0; jdx < 4; jdx++)
+                {
+                    element_vertices[jdx] = DimensionalChastePoint<DIM>(p_element->GetNodeLocation(jdx), mesh_length);
+                }
+
+                for (unsigned jdx = 0; jdx < element_segment_map[idx].size(); jdx++)
+                {
+                    units::quantity<unit::length> length_in_box = LengthOfLineInTetra<DIM>(element_segment_map[idx][jdx]->GetNode(0)->rGetLocation(),
+                                                                    element_segment_map[idx][jdx]->GetNode(1)->rGetLocation(), element_vertices);
+
+                    units::quantity<unit::area> surface_area = 2.0*M_PI*element_segment_map[idx][jdx]->GetRadius()*length_in_box;
+                    double haematocrit = element_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit();
+                    if(haematocrit>0.0)
+                    {
+                        values[idx] += mVesselPermeability * (surface_area/element_volume);
+                    }
+                }
+            }
+        }
+        return values;
+    }
 }
 
 template<unsigned DIM>

@@ -206,30 +206,21 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSourceStrengths()
 {
     AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSourceStrengths();
-    if(this->mUseRegularGrid)
+    if(!this->mpGridCalculator)
     {
-        if(!this->mpRegularGridCalculator)
-        {
-            EXCEPTION("A grid has not been set for the determination of source strengths.");
-        }
+        EXCEPTION("A grid has not been set for the determination of source strengths.");
+    }
 
-        mDiscreteNonLinearSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(),
-                0.0*unit::mole_per_metre_cubed_per_second);
-        for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
-        {
-            this->mDiscreteSources[idx]->SetRegularGridCalculator(this->mpRegularGridCalculator);
-            std::vector<units::quantity<unit::concentration_flow_rate> > result = this->mDiscreteSources[idx]->GetNonlinearTermRegularGridValues();
-            std::transform(mDiscreteNonLinearSourceStrengths.begin( ), mDiscreteNonLinearSourceStrengths.end( ),
-                           result.begin( ), mDiscreteNonLinearSourceStrengths.begin( ),std::plus<units::quantity<unit::concentration_flow_rate> >( ));
-        }
-    }
-    else
+    mDiscreteNonLinearSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(this->mpGridCalculator->GetNumberOfLocations(),
+            0.0*unit::mole_per_metre_cubed_per_second);
+    for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
     {
-        if(!this->mpMesh)
-        {
-            EXCEPTION("A mesh has not been set for the determination of source strengths.");
-        }
+        this->mDiscreteSources[idx]->SetGridCalculator(this->mpGridCalculator);
+        std::vector<units::quantity<unit::concentration_flow_rate> > result = this->mDiscreteSources[idx]->GetNonlinearTermValues();
+        std::transform(mDiscreteNonLinearSourceStrengths.begin( ), mDiscreteNonLinearSourceStrengths.end( ),
+                       result.begin( ), mDiscreteNonLinearSourceStrengths.begin( ),std::plus<units::quantity<unit::concentration_flow_rate> >( ));
     }
+
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

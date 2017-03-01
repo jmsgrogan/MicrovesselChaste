@@ -38,13 +38,16 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include <vector>
 #include <string>
-
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
+#include <vtkDataSet.h>
+#include <vtkSmartPointer.h>
 #include "OutputFileHandler.hpp"
 #include "VesselNetwork.hpp"
 #include "AbstractCellPopulation.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
 #include "RegularGrid.hpp"
 #include "DiscreteContinuumMesh.hpp"
+#include "GridCalculator.hpp"
 #include "UnitCollection.hpp"
 #include "AbstractDiscreteContinuumPde.hpp"
 
@@ -134,14 +137,14 @@ protected:
     std::vector<units::quantity<unit::concentration> > mConcentrations;
 
     /**
-     * Used to check the type of solver
+     * A grid calculator
      */
-    bool mHasRegularGridCalculator;
+    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
 
     /**
-     * Used to check the type of solver
+     * A vtk representation of the solution
      */
-    bool mHasUnstructuredGrid;
+    vtkSmartPointer<vtkDataSet> mpVtkSolution;
 
 public:
 
@@ -194,6 +197,9 @@ public:
      */
     virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh) = 0;
 
+
+    boost::shared_ptr<GridCalculator<DIM> > GetGridCalculator();
+
     /**
      * Return the name of the field being solved for
      * @return a reference to the field name
@@ -240,16 +246,10 @@ public:
     virtual std::vector<double> GetSolution(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh) = 0;
 
     /**
-     * Return true if the solver uses a regular grid to store solutions
-     * @return true if the solver uses a regular grid to store solutions
+     * Return the solution as vtk data
+     * @return the vtk solution
      */
-    bool HasRegularGridCalculator();
-
-    /**
-     * Return true if the solver uses a unstructured grid to store solutions
-     * @return true if the solver uses a unstructured grid to store solutions
-     */
-    bool HasUnstructuredGrid();
+    virtual vtkSmartPointer<vtkDataSet> GetVtkSolution();
 
     /**
      * Set the cell population
@@ -307,6 +307,18 @@ public:
      * @param write write the solution
      */
     void SetWriteSolution(bool write=true);
+
+    /**
+     * Set the regular grid
+     * @param pGrid the regular grid
+     */
+    void SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
+
+    /**
+     * Set the mesh
+     * @param pGrid the mesh
+     */
+    void SetGrid(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pGrid);
 
     /**
      * Do the solve

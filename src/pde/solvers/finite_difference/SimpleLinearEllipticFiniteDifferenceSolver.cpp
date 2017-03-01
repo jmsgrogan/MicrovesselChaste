@@ -75,8 +75,8 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToMatrix()
     }
 
     this->mpLinearSystem->SwitchWriteModeLhsMatrix();
-    c_vector<unsigned, 6> extents = this->mpRegularGridCalculator->GetGrid()->GetExtents();
-    c_vector<unsigned, 3> dimensions = this->mpRegularGridCalculator->GetGrid()->GetDimensions();
+    c_vector<unsigned, 6> extents = this->mpGridCalculator->GetGrid()->GetExtents();
+    c_vector<unsigned, 3> dimensions = this->mpGridCalculator->GetGrid()->GetDimensions();
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     for (unsigned i = extents[4]; i < extents[5]; i++) // Z
     {
@@ -84,7 +84,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToMatrix()
         {
             for (unsigned k = extents[0]; k < extents[1]; k++) // X
             {
-                unsigned grid_index = this->mpRegularGridCalculator->GetGrid()->GetGlobal1dGridIndex(k, j, i);
+                unsigned grid_index = this->mpGridCalculator->GetGrid()->GetGlobal1dGridIndex(k, j, i);
                 this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index,
                         p_linear_pde->ComputeDiscreteLinearInUCoeffInSourceTerm(grid_index)*reference_time);
             }
@@ -103,7 +103,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToRhs()
         EXCEPTION("PDE not recognized");
     }
 
-    c_vector<unsigned, 6> extents = this->mpRegularGridCalculator->GetGrid()->GetExtents();
+    c_vector<unsigned, 6> extents = this->mpGridCalculator->GetGrid()->GetExtents();
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     for (unsigned i = extents[4]; i < extents[5]; i++) // Z
     {
@@ -111,7 +111,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToRhs()
         {
             for (unsigned k = extents[0]; k < extents[1]; k++) // X
             {
-                unsigned grid_index = this->mpRegularGridCalculator->GetGrid()->GetGlobal1dGridIndex(k, j, i);
+                unsigned grid_index = this->mpGridCalculator->GetGrid()->GetGlobal1dGridIndex(k, j, i);
                 this->mpLinearSystem->SetRhsVectorElement(grid_index,
                         -p_linear_pde->ComputeDiscreteConstantInUSourceTerm(grid_index)*(reference_time/this->mReferenceConcentration));
             }
@@ -131,10 +131,10 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
     }
     this->mpLinearSystem->ZeroLhsMatrix();
 
-    c_vector<unsigned, 6> extents = this->mpRegularGridCalculator->GetGrid()->GetExtents();
-    c_vector<unsigned, 3> dimensions = this->mpRegularGridCalculator->GetGrid()->GetDimensions();
+    c_vector<unsigned, 6> extents = this->mpGridCalculator->GetGrid()->GetExtents();
+    c_vector<unsigned, 3> dimensions = this->mpGridCalculator->GetGrid()->GetDimensions();
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
-    units::quantity<unit::length> spacing = this->mpRegularGridCalculator->GetGrid()->GetSpacing();
+    units::quantity<unit::length> spacing = this->mpGridCalculator->GetGrid()->GetSpacing();
     double diffusion_term = (p_linear_pde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
 
     for (unsigned i = extents[4]; i < extents[5]; i++) // Z
@@ -143,7 +143,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
         {
             for (unsigned k = extents[0]; k < extents[1]; k++) // X
             {
-                unsigned grid_index = this->mpRegularGridCalculator->GetGrid()->GetGlobal1dGridIndex(k, j, i);
+                unsigned grid_index = this->mpGridCalculator->GetGrid()->GetGlobal1dGridIndex(k, j, i);
                 this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index,
                         p_linear_pde->ComputeLinearInUCoeffInSourceTerm(grid_index)*reference_time - 6.0 * diffusion_term);
                 // No flux at x bottom
@@ -225,7 +225,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleVector()
 
     this->mpLinearSystem->ZeroRhsVector();
 
-    c_vector<unsigned, 6> extents = this->mpRegularGridCalculator->GetGrid()->GetExtents();
+    c_vector<unsigned, 6> extents = this->mpGridCalculator->GetGrid()->GetExtents();
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     for (unsigned i = extents[4]; i < extents[5]; i++) // Z
     {
@@ -233,7 +233,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleVector()
         {
             for (unsigned k = extents[0]; k < extents[1]; k++) // X
             {
-                unsigned grid_index = this->mpRegularGridCalculator->GetGrid()->GetGlobal1dGridIndex(k, j, i);
+                unsigned grid_index = this->mpGridCalculator->GetGrid()->GetGlobal1dGridIndex(k, j, i);
                 this->mpLinearSystem->SetRhsVectorElement(grid_index,
                         -p_linear_pde->ComputeConstantInUSourceTerm(grid_index)*(reference_time/this->mReferenceConcentration));
             }
@@ -248,8 +248,8 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Setup()
     AbstractFiniteDifferenceSolverBase<DIM>::Setup();
 
     // Set up the linear system
-    unsigned num_points = this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints();
-    Vec template_vec = this->mpRegularGridCalculator->GetGrid()->GetDistributedVectorFactory()->CreateVec(num_points);
+    unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfGlobalPoints();
+    Vec template_vec = this->mpGridCalculator->GetGrid()->GetDistributedVectorFactory()->CreateVec(num_points);
     this->mpLinearSystem = boost::shared_ptr<LinearSystem>(new LinearSystem(template_vec, 7));
     PetscTools::Destroy(template_vec);
 
@@ -283,8 +283,8 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Update()
 
     // Add boundary conditions
     std::vector<unsigned> bc_indices;
-    unsigned lo = this->mpRegularGridCalculator->GetGrid()->GetDistributedVectorFactory()->GetLow();
-    unsigned hi = this->mpRegularGridCalculator->GetGrid()->GetDistributedVectorFactory()->GetHigh();
+    unsigned lo = this->mpGridCalculator->GetGrid()->GetDistributedVectorFactory()->GetLow();
+    unsigned hi = this->mpGridCalculator->GetGrid()->GetDistributedVectorFactory()->GetHigh();
     for(unsigned idx=lo; idx<hi-1; idx++)
     {
         if((*this->mpBoundaryConditions)[idx].first)
@@ -311,7 +311,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Solve()
     ReplicatableVector soln_repl(this->mpLinearSystem->Solve());
 
     // Populate the solution vector
-    unsigned num_points = this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints();
+    unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfGlobalPoints();
     std::vector<units::quantity<unit::concentration> > concs = std::vector<units::quantity<unit::concentration> >(num_points,
                                                                                                                   0.0*this->mReferenceConcentration);
     for (unsigned row = 0; row < num_points; row++)

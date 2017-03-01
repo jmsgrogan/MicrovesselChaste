@@ -44,7 +44,6 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
-#include "RegularGridCalculator.hpp"
 #include "UnitCollection.hpp"
 
 /**
@@ -62,18 +61,6 @@ public:
     using AbstractDiscreteContinuumSolver<DIM>::GetSolution;
     using AbstractDiscreteContinuumSolver<DIM>::UpdateSolution;
 
-protected:
-
-    /**
-     * The solution in the form of vtk image data
-     */
-    vtkSmartPointer<vtkImageData> mpVtkSolution;
-
-    /**
-     * The structured grid
-     */
-    boost::shared_ptr<RegularGridCalculator<DIM> > mpRegularGridCalculator;
-
 public:
 
     /**
@@ -85,12 +72,6 @@ public:
      * Destructor
      */
     virtual ~AbstractRegularGridDiscreteContinuumSolver();
-
-    /**
-     * Return the grid
-     * @return a pointer to the structured grid
-     */
-    boost::shared_ptr<RegularGridCalculator<DIM> > GetGridCalculator();
 
     /**
      * Return the value of the field at the requested points
@@ -132,18 +113,6 @@ public:
      * @return the value of the field ordered according to mesh node order
      */
     virtual std::vector<double> GetSolution(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh);
-
-    /**
-     * Return the solution as vtk image data
-     * @return the vtk solution
-     */
-    virtual vtkSmartPointer<vtkImageData> GetVtkSolution();
-
-    /**
-     * Set the structured grid
-     * @param pRegularGrid the structured grid
-     */
-    void SetGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pRegularGridCalculator);
 
     /**
      * Overridden Setup method.

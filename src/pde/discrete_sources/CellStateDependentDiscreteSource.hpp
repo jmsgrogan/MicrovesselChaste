@@ -89,28 +89,16 @@ public:
     static boost::shared_ptr<CellStateDependentDiscreteSource<DIM> > Create();
 
     /**
-     * Return the values of the source strengths sampled on the mesh elements
+     * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInUMeshValues();
-
-    /**
-     * Return the values of the source strengths sampled on the mesh elements
-     * @return a vector of source strengths
-     */
-    std::vector<units::quantity<unit::rate> > GetLinearInUMeshValues();
+    std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInUValues();
 
     /**
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInURegularGridValues();
-
-    /**
-     * Return the values of the source strengths sampled on the regular grid
-     * @return a vector of source strengths
-     */
-    std::vector<units::quantity<unit::rate> > GetLinearInURegularGridValues();
+    std::vector<units::quantity<unit::rate> > GetLinearInUValues();
 
     /**
      * Set cell 'color' specific consumption rates. 'Color' is a property of the cell mutation state set in its constructor.

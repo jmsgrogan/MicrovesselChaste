@@ -41,8 +41,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UblasIncludes.hpp"
 #include "Part.hpp"
 #include "BoundaryConditionsContainer.hpp"
-#include "RegularGridCalculator.hpp"
-#include "DiscreteContinuumMesh.hpp"
+#include "GridCalculator.hpp"
 #include "DimensionalChastePoint.hpp"
 
 /**
@@ -112,14 +111,9 @@ protected:
     units::quantity<unit::concentration> mValue;
 
     /**
-     * The grid for solvers using regular grids
+     * The grid calculator
      */
-    boost::shared_ptr<RegularGridCalculator<DIM> > mpRegularGridCalculator;
-
-    /**
-     * The mesh for solvers using finite element meshes
-     */
-    boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > mpMesh;
+    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
 
     /**
      * The vessel network
@@ -160,8 +154,6 @@ public:
      */
     units::quantity<unit::concentration> GetValue();
 
-    void SetNetwork(boost::shared_ptr<VesselNetwork <DIM> > pNetwork);
-
     /**
      * Return the value of the boundary condition evaluated at a point and whether the point is on a boundary
      * @param location the location of the point
@@ -174,24 +166,14 @@ public:
      * Update the boundary conditions container for use with the finite element solver
      * @param pContainer the boundary condition container
      */
-    void UpdateBoundaryConditionContainer(boost::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> > pContainer);
-
-    void UpdateRegularGridPointBoundaryConditions(boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > >pBoundaryConditions);
-
-    void UpdateRegularGridFacetBoundaryConditions(boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > >pBoundaryConditions);
-
-    void UpdateRegularGridSegmentBoundaryConditions(boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > >pBoundaryConditions);
-
-    void UpdateRegularGridPartBoundaryConditions(boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > >pBoundaryConditions);
-
-    void UpdateRegularGridCellBoundaryConditions(boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > >pBoundaryConditions);
+    void UpdateBoundaryConditions(boost::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> > pContainer);
 
     /**
      * Update the boundary conditions on the regular grid
      * @param pBoundaryConditions the boundary condition container
      * @param tolerance the tolerance for evaluating if a point is on a boundary
      */
-    void UpdateRegularGridBoundaryConditions(boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > pBoundaryConditions);
+    void UpdateBoundaryConditions(boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > pBoundaryConditions);
 
     /**
      * Set a domain for use in the calculation of FACET type boundary conditions
@@ -206,12 +188,6 @@ public:
     void SetLabelName(const std::string& label);
 
     /**
-     * Set the finite element mesh
-     * @param pMesh the finite element mesh
-     */
-    void SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > pMesh);
-
-    /**
      * Set the points for POINT type boundary conditions
      * @param points the point locations for POINT type boundary conditions
      */
@@ -219,9 +195,9 @@ public:
 
     /**
      * Set the regular grid
-     * @param pRegularGrid the regular grid
+     * @param pGridCalculator the regular grid
      */
-    void SetRegularGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pRegularGrid);
+    void SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator);
 
     /**
      * Set where the value of the boundary condition is obtained, e.g. LABEL, PRESCRIBED
@@ -234,6 +210,12 @@ public:
      * @param boundaryType enum specifying the type of boundary condition
      */
     void SetType(BoundaryConditionType::Value boundaryType);
+
+    /**
+     * Set the vessel network
+     * @param pNetwork the vessel network
+     */
+    void SetNetwork(boost::shared_ptr<VesselNetwork <DIM> > pNetwork);
 
     /**
      * Set the default value of the boundary condition for any points on the boundary

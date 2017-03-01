@@ -104,24 +104,24 @@ template<unsigned DIM>
 void AbstractFiniteDifferenceSolverBase<DIM>::Setup()
 {
     // Set up the grid and PDE
-    if(!this->mpRegularGridCalculator)
+    if(!this->mpGridCalculator)
     {
         EXCEPTION("This solver needs a regular grid to be set before calling Setup.");
     }
 
     if(this->CellPopulationIsSet())
     {
-        this->mpRegularGridCalculator->SetCellPopulation(*(this->mpCellPopulation), this->mCellPopulationReferenceLength);
+        this->mpGridCalculator->SetCellPopulation(*(this->mpCellPopulation), this->mCellPopulationReferenceLength);
     }
 
     if(this->mpNetwork)
     {
-    	this->mpRegularGridCalculator->SetVesselNetwork(this->mpNetwork);
+    	this->mpGridCalculator->SetVesselNetwork(this->mpNetwork);
     }
 
     if(this->mpPde)
     {
-        this->mpPde->SetRegularGridCalculator(this->mpRegularGridCalculator);
+        this->mpPde->SetGridCalculator(this->mpGridCalculator);
     }
     else
     {
@@ -129,7 +129,7 @@ void AbstractFiniteDifferenceSolverBase<DIM>::Setup()
     }
 
     // Set up the boundary conditions. Use a different description from normal DiscreteContinuum BCs for efficiency.
-    unsigned num_points = this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints();
+    unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfGlobalPoints();
     mpBoundaryConditions = boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > (new std::vector<std::pair<bool, units::quantity<unit::concentration> > >(num_points));
     for(unsigned idx=0; idx<num_points; idx++)
     {
@@ -137,7 +137,7 @@ void AbstractFiniteDifferenceSolverBase<DIM>::Setup()
     }
     for(unsigned bound_index=0; bound_index<this->mBoundaryConditions.size(); bound_index++)
     {
-        this->mBoundaryConditions[bound_index]->SetRegularGridCalculator(this->mpRegularGridCalculator);
+        this->mBoundaryConditions[bound_index]->SetGridCalculator(this->mpGridCalculator);
     }
 
     // Set up the vtk solution grid
@@ -158,7 +158,7 @@ void AbstractFiniteDifferenceSolverBase<DIM>::Update()
     {
         for(unsigned bound_index=0; bound_index<this->mBoundaryConditions.size(); bound_index++)
         {
-            this->mBoundaryConditions[bound_index]->UpdateRegularGridBoundaryConditions(mpBoundaryConditions);
+            this->mBoundaryConditions[bound_index]->UpdateBoundaryConditions(mpBoundaryConditions);
         }
         mBoundaryConditionsSet = true;
     }

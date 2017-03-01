@@ -42,7 +42,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "CaBasedCellPopulation.hpp"
 #include "VesselNetwork.hpp"
 #include "UnitCollection.hpp"
-#include "RegularGridCalculator.hpp"
+#include "GridCalculator.hpp"
 
 /**
  * A diffusion update rule based loosely on Owen et al. 2001.
@@ -81,7 +81,7 @@ private:
     /**
      * Regular Grid
      */
-    boost::shared_ptr<RegularGridCalculator<DIM> > mpRegularGridCalculator;
+    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
 
     /**
      * Reference length scale
@@ -159,7 +159,7 @@ public:
      *
      * @param pRegularGrid The regular grid
      */
-    void SetRegularGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pRegularGridCalculator);
+    void SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator);
 
     /**
      * Set the reference length scale

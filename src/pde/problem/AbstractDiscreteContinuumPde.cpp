@@ -43,9 +43,7 @@ AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::AbstractDiscreteContinuumP
             mConstantInUTerm(0.0 * unit::mole_per_metre_cubed_per_second),
             mLinearInUTerm(0.0 * unit::per_second),
             mDiscreteSources(),
-            mpRegularGridCalculator(),
-            mpMesh(),
-            mUseRegularGrid(true),
+            mpGridCalculator(),
             mDiscreteConstantSourceStrengths(),
             mDiscreteLinearSourceStrengths(),
             mReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale())
@@ -108,21 +106,9 @@ void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetIsotropicDiffusion
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetRegularGridCalculator(boost::shared_ptr<RegularGridCalculator<SPACE_DIM> > pRegularGrid)
+void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<SPACE_DIM> > pRegularGrid)
 {
-    mpRegularGridCalculator = pRegularGrid;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetMesh(boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > pMesh)
-{
-    mpMesh = pMesh;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetUseRegularGrid(bool useRegularGrid)
-{
-    mUseRegularGrid = useRegularGrid;
+    mpGridCalculator = pRegularGrid;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -134,53 +120,24 @@ void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetReferenceConcentra
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSourceStrengths()
 {
-    if(mUseRegularGrid)
+    if(!mpGridCalculator)
     {
-        if(!mpRegularGridCalculator)
-        {
-            EXCEPTION("A grid has not been set for the determination of source strengths.");
-        }
-        mDiscreteConstantSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(), 0.0*unit::mole_per_metre_cubed_per_second);
-        mDiscreteLinearSourceStrengths = std::vector<units::quantity<unit::rate> >(mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(), 0.0*unit::per_second);
-
-        for(unsigned idx=0; idx<mDiscreteSources.size(); idx++)
-        {
-            mDiscreteSources[idx]->SetRegularGridCalculator(mpRegularGridCalculator);
-            std::vector<units::quantity<unit::rate> > result = mDiscreteSources[idx]->GetLinearInURegularGridValues();
-            std::transform(mDiscreteLinearSourceStrengths.begin( ), mDiscreteLinearSourceStrengths.end( ),
-                           result.begin( ), mDiscreteLinearSourceStrengths.begin( ),std::plus<units::quantity<unit::rate> >( ));
-
-            std::vector<units::quantity<unit::concentration_flow_rate> > result2 = mDiscreteSources[idx]->GetConstantInURegularGridValues();
-            std::transform(mDiscreteConstantSourceStrengths.begin( ), mDiscreteConstantSourceStrengths.end( ),
-                           result2.begin( ), mDiscreteConstantSourceStrengths.begin( ),std::plus<units::quantity<unit::concentration_flow_rate> >( ));
-        }
+        EXCEPTION("A grid has not been set for the determination of source strengths.");
     }
-    else
+    mDiscreteConstantSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(mpGridCalculator->GetNumberOfLocations(),
+            0.0*unit::mole_per_metre_cubed_per_second);
+    mDiscreteLinearSourceStrengths = std::vector<units::quantity<unit::rate> >(mpGridCalculator->GetNumberOfLocations(), 0.0*unit::per_second);
+
+    for(unsigned idx=0; idx<mDiscreteSources.size(); idx++)
     {
-        if(!mpMesh)
-        {
-            EXCEPTION("A mesh has not been set for the determination of source strengths.");
-        }
+        mDiscreteSources[idx]->SetGridCalculator(mpGridCalculator);
+        std::vector<units::quantity<unit::rate> > result = mDiscreteSources[idx]->GetLinearInUValues();
+        std::transform(mDiscreteLinearSourceStrengths.begin( ), mDiscreteLinearSourceStrengths.end( ),
+                       result.begin( ), mDiscreteLinearSourceStrengths.begin( ),std::plus<units::quantity<unit::rate> >( ));
 
-        for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
-        {
-            this->mDiscreteSources[idx]->SetMesh(this->mpMesh);
-
-        }
-
-        mDiscreteLinearSourceStrengths = std::vector<units::quantity<unit::rate> >(this->mpMesh->GetNumElements(), 0.0*unit::per_second);
-        mDiscreteConstantSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(mpMesh->GetNumElements(), 0.0*unit::mole_per_metre_cubed_per_second);
-        for(unsigned idx=0; idx<mDiscreteSources.size(); idx++)
-        {
-            mDiscreteSources[idx]->SetMesh(mpMesh);
-            std::vector<units::quantity<unit::concentration_flow_rate> > result = mDiscreteSources[idx]->GetConstantInUMeshValues();
-            std::transform(mDiscreteConstantSourceStrengths.begin( ), mDiscreteConstantSourceStrengths.end( ),
-                           result.begin( ), mDiscreteConstantSourceStrengths.begin( ),std::plus<units::quantity<unit::concentration_flow_rate> >( ));
-
-            std::vector<units::quantity<unit::rate> > result2 = this->mDiscreteSources[idx]->GetLinearInUMeshValues();
-            std::transform(mDiscreteLinearSourceStrengths.begin( ), mDiscreteLinearSourceStrengths.end( ),
-                           result2.begin( ), mDiscreteLinearSourceStrengths.begin( ),std::plus<units::quantity<unit::rate> >( ));
-        }
+        std::vector<units::quantity<unit::concentration_flow_rate> > result2 = mDiscreteSources[idx]->GetConstantInUValues();
+        std::transform(mDiscreteConstantSourceStrengths.begin( ), mDiscreteConstantSourceStrengths.end( ),
+                       result2.begin( ), mDiscreteConstantSourceStrengths.begin( ),std::plus<units::quantity<unit::concentration_flow_rate> >( ));
     }
 }
 

@@ -83,28 +83,16 @@ public:
     static boost::shared_ptr<CellBasedDiscreteSource<DIM> > Create();
 
     /**
-     * Return the values of the source strengths sampled on the mesh elements
+     * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInUMeshValues();
-
-    /**
-     * Return the values of the source strengths sampled on the mesh elements
-     * @return a vector of source strengths
-     */
-    std::vector<units::quantity<unit::rate> > GetLinearInUMeshValues();
+    std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInUValues();
 
     /**
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInURegularGridValues();
-
-    /**
-     * Return the values of the source strengths sampled on the regular grid
-     * @return a vector of source strengths
-     */
-    std::vector<units::quantity<unit::rate> > GetLinearInURegularGridValues();
+    std::vector<units::quantity<unit::rate> > GetLinearInUValues();
 
     /**
      * Set the value of the source for PRESCRIBED type sources

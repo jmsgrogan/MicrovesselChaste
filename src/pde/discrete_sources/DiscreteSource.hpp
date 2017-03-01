@@ -38,10 +38,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include <vector>
 #include <string>
-#include <map>
 #include "UblasIncludes.hpp"
-#include "RegularGridCalculator.hpp"
-#include "DiscreteContinuumMesh.hpp"
+#include "GridCalculator.hpp"
 #include "UnitCollection.hpp"
 
 /**
@@ -56,14 +54,9 @@ class DiscreteSource
 protected:
 
     /**
-     * The grid for solvers using regular grids
+     * The grid for solvers
      */
-    boost::shared_ptr<RegularGridCalculator<DIM> > mpRegularGridCalculator;
-
-    /**
-     * The mesh for the finite element solver
-     */
-    boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > mpMesh;
+    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
 
     /**
      * Locations for POINT type sources
@@ -105,34 +98,22 @@ public:
     static boost::shared_ptr<DiscreteSource<DIM> > Create();
 
     /**
-     * Return the values of the source strengths sampled on the mesh elements
+     * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    virtual std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInUMeshValues();
-
-    /**
-     * Return the values of the source strengths sampled on the mesh elements
-     * @return a vector of source strengths
-     */
-    virtual std::vector<units::quantity<unit::rate> > GetLinearInUMeshValues();
+    virtual std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInUValues();
 
     /**
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    virtual std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInURegularGridValues();
+    virtual std::vector<units::quantity<unit::rate> > GetLinearInUValues();
 
     /**
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    virtual std::vector<units::quantity<unit::rate> > GetLinearInURegularGridValues();
-
-    /**
-     * Return the values of the source strengths sampled on the regular grid
-     * @return a vector of source strengths
-     */
-    virtual std::vector<units::quantity<unit::concentration_flow_rate> > GetNonlinearTermRegularGridValues();
+    virtual std::vector<units::quantity<unit::concentration_flow_rate> > GetNonlinearTermValues();
 
     /**
      * Set the name of the label used in LABEL type sources
@@ -150,13 +131,7 @@ public:
      * Set the regular grid
      * @param pRegularGrid the regular grid
      */
-    void SetRegularGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pRegularGridCalculator);
-
-    /**
-     * Set the finite element mesh
-     * @param pMesh the finite element mesh
-     */
-    void SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > pMesh);
+    void SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator);
 
     /**
      * Set the value of the source for PRESCRIBED type sources

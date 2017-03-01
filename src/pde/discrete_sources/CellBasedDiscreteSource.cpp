@@ -62,75 +62,56 @@ boost::shared_ptr<CellBasedDiscreteSource<DIM> > CellBasedDiscreteSource<DIM>::C
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > CellBasedDiscreteSource<DIM>::GetConstantInUMeshValues()
+std::vector<units::quantity<unit::concentration_flow_rate> > CellBasedDiscreteSource<DIM>::GetConstantInUValues()
 {
-    if(!this->mpMesh)
-    {
-        EXCEPTION("A mesh is required for this type of source");
-    }
-
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpMesh->GetNumElements(), 0.0*unit::mole_per_metre_cubed_per_second);
-    std::vector<std::vector<CellPtr> > element_cell_map = this->mpMesh->GetElementCellMap();
-    for(unsigned idx=0; idx<element_cell_map.size(); idx++)
-    {
-        Element<DIM, DIM>* p_element = this->mpMesh->GetElement(idx);
-        double determinant = 0.0;
-        c_matrix<double, DIM, DIM> jacobian;
-        p_element->CalculateJacobian(jacobian, determinant);
-        units::quantity<unit::volume> element_volume = p_element->GetVolume(determinant) * units::pow<3>(this->mpMesh->GetReferenceLengthScale());
-        values[idx] += mCellConstantInUValue * double(element_cell_map[idx].size())/element_volume;
-    }
-    return values;
-}
-
-template<unsigned DIM>
-std::vector<units::quantity<unit::rate> > CellBasedDiscreteSource<DIM>::GetLinearInUMeshValues()
-{
-    if(!this->mpMesh)
-    {
-        EXCEPTION("A mesh is required for this type of source");
-    }
-    std::vector<units::quantity<unit::rate> > values(this->mpMesh->GetNumElements(), 0.0*unit::per_second);
-    std::vector<std::vector<CellPtr> > element_cell_map = this->mpMesh->GetElementCellMap();
-
-    for(unsigned idx=0; idx<element_cell_map.size(); idx++)
-    {
-        values[idx] += mCellLinearInUValue * double(element_cell_map[idx].size());
-    }
-    return values;
-}
-
-template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > CellBasedDiscreteSource<DIM>::GetConstantInURegularGridValues()
-{
-    if(!this->mpRegularGridCalculator)
+    if(!this->mpGridCalculator)
     {
         EXCEPTION("A regular grid is required for this type of source");
     }
 
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(), 0.0*unit::mole_per_metre_cubed_per_second);
-    units::quantity<unit::length> grid_spacing = this->mpRegularGridCalculator->GetGrid()->GetSpacing();
-    units::quantity<unit::volume> grid_volume = units::pow<3>(grid_spacing);
-
-    std::vector<std::vector<CellPtr> > point_cell_map = this->mpRegularGridCalculator->GetPointCellMap();
-    for(unsigned idx=0; idx<point_cell_map.size(); idx++)
+    if(this->mpGridCalculator->HasStructuredGrid())
     {
-        values[idx] += mCellConstantInUValue * double(point_cell_map[idx].size())/grid_volume;
-    }
-    return values;
+        std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpGridCalculator->GetNumberOfLocations(),
+                0.0*unit::mole_per_metre_cubed_per_second);
+        units::quantity<unit::length> grid_spacing = this->mpGridCalculator->GetGrid()->GetSpacing();
+        units::quantity<unit::volume> grid_volume = units::pow<3>(grid_spacing);
 
+        std::vector<std::vector<CellPtr> > point_cell_map = this->mpGridCalculator->GetCellMap();
+        for(unsigned idx=0; idx<point_cell_map.size(); idx++)
+        {
+            values[idx] += mCellConstantInUValue * double(point_cell_map[idx].size())/grid_volume;
+        }
+        return values;
+    }
+    else
+    {
+        std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpGridCalculator->GetNumberOfLocations(),
+                0.0*unit::mole_per_metre_cubed_per_second);
+        std::vector<std::vector<CellPtr> > element_cell_map = this->mpGridCalculator->GetCellMap();
+        for(unsigned idx=0; idx<element_cell_map.size(); idx++)
+        {
+            Element<DIM, DIM>* p_element = this->mpGridCalculator->GetMesh()->GetElement(idx);
+            double determinant = 0.0;
+            c_matrix<double, DIM, DIM> jacobian;
+            p_element->CalculateJacobian(jacobian, determinant);
+            units::quantity<unit::volume> element_volume = p_element->GetVolume(determinant) * units::pow<3>(this->mpGridCalculator->GetMesh()->GetReferenceLengthScale());
+            values[idx] += mCellConstantInUValue * double(element_cell_map[idx].size())/element_volume;
+        }
+        return values;
+    }
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::rate> > CellBasedDiscreteSource<DIM>::GetLinearInURegularGridValues()
+std::vector<units::quantity<unit::rate> > CellBasedDiscreteSource<DIM>::GetLinearInUValues()
 {
-    if(!this->mpRegularGridCalculator)
+    if(!this->mpGridCalculator)
     {
         EXCEPTION("A regular grid is required for this type of source");
     }
 
-    std::vector<units::quantity<unit::rate> > values(this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(), 0.0*unit::per_second);
-    std::vector<std::vector<CellPtr> > point_cell_map = this->mpRegularGridCalculator->GetPointCellMap();
+    std::vector<units::quantity<unit::rate> > values(this->mpGridCalculator->GetNumberOfLocations(),
+            0.0*unit::per_second);
+    std::vector<std::vector<CellPtr> > point_cell_map = this->mpGridCalculator->GetCellMap();
     for(unsigned idx=0; idx<point_cell_map.size(); idx++)
     {
         values[idx] += mCellLinearInUValue * double(point_cell_map[idx].size());

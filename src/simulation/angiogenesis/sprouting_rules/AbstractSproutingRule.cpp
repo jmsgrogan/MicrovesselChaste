@@ -86,7 +86,7 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > AbstractSproutingRule<DIM>::Ge
 }
 
 template<unsigned DIM>
-void AbstractSproutingRule<DIM>::SetGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pGrid)
+void AbstractSproutingRule<DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGrid)
 {
 
 }

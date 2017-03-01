@@ -95,7 +95,7 @@ void GreensFunctionSolver<DIM>::Solve()
     // Get the sink rates
     unsigned number_of_sinks = mSinkCoordinates.size();
     units::quantity<unit::concentration_flow_rate> sink_rate = this->mpPde->ComputeConstantInUSourceTerm();
-    units::quantity<unit::volume> sink_volume = units::pow<3>(this->mpRegularGridCalculator->GetGrid()->GetSpacing());
+    units::quantity<unit::volume> sink_volume = units::pow<3>(this->mpGridCalculator->GetGrid()->GetSpacing());
     mSinkRates = std::vector<units::quantity<unit::molar_flow_rate> >(number_of_sinks, sink_rate * sink_volume);
     units::quantity<unit::molar_flow_rate> total_sink_rate = std::accumulate(mSinkRates.begin(), mSinkRates.end(), 0.0*unit::mole_per_second);
 
@@ -266,12 +266,12 @@ void GreensFunctionSolver<DIM>::GenerateSubSegments()
 template<unsigned DIM>
 void GreensFunctionSolver<DIM>::GenerateTissuePoints()
 {
-    unsigned num_points = this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints();
+    unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfGlobalPoints();
     mSinkCoordinates = std::vector<DimensionalChastePoint<DIM> >(num_points);
     mSinkPointMap = std::vector<unsigned>(num_points);
     for(unsigned idx=0; idx<num_points; idx++)
     {
-        mSinkCoordinates[idx] = this->mpRegularGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(idx);
+        mSinkCoordinates[idx] = this->mpGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(idx);
         mSinkPointMap[idx] = idx;
     }
 }
@@ -344,7 +344,7 @@ boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Gre
     typedef boost::multi_array<units::quantity<unit::per_length>, 2>::index index;
     unsigned num_points = mSinkCoordinates.size();
     double coefficient = 1.0 / (4.0 * M_PI);
-    units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpRegularGridCalculator->GetGrid()->GetSpacing());
+    units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpGridCalculator->GetGrid()->GetSpacing());
     units::quantity<unit::length> equivalent_tissue_point_radius = units::root<3>(tissue_point_volume * 0.75 / M_PI);
     boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2 > > p_interaction_matrix(new boost::multi_array<units::quantity<unit::per_length>, 2>(boost::extents[num_points][num_points]));
     for (index iter = 0; iter < num_points; iter++)
@@ -373,7 +373,7 @@ boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Gre
     unsigned num_sinks = mSinkCoordinates.size();
     unsigned num_subsegments = mSubSegmentCoordinates.size();
 
-    units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpRegularGridCalculator->GetGrid()->GetSpacing());
+    units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpGridCalculator->GetGrid()->GetSpacing());
     units::quantity<unit::length> equivalent_tissue_point_radius = units::root<3>(tissue_point_volume * 0.75 / M_PI);
     double coefficient = 1.0 / (4.0 * M_PI);
 
@@ -406,7 +406,7 @@ boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Gre
     unsigned num_sinks = mSinkCoordinates.size();
     double coefficient = 1.0 / (4.0 * M_PI);
 
-    units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpRegularGridCalculator->GetGrid()->GetSpacing());
+    units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpGridCalculator->GetGrid()->GetSpacing());
     units::quantity<unit::length> equivalent_tissue_point_radius = units::root<3>(tissue_point_volume * 0.75 / M_PI);
 
     boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > p_interaction_matrix(new boost::multi_array<units::quantity<unit::per_length>, 2>(boost::extents[num_subsegments][num_sinks]));
@@ -436,13 +436,13 @@ void GreensFunctionSolver<DIM>::WriteSolution(std::map<std::string, std::vector<
     // Write the tissue point data
     RegularGridWriter writer;
     writer.SetFilename(this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/solution.vti");
-    writer.SetImage(this->mpVtkSolution);
+    writer.SetImage(vtkImageData::SafeDownCast(this->mpVtkSolution));
     writer.Write();
 
     // Add the segment points
     vtkSmartPointer<vtkPolyData> pPolyData = vtkSmartPointer<vtkPolyData>::New();
     vtkSmartPointer<vtkPoints> pPoints = vtkSmartPointer<vtkPoints>::New();
-    units::quantity<unit::length> grid_length_scale = this->mpRegularGridCalculator->GetGrid()->GetReferenceLengthScale();
+    units::quantity<unit::length> grid_length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
 
     for (unsigned i = 0; i < mSubSegmentCoordinates.size(); i++)
     {

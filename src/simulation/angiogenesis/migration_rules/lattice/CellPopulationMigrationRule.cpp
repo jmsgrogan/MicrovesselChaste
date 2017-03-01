@@ -122,7 +122,7 @@ std::vector<double> CellPopulationMigrationRule<DIM>::GetNeighbourMovementProbab
         }
 
         // Make sure that tip cell does not try to move into a location already occupied by the vessel that it comes from
-        DimensionalChastePoint<DIM> neighbour_location = this->mpRegularGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(neighbourIndices[idx]);
+        DimensionalChastePoint<DIM> neighbour_location = this->mpGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(neighbourIndices[idx]);
 
         bool already_attached = false;
         for (unsigned seg_index = 0; seg_index < pNode->GetNumberOfSegments(); seg_index++)
@@ -155,7 +155,7 @@ std::vector<double> CellPopulationMigrationRule<DIM>::GetNeighbourMovementProbab
 template<unsigned DIM>
 std::vector<int> CellPopulationMigrationRule<DIM>::GetIndices(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
-    if(!this->mpRegularGridCalculator)
+    if(!this->mpGridCalculator)
     {
         EXCEPTION("A regular grid is required for this type of migration rule.");
     }
@@ -170,22 +170,22 @@ std::vector<int> CellPopulationMigrationRule<DIM>::GetIndices(const std::vector<
         EXCEPTION("A cell population is required for this type of migration rule.");
     }
 
-    mPointCellMap = this->mpRegularGridCalculator->GetPointCellMap();
+    mPointCellMap = this->mpGridCalculator->GetCellMap();
 
     // Set up the output indices vector
     std::vector<int> indices(rNodes.size(), -1);
 
     // Get the point-node map from the regular grid
-    std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > point_node_map = this->mpRegularGridCalculator->GetPointNodeMap();
+    std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > point_node_map = this->mpGridCalculator->GetVesselNodeMap();
 
     // Get the neighbour data from the regular grid
-    std::vector<std::vector<unsigned> > neighbour_indices = this->mpRegularGridCalculator->GetGrid()->GetNeighbourData();
+    std::vector<std::vector<unsigned> > neighbour_indices = this->mpGridCalculator->GetGrid()->GetNeighbourData();
 
     // Loop over all nodes, if they can move set the index
     for(unsigned idx = 0; idx < rNodes.size(); idx++)
     {
         // Get the grid index of the node
-        unsigned grid_index = this->mpRegularGridCalculator->GetGrid()->GetNearestGlobalGridIndex(rNodes[idx]->rGetLocation());
+        unsigned grid_index = this->mpGridCalculator->GetGrid()->GetNearestGlobalGridIndex(rNodes[idx]->rGetLocation());
 
         // Get the probability of moving into each of the neighbour sites
         std::vector<double> probability_of_moving = GetNeighbourMovementProbabilities(rNodes[idx], neighbour_indices[grid_index], grid_index);

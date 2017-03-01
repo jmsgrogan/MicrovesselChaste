@@ -43,7 +43,7 @@ template<unsigned SPACE_DIM>
 Owen11CaBasedDivisionRule<SPACE_DIM>::Owen11CaBasedDivisionRule()
     : AbstractCaBasedDivisionRule<SPACE_DIM>(),
       mpVesselNetwork(),
-      mpRegularGridCalculator(),
+      mpGridCalculator(),
       mReferenceLengthScale(BaseUnits::Instance()->GetReferenceLengthScale()),
       mCancerCellCarryingCapacity(2)
 {
@@ -61,7 +61,7 @@ bool Owen11CaBasedDivisionRule<SPACE_DIM>::IsRoomToDivide(CellPtr pParentCell, C
 
     if(mpVesselNetwork and SPACE_DIM>1)
     {
-        if(!mpRegularGridCalculator)
+        if(!mpGridCalculator)
         {
             EXCEPTION("A regular grid is required for determining vessel based lattice occupancy");
         }
@@ -74,7 +74,7 @@ bool Owen11CaBasedDivisionRule<SPACE_DIM>::IsRoomToDivide(CellPtr pParentCell, C
     unsigned num_cells_at_site = 0;
     if(mpVesselNetwork and SPACE_DIM>1)
     {
-        if(mpRegularGridCalculator->IsSegmentAtLatticeSite(node_index, false))
+        if(mpGridCalculator->IsSegmentAtLocation(node_index, false))
         {
             num_cells_at_site = 1;
         }
@@ -108,7 +108,7 @@ bool Owen11CaBasedDivisionRule<SPACE_DIM>::IsRoomToDivide(CellPtr pParentCell, C
 
         if(mpVesselNetwork and SPACE_DIM>1)
         {
-            if(mpRegularGridCalculator->IsSegmentAtLatticeSite(*neighbour_iter, false))
+            if(mpGridCalculator->IsSegmentAtLocation(*neighbour_iter, false))
             {
                 num_cells_at_site = 1;
             }
@@ -160,7 +160,7 @@ unsigned Owen11CaBasedDivisionRule<SPACE_DIM>::CalculateDaughterNodeIndex(CellPt
 
     if(mpVesselNetwork and SPACE_DIM>1)
     {
-        if(!mpRegularGridCalculator)
+        if(!mpGridCalculator)
         {
             EXCEPTION("A regular grid is required for determining vessel based lattice occupancy");
         }
@@ -176,7 +176,7 @@ unsigned Owen11CaBasedDivisionRule<SPACE_DIM>::CalculateDaughterNodeIndex(CellPt
         unsigned num_cells_at_site = 0;
         if(mpVesselNetwork and SPACE_DIM>1)
         {
-            if(mpRegularGridCalculator->IsSegmentAtLatticeSite(parent_node_index, false))
+            if(mpGridCalculator->IsSegmentAtLocation(parent_node_index, false))
             {
                 num_cells_at_site = 1;
             }
@@ -215,7 +215,7 @@ unsigned Owen11CaBasedDivisionRule<SPACE_DIM>::CalculateDaughterNodeIndex(CellPt
         unsigned num_cells_at_site = 0;
         if(mpVesselNetwork and SPACE_DIM>1)
         {
-            if(mpRegularGridCalculator->IsSegmentAtLatticeSite(*neighbour_iter, false))
+            if(mpGridCalculator->IsSegmentAtLocation(*neighbour_iter, false))
             {
                 num_cells_at_site = 1;
             }
@@ -302,9 +302,9 @@ void Owen11CaBasedDivisionRule<SPACE_DIM>::SetReferenceLengthScale(units::quanti
 }
 
 template<unsigned SPACE_DIM>
-void Owen11CaBasedDivisionRule<SPACE_DIM>::SetRegularGridCalculator(boost::shared_ptr<RegularGridCalculator<SPACE_DIM> > pRegularGrid)
+void Owen11CaBasedDivisionRule<SPACE_DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<SPACE_DIM> > pRegularGrid)
 {
-    mpRegularGridCalculator = pRegularGrid;
+    mpGridCalculator = pRegularGrid;
 }
 
 // Explicit instantiation

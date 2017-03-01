@@ -52,7 +52,7 @@ AngiogenesisSolver<DIM>::AngiogenesisSolver() :
         mpSproutingRule(),
         mpBoundingDomain(),
         mpFileHandler(),
-        mpVesselGridCalculator(),
+        mpGridCalculator(),
         mpCellPopulation(),
         mCellPopulationReferenceLength(5.0 * unit::microns),
         mTipCells(),
@@ -118,9 +118,9 @@ void AngiogenesisSolver<DIM>::SetSproutingRule(boost::shared_ptr<AbstractSprouti
 }
 
 template<unsigned DIM>
-void AngiogenesisSolver<DIM>::SetVesselGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pVesselGrid)
+void AngiogenesisSolver<DIM>::SetVesselGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pVesselGrid)
 {
-    mpVesselGridCalculator = pVesselGrid;
+    mpGridCalculator = pVesselGrid;
 }
 
 template<unsigned DIM>
@@ -167,7 +167,7 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
     }
 
     // Do lattice or off lattice movement
-    if (mpVesselGridCalculator)
+    if (mpGridCalculator)
     {
         mpMigrationRule->SetIsSprouting(sprouting);
 
@@ -186,14 +186,14 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
             {
                 if (sprouting)
                 {
-                    mpNetwork->FormSprout(tips[idx]->rGetLocation(), mpVesselGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(indices[idx]));
+                    mpNetwork->FormSprout(tips[idx]->rGetLocation(), mpGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(indices[idx]));
                     tips[idx]->SetIsMigrating(false);
                     mpNetwork->UpdateAll();
                 }
                 else
                 {
                     boost::shared_ptr<VesselNode<DIM> > p_new_node = VesselNode<DIM>::Create(tips[idx]);
-                    p_new_node->SetLocation(mpVesselGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(indices[idx]));
+                    p_new_node->SetLocation(mpGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(indices[idx]));
                     mpNetwork->ExtendVessel(tips[idx]->GetSegment(0)->GetVessel(), tips[idx], p_new_node);
                     tips[idx]->SetIsMigrating(false);
                     p_new_node->SetIsMigrating(true);
@@ -281,10 +281,10 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
         // If this is currently a tip
         if (nodes[idx]->IsMigrating() && nodes[idx]->GetNumberOfSegments() == 1)
         {
-            if (mpVesselGridCalculator)
+            if (mpGridCalculator)
             {
-                std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > point_node_map = mpVesselGridCalculator->GetPointNodeMap();
-                unsigned grid_index = mpVesselGridCalculator->GetGrid()->GetNearestGlobalGridIndex(nodes[idx]->rGetLocation());
+                std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > point_node_map = mpGridCalculator->GetVesselNodeMap();
+                unsigned grid_index = mpGridCalculator->GetGrid()->GetNearestGlobalGridIndex(nodes[idx]->rGetLocation());
                 if (point_node_map[grid_index].size() >= 2)
                 {
                     boost::shared_ptr<VesselNode<DIM> > p_merge_node = VesselNode<DIM>::Create(nodes[idx]);
@@ -365,21 +365,21 @@ void AngiogenesisSolver<DIM>::Increment()
         EXCEPTION("The angiogenesis solver needs an initial vessel network");
     }
 
-    if (mpVesselGridCalculator)
+    if (mpGridCalculator)
     {
-        mpVesselGridCalculator->SetVesselNetwork(mpNetwork);
+        mpGridCalculator->SetVesselNetwork(mpNetwork);
         if (mpCellPopulation)
         {
-            mpVesselGridCalculator->SetCellPopulation(*mpCellPopulation, mCellPopulationReferenceLength);
+            mpGridCalculator->SetCellPopulation(*mpCellPopulation, mCellPopulationReferenceLength);
         }
     }
 
     if (mpMigrationRule)
     {
         mpMigrationRule->SetNetwork(mpNetwork);
-        if (mpVesselGridCalculator)
+        if (mpGridCalculator)
         {
-            mpMigrationRule->SetGridCalculator(mpVesselGridCalculator);
+            mpMigrationRule->SetGridCalculator(mpGridCalculator);
         }
         if (mpCellPopulation)
         {
@@ -390,9 +390,9 @@ void AngiogenesisSolver<DIM>::Increment()
     if (mpSproutingRule)
     {
         mpSproutingRule->SetVesselNetwork(mpNetwork);
-        if (mpVesselGridCalculator)
+        if (mpGridCalculator)
         {
-            mpSproutingRule->SetGridCalculator(mpVesselGridCalculator);
+            mpSproutingRule->SetGridCalculator(mpGridCalculator);
         }
     }
 
@@ -432,7 +432,7 @@ void AngiogenesisSolver<DIM>::Increment()
         {
             if (nodes[idx]->IsMigrating())
             {
-                unsigned location_index = mpVesselGridCalculator->GetGrid()->GetNearestGlobalGridIndex(nodes[idx]->rGetLocation());
+                unsigned location_index = mpGridCalculator->GetGrid()->GetNearestGlobalGridIndex(nodes[idx]->rGetLocation());
 
                 // If there is already a stalk cell here it means a vessel tip has stayed in the same location, set it to tip type
                 if(mpCellPopulation->IsCellAttachedToLocationIndex(location_index))

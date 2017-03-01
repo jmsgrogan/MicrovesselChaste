@@ -42,8 +42,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UblasVectorInclude.hpp"
 #include "DiscreteSource.hpp"
 #include "GeometryTools.hpp"
-#include "RegularGridCalculator.hpp"
-#include "DiscreteContinuumMesh.hpp"
+#include "GridCalculator.hpp"
 #include "UnitCollection.hpp"
 
 /**
@@ -81,17 +80,7 @@ protected:
     /**
      * The grid for solvers using regular grids
      */
-    boost::shared_ptr<RegularGridCalculator<SPACE_DIM> > mpRegularGridCalculator;
-
-    /**
-     * The mesh for solvers using finite element meshes
-     */
-    boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > mpMesh;
-
-    /**
-     * Whether to use a regular grid or mesh for discrete source calculations
-     */
-    bool mUseRegularGrid;
+    boost::shared_ptr<GridCalculator<SPACE_DIM> > mpGridCalculator;
 
     /**
      * The constant source strengths for each point on the grid or element in the mesh
@@ -190,25 +179,13 @@ public:
      * Set the regular grid
      * @param pRegularGrid the regular grid
      */
-    void SetRegularGridCalculator(boost::shared_ptr<RegularGridCalculator<SPACE_DIM> > pRegularGridCalculator);
-
-    /**
-     * Set the finite element mesh
-     * @param pMesh the finite element mesh
-     */
-    void SetMesh(boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > pMesh);
+    void SetGridCalculator(boost::shared_ptr<GridCalculator<SPACE_DIM> > pGridCalculator);
 
     /**
      * Set the reference concentration
      * @param referenceConcentration the reference concentration
      */
     void SetReferenceConcentration(units::quantity<unit::concentration> referenceConcentration);
-
-    /**
-     * Set whether to use a regular grid
-     * @param useRegularGrid whether to use a regular grid
-     */
-    void SetUseRegularGrid(bool useRegularGrid);
 
     /**
      * Update the discrete source strengths

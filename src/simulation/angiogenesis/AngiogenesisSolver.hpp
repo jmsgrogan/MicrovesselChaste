@@ -41,7 +41,7 @@
 #include "SmartPointers.hpp"
 #include "VesselNetwork.hpp"
 #include "Part.hpp"
-#include "RegularGridCalculator.hpp"
+#include "GridCalculator.hpp"
 #include "AbstractSproutingRule.hpp"
 #include "AbstractMigrationRule.hpp"
 #include "AbstractCellPopulation.hpp"
@@ -85,7 +85,7 @@ class AngiogenesisSolver
     /**
      * The grid calculator for lattice based angiogenesis simulations
      */
-    boost::shared_ptr<RegularGridCalculator<DIM> > mpVesselGridCalculator;
+    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
 
     /**
      * The cell population for discrete cell angiogenesis models
@@ -183,7 +183,7 @@ public:
      * Set a vessel grid, this means that on-lattice rules will be used
      * @param pVesselGrid the grid for the vessel network
      */
-    void SetVesselGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> >pVesselGrid);
+    void SetVesselGridCalculator(boost::shared_ptr<GridCalculator<DIM> >pVesselGrid);
 
     /**
      * Set the vessel network

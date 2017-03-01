@@ -136,10 +136,10 @@ void DensityMap<DIM>::Solve()
         this->Setup();
     }
 
-    c_vector<unsigned, 6> extents = this->mpRegularGridCalculator->GetGrid()->GetExtents();
-    std::vector<double> vessel_solution(this->mpRegularGridCalculator->GetGrid()->GetNumberOfLocalPoints(), 0.0);
+    c_vector<unsigned, 6> extents = this->mpGridCalculator->GetGrid()->GetExtents();
+    std::vector<double> vessel_solution(this->mpGridCalculator->GetGrid()->GetNumberOfLocalPoints(), 0.0);
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
-    units::quantity<unit::length> length_Scale = this->mpRegularGridCalculator->GetGrid()->GetReferenceLengthScale();
+    units::quantity<unit::length> length_Scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
 
     if (this->mpNetwork)
     {
@@ -149,8 +149,8 @@ void DensityMap<DIM>::Solve()
             {
                 for (unsigned k = extents[0]; k < extents[1] + 1; k++) // X
                 {
-                    unsigned grid_index = this->mpRegularGridCalculator->GetGrid()->GetLocal1dGridIndex(k, j, i);
-                    c_vector<double, 6> bbox = this->mpRegularGridCalculator->GetGrid()->GetPointBoundingBox(k ,j, i, true);
+                    unsigned grid_index = this->mpGridCalculator->GetGrid()->GetLocal1dGridIndex(k, j, i);
+                    c_vector<double, 6> bbox = this->mpGridCalculator->GetGrid()->GetPointBoundingBox(k ,j, i, true);
 
                     for (unsigned idx = 0; idx <  segments.size(); idx++)
                     {

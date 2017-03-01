@@ -105,13 +105,12 @@ void FiniteElementSolver<DIM>::Solve()
 
     for(unsigned idx=0; idx<this->mBoundaryConditions.size(); idx++)
     {
-        this->mBoundaryConditions[idx]->SetMesh(this->mpMesh);
-        this->mBoundaryConditions[idx]->UpdateBoundaryConditionContainer(p_bcc);
+        this->mBoundaryConditions[idx]->SetGridCalculator(this->mpGridCalculator);
+        this->mBoundaryConditions[idx]->UpdateBoundaryConditions(p_bcc);
     }
 
     // Do the solve
-    this->mpPde->SetUseRegularGrid(false);
-    this->mpPde->SetMesh(this->mpMesh);
+    this->mpPde->SetGridCalculator(this->mpGridCalculator);
     this->mpPde->UpdateDiscreteSourceStrengths();
 
     // Check the type of pde

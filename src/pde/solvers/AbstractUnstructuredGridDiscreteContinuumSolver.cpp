@@ -40,31 +40,20 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkProbeFilter.h>
 #include <vtkImageData.h>
 #include <vtkSmartPointer.h>
+#include <vtkXMLUnstructuredGridWriter.h>
 #include "AbstractUnstructuredGridDiscreteContinuumSolver.hpp"
 
 template<unsigned DIM>
 AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::AbstractUnstructuredGridDiscreteContinuumSolver()
-    :   AbstractDiscreteContinuumSolver<DIM>(),
-        mpVtkSolution(),
-        mpMesh()
+    :   AbstractDiscreteContinuumSolver<DIM>()
 {
-    this->mHasUnstructuredGrid = true;
+
 }
 
 template<unsigned DIM>
 AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::~AbstractUnstructuredGridDiscreteContinuumSolver()
 {
 
-}
-
-template<unsigned DIM>
-boost::shared_ptr<DiscreteContinuumMesh<DIM> > AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetMesh()
-{
-    if(!this->mpMesh)
-    {
-        EXCEPTION("A mesh has not been set.");
-    }
-    return this->mpMesh;
 }
 
 template<unsigned DIM>
@@ -171,7 +160,7 @@ std::vector<units::quantity<unit::concentration> > AbstractUnstructuredGridDiscr
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration> > AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetConcentrations(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh)
 {
-    if(this->mpMesh == pMesh)
+    if(this->mpGridCalculator->GetMesh() == pMesh)
     {
         return this->GetConcentrations();
     }
@@ -237,7 +226,7 @@ std::vector<double> AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetSol
 template<unsigned DIM>
 std::vector<double> AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetSolution(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh)
 {
-    if(this->mpMesh == pMesh)
+    if(this->mpGridCalculator->GetMesh() == pMesh)
     {
         return this->GetSolution();
     }
@@ -248,38 +237,22 @@ std::vector<double> AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetSol
 }
 
 template<unsigned DIM>
-vtkSmartPointer<vtkUnstructuredGrid> AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetVtkSolution()
-{
-    if(!this->mpVtkSolution)
-    {
-        this->Setup();
-    }
-    return this->mpVtkSolution;
-}
-
-template<unsigned DIM>
-void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > pMesh)
-{
-    this->mpMesh = pMesh;
-}
-
-template<unsigned DIM>
 void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::Setup()
 {
-    if(!this->mpMesh)
+    if(!this->mpGridCalculator)
     {
         EXCEPTION("Mesh needed before Setup can be called.");
     }
 
     // Set up the VTK solution
-    this->mpVtkSolution = mpMesh->GetAsVtkUnstructuredGrid();
+    this->mpVtkSolution = this->mpGridCalculator->GetMesh()->GetAsVtkUnstructuredGrid();
 
-    unsigned num_nodes = this->mpMesh->GetNodeLocationsAsPoints().size();
+    unsigned num_nodes = this->mpGridCalculator->GetMesh()->GetNodeLocationsAsPoints().size();
     this->mSolution = std::vector<double>(0.0, num_nodes);
 
     if(this->mpNetwork)
     {
-        this->mpMesh->SetVesselNetwork(this->mpNetwork)  ;
+        this->mpGridCalculator->SetVesselNetwork(this->mpNetwork);
     }
 }
 
@@ -300,7 +273,7 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateSolution(const 
         pPointData->SetValue(i, data[i]);
     }
     this->mpVtkSolution->GetPointData()->AddArray(pPointData);
-    this->mpMesh->SetNodalData(data);
+    this->mpGridCalculator->GetMesh()->SetNodalData(data);
 
     // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
     this->mSolution = std::vector<double>(data.size(), 0.0);

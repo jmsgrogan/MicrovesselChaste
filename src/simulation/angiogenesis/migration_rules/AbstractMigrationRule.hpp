@@ -42,7 +42,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "SmartPointers.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
 #include "AbstractCellPopulation.hpp"
-#include "RegularGridCalculator.hpp"
+#include "GridCalculator.hpp"
 #include "Part.hpp"
 #include "DimensionalChastePoint.hpp"
 
@@ -79,7 +79,7 @@ protected:
     /**
      * A regular grid, used in some lattice based simulations
      */
-    boost::shared_ptr<RegularGridCalculator<DIM> > mpRegularGridCalculator;
+    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
 
     /**
      * The bounding domain, optional
@@ -151,7 +151,7 @@ public:
      * Set the lattice/grid for the vessel network
      * @param pGrid the grid for the vessel network
      */
-    void SetGridCalculator(boost::shared_ptr<RegularGridCalculator<DIM> > pGrid);
+    void SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGrid);
 
     /**
      * Set the cell population

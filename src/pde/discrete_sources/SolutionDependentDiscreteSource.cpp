@@ -62,49 +62,14 @@ boost::shared_ptr<SolutionDependentDiscreteSource<DIM> > SolutionDependentDiscre
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > SolutionDependentDiscreteSource<DIM>::GetConstantInUMeshValues()
+std::vector<units::quantity<unit::concentration_flow_rate> > SolutionDependentDiscreteSource<DIM>::GetConstantInUValues()
 {
-    if(!this->mpMesh)
+    if(!this->mpGridCalculator)
     {
-        EXCEPTION("A mesh is required for this type of source");
+        EXCEPTION("A regular grid is required for this type of source");
     }
 
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpMesh->GetNumElements(), 0.0*unit::mole_per_metre_cubed_per_second);
-    if(mpSolution.size() != this->mpMesh->GetNumElements())
-    {
-        EXCEPTION("A solution sampled on the mesh is required for this type of source");
-    }
-    for(unsigned idx=0; idx<this->mpMesh->GetNumElements(); idx++)
-    {
-        values[idx] = mpSolution[idx]*mConstantInUSinkRatePerSolutionQuantity;
-    }
-    return values;
-}
-
-template<unsigned DIM>
-std::vector<units::quantity<unit::rate> > SolutionDependentDiscreteSource<DIM>::GetLinearInUMeshValues()
-{
-    if(!this->mpMesh)
-    {
-        EXCEPTION("A mesh is required for this type of source");
-    }
-
-    std::vector<units::quantity<unit::rate> > values(this->mpMesh->GetNumElements(), 0.0*unit::per_second);
-    if(mpSolution.size() != this->mpMesh->GetNumElements())
-    {
-        EXCEPTION("A solution sampled on the mesh is required for this type of source");
-    }
-    for(unsigned idx=0; idx<this->mpMesh->GetNumElements(); idx++)
-    {
-        values[idx] = mpSolution[idx]*mLinearInUSinkRatePerSolutionQuantity;
-    }
-    return values;
-}
-
-template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > SolutionDependentDiscreteSource<DIM>::GetConstantInURegularGridValues()
-{
-    unsigned num_points = this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints();
+    unsigned num_points = this->mpGridCalculator->GetNumberOfLocations();
     std::vector<units::quantity<unit::concentration_flow_rate> > values(num_points, 0.0*unit::mole_per_metre_cubed_per_second);
     if(mpSolution.size() != num_points)
     {
@@ -114,13 +79,19 @@ std::vector<units::quantity<unit::concentration_flow_rate> > SolutionDependentDi
     {
         values[idx] = mpSolution[idx]*mConstantInUSinkRatePerSolutionQuantity;
     }
+
     return values;
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::rate> > SolutionDependentDiscreteSource<DIM>::GetLinearInURegularGridValues()
+std::vector<units::quantity<unit::rate> > SolutionDependentDiscreteSource<DIM>::GetLinearInUValues()
 {
-    unsigned num_points = this->mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints();
+    if(!this->mpGridCalculator)
+    {
+        EXCEPTION("A regular grid is required for this type of source");
+    }
+
+    unsigned num_points = this->mpGridCalculator->GetNumberOfLocations();
     std::vector<units::quantity<unit::rate> > values(num_points, 0.0*unit::per_second);
     if(mpSolution.size() != num_points)
     {
@@ -130,6 +101,7 @@ std::vector<units::quantity<unit::rate> > SolutionDependentDiscreteSource<DIM>::
     {
         values[idx] = mpSolution[idx]*mLinearInUSinkRatePerSolutionQuantity;
     }
+
     return values;
 }
 

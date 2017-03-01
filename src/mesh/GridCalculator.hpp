@@ -33,12 +33,13 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef REGULARGRIDCALCULATOR_HPP_
-#define REGULARGRIDCALCULATOR_HPP_
+#ifndef GRIDCALCULATOR_HPP_
+#define GRIDCALCULATOR_HPP_
 
 #include <vector>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
 #include <vtkImageData.h>
+#include <vtkUnstructuredGrid.h>
 #include <vtkSmartPointer.h>
 #include "UblasIncludes.hpp"
 #include "SmartPointers.hpp"
@@ -46,17 +47,19 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselSegment.hpp"
 #include "VesselNode.hpp"
 #include "AbstractCellPopulation.hpp"
-#include "CaBasedCellPopulation.hpp"
 #include "Part.hpp"
 #include "UnitCollection.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "RegularGrid.hpp"
+#include "DiscreteContinuumMesh.hpp"
 
 /**
- * A class for calculating point and line to grid point relationships and cell and vessel to grid point maps.
+ * A class for working with structured and unstructured grids and discrete entities.
+ * For structured grids storage is on grid points. For unstructured grids it is on
+ * 'cells' or (finite) elements.
  */
 template<unsigned DIM>
-class RegularGridCalculator
+class GridCalculator
 {
     /**
      * The vessel network
@@ -69,29 +72,24 @@ class RegularGridCalculator
     AbstractCellPopulation<DIM>* mpCellPopulation;
 
     /**
-     * The reference length scale for the cellpopulation.
+     * The reference length scale for the cell population.
      */
     units::quantity<unit::length> mCellPopulationReferenceLength;
 
     /**
-     * A map of cells corresponding to a point on the grid
+     * A map of cells corresponding to points or elements
      */
-    std::vector<std::vector<CellPtr> > mPointCellMap;
+    std::vector<std::vector<CellPtr> > mCellMap;
 
     /**
-     * A map of vessel nodes corresponding to a point on the grid
+     * A map of vessel nodes corresponding to points or elements
      */
-    std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > mPointNodeMap;
+    std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > mVesselNodeMap;
 
     /**
-     * A map of vessel segments corresponding to a point on the grid
+     * A map of vessel segments corresponding to a points or elements
      */
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > mPointSegmentMap;
-
-    /**
-     * Has a cell population
-     */
-    bool mHasCellPopulation;
+    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > mSegmentMap;
 
     /**
      * The reference length scale, default in microns.
@@ -99,56 +97,71 @@ class RegularGridCalculator
     units::quantity<unit::length> mReferenceLength;
 
     /**
-     * The reference length scale, default in microns.
+     * A regular grid
      */
     boost::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
+
+    /**
+     * A mesh
+     */
+    boost::shared_ptr<DiscreteContinuumMesh<DIM> > mpMesh;
+
+    /**
+     * Use regular grid
+     */
+    bool mHasRegularGrid;
+
+    /**
+     * Use mesh
+     */
+    bool mHasUnstructuredGrid;
 
 public:
 
     /**
      * Constructor
      */
-    RegularGridCalculator();
+    GridCalculator();
 
     /**
      * Factory constructor method
-     * @return a shared pointer to a new grid
+     * @return a shared pointer to a new grid calculator
      */
-    static boost::shared_ptr<RegularGridCalculator<DIM> > Create();
+    static boost::shared_ptr<GridCalculator<DIM> > Create();
 
     /**
      * Desctructor
      */
-    ~RegularGridCalculator();
+    ~GridCalculator();
 
     /**
-     * Return a vector of input point indices which in the bounding boxes of each grid point
+     * Return a vector of input point indices which in the bounding boxes of each grid location
      * @param inputPoints a vector of point locations
-     * @return the indices of input points in the bounding box of each grid point
+     * @return the indices of input points in the bounding box of each grid location
      */
-    std::vector<std::vector<unsigned> > GetPointPointMap(std::vector<DimensionalChastePoint<DIM> > inputPoints);
+    std::vector<std::vector<unsigned> > GetPointMap(std::vector<DimensionalChastePoint<DIM> > inputPoints);
 
     /**
-     * Return the point cell map
+     * Return the cell map
      * @param update update the map
-     * @return the point cell map
+     * @return the cell map
      */
-    const std::vector<std::vector<CellPtr> >& GetPointCellMap(bool update = true);
+    const std::vector<std::vector<CellPtr> >& GetCellMap(bool update = true);
 
     /**
-     * Return the point node map
-     * @param update update the map
-     * @return the point node map
+     * Return the vessel node map
+     * @param update update the vessel node map
+     * @return the vessel node map
      */
-    const std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >& GetPointNodeMap(bool update = true);
+    const std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >& GetVesselNodeMap(bool update = true);
 
     /**
-     * Return the point segments map
+     * Return the segments map
      * @param update update the map
      * @param useVesselSurface use the vessel surface for distance calculations
-     * @return the point segment map
+     * @return the segment map
      */
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > GetPointSegmentMap(bool update = true, bool useVesselSurface = false);
+    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > GetSegmentMap(bool update = true, bool useVesselSurface = false);
 
     /**
      * Return the grid itself
@@ -157,12 +170,43 @@ public:
     boost::shared_ptr<RegularGrid<DIM> > GetGrid();
 
     /**
-     * Return true if the segment is at a lattice site
-     * @param index the lattice index
+     * Return the grid itself
+     * @return the grid itself
+     */
+    boost::shared_ptr<DiscreteContinuumMesh<DIM> > GetMesh();
+
+    /**
+     * Return the volume of grid locations
+     * @param jiggle apply jiggle to regular grid points
+     * @return the volume of grid locations
+     */
+    std::vector<double> GetLocationVolumes(bool jiggle=false);
+
+    /**
+     * Return the number of grid points (structured) or cells (unstructured)
+     * @return the grid itself
+     */
+    unsigned GetNumberOfLocations();
+
+    /**
+     * Return true if the solver uses a regular grid to store solutions
+     * @return true if the solver uses a regular grid to store solutions
+     */
+    bool HasStructuredGrid();
+
+    /**
+     * Return true if the solver uses a unstructured grid to store solutions
+     * @return true if the solver uses a unstructured grid to store solutions
+     */
+    bool HasUnstructuredGrid();
+
+    /**
+     * Return true if the segment is at the grid location
+     * @param index the location index
      * @param update update the segment-grid map
      * @return true if the segment is at a lattice site
      */
-    bool IsSegmentAtLatticeSite(unsigned index, bool update);
+    bool IsSegmentAtLocation(unsigned index, bool update);
 
     /**
      * Set the cell population
@@ -172,10 +216,10 @@ public:
     void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation, units::quantity<unit::length> cellPopulationLengthScale);
 
     /**
-     * Set the values of a field at all points on the grid
+     * Set the values of a field at all locations on the grid
      * @param pointSolution the value of the field
      */
-    void SetPointValues(std::vector<double> pointSolution);
+    void SetLocationValues(std::vector<double> pointSolution);
 
     /**
      * Set the vessel network
@@ -187,7 +231,13 @@ public:
      * Set the regular grid
      * @param pGrid the regular grid
      */
-    void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
+    void SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
+
+    /**
+     * Set the mesh
+     * @param pGrid the mesh
+     */
+    void SetGrid(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pGrid);
 };
 
-#endif /* REGULARGRIDCALCULATOR_HPP_*/
+#endif /* GRIDCALCULATOR_HPP_*/

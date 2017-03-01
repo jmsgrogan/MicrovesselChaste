@@ -67,7 +67,7 @@ void LacunarityCalculator<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork
 template<unsigned DIM>
 void LacunarityCalculator<DIM>::Solve()
 {
-    unsigned extents_x = this->mpRegularGridCalculator->GetGrid()->GetDimensions()[0];
+    unsigned extents_x = this->mpGridCalculator->GetGrid()->GetDimensions()[0];
 
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments;
     segments = this->mpNetwork->GetVesselSegments();
@@ -86,7 +86,7 @@ void LacunarityCalculator<DIM>::Solve()
         output_file << "Lacunarity, Box\n";
     }
 
-    units::quantity<unit::length> length_scale = this->mpRegularGridCalculator->GetGrid()->GetReferenceLengthScale();
+    units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
     for (unsigned width_index = 0; width_index < width_factors.size(); width_index++)
     {
         double box_size = (double(extents_x - 1) / double(width_factors[width_index]));

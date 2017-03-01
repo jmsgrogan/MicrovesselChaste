@@ -52,8 +52,8 @@ AbstractDiscreteContinuumSolver<DIM>::AbstractDiscreteContinuumSolver()
         mReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale()),
         mSolution(),
         mConcentrations(),
-        mHasRegularGridCalculator(false),
-        mHasUnstructuredGrid(false)
+        mpGridCalculator(),
+        mpVtkSolution()
 {
 
 }
@@ -89,6 +89,16 @@ const std::string& AbstractDiscreteContinuumSolver<DIM>::GetLabel()
 }
 
 template<unsigned DIM>
+boost::shared_ptr<GridCalculator<DIM> > AbstractDiscreteContinuumSolver<DIM>::GetGridCalculator()
+{
+    if(!mpGridCalculator)
+    {
+        EXCEPTION("A GridCalculator has not been set.");
+    }
+    return mpGridCalculator;
+}
+
+template<unsigned DIM>
 boost::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > AbstractDiscreteContinuumSolver<DIM>::GetPde()
 {
     if(!mpPde)
@@ -111,15 +121,13 @@ std::vector<double> AbstractDiscreteContinuumSolver<DIM>::GetSolution()
 }
 
 template<unsigned DIM>
-bool AbstractDiscreteContinuumSolver<DIM>::HasRegularGridCalculator()
+vtkSmartPointer<vtkDataSet> AbstractDiscreteContinuumSolver<DIM>::GetVtkSolution()
 {
-    return mHasRegularGridCalculator;
-}
-
-template<unsigned DIM>
-bool AbstractDiscreteContinuumSolver<DIM>::HasUnstructuredGrid()
-{
-    return mHasUnstructuredGrid;
+    if(!mpVtkSolution)
+    {
+        Setup();
+    }
+    return mpVtkSolution;
 }
 
 template<unsigned DIM>
@@ -148,6 +156,20 @@ template<unsigned DIM>
 void AbstractDiscreteContinuumSolver<DIM>::SetLabel(const std::string& rLabel)
 {
     mLabel = rLabel;
+}
+
+template<unsigned DIM>
+void AbstractDiscreteContinuumSolver<DIM>::SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid)
+{
+    mpGridCalculator = boost::shared_ptr<GridCalculator<DIM> >(new GridCalculator<DIM>);
+    mpGridCalculator->SetGrid(pGrid);
+}
+
+template<unsigned DIM>
+void AbstractDiscreteContinuumSolver<DIM>::SetGrid(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pGrid)
+{
+    mpGridCalculator = boost::shared_ptr<GridCalculator<DIM> >(new GridCalculator<DIM>);
+    mpGridCalculator->SetGrid(pGrid);
 }
 
 template<unsigned DIM>

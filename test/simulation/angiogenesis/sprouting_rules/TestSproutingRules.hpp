@@ -44,6 +44,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "FunctionMap.hpp"
 #include "LatticeBasedSproutingRule.hpp"
 #include "Owen2011SproutingRule.hpp"
+#include "GridCalculator.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
@@ -92,11 +93,14 @@ public:
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         double spacing = 40.0; //um
         p_grid->SetSpacing(spacing * 1.e-6 * unit::metres);
-        std::vector<unsigned> extents(3, 1);
-        extents[0] = 101; // num x
-        extents[1] = 11; // num_y
-        extents[2] = 1; // num_z
-        p_grid->SetExtents(extents);
+        c_vector<double, 3> dimensions;
+        dimensions[0] = 101; // num x
+        dimensions[1] = 11; // num_y
+        dimensions[2] = 1; // num_z
+        p_grid->SetDimensions(dimensions);
+
+        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        p_grid_calc->SetGrid(p_grid);
 
         // Make a network
         std::vector<boost::shared_ptr<VesselNode<2> > > bottom_nodes;
@@ -109,19 +113,19 @@ public:
         boost::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(bottom_nodes);
         boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel);
-        p_grid->SetVesselNetwork(p_network);
+        p_grid_calc->SetVesselNetwork(p_network);
 
         // Set up a vegf field, 0.15 nM
         boost::shared_ptr<FunctionMap<2> > p_funciton_map = FunctionMap<2>::Create();
         p_funciton_map->SetGrid(p_grid);
         std::vector<units::quantity<unit::concentration> > vegf_field =
-                std::vector<units::quantity<unit::concentration> >(extents[0]*extents[1], 0.15*unit::mole_per_metre_cubed);
+                std::vector<units::quantity<unit::concentration> >(dimensions[0]*dimensions[1], 0.15*unit::mole_per_metre_cubed);
         p_funciton_map->UpdateSolution(vegf_field);
 
         // Set up a sprouting rule
         boost::shared_ptr<Owen2011SproutingRule<2> > p_sprouting_rule = Owen2011SproutingRule<2>::Create();
         p_sprouting_rule->SetSproutingProbability(0.2*(1.0/unit::seconds));
-        p_sprouting_rule->SetGrid(p_grid);
+        p_sprouting_rule->SetGridCalculator(p_grid_calc);
         p_sprouting_rule->SetVesselNetwork(p_network);
         p_sprouting_rule->SetDiscreteContinuumSolver(p_funciton_map);
 

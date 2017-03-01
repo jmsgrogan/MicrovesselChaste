@@ -55,6 +55,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "FunctionMap.hpp"
 #include "FiniteElementSolver.hpp"
 #include "VtkMeshWriter.hpp"
+#include "GridCalculator.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
@@ -74,13 +75,17 @@ public:
         units::quantity<unit::length> grid_spacing(5.0*unit::microns);
         p_grid->GenerateFromPart(p_domain, grid_spacing);
 
+        boost::shared_ptr<GridCalculator<3> > p_grid_calc = GridCalculator<3>::Create();
+        p_grid_calc->SetGrid(p_grid);
+
         // Set up the discrete source
         std::vector<DimensionalChastePoint<3> > linear_consumption_points;
         linear_consumption_points.push_back(DimensionalChastePoint<3>(50.0, 50.0, 50.0, 1.e-6 * unit::metres));
         boost::shared_ptr<DiscreteSource<3> > p_linear_point_source = DiscreteSource<3>::Create();
+
         p_linear_point_source->SetLinearInUValue(1.e3 * unit::per_second);
         p_linear_point_source->SetPoints(linear_consumption_points);
-        p_linear_point_source->SetRegularGrid(p_grid);
+        p_linear_point_source->SetGridCalculator(p_grid_calc);
 
         boost::shared_ptr<DiscreteSource<3> > p_const_point_source = DiscreteSource<3>::Create();
         units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e-4 * unit::mole_per_metre_cubed_per_second);
@@ -95,17 +100,17 @@ public:
         constant_consumption_points.push_back(DimensionalChastePoint<3>(75.0, 75.0, 75.0, 1.e-6 * unit::metres));
         constant_consumption_points.push_back(DimensionalChastePoint<3>(25.0, 75.0, 75.0, 1.e-6 * unit::metres));
         p_const_point_source->SetPoints(constant_consumption_points);
-        p_const_point_source->SetRegularGrid(p_grid);
+        p_const_point_source->SetGridCalculator(p_grid_calc);
 
         // Set up a function map
         FunctionMap<3> solver;
         solver.SetGrid(p_grid);
 
         // Get the source values at each point on the grid
-        std::vector<units::quantity<unit::rate> > point_rates = p_linear_point_source->GetLinearInURegularGridValues();
-        std::vector<units::quantity<unit::concentration_flow_rate> > point_conc_rates = p_const_point_source->GetConstantInURegularGridValues();
+        std::vector<units::quantity<unit::rate> > point_rates = p_linear_point_source->GetLinearInUValues();
+        std::vector<units::quantity<unit::concentration_flow_rate> > point_conc_rates = p_const_point_source->GetConstantInUValues();
         std::vector<double> solution;
-        for(unsigned idx=0; idx<p_grid->GetNumberOfPoints(); idx++)
+        for(unsigned idx=0; idx<p_grid_calc->GetNumberOfLocations(); idx++)
         {
             solution.push_back(double(point_rates[idx].value() + point_conc_rates[idx].value()));
         }
@@ -135,7 +140,6 @@ public:
         boost::shared_ptr<DiscreteSource<3> > p_linear_point_source = DiscreteSource<3>::Create();
         p_linear_point_source->SetLinearInUValue(1.e3 * unit::per_second);
         p_linear_point_source->SetPoints(linear_consumption_points);
-        p_linear_point_source->SetMesh(p_mesh_generator->GetMesh());
 
         boost::shared_ptr<DiscreteSource<3> > p_const_point_source = DiscreteSource<3>::Create();
         units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e-4 * unit::mole_per_metre_cubed_per_second);
@@ -150,15 +154,14 @@ public:
         constant_consumption_points.push_back(DimensionalChastePoint<3>(75.0, 75.0, 75.0, 1.e-6 * unit::metres));
         constant_consumption_points.push_back(DimensionalChastePoint<3>(25.0, 75.0, 75.0, 1.e-6 * unit::metres));
         p_const_point_source->SetPoints(constant_consumption_points);
-        p_const_point_source->SetMesh(p_mesh_generator->GetMesh());
 
         // Set up a function map
         FiniteElementSolver<3> solver;
-        solver.SetMesh(p_mesh_generator->GetMesh());
+        solver.SetGrid(p_mesh_generator->GetMesh());
 
         // Get the source values at each point on the grid
-        std::vector<units::quantity<unit::rate> > point_rates = p_linear_point_source->GetLinearInUMeshValues();
-        std::vector<units::quantity<unit::concentration_flow_rate> > point_conc_rates = p_const_point_source->GetConstantInUMeshValues();
+        std::vector<units::quantity<unit::rate> > point_rates = p_linear_point_source->GetLinearInUValues();
+        std::vector<units::quantity<unit::concentration_flow_rate> > point_conc_rates = p_const_point_source->GetConstantInUValues();
         std::vector<double> solution;
         for(unsigned idx=0; idx<point_conc_rates.size(); idx++)
         {

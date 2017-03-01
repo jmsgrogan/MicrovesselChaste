@@ -34,14 +34,11 @@ Copyright (c) 2005-2016, University of Oxford.
  */
 
 #include "DiscreteSource.hpp"
-#include "AbstractCellPopulation.hpp"
-#include "VesselNetwork.hpp"
 #include "GeometryTools.hpp"
 
 template<unsigned DIM>
 DiscreteSource<DIM>::DiscreteSource()
-    :   mpRegularGridCalculator(),
-        mpMesh(),
+    :   mpGridCalculator(),
         mPoints(),
         mLabel("Default"),
         mConstantInUValue(0.0*unit::mole_per_metre_cubed_per_second),
@@ -64,45 +61,9 @@ boost::shared_ptr<DiscreteSource<DIM> > DiscreteSource<DIM>::Create()
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>::GetConstantInUMeshValues()
+std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>::GetConstantInUValues()
 {
-    if(!mpMesh)
-    {
-        EXCEPTION("A mesh is required for this type of source");
-    }
-
-    // Loop through all points
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(mpMesh->GetNumElements(), 0.0*unit::mole_per_metre_cubed_per_second);
-    std::vector<std::vector<unsigned> > point_element_map = mpMesh->GetPointElementMap(mPoints);
-    for(unsigned idx=0; idx<point_element_map.size(); idx++)
-    {
-        values[idx] += mConstantInUValue * double(point_element_map[idx].size());
-    }
-    return values;
-}
-
-template<unsigned DIM>
-std::vector<units::quantity<unit::rate> > DiscreteSource<DIM>::GetLinearInUMeshValues()
-{
-    if(!mpMesh)
-    {
-        EXCEPTION("A mesh is required for this type of source");
-    }
-
-    // Loop through all points
-    std::vector<units::quantity<unit::rate> > values(mpMesh->GetNumElements(), 0.0*unit::per_second);
-    std::vector<std::vector<unsigned> > point_element_map = mpMesh->GetPointElementMap(mPoints);
-    for(unsigned idx=0; idx<point_element_map.size(); idx++)
-    {
-        values[idx] += mLinearInUValue * double(point_element_map[idx].size());
-    }
-    return values;
-}
-
-template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>::GetConstantInURegularGridValues()
-{
-    if(!mpRegularGridCalculator)
+    if(!mpGridCalculator)
     {
         EXCEPTION("A regular grid is required for this type of source");
     }
@@ -113,8 +74,9 @@ std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>
     }
 
     // Loop through all points
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(), 0.0*unit::mole_per_metre_cubed_per_second);
-    std::vector<std::vector<unsigned> > point_point_map = mpRegularGridCalculator->GetPointPointMap(mPoints);
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(mpGridCalculator->GetNumberOfLocations(),
+            0.0*unit::mole_per_metre_cubed_per_second);
+    std::vector<std::vector<unsigned> > point_point_map = mpGridCalculator->GetPointMap(mPoints);
     for(unsigned idx=0; idx<point_point_map.size(); idx++)
     {
         values[idx] += mConstantInUValue * double(point_point_map[idx].size());
@@ -123,9 +85,9 @@ std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::rate> > DiscreteSource<DIM>::GetLinearInURegularGridValues()
+std::vector<units::quantity<unit::rate> > DiscreteSource<DIM>::GetLinearInUValues()
 {
-    if(!mpRegularGridCalculator)
+    if(!mpGridCalculator)
     {
         EXCEPTION("A regular grid is required for this type of source");
     }
@@ -136,8 +98,9 @@ std::vector<units::quantity<unit::rate> > DiscreteSource<DIM>::GetLinearInURegul
     }
 
     // Loop through all points
-    std::vector<units::quantity<unit::rate> > values(mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(), 0.0*unit::per_second);
-    std::vector<std::vector<unsigned> > point_point_map = mpRegularGridCalculator->GetPointPointMap(mPoints);
+    std::vector<units::quantity<unit::rate> > values(mpGridCalculator->GetNumberOfLocations(),
+            0.0*unit::per_second);
+    std::vector<std::vector<unsigned> > point_point_map = mpGridCalculator->GetPointMap(mPoints);
     for(unsigned idx=0; idx<point_point_map.size(); idx++)
     {
         values[idx] += mLinearInUValue * double(point_point_map[idx].size());
@@ -146,15 +109,15 @@ std::vector<units::quantity<unit::rate> > DiscreteSource<DIM>::GetLinearInURegul
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>::GetNonlinearTermRegularGridValues()
+std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>::GetNonlinearTermValues()
 {
-    if(!mpRegularGridCalculator)
+    if(!mpGridCalculator)
     {
         EXCEPTION("A regular grid is required for this type of source");
     }
 
     // Return an empty vector
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(mpRegularGridCalculator->GetGrid()->GetNumberOfGlobalPoints(),
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(mpGridCalculator->GetNumberOfLocations(),
             0.0*unit::mole_per_metre_cubed_per_second);
 
     return values;
@@ -173,15 +136,9 @@ void DiscreteSource<DIM>::SetPoints(std::vector<DimensionalChastePoint<DIM> > po
 }
 
 template<unsigned DIM>
-void DiscreteSource<DIM>::SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > pMesh)
+void DiscreteSource<DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator)
 {
-    mpMesh = pMesh;
-}
-
-template<unsigned DIM>
-void DiscreteSource<DIM>::SetRegularGridCalculator (boost::shared_ptr<RegularGridCalculator <DIM> > pRegularGridCalculator)
-{
-    mpRegularGridCalculator = pRegularGridCalculator;
+    mpGridCalculator = pGridCalculator;
 }
 
 template<unsigned DIM>

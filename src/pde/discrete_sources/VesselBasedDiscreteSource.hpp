@@ -40,8 +40,6 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <string>
 #include <map>
 #include "UblasIncludes.hpp"
-#include "RegularGrid.hpp"
-#include "DiscreteContinuumMesh.hpp"
 #include "UnitCollection.hpp"
 #include "DiscreteSource.hpp"
 
@@ -98,34 +96,22 @@ public:
     static boost::shared_ptr<VesselBasedDiscreteSource<DIM> > Create();
 
     /**
-     * Return the values of the source strengths sampled on the mesh elements
+     * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInUMeshValues();
-
-    /**
-     * Return the values of the source strengths sampled on the mesh elements
-     * @return a vector of source strengths
-     */
-    std::vector<units::quantity<unit::rate> > GetLinearInUMeshValues();
+    std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInUValues();
 
     /**
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInURegularGridValues();
+    std::vector<units::quantity<unit::rate> > GetLinearInUValues();
 
     /**
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    std::vector<units::quantity<unit::rate> > GetLinearInURegularGridValues();
-
-    /**
-     * Return the values of the source strengths sampled on the regular grid
-     * @return a vector of source strengths
-     */
-    std::vector<units::quantity<unit::concentration_flow_rate> > GetNonlinearTermRegularGridValues();
+    std::vector<units::quantity<unit::concentration_flow_rate> > GetNonlinearTermValues();
 
     /**
      * Set the value of the source for PRESCRIBED type sources
