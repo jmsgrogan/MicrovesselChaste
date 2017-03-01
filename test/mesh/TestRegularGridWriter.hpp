@@ -59,20 +59,20 @@ public:
 
         // Set up a 3d grid
         boost::shared_ptr<RegularGrid<3> > p_grid_3d = RegularGrid<3>::Create();
-        std::vector<unsigned> extents_3d(3);
-        extents_3d[0] = 5;
-        extents_3d[1] = 7;
-        extents_3d[2] = 4;
-        p_grid_3d->SetExtents(extents_3d);
+        c_vector<unsigned, 3> dimensions;
+        dimensions[0] = 5;
+        dimensions[1] = 7;
+        dimensions[2] = 4;
+        p_grid_3d->SetDimensions(dimensions);
 
-        TS_ASSERT_EQUALS(p_grid_3d->Get1dGridIndex(0,0,0), 0u)
-        TS_ASSERT_EQUALS(p_grid_3d->Get1dGridIndex(3,1,2), 78u)
-        TS_ASSERT_EQUALS(p_grid_3d->Get1dGridIndex(0,3,3), 120u)
+        TS_ASSERT_EQUALS(p_grid_3d->GetGlobal1dGridIndex(0,0,0), 0u)
+        TS_ASSERT_EQUALS(p_grid_3d->GetGlobal1dGridIndex(3,1,2), 78u)
+        TS_ASSERT_EQUALS(p_grid_3d->GetGlobal1dGridIndex(0,3,3), 120u)
 
         boost::shared_ptr<RegularGridWriter> p_writer = RegularGridWriter::Create();
         TS_ASSERT_THROWS_THIS(p_writer->Write(), "Output file not specified for image writer.");
         p_writer->SetFilename(output_filename);
-        p_writer->SetImage(p_grid_3d->GetVtkGrid());
+        p_writer->SetImage(p_grid_3d->GetGlobalVtkGrid());
         p_writer->Write();
     }
 

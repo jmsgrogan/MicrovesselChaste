@@ -213,8 +213,6 @@ public:
         boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_vegf_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         p_vegf_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpVegfDiffusivity->GetValue("User"));
         p_vegf_pde->SetContinuumLinearInUTerm(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
-        p_vegf_pde->SetMesh(p_mesh);
-        p_vegf_pde->SetUseRegularGrid(false);
         p_vegf_pde->SetReferenceConcentration(1.e-9*unit::mole_per_metre_cubed);
         /*
         * Add a boundary condition to fix the VEGF concentration in the vegf subdomain.
@@ -231,7 +229,7 @@ public:
         boost::shared_ptr<FiniteElementSolver<3> > p_vegf_solver = FiniteElementSolver<3>::Create();
         p_vegf_solver->SetPde(p_vegf_pde);
         p_vegf_solver->SetLabel("vegf");
-        p_vegf_solver->SetMesh(p_mesh);
+        p_vegf_solver->SetGrid(p_mesh);
         p_vegf_solver->AddBoundaryCondition(p_vegf_boundary);
         /*
          * Set up an angiogenesis solver and add sprouting and migration rules.

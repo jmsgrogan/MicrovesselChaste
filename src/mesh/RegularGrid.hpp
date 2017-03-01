@@ -102,6 +102,11 @@ class RegularGrid
     std::vector<double> mPointVolumes;
 
     /**
+     * Storage for a single attribute value at grid points
+     */
+    std::vector<double> mPointValues;
+
+    /**
      * The reference length scale, default in microns.
      */
     units::quantity<unit::length> mReferenceLength;

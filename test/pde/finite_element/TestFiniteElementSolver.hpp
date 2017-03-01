@@ -99,7 +99,7 @@ public:
 
         // Set up and run the solver
         FiniteElementSolver<3> solver;
-        solver.SetMesh(p_mesh_generator->GetMesh());
+        solver.SetGrid(p_mesh_generator->GetMesh());
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_vessel_ox_boundary_condition);
         solver.SetReferenceConcentration(1.e-9*unit::mole_per_metre_cubed);

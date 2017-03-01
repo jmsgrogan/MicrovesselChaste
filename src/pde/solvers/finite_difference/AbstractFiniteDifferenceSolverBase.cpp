@@ -106,7 +106,7 @@ void AbstractFiniteDifferenceSolverBase<DIM>::Setup()
     // Set up the grid and PDE
     if(!this->mpGridCalculator)
     {
-        EXCEPTION("This solver needs a regular grid to be set before calling Setup.");
+        EXCEPTION("This solver needs a grid calculator to be set before calling Setup.");
     }
 
     if(this->CellPopulationIsSet())

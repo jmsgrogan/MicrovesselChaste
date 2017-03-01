@@ -47,6 +47,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Vessel.hpp"
 #include "VesselNetwork.hpp"
 #include "AngiogenesisSolver.hpp"
+#include "GridCalculator.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
@@ -63,11 +64,11 @@ public:
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         double spacing = 20.0; //um
         p_grid->SetSpacing(spacing * 1.e-6 * unit::metres);
-        std::vector<unsigned> extents(3, 1);
-        extents[0] = 7; // num x
-        extents[1] = 5; // num_y
-        extents[2] = 1; // num_z
-        p_grid->SetExtents(extents);
+        c_vector<unsigned, 3> dimensions;
+        dimensions[0] = 7; // num x
+        dimensions[1] = 5; // num_y
+        dimensions[2] = 1; // num_z
+        p_grid->SetDimensions(dimensions);
 
         // Make a vessel
         boost::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 2.0*spacing);
@@ -76,11 +77,9 @@ public:
         boost::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(p_node1, p_node2);
         boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel);
-        p_grid->SetVesselNetwork(p_network);
 
         // Set up the migration rule
         boost::shared_ptr<LatticeBasedMigrationRule<2> > p_migration_rule = LatticeBasedMigrationRule<2>::Create();
-        p_migration_rule->SetGrid(p_grid);
         p_migration_rule->SetMovementProbability(0.1);
         p_migration_rule->SetNetwork(p_network);
 
@@ -89,7 +88,10 @@ public:
         AngiogenesisSolver<2> angiogenesis_solver;
         angiogenesis_solver.SetVesselNetwork(p_network);
         angiogenesis_solver.SetMigrationRule(p_migration_rule);
-        angiogenesis_solver.SetVesselGrid(p_grid);
+        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        p_grid_calc->SetGrid(p_grid);
+
+        angiogenesis_solver.SetVesselGridCalculator(p_grid_calc);
 
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestAngiogenesisSolver/Lattice/SingleVessel"));
         angiogenesis_solver.SetOutputFileHandler(p_handler);

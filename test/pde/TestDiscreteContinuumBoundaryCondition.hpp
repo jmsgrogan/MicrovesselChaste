@@ -152,7 +152,7 @@ public:
 
         // Set up and run the solver
         FiniteElementSolver<3> solver;
-        solver.SetMesh(p_mesh_generator->GetMesh());
+        solver.SetGrid(p_mesh_generator->GetMesh());
         solver.SetPde(p_pde);
         solver.SetVesselNetwork(p_network);
         solver.AddBoundaryCondition(p_boundary);

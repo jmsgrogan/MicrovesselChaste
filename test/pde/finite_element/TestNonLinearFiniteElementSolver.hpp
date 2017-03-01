@@ -85,7 +85,7 @@ public:
         p_outer_boundary_condition->SetValue(boundary_concentration);
 
         FiniteElementSolver<3> solver;
-        solver.SetMesh(p_mesh_generator->GetMesh());
+        solver.SetGrid(p_mesh_generator->GetMesh());
         solver.SetPde(p_linear_pde);
         solver.SetPde(p_non_linear_pde);
         solver.AddBoundaryCondition(p_outer_boundary_condition);

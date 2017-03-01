@@ -79,8 +79,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UnitCollection.hpp"
 #include "CellBasedDiscreteSource.hpp"
 
-#include "Debug.hpp"
-
 class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
 {
 
@@ -229,14 +227,14 @@ public:
 
         // Create the oxygen pde solver
         boost::shared_ptr<FiniteDifferenceSolver<3> > p_oxygen_solver = GetOxygenSolver(p_domain, p_network);
-        p_oxygen_solver->GetGrid()->SetVesselNetwork(p_network);
-        p_oxygen_solver->GetGrid()->SetCellPopulation(cell_population, cell_lenth_scale);
+        p_oxygen_solver->GetGridCalculator()->SetVesselNetwork(p_network);
+        p_oxygen_solver->GetGridCalculator()->SetCellPopulation(cell_population, cell_lenth_scale);
         p_oxygen_solver->Setup();
 
         // Create the vegf pde solver
         boost::shared_ptr<FiniteDifferenceSolver<3> > p_vegf_solver = GetVegfSolver(p_domain, p_network);
-        p_vegf_solver->GetGrid()->SetVesselNetwork(p_network);
-        p_vegf_solver->GetGrid()->SetCellPopulation(cell_population, cell_lenth_scale);
+        p_vegf_solver->GetGridCalculator()->SetVesselNetwork(p_network);
+        p_vegf_solver->GetGridCalculator()->SetCellPopulation(cell_population, cell_lenth_scale);
         p_vegf_solver->Setup();
 
         // Create the angiogenesis solver
@@ -276,17 +274,18 @@ public:
         boost::shared_ptr<Part<3> > p_tumour_cell_region = GetInitialTumourCellRegion();
         std::vector<unsigned> location_indices = p_tumour_cell_region->GetContainingGridIndices(num_x, num_y, num_z, spacing);
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        std::vector<unsigned> extents(3);
-        extents[0] = 1.5*num_x;
-        extents[1] = 1.5*num_y;
-        extents[2] = 1.5*num_z;
-        p_grid->SetExtents(extents);
+
+        c_vector<unsigned, 3> dimensions;
+        dimensions[0] = 1.5*num_x;
+        dimensions[1] = 1.5*num_y;
+        dimensions[2] = 1.5*num_z;
+        p_grid->SetDimensions(dimensions);
         p_grid->SetSpacing(spacing);
 
         std::vector<Node<3>*> nodes;
         for(unsigned idx=0; idx<location_indices.size(); idx++)
         {
-            DimensionalChastePoint<3> location = p_grid->GetLocationOf1dIndex(location_indices[idx]);
+            DimensionalChastePoint<3> location = p_grid->GetLocationOfGlobal1dIndex(location_indices[idx]);
             nodes.push_back(new Node<3>(idx, location.GetLocation(cell_lenth_scale), false));
         }
 
@@ -304,14 +303,14 @@ public:
 
         // Create the oxygen pde solver
         boost::shared_ptr<FiniteDifferenceSolver<3> > p_oxygen_solver = GetOxygenSolver(p_domain, p_network);
-        p_oxygen_solver->GetGrid()->SetVesselNetwork(p_network);
-        p_oxygen_solver->GetGrid()->SetCellPopulation(cell_population,cell_lenth_scale);
+        p_oxygen_solver->GetGridCalculator()->SetVesselNetwork(p_network);
+        p_oxygen_solver->GetGridCalculator()->SetCellPopulation(cell_population,cell_lenth_scale);
         p_oxygen_solver->Setup();
 
         // Create the vegf pde solver
         boost::shared_ptr<FiniteDifferenceSolver<3> > p_vegf_solver = GetVegfSolver(p_domain, p_network);
-        p_vegf_solver->GetGrid()->SetVesselNetwork(p_network);
-        p_vegf_solver->GetGrid()->SetCellPopulation(cell_population, cell_lenth_scale);
+        p_vegf_solver->GetGridCalculator()->SetVesselNetwork(p_network);
+        p_vegf_solver->GetGridCalculator()->SetCellPopulation(cell_population, cell_lenth_scale);
         p_vegf_solver->Setup();
 
         // Create the angiogenesis solver

@@ -96,6 +96,7 @@ Copyright (c) 2005-2016, University of Oxford.
  * grids and PDEs,
  */
 #include "RegularGrid.hpp"
+#include "GridCalculator.hpp"
 #include "FiniteDifferenceSolver.hpp"
 #include "CellBasedDiscreteSource.hpp"
 #include "VesselBasedDiscreteSource.hpp"
@@ -156,10 +157,12 @@ public:
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         units::quantity<unit::length> grid_spacing = Owen11Parameters::mpLatticeSpacing->GetValue("User");
         p_grid->SetSpacing(grid_spacing);
-        std::vector<unsigned> extents(3, 1);
-        extents[0] = 51; // num x
-        extents[1] = 51; // num_y
-        p_grid->SetExtents(extents);
+
+        c_vector<unsigned, 3> dimensions;
+        dimensions[0] = 51; // num x
+        dimensions[1] = 51; // num_y
+        dimensions[2] = 1;
+        p_grid->SetDimensions(dimensions);
         /*
          * We can write the lattice to file for quick visualization with Paraview. Rendering of this and subsequent images is performed
          * using standard Paraview operations, not detailed here.
@@ -203,8 +206,10 @@ public:
          * filled with normal cells and a tumour spheroid in the middle. We can use a generator for this purpose. The generator simply sets up
          * the population using conventional Cell Based Chaste methods.
          */
+        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        p_grid_calc->SetGrid(p_grid);
         boost::shared_ptr<Owen11CellPopulationGenerator<2> > p_cell_population_genenerator = Owen11CellPopulationGenerator<2>::Create();
-        p_cell_population_genenerator->SetRegularGrid(p_grid);
+        p_cell_population_genenerator->SetGridCalculator(p_grid_calc);
         p_cell_population_genenerator->SetVesselNetwork(p_network);
         units::quantity<unit::length> tumour_radius(300.0 * unit::microns);
         p_cell_population_genenerator->SetTumourRadius(tumour_radius);
@@ -331,7 +336,7 @@ public:
         p_angiogenesis_solver->SetSproutingRule(p_sprouting_rule);
         p_sprouting_rule->SetDiscreteContinuumSolver(p_vegf_solver);
         p_migration_rule->SetDiscreteContinuumSolver(p_vegf_solver);
-        p_angiogenesis_solver->SetVesselGrid(p_grid);
+        p_angiogenesis_solver->SetVesselGridCalculator(p_grid_calc);
         p_angiogenesis_solver->SetVesselNetwork(p_network);
          /*
          * The microvessel solver will manage all aspects of the vessel solve.

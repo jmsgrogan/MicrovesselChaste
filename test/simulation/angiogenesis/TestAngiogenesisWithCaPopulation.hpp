@@ -61,6 +61,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "AngiogenesisSolver.hpp"
 #include "RegularGrid.hpp"
 #include "DefaultCellProliferativeType.hpp"
+#include "GridCalculator.hpp"
 
 #include "FakePetscSetup.hpp"
 
@@ -77,10 +78,11 @@ public:
 
         // Set up the vessel grid
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        std::vector<unsigned> extents(3,1);
-        extents[0] = 20;
-        extents[1] = 20;
-        p_grid->SetExtents(extents);
+        c_vector<unsigned, 3> dimensions;
+        dimensions[0] = 20;
+        dimensions[1] = 20;
+        dimensions[2] = 1;
+        p_grid->SetDimensions(dimensions);
         p_grid->Write(p_file_handler);
 
         // Create the vessel network: single vessel in middle of domain
@@ -130,7 +132,11 @@ public:
         angiogenesis_solver.SetCellPopulation(p_cell_population, 1.e-6*unit::metres);
         angiogenesis_solver.SetVesselNetwork(p_network);
         angiogenesis_solver.SetOutputFileHandler(p_file_handler);
-        angiogenesis_solver.SetVesselGrid(p_grid);
+
+        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        p_grid_calc->SetGrid(p_grid);
+
+        angiogenesis_solver.SetVesselGridCalculator(p_grid_calc);
         angiogenesis_solver.Run(true);
     }
 };

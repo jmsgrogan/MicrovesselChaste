@@ -35,12 +35,15 @@ mesh/TestRegularGrid.hpp
 mesh/TestRegularGridWriter.hpp
 mesh/TestDiscreteContinuumMesh.hpp
 mesh/TestMeshReaderAndWriter.hpp
+mesh/TestGridCalculator.hpp
 pde/TestFiniteDifferenceSolver.hpp
 pde/TestNonLinearFiniteDifferenceSolver.hpp
 pde/TestTimeDependentFiniteDifferenceSolver.hpp
 pde/TestGreensFunctionSolver.hpp
-pde/TestFiniteElementSolver.hpp
-pde/TestNonLinearFiniteElementSolver.hpp
+pde/finite_element/TestFiniteElementSolver.hpp
+pde/finite_element/TestNonLinearFiniteElementSolver.hpp
+pde/finite_element/TestRobinBoundaryConditions.hpp
+pde/finite_element/TestCoupledVegfOdeSystem.hpp
 pde/TestCellBasedDiscreteSource.hpp
 pde/TestSolutionDependentDiscreteSource.hpp
 pde/TestDiscreteSource.hpp

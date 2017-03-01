@@ -61,6 +61,7 @@ RegularGrid<DIM>::RegularGrid() :
         mVtkGridIsSetUp(false),
         mNeighbourData(),
         mPointVolumes(),
+        mPointValues(),
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
         mpDistributedVectorFactory()
 {
@@ -119,6 +120,12 @@ void RegularGrid<DIM>::CalculateNeighbourData()
             }
         }
     }
+}
+
+template<unsigned DIM>
+void RegularGrid<DIM>::SetPointValues(std::vector<double> pointSolution)
+{
+    mPointValues = pointSolution;
 }
 
 template<unsigned DIM>

@@ -85,7 +85,7 @@ public:
         SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(1.0, 1); // Force 1 hour increments
         FiniteDifferenceSolver<3> solver;
         solver.SetGrid(p_grid);
-        solver.SetParabolicPde(p_pde);
+        solver.SetPde(p_pde);
 
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestTimeDependentFiniteDifferenceSolver/Box", false));
         solver.SetFileHandler(p_output_file_handler);

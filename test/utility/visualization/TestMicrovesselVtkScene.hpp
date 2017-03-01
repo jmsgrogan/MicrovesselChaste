@@ -58,14 +58,15 @@ public:
 
         // Generate a grid
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        std::vector<unsigned> extents(3, 1);
-        extents[0] = 20;
-        extents[1] = 20;
-        p_grid->SetExtents(extents);
+        c_vector<unsigned,3> dimensions;
+        dimensions[0] = 20;
+        dimensions[1] = 20;
+        dimensions[2] = 1;
+        p_grid->SetDimensions(dimensions);
         p_grid->SetSpacing(20.e-6*unit::metres);
 
         std::vector<double> grid_values;
-        for(unsigned idx=0; idx < p_grid->GetNumberOfPoints(); idx++)
+        for(unsigned idx=0; idx < p_grid->GetNumberOfGlobalPoints(); idx++)
         {
             grid_values.push_back(double(idx)*10.0 + 100.0);
         }
@@ -93,14 +94,15 @@ public:
 
         // Generate a grid
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        std::vector<unsigned> extents(3, 5);
-        extents[0] = 20;
-        extents[1] = 20;
-        p_grid->SetExtents(extents);
+        c_vector<unsigned,3> dimensions;
+        dimensions[0] = 20;
+        dimensions[1] = 20;
+        dimensions[2] = 5;
+        p_grid->SetDimensions(dimensions);
         p_grid->SetSpacing(20.e-6*unit::metres);
 
         std::vector<double> grid_values;
-        for(unsigned idx=0; idx < p_grid->GetNumberOfPoints(); idx++)
+        for(unsigned idx=0; idx < p_grid->GetNumberOfGlobalPoints(); idx++)
         {
             grid_values.push_back(double(idx)*10.0 + 100.0);
         }
