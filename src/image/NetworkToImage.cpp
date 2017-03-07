@@ -157,7 +157,6 @@ void NetworkToImage<DIM>::Update()
         }
     }
 
-    p_grid->SetUpVtkGrid();
 //    p_grid->SetPointValues(point_solution);
     mpImage = vtkImageData::SafeDownCast(p_grid->GetGlobalVtkGrid());
     mpImage->GetPointData()->SetScalars(mpImage->GetPointData()->GetArray("Point Values"));

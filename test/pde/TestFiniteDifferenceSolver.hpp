@@ -33,8 +33,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef TESTSimpleLinearEllipticFiniteDifferenceSolver_HPP_
-#define TESTSimpleLinearEllipticFiniteDifferenceSolver_HPP_
+#ifndef TESTSIMPLELINEARELLIPTICFINITEDIFFERENCESOLVER_HPP_
+#define TESTSIMPLELINEARELLIPTICFINITEDIFFERENCESOLVER_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include <vector>
@@ -60,7 +60,7 @@ public:
         // Set up the grid
         boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(100*1.e-6*unit::metres,
-                               200*1.e-6*unit::metres,
+                               100*1.e-6*unit::metres,
                                DimensionalChastePoint<2>(0.0, 0.0, 0.0));
 
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
@@ -168,4 +168,4 @@ public:
     }
 };
 
-#endif /*TESTSimpleLinearEllipticFiniteDifferenceSolver_HPP_*/
+#endif /*TESTSIMPLELINEARELLIPTICFINITEDIFFERENCESOLVER_HPP_*/

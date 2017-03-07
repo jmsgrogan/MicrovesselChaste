@@ -139,11 +139,11 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
     double diffusion_term = (p_nonlinear_pde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
 
     // Get the residual vector
-    for (unsigned i = extents[4]; i < extents[5]; i++) // Z
+    for (unsigned i = extents[4]; i <= extents[5]; i++) // Z
     {
-        for (unsigned j = extents[2]; j < extents[3]; j++) // Y
+        for (unsigned j = extents[2]; j <= extents[3]; j++) // Y
         {
-            for (unsigned k = extents[0]; k < extents[1]; k++) // X
+            for (unsigned k = extents[0]; k <= extents[1]; k++) // X
             {
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
                 double grid_guess = input_repl[grid_index];
@@ -240,11 +240,11 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleVector()
 
     // Get the residual vector
     PetscVecTools::Zero(this->mVectorToAssemble);
-    for (unsigned i = extents[4]; i < extents[5]; i++) // Z
+    for (unsigned i = extents[4]; i <= extents[5]; i++) // Z
     {
-        for (unsigned j = extents[2]; j < extents[3]; j++) // Y
+        for (unsigned j = extents[2]; j <= extents[3]; j++) // Y
         {
-            for (unsigned k = extents[0]; k < extents[1]; k++) // X
+            for (unsigned k = extents[0]; k <= extents[1]; k++) // X
             {
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
                 double grid_guess = soln_guess_repl[grid_index];

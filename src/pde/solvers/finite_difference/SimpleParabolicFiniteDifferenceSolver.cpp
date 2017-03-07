@@ -88,7 +88,7 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Vec cu
     std::vector<unsigned> bc_indices;
     unsigned lo = this->mpRegularGrid->GetDistributedVectorFactory()->GetLow();
     unsigned hi = this->mpRegularGrid->GetDistributedVectorFactory()->GetHigh();
-    for(unsigned idx=lo; idx<hi-1; idx++)
+    for(unsigned idx=lo; idx<hi; idx++)
     {
         if((*(this->mpBoundaryConditions))[idx].first)
         {
@@ -142,11 +142,11 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleMatrix()
     PetscMatTools::Zero(this->mMatrixToAssemble);
     PetscMatTools::SwitchWriteMode(this->mMatrixToAssemble);
 
-    for (unsigned i = extents[4]; i < extents[5]; i++) // Z
+    for (unsigned i = extents[4]; i <= extents[5]; i++) // Z
     {
-        for (unsigned j = extents[2]; j < extents[3]; j++) // Y
+        for (unsigned j = extents[2]; j <= extents[3]; j++) // Y
         {
-            for (unsigned k = extents[0]; k < extents[1]; k++) // X
+            for (unsigned k = extents[0]; k <= extents[1]; k++) // X
             {
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
                 double current_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index);
@@ -244,11 +244,11 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleVector()
     PetscVecTools::Zero(this->mVectorToAssemble);
 
     unsigned num_points_xy = dimensions[0]*dimensions[1];
-    for (unsigned i = extents[4]; i < extents[5]; i++) // Z
+    for (unsigned i = extents[4]; i <= extents[5]; i++) // Z
     {
-        for (unsigned j = extents[2]; j < extents[3]; j++) // Y
+        for (unsigned j = extents[2]; j <= extents[3]; j++) // Y
         {
-            for (unsigned k = extents[0]; k < extents[1]; k++) // X
+            for (unsigned k = extents[0]; k <= extents[1]; k++) // X
             {
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
 

@@ -122,7 +122,7 @@ public:
         solver.Write();
     }
 
-    void TestMeshFunction() throw(Exception)
+    void xTestMeshFunction() throw(Exception)
     {
         units::quantity<unit::length> length(100.0*unit::microns);
 
@@ -179,7 +179,7 @@ public:
         solver.Write();
     }
 
-    void TestLinearGridPde() throw(Exception)
+    void xTestLinearGridPde() throw(Exception)
     {
         units::quantity<unit::length> length(100.0*unit::microns);
 
@@ -233,7 +233,7 @@ public:
         solver.Solve();
     }
 
-    void TestNonLinearGridPde() throw(Exception)
+    void xTestNonLinearGridPde() throw(Exception)
     {
         units::quantity<unit::length> length(100.0*unit::microns);
 

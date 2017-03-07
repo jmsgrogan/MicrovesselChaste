@@ -402,10 +402,10 @@ template<unsigned DIM>
 bool RegularGrid<DIM>::IsOnBoundary(unsigned gridIndex)
 {
     unsigned global_index = this->mLocalGlobalMap[gridIndex];
-    unsigned mod_z = global_index % (mDimensions[0] * (mDimensions[1]-1));
-    unsigned z_index = (global_index - mod_z) / (mDimensions[0] * (mDimensions[1]-1));
-    unsigned mod_y = mod_z % (mDimensions[0]-1);
-    unsigned y_index = (mod_z - mod_y) / (mDimensions[0]-1);
+    unsigned mod_z = global_index % (mDimensions[0] * mDimensions[1]);
+    unsigned z_index = (global_index - mod_z) / (mDimensions[0] * mDimensions[1]);
+    unsigned mod_y = mod_z % mDimensions[0];
+    unsigned y_index = (mod_z - mod_y) / mDimensions[0];
     unsigned x_index = mod_y;
     return IsOnBoundary(x_index, y_index, z_index);
 }
@@ -545,6 +545,7 @@ template<unsigned DIM>
 void RegularGrid<DIM>::SetSpacing(units::quantity<unit::length> spacing)
 {
     mSpacing = spacing;
+    UpdateExtents();
     this->mVtkRepresentationUpToDate = false;
     this->rGetLocationVolumes(true, false);
 }

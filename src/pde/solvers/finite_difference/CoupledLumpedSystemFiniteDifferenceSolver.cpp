@@ -87,7 +87,7 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Ve
     std::vector<unsigned> bc_indices;
     unsigned lo = this->mpRegularGrid->GetDistributedVectorFactory()->GetLow();
     unsigned hi = this->mpRegularGrid->GetDistributedVectorFactory()->GetHigh();
-    for(unsigned idx=lo; idx<hi-1; idx++)
+    for(unsigned idx=lo; idx<hi; idx++)
     {
         if((*(this->mpBoundaryConditions))[idx].first)
         {
@@ -108,7 +108,7 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::ComputeJacobian(const Vec c
     std::vector<unsigned> bc_indices;
     unsigned lo = this->mpRegularGrid->GetDistributedVectorFactory()->GetLow();
     unsigned hi = this->mpRegularGrid->GetDistributedVectorFactory()->GetHigh();
-    for(unsigned idx=lo; idx<hi-1; idx++)
+    for(unsigned idx=lo; idx<hi; idx++)
     {
         if((*this->mpBoundaryConditions)[idx].first)
         {
@@ -138,11 +138,11 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
     PetscMatTools::Zero(this->mMatrixToAssemble);
     PetscMatTools::SwitchWriteMode(this->mMatrixToAssemble);
 
-    for (unsigned i = extents[4]; i < extents[5]; i++) // Z
+    for (unsigned i = extents[4]; i <= extents[5]; i++) // Z
     {
-        for (unsigned j = extents[2]; j < extents[3]; j++) // Y
+        for (unsigned j = extents[2]; j <= extents[3]; j++) // Y
         {
-            for (unsigned k = extents[0]; k < extents[1]; k++) // X
+            for (unsigned k = extents[0]; k <= extents[1]; k++) // X
             {
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
                 double current_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index);
@@ -243,7 +243,7 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
     {
         for (unsigned j = 0; j < dimensions[1]; j++)
         {
-            unsigned J_index = i + dimensions[0]*(dimensions[1] - 1) + num_points_xy*j;
+            unsigned J_index = i + dimensions[0]*dimensions[1] + num_points_xy*j;
             units::quantity<unit::rate> jacEntry = surface_area*permeability/(volume*double(dimensions[0]*dimensions[2]));
             PetscMatTools::AddToElement(this->mMatrixToAssemble, num_points, J_index, jacEntry*reference_time);
         }
@@ -270,11 +270,11 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleVector()
     unsigned num_points_xy = dimensions[0]*dimensions[1];
     unsigned num_points = dimensions[0]*dimensions[1]*dimensions[2];
 
-    for (unsigned i = extents[4]; i < extents[5]; i++) // Z
+    for (unsigned i = extents[4]; i <= extents[5]; i++) // Z
     {
-        for (unsigned j = extents[2]; j < extents[3]; j++) // Y
+        for (unsigned j = extents[2]; j <= extents[3]; j++) // Y
         {
-            for (unsigned k = extents[0]; k < extents[1]; k++) // X
+            for (unsigned k = extents[0]; k <= extents[1]; k++) // X
             {
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
                 double current_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index);

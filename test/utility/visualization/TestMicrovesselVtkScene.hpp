@@ -48,6 +48,8 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "VesselNetworkGenerator.hpp"
 #include "VesselNetwork.hpp"
 
+#include "PetscSetupAndFinalize.hpp"
+
 class TestMicrovesselVtkScene : public CxxTest::TestSuite
 {
 public:
