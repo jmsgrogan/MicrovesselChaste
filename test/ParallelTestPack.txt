@@ -1,1 +1,3 @@
 utility/TestMicrovesselParallelMethods.hpp
+mesh/TestDiscreteContinuumMesh.hpp
+mesh/TestRegularGrid.hpp

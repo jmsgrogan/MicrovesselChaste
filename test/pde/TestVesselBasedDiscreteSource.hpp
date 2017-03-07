@@ -43,8 +43,8 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "Part.hpp"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
 #include "DiscreteContinuumLinearEllipticPde.hpp"
-#include "FiniteDifferenceSolver.hpp"
-#include "FiniteElementSolver.hpp"
+#include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
+#include "SimpleLinearEllipticFiniteElementSolver.hpp"
 #include "VesselNetwork.hpp"
 #include "VesselNetworkGenerator.hpp"
 #include "OutputFileHandler.hpp"
@@ -60,7 +60,7 @@ class TestVesselBasedDiscreteSource : public CxxTest::TestSuite
 
 public:
 
-    void TestFiniteDifferenceSolver() throw(Exception)
+    void TestSimpleLinearEllipticFiniteDifferenceSolver() throw(Exception)
     {
         // Set up the vessel network
         units::quantity<unit::length> vessel_length(100.0*unit::microns);
@@ -98,19 +98,19 @@ public:
         p_boundary2->SetValue(1.0*unit::mole_per_metre_cubed);
 
         // Set up and run the solver
-        FiniteDifferenceSolver<3> solver;
+        SimpleLinearEllipticFiniteDifferenceSolver<3> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.SetVesselNetwork(p_network);
         solver.AddBoundaryCondition(p_boundary2);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestFiniteDifferenceSolver"));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteDifferenceSolver"));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();
     }
 
-    void TestFiniteElementSolver() throw(Exception)
+    void TestSimpleLinearEllipticFiniteElementSolver() throw(Exception)
     {
         // Set up the vessel network
         units::quantity<unit::length> vessel_length(100.0*unit::microns);
@@ -151,13 +151,13 @@ public:
         p_boundary2->SetValue(1.0*unit::mole_per_metre_cubed);
 
         // Set up and run the solver
-        FiniteElementSolver<3> solver;
+        SimpleLinearEllipticFiniteElementSolver<3> solver;
         solver.SetGrid(p_mesh_generator->GetMesh());
         solver.SetPde(p_pde);
         solver.SetVesselNetwork(p_network);
         solver.AddBoundaryCondition(p_boundary2);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestFiniteElementSolver"));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteElementSolver"));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();

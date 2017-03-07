@@ -33,25 +33,44 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#include "../../src/pde/problem/DiscreteContinuumLinearEllipticPde.hpp"
+// PDEs
+#include "AbstractDiscreteContinuumPde.hpp"
+#include "AbstractDiscreteContinuumNonLinearEllipticPde.hpp"
+#include "AbstractDiscreteContinuumParabolicPde.hpp"
+#include "CoupledVegfPelletDiffusionReactionPde.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
+#include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
+#include "ParabolicDiffusionReactionPde.hpp"
+
+// Sources
 #include "DiscreteSource.hpp"
 #include "CellStateDependentDiscreteSource.hpp"
 #include "CellBasedDiscreteSource.hpp"
 #include "SolutionDependentDiscreteSource.hpp"
 #include "VesselBasedDiscreteSource.hpp"
+
+// Bcs
 #include "DiscreteContinuumBoundaryCondition.hpp"
-#include "AbstractDiscreteContinuumNonLinearEllipticPde.hpp"
-#include "DiscreteContinuumLinearEllipticPde.hpp"
-#include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
+
+// Solvers
 #include "AbstractDiscreteContinuumSolver.hpp"
 #include "AbstractRegularGridDiscreteContinuumSolver.hpp"
 #include "AbstractUnstructuredGridDiscreteContinuumSolver.hpp"
-#include "FiniteDifferenceSolver.hpp"
-#include "FiniteElementSolver.hpp"
+#include "AbstractFiniteDifferenceSolverBase.hpp"
+#include "CoupledLumpedSystemFiniteDifferenceSolver.hpp"
+#include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
+#include "SimpleNonLinearEllipticFiniteDifferenceSolver.hpp"
+#include "SimpleParabolicFiniteDifferenceSolver.hpp"
+
+#include "AbstractFiniteElementSolverBase.hpp"
+#include "SimpleLinearEllipticFiniteElementSolver.hpp"
+#include "SimpleNonLinearEllipticFiniteElementSolver.hpp"
+#include "SimpleParabolicFiniteElementSolver.hpp"
+
+#include "AbstractGreensFunctionSolverBase.hpp"
+#include "SimpleLinearEllipticGreensFunctionSolver.hpp"
+
 #include "FunctionMap.hpp"
-#include "GreensFunctionSolver.hpp"
-#include "AbstractDiscreteContinuumParabolicPde.hpp"
-#include "CoupledVegfPelletDiffusionReactionPde.hpp"
 
 
 //// Typdef in this namespace so that pyplusplus uses the nicer typedef'd name for the class
@@ -74,40 +93,58 @@ namespace chaste
                     sizeof(SolutionDependentDiscreteSource<3>) +
                     sizeof(VesselBasedDiscreteSource<3>) +
                     sizeof(DiscreteContinuumBoundaryCondition<3>) +
-                    sizeof(AbstractDiscreteContinuumLinearEllipticPde<3, 3>) +
+                    sizeof(AbstractDiscreteContinuumPde<3, 3>) + //PDE
+                    sizeof(DiscreteContinuumLinearEllipticPde<3, 3>) +
                     sizeof(AbstractDiscreteContinuumNonLinearEllipticPde<3, 3>) +
                     sizeof(AbstractDiscreteContinuumParabolicPde<3, 3>) +
                     sizeof(DiscreteContinuumLinearEllipticPde<3, 3>) +
                     sizeof(MichaelisMentenSteadyStateDiffusionReactionPde<3, 3>) +
                     sizeof(CoupledVegfPelletDiffusionReactionPde<3, 3>) +
-                    sizeof(DiscreteContinuumLinearEllipticPde<3, 3>) +
-                    sizeof(AbstractDiscreteContinuumSolver<3>) +
+                    sizeof(ParabolicDiffusionReactionPde<3, 3>) +
+                    sizeof(AbstractDiscreteContinuumSolver<3>) + // Solver
                     sizeof(AbstractRegularGridDiscreteContinuumSolver<3>) +
                     sizeof(AbstractUnstructuredGridDiscreteContinuumSolver<3>) +
-                    sizeof(FiniteDifferenceSolver<3>) +
-                    sizeof(FiniteElementSolver<3>) +
+                    sizeof(AbstractFiniteDifferenceSolverBase<3>) +
+                    sizeof(CoupledLumpedSystemFiniteDifferenceSolver<3>) +
+                    sizeof(SimpleLinearEllipticFiniteDifferenceSolver<3>) +
+                    sizeof(SimpleNonLinearEllipticFiniteDifferenceSolver<3>) +
+                    sizeof(SimpleParabolicFiniteDifferenceSolver<3>) +
+                    sizeof(AbstractFiniteElementSolverBase<3>) +
+                    sizeof(SimpleLinearEllipticFiniteElementSolver<3>) +
+                    sizeof(SimpleNonLinearEllipticFiniteElementSolver<3>) +
+                    sizeof(SimpleParabolicFiniteElementSolver<3>) +
+                    sizeof(AbstractGreensFunctionSolverBase<3>) +
+                    sizeof(SimpleLinearEllipticGreensFunctionSolver<3>) +
                     sizeof(FunctionMap<3>) +
-                    sizeof(GreensFunctionSolver<3>) +
-                    sizeof(DiscreteSource<2>) +
+                    sizeof(DiscreteSource<2>) + //2D
                     sizeof(CellStateDependentDiscreteSource<2>) +
                     sizeof(CellBasedDiscreteSource<2>) +
                     sizeof(SolutionDependentDiscreteSource<2>) +
                     sizeof(VesselBasedDiscreteSource<2>) +
                     sizeof(DiscreteContinuumBoundaryCondition<2>) +
-                    sizeof(AbstractDiscreteContinuumLinearEllipticPde<2, 2>) +
+                    sizeof(AbstractDiscreteContinuumPde<2, 2>) +
                     sizeof(AbstractDiscreteContinuumNonLinearEllipticPde<2, 2>) +
                     sizeof(AbstractDiscreteContinuumParabolicPde<2, 2>) +
                     sizeof(DiscreteContinuumLinearEllipticPde<2, 2>) +
                     sizeof(MichaelisMentenSteadyStateDiffusionReactionPde<2, 2>) +
                     sizeof(CoupledVegfPelletDiffusionReactionPde<2, 2>) +
                     sizeof(DiscreteContinuumLinearEllipticPde<2, 2>) +
+                    sizeof(ParabolicDiffusionReactionPde<2, 2>) +
                     sizeof(AbstractDiscreteContinuumSolver<2>) +
                     sizeof(AbstractRegularGridDiscreteContinuumSolver<2>) +
                     sizeof(AbstractUnstructuredGridDiscreteContinuumSolver<2>) +
-                    sizeof(FiniteDifferenceSolver<2>) +
-                    sizeof(FiniteElementSolver<2>) +
+                    sizeof(AbstractFiniteDifferenceSolverBase<2>) +
+                    sizeof(CoupledLumpedSystemFiniteDifferenceSolver<2>) +
+                    sizeof(SimpleLinearEllipticFiniteDifferenceSolver<2>) +
+                    sizeof(SimpleNonLinearEllipticFiniteDifferenceSolver<2>) +
+                    sizeof(SimpleParabolicFiniteDifferenceSolver<2>) +
+                    sizeof(AbstractFiniteElementSolverBase<2>) +
+                    sizeof(SimpleLinearEllipticFiniteElementSolver<2>) +
+                    sizeof(SimpleNonLinearEllipticFiniteElementSolver<2>) +
+                    sizeof(SimpleParabolicFiniteElementSolver<2>) +
+                    sizeof(AbstractGreensFunctionSolverBase<2>) +
+                    sizeof(SimpleLinearEllipticGreensFunctionSolver<2>) +
                     sizeof(FunctionMap<2>) +
-                    sizeof(GreensFunctionSolver<2>) +
                     sizeof(pyplusplus::aliases::MapUnsigned_ConcentrationFlowRate) +
                                 sizeof(pyplusplus::aliases::MapUnsigned_Concentration);
         }

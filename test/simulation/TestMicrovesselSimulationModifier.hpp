@@ -64,7 +64,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "NodeBasedCellPopulation.hpp"
 #include "GeneralisedLinearSpringForce.hpp"
 #include "FakePetscSetup.hpp"
-#include "FiniteDifferenceSolver.hpp"
+#include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
 #include "VesselNetworkGenerator.hpp"
 #include "SimpleOxygenBasedCellCycleModel.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
@@ -141,7 +141,7 @@ class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
         return p_domain;
     }
 
-    boost::shared_ptr<FiniteDifferenceSolver<3> > GetOxygenSolver(boost::shared_ptr<Part<3> > p_domain,
+    boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > GetOxygenSolver(boost::shared_ptr<Part<3> > p_domain,
                                                                   boost::shared_ptr<VesselNetwork<3> > p_network)
     {
         boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
@@ -158,7 +158,7 @@ class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 50.0 * 1.e-6 * unit::metres);
 
-        boost::shared_ptr<FiniteDifferenceSolver<3> > p_oxygen_solver = FiniteDifferenceSolver<3>::Create();
+        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<3>::Create();
         p_oxygen_solver->SetGrid(p_grid);
         p_oxygen_solver->SetPde(p_oxygen_pde);
         p_oxygen_solver->AddBoundaryCondition(p_vessel_ox_boundary_condition);
@@ -166,7 +166,7 @@ class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
         return p_oxygen_solver;
     }
 
-    boost::shared_ptr<FiniteDifferenceSolver<3> > GetVegfSolver(boost::shared_ptr<Part<3> > p_domain,
+    boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > GetVegfSolver(boost::shared_ptr<Part<3> > p_domain,
                                                                   boost::shared_ptr<VesselNetwork<3> > p_network)
     {
         boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_vegf_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
@@ -185,7 +185,7 @@ class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 50.0 * 1.e-6 * unit::metres);
 
-        boost::shared_ptr<FiniteDifferenceSolver<3> > p_vegf_solver = FiniteDifferenceSolver<3>::Create();
+        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_vegf_solver = SimpleLinearEllipticFiniteDifferenceSolver<3>::Create();
         p_vegf_solver->SetGrid(p_grid);
         p_vegf_solver->SetPde(p_vegf_pde);
         p_vegf_solver->AddBoundaryCondition(p_vessel_vegf_boundary_condition);
@@ -226,13 +226,13 @@ public:
         boost::shared_ptr<VesselNetwork<3> > p_network = GetVesselNetwork();
 
         // Create the oxygen pde solver
-        boost::shared_ptr<FiniteDifferenceSolver<3> > p_oxygen_solver = GetOxygenSolver(p_domain, p_network);
+        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_oxygen_solver = GetOxygenSolver(p_domain, p_network);
         p_oxygen_solver->GetGridCalculator()->SetVesselNetwork(p_network);
         p_oxygen_solver->GetGridCalculator()->SetCellPopulation(cell_population, cell_lenth_scale);
         p_oxygen_solver->Setup();
 
         // Create the vegf pde solver
-        boost::shared_ptr<FiniteDifferenceSolver<3> > p_vegf_solver = GetVegfSolver(p_domain, p_network);
+        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_vegf_solver = GetVegfSolver(p_domain, p_network);
         p_vegf_solver->GetGridCalculator()->SetVesselNetwork(p_network);
         p_vegf_solver->GetGridCalculator()->SetCellPopulation(cell_population, cell_lenth_scale);
         p_vegf_solver->Setup();
@@ -285,7 +285,7 @@ public:
         std::vector<Node<3>*> nodes;
         for(unsigned idx=0; idx<location_indices.size(); idx++)
         {
-            DimensionalChastePoint<3> location = p_grid->GetLocationOfGlobal1dIndex(location_indices[idx]);
+            DimensionalChastePoint<3> location = p_grid->GetLocationOfGlobalIndex(location_indices[idx]);
             nodes.push_back(new Node<3>(idx, location.GetLocation(cell_lenth_scale), false));
         }
 
@@ -302,13 +302,13 @@ public:
         boost::shared_ptr<VesselNetwork<3> > p_network = GetVesselNetwork();
 
         // Create the oxygen pde solver
-        boost::shared_ptr<FiniteDifferenceSolver<3> > p_oxygen_solver = GetOxygenSolver(p_domain, p_network);
+        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_oxygen_solver = GetOxygenSolver(p_domain, p_network);
         p_oxygen_solver->GetGridCalculator()->SetVesselNetwork(p_network);
         p_oxygen_solver->GetGridCalculator()->SetCellPopulation(cell_population,cell_lenth_scale);
         p_oxygen_solver->Setup();
 
         // Create the vegf pde solver
-        boost::shared_ptr<FiniteDifferenceSolver<3> > p_vegf_solver = GetVegfSolver(p_domain, p_network);
+        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_vegf_solver = GetVegfSolver(p_domain, p_network);
         p_vegf_solver->GetGridCalculator()->SetVesselNetwork(p_network);
         p_vegf_solver->GetGridCalculator()->SetCellPopulation(cell_population, cell_lenth_scale);
         p_vegf_solver->Setup();

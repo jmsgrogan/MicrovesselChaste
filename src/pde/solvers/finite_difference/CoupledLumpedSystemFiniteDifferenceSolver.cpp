@@ -69,6 +69,13 @@ CoupledLumpedSystemFiniteDifferenceSolver<DIM>::~CoupledLumpedSystemFiniteDiffer
 
 }
 
+template <unsigned DIM>
+boost::shared_ptr<CoupledLumpedSystemFiniteDifferenceSolver<DIM> > CoupledLumpedSystemFiniteDifferenceSolver<DIM>::Create()
+{
+    MAKE_PTR(CoupledLumpedSystemFiniteDifferenceSolver<DIM>, pSelf);
+    return pSelf;
+}
+
 template<unsigned DIM>
 void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Vec currentGuess, Vec dUdt)
 {

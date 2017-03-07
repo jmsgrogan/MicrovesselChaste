@@ -45,7 +45,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "Part.hpp"
 #include "UnitCollection.hpp"
 #include "DiscreteContinuumLinearEllipticPde.hpp"
-#include "FiniteDifferenceSolver.hpp"
+#include "SimpleNonLinearEllipticFiniteDifferenceSolver.hpp"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
 #include "VesselNetwork.hpp"
 #include "VesselNetworkGenerator.hpp"
@@ -55,7 +55,7 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include "PetscSetupAndFinalize.hpp"
 
-class TestNonLinearFiniteDifferenceSolver : public AbstractCellBasedWithTimingsTestSuite
+class TestNonLinearSimpleNonLinearEllipticFiniteDifferenceSolver : public AbstractCellBasedWithTimingsTestSuite
 {
 public:
 
@@ -86,12 +86,12 @@ public:
         units::quantity<unit::concentration> boundary_concentration(1.0 * unit::mole_per_metre_cubed);
         p_outer_boundary_condition->SetValue(boundary_concentration);
 
-        FiniteDifferenceSolver<3> solver;
+        SimpleNonLinearEllipticFiniteDifferenceSolver<3> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_non_linear_pde);
         solver.AddBoundaryCondition(p_outer_boundary_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestNonLinearFiniteDifferenceSolver/Box", false));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestNonLinearSimpleNonLinearEllipticFiniteDifferenceSolver/Box", false));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetFileName("output_nl_fd.vti");
         solver.SetWriteSolution(true);
@@ -99,4 +99,4 @@ public:
     }
 };
 
-#endif /*TESTFINITEDIFFERENCESOLVER_HPP_*/
+#endif /*TESTSimpleNonLinearEllipticFiniteDifferenceSolver_HPP_*/

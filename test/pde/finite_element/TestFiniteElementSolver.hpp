@@ -33,8 +33,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef TESTFINITEELEMENTSOLVER_HPP_
-#define TESTFINITEELEMENTSOLVER_HPP_
+#ifndef TESTSimpleLinearEllipticFiniteElementSolver_HPP_
+#define TESTSimpleLinearEllipticFiniteElementSolver_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include <vector>
@@ -42,7 +42,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <boost/lexical_cast.hpp>
 #include "SmartPointers.hpp"
 #include "DiscreteContinuumLinearEllipticPde.hpp"
-#include "FiniteElementSolver.hpp"
+#include "SimpleLinearEllipticFiniteElementSolver.hpp"
 #include "UblasIncludes.hpp"
 #include "Part.hpp"
 #include "DimensionalChastePoint.hpp"
@@ -56,7 +56,7 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include "PetscSetupAndFinalize.hpp"
 
-class TestFiniteElementSolver : public CxxTest::TestSuite
+class TestSimpleLinearEllipticFiniteElementSolver : public CxxTest::TestSuite
 {
 public:
 
@@ -98,17 +98,17 @@ public:
         p_vessel_ox_boundary_condition->SetNetwork(p_network);
 
         // Set up and run the solver
-        FiniteElementSolver<3> solver;
+        SimpleLinearEllipticFiniteElementSolver<3> solver;
         solver.SetGrid(p_mesh_generator->GetMesh());
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_vessel_ox_boundary_condition);
         solver.SetReferenceConcentration(1.e-9*unit::mole_per_metre_cubed);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestFiniteElementSolver/KroghCylinder3dSurface", false));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleLinearEllipticFiniteElementSolver/KroghCylinder3dSurface", false));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();
     }
 };
 
-#endif /*TESTFINITEELEMENTSOLVER_HPP_*/
+#endif /*TESTSimpleLinearEllipticFiniteElementSolver_HPP_*/

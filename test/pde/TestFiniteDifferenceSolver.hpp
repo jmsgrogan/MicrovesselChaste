@@ -33,8 +33,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef TESTFINITEDIFFERENCESOLVER_HPP_
-#define TESTFINITEDIFFERENCESOLVER_HPP_
+#ifndef TESTSimpleLinearEllipticFiniteDifferenceSolver_HPP_
+#define TESTSimpleLinearEllipticFiniteDifferenceSolver_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include <vector>
@@ -42,7 +42,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "SmartPointers.hpp"
 #include "Part.hpp"
-#include "FiniteDifferenceSolver.hpp"
+#include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
 #include "VesselNetwork.hpp"
 #include "VesselNetworkGenerator.hpp"
 #include "OutputFileHandler.hpp"
@@ -50,7 +50,7 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include "PetscSetupAndFinalize.hpp"
 
-class TestFiniteDifferenceSolver : public CxxTest::TestSuite
+class TestSimpleLinearEllipticFiniteDifferenceSolver : public CxxTest::TestSuite
 {
 
 public:
@@ -79,12 +79,12 @@ public:
         p_boundary_condition->SetValue(boundary_concentration);
 
         // Set up and run the solver
-        FiniteDifferenceSolver<2> solver;
+        SimpleLinearEllipticFiniteDifferenceSolver<2> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_boundary_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestFiniteDifferenceSolver/RectangleDomain", true));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleLinearEllipticFiniteDifferenceSolver/RectangleDomain", true));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();
@@ -115,12 +115,12 @@ public:
 
         // Set up and run the solver
 
-        FiniteDifferenceSolver<3> solver;
+        SimpleLinearEllipticFiniteDifferenceSolver<3> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_boundary_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestFiniteDifferenceSolver/CuboidalDomain", true));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleLinearEllipticFiniteDifferenceSolver/CuboidalDomain", true));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();
@@ -155,17 +155,17 @@ public:
         p_vessel_boundary_condition->SetSource(BoundaryConditionSource::PRESCRIBED);
 
         // Set up and run the solver
-        FiniteDifferenceSolver<3> solver;
+        SimpleLinearEllipticFiniteDifferenceSolver<3> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_vessel_boundary_condition);
         solver.SetVesselNetwork(p_network);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestFiniteDifferenceSolver/WithVessels", true));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleLinearEllipticFiniteDifferenceSolver/WithVessels", true));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();
     }
 };
 
-#endif /*TESTFINITEDIFFERENCESOLVER_HPP_*/
+#endif /*TESTSimpleLinearEllipticFiniteDifferenceSolver_HPP_*/

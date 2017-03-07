@@ -33,8 +33,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef TESTVESSELBASEDDISCRETESOURCE_HPP_
-#define TESTVESSELBASEDDISCRETESOURCE_HPP_
+#ifndef TESTDISCRETECONTINUUMBOUNDARYCONDITIONS_HPP_
+#define TESTDISCRETECONTINUUMBOUNDARYCONDITIONS_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include <vector>
@@ -43,8 +43,8 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "Part.hpp"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
 #include "DiscreteContinuumLinearEllipticPde.hpp"
-#include "FiniteDifferenceSolver.hpp"
-#include "FiniteElementSolver.hpp"
+#include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
+#include "SimpleLinearEllipticFiniteElementSolver.hpp"
 #include "VesselNetwork.hpp"
 #include "VesselNetworkGenerator.hpp"
 #include "OutputFileHandler.hpp"
@@ -60,7 +60,7 @@ class TestDiscreteContinuumBoundaryCondition : public CxxTest::TestSuite
 
 public:
 
-    void TestFiniteDifferenceSolver() throw(Exception)
+    void TestSimpleLinearEllipticFiniteDifferenceSolver() throw(Exception)
     {
         // Set up the vessel network
         units::quantity<unit::length> vessel_length(100.0*unit::microns);
@@ -98,7 +98,7 @@ public:
         p_boundary->SetValue(1.0*unit::mole_per_metre_cubed);
 
         // Set up and run the solver
-        FiniteDifferenceSolver<3> solver;
+        SimpleLinearEllipticFiniteDifferenceSolver<3> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.SetVesselNetwork(p_network);
@@ -110,7 +110,7 @@ public:
         solver.Solve();
     }
 
-    void TestFiniteElementSolver() throw(Exception)
+    void TestSimpleLinearEllipticFiniteElementSolver() throw(Exception)
     {
         // Set up the vessel network
         units::quantity<unit::length> vessel_length(100.0*unit::microns);
@@ -151,7 +151,7 @@ public:
         p_pde->AddDiscreteSource(p_vessel_source_const);
 
         // Set up and run the solver
-        FiniteElementSolver<3> solver;
+        SimpleLinearEllipticFiniteElementSolver<3> solver;
         solver.SetGrid(p_mesh_generator->GetMesh());
         solver.SetPde(p_pde);
         solver.SetVesselNetwork(p_network);
@@ -163,4 +163,4 @@ public:
     }
 };
 
-#endif /*TESTVESSELBASEDDISCRETESOURCE_HPP_*/
+#endif /*TESTDISCRETECONTINUUMBOUNDARYCONDITIONS_HPP_*/

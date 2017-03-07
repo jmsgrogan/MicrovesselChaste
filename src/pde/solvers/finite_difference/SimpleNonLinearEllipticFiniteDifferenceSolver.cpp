@@ -67,6 +67,13 @@ SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::~SimpleNonLinearEllipticFini
 
 }
 
+template <unsigned DIM>
+boost::shared_ptr<SimpleNonLinearEllipticFiniteDifferenceSolver<DIM> > SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::Create()
+{
+    MAKE_PTR(SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>, pSelf);
+    return pSelf;
+}
+
 template<unsigned DIM>
 void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::ComputeJacobian(const Vec currentGuess, Mat* pJacobian)
 {

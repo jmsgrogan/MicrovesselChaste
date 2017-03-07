@@ -301,14 +301,18 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetUpVtkGrid()
 
     // Get the local to global map
     this->mLocalGlobalMap.clear();
-    for(unsigned idx=0;idx<this->mpVtkGrid->GetNumberOfPoints(); idx++)
+    for(unsigned idx=0;idx<this->mpVtkGrid->GetNumberOfCells(); idx++)
     {
-        this->mLocalGlobalMap.push_back(p_grid->GetPointData()->GetArray("Global Num")->GetTuple1(idx));
+        this->mLocalGlobalMap.push_back(this->mpVtkGrid->GetCellData()->GetArray("Global Num")->GetTuple1(idx));
+        if(this->mpVtkGrid->GetCellData()->GetArray("Global Num")->GetTuple1(idx) >= this->GetNumElements())
+        {
+            EXCEPTION("Element indexes not in expected order");
+        }
     }
 
     // Update the locations with element centroids
     this->mpGridLocations = vtkSmartPointer<vtkPoints>::New();
-    for(unsigned idx=0; idx<this->GetNumElements(); idx++)
+    for(unsigned idx=0; idx<this->mpVtkGrid->GetNumberOfCells(); idx++)
     {
         c_vector<double, SPACE_DIM> loc = this->GetElement(this->mLocalGlobalMap[idx])->CalculateCentroid();
         if(SPACE_DIM==3)

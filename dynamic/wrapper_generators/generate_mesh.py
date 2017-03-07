@@ -42,6 +42,10 @@ def update_builder(builder):
 
     include_classes = ["RegularGrid<3>", 
                        "RegularGrid<2>", 
+                       "AbstractDiscreteContinuumGrid<3>",
+                       "AbstractDiscreteContinuumGrid<2>",
+                       "GridCalculator<3>",
+                       "GridCalculator<2>",
                        "DiscreteContinuumMesh<3,3>", 
                        "DiscreteContinuumMesh<2,2>",
                        "RegularGridWriter",

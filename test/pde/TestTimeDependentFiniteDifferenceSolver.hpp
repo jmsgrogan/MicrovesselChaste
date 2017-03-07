@@ -33,8 +33,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef TESTTIMEDEPENDENTFINITEDIFFERENCESOLVER_HPP_
-#define TESTTIMEDEPENDENTFINITEDIFFERENCESOLVER_HPP_
+#ifndef TESTSIMPLEPARABOLICFINITEDIFFERENCESOLVER_HPP_
+#define TESTSIMPLEPARABOLICFINITEDIFFERENCESOLVER_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include <vector>
@@ -45,7 +45,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "Part.hpp"
 #include "UnitCollection.hpp"
 #include "CoupledVegfPelletDiffusionReactionPde.hpp"
-#include "FiniteDifferenceSolver.hpp"
+#include "SimpleParabolicFiniteDifferenceSolver.hpp"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
 #include "VesselNetwork.hpp"
 #include "VesselNetworkGenerator.hpp"
@@ -55,7 +55,7 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include "PetscSetupAndFinalize.hpp"
 
-class TestTimeDependentFiniteDifferenceSolver : public AbstractCellBasedWithTimingsTestSuite
+class TestSimpleParabolicFiniteDifferenceSolver : public AbstractCellBasedWithTimingsTestSuite
 {
 public:
 
@@ -83,11 +83,11 @@ public:
         p_pde->SetMultiplierValue(initial_vegf_concentration);
 
         SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(1.0, 1); // Force 1 hour increments
-        FiniteDifferenceSolver<3> solver;
+        SimpleParabolicFiniteDifferenceSolver<3> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestTimeDependentFiniteDifferenceSolver/Box", false));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleParabolicFiniteDifferenceSolver/Box", false));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
 
@@ -99,4 +99,4 @@ public:
     }
 };
 
-#endif /*TESTTIMEDEPENDENTFINITEDIFFERENCESOLVER_HPP_*/
+#endif /*TESTSIMPLEPARABOLICFINITEDIFFERENCESOLVER_HPP_*/

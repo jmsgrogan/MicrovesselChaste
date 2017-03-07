@@ -81,8 +81,7 @@ Copyright (c) 2005-2016, University of Oxford.
  */
 #include "DiscreteContinuumMesh.hpp"
 #include "VtkMeshWriter.hpp"
-#include "FiniteElementSolver.hpp"
-#include "FiniteDifferenceSolver.hpp"
+#include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
 #include "DiscreteSource.hpp"
 #include "VesselBasedDiscreteSource.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
@@ -146,7 +145,7 @@ public:
         /*
          * Set up the PDE solvers for the oxygen problem
          */
-        boost::shared_ptr<FiniteDifferenceSolver<3> > p_oxygen_solver = FiniteDifferenceSolver<3>::Create();
+        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<3>::Create();
         p_oxygen_solver->SetPde(p_oxygen_pde);
         p_oxygen_solver->SetGrid(p_grid);
         p_oxygen_solver->AddBoundaryCondition(p_left_face_boundary);

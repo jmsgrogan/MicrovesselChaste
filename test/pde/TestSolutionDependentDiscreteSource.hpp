@@ -43,7 +43,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "SmartPointers.hpp"
 #include "Part.hpp"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
-#include "FiniteDifferenceSolver.hpp"
+#include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
 #include "VesselNetwork.hpp"
 #include "VesselNetworkGenerator.hpp"
 #include "OutputFileHandler.hpp"
@@ -59,7 +59,7 @@ class TestSolutionDependentDiscreteSource : public CxxTest::TestSuite
 
 public:
 
-    void TestFiniteDifferenceSolver() throw(Exception)
+    void TestSimpleLinearEllipticFiniteDifferenceSolver() throw(Exception)
     {
         // Solve two problems on the same grid
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
@@ -80,11 +80,11 @@ public:
         p_boundary->SetValue(1.0*unit::mole_per_metre_cubed);
 
         // Set up and run the first solver
-        FiniteDifferenceSolver<3> solver;
+        SimpleLinearEllipticFiniteDifferenceSolver<3> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde1);
         solver.AddBoundaryCondition(p_boundary);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSolutionDependentDiscreteSource/TestFiniteDifferenceSolver"));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSolutionDependentDiscreteSource/TestSimpleLinearEllipticFiniteDifferenceSolver"));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();
@@ -102,7 +102,7 @@ public:
         boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary2 = DiscreteContinuumBoundaryCondition<3>::Create();
         p_boundary2->SetValue(1.0*unit::mole_per_metre_cubed);
 
-        FiniteDifferenceSolver<3> solver2;
+        SimpleLinearEllipticFiniteDifferenceSolver<3> solver2;
         solver2.SetGrid(p_grid);
         solver2.SetPde(p_pde2);
         solver2.AddBoundaryCondition(p_boundary2);

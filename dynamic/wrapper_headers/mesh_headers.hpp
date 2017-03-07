@@ -36,6 +36,8 @@ Copyright (c) 2005-2016, University of Oxford.
 #ifndef MESH_HEADERS_HPP
 #define MESH_HEADERS_HPP
 
+#include "AbstractDiscreteContinuumGrid.hpp"
+#include "GridCalculator.hpp"
 #include "RegularGrid.hpp"
 #include "RegularGridWriter.hpp"
 #include "DiscreteContinuumMesh.hpp"
@@ -46,6 +48,10 @@ Copyright (c) 2005-2016, University of Oxford.
 
 namespace pyplusplus{
 namespace aliases{
+typedef AbstractDiscreteContinuumGrid<3> AbstractDiscreteContinuumGrid3;
+typedef AbstractDiscreteContinuumGrid<2> AbstractDiscreteContinuumGrid2;
+typedef GridCalculator<3> GridCalculator3;
+typedef GridCalculator<2> GridCalculator2;
 typedef RegularGrid<3> RegularGrid3;
 typedef RegularGrid<2> RegularGrid2;
 typedef DiscreteContinuumMesh<3, 3> DiscreteContinuumMesh3_3;
@@ -65,6 +71,10 @@ typedef std::vector<double> VecDouble_MeshModule;
 }
 }//pyplusplus::aliases
 
+template class AbstractDiscreteContinuumGrid<3>;
+template class AbstractDiscreteContinuumGrid<2>;
+template class GridCalculator<3>;
+template class GridCalculator<2>;
 template class RegularGrid<3>;
 template class RegularGrid<2>;
 template class DiscreteContinuumMesh<3, 3>;

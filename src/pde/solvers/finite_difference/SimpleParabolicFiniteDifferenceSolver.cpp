@@ -70,6 +70,13 @@ SimpleParabolicFiniteDifferenceSolver<DIM>::~SimpleParabolicFiniteDifferenceSolv
 
 }
 
+template <unsigned DIM>
+boost::shared_ptr<SimpleParabolicFiniteDifferenceSolver<DIM> > SimpleParabolicFiniteDifferenceSolver<DIM>::Create()
+{
+    MAKE_PTR(SimpleParabolicFiniteDifferenceSolver<DIM>, pSelf);
+    return pSelf;
+}
+
 template<unsigned DIM>
 void SimpleParabolicFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Vec currentGuess, Vec dUdt)
 {

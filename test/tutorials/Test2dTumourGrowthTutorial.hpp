@@ -59,7 +59,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "CancerCellMutationState.hpp"
 #include "StemCellProliferativeType.hpp"
 #include "RegularGrid.hpp"
-#include "FiniteDifferenceSolver.hpp"
+#include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
 #include "CellStateDependentDiscreteSource.hpp"
 #include "DiscreteSource.hpp"

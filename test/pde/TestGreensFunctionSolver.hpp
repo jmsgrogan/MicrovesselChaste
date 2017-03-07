@@ -33,12 +33,12 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef TESTGREENSFUNCTIONSOLVER_HPP_
-#define TESTGREENSFUNCTIONSOLVER_HPP_
+#ifndef TESTSIMPLELINEARELLIPTICGREENSFUNCTIONSOLVER_HPP_
+#define TESTSIMPLELINEARELLIPTICGREENSFUNCTIONSOLVER_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include "DiscreteContinuumLinearEllipticPde.hpp"
-#include "GreensFunctionSolver.hpp"
+#include "SimpleLinearEllipticGreensFunctionSolver.hpp"
 #include "VesselNetwork.hpp"
 #include "VesselNetworkGenerator.hpp"
 #include "RegularGrid.hpp"
@@ -73,12 +73,12 @@ public:
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
         p_pde->SetContinuumConstantInUTerm(consumption_rate);
 
-        GreensFunctionSolver<3> solver;
+        SimpleLinearEllipticGreensFunctionSolver<3> solver;
         solver.SetVesselNetwork(p_network);
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestGreensFunctionSolver/TestSingleVessel3d", false));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleLinearEllipticGreensFunctionSolver/TestSingleVessel3d", false));
         solver.SetFileHandler(p_output_file_handler);
         solver.Setup();
         solver.SetWriteSolution(true);
@@ -86,4 +86,4 @@ public:
     }
 };
 
-#endif /*TESTGREENSFUNCTIONSOLVER_HPP_*/
+#endif /*TESTSIMPLELINEARELLIPTICGREENSFUNCTIONSOLVER_HPP_*/

@@ -38,6 +38,10 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include <cxxtest/TestSuite.h>
 #include <vector>
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
+#include <vtkPolyData.h>
+#include <vtkSmartPointer.h>
+#include <vtkPoints.h>
 #include "SmartPointers.hpp"
 #include "Polygon.hpp"
 #include "Part.hpp"
@@ -287,9 +291,10 @@ public:
 
         Part<2> part2 = Part<2>();
         part2.AddRectangle(10.e-6*unit::metres, 10.e-6*unit::metres, DimensionalChastePoint<2>(0.0, 0.0));
-        std::vector<DimensionalChastePoint<2> > probes;
-        probes.push_back(DimensionalChastePoint<2>(5.0, 5.0));
-        TS_ASSERT(part2.IsPointInPart(probes)[0]);
+
+        vtkSmartPointer<vtkPoints> p_probes = vtkSmartPointer<vtkPoints>::New();
+        p_probes->InsertNextPoint(0.5, 0.5, 0.0);
+        TS_ASSERT(part2.IsPointInPart(p_probes)[0]);
     }
 
     void TestTranslate()

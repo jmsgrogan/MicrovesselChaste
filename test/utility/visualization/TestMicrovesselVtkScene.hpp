@@ -66,11 +66,11 @@ public:
         p_grid->SetSpacing(20.e-6*unit::metres);
 
         std::vector<double> grid_values;
-        for(unsigned idx=0; idx < p_grid->GetNumberOfGlobalPoints(); idx++)
+        for(unsigned idx=0; idx < p_grid->GetNumberOfLocations(); idx++)
         {
             grid_values.push_back(double(idx)*10.0 + 100.0);
         }
-        p_grid->SetPointValues(grid_values);
+        p_grid->AddPointData(grid_values);
 
         MicrovesselVtkScene<2> scene1;
         scene1.SetRegularGrid(p_grid);
@@ -102,11 +102,11 @@ public:
         p_grid->SetSpacing(20.e-6*unit::metres);
 
         std::vector<double> grid_values;
-        for(unsigned idx=0; idx < p_grid->GetNumberOfGlobalPoints(); idx++)
+        for(unsigned idx=0; idx < p_grid->GetNumberOfLocations(); idx++)
         {
             grid_values.push_back(double(idx)*10.0 + 100.0);
         }
-        p_grid->SetPointValues(grid_values);
+        p_grid->AddPointData(grid_values);
 
         MicrovesselVtkScene<3> scene1;
         scene1.SetRegularGrid(p_grid);

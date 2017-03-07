@@ -43,7 +43,8 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "SmartPointers.hpp"
 #include "Part.hpp"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
-#include "FiniteDifferenceSolver.hpp"
+#include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
+#include "SimpleNonLinearEllipticFiniteDifferenceSolver.hpp"
 #include "VesselNetwork.hpp"
 #include "VesselNetworkGenerator.hpp"
 #include "OutputFileHandler.hpp"
@@ -53,7 +54,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "DiscreteContinuumMeshGenerator.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "FunctionMap.hpp"
-#include "FiniteElementSolver.hpp"
+#include "SimpleLinearEllipticFiniteElementSolver.hpp"
 #include "VtkMeshWriter.hpp"
 #include "GridCalculator.hpp"
 
@@ -110,7 +111,7 @@ public:
         std::vector<units::quantity<unit::rate> > point_rates = p_linear_point_source->GetLinearInUValues();
         std::vector<units::quantity<unit::concentration_flow_rate> > point_conc_rates = p_const_point_source->GetConstantInUValues();
         std::vector<double> solution;
-        for(unsigned idx=0; idx<p_grid_calc->GetNumberOfLocations(); idx++)
+        for(unsigned idx=0; idx<p_grid_calc->GetGrid()->GetNumberOfLocations(); idx++)
         {
             solution.push_back(double(point_rates[idx].value() + point_conc_rates[idx].value()));
         }
@@ -161,7 +162,7 @@ public:
         p_const_point_source->SetGridCalculator(p_grid_calc);
 
         // Set up a function map
-        FiniteElementSolver<3> solver;
+        SimpleLinearEllipticFiniteElementSolver<3> solver;
         solver.SetGrid(p_mesh_generator->GetMesh());
 
         // Get the source values at each point on the grid
@@ -222,7 +223,7 @@ public:
         p_boundary2->SetValue(3.e-6*unit::mole_per_metre_cubed);
 
         // Set up and run the solver
-        FiniteDifferenceSolver<3> solver;
+        SimpleLinearEllipticFiniteDifferenceSolver<3> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_boundary2);
@@ -278,7 +279,7 @@ public:
         p_pde->AddDiscreteSource(p_const_point_source);
 
         // Set up and run the solver
-        FiniteDifferenceSolver<3> solver;
+        SimpleNonLinearEllipticFiniteDifferenceSolver<3> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_boundary2);

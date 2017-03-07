@@ -57,12 +57,18 @@ SimpleLinearEllipticFiniteDifferenceSolver<DIM>::~SimpleLinearEllipticFiniteDiff
 
 }
 
+template <unsigned DIM>
+boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<DIM> > SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Create()
+{
+    MAKE_PTR(SimpleLinearEllipticFiniteDifferenceSolver<DIM>, pSelf);
+    return pSelf;
+}
+
 template<unsigned DIM>
 boost::shared_ptr<LinearSystem> SimpleLinearEllipticFiniteDifferenceSolver<DIM>::GetLinearSystem()
 {
     return mpLinearSystem;
 }
-
 
 template<unsigned DIM>
 void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToMatrix()

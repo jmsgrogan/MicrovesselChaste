@@ -51,12 +51,14 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "RegularGridWriter.hpp"
 #include "BaseUnits.hpp"
 
+#include "Debug.hpp"
+
 template<unsigned DIM>
 RegularGrid<DIM>::RegularGrid() :
         AbstractDiscreteContinuumGrid<DIM, DIM>(),
         mSpacing(BaseUnits::Instance()->GetReferenceLengthScale()),
         mDimensions(scalar_vector<unsigned>(3, 1)),
-        mExtents(zero_vector<double>(6)),
+        mExtents(zero_vector<unsigned>(6)),
         mOrigin(DimensionalChastePoint<DIM>(zero_vector<double>(DIM), BaseUnits::Instance()->GetReferenceLengthScale())),
         mNeighbourData(),
         mpDistributedVectorFactory()
@@ -83,11 +85,12 @@ void RegularGrid<DIM>::CalculateNeighbourData()
 {
     unsigned num_points = this->GetNumberOfLocations();
     mNeighbourData = std::vector<std::vector<unsigned> >(num_points);
-    for (unsigned kdx = mExtents[4]; kdx < mExtents[5]; kdx++)
+
+    for (unsigned kdx = mExtents[4]; kdx <= mExtents[5]; kdx++)
     {
-        for (unsigned jdx = mExtents[2]; jdx < mExtents[3]; jdx++)
+        for (unsigned jdx = mExtents[2]; jdx <= mExtents[3]; jdx++)
         {
-            for (unsigned idx = mExtents[0]; idx < mExtents[1]; idx++)
+            for (unsigned idx = mExtents[0]; idx <= mExtents[1]; idx++)
             {
                 unsigned index = GetGridIndex(idx, jdx, kdx);
                 if (idx > 0)
@@ -124,11 +127,11 @@ void RegularGrid<DIM>::CalculateMooreNeighbourData()
 {
     unsigned num_points = this->GetNumberOfLocations();
     mNeighbourData = std::vector<std::vector<unsigned> >(num_points);
-    for (unsigned kdx = mExtents[4]; kdx < mExtents[5]; kdx++)
+    for (unsigned kdx = mExtents[4]; kdx <= mExtents[5]; kdx++)
     {
-        for (unsigned jdx = mExtents[2]; jdx < mExtents[3]; jdx++)
+        for (unsigned jdx = mExtents[2]; jdx <= mExtents[3]; jdx++)
         {
-            for (unsigned idx = mExtents[0]; idx < mExtents[1]; idx++)
+            for (unsigned idx = mExtents[0]; idx <= mExtents[1]; idx++)
             {
                 unsigned index = GetGridIndex(idx, jdx, kdx);
 
@@ -342,10 +345,9 @@ DimensionalChastePoint<DIM> RegularGrid<DIM>::GetLocation(unsigned x_index, unsi
     locs[0] = x_index;
     locs[1] = y_index;
     locs[2] = z_index;
-
     c_vector<double, 3> loc;
     this->mpGlobalVtkGrid->GetPoint(vtkImageData::SafeDownCast(this->mpGlobalVtkGrid)->ComputePointId(locs), &loc[0]);
-    return DimensionalChastePoint<DIM>(loc, this->mReferenceLength);
+    return DimensionalChastePoint<DIM>(loc[0], loc[1], loc[2], this->mReferenceLength);
 }
 
 template<unsigned DIM>
@@ -357,7 +359,7 @@ DimensionalChastePoint<DIM> RegularGrid<DIM>::GetLocationOfGlobalIndex(unsigned 
     }
     c_vector<double, 3> loc;
     this->mpGlobalVtkGrid->GetPoint(grid_index, &loc[0]);
-    return DimensionalChastePoint<DIM>(loc, this->mReferenceLength);
+    return DimensionalChastePoint<DIM>(loc[0], loc[1], loc[2], this->mReferenceLength);
 }
 
 template<unsigned DIM>
@@ -448,10 +450,20 @@ c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsign
     double dimensionless_spacing = GetSpacing()/scale_factor;
     double jiggle_size = 1.e-3 * dimensionless_spacing;
 
-    c_vector<double, DIM> dimensionless_location = GetLocation(xIndex ,yIndex, zIndex).GetLocation(scale_factor);
+    c_vector<double, DIM> dimensionless_location = this->GetLocation(xIndex ,yIndex, zIndex).GetLocation(scale_factor);
+    c_vector<double, 3> loc;
+
     if(DIM==2)
     {
-        dimensionless_location[2] = 0.0;
+        loc[0] = dimensionless_location[0];
+        loc[1] = dimensionless_location[1];
+        loc[2] = 0.0;
+    }
+    else
+    {
+        loc[0] = dimensionless_location[0];
+        loc[1] = dimensionless_location[1];
+        loc[2] = dimensionless_location[2];
     }
 
     double x_min_offset = dimensionless_spacing/2.0;
@@ -469,6 +481,7 @@ c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsign
         y_min_offset -= jiggle_size;
         y_max_offset += jiggle_size;
     }
+
     if (xIndex == 0)
     {
         x_min_offset = 0.0;
@@ -487,10 +500,10 @@ c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsign
     }
 
     c_vector<double,6> dimensionless_bounds;
-    dimensionless_bounds[0] = dimensionless_location[0] - x_min_offset;
-    dimensionless_bounds[1] = dimensionless_location[0] + x_max_offset;
-    dimensionless_bounds[2] = dimensionless_location[1] - y_min_offset;
-    dimensionless_bounds[3] = dimensionless_location[1] + y_max_offset;
+    dimensionless_bounds[0] = loc[0] - x_min_offset;
+    dimensionless_bounds[1] = loc[0] + x_max_offset;
+    dimensionless_bounds[2] = loc[1] - y_min_offset;
+    dimensionless_bounds[3] = loc[1] + y_max_offset;
     if(DIM==3)
     {
         double z_min_offset = dimensionless_spacing/2.0;
@@ -509,56 +522,47 @@ c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsign
             z_max_offset = 0.0;
         }
 
-        dimensionless_bounds[4] = dimensionless_location[2] - z_min_offset;
-        dimensionless_bounds[5] = dimensionless_location[2] + z_max_offset;
+        dimensionless_bounds[4] = loc[2] - z_min_offset;
+        dimensionless_bounds[5] = loc[2] + z_max_offset;
     }
     else
     {
         dimensionless_bounds[4] = -1.0;
         dimensionless_bounds[5] = 1.0;
     }
+
     return dimensionless_bounds;
 }
 
 template<unsigned DIM>
-void RegularGrid<DIM>::SetOrigin(DimensionalChastePoint<DIM> origin, bool updateVtk)
+void RegularGrid<DIM>::SetOrigin(DimensionalChastePoint<DIM> origin)
 {
     mOrigin = origin;
-    if(updateVtk)
-    {
-        SetUpVtkGrid();
-    }
+    this->mVtkRepresentationUpToDate = false;
 }
 
 template<unsigned DIM>
-void RegularGrid<DIM>::SetSpacing(units::quantity<unit::length> spacing, bool updateVtk)
+void RegularGrid<DIM>::SetSpacing(units::quantity<unit::length> spacing)
 {
     mSpacing = spacing;
+    this->mVtkRepresentationUpToDate = false;
     this->rGetLocationVolumes(true, false);
-
-    if(updateVtk)
-    {
-        SetUpVtkGrid();
-    }
 }
 
 template<unsigned DIM>
-void RegularGrid<DIM>::SetDimensions(c_vector<unsigned, 3> dimensions, bool updateVtk)
+void RegularGrid<DIM>::SetDimensions(c_vector<unsigned, 3> dimensions)
 {
     mDimensions = dimensions;
     UpdateExtents();
-
+    this->mVtkRepresentationUpToDate = false;
     this->rGetLocationVolumes(true, false);
 
-    if(updateVtk)
-    {
-        SetUpVtkGrid();
-    }
 }
 
 template<unsigned DIM>
 void RegularGrid<DIM>::SetUpVtkGrid()
 {
+
     // Set up a VTK grid
     vtkSmartPointer<vtkImageData> p_global_grid = vtkSmartPointer<vtkImageData>::New();
     vtkSmartPointer<vtkImageData> p_local_grid = vtkSmartPointer<vtkImageData>::New();
@@ -582,12 +586,11 @@ void RegularGrid<DIM>::SetUpVtkGrid()
     this->mpGlobalVtkGrid = p_global_grid;
     this->mpVtkGrid = p_local_grid;
 
+
     // Label the grid partitioning
     std::vector<unsigned> global_lows = mpDistributedVectorFactory->rGetGlobalLows();
-
-    vtkSmartPointer<vtkIntArray> p_cell_data = vtkSmartPointer<vtkIntArray>::New();
-    p_cell_data->SetName("Processor Num");
-
+    vtkSmartPointer<vtkIntArray> p_point_data = vtkSmartPointer<vtkIntArray>::New();
+    p_point_data->SetName("Processor Num");
     for(unsigned idx=0;idx<this->mpGlobalVtkGrid->GetNumberOfPoints(); idx++)
     {
         if(global_lows.size()>1)
@@ -596,16 +599,16 @@ void RegularGrid<DIM>::SetUpVtkGrid()
             {
                 if(idx>=global_lows[jdx] and idx<=global_lows[jdx+1]-1)
                 {
-                    p_cell_data->InsertNextTuple1(jdx);
+                    p_point_data->InsertNextTuple1(jdx);
                 }
             }
         }
         else
         {
-            p_cell_data->InsertNextTuple1(0);
+            p_point_data->InsertNextTuple1(0);
         }
     }
-    this->mpGlobalVtkGrid->GetCellData()->AddArray(p_cell_data);
+    this->mpGlobalVtkGrid->GetPointData()->AddArray(p_point_data);
 
     // Set up the local global map and grid locations
     unsigned lo = mpDistributedVectorFactory->GetLow();

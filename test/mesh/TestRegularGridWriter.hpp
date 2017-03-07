@@ -38,6 +38,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include <cxxtest/TestSuite.h>
 #include <vector>
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
+#include <vtkImageData.h>
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
@@ -65,14 +67,14 @@ public:
         dimensions[2] = 4;
         p_grid_3d->SetDimensions(dimensions);
 
-        TS_ASSERT_EQUALS(p_grid_3d->GetGlobal1dGridIndex(0,0,0), 0u)
-        TS_ASSERT_EQUALS(p_grid_3d->GetGlobal1dGridIndex(3,1,2), 78u)
-        TS_ASSERT_EQUALS(p_grid_3d->GetGlobal1dGridIndex(0,3,3), 120u)
+        TS_ASSERT_EQUALS(p_grid_3d->GetGlobalGridIndex(0,0,0), 0u)
+        TS_ASSERT_EQUALS(p_grid_3d->GetGlobalGridIndex(3,1,2), 78u)
+        TS_ASSERT_EQUALS(p_grid_3d->GetGlobalGridIndex(0,3,3), 120u)
 
         boost::shared_ptr<RegularGridWriter> p_writer = RegularGridWriter::Create();
         TS_ASSERT_THROWS_THIS(p_writer->Write(), "Output file not specified for image writer.");
         p_writer->SetFilename(output_filename);
-        p_writer->SetImage(p_grid_3d->GetGlobalVtkGrid());
+        p_writer->SetImage(vtkImageData::SafeDownCast(p_grid_3d->GetGlobalVtkGrid()));
         p_writer->Write();
     }
 

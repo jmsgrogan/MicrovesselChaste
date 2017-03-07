@@ -33,14 +33,14 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef TESTNONLINEARFINITEELEMENTSOLVER_HPP_
-#define TESTNONLINEARFINITEELEMENTSOLVER_HPP_
+#ifndef TESTNONLINEARSIMPLENONLINEARELLIPTICFINITEELEMENTSOLVER_HPP_
+#define TESTNONLINEARSIMPLENONLINEARELLIPTICFINITEELEMENTSOLVER_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include <vector>
 #include <string>
 #include <boost/lexical_cast.hpp>
-#include "FiniteElementSolver.hpp"
+#include "SimpleNonLinearEllipticFiniteElementSolver.hpp"
 #include "UblasIncludes.hpp"
 #include "Part.hpp"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
@@ -54,7 +54,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
 
-class TestNonLinearFiniteElementSolver : public AbstractCellBasedWithTimingsTestSuite
+class TestNonLinearSimpleNonLinearEllipticFiniteElementSolver : public AbstractCellBasedWithTimingsTestSuite
 {
 public:
 
@@ -84,13 +84,13 @@ public:
         units::quantity<unit::concentration> boundary_concentration(1.0 * unit::mole_per_metre_cubed);
         p_outer_boundary_condition->SetValue(boundary_concentration);
 
-        FiniteElementSolver<3> solver;
+        SimpleNonLinearEllipticFiniteElementSolver<3> solver;
         solver.SetGrid(p_mesh_generator->GetMesh());
         solver.SetPde(p_linear_pde);
         solver.SetPde(p_non_linear_pde);
         solver.AddBoundaryCondition(p_outer_boundary_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestNonLinearFiniteElementSolver/Box", false));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleNonLinearEllipticFiniteElementSolver/Box", false));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetFileName("output_nl_t");
         solver.SetWriteSolution(true);
@@ -99,4 +99,4 @@ public:
     }
 };
 
-#endif /*TESTNONLINEARFINITEELEMENTSOLVER_HPP_*/
+#endif /*TESTSIMPLENONLINEARELLIPTICFINITEELEMENTSOLVER_HPP_*/

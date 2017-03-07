@@ -49,7 +49,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Vessel.hpp"
 #include "VesselNetwork.hpp"
 #include "Part.hpp"
-#include "FiniteDifferenceSolver.hpp"
+#include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
 #include "AngiogenesisSolver.hpp"
 #include "VesselSegment.hpp"
 #include "AbstractCellBasedTestSuite.hpp"
@@ -83,7 +83,7 @@ public:
         std::vector<units::quantity<unit::concentration> > vegf_field = std::vector<units::quantity<unit::concentration> >(dimensions[0] * dimensions[1] * dimensions[2], 0.0*unit::mole_per_metre_cubed);
         for (unsigned idx = 0; idx < dimensions[0] * dimensions[1] * dimensions[2]; idx++)
         {
-            vegf_field[idx] = 3.0*p_grid->GetLocationOfGlobal1dIndex(idx).GetLocation(spacing)[0] / (double(dimensions[0]))*1.e-9*unit::mole_per_metre_cubed;
+            vegf_field[idx] = 3.0*p_grid->GetLocationOfGlobalIndex(idx).GetLocation(spacing)[0] / (double(dimensions[0]))*1.e-9*unit::mole_per_metre_cubed;
         }
 
         p_grid->Write(p_handler);
@@ -141,7 +141,7 @@ public:
         std::vector<units::quantity<unit::concentration> > vegf_field = std::vector<units::quantity<unit::concentration> >(dimensions[0] * dimensions[1] * dimensions[2], 0.0*unit::mole_per_metre_cubed);
         for (unsigned idx = 0; idx < dimensions[0] * dimensions[1] * dimensions[2]; idx++)
         {
-            vegf_field[idx] = 2.0*p_grid->GetLocationOfGlobal1dIndex(idx).GetLocation(spacing)[0] / (double(dimensions[0]))*1.e-9*unit::mole_per_metre_cubed;
+            vegf_field[idx] = 2.0*p_grid->GetLocationOfGlobalIndex(idx).GetLocation(spacing)[0] / (double(dimensions[0]))*1.e-9*unit::mole_per_metre_cubed;
         }
 
         p_grid->Write(p_handler);

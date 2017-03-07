@@ -76,6 +76,12 @@ public:
     virtual ~SimpleLinearEllipticFiniteDifferenceSolver();
 
     /**
+     * Construct a new instance of the class and return a shared pointer to it.
+     * @return a shared pointer to a class instance.
+     */
+    static boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<DIM> > Create();
+
+    /**
      * Over-ridden method to add discrete terms
      */
     virtual void AddDiscreteTermsToMatrix();

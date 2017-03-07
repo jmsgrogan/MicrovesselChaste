@@ -256,21 +256,21 @@ public:
      * @param dimensions the grid dimensions
      * @param updateVtk update the vtk representation at this point
      */
-    void SetDimensions(c_vector<unsigned, 3> dimensions, bool updateVtk=true);
+    void SetDimensions(c_vector<unsigned, 3> dimensions);
 
     /**
      * Set the origin in x, y, z
      * @param origin the grid origin
      * @param updateVtk update the vtk representation at this point
      */
-    void SetOrigin(DimensionalChastePoint<DIM> origin, bool updateVtk=true);
+    void SetOrigin(DimensionalChastePoint<DIM> origin);
 
     /**
      * Set the grid spacing
      * @param spacing the grid spacing
      * @param updateVtk update the vtk representation at this point
      */
-    void SetSpacing(units::quantity<unit::length> spacing, bool updateVtk=true);
+    void SetSpacing(units::quantity<unit::length> spacing);
 
     /**
      * Set the internal vtk representation of the grid

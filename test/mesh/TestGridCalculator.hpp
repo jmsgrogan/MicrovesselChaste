@@ -88,7 +88,7 @@ public:
         p_grid_calc->SetGrid(p_grid);
         p_grid_calc->SetVesselNetwork(p_network);
         p_grid->Write(p_handler);
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<2> > > > map = p_grid_calc->GetSegmentMap();
+        std::vector<std::vector<boost::shared_ptr<VesselSegment<2> > > > map = p_grid_calc->rGetSegmentMap();
 
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "/network.vtp");
     }
@@ -155,7 +155,7 @@ public:
         boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
         p_grid_calc->SetCellPopulation(cell_population, 1.e-6 * unit::metres);
-        std::vector<std::vector<CellPtr> > map = p_grid_calc->GetCellMap();
+        std::vector<std::vector<CellPtr> > map = p_grid_calc->rGetCellMap();
 
         // Make sure all the cells are accounted for
         unsigned sum = 0;
@@ -165,6 +165,66 @@ public:
         }
         TS_ASSERT_EQUALS(sum, 100u);
     }
+
+//    void TestInterpolateGridValuesWithVtk() throw (Exception)
+//    {
+//        // Set up a grid
+//        RandomNumberGenerator::Instance()->Reseed(1000);
+//        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+//        c_vector<unsigned, 3> dimensions;
+//        dimensions[0] = 101;
+//        dimensions[1] = 101;
+//        dimensions[2] = 101;
+//        p_grid->SetDimensions(dimensions);
+//        double spacing = 0.33;
+//        p_grid->SetSpacing(spacing* 1.e-6 * unit::metres);
+//
+//        // Set up a function increasing quadratically from bottom front left to top back right
+//        std::vector<double> my_grid_func(dimensions[0] * dimensions[1] * dimensions[2]);
+//        for (unsigned idx = 0; idx < dimensions[2]; idx++)
+//        {
+//            for (unsigned jdx = 0; jdx < dimensions[1]; jdx++)
+//            {
+//                for (unsigned kdx = 0; kdx < dimensions[0]; kdx++)
+//                {
+//                    double value = spacing * spacing * double(kdx * kdx + jdx * jdx + idx * idx);
+//                    unsigned grid_index = kdx + jdx * dimensions[0] + idx * dimensions[0] * dimensions[1];
+//                    my_grid_func[grid_index] = value;
+//                }
+//            }
+//        }
+//
+//        // Set up some sample points
+//        std::vector<DimensionalChastePoint<3> > points(100);
+//        for (unsigned idx = 0; idx < 100; idx++)
+//        {
+//            DimensionalChastePoint<3> location(RandomNumberGenerator::Instance()->ranf() * 30.0,
+//                                               RandomNumberGenerator::Instance()->ranf() * 30.0,
+//                                               RandomNumberGenerator::Instance()->ranf() * 30.0);
+//            points[idx] = location;
+//        }
+//
+//        // Get the interpolated values
+//        std::vector<double> interpolated_vals = p_grid->InterpolateGridValues(points, my_grid_func, true);
+//
+//        // Get the max error
+//        double max_error = 0.0;
+//        for (unsigned idx = 0; idx < interpolated_vals.size(); idx++)
+//        {
+//            double analytical = points[idx].GetLocation(1.e-6*unit::metres)[0] * points[idx].GetLocation(1.e-6*unit::metres)[0] +
+//                    points[idx].GetLocation(1.e-6*unit::metres)[1] * points[idx].GetLocation(1.e-6*unit::metres)[1]
+//                    + points[idx].GetLocation(1.e-6*unit::metres)[2] * points[idx].GetLocation(1.e-6*unit::metres)[2];
+//            double error = std::abs((analytical - interpolated_vals[idx]) / analytical);
+//            if (error > max_error)
+//            {
+//                max_error = error;
+//            }
+//            std::cout << "vals: " << analytical << "," << interpolated_vals[idx] << std::endl;
+//
+//        }
+//        std::cout << "Max Error: " << max_error << std::endl;
+//        TS_ASSERT(max_error < 0.1);
+//    }
 };
 
 #endif /*TESTGRIDCALCULATOR_HPP_*/

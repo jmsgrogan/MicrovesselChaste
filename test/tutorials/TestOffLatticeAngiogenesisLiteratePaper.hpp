@@ -87,7 +87,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "DiscreteContinuumMesh.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
 #include "VtkMeshWriter.hpp"
-#include "FiniteElementSolver.hpp"
+#include "SimpleLinearEllipticFiniteElementSolver.hpp"
 #include "DiscreteSource.hpp"
 #include "VesselBasedDiscreteSource.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
@@ -226,7 +226,7 @@ public:
          * Set up the PDE solvers for the vegf problem. Note the scaling of the concentration to nM to avoid numerical
          * precision problems.
          */
-        boost::shared_ptr<FiniteElementSolver<3> > p_vegf_solver = FiniteElementSolver<3>::Create();
+        boost::shared_ptr<SimpleLinearEllipticFiniteElementSolver<3> > p_vegf_solver = SimpleLinearEllipticFiniteElementSolver<3>::Create();
         p_vegf_solver->SetPde(p_vegf_pde);
         p_vegf_solver->SetLabel("vegf");
         p_vegf_solver->SetGrid(p_mesh);

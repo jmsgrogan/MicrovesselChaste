@@ -41,18 +41,9 @@ Copyright (c) 2005-2017, University of Oxford.
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "RegularGrid.hpp"
-#include "RandomNumberGenerator.hpp"
-#include "HoneycombMeshGenerator.hpp"
-#include "MutableMesh.hpp"
-#include "CellsGenerator.hpp"
-#include "TransitCellProliferativeType.hpp"
-#include "UniformCellCycleModel.hpp"
-#include "MeshBasedCellPopulation.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
-#include "VesselNetwork.hpp"
-#include "VesselSegment.hpp"
-#include "VesselNetworkGenerator.hpp"
 #include "OutputFileHandler.hpp"
+#include "RegularGridWriter.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
@@ -71,9 +62,9 @@ public:
         dimensions[2] = 1;
         p_grid->SetDimensions(dimensions);
 
-        TS_ASSERT_EQUALS(p_grid->GetGlobal1dGridIndex(0,0,0), 0u)
-        TS_ASSERT_EQUALS(p_grid->GetGlobal1dGridIndex(3,1,0), 8u)
-        TS_ASSERT_EQUALS(p_grid->GetGlobal1dGridIndex(0,3,0), 15u)
+        TS_ASSERT_EQUALS(p_grid->GetGlobalGridIndex(0,0,0), 0u)
+        TS_ASSERT_EQUALS(p_grid->GetGlobalGridIndex(3,1,0), 8u)
+        TS_ASSERT_EQUALS(p_grid->GetGlobalGridIndex(0,3,0), 15u)
 
         // Set up a 3d grid
         boost::shared_ptr<RegularGrid<3> > p_grid_3d = RegularGrid<3>::Create();
@@ -83,9 +74,9 @@ public:
         dimensions3d[2] = 4;
         p_grid_3d->SetDimensions(dimensions3d);
 
-        TS_ASSERT_EQUALS(p_grid_3d->GetGlobal1dGridIndex(0,0,0), 0u)
-        TS_ASSERT_EQUALS(p_grid_3d->GetGlobal1dGridIndex(3,1,2), 78u)
-        TS_ASSERT_EQUALS(p_grid_3d->GetGlobal1dGridIndex(0,3,3), 120u)
+        TS_ASSERT_EQUALS(p_grid_3d->GetGlobalGridIndex(0,0,0), 0u)
+        TS_ASSERT_EQUALS(p_grid_3d->GetGlobalGridIndex(3,1,2), 78u)
+        TS_ASSERT_EQUALS(p_grid_3d->GetGlobalGridIndex(0,3,3), 120u)
     }
 
     void TestNeighbourCalculation()
@@ -99,7 +90,7 @@ public:
         p_grid->SetDimensions(dimensions);
 
         // Get neighbours
-        std::vector<std::vector<unsigned> > neighbours =  p_grid->GetNeighbourData();
+        std::vector<std::vector<unsigned> > neighbours =  p_grid->rGetNeighbourData();
         for(unsigned idx=0; idx<2; idx++)
         {
             TS_ASSERT(neighbours[0][idx] == 1 or neighbours[0][idx] == 5)
@@ -116,9 +107,8 @@ public:
          dimensions3d[1] = 7;
          dimensions3d[2] = 4;
          p_grid_3d->SetDimensions(dimensions3d);
-
          // Get neighbours
-         std::vector<std::vector<unsigned> > neighbours_3d =  p_grid_3d->GetNeighbourData();
+         std::vector<std::vector<unsigned> > neighbours_3d =  p_grid_3d->rGetNeighbourData();
          for(unsigned idx=0; idx<3; idx++)
          {
              TS_ASSERT(neighbours_3d[0][idx] == 1u or neighbours_3d[0][idx] == 5u or neighbours_3d[0][idx] == 35u)
@@ -141,7 +131,7 @@ public:
         p_grid->SetDimensions(dimensions);
 
         // Get neighbours
-        std::vector<std::vector<unsigned> > neighbours =  p_grid->GetMooreNeighbourData();
+        std::vector<std::vector<unsigned> > neighbours =  p_grid->rGetMooreNeighbourData();
         for(unsigned idx=0; idx<3; idx++)
         {
             TS_ASSERT(neighbours[0][idx] == 1 or neighbours[0][idx] == 5 or neighbours[0][idx] == 6)
@@ -151,66 +141,6 @@ public:
             TS_ASSERT(neighbours[8][idx] == 13 or neighbours[8][idx] == 9 or neighbours[8][idx] == 3 or neighbours[8][idx] == 7
                     or neighbours[8][idx] == 12 or neighbours[8][idx] == 14 or neighbours[8][idx] == 2 or neighbours[8][idx] == 4)
         }
-    }
-
-    void TestInterpolateGridValuesWithVtk() throw (Exception)
-    {
-        // Set up a grid
-        RandomNumberGenerator::Instance()->Reseed(1000);
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        c_vector<unsigned, 3> dimensions;
-        dimensions[0] = 101;
-        dimensions[1] = 101;
-        dimensions[2] = 101;
-        p_grid->SetDimensions(dimensions);
-        double spacing = 0.33;
-        p_grid->SetSpacing(spacing* 1.e-6 * unit::metres);
-
-        // Set up a function increasing quadratically from bottom front left to top back right
-        std::vector<double> my_grid_func(dimensions[0] * dimensions[1] * dimensions[2]);
-        for (unsigned idx = 0; idx < dimensions[2]; idx++)
-        {
-            for (unsigned jdx = 0; jdx < dimensions[1]; jdx++)
-            {
-                for (unsigned kdx = 0; kdx < dimensions[0]; kdx++)
-                {
-                    double value = spacing * spacing * double(kdx * kdx + jdx * jdx + idx * idx);
-                    unsigned grid_index = kdx + jdx * dimensions[0] + idx * dimensions[0] * dimensions[1];
-                    my_grid_func[grid_index] = value;
-                }
-            }
-        }
-
-        // Set up some sample points
-        std::vector<DimensionalChastePoint<3> > points(100);
-        for (unsigned idx = 0; idx < 100; idx++)
-        {
-            DimensionalChastePoint<3> location(RandomNumberGenerator::Instance()->ranf() * 30.0,
-                                               RandomNumberGenerator::Instance()->ranf() * 30.0,
-                                               RandomNumberGenerator::Instance()->ranf() * 30.0);
-            points[idx] = location;
-        }
-
-        // Get the interpolated values
-        std::vector<double> interpolated_vals = p_grid->InterpolateGridValues(points, my_grid_func, true);
-
-        // Get the max error
-        double max_error = 0.0;
-        for (unsigned idx = 0; idx < interpolated_vals.size(); idx++)
-        {
-            double analytical = points[idx].GetLocation(1.e-6*unit::metres)[0] * points[idx].GetLocation(1.e-6*unit::metres)[0] +
-                    points[idx].GetLocation(1.e-6*unit::metres)[1] * points[idx].GetLocation(1.e-6*unit::metres)[1]
-                    + points[idx].GetLocation(1.e-6*unit::metres)[2] * points[idx].GetLocation(1.e-6*unit::metres)[2];
-            double error = std::abs((analytical - interpolated_vals[idx]) / analytical);
-            if (error > max_error)
-            {
-                max_error = error;
-            }
-            std::cout << "vals: " << analytical << "," << interpolated_vals[idx] << std::endl;
-
-        }
-        std::cout << "Max Error: " << max_error << std::endl;
-        TS_ASSERT(max_error < 0.1);
     }
 
     void TestGetPointBoundingBox2d()
@@ -279,6 +209,20 @@ public:
         TS_ASSERT_DELTA(bbox3[4], 0.5, 1.e-6);
         TS_ASSERT_DELTA(bbox3[5], 1.5, 1.e-6);
         BaseUnits::Instance()->Destroy();
+    }
+
+    void TestWriteGrid2d()
+    {
+        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        c_vector<unsigned, 3> dimensions;
+        dimensions[0] = 5;
+        dimensions[1] = 7;
+        dimensions[2] = 1;
+        p_grid->SetDimensions(dimensions);
+
+        boost::shared_ptr<OutputFileHandler> p_file_handler =
+                boost::shared_ptr<OutputFileHandler>(new OutputFileHandler("TestRegularGrid/TestWrite2d"));
+        p_grid->Write(p_file_handler);
     }
 };
 

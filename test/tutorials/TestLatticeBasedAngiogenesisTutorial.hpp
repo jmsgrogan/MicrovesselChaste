@@ -97,7 +97,7 @@ Copyright (c) 2005-2016, University of Oxford.
  */
 #include "RegularGrid.hpp"
 #include "GridCalculator.hpp"
-#include "FiniteDifferenceSolver.hpp"
+#include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
 #include "CellBasedDiscreteSource.hpp"
 #include "VesselBasedDiscreteSource.hpp"
 #include "CellStateDependentDiscreteSource.hpp"
@@ -246,7 +246,7 @@ public:
         /*
         * Set up a finite difference solver and pass it the pde and grid.
         */
-        boost::shared_ptr<FiniteDifferenceSolver<2> > p_oxygen_solver = FiniteDifferenceSolver<2>::Create();
+        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<2> > p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
         p_oxygen_solver->SetPde(p_oxygen_pde);
         p_oxygen_solver->SetLabel("oxygen");
         p_oxygen_solver->SetGrid(p_grid);
@@ -284,7 +284,7 @@ public:
         /*
         * Set up a finite difference solver as before.
         */
-        boost::shared_ptr<FiniteDifferenceSolver<2> > p_vegf_solver = FiniteDifferenceSolver<2>::Create();
+        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<2> > p_vegf_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
         p_vegf_solver->SetPde(p_vegf_pde);
         p_vegf_solver->SetLabel("VEGF_Extracellular");
         p_vegf_solver->SetGrid(p_grid);

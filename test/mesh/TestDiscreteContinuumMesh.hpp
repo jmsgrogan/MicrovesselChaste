@@ -39,6 +39,8 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <cxxtest/TestSuite.h>
 #include <vector>
 #include <boost/lexical_cast.hpp>
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
+#include <vtkUnstructuredGrid.h>
 #include "SmartPointers.hpp"
 #include "Polygon.hpp"
 #include "Part.hpp"
@@ -145,7 +147,7 @@ public:
         unsigned local_proc_index = PetscTools::GetMyRank();
         mesh_writer.SetFilename(file_handler.GetOutputDirectoryFullPath()+"cylinder_part"+
                 boost::lexical_cast<std::string>(local_proc_index));
-        mesh_writer.SetMesh(p_mesh_generator->GetMesh()->GetLocalVtkGrid());
+        mesh_writer.SetMesh(vtkUnstructuredGrid::SafeDownCast(p_mesh_generator->GetMesh()->GetVtkGrid()));
         mesh_writer.Write();
     }
 

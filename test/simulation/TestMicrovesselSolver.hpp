@@ -47,7 +47,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Vessel.hpp"
 #include "VesselNetwork.hpp"
 #include "Part.hpp"
-#include "FiniteDifferenceSolver.hpp"
+#include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
 #include "AngiogenesisSolver.hpp"
 #include "MicrovesselSolver.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
