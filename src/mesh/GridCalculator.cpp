@@ -77,29 +77,13 @@ boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > GridCalculator<DIM>::GetG
     {
         EXCEPTION("A grid has been requested, but one has not been set.");
     }
-}
-
-template<unsigned DIM>
-unsigned GridCalculator<DIM>::GetNumberOfLocations()
-{
-    if(mHasRegularGrid)
-    {
-        return mpGrid->GetNumberOfGlobalPoints();
-    }
-    else if(mHasUnstructuredGrid)
-    {
-        return mpGrid->GetNumElements();
-    }
-    else
-    {
-        EXCEPTION("No grid has been set.");
-    }
+    return mpGrid;
 }
 
 template<unsigned DIM>
 std::vector<std::vector<unsigned> > GridCalculator<DIM>::GetPointMap(const std::vector<DimensionalChastePoint<DIM> >& rInputPoints)
 {
-    std::vector<std::vector<unsigned> > point_map(GetNumberOfLocations());
+    std::vector<std::vector<unsigned> > point_map(mpGrid->GetNumberOfLocations());
     units::quantity<unit::length> grid_length = mpGrid->GetReferenceLengthScale();
 
     for(unsigned idx=0;idx<rInputPoints.size();idx++)
@@ -107,22 +91,23 @@ std::vector<std::vector<unsigned> > GridCalculator<DIM>::GetPointMap(const std::
         double x_coords[3];
         c_vector<double, DIM> loc = rInputPoints[idx].GetLocation(grid_length);
         x_coords[0] = loc[0];
-        x_coords[1] = loc;
+        x_coords[1] = loc[1];
         if(DIM == 3)
         {
-            x_coords[2] = loc;
+            x_coords[2] = loc[2];
         }
         else
         {
             x_coords[2] = 0.0;
         }
 
-        int cell_id = mpGrid->GetVtkCellLocator()->FindCell(x_coords);
+        int cell_id = mpGrid->GetVtkCellLocator()->FindCell(&x_coords[0]);
         if(cell_id>=0)
         {
             point_map[cell_id].push_back(idx);
         }
     }
+    return point_map;
 }
 
 template<unsigned DIM>
@@ -141,24 +126,24 @@ const std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >& GridCalcu
     std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
     units::quantity<unit::length> grid_length = mpGrid->GetReferenceLengthScale();
     mVesselNodeMap.clear();
-    mVesselNodeMap = std::vector<std::vector<VesselNode<DIM> > >(GetNumberOfLocations());
+    mVesselNodeMap = std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >(mpGrid->GetNumberOfLocations());
 
     for(unsigned idx=0;idx<nodes.size();idx++)
     {
         double x_coords[3];
         c_vector<double, DIM> loc = nodes[idx]->rGetLocation().GetLocation(grid_length);
         x_coords[0] = loc[0];
-        x_coords[1] = loc;
+        x_coords[1] = loc[1];
         if(DIM == 3)
         {
-            x_coords[2] = loc;
+            x_coords[2] = loc[2];
         }
         else
         {
             x_coords[2] = 0.0;
         }
 
-        int cell_id = mpGrid->GetVtkCellLocator()->FindCell(x_coords);
+        int cell_id = mpGrid->GetVtkCellLocator()->FindCell(&x_coords[0]);
         if(cell_id>=0)
         {
             mVesselNodeMap[cell_id].push_back(nodes[idx]);
@@ -185,7 +170,7 @@ const std::vector<std::vector<CellPtr> >& GridCalculator<DIM>::rGetCellMap(bool 
 
     // Loop over all cells and associate cells with the points
     mCellMap.clear();
-    mCellMap = std::vector<std::vector<CellPtr> >(GetNumberOfLocations());
+    mCellMap = std::vector<std::vector<CellPtr> >(mpGrid->GetNumberOfLocations());
 
     units::quantity<unit::length> grid_length = mpGrid->GetReferenceLengthScale();
     double cell_mesh_length_scaling = mCellPopulationReferenceLength/grid_length;
@@ -204,7 +189,7 @@ const std::vector<std::vector<CellPtr> >& GridCalculator<DIM>::rGetCellMap(bool 
         {
             x_coords[2] = 0.0;
         }
-        int cell_id = mpGrid->GetVtkCellLocator()->FindCell(x_coords);
+        int cell_id = mpGrid->GetVtkCellLocator()->FindCell(&x_coords[0]);
         if(cell_id>=0)
         {
             mCellMap[cell_id].push_back(*cell_iter);
@@ -254,14 +239,14 @@ const std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >& GridCa
     mpGrid->GetGlobalVtkGrid();
 
     mSegmentMap.clear();
-    mSegmentMap = std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >(GetNumberOfLocations());
+    mSegmentMap = std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >(mpGrid->GetNumberOfLocations());
     units::quantity<unit::length> grid_length = mpGrid->GetReferenceLengthScale();
 
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = mpNetwork->GetVesselSegments();
     for (unsigned jdx = 0; jdx < segments.size(); jdx++)
     {
-        DimensionalChastePoint<DIM> loc1 = segments[jdx]->GetNode(0)->rGetLocation().GetLocation(grid_length);
-        DimensionalChastePoint<DIM> loc2 = segments[jdx]->GetNode(1)->rGetLocation().GetLocation(grid_length);
+        c_vector<double, DIM> loc1 = segments[jdx]->GetNode(0)->rGetLocation().GetLocation(grid_length);
+        c_vector<double, DIM> loc2 = segments[jdx]->GetNode(1)->rGetLocation().GetLocation(grid_length);
         double x_coords1[3];
         x_coords1[0] = loc1[0];
         x_coords1[1] = loc1[1];
@@ -290,11 +275,11 @@ const std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >& GridCa
         if(useVesselSurface)
         {
             double dimensionless_radius = segments[jdx]->GetRadius()/grid_length;
-            mpGrid->GetVtkCellLocator()->FindCellsAlongLine(x_coords1, x_coords2, dimensionless_radius, p_id_list);
+            mpGrid->GetVtkCellLocator()->FindCellsAlongLine(&x_coords1[0], &x_coords2[0], dimensionless_radius, p_id_list);
         }
         else
         {
-            mpGrid->GetVtkCellLocator()->FindCellsAlongLine(x_coords1, x_coords2, 1.e-8, p_id_list);
+            mpGrid->GetVtkCellLocator()->FindCellsAlongLine(&x_coords1[0], &x_coords2[0], 1.e-8, p_id_list);
         }
 
         unsigned num_intersections = p_id_list->GetNumberOfIds();

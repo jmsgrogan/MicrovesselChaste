@@ -62,7 +62,7 @@ class DiscreteContinuumMeshGenerator;
  */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM = ELEMENT_DIM>
 class DiscreteContinuumMesh : public TetrahedralMesh<ELEMENT_DIM, SPACE_DIM>,
-public AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>
+    public AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>
 {
     /**
      * For access to ImportFromMesher

@@ -353,7 +353,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
         {
             mAttributes.push_back(double(mesher_output.triangleattributelist[idx]));
         }
-        mpMesh->SetAttributes(mAttributes);
+        mpMesh->AddAttributes(mAttributes);
     }
 
     //Tidy up triangle

@@ -117,7 +117,14 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
         EXCEPTION("A regular grid is required to set of the cell population");
     }
 
-    c_vector<unsigned, 3> dimensions = mpGridCalculator->GetGrid()->GetDimensions();
+    boost::shared_ptr<RegularGrid<DIM > > p_grid =
+            boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+    if(!p_grid)
+    {
+        EXCEPTION("Can't cast to regular grid during Setup");
+    }
+
+    c_vector<unsigned, 3> dimensions = p_grid->GetDimensions();
     unsigned extents_z = 1;
     if(DIM==3)
     {
@@ -133,7 +140,7 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
     // There is a bug in Chaste causing index out of bounds for large grid spacing. It may be better to use a scaling here
     // so grid spacing is always one.
 
-    units::quantity<unit::length> spacing = mpGridCalculator->GetGrid()->GetSpacing();
+    units::quantity<unit::length> spacing = p_grid->GetSpacing();
     if(DIM==2)
     {
         p_mesh->Scale(spacing/mCellPopulationReferenceLength, spacing/mCellPopulationReferenceLength);
@@ -221,16 +228,16 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
     else
     {
         double dimensionless_spacing = spacing/mReferenceLength;
-        c_vector<double, DIM> dimensionless_origin = mpGridCalculator->GetGrid()->GetOrigin().GetLocation(mReferenceLength);
+        c_vector<double, DIM> dimensionless_origin = p_grid->GetOrigin().GetLocation(mReferenceLength);
 
         DimensionalChastePoint<DIM> origin(double(dimensions[0])*dimensionless_spacing/2.0 + dimensionless_origin[0],
                                          double(dimensions[1])*dimensionless_spacing/2.0 + dimensionless_origin[0],
                                          double(dimensions[2])*dimensionless_spacing/2.0 + dimensionless_origin[0],
 										 mReferenceLength);
 
-        for(unsigned idx=0; idx<mpGridCalculator->GetGrid()->GetNumberOfGlobalPoints(); idx++)
+        for(unsigned idx=0; idx<p_grid->GetNumberOfLocations(); idx++)
         {
-            units::quantity<unit::length> distance = mpGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(idx).GetDistance(origin);
+            units::quantity<unit::length> distance = p_grid->GetLocation(idx).GetDistance(origin);
             if(distance<=mTumourRadius)
             {
                 p_cell_population->GetCellUsingLocationIndex(idx)->SetMutationState(mpCancerCellMutationState);

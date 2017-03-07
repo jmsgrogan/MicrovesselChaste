@@ -77,8 +77,15 @@ void DistanceMap<DIM>::Solve()
         this->Setup();
     }
 
-    c_vector<unsigned, 6> extents = this->mpGridCalculator->GetGrid()->GetExtents();
-    std::vector<double> distances(this->mpGridCalculator->GetGrid()->GetNumberOfLocalPoints(), 0.0);
+    boost::shared_ptr<RegularGrid<DIM > > p_grid =
+            boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+    if(!p_grid)
+    {
+        EXCEPTION("Can't cast to regular grid during Setup");
+    }
+
+    c_vector<unsigned, 6> extents = p_grid->GetExtents();
+    std::vector<double> distances(p_grid->GetNumberOfLocations(), 0.0);
 
     if (this->mpNetwork)
     {
@@ -91,8 +98,8 @@ void DistanceMap<DIM>::Solve()
             {
                 for (unsigned k = extents[0]; k < extents[1] + 1; k++) // X
                 {
-                    unsigned grid_index = this->mpGridCalculator->GetGrid()->GetLocal1dGridIndex(k, j, i);
-                    DimensionalChastePoint<DIM> location = this->mpGridCalculator->GetGrid()->GetLocation(k ,j, i);
+                    unsigned grid_index = p_grid->GetGridIndex(k, j, i);
+                    DimensionalChastePoint<DIM> location = p_grid->GetLocation(k ,j, i);
                     units::quantity<unit::length> min_distance = DBL_MAX * unit::metres;
                     for (unsigned idx = 0; idx <  segments.size(); idx++)
                     {
@@ -106,7 +113,7 @@ void DistanceMap<DIM>::Solve()
                             min_distance = seg_dist;
                         }
                     }
-                    distances[grid_index] = min_distance/this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
+                    distances[grid_index] = min_distance/p_grid->GetReferenceLengthScale();
                 }
             }
         }

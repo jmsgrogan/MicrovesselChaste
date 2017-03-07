@@ -88,7 +88,7 @@ DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::~DiscreteContinuumMesh()
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::AddNodalData(const std::vector<double>& rPointValues,
-            const std::string& rName = "Default Location Data")
+            const std::string& rName)
 {
 
 }
@@ -220,8 +220,6 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetUpVtkGrid()
 {
     vtkSmartPointer<vtkUnstructuredGrid> p_grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
     vtkSmartPointer<vtkPoints> p_vtk_points = vtkSmartPointer<vtkPoints>::New();
-    vtkSmartPointer<vtkDoubleArray> p_point_data = vtkSmartPointer<vtkDoubleArray>::New();
-    p_point_data->SetName("Nodal Values");
 
     unsigned num_nodes = AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetNumNodes();
     p_vtk_points->SetNumberOfPoints(num_nodes);
@@ -230,22 +228,14 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetUpVtkGrid()
         c_vector<double, SPACE_DIM> loc = AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetNode(idx)->rGetLocation();
         if(SPACE_DIM==3)
         {
-            p_vtk_points->InsertPoint(idx, &loc);
+            p_vtk_points->InsertPoint(idx, &loc[0]);
         }
         else
         {
             p_vtk_points->InsertPoint(idx, loc[0], loc[1], 0.0);
         }
-        if(this->mPointData.size()==num_nodes)
-        {
-            p_point_data->InsertNextTuple1(this->mPointData[idx]);
-        }
     }
     p_grid->SetPoints(p_vtk_points);
-    if(this->mPointData.size()==node_locations.size())
-    {
-        p_grid->GetPointData()->AddArray(p_point_data);
-    }
 
     // Add vtk tets or triangles
     std::vector<std::vector<unsigned> > element_connectivity =  GetConnectivity();
@@ -313,14 +303,22 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetUpVtkGrid()
     this->mLocalGlobalMap.clear();
     for(unsigned idx=0;idx<this->mpVtkGrid->GetNumberOfPoints(); idx++)
     {
-        this->mLocalGlobalMap.append(p_grid->GetPointData()->GetArray("Global Num")->GetTuple1(idx));
+        this->mLocalGlobalMap.push_back(p_grid->GetPointData()->GetArray("Global Num")->GetTuple1(idx));
     }
 
     // Update the locations with element centroids
     this->mpGridLocations = vtkSmartPointer<vtkPoints>::New();
     for(unsigned idx=0; idx<this->GetNumElements(); idx++)
     {
-        this->mpGridLocations[idx] = this->GetElement(this->mLocalGlobalMap[idx])->CalculateCentroid();
+        c_vector<double, SPACE_DIM> loc = this->GetElement(this->mLocalGlobalMap[idx])->CalculateCentroid();
+        if(SPACE_DIM==3)
+        {
+            this->mpGridLocations->InsertNextPoint(&loc[0]);
+        }
+        else
+        {
+            this->mpGridLocations->InsertNextPoint(loc[0], loc[1], 0.0);
+        }
     }
 
     this->mVtkRepresentationUpToDate = true;
@@ -330,7 +328,7 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetUpVtkGrid()
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 DimensionalChastePoint<SPACE_DIM> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetLocationOfGlobalIndex(unsigned index)
 {
-    return this->GetElement(index)->CalculateCentroid();
+    return DimensionalChastePoint<SPACE_DIM>(this->GetElement(index)->CalculateCentroid(), this->GetReferenceLengthScale());
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

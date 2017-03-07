@@ -37,6 +37,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
 #include <vtkImageData.h>
 #include <vtkDoubleArray.h>
+#include <vtkCellData.h>
 #include <vtkPointData.h>
 #include <vtkProbeFilter.h>
 #include <vtkPolyData.h>
@@ -254,13 +255,21 @@ boost::shared_ptr<DistributedVectorFactory> RegularGrid<DIM>::GetDistributedVect
 template<unsigned DIM>
 unsigned RegularGrid<DIM>::GetGlobalGridIndex(unsigned x_index, unsigned y_index, unsigned z_index)
 {
-    return this->mpGlobalVtkGrid()->ComputePointId(x_index, y_index, z_index);
+    int locs[3];
+    locs[0] = x_index;
+    locs[1] = y_index;
+    locs[2] = z_index;
+    return vtkImageData::SafeDownCast(this->mpGlobalVtkGrid)->ComputePointId(locs);
 }
 
 template<unsigned DIM>
 unsigned RegularGrid<DIM>::GetGridIndex(unsigned x_index, unsigned y_index, unsigned z_index)
 {
-    return this->mpVtkGrid()->ComputePointId(x_index, y_index, z_index);
+    int locs[3];
+    locs[0] = x_index;
+    locs[1] = y_index;
+    locs[2] = z_index;
+    return vtkImageData::SafeDownCast(this->mpVtkGrid)->ComputePointId(locs);
 }
 
 template<unsigned DIM>
@@ -278,7 +287,7 @@ c_vector<unsigned, 6> RegularGrid<DIM>::GetExtents()
 template<unsigned DIM>
 const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::rGetNeighbourData()
 {
-    if (mNeighbourData.size() == 0 or mNeighbourData.size() != GetNumberOfGlobalPoints())
+    if (mNeighbourData.size() == 0 or mNeighbourData.size() != this->GetNumberOfLocations())
     {
         CalculateNeighbourData();
     }
@@ -288,7 +297,7 @@ const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::rGetNeighbourData()
 template<unsigned DIM>
 const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::rGetMooreNeighbourData()
 {
-    if (mNeighbourData.size() == 0 or mNeighbourData.size() != GetNumberOfGlobalPoints())
+    if (mNeighbourData.size() == 0 or mNeighbourData.size() != this->GetNumberOfLocations())
     {
         CalculateMooreNeighbourData();
     }
@@ -308,15 +317,15 @@ void RegularGrid<DIM>::GenerateFromPart(boost::shared_ptr<Part<DIM> > pPart, uni
     {
         double norm_z = (spatial_extents[5] - spatial_extents[4]) / gridSize;
         mDimensions[2] = unsigned(boost::math::iround(norm_z))+1;
-        mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0]/mReferenceLength,
-                spatial_extents[2]/mReferenceLength,
-                spatial_extents[4]/mReferenceLength, mReferenceLength);
+        mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0]/this->mReferenceLength,
+                spatial_extents[2]/this->mReferenceLength,
+                spatial_extents[4]/this->mReferenceLength, this->mReferenceLength);
     }
     else
     {
         mDimensions[2] = 1;
-        mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0]/mReferenceLength,
-                spatial_extents[2]/mReferenceLength, 0.0, mReferenceLength);
+        mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0]/this->mReferenceLength,
+                spatial_extents[2]/this->mReferenceLength, 0.0, this->mReferenceLength);
     }
     UpdateExtents();
     SetUpVtkGrid();
@@ -329,8 +338,13 @@ DimensionalChastePoint<DIM> RegularGrid<DIM>::GetLocation(unsigned x_index, unsi
     {
         SetUpVtkGrid();
     }
+    int locs[3];
+    locs[0] = x_index;
+    locs[1] = y_index;
+    locs[2] = z_index;
+
     c_vector<double, 3> loc;
-    this->mpGlobalVtkGrid()->GetPoint(this->mpGlobalVtkGrid()->ComputePointId(x_index, y_index, z_index), &loc);
+    this->mpGlobalVtkGrid->GetPoint(vtkImageData::SafeDownCast(this->mpGlobalVtkGrid)->ComputePointId(locs), &loc[0]);
     return DimensionalChastePoint<DIM>(loc, this->mReferenceLength);
 }
 
@@ -341,7 +355,8 @@ DimensionalChastePoint<DIM> RegularGrid<DIM>::GetLocationOfGlobalIndex(unsigned 
     {
         SetUpVtkGrid();
     }
-    this->mpGlobalVtkGrid()->GetPoint(grid_index, &loc);
+    c_vector<double, 3> loc;
+    this->mpGlobalVtkGrid->GetPoint(grid_index, &loc[0]);
     return DimensionalChastePoint<DIM>(loc, this->mReferenceLength);
 }
 
@@ -360,7 +375,7 @@ units::quantity<unit::length> RegularGrid<DIM>::GetSpacing()
 template<unsigned DIM>
 const std::vector<double>& RegularGrid<DIM>::rGetLocationVolumes(bool update, bool jiggle)
 {
-    unsigned num_points = GetNumberOfLocations();
+    unsigned num_points = this->GetNumberOfLocations();
     if(update)
     {
         this->mVolumes.clear();
@@ -382,9 +397,9 @@ const std::vector<double>& RegularGrid<DIM>::rGetLocationVolumes(bool update, bo
 }
 
 template<unsigned DIM>
-bool RegularGrid<DIM>::IsOnBoundary(unsigned grid_index)
+bool RegularGrid<DIM>::IsOnBoundary(unsigned gridIndex)
 {
-    unsigned global_index = this->mLocalGlobalMap(grid_index);
+    unsigned global_index = this->mLocalGlobalMap[gridIndex];
     unsigned mod_z = global_index % (mDimensions[0] * (mDimensions[1]-1));
     unsigned z_index = (global_index - mod_z) / (mDimensions[0] * (mDimensions[1]-1));
     unsigned mod_y = mod_z % (mDimensions[0]-1);
@@ -417,7 +432,7 @@ bool RegularGrid<DIM>::IsOnBoundary(unsigned x_index, unsigned y_index, unsigned
 template<unsigned DIM>
 c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned gridIndex, bool jiggle)
 {
-    unsigned global_index = this->mLocalGlobalMap(grid_index);
+    unsigned global_index = this->mLocalGlobalMap[gridIndex];
     unsigned mod_z = global_index % (mDimensions[0] * mDimensions[1]);
     unsigned z_index = (global_index - mod_z) / (mDimensions[0] * mDimensions[1]);
     unsigned mod_y = mod_z % mDimensions[0];
@@ -433,7 +448,7 @@ c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsign
     double dimensionless_spacing = GetSpacing()/scale_factor;
     double jiggle_size = 1.e-3 * dimensionless_spacing;
 
-    c_vector<double, 3> dimensionless_location = GetLocation(xIndex ,yIndex, zIndex).GetLocation(scale_factor);
+    c_vector<double, DIM> dimensionless_location = GetLocation(xIndex ,yIndex, zIndex).GetLocation(scale_factor);
     if(DIM==2)
     {
         dimensionless_location[2] = 0.0;
@@ -519,7 +534,7 @@ template<unsigned DIM>
 void RegularGrid<DIM>::SetSpacing(units::quantity<unit::length> spacing, bool updateVtk)
 {
     mSpacing = spacing;
-    GetPointVolumes(true, false);
+    this->rGetLocationVolumes(true, false);
 
     if(updateVtk)
     {
@@ -533,7 +548,7 @@ void RegularGrid<DIM>::SetDimensions(c_vector<unsigned, 3> dimensions, bool upda
     mDimensions = dimensions;
     UpdateExtents();
 
-    GetPointVolumes(true, false);
+    this->rGetLocationVolumes(true, false);
 
     if(updateVtk)
     {
@@ -556,8 +571,8 @@ void RegularGrid<DIM>::SetUpVtkGrid()
     c_vector<double, DIM> dimless_origin = mOrigin.GetLocation(this->mReferenceLength);
     if (DIM == 3)
     {
-        p_global_grid->SetOrigin(&dimless_origin);
-        p_local_grid->SetOrigin(&dimless_origin);
+        p_global_grid->SetOrigin(&dimless_origin[0]);
+        p_local_grid->SetOrigin(&dimless_origin[0]);
     }
     else
     {
@@ -598,8 +613,8 @@ void RegularGrid<DIM>::SetUpVtkGrid()
     this->mpGridLocations = vtkSmartPointer<vtkPoints>::New();
     for(unsigned idx=0;idx<this->mpVtkGrid->GetNumberOfPoints(); idx++)
     {
-        this->mpGridLocations.InsertNextPoint(this->mpVtkGrid->GetPoint(idx));
-        this->mLocalGlobalMap.append(idx+lo);
+        this->mpGridLocations->InsertNextPoint(this->mpVtkGrid->GetPoint(idx));
+        this->mLocalGlobalMap.push_back(idx+lo);
     }
 
     this->mVtkRepresentationUpToDate = true;
@@ -611,9 +626,10 @@ void RegularGrid<DIM>::SetUpVtkGrid()
 template<unsigned DIM>
 void RegularGrid<DIM>::UpdateExtents()
 {
+    unsigned num_points = mDimensions[0] * mDimensions[1] * mDimensions[2];
     // Set up the distributed vector factory and let PETSc decide on splitting
     mpDistributedVectorFactory =
-            boost::shared_ptr<DistributedVectorFactory>(new DistributedVectorFactory(GetNumberOfGlobalPoints()));
+            boost::shared_ptr<DistributedVectorFactory>(new DistributedVectorFactory(num_points));
 
     unsigned lo = mpDistributedVectorFactory->GetLow();
     unsigned hi = mpDistributedVectorFactory->GetHigh();

@@ -125,18 +125,18 @@ public:
     /**
      * Set point or element attributes
      * @param rAttributes the point or element attributes
-     * @param clearExisting clear existing point data
      * @param rName the data name
      */
-    void AddAttributes(const std::vector<unsigned>& rAttributes, bool clearExisting = false,
+    void AddAttributes(const std::vector<unsigned>& rAttributes,
             const std::string& rName = "Default Attribute");
 
     /**
      * Set point or nodal data
      * @param rPointValues the point or nodal values
+     * @param clearExisting clear existing point data
      * @param rName the data name
      */
-    virtual void AddPointData(const std::vector<double>& rPointValues,
+    virtual void AddPointData(const std::vector<double>& rPointValues, bool clearExisting = false,
             const std::string& rName = "Default Location Data");
 
     /**

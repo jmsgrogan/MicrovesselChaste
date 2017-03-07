@@ -122,9 +122,8 @@ DimensionalChastePoint<SPACE_DIM> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPA
     {
         SetUpVtkGrid();
     }
-    c_vector<double, 3> loc;
-    this->mpGridLocations()->GetPoint(grid_index, &loc);
-    return DimensionalChastePoint<SPACE_DIM>(loc, this->mReferenceLength);
+    double* loc = this->mpGridLocations->GetPoint(grid_index);
+    return DimensionalChastePoint<SPACE_DIM>(loc[0], loc[1], loc[2], this->mReferenceLength);
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -134,7 +133,7 @@ vtkSmartPointer<vtkPoints> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>
     {
         SetUpVtkGrid();
     }
-    return this->mpGridLocations();
+    return this->mpGridLocations;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -144,13 +143,27 @@ unsigned AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetNumberOfLocat
     {
         SetUpVtkGrid();
     }
-    return this->mpGridLocations()->GetNumberOfPoints();
+    return this->mpGridLocations->GetNumberOfPoints();
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 unsigned AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetNearestLocationIndex(const DimensionalChastePoint<SPACE_DIM>& rLocation)
 {
-    int cell_id = GetVtkCellLocator()->FindCell(rLocation.GetLocation(mReferenceLength));
+    c_vector<double, SPACE_DIM> loc = rLocation.GetLocation(mReferenceLength);
+    c_vector<double, 3> loc_3d;
+
+    if(SPACE_DIM==3)
+    {
+        loc_3d = loc;
+    }
+    else
+    {
+        loc_3d[0] = loc[0];
+        loc_3d[1] = loc[1];
+        loc_3d[2] = 0.0;
+    }
+
+    int cell_id = GetVtkCellLocator()->FindCell(&loc_3d[0]);
     if(cell_id<0)
     {
         EXCEPTION("Provided location is outside the grid");
@@ -189,7 +202,7 @@ vtkSmartPointer<vtkCellLocator> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-virtual void AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::SetUpVtkCellLocator()
+void AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::SetUpVtkCellLocator()
 {
     if(!mVtkRepresentationUpToDate)
     {
