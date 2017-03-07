@@ -596,27 +596,11 @@ bool Part<DIM>::IsPointInPart(DimensionalChastePoint<DIM> location)
 }
 
 template<unsigned DIM>
-std::vector<bool> Part<DIM>::IsPointInPart(const std::vector<DimensionalChastePoint<DIM> >& rLocations)
+std::vector<bool> Part<DIM>::IsPointInPart(vtkSmartPointer<vtkPoints> pPoints)
 {
     vtkSmartPointer<vtkPolyData> p_part = GetVtk();
-    vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
-
-    for(unsigned idx=0; idx<rLocations.size(); idx++)
-    {
-        if(DIM==3)
-        {
-            p_points->InsertNextPoint(rLocations[idx].GetLocation(mReferenceLength)[0],
-                                      rLocations[idx].GetLocation(mReferenceLength)[1], rLocations[idx].GetLocation(mReferenceLength)[2]);
-        }
-        else
-        {
-            p_points->InsertNextPoint(rLocations[idx].GetLocation(mReferenceLength)[0],
-                                      rLocations[idx].GetLocation(mReferenceLength)[1], 0.0);
-        }
-    }
-
     vtkSmartPointer<vtkPolyData> p_point_data = vtkSmartPointer<vtkPolyData>::New();
-    p_point_data->SetPoints(p_points);
+    p_point_data->SetPoints(pPoints);
 
     //Points inside test
     vtkSmartPointer<vtkSelectEnclosedPoints> selectEnclosedPoints = vtkSmartPointer<vtkSelectEnclosedPoints>::New();
@@ -632,8 +616,8 @@ std::vector<bool> Part<DIM>::IsPointInPart(const std::vector<DimensionalChastePo
     #endif
     selectEnclosedPoints->Update();
 
-    std::vector<bool> is_inside(rLocations.size());
-    for(unsigned idx=0; idx<rLocations.size(); idx++)
+    std::vector<bool> is_inside(pPoints->GetNumberOfPoints());
+    for(unsigned idx=0; idx<pPoints->GetNumberOfPoints(); idx++)
     {
         is_inside[idx] = selectEnclosedPoints->IsInside(idx);
     }

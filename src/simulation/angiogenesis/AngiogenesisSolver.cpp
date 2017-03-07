@@ -186,14 +186,15 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
             {
                 if (sprouting)
                 {
-                    mpNetwork->FormSprout(tips[idx]->rGetLocation(), mpGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(indices[idx]));
+                    mpNetwork->FormSprout(tips[idx]->rGetLocation(),
+                            mpGridCalculator->GetGrid()->GetLocationOfGlobalIndex(indices[idx]));
                     tips[idx]->SetIsMigrating(false);
                     mpNetwork->UpdateAll();
                 }
                 else
                 {
                     boost::shared_ptr<VesselNode<DIM> > p_new_node = VesselNode<DIM>::Create(tips[idx]);
-                    p_new_node->SetLocation(mpGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(indices[idx]));
+                    p_new_node->SetLocation(mpGridCalculator->GetGrid()->GetLocationOfGlobalIndex(indices[idx]));
                     mpNetwork->ExtendVessel(tips[idx]->GetSegment(0)->GetVessel(), tips[idx], p_new_node);
                     tips[idx]->SetIsMigrating(false);
                     p_new_node->SetIsMigrating(true);
@@ -218,11 +219,20 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
 
         mpMigrationRule->SetIsSprouting(sprouting);
         std::vector<DimensionalChastePoint<DIM> > movement_vectors = mpMigrationRule->GetDirections(tips);
-        std::vector<DimensionalChastePoint<DIM> > candidate_tip_locations;
+        vtkSmartPointer<vtkPoints> candidate_tip_locations;
         std::vector<bool> candidate_tips_inside_domain(tips.size(), true);
         for (unsigned idx = 0; idx < tips.size(); idx++)
         {
-            candidate_tip_locations.push_back(tips[idx]->rGetLocation() + movement_vectors[idx]);
+            c_vector<double, DIM> loc = (tips[idx]->rGetLocation() +
+                    movement_vectors[idx]).GetLocation(mpBoundingDomain->GetReferenceLengthScale());
+            if(DIM==2)
+            {
+                candidate_tip_locations->InsertNextPoint(loc[0], loc[1], 0.0);
+            }
+            else
+            {
+                candidate_tip_locations->InsertNextPoint(loc[0], loc[1], loc[2]);
+            }
         }
 
         if (mpBoundingDomain)
@@ -242,16 +252,20 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
             {
                 if (candidate_tips_inside_domain[idx])
                 {
+                    double* loc = candidate_tip_locations->GetPoint(idx);
+                    DimensionalChastePoint<DIM> dimensional_loc(loc[0], loc[1], loc[2],
+                            mpBoundingDomain->GetReferenceLengthScale());
+
                     if (sprouting)
                     {
-                        mpNetwork->FormSprout(tips[idx]->rGetLocation(), candidate_tip_locations[idx]);
+                        mpNetwork->FormSprout(tips[idx]->rGetLocation(), dimensional_loc);
                         mpNetwork->UpdateAll();
                         tips[idx]->SetIsMigrating(false);
                     }
                     else
                     {
                         boost::shared_ptr<VesselNode<DIM> > p_new_node = VesselNode<DIM>::Create(tips[idx]);
-                        p_new_node->SetLocation(candidate_tip_locations[idx]);
+                        p_new_node->SetLocation(dimensional_loc);
                         mpNetwork->ExtendVessel(tips[idx]->GetSegment(0)->GetVessel(), tips[idx], p_new_node);
                         tips[idx]->SetIsMigrating(false);
                         p_new_node->SetIsMigrating(true);
@@ -283,8 +297,9 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
         {
             if (mpGridCalculator)
             {
-                std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > point_node_map = mpGridCalculator->GetVesselNodeMap();
-                unsigned grid_index = mpGridCalculator->GetGrid()->GetNearestGlobalGridIndex(nodes[idx]->rGetLocation());
+                std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > point_node_map = mpGridCalculator->rGetVesselNodeMap();
+                unsigned grid_index = mpGridCalculator->GetGrid()->GetNearestLocationIndex(nodes[idx]->rGetLocation());
+
                 if (point_node_map[grid_index].size() >= 2)
                 {
                     boost::shared_ptr<VesselNode<DIM> > p_merge_node = VesselNode<DIM>::Create(nodes[idx]);
@@ -432,7 +447,7 @@ void AngiogenesisSolver<DIM>::Increment()
         {
             if (nodes[idx]->IsMigrating())
             {
-                unsigned location_index = mpGridCalculator->GetGrid()->GetNearestGlobalGridIndex(nodes[idx]->rGetLocation());
+                unsigned location_index = mpGridCalculator->GetGrid()->GetNearestLocationIndex(nodes[idx]->rGetLocation());
 
                 // If there is already a stalk cell here it means a vessel tip has stayed in the same location, set it to tip type
                 if(mpCellPopulation->IsCellAttachedToLocationIndex(location_index))

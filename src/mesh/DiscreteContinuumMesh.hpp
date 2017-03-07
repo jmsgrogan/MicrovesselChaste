@@ -37,17 +37,15 @@ Copyright (c) 2005-2016, University of Oxford.
 #define DISCRETECONTINUUMMESH_HPP_
 
 #include <vector>
-#include "SmartPointers.hpp"
-#include "ChastePoint.hpp"
-#include "TetrahedralMesh.hpp"
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
-#include <vtkUnstructuredGrid.h>
-#include <vtkCellLocator.h>
-#include "Part.hpp"
-#include "Element.hpp"
+#include <vtkPoints.h>
+#include <vtkDoubleArray.h>
+#include "SmartPointers.hpp"
+#include "TetrahedralMesh.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
+#include "AbstractDiscreteContinuumGrid.hpp"
 #include "UnitCollection.hpp"
 
 // Forward declaration
@@ -58,9 +56,13 @@ class DiscreteContinuumMeshGenerator;
  * This is a TetrahedralMesh with some extra functions for point locating, output of node locations
  * and connectivity and attribute storage. It uses its own version of ImportFromTetgen with fewer template arguements. There is
  * scope for merging this versions with the one in TetrahedralMesh.
+ *
+ * It has some parallel functionality, via an element based partitioning,
+ * but isn't a full parallel mesh like DistributedTetrahedralMesh.
  */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM = ELEMENT_DIM>
-class DiscreteContinuumMesh : public TetrahedralMesh<ELEMENT_DIM, SPACE_DIM>
+class DiscreteContinuumMesh : public TetrahedralMesh<ELEMENT_DIM, SPACE_DIM>,
+public AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>
 {
     /**
      * For access to ImportFromMesher
@@ -68,39 +70,14 @@ class DiscreteContinuumMesh : public TetrahedralMesh<ELEMENT_DIM, SPACE_DIM>
     friend class DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>;
 
     /**
-     * Store element-wise region markers
+     * The node locations as VTK points
      */
-    std::vector<unsigned> mAttributes;
+    vtkSmartPointer<vtkPoints> mpNodeLocations;
 
     /**
-     * Store element-wise dimensionless volumes
+     * The node data in VTK form
      */
-    std::vector<double> mVolumes;
-
-    /**
-     * The reference length scale for the mesh
-     */
-    units::quantity<unit::length> mReferenceLength;
-
-    /**
-     * A vtk representation
-     */
-    vtkSmartPointer<vtkUnstructuredGrid> mpVtkMesh;
-
-    /**
-     * A vtk cell locator
-     */
-    vtkSmartPointer<vtkCellLocator> mpVtkCellLocator;
-
-    /**
-     * Is the vtk representation up to date
-     */
-    bool mVtkRepresentationUpToDate;
-
-    /**
-     * Optional nodal data
-     */
-    std::vector<double> mNodalData;
+    std::vector<vtkSmartPointer<vtkDoubleArray> > mNodeData;
 
 public:
 
@@ -112,7 +89,7 @@ public:
     /**
      * Destructor
      */
-    ~DiscreteContinuumMesh();
+    virtual ~DiscreteContinuumMesh();
 
     /**
      * Factory constructor method
@@ -121,70 +98,48 @@ public:
     static boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > Create();
 
     /**
+     * Set point or nodal data
+     * @param rPointValues the point or nodal values
+     * @param rName the data name
+     */
+    virtual void AddNodalData(const std::vector<double>& rPointValues,
+            const std::string& rName = "Default Location Data");
+
+    /**
      * Return the element connectivity
      * @return the element connectivity
      */
     std::vector<std::vector<unsigned> > GetConnectivity();
 
     /**
+     * Return the location of the supplied GLOBAL index
+     * @return the location of the supplied GLOBAL index
+     */
+    virtual DimensionalChastePoint<SPACE_DIM> GetLocationOfGlobalIndex(unsigned index);
+
+    /**
      * Return the node locations
      * @return the node locations
      */
-    std::vector<c_vector<double, SPACE_DIM> > GetNodeLocations();
-
-    /**
-     * Return the element centroids
-     * @return the element centroids
-     */
-    std::vector<c_vector<double, SPACE_DIM> > GetElementCentroids();
-
-    /**
-     * Return the node locations
-     * @return the node locations as chaste points
-     */
-    std::vector<DimensionalChastePoint<SPACE_DIM> > GetNodeLocationsAsPoints();
-
-    /**
-     * Return the element-wise region markers
-     * @return the element-wise region markers
-     */
-    std::vector<unsigned> GetElementRegionMarkers();
+    vtkSmartPointer<vtkPoints> GetNodeLocations();
 
     /**
      * Return the element-dimensionless volumes
      * @return the element-dimensionless volumes
      */
-    std::vector<double> GetElementVolumes();
+    const std::vector<double>& rGetLocationVolumes(bool update=false, bool jiggle=false);
 
     /**
-     * Return the reference length scale
-     * @return the reference length scale
+     * If running in parallel parition the mesh using parmetis
+     * and return the processor number for each element.
+     * @return the processor number for each element.
      */
-    units::quantity<unit::length> GetReferenceLengthScale();
+    std::vector<unsigned> GetElementPartitioning();
 
     /**
-     * Return the mesh as a vtk unstructured grid
-     * @return the mesh as a vtk unstructured grid
+     * Set the internal vtk representation of the grid
      */
-    vtkSmartPointer<vtkUnstructuredGrid> GetAsVtkUnstructuredGrid();
-
-    /**
-     * Return a vtk cell locator for quickly finding elements
-     * @return a vtk cell locator for quickly finding elements
-     */
-    vtkSmartPointer<vtkCellLocator> GetVtkCellLocator();
-
-    /**
-     * Set element attributes
-     * @param attributes the element attributes
-     */
-    void SetAttributes(std::vector<unsigned> attributes);
-
-    /**
-     * Set nodal data
-     * @param rNodalValues the nodal values
-     */
-    void SetNodalData(std::vector<double> rNodalValues);
+    void SetUpVtkGrid();
 
     /**
      * This is the same as the TetrahedralMesh implementation of ImportFromMesher but avoids some templating

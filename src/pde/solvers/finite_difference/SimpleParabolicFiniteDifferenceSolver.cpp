@@ -79,8 +79,8 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Vec cu
 
     // Apply BCs
     std::vector<unsigned> bc_indices;
-    unsigned lo = this->mpGridCalculator->GetGrid()->GetDistributedVectorFactory()->GetLow();
-    unsigned hi = this->mpGridCalculator->GetGrid()->GetDistributedVectorFactory()->GetHigh();
+    unsigned lo = this->mpRegularGrid->GetDistributedVectorFactory()->GetLow();
+    unsigned hi = this->mpRegularGrid->GetDistributedVectorFactory()->GetHigh();
     for(unsigned idx=lo; idx<hi-1; idx++)
     {
         if((*(this->mpBoundaryConditions))[idx].first)
@@ -100,8 +100,8 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::ComputeJacobian(const Vec curre
 
     // Apply the boundary conditions
     std::vector<unsigned> bc_indices;
-    unsigned lo = this->mpGridCalculator->GetGrid()->GetDistributedVectorFactory()->GetLow();
-    unsigned hi = this->mpGridCalculator->GetGrid()->GetDistributedVectorFactory()->GetHigh();
+    unsigned lo = this->mpRegularGrid->GetDistributedVectorFactory()->GetLow();
+    unsigned hi = this->mpRegularGrid->GetDistributedVectorFactory()->GetHigh();
     for(unsigned idx=lo; idx<hi-1; idx++)
     {
         if((*this->mpBoundaryConditions)[idx].first)
@@ -123,10 +123,10 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::SetParabolicSolverTimeIncrement
 template<unsigned DIM>
 void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleMatrix()
 {
-    c_vector<unsigned, 6> extents = this->mpGridCalculator->GetGrid()->GetExtents();
-    c_vector<unsigned, 3> dimensions = this->mpGridCalculator->GetGrid()->GetDimensions();
+    c_vector<unsigned, 6> extents = this->mpRegularGrid->GetExtents();
+    c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
-    units::quantity<unit::length> spacing = this->mpGridCalculator->GetGrid()->GetSpacing();
+    units::quantity<unit::length> spacing = this->mpRegularGrid->GetSpacing();
 
     boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM> > p_parabolic_pde =
                 boost::dynamic_pointer_cast<AbstractDiscreteContinuumParabolicPde<DIM> >(this->GetPde());
@@ -141,7 +141,7 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleMatrix()
         {
             for (unsigned k = extents[0]; k < extents[1]; k++) // X
             {
-                unsigned grid_index = this->mpGridCalculator->GetGrid()->GetGlobal1dGridIndex(k, j, i);
+                unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
                 double current_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index);
 
                 units::quantity<unit::concentration>  current_dimensional_solution =
@@ -224,10 +224,10 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleMatrix()
 template<unsigned DIM>
 void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleVector()
 {
-    c_vector<unsigned, 6> extents = this->mpGridCalculator->GetGrid()->GetExtents();
-    c_vector<unsigned, 3> dimensions = this->mpGridCalculator->GetGrid()->GetDimensions();
+    c_vector<unsigned, 6> extents = this->mpRegularGrid->GetExtents();
+    c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
-    units::quantity<unit::length> spacing = this->mpGridCalculator->GetGrid()->GetSpacing();
+    units::quantity<unit::length> spacing = this->mpRegularGrid->GetSpacing();
 
     boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > p_parabolic_pde =
                 boost::dynamic_pointer_cast<AbstractDiscreteContinuumParabolicPde<DIM, DIM> >(this->GetPde());
@@ -243,7 +243,7 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleVector()
         {
             for (unsigned k = extents[0]; k < extents[1]; k++) // X
             {
-                unsigned grid_index = this->mpGridCalculator->GetGrid()->GetGlobal1dGridIndex(k, j, i);
+                unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
 
                 double current_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index);
                 units::quantity<unit::concentration>  current_dimensional_solution =
@@ -338,8 +338,8 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleVector()
 template<unsigned DIM>
 void SimpleParabolicFiniteDifferenceSolver<DIM>::Solve()
 {
-    // Set up the system
-    unsigned number_of_points = this->mpGridCalculator->GetGrid()->GetNumberOfGlobalPoints();
+    c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
+    unsigned number_of_points = dimensions[0]*dimensions[1]*dimensions[2];
 
     // Initialize solution
     if(this->mSolution.size()==0)

@@ -41,6 +41,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
 #include <vtkDataSet.h>
 #include <vtkSmartPointer.h>
+#include <vtkPoints.h>
 #include "OutputFileHandler.hpp"
 #include "VesselNetwork.hpp"
 #include "AbstractCellPopulation.hpp"
@@ -50,6 +51,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "GridCalculator.hpp"
 #include "UnitCollection.hpp"
 #include "AbstractDiscreteContinuumPde.hpp"
+#include "AbstractDiscreteContinuumGrid.hpp"
 
 /**
  * An abstract solver class for continuum-discrete field problems.
@@ -181,23 +183,19 @@ public:
      * @param pGrid the sampling grid
      * @return the value of the field ordered according to grid order
      */
-    virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(boost::shared_ptr<RegularGrid<DIM> > pGrid) = 0;
+    virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
 
     /**
      * Return the value of the field at the requested points
-     * @param rSamplePoints a vector of sample points
+     * @param pSamplePoints vtk sample points
      * @return the value of the field ordered according to input point order
      */
-    virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(const std::vector<DimensionalChastePoint<DIM> >& rSamplePoints) = 0;
+    virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(vtkSmartPointer<vtkPoints> pSamplePoints);
 
     /**
-     * Return the value of the field on the nodes of the input mesh
-     * @param pMesh the mesh from which nodes are sampled
-     * @return the value of the field ordered according to mesh node ordering
+     * Return the grid calculator
+     * @return the grid calculator
      */
-    virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh) = 0;
-
-
     boost::shared_ptr<GridCalculator<DIM> > GetGridCalculator();
 
     /**
@@ -226,24 +224,17 @@ public:
 
     /**
      * Return the value of the field at the requested points
-     * @param rSamplePoints the points for sampling
+     * @param pSamplePoints vtk sample points
      * @return the value of the field ordered according to input point order
      */
-    virtual std::vector<double> GetSolution(const std::vector<DimensionalChastePoint<DIM> >& rSamplePoints) = 0;
+    virtual std::vector<double> GetSolution(vtkSmartPointer<vtkPoints> pSamplePoints);
 
     /**
      * Return the value of the field at all points on the supplied grid
      * @param pGrid the grid to be sampled
      * @return the value of the field ordered according to input point order
      */
-    virtual std::vector<double> GetSolution(boost::shared_ptr<RegularGrid<DIM> > pGrid) = 0;
-
-    /**
-     * Return the value of the field at all points on the supplied mesh nodes
-     * @param pMesh the mesh for point sampling
-     * @return the value of the field ordered according to mesh node order
-     */
-    virtual std::vector<double> GetSolution(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh) = 0;
+    virtual std::vector<double> GetSolution(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
 
     /**
      * Return the solution as vtk data

@@ -53,8 +53,6 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned DIM>
 class AbstractUnstructuredGridDiscreteContinuumSolver : public AbstractDiscreteContinuumSolver<DIM>
 {
-    using AbstractDiscreteContinuumSolver<DIM>::GetConcentrations;
-    using AbstractDiscreteContinuumSolver<DIM>::GetSolution;
     using AbstractDiscreteContinuumSolver<DIM>::UpdateSolution;
 
 protected:
@@ -77,51 +75,10 @@ public:
     virtual ~AbstractUnstructuredGridDiscreteContinuumSolver();
 
     /**
-     * Return the value of the field at the requested points
-     * @param rSamplePoints a vector of sample points
-     * @return the value of the field ordered according to input point order
-     */
-    virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(const std::vector<DimensionalChastePoint<DIM> >& rSamplePoints);
-    /**
-     * Return the value of the field at the requested points
-     * @param pGrid the sampling grid
-     * @return the value of the field ordered according to grid order
-     */
-    virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(boost::shared_ptr<RegularGrid<DIM> > pGrid);
-
-    /**
-     * Return the value of the field on the nodes of the input mesh
-     * @param pMesh the mesh from which nodes are sampled
-     * @return the value of the field ordered according to mesh node ordering
-     */
-    virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh);
-
-    /**
      * Return the value of the field at the mesh centroids
      * @return the value of the field ordered according to element order
      */
     virtual std::vector<units::quantity<unit::concentration> > GetConcentrationsAtCentroids();
-
-    /**
-     * Return the value of the field at the requested points
-     * @param rSamplePoints the points for sampling
-     * @return the value of the field ordered according to input point order
-     */
-    virtual std::vector<double> GetSolution(const std::vector<DimensionalChastePoint<DIM> >& rSamplePoints);
-
-    /**
-     * Return the value of the field at all points on the supplied grid
-     * @param pGrid the grid to be sampled
-     * @return the value of the field ordered according to input point order
-     */
-    virtual std::vector<double> GetSolution(boost::shared_ptr<RegularGrid<DIM> > pGrid);
-
-    /**
-     * Return the value of the field at all points on the supplied mesh nodes
-     * @param pMesh the mesh for point sampling
-     * @return the value of the field ordered according to mesh node order
-     */
-    virtual std::vector<double> GetSolution(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh);
 
     /**
      * Overridden Setup method.

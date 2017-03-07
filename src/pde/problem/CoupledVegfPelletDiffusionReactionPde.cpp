@@ -211,7 +211,8 @@ void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscre
         EXCEPTION("A grid has not been set for the determination of source strengths.");
     }
 
-    mDiscreteNonLinearSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(this->mpGridCalculator->GetNumberOfLocations(),
+    unsigned num_locations = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
+    mDiscreteNonLinearSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(num_locations,
             0.0*unit::mole_per_metre_cubed_per_second);
     for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
     {

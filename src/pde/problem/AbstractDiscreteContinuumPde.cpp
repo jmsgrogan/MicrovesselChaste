@@ -124,9 +124,10 @@ void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSourceS
     {
         EXCEPTION("A grid has not been set for the determination of source strengths.");
     }
-    mDiscreteConstantSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(mpGridCalculator->GetNumberOfLocations(),
+    unsigned num_locations = mpGridCalculator->GetGrid()->GetNumberOfLocations();
+    mDiscreteConstantSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(num_locations,
             0.0*unit::mole_per_metre_cubed_per_second);
-    mDiscreteLinearSourceStrengths = std::vector<units::quantity<unit::rate> >(mpGridCalculator->GetNumberOfLocations(), 0.0*unit::per_second);
+    mDiscreteLinearSourceStrengths = std::vector<units::quantity<unit::rate> >(num_locations, 0.0*unit::per_second);
 
     for(unsigned idx=0; idx<mDiscreteSources.size(); idx++)
     {

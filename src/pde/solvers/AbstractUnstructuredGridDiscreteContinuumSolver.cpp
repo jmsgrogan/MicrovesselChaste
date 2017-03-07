@@ -40,12 +40,14 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkProbeFilter.h>
 #include <vtkImageData.h>
 #include <vtkSmartPointer.h>
+#include <vtkPoints.h>
 #include <vtkXMLUnstructuredGridWriter.h>
 #include "AbstractUnstructuredGridDiscreteContinuumSolver.hpp"
 
 template<unsigned DIM>
 AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::AbstractUnstructuredGridDiscreteContinuumSolver()
-    :   AbstractDiscreteContinuumSolver<DIM>()
+    :   AbstractDiscreteContinuumSolver<DIM>(),
+        mpMesh()
 {
 
 }
@@ -59,181 +61,7 @@ AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::~AbstractUnstructuredGridD
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration> > AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetConcentrationsAtCentroids()
 {
-    if(!this->mpVtkSolution)
-    {
-        this->Setup();
-    }
-
-    std::vector<c_vector<double, DIM> > centroids = mpMesh->GetElementCentroids();
-    std::vector<units::quantity<unit::concentration> > sampled_solution(centroids.size(), 0.0*this->mReferenceConcentration);
-
-    // Sample the field at these locations
-    vtkSmartPointer<vtkPolyData> p_polydata = vtkSmartPointer<vtkPolyData>::New();
-    vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
-    p_points->SetNumberOfPoints(centroids.size());
-    for(unsigned idx=0; idx< centroids.size(); idx++)
-    {
-        if(DIM==3)
-        {
-            p_points->SetPoint(idx, centroids[idx][0], centroids[idx][1], centroids[idx][2]);
-        }
-        else
-        {
-            p_points->SetPoint(idx, centroids[idx][0], centroids[idx][1], 0.0);
-        }
-    }
-    p_polydata->SetPoints(p_points);
-
-    vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
-    #if VTK_MAJOR_VERSION <= 5
-        p_probe_filter->SetInput(p_polydata);
-        p_probe_filter->SetSource(this->mpVtkSolution);
-    #else
-        p_probe_filter->SetInputData(p_polydata);
-        p_probe_filter->SetSourceData(this->mpVtkSolution);
-    #endif
-    p_probe_filter->Update();
-    vtkSmartPointer<vtkPointData> p_point_data = p_probe_filter->GetOutput()->GetPointData();
-
-    unsigned num_points = p_point_data->GetArray(this->mLabel.c_str())->GetNumberOfTuples();
-    for(unsigned idx=0; idx<num_points; idx++)
-    {
-        sampled_solution[idx] = p_point_data->GetArray(this->mLabel.c_str())->GetTuple1(idx)*this->mReferenceConcentration;
-    }
-    return sampled_solution;
-}
-
-template<unsigned DIM>
-std::vector<units::quantity<unit::concentration> > AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetConcentrations(const std::vector<DimensionalChastePoint<DIM> >& samplePoints)
-{
-    if(!this->mpVtkSolution)
-    {
-        this->Setup();
-    }
-
-    std::vector<units::quantity<unit::concentration> > sampled_solution(samplePoints.size(), 0.0*this->mReferenceConcentration);
-
-    // Sample the field at these locations
-    vtkSmartPointer<vtkPolyData> p_polydata = vtkSmartPointer<vtkPolyData>::New();
-    vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
-
-    p_points->SetNumberOfPoints(samplePoints.size());
-    for(unsigned idx=0; idx< samplePoints.size(); idx++)
-    {
-        c_vector<double, DIM> location = samplePoints[idx].GetLocation(this->mpMesh->GetReferenceLengthScale());
-        if(DIM==3)
-        {
-            p_points->SetPoint(idx, location[0], location[1], location[2]);
-        }
-        else
-        {
-            p_points->SetPoint(idx, location[0], location[1], 0.0);
-        }
-    }
-    p_polydata->SetPoints(p_points);
-
-    vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
-    #if VTK_MAJOR_VERSION <= 5
-        p_probe_filter->SetInput(p_polydata);
-        p_probe_filter->SetSource(this->mpVtkSolution);
-    #else
-        p_probe_filter->SetInputData(p_polydata);
-        p_probe_filter->SetSourceData(this->mpVtkSolution);
-    #endif
-    p_probe_filter->Update();
-    vtkSmartPointer<vtkPointData> p_point_data = p_probe_filter->GetOutput()->GetPointData();
-
-    unsigned num_points = p_point_data->GetArray(this->mLabel.c_str())->GetNumberOfTuples();
-    for(unsigned idx=0; idx<num_points; idx++)
-    {
-        sampled_solution[idx] = p_point_data->GetArray(this->mLabel.c_str())->GetTuple1(idx)*this->mReferenceConcentration;
-    }
-    return sampled_solution;
-}
-
-template<unsigned DIM>
-std::vector<units::quantity<unit::concentration> > AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetConcentrations(boost::shared_ptr<RegularGrid<DIM> > pGrid)
-{
-    return this->GetConcentrations(pGrid->GetGlobalLocations());
-}
-
-template<unsigned DIM>
-std::vector<units::quantity<unit::concentration> > AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetConcentrations(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh)
-{
-    if(this->mpGridCalculator->GetMesh() == pMesh)
-    {
-        return this->GetConcentrations();
-    }
-    else
-    {
-        return this->GetConcentrations(pMesh->GetNodeLocationsAsPoints());
-    }
-}
-
-template<unsigned DIM>
-std::vector<double> AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetSolution(const std::vector<DimensionalChastePoint<DIM> >& rSamplePoints)
-{
-    if(!this->mpVtkSolution)
-    {
-        this->Setup();
-    }
-
-    std::vector<double> sampled_solution(rSamplePoints.size(), 0.0);
-
-    // Sample the field at these locations
-    vtkSmartPointer<vtkPolyData> p_polydata = vtkSmartPointer<vtkPolyData>::New();
-    vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
-    p_points->SetNumberOfPoints(rSamplePoints.size());
-    for(unsigned idx=0; idx< rSamplePoints.size(); idx++)
-    {
-        c_vector<double, DIM> location = rSamplePoints[idx].GetLocation(this->mpMesh->GetReferenceLengthScale());
-        if(DIM==3)
-        {
-            p_points->SetPoint(idx, location[0], location[1], location[2]);
-        }
-        else
-        {
-            p_points->SetPoint(idx, location[0], location[1], 0.0);
-        }
-    }
-    p_polydata->SetPoints(p_points);
-
-    vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
-    #if VTK_MAJOR_VERSION <= 5
-        p_probe_filter->SetInput(p_polydata);
-        p_probe_filter->SetSource(this->mpVtkSolution);
-    #else
-        p_probe_filter->SetInputData(p_polydata);
-        p_probe_filter->SetSourceData(this->mpVtkSolution);
-    #endif
-    p_probe_filter->Update();
-    vtkSmartPointer<vtkPointData> p_point_data = p_probe_filter->GetOutput()->GetPointData();
-
-    unsigned num_points = p_point_data->GetArray(this->mLabel.c_str())->GetNumberOfTuples();
-    for(unsigned idx=0; idx<num_points; idx++)
-    {
-        sampled_solution[idx] = p_point_data->GetArray(this->mLabel.c_str())->GetTuple1(idx);
-    }
-    return sampled_solution;
-}
-
-template<unsigned DIM>
-std::vector<double> AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetSolution(boost::shared_ptr<RegularGrid<DIM> > pGrid)
-{
-    return this->GetSolution(pGrid->GetGlobalLocations());
-}
-
-template<unsigned DIM>
-std::vector<double> AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetSolution(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh)
-{
-    if(this->mpGridCalculator->GetMesh() == pMesh)
-    {
-        return this->GetSolution();
-    }
-    else
-    {
-        return this->GetSolution(pMesh->GetNodeLocationsAsPoints());
-    }
+    return this->GetConcentrations(this->mpGridCalculator->GetGrid()->GetLocations());
 }
 
 template<unsigned DIM>
@@ -244,12 +72,15 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::Setup()
         EXCEPTION("Mesh needed before Setup can be called.");
     }
 
+    mpMesh = boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
+    if(!mpMesh)
+    {
+        EXCEPTION("Can't cast to mesh during Setup");
+    }
+
     // Set up the VTK solution
-    this->mpVtkSolution = this->mpGridCalculator->GetMesh()->GetAsVtkUnstructuredGrid();
-
-    unsigned num_nodes = this->mpGridCalculator->GetMesh()->GetNodeLocationsAsPoints().size();
-    this->mSolution = std::vector<double>(0.0, num_nodes);
-
+    this->mpVtkSolution = this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid();
+    this->mSolution = std::vector<double>(0.0, this->mpGridCalculator->GetGrid()->GetNumberOfLocations());
     if(this->mpNetwork)
     {
         this->mpGridCalculator->SetVesselNetwork(this->mpNetwork);
@@ -273,7 +104,7 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateSolution(const 
         pPointData->SetValue(i, data[i]);
     }
     this->mpVtkSolution->GetPointData()->AddArray(pPointData);
-    this->mpGridCalculator->GetMesh()->SetNodalData(data);
+    mpMesh->AddNodalData(data, this->GetLabel());
 
     // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
     this->mSolution = std::vector<double>(data.size(), 0.0);

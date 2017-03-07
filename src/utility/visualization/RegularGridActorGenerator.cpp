@@ -88,7 +88,7 @@ void RegularGridActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRenderer> pRend
 {
     if(mpRegularGrid)
     {
-        vtkSmartPointer<vtkImageData> p_grid = mpRegularGrid->GetGlobalVtkGrid();
+        vtkSmartPointer<vtkImageData> p_grid = vtkImageData::SafeDownCast(mpRegularGrid->GetGlobalVtkGrid());
 
         vtkSmartPointer<vtkGeometryFilter> p_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
         #if VTK_MAJOR_VERSION <= 5

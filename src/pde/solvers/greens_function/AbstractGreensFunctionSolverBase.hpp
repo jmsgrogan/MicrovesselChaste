@@ -33,8 +33,8 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef GREENSFUNCTIONSOLVER_HPP_
-#define GREENSFUNCTIONSOLVER_HPP_
+#ifndef ABSTRACTGREENSFUNCTIONSOLVERBASE_HPP_
+#define ABSTRACTGREENSFUNCTIONSOLVERBASE_HPP_
 
 #include <vector>
 #include <string>
@@ -59,8 +59,11 @@ Copyright (c) 2005-2016, University of Oxford.
  * however it has been re-written from scratch following Chaste style and using PETSc linear solvers.
  */
 template<unsigned DIM>
-class GreensFunctionSolver : public AbstractRegularGridDiscreteContinuumSolver<DIM>
+class AbstractGreensFunctionSolverBase : public AbstractRegularGridDiscreteContinuumSolver<DIM>
 {
+
+protected:
+
     /**
      * A cuboidal tissue domain
      */
@@ -136,25 +139,12 @@ public:
     /**
      * Constructor
      */
-    GreensFunctionSolver();
+    AbstractGreensFunctionSolverBase();
 
     /**
      * Destructor
      */
-    ~GreensFunctionSolver();
-
-    /**
-     * Set the minimum subsegment length
-     * @param value the minimum subsegment length
-     */
-    void SetSubSegmentCutoff(units::quantity<unit::length> value);
-
-    /**
-     * Do the solve
-     */
-    void Solve();
-
-private:
+    virtual ~AbstractGreensFunctionSolverBase();
 
     /**
      * Generate vessel subsegments
@@ -167,37 +157,48 @@ private:
     void GenerateTissuePoints();
 
     /**
+     * Update Gvv
+     * @return Gvv
+     */
+    virtual boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetVesselVesselInteractionMatrix();
+
+    /**
+     * Update Gtt
+     * @return Gtt
+     */
+    virtual boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetTissueTissueInteractionMatrix();
+
+    /**
+     * Update Gtv
+     * @return Gtv
+     */
+    virtual boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetTissueVesselInteractionMatrix();
+
+    /**
+     * Update Gvt
+     * @return Gvt
+     */
+    virtual boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetVesselTissueInteractionMatrix();
+
+    /**
+     * Set the minimum subsegment length
+     * @param value the minimum subsegment length
+     */
+    void SetSubSegmentCutoff(units::quantity<unit::length> value);
+
+    /**
+     * Do the solve
+     */
+    virtual void Solve()=0;
+
+    /**
      * Update the greens function matrices
      * @param updateGtt Update Gtt
      * @param updateGvv Update Gvv
      * @param updateGtv Update Gtv
      * @param updateGvt Update Gvt
      */
-    void UpdateGreensFunctionMatrices(bool updateGtt = 0, bool updateGvv = 0, bool updateGtv = 0, bool updateGvt = 0);
-
-    /**
-     * Update Gvv
-     * @return Gvv
-     */
-    boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetVesselVesselInteractionMatrix();
-
-    /**
-     * Update Gtt
-     * @return Gtt
-     */
-    boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetTissueTissueInteractionMatrix();
-
-    /**
-     * Update Gtv
-     * @return Gtv
-     */
-    boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetTissueVesselInteractionMatrix();
-
-    /**
-     * Update Gvt
-     * @return Gvt
-     */
-    boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetVesselTissueInteractionMatrix();
+    virtual void UpdateGreensFunctionMatrices(bool updateGtt = 0, bool updateGvv = 0, bool updateGtv = 0, bool updateGvt = 0);
 
     /**
      * Over-ridden method for writing solution to file
@@ -206,4 +207,4 @@ private:
     void WriteSolution(std::map<std::string, std::vector<units::quantity<unit::concentration> > >& segmentPointData);
 };
 
-#endif /* GREENSFUNCTIONSOLVER_HPP_ */
+#endif /* ABSTRACTGREENSFUNCTIONSOLVERBASE_HPP_ */

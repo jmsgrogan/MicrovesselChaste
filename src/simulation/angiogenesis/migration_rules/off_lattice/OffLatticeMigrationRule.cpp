@@ -101,27 +101,27 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
         // Every node has 5 probes in 2D and 7 in 3D.
         std::vector<units::quantity<unit::concentration> > probed_solutions;
         unsigned probes_per_node = (2*DIM)+1;
-        std::vector<DimensionalChastePoint<DIM> > probe_locations(probes_per_node*rNodes.size(), DimensionalChastePoint<DIM>(0.0, 0.0, 0.0, 1.e-6*unit::metres));
+        vtkSmartPointer<vtkPoints> p_probe_locations = vtkSmartPointer<vtkPoints>::New();
         std::vector<bool> candidate_locations_inside_domain(probes_per_node*rNodes.size(), true);
 
         if(this->mpSolver)
         {
             for(unsigned idx=0; idx<rNodes.size(); idx++)
             {
-                std::vector<DimensionalChastePoint<DIM> > local_probe_locations = GetProbeLocationsExternalPoint<DIM>(rNodes[idx]->rGetLocation(), mProbeLength);
+                vtkSmartPointer<vtkPoints> local_probe_locations = GetProbeLocationsExternalPoint<DIM>(rNodes[idx]->rGetLocation(), mProbeLength);
                 for(unsigned jdx=0;jdx<probes_per_node; jdx++)
                 {
-                    probe_locations[idx*probes_per_node + jdx] = local_probe_locations[jdx];
+                    p_probe_locations->InsertNextPoint(local_probe_locations->GetPoint(jdx));
                 }
             }
-            if(probe_locations.size()>0)
+            if(p_probe_locations->GetNumberOfPoints()>0)
             {
-                probed_solutions = this->mpSolver->GetConcentrations(probe_locations);
+                probed_solutions = this->mpSolver->GetConcentrations(p_probe_locations);
             }
 
             if (this->mpBoundingDomain)
             {
-                candidate_locations_inside_domain = this->mpBoundingDomain->IsPointInPart(probe_locations);
+                candidate_locations_inside_domain = this->mpBoundingDomain->IsPointInPart(p_probe_locations);
             }
         }
 
@@ -256,7 +256,8 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
     {
         probes_per_node = 5;
     }
-    std::vector<DimensionalChastePoint<DIM> > probe_locations(probes_per_node*rNodes.size(), DimensionalChastePoint<DIM>(0.0, 0.0, 0.0, reference_length));
+
+    vtkSmartPointer<vtkPoints> p_probe_locations = vtkSmartPointer<vtkPoints>::New();
     std::vector<bool> candidate_locations_inside_domain(probes_per_node*rNodes.size(), true);
 
     // Get a normal to the segments, will depend on whether they are parallel
@@ -372,27 +373,27 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
 
         units::quantity<unit::plane_angle> angle = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0]/unit::radians,
                                                                                                           mSdvAngles[0]/unit::radians)*unit::radians;
-        std::vector<DimensionalChastePoint<DIM> > local_probes = GetProbeLocationsInternalPoint<DIM>(DimensionalChastePoint<DIM>(sprout_direction, reference_length),
+        vtkSmartPointer<vtkPoints> p_local_probes = GetProbeLocationsInternalPoint<DIM>(DimensionalChastePoint<DIM>(sprout_direction, reference_length),
                                                                                                 rNodes[idx]->rGetLocation(),
                                                                                                 DimensionalChastePoint<DIM>(rNodes[idx]->GetSegments()[0]->GetUnitTangent(), reference_length),
                                                                                                 mProbeLength,
                                                                                                 angle);
         for(unsigned jdx=0;jdx<probes_per_node; jdx++)
         {
-            probe_locations[idx*probes_per_node + jdx] = local_probes[jdx];
+            p_probe_locations->InsertNextPoint(p_local_probes->GetPoint(jdx));
         }
     }
 
     if(this->mpSolver)
     {
-        if(probe_locations.size()>0)
+        if(p_probe_locations->GetNumberOfPoints()>0)
         {
-            probed_solutions = this->mpSolver->GetConcentrations(probe_locations);
+            probed_solutions = this->mpSolver->GetConcentrations(p_probe_locations);
         }
 
         if (this->mpBoundingDomain)
         {
-            candidate_locations_inside_domain = this->mpBoundingDomain->IsPointInPart(probe_locations);
+            candidate_locations_inside_domain = this->mpBoundingDomain->IsPointInPart(p_probe_locations);
         }
     }
 
@@ -429,24 +430,18 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
                     my_index = int(jdx);
                 }
             }
-            if(my_index == 0)
-            {
-                new_direction = probe_locations[idx*probes_per_node+1]-rNodes[idx]->rGetLocation();
-            }
-            else if(my_index == 1)
-            {
-                new_direction = probe_locations[idx*probes_per_node+2]-rNodes[idx]->rGetLocation();
-            }
-            else if(my_index == 2)
-            {
-                new_direction = probe_locations[idx*probes_per_node+3]-rNodes[idx]->rGetLocation();
-            }
-            else if(my_index == 3)
-            {
-                new_direction = probe_locations[idx*probes_per_node+4]-rNodes[idx]->rGetLocation();
-            }
-        }
 
+            double loc[3];
+            if(my_index>=0 and my_index<=3)
+            {
+                p_probe_locations->GetPoint(idx*probes_per_node + 1 + my_index, loc);
+            }
+            else
+            {
+                EXCEPTION("Out of bounds in sprout direction calculation");
+            }
+            new_direction = DimensionalChastePoint<DIM>(loc[0], loc[1], loc[2], reference_length) -rNodes[idx]->rGetLocation();
+        }
         units::quantity<unit::time> time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
         units::quantity<unit::length> increment_length = time_increment* mVelocity;
         movement_vectors.push_back(OffsetAlongVector<DIM>(new_direction, increment_length));

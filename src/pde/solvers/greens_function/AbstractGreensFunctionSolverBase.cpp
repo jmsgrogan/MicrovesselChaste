@@ -46,11 +46,12 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UnitCollection.hpp"
 #include "RegularGridWriter.hpp"
 #include "GeometryWriter.hpp"
-#include "GreensFunctionSolver.hpp"
 #include "BaseUnits.hpp"
 
+#include "AbstractGreensFunctionSolverBase.hpp"
+
 template<unsigned DIM>
-GreensFunctionSolver<DIM>::GreensFunctionSolver()
+AbstractGreensFunctionSolverBase<DIM>::AbstractGreensFunctionSolverBase()
     : AbstractRegularGridDiscreteContinuumSolver<DIM>(),
       mpDomain(),
       mSinkCoordinates(),
@@ -71,152 +72,19 @@ GreensFunctionSolver<DIM>::GreensFunctionSolver()
 }
 
 template<unsigned DIM>
-GreensFunctionSolver<DIM>::~GreensFunctionSolver()
+AbstractGreensFunctionSolverBase<DIM>::~AbstractGreensFunctionSolverBase()
 {
 
 }
 
 template<unsigned DIM>
-void GreensFunctionSolver<DIM>::SetSubSegmentCutoff(units::quantity<unit::length> value)
+void AbstractGreensFunctionSolverBase<DIM>::SetSubSegmentCutoff(units::quantity<unit::length> value)
 {
     mSubsegmentCutoff = value;
 }
 
 template<unsigned DIM>
-void GreensFunctionSolver<DIM>::Solve()
-{
-    // Set up the sub-segment and tissue point co-ordinates
-    GenerateSubSegments();
-    GenerateTissuePoints();
-
-    // Generate the greens function matrices
-    UpdateGreensFunctionMatrices(1, 1, 1, 1);
-
-    // Get the sink rates
-    unsigned number_of_sinks = mSinkCoordinates.size();
-    units::quantity<unit::concentration_flow_rate> sink_rate = this->mpPde->ComputeConstantInUSourceTerm();
-    units::quantity<unit::volume> sink_volume = units::pow<3>(this->mpGridCalculator->GetGrid()->GetSpacing());
-    mSinkRates = std::vector<units::quantity<unit::molar_flow_rate> >(number_of_sinks, sink_rate * sink_volume);
-    units::quantity<unit::molar_flow_rate> total_sink_rate = std::accumulate(mSinkRates.begin(), mSinkRates.end(), 0.0*unit::mole_per_second);
-
-    // Get the sink substance demand on each vessel subsegment
-    unsigned number_of_subsegments = mSubSegmentCoordinates.size();
-    units::quantity<unit::diffusivity> diffusivity = this->mpPde->ComputeIsotropicDiffusionTerm();
-    std::vector<units::quantity<unit::concentration> > sink_demand_per_subsegment(number_of_subsegments, 0.0*this->mReferenceConcentration);
-    for (unsigned idx = 0; idx < number_of_subsegments; idx++)
-    {
-        for (unsigned jdx = 0; jdx < number_of_sinks; jdx++)
-        {
-            sink_demand_per_subsegment[idx] += ((*mGvt)[idx][jdx] / diffusivity) * mSinkRates[jdx];
-        }
-    }
-
-    mSegmentConcentration = std::vector<units::quantity<unit::concentration> >(number_of_subsegments, 1.0*this->mReferenceConcentration);
-    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(number_of_sinks, 0.0*this->mReferenceConcentration);
-
-    // Solve for the subsegment source rates required to meet the sink substance demand
-    double tolerance = 1.e-10;
-    units::quantity<unit::concentration> g0 = 0.0 * this->mReferenceConcentration;
-    mSourceRates = std::vector<units::quantity<unit::molar_flow_rate> >(number_of_subsegments, 0.0*unit::mole_per_second);
-
-    units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
-    units::quantity<unit::concentration> reference_concentration = this->mReferenceConcentration;
-    units::quantity<unit::amount> reference_amount(1.0*unit::moles);
-    LinearSystem linear_system(number_of_subsegments + 1, number_of_subsegments + 1);
-    linear_system.SetKspType("bcgs");
-
-    for (unsigned iteration = 0; iteration < 10; iteration++)
-    {
-        linear_system.AssembleIntermediateLinearSystem();
-        for (unsigned i = 0; i < number_of_subsegments; i++)
-        {
-            linear_system.SetRhsVectorElement(i, (mSegmentConcentration[i] - sink_demand_per_subsegment[i])/reference_concentration);
-        }
-
-        linear_system.SetRhsVectorElement(number_of_subsegments, -total_sink_rate*(reference_time/reference_amount));
-
-        // Set up Linear system matrix
-        for (unsigned iter = 0; iter < number_of_subsegments; iter++)
-        {
-            for (unsigned jter = 0; jter < number_of_subsegments; jter++)
-            {
-                linear_system.SetMatrixElement(iter, jter, ((*mGvv)[iter][jter] / diffusivity)*(reference_amount/(reference_time*reference_concentration)));
-            }
-            linear_system.SetMatrixElement(number_of_subsegments, iter, 1.0);
-            linear_system.SetMatrixElement(iter, number_of_subsegments, 1.0);
-        }
-        linear_system.SetMatrixElement(number_of_subsegments, number_of_subsegments, 0.0);
-
-        // Solve the linear system
-        linear_system.AssembleFinalLinearSystem();
-        ReplicatableVector soln_repl(linear_system.Solve());
-
-        // Populate the solution vector
-        std::vector<units::quantity<unit::molar_flow_rate> > solution_vector(number_of_subsegments + 1);
-        for (unsigned row = 0; row < number_of_subsegments + 1; row++)
-        {
-            (solution_vector)[row] = soln_repl[row]*(reference_amount/reference_time);
-        }
-
-        // Check convergence
-        bool all_in_tolerance = true;
-        for (unsigned i = 0; i < number_of_subsegments; i++)
-        {
-            units::quantity<unit::molar_flow_rate> diff = units::abs(mSourceRates[i] - solution_vector[i]);
-            if (diff > tolerance*unit::mole_per_second)
-            {
-                all_in_tolerance = false;
-                break;
-            }
-        }
-        // Retrieve the solution
-        for (unsigned i = 0; i < number_of_subsegments; i++)
-        {
-            mSourceRates[i] = solution_vector[i];
-        }
-        g0 = solution_vector[number_of_subsegments]*reference_concentration*(reference_time/reference_amount);
-
-        if (all_in_tolerance)
-        {
-            break;
-        }
-        else
-        {
-            if (iteration == 9)
-            {
-                std::cout << "Did not converge\n";
-            }
-        }
-    }
-
-    // Get the tissue concentration and write the solution
-    for (unsigned i = 0; i < number_of_sinks; i++)
-    {
-        this->mConcentrations[i] = 0.0 * this->mReferenceConcentration;
-        for (unsigned j = 0; j < number_of_sinks; j++)
-        {
-            this->mConcentrations[i] += (*mGtt)[i][j] * mSinkRates[j] / diffusivity;
-        }
-
-        for (unsigned j = 0; j < number_of_subsegments; j++)
-        {
-            this->mConcentrations[i] += (*mGtv)[i][j] * mSourceRates[j] / diffusivity;
-        }
-        this->mConcentrations[i] += g0;
-    }
-
-    std::map<std::string, std::vector<units::quantity<unit::concentration> > > segmentPointData;
-    segmentPointData[this->mLabel] = mSegmentConcentration;
-
-    this->UpdateSolution(this->mConcentrations);
-    if(this->mWriteSolution)
-    {
-        this->WriteSolution(segmentPointData);
-    }
-}
-
-template<unsigned DIM>
-void GreensFunctionSolver<DIM>::GenerateSubSegments()
+void AbstractGreensFunctionSolverBase<DIM>::GenerateSubSegments()
 {
     // Set up the sub-segment points and map to original segments
     units::quantity<unit::length> max_subsegment_length = mSubsegmentCutoff;
@@ -264,20 +132,20 @@ void GreensFunctionSolver<DIM>::GenerateSubSegments()
 }
 
 template<unsigned DIM>
-void GreensFunctionSolver<DIM>::GenerateTissuePoints()
+void AbstractGreensFunctionSolverBase<DIM>::GenerateTissuePoints()
 {
-    unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfGlobalPoints();
+    unsigned num_points = this->mpRegularGrid->GetNumberOfLocations();
     mSinkCoordinates = std::vector<DimensionalChastePoint<DIM> >(num_points);
     mSinkPointMap = std::vector<unsigned>(num_points);
     for(unsigned idx=0; idx<num_points; idx++)
     {
-        mSinkCoordinates[idx] = this->mpGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(idx);
+        mSinkCoordinates[idx] = this->mpRegularGrid->GetLocation(idx);
         mSinkPointMap[idx] = idx;
     }
 }
 
 template<unsigned DIM>
-void GreensFunctionSolver<DIM>::UpdateGreensFunctionMatrices(bool updateGtt, bool updateGvv, bool updateGtv,
+void AbstractGreensFunctionSolverBase<DIM>::UpdateGreensFunctionMatrices(bool updateGtt, bool updateGvv, bool updateGtv,
                                                                  bool updateGvt)
 {
     // Get the Greens Function coefficient matrices
@@ -300,7 +168,7 @@ void GreensFunctionSolver<DIM>::UpdateGreensFunctionMatrices(bool updateGtt, boo
 }
 
 template<unsigned DIM>
-boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GreensFunctionSolver<DIM>::GetVesselVesselInteractionMatrix()
+boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > AbstractGreensFunctionSolverBase<DIM>::GetVesselVesselInteractionMatrix()
 {
     typedef boost::multi_array<units::quantity<unit::per_length>, 2>::index index;
     unsigned num_sub_segments = mSubSegmentCoordinates.size();
@@ -339,12 +207,12 @@ boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Gre
 }
 
 template<unsigned DIM>
-boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GreensFunctionSolver<DIM>::GetTissueTissueInteractionMatrix()
+boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > AbstractGreensFunctionSolverBase<DIM>::GetTissueTissueInteractionMatrix()
 {
     typedef boost::multi_array<units::quantity<unit::per_length>, 2>::index index;
     unsigned num_points = mSinkCoordinates.size();
     double coefficient = 1.0 / (4.0 * M_PI);
-    units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpGridCalculator->GetGrid()->GetSpacing());
+    units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpRegularGrid->GetSpacing());
     units::quantity<unit::length> equivalent_tissue_point_radius = units::root<3>(tissue_point_volume * 0.75 / M_PI);
     boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2 > > p_interaction_matrix(new boost::multi_array<units::quantity<unit::per_length>, 2>(boost::extents[num_points][num_points]));
     for (index iter = 0; iter < num_points; iter++)
@@ -367,13 +235,13 @@ boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Gre
 }
 
 template<unsigned DIM>
-boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GreensFunctionSolver<DIM>::GetTissueVesselInteractionMatrix()
+boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > AbstractGreensFunctionSolverBase<DIM>::GetTissueVesselInteractionMatrix()
 {
     typedef boost::multi_array<units::quantity<unit::per_length>, 2>::index index;
     unsigned num_sinks = mSinkCoordinates.size();
     unsigned num_subsegments = mSubSegmentCoordinates.size();
 
-    units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpGridCalculator->GetGrid()->GetSpacing());
+    units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpRegularGrid->GetSpacing());
     units::quantity<unit::length> equivalent_tissue_point_radius = units::root<3>(tissue_point_volume * 0.75 / M_PI);
     double coefficient = 1.0 / (4.0 * M_PI);
 
@@ -399,14 +267,14 @@ boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Gre
 }
 
 template<unsigned DIM>
-boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GreensFunctionSolver<DIM>::GetVesselTissueInteractionMatrix()
+boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > AbstractGreensFunctionSolverBase<DIM>::GetVesselTissueInteractionMatrix()
 {
     typedef boost::multi_array<units::quantity<unit::per_length>, 2>::index index;
     unsigned num_subsegments = mSubSegmentCoordinates.size();
     unsigned num_sinks = mSinkCoordinates.size();
     double coefficient = 1.0 / (4.0 * M_PI);
 
-    units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpGridCalculator->GetGrid()->GetSpacing());
+    units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpRegularGrid->GetSpacing());
     units::quantity<unit::length> equivalent_tissue_point_radius = units::root<3>(tissue_point_volume * 0.75 / M_PI);
 
     boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > p_interaction_matrix(new boost::multi_array<units::quantity<unit::per_length>, 2>(boost::extents[num_subsegments][num_sinks]));
@@ -431,7 +299,7 @@ boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Gre
 }
 
 template<unsigned DIM>
-void GreensFunctionSolver<DIM>::WriteSolution(std::map<std::string, std::vector<units::quantity<unit::concentration> > >& segmentPointData)
+void AbstractGreensFunctionSolverBase<DIM>::WriteSolution(std::map<std::string, std::vector<units::quantity<unit::concentration> > >& segmentPointData)
 {
     // Write the tissue point data
     RegularGridWriter writer;
@@ -474,5 +342,5 @@ void GreensFunctionSolver<DIM>::WriteSolution(std::map<std::string, std::vector<
 }
 
 // Explicit instantiation
-template class GreensFunctionSolver<2>;
-template class GreensFunctionSolver<3>;
+template class AbstractGreensFunctionSolverBase<2>;
+template class AbstractGreensFunctionSolverBase<3>;

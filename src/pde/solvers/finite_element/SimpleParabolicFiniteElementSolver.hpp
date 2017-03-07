@@ -33,73 +33,42 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef FINITEELEMENTSOLVER_HPP_
-#define FINITEELEMENTSOLVER_HPP_
+#ifndef SIMPLEPARABOLICFINITEELEMENTSOLVER_HPP_
+#define SIMPLEPARABOLICFINITEELEMENTSOLVER_HPP_
 
 #include "SmartPointers.hpp"
-#include "AbstractUnstructuredGridDiscreteContinuumSolver.hpp"
-#include "DiscreteContinuumMesh.hpp"
+#include "AbstractFiniteElementSolverBase.hpp"
 
 /**
- * A finite element solver for linear elliptic PDEs with multiple discrete sinks or sources.
+ * A finite element solver for parabolic PDEs with multiple discrete sinks or sources.
  */
 template<unsigned DIM>
-class FiniteElementSolver : public AbstractUnstructuredGridDiscreteContinuumSolver<DIM>
+class SimpleParabolicFiniteElementSolver : public AbstractFiniteElementSolverBase<DIM>
 {
-    /**
-     * Over-ride the base class solve method
-     */
-    using AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::Solve;
-
-    /**
-     * Use the chaste newton solver
-     */
-    bool mUseNewton;
-
-    /**
-     * An initial guess
-     */
-    std::vector<double> mGuess;
 
 public:
 
     /**
      * Constructor
      */
-    FiniteElementSolver();
+    SimpleParabolicFiniteElementSolver();
 
     /**
      * Destructor
      */
-    virtual ~FiniteElementSolver();
+    virtual ~SimpleParabolicFiniteElementSolver();
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a shared pointer to a class instance.
      */
-    static boost::shared_ptr<FiniteElementSolver<DIM> > Create();
+    static boost::shared_ptr<SimpleParabolicFiniteElementSolver<DIM> > Create();
 
     /**
      * Overridden solve method
      */
     void Solve();
 
-    /**
-     * Set the initial dimensionless guess
-     * @param guess the guess.
-     */
-    void SetGuess(const std::vector<double>& guess);
-
-    /**
-     * Use Chaste's simple newton solve
-     * @param useNewton use Chaste's simple newton solve
-     */
-    void SetUseSimpleNetonSolver(bool useNewton);
-
-    /**
-     * Overridden update method
-     */
-    void Update();
 };
 
-#endif /* FINITEELEMENTSOLVER_HPP_ */
+#endif /* SIMPLEPARABOLICFINITEELEMENTSOLVER_HPP_ */

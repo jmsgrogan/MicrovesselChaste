@@ -38,7 +38,7 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include <vector>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
-#include <vtkImageData.h>
+#include <vtkDataSet.h>
 #include <vtkSmartPointer.h>
 #include "UblasIncludes.hpp"
 #include "SmartPointers.hpp"
@@ -47,13 +47,22 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "UnitCollection.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "DistributedVectorFactory.hpp"
+#include "AbstractDiscreteContinuumGrid.hpp"
 
 /**
- * A class for describing regular grids, VTK and PETSc structures are used underneath
+ * A 'rectangular' grid with equal spacing in all directions. It can be used for
+ * Finite Difference solvers or lattice based angiogenesis models.
  */
 template<unsigned DIM>
-class RegularGrid
+class RegularGrid : public AbstractDiscreteContinuumGrid<DIM, DIM>
 {
+
+public:
+
+    using AbstractDiscreteContinuumGrid<DIM, DIM>::GetLocation;
+
+protected:
+
     /**
      * The spacing between grid points
      */
@@ -65,7 +74,7 @@ class RegularGrid
     c_vector<unsigned, 3> mDimensions;
 
     /**
-     * The extents of on this processor
+     * The extents (grid indices) on this processor
      */
     c_vector<unsigned, 6> mExtents;
 
@@ -75,41 +84,9 @@ class RegularGrid
     DimensionalChastePoint<DIM> mOrigin;
 
     /**
-     * The global grid in the form of vtk image data
-     */
-    vtkSmartPointer<vtkImageData> mpGlobalVtkGrid;
-
-    /**
-     * The local grid in the form of vtk image data
-     */
-    vtkSmartPointer<vtkImageData> mpLocalVtkGrid;
-
-    /**
-     * Is the VTK grid set up
-     */
-    bool mVtkGridIsSetUp;
-
-    /**
-     * A vector of neighbour indices
+     * A vector of GLOBAL neighbour indices
      */
     std::vector<std::vector<unsigned> > mNeighbourData;
-
-    /**
-     * The dimensionless volume of the bounding region for each point.
-     * This is not dimensionalised because we might be dealing with area or
-     * volume-like quantities, depending on dimension.
-     */
-    std::vector<double> mPointVolumes;
-
-    /**
-     * Storage for a single attribute value at grid points
-     */
-    std::vector<double> mPointValues;
-
-    /**
-     * The reference length scale, default in microns.
-     */
-    units::quantity<unit::length> mReferenceLength;
 
     /**
      * Factory for producing vectors over the number of nodes in the grid.
@@ -135,12 +112,12 @@ public:
     ~RegularGrid();
 
     /**
-     * Calculate neighbour indices for each grid point
+     * Calculate von Neumann neighbour indices for each grid point
      */
     void CalculateNeighbourData();
 
     /**
-     * Calculate neighbour indices for each grid point
+     * Calculate Moore neighbour indices for each grid point
      */
     void CalculateMooreNeighbourData();
 
@@ -159,51 +136,44 @@ public:
     boost::shared_ptr<DistributedVectorFactory> GetDistributedVectorFactory();
 
     /**
-     * Get the 1-D grid index for given x,y,z indices
+     * Get the GLOBAL grid index for given x,y,z indices
      * @param xIndex the grid x index
      * @param yIndex the grid y index
      * @param zIndex the grid z index
      * @return the grid 1-d index
      */
-    unsigned GetGlobal1dGridIndex(unsigned xIndex, unsigned yIndex, unsigned zIndex);
+    unsigned GetGlobalGridIndex(unsigned xIndex, unsigned yIndex, unsigned zIndex);
 
     /**
-     * Get the 1-D grid index for given x,y,z indices local on this process
+     * Get the LOCAL grid index for given x,y,z indices local on this process
      * @param xIndex the grid x index
      * @param yIndex the grid y index
      * @param zIndex the grid z index
      * @return the grid 1-d index
      */
-    unsigned GetLocal1dGridIndex(unsigned xIndex, unsigned yIndex, unsigned zIndex);
+    unsigned GetGridIndex(unsigned xIndex, unsigned yIndex, unsigned zIndex);
 
     /**
-     * Get the 1-D grid index for given x,y,z indices
-     * @param rLocation the point to get the nearest index to
-     * @return the 1-d index of the nearest grid point
-     */
-    unsigned GetNearestGlobalGridIndex(const DimensionalChastePoint<DIM>& rLocation);
-
-    /**
-     * Calculate local neighbour indices for each grid point
+     * Calculate GLOBAL von Neumann neighbour indices for each LOCAL grid point
      * @return a vector of neighbour indices for each grid point
      */
-    const std::vector<std::vector<unsigned> >& GetNeighbourData();
+    const std::vector<std::vector<unsigned> >& rGetNeighbourData();
 
     /**
-     * Calculate local neighbour indices for each grid point
+     * Calculate GLOBAL Moore neighbour indices for each LOCAL grid point
      * @return a vector of neighbour indices for each grid point
      */
-    const std::vector<std::vector<unsigned> >& GetMooreNeighbourData();
+    const std::vector<std::vector<unsigned> >& rGetMooreNeighbourData();
 
     /**
-     * Return the grid dimensions in x, y, z. Always dimension 3.
-     * @return the grid dimensions
+     * Return the GLOBAL grid dimensions in x, y, z. Always dimension 3.
+     * @return the GLOBAL grid dimensions
      */
     c_vector<unsigned, 3> GetDimensions();
 
     /**
-     * Return the grid extents on this processor
-     * @return the grid extents on this processor
+     * Return the LOCAL grid extents (i.e. the indices on this processor)
+     * @return the LOCAL grid extents
      */
     c_vector<unsigned, 6> GetExtents();
 
@@ -221,38 +191,7 @@ public:
      * @param gridIndex the 1d grid index
      * @return the location of the point
      */
-    DimensionalChastePoint<DIM> GetLocationOfLocal1dIndex(unsigned gridIndex);
-
-    /**
-     * Get the location of a point on the grid for given 1-d grid index
-     * @param gridIndex the 1d grid index
-     * @return the location of the point
-     */
-    DimensionalChastePoint<DIM> GetLocationOfGlobal1dIndex(unsigned gridIndex);
-
-    /**
-     * Get all of the grid locations
-     * @return a vector containing all grid locations in grid order
-     */
-    std::vector<DimensionalChastePoint<DIM> > GetGlobalLocations();
-
-    /**
-     * Get all of the grid locations
-     * @return a vector containing all grid locations in grid order
-     */
-    std::vector<DimensionalChastePoint<DIM> > GetLocalLocations();
-
-    /**
-     * Return the number of points in the grid
-     * @return the number of points in the grid
-     */
-    unsigned GetNumberOfGlobalPoints();
-
-    /**
-     * Return the number of points on this process
-     * @return the number of points on this process
-     */
-    unsigned GetNumberOfLocalPoints();
+    DimensionalChastePoint<DIM> GetLocationOfGlobalIndex(unsigned gridIndex);
 
     /**
      * Return the origin in x, y, z
@@ -268,27 +207,6 @@ public:
     units::quantity<unit::length> GetSpacing();
 
     /**
-     * Return the reference length scale
-     *
-     * @return the reference length scale
-     */
-    units::quantity<unit::length> GetReferenceLengthScale();
-
-    /**
-     * Return the grid in vtk format
-     *
-     * @return the grid in vtk format
-     */
-    vtkSmartPointer<vtkImageData> GetGlobalVtkGrid();
-
-    /**
-     * Return the grid in vtk format
-     *
-     * @return the grid in vtk format
-     */
-    vtkSmartPointer<vtkImageData> GetLocalVtkGrid();
-
-    /**
      * The bounding box for the grid point. In 2D the z bounds are +1 and -1 to
      * all the use of VTK filters. The scale is the grid's reference length scale.
      * @param xIndex the grid x index
@@ -300,7 +218,7 @@ public:
     c_vector<double,6> GetPointBoundingBox(unsigned xIndex, unsigned yIndex, unsigned zIndex, bool jiggle=false);
 
     /**
-     * The bounding box for the local grid point. In 2D the z bounds are +1 and -1 to
+     * The bounding box for the LOCAL grid point. In 2D the z bounds are +1 and -1 to
      * all the use of VTK filters. The scale is the grid's reference length scale.
      * @param gridIndex the grid index
      * @param jiggle increase the box size by a small amount to catch features half way between grid points
@@ -315,39 +233,14 @@ public:
      * @param jiggle increase the box size by a small amount to catch features half way between grid points
      * @return the DIMENSIONLESS volume for each point in the grid
      */
-    std::vector<double> GetPointVolumes(bool update=false, bool jiggle=false);
+    const std::vector<double>& rGetLocationVolumes(bool update=false, bool jiggle=false);
 
     /**
-     * Sample a function specified on the grid at the specified locations
-     * @param locations the sample locations
-     * @param values the known values at the grid points
-     * @param useVtk use VTK to do the sampling, faster but algorithm not clearly documented
-     * @return the grid spacing
-     */
-    std::vector<double> InterpolateGridValues(std::vector<DimensionalChastePoint<DIM> > locations,
-                                              std::vector<double> values, bool useVtk = false);
-
-    /**
-     * Is the input location in the bounding box of the grid point
-     * @param point the location of interest
-     * @param gridIndex the grid point of interest
-     * @return is the input location in the bounding box of the grid point
-     */
-    bool IsLocationInPointVolume(DimensionalChastePoint<DIM> point, unsigned gridIndex);
-
-    /**
-     * Is the point on the outer boundary of the domain
+     * Is the LOCAL index on the outer boundary of the domain
      * @param gridIndex the 1d grid index gridIndex
      * @return is the point on the outer boundary of the domain
      */
-    bool IsGlobalIndexOnBoundary(unsigned gridIndex);
-
-    /**
-     * Is the point on the outer boundary of the domain
-     * @param gridIndex the 1d grid index gridIndex
-     * @return is the point on the outer boundary of the domain
-     */
-    bool IsLocalIndexOnBoundary(unsigned gridIndex);
+    bool IsOnBoundary(unsigned gridIndex);
 
     /**
      * Is the point on the outer boundary of the domain
@@ -361,26 +254,23 @@ public:
     /**
      * Set the grid dimensions in x, y, z
      * @param dimensions the grid dimensions
+     * @param updateVtk update the vtk representation at this point
      */
-    void SetDimensions(c_vector<unsigned, 3> dimensions);
+    void SetDimensions(c_vector<unsigned, 3> dimensions, bool updateVtk=true);
 
     /**
      * Set the origin in x, y, z
      * @param origin the grid origin
+     * @param updateVtk update the vtk representation at this point
      */
-    void SetOrigin(DimensionalChastePoint<DIM> origin);
-
-    /**
-     * Set the values of a field at all points on the grid
-     * @param pointSolution the value of the field
-     */
-    void SetPointValues(std::vector<double> pointSolution);
+    void SetOrigin(DimensionalChastePoint<DIM> origin, bool updateVtk=true);
 
     /**
      * Set the grid spacing
      * @param spacing the grid spacing
+     * @param updateVtk update the vtk representation at this point
      */
-    void SetSpacing(units::quantity<unit::length> spacing);
+    void SetSpacing(units::quantity<unit::length> spacing, bool updateVtk=true);
 
     /**
      * Set the internal vtk representation of the grid

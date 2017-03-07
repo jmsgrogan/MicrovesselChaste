@@ -364,92 +364,116 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
 {
-    std::vector<DimensionalChastePoint<SPACE_DIM> > vertex_locations = mpDomain->GetVertexLocations();
-    std::vector<DimensionalChastePoint<SPACE_DIM> > hole_locations = mpDomain->GetHoleMarkers();
-    unsigned num_vertices = vertex_locations.size();
-    unsigned num_holes = hole_locations.size();
-    std::vector<boost::shared_ptr<Facet<SPACE_DIM> > > facets = mpDomain->GetFacets();
-    unsigned num_facets = facets.size();
-
-    class tetgen::tetgenio mesher_input, mesher_output;
-
-    tetgen::tetgenio::facet *f;
-    tetgen::tetgenio::polygon *p;
-    mesher_input.pointlist = new double[(num_vertices) * 3];
-    mesher_input.numberofpoints = num_vertices;
-
-    for (unsigned idx = 0; idx < num_vertices; idx++)
+    // Only do this on master, since we don't use the mesh from other processors anyway
+    if(PetscTools::AmMaster())
     {
-        c_vector<double, SPACE_DIM> vertex_location = vertex_locations[idx].GetLocation(mReferenceLength);
-        for (unsigned jdx = 0; jdx < 3; jdx++)
-        {
-            mesher_input.pointlist[3 * idx + jdx] = vertex_location[jdx];
-        }
-    }
+        std::vector<DimensionalChastePoint<SPACE_DIM> > vertex_locations = mpDomain->GetVertexLocations();
+        std::vector<DimensionalChastePoint<SPACE_DIM> > hole_locations = mpDomain->GetHoleMarkers();
+        unsigned num_vertices = vertex_locations.size();
+        unsigned num_holes = hole_locations.size();
+        std::vector<boost::shared_ptr<Facet<SPACE_DIM> > > facets = mpDomain->GetFacets();
+        unsigned num_facets = facets.size();
 
-    // Add the holes
-    mesher_input.holelist = new double[(num_holes) * 3];
-    mesher_input.numberofholes = num_holes;
-    for (unsigned idx = 0; idx < num_holes; idx++)
-    {
-        c_vector<double, SPACE_DIM> hole_location = hole_locations[idx].GetLocation(mReferenceLength);
-        for (unsigned jdx = 0; jdx < 3; jdx++)
-        {
-            mesher_input.holelist[3 * idx + jdx] = hole_location[jdx];
-        }
-    }
+        class tetgen::tetgenio mesher_input, mesher_output;
 
-    mesher_input.numberoffacets = num_facets;
-    mesher_input.facetlist = new tetgen::tetgenio::facet[num_facets];
-    mesher_input.facetmarkerlist = new int[num_facets];
-    for (unsigned idx = 0; idx < num_facets; idx++)
-    {
-        mesher_input.facetmarkerlist[idx] = 0;
-        f = &mesher_input.facetlist[idx];
-        std::vector<boost::shared_ptr<Polygon<SPACE_DIM> > > polygons = facets[idx]->GetPolygons();
-        f->numberofpolygons = polygons.size();
-        f->polygonlist = new tetgen::tetgenio::polygon[f->numberofpolygons];
-        f->numberofholes = 0;
-        f->holelist = NULL;
-        for (unsigned jdx = 0; jdx < polygons.size(); jdx++)
+        tetgen::tetgenio::facet *f;
+        tetgen::tetgenio::polygon *p;
+        mesher_input.pointlist = new double[(num_vertices) * 3];
+        mesher_input.numberofpoints = num_vertices;
+
+        for (unsigned idx = 0; idx < num_vertices; idx++)
         {
-            p = &f->polygonlist[jdx];
-            p->numberofvertices = polygons[jdx]->GetVertices().size();
-            p->vertexlist = new int[p->numberofvertices];
-            for (unsigned kdx = 0; kdx < polygons[jdx]->GetVertices().size(); kdx++)
+            c_vector<double, SPACE_DIM> vertex_location = vertex_locations[idx].GetLocation(mReferenceLength);
+            for (unsigned jdx = 0; jdx < 3; jdx++)
             {
-                p->vertexlist[kdx] = int(polygons[jdx]->GetVertices()[kdx]->GetIndex());
+                mesher_input.pointlist[3 * idx + jdx] = vertex_location[jdx];
             }
         }
-    }
 
-    if(mHoles.size() > 0)
-    {
-        unsigned num_holes = mHoles.size();
+        // Add the holes
         mesher_input.holelist = new double[(num_holes) * 3];
         mesher_input.numberofholes = num_holes;
         for (unsigned idx = 0; idx < num_holes; idx++)
         {
-            c_vector<double, SPACE_DIM> hole_location = mHoles[idx].GetLocation(mReferenceLength);
+            c_vector<double, SPACE_DIM> hole_location = hole_locations[idx].GetLocation(mReferenceLength);
             for (unsigned jdx = 0; jdx < 3; jdx++)
             {
                 mesher_input.holelist[3 * idx + jdx] = hole_location[jdx];
             }
         }
+
+        mesher_input.numberoffacets = num_facets;
+        mesher_input.facetlist = new tetgen::tetgenio::facet[num_facets];
+        mesher_input.facetmarkerlist = new int[num_facets];
+        for (unsigned idx = 0; idx < num_facets; idx++)
+        {
+            mesher_input.facetmarkerlist[idx] = 0;
+            f = &mesher_input.facetlist[idx];
+            std::vector<boost::shared_ptr<Polygon<SPACE_DIM> > > polygons = facets[idx]->GetPolygons();
+            f->numberofpolygons = polygons.size();
+            f->polygonlist = new tetgen::tetgenio::polygon[f->numberofpolygons];
+            f->numberofholes = 0;
+            f->holelist = NULL;
+            for (unsigned jdx = 0; jdx < polygons.size(); jdx++)
+            {
+                p = &f->polygonlist[jdx];
+                p->numberofvertices = polygons[jdx]->GetVertices().size();
+                p->vertexlist = new int[p->numberofvertices];
+                for (unsigned kdx = 0; kdx < polygons[jdx]->GetVertices().size(); kdx++)
+                {
+                    p->vertexlist[kdx] = int(polygons[jdx]->GetVertices()[kdx]->GetIndex());
+                }
+            }
+        }
+
+        if(mHoles.size() > 0)
+        {
+            unsigned num_holes = mHoles.size();
+            mesher_input.holelist = new double[(num_holes) * 3];
+            mesher_input.numberofholes = num_holes;
+            for (unsigned idx = 0; idx < num_holes; idx++)
+            {
+                c_vector<double, SPACE_DIM> hole_location = mHoles[idx].GetLocation(mReferenceLength);
+                for (unsigned jdx = 0; jdx < 3; jdx++)
+                {
+                    mesher_input.holelist[3 * idx + jdx] = hole_location[jdx];
+                }
+            }
+        }
+
+        std::string mesher_command = "pqQz";
+        if (mMaxElementArea > 0.0*unit::metres*unit::metres*unit::metres)
+        {
+            double mesh_size = mMaxElementArea/units::pow<3>(mReferenceLength);
+            mesher_command += "a" + boost::lexical_cast<std::string>(mesh_size);
+        }
+
+        // Library call - only do this on master
+        tetgen::tetrahedralize((char*) mesher_command.c_str(), &mesher_input, &mesher_output);
+        mpMesh->ImportDiscreteContinuumMeshFromTetgen(mesher_output, mesher_output.numberoftetrahedra, mesher_output.tetrahedronlist,
+                               mesher_output.numberoftrifaces, mesher_output.trifacelist, NULL);
+
+        // if we are running parallel don't assume the resulting mesh is the same on all procs. Do a write-read
+        // to make sure it is.
+        if(PetscTools::IsParallel())
+        {
+            {
+                TrianglesMeshWriter<ELEMENT_DIM,SPACE_DIM> mesh_writer("", "temp_mesh");
+                mesh_writer.WriteFilesUsingMesh(*mpMesh);
+            }
+        }
     }
 
-    std::string mesher_command = "pqQz";
-    if (mMaxElementArea > 0.0*unit::metres*unit::metres*unit::metres)
+    // if we are running parallel everyone needs to read the mesh back in
+    if(PetscTools::IsParallel())
     {
-        double mesh_size = mMaxElementArea/units::pow<3>(mReferenceLength);
-        mesher_command += "a" + boost::lexical_cast<std::string>(mesh_size);
+        PetscTools::Barrier();
+        OutputFileHandler output_handler("", false);
+        std::string output_dir = output_handler.GetOutputDirectoryFullPath();
+        TrianglesMeshReader<ELEMENT_DIM,SPACE_DIM> mesh_reader(output_dir+"temp_mesh");
+        mpMesh = boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> >(new DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>);
+        mpMesh->ConstructFromMeshReader(mesh_reader);
     }
-
-    // Library call
-    tetgen::tetrahedralize((char*) mesher_command.c_str(), &mesher_input, &mesher_output);
-    mpMesh->ImportDiscreteContinuumMeshFromTetgen(mesher_output, mesher_output.numberoftetrahedra, mesher_output.tetrahedronlist,
-                           mesher_output.numberoftrifaces, mesher_output.trifacelist, NULL);
-
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

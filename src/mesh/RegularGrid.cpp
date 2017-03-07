@@ -52,17 +52,12 @@ Copyright (c) 2005-2016, University of Oxford.
 
 template<unsigned DIM>
 RegularGrid<DIM>::RegularGrid() :
+        AbstractDiscreteContinuumGrid<DIM, DIM>(),
         mSpacing(BaseUnits::Instance()->GetReferenceLengthScale()),
         mDimensions(scalar_vector<unsigned>(3, 1)),
         mExtents(zero_vector<double>(6)),
         mOrigin(DimensionalChastePoint<DIM>(zero_vector<double>(DIM), BaseUnits::Instance()->GetReferenceLengthScale())),
-        mpGlobalVtkGrid(),
-        mpLocalVtkGrid(),
-        mVtkGridIsSetUp(false),
         mNeighbourData(),
-        mPointVolumes(),
-        mPointValues(),
-        mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
         mpDistributedVectorFactory()
 {
 
@@ -85,37 +80,38 @@ RegularGrid<DIM>::~RegularGrid()
 template<unsigned DIM>
 void RegularGrid<DIM>::CalculateNeighbourData()
 {
-    mNeighbourData = std::vector<std::vector<unsigned> >(GetNumberOfGlobalPoints());
-    for (unsigned kdx = 0; kdx < mDimensions[2]; kdx++)
+    unsigned num_points = this->GetNumberOfLocations();
+    mNeighbourData = std::vector<std::vector<unsigned> >(num_points);
+    for (unsigned kdx = mExtents[4]; kdx < mExtents[5]; kdx++)
     {
-        for (unsigned jdx = 0; jdx < mDimensions[1]; jdx++)
+        for (unsigned jdx = mExtents[2]; jdx < mExtents[3]; jdx++)
         {
-            for (unsigned idx = 0; idx < mDimensions[0]; idx++)
+            for (unsigned idx = mExtents[0]; idx < mExtents[1]; idx++)
             {
-                unsigned index = GetGlobal1dGridIndex(idx, jdx, kdx);
+                unsigned index = GetGridIndex(idx, jdx, kdx);
                 if (idx > 0)
                 {
-                    mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx - 1, jdx, kdx));
+                    mNeighbourData[index].push_back(GetGlobalGridIndex(idx - 1, jdx, kdx));
                 }
                 if (idx < mDimensions[0] - 1)
                 {
-                    mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx + 1, jdx, kdx));
+                    mNeighbourData[index].push_back(GetGlobalGridIndex(idx + 1, jdx, kdx));
                 }
                 if (jdx > 0)
                 {
-                    mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx, jdx - 1, kdx));
+                    mNeighbourData[index].push_back(GetGlobalGridIndex(idx, jdx - 1, kdx));
                 }
                 if (jdx < mDimensions[1] - 1)
                 {
-                    mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx, jdx + 1, kdx));
+                    mNeighbourData[index].push_back(GetGlobalGridIndex(idx, jdx + 1, kdx));
                 }
                 if (kdx > 0)
                 {
-                    mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx, jdx, kdx - 1));
+                    mNeighbourData[index].push_back(GetGlobalGridIndex(idx, jdx, kdx - 1));
                 }
                 if (kdx < mDimensions[2] - 1)
                 {
-                    mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx, jdx, kdx + 1));
+                    mNeighbourData[index].push_back(GetGlobalGridIndex(idx, jdx, kdx + 1));
                 }
             }
         }
@@ -123,22 +119,17 @@ void RegularGrid<DIM>::CalculateNeighbourData()
 }
 
 template<unsigned DIM>
-void RegularGrid<DIM>::SetPointValues(std::vector<double> pointSolution)
-{
-    mPointValues = pointSolution;
-}
-
-template<unsigned DIM>
 void RegularGrid<DIM>::CalculateMooreNeighbourData()
 {
-    mNeighbourData = std::vector<std::vector<unsigned> >(GetNumberOfGlobalPoints());
-    for (unsigned kdx = 0; kdx < mDimensions[2]; kdx++)
+    unsigned num_points = this->GetNumberOfLocations();
+    mNeighbourData = std::vector<std::vector<unsigned> >(num_points);
+    for (unsigned kdx = mExtents[4]; kdx < mExtents[5]; kdx++)
     {
-        for (unsigned jdx = 0; jdx < mDimensions[1]; jdx++)
+        for (unsigned jdx = mExtents[2]; jdx < mExtents[3]; jdx++)
         {
-            for (unsigned idx = 0; idx < mDimensions[0]; idx++)
+            for (unsigned idx = mExtents[0]; idx < mExtents[1]; idx++)
             {
-                unsigned index = GetGlobal1dGridIndex(idx, jdx, kdx);
+                unsigned index = GetGridIndex(idx, jdx, kdx);
 
                 // i-1 plane
                 if (idx > 0)
@@ -147,33 +138,33 @@ void RegularGrid<DIM>::CalculateMooreNeighbourData()
                     {
                         if(kdx>0)
                         {
-                            mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx-1, jdx-1, kdx-1));
+                            mNeighbourData[index].push_back(GetGlobalGridIndex(idx-1, jdx-1, kdx-1));
                         }
-                        mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx-1, jdx-1, kdx));
-                        if(kdx<mExtents[2] - 1)
+                        mNeighbourData[index].push_back(GetGlobalGridIndex(idx-1, jdx-1, kdx));
+                        if(kdx<mDimensions[2] - 1)
                         {
-                            mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx-1, jdx-1, kdx+1));
+                            mNeighbourData[index].push_back(GetGlobalGridIndex(idx-1, jdx-1, kdx+1));
                         }
                     }
                     if(kdx>0)
                     {
-                        mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx-1, jdx, kdx-1));
+                        mNeighbourData[index].push_back(GetGlobalGridIndex(idx-1, jdx, kdx-1));
                     }
-                    mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx-1, jdx, kdx));
-                    if(kdx<mExtents[2] - 1)
+                    mNeighbourData[index].push_back(GetGlobalGridIndex(idx-1, jdx, kdx));
+                    if(kdx<mDimensions[2] - 1)
                     {
-                        mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx-1, jdx, kdx+1));
+                        mNeighbourData[index].push_back(GetGlobalGridIndex(idx-1, jdx, kdx+1));
                     }
-                    if(jdx< mExtents[1] - 1)
+                    if(jdx< mDimensions[1] - 1)
                     {
                         if(kdx>0)
                         {
-                            mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx-1, jdx+1, kdx-1));
+                            mNeighbourData[index].push_back(GetGlobalGridIndex(idx-1, jdx+1, kdx-1));
                         }
-                        mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx-1, jdx+1, kdx));
-                        if(kdx<mExtents[2] - 1)
+                        mNeighbourData[index].push_back(GetGlobalGridIndex(idx-1, jdx+1, kdx));
+                        if(kdx<mDimensions[2] - 1)
                         {
-                            mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx-1, jdx+1, kdx+1));
+                            mNeighbourData[index].push_back(GetGlobalGridIndex(idx-1, jdx+1, kdx+1));
                         }
                     }
                 }
@@ -183,69 +174,69 @@ void RegularGrid<DIM>::CalculateMooreNeighbourData()
                 {
                     if(kdx>0)
                     {
-                        mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx, jdx-1, kdx-1));
+                        mNeighbourData[index].push_back(GetGlobalGridIndex(idx, jdx-1, kdx-1));
                     }
-                    mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx, jdx-1, kdx));
-                    if(kdx<mExtents[2] - 1)
+                    mNeighbourData[index].push_back(GetGlobalGridIndex(idx, jdx-1, kdx));
+                    if(kdx<mDimensions[2] - 1)
                     {
-                        mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx, jdx-1, kdx+1));
+                        mNeighbourData[index].push_back(GetGlobalGridIndex(idx, jdx-1, kdx+1));
                     }
                 }
                 if(kdx>0)
                 {
-                    mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx, jdx, kdx-1));
+                    mNeighbourData[index].push_back(GetGlobalGridIndex(idx, jdx, kdx-1));
                 }
-                if(kdx<mExtents[2] - 1)
+                if(kdx<mDimensions[2] - 1)
                 {
-                    mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx, jdx, kdx+1));
+                    mNeighbourData[index].push_back(GetGlobalGridIndex(idx, jdx, kdx+1));
                 }
-                if(jdx< mExtents[1] - 1)
+                if(jdx< mDimensions[1] - 1)
                 {
                     if(kdx>0)
                     {
-                        mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx, jdx+1, kdx-1));
+                        mNeighbourData[index].push_back(GetGlobalGridIndex(idx, jdx+1, kdx-1));
                     }
-                    mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx, jdx+1, kdx));
-                    if(kdx<mExtents[2] - 1)
+                    mNeighbourData[index].push_back(GetGlobalGridIndex(idx, jdx+1, kdx));
+                    if(kdx<mDimensions[2] - 1)
                     {
-                        mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx, jdx+1, kdx+1));
+                        mNeighbourData[index].push_back(GetGlobalGridIndex(idx, jdx+1, kdx+1));
                     }
                 }
 
                 // i+1 plane
-                if (idx < mExtents[0]-1)
+                if (idx < mDimensions[0]-1)
                 {
                     if(jdx>0)
                     {
                         if(kdx>0)
                         {
-                            mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx+1, jdx-1, kdx-1));
+                            mNeighbourData[index].push_back(GetGlobalGridIndex(idx+1, jdx-1, kdx-1));
                         }
-                        mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx+1, jdx-1, kdx));
-                        if(kdx<mExtents[2] - 1)
+                        mNeighbourData[index].push_back(GetGlobalGridIndex(idx+1, jdx-1, kdx));
+                        if(kdx<mDimensions[2] - 1)
                         {
-                            mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx+1, jdx-1, kdx+1));
+                            mNeighbourData[index].push_back(GetGlobalGridIndex(idx+1, jdx-1, kdx+1));
                         }
                     }
                     if(kdx>0)
                     {
-                        mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx+1, jdx, kdx-1));
+                        mNeighbourData[index].push_back(GetGlobalGridIndex(idx+1, jdx, kdx-1));
                     }
-                    mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx+1, jdx, kdx));
-                    if(kdx<mExtents[2] - 1)
+                    mNeighbourData[index].push_back(GetGlobalGridIndex(idx+1, jdx, kdx));
+                    if(kdx<mDimensions[2] - 1)
                     {
-                        mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx+1, jdx, kdx+1));
+                        mNeighbourData[index].push_back(GetGlobalGridIndex(idx+1, jdx, kdx+1));
                     }
-                    if(jdx< mExtents[1] - 1)
+                    if(jdx< mDimensions[1] - 1)
                     {
                         if(kdx>0)
                         {
-                            mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx+1, jdx+1, kdx-1));
+                            mNeighbourData[index].push_back(GetGlobalGridIndex(idx+1, jdx+1, kdx-1));
                         }
-                        mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx+1, jdx+1, kdx));
-                        if(kdx<mExtents[2] - 1)
+                        mNeighbourData[index].push_back(GetGlobalGridIndex(idx+1, jdx+1, kdx));
+                        if(kdx<mDimensions[2] - 1)
                         {
-                            mNeighbourData[index].push_back(GetGlobal1dGridIndex(idx+1, jdx+1, kdx+1));
+                            mNeighbourData[index].push_back(GetGlobalGridIndex(idx+1, jdx+1, kdx+1));
                         }
                     }
                 }
@@ -261,22 +252,15 @@ boost::shared_ptr<DistributedVectorFactory> RegularGrid<DIM>::GetDistributedVect
 }
 
 template<unsigned DIM>
-unsigned RegularGrid<DIM>::GetGlobal1dGridIndex(unsigned x_index, unsigned y_index, unsigned z_index)
+unsigned RegularGrid<DIM>::GetGlobalGridIndex(unsigned x_index, unsigned y_index, unsigned z_index)
 {
-    return x_index + mDimensions[0] * y_index + mDimensions[0] * mDimensions[1] * z_index;
+    return this->mpGlobalVtkGrid()->ComputePointId(x_index, y_index, z_index);
 }
 
 template<unsigned DIM>
-unsigned RegularGrid<DIM>::GetLocal1dGridIndex(unsigned x_index, unsigned y_index, unsigned z_index)
+unsigned RegularGrid<DIM>::GetGridIndex(unsigned x_index, unsigned y_index, unsigned z_index)
 {
-    if(x_index<mExtents[0] or x_index>=mExtents[1])
-    {
-        EXCEPTION("Requested local grid index not found on this processor.");
-    }
-
-    unsigned slice_width = 1 + mExtents[1] - mExtents[0];
-    unsigned slice_depth = 1 + mExtents[3] - mExtents[2];
-    return (x_index-mExtents[0]) + slice_width* y_index + slice_width * slice_depth * z_index;
+    return this->mpVtkGrid()->ComputePointId(x_index, y_index, z_index);
 }
 
 template<unsigned DIM>
@@ -292,7 +276,7 @@ c_vector<unsigned, 6> RegularGrid<DIM>::GetExtents()
 }
 
 template<unsigned DIM>
-const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::GetNeighbourData()
+const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::rGetNeighbourData()
 {
     if (mNeighbourData.size() == 0 or mNeighbourData.size() != GetNumberOfGlobalPoints())
     {
@@ -302,29 +286,13 @@ const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::GetNeighbourData()
 }
 
 template<unsigned DIM>
-const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::GetMooreNeighbourData()
+const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::rGetMooreNeighbourData()
 {
     if (mNeighbourData.size() == 0 or mNeighbourData.size() != GetNumberOfGlobalPoints())
     {
         CalculateMooreNeighbourData();
     }
     return mNeighbourData;
-}
-
-template<unsigned DIM>
-unsigned RegularGrid<DIM>::GetNearestGlobalGridIndex(const DimensionalChastePoint<DIM>& rLocation)
-{
-    c_vector<double, DIM> offsets = (rLocation - mOrigin).GetLocation(mReferenceLength);
-
-    double scale_factor = mReferenceLength / mSpacing;
-    unsigned x_index = round(offsets[0]*scale_factor);
-    unsigned y_index = round(offsets[1]*scale_factor);
-    unsigned z_index = 0;
-    if (DIM == 3)
-    {
-        z_index = round(offsets[2]*scale_factor);
-    }
-    return GetGlobal1dGridIndex(x_index, y_index, z_index);
 }
 
 template<unsigned DIM>
@@ -347,174 +315,34 @@ void RegularGrid<DIM>::GenerateFromPart(boost::shared_ptr<Part<DIM> > pPart, uni
     else
     {
         mDimensions[2] = 1;
-        mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0]/mReferenceLength, spatial_extents[2]/mReferenceLength, 0.0, mReferenceLength);
+        mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0]/mReferenceLength,
+                spatial_extents[2]/mReferenceLength, 0.0, mReferenceLength);
     }
     UpdateExtents();
-}
-
-template<unsigned DIM>
-units::quantity<unit::length> RegularGrid<DIM>::GetReferenceLengthScale()
-{
-    return mReferenceLength;
-}
-
-template<unsigned DIM>
-std::vector<double> RegularGrid<DIM>::InterpolateGridValues(
-        std::vector<DimensionalChastePoint<DIM> > locations, std::vector<double> values, bool useVtk)
-{
-    std::vector<double> sampled_values(locations.size(), 0.0);
-
-    if (!mVtkGridIsSetUp)
-    {
-        SetUpVtkGrid();
-    }
-
-    vtkSmartPointer<vtkDoubleArray> pPointData = vtkSmartPointer<vtkDoubleArray>::New();
-    pPointData->SetNumberOfComponents(1);
-    pPointData->SetNumberOfTuples(GetNumberOfGlobalPoints());
-    const std::string ny_name = "test";
-    pPointData->SetName(ny_name.c_str());
-    for (unsigned idx = 0; idx < GetNumberOfGlobalPoints(); idx++)
-    {
-        pPointData->SetValue(idx, values[idx]);
-    }
-    mpGlobalVtkGrid->GetPointData()->AddArray(pPointData);
-
-    // Sample the field at these locations
-    vtkSmartPointer<vtkPolyData> p_polydata = vtkSmartPointer<vtkPolyData>::New();
-    vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
-    p_points->SetNumberOfPoints(locations.size());
-    for (unsigned idx = 0; idx < locations.size(); idx++)
-    {
-        c_vector<double, DIM> scaled_location = locations[idx].GetLocation(mReferenceLength);
-        if (DIM == 3)
-        {
-            p_points->SetPoint(idx, scaled_location[0], scaled_location[1], scaled_location[2]);
-        }
-        else
-        {
-            p_points->SetPoint(idx, scaled_location[0], scaled_location[1], 0.0);
-        }
-    }
-    p_polydata->SetPoints(p_points);
-
-    vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
-    #if VTK_MAJOR_VERSION <= 5
-        p_probe_filter->SetInput(p_polydata);
-        p_probe_filter->SetSource(mpVtkGrid);
-    #else
-        p_probe_filter->SetInputData(p_polydata);
-        p_probe_filter->SetSourceData(mpGlobalVtkGrid);
-    #endif
-    p_probe_filter->Update();
-    vtkSmartPointer<vtkPointData> p_point_data = p_probe_filter->GetPolyDataOutput()->GetPointData();
-
-    unsigned num_points = p_point_data->GetArray("test")->GetNumberOfTuples();
-    for (unsigned idx = 0; idx < num_points; idx++)
-    {
-        sampled_values[idx] = p_point_data->GetArray("test")->GetTuple1(idx);
-    }
-    return sampled_values;
+    SetUpVtkGrid();
 }
 
 template<unsigned DIM>
 DimensionalChastePoint<DIM> RegularGrid<DIM>::GetLocation(unsigned x_index, unsigned y_index, unsigned z_index)
 {
-    double scale_factor = mSpacing/mReferenceLength;
-    c_vector<double, DIM> dimensionless_origin = mOrigin.GetLocation(mReferenceLength);
-    if(DIM == 2)
+    if (!this->mVtkRepresentationUpToDate)
     {
-        return DimensionalChastePoint<DIM>(double(x_index) * scale_factor + dimensionless_origin[0],
-                                           double(y_index) * scale_factor + dimensionless_origin[1], 0.0, mReferenceLength);
+        SetUpVtkGrid();
     }
-    else
-    {
-        return DimensionalChastePoint<DIM>(double(x_index) * scale_factor + dimensionless_origin[0],
-                                                              double(y_index) * scale_factor + dimensionless_origin[1],
-                                                              double(z_index) * scale_factor + dimensionless_origin[2], mReferenceLength);
-    }
+    c_vector<double, 3> loc;
+    this->mpGlobalVtkGrid()->GetPoint(this->mpGlobalVtkGrid()->ComputePointId(x_index, y_index, z_index), &loc);
+    return DimensionalChastePoint<DIM>(loc, this->mReferenceLength);
 }
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM> RegularGrid<DIM>::GetLocationOfGlobal1dIndex(unsigned grid_index)
+DimensionalChastePoint<DIM> RegularGrid<DIM>::GetLocationOfGlobalIndex(unsigned grid_index)
 {
-    unsigned mod_z = grid_index % (mDimensions[0] * mDimensions[1]);
-    unsigned z_index = (grid_index - mod_z) / (mDimensions[0] * mDimensions[1]);
-    unsigned mod_y = mod_z % mDimensions[0];
-    unsigned y_index = (mod_z - mod_y) / mDimensions[0];
-    unsigned x_index = mod_y;
-    unsigned dimless_spacing = mSpacing/mReferenceLength;
-    c_vector<double, DIM> dimensionless_origin = mOrigin.GetLocation(mReferenceLength);
-    if(DIM == 2)
+    if (!this->mVtkRepresentationUpToDate)
     {
-        return DimensionalChastePoint<DIM>(double(x_index) * dimless_spacing + dimensionless_origin[0],
-                                                              double(y_index) * dimless_spacing + dimensionless_origin[1], 0.0, mReferenceLength);
+        SetUpVtkGrid();
     }
-    else
-    {
-        return DimensionalChastePoint<DIM>(double(x_index) * dimless_spacing + dimensionless_origin[0],
-                                                              double(y_index) * dimless_spacing + dimensionless_origin[1],
-                                                              double(z_index) * dimless_spacing + dimensionless_origin[2], mReferenceLength);
-    }
-}
-
-template<unsigned DIM>
-DimensionalChastePoint<DIM> RegularGrid<DIM>::GetLocationOfLocal1dIndex(unsigned grid_index)
-{
-    unsigned mod_z = grid_index % (mExtents[0] * (mExtents[1]-1));
-    unsigned z_index = (grid_index - mod_z) / (mExtents[0] * (mExtents[1]-1));
-    unsigned mod_y = mod_z % mExtents[0];
-    unsigned y_index = (mod_z - mod_y) / mExtents[0];
-    unsigned x_index = mod_y;
-    unsigned dimless_spacing = mSpacing/mReferenceLength;
-    c_vector<double, DIM> dimensionless_origin = mOrigin.GetLocation(mReferenceLength);
-    if(DIM == 2)
-    {
-        return DimensionalChastePoint<DIM>(double(x_index) * dimless_spacing + dimensionless_origin[0],
-                                                              double(y_index) * dimless_spacing + dimensionless_origin[1], 0.0, mReferenceLength);
-    }
-    else
-    {
-        return DimensionalChastePoint<DIM>(double(x_index) * dimless_spacing + dimensionless_origin[0],
-                                                              double(y_index) * dimless_spacing + dimensionless_origin[1],
-                                                              double(z_index) * dimless_spacing + dimensionless_origin[2], mReferenceLength);
-    }
-}
-
-template<unsigned DIM>
-std::vector<DimensionalChastePoint<DIM> > RegularGrid<DIM>::GetGlobalLocations()
-{
-    std::vector<DimensionalChastePoint<DIM> > locations(GetNumberOfGlobalPoints());
-    for (unsigned idx = 0; idx < GetNumberOfGlobalPoints(); idx++)
-    {
-        locations[idx] = GetLocationOfGlobal1dIndex(idx);
-    }
-    return locations;
-}
-
-template<unsigned DIM>
-std::vector<DimensionalChastePoint<DIM> > RegularGrid<DIM>::GetLocalLocations()
-{
-    std::vector<DimensionalChastePoint<DIM> > locations(GetNumberOfLocalPoints());
-    for (unsigned idx = 0; idx < GetNumberOfLocalPoints(); idx++)
-    {
-        locations[idx] = GetLocationOfLocal1dIndex(idx);
-    }
-    return locations;
-}
-
-template<unsigned DIM>
-unsigned RegularGrid<DIM>::GetNumberOfGlobalPoints()
-{
-    return mDimensions[0] * mDimensions[1] * mDimensions[2];
-}
-
-template<unsigned DIM>
-unsigned RegularGrid<DIM>::GetNumberOfLocalPoints()
-{
-    return (1+ mExtents[1]- mExtents[0])*
-            (1+ mExtents[3]- mExtents[2])*
-            (1 + mExtents[5]- mExtents[4]);
+    this->mpGlobalVtkGrid()->GetPoint(grid_index, &loc);
+    return DimensionalChastePoint<DIM>(loc, this->mReferenceLength);
 }
 
 template<unsigned DIM>
@@ -530,47 +358,37 @@ units::quantity<unit::length> RegularGrid<DIM>::GetSpacing()
 }
 
 template<unsigned DIM>
-std::vector<double> RegularGrid<DIM>::GetPointVolumes(bool update, bool jiggle)
+const std::vector<double>& RegularGrid<DIM>::rGetLocationVolumes(bool update, bool jiggle)
 {
-    unsigned num_points = GetNumberOfGlobalPoints();
+    unsigned num_points = GetNumberOfLocations();
     if(update)
     {
-        mPointVolumes.clear();
+        this->mVolumes.clear();
         for (unsigned idx=0;idx<num_points; idx++)
         {
             c_vector<double,6> bbox = GetPointBoundingBox(idx, jiggle);
             double area = (bbox[3]-bbox[2])*(bbox[1]-bbox[0]);
             if(DIM==2)
             {
-                mPointVolumes.push_back(area);
+                this->mVolumes.push_back(area);
             }
             else
             {
-                mPointVolumes.push_back(area*(bbox[5]-bbox[4]));
+                this->mVolumes.push_back(area*(bbox[5]-bbox[4]));
             }
         }
     }
-    return mPointVolumes;
+    return this->mVolumes;
 }
 
 template<unsigned DIM>
-bool RegularGrid<DIM>::IsGlobalIndexOnBoundary(unsigned grid_index)
+bool RegularGrid<DIM>::IsOnBoundary(unsigned grid_index)
 {
-    unsigned mod_z = grid_index % (mDimensions[0] * mDimensions[1]);
-    unsigned z_index = (grid_index - mod_z) / (mDimensions[0] * mDimensions[1]);
-    unsigned mod_y = mod_z % mDimensions[0];
-    unsigned y_index = (mod_z - mod_y) / mDimensions[0];
-    unsigned x_index = mod_y;
-    return IsOnBoundary(x_index, y_index, z_index);
-}
-
-template<unsigned DIM>
-bool RegularGrid<DIM>::IsLocalIndexOnBoundary(unsigned grid_index)
-{
-    unsigned mod_z = grid_index % (mExtents[0] * (mExtents[1]-1));
-    unsigned z_index = (grid_index - mod_z) / (mExtents[0] * (mExtents[1]-1));
-    unsigned mod_y = mod_z % (mExtents[0]-1);
-    unsigned y_index = (mod_z - mod_y) / (mExtents[0]-1);
+    unsigned global_index = this->mLocalGlobalMap(grid_index);
+    unsigned mod_z = global_index % (mDimensions[0] * (mDimensions[1]-1));
+    unsigned z_index = (global_index - mod_z) / (mDimensions[0] * (mDimensions[1]-1));
+    unsigned mod_y = mod_z % (mDimensions[0]-1);
+    unsigned y_index = (mod_z - mod_y) / (mDimensions[0]-1);
     unsigned x_index = mod_y;
     return IsOnBoundary(x_index, y_index, z_index);
 }
@@ -599,8 +417,9 @@ bool RegularGrid<DIM>::IsOnBoundary(unsigned x_index, unsigned y_index, unsigned
 template<unsigned DIM>
 c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned gridIndex, bool jiggle)
 {
-    unsigned mod_z = gridIndex % (mDimensions[0] * mDimensions[1]);
-    unsigned z_index = (gridIndex - mod_z) / (mDimensions[0] * mDimensions[1]);
+    unsigned global_index = this->mLocalGlobalMap(grid_index);
+    unsigned mod_z = global_index % (mDimensions[0] * mDimensions[1]);
+    unsigned z_index = (global_index - mod_z) / (mDimensions[0] * mDimensions[1]);
     unsigned mod_y = mod_z % mDimensions[0];
     unsigned y_index = (mod_z - mod_y) / mDimensions[0];
     unsigned x_index = mod_y;
@@ -610,18 +429,12 @@ c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned gridIndex, boo
 template<unsigned DIM>
 c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsigned yIndex, unsigned zIndex, bool jiggle)
 {
-    units::quantity<unit::length> scale_factor = GetReferenceLengthScale();
+    units::quantity<unit::length> scale_factor = this->GetReferenceLengthScale();
     double dimensionless_spacing = GetSpacing()/scale_factor;
     double jiggle_size = 1.e-3 * dimensionless_spacing;
 
-    c_vector<double, 3> dimensionless_location;
-    dimensionless_location[0] = GetLocation(xIndex ,yIndex, zIndex).GetLocation(scale_factor)[0];
-    dimensionless_location[1] = GetLocation(xIndex ,yIndex, zIndex).GetLocation(scale_factor)[1];
-    if(DIM==3)
-    {
-        dimensionless_location[2] = GetLocation(xIndex ,yIndex, zIndex).GetLocation(scale_factor)[2];
-    }
-    else
+    c_vector<double, 3> dimensionless_location = GetLocation(xIndex ,yIndex, zIndex).GetLocation(scale_factor);
+    if(DIM==2)
     {
         dimensionless_location[2] = 0.0;
     }
@@ -693,97 +506,36 @@ c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsign
 }
 
 template<unsigned DIM>
-vtkSmartPointer<vtkImageData> RegularGrid<DIM>::GetGlobalVtkGrid()
-{
-    if (!mVtkGridIsSetUp)
-    {
-        SetUpVtkGrid();
-    }
-    return mpGlobalVtkGrid;
-}
-
-template<unsigned DIM>
-vtkSmartPointer<vtkImageData> RegularGrid<DIM>::GetLocalVtkGrid()
-{
-    if (!mVtkGridIsSetUp)
-    {
-        SetUpVtkGrid();
-    }
-    return mpLocalVtkGrid;
-}
-
-template<unsigned DIM>
-bool RegularGrid<DIM>::IsLocationInPointVolume(DimensionalChastePoint<DIM> point, unsigned gridIndex)
-{
-    bool point_in_box = false;
-    unsigned mod_z = gridIndex % (mDimensions[0] * mDimensions[1]);
-    unsigned z_index = (gridIndex - mod_z) / (mDimensions[0] * mDimensions[1]);
-    unsigned mod_y = mod_z % mDimensions[0];
-    unsigned y_index = (mod_z - mod_y) / mDimensions[0];
-    unsigned x_index = mod_y;
-
-    double dimensionless_spacing = mSpacing/mReferenceLength;
-    c_vector<double, DIM> dimensionless_origin = mOrigin.GetLocation(mReferenceLength);
-
-    double loc_x = (double(x_index) * dimensionless_spacing + dimensionless_origin[0]);
-    double loc_y = (double(y_index) * dimensionless_spacing + dimensionless_origin[1]);
-    double loc_z = 0.0;
-    if (DIM == 3)
-    {
-        loc_z = (double(z_index) * dimensionless_spacing + dimensionless_origin[2]);
-    }
-
-    c_vector<double, DIM> dimensionless_point = point.GetLocation(mReferenceLength);
-    if (dimensionless_point[0] >= loc_x - dimensionless_spacing / 2.0 && dimensionless_point[0] <= loc_x + dimensionless_spacing / 2.0)
-    {
-        if (dimensionless_point[1] >= loc_y - dimensionless_spacing / 2.0 && dimensionless_point[1] <= loc_y +dimensionless_spacing / 2.0)
-        {
-            if (DIM == 3)
-            {
-                if (dimensionless_point[2] >= loc_z - dimensionless_spacing / 2.0 && dimensionless_point[2] <= loc_z + dimensionless_spacing / 2.0)
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                return true;
-            }
-        }
-    }
-    return point_in_box;
-}
-
-template<unsigned DIM>
-void RegularGrid<DIM>::SetOrigin(DimensionalChastePoint<DIM> origin)
+void RegularGrid<DIM>::SetOrigin(DimensionalChastePoint<DIM> origin, bool updateVtk)
 {
     mOrigin = origin;
-    if(mVtkGridIsSetUp)
+    if(updateVtk)
     {
         SetUpVtkGrid();
     }
 }
 
 template<unsigned DIM>
-void RegularGrid<DIM>::SetSpacing(units::quantity<unit::length> spacing)
+void RegularGrid<DIM>::SetSpacing(units::quantity<unit::length> spacing, bool updateVtk)
 {
     mSpacing = spacing;
     GetPointVolumes(true, false);
 
-    if(mVtkGridIsSetUp)
+    if(updateVtk)
     {
         SetUpVtkGrid();
     }
 }
 
 template<unsigned DIM>
-void RegularGrid<DIM>::SetDimensions(c_vector<unsigned, 3> dimensions)
+void RegularGrid<DIM>::SetDimensions(c_vector<unsigned, 3> dimensions, bool updateVtk)
 {
     mDimensions = dimensions;
     UpdateExtents();
 
     GetPointVolumes(true, false);
-    if(mVtkGridIsSetUp)
+
+    if(updateVtk)
     {
         SetUpVtkGrid();
     }
@@ -793,25 +545,67 @@ template<unsigned DIM>
 void RegularGrid<DIM>::SetUpVtkGrid()
 {
     // Set up a VTK grid
-    mpGlobalVtkGrid = vtkSmartPointer<vtkImageData>::New();
-    mpLocalVtkGrid = vtkSmartPointer<vtkImageData>::New();
-    mpGlobalVtkGrid->SetDimensions(mDimensions[0], mDimensions[1], mDimensions[2]);
-    mpLocalVtkGrid->SetExtent(mExtents[0], mExtents[1], mExtents[2], mExtents[3], mExtents[4], mExtents[5]);
-    mpGlobalVtkGrid->SetSpacing(mSpacing/mReferenceLength, mSpacing/mReferenceLength, mSpacing/mReferenceLength);
-    mpLocalVtkGrid->SetSpacing(mSpacing/mReferenceLength, mSpacing/mReferenceLength, mSpacing/mReferenceLength);
+    vtkSmartPointer<vtkImageData> p_global_grid = vtkSmartPointer<vtkImageData>::New();
+    vtkSmartPointer<vtkImageData> p_local_grid = vtkSmartPointer<vtkImageData>::New();
+    p_global_grid->SetDimensions(mDimensions[0], mDimensions[1], mDimensions[2]);
+    p_local_grid->SetExtent(mExtents[0], mExtents[1], mExtents[2], mExtents[3], mExtents[4], mExtents[5]);
+    double dimensionless_spacing = mSpacing/this->mReferenceLength;
+    p_global_grid->SetSpacing(dimensionless_spacing, dimensionless_spacing, dimensionless_spacing);
+    p_local_grid->SetSpacing(dimensionless_spacing, dimensionless_spacing, dimensionless_spacing);
 
-    c_vector<double, DIM> dimless_origin = mOrigin.GetLocation(mReferenceLength);
+    c_vector<double, DIM> dimless_origin = mOrigin.GetLocation(this->mReferenceLength);
     if (DIM == 3)
     {
-        mpGlobalVtkGrid->SetOrigin(dimless_origin[0], dimless_origin[1], dimless_origin[2]);
-        mpLocalVtkGrid->SetOrigin(dimless_origin[0], dimless_origin[1], dimless_origin[2]);
+        p_global_grid->SetOrigin(&dimless_origin);
+        p_local_grid->SetOrigin(&dimless_origin);
     }
     else
     {
-        mpGlobalVtkGrid->SetOrigin(dimless_origin[0], dimless_origin[1], 0.0);
-        mpLocalVtkGrid->SetOrigin(dimless_origin[0], dimless_origin[1], 0.0);
+        p_global_grid->SetOrigin(dimless_origin[0], dimless_origin[1], 0.0);
+        p_local_grid->SetOrigin(dimless_origin[0], dimless_origin[1], 0.0);
     }
-    mVtkGridIsSetUp = true;
+    this->mpGlobalVtkGrid = p_global_grid;
+    this->mpVtkGrid = p_local_grid;
+
+    // Label the grid partitioning
+    std::vector<unsigned> global_lows = mpDistributedVectorFactory->rGetGlobalLows();
+
+    vtkSmartPointer<vtkIntArray> p_cell_data = vtkSmartPointer<vtkIntArray>::New();
+    p_cell_data->SetName("Processor Num");
+
+    for(unsigned idx=0;idx<this->mpGlobalVtkGrid->GetNumberOfPoints(); idx++)
+    {
+        if(global_lows.size()>1)
+        {
+            for(unsigned jdx=0;jdx<global_lows.size()-1;jdx++)
+            {
+                if(idx>=global_lows[jdx] and idx<=global_lows[jdx+1]-1)
+                {
+                    p_cell_data->InsertNextTuple1(jdx);
+                }
+            }
+        }
+        else
+        {
+            p_cell_data->InsertNextTuple1(0);
+        }
+    }
+    this->mpGlobalVtkGrid->GetCellData()->AddArray(p_cell_data);
+
+    // Set up the local global map and grid locations
+    unsigned lo = mpDistributedVectorFactory->GetLow();
+    this->mLocalGlobalMap.clear();
+    this->mpGridLocations = vtkSmartPointer<vtkPoints>::New();
+    for(unsigned idx=0;idx<this->mpVtkGrid->GetNumberOfPoints(); idx++)
+    {
+        this->mpGridLocations.InsertNextPoint(this->mpVtkGrid->GetPoint(idx));
+        this->mLocalGlobalMap.append(idx+lo);
+    }
+
+    this->mVtkRepresentationUpToDate = true;
+
+    // Set up the cell locator
+    this->SetUpVtkCellLocator();
 }
 
 template<unsigned DIM>
@@ -835,6 +629,8 @@ void RegularGrid<DIM>::UpdateExtents()
     mod_y = mod_z % mDimensions[0];
     mExtents[3] = (mod_z - mod_y) / mDimensions[0];
     mExtents[1] = mod_y;
+
+    this->mVtkRepresentationUpToDate = false;
 }
 
 template<unsigned DIM>
@@ -842,7 +638,7 @@ void RegularGrid<DIM>::Write(boost::shared_ptr<OutputFileHandler> pFileHandler)
 {
     RegularGridWriter writer;
     writer.SetFilename(pFileHandler->GetOutputDirectoryFullPath() + "/grid.vti");
-    writer.SetImage(GetGlobalVtkGrid());
+    writer.SetImage(vtkImageData::SafeDownCast(this->GetGlobalVtkGrid()));
     writer.Write();
 }
 

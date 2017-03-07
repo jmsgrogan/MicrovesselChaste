@@ -69,7 +69,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > SolutionDependentDi
         EXCEPTION("A regular grid is required for this type of source");
     }
 
-    unsigned num_points = this->mpGridCalculator->GetNumberOfLocations();
+    unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
     std::vector<units::quantity<unit::concentration_flow_rate> > values(num_points, 0.0*unit::mole_per_metre_cubed_per_second);
     if(mpSolution.size() != num_points)
     {
@@ -91,7 +91,7 @@ std::vector<units::quantity<unit::rate> > SolutionDependentDiscreteSource<DIM>::
         EXCEPTION("A regular grid is required for this type of source");
     }
 
-    unsigned num_points = this->mpGridCalculator->GetNumberOfLocations();
+    unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
     std::vector<units::quantity<unit::rate> > values(num_points, 0.0*unit::per_second);
     if(mpSolution.size() != num_points)
     {

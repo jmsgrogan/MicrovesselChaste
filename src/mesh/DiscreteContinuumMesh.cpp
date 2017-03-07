@@ -43,6 +43,9 @@ Copyright (c) 2005-2016, University of Oxford.
 #include <vtkPoints.h>
 #include <vtkTetra.h>
 #include <vtkGenericCell.h>
+#include <vtkThreshold.h>
+#include <vtkVersion.h>
+#include <vtkUnstructuredGrid.h>
 #include "Exception.hpp"
 #include "Warnings.hpp"
 #include "Facet.hpp"
@@ -51,18 +54,21 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "Element.hpp"
 #include "UblasVectorInclude.hpp"
 #include "AbstractTetrahedralMesh.hpp"
-#include "VtkMeshWriter.hpp"
 #include "BaseUnits.hpp"
+#include <parmetis.h>
+#if (PARMETIS_MAJOR_VERSION >= 4) //ParMETIS 4.x and above
+//Redefine the index type so that we can still use the old name "idxtype"
+#define idxtype idx_t
+#else
+//Old version of ParMETIS used "float" which may appear elsewhere in, for example, tetgen
+#define real_t float
+#endif
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::DiscreteContinuumMesh() :
-    mAttributes(),
-    mVolumes(),
-    mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
-    mpVtkMesh(),
-    mpVtkCellLocator(vtkSmartPointer<vtkCellLocator>::New()),
-    mVtkRepresentationUpToDate(false),
-    mNodalData()
+    AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>(),
+    mpNodeLocations(),
+    mNodeData()
 {
 
 }
@@ -81,131 +87,271 @@ DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::~DiscreteContinuumMesh()
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::length> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetReferenceLengthScale()
+void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::AddNodalData(const std::vector<double>& rPointValues,
+            const std::string& rName = "Default Location Data")
 {
-    return mReferenceLength;
+
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-vtkSmartPointer<vtkUnstructuredGrid> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetAsVtkUnstructuredGrid()
+std::vector<unsigned> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetElementPartitioning()
 {
-    if(!mVtkRepresentationUpToDate)
+    if(PetscTools::IsSequential())
     {
-        mpVtkMesh = vtkSmartPointer<vtkUnstructuredGrid>::New();
-        vtkSmartPointer<vtkPoints> p_vtk_points = vtkSmartPointer<vtkPoints>::New();
-        vtkSmartPointer<vtkDoubleArray> p_point_data = vtkSmartPointer<vtkDoubleArray>::New();
-        p_point_data->SetName("Nodal Values");
-
-        std::vector<c_vector<double, SPACE_DIM> > node_locations = GetNodeLocations();
-        p_vtk_points->SetNumberOfPoints(node_locations.size());
-        for(unsigned idx=0; idx<node_locations.size(); idx++)
-        {
-            if(SPACE_DIM==3)
-            {
-                p_vtk_points->InsertPoint(idx, node_locations[idx][0], node_locations[idx][1], node_locations[idx][2]);
-            }
-            else
-            {
-                p_vtk_points->InsertPoint(idx, node_locations[idx][0], node_locations[idx][1], 0.0);
-            }
-
-            if(mNodalData.size()==node_locations.size())
-            {
-                p_point_data->InsertNextTuple1(mNodalData[idx]);
-            }
-        }
-        mpVtkMesh->SetPoints(p_vtk_points);
-        if(mNodalData.size()==node_locations.size())
-        {
-            mpVtkMesh->GetPointData()->AddArray(p_point_data);
-        }
-
-        // Add vtk tets or triangles
-        std::vector<std::vector<unsigned> > element_connectivity =  GetConnectivity();
-        unsigned num_elements = element_connectivity.size();
-        mpVtkMesh->Allocate(num_elements, num_elements);
-
-        for(unsigned idx=0; idx<num_elements; idx++)
-        {
-            if(ELEMENT_DIM==3)
-            {
-                vtkSmartPointer<vtkTetra> p_vtk_element = vtkSmartPointer<vtkTetra>::New();
-                unsigned num_nodes = element_connectivity[idx].size();
-                for(unsigned jdx=0; jdx<num_nodes; jdx++)
-                {
-                    p_vtk_element->GetPointIds()->SetId(jdx, element_connectivity[idx][jdx]);
-                }
-                mpVtkMesh->InsertNextCell(p_vtk_element->GetCellType(), p_vtk_element->GetPointIds());
-            }
-            else
-            {
-                vtkSmartPointer<vtkTriangle> p_vtk_element = vtkSmartPointer<vtkTriangle>::New();
-                unsigned num_nodes = element_connectivity[idx].size();
-                for(unsigned jdx=0; jdx<num_nodes; jdx++)
-                {
-                    p_vtk_element->GetPointIds()->SetId(jdx, element_connectivity[idx][jdx]);
-                }
-                mpVtkMesh->InsertNextCell(p_vtk_element->GetCellType(), p_vtk_element->GetPointIds());
-            }
-        }
-        mpVtkCellLocator = vtkSmartPointer<vtkCellLocator>::New();
-        mpVtkCellLocator->SetDataSet(mpVtkMesh);
-        mpVtkCellLocator->BuildLocator();
-
-        mVtkRepresentationUpToDate = true;
+        return std::vector<unsigned>(this->GetNumElements(), 0);
     }
-    return mpVtkMesh;
+    else
+    {
+        PetscTools::Barrier();
+
+        // Get the mesh dual graph - similar to DistributedTetrahedralMesh method
+        const unsigned num_elements = this->GetNumElements();
+        const unsigned num_procs = PetscTools::GetNumProcs();
+        const unsigned local_proc_index = PetscTools::GetMyRank();
+
+        // Initial assignment of elements to procs
+        boost::scoped_array<idxtype> element_distribution(new idxtype[num_procs+1]);
+        boost::scoped_array<int> element_counts(new int[num_procs]);
+        element_distribution[0] = 0;
+        for (unsigned proc_index=1; proc_index<num_procs; proc_index++)
+        {
+            element_distribution[proc_index] = element_distribution[proc_index-1] + num_elements/num_procs;
+            element_counts[proc_index-1] = element_distribution[proc_index] - element_distribution[proc_index-1];
+        }
+        element_distribution[num_procs] = num_elements;
+        element_counts[num_procs-1] = element_distribution[num_procs] - element_distribution[num_procs-1];
+
+        /*
+         *  Create distributed mesh data structure
+         */
+        idxtype first_local_element = element_distribution[local_proc_index];
+        idxtype last_plus_one_element = element_distribution[local_proc_index+1];
+        idxtype num_local_elements = last_plus_one_element - first_local_element;
+
+        boost::scoped_array<idxtype> eind(new idxtype[num_local_elements*(ELEMENT_DIM+1)]);
+        boost::scoped_array<idxtype> eptr(new idxtype[num_local_elements+1]);
+        unsigned counter = 0;
+        for (idxtype element_index = 0; element_index < num_local_elements; element_index++)
+        {
+            eptr[element_index] = counter;
+            for (unsigned i=0; i<ELEMENT_DIM+1; i++)
+            {
+                eind[counter++] = this->GetElement(element_index+first_local_element)->GetNode(i)->GetIndex();
+            }
+        }
+        eptr[num_local_elements] = counter;
+
+        // Get the graph
+        idxtype numflag = 0; // index from 0
+        idxtype ncommonnodes = 2;
+        if(ELEMENT_DIM==3)
+        {
+            ncommonnodes = 3;
+        }
+        MPI_Comm communicator = PETSC_COMM_WORLD;
+
+        idxtype* xadj;
+        idxtype* adjncy;
+        ParMETIS_V3_Mesh2Dual(element_distribution.get(), eptr.get(), eind.get(),
+                              &numflag, &ncommonnodes, &xadj, &adjncy, &communicator);
+
+        // Get rid of (maybe large) arrays as soon as they're no longer needed, rather than at end of scope
+        eind.reset();
+        eptr.reset();
+
+        // Get the element distribution
+        idxtype weight_flag = 0; // unweighted graph
+        idxtype n_constraints = 1; // number of weights that each vertex has (number of balance constraints)
+        idxtype n_subdomains = PetscTools::GetNumProcs();
+        idxtype options[3]; // extra options
+        options[0] = 0; // ignore extra options
+        idxtype edgecut;
+        boost::scoped_array<real_t> tpwgts(new real_t[n_subdomains]);
+        real_t ubvec_value = (real_t)1.05;
+        for (unsigned proc=0; proc<PetscTools::GetNumProcs(); proc++)
+        {
+            tpwgts[proc] = ((real_t)1.0)/n_subdomains;
+        }
+
+        boost::scoped_array<idxtype> local_partition(new idxtype[num_local_elements]);
+
+        ParMETIS_V3_PartKway(element_distribution.get(), xadj, adjncy, NULL, NULL, &weight_flag, &numflag,
+                             &n_constraints, &n_subdomains, tpwgts.get(), &ubvec_value,
+                             options, &edgecut, local_partition.get(), &communicator);
+        tpwgts.reset();
+
+        boost::scoped_array<idxtype> global_element_partition(new idxtype[num_elements]);
+
+        //idxtype is normally int (see metis-4.0/Lib/struct.h 17-22) but is 64bit on Windows
+        MPI_Datatype mpi_idxtype = MPI_LONG_LONG_INT;
+        if (sizeof(idxtype) == sizeof(int))
+        {
+            mpi_idxtype = MPI_INT;
+        }
+
+        boost::scoped_array<int> int_element_distribution(new int[num_procs+1]);
+        for (unsigned i=0; i<num_procs+1; ++i)
+        {
+            int_element_distribution[i] = element_distribution[i];
+        }
+
+        MPI_Allgatherv(local_partition.get(), num_local_elements, mpi_idxtype,
+                       global_element_partition.get(), element_counts.get(),
+                       int_element_distribution.get(), mpi_idxtype, PETSC_COMM_WORLD);
+        local_partition.reset();
+
+        // This defeats the original purpose of the scoped array for global element dist, but use it for
+        // now.
+        std::vector<unsigned> element_partitioning = std::vector<unsigned>(num_elements);
+        for (unsigned elem_index=0; elem_index<num_elements; elem_index++)
+        {
+            element_partitioning[elem_index] = global_element_partition[elem_index];
+        }
+
+        free(xadj);
+        free(adjncy);
+        PetscTools::Barrier();
+        return element_partitioning;
+    }
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-std::vector<unsigned> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetElementRegionMarkers()
+void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetUpVtkGrid()
 {
-    return mAttributes;
-}
+    vtkSmartPointer<vtkUnstructuredGrid> p_grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
+    vtkSmartPointer<vtkPoints> p_vtk_points = vtkSmartPointer<vtkPoints>::New();
+    vtkSmartPointer<vtkDoubleArray> p_point_data = vtkSmartPointer<vtkDoubleArray>::New();
+    p_point_data->SetName("Nodal Values");
 
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-std::vector<c_vector<double, SPACE_DIM> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetElementCentroids()
-{
-    std::vector<c_vector<double, SPACE_DIM> > centroids(this->GetNumElements());
+    unsigned num_nodes = AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetNumNodes();
+    p_vtk_points->SetNumberOfPoints(num_nodes);
+    for(unsigned idx=0; idx<num_nodes; idx++)
+    {
+        c_vector<double, SPACE_DIM> loc = AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetNode(idx)->rGetLocation();
+        if(SPACE_DIM==3)
+        {
+            p_vtk_points->InsertPoint(idx, &loc);
+        }
+        else
+        {
+            p_vtk_points->InsertPoint(idx, loc[0], loc[1], 0.0);
+        }
+        if(this->mPointData.size()==num_nodes)
+        {
+            p_point_data->InsertNextTuple1(this->mPointData[idx]);
+        }
+    }
+    p_grid->SetPoints(p_vtk_points);
+    if(this->mPointData.size()==node_locations.size())
+    {
+        p_grid->GetPointData()->AddArray(p_point_data);
+    }
+
+    // Add vtk tets or triangles
+    std::vector<std::vector<unsigned> > element_connectivity =  GetConnectivity();
+    unsigned num_elements = element_connectivity.size();
+    p_grid->Allocate(num_elements, num_elements);
+
+    for(unsigned idx=0; idx<num_elements; idx++)
+    {
+        if(ELEMENT_DIM==3)
+        {
+            vtkSmartPointer<vtkTetra> p_vtk_element = vtkSmartPointer<vtkTetra>::New();
+            unsigned num_nodes = element_connectivity[idx].size();
+            for(unsigned jdx=0; jdx<num_nodes; jdx++)
+            {
+                p_vtk_element->GetPointIds()->SetId(jdx, element_connectivity[idx][jdx]);
+            }
+            p_grid->InsertNextCell(p_vtk_element->GetCellType(), p_vtk_element->GetPointIds());
+        }
+        else
+        {
+            vtkSmartPointer<vtkTriangle> p_vtk_element = vtkSmartPointer<vtkTriangle>::New();
+            unsigned num_nodes = element_connectivity[idx].size();
+            for(unsigned jdx=0; jdx<num_nodes; jdx++)
+            {
+                p_vtk_element->GetPointIds()->SetId(jdx, element_connectivity[idx][jdx]);
+            }
+            p_grid->InsertNextCell(p_vtk_element->GetCellType(), p_vtk_element->GetPointIds());
+        }
+    }
+
+    // Assign the processor number to the cells
+    std::vector<unsigned> element_partitioning = GetElementPartitioning();
+    vtkSmartPointer<vtkIntArray> p_cell_data = vtkSmartPointer<vtkIntArray>::New();
+    p_cell_data->SetName("Processor Num");
+
+    vtkSmartPointer<vtkIntArray> p_global_num_data = vtkSmartPointer<vtkIntArray>::New();
+    p_global_num_data->SetName("Global Num");
+    for(unsigned idx=0;idx<element_partitioning.size(); idx++)
+    {
+        p_global_num_data->InsertNextTuple1(idx);
+        p_cell_data->InsertNextTuple1(element_partitioning[idx]);
+    }
+    p_grid->GetCellData()->AddArray(p_cell_data);
+    p_grid->GetCellData()->AddArray(p_global_num_data);
+
+    // Set up the local grid
+    if(PetscTools::IsSequential())
+    {
+        this->mpGlobalVtkGrid = p_grid;
+        this->mpVtkGrid = p_grid;
+    }
+    else
+    {
+        unsigned local_proc_index = PetscTools::GetMyRank();
+        vtkSmartPointer<vtkThreshold> p_threshold = vtkSmartPointer<vtkThreshold>::New();
+        p_threshold->SetInputData(p_grid);
+        p_threshold->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_CELLS, "Processor Num");
+        p_threshold->ThresholdBetween(local_proc_index, local_proc_index);
+        p_threshold->Update();
+        this->mpGlobalVtkGrid = p_grid;
+        this->mpVtkGrid = p_threshold->GetOutput();
+    }
+
+    // Get the local to global map
+    this->mLocalGlobalMap.clear();
+    for(unsigned idx=0;idx<this->mpVtkGrid->GetNumberOfPoints(); idx++)
+    {
+        this->mLocalGlobalMap.append(p_grid->GetPointData()->GetArray("Global Num")->GetTuple1(idx));
+    }
+
+    // Update the locations with element centroids
+    this->mpGridLocations = vtkSmartPointer<vtkPoints>::New();
     for(unsigned idx=0; idx<this->GetNumElements(); idx++)
     {
-        centroids[idx] = this->GetElement(idx)->CalculateCentroid();
+        this->mpGridLocations[idx] = this->GetElement(this->mLocalGlobalMap[idx])->CalculateCentroid();
     }
-    return centroids;
+
+    this->mVtkRepresentationUpToDate = true;
+    this->SetUpVtkCellLocator();
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-vtkSmartPointer<vtkCellLocator> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetVtkCellLocator()
+DimensionalChastePoint<SPACE_DIM> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetLocationOfGlobalIndex(unsigned index)
 {
-    return mpVtkCellLocator;
+    return this->GetElement(index)->CalculateCentroid();
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-std::vector<double> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetElementVolumes()
+const std::vector<double>& DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::rGetLocationVolumes(bool update, bool jiggle)
 {
-    if(mVolumes.size()!=this->GetNumElements())
+    if(!update)
     {
-        mVolumes.clear();
-        for(unsigned idx=0; idx<this->GetNumElements(); idx++)
+        return this->mVolumes;
+    }
+    if(this->mVolumes.size()!=this->GetNumberOfLocations())
+    {
+        this->mVolumes.clear();
+        for(unsigned idx=0; idx<this->GetNumberOfLocations(); idx++)
         {
             double determinant = 0.0;
             c_matrix<double, ELEMENT_DIM, SPACE_DIM> jacobian;
-            this->GetElement(idx)->CalculateJacobian(jacobian, determinant);
-            mVolumes.push_back(this->GetElement(idx)->GetVolume(determinant));
+            this->GetElement(this->mLocalGlobalMap[idx])->CalculateJacobian(jacobian, determinant);
+            this->mVolumes.push_back(this->GetElement(this->mLocalGlobalMap[idx])->GetVolume(determinant));
         }
     }
-    return mVolumes;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetNodalData(std::vector<double> rNodalValues)
-{
-    mNodalData.clear();
-    for(unsigned idx=0; idx<rNodalValues.size(); idx++)
-    {
-        mNodalData.push_back(rNodalValues[idx]);
-    }
-    mVtkRepresentationUpToDate = false;
+    return this->mVolumes;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -227,27 +373,9 @@ std::vector<std::vector<unsigned> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-std::vector<c_vector<double, SPACE_DIM> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetNodeLocations()
+vtkSmartPointer<vtkPoints> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetNodeLocations()
 {
-    unsigned num_nodes = AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetNumNodes();
-    std::vector<c_vector<double, SPACE_DIM> > locations(num_nodes);
-    for (unsigned idx = 0; idx < num_nodes; idx++)
-    {
-        locations[idx] = AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetNode(idx)->rGetLocation();
-    }
-    return locations;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-std::vector<DimensionalChastePoint<SPACE_DIM> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetNodeLocationsAsPoints()
-{
-    unsigned num_nodes = AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetNumNodes();
-    std::vector<DimensionalChastePoint<SPACE_DIM> > locations(num_nodes);
-    for (unsigned idx = 0; idx < num_nodes; idx++)
-    {
-        locations[idx] = DimensionalChastePoint<SPACE_DIM>(AbstractTetrahedralMesh<ELEMENT_DIM, SPACE_DIM>::GetNode(idx)->rGetLocation(), mReferenceLength);
-    }
-    return locations;
+    return mpNodeLocations;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -375,14 +503,7 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::ImportDiscreteContinuumMeshF
             }
         }
     }
-
     this->RefreshJacobianCachedData();
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetAttributes(std::vector<unsigned> attributes)
-{
-    mAttributes = attributes;
 }
 
 // Explicit instantiation

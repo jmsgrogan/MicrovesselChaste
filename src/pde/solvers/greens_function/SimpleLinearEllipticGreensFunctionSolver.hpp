@@ -33,83 +33,43 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef ABSTRACTREGULARGRIDDISCRETECONTINUUMSOLVER_HPP_
-#define ABSTRACTREGULARGRIDDISCRETECONTINUUMSOLVER_HPP_
+#ifndef SIMPLELINEARELLIPTICGREENSFUNCTIONSOLVER_HPP_
+#define SIMPLELINEARELLIPTICGREENSFUNCTIONSOLVER_HPP_
 
 #include <vector>
 #include <string>
-#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
-#include <vtkImageData.h>
-#include <vtkSmartPointer.h>
+#include <map>
+#include <boost/multi_array.hpp>
 #include "SmartPointers.hpp"
-#include "UblasIncludes.hpp"
-#include "AbstractDiscreteContinuumSolver.hpp"
+#include "AbstractGreensFunctionSolverBase.hpp"
 #include "UnitCollection.hpp"
-#include "RegularGrid.hpp"
 
 /**
- * An abstract solver class for DiscreteContinuum continuum-discrete problems using structured grids.
- * Concrete classes can solve PDEs or perform other computations based on interpolation
- * of discrete entities (points/cells, lines/vessels) onto structured grids.
+ * A class for solving diffusion-reaction PDEs based on the Greens Function method of Secomb and co-workers.
+ *
+ * This class is specialized for linear elliptic PDEs. See base class for details.
  */
 template<unsigned DIM>
-class AbstractRegularGridDiscreteContinuumSolver : public AbstractDiscreteContinuumSolver<DIM>
+class SimpleLinearEllipticGreensFunctionSolver : public AbstractGreensFunctionSolverBase<DIM>
 {
 
-protected:
-
-    boost::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
-
 public:
-
-    using AbstractDiscreteContinuumSolver<DIM>::UpdateSolution;
 
     /**
      * Constructor
      */
-    AbstractRegularGridDiscreteContinuumSolver();
+    SimpleLinearEllipticGreensFunctionSolver();
 
     /**
      * Destructor
      */
-    virtual ~AbstractRegularGridDiscreteContinuumSolver();
+    ~SimpleLinearEllipticGreensFunctionSolver();
 
     /**
-     * Overridden Setup method.
+     * Over-ridden solve
      */
-    virtual void Setup();
+    void Solve();
 
-    /**
-     * Update the cell data as passed in
-     */
-    virtual void UpdateCellData();
-
-    /**
-     * Update the solution using dimensionless data
-     * @param rData the data
-     */
-    virtual void UpdateSolution(std::vector<double>& rData);
-
-    /**
-     * Update the solution using concentration data
-     * @param rData the data
-     */
-    virtual void UpdateSolution(std::vector<units::quantity<unit::concentration> >& rData);
-
-    /**
-     * Overridden Update method.
-     */
-    virtual void Update();
-
-    /**
-     * Overridden Update method.
-     */
-    virtual void Solve() = 0;
-
-    /**
-     * Overridden Write method. Writes the solution to file using a VTK structured grid.
-     */
-    virtual void Write();
 };
 
-#endif /* ABSTRACTREGULARGRIDDISCRETECONTINUUMSOLVER_HPP_ */
+#endif /* SIMPLELINEARELLIPTICGREENSFUNCTIONSOLVER_HPP_ */

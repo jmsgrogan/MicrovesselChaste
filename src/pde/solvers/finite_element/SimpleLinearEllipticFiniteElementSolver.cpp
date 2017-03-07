@@ -33,71 +33,36 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#include <math.h>
 #include "SimpleLinearEllipticSolver.hpp"
-#include "SimpleLinearParabolicSolver.hpp"
-#include "SimpleNonlinearEllipticSolver.hpp"
-#include "SimpleNewtonNonlinearSolver.hpp"
 #include "DiscreteContinuumLinearEllipticPde.hpp"
-#include "AbstractDiscreteContinuumParabolicPde.hpp"
-#include "AbstractDiscreteContinuumNonLinearEllipticPde.hpp"
-#include "FiniteElementSolver.hpp"
 #include "Exception.hpp"
+#include "SimpleLinearEllipticFiniteElementSolver.hpp"
+#include "BoundaryConditionsContainer.hpp"
 
 template<unsigned DIM>
-FiniteElementSolver<DIM>::FiniteElementSolver()
-    : AbstractUnstructuredGridDiscreteContinuumSolver<DIM>(),
-      mUseNewton(false),
-      mGuess()
+SimpleLinearEllipticFiniteElementSolver<DIM>::SimpleLinearEllipticFiniteElementSolver()
+    : AbstractFiniteElementSolverBase<DIM>()
 {
 
 }
 
 template<unsigned DIM>
-FiniteElementSolver<DIM>::~FiniteElementSolver()
+SimpleLinearEllipticFiniteElementSolver<DIM>::~SimpleLinearEllipticFiniteElementSolver()
 {
 
 }
 
 template <unsigned DIM>
-boost::shared_ptr<FiniteElementSolver<DIM> > FiniteElementSolver<DIM>::Create()
+boost::shared_ptr<SimpleLinearEllipticFiniteElementSolver<DIM> > SimpleLinearEllipticFiniteElementSolver<DIM>::Create()
 {
-    MAKE_PTR(FiniteElementSolver<DIM>, pSelf);
+    MAKE_PTR(SimpleLinearEllipticFiniteElementSolver<DIM>, pSelf);
     return pSelf;
 }
 
 template<unsigned DIM>
-void FiniteElementSolver<DIM>::Update()
+void SimpleLinearEllipticFiniteElementSolver<DIM>::Solve()
 {
-    if(this->mpPde)
-    {
-        this->mpPde->UpdateDiscreteSourceStrengths();
-    }
-    else
-    {
-        EXCEPTION("A PDE has not been set in the finite element solver");
-    }
-}
-
-template<unsigned DIM>
-void FiniteElementSolver<DIM>::SetGuess(const std::vector<double>& guess)
-{
-    mGuess = guess;
-}
-
-template<unsigned DIM>
-void FiniteElementSolver<DIM>::SetUseSimpleNetonSolver(bool useNewton)
-{
-    mUseNewton = useNewton;
-}
-
-template<unsigned DIM>
-void FiniteElementSolver<DIM>::Solve()
-{
-    if(!this->IsSetupForSolve)
-    {
-        this->Setup();
-    }
+    AbstractFiniteElementSolverBase<DIM>::Solve();
 
     // Set up the boundary conditions in the Chaste format
     boost::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> > p_bcc =
@@ -108,10 +73,6 @@ void FiniteElementSolver<DIM>::Solve()
         this->mBoundaryConditions[idx]->SetGridCalculator(this->mpGridCalculator);
         this->mBoundaryConditions[idx]->UpdateBoundaryConditions(p_bcc);
     }
-
-    // Do the solve
-    this->mpPde->SetGridCalculator(this->mpGridCalculator);
-    this->mpPde->UpdateDiscreteSourceStrengths();
 
     // Check the type of pde
     if(boost::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
@@ -129,33 +90,9 @@ void FiniteElementSolver<DIM>::Solve()
         }
         this->UpdateSolution(this->mSolution);
     }
-    else if(boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > p_nonlinear_pde =
-            boost::dynamic_pointer_cast<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> >(this->mpPde))
-    {
-        Vec initial_guess = PetscTools::CreateAndSetVec(this->mpMesh->GetNumNodes(), this->mBoundaryConditions[0]->GetValue()/this->mReferenceConcentration);
-        SimpleNonlinearEllipticSolver<DIM, DIM> solver(this->mpMesh.get(), p_nonlinear_pde.get(), p_bcc.get());
-        if(mUseNewton)
-        {
-            SimpleNewtonNonlinearSolver newton_solver;
-            solver.SetNonlinearSolver(&newton_solver);
-            newton_solver.SetTolerance(1e-5);
-            newton_solver.SetWriteStats();
-        }
-
-        ReplicatableVector solution_repl(solver.Solve(initial_guess));
-        this->mSolution = std::vector<double>(solution_repl.GetSize());
-        this->mConcentrations = std::vector<units::quantity<unit::concentration> >(solution_repl.GetSize());
-        for(unsigned idx = 0; idx < solution_repl.GetSize(); idx++)
-        {
-            this->mSolution[idx] = solution_repl[idx];
-            this->mConcentrations[idx] = solution_repl[idx]*this->mReferenceConcentration;
-        }
-        this->UpdateSolution(this->mSolution);
-        PetscTools::Destroy(initial_guess);
-    }
     else
     {
-        EXCEPTION("PDE Type could not be identified, did you set a PDE?");
+        EXCEPTION("PDE of wrong type for this solver.");
     }
 
     if(this->mWriteSolution)
@@ -165,5 +102,5 @@ void FiniteElementSolver<DIM>::Solve()
 }
 
 // Explicit instantiation
-template class FiniteElementSolver<2> ;
-template class FiniteElementSolver<3> ;
+template class SimpleLinearEllipticFiniteElementSolver<2> ;
+template class SimpleLinearEllipticFiniteElementSolver<3> ;

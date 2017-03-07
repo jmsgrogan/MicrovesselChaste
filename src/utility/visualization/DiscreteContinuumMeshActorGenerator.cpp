@@ -89,7 +89,7 @@ void DiscreteContinuumMeshActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRende
 {
     if(mpDiscreteContinuumMesh)
     {
-        vtkSmartPointer<vtkUnstructuredGrid> p_grid = mpDiscreteContinuumMesh->GetAsVtkUnstructuredGrid();
+        vtkSmartPointer<vtkUnstructuredGrid> p_grid = vtkUnstructuredGrid::SafeDownCast(mpDiscreteContinuumMesh->GetGlobalVtkGrid());
 
         vtkSmartPointer<vtkGeometryFilter> p_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
         #if VTK_MAJOR_VERSION <= 5

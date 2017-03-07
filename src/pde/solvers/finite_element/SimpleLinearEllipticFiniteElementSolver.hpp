@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2005-2017, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,59 +33,41 @@ Copyright (c) 2005-2017, University of Oxford.
 
  */
 
-#ifndef FINITEDIFFERENCESOLVER_HPP_
-#define FINITEDIFFERENCESOLVER_HPP_
+#ifndef SIMPLELINEARELLIPTICFINITEELEMENTSOLVER_HPP_
+#define SIMPLELINEARELLIPTICFINITEELEMENTSOLVER_HPP_
 
 #include "SmartPointers.hpp"
-#include "AbstractRegularGridDiscreteContinuumSolver.hpp"
-#include "AbstractFiniteDifferenceSolverBase.hpp"
-#include "UnitCollection.hpp"
+#include "AbstractFiniteElementSolverBase.hpp"
 
 /**
- * Finite difference solver for concentration based reaction diffusion PDEs. It can include
- * discrete representations of cells and vessels.
+ * A finite element solver for linear elliptic PDEs with multiple discrete sinks or sources.
  */
 template<unsigned DIM>
-class FiniteDifferenceSolver : public AbstractRegularGridDiscreteContinuumSolver<DIM>
+class SimpleLinearEllipticFiniteElementSolver : public AbstractFiniteElementSolverBase<DIM>
 {
-    /**
-     * The actual solver to use
-     */
-    boost::shared_ptr<AbstractFiniteDifferenceSolverBase<DIM> > mpSolver;
 
 public:
 
     /**
      * Constructor
      */
-    FiniteDifferenceSolver();
-
-    /**
-     * Factory constructor method
-     * @return a shared pointer to a new solver
-     */
-    static boost::shared_ptr<FiniteDifferenceSolver<DIM> > Create();
+    SimpleLinearEllipticFiniteElementSolver();
 
     /**
      * Destructor
      */
-    virtual ~FiniteDifferenceSolver();
+    virtual ~SimpleLinearEllipticFiniteElementSolver();
 
     /**
-     * Set the underlying solver
-     * @param pSolver the underlying solver
+     * Construct a new instance of the class and return a shared pointer to it.
+     * @return a shared pointer to a class instance.
      */
-    void SetSolver(boost::shared_ptr<AbstractFiniteDifferenceSolverBase<DIM> > pSolver);
+    static boost::shared_ptr<SimpleLinearEllipticFiniteElementSolver<DIM> > Create();
 
     /**
      * Overridden solve method
      */
-    virtual void Solve();
-
-    /**
-     * Overridden setup method
-     */
-    void Setup();
+    void Solve();
 };
 
-#endif /* FINITEDIFFERENCESOLVER_HPP_ */
+#endif /* SIMPLELINEARELLIPTICFINITEELEMENTSOLVER_HPP_ */

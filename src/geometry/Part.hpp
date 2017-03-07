@@ -40,6 +40,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
+#include <vtkPoints.h>
 #include "SmartPointers.hpp"
 #include "ChastePoint.hpp"
 #include "UblasVectorInclude.hpp"
@@ -280,10 +281,10 @@ public:
 
     /**
      * Is the point inside the part
-     * @param location the location of the point
+     * @param pPoints vtk points
      * @return bool true if the point is inside the part
      */
-    std::vector<bool> IsPointInPart(const std::vector<DimensionalChastePoint<DIM> >& location);
+    std::vector<bool> IsPointInPart(vtkSmartPointer<vtkPoints> pPoints);
 
     /**
      * Merge vertices that overlap in polygons and facets

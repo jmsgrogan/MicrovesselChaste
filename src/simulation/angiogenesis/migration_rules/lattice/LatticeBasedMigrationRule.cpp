@@ -36,6 +36,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "GeometryTools.hpp"
 #include "LatticeBasedMigrationRule.hpp"
 #include "RandomNumberGenerator.hpp"
+#include "RegularGrid.hpp"
 
 template<unsigned DIM>
 LatticeBasedMigrationRule<DIM>::LatticeBasedMigrationRule()
@@ -66,7 +67,7 @@ std::vector<double> LatticeBasedMigrationRule<DIM>::GetNeighbourMovementProbabil
     for(unsigned idx=0; idx<neighbourIndices.size(); idx++)
     {
         // Make sure that tip cell does not try to move into a location already occupied by the vessel that it comes from
-        DimensionalChastePoint<DIM> neighbour_location = this->mpGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(neighbourIndices[idx]);
+        DimensionalChastePoint<DIM> neighbour_location = this->mpGridCalculator->GetGrid()->GetLocationOfGlobalIndex(neighbourIndices[idx]);
 
         bool already_attached = false;
         for (unsigned seg_index = 0; seg_index < pNode->GetNumberOfSegments(); seg_index++)
@@ -146,24 +147,33 @@ std::vector<int> LatticeBasedMigrationRule<DIM>::GetIndices(const std::vector<bo
     std::vector<int> indices(rNodes.size(), -1);
 
     // Get the point-node map from the regular grid
-    std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > point_node_map = this->mpGridCalculator->GetVesselNodeMap();
+    std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > point_node_map = this->mpGridCalculator->rGetVesselNodeMap();
+
+    // Need a regular grid for this rule
+    boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
+            boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+
+    if(!p_regular_grid)
+    {
+        EXCEPTION("Can't cast to regular grid");
+    }
 
     // Get the neighbour data from the regular grid
     std::vector<std::vector<unsigned> > neighbour_indices;
     if(this->mUseMooreNeighbourhood)
     {
-        neighbour_indices = this->mpGridCalculator->GetGrid()->GetMooreNeighbourData();
+        neighbour_indices = p_regular_grid->rGetMooreNeighbourData();
     }
     else
     {
-        neighbour_indices = this->mpGridCalculator->GetGrid()->GetNeighbourData();
+        neighbour_indices = p_regular_grid->rGetNeighbourData();
     }
 
     // Loop over all nodes, if they can move set the index
     for(unsigned idx = 0; idx < rNodes.size(); idx++)
     {
         // Get the grid index of the node
-        unsigned grid_index = this->mpGridCalculator->GetGrid()->GetNearestGlobalGridIndex(rNodes[idx]->rGetLocation());
+        unsigned grid_index = p_regular_grid->GetNearestLocationIndex(rNodes[idx]->rGetLocation());
 
         // Get the probability of moving into each of the neighbour sites
         std::vector<double> probability_of_moving = GetNeighbourMovementProbabilities(rNodes[idx], neighbour_indices[grid_index], grid_index);

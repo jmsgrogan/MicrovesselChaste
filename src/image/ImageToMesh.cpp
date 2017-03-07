@@ -141,16 +141,19 @@ void ImageToMesh<DIM>::Update()
         temp_mesh_generator.Update();
         boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > p_temp_mesh = temp_mesh_generator.GetMesh();
 
-        std::vector<DimensionalChastePoint<DIM> > mesh_points = p_temp_mesh->GetNodeLocationsAsPoints();
+        vtkSmartPointer<vtkPoints> mesh_points = p_temp_mesh->GetNodeLocations();
         std::vector<std::vector<unsigned> > mesh_connectivity = p_temp_mesh->GetConnectivity();
 
         units::quantity<unit::length> reference_length = p_temp_mesh->GetReferenceLengthScale();
         vtkSmartPointer<vtkPoints> p_vtk_points = vtkSmartPointer<vtkPoints>::New();
         for(unsigned idx = 0; idx<mesh_connectivity.size(); idx++)
         {
-            c_vector<double, DIM> location0 = mesh_points[mesh_connectivity[idx][0]].GetLocation(reference_length);
-            c_vector<double, DIM> location1 = mesh_points[mesh_connectivity[idx][1]].GetLocation(reference_length);
-            c_vector<double, DIM> location2 = mesh_points[mesh_connectivity[idx][2]].GetLocation(reference_length);
+            double location0[3];
+            double location1[3];
+            double location2[3];
+            mesh_points->GetPoint(mesh_connectivity[idx][0], location0);
+            mesh_points->GetPoint(mesh_connectivity[idx][1], location1);
+            mesh_points->GetPoint(mesh_connectivity[idx][2], location2);
             double centx = (location0[0] + location1[0] + location2[0])/3.0;
             double centy = (location0[1] + location1[1] + location2[1])/3.0;
             p_vtk_points->InsertNextPoint(centx, centy, 0.0);

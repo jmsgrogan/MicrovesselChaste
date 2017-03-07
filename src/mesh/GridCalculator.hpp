@@ -37,6 +37,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #define GRIDCALCULATOR_HPP_
 
 #include <vector>
+#include <map>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
 #include <vtkImageData.h>
 #include <vtkUnstructuredGrid.h>
@@ -52,6 +53,7 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "DimensionalChastePoint.hpp"
 #include "RegularGrid.hpp"
 #include "DiscreteContinuumMesh.hpp"
+#include "AbstractDiscreteContinuumGrid.hpp"
 
 /**
  * A class for working with structured and unstructured grids and discrete entities.
@@ -92,19 +94,9 @@ class GridCalculator
     std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > mSegmentMap;
 
     /**
-     * The reference length scale, default in microns.
+     * The grid
      */
-    units::quantity<unit::length> mReferenceLength;
-
-    /**
-     * A regular grid
-     */
-    boost::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
-
-    /**
-     * A mesh
-     */
-    boost::shared_ptr<DiscreteContinuumMesh<DIM> > mpMesh;
+    boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > mpGrid;
 
     /**
      * Use regular grid
@@ -136,24 +128,24 @@ public:
 
     /**
      * Return a vector of input point indices which in the bounding boxes of each grid location
-     * @param inputPoints a vector of point locations
+     * @param rInputPoints a vector of point locations
      * @return the indices of input points in the bounding box of each grid location
      */
-    std::vector<std::vector<unsigned> > GetPointMap(std::vector<DimensionalChastePoint<DIM> > inputPoints);
+    std::vector<std::vector<unsigned> > GetPointMap(const std::vector<DimensionalChastePoint<DIM> >& rInputPoints);
 
     /**
      * Return the cell map
      * @param update update the map
      * @return the cell map
      */
-    const std::vector<std::vector<CellPtr> >& GetCellMap(bool update = true);
+    const std::vector<std::vector<CellPtr> > & rGetCellMap(bool update = true);
 
     /**
      * Return the vessel node map
      * @param update update the vessel node map
      * @return the vessel node map
      */
-    const std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >& GetVesselNodeMap(bool update = true);
+    const std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >& rGetVesselNodeMap(bool update = true);
 
     /**
      * Return the segments map
@@ -161,32 +153,14 @@ public:
      * @param useVesselSurface use the vessel surface for distance calculations
      * @return the segment map
      */
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > GetSegmentMap(bool update = true, bool useVesselSurface = false);
+    const std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >& rGetSegmentMap(bool update = true,
+            bool useVesselSurface = false);
 
     /**
      * Return the grid itself
      * @return the grid itself
      */
-    boost::shared_ptr<RegularGrid<DIM> > GetGrid();
-
-    /**
-     * Return the grid itself
-     * @return the grid itself
-     */
-    boost::shared_ptr<DiscreteContinuumMesh<DIM> > GetMesh();
-
-    /**
-     * Return the volume of grid locations
-     * @param jiggle apply jiggle to regular grid points
-     * @return the volume of grid locations
-     */
-    std::vector<double> GetLocationVolumes(bool jiggle=false);
-
-    /**
-     * Return the number of grid points (structured) or cells (unstructured)
-     * @return the grid itself
-     */
-    unsigned GetNumberOfLocations();
+    boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > GetGrid();
 
     /**
      * Return true if the solver uses a regular grid to store solutions
@@ -219,7 +193,7 @@ public:
      * Set the values of a field at all locations on the grid
      * @param pointSolution the value of the field
      */
-    void SetLocationValues(std::vector<double> pointSolution);
+    void SetLocationValues(const std::vector<double>& rPointSolution);
 
     /**
      * Set the vessel network

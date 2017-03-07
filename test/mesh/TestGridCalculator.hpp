@@ -62,6 +62,37 @@ class TestRegularGrid : public AbstractCellBasedWithTimingsTestSuite
 
 public:
 
+    void TestPointSegmentMapGenerationRegularGrid()
+    {
+        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestRegularGrid/PointSegmentMap"));
+
+        // Set up a grid
+        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        c_vector<unsigned, 3> dimensions;
+        dimensions[0] = 101;
+        dimensions[1] = 101;
+        dimensions[2] = 1;
+        p_grid->SetDimensions(dimensions);
+        units::quantity<unit::length> spacing(2.0*unit::microns);
+        p_grid->SetSpacing(spacing);
+
+        // Set up vessel network
+        VesselNetworkGenerator<2> network_generator;
+        units::quantity<unit::length> width(100.0*unit::microns);
+        units::quantity<unit::length> height(100.0*unit::microns);
+        boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(width,
+                                                                                                    height,
+                                                                                                    spacing);
+        // Get a point-segment map
+        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        p_grid_calc->SetGrid(p_grid);
+        p_grid_calc->SetVesselNetwork(p_network);
+        p_grid->Write(p_handler);
+        std::vector<std::vector<boost::shared_ptr<VesselSegment<2> > > > map = p_grid_calc->GetSegmentMap();
+
+        p_network->Write(p_handler->GetOutputDirectoryFullPath() + "/network.vtp");
+    }
+
     void TestPointPointMapGeneration()
     {
         // Set up a grid
@@ -133,36 +164,6 @@ public:
             sum += map[idx].size();
         }
         TS_ASSERT_EQUALS(sum, 100u);
-    }
-
-    void PointSegmentMapGeneration()
-    {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestRegularGrid"));
-        // Set up a grid
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        c_vector<unsigned, 3> dimensions;
-        dimensions[0] = 101;
-        dimensions[1] = 101;
-        dimensions[2] = 1;
-        p_grid->SetDimensions(dimensions);
-        units::quantity<unit::length> spacing(2.0*unit::microns);
-        p_grid->SetSpacing(spacing);
-
-        // Set up vessel network
-        VesselNetworkGenerator<2> network_generator;
-        units::quantity<unit::length> width(100.0*unit::microns);
-        units::quantity<unit::length> height(100.0*unit::microns);
-        boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(width,
-                                                                                                    height,
-                                                                                                    spacing);
-        // Get a point-segment map
-        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
-        p_grid_calc->SetGrid(p_grid);
-        p_grid_calc->SetVesselNetwork(p_network);
-        p_grid->Write(p_handler);
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<2> > > > map = p_grid_calc->GetSegmentMap();
-
-        p_network->Write(p_handler->GetOutputDirectoryFullPath() + "/network.vtp");
     }
 };
 

@@ -77,17 +77,25 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::
     }
 
     std::vector<units::quantity<unit::concentration> > probed_solutions(rNodes.size(), 0.0*unit::mole_per_metre_cubed);
-    std::vector<DimensionalChastePoint<DIM> > probe_locations(rNodes.size(), DimensionalChastePoint<DIM>(0.0, 0.0, 0.0, 1.e-6*unit::metres));
+    vtkSmartPointer<vtkPoints> p_probe_locations = vtkSmartPointer<vtkPoints>::New();
 
     if(this->mpSolver)
     {
         for(unsigned idx=0; idx<rNodes.size(); idx++)
         {
-            probe_locations[idx] = rNodes[idx]->rGetLocation();
+            c_vector<double, DIM> loc = rNodes[idx]->rGetLocation().GetLocation(this->mpSolver->GetGridCalculator()->GetGrid()->GetReferenceLengthScale());
+            if(DIM==3)
+            {
+                p_probe_locations->InsertNextPoint(loc[0], loc[1], loc[2]);
+            }
+            else
+            {
+                p_probe_locations->InsertNextPoint(loc[0], loc[1], 0.0);
+            }
         }
-        if(probe_locations.size()>0)
+        if(p_probe_locations->GetNumberOfPoints()>0)
         {
-            probed_solutions = this->mpSolver->GetConcentrations(probe_locations);
+            probed_solutions = this->mpSolver->GetConcentrations(p_probe_locations);
         }
     }
 

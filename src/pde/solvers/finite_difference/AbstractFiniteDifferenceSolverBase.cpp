@@ -129,7 +129,7 @@ void AbstractFiniteDifferenceSolverBase<DIM>::Setup()
     }
 
     // Set up the boundary conditions. Use a different description from normal DiscreteContinuum BCs for efficiency.
-    unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfGlobalPoints();
+    unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
     mpBoundaryConditions = boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > (new std::vector<std::pair<bool, units::quantity<unit::concentration> > >(num_points));
     for(unsigned idx=0; idx<num_points; idx++)
     {

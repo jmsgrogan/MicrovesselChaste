@@ -75,9 +75,9 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
 
     if(this->mpGridCalculator->HasStructuredGrid())
     {
-        std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpGridCalculator->GetNumberOfLocations(),
+        std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(),
                 0.0*unit::mole_per_metre_cubed_per_second);
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = this->mpGridCalculator->GetSegmentMap();
+        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = this->mpGridCalculator->rGetSegmentMap();
         units::quantity<unit::length> grid_spacing = this->mpGridCalculator->GetGrid()->GetSpacing();
         units::quantity<unit::volume> grid_volume = units::pow<3>(grid_spacing);
 
@@ -87,7 +87,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
             {
                 units::quantity<unit::length> length_in_box = LengthOfLineInBox<DIM>(point_segment_map[idx][jdx]->GetNode(0)->rGetLocation(),
                                                                              point_segment_map[idx][jdx]->GetNode(1)->rGetLocation(),
-                                                                             this->mpGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(idx), grid_spacing);
+                                                                             this->mpGridCalculator->GetGrid()->GetLocationOfGlobalIndex(idx), grid_spacing);
                 units::quantity<unit::area> surface_area = 2.0*M_PI*point_segment_map[idx][jdx]->GetRadius()*length_in_box;
                 double haematocrit_ratio = point_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit()/mReferenceHaematocrit;
                 values[idx] += mVesselPermeability * (surface_area/grid_volume) * mReferenceConcentration * haematocrit_ratio;
@@ -97,10 +97,10 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
     }
     else
     {
-        std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpGridCalculator->GetNumberOfLocations(),
+        std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(),
                 0.0*unit::mole_per_metre_cubed_per_second);
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > element_segment_map = this->mpGridCalculator->GetSegmentMap();
-        units::quantity<unit::length> mesh_length = this->mpGridCalculator->GetMesh()->GetReferenceLengthScale();
+        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > element_segment_map = this->mpGridCalculator->rGetSegmentMap();
+        units::quantity<unit::length> mesh_length = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
         units::quantity<unit::volume> mesh_volume_multiplier = units::pow<3>(mesh_length);
 
         for(unsigned idx=0; idx<element_segment_map.size(); idx++)
@@ -108,7 +108,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
             if(element_segment_map[idx].size()>0)
             {
                 // Get the element nodal locations and element volume
-                Element<DIM, DIM>* p_element = this->mpGridCalculator->GetMesh()->GetElement(idx);
+                Element<DIM, DIM>* p_element = this->mpGridCalculator->GetGrid()->GetElement(idx);
                 std::vector<DimensionalChastePoint<DIM> > element_vertices(4);
                 double determinant = 0.0;
                 c_matrix<double, DIM, DIM> jacobian;
@@ -153,9 +153,9 @@ void VesselBasedDiscreteSource<DIM>::SetNumberOfCellsPerLength(units::quantity<u
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscreteSource<DIM>::GetNonlinearTermValues()
 {
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpGridCalculator->GetNumberOfLocations(),
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(),
             0.0*unit::mole_per_metre_cubed_per_second);
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = this->mpGridCalculator->GetSegmentMap();
+    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = this->mpGridCalculator->rGetSegmentMap();
     units::quantity<unit::length> grid_spacing = this->mpGridCalculator->GetGrid()->GetSpacing();
     units::quantity<unit::volume> grid_volume = units::pow<3>(grid_spacing);
 
@@ -165,7 +165,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
         {
             units::quantity<unit::length> length_in_box = LengthOfLineInBox<DIM>(point_segment_map[idx][jdx]->GetNode(0)->rGetLocation(),
                                                                          point_segment_map[idx][jdx]->GetNode(1)->rGetLocation(),
-                                                                         this->mpGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(idx), grid_spacing);
+                                                                         this->mpGridCalculator->GetGrid()->GetLocationOfGlobalIndex(idx), grid_spacing);
             double num_cells = length_in_box*mCellsPerMetre;
             values[idx] += mUptakeRatePerCell * (num_cells/grid_volume);
         }
@@ -183,9 +183,9 @@ std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLin
 
     if(this->mpGridCalculator->HasStructuredGrid())
     {
-        std::vector<units::quantity<unit::rate> > values(this->mpGridCalculator->GetNumberOfLocations(),
+        std::vector<units::quantity<unit::rate> > values(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(),
                 0.0*unit::per_second);
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = this->mpGridCalculator->GetSegmentMap(false);
+        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = this->mpGridCalculator->rGetSegmentMap(false);
         units::quantity<unit::length> grid_spacing = this->mpGridCalculator->GetGrid()->GetSpacing();
         units::quantity<unit::volume> grid_volume = units::pow<3>(grid_spacing);
 
@@ -195,7 +195,7 @@ std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLin
             {
                 units::quantity<unit::length> length_in_box = LengthOfLineInBox<DIM>(point_segment_map[idx][jdx]->GetNode(0)->rGetLocation(),
                                                                              point_segment_map[idx][jdx]->GetNode(1)->rGetLocation(),
-                                                                             this->mpGridCalculator->GetGrid()->GetLocationOfGlobal1dIndex(idx), grid_spacing);
+                                                                             this->mpGridCalculator->GetGrid()->GetLocationOfGlobalIndex(idx), grid_spacing);
 
                 units::quantity<unit::area> surface_area = 2.0*M_PI*point_segment_map[idx][jdx]->GetRadius()*length_in_box;
                 double haematocrit = point_segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit();

@@ -38,6 +38,9 @@ Copyright (c) 2005-2016, University of Oxford.
 
 #include <vector>
 #include <math.h>
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
+#include <vtkSmartPointer.h>
+#include <vtkPoints.h>
 #include "SmartPointers.hpp"
 #include "UblasVectorInclude.hpp"
 #include "UnitCollection.hpp"
@@ -107,7 +110,7 @@ DimensionalChastePoint<DIM> GetPointProjectionOnLineSegment(const DimensionalCha
  * @return a vector of points projected at global normals to the central point
  */
 template<unsigned DIM>
-std::vector<DimensionalChastePoint<DIM> > GetProbeLocationsExternalPoint(DimensionalChastePoint<DIM> rCentrePoint,
+vtkSmartPointer<vtkPoints> GetProbeLocationsExternalPoint(DimensionalChastePoint<DIM> rCentrePoint,
                                                                          units::quantity<unit::length> probeLength);
 
 /**
@@ -120,7 +123,7 @@ std::vector<DimensionalChastePoint<DIM> > GetProbeLocationsExternalPoint(Dimensi
  * @return a vector of points projected at global normals to the central point
  */
 template<unsigned DIM>
-std::vector<DimensionalChastePoint<DIM> > GetProbeLocationsInternalPoint(DimensionalChastePoint<DIM> rInitialDirection,
+vtkSmartPointer<vtkPoints> GetProbeLocationsInternalPoint(DimensionalChastePoint<DIM> rInitialDirection,
                                                                          DimensionalChastePoint<DIM> rCentralPoint,
                                                                          DimensionalChastePoint<DIM> rRotationAxis,
                                                                          units::quantity<unit::length> probeLength,

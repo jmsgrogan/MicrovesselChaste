@@ -33,83 +33,76 @@ Copyright (c) 2005-2016, University of Oxford.
 
  */
 
-#ifndef ABSTRACTREGULARGRIDDISCRETECONTINUUMSOLVER_HPP_
-#define ABSTRACTREGULARGRIDDISCRETECONTINUUMSOLVER_HPP_
+#ifndef AbstractFiniteElementSolverBase_HPP_
+#define AbstractFiniteElementSolverBase_HPP_
 
-#include <vector>
-#include <string>
-#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
-#include <vtkImageData.h>
-#include <vtkSmartPointer.h>
 #include "SmartPointers.hpp"
-#include "UblasIncludes.hpp"
-#include "AbstractDiscreteContinuumSolver.hpp"
-#include "UnitCollection.hpp"
-#include "RegularGrid.hpp"
+#include "AbstractUnstructuredGridDiscreteContinuumSolver.hpp"
+#include "DiscreteContinuumMesh.hpp"
 
 /**
- * An abstract solver class for DiscreteContinuum continuum-discrete problems using structured grids.
- * Concrete classes can solve PDEs or perform other computations based on interpolation
- * of discrete entities (points/cells, lines/vessels) onto structured grids.
+ * A finite element solver base class for use with multiple discrete sinks or sources.
  */
 template<unsigned DIM>
-class AbstractRegularGridDiscreteContinuumSolver : public AbstractDiscreteContinuumSolver<DIM>
+class AbstractFiniteElementSolverBase : public AbstractUnstructuredGridDiscreteContinuumSolver<DIM>
 {
 
 protected:
 
-    boost::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
+    /**
+     * Over-ride the base class solve method
+     */
+    using AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::Solve;
+
+    /**
+     * Use the chaste newton solver, if appropriate
+     */
+    bool mUseNewton;
+
+    /**
+     * An initial guess, if needed
+     */
+    std::vector<double> mGuess;
 
 public:
-
-    using AbstractDiscreteContinuumSolver<DIM>::UpdateSolution;
 
     /**
      * Constructor
      */
-    AbstractRegularGridDiscreteContinuumSolver();
+    AbstractFiniteElementSolverBase();
 
     /**
      * Destructor
      */
-    virtual ~AbstractRegularGridDiscreteContinuumSolver();
+    virtual ~AbstractFiniteElementSolverBase();
 
     /**
-     * Overridden Setup method.
+     * Construct a new instance of the class and return a shared pointer to it.
+     * @return a shared pointer to a class instance.
      */
-    virtual void Setup();
+    static boost::shared_ptr<AbstractFiniteElementSolverBase<DIM> > Create();
 
     /**
-     * Update the cell data as passed in
+     * Overridden solve method
      */
-    virtual void UpdateCellData();
+    void Solve();
 
     /**
-     * Update the solution using dimensionless data
-     * @param rData the data
+     * Set the initial dimensionless guess
+     * @param guess the guess.
      */
-    virtual void UpdateSolution(std::vector<double>& rData);
+    void SetGuess(const std::vector<double>& guess);
 
     /**
-     * Update the solution using concentration data
-     * @param rData the data
+     * Use Chaste's simple newton solve
+     * @param useNewton use Chaste's simple newton solve
      */
-    virtual void UpdateSolution(std::vector<units::quantity<unit::concentration> >& rData);
+    void SetUseSimpleNetonSolver(bool useNewton);
 
     /**
-     * Overridden Update method.
+     * Overridden update method
      */
-    virtual void Update();
-
-    /**
-     * Overridden Update method.
-     */
-    virtual void Solve() = 0;
-
-    /**
-     * Overridden Write method. Writes the solution to file using a VTK structured grid.
-     */
-    virtual void Write();
+    void Update();
 };
 
-#endif /* ABSTRACTREGULARGRIDDISCRETECONTINUUMSOLVER_HPP_ */
+#endif /* AbstractFiniteElementSolverBase_HPP_ */

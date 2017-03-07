@@ -74,7 +74,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>
     }
 
     // Loop through all points
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(mpGridCalculator->GetNumberOfLocations(),
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(mpGridCalculator->GetGrid()->GetNumberOfLocations(),
             0.0*unit::mole_per_metre_cubed_per_second);
     std::vector<std::vector<unsigned> > point_point_map = mpGridCalculator->GetPointMap(mPoints);
     for(unsigned idx=0; idx<point_point_map.size(); idx++)
@@ -98,7 +98,7 @@ std::vector<units::quantity<unit::rate> > DiscreteSource<DIM>::GetLinearInUValue
     }
 
     // Loop through all points
-    std::vector<units::quantity<unit::rate> > values(mpGridCalculator->GetNumberOfLocations(),
+    std::vector<units::quantity<unit::rate> > values(mpGridCalculator->GetGrid()->GetNumberOfLocations(),
             0.0*unit::per_second);
     std::vector<std::vector<unsigned> > point_point_map = mpGridCalculator->GetPointMap(mPoints);
     for(unsigned idx=0; idx<point_point_map.size(); idx++)
@@ -117,7 +117,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>
     }
 
     // Return an empty vector
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(mpGridCalculator->GetNumberOfLocations(),
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(mpGridCalculator->GetGrid()->GetNumberOfLocations(),
             0.0*unit::mole_per_metre_cubed_per_second);
 
     return values;
