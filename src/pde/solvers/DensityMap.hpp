@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef DENSITYMAP_HPP_
 #define DENSITYMAP_HPP_
 
@@ -44,7 +42,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /**
  * Calculate the density of vessel network features (nodes, branches, segments) or cells on a
- * grid using a range of measures.
+ * grid. The density map can then be used in the solution of PDEs with discrete sinks or
+ * sources.
  */
 template<unsigned DIM>
 class DensityMap : public AbstractRegularGridDiscreteContinuumSolver<DIM>
@@ -117,42 +116,42 @@ public:
      * @param update update the stored quantity
      * @return the vessel surface area density
      */
-    std::vector<double> GetVesselSurfaceAreaDensity(bool update=true);
+    const std::vector<double>& rGetVesselSurfaceAreaDensity(bool update=true);
 
     /**
      * Get the vessel line density
      * @param update update the stored quantity
      * @return the vessel line density
      */
-    std::vector<double> GetVesselLineDensity(bool update=true);
+    const std::vector<double>& rGetVesselLineDensity(bool update=true);
 
     /**
      * Get the perfused vessel surface area density
      * @param update update the stored quantity
      * @return the perfused vessel surface area density
      */
-    std::vector<double> GetPerfusedVesselSurfaceAreaDensity(bool update=true);
+    const std::vector<double>& rGetPerfusedVesselSurfaceAreaDensity(bool update=true);
 
     /**
      * Get the perfused vessel line density
      * @param update update the stored quantity
      * @return the perfused vessel line  density
      */
-    std::vector<double> GetPerfusedVesselLineDensity(bool update=true);
+    const std::vector<double>& rGetPerfusedVesselLineDensity(bool update=true);
 
     /**
      * Get the vessel tip density
      * @param update update the stored quantity
      * @return the vessel tip density
      */
-    std::vector<double> GetVesselTipDensity(bool update=true);
+    const std::vector<double>& rGetVesselTipDensity(bool update=true);
 
     /**
      * Get the vessel branch density
      * @param update update the stored quantity
      * @return the vessel branch density
      */
-    std::vector<double> GetVesselBranchDensity(bool update=true);
+    const std::vector<double>& rGetVesselBranchDensity(bool update=true);
 
     /**
      * Get the vessel quantity density
@@ -160,14 +159,14 @@ public:
      * @param update update the stored quantity
      * @return the vessel quantity density
      */
-    std::vector<double> GetVesselQuantityDensity(const std::string& rQuantity, bool update=true);
+    const std::vector<double>& rGetVesselQuantityDensity(const std::string& rQuantity, bool update=true);
 
     /**
      * Get the cell density
      * @param update update the stored quantity
      * @return the cell density
      */
-    std::vector<double> GetCellDensity(bool update=true);
+    const std::vector<double>& rGetCellDensity(bool update=true);
 
     /**
      * Get the cell by mutation state
@@ -175,10 +174,10 @@ public:
      * @param update update the stored quantity
      * @return the cell density by mutation state
      */
-    std::vector<double> GetCellDensity(boost::shared_ptr<AbstractCellMutationState> pMutationState, bool update=true);
+    const std::vector<double>& rGetCellDensity(boost::shared_ptr<AbstractCellMutationState> pMutationState, bool update=true);
 
     /**
-     * Null solve method, need to override abstract base class.
+     * Null solve method, needed to override pure virtual base class.
      */
     void Solve();
 

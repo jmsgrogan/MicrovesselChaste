@@ -33,11 +33,14 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkFeatureEdges.h>
 #include <vtkGeometryFilter.h>
 #include <vtkVersion.h>
+#include <vtkMPIController.h>
+#include <vtkPointData.h>
+#include <vtkGeometryFilter.h>
+#include <vtkFeatureEdges.h>
 #include "Exception.hpp"
 #include "AbstractDiscreteContinuumGrid.hpp"
 #include "BaseUnits.hpp"
@@ -108,7 +111,30 @@ const std::vector<vtkSmartPointer<vtkUnsignedIntArray> >& AbstractDiscreteContin
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 vtkSmartPointer<vtkPolyData> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetBoundingGeometry()
 {
+    if (!this->mVtkRepresentationUpToDate)
+    {
+        SetUpVtkGrid();
+    }
+    vtkSmartPointer<vtkGeometryFilter> p_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
+    p_geom_filter->SetInputData(mpVtkGrid);
+    p_geom_filter->Update();
+    return p_geom_filter->GetOutput();
+}
 
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+unsigned AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetGlobalIndex(unsigned localIndex)
+{
+    if(localIndex>=mLocalGlobalMap.size())
+    {
+        EXCEPTION("Out of bounds local index requested");
+    }
+    return mLocalGlobalMap[localIndex];
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+int AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetLocalIndex(unsigned globalIndex)
+{
+    return globalIndex;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -146,6 +172,74 @@ unsigned AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetNumberOfLocat
         SetUpVtkGrid();
     }
     return this->mpGridLocations->GetNumberOfPoints();
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+void AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::AllGatherPointData(const std::string& rName)
+{
+    vtkSmartPointer<vtkMPIController> p_mpi_controller = vtkSmartPointer<vtkMPIController>::New();
+
+    // Add each local data set to the global vtk before output
+    for(unsigned idx=0; idx<this->mPointData.size(); idx++)
+    {
+        if(this->mPointData[idx]->GetName()==rName)
+        {
+            vtkSmartPointer<vtkDoubleArray> p_receive_array = vtkSmartPointer<vtkDoubleArray>::New();
+            p_receive_array->SetName(this->mPointData[idx]->GetName());
+            p_mpi_controller->AllGatherV(this->mPointData[idx], p_receive_array);
+            this->GetGlobalVtkGrid()->GetPointData()->AddArray(p_receive_array);
+        }
+    }
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+void AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::AllGatherAllPointData()
+{
+    vtkSmartPointer<vtkMPIController> p_mpi_controller = vtkSmartPointer<vtkMPIController>::New();
+
+    // Add each local data set to the global vtk before output
+    for(unsigned idx=0; idx<this->mPointData.size(); idx++)
+    {
+        vtkSmartPointer<vtkDoubleArray> p_receive_array = vtkSmartPointer<vtkDoubleArray>::New();
+        p_receive_array->SetName(this->mPointData[idx]->GetName());
+        p_mpi_controller->AllGatherV(this->mPointData[idx], p_receive_array);
+        this->GetGlobalVtkGrid()->GetPointData()->AddArray(p_receive_array);
+    }
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+void AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GatherPointData(const std::string& rName)
+{
+    vtkSmartPointer<vtkMPIController> p_mpi_controller = vtkSmartPointer<vtkMPIController>::New();
+
+    for(unsigned idx=0; idx<this->mPointData.size(); idx++)
+    {
+        if(this->mPointData[idx]->GetName()==rName)
+        {
+            vtkSmartPointer<vtkDoubleArray> p_receive_array = vtkSmartPointer<vtkDoubleArray>::New();
+            p_receive_array->SetName(this->mPointData[idx]->GetName());
+            p_mpi_controller->AllGatherV(this->mPointData[idx], p_receive_array);
+            this->GetGlobalVtkGrid()->GetPointData()->AddArray(p_receive_array);
+        }
+    }
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+void AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GatherAllPointData()
+{
+    vtkSmartPointer<vtkMPIController> p_mpi_controller = vtkSmartPointer<vtkMPIController>::New();
+
+    // Add each local data set to the global vtk before output
+    for(unsigned idx=0; idx<this->mPointData.size(); idx++)
+    {
+        vtkSmartPointer<vtkDoubleArray> p_receive_array = vtkSmartPointer<vtkDoubleArray>::New();
+        p_receive_array->SetName(this->mPointData[idx]->GetName());
+        p_mpi_controller->GatherV(this->mPointData[idx], p_receive_array, PetscTools::MASTER_RANK);
+        if(PetscTools::AmMaster())
+        {
+            this->GetGlobalVtkGrid()->GetPointData()->AddArray(p_receive_array);
+        }
+    }
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

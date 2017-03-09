@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include <cmath>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
 #include <vtkImageData.h>
@@ -249,6 +247,17 @@ void RegularGrid<DIM>::CalculateMooreNeighbourData()
             }
         }
     }
+}
+
+template<unsigned DIM>
+int RegularGrid<DIM>::GetLocalIndex(unsigned globalIndex)
+{
+    int local_index = -1;
+    if(globalIndex >= mpDistributedVectorFactory->GetLow() and globalIndex < mpDistributedVectorFactory->GetHigh())
+    {
+        return globalIndex-mpDistributedVectorFactory->GetLow();
+    }
+    return local_index;
 }
 
 template<unsigned DIM>
@@ -565,7 +574,6 @@ void RegularGrid<DIM>::SetDimensions(c_vector<unsigned, 3> dimensions)
 template<unsigned DIM>
 void RegularGrid<DIM>::SetUpVtkGrid()
 {
-
     // Set up a VTK grid
     vtkSmartPointer<vtkImageData> p_global_grid = vtkSmartPointer<vtkImageData>::New();
     vtkSmartPointer<vtkImageData> p_local_grid = vtkSmartPointer<vtkImageData>::New();
@@ -589,26 +597,36 @@ void RegularGrid<DIM>::SetUpVtkGrid()
     this->mpGlobalVtkGrid = p_global_grid;
     this->mpVtkGrid = p_local_grid;
 
-
     // Label the grid partitioning
     std::vector<unsigned> global_lows = mpDistributedVectorFactory->rGetGlobalLows();
     vtkSmartPointer<vtkIntArray> p_point_data = vtkSmartPointer<vtkIntArray>::New();
     p_point_data->SetName("Processor Num");
+    p_point_data->SetNumberOfTuples(this->mpGlobalVtkGrid->GetNumberOfPoints());
     for(unsigned idx=0;idx<this->mpGlobalVtkGrid->GetNumberOfPoints(); idx++)
     {
         if(global_lows.size()>1)
         {
-            for(unsigned jdx=0;jdx<global_lows.size()-1;jdx++)
+            for(unsigned jdx=0;jdx<global_lows.size();jdx++)
             {
-                if(idx>=global_lows[jdx] and idx<=global_lows[jdx+1]-1)
+                if(jdx<global_lows.size()-1)
                 {
-                    p_point_data->InsertNextTuple1(jdx);
+                    if(idx>=global_lows[jdx] and idx<=global_lows[jdx+1]-1)
+                    {
+                        p_point_data->SetTuple1(idx, jdx);
+                    }
+                }
+                else
+                {
+                    if(idx>=global_lows[jdx])
+                    {
+                        p_point_data->SetTuple1(idx, jdx);
+                    }
                 }
             }
         }
         else
         {
-            p_point_data->InsertNextTuple1(0);
+            p_point_data->SetTuple1(idx, 0);
         }
     }
     this->mpGlobalVtkGrid->GetPointData()->AddArray(p_point_data);
@@ -632,14 +650,54 @@ void RegularGrid<DIM>::SetUpVtkGrid()
 template<unsigned DIM>
 void RegularGrid<DIM>::UpdateExtents()
 {
+    // Simple geometric partitioning. If Z dim is 1 split over y, otherwise split over z.
+    // We need to make sure that all partitions are 'block' shaped for use with the VTK
+    // image data structure.
+    unsigned num_procs = PetscTools::GetNumProcs();
+    unsigned low_index;
+    unsigned high_index;
     unsigned num_points = mDimensions[0] * mDimensions[1] * mDimensions[2];
+
+    if(mDimensions[2]==1)
+    {
+        // Split over Y
+        unsigned piece_size = mDimensions[1]/num_procs;
+        if(piece_size==0)
+        {
+            EXCEPTION("2d Grids with Y-dimensions lower than the number of processors are not supported.");
+        }
+
+        unsigned local_piece_size = piece_size;
+        if (PetscTools::AmTopMost())
+        {
+            local_piece_size = mDimensions[1] - piece_size*num_procs + piece_size;
+        }
+        low_index = PetscTools::GetMyRank()*(piece_size*mDimensions[0]);
+        high_index = mDimensions[0] * local_piece_size + low_index;
+    }
+    else
+    {
+        unsigned piece_size = mDimensions[2]/num_procs;
+        if(piece_size==0)
+        {
+            EXCEPTION("3D Grids with z-dimensions lower than the number of processors are not supported.");
+        }
+
+        unsigned local_piece_size = piece_size;
+        if (PetscTools::AmTopMost())
+        {
+            local_piece_size = mDimensions[2] - piece_size*num_procs + piece_size;
+        }
+        low_index = PetscTools::GetMyRank()*piece_size*mDimensions[0]*mDimensions[1];
+        high_index = mDimensions[0]*mDimensions[1] * local_piece_size + low_index;
+    }
+
     // Set up the distributed vector factory and let PETSc decide on splitting
     mpDistributedVectorFactory =
-            boost::shared_ptr<DistributedVectorFactory>(new DistributedVectorFactory(num_points));
+            boost::shared_ptr<DistributedVectorFactory>(new DistributedVectorFactory(low_index, high_index, num_points));
 
     unsigned lo = mpDistributedVectorFactory->GetLow();
     unsigned hi = mpDistributedVectorFactory->GetHigh();
-
     unsigned mod_z = lo % (mDimensions[0] * mDimensions[1]);
     mExtents[4] = (lo - mod_z) / (mDimensions[0] * mDimensions[1]);
     unsigned mod_y = mod_z % mDimensions[0];
@@ -656,12 +714,60 @@ void RegularGrid<DIM>::UpdateExtents()
 }
 
 template<unsigned DIM>
+void RegularGrid<DIM>::SetUpVtkCellLocator()
+{
+    if(!this->mVtkRepresentationUpToDate)
+    {
+        SetUpVtkGrid();
+    }
+
+    // Put a VTK image data cell over each conventional grid point for easy use of locator methods
+    vtkSmartPointer<vtkImageData> p_current_image = vtkImageData::SafeDownCast(this->mpVtkGrid);
+    vtkSmartPointer<vtkImageData> p_temp_image = vtkSmartPointer<vtkImageData>::New();
+    int* dimensions = p_current_image->GetDimensions();
+    if(DIM==3)
+    {
+        p_temp_image->SetDimensions(dimensions[0]+1, dimensions[1]+1, dimensions[2]+1);
+    }
+    else
+    {
+        p_temp_image->SetDimensions(dimensions[0]+1, dimensions[1]+1, 1);
+    }
+    double spacing = p_current_image->GetSpacing()[0];
+    p_temp_image->SetSpacing(p_current_image->GetSpacing());
+
+    // Add a small offset to the origin to act as a 'jiggle' and force borderline cell identification
+    // to bias the bottom, front, left cell. Otherwise multiple cells can be identified in maps if
+    // vessels or points are equidistant between grid locations.
+    double jiggle = 1.e-3*spacing;
+    double* origin = p_current_image->GetOrigin();
+    if(DIM==3)
+    {
+        p_temp_image->SetOrigin(origin[0]-spacing/2.0+jiggle,origin[1]-spacing/2.0+jiggle,origin[2]-spacing/2.0+jiggle);
+    }
+    else
+    {
+        p_temp_image->SetOrigin(origin[0]-spacing/2.0+jiggle,origin[1]-spacing/2.0+jiggle, 0.0);
+    }
+
+    this->mpVtkCellLocator = vtkSmartPointer<vtkCellLocator>::New();
+    this->mpVtkCellLocator->SetDataSet(p_temp_image);
+    this->mpVtkCellLocator->BuildLocator();
+}
+
+template<unsigned DIM>
 void RegularGrid<DIM>::Write(boost::shared_ptr<OutputFileHandler> pFileHandler)
 {
-    RegularGridWriter writer;
-    writer.SetFilename(pFileHandler->GetOutputDirectoryFullPath() + "/grid.vti");
-    writer.SetImage(vtkImageData::SafeDownCast(this->GetGlobalVtkGrid()));
-    writer.Write();
+    // Write the global grid. First everyone adds their point values to the global grid.
+    this->GatherAllPointData();
+
+    if(PetscTools::AmMaster())
+    {
+        RegularGridWriter writer;
+        writer.SetFilename(pFileHandler->GetOutputDirectoryFullPath() + "/grid.vti");
+        writer.SetImage(vtkImageData::SafeDownCast(this->GetGlobalVtkGrid()));
+        writer.Write();
+    }
 }
 
 // Explicit instantiation

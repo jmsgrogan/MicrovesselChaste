@@ -134,8 +134,8 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::concentration_flow_rate> ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeNonlinearSourceTerm(unsigned gridIndex,
                                                                                                                                                   units::quantity<unit::concentration> u)
 {
-    units::quantity<unit::concentration_flow_rate> rate = this->mLinearInUTerm*u +
-            this->mDiscreteConstantSourceStrengths[gridIndex] + this->mDiscreteLinearSourceStrengths[gridIndex]*u;
+    units::quantity<unit::concentration_flow_rate> rate = this->mLinearInUTerm*u ;//+
+            //this->mDiscreteConstantSourceStrengths[gridIndex] + this->mDiscreteLinearSourceStrengths[gridIndex]*u;
     return rate;
 }
 
@@ -143,7 +143,7 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::rate> ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeNonlinearSourceTermPrime(unsigned gridIndex,
                                                                                                                                     units::quantity<unit::concentration> u)
 {
-    units::quantity<unit::rate> rate = this->mLinearInUTerm + this->mDiscreteLinearSourceStrengths[gridIndex];
+    units::quantity<unit::rate> rate = this->mLinearInUTerm ;//+ this->mDiscreteLinearSourceStrengths[gridIndex];
     return rate;
 }
 

@@ -117,8 +117,9 @@ public:
 
     /**
      * Do the write
+     * @param masterOnly only master writes if true
      */
-    void Write();
+    void Write(bool masterOnly=true);
 
 };
 

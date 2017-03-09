@@ -33,43 +33,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-/*
-
-Copyright (c) 2005-2017, University of Oxford.
- All rights reserved.
-
- University of Oxford means the Chancellor, Masters and Scholars of the
- University of Oxford, having an administrative office at Wellington
- Square, Oxford OX1 2JD, UK.
-
- This file is part of Chaste.
-
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice,
- this list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice,
- this list of conditions and the following disclaimer in the documentation
- and/or other materials provided with the distribution.
- * Neither the name of the University of Oxford nor the names of its
- contributors may be used to endorse or promote products derived from this
- software without specific prior written permission.
-
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
- */
-
 #include <petscts.h>
 #include <petscdmda.h>
+#include <petscvec.h>
 #include "ReplicatableVector.hpp"
 #include "VesselSegment.hpp"
 #include "SimpleParabolicFiniteDifferenceSolver.hpp"
@@ -176,6 +142,9 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleMatrix()
     double diffusion_term = (p_parabolic_pde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
     PetscMatTools::Zero(this->mMatrixToAssemble);
     PetscMatTools::SwitchWriteMode(this->mMatrixToAssemble);
+    // From PETSc 3.6 current solution VEC is read only, which is incompatible with
+    // PetscVecTools::GetElement. Copy it over instead.
+    ReplicatableVector soln_guess_repl(this->mCurrentSolution);
 
     for (unsigned i = extents[4]; i <= extents[5]; i++) // Z
     {
@@ -184,7 +153,7 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleMatrix()
             for (unsigned k = extents[0]; k <= extents[1]; k++) // X
             {
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
-                double current_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index);
+                double current_solution = soln_guess_repl[grid_index];
 
                 units::quantity<unit::concentration>  current_dimensional_solution =
                         current_solution*this->GetReferenceConcentration();
@@ -277,6 +246,9 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleVector()
 
     // compute function value, given current guess
     PetscVecTools::Zero(this->mVectorToAssemble);
+    // From PETSc 3.6 current solution VEC is read only, which is incompatible with
+    // PetscVecTools::GetElement. Copy it over instead.
+    ReplicatableVector soln_guess_repl(this->mCurrentSolution);
 
     unsigned num_points_xy = dimensions[0]*dimensions[1];
     for (unsigned i = extents[4]; i <= extents[5]; i++) // Z
@@ -286,8 +258,7 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleVector()
             for (unsigned k = extents[0]; k <= extents[1]; k++) // X
             {
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
-
-                double current_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index);
+                double current_solution = soln_guess_repl[grid_index];
                 units::quantity<unit::concentration>  current_dimensional_solution =
                         current_solution*this->GetReferenceConcentration();
                 units::quantity<unit::concentration_flow_rate> sink_terms =
@@ -299,48 +270,48 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleVector()
                 // No flux at x bottom
                 if (k > 0)
                 {
-                    double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index - 1);
+                    double nbr_solution = soln_guess_repl[grid_index - 1];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                 }
                 else
                 {
-                    double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index + 1);
+                    double nbr_solution = soln_guess_repl[grid_index + 1];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                 }
 
                 // No flux at x top
                 if (k < dimensions[0] - 1)
                 {
-                    double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index + 1);
+                    double nbr_solution = soln_guess_repl[grid_index + 1];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                 }
                 else
                 {
-                    double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index - 1);
+                    double nbr_solution = soln_guess_repl[grid_index - 1];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                 }
 
                 // No flux at y bottom
                 if (j > 0)
                 {
-                    double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index - dimensions[0]);
+                    double nbr_solution = soln_guess_repl[grid_index - dimensions[0]];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                 }
                 else
                 {
-                    double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index + dimensions[0]);
+                    double nbr_solution = soln_guess_repl[grid_index + dimensions[0]];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                 }
 
-                // Robin at y top
+                // No flux at y top
                 if (j < dimensions[1] - 1)
                 {
-                    double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index + dimensions[0]);
+                    double nbr_solution = soln_guess_repl[grid_index + dimensions[0]];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                 }
                 else
                 {
-                    double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index - dimensions[0]);
+                    double nbr_solution = soln_guess_repl[grid_index - dimensions[0]];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                 }
 
@@ -349,37 +320,37 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleVector()
                     // No flux at z bottom
                     if (i > 0)
                     {
-                        double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index - num_points_xy);
+                        double nbr_solution = soln_guess_repl[grid_index - num_points_xy];
                         PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                     }
                     else
                     {
-                        double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index + num_points_xy);
+                        double nbr_solution = soln_guess_repl[grid_index + num_points_xy];
                         PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                     }
 
                     // No flux at z top
                     if (i < dimensions[2] - 1)
                     {
-                        double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index + num_points_xy);
+                        double nbr_solution = soln_guess_repl[grid_index + num_points_xy];
                         PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                     }
                     else
                     {
-                        double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index - num_points_xy);
+                        double nbr_solution = soln_guess_repl[grid_index - num_points_xy];
                         PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                     }
                 }
             }
         }
     }
-
     PetscVecTools::Finalise(this->mVectorToAssemble);
 }
 
 template<unsigned DIM>
 void SimpleParabolicFiniteDifferenceSolver<DIM>::Solve()
 {
+    // Set up grids, boundary conditions, discrete sinks/sources etc.
     AbstractFiniteDifferenceSolverBase<DIM>::Setup();
 
     c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
@@ -390,7 +361,6 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::Solve()
     {
         this->mSolution = std::vector<double>(number_of_points, 0.0);
     }
-
     Vec previous_solution = PetscTools::CreateVec(number_of_points);
     for(unsigned idx=0; idx<this->mSolution.size(); idx++)
     {

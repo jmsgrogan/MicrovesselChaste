@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef REGULARGRID_HPP_
 #define REGULARGRID_HPP_
 
@@ -154,6 +152,13 @@ public:
      * @return the grid 1-d index
      */
     unsigned GetGridIndex(unsigned xIndex, unsigned yIndex, unsigned zIndex);
+
+    /**
+     * Return the local grid index for the supplied global index. Return -1 if not on this proc.
+     * @param globalIndex the global index
+     * @return the local grid index for the supplied global index. Return -1 if not on this proc
+     */
+    virtual int GetLocalIndex(unsigned globalIndex);
 
     /**
      * Calculate GLOBAL von Neumann neighbour indices for each LOCAL grid point
@@ -278,6 +283,11 @@ public:
      * Set the internal vtk representation of the grid
      */
     void SetUpVtkGrid();
+
+    /**
+     * Over-ridden method to set up the cell locator
+     */
+    virtual void SetUpVtkCellLocator();
 
     /**
      * Update the local extents

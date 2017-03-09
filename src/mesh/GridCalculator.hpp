@@ -33,17 +33,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef GRIDCALCULATOR_HPP_
 #define GRIDCALCULATOR_HPP_
 
 #include <vector>
-#include <map>
-#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
-#include <vtkImageData.h>
-#include <vtkUnstructuredGrid.h>
-#include <vtkSmartPointer.h>
 #include "UblasIncludes.hpp"
 #include "SmartPointers.hpp"
 #include "VesselNetwork.hpp"

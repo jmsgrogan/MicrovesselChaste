@@ -33,78 +33,51 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef REGULARGRIDWRITER_HPP_
-#define REGULARGRIDWRITER_HPP_
-
-#include "SmartPointers.hpp"
-#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
-#include <vtkImageData.h>
-#include <vtkSmartPointer.h>
+#ifndef _PETSCANDVTKSETUPANDFINALIZE_HPP_
+#define _PETSCANDVTKSETUPANDFINALIZE_HPP_
 
 /**
- *  This class that manages output of vtk images (regular structured grids). It is also used for
- *  outputting solutions on regular grids.
+ * This file is designed to be included by any test suites that use PETSc.
+ * It controls the PETSc initialisation and finalisation.
  */
-class RegularGridWriter
+
+#include "PetscSetupUtils.hpp"
+#include <cxxtest/GlobalFixture.h>
+#include <petsc.h>
+#include "PetscException.hpp"
+#include <vtkMPIController.h>
+#include "CommandLineArguments.hpp"
+
+class PetscAndVtkSetup : public CxxTest::GlobalFixture
 {
-
-private:
-
-    /**
-     * The image to be written
-     */
-    vtkSmartPointer<vtkImageData> mpVtkImage;
-
-    /**
-     * The output path
-     */
-    std::string mFilepath;
-
-    /**
-     * The whole extents, used for the parallel writer
-     */
-    std::vector<unsigned> mWholeExtents;
-
 public:
 
     /**
-     * Constructor
+     * Standard setup method for PETSc.
+     * @return true (by CxxTest convention)
      */
-    RegularGridWriter();
-
+    bool setUpWorld()
+    {
+        PetscSetupUtils::CommonSetup();
+        CommandLineArguments* p_args = CommandLineArguments::Instance();
+        vtkSmartPointer<vtkMPIController> p_vtk_mpi_controller = vtkSmartPointer<vtkMPIController>::New();
+        p_vtk_mpi_controller->Initialize(p_args->p_argc, p_args->p_argv,1); // 1 here says real finalize has been done by PETSc
+        return true;
+    }
     /**
-     * Destructor
+     * Clean up PETSc after running all tests.
+     * @return true (by CxxTest convention)
      */
-    ~RegularGridWriter();
-
-    /**
-     * Factory constructor method
-     * @return a shared pointer to a instance of this class
-     */
-    static boost::shared_ptr<RegularGridWriter> Create();
-
-    /**
-     * Set the filename for the writer
-     * @param rFilename the file name
-     */
-    void SetFilename(const std::string& rFilename);
-
-    /**
-     * Set whole extents for any image data. This is used for multi-piece writing.
-     * @param rFilename the file name
-     */
-    void SetWholeExtents(std::vector<unsigned> wholeExtents);
-
-    /**
-     * Set the image in vti format
-     * @param pImage
-     */
-    void SetImage(vtkSmartPointer<vtkImageData> pImage);
-
-    /**
-     * Write the image in VTK format
-     */
-    void Write();
+    bool tearDownWorld()
+    {
+        /// Causes memory failure (and seg fault) in PETSc 3.2 with MPICH-1
+        vtkSmartPointer<vtkMPIController> p_vtk_mpi_controller = vtkSmartPointer<vtkMPIController>::New();
+        p_vtk_mpi_controller->Finalize(1); // 1 here says real finalize will be done by PETSc
+        PetscSetupUtils::CommonFinalize();
+        return true;
+    }
 };
 
-#endif /*REGULARGRIDWRITER_HPP_*/
+static PetscAndVtkSetup thisSetup;
+
+#endif //_PETSCANDVTKSETUPANDFINALIZE_HPP_

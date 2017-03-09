@@ -125,6 +125,16 @@ void Part<DIM>::AddHoleMarker(DimensionalChastePoint<DIM> hole)
 }
 
 template<unsigned DIM>
+void Part<DIM>::AppendPart(boost::shared_ptr<Part<DIM> > pPart)
+{
+    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+    for(unsigned idx=0; idx<polygons.size(); idx++)
+    {
+        this->AddPolygon(polygons[idx], true);
+    }
+}
+
+template<unsigned DIM>
 boost::shared_ptr<Polygon<DIM> > Part<DIM>::AddPolygon(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices, bool newFacet,
                                                                                    boost::shared_ptr<Facet<DIM> > pFacet)
 {
@@ -656,6 +666,16 @@ void Part<DIM>::MergeCoincidentVertices()
         mFacets[idx]->UpdateVertices();
     }
     mVtkIsUpToDate = false;
+}
+
+template<unsigned DIM>
+void Part<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
+{
+    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+    for(unsigned idx=0; idx<polygons.size(); idx++)
+    {
+        polygons[idx]->RotateAboutAxis(axis, angle);
+    }
 }
 
 template<unsigned DIM>

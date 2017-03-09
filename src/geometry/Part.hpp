@@ -189,6 +189,13 @@ public:
     void AddVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork, bool surface = false);
 
     /**
+     * Add a part to the existing one. This takes all the polygons from the incoming part and
+     * adds them to new facets on the existing part.
+     * @param pPart the part to be appended
+     */
+    void AppendPart(boost::shared_ptr<Part<DIM> > pPart);
+
+    /**
      * Remove vessels outside the part
      * @param pVesselNetwork the vessel network to be pruned
      */
@@ -290,6 +297,13 @@ public:
      * Merge vertices that overlap in polygons and facets
      */
     void MergeCoincidentVertices();
+
+    /**
+     * Rotate about the specified axis by the specified angle
+     * @param axis the rotation axis
+     * @param angle the rotation angle
+     */
+    void RotateAboutAxis(c_vector<double, 3> axis, double angle);
 
     /**
      * Set the reference length scale

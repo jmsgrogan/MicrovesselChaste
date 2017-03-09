@@ -33,9 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include <cmath>
-#include <vtkCellLocator.h>
-#include <vtkLine.h>
 #include "PetscTools.hpp"
 #include "Exception.hpp"
 #include "GridCalculator.hpp"
@@ -217,7 +214,6 @@ bool GridCalculator<DIM>::IsSegmentAtLocation(unsigned index, bool update)
     {
         rGetSegmentMap(update);
     }
-
     return mSegmentMap[index].size()>0;
 }
 

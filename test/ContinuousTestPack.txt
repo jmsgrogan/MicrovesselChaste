@@ -16,7 +16,6 @@ population/vessel/TestVesselNetwork.hpp
 population/vessel/calculators/TestVesselNetworkGraphCalculator.hpp
 population/vessel/calculators/TestVesselNetworkGeometryCalculator.hpp
 population/vessel/calculators/TestDistanceMap.hpp
-population/vessel/calculators/TestDensityMap.hpp
 population/vessel/generators/TestVesselNetworkGenerator.hpp
 population/vessel/readers/TestVesselNetworkReader.hpp
 population/vessel/writers/TestVesselNetworkWriter.hpp
@@ -36,12 +35,14 @@ mesh/TestRegularGridWriter.hpp
 mesh/TestDiscreteContinuumMesh.hpp
 mesh/TestMeshReaderAndWriter.hpp
 mesh/TestGridCalculator.hpp
-pde/TestFiniteDifferenceSolver.hpp
-pde/TestNonLinearFiniteDifferenceSolver.hpp
-pde/TestTimeDependentFiniteDifferenceSolver.hpp
+pde/TestDensityMap.hpp
 pde/TestGreensFunctionSolver.hpp
-pde/finite_element/TestFiniteElementSolver.hpp
-pde/finite_element/TestNonLinearFiniteElementSolver.hpp
+pde/finite_difference/TestSimpleLinearEllipticFiniteDifferenceSolver.hpp
+pde/finite_difference/TestSimpleNonLinearEllipticFiniteDifferenceSolver.hpp
+pde/finite_difference/TestSimpleParabolicFiniteDifferenceSolver.hpp
+pde/finite_difference/TestCoupledLumpedSystemFiniteDifferenceSolver.hpp
+pde/finite_element/TestSimpleLinearEllipticFiniteElementSolver.hpp
+pde/finite_element/TestSimpleNonLinearEllipticFiniteElementSolver.hpp
 pde/finite_element/TestRobinBoundaryConditions.hpp
 pde/finite_element/TestCoupledLumpedSystemFiniteElementSolver.hpp
 pde/TestCellBasedDiscreteSource.hpp
@@ -49,7 +50,6 @@ pde/TestSolutionDependentDiscreteSource.hpp
 pde/TestDiscreteSource.hpp
 pde/TestVesselBasedDiscreteSource.hpp
 pde/TestDiscreteContinuumBoundaryCondition.hpp
-pde/TestCoupledLumpedSystemFiniteDifferenceSolver.hpp
 population/cell/TestLQRadiotherapyCellKiller.hpp
 population/cell/TestOwen2011OxygenBasedCellCycleModelWithOde.hpp
 population/cell/TestOwen2011OxygenBasedCellCycleOdeSystem.hpp

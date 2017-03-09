@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTSIMPLEPARABOLICFINITEDIFFERENCESOLVER_HPP_
 #define TESTSIMPLEPARABOLICFINITEDIFFERENCESOLVER_HPP_
 
@@ -46,18 +44,15 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UblasIncludes.hpp"
 #include "Part.hpp"
 #include "UnitCollection.hpp"
-#include "CoupledVegfPelletDiffusionReactionPde.hpp"
-#include "CoupledLumpedSystemFiniteDifferenceSolver.hpp"
-#include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
-#include "VesselNetwork.hpp"
-#include "VesselNetworkGenerator.hpp"
+#include "ParabolicDiffusionReactionPde.hpp"
+#include "SimpleParabolicFiniteDifferenceSolver.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
-class TestCoupledLumpedSystemFiniteDifferenceSolver : public AbstractCellBasedWithTimingsTestSuite
+class TestSimpleParabolicFiniteDifferenceSolver : public AbstractCellBasedWithTimingsTestSuite
 {
 public:
 
@@ -68,27 +63,28 @@ public:
 
         // Set up the mesh
         boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(2000e-6*unit::metres, 1000e-6*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        p_domain->AddRectangle(1000e-6*unit::metres, 1000e-6*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
 
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 100.0e-6*unit::metres);
 
         // Choose the PDE
-        boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
+        boost::shared_ptr<ParabolicDiffusionReactionPde<2> > p_pde = ParabolicDiffusionReactionPde<2>::Create();
         units::quantity<unit::diffusivity> vegf_diffusivity(6.94e-11 * unit::metre_squared_per_second);
         units::quantity<unit::rate> vegf_decay_rate((-0.8/3600.0) * unit::per_second);
         p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
         p_pde->SetContinuumLinearInUTerm(vegf_decay_rate);
 
         units::quantity<unit::concentration> initial_vegf_concentration(3.93e-4*unit::mole_per_metre_cubed);
-        p_pde->SetMultiplierValue(initial_vegf_concentration);
+        std::vector<double> initial_condition(p_grid->GetNumberOfLocations(), double(initial_vegf_concentration/(1.e-6*unit::mole_per_metre_cubed)));
 
         SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(1.0, 1); // Force 1 hour increments
-        CoupledLumpedSystemFiniteDifferenceSolver<2> solver;
+        SimpleParabolicFiniteDifferenceSolver<2> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
+        solver.UpdateSolution(initial_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestCoupledLumpedSystemFiniteDifferenceSolver/Plane"));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleParabolicFiniteDifferenceSolver/Box", false));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
 

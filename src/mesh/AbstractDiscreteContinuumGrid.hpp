@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef ABSTRACTDISCRETECONTINUUMGRID_HPP_
 #define ABSTRACTDISCRETECONTINUUMGRID_HPP_
 
@@ -49,6 +47,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkDoubleArray.h>
 #include <vtkUnsignedIntArray.h>
 #include <vtkPolyData.h>
+#include "PetscTools.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "UnitCollection.hpp"
 
@@ -142,6 +141,22 @@ public:
             const std::string& rName = "Default Location Data");
 
     /**
+     * Return the global grid index for the supplied local index
+     * @param localIndex the local index
+     * @return the global index
+     */
+    virtual unsigned GetGlobalIndex(unsigned localIndex);
+
+    /**
+     * Return the local grid index for the supplied global index. Return -1 if not on this proc.
+     * This versions just spits the global index back, it should be over-ridden if child
+     * classes need to work in parallel.
+     * @param globalIndex the global index
+     * @return the local grid index for the supplied global index. Return -1 if not on this proc
+     */
+    virtual int GetLocalIndex(unsigned globalIndex);
+
+    /**
      * Return the bounding geometry on this processor
      * @return the bounding geometry on this processor
      */
@@ -184,6 +199,28 @@ public:
     virtual vtkSmartPointer<vtkDataSet> GetVtkGrid();
 
     /**
+     * Do simple MPI ALL GATHER for the named point data. Assumes data arrays are ordered over ranks.
+     * @param rName the point data name
+     */
+    virtual void AllGatherPointData(const std::string& rName);
+
+    /**
+     * Do MPI ALL GATHER for all point data. Assumes data arrays are ordered over ranks.
+     */
+    virtual void AllGatherAllPointData();
+
+    /**
+     * Do MPI GATHER for the named point data. Assumes data arrays are ordered over ranks.
+     * @param rName the point data name
+     */
+    virtual void GatherPointData(const std::string& rName);
+
+    /**
+     * Do MPI GATHER for all point data. Assumes data arrays are ordered over ranks.
+     */
+    virtual void GatherAllPointData();
+
+    /**
      * Get the nearest LOCAL location index to the supplied point. An exception is
      * thrown if the input location does not lie inside the grid.
      * @param rLocation the point to get the nearest index to
@@ -210,8 +247,8 @@ public:
     units::quantity<unit::length> GetReferenceLengthScale();
 
     /**
-     * Return a vtk cell locator for quickly finding points or elements
-     * @return a vtk cell locator for quickly finding points or elements
+     * Return a vtk cell locator for quickly finding elements
+     * @return a vtk cell locator for quickly finding elements
      */
     virtual vtkSmartPointer<vtkCellLocator> GetVtkCellLocator();
 

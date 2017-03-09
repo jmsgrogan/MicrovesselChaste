@@ -33,6 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
+#include <vtkThreshold.h>
 #include "VesselSegment.hpp"
 #include "DensityMap.hpp"
 #include "GeometryTools.hpp"
@@ -68,7 +70,7 @@ DensityMap<DIM>::~DensityMap()
 }
 
 template<unsigned DIM>
-std::vector<double> DensityMap<DIM>::GetVesselSurfaceAreaDensity(bool update)
+const std::vector<double>& DensityMap<DIM>::rGetVesselSurfaceAreaDensity(bool update)
 {
     unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
     if(!update and mVesselSurfaceAreaDensity.size() == num_points)
@@ -88,13 +90,14 @@ std::vector<double> DensityMap<DIM>::GetVesselSurfaceAreaDensity(bool update)
         units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetLocationVolumes(true, true);
 
+        // Get the local grid as VTK unstructured
+
         if (this->mpNetwork)
         {
             if(this->mpGridCalculator->HasStructuredGrid())
             {
                 boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
                         boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
-
                 if(!p_regular_grid)
                 {
                     EXCEPTION("Can't cast to regular grid");
@@ -150,7 +153,7 @@ std::vector<double> DensityMap<DIM>::GetVesselSurfaceAreaDensity(bool update)
 }
 
 template<unsigned DIM>
-std::vector<double> DensityMap<DIM>::GetVesselLineDensity(bool update)
+const std::vector<double>& DensityMap<DIM>::rGetVesselLineDensity(bool update)
 {
     unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
     if(!update and mVesselLineDensity.size() == num_points)
@@ -165,7 +168,7 @@ std::vector<double> DensityMap<DIM>::GetVesselLineDensity(bool update)
 }
 
 template<unsigned DIM>
-std::vector<double> DensityMap<DIM>::GetPerfusedVesselSurfaceAreaDensity(bool update)
+const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselSurfaceAreaDensity(bool update)
 {
     unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
     if(!update and mPerfusedVesselSurfaceAreaDensity.size() == num_points)
@@ -180,7 +183,7 @@ std::vector<double> DensityMap<DIM>::GetPerfusedVesselSurfaceAreaDensity(bool up
 }
 
 template<unsigned DIM>
-std::vector<double> DensityMap<DIM>::GetPerfusedVesselLineDensity(bool update)
+const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselLineDensity(bool update)
 {
     unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
     if(!update and mPerfusedVesselLineDensity.size() == num_points)
@@ -195,7 +198,7 @@ std::vector<double> DensityMap<DIM>::GetPerfusedVesselLineDensity(bool update)
 }
 
 template<unsigned DIM>
-std::vector<double> DensityMap<DIM>::GetVesselTipDensity(bool update)
+const std::vector<double>& DensityMap<DIM>::rGetVesselTipDensity(bool update)
 {
     unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
     if(!update and mVesselTipDensity.size() == num_points)
@@ -210,7 +213,7 @@ std::vector<double> DensityMap<DIM>::GetVesselTipDensity(bool update)
 }
 
 template<unsigned DIM>
-std::vector<double> DensityMap<DIM>::GetVesselBranchDensity(bool update)
+const std::vector<double>& DensityMap<DIM>::rGetVesselBranchDensity(bool update)
 {
     unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
     if(!update and mVesselBranchDensity.size() == num_points)
@@ -225,7 +228,7 @@ std::vector<double> DensityMap<DIM>::GetVesselBranchDensity(bool update)
 }
 
 template<unsigned DIM>
-std::vector<double> DensityMap<DIM>::GetVesselQuantityDensity(const std::string& rQuantity, bool update)
+const std::vector<double>& DensityMap<DIM>::rGetVesselQuantityDensity(const std::string& rQuantity, bool update)
 {
     unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
     if(!update and mVesselQuantityDensity.size() == num_points)
@@ -240,7 +243,7 @@ std::vector<double> DensityMap<DIM>::GetVesselQuantityDensity(const std::string&
 }
 
 template<unsigned DIM>
-std::vector<double> DensityMap<DIM>::GetCellDensity(bool update)
+const std::vector<double>& DensityMap<DIM>::rGetCellDensity(bool update)
 {
     unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
     if(!update and mDimensionlessCellDensity.size() == num_points)
@@ -255,7 +258,7 @@ std::vector<double> DensityMap<DIM>::GetCellDensity(bool update)
 }
 
 template<unsigned DIM>
-std::vector<double> DensityMap<DIM>::GetCellDensity(boost::shared_ptr<AbstractCellMutationState> pMutationState, bool update)
+const std::vector<double>& DensityMap<DIM>::rGetCellDensity(boost::shared_ptr<AbstractCellMutationState> pMutationState, bool update)
 {
     unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
     if(!update and mDimensionlessCellDensityByMutationType.size() == num_points)

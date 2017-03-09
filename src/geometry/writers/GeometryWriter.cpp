@@ -84,7 +84,7 @@ void GeometryWriter::SetOutputFormat(GeometryFormat::Value format)
     mFormat = format;
 }
 
-void GeometryWriter::Write()
+void GeometryWriter::Write(bool masterOnly)
 {
     if(!mpInputGeometry)
     {
@@ -98,7 +98,7 @@ void GeometryWriter::Write()
 
     if(mFormat == GeometryFormat::STL)
     {
-        if(PetscTools::AmMaster())
+        if((masterOnly and PetscTools::AmMaster()) or !masterOnly)
         {
             vtkSmartPointer<vtkTriangleFilter> p_tri_filter = vtkSmartPointer<vtkTriangleFilter>::New();
             #if VTK_MAJOR_VERSION <= 5
@@ -124,7 +124,7 @@ void GeometryWriter::Write()
     }
     else
     {
-        if(PetscTools::AmMaster())
+        if((masterOnly and PetscTools::AmMaster()) or !masterOnly)
         {
             vtkSmartPointer<vtkXMLPolyDataWriter> writer = vtkSmartPointer<vtkXMLPolyDataWriter>::New();
             writer->SetFileName(mFilename.c_str());

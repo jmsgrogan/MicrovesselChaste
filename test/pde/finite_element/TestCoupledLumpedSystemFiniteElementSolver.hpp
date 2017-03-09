@@ -45,7 +45,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UnitCollection.hpp"
 #include "MappableGridGenerator.hpp"
 #include "Part.hpp"
-#include "Polygon.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
 #include "MultiFormatMeshWriter.hpp"
 
@@ -173,19 +172,12 @@ public:
         rotation_axis[1] = 1.0;
         rotation_axis[2] = 0.0;
         double rotation_angle = 0.0;
-        for(unsigned idx=0; idx<polygons.size(); idx++)
-        {
-            polygons[idx]->RotateAboutAxis(rotation_axis, rotation_angle);
-        }
+        p_vegf_domain->RotateAboutAxis(rotation_axis, rotation_angle);
         pellet_centre.RotateAboutAxis(rotation_axis, rotation_angle);
-
         p_vegf_domain->Write(p_handler->GetOutputDirectoryFullPath()+"initial_vegf_domain.vtp");
 
         // Add the pellet domain to the cornea
-        for(unsigned idx=0; idx<polygons.size(); idx++)
-        {
-            p_domain->AddPolygon(polygons[idx], true);
-        }
+        p_domain->AppendPart(p_vegf_domain);
         p_domain->AddHoleMarker(pellet_centre);
         p_domain->Write(p_handler->GetOutputDirectoryFullPath()+"merged_cornea.vtp", GeometryFormat::VTP);
 

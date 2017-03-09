@@ -33,41 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-/*
-
-Copyright (c) 2005-2017, University of Oxford.
- All rights reserved.
-
- University of Oxford means the Chancellor, Masters and Scholars of the
- University of Oxford, having an administrative office at Wellington
- Square, Oxford OX1 2JD, UK.
-
- This file is part of Chaste.
-
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice,
- this list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice,
- this list of conditions and the following disclaimer in the documentation
- and/or other materials provided with the distribution.
- * Neither the name of the University of Oxford nor the names of its
- contributors may be used to endorse or promote products derived from this
- software without specific prior written permission.
-
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
- */
-
 #include <petscts.h>
 #include <petscdmda.h>
 #include "ReplicatableVector.hpp"
@@ -75,7 +40,6 @@ Copyright (c) 2005-2017, University of Oxford.
 #include "CoupledLumpedSystemFiniteDifferenceSolver.hpp"
 #include "CoupledVegfPelletDiffusionReactionPde.hpp"
 #include "BaseUnits.hpp"
-#include "Debug.hpp"
 
 // Parabolic solve method interfaces, needed later.
 template<unsigned DIM>
@@ -115,7 +79,6 @@ boost::shared_ptr<CoupledLumpedSystemFiniteDifferenceSolver<DIM> > CoupledLumped
 template<unsigned DIM>
 void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Vec currentGuess, Vec dUdt)
 {
-    MARK;
     this->SetVectorToAssemble(dUdt);
     this->SetCurrentSolution(currentGuess);
     this->AssembleVector();
@@ -137,11 +100,10 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Ve
 template<unsigned DIM>
 void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::ComputeJacobian(const Vec currentGuess, Mat* pJacobian)
 {
-    MARK;
     this->SetMatrixToAssemble(*pJacobian);
     this->SetCurrentSolution(currentGuess);
     this->AssembleMatrix();
-    MARK;
+
     // Apply the boundary conditions
     std::vector<unsigned> bc_indices;
     unsigned lo = this->mpRegularGrid->GetDistributedVectorFactory()->GetLow();
@@ -153,16 +115,13 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::ComputeJacobian(const Vec c
             bc_indices.push_back(idx);
         }
     }
-    MARK;
     PetscMatTools::ZeroRowsWithValueOnDiagonal(this->mMatrixToAssemble, bc_indices, 1.0);
     PetscMatTools::Finalise(this->mMatrixToAssemble);
-    MARK;
 }
 
 template<unsigned DIM>
 void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
 {
-    MARK;
     c_vector<unsigned, 6> extents = this->mpRegularGrid->GetExtents();
     c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
@@ -170,13 +129,17 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
 
     boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_pde =
             boost::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM> >(this->mpPde);
-    MARK;
+
     double diffusion_term = (p_coupled_pde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
     unsigned num_points_xy = dimensions[0]*dimensions[1];
     unsigned num_points = num_points_xy*dimensions[2];
-    MARK;
+
     PetscMatTools::Zero(this->mMatrixToAssemble);
     PetscMatTools::SwitchWriteMode(this->mMatrixToAssemble);
+
+    // From PETSc 3.6 current solution VEC is read only, which is incompatible with
+    // PetscVecTools::GetElement. Copy it over instead.
+    ReplicatableVector soln_guess_repl(this->mCurrentSolution);
 
     for (unsigned i = extents[4]; i <= extents[5]; i++) // Z
     {
@@ -184,16 +147,14 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
         {
             for (unsigned k = extents[0]; k <= extents[1]; k++) // X
             {
-                MARK;
+
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
-                double current_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index);
-                MARK;
+                double current_solution = soln_guess_repl[grid_index];
                 units::quantity<unit::concentration>  current_dimensional_solution =
                         current_solution*this->GetReferenceConcentration();
-                MARK;
+
                 units::quantity<unit::rate> sink_terms =
                         p_coupled_pde->ComputeNonlinearSourceTermPrime(grid_index, current_dimensional_solution);
-                MARK;
                 double nondim_sink_terms = sink_terms*reference_time;
                 PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index, nondim_sink_terms);
                 PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index,-2.0*double(DIM)*diffusion_term);
@@ -235,7 +196,6 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
                 }
                 else
                 {
-                    MARK;
                     PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index - dimensions[0], diffusion_term);
 
                     double nondim_permeability = p_coupled_pde->GetCorneaPelletPermeability()*(reference_time/spacing);
@@ -274,7 +234,6 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
             }
         }
     }
-    MARK;
     units::quantity<unit::area> surface_area = p_coupled_pde->GetPelletSurfaceArea();
     units::quantity<unit::volume> volume = p_coupled_pde->GetPelletVolume();
     units::quantity<unit::membrane_permeability> permeability = p_coupled_pde->GetCorneaPelletPermeability();
@@ -282,7 +241,6 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
     units::quantity<unit::rate> decay_rate = p_coupled_pde->GetPelletFreeDecayRate();
     units::quantity<unit::rate> jacEntry = -(decay_rate/binding_constant) - (surface_area*permeability)/(volume*binding_constant);
     PetscMatTools::AddToElement(this->mMatrixToAssemble, num_points, num_points, jacEntry*reference_time);
-    MARK;
     for (unsigned i = 0; i < dimensions[0]; i++)
     {
         for (unsigned j = 0; j < dimensions[1]; j++)
@@ -292,28 +250,27 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
             PetscMatTools::AddToElement(this->mMatrixToAssemble, num_points, J_index, jacEntry*reference_time);
         }
     }
-    MARK;
     PetscMatTools::Finalise(this->mMatrixToAssemble);
-    MARK;
 }
 
 template<unsigned DIM>
 void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleVector()
 {
-    MARK;
     c_vector<unsigned, 6> extents = this->mpRegularGrid->GetExtents();
     c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     units::quantity<unit::length> spacing = this->mpRegularGrid->GetSpacing();
-    MARK;
+
     boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_pde =
             boost::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM> >(this->mpPde);
-    MARK;
     double diffusion_term = (p_coupled_pde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
 
     // compute function value, given current guess
     PetscVecTools::Zero(this->mVectorToAssemble);
-    MARK;
+    // From PETSc 3.6 current solution VEC is read only, which is incompatible with
+    // PetscVecTools::GetElement. Copy it over instead.
+    ReplicatableVector soln_guess_repl(this->mCurrentSolution);
+
     unsigned num_points_xy = dimensions[0]*dimensions[1];
     unsigned num_points = dimensions[0]*dimensions[1]*dimensions[2];
     for (unsigned i = extents[4]; i <= extents[5]; i++) // Z
@@ -322,67 +279,59 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleVector()
         {
             for (unsigned k = extents[0]; k <= extents[1]; k++) // X
             {
-                MARK;
+
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
-                double current_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index);
-                MARK;
+                double current_solution = soln_guess_repl[grid_index];
+
                 units::quantity<unit::concentration>  current_dimensional_solution =
                         current_solution*this->GetReferenceConcentration();
-                MARK;
                 units::quantity<unit::concentration_flow_rate> sink_terms =
                         p_coupled_pde->ComputeNonlinearSourceTerm(grid_index, current_dimensional_solution);
-                MARK;
                 double nondim_sink_terms = sink_terms*(reference_time/this->GetReferenceConcentration());
                 PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, nondim_sink_terms);
-                MARK;
                 PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index,-2.0*double(DIM)*diffusion_term*current_solution);
-                MARK;
                 // No flux at x bottom
                 if (k > 0)
                 {
-                    double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index - 1);
+                    double nbr_solution = soln_guess_repl[grid_index - 1];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                 }
                 else
                 {
-                    double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index + 1);
+                    double nbr_solution = soln_guess_repl[grid_index + 1];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                 }
-                MARK;
                 // No flux at x top
                 if (k < dimensions[0] - 1)
                 {
-                    double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index + 1);
+                    double nbr_solution = soln_guess_repl[grid_index + 1];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                 }
                 else
                 {
-                    double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index - 1);
+                    double nbr_solution = soln_guess_repl[grid_index - 1];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                 }
-                MARK;
                 // No flux at y bottom
                 if (j > 0)
                 {
-                    double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index - dimensions[0]);
+                    double nbr_solution = soln_guess_repl[grid_index - dimensions[0]];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                 }
                 else
                 {
-                    double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index + dimensions[0]);
+                    double nbr_solution = soln_guess_repl[grid_index + dimensions[0]];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                 }
-                MARK;
                 // Robin at y top
                 if (j < dimensions[1] - 1)
                 {
-                    double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index + dimensions[0]);
+                    double nbr_solution = soln_guess_repl[grid_index + dimensions[0]];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                 }
                 else
                 {
-                    MARK;
-                    double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index - dimensions[0]);
+                    double nbr_solution = soln_guess_repl[grid_index - dimensions[0]];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
 
                     double nondim_permeability =
@@ -398,67 +347,61 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleVector()
                     // No flux at z bottom
                     if (i > 0)
                     {
-                        double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index - num_points_xy);
+                        double nbr_solution = soln_guess_repl[grid_index - num_points_xy];
                         PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                     }
                     else
                     {
-                        double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index + num_points_xy);
+                        double nbr_solution = soln_guess_repl[grid_index + num_points_xy];
                         PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                     }
 
                     // No flux at z top
                     if (i < dimensions[2] - 1)
                     {
-                        double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index + num_points_xy);
+                        double nbr_solution = soln_guess_repl[grid_index + num_points_xy];
                         PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                     }
                     else
                     {
-                        double nbr_solution = PetscVecTools::GetElement(this->mCurrentSolution, grid_index - num_points_xy);
+                        double nbr_solution = soln_guess_repl[grid_index - num_points_xy];
                         PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
                     }
                 }
             }
         }
     }
-    MARK;
+
     // calculate d(VEGF_pellet)/dt
     double vegf_boundary_average = 0.0;
     for (unsigned i = 0; i < dimensions[0]; i++)
     {
         for (unsigned j = 0; j < dimensions[2]; j++)
         {
-            MARK;
             unsigned k = i + dimensions[0]*(dimensions[1] - 1) + num_points_xy*j;
             vegf_boundary_average += PetscVecTools::GetElement(this->mCurrentSolution, k);
         }
     }
-    MARK;
+
     vegf_boundary_average /= double(dimensions[0]*dimensions[2]);
     units::quantity<unit::area> surface_area = p_coupled_pde->GetPelletSurfaceArea();
     units::quantity<unit::volume> volume = p_coupled_pde->GetPelletVolume();
     units::quantity<unit::membrane_permeability> permeability = p_coupled_pde->GetCorneaPelletPermeability();
     units::quantity<unit::dimensionless> binding_constant = p_coupled_pde->GetPelletBindingConstant();
     units::quantity<unit::rate> decay_rate = p_coupled_pde->GetPelletFreeDecayRate();
-    MARK;
-    double pellet_solution = PetscVecTools::GetElement(this->mCurrentSolution, num_points);
-    MARK;
+    double pellet_solution = soln_guess_repl[num_points];
     units::quantity<unit::rate> pellet_update_term1 = ((surface_area*permeability)/volume)*((pellet_solution/binding_constant) -
             vegf_boundary_average);
     units::quantity<unit::rate> dVegf_dt = -(decay_rate/binding_constant)*pellet_solution - pellet_update_term1;
     PetscVecTools::AddToElement(this->mVectorToAssemble, num_points, dVegf_dt*reference_time);
-    MARK;
     PetscVecTools::Finalise(this->mVectorToAssemble);
 }
 
 template<unsigned DIM>
 void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::Solve()
 {
-    MARK;
     AbstractFiniteDifferenceSolverBase<DIM>::Setup();
 
-    MARK;
     c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
     unsigned number_of_points = dimensions[0]*dimensions[1]*dimensions[2];
     // Initialize solution
@@ -467,19 +410,16 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::Solve()
         this->mSolution = std::vector<double>(number_of_points, 0.0);
     }
 
-    MARK;
     Vec previous_solution = PetscTools::CreateVec(number_of_points + 1);
     for(unsigned idx=0; idx<this->mSolution.size(); idx++)
     {
         PetscVecTools::SetElement(previous_solution, idx, this->mSolution[idx]);
     }
 
-    MARK;
     boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_pde =
             boost::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM> >(this->mpPde);
     PetscVecTools::SetElement(previous_solution, number_of_points, p_coupled_pde->GetMultiplierValue()/this->mReferenceConcentration);
 
-    MARK;
     TS ts; // time stepper
     SNES snes; // nonlinear solver
     TSCreate(PETSC_COMM_WORLD,&ts);
@@ -519,28 +459,25 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::Solve()
 
     // Do the solve
     TSSolve(ts, previous_solution);
-    MARK;
+
     // Get the current time
     PetscReal solveTime;
     TSGetSolveTime(ts, &solveTime);
-    MARK;
+
     ReplicatableVector soln_repl(previous_solution);
     // Populate the solution vector
     std::vector<double> solution = std::vector<double>(number_of_points, 0.0);
-    MARK;
     for (unsigned row = 0; row < number_of_points; row++)
     {
         solution[row] = soln_repl[row];
     }
     p_coupled_pde->SetMultiplierValue(soln_repl[number_of_points]*this->mReferenceConcentration);
-    MARK;
     this->UpdateSolution(solution);
 
     if (this->mWriteSolution)
     {
         this->Write();
     }
-    MARK;
     TSDestroy(&ts);
     PetscTools::Destroy(jacobian);
     PetscTools::Destroy(previous_solution);
@@ -562,9 +499,7 @@ PetscErrorCode CoupledLumpedSystemFiniteDifferenceSolver_ComputeJacobian(TS ts, 
 {
     CoupledLumpedSystemFiniteDifferenceSolver<DIM>* p_solver =
             (CoupledLumpedSystemFiniteDifferenceSolver<DIM>*) pContext;
-    MARK;
     p_solver->ComputeJacobian(currentSolution, &pGlobalJacobian);
-    MARK;
 
 #else
 template<unsigned DIM>
@@ -573,9 +508,7 @@ PetscErrorCode CoupledLumpedSystemFiniteDifferenceSolver_ComputeJacobian(TS ts, 
 {
     CoupledLumpedSystemFiniteDifferenceSolver<DIM>* p_solver =
             (CoupledLumpedSystemFiniteDifferenceSolver<DIM>*) pContext;
-    MARK;
     p_solver->ComputeJacobian(currentSolution, pJacobian);
-    MARK;
 #endif
     return 0;
 }
