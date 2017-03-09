@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """MicrovesselChaste Module
 """
-__copyright__ = """Copyright (c) 2005-2016, University of Oxford.
+__copyright__ = """Copyright (c) 2005-2017, University of Oxford.
 All rights reserved.
 
 University of Oxford means the Chancellor, Masters and Scholars of the

@@ -43,12 +43,13 @@ pde/TestGreensFunctionSolver.hpp
 pde/finite_element/TestFiniteElementSolver.hpp
 pde/finite_element/TestNonLinearFiniteElementSolver.hpp
 pde/finite_element/TestRobinBoundaryConditions.hpp
-pde/finite_element/TestCoupledVegfOdeSystem.hpp
+pde/finite_element/TestCoupledLumpedSystemFiniteElementSolver.hpp
 pde/TestCellBasedDiscreteSource.hpp
 pde/TestSolutionDependentDiscreteSource.hpp
 pde/TestDiscreteSource.hpp
 pde/TestVesselBasedDiscreteSource.hpp
 pde/TestDiscreteContinuumBoundaryCondition.hpp
+pde/TestCoupledLumpedSystemFiniteDifferenceSolver.hpp
 population/cell/TestLQRadiotherapyCellKiller.hpp
 population/cell/TestOwen2011OxygenBasedCellCycleModelWithOde.hpp
 population/cell/TestOwen2011OxygenBasedCellCycleOdeSystem.hpp
