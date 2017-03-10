@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include <sstream>
 #include <boost/lexical_cast.hpp>
 #include "RandomNumberGenerator.hpp"
@@ -42,6 +40,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Polygon.hpp"
 #include "Exception.hpp"
 #include "VesselNetworkGenerator.hpp"
+
+#include "Timer.hpp"
 
 template<unsigned DIM>
 VesselNetworkGenerator<DIM>::VesselNetworkGenerator() :
@@ -652,8 +652,9 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateHexa
                                                                                                double(units_in_y_direction)*unit_height, 0, mReferenceLength)));
     }
 
-
+    Timer::PrintAndReset("Internal Network set up");
     pVesselNetwork->MergeCoincidentNodes();
+    Timer::PrintAndReset("Nodes merged");
     return pVesselNetwork;
 }
 

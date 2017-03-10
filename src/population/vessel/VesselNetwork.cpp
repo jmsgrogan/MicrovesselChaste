@@ -33,6 +33,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
 
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
+#include <vtkSmartPointer.h>
+#include <vtkMergePoints.h>
 #include <iostream>
 #include <math.h>
 #include "SmartPointers.hpp"
@@ -40,6 +43,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "SegmentFlowProperties.hpp"
 #include "VesselNetwork.hpp"
 #include "VesselNetworkWriter.hpp"
+#include "Timer.hpp"
 
 template <unsigned DIM>
 VesselNetwork<DIM>::VesselNetwork() : AbstractVesselNetworkComponent<DIM>(),
@@ -895,44 +899,64 @@ void VesselNetwork<DIM>::MergeCoincidentNodes(std::vector<boost::shared_ptr<Vess
 template <unsigned DIM>
 void VesselNetwork<DIM>::MergeCoincidentNodes(std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes, double tolerance)
 {
-    typename std::vector<boost::shared_ptr<VesselNode<DIM> > >::iterator it;
-    typename std::vector<boost::shared_ptr<VesselNode<DIM> > >::iterator it2;
-    typename std::vector<boost::shared_ptr<VesselSegment<DIM> > >::iterator it3;
-
-    for(it = nodes.begin(); it != nodes.end(); it++)
+    if(nodes.size()==0)
     {
-        for(it2 = nodes.begin(); it2 != nodes.end(); it2++)
-        {
-            // If the nodes are not identical
-            if ((*it) != (*it2))
-            {
-                // If the node locations are the same - according to the ChastePoint definition
-                bool is_coincident = false;
-                if(tolerance >0.0)
-                {
-                    is_coincident = (*it)->GetDistance((*it2)->rGetLocation())/(*it)->GetReferenceLengthScale() <= tolerance;
-                }
-                else
-                {
-                    is_coincident = (*it)->IsCoincident((*it2)->rGetLocation());
-                }
+        return;
+    }
 
-                if(is_coincident)
+    typename std::vector<boost::shared_ptr<VesselSegment<DIM> > >::iterator it3;
+    vtkSmartPointer<vtkMergePoints> p_merge = vtkSmartPointer<vtkMergePoints>::New();
+    vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
+    double bounds[6];
+    bounds[0] = 0;
+    bounds[1] = 3000;
+    bounds[2] = 0;
+    bounds[3] = 3000;
+    bounds[4] = 0;
+    bounds[5] = 10;
+    p_merge->SetTolerance(tolerance);
+    p_merge->InitPointInsertion(p_points, bounds);
+    units::quantity<unit::length> length_scale = nodes[0]->GetReferenceLengthScale();
+    std::vector<int> unique_index_map= std::vector<int>(nodes.size(), -1);
+    for(unsigned idx=0; idx<nodes.size(); idx++)
+    {
+        c_vector<double, DIM> loc = nodes[idx]->rGetLocation().GetLocation(length_scale);
+        vtkIdType id;
+        int new_point;
+        if(DIM==3)
+        {
+            new_point = p_merge->InsertUniquePoint(&loc[0], id);
+        }
+        else
+        {
+            double loc2d[3];
+            loc2d[0] = loc[0];
+            loc2d[1] = loc[1];
+            loc2d[2] = 0.0;
+            new_point = p_merge->InsertUniquePoint(loc2d, id);
+        }
+        if(new_point)
+        {
+            unique_index_map[id] = int(idx);
+        }
+        else
+        {
+            if(unique_index_map[id]<0)
+            {
+                EXCEPTION("Unexpected index found during attempted node merge");
+            }
+            // Replace the node corresponding to 'it2' with the one corresponding to 'it'
+            // in all segments.
+            std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = nodes[idx]->GetSegments();
+            for(it3 = segments.begin(); it3 != segments.end(); it3++)
+            {
+                if ((*it3)->GetNode(0) == nodes[idx])
                 {
-                    // Replace the node corresponding to 'it2' with the one corresponding to 'it'
-                    // in all segments.
-                    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = (*it2)->GetSegments();
-                    for(it3 = segments.begin(); it3 != segments.end(); it3++)
-                    {
-                        if ((*it3)->GetNode(0) == (*it2))
-                        {
-                            (*it3)->ReplaceNode(0, (*it));
-                        }
-                        else if(((*it3)->GetNode(1) == (*it2)))
-                        {
-                            (*it3)->ReplaceNode(1, (*it));
-                        }
-                    }
+                    (*it3)->ReplaceNode(0, nodes[unique_index_map[id]]);
+                }
+                else if(((*it3)->GetNode(1) == nodes[idx]))
+                {
+                    (*it3)->ReplaceNode(1, nodes[unique_index_map[id]]);
                 }
             }
         }

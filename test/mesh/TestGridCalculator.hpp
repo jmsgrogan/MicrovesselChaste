@@ -54,6 +54,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNetworkGenerator.hpp"
 #include "OutputFileHandler.hpp"
 #include "GridCalculator.hpp"
+#include "Timer.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
@@ -216,30 +217,34 @@ public:
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "/network.vtp");
     }
 
-    void TestPointSegmentMapGenerationRegularGrid3d()
+    void TestPointSegmentMapGenerationRegularGridHex()
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestGridCalculator/TestPointSegmentMapGenerationRegularGrid3d"));
+        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestGridCalculator/TestPointSegmentMapGenerationRegularGridHex"));
 
         // Set up a grid
+        Timer::Reset();
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
-        dimensions[0] = 10000;
-        dimensions[1] = 10000;
+        dimensions[0] = 1000;
+        dimensions[1] = 1000;
         dimensions[2] = 1;
         p_grid->SetDimensions(dimensions);
         units::quantity<unit::length> spacing(10.0*unit::microns);
         p_grid->SetSpacing(spacing);
 
+        Timer::PrintAndReset("Grid set up");
         // Set up vessel network
         VesselNetworkGenerator<2> network_generator;
-        units::quantity<unit::length> length(100000.0*unit::microns);
+        units::quantity<unit::length> length(6000.0*unit::microns);
         units::quantity<unit::length> vessel_length(40.0*unit::microns);
         boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(length, length, vessel_length);
+        Timer::PrintAndReset("Network set up");
         // Get a point-segment map
         boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
         p_grid_calc->SetVesselNetwork(p_network);
         std::vector<std::vector<boost::shared_ptr<VesselSegment<2> > > > map = p_grid_calc->rGetSegmentMap();
+        Timer::PrintAndReset("Map Calculated");
 
         // Write out the map
         std::vector<double> map_values;
