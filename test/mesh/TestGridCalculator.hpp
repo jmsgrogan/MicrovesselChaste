@@ -47,7 +47,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "CellsGenerator.hpp"
 #include "TransitCellProliferativeType.hpp"
 #include "UniformCellCycleModel.hpp"
-#include "MeshBasedCellPopulation.hpp"
+#include "NodesOnlyMesh.hpp"
+#include "NodeBasedCellPopulation.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
 #include "VesselNetwork.hpp"
 #include "VesselSegment.hpp"
@@ -55,6 +56,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "OutputFileHandler.hpp"
 #include "GridCalculator.hpp"
 #include "Timer.hpp"
+#include "Node.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
@@ -165,7 +167,7 @@ public:
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "/network.vtp");
     }
 
-    void xTestPointSegmentMapGenerationRegularGridWithSurface()
+    void TestPointSegmentMapGenerationRegularGridWithSurface()
     {
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestGridCalculator/TestPointSegmentMapGenerationRegularGridWithSurface"));
 
@@ -184,19 +186,23 @@ public:
         units::quantity<unit::length> length(92.0*unit::microns);
         boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
                                                                                                 DimensionalChastePoint<2>(50.0, 4.0));
+        units::quantity<unit::length> radius(100.0*unit::microns);
+        p_network->SetSegmentRadii(radius);
+
         // Get a point-segment map
         boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
         p_grid_calc->SetVesselNetwork(p_network);
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<2> > > > map = p_grid_calc->rGetSegmentMap();
+        std::vector<std::vector<boost::shared_ptr<VesselSegment<2> > > > map = p_grid_calc->rGetSegmentMap(true, true);
 
         std::vector<std::pair<unsigned, unsigned> > global_index_value_pairs;
-        global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(4, 0));
+        global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(3, 0));
+        global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(4, 1));
         global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(5, 1));
-        global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(6, 0));
+        global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(6, 1));
+        global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(7, 0));
         global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(16, 1));
         global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(27, 1));
-
         for(unsigned idx=0;idx<global_index_value_pairs.size();idx++)
         {
             if(p_grid->GetLocalIndex(global_index_value_pairs[idx].first)>=0)
@@ -225,26 +231,24 @@ public:
         Timer::Reset();
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
-        dimensions[0] = 1000;
-        dimensions[1] = 1000;
+        dimensions[0] = 100;
+        dimensions[1] = 100;
         dimensions[2] = 1;
         p_grid->SetDimensions(dimensions);
         units::quantity<unit::length> spacing(10.0*unit::microns);
         p_grid->SetSpacing(spacing);
 
-        Timer::PrintAndReset("Grid set up");
         // Set up vessel network
         VesselNetworkGenerator<2> network_generator;
-        units::quantity<unit::length> length(6000.0*unit::microns);
+        units::quantity<unit::length> length(1000.0*unit::microns);
         units::quantity<unit::length> vessel_length(40.0*unit::microns);
         boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(length, length, vessel_length);
-        Timer::PrintAndReset("Network set up");
+
         // Get a point-segment map
         boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
         p_grid_calc->SetVesselNetwork(p_network);
         std::vector<std::vector<boost::shared_ptr<VesselSegment<2> > > > map = p_grid_calc->rGetSegmentMap();
-        Timer::PrintAndReset("Map Calculated");
 
         // Write out the map
         std::vector<double> map_values;
@@ -257,66 +261,92 @@ public:
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "/network.vtp");
     }
 
-    void xTestPointPointMapGeneration()
+    void TestPointPointMapGeneration()
     {
-        // Set up a grid
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        c_vector<unsigned, 3> dimensions;
-        dimensions[0] = 101;
-        dimensions[1] = 101;
-        dimensions[2] = 101;
-        p_grid->SetDimensions(dimensions);
-
-        // Set up points
-        RandomNumberGenerator::Instance()->Reseed(1000);
-        std::vector<DimensionalChastePoint<3> > points(10000);
-        for (unsigned idx = 0; idx < 10000; idx++)
-        {
-            DimensionalChastePoint<3> location(RandomNumberGenerator::Instance()->ranf() * 100.0,
-                                               RandomNumberGenerator::Instance()->ranf() * 100.0,
-                                               RandomNumberGenerator::Instance()->ranf() * 100.0);
-            points[idx] = location;
-        }
-
-        // Get a point-point map
-        boost::shared_ptr<GridCalculator<3> > p_grid_calc = GridCalculator<3>::Create();
-        p_grid_calc->SetGrid(p_grid);
-        std::vector<std::vector<unsigned> > map = p_grid_calc->GetPointMap(points);
-
-        // Make sure all the points are accounted for
-        unsigned sum = 0;
-        for (unsigned idx = 0; idx < map.size(); idx++)
-        {
-            sum += map[idx].size();
-        }
-        TS_ASSERT_EQUALS(sum, 10000u);
-    }
-
-    void xTestPointCellMapGeneration()
-    {
-        EXIT_IF_PARALLEL;    // HoneycombMeshGenerator doesn't work in parallel
+        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestGridCalculator/TestPointPointMapGeneration"));
 
         // Set up a grid
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
-        dimensions[0] = 101;
-        dimensions[1] = 101;
+        dimensions[0] = 10;
+        dimensions[1] = 10;
         dimensions[2] = 1;
         p_grid->SetDimensions(dimensions);
-        p_grid->SetSpacing(0.333 * 1.e-6 * unit::metres);
+
+        // Set up points
+        std::vector<DimensionalChastePoint<2> > points;
+        points.push_back(DimensionalChastePoint<2>(5.0, 0.0));
+        points.push_back(DimensionalChastePoint<2>(5.3, 0.0));
+        points.push_back(DimensionalChastePoint<2>(5.3, 0.2));
+        points.push_back(DimensionalChastePoint<2>(5.0, 5.0));
+        points.push_back(DimensionalChastePoint<2>(0.0, 5.0));
+        // Get a point-point map
+        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        p_grid_calc->SetGrid(p_grid);
+        std::vector<std::vector<unsigned> > map = p_grid_calc->GetPointMap(points);
+
+        std::vector<std::pair<unsigned, unsigned> > global_index_value_pairs;
+        global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(4, 0));
+        global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(5, 3));
+        global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(6, 0));
+        global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(50, 1));
+        global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(55, 1));
+        for(unsigned idx=0;idx<global_index_value_pairs.size();idx++)
+        {
+            if(p_grid->GetLocalIndex(global_index_value_pairs[idx].first)>=0)
+            {
+                TS_ASSERT(map[p_grid->GetLocalIndex(global_index_value_pairs[idx].first)].size()==
+                        global_index_value_pairs[idx].second);
+            }
+        }
+
+        // Write out the map
+        std::vector<double> map_values;
+        for(unsigned idx=0;idx<map.size();idx++)
+        {
+            map_values.push_back(map[idx].size());
+        }
+        p_grid->AddPointData(map_values, false, "Map Values");
+        p_grid->Write(p_handler);
+    }
+
+    void TestPointCellMapGeneration()
+    {
+        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestGridCalculator/TestPointCellMapGeneration"));
+
+        // Set up a grid
+        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        c_vector<unsigned, 3> dimensions;
+        dimensions[0] = 10;
+        dimensions[1] = 10;
+        dimensions[2] = 10;
+        p_grid->SetDimensions(dimensions);
+        p_grid->SetSpacing(1.0 * 1.e-6 * unit::metres);
 
         // Set up cells
-        HoneycombMeshGenerator generator(10, 10);    // Parameters are: cells across, cells up
-        MutableMesh<2, 2>* p_mesh = generator.GetMesh();
+        std::vector<Node<3>*> nodes;
+        for(unsigned kdx=0;kdx<10;kdx++)
+        {
+            for(unsigned jdx=0;jdx<10;jdx++)
+            {
+                for(unsigned idx=0;idx<10;idx++)
+                {
+                    unsigned index = idx + jdx*10 +kdx*10*10;
+                    nodes.push_back(new Node<3>(index,  false,  double(idx), double(jdx), double(kdx)));
+                }
+            }
+        }
+        NodesOnlyMesh<3> mesh;
+        mesh.ConstructNodesWithoutMesh(nodes, 1.5);
         std::vector<CellPtr> cells;
         MAKE_PTR(TransitCellProliferativeType, p_transit_type);
-        CellsGenerator<UniformCellCycleModel, 2> cells_generator;
-        cells_generator.GenerateBasicRandom(cells, p_mesh->GetNumNodes(), p_transit_type);
+        CellsGenerator<UniformCellCycleModel, 3> cells_generator;
+        cells_generator.GenerateBasicRandom(cells, mesh.GetNumNodes(), p_transit_type);
 
-        MeshBasedCellPopulation<2> cell_population(*p_mesh, cells);
+        NodeBasedCellPopulation<3> cell_population(mesh, cells);
 
         // Get a point-cell map
-        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        boost::shared_ptr<GridCalculator<3> > p_grid_calc = GridCalculator<3>::Create();
         p_grid_calc->SetGrid(p_grid);
         p_grid_calc->SetCellPopulation(cell_population, 1.e-6 * unit::metres);
         std::vector<std::vector<CellPtr> > map = p_grid_calc->rGetCellMap();
@@ -327,7 +357,21 @@ public:
         {
             sum += map[idx].size();
         }
-        TS_ASSERT_EQUALS(sum, 100u);
+        TS_ASSERT_EQUALS(sum, 1000u);
+
+        // Write out the map
+        std::vector<double> map_values;
+        for(unsigned idx=0;idx<map.size();idx++)
+        {
+            map_values.push_back(map[idx].size());
+        }
+        p_grid->AddPointData(map_values, false, "Map Values");
+        p_grid->Write(p_handler);
+
+        for (unsigned i=0; i<nodes.size(); i++)
+        {
+            delete nodes[i];
+        }
     }
 
 //    void TestInterpolateGridValuesWithVtk() throw (Exception)

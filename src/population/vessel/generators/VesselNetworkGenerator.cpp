@@ -41,8 +41,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Exception.hpp"
 #include "VesselNetworkGenerator.hpp"
 
-#include "Timer.hpp"
-
 template<unsigned DIM>
 VesselNetworkGenerator<DIM>::VesselNetworkGenerator() :
     mReferenceLength(1.e-6 * unit::metres)
@@ -652,9 +650,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateHexa
                                                                                                double(units_in_y_direction)*unit_height, 0, mReferenceLength)));
     }
 
-    Timer::PrintAndReset("Internal Network set up");
     pVesselNetwork->MergeCoincidentNodes();
-    Timer::PrintAndReset("Nodes merged");
     return pVesselNetwork;
 }
 
