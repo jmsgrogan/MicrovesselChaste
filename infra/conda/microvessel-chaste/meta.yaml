@@ -6,7 +6,7 @@ source:
   path: /home/grogan/Chaste
 
 build:
-  number: 1
+  number: 2
 
 requirements:
   build:
@@ -14,7 +14,7 @@ requirements:
     - xsd ==4.0.0
     - xerces-c ==3.1.4
     - vtk ==7.0
-    - petsc ==3.7.4
+    - petsc ==3.7.5
     - boost
     - lxml
     - rdflib
@@ -32,7 +32,7 @@ requirements:
     - xsd ==4.0.0
     - xerces-c ==3.1.4
     - vtk ==7.0
-    - petsc ==3.7.4
+    - petsc ==3.7.5
     - boost
     - matplotlib
     - petsc4py ==3.7

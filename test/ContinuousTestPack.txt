@@ -45,6 +45,7 @@ pde/finite_element/TestSimpleLinearEllipticFiniteElementSolver.hpp
 pde/finite_element/TestSimpleNonLinearEllipticFiniteElementSolver.hpp
 pde/finite_element/TestRobinBoundaryConditions.hpp
 pde/finite_element/TestCoupledLumpedSystemFiniteElementSolver.hpp
+pde/finite_element/TestSimpleParabolicFiniteElementSolver.hpp
 pde/TestCellBasedDiscreteSource.hpp
 pde/TestSolutionDependentDiscreteSource.hpp
 pde/TestDiscreteSource.hpp

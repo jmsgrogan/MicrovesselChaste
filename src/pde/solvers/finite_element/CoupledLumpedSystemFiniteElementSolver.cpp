@@ -33,35 +33,62 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "SimpleNonlinearEllipticSolver.hpp"
-#include "SimpleNewtonNonlinearSolver.hpp"
-#include "AbstractDiscreteContinuumNonLinearEllipticPde.hpp"
+#include "SimpleLinearParabolicSolver.hpp"
+#include "AbstractDiscreteContinuumParabolicPde.hpp"
+#include "CoupledLumpedSystemFiniteElementSolver.hpp"
+#include "CoupledInterfaceOdePdeSolver.hpp"
 #include "Exception.hpp"
-#include "SimpleNonLinearEllipticFiniteElementSolver.hpp"
-#include "BoundaryConditionsContainer.hpp"
 
 template<unsigned DIM>
-SimpleNonLinearEllipticFiniteElementSolver<DIM>::SimpleNonLinearEllipticFiniteElementSolver()
-    : AbstractFiniteElementSolverBase<DIM>()
+CoupledLumpedSystemFiniteElementSolver<DIM>::CoupledLumpedSystemFiniteElementSolver()
+    : AbstractFiniteElementSolverBase<DIM>(),
+      mTimeIncrement(0.1),
+      mSolveStartTime(0.0),
+      mSolveEndTime(1.0),
+      mInitialGuess()
 {
 
 }
 
 template<unsigned DIM>
-SimpleNonLinearEllipticFiniteElementSolver<DIM>::~SimpleNonLinearEllipticFiniteElementSolver()
+CoupledLumpedSystemFiniteElementSolver<DIM>::~CoupledLumpedSystemFiniteElementSolver()
 {
 
 }
 
 template <unsigned DIM>
-boost::shared_ptr<SimpleNonLinearEllipticFiniteElementSolver<DIM> > SimpleNonLinearEllipticFiniteElementSolver<DIM>::Create()
+boost::shared_ptr<CoupledLumpedSystemFiniteElementSolver<DIM> > CoupledLumpedSystemFiniteElementSolver<DIM>::Create()
 {
-    MAKE_PTR(SimpleNonLinearEllipticFiniteElementSolver<DIM>, pSelf);
+    MAKE_PTR(CoupledLumpedSystemFiniteElementSolver<DIM>, pSelf);
     return pSelf;
 }
 
+template <unsigned DIM>
+void CoupledLumpedSystemFiniteElementSolver<DIM>::SetTargetTimeIncrement(double targetIncrement)
+{
+    mTimeIncrement = targetIncrement;
+}
+
+template <unsigned DIM>
+void CoupledLumpedSystemFiniteElementSolver<DIM>::SetStartTime(double startTime)
+{
+    mSolveStartTime = startTime;
+}
+
+template <unsigned DIM>
+void CoupledLumpedSystemFiniteElementSolver<DIM>::SetEndTime(double endTime)
+{
+    mSolveEndTime = endTime;
+}
+
+template <unsigned DIM>
+void CoupledLumpedSystemFiniteElementSolver<DIM>::SetInitialGuess(const std::vector<double>& rInitialGuess)
+{
+    mInitialGuess = rInitialGuess;
+}
+
 template<unsigned DIM>
-void SimpleNonLinearEllipticFiniteElementSolver<DIM>::Solve()
+void CoupledLumpedSystemFiniteElementSolver<DIM>::Solve()
 {
     AbstractFiniteElementSolverBase<DIM>::Solve();
 
@@ -76,20 +103,20 @@ void SimpleNonLinearEllipticFiniteElementSolver<DIM>::Solve()
     }
 
     // Check the type of pde
-    if(boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > p_nonlinear_pde =
-            boost::dynamic_pointer_cast<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> >(this->mpPde))
+    if(boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM, DIM> > p_parabolic_pde =
+            boost::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM, DIM> >(this->mpPde))
     {
-        Vec initial_guess = PetscTools::CreateAndSetVec(this->mpMesh->GetNumNodes(), this->mBoundaryConditions[0]->GetValue()/this->mReferenceConcentration);
-        SimpleNonlinearEllipticSolver<DIM, DIM> solver(this->mpMesh.get(), p_nonlinear_pde.get(), p_bcc.get());
-        if(this->mUseNewton)
-        {
-            SimpleNewtonNonlinearSolver newton_solver;
-            solver.SetNonlinearSolver(&newton_solver);
-            newton_solver.SetTolerance(1e-5);
-            newton_solver.SetWriteStats();
-        }
+        Vec initial_guess = PetscTools::CreateAndSetVec(this->mpMesh->GetNumNodes(), 0.0);
+        CoupledInterfaceOdePdeSolver<DIM> solver(this->mpMesh.get(), p_bcc.get(), p_parabolic_pde.get());
 
-        ReplicatableVector solution_repl(solver.Solve(initial_guess));
+        /* The interface is exactly the same as the `SimpleLinearParabolicSolver`. */
+        solver.SetTimeStep(mTimeIncrement);
+        solver.SetTimes(mSolveStartTime, mSolveEndTime);
+        solver.SetInitialCondition(initial_guess);
+
+        Vec result = solver.Solve();
+        ReplicatableVector solution_repl(result);
+
         this->mSolution = std::vector<double>(solution_repl.GetSize());
         this->mConcentrations = std::vector<units::quantity<unit::concentration> >(solution_repl.GetSize());
         for(unsigned idx = 0; idx < solution_repl.GetSize(); idx++)
@@ -98,11 +125,14 @@ void SimpleNonLinearEllipticFiniteElementSolver<DIM>::Solve()
             this->mConcentrations[idx] = solution_repl[idx]*this->mReferenceConcentration;
         }
         this->UpdateSolution(this->mSolution);
+
+        // Tidy up
         PetscTools::Destroy(initial_guess);
+        PetscTools::Destroy(result);
     }
     else
     {
-        EXCEPTION("PDE Type could not be identified, did you set a correct type of PDE?");
+        EXCEPTION("PDE Type could not be identified, did you set a PDE?");
     }
 
     if(this->mWriteSolution)
@@ -112,5 +142,5 @@ void SimpleNonLinearEllipticFiniteElementSolver<DIM>::Solve()
 }
 
 // Explicit instantiation
-template class SimpleNonLinearEllipticFiniteElementSolver<2> ;
-template class SimpleNonLinearEllipticFiniteElementSolver<3> ;
+template class CoupledLumpedSystemFiniteElementSolver<2>;
+template class CoupledLumpedSystemFiniteElementSolver<3>;

@@ -41,6 +41,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "CoupledVegfPelletDiffusionReactionPde.hpp"
 #include "BaseUnits.hpp"
 
+#include "Debug.hpp"
+
 // Parabolic solve method interfaces, needed later.
 template<unsigned DIM>
 PetscErrorCode CoupledLumpedSystemFiniteDifferenceSolver_RHSFunction(TS ts, PetscReal t, Vec currentSolution, Vec dUdt, void* pContext);
@@ -147,14 +149,13 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
         {
             for (unsigned k = extents[0]; k <= extents[1]; k++) // X
             {
-
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
                 double current_solution = soln_guess_repl[grid_index];
                 units::quantity<unit::concentration>  current_dimensional_solution =
                         current_solution*this->GetReferenceConcentration();
 
                 units::quantity<unit::rate> sink_terms =
-                        p_coupled_pde->ComputeNonlinearSourceTermPrime(grid_index, current_dimensional_solution);
+                        p_coupled_pde->ComputeSourceTermPrime(grid_index, current_dimensional_solution);
                 double nondim_sink_terms = sink_terms*reference_time;
                 PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index, nondim_sink_terms);
                 PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index,-2.0*double(DIM)*diffusion_term);
@@ -243,7 +244,7 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
     PetscMatTools::AddToElement(this->mMatrixToAssemble, num_points, num_points, jacEntry*reference_time);
     for (unsigned i = 0; i < dimensions[0]; i++)
     {
-        for (unsigned j = 0; j < dimensions[1]; j++)
+        for (unsigned j = 0; j < dimensions[2]; j++)
         {
             unsigned J_index = i + dimensions[0]*(dimensions[1]-1) + num_points_xy*j;
             units::quantity<unit::rate> jacEntry = surface_area*permeability/(volume*double(dimensions[0]*dimensions[2]));
@@ -286,7 +287,7 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleVector()
                 units::quantity<unit::concentration>  current_dimensional_solution =
                         current_solution*this->GetReferenceConcentration();
                 units::quantity<unit::concentration_flow_rate> sink_terms =
-                        p_coupled_pde->ComputeNonlinearSourceTerm(grid_index, current_dimensional_solution);
+                        p_coupled_pde->ComputeSourceTerm(grid_index, current_dimensional_solution);
                 double nondim_sink_terms = sink_terms*(reference_time/this->GetReferenceConcentration());
                 PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, nondim_sink_terms);
                 PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index,-2.0*double(DIM)*diffusion_term*current_solution);
@@ -337,7 +338,7 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleVector()
                     double nondim_permeability =
                             p_coupled_pde->GetCorneaPelletPermeability()*(reference_time/spacing);
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, -2.0*nondim_permeability*nbr_solution);
-                    double pellet_solution = PetscVecTools::GetElement(this->mCurrentSolution, num_points);
+                    double pellet_solution = soln_guess_repl[num_points];
                     double binding_constant = p_coupled_pde->GetPelletBindingConstant();
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, 2.0*nondim_permeability*pellet_solution/binding_constant);
                 }
@@ -371,7 +372,6 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleVector()
             }
         }
     }
-
     // calculate d(VEGF_pellet)/dt
     double vegf_boundary_average = 0.0;
     for (unsigned i = 0; i < dimensions[0]; i++)
@@ -379,7 +379,7 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleVector()
         for (unsigned j = 0; j < dimensions[2]; j++)
         {
             unsigned k = i + dimensions[0]*(dimensions[1] - 1) + num_points_xy*j;
-            vegf_boundary_average += PetscVecTools::GetElement(this->mCurrentSolution, k);
+            vegf_boundary_average += soln_guess_repl[k];
         }
     }
 
@@ -418,7 +418,7 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::Solve()
 
     boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_pde =
             boost::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM> >(this->mpPde);
-    PetscVecTools::SetElement(previous_solution, number_of_points, p_coupled_pde->GetMultiplierValue()/this->mReferenceConcentration);
+    PetscVecTools::SetElement(previous_solution, number_of_points, p_coupled_pde->GetCurrentVegfInPellet()/this->mReferenceConcentration);
 
     TS ts; // time stepper
     SNES snes; // nonlinear solver
@@ -471,9 +471,8 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::Solve()
     {
         solution[row] = soln_repl[row];
     }
-    p_coupled_pde->SetMultiplierValue(soln_repl[number_of_points]*this->mReferenceConcentration);
+    p_coupled_pde->SetCurrentVegfInPellet(soln_repl[number_of_points]*this->mReferenceConcentration);
     this->UpdateSolution(solution);
-
     if (this->mWriteSolution)
     {
         this->Write();

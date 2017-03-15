@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "Facet.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
 #include "VesselSegment.hpp"
@@ -47,14 +45,16 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 DiscreteContinuumBoundaryCondition<DIM>::DiscreteContinuumBoundaryCondition()
     :   mpDomain(),
-        mPoints(),
+        mpPoints(),
         mType(BoundaryConditionType::OUTER),
         mSource(BoundaryConditionSource::PRESCRIBED),
         mLabel("Default"),
         mValue(),
         mpGridCalculator(),
         mpNetwork(),
-        mReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale())
+        mReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale()),
+        mIsNeumann(false),
+        mIsRobin(false)
 {
 
 }
@@ -85,13 +85,25 @@ BoundaryConditionType::Value DiscreteContinuumBoundaryCondition<DIM>::GetType()
 }
 
 template<unsigned DIM>
+void DiscreteContinuumBoundaryCondition<DIM>::SetIsRobin(bool isRobin)
+{
+    mIsRobin = isRobin;
+}
+
+template<unsigned DIM>
+void DiscreteContinuumBoundaryCondition<DIM>::SetIsNeumann(bool isNeumann)
+{
+    mIsNeumann = isNeumann;
+}
+
+template<unsigned DIM>
 void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> > pContainer)
 {
     double node_distance_tolerance = 1.e-3;
     bool apply_boundary = true;
     bool use_boundry_nodes = false;
 
-    // Need a regular grid for this rule
+    // Need a mesh for this rule
     boost::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
             boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
     if(!p_mesh)
@@ -176,7 +188,25 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
                 if(result.first)
                 {
                     ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result.second/mReferenceConcentration);
-                    pContainer->AddDirichletBoundaryCondition(*iter, p_fixed_boundary_condition);
+                    if(!mIsNeumann and !mIsRobin)
+                    {
+                        pContainer->AddDirichletBoundaryCondition(*iter, p_fixed_boundary_condition);
+                    }
+                    else
+                    {
+                        typename TetrahedralMesh<DIM,DIM>::BoundaryElementIterator surf_iter = p_mesh->GetBoundaryElementIteratorBegin();
+                        while (surf_iter != p_mesh->GetBoundaryElementIteratorEnd())
+                        {
+                            unsigned node_index = (*surf_iter)->GetNodeGlobalIndex(0);
+                            if(node_index==(*iter)->GetIndex())
+                            {
+                                pContainer->AddNeumannBoundaryCondition(*surf_iter, p_fixed_boundary_condition);
+                            }
+                            surf_iter++;
+                        }
+
+                    }
+
                 }
                 ++iter;
             }
@@ -191,15 +221,26 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
     std::pair<bool, units::quantity<unit::concentration> > result(false, 0.0*unit::mole_per_metre_cubed);
     if(mType == BoundaryConditionType::POINT)
     {
-        if(mPoints.size()==0)
+        if(!mpPoints)
         {
             EXCEPTION("A point is required for this type of boundary condition");
         }
         else
         {
-            for(unsigned jdx=0; jdx<mPoints.size(); jdx++)
+            for(unsigned jdx=0; jdx<mpPoints->GetNumberOfPoints(); jdx++)
             {
-                if(GetDistance<DIM>(location, mPoints[jdx]) < tolerance*length_scale)
+                c_vector<double, 3> loc3d;
+                mpPoints->GetPoint(jdx, &loc3d[0]);
+                DimensionalChastePoint<DIM> loc;
+                if(DIM==3)
+                {
+                    loc = DimensionalChastePoint<DIM>(loc3d, length_scale);
+                }
+                else
+                {
+                    loc = DimensionalChastePoint<DIM>(loc3d[0], loc3d[1], 0.0, length_scale);
+                }
+                if(GetDistance<DIM>(location, loc) < tolerance*length_scale)
                 {
                     return std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
                 }
@@ -324,13 +365,13 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
     }
     else if(mType == BoundaryConditionType::POINT)
     {
-        if(mPoints.size()==0)
+        if(!mpPoints)
         {
             EXCEPTION("A point is required for this type of boundary condition");
         }
         else
         {
-            std::vector<std::vector<unsigned> > point_point_map = mpGridCalculator->GetPointMap(mPoints);
+            std::vector<std::vector<unsigned> > point_point_map = mpGridCalculator->GetPointMap(mpPoints);
             for(unsigned idx=0; idx<point_point_map.size(); idx++)
             {
                 if(point_point_map[idx].size()>0)
@@ -421,9 +462,27 @@ void DiscreteContinuumBoundaryCondition<DIM>::SetDomain(boost::shared_ptr<Part<D
 }
 
 template<unsigned DIM>
+void DiscreteContinuumBoundaryCondition<DIM>::SetPoints(vtkSmartPointer<vtkPoints> pPoints)
+{
+    mpPoints = pPoints;
+}
+
+template<unsigned DIM>
 void DiscreteContinuumBoundaryCondition<DIM>::SetPoints(std::vector<DimensionalChastePoint<DIM> > points)
 {
-    mPoints = points;
+    mpPoints = vtkSmartPointer<vtkPoints>::New();
+    for(unsigned idx=0; idx<points.size(); idx++)
+    {
+        c_vector<double, DIM> loc = points[idx].GetLocation(mpGridCalculator->GetGrid()->GetReferenceLengthScale());
+        if(DIM==3)
+        {
+            mpPoints->InsertNextPoint(&loc[0]);
+        }
+        else
+        {
+            mpPoints->InsertNextPoint(loc[0], loc[1], 0.0);
+        }
+    }
 }
 
 template<unsigned DIM>

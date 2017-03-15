@@ -158,7 +158,7 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleMatrix()
                 units::quantity<unit::concentration>  current_dimensional_solution =
                         current_solution*this->GetReferenceConcentration();
                 units::quantity<unit::rate> sink_terms =
-                        p_parabolic_pde->ComputeNonlinearSourceTermPrime(grid_index, current_dimensional_solution);
+                        p_parabolic_pde->ComputeSourceTermPrime(grid_index, current_dimensional_solution);
                 double nondim_sink_terms = sink_terms*reference_time;
                 PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index, nondim_sink_terms);
                 PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index,-2.0*double(DIM)*diffusion_term);
@@ -262,7 +262,7 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleVector()
                 units::quantity<unit::concentration>  current_dimensional_solution =
                         current_solution*this->GetReferenceConcentration();
                 units::quantity<unit::concentration_flow_rate> sink_terms =
-                        p_parabolic_pde->ComputeNonlinearSourceTerm(grid_index, current_dimensional_solution);
+                        p_parabolic_pde->ComputeSourceTerm(grid_index, current_dimensional_solution);
                 double nondim_sink_terms = sink_terms*(reference_time/this->GetReferenceConcentration());
                 PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, nondim_sink_terms);
                 PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index,-2.0*double(DIM)*diffusion_term*current_solution);

@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "Vessel.hpp"
 #include "VesselSegment.hpp"
 #include "ChastePoint.hpp"
@@ -43,6 +41,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UblasMatrixInclude.hpp"
 #include "UnitCollection.hpp"
 #include "BaseUnits.hpp"
+#include "DiscreteContinuumLinearEllipticPde.hpp"
 
 #include "SimpleLinearEllipticGreensFunctionSolver.hpp"
 
@@ -70,15 +69,22 @@ void SimpleLinearEllipticGreensFunctionSolver<DIM>::Solve()
     this->UpdateGreensFunctionMatrices(1, 1, 1, 1);
 
     // Get the sink rates
+    boost::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_elliptic_pde =
+                boost::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
+    if(!p_elliptic_pde)
+    {
+        EXCEPTION("PDE type not recognized in Green's function solver.");
+    }
+
     unsigned number_of_sinks = this->mSinkCoordinates.size();
-    units::quantity<unit::concentration_flow_rate> sink_rate = this->mpPde->ComputeConstantInUSourceTerm();
+    units::quantity<unit::concentration_flow_rate> sink_rate = p_elliptic_pde->ComputeConstantInUSourceTerm();
     units::quantity<unit::volume> sink_volume = units::pow<3>(this->mpRegularGrid->GetSpacing());
     this->mSinkRates = std::vector<units::quantity<unit::molar_flow_rate> >(number_of_sinks, sink_rate * sink_volume);
     units::quantity<unit::molar_flow_rate> total_sink_rate = std::accumulate(this->mSinkRates.begin(), this->mSinkRates.end(), 0.0*unit::mole_per_second);
 
     // Get the sink substance demand on each vessel subsegment
     unsigned number_of_subsegments = this->mSubSegmentCoordinates.size();
-    units::quantity<unit::diffusivity> diffusivity = this->mpPde->ComputeIsotropicDiffusionTerm();
+    units::quantity<unit::diffusivity> diffusivity = p_elliptic_pde->ComputeIsotropicDiffusionTerm();
     std::vector<units::quantity<unit::concentration> > sink_demand_per_subsegment(number_of_subsegments, 0.0*this->mReferenceConcentration);
     for (unsigned idx = 0; idx < number_of_subsegments; idx++)
     {

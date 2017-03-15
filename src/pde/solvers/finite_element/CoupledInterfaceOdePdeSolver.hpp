@@ -47,6 +47,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "NullSurfaceIntegralCalculator.hpp"
 #include "CoupledOdePdeParabolicTermAssembler.hpp"
 #include "RobinConditionsSurfaceTermAssembler.hpp"
+#include "CoupledVegfPelletDiffusionReactionPde.hpp"
 
 /**
  * A Parabolic PDE with a coupled ODE system on prescribed boundary nodes
@@ -68,16 +69,32 @@ private:
 
     double mPermeability;
 
+    double mCurrentVegfSolution;
+
     /* This is the main method which needs to be implemented. It takes in the current solution, and a
      * boolean saying whether the matrix (ie A in Ax=b) is being computed or not.
      */
     void SetupLinearSystem(Vec currentSolution, bool computeMatrix)
     {
-
         // Update the surface integral value
         NullSurfaceIntegralCalculator<DIM> surf_calc(this->mpMesh, mpBoundaryConditions);
         surf_calc.SetCurrentSolution(currentSolution);
         double integral_value = surf_calc.CalculateSurfaceIntegral();
+
+//        // Update the vegf in the pellet
+//        boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM, DIM> > p_coupled_pde =
+//                    boost::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM, DIM> >(this->mpParabolicPde);
+//
+//        units::quantity<unit::volume> volume = p_coupled_pde->GetPelletVolume();
+//        units::quantity<unit::membrane_permeability> permeability = p_coupled_pde->GetCorneaPelletPermeability();
+//        units::quantity<unit::dimensionless> binding_constant = p_coupled_pde->GetPelletBindingConstant();
+//        units::quantity<unit::rate> decay_rate = p_coupled_pde->GetPelletFreeDecayRate();
+//        double pellet_solution = soln_guess_repl[num_points];
+//        units::quantity<unit::rate> pellet_update_term1 = ((surface_area*permeability)/volume)*((mCurrentVegfSolution/binding_constant) -
+//                integral_value);
+//        units::quantity<unit::rate> dVegf_dt = -(decay_rate/binding_constant)*mCurrentVegfSolution - pellet_update_term1;
+//        mCurrentVegfSolution += dVegf_dt*time;
+
 
         // Assemble the parabolic terms
         CoupledOdePdeParabolicTermAssembler<DIM> parabolic_terms_assembler(this->mpMesh, this->mpParabolicPde);
@@ -138,7 +155,8 @@ public:
          : AbstractDynamicLinearPdeSolver<DIM,DIM,1>(pMesh),
            mpParabolicPde(pPde),
            mpBoundaryConditions(pBoundaryConditions),
-           mPermeability(1.0)
+           mPermeability(1.0),
+           mCurrentVegfSolution(0.0)
     {
         this->mMatrixIsConstant = true;
         PetscTools::SetupMat(mRhsRobinMatrix, this->mpMesh->GetNumNodes(), this->mpMesh->GetNumNodes(), 9);
@@ -147,6 +165,15 @@ public:
     ~CoupledInterfaceOdePdeSolver()
     {
         PetscTools::Destroy(mRhsRobinMatrix);
+    }
+
+    /**
+     * Over-ridden method to
+     *
+     * @param currentSolution The current solution (solution of the linear system solve)
+     */
+    virtual void FollowingSolveLinearSystem(Vec currentSolution)
+    {
     }
 
 };

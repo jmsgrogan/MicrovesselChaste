@@ -37,6 +37,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define GRIDCALCULATOR_HPP_
 
 #include <vector>
+#include <vtkSmartPointer.h>
+#include <vtkPoints.h>
 #include "UblasIncludes.hpp"
 #include "SmartPointers.hpp"
 #include "VesselNetwork.hpp"
@@ -127,6 +129,13 @@ public:
      * @return the indices of input points in the bounding box of each grid location
      */
     std::vector<std::vector<unsigned> > GetPointMap(const std::vector<DimensionalChastePoint<DIM> >& rInputPoints);
+
+    /**
+     * Return a vector of input point indices which in the bounding boxes of each grid location
+     * @param pInputPoints input points in VTK form
+     * @return the indices of input points in the bounding box of each grid location
+     */
+    std::vector<std::vector<unsigned> > GetPointMap(vtkSmartPointer<vtkPoints> pInputPoints);
 
     /**
      * Return the cell map

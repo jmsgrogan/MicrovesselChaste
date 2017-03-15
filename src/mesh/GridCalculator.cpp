@@ -78,33 +78,38 @@ boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > GridCalculator<DIM>::GetG
 }
 
 template<unsigned DIM>
-std::vector<std::vector<unsigned> > GridCalculator<DIM>::GetPointMap(const std::vector<DimensionalChastePoint<DIM> >& rInputPoints)
+std::vector<std::vector<unsigned> > GridCalculator<DIM>::GetPointMap(vtkSmartPointer<vtkPoints> pInputPoints)
 {
     std::vector<std::vector<unsigned> > point_map(mpGrid->GetNumberOfLocations());
-    units::quantity<unit::length> grid_length = mpGrid->GetReferenceLengthScale();
-
-    for(unsigned idx=0;idx<rInputPoints.size();idx++)
+    for(unsigned idx=0;idx<pInputPoints->GetNumberOfPoints();idx++)
     {
-        double x_coords[3];
-        c_vector<double, DIM> loc = rInputPoints[idx].GetLocation(grid_length);
-        x_coords[0] = loc[0];
-        x_coords[1] = loc[1];
-        if(DIM == 3)
-        {
-            x_coords[2] = loc[2];
-        }
-        else
-        {
-            x_coords[2] = 0.0;
-        }
-
-        int cell_id = mpGrid->GetVtkCellLocator()->FindCell(&x_coords[0]);
+        int cell_id = mpGrid->GetVtkCellLocator()->FindCell(pInputPoints->GetPoint(idx));
         if(cell_id>=0)
         {
             point_map[cell_id].push_back(idx);
         }
     }
     return point_map;
+}
+
+template<unsigned DIM>
+std::vector<std::vector<unsigned> > GridCalculator<DIM>::GetPointMap(const std::vector<DimensionalChastePoint<DIM> >& rInputPoints)
+{
+    units::quantity<unit::length> grid_length = mpGrid->GetReferenceLengthScale();
+    vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
+    for(unsigned idx=0; idx<rInputPoints.size(); idx++)
+    {
+        c_vector<double, DIM> loc = rInputPoints[idx].GetLocation(grid_length);
+        if(DIM==3)
+        {
+            p_points->InsertNextPoint(&loc[0]);
+        }
+        else
+        {
+            p_points->InsertNextPoint(loc[0], loc[1], 0.0);
+        }
+    }
+    return GetPointMap(p_points);
 }
 
 template<unsigned DIM>

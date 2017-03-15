@@ -74,6 +74,7 @@ Copyright (c) 2005-2016, University of Oxford.
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::MichaelisMentenSteadyStateDiffusionReactionPde() :
             AbstractDiscreteContinuumNonLinearEllipticPde<SPACE_DIM>(),
+            mRateConstant(0.0 * unit::mole_per_metre_cubed_per_second),
             mMichaelisMentenThreshold(1.0*unit::mole_per_metre_cubed)
 {
 
@@ -93,18 +94,6 @@ MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::~Michael
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-c_matrix<double, SPACE_DIM, SPACE_DIM> MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiffusionTerm(const ChastePoint<SPACE_DIM>&, double u)
-{
-    return this->mDiffusionTensor;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-c_matrix<double, SPACE_DIM, SPACE_DIM> MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiffusionTermPrime(const ChastePoint<SPACE_DIM>& rX, double u)
-{
-    return zero_matrix<double>(SPACE_DIM);
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 double MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearSourceTerm(const ChastePoint<SPACE_DIM>& rX)
 {
     return 0.0;
@@ -119,7 +108,7 @@ double MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::C
     }
     else
     {
-        return (this->mConstantInUTerm/unit::mole_per_metre_cubed_per_second) * u / (mMichaelisMentenThreshold/(unit::mole_per_metre_cubed) + u);
+        return (this->mRateConstant/unit::mole_per_metre_cubed_per_second) * u / (mMichaelisMentenThreshold/(unit::mole_per_metre_cubed) + u);
     }
 }
 
@@ -128,12 +117,12 @@ double MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::C
 {
     if(u<0.0)
     {
-        return (this->mConstantInUTerm / mMichaelisMentenThreshold)*(1.0*unit::seconds);
+        return (this->mRateConstant / mMichaelisMentenThreshold)*(1.0*unit::seconds);
     }
     else
     {
         units::quantity<unit::concentration> u_scaled = u*unit::mole_per_metre_cubed;
-        return (this->mConstantInUTerm * mMichaelisMentenThreshold)/((mMichaelisMentenThreshold + u_scaled)*(mMichaelisMentenThreshold + u_scaled))*(1.0*unit::seconds);
+        return (this->mRateConstant * mMichaelisMentenThreshold)/((mMichaelisMentenThreshold + u_scaled)*(mMichaelisMentenThreshold + u_scaled))*(1.0*unit::seconds);
     }
 }
 
@@ -143,11 +132,11 @@ units::quantity<unit::concentration_flow_rate> MichaelisMentenSteadyStateDiffusi
 {
     if(u<0.0*unit::mole_per_metre_cubed)
     {
-        return this->mDiscreteConstantSourceStrengths[gridIndex];
+        return 0.0*unit::mole_per_metre_cubed_per_second; //this->mDiscreteConstantSourceStrengths[gridIndex];
     }
     else
     {
-        return this->mConstantInUTerm * u / (mMichaelisMentenThreshold + u) + this->mDiscreteConstantSourceStrengths[gridIndex] + this->mDiscreteLinearSourceStrengths[gridIndex]*u;
+        return this->mRateConstant * u / (mMichaelisMentenThreshold + u) ;//+ this->mDiscreteConstantSourceStrengths[gridIndex] + this->mDiscreteLinearSourceStrengths[gridIndex]*u;
     }
 }
 
@@ -157,11 +146,11 @@ units::quantity<unit::rate> MichaelisMentenSteadyStateDiffusionReactionPde<ELEME
 {
     if(u<0.0*unit::mole_per_metre_cubed)
     {
-        return (this->mConstantInUTerm / mMichaelisMentenThreshold) + this->mDiscreteLinearSourceStrengths[gridIndex];
+        return (this->mRateConstant / mMichaelisMentenThreshold) ;//+ this->mDiscreteLinearSourceStrengths[gridIndex];
     }
     else
     {
-        return this->mConstantInUTerm * mMichaelisMentenThreshold/((mMichaelisMentenThreshold + u)*(mMichaelisMentenThreshold + u)) + this->mDiscreteLinearSourceStrengths[gridIndex];
+        return this->mRateConstant * mMichaelisMentenThreshold/((mMichaelisMentenThreshold + u)*(mMichaelisMentenThreshold + u));// + this->mDiscreteLinearSourceStrengths[gridIndex];
     }
 
 }
@@ -170,6 +159,12 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::concentration> MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetMichaelisMentenThreshold()
 {
     return mMichaelisMentenThreshold;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+void MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetRateConstant(units::quantity<unit::concentration_flow_rate> constantInUTerm)
+{
+    mRateConstant = constantInUTerm;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

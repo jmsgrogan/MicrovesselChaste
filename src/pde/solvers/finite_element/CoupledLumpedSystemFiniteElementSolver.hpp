@@ -33,83 +33,69 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef ABSTRACTREGULARGRIDDISCRETECONTINUUMSOLVER_HPP_
-#define ABSTRACTREGULARGRIDDISCRETECONTINUUMSOLVER_HPP_
+#ifndef COUPLEDLUMPEDSYSTEMFINITEELEMENTSOLVER_HPP_
+#define COUPLEDLUMPEDSYSTEMFINITEELEMENTSOLVER_HPP_
 
-#include <vector>
-#include <string>
-#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
-#include <vtkImageData.h>
-#include <vtkSmartPointer.h>
 #include "SmartPointers.hpp"
-#include "UblasIncludes.hpp"
-#include "AbstractDiscreteContinuumSolver.hpp"
-#include "UnitCollection.hpp"
-#include "RegularGrid.hpp"
+#include "AbstractFiniteElementSolverBase.hpp"
 
 /**
- * An abstract solver class for DiscreteContinuum continuum-discrete problems using structured grids.
- * Concrete classes can solve PDEs or perform other computations based on interpolation
- * of discrete entities (points/cells, lines/vessels) onto structured grids.
+ * A finite element solver for parabolic PDEs with multiple discrete sinks or sources.
  */
 template<unsigned DIM>
-class AbstractRegularGridDiscreteContinuumSolver : public AbstractDiscreteContinuumSolver<DIM>
+class CoupledLumpedSystemFiniteElementSolver : public AbstractFiniteElementSolverBase<DIM>
 {
+    /**
+     * The target time increment
+     */
+    double mTimeIncrement;
 
-protected:
+    /**
+     * The solve time
+     */
+    double mSolveStartTime;
 
-    boost::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
+    /**
+     * The end time
+     */
+    double mSolveEndTime;
+
+    /**
+     * The end time
+     */
+    std::vector<double> mInitialGuess;
 
 public:
-
-    using AbstractDiscreteContinuumSolver<DIM>::UpdateSolution;
 
     /**
      * Constructor
      */
-    AbstractRegularGridDiscreteContinuumSolver();
+    CoupledLumpedSystemFiniteElementSolver();
 
     /**
      * Destructor
      */
-    virtual ~AbstractRegularGridDiscreteContinuumSolver();
+    virtual ~CoupledLumpedSystemFiniteElementSolver();
 
     /**
-     * Overridden Setup method.
+     * Construct a new instance of the class and return a shared pointer to it.
+     * @return a shared pointer to a class instance.
      */
-    virtual void Setup();
+    static boost::shared_ptr<CoupledLumpedSystemFiniteElementSolver<DIM> > Create();
+
+    void SetTargetTimeIncrement(double targetIncrement);
+
+    void SetStartTime(double startTime);
+
+    void SetEndTime(double endTime);
+
+    void SetInitialGuess(const std::vector<double>& rInitialGuess);
 
     /**
-     * Update the cell data as passed in
+     * Overridden solve method
      */
-    virtual void UpdateCellData();
+    void Solve();
 
-    /**
-     * Update the solution using dimensionless data
-     * @param rData the data
-     */
-    virtual void UpdateSolution(std::vector<double>& rData);
-
-    /**
-     * Update the solution using concentration data
-     * @param rData the data
-     */
-    virtual void UpdateSolution(std::vector<units::quantity<unit::concentration> >& rData);
-
-    /**
-     * Overridden Update method.
-     */
-    virtual void Update();
-
-    /**
-     * Overridden Update method.
-     */
-    virtual void Solve() = 0;
-
-    /**
-     * Overridden Write method. Writes the solution to file using a VTK structured grid.
-     */
-    virtual void Write();
 };
 
-#endif /* ABSTRACTREGULARGRIDDISCRETECONTINUUMSOLVER_HPP_ */
+#endif /* COUPLEDLUMPEDSYSTEMFINITEELEMENTSOLVER_HPP_ */

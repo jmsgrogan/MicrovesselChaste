@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "SimpleLinearParabolicSolver.hpp"
 #include "AbstractDiscreteContinuumParabolicPde.hpp"
 #include "SimpleParabolicFiniteElementSolver.hpp"
@@ -69,7 +67,7 @@ void SimpleParabolicFiniteElementSolver<DIM>::Solve()
     if(boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > p_parabolic_pde =
             boost::dynamic_pointer_cast<AbstractDiscreteContinuumParabolicPde<DIM, DIM> >(this->mpPde))
     {
-        EXCEPTION("Not implemented yet.");
+
     }
     else
     {

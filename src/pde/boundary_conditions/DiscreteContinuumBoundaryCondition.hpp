@@ -33,13 +33,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef DISCRETECONTINUUMBOUNDARYCONDITION_HPP_
 #define DISCRETECONTINUUMBOUNDARYCONDITION_HPP_
 
 #include <vector>
 #include <string>
+#include <vtkSmartPointer.h>
+#include <vtkPoints.h>
 #include "UblasIncludes.hpp"
 #include "Part.hpp"
 #include "BoundaryConditionsContainer.hpp"
@@ -89,7 +89,7 @@ protected:
     /**
      * Point locations for POINT type conditions
      */
-    std::vector<DimensionalChastePoint<DIM> > mPoints;
+    vtkSmartPointer<vtkPoints> mpPoints;
 
     /**
      * The type of boundary condition
@@ -126,6 +126,10 @@ protected:
      * The reference concentration
      */
     units::quantity<unit::concentration> mReferenceConcentration;
+
+    bool mIsNeumann;
+
+    bool mIsRobin;
 
 public:
 
@@ -183,6 +187,10 @@ public:
      */
     void SetDomain(boost::shared_ptr<Part<DIM> > pDomain);
 
+    void SetIsRobin(bool isRobin);
+
+    void SetIsNeumann(bool isNeumann);
+
     /**
      * Set the name of the label used in LABEL type sources
      * @param rLabel the label for the source strength value
@@ -194,6 +202,12 @@ public:
      * @param points the point locations for POINT type boundary conditions
      */
     void SetPoints(std::vector<DimensionalChastePoint<DIM> > points);
+
+    /**
+     * Set the points for POINT type boundary conditions
+     * @param pPoints the point locations for POINT type boundary conditions
+     */
+    void SetPoints(vtkSmartPointer<vtkPoints> pPoints);
 
     /**
      * Set the regular grid
