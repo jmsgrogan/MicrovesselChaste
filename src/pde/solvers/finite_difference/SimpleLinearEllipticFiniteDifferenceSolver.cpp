@@ -161,7 +161,14 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
                 }
                 else
                 {
-                    this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index, diffusion_term);
+                    if(k < dimensions[0] - 1)
+                    {
+                        this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index+1, diffusion_term);
+                    }
+                    else
+                    {
+                        this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index, diffusion_term);
+                    }
                 }
 
                 // No flux at x top
@@ -171,7 +178,14 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
                 }
                 else
                 {
-                    this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index, diffusion_term);
+                    if(k > 0)
+                    {
+                        this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index-1, diffusion_term);
+                    }
+                    else
+                    {
+                        this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index, diffusion_term);
+                    }
                 }
 
                 // No flux at y bottom
@@ -181,7 +195,14 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
                 }
                 else
                 {
-                    this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index, diffusion_term);
+                    if(j < dimensions[1] - 1)
+                    {
+                        this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index + dimensions[0], diffusion_term);
+                    }
+                    else
+                    {
+                        this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index, diffusion_term);
+                    }
                 }
 
                 // No flux at y top
@@ -191,7 +212,14 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
                 }
                 else
                 {
-                    this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index, diffusion_term);
+                    if(j>0)
+                    {
+                        this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index - dimensions[0], diffusion_term);
+                    }
+                    else
+                    {
+                        this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index, diffusion_term);
+                    }
                 }
 
                 // No flux at z bottom
@@ -202,7 +230,14 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
                 }
                 else
                 {
-                    this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index, diffusion_term);
+                    if(i < dimensions[2] - 1)
+                    {
+                        this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index + dimensions[0] * dimensions[1], diffusion_term);
+                    }
+                    else
+                    {
+                        this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index, diffusion_term);
+                    }
                 }
 
                 // No flux at z top
@@ -213,7 +248,14 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
                 }
                 else
                 {
-                    this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index, diffusion_term);
+                    if(i>0)
+                    {
+                        this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index - dimensions[0] * dimensions[1], diffusion_term);
+                    }
+                    else
+                    {
+                        this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index, diffusion_term);
+                    }
                 }
             }
         }

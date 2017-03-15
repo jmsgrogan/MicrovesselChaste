@@ -70,7 +70,7 @@ public:
                                5.0*unit::metres,
                                DimensionalChastePoint<2>(0.0, 0.0, 0.0));
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        p_grid->GenerateFromPart(p_domain, 0.1*unit::metres);
+        p_grid->GenerateFromPart(p_domain, 1.0*unit::metres);
 
         // Choose the PDE
         boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
@@ -109,9 +109,9 @@ public:
         std::vector<units::quantity<unit::concentration> > solution = solver.GetConcentrations();
 
         // Analytical c = k*x*x/(2*D) - k*x*w/D+c_0
-        for(unsigned idx=0; idx<51; idx++)
+        for(unsigned idx=0; idx<6; idx++)
         {
-            units::quantity<unit::length> x = double(idx)*0.1*unit::metres;
+            units::quantity<unit::length> x = double(idx)*1.0*unit::metres;
             units::quantity<unit::length> w = 5.0*unit::metres;
             units::quantity<unit::concentration> c = -consumption_rate*x*x/(2.0*diffusivity)-
                     x*-consumption_rate*w/diffusivity + boundary_concentration;
@@ -135,7 +135,7 @@ public:
         // Choose the PDE
         boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         units::quantity<unit::diffusivity> diffusivity(1.e-3 * unit::metre_squared_per_second);
-        units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e6 * unit::mole_per_metre_cubed_per_second);
+        units::quantity<unit::concentration_flow_rate> consumption_rate(-20.0 * unit::mole_per_metre_cubed_per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
         p_pde->SetContinuumConstantInUTerm(consumption_rate);
 
@@ -165,6 +165,20 @@ public:
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();
+
+        std::vector<units::quantity<unit::concentration> > solution = solver.GetConcentrations();
+
+        // Analytical c = k*x*x/(2*D) - k*x*w/D+c_0
+        for(unsigned idx=0; idx<6; idx++)
+        {
+            units::quantity<unit::length> x = double(idx)*10.0e-6*unit::metres;
+            units::quantity<unit::length> w = 200.0e-6*unit::metres;
+            units::quantity<unit::concentration> c = -consumption_rate*x*x/(2.0*diffusivity)-
+                    x*-consumption_rate*w/diffusivity + boundary_concentration;
+            double norm_analytical = c/(1.0* unit::mole_per_metre_cubed);
+            double norm_numerical = solution[idx]/(1.0* unit::mole_per_metre_cubed);
+            TS_ASSERT_DELTA(norm_analytical, norm_numerical, 1.e-6)
+        }
     }
 
     void TestWithVesselBoundaryConditions() throw(Exception)

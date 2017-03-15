@@ -61,6 +61,7 @@ class AbstractDiscreteContinuumLinearEllipticPde : public AbstractLinearElliptic
 
 public:
 
+    using AbstractLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeConstantInUSourceTerm;
     using AbstractLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm;
 
 protected:

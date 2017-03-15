@@ -74,7 +74,7 @@ public:
         p_pde->SetContinuumLinearInUTerm(vegf_decay_rate);
 
         units::quantity<unit::concentration> initial_vegf_concentration(3.93e-4*unit::mole_per_metre_cubed);
-        p_pde->SetMultiplierValue(initial_vegf_concentration);
+        p_pde->SetCurrentVegfInPellet(initial_vegf_concentration);
 
         // Set up robin BC on top plane
         std::vector<DimensionalChastePoint<2> > boundary_points;
