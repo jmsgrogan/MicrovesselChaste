@@ -60,6 +60,82 @@ class TestSimpleLinearEllipticFiniteElementSolver : public CxxTest::TestSuite
 {
 public:
 
+    void TestPlane()
+    {
+        // Set up the mesh
+        BaseUnits::Instance()->SetReferenceLengthScale(1.0*unit::metres);
+        BaseUnits::Instance()->SetReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed);
+        BaseUnits::Instance()->SetReferenceTimeScale(1.0*unit::seconds);
+
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(5.0*unit::metres, 5.0*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+
+        DiscreteContinuumMeshGenerator<2> mesh_generator;
+        mesh_generator.SetDomain(p_domain);
+        mesh_generator.SetMaxElementArea(0.5*(units::pow<3>(1.0*unit::metres)));
+        mesh_generator.Update();
+        boost::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
+
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde =
+                DiscreteContinuumLinearEllipticPde<2>::Create();
+        units::quantity<unit::diffusivity> diffusivity(1.0* unit::metre_squared_per_second);
+        units::quantity<unit::concentration_flow_rate> consumption_rate(-0.05 * unit::mole_per_metre_cubed_per_second);
+        p_pde->SetIsotropicDiffusionConstant(diffusivity);
+        p_pde->SetContinuumConstantInUTerm(consumption_rate);
+
+        // Set up BC on left plane
+        vtkSmartPointer<vtkPoints> p_boundary_points = vtkSmartPointer<vtkPoints>::New();
+        TetrahedralMesh<2,2>::BoundaryElementIterator surf_iter = p_mesh->GetBoundaryElementIteratorBegin();
+        while (surf_iter != p_mesh->GetBoundaryElementIteratorEnd())
+        {
+            unsigned node_index = (*surf_iter)->GetNodeGlobalIndex(0);
+            double x = p_mesh->GetNode(node_index)->GetPoint()[0];
+            if (x<0.1)
+            {
+                p_boundary_points->InsertNextPoint(p_mesh->GetNode(node_index)->GetPoint()[0],
+                        p_mesh->GetNode(node_index)->GetPoint()[1], 0.0);
+            }
+            surf_iter++;
+        }
+        boost::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition =
+                DiscreteContinuumBoundaryCondition<2>::Create();
+        units::quantity<unit::concentration> boundary_concentration(1.0* unit::mole_per_metre_cubed);
+        p_boundary_condition->SetValue(boundary_concentration);
+        p_boundary_condition->SetType(BoundaryConditionType::POINT);
+        p_boundary_condition->SetPoints(p_boundary_points);
+
+        boost::shared_ptr<SimpleLinearEllipticFiniteElementSolver<2> > p_solver =
+                SimpleLinearEllipticFiniteElementSolver<2>::Create();
+        p_solver->SetGrid(p_mesh);
+        p_solver->SetPde(p_pde);
+        p_solver->AddBoundaryCondition(p_boundary_condition);
+
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleLinearEllipticFiniteElementSolver/Plane"));
+        p_solver->SetFileHandler(p_output_file_handler);
+        p_solver->SetWriteSolution(true);
+        p_solver->Solve();
+
+        vtkSmartPointer<vtkPoints> p_sample_points = vtkSmartPointer<vtkPoints>::New();
+        for(unsigned idx=0; idx<6; idx++)
+        {
+            p_sample_points->InsertNextPoint(double(idx), 2.5, 0.0);
+        }
+
+        std::vector<units::quantity<unit::concentration> > solution = p_solver->GetConcentrations(p_sample_points);
+
+        // Analytical c = k*x*x/(2*D) - k*x*w/D+c_0
+        for(unsigned idx=0; idx<6; idx++)
+        {
+            units::quantity<unit::length> x = double(idx)*1.0*unit::metres;
+            units::quantity<unit::length> w = 5.0*unit::metres;
+            units::quantity<unit::concentration> c = -consumption_rate*x*x/(2.0*diffusivity)-
+                    x*-consumption_rate*w/diffusivity + boundary_concentration;
+            double norm_analytical = c/(1.0* unit::mole_per_metre_cubed);
+            double norm_numerical = solution[idx]/(1.0* unit::mole_per_metre_cubed);
+            TS_ASSERT_DELTA(norm_analytical, norm_numerical, 0.01)
+        }
+    }
+
     void Test3dKroghCylinderNetworkSurface() throw(Exception)
     {
         // Set up the vessel network

@@ -60,6 +60,8 @@ class MichaelisMentenSteadyStateDiffusionReactionPde : public AbstractDiscreteCo
 
 public:
 
+    using AbstractDiscreteContinuumNonLinearEllipticPde<SPACE_DIM>::ComputeLinearSourceTerm;
+
     /**
      * Constructor
      */
