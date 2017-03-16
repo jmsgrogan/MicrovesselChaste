@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include <petscts.h>
-#include <petscdmda.h>
 #include "ReplicatableVector.hpp"
 #include "SimplePetscNonlinearSolver.hpp"
 #include "VesselSegment.hpp"
@@ -248,7 +246,7 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleVector()
             {
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
                 double grid_guess = soln_guess_repl[grid_index];
-                units::quantity<unit::concentration> scale_grid_guess = this->GetReferenceConcentration();
+                units::quantity<unit::concentration> scale_grid_guess = grid_guess*this->GetReferenceConcentration();
 
                 PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, grid_guess * (- 6.0 * diffusion_term) +
                         p_nonlinear_pde->ComputeNonlinearSourceTerm(grid_index, scale_grid_guess)*(reference_time/this->GetReferenceConcentration()));
@@ -333,6 +331,7 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::Solve()
     {
         this->Setup();
     }
+    this->Update();
 
     // Set up initial Guess
     c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
@@ -346,14 +345,14 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::Solve()
     ReplicatableVector soln_repl(answer_petsc);
 
     // Populate the solution vector
-    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(number_of_points,
-                                                                               0.0*this->mReferenceConcentration);
+    std::vector<units::quantity<unit::concentration> > concs = std::vector<units::quantity<unit::concentration> >(number_of_points,
+                                                                                                                  0.0*this->mReferenceConcentration);
     for (unsigned row = 0; row < number_of_points; row++)
     {
-       this->mConcentrations[row] = soln_repl[row]*this->mReferenceConcentration;
+        concs[row] = soln_repl[row]*this->mReferenceConcentration;
     }
 
-    this->UpdateSolution(this->mConcentrations);
+    this->UpdateSolution(concs);
 
     if (this->mWriteSolution)
     {

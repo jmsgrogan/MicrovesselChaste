@@ -171,6 +171,7 @@ void AbstractFiniteDifferenceSolverBase<DIM>::Solve()
     {
         Setup();
     }
+    Update();
 }
 
 // Explicit instantiation

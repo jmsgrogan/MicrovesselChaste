@@ -33,14 +33,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include <petscts.h>
-#include <petscdmda.h>
 #include "ReplicatableVector.hpp"
 #include "VesselSegment.hpp"
 #include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
 #include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "BaseUnits.hpp"
-#include "Debug.hpp"
 
 template<unsigned DIM>
 SimpleLinearEllipticFiniteDifferenceSolver<DIM>::SimpleLinearEllipticFiniteDifferenceSolver()
@@ -314,7 +311,6 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Setup()
     //mpInitialLhs = this->mpLinearSystem->rGetLhsMatrix();
     //mpInitialRhs = this->mpLinearSystem->rGetRhsVector();
     // This will add the discrete terms and boundary conditions
-    Update();
     this->IsSetupForSolve = true;
 }
 
@@ -334,7 +330,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Update()
     //this->AddDiscreteTermsToRhs();
 
     // Add boundary conditions
-    this->mpLinearSystem->AssembleIntermediateLinearSystem();
+    //this->mpLinearSystem->AssembleIntermediateLinearSystem();
     std::vector<unsigned> bc_indices;
     unsigned lo = this->mpRegularGrid->GetDistributedVectorFactory()->GetLow();
     unsigned hi = this->mpRegularGrid->GetDistributedVectorFactory()->GetHigh();
@@ -359,6 +355,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Solve()
     {
         Setup();
     }
+    this->Update();
 
     // Do the solve
     ReplicatableVector soln_repl(this->mpLinearSystem->Solve());
