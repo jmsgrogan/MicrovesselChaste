@@ -158,9 +158,15 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
                 }
                 else
                 {
-                    PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index, diffusion_term);
+                    if(k < dimensions[0] - 1)
+                    {
+                        PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index+1, diffusion_term);
+                    }
+                    else
+                    {
+                        PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index, diffusion_term);
+                    }
                 }
-
                 // No flux at x top
                 if (k < dimensions[0] - 1)
                 {
@@ -168,9 +174,15 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
                 }
                 else
                 {
-                    PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index, diffusion_term);
+                    if(k>0)
+                    {
+                        PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index-1, diffusion_term);
+                    }
+                    else
+                    {
+                        PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index, diffusion_term);
+                    }
                 }
-
                 // No flux at y bottom
                 if (j > 0)
                 {
@@ -178,9 +190,15 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
                 }
                 else
                 {
-                    PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index, diffusion_term);
+                    if(j < dimensions[1] - 1)
+                    {
+                        PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index + dimensions[0], diffusion_term);
+                    }
+                    else
+                    {
+                        PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index, diffusion_term);
+                    }
                 }
-
                 // No flux at y top
                 if (j < dimensions[1] - 1)
                 {
@@ -188,9 +206,15 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
                 }
                 else
                 {
-                    PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index, diffusion_term);
+                    if(j>0)
+                    {
+                        PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index - dimensions[0], diffusion_term);
+                    }
+                    else
+                    {
+                        PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index, diffusion_term);
+                    }
                 }
-
                 // No flux at z bottom
                 if (i > 0)
                 {
@@ -198,9 +222,16 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
                 }
                 else
                 {
-                    PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index,grid_index, diffusion_term);
-                }
+                    if(i< dimensions[2] - 1)
+                    {
+                        PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index,grid_index+dimensions[0] * dimensions[1], diffusion_term);
+                    }
+                    else
+                    {
+                        PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index,grid_index, diffusion_term);
+                    }
 
+                }
                 // No flux at z top
                 if (i < dimensions[2] - 1)
                 {
@@ -208,7 +239,14 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
                 }
                 else
                 {
-                    PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index, diffusion_term);
+                    if(i>0)
+                    {
+                        PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index - dimensions[0] * dimensions[1], diffusion_term);
+                    }
+                    else
+                    {
+                        PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index, diffusion_term);
+                    }
                 }
             }
         }
@@ -260,9 +298,16 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleVector()
                 }
                 else
                 {
-                    PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * grid_guess);
+                    if(k < dimensions[0] - 1)
+                    {
+                        double neighbour_guess = soln_guess_repl[grid_index+1];
+                        PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * neighbour_guess);
+                    }
+                    else
+                    {
+                        PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * grid_guess);
+                    }
                 }
-
                 // No flux at x top
                 if (k < dimensions[0] - 1)
                 {
@@ -271,9 +316,16 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleVector()
                 }
                 else
                 {
-                    PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * grid_guess);
+                    if(k>0)
+                    {
+                        double neighbour_guess = soln_guess_repl[grid_index-1];
+                        PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * neighbour_guess);
+                    }
+                    else
+                    {
+                        PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * grid_guess);
+                    }
                 }
-
                 // No flux at y bottom
                 if (j > 0)
                 {
@@ -282,9 +334,16 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleVector()
                 }
                 else
                 {
-                    PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * grid_guess);
+                    if(j < dimensions[1] - 1)
+                    {
+                        double neighbour_guess = soln_guess_repl[grid_index+dimensions[0]];
+                        PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * neighbour_guess);
+                    }
+                    else
+                    {
+                        PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * grid_guess);
+                    }
                 }
-
                 // No flux at y top
                 if (j < dimensions[1] - 1)
                 {
@@ -293,9 +352,16 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleVector()
                 }
                 else
                 {
-                    PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * grid_guess);
+                    if(j>0)
+                    {
+                        double neighbour_guess = soln_guess_repl[grid_index-dimensions[0]];
+                        PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * neighbour_guess);
+                    }
+                    else
+                    {
+                        PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * grid_guess);
+                    }
                 }
-
                 // No flux at z bottom
                 if (i > 0)
                 {
@@ -304,9 +370,16 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleVector()
                 }
                 else
                 {
-                    PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * grid_guess);
+                    if(i < dimensions[2] - 1)
+                    {
+                        double neighbour_guess = soln_guess_repl[grid_index + dimensions[0] * dimensions[1]];
+                        PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * neighbour_guess);
+                    }
+                    else
+                    {
+                        PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * grid_guess);
+                    }
                 }
-
                 // No flux at z top
                 if (i < dimensions[2] - 1)
                 {
@@ -315,7 +388,15 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleVector()
                 }
                 else
                 {
-                    PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * grid_guess);
+                    if(i>0)
+                    {
+                        double neighbour_guess = soln_guess_repl[grid_index - dimensions[0] * dimensions[1]];
+                        PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * neighbour_guess);
+                    }
+                    else
+                    {
+                        PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term * grid_guess);
+                    }
                 }
             }
         }

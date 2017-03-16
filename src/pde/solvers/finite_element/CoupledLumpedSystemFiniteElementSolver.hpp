@@ -61,7 +61,7 @@ class CoupledLumpedSystemFiniteElementSolver : public AbstractFiniteElementSolve
     double mSolveEndTime;
 
     /**
-     * The end time
+     * The initial guess
      */
     std::vector<double> mInitialGuess;
 

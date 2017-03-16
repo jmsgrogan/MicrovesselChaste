@@ -40,9 +40,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <string>
 #include <boost/lexical_cast.hpp>
+
+#include "SimpleParabolicFiniteElementSolver.hpp"
 #include "SmartPointers.hpp"
 #include "ParabolicDiffusionReactionPde.hpp"
-#include "SimpleParabolicFiniteElementSolver.hpp"
 #include "UblasIncludes.hpp"
 #include "Part.hpp"
 #include "DimensionalChastePoint.hpp"
@@ -58,17 +59,38 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 class TestSimpleParabolicFiniteElementSolver : public CxxTest::TestSuite
 {
+private:
+
+    /**
+     * Hill 1928 Fixed bounary on both ends, diffusion only.
+     */
+    double Solve1DParabolic(double x, double D, double t)
+    {
+        double b = 0.5;
+        double c = 1.0;
+        for(unsigned idx=0; idx<10; idx++)
+        {
+            double n = 2*idx + 1;
+            c = c - (4.0/M_PI)*(1.0/n)*std::exp(-n*n*D*M_PI*M_PI*t/(4.0*b*b))*std::sin(n*M_PI*x/(2.0*b));
+        }
+        return c;
+    }
+
 public:
 
     void TestPlane()
     {
         // Set up the mesh
+        BaseUnits::Instance()->SetReferenceLengthScale(1.0*unit::metres);
+        BaseUnits::Instance()->SetReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed);
+        BaseUnits::Instance()->SetReferenceTimeScale(1.0*unit::seconds);
+
         boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(1.0*unit::metres, 1.0*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
 
         DiscreteContinuumMeshGenerator<2> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-        mesh_generator.SetMaxElementArea(0.01*(units::pow<3>(1.0*unit::metres)));
+        mesh_generator.SetMaxElementArea(0.005*(units::pow<3>(1.0*unit::metres)));
         mesh_generator.Update();
         boost::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
 
@@ -77,7 +99,7 @@ public:
         units::quantity<unit::diffusivity> diffusivity(1.0 * unit::metre_squared_per_second);
         units::quantity<unit::rate> decay_rate(-0.5 * unit::per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
-        p_pde->SetContinuumLinearInUTerm(decay_rate);
+        //p_pde->SetContinuumLinearInUTerm(decay_rate);
 
         // BC on right plane
         vtkSmartPointer<vtkPoints> p_boundary_points = vtkSmartPointer<vtkPoints>::New();
@@ -86,7 +108,7 @@ public:
         {
             unsigned node_index = (*surf_iter)->GetNodeGlobalIndex(0);
             double x = p_mesh->GetNode(node_index)->GetPoint()[0];
-            if (x>0.999)
+            if (x>0.999 or x<0.001)
             {
                 p_boundary_points->InsertNextPoint(p_mesh->GetNode(node_index)->GetPoint()[0],
                         p_mesh->GetNode(node_index)->GetPoint()[1], 0.0);
@@ -105,15 +127,39 @@ public:
         p_solver->SetGrid(p_mesh);
         p_solver->SetPde(p_pde);
         p_solver->AddBoundaryCondition(p_boundary_condition);
-        p_solver->SetReferenceConcentration(1.e-9*unit::mole_per_metre_cubed);
-
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleParabolicFiniteElementSolver/Plane"));
         p_solver->SetFileHandler(p_output_file_handler);
         p_solver->SetWriteSolution(true);
-        p_solver->SetTargetTimeIncrement(1.0);
+        p_solver->SetTargetTimeIncrement(0.0005);
         p_solver->SetStartTime(0.0);
-        p_solver->SetEndTime(100.0);
+        p_solver->SetEndTime(0.5);
+        p_solver->SetWriteIntermediateSolutions(true, 100);
         p_solver->Solve();
+
+        // Test the intermediate solutions
+        vtkSmartPointer<vtkPoints> p_sample_points = vtkSmartPointer<vtkPoints>::New();
+        for(unsigned idx=0; idx<11; idx++)
+        {
+            p_sample_points->InsertNextPoint(double(idx)*0.1, 0.5, 0.0);
+        }
+
+        std::vector<std::pair<std::vector<double>, double> > intermediate_solutions =
+                p_solver->rGetIntermediateSolutions();
+        double diff_nondim = diffusivity*(1.0*unit::seconds)/(1.0*unit::metres*1.0*unit::metres);
+        for(unsigned idx=0; idx<intermediate_solutions.size();idx++)
+        {
+            double time = intermediate_solutions[idx].second;
+            p_solver->UpdateSolution(intermediate_solutions[idx].first);
+            std::vector<units::quantity<unit::concentration> > solution = p_solver->GetConcentrations(p_sample_points);
+            for(unsigned jdx=0; jdx<11; jdx++)
+            {
+                units::quantity<unit::length> x = double(jdx)*0.1*unit::metres;
+                double x_nondim = x/(1.0*unit::metres);
+                double c_analytical_nondim = Solve1DParabolic(x_nondim, diff_nondim, time);
+                double c_numerical_nondim = solution[jdx]/boundary_concentration;
+                TS_ASSERT_DELTA(c_analytical_nondim, c_numerical_nondim, 1.e-2)
+            }
+        }
     }
 
     void Test3dKroghCylinderNetworkSurface() throw(Exception)
@@ -122,6 +168,7 @@ public:
         units::quantity<unit::length> micron_length_scale = 1.e-6*unit::metres;
         BaseUnits::Instance()->SetReferenceLengthScale(micron_length_scale);
         BaseUnits::Instance()->SetReferenceTimeScale(3600.0*unit::seconds);
+        BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
 
         units::quantity<unit::length> vessel_length = 100.0 * micron_length_scale;
         VesselNetworkGenerator<3> generator;
@@ -143,7 +190,6 @@ public:
         units::quantity<unit::rate> consumption_rate(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
         p_pde->SetContinuumLinearInUTerm(consumption_rate);
-        p_pde->SetReferenceConcentration(1.e-9*unit::mole_per_metre_cubed);
 
         // Choose the Boundary conditions
         boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_vessel_ox_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
@@ -158,14 +204,14 @@ public:
         solver.SetGrid(p_mesh_generator->GetMesh());
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_vessel_ox_boundary_condition);
-        solver.SetReferenceConcentration(1.e-9*unit::mole_per_metre_cubed);
 
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleParabolicFiniteElementSolver/KroghCylinder3dSurface", false));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
-        p_solver->SetTargetTimeIncrement(1.0);
-        p_solver->SetStartTime(0.0);
-        p_solver->SetEndTime(100.0);
+        solver.SetTargetTimeIncrement(0.001);
+        solver.SetStartTime(0.0);
+        solver.SetEndTime(0.1);
+        solver.SetWriteIntermediateSolutions(true, 10);
         solver.Solve();
     }
 };

@@ -349,8 +349,11 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleVector()
 template<unsigned DIM>
 void SimpleParabolicFiniteDifferenceSolver<DIM>::Solve()
 {
-    // Set up grids, boundary conditions, discrete sinks/sources etc.
-    AbstractFiniteDifferenceSolverBase<DIM>::Setup();
+    if(!this->IsSetupForSolve)
+    {
+        this->Setup();
+    }
+    this->Update();
 
     c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
     unsigned number_of_points = dimensions[0]*dimensions[1]*dimensions[2];
@@ -360,6 +363,19 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::Solve()
     {
         this->mSolution = std::vector<double>(number_of_points, 0.0);
     }
+
+    // Apply BCs
+    std::vector<unsigned> bc_indices;
+    unsigned lo = this->mpRegularGrid->GetDistributedVectorFactory()->GetLow();
+    unsigned hi = this->mpRegularGrid->GetDistributedVectorFactory()->GetHigh();
+    for(unsigned idx=lo; idx<hi; idx++)
+    {
+        if((*(this->mpBoundaryConditions))[idx].first)
+        {
+            this->mSolution[idx] = (*(this->mpBoundaryConditions))[idx].second/this->GetReferenceConcentration();
+        }
+    }
+
     Vec previous_solution = PetscTools::CreateVec(number_of_points);
     for(unsigned idx=0; idx<this->mSolution.size(); idx++)
     {

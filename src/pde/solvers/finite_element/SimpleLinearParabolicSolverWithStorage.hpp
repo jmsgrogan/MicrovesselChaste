@@ -1,6 +1,7 @@
+
 /*
 
-Copyright (c) 2005-2017, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
 All rights reserved.
 
 University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,19 +34,23 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef SIMPLEPARABOLICFINITEELEMENTSOLVER_HPP_
-#define SIMPLEPARABOLICFINITEELEMENTSOLVER_HPP_
+#ifndef SIMPLELINEARPARABOLICSOLVERWITHSTORAGE_HPP_
+#define SIMPLELINEARPARABOLICSOLVERWITHSTORAGE_HPP_
 
-#include "SmartPointers.hpp"
+#include "SimpleLinearParabolicSolver.hpp"
+#include "AbstractLinearParabolicPde.hpp"
 #include "UnitCollection.hpp"
-#include "AbstractFiniteElementSolverBase.hpp"
 
 /**
- * A finite element solver for parabolic PDEs with multiple discrete sinks or sources.
+ * SimpleLinearParabolicSolverWithStorage.
+ *
+ * Solver for solving AbstractLinearParabolicPdes
  */
-template<unsigned DIM>
-class SimpleParabolicFiniteElementSolver : public AbstractFiniteElementSolverBase<DIM>
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+class SimpleLinearParabolicSolverWithStorage : public SimpleLinearParabolicSolver<ELEMENT_DIM, SPACE_DIM>
 {
+
+protected:
 
     /**
      * Storage for intermediate solutions. Useful for debugging.
@@ -63,71 +68,48 @@ class SimpleParabolicFiniteElementSolver : public AbstractFiniteElementSolverBas
     bool mStoreIntermediate;
 
     /**
-     * Whether to write intermediate solutions.
+     * Count the time increments taken
      */
-    bool mWriteIntermediate;
+    unsigned mIncrementCounter;
 
     /**
-     * The target time increment
+     * Save the current time
      */
-    double mTimeIncrement;
-
-    /**
-     * The solve time
-     */
-    double mSolveStartTime;
-
-    /**
-     * The end time
-     */
-    double mSolveEndTime;
-
-    /**
-     * The initial guess
-     */
-    std::vector<double> mInitialGuess;
-
+    double mCurrentTime;
 
 public:
 
     /**
-     * Constructor
+     * Constructor.
+     *
+     * @param pMesh pointer to the mesh
+     * @param pPde pointer to the PDE
+     * @param pBoundaryConditions pointer to the boundary conditions
      */
-    SimpleParabolicFiniteElementSolver();
+    SimpleLinearParabolicSolverWithStorage(AbstractTetrahedralMesh<ELEMENT_DIM,SPACE_DIM>* pMesh,
+                                AbstractLinearParabolicPde<ELEMENT_DIM,SPACE_DIM>* pPde,
+                                BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,1>* pBoundaryConditions);
 
     /**
-     * Destructor
+     * The static and dynamic Solve() implementations both call this immediately after
+     * the linear solve is carried out (but before the timestep counter is incremented.
+     * This can be overloaded if further work on the solution vector needs to be done
+     * (for example, in operator splitting of the diffusion and reaction terms in the
+     * OperatorSplittingMonodomainSolver.
+     *
+     * @param currentSolution The current solution (solution of the linear system solve)
      */
-    virtual ~SimpleParabolicFiniteElementSolver();
-
-    /**
-     * Construct a new instance of the class and return a shared pointer to it.
-     * @return a shared pointer to a class instance.
-     */
-    static boost::shared_ptr<SimpleParabolicFiniteElementSolver<DIM> > Create();
-
-    void SetTargetTimeIncrement(double targetIncrement);
-
-    void SetStartTime(double startTime);
-
-    void SetEndTime(double endTime);
-
-    void SetInitialGuess(const std::vector<double>& rInitialGuess);
+    void FollowingSolveLinearSystem(Vec currentSolution);
 
     /**
      * Whether to store intermediate solutions, useful for debugging. Default (off).
      */
     void SetStoreIntermediateSolutions(bool store, unsigned frequency=1);
 
-    void SetWriteIntermediateSolutions(bool write, unsigned frequency=1);
-
-    const std::vector<std::pair<std::vector<double>, double> >& rGetIntermediateSolutions();
-
     /**
-     * Overridden solve method
+     * Return the intermediate solutions
      */
-    void Solve();
-
+    const std::vector<std::pair<std::vector<double>, double> >& rGetIntermediateSolutions();
 };
 
-#endif /* SIMPLEPARABOLICFINITEELEMENTSOLVER_HPP_ */
+#endif /*SIMPLELINEARPARABOLICSOLVERWITHSTORAGE_HPP_*/

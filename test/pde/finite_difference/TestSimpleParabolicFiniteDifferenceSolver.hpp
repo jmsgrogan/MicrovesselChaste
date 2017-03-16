@@ -56,7 +56,62 @@ class TestSimpleParabolicFiniteDifferenceSolver : public AbstractCellBasedWithTi
 {
 public:
 
-    void TestBox() throw(Exception)
+    void TestRectangleDomain() throw(Exception)
+    {
+        // Set up the grid
+        BaseUnits::Instance()->SetReferenceLengthScale(1.0*unit::metres);
+        BaseUnits::Instance()->SetReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed);
+        BaseUnits::Instance()->SetReferenceTimeScale(1.0*unit::seconds);
+
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(1.0*unit::metres,
+                               1.0*unit::metres,
+                               DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        p_grid->GenerateFromPart(p_domain, 0.1*unit::metres);
+
+        // Choose the PDE
+        boost::shared_ptr<ParabolicDiffusionReactionPde<2> > p_pde =
+                ParabolicDiffusionReactionPde<2>::Create();
+        units::quantity<unit::diffusivity> diffusivity(1.0* unit::metre_squared_per_second);
+        p_pde->SetIsotropicDiffusionConstant(diffusivity);
+
+        // Prescribe a value on the domain's left and right boundary
+        boost::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition = DiscreteContinuumBoundaryCondition<2>::Create();
+        units::quantity<unit::concentration> boundary_concentration(1.0* unit::mole_per_metre_cubed);
+        p_boundary_condition->SetValue(boundary_concentration);
+        p_boundary_condition->SetType(BoundaryConditionType::POINT);
+        vtkSmartPointer<vtkPoints> p_boundary_points = vtkSmartPointer<vtkPoints>::New();
+        vtkSmartPointer<vtkPoints> p_points = p_grid->GetLocations();
+        for(unsigned idx=0; idx<p_points->GetNumberOfPoints(); idx++)
+        {
+            if(p_points->GetPoint(idx)[0]>0.99 or p_points->GetPoint(idx)[0]<0.01)
+            {
+                p_boundary_points->InsertNextPoint(p_points->GetPoint(idx));
+            }
+        }
+        p_boundary_condition->SetPoints(p_boundary_points);
+
+
+        std::vector<double> initial_condition(p_grid->GetNumberOfLocations(), 0.0);
+
+        // Set up and run the solver
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(0.5, 1);
+        SimpleParabolicFiniteDifferenceSolver<2> solver;
+        solver.SetGrid(p_grid);
+        solver.SetPde(p_pde);
+        solver.AddBoundaryCondition(p_boundary_condition);
+        solver.SetParabolicSolverTimeIncrement(0.5/1000.0);
+        solver.UpdateSolution(initial_condition);
+
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleParabolicFiniteDifferenceSolver/RectangleDomain", true));
+        solver.SetFileHandler(p_output_file_handler);
+        solver.SetWriteSolution(true);
+        solver.SetFileName("output_nl_fd_");
+        solver.Solve();
+    }
+
+    void xTestBox() throw(Exception)
     {
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-6*unit::mole_per_metre_cubed);
         BaseUnits::Instance()->SetReferenceTimeScale(3600.0*unit::seconds);

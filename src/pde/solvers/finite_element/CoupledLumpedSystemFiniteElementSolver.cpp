@@ -33,11 +33,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "SimpleLinearParabolicSolver.hpp"
 #include "AbstractDiscreteContinuumParabolicPde.hpp"
 #include "CoupledLumpedSystemFiniteElementSolver.hpp"
 #include "CoupledInterfaceOdePdeSolver.hpp"
 #include "Exception.hpp"
+#include "SimpleLinearParabolicSolverWithStorage.hpp"
 
 template<unsigned DIM>
 CoupledLumpedSystemFiniteElementSolver<DIM>::CoupledLumpedSystemFiniteElementSolver()

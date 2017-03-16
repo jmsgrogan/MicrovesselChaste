@@ -69,6 +69,7 @@ Copyright (c) 2005-2016, University of Oxford.
  */
 
 // PDEs
+#include "../../src/pde/solvers/finite_element/SimpleParabolicFiniteElementSolver.hpp"
 #include "AbstractDiscreteContinuumPde.hpp"
 #include "AbstractDiscreteContinuumNonLinearEllipticPde.hpp"
 #include "AbstractDiscreteContinuumParabolicPde.hpp"
@@ -100,8 +101,6 @@ Copyright (c) 2005-2016, University of Oxford.
 #include "AbstractFiniteElementSolverBase.hpp"
 #include "SimpleLinearEllipticFiniteElementSolver.hpp"
 #include "SimpleNonLinearEllipticFiniteElementSolver.hpp"
-#include "SimpleParabolicFiniteElementSolver.hpp"
-
 #include "AbstractGreensFunctionSolverBase.hpp"
 #include "SimpleLinearEllipticGreensFunctionSolver.hpp"
 

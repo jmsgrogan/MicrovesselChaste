@@ -152,7 +152,7 @@ public:
             double x_nondim = x/(1.0*unit::metres);
             double c_analytical_nondim = SolveMichaelisMenten1d(x_nondim, gamma, k);
             double c_numerical_nondim = solution[idx]/(1.0* unit::mole_per_metre_cubed);
-            TS_ASSERT_DELTA(c_analytical_nondim, c_numerical_nondim, 1.e-6)
+            TS_ASSERT_DELTA(c_analytical_nondim, c_numerical_nondim, 1.e-2)
         }
     }
 
