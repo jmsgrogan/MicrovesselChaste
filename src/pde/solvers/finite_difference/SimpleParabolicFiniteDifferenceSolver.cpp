@@ -33,10 +33,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include <petscts.h>
 #include <petscvec.h>
+#include <boost/lexical_cast.hpp>
 #include "ReplicatableVector.hpp"
-#include "VesselSegment.hpp"
 #include "SimpleParabolicFiniteDifferenceSolver.hpp"
 #include "BaseUnits.hpp"
 #include "AbstractDiscreteContinuumParabolicPde.hpp"
@@ -59,7 +58,13 @@ PetscErrorCode ParabolicFiniteDifferenceSolver_ComputeJacobian(TS ts, PetscReal 
 template<unsigned DIM>
 SimpleParabolicFiniteDifferenceSolver<DIM>::SimpleParabolicFiniteDifferenceSolver()
     :   AbstractFiniteDifferenceSolverBase<DIM>(),
-        mParabolicSolverTimeIncrement(0.05)
+        mIntermediateSolutionCollection(),
+        mIntermediateSolutionFrequency(1),
+        mStoreIntermediate(false),
+        mWriteIntermediate(false),
+        mTimeIncrement(0.001),
+        mSolveStartTime(0.0),
+        mSolveEndTime(1.0)
 {
 
 }
@@ -78,7 +83,7 @@ boost::shared_ptr<SimpleParabolicFiniteDifferenceSolver<DIM> > SimpleParabolicFi
 }
 
 template<unsigned DIM>
-void SimpleParabolicFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Vec currentGuess, Vec dUdt)
+void SimpleParabolicFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Vec currentGuess, Vec dUdt, TS ts)
 {
     this->SetVectorToAssemble(dUdt);
     this->SetCurrentSolution(currentGuess);
@@ -96,10 +101,30 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Vec cu
         }
     }
     PetscVecTools::Finalise(this->mVectorToAssemble);
+
+    if(mStoreIntermediate)
+    {
+        PetscInt totalSteps;
+        TSGetTotalSteps(ts, &totalSteps);
+        if(totalSteps%mIntermediateSolutionFrequency==0)
+        {
+            // Get the current time
+            PetscReal currentTime;
+            TSGetTime(ts, &currentTime);
+
+            ReplicatableVector soln_guess_repl(currentGuess);
+            std::vector<double> soln(soln_guess_repl.GetSize(), 0.0);
+            for (unsigned row = 0; row < soln_guess_repl.GetSize(); row++)
+            {
+                soln[row] = soln_guess_repl[row];
+            }
+            mIntermediateSolutionCollection.push_back(std::pair<std::vector<double>, double>(soln, double(currentTime)));
+        }
+    }
 }
 
 template<unsigned DIM>
-void SimpleParabolicFiniteDifferenceSolver<DIM>::ComputeJacobian(const Vec currentGuess, Mat* pJacobian)
+void SimpleParabolicFiniteDifferenceSolver<DIM>::ComputeJacobian(const Vec currentGuess, Mat* pJacobian, TS ts)
 {
     this->SetMatrixToAssemble(*pJacobian);
     this->SetCurrentSolution(currentGuess);
@@ -121,10 +146,43 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::ComputeJacobian(const Vec curre
     PetscMatTools::Finalise(this->mMatrixToAssemble);
 }
 
-template<unsigned DIM>
-void SimpleParabolicFiniteDifferenceSolver<DIM>::SetParabolicSolverTimeIncrement(double timeIncrement)
+template <unsigned DIM>
+void SimpleParabolicFiniteDifferenceSolver<DIM>::SetTargetTimeIncrement(double targetIncrement)
 {
-    mParabolicSolverTimeIncrement = timeIncrement;
+    mTimeIncrement = targetIncrement;
+}
+
+template <unsigned DIM>
+void SimpleParabolicFiniteDifferenceSolver<DIM>::SetStartTime(double startTime)
+{
+    mSolveStartTime = startTime;
+}
+
+template <unsigned DIM>
+void SimpleParabolicFiniteDifferenceSolver<DIM>::SetEndTime(double endTime)
+{
+    mSolveEndTime = endTime;
+}
+
+template <unsigned DIM>
+const std::vector<std::pair<std::vector<double>, double> >& SimpleParabolicFiniteDifferenceSolver<DIM>::rGetIntermediateSolutions()
+{
+    return mIntermediateSolutionCollection;
+}
+
+template <unsigned DIM>
+void SimpleParabolicFiniteDifferenceSolver<DIM>::SetStoreIntermediateSolutions(bool store, unsigned frequency)
+{
+    mStoreIntermediate = store;
+    mIntermediateSolutionFrequency = frequency;
+}
+
+template <unsigned DIM>
+void SimpleParabolicFiniteDifferenceSolver<DIM>::SetWriteIntermediateSolutions(bool write, unsigned frequency)
+{
+    mWriteIntermediate = write;
+    mStoreIntermediate = write;
+    mIntermediateSolutionFrequency = frequency;
 }
 
 template<unsigned DIM>
@@ -400,7 +458,7 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::Solve()
 
     // Time stepping and SNES settings
     PetscInt time_steps_max = 1e7;
-    PetscReal time_total_max = SimulationTime::Instance()->GetTimeStep();
+    PetscReal time_total_max = mSolveEndTime;
     TSGetSNES(ts,&snes);
     PetscReal abstol = 1.0e-50;
     PetscReal reltol = 1.0e-10;
@@ -416,15 +474,11 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::Solve()
 
     // Set initial timestep
     PetscReal dt;
-    dt = mParabolicSolverTimeIncrement;
-    TSSetInitialTimeStep(ts, 0.0, dt);
+    dt = mTimeIncrement;
+    TSSetInitialTimeStep(ts, mSolveStartTime, dt);
 
     // Do the solve
     TSSolve(ts, previous_solution);
-
-    // Get the current time
-    PetscReal solveTime;
-    TSGetSolveTime(ts, &solveTime);
 
     ReplicatableVector soln_repl(previous_solution);
     // Populate the solution vector
@@ -441,6 +495,29 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::Solve()
         this->Write();
     }
 
+    if(mWriteIntermediate)
+    {
+        std::string base_file_name;
+        std::string original_file_name;
+        if(this->mFilename.empty())
+        {
+            original_file_name = "solution";
+        }
+        else
+        {
+            original_file_name = this->mFilename;
+        }
+        base_file_name = original_file_name + "_intermediate_t_";
+
+        for(unsigned idx=0;idx<mIntermediateSolutionCollection.size();idx++)
+        {
+            this->UpdateSolution(mIntermediateSolutionCollection[idx].first);
+            this->mFilename = base_file_name + boost::lexical_cast<std::string>(unsigned(100.0*mIntermediateSolutionCollection[idx].second/mTimeIncrement));
+            this->Write();
+        }
+        this->mFilename = original_file_name;
+    }
+
     TSDestroy(&ts);
     PetscTools::Destroy(jacobian);
     PetscTools::Destroy(previous_solution);
@@ -451,7 +528,7 @@ PetscErrorCode ParabolicFiniteDifferenceSolver_RHSFunction(TS ts, PetscReal t, V
 {
     // extract solver from void so that we can use locally set values from the calculator object
     SimpleParabolicFiniteDifferenceSolver<DIM>* p_solver = (SimpleParabolicFiniteDifferenceSolver<DIM>*) pContext;
-    p_solver->ComputeRHSFunction(currentSolution, dUdt);
+    p_solver->ComputeRHSFunction(currentSolution, dUdt, ts);
     return 0;
 }
 
@@ -462,7 +539,7 @@ PetscErrorCode ParabolicFiniteDifferenceSolver_ComputeJacobian(TS ts, PetscReal 
 {
     SimpleParabolicFiniteDifferenceSolver<DIM>* p_solver =
             (SimpleParabolicFiniteDifferenceSolver<DIM>*) pContext;
-    p_solver->ComputeJacobian(currentSolution, &pGlobalJacobian);
+    p_solver->ComputeJacobian(currentSolution, &pGlobalJacobian, ts);
 
 #else
 template<unsigned DIM>
@@ -471,7 +548,7 @@ PetscErrorCode ParabolicFiniteDifferenceSolver_ComputeJacobian(TS ts, PetscReal 
 {
     SimpleParabolicFiniteDifferenceSolver<DIM>* p_solver =
             (SimpleParabolicFiniteDifferenceSolver<DIM>*) pContext;
-    p_solver->ComputeJacobian(currentSolution, pJacobian);
+    p_solver->ComputeJacobian(currentSolution, pJacobian, ts);
 #endif
     return 0;
 }

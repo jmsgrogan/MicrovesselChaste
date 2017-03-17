@@ -36,6 +36,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef SIMPLEPARABOLICFINITEDIFFERENCESOLVER_HPP_
 #define SIMPLEPARABOLICFINITEDIFFERENCESOLVER_HPP_
 
+#include <petscts.h>
 #include "SmartPointers.hpp"
 #include "AbstractFiniteDifferenceSolverBase.hpp"
 #include "UnitCollection.hpp"
@@ -55,9 +56,39 @@ class SimpleParabolicFiniteDifferenceSolver : public AbstractFiniteDifferenceSol
 protected:
 
     /**
-     * Time step for the parabolic solver
+     * Storage for intermediate solutions. Useful for debugging.
      */
-    double mParabolicSolverTimeIncrement;
+    std::vector<std::pair<std::vector<double>, double> > mIntermediateSolutionCollection;
+
+    /**
+     * How often to store intermediate solutions.
+     */
+    unsigned mIntermediateSolutionFrequency;
+
+    /**
+     * Whether to store intermediate solutions.
+     */
+    bool mStoreIntermediate;
+
+    /**
+     * Whether to write intermediate solutions.
+     */
+    bool mWriteIntermediate;
+
+    /**
+     * The target time increment
+     */
+    double mTimeIncrement;
+
+    /**
+     * The solve time
+     */
+    double mSolveStartTime;
+
+    /**
+     * The end time
+     */
+    double mSolveEndTime;
 
 public:
 
@@ -96,7 +127,7 @@ public:
      * NOTE: this method is called indirectly by the PETSc iterative
      * solvers, so must be public.
      */
-    void ComputeRHSFunction(const Vec currentGuess, Vec dUdt);
+    void ComputeRHSFunction(const Vec currentGuess, Vec dUdt, TS ts);
 
     /**
      * Compute the Jacobian matrix given a current guess at the solution.
@@ -109,13 +140,45 @@ public:
      * NOTE: this method is called indirectly by the PETSc iterative
      * solvers, so must be public.
      */
-    void ComputeJacobian(const Vec currentGuess, Mat* pJacobian);
+    void ComputeJacobian(const Vec currentGuess, Mat* pJacobian, TS ts);
 
     /**
-     * Dimensionless time increment for the parabolic solver
-     * @param timeIncrement Dimensionless time increment for the parabolic solver
+     * Return the intermediate solutions. Empty if not stored.
+     * @return the intermediate solutions. Empty if not stored.
      */
-    void SetParabolicSolverTimeIncrement(double timeIncrement);
+    const std::vector<std::pair<std::vector<double>, double> >& rGetIntermediateSolutions();
+
+    /**
+     * Set the target time increment for the solver
+     * @param targetIncrement the target time increment for the solver
+     */
+    void SetTargetTimeIncrement(double targetIncrement);
+
+    /**
+     * Set the solver start time
+     * @param startTime the solver start time
+     */
+    void SetStartTime(double startTime);
+
+    /**
+     * Set the solver end time
+     * @param endTime the solver end time
+     */
+    void SetEndTime(double endTime);
+
+    /**
+     * Whether to store intermediate solutions, useful for debugging. Default (off).
+     * @param store store intermediate solutions
+     * @param frequency the frequency to store solutions at
+     */
+    void SetStoreIntermediateSolutions(bool store, unsigned frequency=1);
+
+    /**
+     * Whether to write intermediate solutions, useful for debugging. Default (off).
+     * @param write write intermediate solutions
+     * @param frequency the frequency to store solutions at
+     */
+    void SetWriteIntermediateSolutions(bool write, unsigned frequency=1);
 
     /**
      * Overridden solve method

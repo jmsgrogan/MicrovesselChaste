@@ -54,40 +54,41 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 class TestCoupledLumpedSystemFiniteElementSolver : public CxxTest::TestSuite
 {
 public:
-    void TestExplicitSolver()
+    void TestPlaneSlowRelease() throw(Exception)
     {
+        BaseUnits::Instance()->SetReferenceLengthScale(1.0*unit::metres);
+        BaseUnits::Instance()->SetReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed);
+        BaseUnits::Instance()->SetReferenceTimeScale(1.0*unit::seconds);
+
         // Set up the mesh
         boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(2000e-6*unit::metres, 1000e-6*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        p_domain->AddRectangle(10.0*unit::metres, 100.0*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
 
         DiscreteContinuumMeshGenerator<2> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-        mesh_generator.SetMaxElementArea(1e7*(units::pow<3>(1.e-6*unit::metres)));
+        mesh_generator.SetMaxElementArea(4.0*(units::pow<3>(1.0*unit::metres)));
         mesh_generator.Update();
         boost::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
 
         boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_pde =
                 CoupledVegfPelletDiffusionReactionPde<2>::Create();
-        units::quantity<unit::diffusivity> vegf_diffusivity(6.94e-11 * unit::metre_squared_per_second);
-        units::quantity<unit::rate> vegf_decay_rate((-0.8/3600.0) * unit::per_second);
+        units::quantity<unit::diffusivity> vegf_diffusivity(1.0* unit::metre_squared_per_second);
         p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
-        p_pde->SetContinuumLinearInUTerm(vegf_decay_rate);
 
-        units::quantity<unit::concentration> initial_vegf_concentration(3.93e-4*unit::mole_per_metre_cubed);
+        units::quantity<unit::concentration> initial_vegf_concentration(1.0*unit::mole_per_metre_cubed);
         p_pde->SetCurrentVegfInPellet(initial_vegf_concentration);
 
         // Set up robin BC on top plane
-        std::vector<DimensionalChastePoint<2> > boundary_points;
+        vtkSmartPointer<vtkPoints> p_boundary_points = vtkSmartPointer<vtkPoints>::New();
         TetrahedralMesh<2,2>::BoundaryElementIterator surf_iter = p_mesh->GetBoundaryElementIteratorBegin();
         while (surf_iter != p_mesh->GetBoundaryElementIteratorEnd())
         {
             unsigned node_index = (*surf_iter)->GetNodeGlobalIndex(0);
             double y = p_mesh->GetNode(node_index)->GetPoint()[1];
-            if (y>999.0)
+            if (y>99.9)
             {
-                boundary_points.push_back(DimensionalChastePoint<2>(p_mesh->GetNode(node_index)->GetPoint()[0],
-                        p_mesh->GetNode(node_index)->GetPoint()[0], 0.0,
-                        p_mesh->GetReferenceLengthScale()));
+                p_boundary_points->InsertNextPoint(p_mesh->GetNode(node_index)->GetPoint()[0],
+                        p_mesh->GetNode(node_index)->GetPoint()[1], 0.0);
             }
             surf_iter++;
         }
@@ -97,21 +98,20 @@ public:
         p_boundary_condition->SetValue(boundary_concentration);
         p_boundary_condition->SetType(BoundaryConditionType::POINT);
         p_boundary_condition->SetIsRobin(true);
-        p_boundary_condition->SetPoints(boundary_points);
+        p_boundary_condition->SetPoints(p_boundary_points);
 
         boost::shared_ptr<CoupledLumpedSystemFiniteElementSolver<2> > p_solver =
                 CoupledLumpedSystemFiniteElementSolver<2>::Create();
         p_solver->SetGrid(p_mesh);
         p_solver->SetPde(p_pde);
         p_solver->AddBoundaryCondition(p_boundary_condition);
-        p_solver->SetReferenceConcentration(1.e-9*unit::mole_per_metre_cubed);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestCoupledLumpedSystemFiniteElementSolver/Plane"));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestCoupledLumpedSystemFiniteElementSolver/PlaneSlowRelease"));
         p_solver->SetFileHandler(p_output_file_handler);
         p_solver->SetWriteSolution(true);
-        p_solver->SetTargetTimeIncrement(1.0);
+        p_solver->SetTargetTimeIncrement(0.01);
         p_solver->SetStartTime(0.0);
-        p_solver->SetEndTime(100.0);
+        p_solver->SetEndTime(10.0);
         p_solver->Solve();
     }
 

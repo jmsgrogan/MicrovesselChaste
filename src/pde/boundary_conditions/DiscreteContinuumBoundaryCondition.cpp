@@ -198,7 +198,9 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
                         while (surf_iter != p_mesh->GetBoundaryElementIteratorEnd())
                         {
                             unsigned node_index = (*surf_iter)->GetNodeGlobalIndex(0);
-                            if(node_index==(*iter)->GetIndex())
+                            unsigned node2_index = (*surf_iter)->GetNodeGlobalIndex(1);
+                            if(node_index==(*iter)->GetIndex() and
+                                    p_mesh->GetNode(node_index)->GetPoint()[1]==p_mesh->GetNode(node2_index)->GetPoint()[1])
                             {
                                 pContainer->AddNeumannBoundaryCondition(*surf_iter, p_fixed_boundary_condition);
                             }

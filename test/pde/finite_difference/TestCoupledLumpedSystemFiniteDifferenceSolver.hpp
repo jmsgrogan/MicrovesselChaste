@@ -39,6 +39,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cxxtest/TestSuite.h>
 #include <vector>
 #include <string>
+#include <math.h>
 #include <boost/lexical_cast.hpp>
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
@@ -52,14 +53,97 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DiscreteContinuumMesh.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
 
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestCoupledLumpedSystemFiniteDifferenceSolver : public AbstractCellBasedWithTimingsTestSuite
 {
+
+    /**
+     * Diffusion only in 1D with Robin Boundary on the left
+     * From Crank Diffusion text
+     */
+    double SolveRobinBoundary(double x, double t, double D, double k, double c_0)
+    {
+        double h = k/D;
+        double L = std::sqrt(t*D);
+        double erfc1 = erfc(x/(2.0*L));
+        double erfc2 = erfc(x/(2.0*L)+h*L);
+        double expterm = std::exp(h*x + h*h*D*t);
+        double c = c_0*(erfc1-expterm*erfc2);
+        return c;
+    }
 public:
+
+    void TestPlaneSlowRelease() throw(Exception)
+    {
+        BaseUnits::Instance()->SetReferenceLengthScale(1.0*unit::metres);
+        BaseUnits::Instance()->SetReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed);
+        BaseUnits::Instance()->SetReferenceTimeScale(1.0*unit::seconds);
+
+        // Set up the mesh
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(10.0*unit::metres, 100.0*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+
+        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        p_grid->GenerateFromPart(p_domain, 5.0*unit::metres);
+
+        // Choose the PDE
+        boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
+        units::quantity<unit::diffusivity> vegf_diffusivity(1.0 * unit::metre_squared_per_second);
+        p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
+
+        units::quantity<unit::concentration> initial_vegf_concentration(1.0*unit::mole_per_metre_cubed);
+        p_pde->SetCurrentVegfInPellet(initial_vegf_concentration);
+        p_pde->SetCorneaPelletPermeability(1.0*unit::metre_per_second);
+        p_pde->SetPelletFreeDecayRate(0.0*unit::per_second);
+        p_pde->SetPelletBindingConstant(1.0);
+        p_pde->SetPelletSurfaceArea(1.0*unit::metres_squared);
+        p_pde->SetPelletVolume(1.0*unit::metres*1.0*unit::metres*1.0*unit::metres);
+
+        CoupledLumpedSystemFiniteDifferenceSolver<2> solver;
+        solver.SetGrid(p_grid);
+        solver.SetPde(p_pde);
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestCoupledLumpedSystemFiniteDifferenceSolver/PlaneSlowRelease"));
+        solver.SetFileHandler(p_output_file_handler);
+        solver.SetWriteSolution(true);
+        solver.SetTargetTimeIncrement(0.1);
+        solver.SetUseCoupling(false);
+        solver.SetStartTime(0.0);
+        solver.SetEndTime(100.0);
+        solver.SetWriteIntermediateSolutions(true, 100);
+        solver.Solve();
+
+        // Test the intermediate solutions
+        vtkSmartPointer<vtkPoints> p_sample_points = vtkSmartPointer<vtkPoints>::New();
+        for(unsigned idx=0; idx<11; idx++)
+        {
+            p_sample_points->InsertNextPoint(5.0, 100.0-idx*10.0, 0.0);
+        }
+
+        std::vector<std::pair<std::vector<double>, double> > intermediate_solutions = solver.rGetIntermediateSolutions();
+        double diff_nondim = vegf_diffusivity*(1.0*unit::seconds)/(1.0*unit::metres*1.0*unit::metres);
+        for(unsigned idx=0; idx<intermediate_solutions.size();idx++)
+        {
+            double time = intermediate_solutions[idx].second;
+            if(time>10.0)
+            {
+                solver.UpdateSolution(intermediate_solutions[idx].first);
+                std::vector<units::quantity<unit::concentration> > solution = solver.GetConcentrations(p_sample_points);
+                for(unsigned jdx=0; jdx<11; jdx++)
+                {
+                    units::quantity<unit::length> x = double(jdx)*10.0*unit::metres;
+                    double x_nondim = x/(1.0*unit::metres);
+                    double c_analytical_nondim = SolveRobinBoundary(x_nondim, time, diff_nondim, 1.0, 1.0);
+                    double c_numerical_nondim = solution[jdx]/initial_vegf_concentration;
+                    TS_ASSERT_DELTA(c_analytical_nondim, c_numerical_nondim, 2.e-2)
+                }
+            }
+        }
+    }
 
     void TestPlane() throw(Exception)
     {
+        BaseUnits::Instance()->SetReferenceLengthScale(1.e-6*unit::metres);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-6*unit::mole_per_metre_cubed);
         BaseUnits::Instance()->SetReferenceTimeScale(3600.0*unit::seconds);
 
@@ -78,22 +162,19 @@ public:
         p_pde->SetContinuumLinearInUTerm(vegf_decay_rate);
 
         units::quantity<unit::concentration> initial_vegf_concentration(3.93e-4*unit::mole_per_metre_cubed);
-        p_pde->SetMultiplierValue(initial_vegf_concentration);
+        p_pde->SetInitialVegfInPellet(initial_vegf_concentration);
 
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(1.0, 1); // Force 1 hour increments
         CoupledLumpedSystemFiniteDifferenceSolver<2> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
-
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestCoupledLumpedSystemFiniteDifferenceSolver/Plane"));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
-
-        for(unsigned idx=0; idx<10; idx++)
-        {
-            solver.SetFileName("output_nl_fd_" + boost::lexical_cast<std::string>(idx));
-            solver.Solve();
-        }
+        solver.SetTargetTimeIncrement(0.0005);
+        solver.SetStartTime(0.0);
+        solver.SetEndTime(0.5);
+        solver.SetWriteIntermediateSolutions(true, 20);
+        solver.Solve();
     }
 };
 

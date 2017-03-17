@@ -50,10 +50,28 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DiscreteContinuumMesh.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
 
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestSimpleParabolicFiniteDifferenceSolver : public AbstractCellBasedWithTimingsTestSuite
 {
+
+private:
+
+    /**
+     * Hill 1928 Fixed bounary on both ends, diffusion only.
+     */
+    double Solve1DParabolic(double x, double D, double t)
+    {
+        double b = 0.5;
+        double c = 1.0;
+        for(unsigned idx=0; idx<10; idx++)
+        {
+            double n = 2*idx + 1;
+            c = c - (4.0/M_PI)*(1.0/n)*std::exp(-n*n*D*M_PI*M_PI*t/(4.0*b*b))*std::sin(n*M_PI*x/(2.0*b));
+        }
+        return c;
+    }
+
 public:
 
     void TestRectangleDomain() throw(Exception)
@@ -96,19 +114,42 @@ public:
         std::vector<double> initial_condition(p_grid->GetNumberOfLocations(), 0.0);
 
         // Set up and run the solver
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(0.5, 1);
         SimpleParabolicFiniteDifferenceSolver<2> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_boundary_condition);
-        solver.SetParabolicSolverTimeIncrement(0.5/1000.0);
         solver.UpdateSolution(initial_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleParabolicFiniteDifferenceSolver/RectangleDomain", true));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleParabolicFiniteDifferenceSolver/RectangleDomain"));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
-        solver.SetFileName("output_nl_fd_");
+        solver.SetTargetTimeIncrement(0.0005);
+        solver.SetStartTime(0.0);
+        solver.SetEndTime(0.5);
+        solver.SetWriteIntermediateSolutions(true, 20);
         solver.Solve();
+
+        // Test the intermediate solutions
+        std::vector<std::pair<std::vector<double>, double> > intermediate_solutions =
+                solver.rGetIntermediateSolutions();
+        double diff_nondim = diffusivity*(1.0*unit::seconds)/(1.0*unit::metres*1.0*unit::metres);
+        for(unsigned idx=0; idx<intermediate_solutions.size();idx++)
+        {
+            double time = intermediate_solutions[idx].second;
+            if(time>0.1) // Analytical solution won't capture sharp initial condition.
+            {
+                solver.UpdateSolution(intermediate_solutions[idx].first);
+                std::vector<units::quantity<unit::concentration> > solution = solver.GetConcentrations();
+                for(unsigned jdx=0; jdx<11; jdx++)
+                {
+                    units::quantity<unit::length> x = double(jdx)*0.1*unit::metres;
+                    double x_nondim = x/(1.0*unit::metres);
+                    double c_analytical_nondim = Solve1DParabolic(x_nondim, diff_nondim, time);
+                    double c_numerical_nondim = solution[jdx]/boundary_concentration;
+                    TS_ASSERT_DELTA(c_analytical_nondim, c_numerical_nondim, 1.e-2)
+                }
+            }
+        }
     }
 
     void xTestBox() throw(Exception)
@@ -133,21 +174,18 @@ public:
         units::quantity<unit::concentration> initial_vegf_concentration(3.93e-4*unit::mole_per_metre_cubed);
         std::vector<double> initial_condition(p_grid->GetNumberOfLocations(), double(initial_vegf_concentration/(1.e-6*unit::mole_per_metre_cubed)));
 
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(1.0, 1); // Force 1 hour increments
         SimpleParabolicFiniteDifferenceSolver<2> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.UpdateSolution(initial_condition);
-
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleParabolicFiniteDifferenceSolver/Box", false));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleParabolicFiniteDifferenceSolver/Box"));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
-
-        for(unsigned idx=0; idx<10; idx++)
-        {
-            solver.SetFileName("output_nl_fd_" + boost::lexical_cast<std::string>(idx));
-            solver.Solve();
-        }
+        solver.SetTargetTimeIncrement(0.01);
+        solver.SetStartTime(0.0);
+        solver.SetEndTime(1.0);
+        solver.SetWriteIntermediateSolutions(true, 10);
+        solver.Solve();
     }
 };
 

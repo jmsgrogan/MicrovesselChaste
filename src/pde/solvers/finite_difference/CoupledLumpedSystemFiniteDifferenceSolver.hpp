@@ -48,6 +48,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 class CoupledLumpedSystemFiniteDifferenceSolver : public SimpleParabolicFiniteDifferenceSolver<DIM>
 {
+    /**
+     * Turn off to prevent mass loss from the lumped component. Useful for model testing.
+     */
+    bool mUseCoupling;
 
 public:
 
@@ -86,7 +90,7 @@ public:
      * NOTE: this method is called indirectly by the PETSc iterative
      * solvers, so must be public.
      */
-    void ComputeRHSFunction(const Vec currentGuess, Vec dUdt);
+    void ComputeRHSFunction(const Vec currentGuess, Vec dUdt, TS ts);
 
     /**
      * Compute the Jacobian matrix given a current guess at the solution.
@@ -99,7 +103,14 @@ public:
      * NOTE: this method is called indirectly by the PETSc iterative
      * solvers, so must be public.
      */
-    void ComputeJacobian(const Vec currentGuess, Mat* pJacobian);
+    void ComputeJacobian(const Vec currentGuess, Mat* pJacobian, TS ts);
+
+    /**
+     * Whether to include mass loss in the lumped system. Turning this off is
+     * useful for model testing.
+     * @param useCoupling Whether to include mass loss in the lumped system
+     */
+    void SetUseCoupling(bool useCoupling);
 
     /**
      * Overridden solve method

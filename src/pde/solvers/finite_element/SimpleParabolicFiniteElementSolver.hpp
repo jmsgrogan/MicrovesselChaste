@@ -106,22 +106,49 @@ public:
      */
     static boost::shared_ptr<SimpleParabolicFiniteElementSolver<DIM> > Create();
 
+    /**
+     * Return the intermediate solutions. Empty if not stored.
+     * @return the intermediate solutions. Empty if not stored.
+     */
+    const std::vector<std::pair<std::vector<double>, double> >& rGetIntermediateSolutions();
+
+    /**
+     * Set the target time increment for the solver
+     * @param targetIncrement the target time increment for the solver
+     */
     void SetTargetTimeIncrement(double targetIncrement);
 
+    /**
+     * Set the solver start time
+     * @param startTime the solver start time
+     */
     void SetStartTime(double startTime);
 
+    /**
+     * Set the solver end time
+     * @param endTime the solver end time
+     */
     void SetEndTime(double endTime);
 
+    /**
+     * Set the initial guess
+     * @param rInitialGuess the initial guess
+     */
     void SetInitialGuess(const std::vector<double>& rInitialGuess);
 
     /**
      * Whether to store intermediate solutions, useful for debugging. Default (off).
+     * @param store store intermediate solutions
+     * @param frequency the frequency to store solutions at
      */
     void SetStoreIntermediateSolutions(bool store, unsigned frequency=1);
 
+    /**
+     * Whether to write intermediate solutions, useful for debugging. Default (off).
+     * @param write write intermediate solutions
+     * @param frequency the frequency to store solutions at
+     */
     void SetWriteIntermediateSolutions(bool write, unsigned frequency=1);
-
-    const std::vector<std::pair<std::vector<double>, double> >& rGetIntermediateSolutions();
 
     /**
      * Overridden solve method

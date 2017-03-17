@@ -103,7 +103,7 @@ public:
     RobinConditionsSurfaceTermAssembler(AbstractTetrahedralMesh<ELEMENT_DIM,SPACE_DIM>* pMesh,
                                        BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>* pBoundaryConditions)
         : AbstractFeSurfaceIntegralAssemblerWithMatrix<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>(pMesh, pBoundaryConditions),
-          mScaleFactor(1.0),
+          mScaleFactor(0.5),
           mPermeability(1.0)
     {
     }

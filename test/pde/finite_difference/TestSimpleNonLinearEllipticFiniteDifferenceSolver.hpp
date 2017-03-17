@@ -58,7 +58,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 class TestNonLinearSimpleNonLinearEllipticFiniteDifferenceSolver : public AbstractCellBasedWithTimingsTestSuite
 {
 
-    private:
+private:
 
     /**
      * Approximate analytical solution to 1-D RD equation with MM like sink. Right boundary is fixed.

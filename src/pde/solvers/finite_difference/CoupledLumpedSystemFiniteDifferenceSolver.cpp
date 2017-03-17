@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+#include <boost/lexical_cast.hpp>
 #include <petscts.h>
-#include <petscdmda.h>
 #include "ReplicatableVector.hpp"
 #include "VesselSegment.hpp"
 #include "CoupledLumpedSystemFiniteDifferenceSolver.hpp"
@@ -60,7 +60,8 @@ PetscErrorCode CoupledLumpedSystemFiniteDifferenceSolver_ComputeJacobian(TS ts, 
 
 template<unsigned DIM>
 CoupledLumpedSystemFiniteDifferenceSolver<DIM>::CoupledLumpedSystemFiniteDifferenceSolver()
-    :   SimpleParabolicFiniteDifferenceSolver<DIM>()
+    :   SimpleParabolicFiniteDifferenceSolver<DIM>(),
+        mUseCoupling(true)
 {
 
 }
@@ -79,7 +80,13 @@ boost::shared_ptr<CoupledLumpedSystemFiniteDifferenceSolver<DIM> > CoupledLumped
 }
 
 template<unsigned DIM>
-void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Vec currentGuess, Vec dUdt)
+void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::SetUseCoupling(bool useCoupling)
+{
+    mUseCoupling = useCoupling;
+}
+
+template<unsigned DIM>
+void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Vec currentGuess, Vec dUdt, TS ts)
 {
     this->SetVectorToAssemble(dUdt);
     this->SetCurrentSolution(currentGuess);
@@ -96,11 +103,31 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Ve
             PetscVecTools::SetElement(this->mVectorToAssemble, idx, 0.0);
         }
     }
+
+    if(this->mStoreIntermediate)
+    {
+        PetscInt totalSteps;
+        TSGetTotalSteps(ts, &totalSteps);
+        if(totalSteps%this->mIntermediateSolutionFrequency==0)
+        {
+            // Get the current time
+            PetscReal currentTime;
+            TSGetTime(ts, &currentTime);
+
+            ReplicatableVector soln_guess_repl(currentGuess);
+            std::vector<double> soln(soln_guess_repl.GetSize(), 0.0);
+            for (unsigned row = 0; row < soln_guess_repl.GetSize()-1; row++)
+            {
+                soln[row] = soln_guess_repl[row];
+            }
+            this->mIntermediateSolutionCollection.push_back(std::pair<std::vector<double>, double>(soln, double(currentTime)));
+        }
+    }
     PetscVecTools::Finalise(this->mVectorToAssemble);
 }
 
 template<unsigned DIM>
-void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::ComputeJacobian(const Vec currentGuess, Mat* pJacobian)
+void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::ComputeJacobian(const Vec currentGuess, Mat* pJacobian, TS ts)
 {
     this->SetMatrixToAssemble(*pJacobian);
     this->SetCurrentSolution(currentGuess);
@@ -199,7 +226,8 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
                 {
                     PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index - dimensions[0], diffusion_term);
 
-                    double nondim_permeability = p_coupled_pde->GetCorneaPelletPermeability()*(reference_time/spacing);
+                    double nondim_permeability = diffusion_term *
+                            (p_coupled_pde->GetCorneaPelletPermeability()*spacing/p_coupled_pde->ComputeIsotropicDiffusionTerm());
                     double binding_constant = p_coupled_pde->GetPelletBindingConstant();
                     PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index, -2.0*nondim_permeability);
                     PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, num_points,
@@ -235,21 +263,32 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
             }
         }
     }
+
     units::quantity<unit::area> surface_area = p_coupled_pde->GetPelletSurfaceArea();
     units::quantity<unit::volume> volume = p_coupled_pde->GetPelletVolume();
     units::quantity<unit::membrane_permeability> permeability = p_coupled_pde->GetCorneaPelletPermeability();
     units::quantity<unit::dimensionless> binding_constant = p_coupled_pde->GetPelletBindingConstant();
     units::quantity<unit::rate> decay_rate = p_coupled_pde->GetPelletFreeDecayRate();
     units::quantity<unit::rate> jacEntry = -(decay_rate/binding_constant) - (surface_area*permeability)/(volume*binding_constant);
-    PetscMatTools::AddToElement(this->mMatrixToAssemble, num_points, num_points, jacEntry*reference_time);
-    for (unsigned i = 0; i < dimensions[0]; i++)
+
+    if(mUseCoupling)
     {
-        for (unsigned j = 0; j < dimensions[2]; j++)
+        PetscMatTools::AddToElement(this->mMatrixToAssemble, num_points, num_points, jacEntry*reference_time);
+
+        // Do averaging over pellet boundary
+        for (unsigned i = 0; i < dimensions[0]; i++)
         {
-            unsigned J_index = i + dimensions[0]*(dimensions[1]-1) + num_points_xy*j;
-            units::quantity<unit::rate> jacEntry = surface_area*permeability/(volume*double(dimensions[0]*dimensions[2]));
-            PetscMatTools::AddToElement(this->mMatrixToAssemble, num_points, J_index, jacEntry*reference_time);
+            for (unsigned j = 0; j < dimensions[2]; j++)
+            {
+                unsigned J_index = i + dimensions[0]*(dimensions[1]-1) + num_points_xy*j;
+                units::quantity<unit::rate> jacEntry = surface_area*permeability/(volume*double(dimensions[0]*dimensions[2]));
+                PetscMatTools::AddToElement(this->mMatrixToAssemble, num_points, J_index, jacEntry*reference_time);
+            }
         }
+    }
+    else
+    {
+        PetscMatTools::AddToElement(this->mMatrixToAssemble, num_points, num_points, 1.0);
     }
     PetscMatTools::Finalise(this->mMatrixToAssemble);
 }
@@ -333,11 +372,12 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleVector()
                 else
                 {
                     double nbr_solution = soln_guess_repl[grid_index - dimensions[0]];
+                    double current_solution = soln_guess_repl[grid_index];
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, diffusion_term*nbr_solution);
 
-                    double nondim_permeability =
-                            p_coupled_pde->GetCorneaPelletPermeability()*(reference_time/spacing);
-                    PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, -2.0*nondim_permeability*nbr_solution);
+                    double nondim_permeability = diffusion_term *
+                            (p_coupled_pde->GetCorneaPelletPermeability()*spacing/p_coupled_pde->ComputeIsotropicDiffusionTerm());
+                    PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, -2.0*nondim_permeability*current_solution);
                     double pellet_solution = soln_guess_repl[num_points];
                     double binding_constant = p_coupled_pde->GetPelletBindingConstant();
                     PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, 2.0*nondim_permeability*pellet_solution/binding_constant);
@@ -393,7 +433,15 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleVector()
     units::quantity<unit::rate> pellet_update_term1 = ((surface_area*permeability)/volume)*((pellet_solution/binding_constant) -
             vegf_boundary_average);
     units::quantity<unit::rate> dVegf_dt = -(decay_rate/binding_constant)*pellet_solution - pellet_update_term1;
-    PetscVecTools::AddToElement(this->mVectorToAssemble, num_points, dVegf_dt*reference_time);
+
+    if(mUseCoupling)
+    {
+        PetscVecTools::AddToElement(this->mVectorToAssemble, num_points, dVegf_dt*reference_time);
+    }
+    else
+    {
+        PetscVecTools::AddToElement(this->mVectorToAssemble, num_points, 0.0);
+    }
     PetscVecTools::Finalise(this->mVectorToAssemble);
 }
 
@@ -438,7 +486,7 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::Solve()
 
     // Time stepping and SNES settings
     PetscInt time_steps_max = 1e7;
-    PetscReal time_total_max = SimulationTime::Instance()->GetTimeStep();
+    PetscReal time_total_max = this->mSolveEndTime;
     TSGetSNES(ts,&snes);
     PetscReal abstol = 1.0e-50;
     PetscReal reltol = 1.0e-10;
@@ -454,8 +502,8 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::Solve()
 
     // Set initial timestep
     PetscReal dt;
-    dt = this->mParabolicSolverTimeIncrement;
-    TSSetInitialTimeStep(ts, 0.0, dt);
+    dt = this->mTimeIncrement;
+    TSSetInitialTimeStep(ts, this->mSolveStartTime, dt);
 
     // Do the solve
     TSSolve(ts, previous_solution);
@@ -477,6 +525,29 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::Solve()
     {
         this->Write();
     }
+
+    if(this->mWriteIntermediate)
+    {
+        std::string base_file_name;
+        std::string original_file_name;
+        if(this->mFilename.empty())
+        {
+            original_file_name = "solution";
+        }
+        else
+        {
+            original_file_name = this->mFilename;
+        }
+        base_file_name = original_file_name + "_intermediate_t_";
+
+        for(unsigned idx=0;idx<this->mIntermediateSolutionCollection.size();idx++)
+        {
+            this->UpdateSolution(this->mIntermediateSolutionCollection[idx].first);
+            this->mFilename = base_file_name + boost::lexical_cast<std::string>(unsigned(100.0*this->mIntermediateSolutionCollection[idx].second/this->mTimeIncrement));
+            this->Write();
+        }
+        this->mFilename = original_file_name;
+    }
     TSDestroy(&ts);
     PetscTools::Destroy(jacobian);
     PetscTools::Destroy(previous_solution);
@@ -487,7 +558,7 @@ PetscErrorCode CoupledLumpedSystemFiniteDifferenceSolver_RHSFunction(TS ts, Pets
 {
     // extract solver from void so that we can use locally set values from the calculator object
     CoupledLumpedSystemFiniteDifferenceSolver<DIM>* p_solver = (CoupledLumpedSystemFiniteDifferenceSolver<DIM>*) pContext;
-    p_solver->ComputeRHSFunction(currentSolution, dUdt);
+    p_solver->ComputeRHSFunction(currentSolution, dUdt, ts);
     return 0;
 }
 
@@ -498,7 +569,7 @@ PetscErrorCode CoupledLumpedSystemFiniteDifferenceSolver_ComputeJacobian(TS ts, 
 {
     CoupledLumpedSystemFiniteDifferenceSolver<DIM>* p_solver =
             (CoupledLumpedSystemFiniteDifferenceSolver<DIM>*) pContext;
-    p_solver->ComputeJacobian(currentSolution, &pGlobalJacobian);
+    p_solver->ComputeJacobian(currentSolution, &pGlobalJacobian, ts);
 
 #else
 template<unsigned DIM>
@@ -507,7 +578,7 @@ PetscErrorCode CoupledLumpedSystemFiniteDifferenceSolver_ComputeJacobian(TS ts, 
 {
     CoupledLumpedSystemFiniteDifferenceSolver<DIM>* p_solver =
             (CoupledLumpedSystemFiniteDifferenceSolver<DIM>*) pContext;
-    p_solver->ComputeJacobian(currentSolution, pJacobian);
+    p_solver->ComputeJacobian(currentSolution, pJacobian, ts);
 #endif
     return 0;
 }
