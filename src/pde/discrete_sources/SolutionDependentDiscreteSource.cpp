@@ -33,12 +33,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "SolutionDependentDiscreteSource.hpp"
-#include "AbstractCellPopulation.hpp"
-#include "VesselNetwork.hpp"
-#include "GeometryTools.hpp"
 
 template<unsigned DIM>
 SolutionDependentDiscreteSource<DIM>::SolutionDependentDiscreteSource()

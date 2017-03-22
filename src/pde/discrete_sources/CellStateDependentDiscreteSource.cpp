@@ -33,11 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "CellStateDependentDiscreteSource.hpp"
 #include "AbstractCellPopulation.hpp"
-#include "VesselNetwork.hpp"
 
 template<unsigned DIM>
 CellStateDependentDiscreteSource<DIM>::CellStateDependentDiscreteSource()
@@ -65,104 +62,101 @@ boost::shared_ptr<CellStateDependentDiscreteSource<DIM> > CellStateDependentDisc
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration_flow_rate> > CellStateDependentDiscreteSource<DIM>::GetConstantInUValues()
 {
-//    if(!this->mpGridCalculator)
-//    {
-//        EXCEPTION("A regular grid is required for this type of source");
-//    }
-//
-////    units::quantity<unit::length> grid_spacing = this->mpRegularGrid->GetSpacing();
-////    units::quantity<unit::volume> grid_volume = units::pow<3>(grid_spacing);
-//    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(),
-//            0.0*unit::mole_per_metre_cubed_per_second);
-//
-//    boost::shared_ptr<ApoptoticCellProperty> apoptotic_property(new ApoptoticCellProperty);
-//    unsigned apoptotic_label = apoptotic_property->GetColour();
-//
-//    // Loop through all points
-//    std::vector<std::vector<CellPtr> > point_cell_map = this->mpGridCalculator->rGetCellMap();
-//    for(unsigned idx=0; idx<point_cell_map.size(); idx++)
-//    {
-//        for(unsigned jdx=0; jdx<point_cell_map[idx].size(); jdx++)
-//        {
-//            // If a mutation specific consumption rate has been specified
-//            if(mStateRateMap.size()>0)
-//            {
-//                std::map<unsigned, units::quantity<unit::concentration_flow_rate> >::iterator it;
-//                // If the cell is apoptotic
-//                if (point_cell_map[idx][jdx]->template HasCellProperty<ApoptoticCellProperty>())
-//                {
-//                    it = mStateRateMap.find(apoptotic_label);
-//                    if (it != mStateRateMap.end())
-//                    {
-//                        values[idx] += it->second;
-//                    }
-//                }
-//                else
-//                {
-//                    it = mStateRateMap.find(point_cell_map[idx][jdx]->GetMutationState()->GetColour());
-//                    if (it != mStateRateMap.end())
-//                    {
-//                        if(!this->mLabel.empty())
-//                        {
-//                            // Get a threshold value if it has been set, use the label to determine the field from which the label
-//                            // value is obtained.
-//                            units::quantity<unit::concentration> threshold = 0.0 * unit::mole_per_metre_cubed;
-//                            if(mStateRateThresholdMap.size()>0)
-//                            {
-//                                std::map<unsigned, units::quantity<unit::concentration> >::iterator it_threshold;
-//                                it_threshold = mStateRateThresholdMap.find(point_cell_map[idx][jdx]->GetMutationState()->GetColour());
-//                                if (it_threshold != mStateRateThresholdMap.end())
-//                                {
-//                                    threshold = it_threshold->second;
-//                                }
-//                            }
-////                            units::quantity<unit::concentration_flow_rate> conversion_factor = mConsumptionRatePerUnitConcentration*unit::mole_per_metre_cubed/grid_volume;
-//
-//                            if(threshold>0.0* unit::mole_per_metre_cubed)
-//                            {
-//                                if(point_cell_map[idx][jdx]->GetCellData()->GetItem(this->mLabel)>threshold.value())
-//                                {
-//                                    values[idx] += it->second;
-//                                }
-//                            }
-//                            else
-//                            {
-//                                values[idx] += it->second;
-//                            }
-//                        }
-//                        else
-//                        {
-//                            values[idx] += it->second;
-//                        }
-//                    }
-//                }
-//            }
-//            else
-//            {
-//                values[idx] += this->mConstantInUValue;
-//            }
-//        }
-//    }
-//    return values;
+    if(!this->mpGridCalculator)
+    {
+        EXCEPTION("A regular grid is required for this type of source");
+    }
+
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(),
+            0.0*unit::mole_per_metre_cubed_per_second);
+
+    boost::shared_ptr<ApoptoticCellProperty> apoptotic_property(new ApoptoticCellProperty);
+    unsigned apoptotic_label = apoptotic_property->GetColour();
+
+    // Loop through all points
+    std::vector<std::vector<CellPtr> > point_cell_map = this->mpGridCalculator->rGetCellMap();
+    for(unsigned idx=0; idx<point_cell_map.size(); idx++)
+    {
+        for(unsigned jdx=0; jdx<point_cell_map[idx].size(); jdx++)
+        {
+            // If a mutation specific consumption rate has been specified
+            if(mStateRateMap.size()>0)
+            {
+                std::map<unsigned, units::quantity<unit::concentration_flow_rate> >::iterator it;
+                // If the cell is apoptotic
+                if (point_cell_map[idx][jdx]->template HasCellProperty<ApoptoticCellProperty>())
+                {
+                    it = mStateRateMap.find(apoptotic_label);
+                    if (it != mStateRateMap.end())
+                    {
+                        values[idx] += it->second;
+                    }
+                }
+                else
+                {
+                    it = mStateRateMap.find(point_cell_map[idx][jdx]->GetMutationState()->GetColour());
+                    if (it != mStateRateMap.end())
+                    {
+                        if(!this->mLabel.empty())
+                        {
+                            // Get a threshold value if it has been set, use the label to determine the field from which the label
+                            // value is obtained.
+                            units::quantity<unit::concentration> threshold = 0.0 * unit::mole_per_metre_cubed;
+                            if(mStateRateThresholdMap.size()>0)
+                            {
+                                std::map<unsigned, units::quantity<unit::concentration> >::iterator it_threshold;
+                                it_threshold = mStateRateThresholdMap.find(point_cell_map[idx][jdx]->GetMutationState()->GetColour());
+                                if (it_threshold != mStateRateThresholdMap.end())
+                                {
+                                    threshold = it_threshold->second;
+                                }
+                            }
+//                            units::quantity<unit::concentration_flow_rate> conversion_factor = mConsumptionRatePerUnitConcentration*unit::mole_per_metre_cubed/grid_volume;
+
+                            if(threshold>0.0* unit::mole_per_metre_cubed)
+                            {
+                                if(point_cell_map[idx][jdx]->GetCellData()->GetItem(this->mLabel)>threshold.value())
+                                {
+                                    values[idx] += it->second;
+                                }
+                            }
+                            else
+                            {
+                                values[idx] += it->second;
+                            }
+                        }
+                        else
+                        {
+                            values[idx] += it->second;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                values[idx] += this->mConstantInUValue;
+            }
+        }
+    }
+    return values;
 }
 
 template<unsigned DIM>
 std::vector<units::quantity<unit::rate> > CellStateDependentDiscreteSource<DIM>::GetLinearInUValues()
 {
-    // This map is only for constant values
     return std::vector<units::quantity<unit::rate> >(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(), 0.0*unit::per_second);
 }
 
 template<unsigned DIM>
 void CellStateDependentDiscreteSource<DIM>::SetStateRateMap(std::map<unsigned, units::quantity<unit::concentration_flow_rate> > stateRateMap)
 {
-	mStateRateMap = stateRateMap;
+    mStateRateMap = stateRateMap;
 }
 
 template<unsigned DIM>
 void CellStateDependentDiscreteSource<DIM>::SetStateRateThresholdMap(std::map<unsigned, units::quantity<unit::concentration> > stateThresholdMap)
 {
-	mStateRateThresholdMap = stateThresholdMap;
+    mStateRateThresholdMap = stateThresholdMap;
 }
 
 // Explicit instantiation

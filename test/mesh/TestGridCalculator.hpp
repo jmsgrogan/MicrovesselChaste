@@ -36,6 +36,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef TESTGRIDCALCULATOR_HPP_
 #define TESTGRIDCALCULATOR_HPP_
 
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
+#include <vtkSmartPointer.h>
+#include <vtkTriangle.h>
+#include <vtkVoxel.h>
+#include <vtkTetra.h>
+#include <vtkWedge.h>
+#include <vtkUnstructuredGrid.h>
 #include <cxxtest/TestSuite.h>
 #include <vector>
 #include "SmartPointers.hpp"
@@ -372,6 +379,48 @@ public:
         {
             delete nodes[i];
         }
+    }
+
+    void TestVtkLocationMethods()
+    {
+        vtkSmartPointer<vtkPoints> p_tri_points = vtkSmartPointer<vtkPoints>::New();
+        p_tri_points->InsertNextPoint(0.0, 0.0, -1.e-3);
+        p_tri_points->InsertNextPoint(1.0, 0.0, -1.e-3);
+        p_tri_points->InsertNextPoint(0.5, 1.0, -1.e-3);
+        p_tri_points->InsertNextPoint(0.0, 0.0, 1.e-3);
+        p_tri_points->InsertNextPoint(1.0, 0.0, 1.e-3);
+        p_tri_points->InsertNextPoint(0.5, 1.0, 1.e-3);
+
+        vtkSmartPointer<vtkWedge> p_triangle = vtkSmartPointer<vtkWedge>::New();
+        p_triangle->GetPointIds()->SetId(0, 0);
+        p_triangle->GetPointIds()->SetId(1, 1);
+        p_triangle->GetPointIds()->SetId(2, 2);
+        p_triangle->GetPointIds()->SetId(3, 3);
+        p_triangle->GetPointIds()->SetId(4, 4);
+        p_triangle->GetPointIds()->SetId(5, 5);
+
+        vtkSmartPointer<vtkUnstructuredGrid> p_tri_grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
+        p_tri_grid->Allocate(1, 1);
+        p_tri_grid->InsertNextCell(p_triangle->GetCellType(), p_triangle->GetPointIds());
+        p_tri_grid->SetPoints(p_tri_points);
+
+        double p1[3];
+        p1[0] = 0.0;
+        p1[1] = 0.5;
+        p1[2] = 0.0;
+
+        double p2[3];
+        p2[0] = 2.0;
+        p2[1] = 0.5;
+        p2[2] = 0.0;
+
+        double t, x[3], pcoords[3];
+        int subId;
+        int intercept = p_tri_grid->GetCell(0)->IntersectWithLine(p1, p2, 1.e-3, t, x, pcoords, subId);
+        TS_ASSERT(intercept==1);
+        TS_ASSERT_DELTA(x[0], 0.25, 1.e-6);
+        TS_ASSERT_DELTA(x[1], 0.5, 1.e-6);
+
     }
 
 //    void TestInterpolateGridValuesWithVtk() throw (Exception)

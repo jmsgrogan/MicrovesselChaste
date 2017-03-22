@@ -33,17 +33,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef CELLBASEDDISCRETESOURCE_HPP_
 #define CELLBASEDDISCRETESOURCE_HPP_
 
 #include <vector>
 #include <string>
-#include <map>
-#include "UblasIncludes.hpp"
-#include "RegularGrid.hpp"
-#include "DiscreteContinuumMesh.hpp"
 #include "UnitCollection.hpp"
 #include "DiscreteSource.hpp"
 
@@ -107,6 +101,11 @@ public:
      * @param value the value of the source
      */
     void SetLinearInUConsumptionRatePerCell(units::quantity<unit::rate> value);
+
+    /**
+     * Update the required entries in the density map, if needed
+     */
+    virtual void UpdateDensityMap();
 };
 
 #endif /* CELLBASEDDISCRETESOURCE_HPP_ */

@@ -35,6 +35,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
 #include <vtkThreshold.h>
+#include <vtkWedge.h>
+#include <vtkVoxel.h>
+#include <vtkPoints.h>
 #include "VesselSegment.hpp"
 #include "DensityMap.hpp"
 #include "GeometryTools.hpp"
@@ -70,6 +73,150 @@ DensityMap<DIM>::~DensityMap()
 }
 
 template<unsigned DIM>
+vtkSmartPointer<vtkUnstructuredGrid> DensityMap<DIM>::GetSamplingGrid(vtkSmartPointer<vtkUnstructuredGrid> pGrid)
+{
+    vtkSmartPointer<vtkUnstructuredGrid> p_tri_grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
+    p_tri_grid->Allocate(1,1);
+    vtkSmartPointer<vtkPoints> p_newpoints = vtkSmartPointer<vtkPoints>::New();
+    for(unsigned idx=0; idx<pGrid->GetNumberOfCells(); idx++)
+    {
+        vtkSmartPointer<vtkWedge> p_wedge = vtkSmartPointer<vtkWedge>::New();
+        vtkSmartPointer<vtkPoints> p_points = pGrid->GetCell(idx)->GetPoints();
+        for(unsigned jdx=0;jdx<p_points->GetNumberOfPoints();jdx++)
+        {
+            vtkIdType id1 = p_newpoints->InsertNextPoint(p_points->GetPoint(jdx)[0], p_points->GetPoint(jdx)[1], -1.e-3);
+            p_wedge->GetPointIds()->SetId(jdx, id1);
+            vtkIdType id2 = p_newpoints->InsertNextPoint(p_points->GetPoint(jdx)[0], p_points->GetPoint(jdx)[1], 1.e-3);
+            p_wedge->GetPointIds()->SetId(jdx+2, id2);
+        }
+        p_tri_grid->InsertNextCell(p_wedge->GetCellType(), p_wedge->GetPointIds());
+    }
+    p_tri_grid->SetPoints(p_newpoints);
+    return p_tri_grid;
+}
+
+template<unsigned DIM>
+vtkSmartPointer<vtkUnstructuredGrid> DensityMap<DIM>::GetSamplingGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid)
+{
+    vtkSmartPointer<vtkUnstructuredGrid> p_tri_grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
+    p_tri_grid->Allocate(1,1);
+    vtkSmartPointer<vtkPoints> p_newpoints = vtkSmartPointer<vtkPoints>::New();
+    for(unsigned idx=0; idx<pGrid->GetNumberOfLocations(); idx++)
+    {
+        vtkSmartPointer<vtkVoxel> p_voxel = vtkSmartPointer<vtkVoxel>::New();
+        c_vector<double, 6> bbox = pGrid->GetPointBoundingBox(idx, true);
+        double z_min = bbox[4];
+        double z_max = bbox[5];
+        if(DIM==2)
+        {
+            z_min = -1.e-3;
+            z_max = 1.e-3;
+        }
+        vtkIdType id1 = p_newpoints->InsertNextPoint(bbox[0], bbox[2], z_min);
+        p_voxel->GetPointIds()->SetId(0, id1);
+        vtkIdType id2 = p_newpoints->InsertNextPoint(bbox[1], bbox[2], z_min);
+        p_voxel->GetPointIds()->SetId(1, id2);
+        vtkIdType id3 = p_newpoints->InsertNextPoint(bbox[1], bbox[3], z_min);
+        p_voxel->GetPointIds()->SetId(2, id3);
+        vtkIdType id4 = p_newpoints->InsertNextPoint(bbox[0], bbox[3], z_min);
+        p_voxel->GetPointIds()->SetId(3, id4);
+        vtkIdType id5 = p_newpoints->InsertNextPoint(bbox[0], bbox[2], z_max);
+        p_voxel->GetPointIds()->SetId(4, id5);
+        vtkIdType id6 = p_newpoints->InsertNextPoint(bbox[1], bbox[2], z_max);
+        p_voxel->GetPointIds()->SetId(5, id6);
+        vtkIdType id7 = p_newpoints->InsertNextPoint(bbox[1], bbox[3], z_max);
+        p_voxel->GetPointIds()->SetId(6, id7);
+        vtkIdType id8 = p_newpoints->InsertNextPoint(bbox[0], bbox[3], z_max);
+        p_voxel->GetPointIds()->SetId(7, id8);
+        p_tri_grid->InsertNextCell(p_voxel->GetCellType(), p_voxel->GetPointIds());
+    }
+    p_tri_grid->SetPoints(p_newpoints);
+    return p_tri_grid;
+}
+
+template<unsigned DIM>
+double DensityMap<DIM>::LengthOfLineInCell(vtkSmartPointer<vtkUnstructuredGrid> pSamplingGrid, c_vector<double, DIM> loc1,
+        c_vector<double, DIM> loc2, unsigned index, bool loc1InCell, bool loc2InCell)
+{
+    double length_in_cell = 0.0;
+    c_vector<double, 3> point1_loc3d;
+    if(DIM==3)
+    {
+     point1_loc3d = loc1;
+    }
+    else
+    {
+     point1_loc3d[0] = loc1[0];
+     point1_loc3d[1] = loc1[1];
+     point1_loc3d[2] = 0.0;
+    }
+
+    c_vector<double, 3> point2_loc3d;
+    if(DIM==3)
+    {
+        point2_loc3d = loc2;
+    }
+    else
+    {
+        point2_loc3d[0] = loc2[0];
+        point2_loc3d[1] = loc2[1];
+        point2_loc3d[2] = 0.0;
+    }
+    if(loc1InCell and loc2InCell)
+    {
+        return norm_2(loc2-loc1);
+    }
+    else
+    {
+        double t;
+        c_vector<double,3> intersection;
+        c_vector<double,3> parametric_intersection;
+        int subId;
+        if(loc1InCell)
+        {
+            pSamplingGrid->GetCell(index)->IntersectWithLine(&point1_loc3d[0], &point2_loc3d[0], 1.e-6, t, &intersection[0], &parametric_intersection[0], subId);
+            length_in_cell = norm_2(intersection - point1_loc3d);
+        }
+        if(loc2InCell)
+        {
+            pSamplingGrid->GetCell(index)->IntersectWithLine(&point2_loc3d[0], &point1_loc3d[0], 1.e-6, t, &intersection[0], &parametric_intersection[0], subId);
+            length_in_cell = norm_2(intersection - point2_loc3d);
+        }
+
+        int line_crosses = pSamplingGrid->GetCell(index)->IntersectWithLine(&point1_loc3d[0], &point2_loc3d[0], 1.e-6, t, &intersection[0],
+                &parametric_intersection[0], subId);
+        if(line_crosses)
+        {
+            c_vector<double,3> intersection2;
+            pSamplingGrid->GetCell(index)->IntersectWithLine(&point2_loc3d[0], &point1_loc3d[0], 1.e-6, t, &intersection2[0], &parametric_intersection[0], subId);
+            length_in_cell = norm_2(intersection - intersection2);
+        }
+        else
+        {
+            length_in_cell = 0.0;
+        }
+        return length_in_cell;
+    }
+}
+
+template<unsigned DIM>
+bool DensityMap<DIM>::IsPointInCell(vtkSmartPointer<vtkCellLocator> pCellLocator, c_vector<double, DIM> loc, unsigned index)
+{
+    c_vector<double, 3> point1_loc3d;
+     if(DIM==3)
+     {
+         point1_loc3d = loc;
+     }
+     else
+     {
+         point1_loc3d[0] = loc[0];
+         point1_loc3d[1] = loc[1];
+         point1_loc3d[2] = 0.0;
+     }
+     return (pCellLocator->FindCell(&point1_loc3d[0])==index);
+}
+
+template<unsigned DIM>
 const std::vector<double>& DensityMap<DIM>::rGetVesselSurfaceAreaDensity(bool update)
 {
     unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
@@ -79,6 +226,11 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselSurfaceAreaDensity(bool up
     }
     else
     {
+        if (!this->mpNetwork)
+        {
+            EXCEPTION("A vessel network is required for this density map");
+        }
+
         if(!this->mpVtkSolution)
         {
             this->Setup();
@@ -89,66 +241,54 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselSurfaceAreaDensity(bool up
         std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
         units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetLocationVolumes(true, true);
+        vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
 
-        // Get the local grid as VTK unstructured
-
-        if (this->mpNetwork)
+        if(this->mpGridCalculator->HasStructuredGrid())
         {
-            if(this->mpGridCalculator->HasStructuredGrid())
+            boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
+                    boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+            if(!p_regular_grid)
             {
-                boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
-                        boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
-                if(!p_regular_grid)
-                {
-                    EXCEPTION("Can't cast to regular grid");
-                }
+                EXCEPTION("Can't cast to regular grid");
+            }
+            p_sampling_grid = GetSamplingGrid(p_regular_grid);
+        }
+        else
+        {
+            boost::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
+                    boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
+            if(!p_mesh)
+            {
+                EXCEPTION("Can't cast to mesh");
+            }
 
-                c_vector<unsigned, 6> extents = p_regular_grid->GetExtents();
-                for(unsigned idx=0; idx<segment_map.size();idx++)
-                {
-                    c_vector<double, 6> bbox = p_regular_grid->GetPointBoundingBox(idx, true);
-                    for(unsigned jdx=0;jdx<segment_map[idx].size();jdx++)
-                    {
-                        units::quantity<unit::length> length = LengthOfLineInBox(segment_map[idx][jdx]->GetNode(0)->rGetLocation(),
-                                segment_map[idx][jdx]->GetNode(1)->rGetLocation(), bbox, length_scale);
-                        units::quantity<unit::area> surface_area = length*2.0*M_PI*segment_map[idx][jdx]->GetVessel()->GetRadius();
-                        mVesselSurfaceAreaDensity[idx] += (surface_area/(length_scale*length_scale));
-                    }
-                    mVesselSurfaceAreaDensity[idx] /= grid_volumes[idx];
-                }
+            vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
+            if(DIM==3)
+            {
+                p_sampling_grid = vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid());
             }
             else
             {
-                boost::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
-                        boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
-                if(!p_mesh)
-                {
-                    EXCEPTION("Can't cast to mesh");
-                }
-
-                for(unsigned idx=0; idx<segment_map.size();idx++)
-                {
-                    // Get the element nodal locations and element volume
-                    Element<DIM, DIM>* p_element = p_mesh->GetElement(idx);
-                    std::vector<DimensionalChastePoint<DIM> > element_vertices(4);
-                    if(p_element->GetNumNodes() != 4)
-                    {
-                        EXCEPTION("Vessel mesh mapping only supported for linear tetrahedral elements.");
-                    }
-                    for (unsigned jdx = 0; jdx < 4; jdx++)
-                    {
-                        element_vertices[jdx] = DimensionalChastePoint<DIM>(p_element->GetNodeLocation(jdx), length_scale);
-                    }
-                    for (unsigned jdx = 0; jdx < segment_map[idx].size(); jdx++)
-                    {
-                        units::quantity<unit::length> length_in_box = LengthOfLineInTetra<DIM>(segment_map[idx][jdx]->GetNode(0)->rGetLocation(),
-                                segment_map[idx][jdx]->GetNode(1)->rGetLocation(), element_vertices);
-                        units::quantity<unit::area> surface_area = 2.0*M_PI*segment_map[idx][jdx]->GetRadius()*length_in_box;
-                        mVesselSurfaceAreaDensity[idx] += ((surface_area/(length_scale*length_scale))/grid_volumes[idx]);
-                    }
-                }
+                p_sampling_grid = GetSamplingGrid(vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid()));
             }
         }
+
+        for(unsigned idx=0; idx<segment_map.size();idx++)
+        {
+            for (unsigned jdx = 0; jdx < segment_map[idx].size(); jdx++)
+            {
+                c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().GetLocation(length_scale);
+                c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().GetLocation(length_scale);
+                bool point1_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point1_loc, idx);
+                bool point2_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point2_loc, idx);
+                double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
+                        idx, point1_in_cell, point2_in_cell);
+                units::quantity<unit::length> length_in_cell = dimless_length_in_cell*length_scale;
+                units::quantity<unit::area> surface_area = 2.0*M_PI*segment_map[idx][jdx]->GetRadius()*length_in_cell;
+                mVesselSurfaceAreaDensity[idx] += ((surface_area/(length_scale*length_scale))/grid_volumes[idx]);
+            }
+        }
+        return mVesselSurfaceAreaDensity;
     }
 }
 
@@ -162,7 +302,66 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselLineDensity(bool update)
     }
     else
     {
-        Solve();
+        if (!this->mpNetwork)
+        {
+            EXCEPTION("A vessel network is required for this density map");
+        }
+
+        if(!this->mpVtkSolution)
+        {
+            this->Setup();
+        }
+
+        mVesselLineDensity.clear();
+        mVesselLineDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(), 0.0);
+        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
+        units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
+        std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetLocationVolumes(true, true);
+        vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
+        if(this->mpGridCalculator->HasStructuredGrid())
+        {
+            boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
+                    boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+            if(!p_regular_grid)
+            {
+                EXCEPTION("Can't cast to regular grid");
+            }
+            p_sampling_grid = GetSamplingGrid(p_regular_grid);
+        }
+        else
+        {
+            boost::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
+                    boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
+            if(!p_mesh)
+            {
+                EXCEPTION("Can't cast to mesh");
+            }
+
+            vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
+            if(DIM==3)
+            {
+                p_sampling_grid = vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid());
+            }
+            else
+            {
+                p_sampling_grid = GetSamplingGrid(vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid()));
+            }
+        }
+
+        for(unsigned idx=0; idx<segment_map.size();idx++)
+        {
+            for (unsigned jdx = 0; jdx < segment_map[idx].size(); jdx++)
+            {
+                c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().GetLocation(length_scale);
+                c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().GetLocation(length_scale);
+                bool point1_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point1_loc, idx);
+                bool point2_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point2_loc, idx);
+                double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
+                        idx, point1_in_cell, point2_in_cell);
+                units::quantity<unit::length> length_in_cell = dimless_length_in_cell*length_scale;
+                mVesselLineDensity[idx] += (length_in_cell/length_scale)/grid_volumes[idx];
+            }
+        }
         return mVesselLineDensity;
     }
 }
@@ -177,8 +376,73 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselSurfaceAreaDensity
     }
     else
     {
-        Solve();
-        return mVesselLineDensity;
+        if (!this->mpNetwork)
+        {
+            EXCEPTION("A vessel network is required for this density map");
+        }
+
+        if(!this->mpVtkSolution)
+        {
+            this->Setup();
+        }
+
+        mPerfusedVesselSurfaceAreaDensity.clear();
+        mPerfusedVesselSurfaceAreaDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(), 0.0);
+        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
+        units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
+        std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetLocationVolumes(true, true);
+        vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
+
+        if(this->mpGridCalculator->HasStructuredGrid())
+        {
+            boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
+                    boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+            if(!p_regular_grid)
+            {
+                EXCEPTION("Can't cast to regular grid");
+            }
+            p_sampling_grid = GetSamplingGrid(p_regular_grid);
+        }
+        else
+        {
+            boost::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
+                    boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
+            if(!p_mesh)
+            {
+                EXCEPTION("Can't cast to mesh");
+            }
+
+            vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
+            if(DIM==3)
+            {
+                p_sampling_grid = vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid());
+            }
+            else
+            {
+                p_sampling_grid = GetSamplingGrid(vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid()));
+            }
+        }
+
+        for(unsigned idx=0; idx<segment_map.size();idx++)
+        {
+            for (unsigned jdx = 0; jdx < segment_map[idx].size(); jdx++)
+            {
+                c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().GetLocation(length_scale);
+                c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().GetLocation(length_scale);
+                bool point1_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point1_loc, idx);
+                bool point2_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point2_loc, idx);
+                double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
+                        idx, point1_in_cell, point2_in_cell);
+                units::quantity<unit::length> length_in_cell = dimless_length_in_cell*length_scale;
+                units::quantity<unit::area> surface_area = 2.0*M_PI*segment_map[idx][jdx]->GetRadius()*length_in_cell;
+                if(segment_map[idx][jdx]->GetVessel()->GetFlowProperties()->GetHaematocrit()==0.0)
+                {
+                    surface_area*= 0.0;
+                }
+                mPerfusedVesselSurfaceAreaDensity[idx] += ((surface_area/(length_scale*length_scale))/grid_volumes[idx]);
+            }
+        }
+        return mPerfusedVesselSurfaceAreaDensity;
     }
 }
 
@@ -192,8 +456,72 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselLineDensity(bool u
     }
     else
     {
-        Solve();
-        return mVesselLineDensity;
+        if (!this->mpNetwork)
+        {
+            EXCEPTION("A vessel network is required for this density map");
+        }
+
+        if(!this->mpVtkSolution)
+        {
+            this->Setup();
+        }
+
+        mPerfusedVesselLineDensity.clear();
+        mPerfusedVesselLineDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(), 0.0);
+        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
+        units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
+        std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetLocationVolumes(true, true);
+        vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
+
+        if(this->mpGridCalculator->HasStructuredGrid())
+        {
+            boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
+                    boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+            if(!p_regular_grid)
+            {
+                EXCEPTION("Can't cast to regular grid");
+            }
+            p_sampling_grid = GetSamplingGrid(p_regular_grid);
+        }
+        else
+        {
+            boost::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
+                    boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
+            if(!p_mesh)
+            {
+                EXCEPTION("Can't cast to mesh");
+            }
+
+            vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
+            if(DIM==3)
+            {
+                p_sampling_grid = vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid());
+            }
+            else
+            {
+                p_sampling_grid = GetSamplingGrid(vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid()));
+            }
+        }
+
+        for(unsigned idx=0; idx<segment_map.size();idx++)
+        {
+            for (unsigned jdx = 0; jdx < segment_map[idx].size(); jdx++)
+            {
+                c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().GetLocation(length_scale);
+                c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().GetLocation(length_scale);
+                bool point1_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point1_loc, idx);
+                bool point2_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point2_loc, idx);
+                double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
+                        idx, point1_in_cell, point2_in_cell);
+                units::quantity<unit::length> length_in_cell = dimless_length_in_cell*length_scale;
+                if(segment_map[idx][jdx]->GetVessel()->GetFlowProperties()->GetHaematocrit()==0.0)
+                {
+                    length_in_cell*= 0.0;
+                }
+                mPerfusedVesselLineDensity[idx] += (length_in_cell/length_scale)/grid_volumes[idx];
+            }
+        }
+        return mPerfusedVesselLineDensity;
     }
 }
 
@@ -207,8 +535,31 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselTipDensity(bool update)
     }
     else
     {
-        Solve();
-        return mVesselLineDensity;
+        if (!this->mpNetwork)
+        {
+            EXCEPTION("A vessel network is required for this density map");
+        }
+
+        if(!this->mpVtkSolution)
+        {
+            this->Setup();
+        }
+
+        mVesselTipDensity.clear();
+        mVesselTipDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(), 0.0);
+        std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > node_map = this->mpGridCalculator->rGetVesselNodeMap();
+        std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetLocationVolumes(true, true);
+        for(unsigned idx=0; idx<node_map.size();idx++)
+        {
+            for (unsigned jdx = 0; jdx < node_map[idx].size(); jdx++)
+            {
+                if(node_map[idx][jdx]->IsMigrating())
+                {
+                    mVesselTipDensity[idx] += 1.0/grid_volumes[idx];
+                }
+            }
+        }
+        return mVesselTipDensity;
     }
 }
 
@@ -222,8 +573,30 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselBranchDensity(bool update)
     }
     else
     {
-        Solve();
-        return mVesselLineDensity;
+        if (!this->mpNetwork)
+        {
+            EXCEPTION("A vessel network is required for this density map");
+        }
+
+        if(!this->mpVtkSolution)
+        {
+            this->Setup();
+        }
+        mVesselBranchDensity.clear();
+        mVesselBranchDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(), 0.0);
+        std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > node_map = this->mpGridCalculator->rGetVesselNodeMap();
+        std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetLocationVolumes(true, true);
+        for(unsigned idx=0; idx<node_map.size();idx++)
+        {
+            for (unsigned jdx = 0; jdx < node_map[idx].size(); jdx++)
+            {
+                if(node_map[idx][jdx]->GetNumberOfSegments()>2)
+                {
+                    mVesselBranchDensity[idx] += 1.0/grid_volumes[idx];
+                }
+            }
+        }
+        return mVesselBranchDensity;
     }
 }
 
@@ -237,8 +610,73 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselQuantityDensity(const std:
     }
     else
     {
-        Solve();
-        return mVesselLineDensity;
+        if (!this->mpNetwork)
+        {
+            EXCEPTION("A vessel network is required for this density map");
+        }
+
+        if(!this->mpVtkSolution)
+        {
+            this->Setup();
+        }
+
+        mVesselQuantityDensity.clear();
+        mVesselQuantityDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(), 0.0);
+        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
+        units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
+        std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetLocationVolumes(true, true);
+        vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
+
+        if(this->mpGridCalculator->HasStructuredGrid())
+        {
+            boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
+                    boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+            if(!p_regular_grid)
+            {
+                EXCEPTION("Can't cast to regular grid");
+            }
+            p_sampling_grid = GetSamplingGrid(p_regular_grid);
+        }
+        else
+        {
+            boost::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
+                    boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
+            if(!p_mesh)
+            {
+                EXCEPTION("Can't cast to mesh");
+            }
+
+            vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
+            if(DIM==3)
+            {
+                p_sampling_grid = vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid());
+            }
+            else
+            {
+                p_sampling_grid = GetSamplingGrid(vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid()));
+            }
+        }
+
+        for(unsigned idx=0; idx<segment_map.size();idx++)
+        {
+            for (unsigned jdx = 0; jdx < segment_map[idx].size(); jdx++)
+            {
+                c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().GetLocation(length_scale);
+                c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().GetLocation(length_scale);
+                bool point1_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point1_loc, idx);
+                bool point2_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point2_loc, idx);
+                double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
+                        idx, point1_in_cell, point2_in_cell);
+                units::quantity<unit::length> length_in_cell = dimless_length_in_cell*length_scale;
+                double amount = segment_map[idx][jdx]->GetFlowProperties()->GetOutputData()[rQuantity];
+                if(segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit()==0.0)
+                {
+                    length_in_cell*= 0.0;
+                }
+                mVesselQuantityDensity[idx] += (amount*length_in_cell/length_scale)/grid_volumes[idx];
+            }
+        }
+        return mVesselQuantityDensity;
     }
 }
 
@@ -252,8 +690,27 @@ const std::vector<double>& DensityMap<DIM>::rGetCellDensity(bool update)
     }
     else
     {
-        Solve();
-        return mVesselLineDensity;
+        if (!this->mpNetwork)
+        {
+            EXCEPTION("A vessel network is required for this density map");
+        }
+
+        if(!this->mpVtkSolution)
+        {
+            this->Setup();
+        }
+        mDimensionlessCellDensity.clear();
+        mDimensionlessCellDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(), 0.0);
+        std::vector<std::vector<CellPtr> > cell_map = this->mpGridCalculator->rGetCellMap();
+        std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetLocationVolumes(true, true);
+        for(unsigned idx=0; idx<cell_map.size();idx++)
+        {
+            for (unsigned jdx = 0; jdx < cell_map[idx].size(); jdx++)
+            {
+                mDimensionlessCellDensity[idx] += 1.0/grid_volumes[idx];
+            }
+        }
+        return mDimensionlessCellDensity;
     }
 }
 
@@ -267,15 +724,37 @@ const std::vector<double>& DensityMap<DIM>::rGetCellDensity(boost::shared_ptr<Ab
     }
     else
     {
-        Solve();
-        return mVesselLineDensity;
+        if (!this->mpNetwork)
+        {
+            EXCEPTION("A vessel network is required for this density map");
+        }
+
+        if(!this->mpVtkSolution)
+        {
+            this->Setup();
+        }
+        mDimensionlessCellDensityByMutationType.clear();
+        mDimensionlessCellDensityByMutationType = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(), 0.0);
+        std::vector<std::vector<CellPtr > > cell_map = this->mpGridCalculator->rGetCellMap();
+        std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetLocationVolumes(true, true);
+        for(unsigned idx=0; idx<cell_map.size();idx++)
+        {
+            for (unsigned jdx = 0; jdx < cell_map[idx].size(); jdx++)
+            {
+                if(cell_map[idx][jdx]->GetMutationState()==pMutationState)
+                {
+                    mDimensionlessCellDensityByMutationType[idx] += 1.0/grid_volumes[idx];
+                }
+            }
+        }
+        return mDimensionlessCellDensityByMutationType;
     }
 }
 
 template<unsigned DIM>
 void DensityMap<DIM>::Solve()
 {
-
+    EXCEPTION("Solve method not available for Density Map.");
 }
 
 // Explicit instantiation

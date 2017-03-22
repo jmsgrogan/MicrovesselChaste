@@ -33,15 +33,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef CELLSTATEDEPENDENTDISCRETESOURCE_HPP_
 #define CELLSTATEDEPENDENTDISCRETESOURCE_HPP_
 
 #include <vector>
 #include <string>
-#include <map>
-#include "UblasIncludes.hpp"
 #include "Part.hpp"
 #include "AbstractCellProperty.hpp"
 #include "ApoptoticCellProperty.hpp"

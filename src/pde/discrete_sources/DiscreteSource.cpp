@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "DiscreteSource.hpp"
 #include "GeometryTools.hpp"
 
@@ -44,7 +42,8 @@ DiscreteSource<DIM>::DiscreteSource()
         mPoints(),
         mLabel("Default"),
         mConstantInUValue(0.0*unit::mole_per_metre_cubed_per_second),
-        mLinearInUValue(0.0*unit::per_second)
+        mLinearInUValue(0.0*unit::per_second),
+        mpDensityMap()
 {
 
 }
@@ -153,6 +152,18 @@ template<unsigned DIM>
 void DiscreteSource<DIM>::SetLinearInUValue(units::quantity<unit::rate> value)
 {
     mLinearInUValue = value;
+}
+
+template<unsigned DIM>
+void DiscreteSource<DIM>::SetDensityMap(boost::shared_ptr<DensityMap<DIM> > pMap)
+{
+    mpDensityMap = pMap;
+}
+
+template<unsigned DIM>
+void DiscreteSource<DIM>::UpdateDensityMap()
+{
+
 }
 
 // Explicit instantiation

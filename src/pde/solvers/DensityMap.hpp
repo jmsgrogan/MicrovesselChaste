@@ -36,9 +36,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef DENSITYMAP_HPP_
 #define DENSITYMAP_HPP_
 
+#include <vtkUnstructuredGrid.h>
 #include "SmartPointers.hpp"
 #include "AbstractCellMutationState.hpp"
+#include "AbstractDiscreteContinuumSolver.hpp"
 #include "AbstractRegularGridDiscreteContinuumSolver.hpp"
+#include "RegularGrid.hpp"
 
 /**
  * Calculate the density of vessel network features (nodes, branches, segments) or cells on a
@@ -110,6 +113,25 @@ public:
      * Destructor
      */
     ~DensityMap();
+
+    double LengthOfLineInCell(vtkSmartPointer<vtkUnstructuredGrid> pSamplingGrid, c_vector<double, DIM> loc1,
+            c_vector<double, DIM> loc2, unsigned index, bool loc1InCell, bool loc2InCell);
+
+    bool IsPointInCell(vtkSmartPointer<vtkCellLocator> pCellLocator, c_vector<double, DIM> loc, unsigned index);
+
+    /**
+     * Return the grid in a form suitable for length of line in box computations
+     * @param pGrid the input grid
+     * @return the processed grid
+     */
+    vtkSmartPointer<vtkUnstructuredGrid> GetSamplingGrid(vtkSmartPointer<vtkUnstructuredGrid> pGrid);
+
+    /**
+     * Return the grid in a form suitable for length of line in box computations
+     * @param pGrid the input grid
+     * @return the processed grid
+     */
+    vtkSmartPointer<vtkUnstructuredGrid> GetSamplingGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
 
     /**
      * Get the vessel surface area density

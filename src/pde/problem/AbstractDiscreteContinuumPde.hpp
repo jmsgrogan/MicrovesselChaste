@@ -40,10 +40,15 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UblasIncludes.hpp"
 #include "SmartPointers.hpp"
 #include "UblasVectorInclude.hpp"
-#include "DiscreteSource.hpp"
 #include "GeometryTools.hpp"
 #include "GridCalculator.hpp"
 #include "UnitCollection.hpp"
+
+/**
+ * Discrete source forward declared because it can contain its own DiscreteContinuumSolvers
+ */
+template<unsigned DIM>
+class DiscreteSource;
 
 /**
  * This class specifies interfaces that PDEs being used in Discrete Continuum solvers should

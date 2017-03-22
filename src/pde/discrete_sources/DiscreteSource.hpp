@@ -33,16 +33,16 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef DISCRETESOURCE_HPP_
 #define DISCRETESOURCE_HPP_
 
 #include <vector>
 #include <string>
+#include "AbstractDiscreteContinuumSolver.hpp"
 #include "UblasIncludes.hpp"
 #include "GridCalculator.hpp"
 #include "UnitCollection.hpp"
+#include "DensityMap.hpp"
 
 /**
  * This class calculates the value of discrete sources at grid/mesh locations in continuum problems.
@@ -80,6 +80,11 @@ protected:
      * The prescribed value of the source strength. Used for PRESCRIBED source strengths.
      */
     units::quantity<unit::rate> mLinearInUValue;
+
+    /**
+     * The density map
+     */
+    boost::shared_ptr<DensityMap<DIM> > mpDensityMap;
 
 public:
 
@@ -146,6 +151,17 @@ public:
      * @param value the value of the source
      */
     void SetLinearInUValue(units::quantity<unit::rate> value);
+
+    /**
+     * Set the density map for the calculator
+     * @param pMap the density map
+     */
+    void SetDensityMap(boost::shared_ptr<DensityMap<DIM> > pMap);
+
+    /**
+     * Update the required entries in the density map, if needed
+     */
+    virtual void UpdateDensityMap();
 };
 
 #endif /* DISCRETESOURCE_HPP_ */

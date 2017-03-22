@@ -36,6 +36,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <algorithm>
 #include "AbstractDiscreteContinuumPde.hpp"
 #include "BaseUnits.hpp"
+#include "DiscreteSource.hpp"
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::AbstractDiscreteContinuumPde() :
