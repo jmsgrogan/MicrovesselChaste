@@ -64,6 +64,21 @@ class Polygon
      */
     units::quantity<unit::length> mReferenceLength;
 
+    /**
+     * Edge labels for boundary condition application
+     */
+    std::vector<std::string> mEdgeLabels;
+
+    /**
+     * Is the VTK representation up to date
+     */
+    bool mVtkRepresentationUpToDate;
+
+    /**
+     * The VTK representation
+     */
+    vtkSmartPointer<vtkPolygon> mpVtkRepresentation;
+
 public:
 
     /**
@@ -174,10 +189,34 @@ public:
     vtkSmartPointer<vtkPolygon> GetVtkPolygon();
 
     /**
+     * Return the edge labels
+     * @return the edge labels
+     */
+    std::vector<std::string> GetEdgeLabels();
+
+    /**
      * Return the polygon vertices as a set of VtkPoints.
      * @return a pair consisting of vtk representation of the vertices and corresponding ids
      */
     std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > GetVtkVertices();
+
+    /**
+     * Label a polygon edge if it is found
+     * @param loc the search point
+     * @param rLabel the label
+     * @return true if an edge is found
+     */
+    bool LabelEdgeIfFound(DimensionalChastePoint<DIM> loc, const std::string& rLabel);
+
+    void LabelAllEdges(const std::string& rLabel);
+
+    /**
+     * Return true if the edge at the input point has the supplied label
+     * @param loc the search point
+     * @param rLabel the label
+     * @return true if an edge is found
+     */
+    bool EdgeHasLabel(DimensionalChastePoint<DIM> loc, const std::string& rLabel);
 
     /**
      * Replace an exiting vertex with the passed in one.

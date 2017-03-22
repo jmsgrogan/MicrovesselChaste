@@ -39,7 +39,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "AbstractFeSurfaceIntegralAssemblerWithMatrix.hpp"
 #include "PdeSimulationTime.hpp"
 
-
 /**
  *   An assembler for assembling surface element contributions to a vector coming from
  *   Robin boundary conditions, assuming the prescribed BCs are NATURAL boundary conditions.
@@ -64,10 +63,10 @@ class RobinConditionsSurfaceTermAssembler : public AbstractFeSurfaceIntegralAsse
 {
 protected:
 
-    /** Scale factor to multiply the integrals */
-    double mScaleFactor;
-
+    /** The dimensionless permeability */
     double mPermeability;
+
+    double mBoundaryConditionMultiplier;
 
     /**
      * @return the vector to be added to full vector
@@ -103,18 +102,14 @@ public:
     RobinConditionsSurfaceTermAssembler(AbstractTetrahedralMesh<ELEMENT_DIM,SPACE_DIM>* pMesh,
                                        BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>* pBoundaryConditions)
         : AbstractFeSurfaceIntegralAssemblerWithMatrix<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>(pMesh, pBoundaryConditions),
-          mScaleFactor(0.5),
-          mPermeability(1.0)
+          mPermeability(1.0),
+          mBoundaryConditionMultiplier(1.0)
     {
     }
 
-    /**
-     * Set a scale factor to multiply the contribution to the vector that is assembled by this class
-     * @param scaleFactor
-     */
-    void SetScaleFactor(double scaleFactor)
+    void SetMultiplier(double scaleFactor)
     {
-        mScaleFactor = scaleFactor;
+        mBoundaryConditionMultiplier = scaleFactor;
     }
 
     /**
@@ -140,9 +135,12 @@ c_vector<double, PROBLEM_DIM*ELEMENT_DIM> RobinConditionsSurfaceTermAssembler<EL
     {
         for(unsigned problem_dim = 0; problem_dim<PROBLEM_DIM; problem_dim++)
         {
-            double neumann_bc_value = this->mpBoundaryConditions->GetNeumannBCValue(&rSurfaceElement, rX, problem_dim);
-
-            ret(PROBLEM_DIM*i + problem_dim)  =  mScaleFactor * rPhi(i) * neumann_bc_value;
+            double boundary_condition_value = 0.0;
+            if(this->mpBoundaryConditions->GetNeumannBCValue(&rSurfaceElement, rX, problem_dim)!=0.0)
+            {
+                boundary_condition_value = mBoundaryConditionMultiplier;
+            }
+            ret(PROBLEM_DIM*i + problem_dim)  =  rPhi(i) * boundary_condition_value*mPermeability;
         }
     }
 
@@ -155,7 +153,7 @@ c_matrix<double,PROBLEM_DIM*(ELEMENT_DIM),PROBLEM_DIM*(ELEMENT_DIM)> RobinCondit
         c_vector<double, ELEMENT_DIM>& rPhi,
         ChastePoint<SPACE_DIM>& rX)
         {
-            return PdeSimulationTime::GetPdeTimeStepInverse() *outer_prod(trans(rPhi), rPhi) * -mPermeability;
+            return outer_prod(trans(rPhi), rPhi) * mPermeability;
         }
 
 #endif /* RobinConditionsSurfaceTermAssembler_HPP */

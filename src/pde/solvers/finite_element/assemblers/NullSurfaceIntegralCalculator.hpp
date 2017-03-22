@@ -51,7 +51,7 @@ class NullSurfaceIntegralCalculator
 
 public:
 
-    double CalculateSurfaceIntegral()
+    double CalculateSurfaceIntegral(bool useSolution=true)
     {
         double integral_total = 0.0;
         typename BoundaryConditionsContainer<DIM,DIM,1>::NeumannMapIterator
@@ -80,7 +80,15 @@ public:
                 double node_contribution = 0.0;
                 for (unsigned i=0; i<r_surf_element.GetNumNodes(); i++)
                 {
-                    double u_at_node = this->GetCurrentSolutionOrGuessValue(r_surf_element.GetNode(i)->GetIndex(), 0);
+                    double u_at_node;
+                    if(useSolution)
+                    {
+                        u_at_node=this->GetCurrentSolutionOrGuessValue(r_surf_element.GetNode(i)->GetIndex(), 0);
+                    }
+                    else
+                    {
+                        u_at_node=1.0;
+                    }
                     node_contribution += phi(i) * u_at_node;
                 }
                 double wJ = jacobian_determinant * this->mpSurfaceQuadRule->GetWeight(quad_index);

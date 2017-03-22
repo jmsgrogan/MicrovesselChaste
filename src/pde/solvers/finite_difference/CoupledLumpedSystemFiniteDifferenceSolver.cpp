@@ -433,7 +433,6 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleVector()
     units::quantity<unit::rate> pellet_update_term1 = ((surface_area*permeability)/volume)*((pellet_solution/binding_constant) -
             vegf_boundary_average);
     units::quantity<unit::rate> dVegf_dt = -(decay_rate/binding_constant)*pellet_solution - pellet_update_term1;
-
     if(mUseCoupling)
     {
         PetscVecTools::AddToElement(this->mVectorToAssemble, num_points, dVegf_dt*reference_time);

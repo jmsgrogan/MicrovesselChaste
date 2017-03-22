@@ -33,6 +33,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+#include <boost/lexical_cast.hpp>
 #include "AbstractDiscreteContinuumParabolicPde.hpp"
 #include "CoupledLumpedSystemFiniteElementSolver.hpp"
 #include "CoupledInterfaceOdePdeSolver.hpp"
@@ -42,10 +43,15 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 CoupledLumpedSystemFiniteElementSolver<DIM>::CoupledLumpedSystemFiniteElementSolver()
     : AbstractFiniteElementSolverBase<DIM>(),
+      mIntermediateSolutionCollection(),
+      mIntermediateSolutionFrequency(1),
+      mStoreIntermediate(false),
+      mWriteIntermediate(false),
       mTimeIncrement(0.1),
       mSolveStartTime(0.0),
       mSolveEndTime(1.0),
-      mInitialGuess()
+      mInitialGuess(),
+      mUseCoupling(true)
 {
 
 }
@@ -88,6 +94,33 @@ void CoupledLumpedSystemFiniteElementSolver<DIM>::SetInitialGuess(const std::vec
 }
 
 template<unsigned DIM>
+void CoupledLumpedSystemFiniteElementSolver<DIM>::SetUseCoupling(bool useCoupling)
+{
+    mUseCoupling = useCoupling;
+}
+
+template <unsigned DIM>
+const std::vector<std::pair<std::vector<double>, double> >& CoupledLumpedSystemFiniteElementSolver<DIM>::rGetIntermediateSolutions()
+{
+    return mIntermediateSolutionCollection;
+}
+
+template <unsigned DIM>
+void CoupledLumpedSystemFiniteElementSolver<DIM>::SetStoreIntermediateSolutions(bool store, unsigned frequency)
+{
+    mStoreIntermediate = store;
+    mIntermediateSolutionFrequency = frequency;
+}
+
+template <unsigned DIM>
+void CoupledLumpedSystemFiniteElementSolver<DIM>::SetWriteIntermediateSolutions(bool write, unsigned frequency)
+{
+    mWriteIntermediate = write;
+    mStoreIntermediate = write;
+    mIntermediateSolutionFrequency = frequency;
+}
+
+template<unsigned DIM>
 void CoupledLumpedSystemFiniteElementSolver<DIM>::Solve()
 {
     AbstractFiniteElementSolverBase<DIM>::Solve();
@@ -113,6 +146,14 @@ void CoupledLumpedSystemFiniteElementSolver<DIM>::Solve()
         solver.SetTimeStep(mTimeIncrement);
         solver.SetTimes(mSolveStartTime, mSolveEndTime);
         solver.SetInitialCondition(initial_guess);
+        solver.SetStoreIntermediateSolutions(mStoreIntermediate, mIntermediateSolutionFrequency);
+        solver.SetUseCoupling(mUseCoupling);
+        solver.SetInitialDimensionlessLumpedSolution(p_parabolic_pde->GetCurrentVegfInPellet()/this->mReferenceConcentration);
+
+        // Set the dimensionless permeability - remember the robin boundary condition does not contain the diffusion term.
+        double permeability = p_parabolic_pde->GetCorneaPelletPermeability()*(BaseUnits::Instance()->GetReferenceTimeScale()/this->mpMesh->GetReferenceLengthScale());
+        solver.SetDimensionlessPermeability(permeability);
+        solver.SetReferenceLengthScale(this->mpMesh->GetReferenceLengthScale());
 
         Vec result = solver.Solve();
         ReplicatableVector solution_repl(result);
@@ -126,6 +167,11 @@ void CoupledLumpedSystemFiniteElementSolver<DIM>::Solve()
         }
         this->UpdateSolution(this->mSolution);
 
+        if(mStoreIntermediate)
+        {
+            mIntermediateSolutionCollection = solver.rGetIntermediateSolutions();
+        }
+
         // Tidy up
         PetscTools::Destroy(initial_guess);
         PetscTools::Destroy(result);
@@ -138,6 +184,29 @@ void CoupledLumpedSystemFiniteElementSolver<DIM>::Solve()
     if(this->mWriteSolution)
     {
         this->Write();
+    }
+
+    if(mWriteIntermediate)
+    {
+        std::string base_file_name;
+        std::string original_file_name;
+        if(this->mFilename.empty())
+        {
+            original_file_name = "solution";
+        }
+        else
+        {
+            original_file_name = this->mFilename;
+        }
+        base_file_name = original_file_name + "_intermediate_t_";
+
+        for(unsigned idx=0;idx<mIntermediateSolutionCollection.size();idx++)
+        {
+            this->UpdateSolution(mIntermediateSolutionCollection[idx].first);
+            this->mFilename = base_file_name + boost::lexical_cast<std::string>(unsigned(100.0*mIntermediateSolutionCollection[idx].second/mTimeIncrement));
+            this->Write();
+        }
+        this->mFilename = original_file_name;
     }
 }
 

@@ -49,6 +49,7 @@ CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::CoupledVegfPellet
             mCurrentVegfInPellet(Connor17Parameters::mpInitialVegfConcentrationInPellet->GetValue("CoupledVegfPelletDiffusionReactionPde")),
             mCorneaPelletPermeability(Connor17Parameters::mpCorneaVegfPermeability->GetValue("CoupledVegfPelletDiffusionReactionPde")),
             mPelletSurfaceArea(Connor17Parameters::mpPelletSurfaceArea->GetValue("CoupledVegfPelletDiffusionReactionPde")),
+            mPelletDepth(1.0*1e-6*unit::metres), // for consistency with some existing tests
             mPelletVolume(Connor17Parameters::mpPelletVolume->GetValue("CoupledVegfPelletDiffusionReactionPde")),
             mHalfMaxVegf(Connor17Parameters::mpVegfAtHalfReceptorOccupancy->GetValue("CoupledVegfPelletDiffusionReactionPde"))
 {
@@ -96,6 +97,12 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::membrane_permeability> CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetCorneaPelletPermeability()
 {
     return mCorneaPelletPermeability;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+units::quantity<unit::length> CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetPelletDepth()
+{
+    return mPelletDepth;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -150,6 +157,12 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetPelletVolume(units::quantity<unit::volume> volume)
 {
     mPelletVolume = volume;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetPelletDepth(units::quantity<unit::length> depth)
+{
+    mPelletDepth = depth;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

@@ -127,7 +127,7 @@ void Part<DIM>::AddHoleMarker(DimensionalChastePoint<DIM> hole)
 template<unsigned DIM>
 void Part<DIM>::AppendPart(boost::shared_ptr<Part<DIM> > pPart)
 {
-    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = pPart->GetPolygons();
     for(unsigned idx=0; idx<polygons.size(); idx++)
     {
         this->AddPolygon(polygons[idx], true);
@@ -666,6 +666,31 @@ void Part<DIM>::MergeCoincidentVertices()
         mFacets[idx]->UpdateVertices();
     }
     mVtkIsUpToDate = false;
+}
+
+template<unsigned DIM>
+void Part<DIM>::LabelEdges(DimensionalChastePoint<DIM> loc, const std::string& rLabel)
+{
+    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+    for(unsigned idx=0; idx<polygons.size(); idx++)
+    {
+        polygons[idx]->LabelEdgeIfFound(loc, rLabel);
+    }
+}
+
+template<unsigned DIM>
+bool Part<DIM>::EdgeHasLabel(DimensionalChastePoint<DIM> loc, const std::string& rLabel)
+{
+    bool edge_has_label = false;
+    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+    for(unsigned idx=0; idx<polygons.size(); idx++)
+    {
+        if(polygons[idx]->EdgeHasLabel(loc, rLabel))
+        {
+            return true;
+        }
+    }
+    return edge_has_label;
 }
 
 template<unsigned DIM>

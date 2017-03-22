@@ -90,6 +90,11 @@ class CoupledVegfPelletDiffusionReactionPde : public AbstractDiscreteContinuumPa
     units::quantity<unit::area> mPelletSurfaceArea;
 
     /**
+     * The pellet surface depth (for 2D problems)
+     */
+    units::quantity<unit::length> mPelletDepth;
+
+    /**
      * The pellet volume
      */
     units::quantity<unit::volume> mPelletVolume;
@@ -185,6 +190,11 @@ public:
     units::quantity<unit::area> GetPelletSurfaceArea();
 
     /**
+     * @return the pellet depth
+     */
+    units::quantity<unit::length> GetPelletDepth();
+
+    /**
      * @return the pellet volume
      */
     units::quantity<unit::volume> GetPelletVolume();
@@ -224,6 +234,12 @@ public:
      * @param surfaceArea the pellet surface area
      */
     void SetPelletSurfaceArea(units::quantity<unit::area> surfaceArea);
+
+    /**
+     * Set the pellet depth
+     * @param depth the pellet depth
+     */
+    void SetPelletDepth(units::quantity<unit::length> depth);
 
     /**
      * Set the pellet volume

@@ -56,7 +56,7 @@ struct BoundaryConditionType
      */
     enum Value
     {
-        POINT, FACET, OUTER, VESSEL_LINE, VESSEL_VOLUME, CELL, IN_PART
+        POINT, FACET, OUTER, VESSEL_LINE, VESSEL_VOLUME, CELL, IN_PART, EDGE
     };
 };
 

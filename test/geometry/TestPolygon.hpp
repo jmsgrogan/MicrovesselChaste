@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTPOLYGON_HPP_
 #define TESTPOLYGON_HPP_
 
@@ -221,6 +219,23 @@ public:
         TS_ASSERT_DELTA(std::abs(p_polygon->GetPlane()->GetNormal()[2]), 1.0, 1.e-6);
 
         TS_ASSERT_DELTA(p_polygon->GetDistanceToEdges(DimensionalChastePoint<3>(1.5, 0.5, 0.0, 1.e-6*unit::metres)).value(), 0.5e-6, 1.e-8);
+    }
+
+    void TestEdgeLabelling()
+    {
+        std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices;
+        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 1.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 1.0, 0.0, 1.e-6*unit::metres));
+        boost::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(vertices);
+
+        std::string test = "Test";
+        bool edge_found = p_polygon->LabelEdgeIfFound(DimensionalChastePoint<3>(0.5, 0.0, 0.0, 1.e-6*unit::metres), test);
+        std::vector<std::string> edge_labels = p_polygon->GetEdgeLabels();
+        TS_ASSERT(edge_found);
+        TS_ASSERT(edge_labels[0]==test or edge_labels[1]==test or edge_labels[2]==test or edge_labels[3]==test);
+        TS_ASSERT(p_polygon->EdgeHasLabel(DimensionalChastePoint<3>(0.5, 0.0, 0.0, 1.e-6*unit::metres), "Test"));
     }
 };
 

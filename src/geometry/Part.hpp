@@ -280,6 +280,22 @@ public:
     vtkSmartPointer<vtkPolyData> GetVtk();
 
     /**
+     * Label a polygon edge if it is found
+     * @param loc the search point
+     * @param rLabel the label
+     * @return true if an edge is found
+     */
+    void LabelEdges(DimensionalChastePoint<DIM> loc, const std::string& rLabel);
+
+    /**
+     * Return true if the edge at the input point has the supplied label
+     * @param loc the search point
+     * @param rLabel the label
+     * @return true if an edge is found
+     */
+    bool EdgeHasLabel(DimensionalChastePoint<DIM> loc, const std::string& rLabel);
+
+    /**
      * Is the point inside the part
      * @param location the location of the point
      * @return bool true if the point is inside the part

@@ -118,7 +118,8 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
         pContainer->DefineConstantDirichletOnMeshBoundary(p_mesh.get(), mValue/mReferenceConcentration);
         apply_boundary = false;
     }
-    else if(mType == BoundaryConditionType::FACET || mType == BoundaryConditionType::VESSEL_VOLUME)
+    else if(mType == BoundaryConditionType::FACET || mType == BoundaryConditionType::VESSEL_VOLUME ||
+            mIsRobin || mIsNeumann or mType == BoundaryConditionType::EDGE)
     {
         use_boundry_nodes = true;
     }
@@ -179,38 +180,69 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
         }
         else
         {
-            typename DiscreteContinuumMesh<DIM, DIM>::BoundaryNodeIterator iter = p_mesh->GetBoundaryNodeIteratorBegin();
-
-            while (iter < p_mesh->GetBoundaryNodeIteratorEnd())
+            if(!(mIsNeumann  or mIsRobin))
             {
-                DimensionalChastePoint<DIM> probe_location((*iter)->GetPoint().rGetLocation(), length_scale);
-                std::pair<bool,units::quantity<unit::concentration> > result = GetValue(probe_location, node_distance_tolerance);
-                if(result.first)
+                typename DiscreteContinuumMesh<DIM, DIM>::BoundaryNodeIterator iter = p_mesh->GetBoundaryNodeIteratorBegin();
+                while (iter < p_mesh->GetBoundaryNodeIteratorEnd())
                 {
+                    DimensionalChastePoint<DIM> probe_location((*iter)->GetPoint().rGetLocation(), length_scale);
+                    std::pair<bool,units::quantity<unit::concentration> > result = GetValue(probe_location, node_distance_tolerance);
                     ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result.second/mReferenceConcentration);
-                    if(!mIsNeumann and !mIsRobin)
+                    if(result.first)
                     {
                         pContainer->AddDirichletBoundaryCondition(*iter, p_fixed_boundary_condition);
                     }
-                    else
+                    ++iter;
+                }
+            }
+            else
+            {
+                typename TetrahedralMesh<DIM,DIM>::BoundaryElementIterator surf_iter = p_mesh->GetBoundaryElementIteratorBegin();
+                while (surf_iter != p_mesh->GetBoundaryElementIteratorEnd())
+                {
+                    unsigned node1_index = (*surf_iter)->GetNodeGlobalIndex(0);
+                    unsigned node2_index = (*surf_iter)->GetNodeGlobalIndex(1);
+                    DimensionalChastePoint<DIM> loc1(p_mesh->GetNode(node1_index)->GetPoint().rGetLocation(), length_scale);
+                    DimensionalChastePoint<DIM> loc2(p_mesh->GetNode(node2_index)->GetPoint().rGetLocation(), length_scale);
+                    std::pair<bool,units::quantity<unit::concentration> > result1 = GetValue(loc1,node_distance_tolerance);
+                    std::pair<bool,units::quantity<unit::concentration> > result2 = GetValue(loc2,node_distance_tolerance);
+
+                    unsigned num_on_feature = 0;
+                    num_on_feature += unsigned(result1.first);
+                    num_on_feature += unsigned(result2.first);
+                    if(DIM==2 and mType == BoundaryConditionType::EDGE)
                     {
-                        typename TetrahedralMesh<DIM,DIM>::BoundaryElementIterator surf_iter = p_mesh->GetBoundaryElementIteratorBegin();
-                        while (surf_iter != p_mesh->GetBoundaryElementIteratorEnd())
+                        if(num_on_feature==2)
                         {
-                            unsigned node_index = (*surf_iter)->GetNodeGlobalIndex(0);
-                            unsigned node2_index = (*surf_iter)->GetNodeGlobalIndex(1);
-                            if(node_index==(*iter)->GetIndex() and
-                                    p_mesh->GetNode(node_index)->GetPoint()[1]==p_mesh->GetNode(node2_index)->GetPoint()[1])
+                            ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result1.second/mReferenceConcentration);
+                            pContainer->AddNeumannBoundaryCondition(*surf_iter, p_fixed_boundary_condition);
+                        }
+                    }
+                    else if(DIM==3)
+                    {
+                        unsigned node3_index = (*surf_iter)->GetNodeGlobalIndex(2);
+                        DimensionalChastePoint<DIM> loc3(p_mesh->GetNode(node3_index)->GetPoint().rGetLocation(), length_scale);
+                        std::pair<bool,units::quantity<unit::concentration> > result3 = GetValue(loc3, node_distance_tolerance);
+                        num_on_feature += unsigned(result3.first);
+                        if(mType == BoundaryConditionType::EDGE)
+                        {
+                            if(num_on_feature==2)
                             {
+                                ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result1.second/mReferenceConcentration);
                                 pContainer->AddNeumannBoundaryCondition(*surf_iter, p_fixed_boundary_condition);
                             }
-                            surf_iter++;
                         }
-
+                        else
+                        {
+                            if(num_on_feature==3)
+                            {
+                                ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result1.second/mReferenceConcentration);
+                                pContainer->AddNeumannBoundaryCondition(*surf_iter, p_fixed_boundary_condition);
+                            }
+                        }
                     }
-
+                    surf_iter++;
                 }
-                ++iter;
             }
         }
     }
@@ -264,6 +296,20 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
                 {
                     return std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
                 }
+            }
+        }
+    }
+    else if(mType == BoundaryConditionType::EDGE)
+    {
+        if(!mpDomain)
+        {
+            EXCEPTION("A part is required for this type of boundary condition");
+        }
+        else
+        {
+            if(mpDomain->EdgeHasLabel(location, mLabel))
+            {
+                return std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
             }
         }
     }
@@ -420,6 +466,23 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
     //                    }
     //                }
     //            }
+            }
+        }
+    }
+    else if(mType == BoundaryConditionType::EDGE)
+    {
+        if(!mpDomain)
+        {
+            EXCEPTION("A part is required for this type of boundary condition");
+        }
+        else
+        {
+            for(unsigned idx=0; idx<p_regular_grid->GetNumberOfLocations(); idx++)
+            {
+                if(mpDomain->EdgeHasLabel(p_regular_grid->GetLocation(idx), mLabel))
+                {
+                    (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+                }
             }
         }
     }

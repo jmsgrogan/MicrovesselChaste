@@ -58,123 +58,96 @@ class CoupledInterfaceOdePdeSolver : public AbstractDynamicLinearPdeSolver<DIM,D
 
 protected:
 
+    /**
+     * The PDE to be solved
+     */
     AbstractLinearParabolicPde<DIM,DIM>* mpParabolicPde;
 
-private:
+    /**
+     * Storage for intermediate solutions. Useful for debugging.
+     */
+    std::vector<std::pair<std::vector<double>, double> > mIntermediateSolutionCollection;
 
-    /* The constuctor will take in a mesh and a BCC, the latter will be stored as a member variable */
+    /**
+     * How often to store intermediate solutions.
+     */
+    unsigned mIntermediateSolutionFrequency;
+
+    /**
+     * Whether to store intermediate solutions.
+     */
+    bool mStoreIntermediate;
+
+    /**
+     * Count the time increments taken
+     */
+    unsigned mIncrementCounter;
+
+    /**
+     * Save the current time
+     */
+    double mCurrentTime;
+
+    /**
+     * The constuctor will take in a mesh and a BCC, the latter will be stored as a member variable
+     */
     BoundaryConditionsContainer<DIM,DIM,1>* mpBoundaryConditions;
 
-    Mat mRhsRobinMatrix;
-
+    /**
+     * Dimensionless permeability
+     */
     double mPermeability;
 
-    double mCurrentVegfSolution;
+    /**
+     * Dimensionless solution in the lumped compartment
+     */
+    double mCurrentLumpedSolution;
 
-    /* This is the main method which needs to be implemented. It takes in the current solution, and a
+    units::quantity<unit::length> mReferenceLengthScale;
+
+    bool mUseCoupling;
+
+    /**
+     * This is the main method which needs to be implemented. It takes in the current solution, and a
      * boolean saying whether the matrix (ie A in Ax=b) is being computed or not.
      */
-    void SetupLinearSystem(Vec currentSolution, bool computeMatrix)
-    {
-        // Update the surface integral value
-        NullSurfaceIntegralCalculator<DIM> surf_calc(this->mpMesh, mpBoundaryConditions);
-        surf_calc.SetCurrentSolution(currentSolution);
-        double integral_value = surf_calc.CalculateSurfaceIntegral();
-
-//        // Update the vegf in the pellet
-//        boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM, DIM> > p_coupled_pde =
-//                    boost::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM, DIM> >(this->mpParabolicPde);
-//
-//        units::quantity<unit::volume> volume = p_coupled_pde->GetPelletVolume();
-//        units::quantity<unit::membrane_permeability> permeability = p_coupled_pde->GetCorneaPelletPermeability();
-//        units::quantity<unit::dimensionless> binding_constant = p_coupled_pde->GetPelletBindingConstant();
-//        units::quantity<unit::rate> decay_rate = p_coupled_pde->GetPelletFreeDecayRate();
-//        double pellet_solution = soln_guess_repl[num_points];
-//        units::quantity<unit::rate> pellet_update_term1 = ((surface_area*permeability)/volume)*((mCurrentVegfSolution/binding_constant) -
-//                integral_value);
-//        units::quantity<unit::rate> dVegf_dt = -(decay_rate/binding_constant)*mCurrentVegfSolution - pellet_update_term1;
-//        mCurrentVegfSolution += dVegf_dt*time;
-
-
-        // Assemble the parabolic terms
-        CoupledOdePdeParabolicTermAssembler<DIM> parabolic_terms_assembler(this->mpMesh, this->mpParabolicPde);
-
-        if (computeMatrix)
-        {
-            parabolic_terms_assembler.SetMatrixToAssemble(this->mpLinearSystem->rGetLhsMatrix());
-            parabolic_terms_assembler.AssembleMatrix();
-            this->mpLinearSystem->FinaliseLhsMatrix(); // (Petsc communication)
-        }
-        else
-        {
-            RobinConditionsSurfaceTermAssembler<DIM,DIM,1> surface_integral_assembler(this->mpMesh, mpBoundaryConditions);
-            surface_integral_assembler.SetMatrixToAssemble(mRhsRobinMatrix, true);
-            surface_integral_assembler.AssembleMatrix();
-            PetscMatTools::Finalise(mRhsRobinMatrix);
-            MatMult(mRhsRobinMatrix, currentSolution, this->mpLinearSystem->rGetRhsVector());
-
-            surface_integral_assembler.SetVectorToAssemble(this->mpLinearSystem->rGetRhsVector(), false);
-            surface_integral_assembler.AssembleVector();
-            this->mpLinearSystem->FinaliseRhsVector(); // (Petsc communication)
-
-            parabolic_terms_assembler.SetVectorToAssemble(this->mpLinearSystem->rGetRhsVector(), false);
-            parabolic_terms_assembler.SetCurrentSolution(currentSolution);
-            parabolic_terms_assembler.AssembleVector();
-            this->mpLinearSystem->FinaliseRhsVector(); // (Petsc communication)
-        }
-
-//        /* The third assembler we use is the `NaturalNeumannSurfaceTermAssembler`, which assembles
-//         * the vector `c` defined above, using the Neumann BCs stored in the `BoundaryConditionsContainer`
-//         * which is passed in in the constructor
-//         */
-//        NaturalNeumannSurfaceTermAssembler<DIM,DIM,1> surface_integral_assembler(this->mpMesh, mpBoundaryConditions);
-//        surface_integral_assembler.SetVectorToAssemble(this->mpLinearSystem->rGetRhsVector(), false /*don't zero vector before assembling!*/);
-//        surface_integral_assembler.Assemble();
-
-        /* Some necessary PETSc communication before applying Dirichet BCs */
-        this->mpLinearSystem->FinaliseRhsVector();         // (Petsc communication)
-        this->mpLinearSystem->SwitchWriteModeLhsMatrix();  // (Petsc communication - needs to called when going from adding entries to inserting entries)
-
-        /* Apply the dirichlet BCs from the BCC to the linear system */
-        mpBoundaryConditions->ApplyDirichletToLinearProblem(*(this->mpLinearSystem), computeMatrix);
-
-        /* Some necessary PETSc communication to finish */
-        this->mpLinearSystem->FinaliseRhsVector();
-        this->mpLinearSystem->FinaliseLhsMatrix();
-
-        // Update the Pellet VEGF for the next step
-    }
+    void SetupLinearSystem(Vec currentSolution, bool computeMatrix);
 
 public:
-    /* The constructor needs to call the parent constructor, save the BCC, ''say that the (LHS) matrix is constant
+    /**
+     * The constructor needs to call the parent constructor, save the BCC, ''say that the (LHS) matrix is constant
      * in time'' (so it is only computed once), and allocate memory for the RHS matrix.
      */
     CoupledInterfaceOdePdeSolver(TetrahedralMesh<DIM,DIM>* pMesh,
                                BoundaryConditionsContainer<DIM,DIM,1>* pBoundaryConditions,
-                               AbstractLinearParabolicPde<DIM,DIM>* pPde)
-         : AbstractDynamicLinearPdeSolver<DIM,DIM,1>(pMesh),
-           mpParabolicPde(pPde),
-           mpBoundaryConditions(pBoundaryConditions),
-           mPermeability(1.0),
-           mCurrentVegfSolution(0.0)
-    {
-        this->mMatrixIsConstant = true;
-        PetscTools::SetupMat(mRhsRobinMatrix, this->mpMesh->GetNumNodes(), this->mpMesh->GetNumNodes(), 9);
-    }
+                               AbstractLinearParabolicPde<DIM,DIM>* pPde);
 
-    ~CoupledInterfaceOdePdeSolver()
-    {
-        PetscTools::Destroy(mRhsRobinMatrix);
-    }
+    virtual ~CoupledInterfaceOdePdeSolver();
 
     /**
      * Over-ridden method to
      *
      * @param currentSolution The current solution (solution of the linear system solve)
      */
-    virtual void FollowingSolveLinearSystem(Vec currentSolution)
-    {
-    }
+    virtual void FollowingSolveLinearSystem(Vec currentSolution);
+
+    /**
+     * Whether to store intermediate solutions, useful for debugging. Default (off).
+     */
+    void SetStoreIntermediateSolutions(bool store, unsigned frequency=1);
+
+    void SetDimensionlessPermeability(double permeability);
+
+    void SetReferenceLengthScale(units::quantity<unit::length> referenceLengthScale);
+
+    void SetInitialDimensionlessLumpedSolution(double solution);
+
+    void SetUseCoupling(bool useCoupling);
+
+    /**
+     * Return the intermediate solutions
+     */
+    const std::vector<std::pair<std::vector<double>, double> >& rGetIntermediateSolutions();
 
 };
 
