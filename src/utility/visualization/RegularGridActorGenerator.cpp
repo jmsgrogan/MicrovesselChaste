@@ -33,41 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-/*
-
-Copyright (c) 2005-2016, University of Oxford.
- All rights reserved.
-
- University of Oxford means the Chancellor, Masters and Scholars of the
- University of Oxford, having an administrative office at Wellington
- Square, Oxford OX1 2JD, UK.
-
- This file is RegularGrid of Chaste.
-
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice,
- this list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice,
- this list of conditions and the following disclaimer in the documentation
- and/or other materials provided with the distribution.
- * Neither the name of the University of Oxford nor the names of its
- contributors may be used to endorse or promote products derived from this
- software without specific prior written permission.
-
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A RegularGridICULAR PURPOSE
- ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
- */
-
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
@@ -124,16 +89,15 @@ void RegularGridActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRenderer> pRend
     if(mpRegularGrid)
     {
         vtkSmartPointer<vtkImageData> p_grid = vtkImageData::SafeDownCast(mpRegularGrid->GetGlobalVtkGrid());
-
         vtkSmartPointer<vtkGeometryFilter> p_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
         #if VTK_MAJOR_VERSION <= 5
             p_geom_filter->SetInput(p_grid);
         #else
             p_geom_filter->SetInputData(p_grid);
         #endif
-
         vtkSmartPointer<vtkColorTransferFunction> p_scaled_ctf = vtkSmartPointer<vtkColorTransferFunction>::New();
-        if(!this->mDataLabel.empty())
+        bool has_point_data = (!this->mDataLabel.empty() and p_grid->GetPointData()->HasArray(this->mDataLabel.c_str()));
+        if(has_point_data)
         {
             double range[2];
             p_grid->GetPointData()->GetArray(this->mDataLabel.c_str())->GetRange(range);
@@ -165,7 +129,6 @@ void RegularGridActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRenderer> pRend
             p_glyph->SetScaleModeToScaleByScalar();
             p_glyph->SetScaleFactor(1.0);
             p_glyph->Update();
-
             vtkSmartPointer<vtkPolyDataMapper> p_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
             #if VTK_MAJOR_VERSION <= 5
                 p_mapper->SetInput(p_glyph->GetOutput());
@@ -219,13 +182,12 @@ void RegularGridActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRenderer> pRend
                 pRenderer->AddActor(p_edge_actor);
             }
         }
-
         // Add the volume
         if(this->mShowVolume)
         {
             vtkSmartPointer<vtkPolyDataMapper> p_grid_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
             p_grid_mapper->SetInputConnection(p_geom_filter->GetOutputPort());
-            if(!this->mDataLabel.empty())
+            if(has_point_data)
             {
                 p_grid_mapper->SetLookupTable(p_scaled_ctf);
                 p_grid_mapper->ScalarVisibilityOn();
@@ -247,7 +209,7 @@ void RegularGridActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRenderer> pRend
             p_volume_actor->GetProperty()->SetOpacity(this->mVolumeOpacity);
             pRenderer->AddActor(p_volume_actor);
 
-            if(!this->mDataLabel.empty())
+            if(has_point_data)
             {
                 vtkSmartPointer<vtkScalarBarActor> p_scale_bar = vtkSmartPointer<vtkScalarBarActor>::New();
                 p_scale_bar->SetLookupTable(p_scaled_ctf);

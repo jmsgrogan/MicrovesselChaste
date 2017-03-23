@@ -33,6 +33,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+#include <petscts.h>
 #include <petscvec.h>
 #include <boost/lexical_cast.hpp>
 #include "ReplicatableVector.hpp"

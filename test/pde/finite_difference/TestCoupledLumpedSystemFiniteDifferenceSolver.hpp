@@ -221,30 +221,30 @@ public:
         //solver.Solve();
 
         // Test the intermediate solutions
-        vtkSmartPointer<vtkPoints> p_sample_points = vtkSmartPointer<vtkPoints>::New();
-        for(unsigned idx=0; idx<11; idx++)
-        {
-            p_sample_points->InsertNextPoint(1000.0, 1000.0-idx*100.0, 0.0);
-        }
-
-        std::vector<std::pair<std::vector<double>, double> > intermediate_solutions = fd_solver.rGetIntermediateSolutions();
-        double diff_nondim = vegf_diffusivity*(3600.0*unit::seconds)/(1.e-6*unit::metres*1.e-6*unit::metres);
-        double perm_nondim = p_pde->GetCorneaPelletPermeability()*(3600.0*unit::seconds/(1.e-6*unit::metres));
-        double conc_nondim = initial_vegf_concentration/(1.e-9*unit::mole_per_metre_cubed);
-
-        for(unsigned idx=0; idx<intermediate_solutions.size();idx++)
-        {
-            double time = intermediate_solutions[idx].second;
-            if(time>0.01)
-            {
-                fd_solver.UpdateSolution(intermediate_solutions[idx].first);
-                std::vector<units::quantity<unit::concentration> > solution = fd_solver.GetConcentrations(p_sample_points);
-                for(unsigned jdx=0; jdx<11; jdx++)
-                {
-                    double c_numerical_nondim = solution[jdx]/(1.e-9*unit::mole_per_metre_cubed);
-                }
-            }
-        }
+//        vtkSmartPointer<vtkPoints> p_sample_points = vtkSmartPointer<vtkPoints>::New();
+//        for(unsigned idx=0; idx<11; idx++)
+//        {
+//            p_sample_points->InsertNextPoint(1000.0, 1000.0-idx*100.0, 0.0);
+//        }
+//
+//        std::vector<std::pair<std::vector<double>, double> > intermediate_solutions = fd_solver.rGetIntermediateSolutions();
+//        double diff_nondim = vegf_diffusivity*(3600.0*unit::seconds)/(1.e-6*unit::metres*1.e-6*unit::metres);
+//        double perm_nondim = p_pde->GetCorneaPelletPermeability()*(3600.0*unit::seconds/(1.e-6*unit::metres));
+//        double conc_nondim = initial_vegf_concentration/(1.e-9*unit::mole_per_metre_cubed);
+//
+//        for(unsigned idx=0; idx<intermediate_solutions.size();idx++)
+//        {
+//            double time = intermediate_solutions[idx].second;
+//            if(time>0.01)
+//            {
+//                fd_solver.UpdateSolution(intermediate_solutions[idx].first);
+//                std::vector<units::quantity<unit::concentration> > solution = fd_solver.GetConcentrations(p_sample_points);
+//                for(unsigned jdx=0; jdx<11; jdx++)
+//                {
+//                    double c_numerical_nondim = solution[jdx]/(1.e-9*unit::mole_per_metre_cubed);
+//                }
+//            }
+//        }
 
 //        intermediate_solutions = solver.rGetIntermediateSolutions();
 //        for(unsigned idx=0; idx<intermediate_solutions.size();idx++)

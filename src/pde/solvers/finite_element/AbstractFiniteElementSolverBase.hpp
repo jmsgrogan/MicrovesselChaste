@@ -102,6 +102,11 @@ public:
     void SetUseSimpleNetonSolver(bool useNewton);
 
     /**
+     * Overridden setup method
+     */
+    void Setup();
+
+    /**
      * Overridden update method
      */
     void Update();

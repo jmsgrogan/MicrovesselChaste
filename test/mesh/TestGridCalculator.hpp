@@ -190,10 +190,10 @@ public:
 
         // Set up vessel network
         VesselNetworkGenerator<2> network_generator;
-        units::quantity<unit::length> length(92.0*unit::microns);
+        units::quantity<unit::length> length(100.0*unit::microns);
         boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
-                                                                                                DimensionalChastePoint<2>(50.0, 4.0));
-        units::quantity<unit::length> radius(100.0*unit::microns);
+                                                                                                DimensionalChastePoint<2>(45.0, -0.1));
+        units::quantity<unit::length> radius(11.0*unit::microns);
         p_network->SetSegmentRadii(radius);
 
         // Get a point-segment map
@@ -206,8 +206,7 @@ public:
         global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(3, 0));
         global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(4, 1));
         global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(5, 1));
-        global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(6, 1));
-        global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(7, 0));
+        global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(6, 0));
         global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(16, 1));
         global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(27, 1));
         for(unsigned idx=0;idx<global_index_value_pairs.size();idx++)

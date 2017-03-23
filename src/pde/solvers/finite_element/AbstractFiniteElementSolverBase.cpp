@@ -67,6 +67,31 @@ boost::shared_ptr<AbstractFiniteElementSolverBase<DIM> > AbstractFiniteElementSo
 }
 
 template<unsigned DIM>
+void AbstractFiniteElementSolverBase<DIM>::Setup()
+{
+    AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::Setup();
+
+    if(this->CellPopulationIsSet())
+    {
+        this->mpGridCalculator->SetCellPopulation(*(this->mpCellPopulation), this->mCellPopulationReferenceLength);
+    }
+
+    if(this->mpNetwork)
+    {
+        this->mpGridCalculator->SetVesselNetwork(this->mpNetwork);
+    }
+
+    if(this->mpPde)
+    {
+        this->mpPde->SetGridCalculator(this->mpGridCalculator);
+    }
+    else
+    {
+        EXCEPTION("This solver needs a PDE to be set before calling Setup.");
+    }
+}
+
+template<unsigned DIM>
 void AbstractFiniteElementSolverBase<DIM>::Update()
 {
     if(this->mpPde)

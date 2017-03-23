@@ -70,7 +70,7 @@ class TestCoupledLumpedSystemFiniteElementSolver : public CxxTest::TestSuite
 
 public:
 
-    void xTestPlaneSlowRelease() throw(Exception)
+    void TestPlaneSlowRelease() throw(Exception)
     {
         BaseUnits::Instance()->SetReferenceLengthScale(1.0*unit::metres);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed);
@@ -134,8 +134,8 @@ public:
         p_solver->SetTargetTimeIncrement(0.1);
         p_solver->SetUseCoupling(false);
         p_solver->SetStartTime(0.0);
-        p_solver->SetEndTime(100.0);
-        p_solver->SetWriteIntermediateSolutions(true, 100);
+        p_solver->SetEndTime(10.0);
+        p_solver->SetWriteIntermediateSolutions(true, 10);
         p_solver->Solve();
 
         // Test the intermediate solutions
@@ -170,7 +170,7 @@ public:
         }
     }
 
-    void xTestSolveOnCircle()
+    void TestSolveOnCircle()
     {
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestCoupledLumpedSystemFiniteElementSolver/Circle"));
 
@@ -235,7 +235,7 @@ public:
         solver.AddBoundaryCondition(p_boundary_condition);
         solver.SetTargetTimeIncrement(0.01);
         solver.SetStartTime(0.0);
-        solver.SetEndTime(10.0);
+        solver.SetEndTime(1.0);
         solver.SetWriteIntermediateSolutions(true, 20);
         p_domain->Write(p_handler->GetOutputDirectoryFullPath()+"merged_cornea2.vtp", GeometryFormat::VTP);
         solver.Solve();
@@ -255,7 +255,7 @@ public:
         }
     }
 
-    void TestSolveOnSphere()
+    void xTestSolveOnSphere()
     {
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestCoupledLumpedSystemFiniteElementSolver/Sphere"));
 
@@ -349,8 +349,8 @@ public:
         solver.AddBoundaryCondition(p_boundary_condition);
         solver.SetTargetTimeIncrement(0.1);
         solver.SetStartTime(0.0);
-        solver.SetEndTime(24.0*6);
-        solver.SetWriteIntermediateSolutions(true, 10*24);
+        solver.SetEndTime(10.0);
+        solver.SetWriteIntermediateSolutions(true, 10.0);
         p_domain->Write(p_handler->GetOutputDirectoryFullPath()+"merged_cornea2.vtp", GeometryFormat::VTP);
         solver.Solve();
     }

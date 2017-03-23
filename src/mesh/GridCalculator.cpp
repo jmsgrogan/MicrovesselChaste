@@ -33,6 +33,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+#include <vtkVersion.h>
+#include <vtkLineSource.h>
+#include <vtkTubeFilter.h>
+#include <vtkSelectEnclosedPoints.h>
 #include "PetscTools.hpp"
 #include "Exception.hpp"
 #include "GridCalculator.hpp"
@@ -276,17 +280,41 @@ const std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >& GridCa
         if(useVesselSurface)
         {
             double dimensionless_radius = segments[jdx]->GetRadius()/grid_length;
-            mpGrid->GetVtkCellLocator()->FindCellsAlongLine(&x_coords1[0], &x_coords2[0], dimensionless_radius, p_id_list);
+            vtkSmartPointer<vtkLineSource> p_line_source = vtkSmartPointer<vtkLineSource>::New();
+            p_line_source->SetPoint1(&x_coords1[0]);
+            p_line_source->SetPoint2(&x_coords2[0]);
+            vtkSmartPointer<vtkTubeFilter> p_tube_filter = vtkSmartPointer<vtkTubeFilter>::New();
+            p_tube_filter->SetInputConnection(p_line_source->GetOutputPort());
+            p_tube_filter->SetRadius(dimensionless_radius);
+            p_tube_filter->SetCapping(1);
+            p_tube_filter->SetNumberOfSides(12);
+            vtkSmartPointer<vtkPolyData> p_point_polydata = vtkSmartPointer<vtkPolyData>::New();
+            p_point_polydata->SetPoints(mpGrid->GetLocations());
+
+            vtkSmartPointer<vtkSelectEnclosedPoints> p_select_encolsed = vtkSmartPointer<vtkSelectEnclosedPoints>::New();
+            #if VTK_MAJOR_VERSION <= 5
+            p_select_encolsed->SetInput(p_point_polydata);
+            #else
+            p_select_encolsed->SetInputData(p_point_polydata);
+            #endif
+            p_select_encolsed->SetSurfaceConnection(p_tube_filter->GetOutputPort());
+            p_select_encolsed->Update();
+            for(unsigned idx=0;idx<mpGrid->GetNumberOfLocations();idx++)
+            {
+                if(p_select_encolsed->IsInside(idx))
+                {
+                    mSegmentMap[idx].push_back(segments[jdx]);
+                }
+            }
         }
         else
         {
             mpGrid->GetVtkCellLocator()->FindCellsAlongLine(&x_coords1[0], &x_coords2[0], 1.e-8, p_id_list);
-        }
-
-        unsigned num_intersections = p_id_list->GetNumberOfIds();
-        for(unsigned idx=0; idx<num_intersections; idx++)
-        {
-            mSegmentMap[p_id_list->GetId(idx)].push_back(segments[jdx]);
+            unsigned num_intersections = p_id_list->GetNumberOfIds();
+            for(unsigned idx=0; idx<num_intersections; idx++)
+            {
+                mSegmentMap[p_id_list->GetId(idx)].push_back(segments[jdx]);
+            }
         }
     }
     return mSegmentMap;

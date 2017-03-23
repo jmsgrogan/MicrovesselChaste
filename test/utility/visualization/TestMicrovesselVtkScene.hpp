@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTMICROVESSELVTKSCENE_HPP_
 #define TESTMICROVESSELVTKSCENE_HPP_
 
@@ -68,7 +66,6 @@ public:
         dimensions[2] = 1;
         p_grid->SetDimensions(dimensions);
         p_grid->SetSpacing(20.e-6*unit::metres);
-
         std::vector<double> grid_values;
         for(unsigned idx=0; idx < p_grid->GetNumberOfLocations(); idx++)
         {
@@ -88,6 +85,7 @@ public:
         scene1.SetSaveAsAnimation(false);
         scene1.SetSaveAsImages(true);
         scene1.SetOutputFilePath(file_handler1.GetOutputDirectoryFullPath()+"render");
+
         scene1.Start();
     }
 
@@ -130,7 +128,6 @@ public:
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestMicrovesselVtkScene/TestVesselNetwork");
-
 
         // Specify the network dimensions
         units::quantity<unit::length> vessel_length = 40.0* 1.e-6 * unit::metres;

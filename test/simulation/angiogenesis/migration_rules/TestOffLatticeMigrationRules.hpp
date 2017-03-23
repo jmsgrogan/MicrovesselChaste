@@ -95,11 +95,11 @@ public:
 
         //Set up the limbal vessel
         VesselNetworkGenerator<2> generator;
-        units::quantity<unit::length> length = spacing * double(dimensions[1] - 3); // full domain in y direction
+        units::quantity<unit::length> length = spacing * double(dimensions[1] - 1); // full domain in y direction
         unsigned divisions = dimensions[1] - 2; // divide the vessel to coincide with grid
         unsigned alignment_axis = 1; // pointing y direction
         boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(length,
-                                                                                        DimensionalChastePoint<2>(2.0, 2.0, 0.0, spacing),
+                                                                                        DimensionalChastePoint<2>(2.0, 0.0, 0.0, spacing),
                                                                                             divisions, alignment_axis);
 
         boost::shared_ptr<OffLatticeMigrationRule<2> > p_migration_rule = OffLatticeMigrationRule<2>::Create();
@@ -116,7 +116,7 @@ public:
         angiogenesis_solver.SetSproutingRule(p_sprouting_rule);
         angiogenesis_solver.SetOutputFileHandler(p_handler);
 
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(5.0 * 60.0, 5);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(20.0 * 60.0, 20);
         angiogenesis_solver.Run(true);
     }
 

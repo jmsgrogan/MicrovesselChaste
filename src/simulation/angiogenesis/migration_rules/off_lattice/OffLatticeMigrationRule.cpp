@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "GeometryTools.hpp"
 #include "OffLatticeMigrationRule.hpp"
 #include "RandomNumberGenerator.hpp"
@@ -258,13 +256,17 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
     {
         probes_per_node = 5;
     }
-
     vtkSmartPointer<vtkPoints> p_probe_locations = vtkSmartPointer<vtkPoints>::New();
     std::vector<bool> candidate_locations_inside_domain(probes_per_node*rNodes.size(), true);
 
     // Get a normal to the segments, will depend on whether they are parallel
     for(unsigned idx = 0; idx < rNodes.size(); idx++)
     {
+        if(rNodes[idx]->GetNumberOfSegments() !=2)
+        {
+            EXCEPTION("Attempting to form sprout at tip or existing branch. This is not supported.");
+        }
+
         c_vector<double, DIM> sprout_direction;
         c_vector<double, DIM> cross_product;
         double sum = 0.0;
@@ -420,13 +422,17 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
                     }
                 }
             }
+            else
+            {
+                EXCEPTION("Incorrect number of solution gradient probes per node.");
+            }
 
             // Get the index of the max viable gradient
             units::quantity<unit::concentration_gradient> max_grad = 0.0 * unit::mole_per_metre_pow_4;
             int my_index = -1;
             for(unsigned jdx = 0; jdx<gradients.size(); jdx++)
             {
-                if(gradients[jdx]>max_grad)
+                if(gradients[jdx]>=max_grad)
                 {
                     max_grad = gradients[jdx];
                     my_index = int(jdx);
@@ -434,7 +440,12 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             }
 
             double loc[3];
-            if(my_index>=0 and my_index<=3)
+            int max_index=1;
+            if(DIM==3)
+            {
+                max_index = 3;
+            }
+            if(my_index>=0 and my_index<=max_index)
             {
                 p_probe_locations->GetPoint(idx*probes_per_node + 1 + my_index, loc);
             }
