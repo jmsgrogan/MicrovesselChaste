@@ -50,14 +50,14 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "BaseUnits.hpp"
 #include "PetscTools.hpp"
 
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestDensityMap : public CxxTest::TestSuite
 {
 
 public:
 
-    void TestAllInsideBoxAndAllOutsideBox2d()
+    void TestAllInsideBoxAndAllOutsideBox2d() throw(Exception)
     {
         EXIT_IF_PARALLEL;
 
@@ -78,15 +78,15 @@ public:
         DensityMap<2> solver;
         solver.SetVesselNetwork(p_network);
         solver.SetGrid(p_grid);
-        solver.Solve();
+        std::vector<double> line_density = solver.rGetVesselLineDensity(true);
 
         // Check the density
-        TS_ASSERT_DELTA(solver.GetSolution()[0], 0.15/(0.501*0.501), 1e-6);
-        TS_ASSERT_DELTA(solver.GetSolution()[1], 0.0, 1e-6);
+        TS_ASSERT_DELTA(line_density[0], 0.15/(0.501*0.501), 1e-6);
+        TS_ASSERT_DELTA(line_density[1], 0.0, 1e-6);
         BaseUnits::Instance()->Destroy();
     }
 
-    void TestCrossingBoxes2d()
+    void TestCrossingBoxes2d() throw(Exception)
     {
         EXIT_IF_PARALLEL;
 
@@ -107,15 +107,15 @@ public:
         DensityMap<2> solver;
         solver.SetVesselNetwork(p_network);
         solver.SetGrid(p_grid);
-        solver.Solve();
+        std::vector<double> line_density = solver.rGetVesselLineDensity(true);
 
         // Check the density
-        TS_ASSERT_DELTA(solver.GetSolution()[0], 0.251/(0.501*0.501), 1e-6);
-        TS_ASSERT_DELTA(solver.GetSolution()[3], 0.249/(0.501*1.000), 1e-6);
+        TS_ASSERT_DELTA(line_density[0], 0.251/(0.501*0.501), 1e-6);
+        TS_ASSERT_DELTA(line_density[3], 0.249/(0.501*1.000), 1e-6);
         BaseUnits::Instance()->Destroy();
     }
 
-    void TestAllInsideBoxAndAllOutsideBox3d()
+    void TestAllInsideBoxAndAllOutsideBox3d() throw(Exception)
     {
         EXIT_IF_PARALLEL;
 
@@ -137,18 +137,18 @@ public:
         DensityMap<3> solver;
         solver.SetVesselNetwork(p_network);
         solver.SetGrid(p_grid);
-        solver.Solve();
+        std::vector<double> line_density = solver.rGetVesselLineDensity(true);
 
         // Check the density
-        TS_ASSERT_DELTA(solver.GetSolution()[0], 0.15/(0.501*0.501*0.501), 1e-6);
-        TS_ASSERT_DELTA(solver.GetSolution()[1], 0.0, 1e-6);
-        TS_ASSERT_DELTA(solver.GetSolution()[2], 0.0, 1e-6);
-        TS_ASSERT_DELTA(solver.GetSolution()[3], 0.0, 1e-6);
-        TS_ASSERT_DELTA(solver.GetSolution()[4], 0.0, 1e-6);
+        TS_ASSERT_DELTA(line_density[0], 0.15/(0.501*0.501*0.501), 1e-6);
+        TS_ASSERT_DELTA(line_density[1], 0.0, 1e-6);
+        TS_ASSERT_DELTA(line_density[2], 0.0, 1e-6);
+        TS_ASSERT_DELTA(line_density[3], 0.0, 1e-6);
+        TS_ASSERT_DELTA(line_density[4], 0.0, 1e-6);
         BaseUnits::Instance()->Destroy();
     }
 
-    void TestCrossingBoxes3d()
+    void TestCrossingBoxes3d() throw(Exception)
     {
         EXIT_IF_PARALLEL;
 
@@ -169,16 +169,16 @@ public:
         DensityMap<3> solver;
         solver.SetVesselNetwork(p_network);
         solver.SetGrid(p_grid);
-        solver.Solve();
+        std::vector<double> line_density = solver.rGetVesselLineDensity(true);
 
         // Check the density
-        TS_ASSERT_DELTA(solver.GetSolution()[0], 0.251/(0.501*0.501*0.501), 1e-2);
-        TS_ASSERT_DELTA(solver.GetSolution()[3], 0.249/(0.501*0.501*1.0), 1e-3);
-        TS_ASSERT_DELTA(solver.GetSolution()[4], 0.0, 1e-6);
+        TS_ASSERT_DELTA(line_density[0], 0.251/(0.501*0.501*0.501), 1e-2);
+        TS_ASSERT_DELTA(line_density[3], 0.249/(0.501*0.501*1.0), 1e-3);
+        TS_ASSERT_DELTA(line_density[4], 0.0, 1e-6);
         BaseUnits::Instance()->Destroy();
     }
 
-    void TestBifurcationNetwork()
+    void TestBifurcationNetwork() throw(Exception)
     {
         std::string output_path = "TestDensityMap/Bifurcation";
         if(PetscTools::IsParallel())
@@ -207,13 +207,14 @@ public:
         DensityMap<3> calculator;
         calculator.SetVesselNetwork(p_network);
         calculator.SetGrid(p_grid);
-        calculator.SetFileHandler(p_output_file_handler);
-        calculator.SetWriteSolution(true);
-        calculator.Solve();
+        std::vector<double> line_density = calculator.rGetVesselLineDensity(true);
+        p_grid->AddPointData(line_density);
+        p_grid->Write(p_output_file_handler);
     }
 
-    void TestBifurcationNetwork2d()
+    void TestBifurcationNetwork2d() throw(Exception)
     {
+
         std::string output_path = "TestDensityMap/Bifurcation2d";
         if(PetscTools::IsParallel())
         {
@@ -240,12 +241,12 @@ public:
         DensityMap<2> calculator;
         calculator.SetVesselNetwork(p_network);
         calculator.SetGrid(p_grid);
-        calculator.SetFileHandler(p_output_file_handler);
-        calculator.SetWriteSolution(true);
-        calculator.Solve();
+        std::vector<double> line_density = calculator.rGetVesselLineDensity(true);
+        p_grid->AddPointData(line_density);
+        p_grid->Write(p_output_file_handler);
     }
 
-    void TestConservationOverBoxSize()
+    void TestConservationOverBoxSize() throw(Exception)
     {
         EXIT_IF_PARALLEL;
 
@@ -272,16 +273,15 @@ public:
             DensityMap<2> calculator;
             calculator.SetVesselNetwork(p_network);
             calculator.SetGrid(p_grid);
-            calculator.SetFileHandler(p_output_file_handler);
-            calculator.SetWriteSolution(true);
-            calculator.SetFileName("grid"+boost::lexical_cast<std::string>(grid_size));
-            calculator.Solve();
+            std::vector<double> line_density = calculator.rGetVesselLineDensity(true);
+            p_grid->AddPointData(line_density);
+            p_grid->Write(p_output_file_handler);
 
             double running_total = 0.0;
-            for(unsigned jdx=0; jdx<calculator.GetSolution().size(); jdx++)
+            for(unsigned jdx=0; jdx<line_density.size(); jdx++)
             {
                 c_vector<double, 6> bbox = p_grid->GetPointBoundingBox(jdx);
-                running_total+= calculator.GetSolution()[jdx]*(bbox[1]-bbox[0])*(bbox[3]-bbox[2]);
+                running_total+= line_density[jdx]*(bbox[1]-bbox[0])*(bbox[3]-bbox[2]);
             }
 
             densities.push_back(running_total);

@@ -44,6 +44,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "TipCellMutationState.hpp"
 #include "VesselNetworkWriter.hpp"
 #include "BaseUnits.hpp"
+#include "Timer.hpp"
 
 template<unsigned DIM>
 AngiogenesisSolver<DIM>::AngiogenesisSolver() :
@@ -283,9 +284,7 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
 template<unsigned DIM>
 void AngiogenesisSolver<DIM>::DoAnastamosis()
 {
-    mpNetwork->UpdateAll();
     std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
-
     for (unsigned idx = 0; idx < nodes.size(); idx++)
     {
         // If this is currently a tip
@@ -326,42 +325,48 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
             else
             {
                 // Get the nearest segment and check if it is close enough to the node for a merge
-                std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > segment_pair =
-                        mpNetwork->GetNearestSegment(nodes[idx], false);
+                Timer::Print("Start Find Nearest");
+                boost::shared_ptr<VesselSegment<DIM> > p_nearest_segment;
+                units::quantity<unit::length> distance = mpNetwork->GetNearestSegment(nodes[idx],
+                        p_nearest_segment, false, mNodeAnastamosisRadius);
+                Timer::Print("End Find Nearest");
 
-                if (segment_pair.second <= mNodeAnastamosisRadius
-                        && nodes[idx]->GetSegment(0)->GetLength() > segment_pair.second)
+                if(p_nearest_segment)
                 {
-                    // If there is a non-zero anastamosis radius move the tip onto the segment
-                    DimensionalChastePoint<DIM> original_location = nodes[idx]->rGetLocation();
-                    if (mNodeAnastamosisRadius > 0.0 * unit::metres)
+                    if (distance <= mNodeAnastamosisRadius && nodes[idx]->GetSegment(0)->GetLength() > distance)
                     {
-                        DimensionalChastePoint<DIM> divide_location = segment_pair.first->GetPointProjection(
-                                original_location, true);
-                        nodes[idx]->SetLocation(divide_location);
-                    }
-                    boost::shared_ptr<VesselNode<DIM> > p_merge_node = mpNetwork->DivideVessel(
-                            segment_pair.first->GetVessel(), nodes[idx]->rGetLocation());
-
-                    // Replace the node at the end of the migrating tip with the merge node
-                    if ((nodes[idx]->GetSegment(0)->GetNode(0) == p_merge_node)
-                            || (nodes[idx]->GetSegment(0)->GetNode(1) == p_merge_node))
-                    {
-                        nodes[idx]->SetLocation(original_location);
-                    }
-                    else
-                    {
-                        p_merge_node->SetIsMigrating(false);
-                        if (nodes[idx]->GetSegment(0)->GetNode(0) == nodes[idx])
+                        // If there is a non-zero anastamosis radius move the tip onto the segment
+                        DimensionalChastePoint<DIM> original_location = nodes[idx]->rGetLocation();
+                        if (mNodeAnastamosisRadius > 0.0 * unit::metres)
                         {
-                            nodes[idx]->GetSegment(0)->ReplaceNode(0, p_merge_node);
+                            DimensionalChastePoint<DIM> divide_location = p_nearest_segment->GetPointProjection(
+                                    original_location, true);
+                            nodes[idx]->SetLocation(divide_location);
+                        }
+                        boost::shared_ptr<VesselNode<DIM> > p_merge_node = mpNetwork->DivideVessel(
+                                p_nearest_segment->GetVessel(), nodes[idx]->rGetLocation());
+                        // Replace the node at the end of the migrating tip with the merge node
+                        if ((nodes[idx]->GetSegment(0)->GetNode(0) == p_merge_node)
+                                || (nodes[idx]->GetSegment(0)->GetNode(1) == p_merge_node))
+                        {
+                            nodes[idx]->SetLocation(original_location);
                         }
                         else
                         {
-                            nodes[idx]->GetSegment(0)->ReplaceNode(1, p_merge_node);
+                            p_merge_node->SetIsMigrating(false);
+                            if (nodes[idx]->GetSegment(0)->GetNode(0) == nodes[idx])
+                            {
+                                nodes[idx]->GetSegment(0)->ReplaceNode(0, p_merge_node);
+                            }
+                            else
+                            {
+                                nodes[idx]->GetSegment(0)->ReplaceNode(1, p_merge_node);
+                            }
                         }
+                        Timer::Print("Full Update");
+                        mpNetwork->UpdateAll();
+                        Timer::Print("End Full Update");
                     }
-                    mpNetwork->UpdateAll();
                 }
             }
         }
@@ -371,6 +376,7 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
 template<unsigned DIM>
 void AngiogenesisSolver<DIM>::Increment()
 {
+    Timer::PrintAndReset("Start Angio Increment");
     if (!mpNetwork)
     {
         EXCEPTION("The angiogenesis solver needs an initial vessel network");
@@ -407,16 +413,20 @@ void AngiogenesisSolver<DIM>::Increment()
         }
     }
 
+    Timer::Print("Start Migration");
     // Move any migrating nodes
     UpdateNodalPositions();
 
+    Timer::Print("Check Anasta");
     // Check for anastamosis
     DoAnastamosis();
 
     // Do sprouting
     if (mpSproutingRule)
     {
+        Timer::Print("Start Sprouting");
         DoSprouting();
+        Timer::Print("Check Anasta2");
         DoAnastamosis();
     }
 
@@ -467,6 +477,7 @@ void AngiogenesisSolver<DIM>::Increment()
             }
         }
     }
+    Timer::Print("End Angio Increment");
 }
 
 template<unsigned DIM>

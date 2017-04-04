@@ -37,6 +37,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ReplicatableVector.hpp"
 #include "VesselSegment.hpp"
 #include "AbstractFiniteDifferenceSolverBase.hpp"
+#include "AbstractDiscreteContinuumPde.hpp"
 #include "BaseUnits.hpp"
 
 template<unsigned DIM>

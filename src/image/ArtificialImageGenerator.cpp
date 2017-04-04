@@ -39,7 +39,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UnitCollection.hpp"
 
 template<unsigned DIM>
-DensityMap<DIM>::DensityMap()
+ArtificialImageGenerator<DIM>::ArtificialImageGenerator()
     :   AbstractRegularGridDiscreteContinuumSolver<DIM>()
 //        mUseSurfaceBasedVesselDensity(false),
 //        mUseLineBasedVesselDensity(true),
@@ -56,14 +56,14 @@ DensityMap<DIM>::DensityMap()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<DensityMap<DIM> > DensityMap<DIM>::Create()
+boost::shared_ptr<ArtificialImageGenerator<DIM> > ArtificialImageGenerator<DIM>::Create()
 {
-    MAKE_PTR(DensityMap<DIM>, pSelf);
+    MAKE_PTR(ArtificialImageGenerator<DIM>, pSelf);
     return pSelf;
 }
 
 template<unsigned DIM>
-DensityMap<DIM>::~DensityMap()
+ArtificialImageGenerator<DIM>::~ArtificialImageGenerator()
 {
 
 }
@@ -178,5 +178,5 @@ DensityMap<DIM>::~DensityMap()
 //}
 
 // Explicit instantiation
-template class DensityMap<2> ;
-template class DensityMap<3> ;
+template class ArtificialImageGenerator<2>;
+template class ArtificialImageGenerator<3>;

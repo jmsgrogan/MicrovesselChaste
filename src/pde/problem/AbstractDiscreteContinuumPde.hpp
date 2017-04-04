@@ -43,10 +43,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "GeometryTools.hpp"
 #include "GridCalculator.hpp"
 #include "UnitCollection.hpp"
+#include "DiscreteSource.hpp"
 
 /**
- * Discrete source forward declared because it can contain its own DiscreteContinuumSolvers
- */
+* Discrete source forward declared because it can contain its own DiscreteContinuumSolvers
+*/
 template<unsigned DIM>
 class DiscreteSource;
 
@@ -56,7 +57,7 @@ class DiscreteSource;
  * It can be combined with a range of abstract PDEs in Chaste or used to build
  * more general PDE descriptions.
  */
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM = ELEMENT_DIM>
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 class AbstractDiscreteContinuumPde
 {
 

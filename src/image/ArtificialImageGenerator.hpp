@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef DENSITYMAP_HPP_
-#define DENSITYMAP_HPP_
+#ifndef ARTIFICIALIMAGEGENERATOR_HPP_
+#define ARTIFICIALIMAGEGENERATOR_HPP_
 
 #include "SmartPointers.hpp"
 #include "AbstractRegularGridDiscreteContinuumSolver.hpp"
@@ -45,7 +45,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
 template<unsigned DIM>
-class DensityMap : public AbstractRegularGridDiscreteContinuumSolver<DIM>
+class ArtificialImageGenerator : public AbstractRegularGridDiscreteContinuumSolver<DIM>
 {
 //    /**
 //     * Dimensionless vessel surface area density
@@ -97,18 +97,18 @@ public:
     /**
      * Constructor
      */
-    DensityMap();
+    ArtificialImageGenerator();
 
     /**
      * Factory constructor method
      * @return a shared pointer to a new solver
      */
-    static boost::shared_ptr<DensityMap<DIM> > Create();
+    static boost::shared_ptr<ArtificialImageGenerator<DIM> > Create();
 
     /**
      * Destructor
      */
-    ~DensityMap();
+    ~ArtificialImageGenerator();
 
 //    /**
 //     * @return the projection of the density onto 2D
@@ -171,8 +171,11 @@ public:
     /**
      * Calculate the map
      */
-    void Solve();
+    void Solve()
+    {
+
+    }
 
 };
 
-#endif /* DENSITYMAP_HPP_ */
+#endif /* ARTIFICIALIMAGEGENERATOR_HPP_ */

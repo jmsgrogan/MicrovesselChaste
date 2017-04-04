@@ -110,7 +110,6 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
     {
         EXCEPTION("Can't cast to mesh");
     }
-
     units::quantity<unit::length> length_scale = p_mesh->GetReferenceLengthScale();
 
     if(mType == BoundaryConditionType::OUTER)
@@ -123,7 +122,6 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
     {
         use_boundry_nodes = true;
     }
-
     if(apply_boundary)
     {
         if(!use_boundry_nodes)
@@ -138,18 +136,15 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
                 }
                 else
                 {
-                    std::vector<DimensionalChastePoint<DIM> > locations(p_mesh->GetNumNodes());
                     std::vector<unsigned> mesh_nodes(p_mesh->GetNumNodes());
-
                     typename DiscreteContinuumMesh<DIM, DIM>::NodeIterator iter = p_mesh->GetNodeIteratorBegin();
                     unsigned counter=0;
                     while (iter != p_mesh->GetNodeIteratorEnd())
-                     {
-                         locations[counter] = DimensionalChastePoint<DIM>((*iter).GetPoint().rGetLocation(), length_scale);
+                    {
                          mesh_nodes[counter] = (*iter).GetIndex();
                          counter++;
                          ++iter;
-                     }
+                    }
                     std::vector<bool> inside_flags = mpDomain->IsPointInPart(p_mesh->GetNodeLocations());
                     for(unsigned idx=0; idx<inside_flags.size(); idx++)
                     {

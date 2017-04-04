@@ -582,7 +582,6 @@ void RegularGrid<DIM>::SetUpVtkGrid()
     double dimensionless_spacing = mSpacing/this->mReferenceLength;
     p_global_grid->SetSpacing(dimensionless_spacing, dimensionless_spacing, dimensionless_spacing);
     p_local_grid->SetSpacing(dimensionless_spacing, dimensionless_spacing, dimensionless_spacing);
-
     c_vector<double, DIM> dimless_origin = mOrigin.GetLocation(this->mReferenceLength);
     if (DIM == 3)
     {
@@ -596,7 +595,6 @@ void RegularGrid<DIM>::SetUpVtkGrid()
     }
     this->mpGlobalVtkGrid = p_global_grid;
     this->mpVtkGrid = p_local_grid;
-
     // Label the grid partitioning
     std::vector<unsigned> global_lows = mpDistributedVectorFactory->rGetGlobalLows();
     vtkSmartPointer<vtkIntArray> p_point_data = vtkSmartPointer<vtkIntArray>::New();
@@ -640,7 +638,6 @@ void RegularGrid<DIM>::SetUpVtkGrid()
         this->mpGridLocations->InsertNextPoint(this->mpVtkGrid->GetPoint(idx));
         this->mLocalGlobalMap.push_back(idx+lo);
     }
-
     this->mVtkRepresentationUpToDate = true;
 
     // Set up the cell locator

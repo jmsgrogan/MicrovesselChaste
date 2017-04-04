@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTDISCRETECONTINUUMBOUNDARYCONDITIONS_HPP_
 #define TESTDISCRETECONTINUUMBOUNDARYCONDITIONS_HPP_
 
@@ -92,7 +90,6 @@ public:
         p_vessel_source_lin->SetLinearInUValue(-1.e3*unit::per_second);
         boost::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_source_const = VesselBasedDiscreteSource<3>::Create();
         p_vessel_source_const->SetConstantInUValue(40.e-7* unit::mole_per_metre_cubed_per_second);
-
         p_pde->AddDiscreteSource(p_vessel_source_lin);
         p_pde->AddDiscreteSource(p_vessel_source_const);
 
@@ -148,7 +145,6 @@ public:
 
         boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
         p_boundary->SetValue(1.0*unit::mole_per_metre_cubed);
-
         p_pde->AddDiscreteSource(p_vessel_source_lin);
         p_pde->AddDiscreteSource(p_vessel_source_const);
 

@@ -40,6 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkProbeFilter.h>
 #include <vtkSmartPointer.h>
 #include <vtkPoints.h>
+#include "AbstractDiscreteContinuumPde.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
 #include "BaseUnits.hpp"
 

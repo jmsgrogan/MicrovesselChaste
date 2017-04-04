@@ -42,6 +42,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "AbstractDiscreteContinuumParabolicPde.hpp"
 #include "AbstractDiscreteContinuumNonLinearEllipticPde.hpp"
 #include "AbstractFiniteElementSolverBase.hpp"
+#include "AbstractDiscreteContinuumPde.hpp"
 #include "Exception.hpp"
 
 template<unsigned DIM>

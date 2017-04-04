@@ -33,14 +33,15 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef VESSELNETWORK_HPP_
 #define VESSELNETWORK_HPP_
 
 #include <vector>
 #include <set>
 #include <map>
+#include <vtkSmartPointer.h>
+#include <vtkCellLocator.h>
+#include <vtkPolyData.h>
 #include "Vessel.hpp"
 #include "VesselSegment.hpp"
 #include "VesselNode.hpp"
@@ -91,6 +92,25 @@ private:
      * Is the data in mVesselNodes up to date.
      */
     bool mVesselNodesUpToDate;
+
+    /**
+     * A vtk representation of the geometry. Used internally for
+     * node and segment location. Indexing is according to
+     * the indexing of mNodes and mSegments.
+     */
+    vtkSmartPointer<vtkPolyData> mpVtkGeometry;
+
+    /**
+     * A vtk cell locator for vessel segments. Indexing is according to
+     * the indexing of mSegments.
+     * node and segment location.
+     */
+    vtkSmartPointer<vtkCellLocator> mpVtkSegmentCellLocator;
+
+    /**
+     * Is the vtk geometry representation up to date.
+     */
+    bool mVtkGeometryUpToDate;
 
 public:
 
@@ -197,13 +217,18 @@ public:
     std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > GetNearestSegment(boost::shared_ptr<VesselSegment<DIM> > pSegment);
 
     /**
-     * Get the segment nearest to the specified node and the distance to it
+     * Return the distance to the nearest segment. Also over-rides the input segment with the nearest one
+     * if a segment is found. The input segment is set to NULL if a segment is not found in the optional
+     * bounding region.
      * @param pNode the probe node
-     * @param sameVessel can it be on the same vessel
-     * @return the segment nearest to the specified segment and the distance to it
+     * @param pEmptySegment an empty segment pointer. Becomes the nearest segment if one is found or NULL otherwise.
+     * @param sameVessel can the segment be on the same vessel.
+     * @param radius an optional search radius, providing one significantly speeds up the search.
+     * @return the distance to the nearest segment. Large if none is found, check pEmptySegment instead.
      */
-    std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > GetNearestSegment(boost::shared_ptr<VesselNode<DIM> > pNode,
-                                                                                                        bool sameVessel = true);
+    units::quantity<unit::length> GetNearestSegment(boost::shared_ptr<VesselNode<DIM> > pNode,
+            boost::shared_ptr<VesselSegment<DIM> >& pEmptySegment,
+            bool sameVessel = true, units::quantity<unit::length> radius = 0.0*unit::metres);
 
     /**
      * Get the segment nearest to the specified location and the distance to it
@@ -370,6 +395,11 @@ public:
     void MergeCoincidentNodes(std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes, double tolerance = 0.0);
 
     /**
+     * Convenience method to signify when node, segment and vessel storage have gone out of date.
+     */
+    void Modified(bool nodesOutOfDate=true, bool segmentsOutOfDate=true, bool vesselsOutOfDate=true);
+
+    /**
      * Removes a vessel from the network
      * @param pVessel the vessel to remove
      * @param deleteVessel also remove the vessel from its child segments and nodes if true.
@@ -444,6 +474,11 @@ public:
      * Update the vessel id tags
      */
     void UpdateVesselIds();
+
+    /**
+     * Update the internal vtk geometry
+     */
+    void UpdateInternalVtkGeometry();
 
     /**
      * Update all dynamic storage in the vessel network, optionally merge coincident nodes

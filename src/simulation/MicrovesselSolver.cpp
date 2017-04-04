@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include <boost/lexical_cast.hpp>
 #include "UblasIncludes.hpp"
 #include "VesselSegment.hpp"
@@ -42,6 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "MicrovesselSolver.hpp"
 #include "VesselNetworkWriter.hpp"
 #include "SolutionDependentDiscreteSource.hpp"
+#include "AbstractDiscreteContinuumPde.hpp"
 
 template<unsigned DIM>
 MicrovesselSolver<DIM>::MicrovesselSolver() :
@@ -106,7 +105,6 @@ template<unsigned DIM>
 void MicrovesselSolver<DIM>::Increment()
 {
     unsigned num_steps = SimulationTime::Instance()->GetTimeStepsElapsed();
-
     if(num_steps==0)
     {
         for(unsigned idx=0;idx<mMicrovesselModifiers.size(); idx++)
@@ -137,7 +135,6 @@ void MicrovesselSolver<DIM>::Increment()
             {
                 break;
             }
-
             mDiscreteContinuumSolvers[idx]->Update();
             mDiscreteContinuumSolvers[idx]->SetFileName("/" + mDiscreteContinuumSolvers[idx]->GetLabel() +"_solution_" + boost::lexical_cast<std::string>(num_steps));
 
@@ -161,7 +158,6 @@ void MicrovesselSolver<DIM>::Increment()
                     }
                 }
             }
-
             if(mOutputFrequency > 0 && num_steps % mOutputFrequency == 0)
             {
                 mDiscreteContinuumSolvers[idx]->SetWriteSolution(true);
@@ -179,7 +175,6 @@ void MicrovesselSolver<DIM>::Increment()
     {
         mpAngiogenesisSolver->Increment();
     }
-
     // Do regression if the is a network and solver
     if(this->mpNetwork && mpRegressionSolver)
     {
@@ -200,7 +195,6 @@ void MicrovesselSolver<DIM>::Increment()
             p_network_writer->Write();
         }
     }
-
     for(unsigned idx=0;idx<mMicrovesselModifiers.size(); idx++)
     {
         mMicrovesselModifiers[idx]->UpdateAtEndOfTimeStep();

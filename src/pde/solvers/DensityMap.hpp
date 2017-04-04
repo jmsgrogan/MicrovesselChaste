@@ -33,15 +33,16 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef DENSITYMAP_HPP_
-#define DENSITYMAP_HPP_
+#ifndef DENSITYMAPA_HPP_
+#define DENSITYMAPA_HPP_
 
 #include <vtkUnstructuredGrid.h>
 #include "SmartPointers.hpp"
 #include "AbstractCellMutationState.hpp"
-#include "AbstractDiscreteContinuumSolver.hpp"
-#include "AbstractRegularGridDiscreteContinuumSolver.hpp"
+#include "VesselNetwork.hpp"
 #include "RegularGrid.hpp"
+#include "GridCalculator.hpp"
+#include "AbstractCellPopulation.hpp"
 
 /**
  * Calculate the density of vessel network features (nodes, branches, segments) or cells on a
@@ -49,8 +50,18 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * sources.
  */
 template<unsigned DIM>
-class DensityMap : public AbstractRegularGridDiscreteContinuumSolver<DIM>
+class DensityMap
 {
+    /**
+     * The vessel network.
+     */
+    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
+
+    /**
+     * The cell population.
+     */
+    AbstractCellPopulation<DIM>* mpCellPopulation;
+
     /**
      * Dimensionless vessel surface area density
      */
@@ -95,6 +106,11 @@ class DensityMap : public AbstractRegularGridDiscreteContinuumSolver<DIM>
      * Dimensionless cell density by mutation type
      */
     std::vector<double> mDimensionlessCellDensityByMutationType;
+
+    /**
+     * A grid calculator
+     */
+    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
 
 public:
 
@@ -145,7 +161,7 @@ public:
      * @param update update the stored quantity
      * @return the vessel line density
      */
-    const std::vector<double>& rGetVesselLineDensity(bool update=true);
+    std::vector<double> rGetVesselLineDensity(bool update=true);
 
     /**
      * Get the perfused vessel surface area density
@@ -199,10 +215,31 @@ public:
     const std::vector<double>& rGetCellDensity(boost::shared_ptr<AbstractCellMutationState> pMutationState, bool update=true);
 
     /**
-     * Null solve method, needed to override pure virtual base class.
+     * Set the vessel network
+     * @param pNetwork the vessel network
      */
-    void Solve();
+    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+
+    /**
+     * Set the cell population
+     * @param rCellPopulation a reference to the cell population
+     * @param cellPopulationReferenceLength the length scale for the cell population
+     * @param cellPopulationReferenceConcentration the concentration scale for the cell population
+     */
+    void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation);
+
+    /**
+     * Set the regular grid
+     * @param pGrid the regular grid
+     */
+    void SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
+
+    /**
+     * Set the mesh
+     * @param pGrid the mesh
+     */
+    void SetGrid(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pGrid);
 
 };
 
-#endif /* DENSITYMAP_HPP_ */
+#endif /* DENSITYMAPA_HPP_ */

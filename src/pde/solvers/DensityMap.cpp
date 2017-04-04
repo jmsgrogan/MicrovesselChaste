@@ -42,10 +42,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DensityMap.hpp"
 #include "GeometryTools.hpp"
 #include "UnitCollection.hpp"
+#include "Debug.hpp"
 
 template<unsigned DIM>
-DensityMap<DIM>::DensityMap()
-    :   AbstractRegularGridDiscreteContinuumSolver<DIM>(),
+DensityMap<DIM>::DensityMap() :
+        mpNetwork(),
+        mpCellPopulation(),
         mVesselSurfaceAreaDensity(),
         mVesselLineDensity(),
         mPerfusedVesselSurfaceAreaDensity(),
@@ -54,7 +56,8 @@ DensityMap<DIM>::DensityMap()
         mVesselBranchDensity(),
         mVesselQuantityDensity(),
         mDimensionlessCellDensity(),
-        mDimensionlessCellDensityByMutationType()
+        mDimensionlessCellDensityByMutationType(),
+        mpGridCalculator()
 {
 
 }
@@ -231,11 +234,6 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselSurfaceAreaDensity(bool up
             EXCEPTION("A vessel network is required for this density map");
         }
 
-        if(!this->mpVtkSolution)
-        {
-            this->Setup();
-        }
-
         mVesselSurfaceAreaDensity.clear();
         mVesselSurfaceAreaDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(), 0.0);
         std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
@@ -293,7 +291,7 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselSurfaceAreaDensity(bool up
 }
 
 template<unsigned DIM>
-const std::vector<double>& DensityMap<DIM>::rGetVesselLineDensity(bool update)
+std::vector<double> DensityMap<DIM>::rGetVesselLineDensity(bool update)
 {
     unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
     if(!update and mVesselLineDensity.size() == num_points)
@@ -306,17 +304,13 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselLineDensity(bool update)
         {
             EXCEPTION("A vessel network is required for this density map");
         }
-
-        if(!this->mpVtkSolution)
-        {
-            this->Setup();
-        }
-
+        this->mpGridCalculator->SetVesselNetwork(this->mpNetwork);
         mVesselLineDensity.clear();
-        mVesselLineDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(), 0.0);
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
+        mVesselLineDensity = std::vector<double>(num_points, 0.0);
+        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap(update);
         units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetLocationVolumes(true, true);
+
         vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
         if(this->mpGridCalculator->HasStructuredGrid())
         {
@@ -347,7 +341,6 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselLineDensity(bool update)
                 p_sampling_grid = GetSamplingGrid(vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid()));
             }
         }
-
         for(unsigned idx=0; idx<segment_map.size();idx++)
         {
             for (unsigned jdx = 0; jdx < segment_map[idx].size(); jdx++)
@@ -359,7 +352,8 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselLineDensity(bool update)
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
                         idx, point1_in_cell, point2_in_cell);
                 units::quantity<unit::length> length_in_cell = dimless_length_in_cell*length_scale;
-                mVesselLineDensity[idx] += (length_in_cell/length_scale)/grid_volumes[idx];
+                double grid_volume = grid_volumes[idx];
+                mVesselLineDensity[idx] += (length_in_cell/length_scale)/grid_volume;
             }
         }
         return mVesselLineDensity;
@@ -379,11 +373,6 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselSurfaceAreaDensity
         if (!this->mpNetwork)
         {
             EXCEPTION("A vessel network is required for this density map");
-        }
-
-        if(!this->mpVtkSolution)
-        {
-            this->Setup();
         }
 
         mPerfusedVesselSurfaceAreaDensity.clear();
@@ -461,11 +450,6 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselLineDensity(bool u
             EXCEPTION("A vessel network is required for this density map");
         }
 
-        if(!this->mpVtkSolution)
-        {
-            this->Setup();
-        }
-
         mPerfusedVesselLineDensity.clear();
         mPerfusedVesselLineDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(), 0.0);
         std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
@@ -540,11 +524,6 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselTipDensity(bool update)
             EXCEPTION("A vessel network is required for this density map");
         }
 
-        if(!this->mpVtkSolution)
-        {
-            this->Setup();
-        }
-
         mVesselTipDensity.clear();
         mVesselTipDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(), 0.0);
         std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > node_map = this->mpGridCalculator->rGetVesselNodeMap();
@@ -578,10 +557,6 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselBranchDensity(bool update)
             EXCEPTION("A vessel network is required for this density map");
         }
 
-        if(!this->mpVtkSolution)
-        {
-            this->Setup();
-        }
         mVesselBranchDensity.clear();
         mVesselBranchDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(), 0.0);
         std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > node_map = this->mpGridCalculator->rGetVesselNodeMap();
@@ -613,11 +588,6 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselQuantityDensity(const std:
         if (!this->mpNetwork)
         {
             EXCEPTION("A vessel network is required for this density map");
-        }
-
-        if(!this->mpVtkSolution)
-        {
-            this->Setup();
         }
 
         mVesselQuantityDensity.clear();
@@ -695,10 +665,6 @@ const std::vector<double>& DensityMap<DIM>::rGetCellDensity(bool update)
             EXCEPTION("A vessel network is required for this density map");
         }
 
-        if(!this->mpVtkSolution)
-        {
-            this->Setup();
-        }
         mDimensionlessCellDensity.clear();
         mDimensionlessCellDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(), 0.0);
         std::vector<std::vector<CellPtr> > cell_map = this->mpGridCalculator->rGetCellMap();
@@ -729,10 +695,6 @@ const std::vector<double>& DensityMap<DIM>::rGetCellDensity(boost::shared_ptr<Ab
             EXCEPTION("A vessel network is required for this density map");
         }
 
-        if(!this->mpVtkSolution)
-        {
-            this->Setup();
-        }
         mDimensionlessCellDensityByMutationType.clear();
         mDimensionlessCellDensityByMutationType = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(), 0.0);
         std::vector<std::vector<CellPtr > > cell_map = this->mpGridCalculator->rGetCellMap();
@@ -752,9 +714,29 @@ const std::vector<double>& DensityMap<DIM>::rGetCellDensity(boost::shared_ptr<Ab
 }
 
 template<unsigned DIM>
-void DensityMap<DIM>::Solve()
+void DensityMap<DIM>::SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid)
 {
-    EXCEPTION("Solve method not available for Density Map.");
+    mpGridCalculator = boost::shared_ptr<GridCalculator<DIM> >(new GridCalculator<DIM>);
+    mpGridCalculator->SetGrid(pGrid);
+}
+
+template<unsigned DIM>
+void DensityMap<DIM>::SetGrid(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pGrid)
+{
+    mpGridCalculator = boost::shared_ptr<GridCalculator<DIM> >(new GridCalculator<DIM>);
+    mpGridCalculator->SetGrid(pGrid);
+}
+
+template<unsigned DIM>
+void DensityMap<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+{
+    mpNetwork = pNetwork;
+}
+
+template<unsigned DIM>
+void DensityMap<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation)
+{
+    mpCellPopulation = &rCellPopulation;
 }
 
 // Explicit instantiation

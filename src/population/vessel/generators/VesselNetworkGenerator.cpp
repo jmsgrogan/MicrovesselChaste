@@ -465,6 +465,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateBifu
     boost::shared_ptr<VesselNetwork<DIM> > p_network(new VesselNetwork<DIM>());
     p_network->AddVessels(vessels);
     p_network->Translate(startPosition);
+    p_network->UpdateAll();
     return p_network;
 }
 

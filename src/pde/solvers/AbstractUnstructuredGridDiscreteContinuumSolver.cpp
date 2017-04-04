@@ -42,6 +42,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkSmartPointer.h>
 #include <vtkPoints.h>
 #include <vtkXMLUnstructuredGridWriter.h>
+#include "AbstractDiscreteContinuumPde.hpp"
 #include "AbstractUnstructuredGridDiscreteContinuumSolver.hpp"
 
 template<unsigned DIM>

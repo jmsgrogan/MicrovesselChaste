@@ -37,6 +37,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define TESTVESSELNETWORK_HPP_
 
 #include <cxxtest/TestSuite.h>
+#include <vtkPolyData.h>
+#include <vtkIdList.h>
+#include <vtkCellArray.h>
+#include <vtkCellLocator.h>
+#include <vtkLine.h>
 #include "VesselNode.hpp"
 #include "SmartPointers.hpp"
 #include "ChastePoint.hpp"
@@ -46,6 +51,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UblasIncludes.hpp"
 #include "VesselNetworkGenerator.hpp"
 #include "UnitCollection.hpp"
+#include "Timer.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
@@ -351,7 +357,28 @@ public:
         }
         OutputFileHandler output_file_handler("TestVesselNetwork",false);
         p_network->Write(output_file_handler.GetOutputDirectoryFullPath() + "/multisprout.vtp");
-   }
+    }
+
+    void TestFindNearestSegment()
+    {
+        std::vector<boost::shared_ptr<VesselNode<2> > > nodes;
+        nodes.push_back(VesselNode<2>::Create(0.0, 0.0));
+        nodes.push_back(VesselNode<2>::Create(10.0, 0.0));
+        nodes.push_back(VesselNode<2>::Create(20.0, 0.0));
+        nodes.push_back(VesselNode<2>::Create(16.0, 5.0));
+
+        // Make some vessels
+        std::vector<boost::shared_ptr<Vessel<2> > > vessels;
+        vessels.push_back(Vessel<2>::Create(VesselSegment<2>::Create(nodes[0], nodes[1])));
+        vessels.push_back(Vessel<2>::Create(VesselSegment<2>::Create(nodes[1], nodes[2])));
+        VesselNetwork<2> vessel_network;
+        vessel_network.AddVessels(vessels);
+
+        boost::shared_ptr<VesselSegment<2> > p_nearest_segment;
+        units::quantity<unit::length> distance = vessel_network.GetNearestSegment(nodes[3], p_nearest_segment, false);
+        TS_ASSERT(p_nearest_segment);
+        TS_ASSERT_DELTA(double(distance/(1.e-6*unit::metres)), 5.0, 1.e-6);
+    }
 };
 
 #endif /*TESTVESSELNETWORK_HPP_*/

@@ -234,7 +234,6 @@ const std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >& GridCa
     {
         return mSegmentMap;
     }
-
     if (!mpNetwork)
     {
         EXCEPTION("A vessel network has not been set. Can not create a vessel point map.");

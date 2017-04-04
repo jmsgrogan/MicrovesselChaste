@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
 #include <vtkDoubleArray.h>
 #include <vtkPointData.h>
@@ -43,7 +41,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkImageData.h>
 #include <vtkSmartPointer.h>
 #include "RegularGridWriter.hpp"
-
+#include "AbstractDiscreteContinuumPde.hpp"
 #include "AbstractRegularGridDiscreteContinuumSolver.hpp"
 
 template<unsigned DIM>

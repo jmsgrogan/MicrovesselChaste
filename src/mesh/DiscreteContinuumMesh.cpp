@@ -90,7 +90,15 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::AddNodalData(const std::vector<double>& rPointValues,
             const std::string& rName)
 {
-
+    vtkSmartPointer<vtkDoubleArray> p_node_data = vtkSmartPointer<vtkDoubleArray>::New();
+    p_node_data->SetNumberOfTuples(rPointValues.size());
+    p_node_data->SetName(rName.c_str());
+    for(unsigned idx=0; idx<rPointValues.size(); idx++)
+    {
+        p_node_data->SetTuple1(idx, rPointValues[idx]);
+    }
+    mNodeData.push_back(p_node_data);
+    this->mVtkRepresentationUpToDate = false;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -324,6 +332,23 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetUpVtkGrid()
             this->mpGridLocations->InsertNextPoint(loc[0], loc[1], 0.0);
         }
     }
+
+    // Update the node locations
+    mpNodeLocations = vtkSmartPointer<vtkPoints>::New();
+    typename DiscreteContinuumMesh<SPACE_DIM, SPACE_DIM>::NodeIterator iter = this->GetNodeIteratorBegin();
+    while (iter != this->GetNodeIteratorEnd())
+     {
+        c_vector<double, SPACE_DIM> loc = (*iter).GetPoint().rGetLocation();
+        if(SPACE_DIM==3)
+        {
+            mpNodeLocations->InsertNextPoint(&loc[0]);
+        }
+        else
+        {
+            mpNodeLocations->InsertNextPoint(loc[0], loc[1], 0.0);
+        }
+         ++iter;
+     }
 
     this->mVtkRepresentationUpToDate = true;
     this->SetUpVtkCellLocator();

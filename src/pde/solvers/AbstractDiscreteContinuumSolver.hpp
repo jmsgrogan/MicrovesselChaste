@@ -50,8 +50,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DiscreteContinuumMesh.hpp"
 #include "GridCalculator.hpp"
 #include "UnitCollection.hpp"
-#include "AbstractDiscreteContinuumPde.hpp"
+//#include "AbstractDiscreteContinuumPde.hpp"
 #include "AbstractDiscreteContinuumGrid.hpp"
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM = ELEMENT_DIM>
+class AbstractDiscreteContinuumPde;
 
 /**
  * An abstract solver class for continuum-discrete field problems.

@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef DISCRETESOURCE_HPP_
-#define DISCRETESOURCE_HPP_
+#ifndef DISCRETESOURCEa_HPP_
+#define DISCRETESOURCEa_HPP_
 
 #include <vector>
 #include <string>
@@ -164,4 +164,4 @@ public:
     virtual void UpdateDensityMap();
 };
 
-#endif /* DISCRETESOURCE_HPP_ */
+#endif /* DISCRETESOURCEa_HPP_ */
