@@ -42,7 +42,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DensityMap.hpp"
 #include "GeometryTools.hpp"
 #include "UnitCollection.hpp"
-#include "Debug.hpp"
 
 template<unsigned DIM>
 DensityMap<DIM>::DensityMap() :
@@ -119,17 +118,17 @@ vtkSmartPointer<vtkUnstructuredGrid> DensityMap<DIM>::GetSamplingGrid(boost::sha
         p_voxel->GetPointIds()->SetId(0, id1);
         vtkIdType id2 = p_newpoints->InsertNextPoint(bbox[1], bbox[2], z_min);
         p_voxel->GetPointIds()->SetId(1, id2);
-        vtkIdType id3 = p_newpoints->InsertNextPoint(bbox[1], bbox[3], z_min);
+        vtkIdType id3 = p_newpoints->InsertNextPoint(bbox[0], bbox[3], z_min);
         p_voxel->GetPointIds()->SetId(2, id3);
-        vtkIdType id4 = p_newpoints->InsertNextPoint(bbox[0], bbox[3], z_min);
+        vtkIdType id4 = p_newpoints->InsertNextPoint(bbox[1], bbox[3], z_min);
         p_voxel->GetPointIds()->SetId(3, id4);
         vtkIdType id5 = p_newpoints->InsertNextPoint(bbox[0], bbox[2], z_max);
         p_voxel->GetPointIds()->SetId(4, id5);
         vtkIdType id6 = p_newpoints->InsertNextPoint(bbox[1], bbox[2], z_max);
         p_voxel->GetPointIds()->SetId(5, id6);
-        vtkIdType id7 = p_newpoints->InsertNextPoint(bbox[1], bbox[3], z_max);
+        vtkIdType id7 = p_newpoints->InsertNextPoint(bbox[0], bbox[3], z_max);
         p_voxel->GetPointIds()->SetId(6, id7);
-        vtkIdType id8 = p_newpoints->InsertNextPoint(bbox[0], bbox[3], z_max);
+        vtkIdType id8 = p_newpoints->InsertNextPoint(bbox[1], bbox[3], z_max);
         p_voxel->GetPointIds()->SetId(7, id8);
         p_tri_grid->InsertNextCell(p_voxel->GetCellType(), p_voxel->GetPointIds());
     }
@@ -145,13 +144,13 @@ double DensityMap<DIM>::LengthOfLineInCell(vtkSmartPointer<vtkUnstructuredGrid> 
     c_vector<double, 3> point1_loc3d;
     if(DIM==3)
     {
-     point1_loc3d = loc1;
+        point1_loc3d = loc1;
     }
     else
     {
-     point1_loc3d[0] = loc1[0];
-     point1_loc3d[1] = loc1[1];
-     point1_loc3d[2] = 0.0;
+        point1_loc3d[0] = loc1[0];
+        point1_loc3d[1] = loc1[1];
+        point1_loc3d[2] = 0.0;
     }
 
     c_vector<double, 3> point2_loc3d;
@@ -175,19 +174,26 @@ double DensityMap<DIM>::LengthOfLineInCell(vtkSmartPointer<vtkUnstructuredGrid> 
         c_vector<double,3> intersection;
         c_vector<double,3> parametric_intersection;
         int subId;
-        if(loc1InCell)
+        if(loc1InCell and !loc2InCell)
         {
-            pSamplingGrid->GetCell(index)->IntersectWithLine(&point1_loc3d[0], &point2_loc3d[0], 1.e-6, t, &intersection[0], &parametric_intersection[0], subId);
-            length_in_cell = norm_2(intersection - point1_loc3d);
+            int found_intersection1 = pSamplingGrid->GetCell(index)->IntersectWithLine(&point2_loc3d[0], &point1_loc3d[0], 1.e-6, t, &intersection[0], &parametric_intersection[0], subId);
+            if(found_intersection1)
+            {
+                return norm_2(intersection - point1_loc3d);
+            }
         }
-        if(loc2InCell)
+        if(loc2InCell and !loc1InCell)
         {
-            pSamplingGrid->GetCell(index)->IntersectWithLine(&point2_loc3d[0], &point1_loc3d[0], 1.e-6, t, &intersection[0], &parametric_intersection[0], subId);
-            length_in_cell = norm_2(intersection - point2_loc3d);
+            int found_intersection = pSamplingGrid->GetCell(index)->IntersectWithLine(&point1_loc3d[0], &point2_loc3d[0], 1.e-6, t, &intersection[0], &parametric_intersection[0], subId);
+            if(found_intersection)
+            {
+                return norm_2(intersection - point2_loc3d);
+            }
         }
-
+        // Neither point in cell, does line cross the cell?
         int line_crosses = pSamplingGrid->GetCell(index)->IntersectWithLine(&point1_loc3d[0], &point2_loc3d[0], 1.e-6, t, &intersection[0],
                 &parametric_intersection[0], subId);
+
         if(line_crosses)
         {
             c_vector<double,3> intersection2;
@@ -341,14 +347,19 @@ std::vector<double> DensityMap<DIM>::rGetVesselLineDensity(bool update)
                 p_sampling_grid = GetSamplingGrid(vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid()));
             }
         }
+        vtkSmartPointer<vtkCellLocator> p_sampling_locator = vtkSmartPointer<vtkCellLocator>::New();
+        p_sampling_locator->SetDataSet(p_sampling_grid);
+        p_sampling_locator->BuildLocator();
+
         for(unsigned idx=0; idx<segment_map.size();idx++)
         {
             for (unsigned jdx = 0; jdx < segment_map[idx].size(); jdx++)
             {
                 c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().GetLocation(length_scale);
                 c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().GetLocation(length_scale);
-                bool point1_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point1_loc, idx);
-                bool point2_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point2_loc, idx);
+
+                bool point1_in_cell = IsPointInCell(p_sampling_locator, point1_loc, idx);
+                bool point2_in_cell = IsPointInCell(p_sampling_locator, point2_loc, idx);
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
                         idx, point1_in_cell, point2_in_cell);
                 units::quantity<unit::length> length_in_cell = dimless_length_in_cell*length_scale;

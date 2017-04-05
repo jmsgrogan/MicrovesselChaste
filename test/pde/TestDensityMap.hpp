@@ -214,7 +214,7 @@ public:
 
     void TestBifurcationNetwork2d() throw(Exception)
     {
-
+        BaseUnits::Instance()->SetReferenceLengthScale(1.e-6 * unit::metres);
         std::string output_path = "TestDensityMap/Bifurcation2d";
         if(PetscTools::IsParallel())
         {
@@ -242,6 +242,7 @@ public:
         calculator.SetVesselNetwork(p_network);
         calculator.SetGrid(p_grid);
         std::vector<double> line_density = calculator.rGetVesselLineDensity(true);
+
         p_grid->AddPointData(line_density);
         p_grid->Write(p_output_file_handler);
     }
@@ -249,7 +250,7 @@ public:
     void TestConservationOverBoxSize() throw(Exception)
     {
         EXIT_IF_PARALLEL;
-
+        BaseUnits::Instance()->SetReferenceLengthScale(1.e-6 * unit::metres);
         // Set up the vessel network
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDensityMap/TestConservationOverBoxSize", false));
         units::quantity<unit::length> vessel_length = 100 * 1.e-6 * unit::metres;
