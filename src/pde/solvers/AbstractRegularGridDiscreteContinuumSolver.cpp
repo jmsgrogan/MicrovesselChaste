@@ -61,65 +61,28 @@ AbstractRegularGridDiscreteContinuumSolver<DIM>::~AbstractRegularGridDiscreteCon
 template<unsigned DIM>
 void AbstractRegularGridDiscreteContinuumSolver<DIM>::Setup()
 {
-    if(!this->mpGridCalculator)
+    if(!this->mpDensityMap)
     {
         EXCEPTION("Regular grid DiscreteContinuum solvers need a grid before Setup can be called.");
     }
 
-    mpRegularGrid = boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+    mpRegularGrid = boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
     if(!mpRegularGrid)
     {
         EXCEPTION("Can't cast to regular grid during Setup");
     }
 
-    // Set up the VTK solution
-    vtkSmartPointer<vtkImageData> p_image = vtkSmartPointer<vtkImageData>::New();
-    c_vector<unsigned, 6> extents = mpRegularGrid->GetExtents();
-    if(DIM==3)
-    {
-        p_image->SetExtent(extents[0], extents[1], extents[2],
-                extents[3], extents[4], extents[5]);
-    }
-    else
-    {
-        p_image->SetExtent(extents[0], extents[1], extents[2],
-                extents[3], 0, 0);
-    }
-
-    double spacing = mpRegularGrid->GetSpacing()/mpRegularGrid->GetReferenceLengthScale();
-    p_image->SetSpacing(spacing, spacing, spacing);
-
-    c_vector<double,DIM> origin = mpRegularGrid->GetOrigin().GetLocation(mpRegularGrid->GetReferenceLengthScale());
-    if(DIM==3)
-    {
-        p_image->SetOrigin(origin[0], origin[1], origin[2]);
-    }
-    else
-    {
-        p_image->SetOrigin(origin[0], origin[1], 0.0);
-    }
-
-    this->mpVtkSolution = p_image;
-    this->mSolution = std::vector<double>(0.0, mpRegularGrid->GetNumberOfLocations());
+    this->mSolution = std::vector<double>(0.0, this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfLocations());
 }
 
 template<unsigned DIM>
 void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector<double>& data)
 {
-    if(!this->mpVtkSolution)
+    if(this->mSolution.size()==0)
     {
         this->Setup();
     }
-
-    vtkSmartPointer<vtkDoubleArray> pPointData = vtkSmartPointer<vtkDoubleArray>::New();
-    pPointData->SetNumberOfComponents(1);
-    pPointData->SetNumberOfTuples(data.size());
-    pPointData->SetName(this->GetLabel().c_str());
-    for (unsigned i = 0; i < data.size(); i++)
-    {
-        pPointData->SetValue(i, data[i]);
-    }
-    this->mpVtkSolution->GetPointData()->AddArray(pPointData);
+    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(data, true, this->GetLabel());
 
     // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
     this->mSolution = std::vector<double>(data.size(), 0.0);
@@ -127,7 +90,6 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector
     {
         this->mSolution[i] = data[i];
     }
-
     this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*this->mReferenceConcentration);
     for (unsigned i = 0; i < data.size(); i++)
     {
@@ -138,22 +100,19 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector
 template<unsigned DIM>
 void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector<units::quantity<unit::concentration> >& data)
 {
-    if(!this->mpVtkSolution)
+    if(this->mSolution.size()==0)
     {
         this->Setup();
     }
 
-    vtkSmartPointer<vtkDoubleArray> pPointData = vtkSmartPointer<vtkDoubleArray>::New();
-    pPointData->SetNumberOfComponents(1);
-    pPointData->SetNumberOfTuples(data.size());
-    pPointData->SetName((this->GetLabel()).c_str());
+    // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
+    this->mSolution = std::vector<double>(data.size(), 0.0);
     for (unsigned i = 0; i < data.size(); i++)
     {
-        pPointData->SetValue(i, data[i]/this->mReferenceConcentration);
+        this->mSolution[i] = data[i]/this->mReferenceConcentration;
     }
-    this->mpVtkSolution->GetPointData()->AddArray(pPointData);
+    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(this->mSolution, true, this->GetLabel());
 
-    // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
     this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*this->mReferenceConcentration);
     for (unsigned i = 0; i < data.size(); i++)
     {
@@ -164,24 +123,16 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector
 template<unsigned DIM>
 void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateCellData()
 {
-    if(!this->mpVtkSolution)
+    if(this->mSolution.size()==0)
     {
         this->Setup();
     }
-
-    if(!this->CellPopulationIsSet())
-    {
-        EXCEPTION("The DiscreteContinuum solver needs a cell population for this operation.");
-    }
-
-    this->mpGridCalculator->SetCellPopulation(*(this->mpCellPopulation), this->mCellPopulationReferenceLength);
-    std::vector<std::vector<CellPtr> > point_cell_map = this->mpGridCalculator->rGetCellMap();
+    std::vector<std::vector<CellPtr> > point_cell_map = this->mpDensityMap->GetGridCalculator()->rGetCellMap();
     for(unsigned idx=0; idx<point_cell_map.size(); idx++)
     {
         for(unsigned jdx=0; jdx<point_cell_map[idx].size(); jdx++)
         {
-            point_cell_map[idx][jdx]->GetCellData()->SetItem(this->mLabel,
-                    this->mConcentrations[idx]/this->mCellPopulationReferenceConcentration);
+            point_cell_map[idx][jdx]->GetCellData()->SetItem(this->mLabel, this->mSolution[idx]);
         }
     }
 }
@@ -221,13 +172,19 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Write()
         writer.SetFilename((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/solution" + extension));
     }
 
+    boost::shared_ptr<RegularGrid<DIM> >pRegularGrid = boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
+    if(!pRegularGrid)
+    {
+        EXCEPTION("Can't cast to regular grid during Write");
+    }
+
     std::vector<unsigned> whole_extents(6, 0);
-    c_vector<unsigned, 3> dimensions = mpRegularGrid->GetDimensions();
+    c_vector<unsigned, 3> dimensions = pRegularGrid->GetDimensions();
     whole_extents[1] = dimensions[0]-1;
     whole_extents[3] = dimensions[1]-1;
     whole_extents[5] = dimensions[2]-1;
     writer.SetWholeExtents(whole_extents);
-    writer.SetImage(vtkImageData::SafeDownCast(this->mpVtkSolution));
+    writer.SetImage(vtkImageData::SafeDownCast(this->GetVtkSolution()));
     writer.Write();
 }
 

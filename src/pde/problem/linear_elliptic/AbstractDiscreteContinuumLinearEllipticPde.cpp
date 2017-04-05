@@ -57,9 +57,7 @@ AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::~AbstractDis
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 c_matrix<double, SPACE_DIM, SPACE_DIM> AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiffusionTerm(const ChastePoint<SPACE_DIM>&)
 {
-    units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
-    units::quantity<unit::time> time_scale = BaseUnits::Instance()->GetReferenceTimeScale();
-    double dimensionless_diffusivity = this->mDiffusivity*time_scale/(length_scale*length_scale);
+    double dimensionless_diffusivity = this->mDiffusivity*this->mReferenceTimeScale/(this->mReferenceLengthScale*this->mReferenceLengthScale);
     return identity_matrix<double>(SPACE_DIM)*dimensionless_diffusivity;
 }
 
@@ -90,25 +88,23 @@ void AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetCont
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSourceStrengths()
 {
-    if(!this->mpGridCalculator)
+    if(this->mDiscreteSources.size()>0)
     {
-        EXCEPTION("A grid has not been set for the determination of source strengths.");
-    }
-    unsigned num_locations = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
-    mDiscreteConstantSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(num_locations,
-            0.0*unit::mole_per_metre_cubed_per_second);
-    mDiscreteLinearSourceStrengths = std::vector<units::quantity<unit::rate> >(num_locations, 0.0*unit::per_second);
+        unsigned num_locations = this->mDiscreteSources[0]->GetDensityMap()->GetGridCalculator()->GetGrid()->GetNumberOfLocations();
 
-    for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
-    {
-        this->mDiscreteSources[idx]->SetGridCalculator(this->mpGridCalculator);
-        std::vector<units::quantity<unit::rate> > result = this->mDiscreteSources[idx]->GetLinearInUValues();
-        std::transform(mDiscreteLinearSourceStrengths.begin( ), mDiscreteLinearSourceStrengths.end( ),
-                       result.begin( ), mDiscreteLinearSourceStrengths.begin( ),std::plus<units::quantity<unit::rate> >( ));
+        mDiscreteConstantSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(num_locations,
+                0.0*unit::mole_per_metre_cubed_per_second);
+        mDiscreteLinearSourceStrengths = std::vector<units::quantity<unit::rate> >(num_locations, 0.0*unit::per_second);
+        for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
+        {
+            std::vector<units::quantity<unit::rate> > result = this->mDiscreteSources[idx]->GetLinearInUValues();
+            std::transform(mDiscreteLinearSourceStrengths.begin( ), mDiscreteLinearSourceStrengths.end( ),
+                           result.begin( ), mDiscreteLinearSourceStrengths.begin( ),std::plus<units::quantity<unit::rate> >( ));
 
-        std::vector<units::quantity<unit::concentration_flow_rate> > result2 = this->mDiscreteSources[idx]->GetConstantInUValues();
-        std::transform(mDiscreteConstantSourceStrengths.begin( ), mDiscreteConstantSourceStrengths.end( ),
-                       result2.begin( ), mDiscreteConstantSourceStrengths.begin( ),std::plus<units::quantity<unit::concentration_flow_rate> >( ));
+            std::vector<units::quantity<unit::concentration_flow_rate> > result2 = this->mDiscreteSources[idx]->GetConstantInUValues();
+            std::transform(mDiscreteConstantSourceStrengths.begin( ), mDiscreteConstantSourceStrengths.end( ),
+                           result2.begin( ), mDiscreteConstantSourceStrengths.begin( ),std::plus<units::quantity<unit::concentration_flow_rate> >( ));
+        }
     }
 }
 

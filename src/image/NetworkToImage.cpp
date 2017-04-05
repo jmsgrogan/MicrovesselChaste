@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "Exception.hpp"
 #include "RegularGrid.hpp"
 #include "GridCalculator.hpp"
@@ -140,8 +138,10 @@ void NetworkToImage<DIM>::Update()
     p_grid->SetOrigin(DimensionalChastePoint<DIM>(origin, mGridSpacing));
 
     boost::shared_ptr<DistanceMap<DIM> > p_distance_map = DistanceMap<DIM>::Create();
-    p_distance_map->SetVesselNetwork(mpNetwork);
-    p_distance_map->SetGrid(p_grid);
+    boost::shared_ptr<DensityMap<DIM> > p_density_map = DensityMap<DIM>::Create();
+    p_density_map->SetVesselNetwork(mpNetwork);
+    p_density_map->SetGrid(p_grid);
+    p_distance_map->SetDensityMap(p_density_map);
     p_distance_map->SetUseSegmentRadii(true);
     p_distance_map->Setup();
     p_distance_map->Solve();

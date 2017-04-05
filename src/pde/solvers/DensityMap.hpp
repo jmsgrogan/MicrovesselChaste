@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef DENSITYMAPA_HPP_
-#define DENSITYMAPA_HPP_
+#ifndef DENSITYMAP_HPP_
+#define DENSITYMAP_HPP_
 
 #include <vtkUnstructuredGrid.h>
 #include "SmartPointers.hpp"
@@ -45,9 +45,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "AbstractCellPopulation.hpp"
 
 /**
- * Calculate the density of vessel network features (nodes, branches, segments) or cells on a
- * grid. The density map can then be used in the solution of PDEs with discrete sinks or
- * sources.
+ * This class is central to the discrete continuum solvers. It calculates the density of discrete entities (vessels, biological cells)
+ * at each grid location (lattice point or grid cell centroid). The resulting density maps can the be used to generate sink or
+ * source terms in continuum PDEs. The density map stores both the grids used in the DiscreteContinuum solvers and the discrete
+ * entities such as vessel networks or cell populations. It uses the GridCalculator for relatively quick interpolation between
+ * discrete entities and grid based fields.
  */
 template<unsigned DIM>
 class DensityMap
@@ -61,6 +63,16 @@ class DensityMap
      * The cell population.
      */
     AbstractCellPopulation<DIM>* mpCellPopulation;
+
+    /**
+     * The reference length scale for the cellpopulation.
+     */
+    units::quantity<unit::length> mCellPopulationReferenceLength;
+
+    /**
+     * The reference concentration scale for the cellpopulation.
+     */
+    units::quantity<unit::concentration> mCellPopulationReferenceConcentration;
 
     /**
      * Dimensionless vessel surface area density
@@ -130,10 +142,11 @@ public:
      */
     ~DensityMap();
 
-    double LengthOfLineInCell(vtkSmartPointer<vtkUnstructuredGrid> pSamplingGrid, c_vector<double, DIM> loc1,
-            c_vector<double, DIM> loc2, unsigned index, bool loc1InCell, bool loc2InCell);
-
-    bool IsPointInCell(vtkSmartPointer<vtkCellLocator> pCellLocator, c_vector<double, DIM> loc, unsigned index);
+    /**
+     * Has a cell population been set?
+     * @return whether a cell population been set.
+     */
+    bool CellPopulationIsSet();
 
     /**
      * Return the grid in a form suitable for length of line in box computations
@@ -148,6 +161,12 @@ public:
      * @return the processed grid
      */
     vtkSmartPointer<vtkUnstructuredGrid> GetSamplingGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
+
+    /**
+     * Return the grid calculator
+     * @return the grid calculator
+     */
+    boost::shared_ptr<GridCalculator<DIM> > GetGridCalculator();
 
     /**
      * Get the vessel surface area density
@@ -215,6 +234,30 @@ public:
     const std::vector<double>& rGetCellDensity(boost::shared_ptr<AbstractCellMutationState> pMutationState, bool update=true);
 
     /**
+     * Return true if the specified point is in the cell with the provided index. A VTK cell locator containing
+     * the grid corresponding to the input index is also required.
+     * @param pCellLocator a VTK cell locator with the indexed grid
+     * @param loc the location to be checked
+     * @param index the index of the cell to be checked
+     * @return true if the specified point is in the cell
+     */
+    bool IsPointInCell(vtkSmartPointer<vtkCellLocator> pCellLocator, c_vector<double, DIM> loc, unsigned index);
+
+    /**
+     * Return the length of the provided line segment in the indexed cell. Provide the VTK grid corresponding
+     * to the index and whether or not each end of the line segment is inside the cell.
+     * @param pSamplingGrid the grid corresponding to the supplied index
+     * @param loc1 the start point of the line
+     * @param loc2 the end point of the line
+     * @param index the cell index
+     * @param loc1InCell is the first point in the cell
+     * @param loc2InCell is the second point in the cell
+     * @return the dimensionless length of the line in the cell
+     */
+    double LengthOfLineInCell(vtkSmartPointer<vtkUnstructuredGrid> pSamplingGrid, c_vector<double, DIM> loc1,
+            c_vector<double, DIM> loc2, unsigned index, bool loc1InCell, bool loc2InCell);
+
+    /**
      * Set the vessel network
      * @param pNetwork the vessel network
      */
@@ -226,20 +269,22 @@ public:
      * @param cellPopulationReferenceLength the length scale for the cell population
      * @param cellPopulationReferenceConcentration the concentration scale for the cell population
      */
-    void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation);
+    void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
+                           units::quantity<unit::length> cellPopulationReferenceLength,
+                           units::quantity<unit::concentration> cellPopulationReferenceConcentration);
 
     /**
-     * Set the regular grid
-     * @param pGrid the regular grid
+     * Set the grid
+     * @param pGrid the grid
      */
-    void SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
+    void SetGrid(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
 
     /**
-     * Set the mesh
-     * @param pGrid the mesh
+     * Set the grid calculator directly
+     * @param pGridCalculator the grid calculator
      */
-    void SetGrid(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pGrid);
+    void SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator);
 
 };
 
-#endif /* DENSITYMAPA_HPP_ */
+#endif /* DENSITYMAP_HPP_ */

@@ -41,18 +41,17 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
 #include <vtkDataSet.h>
 #include <vtkSmartPointer.h>
-#include <vtkPoints.h>
 #include "OutputFileHandler.hpp"
-#include "VesselNetwork.hpp"
-#include "AbstractCellPopulation.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
 #include "RegularGrid.hpp"
 #include "DiscreteContinuumMesh.hpp"
-#include "GridCalculator.hpp"
 #include "UnitCollection.hpp"
-//#include "AbstractDiscreteContinuumPde.hpp"
+#include "DensityMap.hpp"
 #include "AbstractDiscreteContinuumGrid.hpp"
 
+/**
+ * Forward declaration as some PDEs can have DiscreteContinuumSolvers in their DiscreteSources
+ */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM = ELEMENT_DIM>
 class AbstractDiscreteContinuumPde;
 
@@ -68,26 +67,6 @@ class AbstractDiscreteContinuumSolver
 {
 
 protected:
-
-    /**
-     * The vessel network.
-     */
-    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
-
-    /**
-     * The cell population.
-     */
-    AbstractCellPopulation<DIM>* mpCellPopulation;
-
-    /**
-     * The reference length scale for the cellpopulation.
-     */
-    units::quantity<unit::length> mCellPopulationReferenceLength;
-
-    /**
-     * The reference concentration scale for the cellpopulation.
-     */
-    units::quantity<unit::concentration> mCellPopulationReferenceConcentration;
 
     /**
      * File handler containing the output directory
@@ -142,14 +121,9 @@ protected:
     std::vector<units::quantity<unit::concentration> > mConcentrations;
 
     /**
-     * A grid calculator
+     * A density map
      */
-    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
-
-    /**
-     * A vtk representation of the solution
-     */
-    vtkSmartPointer<vtkDataSet> mpVtkSolution;
+    boost::shared_ptr<DensityMap<DIM> > mpDensityMap;
 
 public:
 
@@ -168,12 +142,6 @@ public:
      * @param pBoundaryCondition the boundary condition
      */
     void AddBoundaryCondition(boost::shared_ptr<DiscreteContinuumBoundaryCondition<DIM> > pBoundaryCondition);
-
-    /**
-     * Has a cell population been set?
-     * @return whether a cell population been set.
-     */
-    bool CellPopulationIsSet();
 
     /**
      * Return the value of the field with ordering determined by child classes
@@ -196,10 +164,10 @@ public:
     virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(vtkSmartPointer<vtkPoints> pSamplePoints);
 
     /**
-     * Return the grid calculator
-     * @return the grid calculator
+     * Return the density map
+     * @return the density map
      */
-    boost::shared_ptr<GridCalculator<DIM> > GetGridCalculator();
+    boost::shared_ptr<DensityMap<DIM> > GetDensityMap();
 
     /**
      * Return the name of the field being solved for
@@ -212,6 +180,12 @@ public:
      * @return the DiscreteContinuum linear elliptic pde
      */
     boost::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > GetPde();
+
+    /**
+     * Return the reference length scale, needs a grid first
+     * @return the reference length value
+     */
+    units::quantity<unit::length> GetReferenceLength();
 
     /**
      * Return the reference concentration value.
@@ -246,16 +220,6 @@ public:
     virtual vtkSmartPointer<vtkDataSet> GetVtkSolution();
 
     /**
-     * Set the cell population
-     * @param rCellPopulation a reference to the cell population
-     * @param cellPopulationReferenceLength the length scale for the cell population
-     * @param cellPopulationReferenceConcentration the concentration scale for the cell population
-     */
-    void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
-                           units::quantity<unit::length> cellPopulationReferenceLength,
-                           units::quantity<unit::concentration> cellPopulationReferenceConcentration);
-
-    /**
      * Set the file handler containing the working directory
      * @param pOutputFileHandler the file handler containing the working directory
      */
@@ -280,6 +244,12 @@ public:
     void SetPde(boost::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > pPde);
 
     /**
+     * Return true if a density map has already been set
+     * @return true if a density map has already been set
+     */
+    bool HasDensityMap();
+
+    /**
      * Operations to be performed prior to the first solve
      */
     virtual void Setup() = 0;
@@ -291,28 +261,22 @@ public:
     void SetReferenceConcentration(units::quantity<unit::concentration> referenceConcentration);
 
     /**
-     * Set the vessel network
-     * @param pNetwork the vessel network
-     */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
-
-    /**
      * Set whether to write the solution to file on next solve
      * @param write write the solution
      */
     void SetWriteSolution(bool write=true);
 
     /**
-     * Set the regular grid
-     * @param pGrid the regular grid
+     * Set the regular grid. Only do this if not working with discrete sinks or sources. Otherwise
+     * supply a density map.
+     * @param pGrid the grid
      */
-    void SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
+    void SetGrid(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
 
     /**
-     * Set the mesh
-     * @param pGrid the mesh
+     * Set the density map
      */
-    void SetGrid(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pGrid);
+    void SetDensityMap(boost::shared_ptr<DensityMap<DIM> > pDensityMap);
 
     /**
      * Do the solve
@@ -325,7 +289,7 @@ public:
     virtual void Update() = 0;
 
     /**
-     * Set the cell data to the values in the field
+     * Set the cell data to the values in the solution field
      */
     virtual void UpdateCellData() = 0;
 

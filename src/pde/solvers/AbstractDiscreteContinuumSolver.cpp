@@ -46,11 +46,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 template<unsigned DIM>
 AbstractDiscreteContinuumSolver<DIM>::AbstractDiscreteContinuumSolver()
-    :   mpNetwork(),
-        mpCellPopulation(NULL),
-        mCellPopulationReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
-        mCellPopulationReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale()),
-        mpOutputFileHandler(),
+    :   mpOutputFileHandler(),
         mFilename(),
         mLabel("Default"),
         IsSetupForSolve(false),
@@ -60,8 +56,7 @@ AbstractDiscreteContinuumSolver<DIM>::AbstractDiscreteContinuumSolver()
         mReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale()),
         mSolution(),
         mConcentrations(),
-        mpGridCalculator(),
-        mpVtkSolution()
+        mpDensityMap()
 {
 
 }
@@ -79,12 +74,6 @@ void AbstractDiscreteContinuumSolver<DIM>::AddBoundaryCondition(boost::shared_pt
 }
 
 template<unsigned DIM>
-bool AbstractDiscreteContinuumSolver<DIM>::CellPopulationIsSet()
-{
-    return bool(mpCellPopulation);
-}
-
-template<unsigned DIM>
 std::vector<units::quantity<unit::concentration> > AbstractDiscreteContinuumSolver<DIM>::GetConcentrations()
 {
     return mConcentrations;
@@ -97,13 +86,13 @@ const std::string& AbstractDiscreteContinuumSolver<DIM>::GetLabel()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<GridCalculator<DIM> > AbstractDiscreteContinuumSolver<DIM>::GetGridCalculator()
+boost::shared_ptr<DensityMap<DIM> > AbstractDiscreteContinuumSolver<DIM>::GetDensityMap()
 {
-    if(!mpGridCalculator)
+    if(!mpDensityMap)
     {
-        EXCEPTION("A GridCalculator has not been set.");
+        EXCEPTION("A DensityMp has not been set.");
     }
-    return mpGridCalculator;
+    return mpDensityMap;
 }
 
 template<unsigned DIM>
@@ -117,13 +106,20 @@ boost::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > AbstractDiscreteConti
 }
 
 template<unsigned DIM>
+units::quantity<unit::length> AbstractDiscreteContinuumSolver<DIM>::GetReferenceLength()
+{
+    return GetDensityMap()->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
+}
+
+template<unsigned DIM>
+bool AbstractDiscreteContinuumSolver<DIM>::HasDensityMap()
+{
+    return bool(mpDensityMap);
+}
+
+template<unsigned DIM>
 std::vector<units::quantity<unit::concentration> > AbstractDiscreteContinuumSolver<DIM>::GetConcentrations(vtkSmartPointer<vtkPoints> pSamplePoints)
 {
-    if(!this->mpVtkSolution)
-    {
-        this->Setup();
-    }
-
     std::vector<units::quantity<unit::concentration> > sampled_solution(pSamplePoints->GetNumberOfPoints(),
             0.0*this->mReferenceConcentration);
 
@@ -134,10 +130,10 @@ std::vector<units::quantity<unit::concentration> > AbstractDiscreteContinuumSolv
     vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
     #if VTK_MAJOR_VERSION <= 5
         p_probe_filter->SetInput(p_polydata);
-        p_probe_filter->SetSource(this->mpVtkSolution);
+        p_probe_filter->SetSource(GetDensityMap()->GetGridCalculator()->GetGrid()->GetGlobalVtkGrid());
     #else
         p_probe_filter->SetInputData(p_polydata);
-        p_probe_filter->SetSourceData(this->mpVtkSolution);
+        p_probe_filter->SetSourceData(GetDensityMap()->GetGridCalculator()->GetGrid()->GetGlobalVtkGrid());
     #endif
     p_probe_filter->Update();
     vtkSmartPointer<vtkPointData> p_point_data = p_probe_filter->GetOutput()->GetPointData();
@@ -159,11 +155,6 @@ std::vector<units::quantity<unit::concentration> > AbstractDiscreteContinuumSolv
 template<unsigned DIM>
 std::vector<double> AbstractDiscreteContinuumSolver<DIM>::GetSolution(vtkSmartPointer<vtkPoints> pSamplePoints)
 {
-    if(!this->mpVtkSolution)
-    {
-        this->Setup();
-    }
-
     std::vector<double> sampled_solution(pSamplePoints->GetNumberOfPoints(), 0.0);
 
     // Sample the field at these locations
@@ -173,10 +164,10 @@ std::vector<double> AbstractDiscreteContinuumSolver<DIM>::GetSolution(vtkSmartPo
     vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
     #if VTK_MAJOR_VERSION <= 5
         p_probe_filter->SetInput(p_polydata);
-        p_probe_filter->SetSource(this->mpVtkSolution);
+        p_probe_filter->SetSource(GetDensityMap()->GetGridCalculator()->GetGrid()->GetGlobalVtkGrid());
     #else
         p_probe_filter->SetInputData(p_polydata);
-        p_probe_filter->SetSourceData(this->mpVtkSolution);
+        p_probe_filter->SetSourceData(GetDensityMap()->GetGridCalculator()->GetGrid()->GetGlobalVtkGrid());
     #endif
     p_probe_filter->Update();
     vtkSmartPointer<vtkPointData> p_point_data = p_probe_filter->GetOutput()->GetPointData();
@@ -210,21 +201,7 @@ std::vector<double> AbstractDiscreteContinuumSolver<DIM>::GetSolution()
 template<unsigned DIM>
 vtkSmartPointer<vtkDataSet> AbstractDiscreteContinuumSolver<DIM>::GetVtkSolution()
 {
-    if(!mpVtkSolution)
-    {
-        Setup();
-    }
-    return mpVtkSolution;
-}
-
-template<unsigned DIM>
-void AbstractDiscreteContinuumSolver<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
-                                                             units::quantity<unit::length> cellPopulationReferenceLength,
-                                                             units::quantity<unit::concentration> cellPopulationReferenceConcentration)
-{
-    mpCellPopulation = &rCellPopulation;
-    mCellPopulationReferenceLength = cellPopulationReferenceLength;
-    mCellPopulationReferenceConcentration = cellPopulationReferenceConcentration;
+    return GetDensityMap()->GetGridCalculator()->GetGrid()->GetGlobalVtkGrid();
 }
 
 template<unsigned DIM>
@@ -246,17 +223,16 @@ void AbstractDiscreteContinuumSolver<DIM>::SetLabel(const std::string& rLabel)
 }
 
 template<unsigned DIM>
-void AbstractDiscreteContinuumSolver<DIM>::SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid)
+void AbstractDiscreteContinuumSolver<DIM>::SetGrid(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
 {
-    mpGridCalculator = boost::shared_ptr<GridCalculator<DIM> >(new GridCalculator<DIM>);
-    mpGridCalculator->SetGrid(pGrid);
+    mpDensityMap = DensityMap<DIM>::Create();
+    mpDensityMap->SetGrid(pGrid);
 }
 
 template<unsigned DIM>
-void AbstractDiscreteContinuumSolver<DIM>::SetGrid(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pGrid)
+void AbstractDiscreteContinuumSolver<DIM>::SetDensityMap(boost::shared_ptr<DensityMap<DIM> > pDensityMap)
 {
-    mpGridCalculator = boost::shared_ptr<GridCalculator<DIM> >(new GridCalculator<DIM>);
-    mpGridCalculator->SetGrid(pGrid);
+    mpDensityMap = pDensityMap;
 }
 
 template<unsigned DIM>
@@ -269,12 +245,6 @@ template<unsigned DIM>
 void AbstractDiscreteContinuumSolver<DIM>::SetReferenceConcentration(units::quantity<unit::concentration> referenceConcentration)
 {
     mReferenceConcentration = referenceConcentration;
-}
-
-template<unsigned DIM>
-void AbstractDiscreteContinuumSolver<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
-{
-    mpNetwork = pNetwork;
 }
 
 template<unsigned DIM>

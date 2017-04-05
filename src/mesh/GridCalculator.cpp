@@ -327,19 +327,11 @@ void GridCalculator<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPo
 }
 
 template<unsigned DIM>
-void GridCalculator<DIM>::SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid)
+void GridCalculator<DIM>::SetGrid(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
 {
     mpGrid = pGrid;
-    mHasRegularGrid = true;
-    mHasUnstructuredGrid = false;
-}
-
-template<unsigned DIM>
-void GridCalculator<DIM>::SetGrid(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pGrid)
-{
-    mpGrid = pGrid;
-    mHasRegularGrid = false;
-    mHasUnstructuredGrid = true;
+    mHasRegularGrid = bool(boost::dynamic_pointer_cast<RegularGrid<DIM> >(pGrid));
+    mHasUnstructuredGrid = !mHasRegularGrid;
 }
 
 template<unsigned DIM>

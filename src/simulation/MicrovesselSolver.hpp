@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef MICROVESSELSOLVER_HPP_
 #define MICROVESSELSOLVER_HPP_
 
@@ -45,6 +43,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "SmartPointers.hpp"
 #include "VesselNetwork.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
+#include "AbstractDiscreteContinuumGrid.hpp"
 #include "AbstractCellPopulation.hpp"
 #include "AngiogenesisSolver.hpp"
 #include "RegressionSolver.hpp"
@@ -114,6 +113,11 @@ class MicrovesselSolver
      */
     boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > mpCellPopulation;
 
+    /**
+     * The default discrete continuum grid
+     */
+    boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > mpDefaultDiscreteContinuumGrid;
+
 public:
 
     /**
@@ -165,6 +169,13 @@ public:
      * @param pAngiogenesisSolver the solver for structural adaptation
      */
     void SetAngiogenesisSolver(boost::shared_ptr<AngiogenesisSolver<DIM> > pAngiogenesisSolver);
+
+    /**
+     * Set the grid to be used if one has not otherwise been specified in the PDE solvers. This
+     * is more efficient than individually assigning grids if all PDEs are to be solved on the same grid.
+     * @param pDefaultGrid the grid to be used if one has not otherwise been specified in the PDE solvers.
+     */
+    void SetDefaultGrid(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pDefaultGrid);
 
     /**
      * Set the output directory for results

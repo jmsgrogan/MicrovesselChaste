@@ -46,7 +46,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 DensityMap<DIM>::DensityMap() :
         mpNetwork(),
-        mpCellPopulation(),
+        mpCellPopulation(NULL),
+        mCellPopulationReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
+        mCellPopulationReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale()),
         mVesselSurfaceAreaDensity(),
         mVesselLineDensity(),
         mPerfusedVesselSurfaceAreaDensity(),
@@ -72,6 +74,12 @@ template<unsigned DIM>
 DensityMap<DIM>::~DensityMap()
 {
 
+}
+
+template<unsigned DIM>
+bool DensityMap<DIM>::CellPopulationIsSet()
+{
+    return bool(mpCellPopulation);
 }
 
 template<unsigned DIM>
@@ -226,6 +234,12 @@ bool DensityMap<DIM>::IsPointInCell(vtkSmartPointer<vtkCellLocator> pCellLocator
 }
 
 template<unsigned DIM>
+boost::shared_ptr<GridCalculator<DIM> > DensityMap<DIM>::GetGridCalculator()
+{
+    return this->mpGridCalculator;
+}
+
+template<unsigned DIM>
 const std::vector<double>& DensityMap<DIM>::rGetVesselSurfaceAreaDensity(bool update)
 {
     unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
@@ -276,6 +290,9 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselSurfaceAreaDensity(bool up
                 p_sampling_grid = GetSamplingGrid(vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid()));
             }
         }
+        vtkSmartPointer<vtkCellLocator> p_sampling_locator = vtkSmartPointer<vtkCellLocator>::New();
+        p_sampling_locator->SetDataSet(p_sampling_grid);
+        p_sampling_locator->BuildLocator();
 
         for(unsigned idx=0; idx<segment_map.size();idx++)
         {
@@ -283,8 +300,8 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselSurfaceAreaDensity(bool up
             {
                 c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().GetLocation(length_scale);
                 c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().GetLocation(length_scale);
-                bool point1_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point1_loc, idx);
-                bool point2_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point2_loc, idx);
+                bool point1_in_cell = IsPointInCell(p_sampling_locator, point1_loc, idx);
+                bool point2_in_cell = IsPointInCell(p_sampling_locator, point2_loc, idx);
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
                         idx, point1_in_cell, point2_in_cell);
                 units::quantity<unit::length> length_in_cell = dimless_length_in_cell*length_scale;
@@ -422,6 +439,9 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselSurfaceAreaDensity
                 p_sampling_grid = GetSamplingGrid(vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid()));
             }
         }
+        vtkSmartPointer<vtkCellLocator> p_sampling_locator = vtkSmartPointer<vtkCellLocator>::New();
+        p_sampling_locator->SetDataSet(p_sampling_grid);
+        p_sampling_locator->BuildLocator();
 
         for(unsigned idx=0; idx<segment_map.size();idx++)
         {
@@ -429,8 +449,8 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselSurfaceAreaDensity
             {
                 c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().GetLocation(length_scale);
                 c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().GetLocation(length_scale);
-                bool point1_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point1_loc, idx);
-                bool point2_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point2_loc, idx);
+                bool point1_in_cell = IsPointInCell(p_sampling_locator, point1_loc, idx);
+                bool point2_in_cell = IsPointInCell(p_sampling_locator, point2_loc, idx);
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
                         idx, point1_in_cell, point2_in_cell);
                 units::quantity<unit::length> length_in_cell = dimless_length_in_cell*length_scale;
@@ -497,6 +517,9 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselLineDensity(bool u
                 p_sampling_grid = GetSamplingGrid(vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid()));
             }
         }
+        vtkSmartPointer<vtkCellLocator> p_sampling_locator = vtkSmartPointer<vtkCellLocator>::New();
+        p_sampling_locator->SetDataSet(p_sampling_grid);
+        p_sampling_locator->BuildLocator();
 
         for(unsigned idx=0; idx<segment_map.size();idx++)
         {
@@ -504,8 +527,8 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselLineDensity(bool u
             {
                 c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().GetLocation(length_scale);
                 c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().GetLocation(length_scale);
-                bool point1_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point1_loc, idx);
-                bool point2_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point2_loc, idx);
+                bool point1_in_cell = IsPointInCell(p_sampling_locator, point1_loc, idx);
+                bool point2_in_cell = IsPointInCell(p_sampling_locator, point2_loc, idx);
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
                         idx, point1_in_cell, point2_in_cell);
                 units::quantity<unit::length> length_in_cell = dimless_length_in_cell*length_scale;
@@ -637,6 +660,9 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselQuantityDensity(const std:
                 p_sampling_grid = GetSamplingGrid(vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid()));
             }
         }
+        vtkSmartPointer<vtkCellLocator> p_sampling_locator = vtkSmartPointer<vtkCellLocator>::New();
+        p_sampling_locator->SetDataSet(p_sampling_grid);
+        p_sampling_locator->BuildLocator();
 
         for(unsigned idx=0; idx<segment_map.size();idx++)
         {
@@ -644,8 +670,8 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselQuantityDensity(const std:
             {
                 c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().GetLocation(length_scale);
                 c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().GetLocation(length_scale);
-                bool point1_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point1_loc, idx);
-                bool point2_in_cell = IsPointInCell(this->mpGridCalculator->GetGrid()->GetVtkCellLocator(), point2_loc, idx);
+                bool point1_in_cell = IsPointInCell(p_sampling_locator, point1_loc, idx);
+                bool point2_in_cell = IsPointInCell(p_sampling_locator, point2_loc, idx);
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
                         idx, point1_in_cell, point2_in_cell);
                 units::quantity<unit::length> length_in_cell = dimless_length_in_cell*length_scale;
@@ -725,17 +751,26 @@ const std::vector<double>& DensityMap<DIM>::rGetCellDensity(boost::shared_ptr<Ab
 }
 
 template<unsigned DIM>
-void DensityMap<DIM>::SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid)
+void DensityMap<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
+                                                             units::quantity<unit::length> cellPopulationReferenceLength,
+                                                             units::quantity<unit::concentration> cellPopulationReferenceConcentration)
+{
+    mpCellPopulation = &rCellPopulation;
+    mCellPopulationReferenceLength = cellPopulationReferenceLength;
+    mCellPopulationReferenceConcentration = cellPopulationReferenceConcentration;
+}
+
+template<unsigned DIM>
+void DensityMap<DIM>::SetGrid(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
 {
     mpGridCalculator = boost::shared_ptr<GridCalculator<DIM> >(new GridCalculator<DIM>);
     mpGridCalculator->SetGrid(pGrid);
 }
 
 template<unsigned DIM>
-void DensityMap<DIM>::SetGrid(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pGrid)
+void DensityMap<DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator)
 {
-    mpGridCalculator = boost::shared_ptr<GridCalculator<DIM> >(new GridCalculator<DIM>);
-    mpGridCalculator->SetGrid(pGrid);
+    mpGridCalculator = pGridCalculator;
 }
 
 template<unsigned DIM>
@@ -744,12 +779,6 @@ void DensityMap<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pN
     mpNetwork = pNetwork;
 }
 
-template<unsigned DIM>
-void DensityMap<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation)
-{
-    mpCellPopulation = &rCellPopulation;
-}
-
 // Explicit instantiation
-template class DensityMap<2> ;
-template class DensityMap<3> ;
+template class DensityMap<2>;
+template class DensityMap<3>;

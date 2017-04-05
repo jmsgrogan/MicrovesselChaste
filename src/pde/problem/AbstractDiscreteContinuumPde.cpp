@@ -42,8 +42,9 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::AbstractDiscreteContinuumPde() :
             mDiffusivity(1.0 * unit::metre_squared_per_second),
             mDiscreteSources(),
-            mpGridCalculator(),
-            mReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale())
+            mReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale()),
+            mReferenceLengthScale(BaseUnits::Instance()->GetReferenceLengthScale()),
+            mReferenceTimeScale(BaseUnits::Instance()->GetReferenceTimeScale())
 {
 
 }
@@ -79,15 +80,21 @@ void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetIsotropicDiffusion
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<SPACE_DIM> > pRegularGrid)
-{
-    mpGridCalculator = pRegularGrid;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetReferenceConcentration(units::quantity<unit::concentration> referenceConcentration)
 {
     mReferenceConcentration = referenceConcentration;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetReferenceLength(units::quantity<unit::length> referenceLength)
+{
+    mReferenceLengthScale = referenceLength;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetReferenceTime(units::quantity<unit::time> referenceTime)
+{
+    mReferenceTimeScale = referenceTime;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

@@ -56,11 +56,6 @@ class DiscreteSource
 protected:
 
     /**
-     * The grid for solvers
-     */
-    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
-
-    /**
      * Locations for POINT type sources
      */
     std::vector<DimensionalChastePoint<DIM> > mPoints;
@@ -111,6 +106,12 @@ public:
     virtual std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInUValues();
 
     /**
+     * Return the density map
+     * @param pMap the density map
+     */
+    boost::shared_ptr<DensityMap<DIM> > GetDensityMap();
+
+    /**
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
@@ -133,12 +134,6 @@ public:
      * @param points the point locations for POINT type sources
      */
     void SetPoints(std::vector<DimensionalChastePoint<DIM> > points);
-
-    /**
-     * Set the regular grid
-     * @param pRegularGrid the regular grid
-     */
-    void SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator);
 
     /**
      * Set the value of the source for PRESCRIBED type sources

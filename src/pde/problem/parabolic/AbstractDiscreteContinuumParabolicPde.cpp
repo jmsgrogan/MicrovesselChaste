@@ -55,8 +55,8 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 c_matrix<double, SPACE_DIM, SPACE_DIM> AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiffusionTerm(const ChastePoint<SPACE_DIM>& rX,
                                                                     Element<ELEMENT_DIM,SPACE_DIM>* pElement)
 {
-    units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
-    units::quantity<unit::time> time_scale = BaseUnits::Instance()->GetReferenceTimeScale();
+    units::quantity<unit::length> length_scale = this->mReferenceLengthScale;
+    units::quantity<unit::time> time_scale = this->mReferenceTimeScale;
     double dimensionless_diffusivity = this->mDiffusivity*time_scale/(length_scale*length_scale);
     return identity_matrix<double>(SPACE_DIM)*dimensionless_diffusivity;
 }
@@ -70,22 +70,19 @@ double AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>::ComputeDuD
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void AbstractDiscreteContinuumParabolicPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSourceStrengths()
 {
-    if(!this->mpGridCalculator)
+    if(this->mDiscreteSources.size()>0)
     {
-        EXCEPTION("A grid has not been set for the determination of source strengths.");
-    }
-    unsigned num_locations = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
-    mDiscreteSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(num_locations,
-            0.0*unit::mole_per_metre_cubed_per_second);
-    for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
-    {
-        this->mDiscreteSources[idx]->SetGridCalculator(this->mpGridCalculator);
-        std::vector<units::quantity<unit::concentration_flow_rate> > result2 = this->mDiscreteSources[idx]->GetConstantInUValues();
-        std::transform(mDiscreteSourceStrengths.begin( ), mDiscreteSourceStrengths.end( ),
-                       result2.begin( ), mDiscreteSourceStrengths.begin( ),std::plus<units::quantity<unit::concentration_flow_rate> >( ));
+        unsigned num_locations = this->mDiscreteSources[0]->GetDensityMap()->GetGridCalculator()->GetGrid()->GetNumberOfLocations();
+        mDiscreteSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(num_locations,
+                0.0*unit::mole_per_metre_cubed_per_second);
+        for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
+        {
+            std::vector<units::quantity<unit::concentration_flow_rate> > result2 = this->mDiscreteSources[idx]->GetConstantInUValues();
+            std::transform(mDiscreteSourceStrengths.begin( ), mDiscreteSourceStrengths.end( ),
+                           result2.begin( ), mDiscreteSourceStrengths.begin( ),std::plus<units::quantity<unit::concentration_flow_rate> >( ));
+        }
     }
 }
-
 
 // Explicit instantiation
 template class AbstractDiscreteContinuumParabolicPde<2>;

@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTDISCRETESOURCE_HPP_
 #define TESTDISCRETESOURCE_HPP_
 
@@ -60,7 +58,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VtkMeshWriter.hpp"
 #include "GridCalculator.hpp"
 
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestDiscreteSource : public CxxTest::TestSuite
 {
@@ -72,41 +70,38 @@ public:
         units::quantity<unit::length> length(100.0*unit::microns);
 
         // Set up the grid
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(length, length, length, DimensionalChastePoint<3>());
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(length, length, DimensionalChastePoint<2>());
+
+        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         units::quantity<unit::length> grid_spacing(5.0*unit::microns);
         p_grid->GenerateFromPart(p_domain, grid_spacing);
 
-        boost::shared_ptr<GridCalculator<3> > p_grid_calc = GridCalculator<3>::Create();
+        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
 
         // Set up the discrete source
-        std::vector<DimensionalChastePoint<3> > linear_consumption_points;
-        linear_consumption_points.push_back(DimensionalChastePoint<3>(50.0, 50.0, 50.0, 1.e-6 * unit::metres));
-        boost::shared_ptr<DiscreteSource<3> > p_linear_point_source = DiscreteSource<3>::Create();
+        std::vector<DimensionalChastePoint<2> > linear_consumption_points;
+        linear_consumption_points.push_back(DimensionalChastePoint<2>(50.0, 50.0, 0.0, 1.e-6 * unit::metres));
+        boost::shared_ptr<DiscreteSource<2> > p_linear_point_source = DiscreteSource<2>::Create();
 
-        p_linear_point_source->SetLinearInUValue(1.e3 * unit::per_second);
+        p_linear_point_source->SetLinearInUValue(1.0 * unit::per_second);
         p_linear_point_source->SetPoints(linear_consumption_points);
         p_linear_point_source->SetGridCalculator(p_grid_calc);
 
-        boost::shared_ptr<DiscreteSource<3> > p_const_point_source = DiscreteSource<3>::Create();
-        units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e-4 * unit::mole_per_metre_cubed_per_second);
+        boost::shared_ptr<DiscreteSource<2> > p_const_point_source = DiscreteSource<2>::Create();
+        units::quantity<unit::concentration_flow_rate> consumption_rate(2.0 * unit::mole_per_metre_cubed_per_second);
         p_const_point_source->SetConstantInUValue(consumption_rate);
-        std::vector<DimensionalChastePoint<3> > constant_consumption_points;
-        constant_consumption_points.push_back(DimensionalChastePoint<3>(25.0, 25.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<3>(75.0, 25.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<3>(75.0, 75.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<3>(25.0, 75.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<3>(25.0, 25.0, 75.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<3>(75.0, 25.0, 75.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<3>(75.0, 75.0, 75.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<3>(25.0, 75.0, 75.0, 1.e-6 * unit::metres));
+        std::vector<DimensionalChastePoint<2> > constant_consumption_points;
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 25.0, 0.0, 1.e-6 * unit::metres));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 25.0, 0.0, 1.e-6 * unit::metres));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 75.0, 0.0, 1.e-6 * unit::metres));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 75.0, 0.0, 1.e-6 * unit::metres));
         p_const_point_source->SetPoints(constant_consumption_points);
         p_const_point_source->SetGridCalculator(p_grid_calc);
 
         // Set up a function map
-        FunctionMap<3> solver;
+        FunctionMap<2> solver;
         solver.SetGrid(p_grid);
 
         // Get the source values at each point on the grid
@@ -124,47 +119,43 @@ public:
         solver.Write();
     }
 
-    void xTestMeshFunction() throw(Exception)
+    void TestMeshFunction() throw(Exception)
     {
         units::quantity<unit::length> length(100.0*unit::microns);
 
         // Set up the grid
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(length, length, length, DimensionalChastePoint<3>());
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(length, length, DimensionalChastePoint<2>());
 
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator = DiscreteContinuumMeshGenerator<2>::Create();
         p_mesh_generator->SetDomain(p_domain);
-        p_mesh_generator->SetMaxElementArea(units::pow<3>(0.1*length));
+        p_mesh_generator->SetMaxElementArea(units::pow<3>(0.02*length));
         p_mesh_generator->Update();
 
-        boost::shared_ptr<GridCalculator<3> > p_grid_calc = GridCalculator<3>::Create();
+        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_mesh_generator->GetMesh());
 
         // Set up the discrete source
-        std::vector<DimensionalChastePoint<3> > linear_consumption_points;
-        linear_consumption_points.push_back(DimensionalChastePoint<3>(50.0, 50.0, 50.0, 1.e-6 * unit::metres));
-        boost::shared_ptr<DiscreteSource<3> > p_linear_point_source = DiscreteSource<3>::Create();
-        p_linear_point_source->SetLinearInUValue(1.e3 * unit::per_second);
+        std::vector<DimensionalChastePoint<2> > linear_consumption_points;
+        linear_consumption_points.push_back(DimensionalChastePoint<2>(50.0, 50.0, 0.0, 1.e-6 * unit::metres));
+        boost::shared_ptr<DiscreteSource<2> > p_linear_point_source = DiscreteSource<2>::Create();
+        p_linear_point_source->SetLinearInUValue(1.0 * unit::per_second);
         p_linear_point_source->SetPoints(linear_consumption_points);
         p_linear_point_source->SetGridCalculator(p_grid_calc);
 
-        boost::shared_ptr<DiscreteSource<3> > p_const_point_source = DiscreteSource<3>::Create();
-        units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e-4 * unit::mole_per_metre_cubed_per_second);
+        boost::shared_ptr<DiscreteSource<2> > p_const_point_source = DiscreteSource<2>::Create();
+        units::quantity<unit::concentration_flow_rate> consumption_rate(2.0 * unit::mole_per_metre_cubed_per_second);
         p_const_point_source->SetConstantInUValue(consumption_rate);
-        std::vector<DimensionalChastePoint<3> > constant_consumption_points;
-        constant_consumption_points.push_back(DimensionalChastePoint<3>(25.0, 25.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<3>(75.0, 25.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<3>(75.0, 75.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<3>(25.0, 75.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<3>(25.0, 25.0, 75.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<3>(75.0, 25.0, 75.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<3>(75.0, 75.0, 75.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<3>(25.0, 75.0, 75.0, 1.e-6 * unit::metres));
+        std::vector<DimensionalChastePoint<2> > constant_consumption_points;
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 25.0, 25.0, 1.e-6 * unit::metres));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 25.0, 25.0, 1.e-6 * unit::metres));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 75.0, 25.0, 1.e-6 * unit::metres));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 75.0, 25.0, 1.e-6 * unit::metres));
         p_const_point_source->SetPoints(constant_consumption_points);
         p_const_point_source->SetGridCalculator(p_grid_calc);
 
         // Set up a function map
-        SimpleLinearEllipticFiniteElementSolver<3> solver;
+        FunctionMap<2> solver;
         solver.SetGrid(p_mesh_generator->GetMesh());
 
         // Get the source values at each point on the grid
@@ -181,7 +172,7 @@ public:
         solver.Write();
     }
 
-    void xTestLinearGridPde() throw(Exception)
+    void TestLinearGridPde() throw(Exception)
     {
         units::quantity<unit::length> length(100.0*unit::microns);
 
@@ -235,7 +226,7 @@ public:
         solver.Solve();
     }
 
-    void xTestNonLinearGridPde() throw(Exception)
+    void TestNonLinearGridPde() throw(Exception)
     {
         units::quantity<unit::length> length(100.0*unit::microns);
 

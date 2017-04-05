@@ -68,44 +68,30 @@ std::vector<units::quantity<unit::concentration> > AbstractUnstructuredGridDiscr
 template<unsigned DIM>
 void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::Setup()
 {
-    if(!this->mpGridCalculator)
+    if(!this->mpDensityMap)
     {
         EXCEPTION("Mesh needed before Setup can be called.");
     }
 
-    mpMesh = boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
+    mpMesh = boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
     if(!mpMesh)
     {
         EXCEPTION("Can't cast to mesh during Setup");
     }
 
     // Set up the VTK solution
-    this->mpVtkSolution = this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid();
-    this->mSolution = std::vector<double>(0.0, this->mpGridCalculator->GetGrid()->GetNumberOfLocations());
-    if(this->mpNetwork)
-    {
-        this->mpGridCalculator->SetVesselNetwork(this->mpNetwork);
-    }
+    this->mSolution = std::vector<double>(0.0, this->mpDensityMap->GetGridCalculator()->GetNumberOfLocations());
 }
 
 template<unsigned DIM>
 void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateSolution(const std::vector<double>& data)
 {
-    if(!this->mpVtkSolution)
+    if(this->mSolution.size()==0)
     {
         this->Setup();
     }
 
-    vtkSmartPointer<vtkDoubleArray> pPointData = vtkSmartPointer<vtkDoubleArray>::New();
-    pPointData->SetNumberOfComponents(1);
-    pPointData->SetNumberOfTuples(data.size());
-    pPointData->SetName(this->GetLabel().c_str());
-    for (unsigned i = 0; i < data.size(); i++)
-    {
-        pPointData->SetValue(i, data[i]);
-    }
-    this->mpVtkSolution->GetPointData()->AddArray(pPointData);
-    mpMesh->AddNodalData(data, this->GetLabel());
+    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddNodalData(data, this->GetLabel());
 
     // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
     this->mSolution = std::vector<double>(data.size(), 0.0);
@@ -118,20 +104,11 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateSolution(const 
 template<unsigned DIM>
 void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateElementSolution(const std::vector<double>& data)
 {
-    if(!this->mpVtkSolution)
+    if(this->mSolution.size()==0)
     {
         this->Setup();
     }
-
-    vtkSmartPointer<vtkDoubleArray> pPointData = vtkSmartPointer<vtkDoubleArray>::New();
-    pPointData->SetNumberOfComponents(1);
-    pPointData->SetNumberOfTuples(data.size());
-    pPointData->SetName(this->GetLabel().c_str());
-    for (unsigned i = 0; i < data.size(); i++)
-    {
-        pPointData->SetValue(i, data[i]);
-    }
-    this->mpVtkSolution->GetCellData()->AddArray(pPointData);
+    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(data, true, this->GetLabel());
 }
 
 template<unsigned DIM>
@@ -142,15 +119,19 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateSolution(const 
         this->Setup();
     }
 
-    vtkSmartPointer<vtkDoubleArray> pPointData = vtkSmartPointer<vtkDoubleArray>::New();
-    pPointData->SetNumberOfComponents(1);
-    pPointData->SetNumberOfTuples(data.size());
-    pPointData->SetName(this->GetLabel().c_str());
+    if(this->mSolution.size()==0)
+    {
+        this->Setup();
+    }
+
+    // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
+    this->mSolution = std::vector<double>(data.size(), 0.0);
     for (unsigned i = 0; i < data.size(); i++)
     {
-        pPointData->SetValue(i, data[i]/this->mReferenceConcentration);
+        this->mSolution[i] = data[i]/this->mReferenceConcentration;
     }
-    this->mpVtkSolution->GetPointData()->AddArray(pPointData);
+
+    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddNodalData(this->mSolution, this->GetLabel());
 
     // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
     this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*this->mReferenceConcentration);
@@ -163,26 +144,18 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateSolution(const 
 template<unsigned DIM>
 void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateCellData()
 {
-    if(!this->mpVtkSolution)
+    if(this->mSolution.size()==0)
     {
         this->Setup();
     }
-
-    if(!this->CellPopulationIsSet())
+    std::vector<std::vector<CellPtr> > point_cell_map = this->mpDensityMap->GetGridCalculator()->rGetCellMap();
+    for(unsigned idx=0; idx<point_cell_map.size(); idx++)
     {
-        EXCEPTION("The DiscreteContinuum solver needs a cell population for this operation.");
+        for(unsigned jdx=0; jdx<point_cell_map[idx].size(); jdx++)
+        {
+            point_cell_map[idx][jdx]->GetCellData()->SetItem(this->mLabel, this->mSolution[idx]);
+        }
     }
-
-    // Update for FEM
-//    this->mpRegularGrid->SetCellPopulation(*(this->mpCellPopulation));
-//    std::vector<std::vector<CellPtr> > point_cell_map = this->mpRegularGrid->GetPointCellMap();
-//    for(unsigned idx=0; idx<point_cell_map.size(); idx++)
-//    {
-//        for(unsigned jdx=0; jdx<point_cell_map[idx].size(); jdx++)
-//        {
-//            point_cell_map[idx][jdx]->GetCellData()->SetItem(this->mLabel, this->mSolution[idx]);
-//        }
-//    }
 }
 
 template<unsigned DIM>
@@ -216,9 +189,9 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::Write()
             p_writer1->SetFileName((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/solution.vtu").c_str());
         }
         #if VTK_MAJOR_VERSION <= 5
-            p_writer1->SetInput(this->mpVtkSolution);
+            p_writer1->SetInput(vtkUnstructuredGrid::SafeDownCast(this->GetVtkSolution()));
         #else
-            p_writer1->SetInputData(this->mpVtkSolution);
+            p_writer1->SetInputData(vtkUnstructuredGrid::SafeDownCast(this->GetVtkSolution()));
         #endif
         p_writer1->Update();
         p_writer1->Write();

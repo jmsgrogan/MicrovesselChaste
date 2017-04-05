@@ -206,16 +206,11 @@ public:
     void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
-     * Set the regular grid
-     * @param pGrid the regular grid
+     * Set the grid
+     * @param pGrid the grid
      */
-    void SetGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
+    void SetGrid(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
 
-    /**
-     * Set the mesh
-     * @param pGrid the mesh
-     */
-    void SetGrid(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pGrid);
 };
 
 #endif /* GRIDCALCULATOR_HPP_*/

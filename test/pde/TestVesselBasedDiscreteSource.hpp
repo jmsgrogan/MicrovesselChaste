@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTVESSELBASEDDISCRETESOURCE_HPP_
 #define TESTVESSELBASEDDISCRETESOURCE_HPP_
 
@@ -43,6 +41,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include "SmartPointers.hpp"
 #include "Part.hpp"
+#include "FunctionMap.hpp"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
 #include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
@@ -54,15 +53,128 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DiscreteContinuumMeshGenerator.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "VesselBasedDiscreteSource.hpp"
+#include "DensityMap.hpp"
 
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestVesselBasedDiscreteSource : public CxxTest::TestSuite
 {
 
 public:
 
-    void TestSimpleLinearEllipticFiniteDifferenceSolver() throw(Exception)
+    void TestGridFunction() throw(Exception)
+    {
+        units::quantity<unit::length> vessel_length(100.0*unit::microns);
+        units::quantity<unit::length> reference_length(1.0*unit::microns);
+        VesselNetworkGenerator<2> generator;
+        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>());
+
+        // Set up the grid
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(vessel_length, vessel_length, DimensionalChastePoint<2>());
+        DimensionalChastePoint<2> translation_vector(-vessel_length/(2.0*reference_length),
+                                                     -vessel_length/(2.0*reference_length), 0.0, reference_length);
+        p_domain->Translate(translation_vector);
+        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        units::quantity<unit::length> spacing(10.0*unit::microns);
+        p_grid->GenerateFromPart(p_domain, spacing);
+
+        // Set up a density map
+        boost::shared_ptr<DensityMap<2> > p_density_map = DensityMap<2>::Create();
+        p_density_map->SetVesselNetwork(p_network);
+        p_density_map->SetGrid(p_grid);
+
+        // Set up the discrete source
+        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_source_lin = VesselBasedDiscreteSource<2>::Create();
+        p_vessel_source_lin->SetLinearInUValue(1.0*unit::per_second);
+        p_vessel_source_lin->SetDensityMap(p_density_map);
+
+        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_source_const = VesselBasedDiscreteSource<2>::Create();
+        p_vessel_source_const->SetConstantInUValue(2.0* unit::mole_per_metre_cubed_per_second);
+        p_vessel_source_const->SetDensityMap(p_density_map);
+
+        // Set up a function map
+        FunctionMap<2> solver;
+        solver.SetGrid(p_grid);
+
+        // Get the source values at each point on the grid
+        std::vector<units::quantity<unit::rate> > point_rates = p_vessel_source_lin->GetLinearInUValues();
+        std::vector<units::quantity<unit::concentration_flow_rate> > point_conc_rates = p_vessel_source_const->GetConstantInUValues();
+        std::vector<double> solution;
+        for(unsigned idx=0; idx<p_density_map->GetGridCalculator()->GetGrid()->GetNumberOfLocations(); idx++)
+        {
+            solution.push_back(double(point_rates[idx].value() + point_conc_rates[idx].value()));
+        }
+
+        solver.UpdateSolution(solution);
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestGridFunction", true));
+        solver.SetFileHandler(p_output_file_handler);
+        solver.Write();
+    }
+
+    void xTestMeshFunction() throw(Exception)
+    {
+        units::quantity<unit::length> vessel_length(100.0*unit::microns);
+        units::quantity<unit::length> reference_length(1.0*unit::microns);
+        VesselNetworkGenerator<2> generator;
+        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>());
+
+        // Set up the grid
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(vessel_length, vessel_length, DimensionalChastePoint<2>());
+        DimensionalChastePoint<2> translation_vector(-vessel_length/(2.0*reference_length),
+                                                     -vessel_length/(2.0*reference_length), 0.0, reference_length);
+        p_domain->Translate(translation_vector);
+
+        // Set up the grid
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator = DiscreteContinuumMeshGenerator<2>::Create();
+        p_mesh_generator->SetDomain(p_domain);
+        p_mesh_generator->SetMaxElementArea(units::pow<3>(0.02*vessel_length));
+        p_mesh_generator->Update();
+
+        // Set up a density map
+        boost::shared_ptr<DensityMap<2> > p_density_map = DensityMap<2>::Create();
+        p_density_map->SetVesselNetwork(p_network);
+        p_density_map->SetGrid(p_mesh_generator->GetMesh());
+
+        // Set up the discrete source
+        std::vector<DimensionalChastePoint<2> > linear_consumption_points;
+        linear_consumption_points.push_back(DimensionalChastePoint<2>(50.0, 50.0, 0.0, 1.e-6 * unit::metres));
+        boost::shared_ptr<DiscreteSource<2> > p_linear_point_source = DiscreteSource<2>::Create();
+        p_linear_point_source->SetLinearInUValue(1.0 * unit::per_second);
+        p_linear_point_source->SetPoints(linear_consumption_points);
+        p_linear_point_source->SetDensityMap(p_density_map);
+
+        boost::shared_ptr<DiscreteSource<2> > p_const_point_source = DiscreteSource<2>::Create();
+        units::quantity<unit::concentration_flow_rate> consumption_rate(2.0 * unit::mole_per_metre_cubed_per_second);
+        p_const_point_source->SetConstantInUValue(consumption_rate);
+        std::vector<DimensionalChastePoint<2> > constant_consumption_points;
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 25.0, 25.0, 1.e-6 * unit::metres));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 25.0, 25.0, 1.e-6 * unit::metres));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 75.0, 25.0, 1.e-6 * unit::metres));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 75.0, 25.0, 1.e-6 * unit::metres));
+        p_const_point_source->SetPoints(constant_consumption_points);
+        p_const_point_source->SetDensityMap(p_density_map);
+
+        // Set up a function map
+        FunctionMap<2> solver;
+        solver.SetGrid(p_mesh_generator->GetMesh());
+
+        // Get the source values at each point on the grid
+        std::vector<units::quantity<unit::rate> > point_rates = p_linear_point_source->GetLinearInUValues();
+        std::vector<units::quantity<unit::concentration_flow_rate> > point_conc_rates = p_const_point_source->GetConstantInUValues();
+        std::vector<double> solution;
+        for(unsigned idx=0; idx<point_conc_rates.size(); idx++)
+        {
+            solution.push_back(double(point_rates[idx].value() + point_conc_rates[idx].value()));
+        }
+        solver.UpdateElementSolution(solution);
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestMeshFunction", false));
+        solver.SetFileHandler(p_output_file_handler);
+        solver.Write();
+    }
+
+    void xTestSimpleLinearEllipticFiniteDifferenceSolver() throw(Exception)
     {
         // Set up the vessel network
         units::quantity<unit::length> vessel_length(100.0*unit::microns);
@@ -112,7 +224,7 @@ public:
         solver.Solve();
     }
 
-    void TestSimpleLinearEllipticFiniteElementSolver() throw(Exception)
+    void xTestSimpleLinearEllipticFiniteElementSolver() throw(Exception)
     {
         // Set up the vessel network
         units::quantity<unit::length> vessel_length(100.0*unit::microns);

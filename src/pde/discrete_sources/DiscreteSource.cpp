@@ -38,8 +38,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 template<unsigned DIM>
 DiscreteSource<DIM>::DiscreteSource()
-    :   mpGridCalculator(),
-        mPoints(),
+    :   mPoints(),
         mLabel("Default"),
         mConstantInUValue(0.0*unit::mole_per_metre_cubed_per_second),
         mLinearInUValue(0.0*unit::per_second),
@@ -64,9 +63,9 @@ boost::shared_ptr<DiscreteSource<DIM> > DiscreteSource<DIM>::Create()
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>::GetConstantInUValues()
 {
-    if(!mpGridCalculator)
+    if(!mpDensityMap)
     {
-        EXCEPTION("A regular grid is required for this type of source");
+        EXCEPTION("A density map is required for this type of source");
     }
 
     if(mPoints.size()==0)
@@ -75,9 +74,9 @@ std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>
     }
 
     // Loop through all points
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(mpGridCalculator->GetGrid()->GetNumberOfLocations(),
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfLocations(),
             0.0*unit::mole_per_metre_cubed_per_second);
-    std::vector<std::vector<unsigned> > point_point_map = mpGridCalculator->GetPointMap(mPoints);
+    std::vector<std::vector<unsigned> > point_point_map = mpDensityMap->GetGridCalculator()->GetPointMap(mPoints);
     for(unsigned idx=0; idx<point_point_map.size(); idx++)
     {
         values[idx] += mConstantInUValue * double(point_point_map[idx].size());
@@ -88,9 +87,9 @@ std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>
 template<unsigned DIM>
 std::vector<units::quantity<unit::rate> > DiscreteSource<DIM>::GetLinearInUValues()
 {
-    if(!mpGridCalculator)
+    if(!mpDensityMap)
     {
-        EXCEPTION("A regular grid is required for this type of source");
+        EXCEPTION("A density map is required for this type of source");
     }
 
     if(mPoints.size()==0)
@@ -99,9 +98,9 @@ std::vector<units::quantity<unit::rate> > DiscreteSource<DIM>::GetLinearInUValue
     }
 
     // Loop through all points
-    std::vector<units::quantity<unit::rate> > values(mpGridCalculator->GetGrid()->GetNumberOfLocations(),
+    std::vector<units::quantity<unit::rate> > values(mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfLocations(),
             0.0*unit::per_second);
-    std::vector<std::vector<unsigned> > point_point_map = mpGridCalculator->GetPointMap(mPoints);
+    std::vector<std::vector<unsigned> > point_point_map = mpDensityMap->GetGridCalculator()->GetPointMap(mPoints);
     for(unsigned idx=0; idx<point_point_map.size(); idx++)
     {
         values[idx] += mLinearInUValue * double(point_point_map[idx].size());
@@ -112,13 +111,13 @@ std::vector<units::quantity<unit::rate> > DiscreteSource<DIM>::GetLinearInUValue
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>::GetNonlinearTermValues()
 {
-    if(!mpGridCalculator)
+    if(!mpDensityMap)
     {
-        EXCEPTION("A regular grid is required for this type of source");
+        EXCEPTION("A density map is required for this type of source");
     }
 
     // Return an empty vector
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(mpGridCalculator->GetGrid()->GetNumberOfLocations(),
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfLocations(),
             0.0*unit::mole_per_metre_cubed_per_second);
 
     return values;
@@ -137,9 +136,9 @@ void DiscreteSource<DIM>::SetPoints(std::vector<DimensionalChastePoint<DIM> > po
 }
 
 template<unsigned DIM>
-void DiscreteSource<DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator)
+boost::shared_ptr<DensityMap<DIM> > DiscreteSource<DIM>::GetDensityMap()
 {
-    mpGridCalculator = pGridCalculator;
+    return mpDensityMap;
 }
 
 template<unsigned DIM>

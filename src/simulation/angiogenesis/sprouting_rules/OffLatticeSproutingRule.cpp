@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "OffLatticeSproutingRule.hpp"
 #include "RandomNumberGenerator.hpp"
 #include "GeometryTools.hpp"
@@ -80,12 +78,13 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::
 
     std::vector<units::quantity<unit::concentration> > probed_solutions(rNodes.size(), 0.0*unit::mole_per_metre_cubed);
     vtkSmartPointer<vtkPoints> p_probe_locations = vtkSmartPointer<vtkPoints>::New();
+    units::quantity<unit::length> reference_length = this->mpSolver->GetReferenceLength();
 
     if(this->mpSolver)
     {
         for(unsigned idx=0; idx<rNodes.size(); idx++)
         {
-            c_vector<double, DIM> loc = rNodes[idx]->rGetLocation().GetLocation(this->mpSolver->GetGridCalculator()->GetGrid()->GetReferenceLengthScale());
+            c_vector<double, DIM> loc = rNodes[idx]->rGetLocation().GetLocation(reference_length);
             if(DIM==3)
             {
                 p_probe_locations->InsertNextPoint(loc[0], loc[1], loc[2]);

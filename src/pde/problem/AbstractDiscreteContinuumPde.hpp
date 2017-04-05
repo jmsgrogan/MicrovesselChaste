@@ -41,7 +41,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "SmartPointers.hpp"
 #include "UblasVectorInclude.hpp"
 #include "GeometryTools.hpp"
-#include "GridCalculator.hpp"
 #include "UnitCollection.hpp"
 #include "DiscreteSource.hpp"
 
@@ -74,16 +73,21 @@ protected:
     std::vector<boost::shared_ptr<DiscreteSource<SPACE_DIM> > > mDiscreteSources;
 
     /**
-     * The grid for solvers using regular grids
-     */
-    boost::shared_ptr<GridCalculator<SPACE_DIM> > mpGridCalculator;
-
-    /**
      * This is used internally to scale concentrations before and after linear system solves, reads and writes.
      * Since those functions don't use Boost Units. It should not affect the solution, but can be judiciously chosen
      * to avoid precision problems.
      */
     units::quantity<unit::concentration> mReferenceConcentration;
+
+    /**
+     * The reference length scale, used to scale diffusivity to the mesh size
+     */
+    units::quantity<unit::length> mReferenceLengthScale;
+
+    /**
+     * The reference time scale, used to scale diffusivity
+     */
+    units::quantity<unit::length> mReferenceTimeScale;
 
 public:
 
@@ -122,16 +126,22 @@ public:
     void SetIsotropicDiffusionConstant(units::quantity<unit::diffusivity> diffusivity);
 
     /**
-     * Set the regular grid
-     * @param pRegularGrid the regular grid
-     */
-    void SetGridCalculator(boost::shared_ptr<GridCalculator<SPACE_DIM> > pGridCalculator);
-
-    /**
      * Set the reference concentration
      * @param referenceConcentration the reference concentration
      */
     void SetReferenceConcentration(units::quantity<unit::concentration> referenceConcentration);
+
+    /**
+     * Set the reference length
+     * @param referenceLength the reference length
+     */
+    void SetReferenceLength(units::quantity<unit::length> referenceLength);
+
+    /**
+     * Set the reference time
+     * @param referenceTime the reference time
+     */
+    void SetReferenceTime(units::quantity<unit::time> referenceTime);
 
     /**
      * Update the discrete source strengths

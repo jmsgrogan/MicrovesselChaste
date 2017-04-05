@@ -66,12 +66,12 @@ double DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeConsta
         {
             EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
         }
-        units::quantity<unit::concentration_flow_rate> scaling_factor = this->mReferenceConcentration/BaseUnits::Instance()->GetReferenceTimeScale();
+        units::quantity<unit::concentration_flow_rate> scaling_factor = this->mReferenceConcentration/this->mReferenceTimeScale;
         return (this->mConstantInUTerm + this->mDiscreteConstantSourceStrengths[pElement->GetIndex()]) / scaling_factor;
     }
     else
     {
-        units::quantity<unit::concentration_flow_rate> scaling_factor = this->mReferenceConcentration/BaseUnits::Instance()->GetReferenceTimeScale();
+        units::quantity<unit::concentration_flow_rate> scaling_factor = this->mReferenceConcentration/this->mReferenceTimeScale;
         return this->mConstantInUTerm/scaling_factor;
     }
 }
@@ -109,12 +109,12 @@ double DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinear
         {
             EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
         }
-        units::quantity<unit::rate> scaling_factor = (1.0/BaseUnits::Instance()->GetReferenceTimeScale());
+        units::quantity<unit::rate> scaling_factor = (1.0/this->mReferenceTimeScale);
         return (this->mLinearInUTerm + this->mDiscreteLinearSourceStrengths[pElement->GetIndex()])/scaling_factor;
     }
     else
     {
-        units::quantity<unit::rate> scaling_factor = (1.0/BaseUnits::Instance()->GetReferenceTimeScale());
+        units::quantity<unit::rate> scaling_factor = (1.0/this->mReferenceTimeScale);
         return this->mLinearInUTerm/scaling_factor;
     }
 }
