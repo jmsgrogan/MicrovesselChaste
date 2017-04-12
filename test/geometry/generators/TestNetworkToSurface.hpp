@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTNETWORKTOSURFACE_HPP_
 #define TESTNETWORKTOSURFACE_HPP_
 
@@ -55,7 +53,7 @@ class TestNetworkToSurface : public CxxTest::TestSuite
 {
 public:
 
-    void TestSingleVessel2d()
+    void TestSingleVessel2d() throw(Exception)
     {
         std::string output_path = "TestNetworkToSurface";
         if(PetscTools::IsParallel())
@@ -89,7 +87,7 @@ public:
         writer.Write();
     }
 
-    void TestSingleVessel()
+    void TestSingleVessel() throw(Exception)
     {
         // Set up the network
         double length = 100.0;
@@ -117,7 +115,7 @@ public:
         writer.Write();
     }
 
-    void TestBifurcationVessel2d()
+    void TestBifurcationVessel2d() throw(Exception)
     {
         // Set up the network
         double length = 100.0;
@@ -159,7 +157,7 @@ public:
         writer.Write();
     }
 
-    void TestBifurcationVessel()
+    void TestBifurcationVessel() throw(Exception)
     {
         // Set up the network
         double length = 100.0;

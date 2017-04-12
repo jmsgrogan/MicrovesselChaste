@@ -33,13 +33,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "RandomNumberGenerator.hpp"
 #include "VesselSegment.hpp"
 #include "Vessel.hpp"
 #include "Owen2011SproutingRule.hpp"
 #include "Owen11Parameters.hpp"
+
+#include "Debug.hpp"
 
 template<unsigned DIM>
 Owen2011SproutingRule<DIM>::Owen2011SproutingRule()
@@ -77,6 +77,7 @@ void Owen2011SproutingRule<DIM>::SetHalfMaxVegf(units::quantity<unit::concentrat
 template<unsigned DIM>
 std::vector<boost::shared_ptr<VesselNode<DIM> > > Owen2011SproutingRule<DIM>::GetSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
+    MARK;
     if(!this->mpGridCalculator)
     {
         EXCEPTION("A regular grid is required for this type of sprouting rule.");
@@ -86,10 +87,10 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > Owen2011SproutingRule<DIM>::Ge
     {
         EXCEPTION("A vessel network is required for this type of sprouting rule.");
     }
-
+    MARK;
     // Get the VEGF field
     this->mVegfField = this->mpSolver->GetConcentrations(this->mpGridCalculator->GetGrid());
-
+    MARK;
     // Set up the output sprouts vector
     std::vector<boost::shared_ptr<VesselNode<DIM> > > sprouts;
 
@@ -130,18 +131,20 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > Owen2011SproutingRule<DIM>::Ge
                 continue;
             }
         }
-
+        MARK;
         // Get the grid index of the node
-        unsigned grid_index = this->mpGridCalculator->GetGrid()->GetNearestLocationIndex(rNodes[idx]->rGetLocation());
+        unsigned grid_index = this->mpGridCalculator->GetGrid()->GetNearestCellIndex(rNodes[idx]->rGetLocation());
+        MARK;
         units::quantity<unit::concentration> vegf_conc = this->mVegfField[grid_index];
         double vegf_fraction = vegf_conc/(vegf_conc + mHalfMaxVegf);
         double max_prob_per_time_step = this->mSproutingProbability*SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
         double prob_tip_selection = max_prob_per_time_step*vegf_fraction;
-
+        MARK;
         if (RandomNumberGenerator::Instance()->ranf() < prob_tip_selection)
         {
             sprouts.push_back(rNodes[idx]);
         }
+        MARK;
     }
     return sprouts;
 }

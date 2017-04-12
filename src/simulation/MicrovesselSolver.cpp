@@ -54,8 +54,7 @@ MicrovesselSolver<DIM>::MicrovesselSolver() :
         mDiscreteContinuumSolversHaveCompatibleGridIndexing(false),
         mUpdatePdeEachSolve(true),
         mMicrovesselModifiers(),
-        mpCellPopulation(),
-        mpDefaultDiscreteContinuumGrid()
+        mpCellPopulation()
 {
 
 }
@@ -83,12 +82,6 @@ template<unsigned DIM>
 void MicrovesselSolver<DIM>::SetUpdatePdeEachSolve(bool doUpdate)
 {
     mUpdatePdeEachSolve = doUpdate;
-}
-
-template<unsigned DIM>
-void MicrovesselSolver<DIM>::SetDefaultGrid(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pDefaultGrid)
-{
-    mpDefaultDiscreteContinuumGrid = pDefaultGrid;
 }
 
 template<unsigned DIM>
@@ -266,25 +259,11 @@ void MicrovesselSolver<DIM>::SetupFromModifier(AbstractCellPopulation<DIM,DIM>& 
     // Set up all the DiscreteContinuum solvers
     for(unsigned idx=0; idx<mDiscreteContinuumSolvers.size(); idx++)
     {
-        if(!mDiscreteContinuumSolvers[idx]->HasDensityMap())
-        {
-            if(!p_default_density_map)
-            {
-                p_default_density_map = DensityMap<DIM>::Create();
-                if(!mpDefaultDiscreteContinuumGrid)
-                {
-                    EXCEPTION("Not all PDE solvers have a grid and no default grid has been assigned.");
-                }
-                p_default_density_map->SetGrid(mpDefaultDiscreteContinuumGrid);
-            }
-            mDiscreteContinuumSolvers[idx]->SetDensityMap(p_default_density_map);
-        }
-
-        mDiscreteContinuumSolvers[idx]->GetDensityMap()->SetCellPopulation(rCellPopulation, cellReferenceLength, cellReferenceConcentration);
+        mDiscreteContinuumSolvers[idx]->SetCellPopulation(rCellPopulation, cellReferenceLength, cellReferenceConcentration);
         mDiscreteContinuumSolvers[idx]->SetFileHandler(mpOutputFileHandler);
         if(mpNetwork)
         {
-            mDiscreteContinuumSolvers[idx]->GetDensityMap()->SetVesselNetwork(mpNetwork);
+            mDiscreteContinuumSolvers[idx]->SetVesselNetwork(mpNetwork);
         }
         mDiscreteContinuumSolvers[idx]->Setup();
     }
@@ -305,24 +284,10 @@ void MicrovesselSolver<DIM>::Setup()
     boost::shared_ptr<DensityMap<DIM> > p_default_density_map;
     for(unsigned idx=0; idx<mDiscreteContinuumSolvers.size(); idx++)
     {
-        if(!mDiscreteContinuumSolvers[idx]->HasDensityMap())
-        {
-            if(!p_default_density_map)
-            {
-                p_default_density_map = DensityMap<DIM>::Create();
-                if(!mpDefaultDiscreteContinuumGrid)
-                {
-                    EXCEPTION("Not all PDE solvers have a grid and no default grid has been assigned.");
-                }
-                p_default_density_map->SetGrid(mpDefaultDiscreteContinuumGrid);
-            }
-            mDiscreteContinuumSolvers[idx]->SetDensityMap(p_default_density_map);
-        }
-
         mDiscreteContinuumSolvers[idx]->SetFileHandler(mpOutputFileHandler);
         if(mpNetwork)
         {
-            mDiscreteContinuumSolvers[idx]->GetDensityMap()->SetVesselNetwork(mpNetwork);
+            mDiscreteContinuumSolvers[idx]->SetVesselNetwork(mpNetwork);
         }
         mDiscreteContinuumSolvers[idx]->Setup();
     }
@@ -357,14 +322,16 @@ void MicrovesselSolver<DIM>::UpdateCellData(std::vector<std::string> labels)
             mDiscreteContinuumSolvers[jdx]->UpdateCellData();
         }
     }
-
-    for(unsigned idx=0; idx<labels.size(); idx++)
+    else
     {
-        for(unsigned jdx=0; jdx<mDiscreteContinuumSolvers.size(); jdx++)
+        for(unsigned idx=0; idx<labels.size(); idx++)
         {
-            if(labels[idx]==mDiscreteContinuumSolvers[idx]->GetLabel())
+            for(unsigned jdx=0; jdx<mDiscreteContinuumSolvers.size(); jdx++)
             {
-                mDiscreteContinuumSolvers[jdx]->UpdateCellData();
+                if(labels[idx]==mDiscreteContinuumSolvers[idx]->GetLabel())
+                {
+                    mDiscreteContinuumSolvers[jdx]->UpdateCellData();
+                }
             }
         }
     }

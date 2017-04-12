@@ -72,7 +72,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Setup()
         EXCEPTION("Can't cast to regular grid during Setup");
     }
 
-    this->mSolution = std::vector<double>(0.0, this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfLocations());
+    this->mSolution = std::vector<double>(0.0, this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfPoints());
 }
 
 template<unsigned DIM>
@@ -82,7 +82,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector
     {
         this->Setup();
     }
-    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(data, true, this->GetLabel());
+    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(data, this->GetLabel());
 
     // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
     this->mSolution = std::vector<double>(data.size(), 0.0);
@@ -111,7 +111,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector
     {
         this->mSolution[i] = data[i]/this->mReferenceConcentration;
     }
-    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(this->mSolution, true, this->GetLabel());
+    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(this->mSolution, this->GetLabel());
 
     this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*this->mReferenceConcentration);
     for (unsigned i = 0; i < data.size(); i++)
@@ -146,7 +146,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Update()
 template<unsigned DIM>
 void AbstractRegularGridDiscreteContinuumSolver<DIM>::Write()
 {
-    if(!this->mpVtkSolution)
+    if(this->mSolution.size()==0)
     {
         this->Setup();
     }

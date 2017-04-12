@@ -87,7 +87,7 @@ protected:
     /**
      * The reference time scale, used to scale diffusivity
      */
-    units::quantity<unit::length> mReferenceTimeScale;
+    units::quantity<unit::time> mReferenceTimeScale;
 
 public:
 

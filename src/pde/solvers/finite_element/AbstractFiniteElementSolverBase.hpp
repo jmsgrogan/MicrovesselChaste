@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef AbstractFiniteElementSolverBase_HPP_
 #define AbstractFiniteElementSolverBase_HPP_
 

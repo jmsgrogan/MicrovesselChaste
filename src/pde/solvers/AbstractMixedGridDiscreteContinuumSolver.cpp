@@ -64,7 +64,7 @@ AbstractMixedGridDiscreteContinuumSolver<DIM>::~AbstractMixedGridDiscreteContinu
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration> > AbstractMixedGridDiscreteContinuumSolver<DIM>::GetConcentrationsAtCentroids()
 {
-    return this->GetConcentrations(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetLocations());
+    return this->GetConcentrations(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetCellLocations());
 }
 
 template<unsigned DIM>
@@ -93,7 +93,7 @@ void AbstractMixedGridDiscreteContinuumSolver<DIM>::Setup()
     }
 
     // Set up the solution
-    this->mSolution = std::vector<double>(0.0, this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfLocations());
+    this->mSolution = std::vector<double>(0.0, this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfPoints());
 }
 
 template<unsigned DIM>
@@ -103,15 +103,7 @@ void AbstractMixedGridDiscreteContinuumSolver<DIM>::UpdateSolution(const std::ve
     {
         this->Setup();
     }
-
-    if(this->mpDensityMap->GetGridCalculator()->HasUnstructuredGrid())
-    {
-        this->mpDensityMap->GetGridCalculator()->GetGrid()->AddNodalData(data, this->GetLabel());
-    }
-    else
-    {
-        this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(data, true, this->GetLabel());
-    }
+    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(data, this->GetLabel());
 
     // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
     this->mSolution = std::vector<double>(data.size(), 0.0);
@@ -133,7 +125,7 @@ void AbstractMixedGridDiscreteContinuumSolver<DIM>::UpdateElementSolution(const 
     {
         this->Setup();
     }
-    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(data, true, this->GetLabel());
+    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddCellData(data, this->GetLabel());
 }
 
 template<unsigned DIM>
@@ -151,14 +143,7 @@ void AbstractMixedGridDiscreteContinuumSolver<DIM>::UpdateSolution(const std::ve
         this->mSolution[i] = data[i]/this->mReferenceConcentration;
     }
 
-    if(this->mpDensityMap->GetGridCalculator()->HasUnstructuredGrid())
-    {
-        this->mpDensityMap->GetGridCalculator()->GetGrid()->AddNodalData(this->mSolution, this->GetLabel());
-    }
-    else
-    {
-        this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(this->mSolution, true, this->GetLabel());
-    }
+    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(this->mSolution, this->GetLabel());
 
     // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
     this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*this->mReferenceConcentration);
@@ -206,7 +191,7 @@ void AbstractMixedGridDiscreteContinuumSolver<DIM>::Write()
 
     if(PetscTools::AmMaster())
     {
-        if(this->mpGridCalculator->HasUnstructuredGrid())
+        if(this->mpDensityMap->GetGridCalculator()->HasUnstructuredGrid())
         {
             vtkSmartPointer<vtkXMLUnstructuredGridWriter> p_writer1 = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
             if(!this->mFilename.empty())

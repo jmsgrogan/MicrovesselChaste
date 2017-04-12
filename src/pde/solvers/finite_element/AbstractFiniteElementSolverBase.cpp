@@ -72,23 +72,15 @@ void AbstractFiniteElementSolverBase<DIM>::Setup()
 {
     AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::Setup();
 
-    if(this->CellPopulationIsSet())
-    {
-        this->mpGridCalculator->SetCellPopulation(*(this->mpCellPopulation), this->mCellPopulationReferenceLength);
-    }
-
-    if(this->mpNetwork)
-    {
-        this->mpGridCalculator->SetVesselNetwork(this->mpNetwork);
-    }
-
-    if(this->mpPde)
-    {
-        this->mpPde->SetGridCalculator(this->mpGridCalculator);
-    }
-    else
+    if(!this->mpPde)
     {
         EXCEPTION("This solver needs a PDE to be set before calling Setup.");
+    }
+
+    std::vector<boost::shared_ptr<DiscreteSource<DIM> > > discrete_sources = this->mpPde->GetDiscreteSources();
+    for(unsigned idx=0;idx<discrete_sources.size();idx++)
+    {
+        discrete_sources[idx]->SetDensityMap(this->mpDensityMap);
     }
 }
 
@@ -126,7 +118,6 @@ void AbstractFiniteElementSolverBase<DIM>::Solve()
     }
 
     // Set up for solve
-    this->mpPde->SetGridCalculator(this->mpGridCalculator);
     this->mpPde->UpdateDiscreteSourceStrengths();
 }
 

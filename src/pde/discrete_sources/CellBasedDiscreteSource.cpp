@@ -60,16 +60,16 @@ boost::shared_ptr<CellBasedDiscreteSource<DIM> > CellBasedDiscreteSource<DIM>::C
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration_flow_rate> > CellBasedDiscreteSource<DIM>::GetConstantInUValues()
 {
-    if(!this->mpGridCalculator)
+    if(!this->mpDensityMap->GetGridCalculator())
     {
         EXCEPTION("A regular grid is required for this type of source");
     }
 
     // Get the cell density map
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(),
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::mole_per_metre_cubed_per_second);
     std::vector<double> cell_densities = this->mpDensityMap->rGetCellDensity(false);
-    units::quantity<unit::length> reference_length = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
+    units::quantity<unit::length> reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
     for(unsigned idx=0;idx<cell_densities.size();idx++)
     {
         values[idx] += mCellConstantInUValue*cell_densities[idx]/units::pow<3>(reference_length);
@@ -80,12 +80,12 @@ std::vector<units::quantity<unit::concentration_flow_rate> > CellBasedDiscreteSo
 template<unsigned DIM>
 std::vector<units::quantity<unit::rate> > CellBasedDiscreteSource<DIM>::GetLinearInUValues()
 {
-    if(!this->mpGridCalculator)
+    if(!this->mpDensityMap->GetGridCalculator())
     {
         EXCEPTION("A regular grid is required for this type of source");
     }
 
-    std::vector<units::quantity<unit::rate> > values(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(),
+    std::vector<units::quantity<unit::rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::per_second);
     std::vector<double> cell_densities = this->mpDensityMap->rGetCellDensity(false);
     for(unsigned idx=0; idx<cell_densities.size(); idx++)

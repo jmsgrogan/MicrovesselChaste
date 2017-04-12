@@ -138,15 +138,13 @@ void NetworkToImage<DIM>::Update()
     p_grid->SetOrigin(DimensionalChastePoint<DIM>(origin, mGridSpacing));
 
     boost::shared_ptr<DistanceMap<DIM> > p_distance_map = DistanceMap<DIM>::Create();
-    boost::shared_ptr<DensityMap<DIM> > p_density_map = DensityMap<DIM>::Create();
-    p_density_map->SetVesselNetwork(mpNetwork);
-    p_density_map->SetGrid(p_grid);
-    p_distance_map->SetDensityMap(p_density_map);
+    p_distance_map->SetVesselNetwork(mpNetwork);
+    p_distance_map->SetGrid(p_grid);
     p_distance_map->SetUseSegmentRadii(true);
     p_distance_map->Setup();
     p_distance_map->Solve();
 
-    std::vector<double> point_solution = p_distance_map->GetSolution(p_grid);
+    std::vector<double> point_solution = p_distance_map->GetSolution();
     for(unsigned idx=0; idx<point_solution.size();idx++)
     {
         if(point_solution[idx]==0.0)
@@ -159,9 +157,9 @@ void NetworkToImage<DIM>::Update()
         }
     }
 
-//    p_grid->SetPointValues(point_solution);
-    mpImage = vtkImageData::SafeDownCast(p_grid->GetGlobalVtkGrid());
-    mpImage->GetPointData()->SetScalars(mpImage->GetPointData()->GetArray("Point Values"));
+    p_grid->AddPointData(point_solution, "Distance Map");
+    mpImage = vtkImageData::SafeDownCast(p_grid->GetVtkGrid());
+    mpImage->GetPointData()->SetActiveScalars("Distance Map");
 }
 
 // Explicit instantiation

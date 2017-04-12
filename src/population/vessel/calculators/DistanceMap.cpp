@@ -46,7 +46,7 @@ DistanceMap<DIM>::DistanceMap()
     :   AbstractRegularGridDiscreteContinuumSolver<DIM>(),
         mUseSegmentRadii(false)
 {
-
+    this->mLabel = "Distance Map";
 }
 
 template<unsigned DIM>
@@ -72,51 +72,32 @@ template<unsigned DIM>
 void DistanceMap<DIM>::Solve()
 {
     // Set up the vtk solution on the regular grid
-    if(!this->mpVtkSolution)
+    this->Setup();
+
+    unsigned num_points = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfPoints();
+    std::vector<double> distances(num_points, 0.0);
+
+    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments;
+    segments = this->mpDensityMap->GetVesselNetwork()->GetVesselSegments();
+    units::quantity<unit::length> ref_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
+
+    for(unsigned idx=0;idx<num_points; idx++)
     {
-        this->Setup();
-    }
-
-    boost::shared_ptr<RegularGrid<DIM > > p_grid =
-            boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
-    if(!p_grid)
-    {
-        EXCEPTION("Can't cast to regular grid during Setup");
-    }
-
-    c_vector<unsigned, 6> extents = p_grid->GetExtents();
-    std::vector<double> distances(p_grid->GetNumberOfLocations(), 0.0);
-
-    if (this->mpNetwork)
-    {
-        std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments;
-        segments = this->mpNetwork->GetVesselSegments();
-
-        for (unsigned i = extents[4]; i < extents[5] + 1; i++) // Z
+        DimensionalChastePoint<DIM> location = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetPoint(idx);
+        units::quantity<unit::length> min_distance = DBL_MAX * unit::metres;
+        for (unsigned jdx = 0; jdx <  segments.size(); jdx++)
         {
-            for (unsigned j = extents[2]; j < extents[3] + 1; j++) // Y
+            units::quantity<unit::length> seg_dist = segments[jdx]->GetDistance(location);
+            if(this->mUseSegmentRadii && seg_dist<=segments[jdx]->GetRadius())
             {
-                for (unsigned k = extents[0]; k < extents[1] + 1; k++) // X
-                {
-                    unsigned grid_index = p_grid->GetGridIndex(k, j, i);
-                    DimensionalChastePoint<DIM> location = p_grid->GetLocation(k ,j, i);
-                    units::quantity<unit::length> min_distance = DBL_MAX * unit::metres;
-                    for (unsigned idx = 0; idx <  segments.size(); idx++)
-                    {
-                        units::quantity<unit::length> seg_dist = segments[idx]->GetDistance(location);
-                        if(this->mUseSegmentRadii && seg_dist<=segments[idx]->GetRadius())
-                        {
-                            seg_dist = 0.0 * unit::metres;
-                        }
-                        if(seg_dist < min_distance)
-                        {
-                            min_distance = seg_dist;
-                        }
-                    }
-                    distances[grid_index] = min_distance/p_grid->GetReferenceLengthScale();
-                }
+                seg_dist = 0.0 * unit::metres;
+            }
+            if(seg_dist < min_distance)
+            {
+                min_distance = seg_dist;
             }
         }
+        distances[idx] = min_distance/ref_length;
     }
 
     this->UpdateSolution(distances);

@@ -244,12 +244,6 @@ public:
     void SetPde(boost::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > pPde);
 
     /**
-     * Return true if a density map has already been set
-     * @return true if a density map has already been set
-     */
-    bool HasDensityMap();
-
-    /**
      * Operations to be performed prior to the first solve
      */
     virtual void Setup() = 0;
@@ -277,6 +271,22 @@ public:
      * Set the density map
      */
     void SetDensityMap(boost::shared_ptr<DensityMap<DIM> > pDensityMap);
+
+    /**
+     * Set the vessel network
+     * @param pNetwork the vessel network
+     */
+    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+
+    /**
+     * Set the cell population
+     * @param rCellPopulation a reference to the cell population
+     * @param cellPopulationReferenceLength the length scale for the cell population
+     * @param cellPopulationReferenceConcentration the concentration scale for the cell population
+     */
+    void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
+                           units::quantity<unit::length> cellPopulationReferenceLength,
+                           units::quantity<unit::concentration> cellPopulationReferenceConcentration);
 
     /**
      * Do the solve

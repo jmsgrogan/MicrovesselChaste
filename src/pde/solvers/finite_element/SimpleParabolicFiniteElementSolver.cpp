@@ -123,7 +123,7 @@ void SimpleParabolicFiniteElementSolver<DIM>::Solve()
 
     for(unsigned idx=0; idx<this->mBoundaryConditions.size(); idx++)
     {
-        this->mBoundaryConditions[idx]->SetGridCalculator(this->mpGridCalculator);
+        this->mBoundaryConditions[idx]->SetGridCalculator(this->mpDensityMap->GetGridCalculator());
         this->mBoundaryConditions[idx]->UpdateBoundaryConditions(p_bcc);
     }
 

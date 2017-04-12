@@ -47,33 +47,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
  * This class is central to the discrete continuum solvers. It calculates the density of discrete entities (vessels, biological cells)
  * at each grid location (lattice point or grid cell centroid). The resulting density maps can the be used to generate sink or
- * source terms in continuum PDEs. The density map stores both the grids used in the DiscreteContinuum solvers and the discrete
- * entities such as vessel networks or cell populations. It uses the GridCalculator for relatively quick interpolation between
- * discrete entities and grid based fields.
+ * source terms in continuum PDEs.
  */
 template<unsigned DIM>
 class DensityMap
 {
-    /**
-     * The vessel network.
-     */
-    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
-
-    /**
-     * The cell population.
-     */
-    AbstractCellPopulation<DIM>* mpCellPopulation;
-
-    /**
-     * The reference length scale for the cellpopulation.
-     */
-    units::quantity<unit::length> mCellPopulationReferenceLength;
-
-    /**
-     * The reference concentration scale for the cellpopulation.
-     */
-    units::quantity<unit::concentration> mCellPopulationReferenceConcentration;
-
     /**
      * Dimensionless vessel surface area density
      */
@@ -143,10 +121,10 @@ public:
     ~DensityMap();
 
     /**
-     * Has a cell population been set?
-     * @return whether a cell population been set.
+     * Return the vessel network
+     * @return the vessel network
      */
-    bool CellPopulationIsSet();
+    boost::shared_ptr<VesselNetwork<DIM> > GetVesselNetwork();
 
     /**
      * Return the grid in a form suitable for length of line in box computations

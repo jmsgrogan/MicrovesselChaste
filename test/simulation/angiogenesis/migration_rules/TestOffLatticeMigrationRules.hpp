@@ -64,9 +64,15 @@ public:
 
     void Test2dMigration() throw(Exception)
     {
+        BaseUnits::Instance()->SetReferenceLengthScale(1.e-6*unit::metres);
+        BaseUnits::Instance()->SetReferenceTimeScale(3600.0*unit::seconds);
+
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestOffLatticeMigrationRules/2d"));
 
         // Set up the grid
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(1000*1.e-6*unit::metres, 1000*1.e-6*unit::metres, DimensionalChastePoint<2>());
+
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         units::quantity<unit::length> spacing(40.0*unit::microns); //um
         p_grid->SetSpacing(spacing);
@@ -83,13 +89,12 @@ public:
         std::vector<units::quantity<unit::concentration> > vegf_field = std::vector<units::quantity<unit::concentration> >(dimensions[0] * dimensions[1] * dimensions[2], 0.0*unit::mole_per_metre_cubed);
         for (unsigned idx = 0; idx < dimensions[0] * dimensions[1] * dimensions[2]; idx++)
         {
-            vegf_field[idx] = 3.0*p_grid->GetLocationOfGlobalIndex(idx).GetLocation(spacing)[0] / (double(dimensions[0]))*1.e-9*unit::mole_per_metre_cubed;
+            vegf_field[idx] = 0.3*p_grid->GetPoint(idx).GetLocation(spacing)[0] / (double(dimensions[0]))*1.e-9*unit::mole_per_metre_cubed;
         }
 
         p_grid->Write(p_handler);
         p_funciton_map->SetFileHandler(p_handler);
         p_funciton_map->SetFileName("Function");
-        p_funciton_map->Setup();
         p_funciton_map->UpdateSolution(vegf_field);
         p_funciton_map->Write();
 
@@ -106,17 +111,20 @@ public:
         p_migration_rule->SetDiscreteContinuumSolver(p_funciton_map);
         p_migration_rule->SetNetwork(p_network);
 
+
         boost::shared_ptr<OffLatticeSproutingRule<2> > p_sprouting_rule = OffLatticeSproutingRule<2>::Create();
         p_sprouting_rule->SetDiscreteContinuumSolver(p_funciton_map);
         p_sprouting_rule->SetVesselNetwork(p_network);
+        p_sprouting_rule->SetSproutingProbability(5.e-03 /(60.0*unit::seconds));
 
         AngiogenesisSolver<2> angiogenesis_solver;
         angiogenesis_solver.SetVesselNetwork(p_network);
         angiogenesis_solver.SetMigrationRule(p_migration_rule);
         angiogenesis_solver.SetSproutingRule(p_sprouting_rule);
         angiogenesis_solver.SetOutputFileHandler(p_handler);
+        angiogenesis_solver.SetBoundingDomain(p_domain);
 
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(20.0 * 60.0, 20);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(48.0, 96);
         angiogenesis_solver.Run(true);
     }
 
@@ -125,6 +133,9 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestOffLatticeMigrationRules/3d"));
 
         // Set up the grid
+        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
+        p_domain->AddCuboid(1000*1.e-6*unit::metres, 1000*1.e-6*unit::metres, 200*1.e-6*unit::metres, DimensionalChastePoint<3>());
+
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         units::quantity<unit::length> spacing(40.0*unit::microns); //um
         p_grid->SetSpacing(spacing);
@@ -132,7 +143,7 @@ public:
         c_vector<double, 3> dimensions;
         dimensions[0] = 25; // num x
         dimensions[1] = 25; // num_y
-        dimensions[2] = 25; // num_z
+        dimensions[2] = 3; // num_z
         p_grid->SetDimensions(dimensions);
 
         // Prescribe a linearly increasing vegf field using a function map
@@ -141,13 +152,12 @@ public:
         std::vector<units::quantity<unit::concentration> > vegf_field = std::vector<units::quantity<unit::concentration> >(dimensions[0] * dimensions[1] * dimensions[2], 0.0*unit::mole_per_metre_cubed);
         for (unsigned idx = 0; idx < dimensions[0] * dimensions[1] * dimensions[2]; idx++)
         {
-            vegf_field[idx] = 2.0*p_grid->GetLocationOfGlobalIndex(idx).GetLocation(spacing)[0] / (double(dimensions[0]))*1.e-9*unit::mole_per_metre_cubed;
+            vegf_field[idx] = 0.3*p_grid->GetPoint(idx).GetLocation(spacing)[0] / (double(dimensions[0]))*1.e-9*unit::mole_per_metre_cubed;
         }
 
         p_grid->Write(p_handler);
         p_funciton_map->SetFileHandler(p_handler);
         p_funciton_map->SetFileName("Function");
-        p_funciton_map->Setup();
         p_funciton_map->UpdateSolution(vegf_field);
         p_funciton_map->Write();
 
@@ -157,7 +167,7 @@ public:
         unsigned divisions = dimensions[1] - 2; // divide the vessel to coincide with grid
         unsigned alignment_axis = 1; // pointing y direction
         boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(length,
-                                                                                        DimensionalChastePoint<3>(2.0, 2.0, 10.0, spacing),
+                                                                                        DimensionalChastePoint<3>(2.0, 2.0, 0.5, spacing),
                                                                                             divisions, alignment_axis);
 
         boost::shared_ptr<OffLatticeMigrationRule<3> > p_migration_rule = OffLatticeMigrationRule<3>::Create();
@@ -167,14 +177,16 @@ public:
         boost::shared_ptr<OffLatticeSproutingRule<3> > p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
         p_sprouting_rule->SetDiscreteContinuumSolver(p_funciton_map);
         p_sprouting_rule->SetVesselNetwork(p_network);
+        p_sprouting_rule->SetSproutingProbability(5.e-03 /(60.0*unit::seconds));
 
         AngiogenesisSolver<3> angiogenesis_solver;
         angiogenesis_solver.SetVesselNetwork(p_network);
         angiogenesis_solver.SetMigrationRule(p_migration_rule);
         angiogenesis_solver.SetSproutingRule(p_sprouting_rule);
         angiogenesis_solver.SetOutputFileHandler(p_handler);
+        //angiogenesis_solver.SetBoundingDomain(p_domain);
 
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(5.0*60.0, 5);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(48.0, 96.0);
         angiogenesis_solver.Run(true);
     }
 };

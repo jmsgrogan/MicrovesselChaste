@@ -145,7 +145,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
                          counter++;
                          ++iter;
                     }
-                    std::vector<bool> inside_flags = mpDomain->IsPointInPart(p_mesh->GetNodeLocations());
+                    std::vector<bool> inside_flags = mpDomain->IsPointInPart(p_mesh->GetPoints());
                     for(unsigned idx=0; idx<inside_flags.size(); idx++)
                     {
                         if(inside_flags[idx])
@@ -401,7 +401,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
     // Check the boundary condition type
     if(mType == BoundaryConditionType::OUTER)
     {
-        for(unsigned idx=0; idx<p_regular_grid->GetNumberOfLocations(); idx++)
+        for(unsigned idx=0; idx<p_regular_grid->GetNumberOfPoints(); idx++)
         {
             (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> > (p_regular_grid->IsOnBoundary(idx), mValue);
         }
@@ -434,9 +434,9 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
         {
             units::quantity<unit::length> length_Scale = p_regular_grid->GetReferenceLengthScale();
             double y_max = double(p_regular_grid->GetDimensions()[1]-1) * p_regular_grid->GetSpacing()/length_Scale;
-            for(unsigned idx=0; idx<p_regular_grid->GetNumberOfLocations(); idx++)
+            for(unsigned idx=0; idx<p_regular_grid->GetNumberOfPoints(); idx++)
             {
-                if(p_regular_grid->GetLocation(idx).GetLocation(length_Scale)[1] == y_max)
+                if(p_regular_grid->GetPoint(idx).GetLocation(length_Scale)[1] == y_max)
                 {
                     (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
                 }
@@ -472,9 +472,9 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
         }
         else
         {
-            for(unsigned idx=0; idx<p_regular_grid->GetNumberOfLocations(); idx++)
+            for(unsigned idx=0; idx<p_regular_grid->GetNumberOfPoints(); idx++)
             {
-                if(mpDomain->EdgeHasLabel(p_regular_grid->GetLocation(idx), mLabel))
+                if(mpDomain->EdgeHasLabel(p_regular_grid->GetPoint(idx), mLabel))
                 {
                     (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
                 }
@@ -503,9 +503,9 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
         }
         else
         {
-            for(unsigned idx=0; idx<p_regular_grid->GetNumberOfLocations(); idx++)
+            for(unsigned idx=0; idx<p_regular_grid->GetNumberOfPoints(); idx++)
             {
-                if(mpDomain->IsPointInPart(p_regular_grid->GetLocation(idx)))
+                if(mpDomain->IsPointInPart(p_regular_grid->GetPoint(idx)))
                 {
                     (*pBoundaryConditions)[idx] =  std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
                     break;

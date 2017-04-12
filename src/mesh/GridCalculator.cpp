@@ -45,8 +45,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 GridCalculator<DIM>::GridCalculator() :
         mpNetwork(),
-        mpCellPopulation(),
+        mpCellPopulation(NULL),
         mCellPopulationReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
+        mCellPopulationReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale()),
         mCellMap(),
         mVesselNodeMap(),
         mSegmentMap(),
@@ -72,6 +73,12 @@ GridCalculator<DIM>::~GridCalculator()
 }
 
 template<unsigned DIM>
+bool GridCalculator<DIM>::CellPopulationIsSet()
+{
+    return bool(mpCellPopulation);
+}
+
+template<unsigned DIM>
 boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > GridCalculator<DIM>::GetGrid()
 {
     if(!mpGrid)
@@ -82,9 +89,19 @@ boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > GridCalculator<DIM>::GetG
 }
 
 template<unsigned DIM>
+boost::shared_ptr<VesselNetwork<DIM> > GridCalculator<DIM>::GetVesselNetwork()
+{
+    if(!mpNetwork)
+    {
+        EXCEPTION("A vessel network has not been set in the grid calculator");
+    }
+    return mpNetwork;
+}
+
+template<unsigned DIM>
 std::vector<std::vector<unsigned> > GridCalculator<DIM>::GetPointMap(vtkSmartPointer<vtkPoints> pInputPoints)
 {
-    std::vector<std::vector<unsigned> > point_map(mpGrid->GetNumberOfLocations());
+    std::vector<std::vector<unsigned> > point_map(mpGrid->GetNumberOfCells());
     for(unsigned idx=0;idx<pInputPoints->GetNumberOfPoints();idx++)
     {
         int cell_id = mpGrid->GetVtkCellLocator()->FindCell(pInputPoints->GetPoint(idx));
@@ -132,7 +149,7 @@ const std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >& GridCalcu
     std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
     units::quantity<unit::length> grid_length = mpGrid->GetReferenceLengthScale();
     mVesselNodeMap.clear();
-    mVesselNodeMap = std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >(mpGrid->GetNumberOfLocations());
+    mVesselNodeMap = std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >(mpGrid->GetNumberOfCells());
 
     for(unsigned idx=0;idx<nodes.size();idx++)
     {
@@ -176,7 +193,7 @@ const std::vector<std::vector<CellPtr> >& GridCalculator<DIM>::rGetCellMap(bool 
 
     // Loop over all cells and associate cells with the points
     mCellMap.clear();
-    mCellMap = std::vector<std::vector<CellPtr> >(mpGrid->GetNumberOfLocations());
+    mCellMap = std::vector<std::vector<CellPtr> >(mpGrid->GetNumberOfCells());
 
     units::quantity<unit::length> grid_length = mpGrid->GetReferenceLengthScale();
     double cell_mesh_length_scaling = mCellPopulationReferenceLength/grid_length;
@@ -243,7 +260,7 @@ const std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >& GridCa
     mpGrid->GetGlobalVtkGrid();
 
     mSegmentMap.clear();
-    mSegmentMap = std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >(mpGrid->GetNumberOfLocations());
+    mSegmentMap = std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >(mpGrid->GetNumberOfCells());
     units::quantity<unit::length> grid_length = mpGrid->GetReferenceLengthScale();
 
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = mpNetwork->GetVesselSegments();
@@ -288,7 +305,7 @@ const std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >& GridCa
             p_tube_filter->SetCapping(1);
             p_tube_filter->SetNumberOfSides(12);
             vtkSmartPointer<vtkPolyData> p_point_polydata = vtkSmartPointer<vtkPolyData>::New();
-            p_point_polydata->SetPoints(mpGrid->GetLocations());
+            p_point_polydata->SetPoints(mpGrid->GetCellLocations());
 
             vtkSmartPointer<vtkSelectEnclosedPoints> p_select_encolsed = vtkSmartPointer<vtkSelectEnclosedPoints>::New();
             #if VTK_MAJOR_VERSION <= 5
@@ -298,7 +315,7 @@ const std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >& GridCa
             #endif
             p_select_encolsed->SetSurfaceConnection(p_tube_filter->GetOutputPort());
             p_select_encolsed->Update();
-            for(unsigned idx=0;idx<mpGrid->GetNumberOfLocations();idx++)
+            for(unsigned idx=0;idx<mpGrid->GetNumberOfCells();idx++)
             {
                 if(p_select_encolsed->IsInside(idx))
                 {
@@ -320,10 +337,13 @@ const std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >& GridCa
 }
 
 template<unsigned DIM>
-void GridCalculator<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation, units::quantity<unit::length> cellPopulationLengthScale)
+void GridCalculator<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
+        units::quantity<unit::length> cellPopulationReferenceLength,
+        units::quantity<unit::concentration> cellPopulationReferenceConcentration)
 {
     mpCellPopulation = &rCellPopulation;
-    mCellPopulationReferenceLength = cellPopulationLengthScale;
+    mCellPopulationReferenceLength = cellPopulationReferenceLength;
+    mCellPopulationReferenceConcentration = cellPopulationReferenceConcentration;
 }
 
 template<unsigned DIM>

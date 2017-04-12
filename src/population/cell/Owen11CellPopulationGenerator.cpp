@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "Owen11CellPopulationGenerator.hpp"
 #include "BaseUnits.hpp"
 #include "CancerCellMutationState.hpp"
@@ -237,9 +235,9 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
                                          double(dimensions[2])*dimensionless_spacing/2.0 + dimensionless_origin[0],
 										 mReferenceLength);
 
-        for(unsigned idx=0; idx<p_grid->GetNumberOfLocations(); idx++)
+        for(unsigned idx=0; idx<p_grid->GetNumberOfPoints(); idx++)
         {
-            units::quantity<unit::length> distance = p_grid->GetLocation(idx).GetDistance(origin);
+            units::quantity<unit::length> distance = p_grid->GetPoint(idx).GetDistance(origin);
             if(distance<=mTumourRadius)
             {
                 p_cell_population->GetCellUsingLocationIndex(idx)->SetMutationState(mpCancerCellMutationState);

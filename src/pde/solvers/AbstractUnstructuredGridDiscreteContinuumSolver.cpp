@@ -62,7 +62,7 @@ AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::~AbstractUnstructuredGridD
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration> > AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetConcentrationsAtCentroids()
 {
-    return this->GetConcentrations(this->mpGridCalculator->GetGrid()->GetLocations());
+    return this->GetConcentrations(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetCellLocations());
 }
 
 template<unsigned DIM>
@@ -80,7 +80,7 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::Setup()
     }
 
     // Set up the VTK solution
-    this->mSolution = std::vector<double>(0.0, this->mpDensityMap->GetGridCalculator()->GetNumberOfLocations());
+    this->mSolution = std::vector<double>(0.0, this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfPoints());
 }
 
 template<unsigned DIM>
@@ -91,7 +91,7 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateSolution(const 
         this->Setup();
     }
 
-    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddNodalData(data, this->GetLabel());
+    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(data, this->GetLabel());
 
     // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
     this->mSolution = std::vector<double>(data.size(), 0.0);
@@ -108,17 +108,12 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateElementSolution
     {
         this->Setup();
     }
-    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(data, true, this->GetLabel());
+    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddCellData(data, this->GetLabel());
 }
 
 template<unsigned DIM>
 void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateSolution(const std::vector<units::quantity<unit::concentration> >& data)
 {
-    if(!this->mpVtkSolution)
-    {
-        this->Setup();
-    }
-
     if(this->mSolution.size()==0)
     {
         this->Setup();
@@ -131,7 +126,7 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateSolution(const 
         this->mSolution[i] = data[i]/this->mReferenceConcentration;
     }
 
-    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddNodalData(this->mSolution, this->GetLabel());
+    this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(this->mSolution, this->GetLabel());
 
     // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
     this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*this->mReferenceConcentration);
@@ -167,11 +162,6 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::Update()
 template<unsigned DIM>
 void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::Write()
 {
-    if(!this->mpVtkSolution)
-    {
-        this->Setup();
-    }
-
     if(!this->mpOutputFileHandler)
     {
         EXCEPTION("An output file handler has not been set for the DiscreteContinuum solver.");

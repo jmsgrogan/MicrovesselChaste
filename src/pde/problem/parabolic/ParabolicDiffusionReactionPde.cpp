@@ -106,10 +106,9 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSourceStrengths()
 {
     AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSourceStrengths();
-
     if(this->mDiscreteSources.size()>0)
     {
-        unsigned num_locations = this->mDiscreteSources[0]->GetDensityMap()->GetGridCalculator()->GetGrid()->GetNumberOfLocations();
+        unsigned num_locations = this->mDiscreteSources[0]->GetDensityMap()->GetGridCalculator()->GetGrid()->GetNumberOfPoints();
         mDiscreteNonLinearSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(num_locations,
                 0.0*unit::mole_per_metre_cubed_per_second);
         for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
@@ -119,7 +118,6 @@ void ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSource
                            result.begin( ), mDiscreteNonLinearSourceStrengths.begin( ),std::plus<units::quantity<unit::concentration_flow_rate> >( ));
         }
     }
-
 }
 
 // Explicit instantiation

@@ -84,9 +84,9 @@ public:
 
         // Set up a quadratic function
         std::vector<double> solution;
-        for(unsigned idx=0; idx<p_grid->GetNumberOfLocations(); idx++)
+        for(unsigned idx=0; idx<p_grid->GetNumberOfPoints(); idx++)
         {
-            double x_loc = p_grid->GetLocation(idx).GetLocation(1.e-6*unit::metres)[0];
+            double x_loc = p_grid->GetPoint(idx).GetLocation(1.e-6*unit::metres)[0];
             double value = (100.0-x_loc)*(100.0-x_loc)/(100.0*100.0);
             solution.push_back(value);
         }
@@ -117,9 +117,9 @@ public:
 
         // Set the source values at each point on the grid
         std::vector<double> solution;
-        for(unsigned idx=0; idx<p_mesh_generator->GetMesh()->GetNumberOfLocations(); idx++)
+        for(unsigned idx=0; idx<p_mesh_generator->GetMesh()->GetNumberOfCells(); idx++)
         {
-            double x_loc = p_mesh_generator->GetMesh()->GetLocation(idx).GetLocation(1.e-6*unit::metres)[0];
+            double x_loc = p_mesh_generator->GetMesh()->GetCellLocation(idx).GetLocation(1.e-6*unit::metres)[0];
             double value = (100.0-x_loc)*(100.0-x_loc)/(100.0*100.0);
             solution.push_back(value);
         }

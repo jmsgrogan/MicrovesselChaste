@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "Exception.hpp"
 #include "ImageToMesh.hpp"
 #include <vtkThreshold.h>
@@ -143,7 +141,7 @@ void ImageToMesh<DIM>::Update()
         temp_mesh_generator.Update();
         boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > p_temp_mesh = temp_mesh_generator.GetMesh();
 
-        vtkSmartPointer<vtkPoints> mesh_points = p_temp_mesh->GetNodeLocations();
+        vtkSmartPointer<vtkPoints> mesh_points = p_temp_mesh->GetPoints();
         std::vector<std::vector<unsigned> > mesh_connectivity = p_temp_mesh->GetConnectivity();
 
         units::quantity<unit::length> reference_length = p_temp_mesh->GetReferenceLengthScale();

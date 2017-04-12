@@ -100,7 +100,7 @@ public:
         p_boundary_condition->SetValue(boundary_concentration);
         p_boundary_condition->SetType(BoundaryConditionType::POINT);
         vtkSmartPointer<vtkPoints> p_boundary_points = vtkSmartPointer<vtkPoints>::New();
-        vtkSmartPointer<vtkPoints> p_points = p_grid->GetLocations();
+        vtkSmartPointer<vtkPoints> p_points = p_grid->GetPoints();
         for(unsigned idx=0; idx<p_points->GetNumberOfPoints(); idx++)
         {
             if(p_points->GetPoint(idx)[0]>0.99 or p_points->GetPoint(idx)[0]<0.01)
@@ -110,8 +110,7 @@ public:
         }
         p_boundary_condition->SetPoints(p_boundary_points);
 
-
-        std::vector<double> initial_condition(p_grid->GetNumberOfLocations(), 0.0);
+        std::vector<double> initial_condition(p_grid->GetNumberOfPoints(), 0.0);
 
         // Set up and run the solver
         SimpleParabolicFiniteDifferenceSolver<2> solver;
@@ -172,7 +171,7 @@ public:
         p_pde->SetContinuumLinearInUTerm(vegf_decay_rate);
 
         units::quantity<unit::concentration> initial_vegf_concentration(3.93e-4*unit::mole_per_metre_cubed);
-        std::vector<double> initial_condition(p_grid->GetNumberOfLocations(), double(initial_vegf_concentration/(1.e-6*unit::mole_per_metre_cubed)));
+        std::vector<double> initial_condition(p_grid->GetNumberOfPoints(), double(initial_vegf_concentration/(1.e-6*unit::mole_per_metre_cubed)));
 
         SimpleParabolicFiniteDifferenceSolver<2> solver;
         solver.SetGrid(p_grid);

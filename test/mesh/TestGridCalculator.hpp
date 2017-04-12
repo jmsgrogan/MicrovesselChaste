@@ -119,7 +119,7 @@ public:
         {
             map_values.push_back(map[idx].size());
         }
-        p_grid->AddPointData(map_values, false, "Map Values");
+        p_grid->AddPointData(map_values, "Map Values");
         p_grid->Write(p_handler);
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "/network.vtp");
     }
@@ -169,7 +169,7 @@ public:
         {
             map_values.push_back(map[idx].size());
         }
-        p_grid->AddPointData(map_values, false, "Map Values");
+        p_grid->AddPointData(map_values, "Map Values");
         p_grid->Write(p_handler);
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "/network.vtp");
     }
@@ -224,7 +224,7 @@ public:
         {
             map_values.push_back(map[idx].size());
         }
-        p_grid->AddPointData(map_values, false, "Map Values");
+        p_grid->AddPointData(map_values, "Map Values");
         p_grid->Write(p_handler);
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "/network.vtp");
     }
@@ -262,7 +262,7 @@ public:
         {
             map_values.push_back(map[idx].size());
         }
-        p_grid->AddPointData(map_values, false, "Map Values");
+        p_grid->AddPointData(map_values, "Map Values");
         p_grid->Write(p_handler);
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "/network.vtp");
     }
@@ -312,7 +312,7 @@ public:
         {
             map_values.push_back(map[idx].size());
         }
-        p_grid->AddPointData(map_values, false, "Map Values");
+        p_grid->AddPointData(map_values, "Map Values");
         p_grid->Write(p_handler);
     }
 
@@ -354,7 +354,7 @@ public:
         // Get a point-cell map
         boost::shared_ptr<GridCalculator<3> > p_grid_calc = GridCalculator<3>::Create();
         p_grid_calc->SetGrid(p_grid);
-        p_grid_calc->SetCellPopulation(cell_population, 1.e-6 * unit::metres);
+        p_grid_calc->SetCellPopulation(cell_population, 1.e-6 * unit::metres, BaseUnits::Instance()->GetReferenceConcentrationScale());
         std::vector<std::vector<CellPtr> > map = p_grid_calc->rGetCellMap();
 
         // Make sure all the cells are accounted for
@@ -371,7 +371,7 @@ public:
         {
             map_values.push_back(map[idx].size());
         }
-        p_grid->AddPointData(map_values, false, "Map Values");
+        p_grid->AddPointData(map_values, "Map Values");
         p_grid->Write(p_handler);
 
         for (unsigned i=0; i<nodes.size(); i++)

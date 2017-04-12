@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "RandomNumberGenerator.hpp"
 #include "VesselSegment.hpp"
 #include "Vessel.hpp"
@@ -101,7 +99,7 @@ std::vector<double> Owen2011MigrationRule<DIM>::GetNeighbourMovementProbabilitie
     {
         // make sure that tip cell does not try to move into a location already occupied by the vessel that it comes from
         // i.e. that it doesn't loop back around
-        DimensionalChastePoint<DIM> neighbour_location = this->mpGridCalculator->GetGrid()->GetLocationOfGlobalIndex(neighbourIndices[jdx]);
+        DimensionalChastePoint<DIM> neighbour_location = this->mpGridCalculator->GetGrid()->GetGlobalCellLocation(neighbourIndices[jdx]);
 
         bool sprout_already_attached_to_vessel_at_location = false;
 

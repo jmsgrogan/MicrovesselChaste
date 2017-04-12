@@ -61,12 +61,12 @@ boost::shared_ptr<SolutionDependentDiscreteSource<DIM> > SolutionDependentDiscre
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration_flow_rate> > SolutionDependentDiscreteSource<DIM>::GetConstantInUValues()
 {
-    if(!this->mpGridCalculator)
+    if(!this->mpDensityMap->GetGridCalculator())
     {
         EXCEPTION("A regular grid is required for this type of source");
     }
 
-    unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
+    unsigned num_points = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells();
     std::vector<units::quantity<unit::concentration_flow_rate> > values(num_points, 0.0*unit::mole_per_metre_cubed_per_second);
     if(mpSolution.size() != num_points)
     {
@@ -83,12 +83,12 @@ std::vector<units::quantity<unit::concentration_flow_rate> > SolutionDependentDi
 template<unsigned DIM>
 std::vector<units::quantity<unit::rate> > SolutionDependentDiscreteSource<DIM>::GetLinearInUValues()
 {
-    if(!this->mpGridCalculator)
+    if(!this->mpDensityMap->GetGridCalculator())
     {
         EXCEPTION("A regular grid is required for this type of source");
     }
 
-    unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
+    unsigned num_points = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells();
     std::vector<units::quantity<unit::rate> > values(num_points, 0.0*unit::per_second);
     if(mpSolution.size() != num_points)
     {

@@ -158,7 +158,7 @@ boost::shared_ptr<VesselNode<DIM> > VesselNetwork<DIM>::DivideVessel(boost::shar
         std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = pVessel->GetSegments();
         for (unsigned idx = 0; idx < segments.size(); idx++)
         {
-            if (segments[idx]->GetDistance(location)/segments[idx]->GetNode(0)->GetReferenceLengthScale() <= 1e-6)
+            if (segments[idx]->GetDistance(location)/BaseUnits::Instance()->GetReferenceLengthScale() <= 1e-6)
             {
                 locatedInsideVessel = true;
                 p_segment = segments[idx];
@@ -241,7 +241,7 @@ boost::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::FormSprout(const Dimensional
 {
     // locate vessel at which the location of the sprout base exists
     std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > nearest_segment = GetNearestSegment(sproutBaseLocation);
-    if (nearest_segment.second / nearest_segment.first->GetNode(0)->GetReferenceLengthScale()  > 1e-6)
+    if (nearest_segment.second / BaseUnits::Instance()->GetReferenceLengthScale()  > 1e-6)
     {
         EXCEPTION("No vessel located at sprout base.");
     }
@@ -298,7 +298,7 @@ std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > VesselNetwo
     typename std::vector<boost::shared_ptr<VesselNode<DIM> > >::iterator it;
     for(it = nodes.begin(); it != nodes.end(); it++)
     {
-        units::quantity<unit::length> length_scale = (*it)->rGetLocation().GetReferenceLengthScale();
+        units::quantity<unit::length> length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
         c_vector<double, DIM> location = (*it)->rGetLocation().GetLocation(length_scale);
         if(location[0]*length_scale > x_max)
         {
@@ -334,7 +334,7 @@ std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > VesselNetwo
     units::quantity<unit::length> z_min = z_max;
     for(it = nodes.begin(); it != nodes.end(); it++)
     {
-        units::quantity<unit::length> length_scale = (*it)->rGetLocation().GetReferenceLengthScale();
+        units::quantity<unit::length> length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
         c_vector<double, DIM> location = (*it)->rGetLocation().GetLocation(length_scale);
         if(location[0]*length_scale < x_min)
         {
@@ -464,7 +464,7 @@ std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> 
 {
     boost::shared_ptr<VesselSegment<DIM> > nearest_segment;
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = GetVesselSegments();
-    units::quantity<unit::length> length_scale = segments[0]->GetNode(0)->GetReferenceLengthScale();
+    units::quantity<unit::length> length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
 
     double min_distance = DBL_MAX;
     typename std::vector<boost::shared_ptr<VesselSegment<DIM> > >::iterator segment_iter;
@@ -577,7 +577,7 @@ units::quantity<unit::length> VesselNetwork<DIM>::GetNearestSegment(boost::share
         UpdateInternalVtkGeometry();
     }
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = GetVesselSegments();
-    units::quantity<unit::length> length_scale = pNode->GetReferenceLengthScale();
+    units::quantity<unit::length> length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
 
     c_vector<double, DIM> loc = pNode->rGetLocation().GetLocation(length_scale);
     vtkSmartPointer<vtkIdList> p_id_list = vtkSmartPointer<vtkIdList>::New();
@@ -758,7 +758,7 @@ unsigned VesselNetwork<DIM>::NumberOfNodesNearLocation(const DimensionalChastePo
 
     for(unsigned idx = 0; idx < nodes.size(); idx++)
     {
-        if(nodes[idx]->GetDistance(rLocation)/nodes[idx]->GetReferenceLengthScale() <= tolerance + 1.e-6)
+        if(nodes[idx]->GetDistance(rLocation)/BaseUnits::Instance()->GetReferenceLengthScale() <= tolerance + 1.e-6)
         {
             num_nodes++;
         }
@@ -967,7 +967,7 @@ void VesselNetwork<DIM>::MergeCoincidentNodes(std::vector<boost::shared_ptr<Vess
     bounds[5] = 10;
     p_merge->SetTolerance(tolerance);
     p_merge->InitPointInsertion(p_points, bounds);
-    units::quantity<unit::length> length_scale = nodes[0]->GetReferenceLengthScale();
+    units::quantity<unit::length> length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
     std::vector<int> unique_index_map= std::vector<int>(nodes.size(), -1);
     for(unsigned idx=0; idx<nodes.size(); idx++)
     {
@@ -1207,7 +1207,7 @@ void VesselNetwork<DIM>::UpdateInternalVtkGeometry()
     {
         EXCEPTION("No nodes found in network.");
     }
-    units::quantity<unit::length> length_scale = nodes[0]->GetReferenceLengthScale();
+    units::quantity<unit::length> length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
     vtkSmartPointer<vtkPoints> p_node_points = vtkSmartPointer<vtkPoints>::New();
     for(unsigned idx=0;idx<nodes.size();idx++)
     {
@@ -1221,7 +1221,6 @@ void VesselNetwork<DIM>::UpdateInternalVtkGeometry()
         {
             p_node_points->InsertNextPoint(&loc[0]);
         }
-
     }
 
     vtkSmartPointer<vtkCellArray> p_lines = vtkSmartPointer<vtkCellArray>::New();
@@ -1252,9 +1251,9 @@ bool VesselNetwork<DIM>::VesselCrossesLineSegment(const DimensionalChastePoint<D
 
     // todo a false here does not necessarily guarantee that a vessel does not cross a line segment since get nearest
     // segment only returns one segment
-    double nearest_seg_dist = nearest_segment.second / nearest_segment.first->GetNode(0)->GetReferenceLengthScale();
-    double coord1_distance = nearest_segment.first->GetDistance(coordinate_1) / nearest_segment.first->GetNode(0)->GetReferenceLengthScale();
-    double coord2_distance = nearest_segment.first->GetDistance(coordinate_2) / nearest_segment.first->GetNode(0)->GetReferenceLengthScale();
+    double nearest_seg_dist = nearest_segment.second / BaseUnits::Instance()->GetReferenceLengthScale();
+    double coord1_distance = nearest_segment.first->GetDistance(coordinate_1) / BaseUnits::Instance()->GetReferenceLengthScale();
+    double coord2_distance = nearest_segment.first->GetDistance(coordinate_2) / BaseUnits::Instance()->GetReferenceLengthScale();
 
     bool crosses_segment = (nearest_seg_dist<= tolerance) && (coord1_distance > tolerance) && (coord2_distance > tolerance);
     return  crosses_segment;

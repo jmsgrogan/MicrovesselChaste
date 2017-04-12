@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "VesselSegment.hpp"
 #include "ChastePoint.hpp"
 #include "GeometryTools.hpp"
@@ -70,7 +68,7 @@ template<unsigned DIM>
 void LacunarityCalculator<DIM>::Solve()
 {
     boost::shared_ptr<RegularGrid<DIM > > p_grid =
-            boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+            boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
     if(!p_grid)
     {
         EXCEPTION("Can't cast to regular grid during Setup");

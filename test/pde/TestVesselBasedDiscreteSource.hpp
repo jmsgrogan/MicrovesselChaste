@@ -101,7 +101,7 @@ public:
         std::vector<units::quantity<unit::rate> > point_rates = p_vessel_source_lin->GetLinearInUValues();
         std::vector<units::quantity<unit::concentration_flow_rate> > point_conc_rates = p_vessel_source_const->GetConstantInUValues();
         std::vector<double> solution;
-        for(unsigned idx=0; idx<p_density_map->GetGridCalculator()->GetGrid()->GetNumberOfLocations(); idx++)
+        for(unsigned idx=0; idx<p_density_map->GetGridCalculator()->GetGrid()->GetNumberOfPoints(); idx++)
         {
             solution.push_back(double(point_rates[idx].value() + point_conc_rates[idx].value()));
         }

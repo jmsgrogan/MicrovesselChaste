@@ -90,7 +90,7 @@ void AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::UpdateD
 {
     if(this->mDiscreteSources.size()>0)
     {
-        unsigned num_locations = this->mDiscreteSources[0]->GetDensityMap()->GetGridCalculator()->GetGrid()->GetNumberOfLocations();
+        unsigned num_locations = this->mDiscreteSources[0]->GetDensityMap()->GetGridCalculator()->GetGrid()->GetNumberOfPoints();
 
         mDiscreteConstantSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(num_locations,
                 0.0*unit::mole_per_metre_cubed_per_second);

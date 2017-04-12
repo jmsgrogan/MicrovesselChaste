@@ -262,7 +262,7 @@ public:
 
         // Check point data writing
         std::vector<double> local_index;
-        for(unsigned idx=0;idx<p_grid->GetNumberOfLocations();idx++)
+        for(unsigned idx=0;idx<p_grid->GetNumberOfPoints();idx++)
         {
             local_index.push_back(idx);
         }
@@ -284,7 +284,7 @@ public:
 
         // Check point data writing
         std::vector<double> local_index;
-        for(unsigned idx=0;idx<p_grid->GetNumberOfLocations();idx++)
+        for(unsigned idx=0;idx<p_grid->GetNumberOfPoints();idx++)
         {
             local_index.push_back(idx);
         }

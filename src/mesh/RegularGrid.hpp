@@ -59,7 +59,7 @@ class RegularGrid : public AbstractDiscreteContinuumGrid<DIM, DIM>
 
 public:
 
-    using AbstractDiscreteContinuumGrid<DIM, DIM>::GetLocation;
+    using AbstractDiscreteContinuumGrid<DIM, DIM>::GetPoint;
 
 protected:
 
@@ -158,7 +158,13 @@ public:
      * @param globalIndex the global index
      * @return the local grid index for the supplied global index. Return -1 if not on this proc
      */
-    virtual int GetLocalIndex(unsigned globalIndex);
+    int GetLocalIndex(unsigned globalIndex);
+
+    /**
+     * Return the location of the supplied GLOBAL index
+     * @return the location of the supplied GLOBAL index
+     */
+    DimensionalChastePoint<DIM> GetGlobalCellLocation(unsigned index);
 
     /**
      * Calculate GLOBAL von Neumann neighbour indices for each LOCAL grid point
@@ -191,14 +197,7 @@ public:
      * @param zIndex the grid z index
      * @return the location of the point
      */
-    DimensionalChastePoint<DIM> GetLocation(unsigned xIndex, unsigned yIndex, unsigned zIndex);
-
-    /**
-     * Get the location of a point on the grid for given 1-d grid index
-     * @param gridIndex the 1d grid index
-     * @return the location of the point
-     */
-    DimensionalChastePoint<DIM> GetLocationOfGlobalIndex(unsigned gridIndex);
+    DimensionalChastePoint<DIM> GetPoint(unsigned xIndex, unsigned yIndex, unsigned zIndex);
 
     /**
      * Return the origin in x, y, z
@@ -240,7 +239,7 @@ public:
      * @param jiggle increase the box size by a small amount to catch features half way between grid points
      * @return the DIMENSIONLESS volume for each point in the grid
      */
-    const std::vector<double>& rGetLocationVolumes(bool update=false, bool jiggle=false);
+    const std::vector<double>& rGetCellVolumes(bool update=false, bool jiggle=false);
 
     /**
      * Is the LOCAL index on the outer boundary of the domain
@@ -287,7 +286,7 @@ public:
     /**
      * Over-ridden method to set up the cell locator
      */
-    virtual void SetUpVtkCellLocator();
+    void SetUpVtkCellLocator();
 
     /**
      * Update the local extents

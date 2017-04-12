@@ -146,9 +146,9 @@ public:
                 std::vector<units::quantity<unit::concentration> >(dimensions[0]*dimensions[1], 0.0*unit::mole_per_metre_cubed);
 
         units::quantity<unit::concentration> max_vegf(0.2e-9*unit::mole_per_metre_cubed);
-        for(unsigned idx=0; idx<p_grid_calc->GetGrid()->GetNumberOfLocations(); idx++)
+        for(unsigned idx=0; idx<p_grid_calc->GetGrid()->GetNumberOfPoints(); idx++)
         {
-            vegf_field[idx] = max_vegf * p_grid->GetLocationOfGlobalIndex(idx).GetLocation(1.e-6*unit::metres)[0] / (float(dimensions[0]) * spacing);
+            vegf_field[idx] = max_vegf * p_grid->GetPoint(idx).GetLocation(1.e-6*unit::metres)[0] / (float(dimensions[0]) * spacing);
         }
         p_funciton_map->UpdateSolution(vegf_field);
 

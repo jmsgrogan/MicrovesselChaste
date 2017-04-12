@@ -51,8 +51,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "RegularGridWriter.hpp"
 #include "BaseUnits.hpp"
 
-#include "Debug.hpp"
-
 template<unsigned DIM>
 RegularGrid<DIM>::RegularGrid() :
         AbstractDiscreteContinuumGrid<DIM, DIM>(),
@@ -83,7 +81,7 @@ RegularGrid<DIM>::~RegularGrid()
 template<unsigned DIM>
 void RegularGrid<DIM>::CalculateNeighbourData()
 {
-    unsigned num_points = this->GetNumberOfLocations();
+    unsigned num_points = this->GetNumberOfPoints();
     mNeighbourData = std::vector<std::vector<unsigned> >(num_points);
 
     for (unsigned kdx = mExtents[4]; kdx <= mExtents[5]; kdx++)
@@ -125,7 +123,7 @@ void RegularGrid<DIM>::CalculateNeighbourData()
 template<unsigned DIM>
 void RegularGrid<DIM>::CalculateMooreNeighbourData()
 {
-    unsigned num_points = this->GetNumberOfLocations();
+    unsigned num_points = this->GetNumberOfPoints();
     mNeighbourData = std::vector<std::vector<unsigned> >(num_points);
     for (unsigned kdx = mExtents[4]; kdx <= mExtents[5]; kdx++)
     {
@@ -261,6 +259,17 @@ int RegularGrid<DIM>::GetLocalIndex(unsigned globalIndex)
 }
 
 template<unsigned DIM>
+DimensionalChastePoint<DIM> RegularGrid<DIM>::GetGlobalCellLocation(unsigned index)
+{
+    if (!this->mVtkRepresentationUpToDate)
+    {
+        SetUpVtkGrid();
+    }
+    double* loc = this->mpGlobalVtkGrid->GetPoint(index);
+    return DimensionalChastePoint<DIM>(loc[0], loc[1], loc[2], this->mReferenceLength);
+}
+
+template<unsigned DIM>
 boost::shared_ptr<DistributedVectorFactory> RegularGrid<DIM>::GetDistributedVectorFactory()
 {
     return mpDistributedVectorFactory;
@@ -301,7 +310,7 @@ c_vector<unsigned, 6> RegularGrid<DIM>::GetExtents()
 template<unsigned DIM>
 const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::rGetNeighbourData()
 {
-    if (mNeighbourData.size() == 0 or mNeighbourData.size() != this->GetNumberOfLocations())
+    if (mNeighbourData.size() == 0 or mNeighbourData.size() != this->GetNumberOfPoints())
     {
         CalculateNeighbourData();
     }
@@ -311,7 +320,7 @@ const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::rGetNeighbourData()
 template<unsigned DIM>
 const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::rGetMooreNeighbourData()
 {
-    if (mNeighbourData.size() == 0 or mNeighbourData.size() != this->GetNumberOfLocations())
+    if (mNeighbourData.size() == 0 or mNeighbourData.size() != this->GetNumberOfPoints())
     {
         CalculateMooreNeighbourData();
     }
@@ -346,7 +355,7 @@ void RegularGrid<DIM>::GenerateFromPart(boost::shared_ptr<Part<DIM> > pPart, uni
 }
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM> RegularGrid<DIM>::GetLocation(unsigned x_index, unsigned y_index, unsigned z_index)
+DimensionalChastePoint<DIM> RegularGrid<DIM>::GetPoint(unsigned x_index, unsigned y_index, unsigned z_index)
 {
     if (!this->mVtkRepresentationUpToDate)
     {
@@ -358,18 +367,6 @@ DimensionalChastePoint<DIM> RegularGrid<DIM>::GetLocation(unsigned x_index, unsi
     locs[2] = z_index;
     c_vector<double, 3> loc;
     this->mpGlobalVtkGrid->GetPoint(vtkImageData::SafeDownCast(this->mpGlobalVtkGrid)->ComputePointId(locs), &loc[0]);
-    return DimensionalChastePoint<DIM>(loc[0], loc[1], loc[2], this->mReferenceLength);
-}
-
-template<unsigned DIM>
-DimensionalChastePoint<DIM> RegularGrid<DIM>::GetLocationOfGlobalIndex(unsigned grid_index)
-{
-    if (!this->mVtkRepresentationUpToDate)
-    {
-        SetUpVtkGrid();
-    }
-    c_vector<double, 3> loc;
-    this->mpGlobalVtkGrid->GetPoint(grid_index, &loc[0]);
     return DimensionalChastePoint<DIM>(loc[0], loc[1], loc[2], this->mReferenceLength);
 }
 
@@ -386,27 +383,27 @@ units::quantity<unit::length> RegularGrid<DIM>::GetSpacing()
 }
 
 template<unsigned DIM>
-const std::vector<double>& RegularGrid<DIM>::rGetLocationVolumes(bool update, bool jiggle)
+const std::vector<double>& RegularGrid<DIM>::rGetCellVolumes(bool update, bool jiggle)
 {
-    unsigned num_points = this->GetNumberOfLocations();
+    unsigned num_points = this->GetNumberOfPoints();
     if(update)
     {
-        this->mVolumes.clear();
+        this->mCellVolumes.clear();
         for (unsigned idx=0;idx<num_points; idx++)
         {
             c_vector<double,6> bbox = GetPointBoundingBox(idx, jiggle);
             double area = (bbox[3]-bbox[2])*(bbox[1]-bbox[0]);
             if(DIM==2)
             {
-                this->mVolumes.push_back(area);
+                this->mCellVolumes.push_back(area);
             }
             else
             {
-                this->mVolumes.push_back(area*(bbox[5]-bbox[4]));
+                this->mCellVolumes.push_back(area*(bbox[5]-bbox[4]));
             }
         }
     }
-    return this->mVolumes;
+    return this->mCellVolumes;
 }
 
 template<unsigned DIM>
@@ -461,7 +458,7 @@ c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsign
     double dimensionless_spacing = GetSpacing()/scale_factor;
     double jiggle_size = 1.e-3 * dimensionless_spacing;
 
-    c_vector<double, DIM> dimensionless_location = this->GetLocation(xIndex ,yIndex, zIndex).GetLocation(scale_factor);
+    c_vector<double, DIM> dimensionless_location = this->GetPoint(xIndex ,yIndex, zIndex).GetLocation(scale_factor);
     c_vector<double, 3> loc;
 
     if(DIM==2)
@@ -558,7 +555,7 @@ void RegularGrid<DIM>::SetSpacing(units::quantity<unit::length> spacing)
     mSpacing = spacing;
     UpdateExtents();
     this->mVtkRepresentationUpToDate = false;
-    this->rGetLocationVolumes(true, false);
+    this->rGetCellVolumes(true, false);
 }
 
 template<unsigned DIM>
@@ -567,7 +564,7 @@ void RegularGrid<DIM>::SetDimensions(c_vector<unsigned, 3> dimensions)
     mDimensions = dimensions;
     UpdateExtents();
     this->mVtkRepresentationUpToDate = false;
-    this->rGetLocationVolumes(true, false);
+    this->rGetCellVolumes(true, false);
 
 }
 
@@ -632,10 +629,12 @@ void RegularGrid<DIM>::SetUpVtkGrid()
     // Set up the local global map and grid locations
     unsigned lo = mpDistributedVectorFactory->GetLow();
     this->mLocalGlobalMap.clear();
-    this->mpGridLocations = vtkSmartPointer<vtkPoints>::New();
+    this->mpCellLocations = vtkSmartPointer<vtkPoints>::New();
+    this->mpPointLocations = vtkSmartPointer<vtkPoints>::New();
     for(unsigned idx=0;idx<this->mpVtkGrid->GetNumberOfPoints(); idx++)
     {
-        this->mpGridLocations->InsertNextPoint(this->mpVtkGrid->GetPoint(idx));
+        this->mpPointLocations->InsertNextPoint(this->mpVtkGrid->GetPoint(idx));
+        this->mpCellLocations->InsertNextPoint(this->mpVtkGrid->GetPoint(idx));
         this->mLocalGlobalMap.push_back(idx+lo);
     }
     this->mVtkRepresentationUpToDate = true;

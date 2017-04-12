@@ -50,7 +50,7 @@ template<unsigned DIM>
 AngiogenesisSolver<DIM>::AngiogenesisSolver() :
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
         mpNetwork(),
-        mNodeAnastamosisRadius(5.0 * unit::microns),
+        mNodeAnastamosisRadius(10.0 * unit::microns),
         mpMigrationRule(),
         mpSproutingRule(),
         mpBoundingDomain(),
@@ -189,14 +189,14 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
                 if (sprouting)
                 {
                     mpNetwork->FormSprout(tips[idx]->rGetLocation(),
-                            mpGridCalculator->GetGrid()->GetLocationOfGlobalIndex(indices[idx]));
+                            mpGridCalculator->GetGrid()->GetGlobalCellLocation(indices[idx]));
                     tips[idx]->SetIsMigrating(false);
                     mpNetwork->UpdateAll();
                 }
                 else
                 {
                     boost::shared_ptr<VesselNode<DIM> > p_new_node = VesselNode<DIM>::Create(tips[idx]);
-                    p_new_node->SetLocation(mpGridCalculator->GetGrid()->GetLocationOfGlobalIndex(indices[idx]));
+                    p_new_node->SetLocation(mpGridCalculator->GetGrid()->GetGlobalCellLocation(indices[idx]));
                     mpNetwork->ExtendVessel(tips[idx]->GetSegment(0)->GetVessel(), tips[idx], p_new_node);
                     tips[idx]->SetIsMigrating(false);
                     p_new_node->SetIsMigrating(true);
@@ -293,7 +293,7 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
             if (mpGridCalculator)
             {
                 std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > point_node_map = mpGridCalculator->rGetVesselNodeMap();
-                unsigned grid_index = mpGridCalculator->GetGrid()->GetNearestLocationIndex(nodes[idx]->rGetLocation());
+                unsigned grid_index = mpGridCalculator->GetGrid()->GetNearestCellIndex(nodes[idx]->rGetLocation());
 
                 if (point_node_map[grid_index].size() >= 2)
                 {
@@ -325,11 +325,9 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
             else
             {
                 // Get the nearest segment and check if it is close enough to the node for a merge
-                Timer::Print("Start Find Nearest");
                 boost::shared_ptr<VesselSegment<DIM> > p_nearest_segment;
                 units::quantity<unit::length> distance = mpNetwork->GetNearestSegment(nodes[idx],
-                        p_nearest_segment, false, mNodeAnastamosisRadius);
-                Timer::Print("End Find Nearest");
+                        p_nearest_segment, false, 3.0*mNodeAnastamosisRadius);
 
                 if(p_nearest_segment)
                 {
@@ -363,9 +361,7 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
                                 nodes[idx]->GetSegment(0)->ReplaceNode(1, p_merge_node);
                             }
                         }
-                        Timer::Print("Full Update");
                         mpNetwork->UpdateAll();
-                        Timer::Print("End Full Update");
                     }
                 }
             }
@@ -376,7 +372,6 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
 template<unsigned DIM>
 void AngiogenesisSolver<DIM>::Increment()
 {
-    Timer::PrintAndReset("Start Angio Increment");
     if (!mpNetwork)
     {
         EXCEPTION("The angiogenesis solver needs an initial vessel network");
@@ -387,7 +382,8 @@ void AngiogenesisSolver<DIM>::Increment()
         mpGridCalculator->SetVesselNetwork(mpNetwork);
         if (mpCellPopulation)
         {
-            mpGridCalculator->SetCellPopulation(*mpCellPopulation, mCellPopulationReferenceLength);
+            mpGridCalculator->SetCellPopulation(*mpCellPopulation, mCellPopulationReferenceLength,
+                    BaseUnits::Instance()->GetReferenceConcentrationScale());
         }
     }
 
@@ -413,20 +409,16 @@ void AngiogenesisSolver<DIM>::Increment()
         }
     }
 
-    Timer::Print("Start Migration");
     // Move any migrating nodes
     UpdateNodalPositions();
 
-    Timer::Print("Check Anasta");
     // Check for anastamosis
     DoAnastamosis();
 
     // Do sprouting
     if (mpSproutingRule)
     {
-        Timer::Print("Start Sprouting");
         DoSprouting();
-        Timer::Print("Check Anasta2");
         DoAnastamosis();
     }
 
@@ -453,7 +445,7 @@ void AngiogenesisSolver<DIM>::Increment()
         {
             if (nodes[idx]->IsMigrating())
             {
-                unsigned location_index = mpGridCalculator->GetGrid()->GetNearestLocationIndex(nodes[idx]->rGetLocation());
+                unsigned location_index = mpGridCalculator->GetGrid()->GetNearestCellIndex(nodes[idx]->rGetLocation());
 
                 // If there is already a stalk cell here it means a vessel tip has stayed in the same location, set it to tip type
                 if(mpCellPopulation->IsCellAttachedToLocationIndex(location_index))
@@ -477,7 +469,6 @@ void AngiogenesisSolver<DIM>::Increment()
             }
         }
     }
-    Timer::Print("End Angio Increment");
 }
 
 template<unsigned DIM>

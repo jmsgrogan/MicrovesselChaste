@@ -66,9 +66,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::DiscreteContinuumMesh() :
-    AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>(),
-    mpNodeLocations(),
-    mNodeData()
+    AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>()
 {
 
 }
@@ -84,21 +82,6 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::~DiscreteContinuumMesh()
 {
 
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::AddNodalData(const std::vector<double>& rPointValues,
-            const std::string& rName)
-{
-    vtkSmartPointer<vtkDoubleArray> p_node_data = vtkSmartPointer<vtkDoubleArray>::New();
-    p_node_data->SetNumberOfTuples(rPointValues.size());
-    p_node_data->SetName(rName.c_str());
-    for(unsigned idx=0; idx<rPointValues.size(); idx++)
-    {
-        p_node_data->SetTuple1(idx, rPointValues[idx]);
-    }
-    mNodeData.push_back(p_node_data);
-    this->mVtkRepresentationUpToDate = false;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -319,33 +302,33 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetUpVtkGrid()
     }
 
     // Update the locations with element centroids
-    this->mpGridLocations = vtkSmartPointer<vtkPoints>::New();
+    this->mpCellLocations = vtkSmartPointer<vtkPoints>::New();
     for(unsigned idx=0; idx<this->mpVtkGrid->GetNumberOfCells(); idx++)
     {
         c_vector<double, SPACE_DIM> loc = this->GetElement(this->mLocalGlobalMap[idx])->CalculateCentroid();
         if(SPACE_DIM==3)
         {
-            this->mpGridLocations->InsertNextPoint(&loc[0]);
+            this->mpCellLocations->InsertNextPoint(&loc[0]);
         }
         else
         {
-            this->mpGridLocations->InsertNextPoint(loc[0], loc[1], 0.0);
+            this->mpCellLocations->InsertNextPoint(loc[0], loc[1], 0.0);
         }
     }
 
     // Update the node locations
-    mpNodeLocations = vtkSmartPointer<vtkPoints>::New();
+    this->mpPointLocations = vtkSmartPointer<vtkPoints>::New();
     typename DiscreteContinuumMesh<SPACE_DIM, SPACE_DIM>::NodeIterator iter = this->GetNodeIteratorBegin();
     while (iter != this->GetNodeIteratorEnd())
      {
         c_vector<double, SPACE_DIM> loc = (*iter).GetPoint().rGetLocation();
         if(SPACE_DIM==3)
         {
-            mpNodeLocations->InsertNextPoint(&loc[0]);
+            this->mpPointLocations->InsertNextPoint(&loc[0]);
         }
         else
         {
-            mpNodeLocations->InsertNextPoint(loc[0], loc[1], 0.0);
+            this->mpPointLocations->InsertNextPoint(loc[0], loc[1], 0.0);
         }
          ++iter;
      }
@@ -355,30 +338,30 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetUpVtkGrid()
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-DimensionalChastePoint<SPACE_DIM> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetLocationOfGlobalIndex(unsigned index)
+DimensionalChastePoint<SPACE_DIM> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetGlobalCellLocation(unsigned index)
 {
     return DimensionalChastePoint<SPACE_DIM>(this->GetElement(index)->CalculateCentroid(), this->GetReferenceLengthScale());
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-const std::vector<double>& DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::rGetLocationVolumes(bool update, bool jiggle)
+const std::vector<double>& DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::rGetCellVolumes(bool update, bool jiggle)
 {
     if(!update)
     {
-        return this->mVolumes;
+        return this->mCellVolumes;
     }
-    if(this->mVolumes.size()!=this->GetNumberOfLocations())
+    if(this->mCellVolumes.size()!=this->GetNumberOfCells())
     {
-        this->mVolumes.clear();
-        for(unsigned idx=0; idx<this->GetNumberOfLocations(); idx++)
+        this->mCellVolumes.clear();
+        for(unsigned idx=0; idx<this->GetNumberOfCells(); idx++)
         {
             double determinant = 0.0;
             c_matrix<double, ELEMENT_DIM, SPACE_DIM> jacobian;
             this->GetElement(this->mLocalGlobalMap[idx])->CalculateJacobian(jacobian, determinant);
-            this->mVolumes.push_back(this->GetElement(this->mLocalGlobalMap[idx])->GetVolume(determinant));
+            this->mCellVolumes.push_back(this->GetElement(this->mLocalGlobalMap[idx])->GetVolume(determinant));
         }
     }
-    return this->mVolumes;
+    return this->mCellVolumes;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -400,9 +383,9 @@ std::vector<std::vector<unsigned> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-vtkSmartPointer<vtkPoints> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetNodeLocations()
+vtkSmartPointer<vtkPoints> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetPointLocations()
 {
-    return mpNodeLocations;
+    return this->mpPointLocations;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

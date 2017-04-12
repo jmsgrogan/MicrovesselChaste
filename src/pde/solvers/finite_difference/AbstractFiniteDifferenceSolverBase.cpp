@@ -105,32 +105,25 @@ template<unsigned DIM>
 void AbstractFiniteDifferenceSolverBase<DIM>::Setup()
 {
     // Set up the grid and PDE
-    if(!this->mpGridCalculator)
+    if(!this->mpDensityMap)
     {
-        EXCEPTION("This solver needs a grid calculator to be set before calling Setup.");
+        EXCEPTION("This solver needs a density map to be set before calling Setup.");
     }
 
-    if(this->CellPopulationIsSet())
-    {
-        this->mpGridCalculator->SetCellPopulation(*(this->mpCellPopulation), this->mCellPopulationReferenceLength);
-    }
-
-    if(this->mpNetwork)
-    {
-    	this->mpGridCalculator->SetVesselNetwork(this->mpNetwork);
-    }
-
-    if(this->mpPde)
-    {
-        this->mpPde->SetGridCalculator(this->mpGridCalculator);
-    }
-    else
+    if(!this->mpPde)
     {
         EXCEPTION("This solver needs a PDE to be set before calling Setup.");
     }
 
+    // Set up an discrete sources
+    std::vector<boost::shared_ptr<DiscreteSource<DIM> > > discrete_sources = this->mpPde->GetDiscreteSources();
+    for(unsigned idx=0;idx<discrete_sources.size();idx++)
+    {
+        discrete_sources[idx]->SetDensityMap(this->mpDensityMap);
+    }
+
     // Set up the boundary conditions. Use a different description from normal DiscreteContinuum BCs for efficiency.
-    unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfLocations();
+    unsigned num_points = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfPoints();
     mpBoundaryConditions = boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > (new std::vector<std::pair<bool, units::quantity<unit::concentration> > >(num_points));
     for(unsigned idx=0; idx<num_points; idx++)
     {
@@ -138,7 +131,7 @@ void AbstractFiniteDifferenceSolverBase<DIM>::Setup()
     }
     for(unsigned bound_index=0; bound_index<this->mBoundaryConditions.size(); bound_index++)
     {
-        this->mBoundaryConditions[bound_index]->SetGridCalculator(this->mpGridCalculator);
+        this->mBoundaryConditions[bound_index]->SetGridCalculator(this->mpDensityMap->GetGridCalculator());
     }
 
     // Set up the vtk solution grid

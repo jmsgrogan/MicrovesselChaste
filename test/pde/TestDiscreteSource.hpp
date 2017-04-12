@@ -77,8 +77,9 @@ public:
         units::quantity<unit::length> grid_spacing(5.0*unit::microns);
         p_grid->GenerateFromPart(p_domain, grid_spacing);
 
-        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
-        p_grid_calc->SetGrid(p_grid);
+        // Set up a density map
+        boost::shared_ptr<DensityMap<2> > p_density_map = DensityMap<2>::Create();
+        p_density_map->SetGrid(p_grid);
 
         // Set up the discrete source
         std::vector<DimensionalChastePoint<2> > linear_consumption_points;
@@ -87,7 +88,7 @@ public:
 
         p_linear_point_source->SetLinearInUValue(1.0 * unit::per_second);
         p_linear_point_source->SetPoints(linear_consumption_points);
-        p_linear_point_source->SetGridCalculator(p_grid_calc);
+        p_linear_point_source->SetDensityMap(p_density_map);
 
         boost::shared_ptr<DiscreteSource<2> > p_const_point_source = DiscreteSource<2>::Create();
         units::quantity<unit::concentration_flow_rate> consumption_rate(2.0 * unit::mole_per_metre_cubed_per_second);
@@ -98,7 +99,7 @@ public:
         constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 75.0, 0.0, 1.e-6 * unit::metres));
         constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 75.0, 0.0, 1.e-6 * unit::metres));
         p_const_point_source->SetPoints(constant_consumption_points);
-        p_const_point_source->SetGridCalculator(p_grid_calc);
+        p_const_point_source->SetDensityMap(p_density_map);
 
         // Set up a function map
         FunctionMap<2> solver;
@@ -108,7 +109,7 @@ public:
         std::vector<units::quantity<unit::rate> > point_rates = p_linear_point_source->GetLinearInUValues();
         std::vector<units::quantity<unit::concentration_flow_rate> > point_conc_rates = p_const_point_source->GetConstantInUValues();
         std::vector<double> solution;
-        for(unsigned idx=0; idx<p_grid_calc->GetGrid()->GetNumberOfLocations(); idx++)
+        for(unsigned idx=0; idx<p_density_map->GetGridCalculator()->GetGrid()->GetNumberOfPoints(); idx++)
         {
             solution.push_back(double(point_rates[idx].value() + point_conc_rates[idx].value()));
         }
@@ -132,8 +133,8 @@ public:
         p_mesh_generator->SetMaxElementArea(units::pow<3>(0.02*length));
         p_mesh_generator->Update();
 
-        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
-        p_grid_calc->SetGrid(p_mesh_generator->GetMesh());
+        boost::shared_ptr<DensityMap<2> > p_density_map = DensityMap<2>::Create();
+        p_density_map->SetGrid(p_mesh_generator->GetMesh());
 
         // Set up the discrete source
         std::vector<DimensionalChastePoint<2> > linear_consumption_points;
@@ -141,7 +142,7 @@ public:
         boost::shared_ptr<DiscreteSource<2> > p_linear_point_source = DiscreteSource<2>::Create();
         p_linear_point_source->SetLinearInUValue(1.0 * unit::per_second);
         p_linear_point_source->SetPoints(linear_consumption_points);
-        p_linear_point_source->SetGridCalculator(p_grid_calc);
+        p_linear_point_source->SetDensityMap(p_density_map);
 
         boost::shared_ptr<DiscreteSource<2> > p_const_point_source = DiscreteSource<2>::Create();
         units::quantity<unit::concentration_flow_rate> consumption_rate(2.0 * unit::mole_per_metre_cubed_per_second);
@@ -152,7 +153,7 @@ public:
         constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 75.0, 25.0, 1.e-6 * unit::metres));
         constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 75.0, 25.0, 1.e-6 * unit::metres));
         p_const_point_source->SetPoints(constant_consumption_points);
-        p_const_point_source->SetGridCalculator(p_grid_calc);
+        p_const_point_source->SetDensityMap(p_density_map);
 
         // Set up a function map
         FunctionMap<2> solver;

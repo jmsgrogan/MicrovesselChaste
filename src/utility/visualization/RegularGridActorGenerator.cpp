@@ -246,6 +246,5 @@ void RegularGridActorGenerator<DIM>::SetEdgeOpacity(double opacity)
     mEdgeOpacity = opacity;
 }
 
-
 template class RegularGridActorGenerator<2>;
 template class RegularGridActorGenerator<3>;

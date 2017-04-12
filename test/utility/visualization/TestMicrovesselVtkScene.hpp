@@ -67,7 +67,7 @@ public:
         p_grid->SetDimensions(dimensions);
         p_grid->SetSpacing(20.e-6*unit::metres);
         std::vector<double> grid_values;
-        for(unsigned idx=0; idx < p_grid->GetNumberOfLocations(); idx++)
+        for(unsigned idx=0; idx < p_grid->GetNumberOfPoints(); idx++)
         {
             grid_values.push_back(double(idx)*10.0 + 100.0);
         }
@@ -104,7 +104,7 @@ public:
         p_grid->SetSpacing(20.e-6*unit::metres);
 
         std::vector<double> grid_values;
-        for(unsigned idx=0; idx < p_grid->GetNumberOfLocations(); idx++)
+        for(unsigned idx=0; idx < p_grid->GetNumberOfPoints(); idx++)
         {
             grid_values.push_back(double(idx)*10.0 + 100.0);
         }

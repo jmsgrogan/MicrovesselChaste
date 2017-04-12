@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
 #include <vtkDoubleArray.h>
 #include <vtkPointData.h>
@@ -91,7 +89,7 @@ void AbstractGreensFunctionSolverBase<DIM>::GenerateSubSegments()
     // Set up the sub-segment points and map to original segments
     units::quantity<unit::length> max_subsegment_length = mSubsegmentCutoff;
 
-    std::vector<boost::shared_ptr<Vessel<DIM> > > vessels = this->mpNetwork->GetVessels();
+    std::vector<boost::shared_ptr<Vessel<DIM> > > vessels = this->mpDensityMap->GetVesselNetwork()->GetVessels();
     typename std::vector<boost::shared_ptr<Vessel<DIM> > >::iterator vessel_iter;
     typename std::vector<boost::shared_ptr<VesselSegment<DIM> > >::iterator segment_iter;
 
@@ -136,12 +134,12 @@ void AbstractGreensFunctionSolverBase<DIM>::GenerateSubSegments()
 template<unsigned DIM>
 void AbstractGreensFunctionSolverBase<DIM>::GenerateTissuePoints()
 {
-    unsigned num_points = this->mpRegularGrid->GetNumberOfLocations();
+    unsigned num_points = this->mpRegularGrid->GetNumberOfPoints();
     mSinkCoordinates = std::vector<DimensionalChastePoint<DIM> >(num_points);
     mSinkPointMap = std::vector<unsigned>(num_points);
     for(unsigned idx=0; idx<num_points; idx++)
     {
-        mSinkCoordinates[idx] = this->mpRegularGrid->GetLocation(idx);
+        mSinkCoordinates[idx] = this->mpRegularGrid->GetPoint(idx);
         mSinkPointMap[idx] = idx;
     }
 }
@@ -306,13 +304,13 @@ void AbstractGreensFunctionSolverBase<DIM>::WriteSolution(std::map<std::string, 
     // Write the tissue point data
     RegularGridWriter writer;
     writer.SetFilename(this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/solution.vti");
-    writer.SetImage(vtkImageData::SafeDownCast(this->mpVtkSolution));
+    writer.SetImage(vtkImageData::SafeDownCast(this->GetVtkSolution()));
     writer.Write();
 
     // Add the segment points
     vtkSmartPointer<vtkPolyData> pPolyData = vtkSmartPointer<vtkPolyData>::New();
     vtkSmartPointer<vtkPoints> pPoints = vtkSmartPointer<vtkPoints>::New();
-    units::quantity<unit::length> grid_length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
+    units::quantity<unit::length> grid_length_scale = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
 
     for (unsigned i = 0; i < mSubSegmentCoordinates.size(); i++)
     {

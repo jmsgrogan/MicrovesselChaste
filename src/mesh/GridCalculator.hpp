@@ -66,14 +66,19 @@ class GridCalculator
     boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
 
     /**
-     * The cell population. This memory pointed to is not managed in this class.
+     * The cell population.
      */
     AbstractCellPopulation<DIM>* mpCellPopulation;
 
     /**
-     * The reference length scale for the cell population.
+     * The reference length scale for the cellpopulation.
      */
     units::quantity<unit::length> mCellPopulationReferenceLength;
+
+    /**
+     * The reference concentration scale for the cellpopulation.
+     */
+    units::quantity<unit::concentration> mCellPopulationReferenceConcentration;
 
     /**
      * A map of cells corresponding to points or elements
@@ -124,6 +129,12 @@ public:
     ~GridCalculator();
 
     /**
+     * Has a cell population been set?
+     * @return whether a cell population been set.
+     */
+    bool CellPopulationIsSet();
+
+    /**
      * Return a vector of input point indices which in the bounding boxes of each grid location
      * @param rInputPoints a vector of point locations
      * @return the indices of input points in the bounding box of each grid location
@@ -143,6 +154,12 @@ public:
      * @return the cell map
      */
     const std::vector<std::vector<CellPtr> > & rGetCellMap(bool update = true);
+
+    /**
+     * Return the vessel network
+     * @return the vessel network
+     */
+    boost::shared_ptr<VesselNetwork<DIM> > GetVesselNetwork();
 
     /**
      * Return the vessel node map
@@ -189,9 +206,12 @@ public:
     /**
      * Set the cell population
      * @param rCellPopulation a reference to the cell population
-     * @param cellPopulationLengthScale the length scale for the cell population
+     * @param cellPopulationReferenceLength the length scale for the cell population
+     * @param cellPopulationReferenceConcentration the concentration scale for the cell population
      */
-    void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation, units::quantity<unit::length> cellPopulationLengthScale);
+    void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
+                           units::quantity<unit::length> cellPopulationReferenceLength,
+                           units::quantity<unit::concentration> cellPopulationReferenceConcentration);
 
     /**
      * Set the values of a field at all locations on the grid

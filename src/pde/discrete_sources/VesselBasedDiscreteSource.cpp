@@ -68,14 +68,14 @@ boost::shared_ptr<VesselBasedDiscreteSource<DIM> > VesselBasedDiscreteSource<DIM
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscreteSource<DIM>::GetConstantInUValues()
 {
-    if(!this->mpGridCalculator)
+    if(!this->mpDensityMap)
     {
-        EXCEPTION("A regular grid is required for this type of source");
+        EXCEPTION("A density map is required for this type of source");
     }
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(),
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::mole_per_metre_cubed_per_second);
 
-    units::quantity<unit::length> reference_length = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
+    units::quantity<unit::length> reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
     std::vector<double> vessel_densities = this->mpDensityMap->rGetVesselSurfaceAreaDensity(false);
     double haematocrit_ratio = 1.0;
     for(unsigned idx=0;idx<vessel_densities.size();idx++)
@@ -100,10 +100,10 @@ void VesselBasedDiscreteSource<DIM>::SetNumberOfCellsPerLength(units::quantity<u
 template<unsigned DIM>
 std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscreteSource<DIM>::GetNonlinearTermValues()
 {
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(),
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::mole_per_metre_cubed_per_second);
 
-    units::quantity<unit::length> reference_length = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
+    units::quantity<unit::length> reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
     std::vector<double> vessel_densities = this->mpDensityMap->rGetVesselLineDensity(false);
     for(unsigned idx=0;idx<vessel_densities.size();idx++)
     {
@@ -116,14 +116,14 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
 template<unsigned DIM>
 std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLinearInUValues()
 {
-    if(!this->mpGridCalculator)
+    if(!this->mpDensityMap->GetGridCalculator())
     {
         EXCEPTION("A regular grid is required for this type of source");
     }
 
-    std::vector<units::quantity<unit::rate> > values(this->mpGridCalculator->GetGrid()->GetNumberOfLocations(),
+    std::vector<units::quantity<unit::rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::per_second);
-    units::quantity<unit::length> reference_length = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
+    units::quantity<unit::length> reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
     std::vector<double> vessel_densities = this->mpDensityMap->rGetPerfusedVesselSurfaceAreaDensity(false);
     for(unsigned idx=0;idx<vessel_densities.size();idx++)
     {

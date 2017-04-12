@@ -69,16 +69,6 @@ class DiscreteContinuumMesh : public TetrahedralMesh<ELEMENT_DIM, SPACE_DIM>,
      */
     friend class DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>;
 
-    /**
-     * The node locations as VTK points
-     */
-    vtkSmartPointer<vtkPoints> mpNodeLocations;
-
-    /**
-     * The node data in VTK form
-     */
-    std::vector<vtkSmartPointer<vtkDoubleArray> > mNodeData;
-
 public:
 
     /**
@@ -98,14 +88,6 @@ public:
     static boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > Create();
 
     /**
-     * Set point or nodal data
-     * @param rPointValues the point or nodal values
-     * @param rName the data name
-     */
-    virtual void AddNodalData(const std::vector<double>& rPointValues,
-            const std::string& rName = "Default Location Data");
-
-    /**
      * Return the element connectivity
      * @return the element connectivity
      */
@@ -115,19 +97,19 @@ public:
      * Return the location of the supplied GLOBAL index
      * @return the location of the supplied GLOBAL index
      */
-    virtual DimensionalChastePoint<SPACE_DIM> GetLocationOfGlobalIndex(unsigned index);
+    virtual DimensionalChastePoint<SPACE_DIM> GetGlobalCellLocation(unsigned index);
 
     /**
      * Return the node locations
      * @return the node locations
      */
-    vtkSmartPointer<vtkPoints> GetNodeLocations();
+    vtkSmartPointer<vtkPoints> GetPointLocations();
 
     /**
      * Return the element-dimensionless volumes
      * @return the element-dimensionless volumes
      */
-    const std::vector<double>& rGetLocationVolumes(bool update=false, bool jiggle=false);
+    const std::vector<double>& rGetCellVolumes(bool update=false, bool jiggle=false);
 
     /**
      * If running in parallel parition the mesh using parmetis

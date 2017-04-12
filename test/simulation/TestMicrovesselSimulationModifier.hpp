@@ -229,14 +229,10 @@ public:
 
         // Create the oxygen pde solver
         boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_oxygen_solver = GetOxygenSolver(p_domain, p_network);
-        p_oxygen_solver->GetGridCalculator()->SetVesselNetwork(p_network);
-        p_oxygen_solver->GetGridCalculator()->SetCellPopulation(cell_population, cell_lenth_scale);
         p_oxygen_solver->Setup();
 
         // Create the vegf pde solver
         boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_vegf_solver = GetVegfSolver(p_domain, p_network);
-        p_vegf_solver->GetGridCalculator()->SetVesselNetwork(p_network);
-        p_vegf_solver->GetGridCalculator()->SetCellPopulation(cell_population, cell_lenth_scale);
         p_vegf_solver->Setup();
 
         // Create the angiogenesis solver
@@ -287,7 +283,7 @@ public:
         std::vector<Node<3>*> nodes;
         for(unsigned idx=0; idx<location_indices.size(); idx++)
         {
-            DimensionalChastePoint<3> location = p_grid->GetLocationOfGlobalIndex(location_indices[idx]);
+            DimensionalChastePoint<3> location = p_grid->GetPoint(location_indices[idx]);
             nodes.push_back(new Node<3>(idx, location.GetLocation(cell_lenth_scale), false));
         }
 
@@ -305,14 +301,10 @@ public:
 
         // Create the oxygen pde solver
         boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_oxygen_solver = GetOxygenSolver(p_domain, p_network);
-        p_oxygen_solver->GetGridCalculator()->SetVesselNetwork(p_network);
-        p_oxygen_solver->GetGridCalculator()->SetCellPopulation(cell_population,cell_lenth_scale);
         p_oxygen_solver->Setup();
 
         // Create the vegf pde solver
         boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_vegf_solver = GetVegfSolver(p_domain, p_network);
-        p_vegf_solver->GetGridCalculator()->SetVesselNetwork(p_network);
-        p_vegf_solver->GetGridCalculator()->SetCellPopulation(cell_population, cell_lenth_scale);
         p_vegf_solver->Setup();
 
         // Create the angiogenesis solver

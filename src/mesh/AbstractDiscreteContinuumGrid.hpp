@@ -48,35 +48,24 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkUnsignedIntArray.h>
 #include <vtkArrayData.h>
 #include <vtkPolyData.h>
-#include "PetscTools.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "UnitCollection.hpp"
 
 /**
- * A grid is a made up of point locations and containing (topological) cells. Grids can
- * be regular, where points are evenly spaced and cells correspond to pixels or voxels or
- * unstructured where cells correspond to triangles or tetrahedra. Behind the scenes grids
- * are represented as VTK structures, ImageData for regular grids and UnstructureGrids for
- * unstructured grids. VTK data arrays can be associated with either points or topological cells.
- * For the regular grid points and cell storage is equivalent, there is one point for every cell.
- * Parallelism is only partially supported at the moment. Unless otherwise specified quantities are
- * LOCAL to the process.
+ * Grids are similar to vtkDataSet objects, but have extra (VTK based) convenience functions for
+ * locating points and cells and managing parallel data transfer.
+ * They are composed of geometric (point) and topological (cell) structures which can be assigned
+ * attributes (boundary labels, region markers) and data (PDE solutions). The two current concrete
+ * types are RegularGrids and DiscreteContinuumMeshs. UnstructuredGrids closely follow the vtkUnstructuredGrid.
+ * RegularGrids are similar to vtkImageData, but cells are explicitly represented as vtkVoxels, which
+ * can be truncated on edges and corners. Grids are parallel structures, most operations and storage
+ * are LOCAL to the process unless otherwise specified.
  */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM = ELEMENT_DIM>
 class AbstractDiscreteContinuumGrid
 {
 
 protected:
-
-    /**
-     * Point attributes
-     */
-    vtkSmartPointer<vtkArrayData> mPointAttributes;
-
-    /**
-     * Cell attributes
-     */
-    vtkSmartPointer<vtkArrayData> mCellAttributes;
 
     /**
      * Cell volumes
@@ -104,7 +93,7 @@ protected:
     vtkSmartPointer<vtkPoints> mpPointLocations;
 
     /**
-     * The cell locations as VTK points. For unstructured grids this is the centroid
+     * The cell locations as VTK points. For unstructured grids this is the centroid.
      */
     vtkSmartPointer<vtkPoints> mpCellLocations;
 
@@ -117,16 +106,6 @@ protected:
      * Is the vtk representation up to date
      */
     bool mVtkRepresentationUpToDate;
-
-    /**
-     * Storage for point data
-     */
-    vtkSmartPointer<vtkArrayData> mPointData;
-
-    /**
-     * Storage for cell data
-     */
-    vtkSmartPointer<vtkArrayData> mCellData;
 
     /**
      * Local to global index map
@@ -150,32 +129,28 @@ public:
      * @param rAttributes the point attributes
      * @param rName the data name
      */
-    void AddPointAttributes(const std::vector<unsigned>& rAttributes,
-            const std::string& rName = "Default Attribute");
+    void AddPointAttributes(const std::vector<unsigned>& rAttributes, const std::string& rName = "Default Attribute");
 
     /**
      * Add cell attributes
      * @param rAttributes the cell attributes
      * @param rName the data name
      */
-    void AddCellAttributes(const std::vector<unsigned>& rAttributes,
-            const std::string& rName = "Default Attribute");
+    void AddCellAttributes(const std::vector<unsigned>& rAttributes, const std::string& rName = "Default Attribute");
 
     /**
      * Set point or nodal data
-     * @param rPointValues the point or nodal values
+     * @param rPointValues the point values
      * @param rName the data name
      */
-    virtual void AddPointData(const std::vector<double>& rPointValues,
-            const std::string& rName = "Default Location Data");
+    virtual void AddPointData(const std::vector<double>& rPointValues, const std::string& rName = "Default Data");
 
     /**
      * Set cell data
-     * @param rCellValues the point or nodal values
+     * @param rCellValues the cell values
      * @param rName the data name
      */
-    virtual void AddCellData(const std::vector<double>& rCellValues,
-            const std::string& rName = "Default Location Data");
+    virtual void AddCellData(const std::vector<double>& rCellValues, const std::string& rName = "Default Data");
 
     /**
      * Return the bounding geometry on this processor
@@ -188,34 +163,34 @@ public:
      * @param localIndex the local index
      * @return the global index
      */
-    virtual unsigned GetGlobalCellIndex(unsigned localIndex);
+    virtual unsigned GetGlobalIndex(unsigned localIndex);
 
     /**
-     * Return the local grid index for the supplied global index. Return -1 if not on this proc.
+     * Return the local cell index for the supplied global index. Return -1 if not on this proc.
      * This versions just spits the global index back, it should be over-ridden if child
      * classes need to work in parallel.
      * @param globalIndex the global index
      * @return the local grid index for the supplied global index. Return -1 if not on this proc
      */
-    virtual int GetLocalCellIndex(unsigned globalIndex);
+    virtual int GetLocalIndex(unsigned globalIndex);
 
     /**
-     * Return the LOCAL point attributes
-     * @return the LOCAL point attributes
+     * Return the LOCAL point data
+     * @return the LOCAL point data
      */
-    vtkSmartPointer<vtkArrayData> GetPointAttributes();
+    vtkSmartPointer<vtkPointData> GetPointData();
 
     /**
-     * Return the LOCAL cell attributes
-     * @return the LOCAL cell attributes
+     * Return the LOCAL cell data
+     * @return the LOCAL cell data
      */
-    vtkSmartPointer<vtkArrayData> GetCellAttributes();
+    vtkSmartPointer<vtkCellData> GetCellData();
 
     /**
      * Return the location of the supplied GLOBAL index
      * @return the location of the supplied GLOBAL index
      */
-    virtual DimensionalChastePoint<SPACE_DIM> GetGlobalPoint(unsigned index)=0;
+    virtual DimensionalChastePoint<SPACE_DIM> GetGlobalPoint(unsigned index);
 
     /**
      * Return the location of the supplied LOCAL index
@@ -227,13 +202,13 @@ public:
      * Return the location of the supplied GLOBAL index
      * @return the location of the supplied GLOBAL index
      */
-    virtual DimensionalChastePoint<SPACE_DIM> GetGlobalCell(unsigned index)=0;
+    virtual DimensionalChastePoint<SPACE_DIM> GetGlobalCellLocation(unsigned index)=0;
 
     /**
      * Return the location of the supplied LOCAL index
      * @return the location of the supplied LOCAL index
      */
-    virtual DimensionalChastePoint<SPACE_DIM> GetCell(unsigned index);
+    virtual DimensionalChastePoint<SPACE_DIM> GetCellLocation(unsigned index);
 
     /**
      * Return the LOCAL point or element dimensionless volumes
@@ -254,6 +229,17 @@ public:
     virtual vtkSmartPointer<vtkDataSet> GetVtkGrid();
 
     /**
+     * Do MPI GATHER for the named cell data. Assumes data arrays are ordered over ranks.
+     * @param rName the point data name
+     */
+    virtual void GatherPointData(const std::string& rName);
+
+    /**
+     * Do MPI GATHER for all cell data. Assumes data arrays are ordered over ranks.
+     */
+    virtual void GatherAllPointData();
+
+    /**
      * Do simple MPI ALL GATHER for the named point data. Assumes data arrays are ordered over ranks.
      * @param rName the point data name
      */
@@ -268,12 +254,23 @@ public:
      * Do MPI GATHER for the named point data. Assumes data arrays are ordered over ranks.
      * @param rName the point data name
      */
-    virtual void GatherPointData(const std::string& rName);
+    virtual void GatherCellData(const std::string& rName);
 
     /**
-     * Do MPI GATHER for all point data. Assumes data arrays are ordered over ranks.
+     * Do MPI GATHER for all cell data. Assumes data arrays are ordered over ranks.
      */
-    virtual void GatherAllPointData();
+    virtual void GatherAllCellData();
+
+    /**
+     * Do simple MPI ALL GATHER for the named cell data. Assumes data arrays are ordered over ranks.
+     * @param rName the point data name
+     */
+    virtual void AllGatherCellData(const std::string& rName);
+
+    /**
+     * Do MPI ALL GATHER for all cell data. Assumes data arrays are ordered over ranks.
+     */
+    virtual void AllGatherAllCellData();
 
     /**
      * Get the nearest LOCAL location index to the supplied point. An exception is
@@ -299,13 +296,13 @@ public:
      * Return the LOCAL grid locations
      * @return the locations of grid points
      */
-    vtkSmartPointer<vtkPoints> GetPoints();
+    virtual vtkSmartPointer<vtkPoints> GetPoints();
 
     /**
      * Return the LOCAL grid locations
      * @return the locations of grid cells
      */
-    vtkSmartPointer<vtkPoints> GetCells();
+    vtkSmartPointer<vtkPoints> GetCellLocations();
 
     /**
      * Return the reference length scale

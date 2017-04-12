@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "GeometryTools.hpp"
 #include "CellPopulationMigrationRule.hpp"
 #include "RandomNumberGenerator.hpp"
@@ -125,7 +123,7 @@ std::vector<double> CellPopulationMigrationRule<DIM>::GetNeighbourMovementProbab
         }
 
         // Make sure that tip cell does not try to move into a location already occupied by the vessel that it comes from
-        DimensionalChastePoint<DIM> neighbour_location = this->mpGridCalculator->GetGrid()->GetLocationOfGlobalIndex(neighbourIndices[idx]);
+        DimensionalChastePoint<DIM> neighbour_location = this->mpGridCalculator->GetGrid()->GetGlobalCellLocation(neighbourIndices[idx]);
 
         bool already_attached = false;
         for (unsigned seg_index = 0; seg_index < pNode->GetNumberOfSegments(); seg_index++)
@@ -197,7 +195,7 @@ std::vector<int> CellPopulationMigrationRule<DIM>::GetIndices(const std::vector<
     for(unsigned idx = 0; idx < rNodes.size(); idx++)
     {
         // Get the grid index of the node
-        unsigned grid_index = p_regular_grid->GetNearestLocationIndex(rNodes[idx]->rGetLocation());
+        unsigned grid_index = p_regular_grid->GetNearestCellIndex(rNodes[idx]->rGetLocation());
 
         // Get the probability of moving into each of the neighbour sites
         std::vector<double> probability_of_moving = GetNeighbourMovementProbabilities(rNodes[idx], neighbour_indices[grid_index], grid_index);

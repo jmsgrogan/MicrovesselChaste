@@ -45,10 +45,10 @@ OffLatticeMigrationRule<DIM>::OffLatticeMigrationRule()
       mGlobalY(unit_vector<double>(3,1)),
       mGlobalZ(unit_vector<double>(3,2)),
       mMeanAngles(std::vector<units::quantity<unit::plane_angle> >(3, 0.0*unit::radians)),
-      mSdvAngles(std::vector<units::quantity<unit::plane_angle> >(3, M_PI/18.0*unit::radians)),
+      mSdvAngles(std::vector<units::quantity<unit::plane_angle> >(3, M_PI/6.0*unit::radians)), //formerly pi/18
       mVelocity(20.0 *(1.e-6/3600.0) * unit::metre_per_second),
-      mChemotacticStrength(1.0),
-      mAttractionStrength(1.0),
+      mChemotacticStrength(0.6),
+      mAttractionStrength(0.0), // was 1.0
       mProbeLength(5.0 * 1.e-6 * unit::metres),
       mCriticalMutualAttractionLength(100.0 * 1.e-6 *unit::metres)
 {

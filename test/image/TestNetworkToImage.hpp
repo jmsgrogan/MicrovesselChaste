@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTNETWORKTOIMAGE_HPP_
 #define TESTNETWORKTOIMAGE_HPP_
 
@@ -56,7 +54,7 @@ class TestNetworkToImage : public CxxTest::TestSuite
 {
 public:
 
-    void TestSingleVessel()
+    void TestSingleVessel()  throw(Exception)
     {
         std::string output_path = "TestNetworkToImage";
         if(PetscTools::IsParallel())
@@ -97,7 +95,7 @@ public:
         writer.Write();
     }
 
-    void TestBifurcationVessel()
+    void TestBifurcationVessel() throw(Exception)
     {
         // Set up the network
         double length = 100.0;

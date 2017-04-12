@@ -121,7 +121,7 @@ public:
         p_boundary_condition->SetValue(boundary_concentration);
         p_boundary_condition->SetType(BoundaryConditionType::POINT);
         vtkSmartPointer<vtkPoints> p_boundary_points = vtkSmartPointer<vtkPoints>::New();
-        vtkSmartPointer<vtkPoints> p_points = p_grid->GetLocations();
+        vtkSmartPointer<vtkPoints> p_points = p_grid->GetPoints();
         for(unsigned idx=0; idx<p_points->GetNumberOfPoints(); idx++)
         {
             if(p_points->GetPoint(idx)[0]>0.99)
