@@ -103,7 +103,7 @@ public:
         solver.SetVesselNetwork(p_network);
         solver.AddBoundaryCondition(p_boundary);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteContinuumBoundaryCondition"));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteContinuumBoundaryCondition/FiniteDifference"));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();
@@ -138,15 +138,8 @@ public:
         p_pde->SetContinuumConstantInUTerm(consumption_rate);
 
         // Set up the discrete source
-        boost::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_source_lin = VesselBasedDiscreteSource<3>::Create();
-        p_vessel_source_lin->SetLinearInUValue(-1.e3*unit::per_second);
-        boost::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_source_const = VesselBasedDiscreteSource<3>::Create();
-        p_vessel_source_const->SetConstantInUValue(40.e-7* unit::mole_per_metre_cubed_per_second);
-
         boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
         p_boundary->SetValue(1.0*unit::mole_per_metre_cubed);
-        p_pde->AddDiscreteSource(p_vessel_source_lin);
-        p_pde->AddDiscreteSource(p_vessel_source_const);
 
         // Set up and run the solver
         SimpleLinearEllipticFiniteElementSolver<3> solver;
@@ -154,7 +147,7 @@ public:
         solver.SetPde(p_pde);
         solver.SetVesselNetwork(p_network);
         solver.AddBoundaryCondition(p_boundary);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteContinuumBoundaryCondition"));
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteContinuumBoundaryCondition/FiniteElement"));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();

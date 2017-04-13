@@ -130,6 +130,13 @@ public:
     void SetLabelName(const std::string& rLabel);
 
     /**
+     * Convencience function to get the size of arrays that will
+     * be returned in advance.
+     * @return the size of arrays that will be returned
+     */
+    unsigned GetNumberOfPoints();
+
+    /**
      * Set the points for POINT type sources
      * @param points the point locations for POINT type sources
      */

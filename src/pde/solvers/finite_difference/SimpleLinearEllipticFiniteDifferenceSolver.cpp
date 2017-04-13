@@ -308,8 +308,8 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Setup()
 
     // Store the system without discrete terms
     //MatCopy(this->mpLinearSystem->rGetLhsMatrix(), mpInitialLhs, DIFFERENT_NONZERO_PATTERN);
-    //mpInitialLhs = this->mpLinearSystem->rGetLhsMatrix();
-    //mpInitialRhs = this->mpLinearSystem->rGetRhsVector();
+    mpInitialLhs = this->mpLinearSystem->rGetLhsMatrix();
+    mpInitialRhs = this->mpLinearSystem->rGetRhsVector();
     // This will add the discrete terms and boundary conditions
     this->IsSetupForSolve = true;
 }
@@ -322,12 +322,12 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Update()
 
     // Copy over the original matrix
     this->mpLinearSystem->AssembleIntermediateLinearSystem();
-    //MatCopy(mpInitialLhs, this->mpLinearSystem->rGetLhsMatrix(), DIFFERENT_NONZERO_PATTERN);
-    //VecCopy(mpInitialRhs, this->mpLinearSystem->rGetRhsVector());
+    MatCopy(mpInitialLhs, this->mpLinearSystem->rGetLhsMatrix(), DIFFERENT_NONZERO_PATTERN);
+    VecCopy(mpInitialRhs, this->mpLinearSystem->rGetRhsVector());
 //
 //    // Add discrete terms
-    //this->AddDiscreteTermsToMatrix();
-    //this->AddDiscreteTermsToRhs();
+//    this->AddDiscreteTermsToMatrix();
+//    this->AddDiscreteTermsToRhs();
 
     // Add boundary conditions
     //this->mpLinearSystem->AssembleIntermediateLinearSystem();

@@ -74,7 +74,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>
     }
 
     // Loop through all points
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(GetNumberOfPoints(),
             0.0*unit::mole_per_metre_cubed_per_second);
     std::vector<std::vector<unsigned> > point_point_map = mpDensityMap->GetGridCalculator()->GetPointMap(mPoints);
     for(unsigned idx=0; idx<point_point_map.size(); idx++)
@@ -98,8 +98,7 @@ std::vector<units::quantity<unit::rate> > DiscreteSource<DIM>::GetLinearInUValue
     }
 
     // Loop through all points
-    std::vector<units::quantity<unit::rate> > values(mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
-            0.0*unit::per_second);
+    std::vector<units::quantity<unit::rate> > values(GetNumberOfPoints(), 0.0*unit::per_second);
     std::vector<std::vector<unsigned> > point_point_map = mpDensityMap->GetGridCalculator()->GetPointMap(mPoints);
     for(unsigned idx=0; idx<point_point_map.size(); idx++)
     {
@@ -117,10 +116,20 @@ std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>
     }
 
     // Return an empty vector
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
+    std::vector<units::quantity<unit::concentration_flow_rate> > values(GetNumberOfPoints(),
             0.0*unit::mole_per_metre_cubed_per_second);
 
     return values;
+}
+
+template<unsigned DIM>
+unsigned DiscreteSource<DIM>::GetNumberOfPoints()
+{
+    if(!mpDensityMap)
+    {
+        EXCEPTION("A density map is required for this type of source");
+    }
+    return mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells();
 }
 
 template<unsigned DIM>
@@ -162,7 +171,12 @@ void DiscreteSource<DIM>::SetDensityMap(boost::shared_ptr<DensityMap<DIM> > pMap
 template<unsigned DIM>
 void DiscreteSource<DIM>::UpdateDensityMap()
 {
+    if(mPoints.size()==0)
+    {
+        EXCEPTION("A point is required for this type of source");
+    }
 
+    mpDensityMap->GetGridCalculator()->GetPointMap(mPoints);
 }
 
 // Explicit instantiation

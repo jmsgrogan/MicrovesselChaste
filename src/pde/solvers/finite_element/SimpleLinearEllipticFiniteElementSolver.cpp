@@ -39,8 +39,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "SimpleLinearEllipticFiniteElementSolver.hpp"
 #include "BoundaryConditionsContainer.hpp"
 
-#include "Debug.hpp"
-
 template<unsigned DIM>
 SimpleLinearEllipticFiniteElementSolver<DIM>::SimpleLinearEllipticFiniteElementSolver()
     : AbstractFiniteElementSolverBase<DIM>()
@@ -64,9 +62,8 @@ boost::shared_ptr<SimpleLinearEllipticFiniteElementSolver<DIM> > SimpleLinearEll
 template<unsigned DIM>
 void SimpleLinearEllipticFiniteElementSolver<DIM>::Solve()
 {
-    MARK;
     AbstractFiniteElementSolverBase<DIM>::Solve();
-    MARK;
+
     // Set up the boundary conditions in the Chaste format
     boost::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> > p_bcc =
             boost::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> >(new BoundaryConditionsContainer<DIM, DIM, 1> );
@@ -76,15 +73,14 @@ void SimpleLinearEllipticFiniteElementSolver<DIM>::Solve()
         this->mBoundaryConditions[idx]->SetGridCalculator(this->mpDensityMap->GetGridCalculator());
         this->mBoundaryConditions[idx]->UpdateBoundaryConditions(p_bcc);
     }
-    MARK;
+
     // Check the type of pde
     if(boost::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
             boost::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde))
     {
-        MARK;
         SimpleLinearEllipticSolver<DIM, DIM> static_solver(this->mpMesh.get(), p_linear_pde.get(), p_bcc.get());
         ReplicatableVector solution_repl(static_solver.Solve());
-        MARK;
+
         this->mSolution = std::vector<double>(solution_repl.GetSize());
         this->mConcentrations = std::vector<units::quantity<unit::concentration> >(solution_repl.GetSize());
         for(unsigned idx = 0; idx < solution_repl.GetSize(); idx++)
