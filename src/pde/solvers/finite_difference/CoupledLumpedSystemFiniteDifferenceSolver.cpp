@@ -103,7 +103,7 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Ve
             PetscVecTools::SetElement(this->mVectorToAssemble, idx, 0.0);
         }
     }
-
+    #if ( PETSC_VERSION_MAJOR==3 && PETSC_VERSION_MINOR>=6 )
     if(this->mStoreIntermediate)
     {
         PetscInt totalSteps;
@@ -123,6 +123,7 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Ve
             this->mIntermediateSolutionCollection.push_back(std::pair<std::vector<double>, double>(soln, double(currentTime)));
         }
     }
+    #endif
     PetscVecTools::Finalise(this->mVectorToAssemble);
 }
 

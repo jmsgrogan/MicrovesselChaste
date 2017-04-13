@@ -103,6 +103,7 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Vec cu
     }
     PetscVecTools::Finalise(this->mVectorToAssemble);
 
+    #if ( PETSC_VERSION_MAJOR==3 && PETSC_VERSION_MINOR>=6 )
     if(mStoreIntermediate)
     {
         PetscInt totalSteps;
@@ -122,6 +123,7 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Vec cu
             mIntermediateSolutionCollection.push_back(std::pair<std::vector<double>, double>(soln, double(currentTime)));
         }
     }
+    #endif
 }
 
 template<unsigned DIM>
