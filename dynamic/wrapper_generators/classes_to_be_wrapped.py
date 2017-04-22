@@ -1,0 +1,176 @@
+"""
+This file contains a list of classes that are to be wrapped. 
+
+Each class includes metadata such as template arguments, excluded methods,
+methods with special pointer management requirements, and any special
+declaration code needed for wrapping. A minimal, and typical, case is just to
+specify the class name.
+"""
+
+from wrapper_utilities.class_data import CppClass
+
+################################## GEOMETRY ##########################################
+
+geometry_classes = [CppClass('Polygon', excluded_methods=["GetBoundingBox"]),CppClass('Facet', excluded_methods=["GetBoundingBox"]),
+                    CppClass('Part', excluded_methods=["GetBoundingBox"]),CppClass('MappableGridGenerator'), CppClass('NetworkToSurface'),
+                    CppClass('VesselSurfaceGenerator'), CppClass('BoundaryExtractor'),
+                    CppClass('SurfaceCleaner'), CppClass('GeometryFormat', needs_include_file = False),
+                    CppClass('GeometryWriter'),
+                    CppClass('boost::shared_ptr', skip_wrapping=True, needs_include_file=False, needs_instantiation = False,
+                          template_args=[["Polygon2"],
+                                         ["Polygon3"],]),                    
+                    CppClass('std::vector', skip_wrapping=True, needs_include_file=False, needs_instantiation = False,
+                          template_args=[["std::vector<boost::shared_ptr<Polygon2 > >"], 
+                                         ["std::vector<boost::shared_ptr<Polygon3 > >"],
+                                         ["boost::shared_ptr<Polygon<2> >"],
+                                         ["boost::shared_ptr<Polygon<2> >"],
+                                         ["boost::shared_ptr<Facet<2> >"],
+                                         ["boost::shared_ptr<Facet<3> >"],
+                                         ["boost::shared_ptr<DimensionalChastePoint<2> >"], 
+                                         ["boost::shared_ptr<DimensionalChastePoint<3> >"], 
+                                         #["units::quantity<unit::length>"]
+                                         ]),]
+
+################################## MESH ##########################################
+
+mesh_classes = [CppClass('AbstractDiscreteContinuumGrid'),CppClass('DimensionalChastePoint'),
+                CppClass('DiscreteContinuumMesh'),CppClass('DiscreteContinuumMeshGenerator'),
+                CppClass('GridCalculator'), CppClass('MeshReader'),
+                CppClass('MultiFormatMeshWriter'), CppClass('RegularGrid'),
+                CppClass('RegularGridWriter'), CppClass('MeshFormat', needs_include_file = False),
+                CppClass('std::vector', skip_wrapping=True, needs_include_file=False, needs_instantiation = False,
+                          template_args=[["DimensionalChastePoint<2>"], 
+                                         ["DimensionalChastePoint<3>"],]),
+                CppClass('std::pair', skip_wrapping=True, needs_include_file=False, needs_instantiation = False,
+                          template_args=[["DimensionalChastePoint<2>, DimensionalChastePoint<2>"], 
+                                         ["DimensionalChastePoint<3>, DimensionalChastePoint<3>"],])]
+
+################################## CELL ##########################################
+
+cell_classes = [CppClass('AbstractCellKiller'), CppClass('AbstractCellMutationState'),
+                CppClass('CancerCellMutationState'), CppClass('QuiescentCancerCellMutationState'),
+                CppClass('StalkCellMutationState'), CppClass('TipCellMutationState'),
+                CppClass('VesselCellMutationState'), CppClass('MacrophageMutationState'),
+                CppClass('Owen2011OxygenBasedCellCycleModel'), CppClass('Owen11CellPopulationGenerator'),
+                CppClass('CaBasedCellPopulation'), CppClass('LQRadiotherapyCellKiller'),
+                CppClass('Owen11CaBasedDivisionRule'), CppClass('Owen11CaUpdateRule')]
+
+################################## ANGIOGENESIS ##########################################
+
+angiogenesis_classes = [CppClass('TipAttractionLatticeBasedMigrationRule'), CppClass('AngiogenesisSolver'),
+                        CppClass('Owen2011MigrationRule'), CppClass('Owen2011SproutingRule'),
+                        CppClass('OffLatticeMigrationRule'), CppClass('OffLatticeSproutingRule'),
+                        CppClass('AbstractMigrationRule'), CppClass('AbstractSproutingRule'),
+                        CppClass('LatticeBasedMigrationRule'), CppClass('CellPopulationMigrationRule'),
+                        CppClass('RegressionSolver'),CppClass('WallShearStressBasedRegressionSolver'),
+                        CppClass('LatticeBasedSproutingRule'),]
+
+################################## FLOW ##########################################
+
+flow_classes = [CppClass('FlowSolver'), CppClass('WallShearStressCalculator'),
+                CppClass('VesselImpedanceCalculator'), CppClass('BetteridgeHaematocritSolver'),
+                CppClass('AbstractVesselNetworkCalculator'), CppClass('MechanicalStimulusCalculator'),
+                CppClass('MetabolicStimulusCalculator'), CppClass('RadiusCalculator'),
+                CppClass('ShrinkingStimulusCalculator'), CppClass('ViscosityCalculator'),
+                CppClass('WallShearStressCalculator'),CppClass('AbstractStructuralAdaptationSolver'),
+                CppClass('StructuralAdaptationSolver'),CppClass('AbstractHaematocritSolver'),
+                CppClass('AlarconHaematocritSolver'),CppClass('ConstantHaematocritSolver')]
+
+################################## PDE ##########################################
+
+pde_classes = [CppClass('DiscreteContinuumBoundaryCondition'),
+               CppClass('DiscreteSource'), CppClass('CellStateDependentDiscreteSource'),
+               CppClass('CellBasedDiscreteSource'), CppClass('SolutionDependentDiscreteSource'),
+               CppClass('VesselBasedDiscreteSource'), CppClass('AbstractDiscreteContinuumPde'),
+               CppClass('AbstractDiscreteContinuumLinearEllipticPde'), CppClass('DiscreteContinuumLinearEllipticPde'),
+               CppClass('AbstractDiscreteContinuumNonLinearEllipticPde'),CppClass('MichaelisMentenSteadyStateDiffusionReactionPde'),
+               CppClass('AbstractDiscreteContinuumParabolicPde'),CppClass('ParabolicDiffusionReactionPde'),
+               CppClass('CoupledVegfPelletDiffusionReactionPde'),CppClass('AbstractDiscreteContinuumSolver'),
+               CppClass('AbstractRegularGridDiscreteContinuumSolver'),CppClass('AbstractUnstructuredGridDiscreteContinuumSolver'),
+               CppClass('AbstractMixedGridDiscreteContinuumSolver'), CppClass('AbstractFiniteDifferenceSolverBase'),
+               CppClass('CoupledLumpedSystemFiniteDifferenceSolver'),CppClass('SimpleLinearEllipticFiniteDifferenceSolver'),
+               CppClass('SimpleNonLinearEllipticFiniteDifferenceSolver'),CppClass('AbstractFiniteElementSolverBase'),
+               CppClass('CoupledLumpedSystemFiniteElementSolver'),CppClass('SimpleLinearEllipticFiniteElementSolver'),
+               CppClass('SimpleNonLinearEllipticFiniteElementSolver'),CppClass('SimpleParabolicFiniteElementSolver'),
+               CppClass('AbstractGreensFunctionSolverBase'),CppClass('SimpleLinearEllipticGreensFunctionSolver'),
+               CppClass('FunctionMap'),CppClass('DensityMap')]
+
+################################## SIMUALTION ##########################################
+
+simulation_classes = [CppClass('MicrovesselSolver'),CppClass('MicrovesselSimulationModifier'),
+                      CppClass('AbstractMicrovesselModifier'),CppClass('VtkSceneMicrovesselModifier'),
+                      CppClass('Owen2011TrackingModifier'),CppClass('AbstractCellBasedSimulationModifier'),]
+
+################################## VESSEL ##########################################
+
+vessel_classes = [CppClass('VesselNetworkReader'),CppClass('NodeFlowProperties'),
+                  CppClass('SegmentFlowProperties'),CppClass('VesselFlowProperties'),
+                  CppClass('VesselNode'),CppClass('VesselSegment'),
+                  CppClass('Vessel'),CppClass('VesselNetwork'),
+                  CppClass('VesselNetworkGenerator'),CppClass('AbstractVesselNetworkComponent'),
+                  CppClass('VesselNetworkCellPopulationInteractor'),CppClass('VesselNetworkWriter'),
+                  CppClass('DistanceMap'),
+                  CppClass('VesselNetworkGeometryCalculator'),CppClass('VesselNetworkGraphCalculator'),
+                  CppClass('AbstractVesselNetworkComponentProperties'),CppClass('AbstractVesselNetworkComponentFlowProperties'),
+                  CppClass('AbstractVesselNetworkComponentChemicalProperties')]
+
+################################## VISUALIZATION ##########################################
+
+visualization_classes = [CppClass('MicrovesselVtkScene'),
+                  CppClass('CellPopulationActorGenerator'),CppClass('DiscreteContinuumMeshActorGenerator'),
+                  CppClass('PartActorGenerator'),CppClass('RegularGridActorGenerator'),
+                  CppClass('VesselNetworkActorGenerator'),CppClass('AbstractActorGenerator'),
+                  CppClass('AbstractMicrovesselModifier'),CppClass('VtkSceneMicrovesselModifier'),]
+
+################################## UTILITY ##########################################
+
+units = {"membrane_permeability": "metre_per_second", 
+             "volumetric_solubility": "per_pascal",
+             "solubility": "mole_per_metre_cubed_per_second",
+             "diffusivity_per_concentration": "metre_pow5_per_second_per_mole",
+             "diffusivity": "metre_squared_per_second",
+             "flow_impedance": "pascal_second_per_metre_cubed",
+             "flow_rate": "metre_cubed_per_second",
+             "dynamic_viscosity": "poiseuille",
+             "pressure": "pascal",
+             "force": "newton",
+             "velocity": "metre_per_second",
+             "number_density": "per_metre_cubed",
+             "molar_mass": "mole_per_kg",
+             "rate_per_concentration": "metre_cubed_per_mole_per_second",
+             "concentration_gradient": "mole_per_metre_pow4",
+             "concentration_flux": "mole_per_metre_pow5_per_second",
+             "concentration_flow_rate": "mole_per_metre_cubed_per_second",
+             "concentration": "mole_per_metre_cubed",
+             "molar_flux": "mole_per_metre_squared_per_second",
+             "molar_flow_rate": "mole_per_second",
+             "mass": "kg",
+             "per_area": "per_metre_squared",
+             "per_length": "per_metre",
+             "volume": "metre_cubed",
+             "area": "metre_squared",
+             "length": "metre",
+             "rate":"per_second",
+             "time":"second", 
+             "dimensionless" : "dimensionless",       
+             }
+
+utility_classes = [CppClass('ParameterInstance'),
+                   CppClass('BaseUnits'),
+                   CppClass('UnitCollection'),
+                   CppClass('ParameterCollection'),
+                   CppClass('BaseParameterInstance'),
+                   CppClass('Owen11Parameters'),
+                   CppClass('Connor17Parameters'),
+                   CppClass('Secomb04Parameters'),
+                   CppClass('GenericParameters'),]
+
+# parameter_instance_class = utility_classes[0]
+# parameter_instance_class.template_args=[]
+# for eachUnit in units.keys():
+#     print eachUnit
+#     parameter_instance_class.template_args.append("unit::"+eachUnit)
+
+# This final list will be pulled in by the autowrapper code by name...i.e. don't change the name.
+classes = geometry_classes + mesh_classes + cell_classes + angiogenesis_classes + pde_classes 
+classes += simulation_classes + vessel_classes + visualization_classes + utility_classes

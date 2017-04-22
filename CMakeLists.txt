@@ -31,6 +31,11 @@
 # 
 
 find_package(Chaste COMPONENTS cell_based)
+
+# Microvessel Chaste needs some additional VTK libraries, take them all for now.
+find_package(VTK REQUIRED)
+list(APPEND Chaste_THIRD_PARTY_LIBRARIES ${VTK_LIBRARIES})
+
 chaste_do_project(MicrovesselChaste)
     
 set(BUILD_MicrovesselChaste_PYTHON ON CACHE BOOL "Build Python Bindings for MicrovesselChaste component")
