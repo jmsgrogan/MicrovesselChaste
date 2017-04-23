@@ -38,7 +38,8 @@ class CppClass():
     def __init__(self, name, component = None, template_args = None, skip_wrapping = False, 
                  excluded_methods = None, excluded_variables = None, pointer_return_methods = None, 
                  needs_include_file = True, include_file_only = False, declaration_code = None,
-                 needs_instantiation = True, name_override = None):
+                 needs_instantiation = True, name_override = None, include_vec_ptr_self = False,
+                 include_ptr_self = False, include_raw_ptr_self = False):
         
         self.name = name
         self.component = component
@@ -53,6 +54,22 @@ class CppClass():
         self.needs_instantiation= needs_instantiation
         self.full_path = None
         self.name_override = name_override
+        self.include_vec_ptr_self = include_vec_ptr_self
+        self.include_ptr_self = include_ptr_self
+        self.include_raw_ptr_self = include_raw_ptr_self
+        self.name_replacements = {"double": "Double",
+                                  "unsigned int": "Unsigned",
+                                  "Unsigned int": "Unsigned",
+                                  "unsigned": "Unsigned",
+                                  "double" : "Double",
+                                  "std::vector": "Vector",
+                                  "std::pair" : "Pair",
+                                  "std::map" : "Map",
+                                  "std::string" : "String",
+                                  "boost::shared_ptr": "SharedPtr",
+                                  "*" : "Ptr",
+                                  "c_vector":"CVector",
+                                  "std::set": "Set"}
         
     def get_short_names(self):
         
@@ -73,7 +90,12 @@ class CppClass():
         for eachTemplateArg in self.template_args:
             template_string=""
             for idx, eachTemplateEntry in enumerate(eachTemplateArg):
-                cleaned_entry = str(eachTemplateEntry).translate(None, "<>:,*").replace(" ", "")
+                
+                # Do standard translations
+                current_name = str(eachTemplateEntry)
+                for eachReplacementString in self.name_replacements.keys():
+                    current_name = current_name.replace(eachReplacementString, self.name_replacements[eachReplacementString])
+                cleaned_entry = current_name.translate(None, "<>:,").replace(" ", "")
                 if len(cleaned_entry)>1:
                     cleaned_entry = cleaned_entry[0].capitalize()+cleaned_entry[1:]
                 template_string += str(cleaned_entry)
@@ -83,7 +105,13 @@ class CppClass():
             current_name = self.name
             if self.name_override is not None:
                 current_name = self.name_override
-            cleaned_name = current_name.translate(None, "<>:*")
+                
+            # Do standard translations
+            for eachReplacementString in self.name_replacements.keys():
+                current_name = current_name.replace(eachReplacementString, self.name_replacements[eachReplacementString])
+                
+            # Strip templates and scopes
+            cleaned_name = current_name.translate(None, "<>:,").replace(" ", "")
             if len(cleaned_name)>1:
                 cleaned_name = cleaned_name[0].capitalize()+cleaned_name[1:]
             names.append(cleaned_name+template_string)
@@ -126,8 +154,10 @@ class CppClass():
         Does this class need to be typdef'd with a nicer name in the header file.
         All template classes need this.
         """
+        cond1 = (self.template_args is not None) and (not self.include_file_only)
+        cond2 = (self.include_vec_ptr_self or self.include_ptr_self or self.include_raw_ptr_self )
         
-        return (self.template_args is not None) and (not self.include_file_only)
+        return cond1 or cond2
     
     def needs_auto_wrapper_generation(self):
         

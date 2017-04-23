@@ -38,11 +38,119 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "boost/python.hpp"
 
+#include "indexing_suite/value_traits.hpp"
+
+#include "indexing_suite/container_suite.hpp"
+
+#include "indexing_suite/vector.hpp"
+
 #include "wrapper_header_collection.hpp"
+
+#include "AbstractDiscreteContinuumGrid2_2.pypp.hpp"
+
+#include "AbstractDiscreteContinuumGrid3_3.pypp.hpp"
+
+#include "DimensionalChastePoint2.pypp.hpp"
+
+#include "DimensionalChastePoint3.pypp.hpp"
+
+#include "DiscreteContinuumMesh2_2.pypp.hpp"
+
+#include "DiscreteContinuumMesh3_3.pypp.hpp"
+
+#include "DiscreteContinuumMeshGenerator2_2.pypp.hpp"
+
+#include "DiscreteContinuumMeshGenerator3_3.pypp.hpp"
+
+#include "GridCalculator2.pypp.hpp"
+
+#include "GridCalculator3.pypp.hpp"
+
+#include "MeshReader.pypp.hpp"
+
+#include "MultiFormatMeshWriter2.pypp.hpp"
+
+#include "MultiFormatMeshWriter3.pypp.hpp"
+
+#include "RegularGrid2.pypp.hpp"
+
+#include "RegularGrid3.pypp.hpp"
+
+#include "RegularGridWriter.pypp.hpp"
+
+#include "VectorDimensionalChastePoint2.pypp.hpp"
+
+#include "VectorDimensionalChastePoint3.pypp.hpp"
+
+#include "VectorDouble.pypp.hpp"
+
+#include "VectorUnsigned.pypp.hpp"
+
+#include "VectorVectorSharedPtrCell.pypp.hpp"
+
+#include "VectorVectorSharedPtrVesselNode2.pypp.hpp"
+
+#include "VectorVectorSharedPtrVesselNode3.pypp.hpp"
+
+#include "VectorVectorSharedPtrVesselSegment2.pypp.hpp"
+
+#include "VectorVectorSharedPtrVesselSegment3.pypp.hpp"
+
+#include "VectorVectorUnsigned.pypp.hpp"
 
 namespace bp = boost::python;
 
 BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_mesh){
+    register_VectorUnsigned_class();
 
+    register_VectorVectorUnsigned_class();
+
+    register_VectorVectorSharedPtrVesselSegment3_class();
+
+    register_VectorVectorSharedPtrVesselSegment2_class();
+
+    register_VectorVectorSharedPtrVesselNode3_class();
+
+    register_VectorVectorSharedPtrVesselNode2_class();
+
+    register_VectorVectorSharedPtrCell_class();
+
+    register_VectorDouble_class();
+
+    register_VectorDimensionalChastePoint3_class();
+
+    register_VectorDimensionalChastePoint2_class();
+
+    register_AbstractDiscreteContinuumGrid2_2_class();
+
+    register_AbstractDiscreteContinuumGrid3_3_class();
+
+    register_DimensionalChastePoint2_class();
+
+    register_DimensionalChastePoint3_class();
+
+    register_DiscreteContinuumMesh2_2_class();
+
+    register_DiscreteContinuumMesh3_3_class();
+
+    register_DiscreteContinuumMeshGenerator2_2_class();
+
+    register_DiscreteContinuumMeshGenerator3_3_class();
+
+    register_GridCalculator2_class();
+
+    register_GridCalculator3_class();
+
+    register_MeshReader_class();
+
+    register_MultiFormatMeshWriter2_class();
+
+    register_MultiFormatMeshWriter3_class();
+
+    register_RegularGrid2_class();
+
+    register_RegularGrid3_class();
+
+    register_RegularGridWriter_class();
 }
 

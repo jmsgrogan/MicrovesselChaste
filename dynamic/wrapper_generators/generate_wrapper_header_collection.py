@@ -73,6 +73,10 @@ def generate_class_data(args):
             for eachKey in component_keys:
                 if "/" + eachKey + "/" in eachClass.full_path:
                     eachClass.component = eachKey
+                    if "/angiogenesis/" in eachClass.full_path:
+                        eachClass.component = "angiogenesis"
+                    if "/flow/" in eachClass.full_path:
+                        eachClass.component = "flow"
                     
     # Set the template args by trying to guess what they are from the HPP files.
     # DOn't guess if they have been manually specified.
@@ -110,7 +114,7 @@ def generate_class_data(args):
                                 eachClass.template_args = same_dims_1
                                 break          
                 f.close()
-                
+                  
     with open(args[2]+"class_data.p", 'wb') as fp:
         pickle.dump(classes_to_be_wrapped.classes, fp)
         
@@ -157,39 +161,57 @@ def generate_hpp_file(args):
         short_names = eachClass.get_short_names()
         for idx, eachClassTemplateName in enumerate(eachClass.get_full_names()):
             hpp_file.write("typedef " + eachClassTemplateName + " " + 
-                           short_names[idx] + ";\n")    
+                           short_names[idx] + ";\n")  
             
-    # Add extra typdefs for STL and UBLAS components so name conflicts do not arise
-    # in wrapper classes.
-    extra_typdefs = [CppClass("std::map", "std", [["std::string", "std::string"]], True),
-                     CppClass("std::set", "std", [["unsigned"]], True),
-                     CppClass("std::vector", "std", [["double"], 
-                                                    ["unsigned"], 
-                                                    ["bool"],
-                                                    ["std::string"],
-                                                    ["c_vector<double,3>"],
-                                                    ["c_vector<double,2>"],
-                                                    ["c_vector<unsigned,5>"],
-                                                    ["std::set<unsigned int>"],
-                                                    ["std::vector<unsigned int>"],
-                                                    ["std::pair<unsigned int, unsigned int>"]], True),
-                     CppClass("c_vector", "blas",[["double", 2], ["double", 3], ["unsigned", 5]], True)]
-    for eachClass in extra_typdefs:
-        if not eachClass.needs_header_file_typdef():
-            continue
-        
-        short_names = eachClass.get_short_names()
-        for idx, eachClassTemplateName in enumerate(eachClass.get_full_names()):
-            hpp_file.write("typedef " + eachClassTemplateName + " " + 
-                           short_names[idx] + ";\n")    
-      
+            if eachClass.include_vec_ptr_self:
+                hpp_file.write("typedef " + eachClassTemplateName + "* " + 
+                               short_names[idx] + "Ptr;\n")    
+                hpp_file.write("typedef boost::shared_ptr<" + eachClassTemplateName + " > SharedPtr" + 
+                               short_names[idx] + ";\n")   
+                hpp_file.write("typedef std::vector<" + short_names[idx] + "Ptr> " + 
+                               "Vector" + short_names[idx] + "Ptr;\n")   
+                hpp_file.write("typedef std::vector<SharedPtr" + short_names[idx] + "> " + 
+                               "VectorSharedPtr" + short_names[idx] + ";\n") 
+                
+            if  eachClass.include_ptr_self and not eachClass.include_vec_ptr_self: 
+                hpp_file.write("typedef boost::shared_ptr<" + eachClassTemplateName + " > SharedPtr" + 
+                               short_names[idx] + ";\n")  
+            if eachClass.include_raw_ptr_self and not eachClass.include_vec_ptr_self:
+                hpp_file.write("typedef " + eachClassTemplateName + "* " + 
+                               short_names[idx] + "Ptr;\n") 
+                
+    # Special case for boost units
+    for eachUnit in classes_to_be_wrapped.units.keys():
+        base_name = ""
+        entries = eachUnit.split("_")
+        for eachEntry in entries:
+            base_name += eachEntry.capitalize()
+        base_name += "Quantity"
+        hpp_file.write("typedef units::quantity<unit:: " + eachUnit + ",double> " + base_name + ";\n")    
+        hpp_file.write("typedef std::vector<units::quantity<unit:: " + eachUnit + ",double> > Vector" + base_name + ";\n") 
+        hpp_file.write("typedef ParameterInstance<unit:: " + eachUnit + "> ParameterInstance" + base_name + ";\n")            
+
     hpp_file.write("    }\n")
     hpp_file.write("}\n")
     
     ## Add some special includes for Boost and PETSc
     hpp_file.write("\n// Need to specifically instantiate PETSc Vec and Mat \n")
     hpp_file.write("typedef boost::filesystem::path boost_filesystem_path;\n")
-    hpp_file.write("\n inline int Instantiation()\n{\nreturn sizeof(Mat) + sizeof(Vec);\n}\n")
+    
+    
+    hpp_file.write("typedef std::map<unsigned, units::quantity<unit::concentration_flow_rate> > MapUnsigned_ConcentrationFlowRate;\n")
+    hpp_file.write("typedef std::map<unsigned, units::quantity<unit::concentration> > MapUnsigned_Concentration;\n")
+    hpp_file.write("typedef std::map<std::string, std::vector<units::quantity<unit::concentration> > > MapString_VectorConcentration;\n")
+    hpp_file.write("\n inline int Instantiation()\n{\nreturn sizeof(Mat) + sizeof(Vec)\n")
+    for eachUnit in classes_to_be_wrapped.units.keys():
+        base_name = ""
+        entries = eachUnit.split("_")
+        for eachEntry in entries:
+            base_name += eachEntry.capitalize()
+        base_name += "Quantity"
+        hpp_file.write("+ sizeof(pyplusplus::aliases::"+ base_name + ")\n")  
+        hpp_file.write("+ sizeof(ParameterInstance<unit:: " + eachUnit + ">)\n")                
+    hpp_file.write(";\n}\n")
     hpp_file.write("\n inline Mat GetPetscMatForWrapper()\n{\nMat A;\nPetscTools::SetupMat(A, 3, 3, 3);\nreturn A;\n}\n")
     
     hpp_file.write("#endif // " + package_name + "HEADERS_HPP_\n")

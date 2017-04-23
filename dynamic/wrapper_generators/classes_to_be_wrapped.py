@@ -11,39 +11,40 @@ from wrapper_utilities.class_data import CppClass
 
 ################################## GEOMETRY ##########################################
 
-geometry_classes = [CppClass('Polygon', excluded_methods=["GetBoundingBox"]),CppClass('Facet', excluded_methods=["GetBoundingBox"]),
-                    CppClass('Part', excluded_methods=["GetBoundingBox"]),CppClass('MappableGridGenerator'), CppClass('NetworkToSurface'),
+geometry_classes = [CppClass('Polygon', include_vec_ptr_self=True),
+                    CppClass('Facet', include_vec_ptr_self=True),
+                    CppClass('Part'),
+                    CppClass('MappableGridGenerator'), CppClass('NetworkToSurface'),
                     CppClass('VesselSurfaceGenerator'), CppClass('BoundaryExtractor'),
-                    CppClass('SurfaceCleaner'), CppClass('GeometryFormat', needs_include_file = False),
-                    CppClass('GeometryWriter'),
-                    CppClass('boost::shared_ptr', skip_wrapping=True, needs_include_file=False, needs_instantiation = False,
-                          template_args=[["Polygon2"],
-                                         ["Polygon3"],]),                    
-                    CppClass('std::vector', skip_wrapping=True, needs_include_file=False, needs_instantiation = False,
-                          template_args=[["std::vector<boost::shared_ptr<Polygon2 > >"], 
-                                         ["std::vector<boost::shared_ptr<Polygon3 > >"],
-                                         ["boost::shared_ptr<Polygon<2> >"],
-                                         ["boost::shared_ptr<Polygon<2> >"],
-                                         ["boost::shared_ptr<Facet<2> >"],
-                                         ["boost::shared_ptr<Facet<3> >"],
-                                         ["boost::shared_ptr<DimensionalChastePoint<2> >"], 
-                                         ["boost::shared_ptr<DimensionalChastePoint<3> >"], 
-                                         #["units::quantity<unit::length>"]
-                                         ]),]
+                    CppClass('SurfaceCleaner'), 
+                    CppClass('GeometryFormat', needs_include_file = False),
+                    CppClass('GeometryWriter'),                  
+                    #CppClass('std::vector', skip_wrapping=True, needs_include_file=False, needs_instantiation = False,
+                          #template_args=[["units::quantity<unit::length>"]
+                                         #]),
+                                         ]
 
 ################################## MESH ##########################################
 
-mesh_classes = [CppClass('AbstractDiscreteContinuumGrid'),CppClass('DimensionalChastePoint'),
-                CppClass('DiscreteContinuumMesh'),CppClass('DiscreteContinuumMeshGenerator'),
-                CppClass('GridCalculator'), CppClass('MeshReader'),
+mesh_classes = [CppClass('AbstractDiscreteContinuumGrid'),
+                CppClass('DimensionalChastePoint', include_vec_ptr_self=True),
+                CppClass('DiscreteContinuumMesh'),
+                CppClass('DiscreteContinuumMeshGenerator'),
+                CppClass('GridCalculator'), 
+                CppClass('MeshReader'),
                 CppClass('MultiFormatMeshWriter'), CppClass('RegularGrid'),
                 CppClass('RegularGridWriter'), CppClass('MeshFormat', needs_include_file = False),
                 CppClass('std::vector', skip_wrapping=True, needs_include_file=False, needs_instantiation = False,
-                          template_args=[["DimensionalChastePoint<2>"], 
-                                         ["DimensionalChastePoint<3>"],]),
+                          template_args=[["std::vector<boost::shared_ptr<VesselNode<2> > >"],
+                                         ["std::vector<boost::shared_ptr<VesselNode<3> > >"],
+                                         ["std::vector<boost::shared_ptr<VesselSegment<2> > >"],
+                                         ["std::vector<boost::shared_ptr<VesselSegment<3> > >"],
+                                         ["std::vector<boost::shared_ptr<Cell> >"],
+                                         ["DimensionalChastePoint2"], 
+                                         ["DimensionalChastePoint3"],]),
                 CppClass('std::pair', skip_wrapping=True, needs_include_file=False, needs_instantiation = False,
-                          template_args=[["DimensionalChastePoint<2>, DimensionalChastePoint<2>"], 
-                                         ["DimensionalChastePoint<3>, DimensionalChastePoint<3>"],])]
+                          template_args=[["DimensionalChastePoint2, DimensionalChastePoint2"], 
+                                         ["DimensionalChastePoint3, DimensionalChastePoint3"],])]
 
 ################################## CELL ##########################################
 
@@ -52,7 +53,8 @@ cell_classes = [CppClass('AbstractCellKiller'), CppClass('AbstractCellMutationSt
                 CppClass('StalkCellMutationState'), CppClass('TipCellMutationState'),
                 CppClass('VesselCellMutationState'), CppClass('MacrophageMutationState'),
                 CppClass('Owen2011OxygenBasedCellCycleModel'), CppClass('Owen11CellPopulationGenerator'),
-                CppClass('CaBasedCellPopulation'), CppClass('LQRadiotherapyCellKiller'),
+                CppClass('CaBasedCellPopulation'), 
+                CppClass('LQRadiotherapyCellKiller'),
                 CppClass('Owen11CaBasedDivisionRule'), CppClass('Owen11CaUpdateRule')]
 
 ################################## ANGIOGENESIS ##########################################
@@ -79,34 +81,50 @@ flow_classes = [CppClass('FlowSolver'), CppClass('WallShearStressCalculator'),
 ################################## PDE ##########################################
 
 pde_classes = [CppClass('DiscreteContinuumBoundaryCondition'),
-               CppClass('DiscreteSource'), CppClass('CellStateDependentDiscreteSource'),
-               CppClass('CellBasedDiscreteSource'), CppClass('SolutionDependentDiscreteSource'),
+               CppClass('DiscreteSource', include_vec_ptr_self=True), 
+               CppClass('CellStateDependentDiscreteSource'),
+               CppClass('CellBasedDiscreteSource'), 
+               CppClass('SolutionDependentDiscreteSource'),
                CppClass('VesselBasedDiscreteSource'), CppClass('AbstractDiscreteContinuumPde'),
                CppClass('AbstractDiscreteContinuumLinearEllipticPde'), CppClass('DiscreteContinuumLinearEllipticPde'),
                CppClass('AbstractDiscreteContinuumNonLinearEllipticPde'),CppClass('MichaelisMentenSteadyStateDiffusionReactionPde'),
                CppClass('AbstractDiscreteContinuumParabolicPde'),CppClass('ParabolicDiffusionReactionPde'),
-               CppClass('CoupledVegfPelletDiffusionReactionPde'),CppClass('AbstractDiscreteContinuumSolver'),
-               CppClass('AbstractRegularGridDiscreteContinuumSolver'),CppClass('AbstractUnstructuredGridDiscreteContinuumSolver'),
-               CppClass('AbstractMixedGridDiscreteContinuumSolver'), CppClass('AbstractFiniteDifferenceSolverBase'),
-               CppClass('CoupledLumpedSystemFiniteDifferenceSolver'),CppClass('SimpleLinearEllipticFiniteDifferenceSolver'),
-               CppClass('SimpleNonLinearEllipticFiniteDifferenceSolver'),CppClass('AbstractFiniteElementSolverBase'),
-               CppClass('CoupledLumpedSystemFiniteElementSolver'),CppClass('SimpleLinearEllipticFiniteElementSolver'),
-               CppClass('SimpleNonLinearEllipticFiniteElementSolver'),CppClass('SimpleParabolicFiniteElementSolver'),
-               CppClass('AbstractGreensFunctionSolverBase'),CppClass('SimpleLinearEllipticGreensFunctionSolver'),
-               CppClass('FunctionMap'),CppClass('DensityMap')]
+               CppClass('CoupledVegfPelletDiffusionReactionPde'),
+               CppClass('AbstractDiscreteContinuumSolver', include_vec_ptr_self=True),
+               CppClass('AbstractRegularGridDiscreteContinuumSolver'),
+               CppClass('AbstractUnstructuredGridDiscreteContinuumSolver'),
+               CppClass('AbstractMixedGridDiscreteContinuumSolver'), 
+               CppClass('AbstractFiniteDifferenceSolverBase'),
+               CppClass('CoupledLumpedSystemFiniteDifferenceSolver'),
+               CppClass('SimpleLinearEllipticFiniteDifferenceSolver'),
+               CppClass('SimpleNonLinearEllipticFiniteDifferenceSolver'),
+               CppClass('AbstractFiniteElementSolverBase'),
+               CppClass('CoupledLumpedSystemFiniteElementSolver'),
+               CppClass('SimpleLinearEllipticFiniteElementSolver'),
+               CppClass('SimpleNonLinearEllipticFiniteElementSolver'),
+               CppClass('SimpleParabolicFiniteElementSolver'),
+               #CppClass('AbstractGreensFunctionSolverBase'),
+               #CppClass('SimpleLinearEllipticGreensFunctionSolver'),
+               CppClass('FunctionMap'),
+               CppClass('DensityMap')]
 
 ################################## SIMUALTION ##########################################
 
-simulation_classes = [CppClass('MicrovesselSolver'),CppClass('MicrovesselSimulationModifier'),
-                      CppClass('AbstractMicrovesselModifier'),CppClass('VtkSceneMicrovesselModifier'),
-                      CppClass('Owen2011TrackingModifier'),CppClass('AbstractCellBasedSimulationModifier'),]
+simulation_classes = [CppClass('MicrovesselSolver'),
+                      CppClass('MicrovesselSimulationModifier'),
+                      CppClass('AbstractMicrovesselModifier'),
+                      CppClass('VtkSceneMicrovesselModifier'),
+                      CppClass('Owen2011TrackingModifier'),
+                      CppClass('AbstractCellBasedSimulationModifier'),]
 
 ################################## VESSEL ##########################################
 
 vessel_classes = [CppClass('VesselNetworkReader'),CppClass('NodeFlowProperties'),
                   CppClass('SegmentFlowProperties'),CppClass('VesselFlowProperties'),
-                  CppClass('VesselNode'),CppClass('VesselSegment'),
-                  CppClass('Vessel'),CppClass('VesselNetwork'),
+                  CppClass('VesselNode', include_vec_ptr_self=True),
+                  CppClass('VesselSegment', include_vec_ptr_self=True),
+                  CppClass('Vessel', include_vec_ptr_self=True),
+                  CppClass('VesselNetwork'),
                   CppClass('VesselNetworkGenerator'),CppClass('AbstractVesselNetworkComponent'),
                   CppClass('VesselNetworkCellPopulationInteractor'),CppClass('VesselNetworkWriter'),
                   CppClass('DistanceMap'),
@@ -155,15 +173,38 @@ units = {"membrane_permeability": "metre_per_second",
              "dimensionless" : "dimensionless",       
              }
 
-utility_classes = [CppClass('ParameterInstance'),
+utility_classes = [CppClass('ParameterInstance', skip_wrapping=True, needs_instantiation = False), # needs custom code
                    CppClass('BaseUnits'),
-                   CppClass('UnitCollection'),
+                   CppClass('UnitCollection', skip_wrapping=True, needs_instantiation = False),
                    CppClass('ParameterCollection'),
                    CppClass('BaseParameterInstance'),
                    CppClass('Owen11Parameters'),
                    CppClass('Connor17Parameters'),
                    CppClass('Secomb04Parameters'),
                    CppClass('GenericParameters'),]
+
+extra_classes = [
+                 CppClass("std::string", "extra", skip_wrapping=True, needs_include_file=False, needs_instantiation = False),
+                 CppClass("std::map","extra",  [["std::string", "std::string"],
+                                                ["std::string, double"]], skip_wrapping=True, needs_include_file=False, needs_instantiation = False),
+                 CppClass("std::set","extra",  [["unsigned"]], skip_wrapping=True, needs_include_file=False, needs_instantiation = False),
+                 CppClass("std::pair","extra", [["unsigned int, unsigned int"],
+                                                ["std::vector<double>, double"]], skip_wrapping=True, needs_include_file=False, needs_instantiation = False),
+                 CppClass("std::vector","extra", [["double"], 
+                                          ["unsigned"], 
+                                          ["int"], 
+                                          ["bool"],
+                                          ["std::string"],
+                                          ["c_vector<double,3>"],
+                                          ["c_vector<double,2>"],
+                                          ["c_vector<unsigned,5>"],
+                                          ["std::set<unsigned int>"],
+                                          ["std::vector<unsigned int>"],
+                                          ["std::pair<unsigned int, unsigned int>"],
+                                          ["std::pair<std::vector<double>, double>"]], 
+                          skip_wrapping=True, needs_include_file=False, needs_instantiation = False),
+                 CppClass("c_vector","extra", [["double", 2], ["double", 3], ["unsigned", 5]], 
+                          skip_wrapping=True, needs_include_file=False, needs_instantiation = False)]
 
 # parameter_instance_class = utility_classes[0]
 # parameter_instance_class.template_args=[]
@@ -172,5 +213,5 @@ utility_classes = [CppClass('ParameterInstance'),
 #     parameter_instance_class.template_args.append("unit::"+eachUnit)
 
 # This final list will be pulled in by the autowrapper code by name...i.e. don't change the name.
-classes = geometry_classes + mesh_classes + cell_classes + angiogenesis_classes + pde_classes 
-classes += simulation_classes + vessel_classes + visualization_classes + utility_classes
+classes = extra_classes + geometry_classes + mesh_classes + cell_classes + angiogenesis_classes + pde_classes 
+classes += flow_classes + simulation_classes + vessel_classes + visualization_classes + utility_classes

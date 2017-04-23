@@ -39,6 +39,7 @@ try:
    import cPickle as pickle
 except:
    import pickle
+import ntpath
 import doxygen_extractor
 from pyplusplus import module_builder
 from pyplusplus.module_builder import call_policies, file_cache_t
@@ -188,8 +189,15 @@ def add_autowrap_classes_to_builder(builder, component_name, classes):
                         # PETSc Vec and Mat args need special care
                         for eachArgType in eachMemberFunction.arguments:
                             #pprint (vars(eachArgType))
-                            if "Vec" in eachArgType.type.decl_string and not "CellVecData" in eachArgType.type.decl_string:
-                                add_petsc_vec_code = True
+                            vec_exlude_terms = ["CellVecData", "Vector"]
+                            if "Vec" in eachArgType.type.decl_string:
+                                found_exclude = False
+                                for eachExcludeTerm in vec_exlude_terms:
+                                    if eachExcludeTerm in eachArgType.type.decl_string:
+                                        found_exclude = True
+                                        break                                        
+                                if not found_exclude:
+                                     add_petsc_vec_code = True
                             if "Mat" in eachArgType.type.decl_string:
                                 add_petsc_mat_code = True
                                 
@@ -214,10 +222,17 @@ def add_autowrap_classes_to_builder(builder, component_name, classes):
                             continue
                         
                         # PETSc Vec and Mat need special care
-                        if "Vec" in str(eachMemberFunction.return_type) and not "CellVecData" in str(eachMemberFunction.return_type):
-                            eachMemberFunction.call_policies = call_policies_collection["return_opaque_pointer"]
-                            petsc_vec_code_will_auto = True
-                            continue
+                        vec_exlude_terms = ["CellVecData", "Vector"]
+                        if "Vec" in str(eachMemberFunction.return_type):
+                            found_exclude = False
+                            for eachExcludeTerm in vec_exlude_terms:
+                                if eachExcludeTerm in str(eachMemberFunction.return_type):
+                                    found_exclude = True
+                                    break                                        
+                            if not found_exclude:
+                                eachMemberFunction.call_policies = call_policies_collection["return_opaque_pointer"]
+                                petsc_vec_code_will_auto = True
+                                continue
                         
                         if "Mat" in str(eachMemberFunction.return_type):
                             eachMemberFunction.call_policies = call_policies_collection["return_opaque_pointer"]
@@ -286,7 +301,61 @@ def pypp_template_name_fix(module_file):
             lines.append(line)
     with open(module_file, 'w') as outfile:
         for line in lines:
-            outfile.write(line)     
+            outfile.write(line)   
+            
+def strip_undefined_call_policies(module_file):
+    
+    # Catch-all to remove methods with undefined call policies that
+    # might otherwise have been missed.
+    
+    lines = []
+    with open(module_file) as infile:
+        for line in infile:
+            lines.append(line)
+            
+    strip_indices = []
+    def_index = 0
+    for idx, eachLine in enumerate(lines):
+        if ".def(" in eachLine:
+            def_index = idx
+        if "/* undefined call policies */" in eachLine:
+            if ";" in eachLine:
+                strip_indices.extend(range(idx-1, def_index-1, -1))
+                lines[idx] = ";"
+            else:
+                strip_indices.extend(range(idx, def_index-1, -1))                
+            
+    if len(strip_indices)>0:
+        print "Note: found undefined call policies in ", module_file, ". Stripping them out."
+        
+    return_lines = [i for j, i in enumerate(lines) if j not in strip_indices]
+    
+    with open(module_file, 'w') as outfile:
+        for line in return_lines:
+            outfile.write(line)   
+            
+def strip_value_traits(module_file, file_list):
+    
+    lines = []
+    with open(module_file) as infile:
+        for line in infile:
+            lines.append(line)
+            
+    return_lines = []
+    for idx, eachLine in enumerate(lines):
+        if "__value_traits.pypp.hpp" in eachLine:
+            # Get the base file name
+            cleaned_line = eachLine.rstrip().replace(" ", "").replace("#include", "").translate(None, '"')
+            if cleaned_line not in file_list:
+                continue
+        return_lines.append(eachLine)
+            
+    if len(return_lines) != len(lines):
+        print "Stripped value traits from: ", module_file
+    
+    with open(module_file, 'w') as outfile:
+        for line in return_lines:
+            outfile.write(line)  
             
 def do_module(module_name, builder, work_dir, classes):
     
@@ -306,7 +375,7 @@ def do_module(module_name, builder, work_dir, classes):
         for eachName in eachClass.get_short_names():
             f.write('.. autoclass:: microvessel_chaste.' + module_name + '.' + eachName + '\n\t:members:\n\n')
     f.close()
-    return builder
+    return builder   
        
 def generate_wrappers(args):
     
@@ -349,12 +418,13 @@ def generate_wrappers(args):
     with open(work_dir + "/dynamic/wrappers/class_data.p", 'rb') as fp:
         classes = pickle.load(fp)
         
-    module_names = ["mesh", "geometry", "cell", "angiogenesis", "pde", "simulation", "vessel",
+    module_names = ["mesh", "geometry", "cell", "vessel", "pde", "angiogenesis", "flow", "simulation", 
                     "visualization", "utility"]
     
     # Just for debugging
-    ignore_modules = ["geometry", "cell", "angiogenesis", "pde", "simulation", "vessel",
-                    "visualization", "utility"]
+    ignore_modules = ["vessel", "pde", "mesh", "geometry", 
+                      "cell", "flow", "angiogenesis", "simulation", "visualization"]
+    
     #ignore_modules = []
     
     for idx, module_name in enumerate(module_names):
@@ -364,8 +434,8 @@ def generate_wrappers(args):
         
         print 'Generating Wrapper Code for: ' + module_name + ' Module.'
         
-        if "mesh" not in module_name:
-            builder.register_module_dependency(work_dir + "/dynamic/wrappers/"+module_names[idx-1])
+#         if "mesh" not in module_name:
+#             builder.register_module_dependency(work_dir + "/dynamic/wrappers/"+module_names[idx-1])
         
         # Set up the builder for each module
         
@@ -381,7 +451,11 @@ def generate_wrappers(args):
         builder.code_creator.user_defined_directories.append(work_dir + "/dynamic/wrappers/" + module_name + "/")
         builder.code_creator.license = chaste_license
         
-        builder.split_module(work_dir+"/dynamic/wrappers/"+module_name)
+        file_list = builder.split_module(work_dir+"/dynamic/wrappers/"+module_name)
+        value_traits_files = []
+        for eachFile in file_list:
+            if "__value_traits" in eachFile:
+                value_traits_files.append(ntpath.basename(eachFile))
         
         # Manually strip any undefined call policies we have missed. Strictly there should not be any/many.
 #         for file in os.listdir(work_dir + "/dynamic/wrappers/" + module_name + "/"):
@@ -389,13 +463,13 @@ def generate_wrappers(args):
 #                 strip_undefined_call_policies(work_dir + "/dynamic/wrappers/" + module_name + "/" + file)
                 
         # Manually remove some value traits in std headers (https://mail.python.org/pipermail/cplusplus-sig/2008-April/013105.html)
-#         for file in os.listdir(work_dir + "/dynamic/wrappers/" + module_name + "/"):
-#             if file.endswith(".cpp"):
-#                 strip_value_traits(work_dir + "/dynamic/wrappers/" + module_name + "/" + file)   
+        for file in os.listdir(work_dir + "/dynamic/wrappers/" + module_name + "/"):
+            if file.endswith(".cpp"):
+                strip_value_traits(work_dir + "/dynamic/wrappers/" + module_name + "/" + file, value_traits_files)   
         
         # Fix a bug with boost units
         for file in os.listdir(work_dir + "/dynamic/wrappers/" + module_name + "/"):
-            if file.endswith(".cpp"):
+            if file.endswith(".cpp") or file.endswith("__value_traits.pypp.hpp"):
                 boost_units_namespace_fix(work_dir + "/dynamic/wrappers/" + module_name + "/" + file)   
                 pypp_template_name_fix(work_dir + "/dynamic/wrappers/" + module_name + "/" + file)
     

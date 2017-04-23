@@ -45,11 +45,11 @@ def update_builder(builder, class_collection):
 #     builder.class_('VesselNetworkGenerator<3>').calldefs().use_default_arguments=False    
 
     # The VesselSegment and Vessel classes need factory constructors as they have private constructor methods
-    builder.add_declaration_code('boost::shared_ptr<VesselSegment<3> > (*VS3_Nodes)(boost::shared_ptr<VesselNode<3> >, boost::shared_ptr<VesselNode<3> >) = &VesselSegment<3>::Create;')
-    builder.add_declaration_code('boost::shared_ptr<VesselSegment<3> > (*VS3_Copy)(boost::shared_ptr<VesselSegment<3> >) = &VesselSegment<3>::Create;')
-    builder.add_declaration_code('boost::shared_ptr<Vessel<3> > (*V3_SingleSegment)(boost::shared_ptr<VesselSegment<3> >) = &Vessel<3>::Create;')
-    builder.add_declaration_code('boost::shared_ptr<Vessel<3> > (*V3_MultiSegment)(std::vector<boost::shared_ptr<VesselSegment<3> > >) = &Vessel<3>::Create;')
-    builder.add_declaration_code('boost::shared_ptr<Vessel<3> > (*V3_Nodes)(std::vector<boost::shared_ptr<VesselNode<3> > >) = &Vessel<3>::Create;')
+    builder.class_('VesselSegment<3>').add_declaration_code('boost::shared_ptr<VesselSegment<3> > (*VS3_Nodes)(boost::shared_ptr<VesselNode<3> >, boost::shared_ptr<VesselNode<3> >) = &VesselSegment<3>::Create;')
+    builder.class_('VesselSegment<3>').add_declaration_code('boost::shared_ptr<VesselSegment<3> > (*VS3_Copy)(boost::shared_ptr<VesselSegment<3> >) = &VesselSegment<3>::Create;')
+    builder.class_('Vessel<3>').add_declaration_code('boost::shared_ptr<Vessel<3> > (*V3_SingleSegment)(boost::shared_ptr<VesselSegment<3> >) = &Vessel<3>::Create;')
+    builder.class_('Vessel<3>').add_declaration_code('boost::shared_ptr<Vessel<3> > (*V3_MultiSegment)(std::vector<boost::shared_ptr<VesselSegment<3> > >) = &Vessel<3>::Create;')
+    builder.class_('Vessel<3>').add_declaration_code('boost::shared_ptr<Vessel<3> > (*V3_Nodes)(std::vector<boost::shared_ptr<VesselNode<3> > >) = &Vessel<3>::Create;')
     builder.class_('VesselSegment<3>').add_registration_code('def("__init__", bp::make_constructor(VS3_Nodes))')
     builder.class_('VesselSegment<3>').add_registration_code('def("__init__", bp::make_constructor(VS3_Copy))')
     builder.class_('Vessel<3>').add_registration_code('def("__init__", bp::make_constructor(V3_SingleSegment))')

@@ -1,3 +1,51 @@
+.. autoclass:: microvessel_chaste.geometry.std::string
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.MapString_String
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.SetUnsigned
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.VectorDouble
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.VectorUnsigned
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.VectorBool
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.VectorString
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.VectorCVectorDouble3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.VectorCVectorDouble2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.VectorCVectorUnsigned5
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.VectorSetUnsigned
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.VectorVectorUnsigned
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.VectorPairUnsignedUnsigned
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.CVectorDouble_2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.CVectorDouble_3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.CVectorUnsigned_5
+	:members:
+
 .. autoclass:: microvessel_chaste.geometry.Polygon2
 	:members:
 
@@ -41,36 +89,6 @@
 	:members:
 
 .. autoclass:: microvessel_chaste.geometry.GeometryWriter
-	:members:
-
-.. autoclass:: microvessel_chaste.geometry.Boostshared_ptrPolygon2
-	:members:
-
-.. autoclass:: microvessel_chaste.geometry.Boostshared_ptrPolygon3
-	:members:
-
-.. autoclass:: microvessel_chaste.geometry.StdvectorStdvectorboostshared_ptrPolygon2
-	:members:
-
-.. autoclass:: microvessel_chaste.geometry.StdvectorStdvectorboostshared_ptrPolygon3
-	:members:
-
-.. autoclass:: microvessel_chaste.geometry.StdvectorBoostshared_ptrPolygon2
-	:members:
-
-.. autoclass:: microvessel_chaste.geometry.StdvectorBoostshared_ptrPolygon2
-	:members:
-
-.. autoclass:: microvessel_chaste.geometry.StdvectorBoostshared_ptrFacet2
-	:members:
-
-.. autoclass:: microvessel_chaste.geometry.StdvectorBoostshared_ptrFacet3
-	:members:
-
-.. autoclass:: microvessel_chaste.geometry.StdvectorBoostshared_ptrDimensionalChastePoint2
-	:members:
-
-.. autoclass:: microvessel_chaste.geometry.StdvectorBoostshared_ptrDimensionalChastePoint3
 	:members:
 
 .. autoclass:: microvessel_chaste.geometry.AbstractDiscreteContinuumGrid2_2
@@ -124,16 +142,31 @@
 .. autoclass:: microvessel_chaste.geometry.MeshFormat
 	:members:
 
-.. autoclass:: microvessel_chaste.geometry.StdvectorDimensionalChastePoint2
+.. autoclass:: microvessel_chaste.geometry.VectorVectorSharedPtrVesselNode2
 	:members:
 
-.. autoclass:: microvessel_chaste.geometry.StdvectorDimensionalChastePoint3
+.. autoclass:: microvessel_chaste.geometry.VectorVectorSharedPtrVesselNode3
 	:members:
 
-.. autoclass:: microvessel_chaste.geometry.StdpairDimensionalChastePoint2DimensionalChastePoint2
+.. autoclass:: microvessel_chaste.geometry.VectorVectorSharedPtrVesselSegment2
 	:members:
 
-.. autoclass:: microvessel_chaste.geometry.StdpairDimensionalChastePoint3DimensionalChastePoint3
+.. autoclass:: microvessel_chaste.geometry.VectorVectorSharedPtrVesselSegment3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.VectorVectorSharedPtrCell
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.VectorDimensionalChastePoint2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.VectorDimensionalChastePoint3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.PairDimensionalChastePoint2DimensionalChastePoint2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.PairDimensionalChastePoint3DimensionalChastePoint3
 	:members:
 
 .. autoclass:: microvessel_chaste.geometry.AbstractCellKiller2
@@ -460,6 +493,99 @@
 .. autoclass:: microvessel_chaste.geometry.DensityMap3
 	:members:
 
+.. autoclass:: microvessel_chaste.geometry.FlowSolver2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.FlowSolver3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.WallShearStressCalculator
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.VesselImpedanceCalculator2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.VesselImpedanceCalculator3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.BetteridgeHaematocritSolver2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.BetteridgeHaematocritSolver3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.AbstractVesselNetworkCalculator2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.AbstractVesselNetworkCalculator3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.MechanicalStimulusCalculator2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.MechanicalStimulusCalculator3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.MetabolicStimulusCalculator2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.MetabolicStimulusCalculator3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.RadiusCalculator2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.RadiusCalculator3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.ShrinkingStimulusCalculator2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.ShrinkingStimulusCalculator3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.ViscosityCalculator2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.ViscosityCalculator3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.WallShearStressCalculator2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.WallShearStressCalculator3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.AbstractStructuralAdaptationSolver2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.AbstractStructuralAdaptationSolver3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.StructuralAdaptationSolver2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.StructuralAdaptationSolver3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.AbstractHaematocritSolver2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.AbstractHaematocritSolver3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.AlarconHaematocritSolver2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.AlarconHaematocritSolver3
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.ConstantHaematocritSolver2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.ConstantHaematocritSolver3
+	:members:
+
 .. autoclass:: microvessel_chaste.geometry.MicrovesselSolver2
 	:members:
 
@@ -566,12 +692,6 @@
 	:members:
 
 .. autoclass:: microvessel_chaste.geometry.DistanceMap3
-	:members:
-
-.. autoclass:: microvessel_chaste.geometry.LacunarityCalculator2
-	:members:
-
-.. autoclass:: microvessel_chaste.geometry.LacunarityCalculator3
 	:members:
 
 .. autoclass:: microvessel_chaste.geometry.VesselNetworkGeometryCalculator2

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""Copyright (c) 2005-2016, University of Oxford.
+"""Copyright (c) 2005-2017, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -39,47 +39,47 @@ from pygccxml import parser
 
 def update_builder(builder, class_collection):
     
-
     helpers = builder.classes(lambda decl: decl.name.startswith('ParameterInstance'))
     for eachClass in helpers:
         eachClass.include()
 #         eachClass.rename("SomethingElse")
-        print eachClass.alias
-
-#    builder.variable("kg").include()
-#     helpers = builder.classes(lambda decl: decl.name.startswith('ParameterInstance'))
-#     for var_gen_typedef in helpers:
-#         print "in"
-# #        var_gen_cls = var_gen_typedef.type.declaration
-#         var_gen_cls = var_gen_typedef
-# #        var_gen_cls.rename(var_gen_typedef.name)
-#         var_gen_cls.include()
-    
-#     pypluplus_alias_ns = builder.global_ns.namespace('pyplusplus')
-#     helpers = pypluplus_alias_ns.typedefs(lambda decl: decl.name.startswith('ParameterInstance'))
-#     for var_gen_typedef in helpers:
-#         print var_gen_typedef.name
-# #         print var_gen_typedef.type
-#         eachclass = builder.class_(str(var_gen_typedef.type))
-#         eachclass.include()
-#         eachclass.rename(str(var_gen_typedef.name))
-#        var_gen_cls = var_gen_typedef.type.declaration
-#         var_gen_cls = var_gen_typedef
-#        var_gen_cls.rename(var_gen_typedef.name)
-#         var_gen_cls.include()
-    # #        var_gen_cls.member_operators( symbol='()' ).create_with_signature = True
-
-    # #        var_gen_cls.constructors().exclude()
-
-    #builder.class_("kg_instance_t<true>").include()
-    #builder.class_("metre_cubed_per_second_instance_t< true >").include()
-#    builder.class_(dimensionless_unit).include()
-#    builder.class_("DimensionlessUnit").include()
+        print "Processing: ", eachClass.alias
     
     # can we find all the boost units classes 
     # they live in the unit namespace
     unit_ns = builder.global_ns.namespace('unit', recursive=False)
     pypluplus_alias_ns = builder.global_ns.namespace('pyplusplus')
+    
+    units = {"membrane_permeability": "metre_per_second", 
+             "volumetric_solubility": "per_pascal",
+             "solubility": "mole_per_metre_cubed_per_second",
+             "diffusivity_per_concentration": "metre_pow5_per_second_per_mole",
+             "diffusivity": "metre_squared_per_second",
+             "flow_impedance": "pascal_second_per_metre_cubed",
+             "flow_rate": "metre_cubed_per_second",
+             "dynamic_viscosity": "poiseuille",
+             "pressure": "pascal",
+             "force": "newton",
+             "velocity": "metre_per_second",
+             "number_density": "per_metre_cubed",
+             "molar_mass": "mole_per_kg",
+             "rate_per_concentration": "metre_cubed_per_mole_per_second",
+             "concentration_gradient": "mole_per_metre_pow4",
+             "concentration_flux": "mole_per_metre_pow5_per_second",
+             "concentration_flow_rate": "mole_per_metre_cubed_per_second",
+             "concentration": "mole_per_metre_cubed",
+             "molar_flux": "mole_per_metre_squared_per_second",
+             "molar_flow_rate": "mole_per_second",
+             "mass": "kg",
+             "per_area": "per_metre_squared",
+             "per_length": "per_metre",
+             "volume": "metre_cubed",
+             "area": "metre_squared",
+             "length": "metre",
+             "rate":"per_second",
+             "time":"second", 
+             "dimensionless" : "dimensionless",       
+             }
    
     unit_names = ["membrane_permeability",
                   "volumetric_solubility",
@@ -129,7 +129,7 @@ def update_builder(builder, class_collection):
                       "DiffusivityPerConcentrationQuantity",
                       "DiffusivityQuantity",
                       "FlowRateQuantity",
-                      "ViscosityQuantity",
+                      "DynamicViscosityQuantity",
                       "PressureQuantity",
                       "ForceQuantity",
                       "VelocityQuantity",
@@ -142,9 +142,8 @@ def update_builder(builder, class_collection):
                       "ConcentrationFlowRateQuantity",
                       "MolarFluxQuantity",
                       "MolarFlowRateQuantity",
-                      "AmountQuantity",
-                      "MassFluxQuantity",
-                      "MassFlowRateQuantity",
+                      #"MassFluxQuantity",
+                      #"MassFlowRateQuantity",
                       "MassQuantity",
                       "PerAreaQuantity",
                       "PerLengthQuantity",
@@ -153,11 +152,12 @@ def update_builder(builder, class_collection):
                       "LengthQuantity",
                       "RateQuantity",
                       "TimeQuantity",
-                      "AngleQuantity",
+                      #"AngleQuantity",
                       "DimensionlessQuantity"
                       ]
     
     for eachQuantity in quantity_names:
+        print "Processing: ", eachQuantity
         helpers = pypluplus_alias_ns.typedefs(eachQuantity)
         for var_gen_typedef in helpers:
             var_gen_cls = var_gen_typedef.type.declaration

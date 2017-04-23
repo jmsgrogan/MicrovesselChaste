@@ -68,70 +68,70 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "Polygon3.pypp.hpp"
 
-#include "StdvectorBool.pypp.hpp"
-
-#include "StdvectorBoostshared_ptrDimensionalChastePoint2.pypp.hpp"
-
-#include "StdvectorBoostshared_ptrDimensionalChastePoint3.pypp.hpp"
-
-#include "StdvectorBoostshared_ptrFacet2.pypp.hpp"
-
-#include "StdvectorBoostshared_ptrFacet3.pypp.hpp"
-
-#include "StdvectorBoostshared_ptrPolygon2.pypp.hpp"
-
-#include "StdvectorDimensionalChastePoint2.pypp.hpp"
-
-#include "StdvectorDimensionalChastePoint3.pypp.hpp"
-
-#include "StdvectorStdpairunsignedintunsignedint.pypp.hpp"
-
-#include "StdvectorStdstring.pypp.hpp"
-
-#include "StdvectorStdvectorboostshared_ptrPolygon2.pypp.hpp"
-
-#include "StdvectorStdvectorboostshared_ptrPolygon3.pypp.hpp"
-
-#include "StdvectorUnsigned.pypp.hpp"
-
 #include "SurfaceCleaner.pypp.hpp"
+
+#include "VectorBool.pypp.hpp"
+
+#include "VectorDimensionalChastePoint2.pypp.hpp"
+
+#include "VectorDimensionalChastePoint3.pypp.hpp"
+
+#include "VectorPairUnsignedUnsigned.pypp.hpp"
+
+#include "VectorSharedPtrDimensionalChastePoint2.pypp.hpp"
+
+#include "VectorSharedPtrDimensionalChastePoint3.pypp.hpp"
+
+#include "VectorSharedPtrFacet2.pypp.hpp"
+
+#include "VectorSharedPtrFacet3.pypp.hpp"
+
+#include "VectorSharedPtrPolygon2.pypp.hpp"
+
+#include "VectorSharedPtrPolygon3.pypp.hpp"
+
+#include "VectorString.pypp.hpp"
+
+#include "VectorUnsigned.pypp.hpp"
 
 #include "VesselSurfaceGenerator2.pypp.hpp"
 
 #include "VesselSurfaceGenerator3.pypp.hpp"
 
-#include "__type.pypp.hpp"
+#include "vector_less__std_scope_vector_less__boost_scope_shared_ptr_less_Polygon_less_2_greater___greater___greater___greater_.pypp.hpp"
+
+#include "vector_less__std_scope_vector_less__boost_scope_shared_ptr_less_Polygon_less_3_greater___greater___greater___greater_.pypp.hpp"
 
 namespace bp = boost::python;
 
 BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_geometry){
-    register_StdvectorUnsigned_class();
+    register_VectorUnsigned_class();
 
-    register_StdvectorStdvectorboostshared_ptrPolygon3_class();
+    register_vector_less__std_scope_vector_less__boost_scope_shared_ptr_less_Polygon_less_3_greater___greater___greater___greater__class();
 
-    register_StdvectorStdvectorboostshared_ptrPolygon2_class();
+    register_vector_less__std_scope_vector_less__boost_scope_shared_ptr_less_Polygon_less_2_greater___greater___greater___greater__class();
 
-    register_StdvectorStdpairunsignedintunsignedint_class();
+    register_VectorPairUnsignedUnsigned_class();
 
-    register_StdvectorStdstring_class();
+    register_VectorString_class();
 
-    register___type_class();
+    register_VectorSharedPtrPolygon3_class();
 
-    register_StdvectorBoostshared_ptrPolygon2_class();
+    register_VectorSharedPtrPolygon2_class();
 
-    register_StdvectorBoostshared_ptrFacet3_class();
+    register_VectorSharedPtrFacet3_class();
 
-    register_StdvectorBoostshared_ptrFacet2_class();
+    register_VectorSharedPtrFacet2_class();
 
-    register_StdvectorBoostshared_ptrDimensionalChastePoint3_class();
+    register_VectorSharedPtrDimensionalChastePoint3_class();
 
-    register_StdvectorBoostshared_ptrDimensionalChastePoint2_class();
+    register_VectorSharedPtrDimensionalChastePoint2_class();
 
-    register_StdvectorBool_class();
+    register_VectorBool_class();
 
-    register_StdvectorDimensionalChastePoint3_class();
+    register_VectorDimensionalChastePoint3_class();
 
-    register_StdvectorDimensionalChastePoint2_class();
+    register_VectorDimensionalChastePoint2_class();
 
     register_BoundaryExtractor_class();
 

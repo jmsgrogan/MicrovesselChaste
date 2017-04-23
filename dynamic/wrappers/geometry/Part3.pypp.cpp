@@ -39,6 +39,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "boost/python.hpp"
 #include "wrapper_header_collection.hpp"
 #include "Part3.pypp.hpp"
+#include "GeometryWriter.hpp"
 
 namespace bp = boost::python;
 
@@ -375,7 +376,7 @@ void register_Part3_class(){
             
             Part3_exposer.def( 
                 "Write"
-                , Write_function_type( &::Part< 3 >::Write ) );
+                , Write_function_type( &::Part< 3 >::Write ));
         
         }
         Part3_exposer.staticmethod( "Create" );

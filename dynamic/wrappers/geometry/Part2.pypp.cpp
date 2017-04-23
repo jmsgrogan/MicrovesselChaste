@@ -375,7 +375,7 @@ void register_Part2_class(){
             
             Part2_exposer.def( 
                 "Write"
-                , Write_function_type( &::Part< 2 >::Write ) );
+                , Write_function_type( &::Part< 2 >::Write ));
         
         }
         Part2_exposer.staticmethod( "Create" );
