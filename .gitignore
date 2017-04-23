@@ -9,7 +9,7 @@ paper/
 papers/
 papers/
 .settings/
-dynamic/exposed_decl.pypp.txt
+*exposed_decl.pypp.txt
 .idea
 doc/api/build/*
 
