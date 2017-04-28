@@ -36,27 +36,15 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef _VectorConcentrationQuantity__value_traits_pypp_hpp_hpp__pyplusplus_wrapper
-#define _VectorConcentrationQuantity__value_traits_pypp_hpp_hpp__pyplusplus_wrapper
+#include "boost/python.hpp"
+#include "wrapper_header_collection.hpp"
+#include "Secomb04Parameters.pypp.hpp"
 
-namespace boost { namespace python { namespace indexing {
+namespace bp = boost::python;
 
-template<>
-struct value_traits< std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<-3, 1> >, boost::units::list<boost::units::dim<boost::units::amount_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type> >, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > >{
+void register_Secomb04Parameters_class(){
 
-    static bool const equality_comparable = false;
-    
+    bp::class_< Secomb04Parameters >( "Secomb04Parameters" )    
+        .def_readonly( "mpOxygenVolumetricSolubility", &Secomb04Parameters::mpOxygenVolumetricSolubility );
 
-    static bool const less_than_comparable = false;
-    
-
-    template<typename PythonClass, typename Policy>
-    static void visit_container_class(PythonClass &, Policy const &){
-        
-    }
-
-};
-
-}/*indexing*/ } /*python*/ } /*boost*/
-
-#endif//_VectorConcentrationQuantity__value_traits_pypp_hpp_hpp__pyplusplus_wrapper
+}

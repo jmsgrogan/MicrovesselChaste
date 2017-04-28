@@ -87,6 +87,12 @@ void OffLatticeMigrationRule<DIM>::SetAttractionStrength(double strength)
 }
 
 template<unsigned DIM>
+void OffLatticeMigrationRule<DIM>::SetPersistenceAngleSdv(double angle)
+{
+    mSdvAngles = std::vector<units::quantity<unit::plane_angle> >(3, angle*unit::radians);
+}
+
+template<unsigned DIM>
 std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     if (this->mIsSprouting)
@@ -103,7 +109,6 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
         unsigned probes_per_node = (2*DIM)+1;
         vtkSmartPointer<vtkPoints> p_probe_locations = vtkSmartPointer<vtkPoints>::New();
         std::vector<bool> candidate_locations_inside_domain(probes_per_node*rNodes.size(), true);
-
         if(this->mpSolver)
         {
             for(unsigned idx=0; idx<rNodes.size(); idx++)
@@ -124,7 +129,6 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
                 candidate_locations_inside_domain = this->mpBoundingDomain->IsPointInPart(p_probe_locations);
             }
         }
-
         for(unsigned idx=0; idx<rNodes.size(); idx++)
         {
             // Persistent random walk
@@ -258,7 +262,6 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
     }
     vtkSmartPointer<vtkPoints> p_probe_locations = vtkSmartPointer<vtkPoints>::New();
     std::vector<bool> candidate_locations_inside_domain(probes_per_node*rNodes.size(), true);
-
     // Get a normal to the segments, will depend on whether they are parallel
     for(unsigned idx = 0; idx < rNodes.size(); idx++)
     {
@@ -374,7 +377,6 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
                 }
             }
         }
-
         units::quantity<unit::plane_angle> angle = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0]/unit::radians,
                                                                                                           mSdvAngles[0]/unit::radians)*unit::radians;
         vtkSmartPointer<vtkPoints> p_local_probes = GetProbeLocationsInternalPoint<DIM>(DimensionalChastePoint<DIM>(sprout_direction, reference_length),
@@ -387,7 +389,6 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             p_probe_locations->InsertNextPoint(p_local_probes->GetPoint(jdx));
         }
     }
-
     if(this->mpSolver)
     {
         if(p_probe_locations->GetNumberOfPoints()>0)
@@ -405,7 +406,6 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
     for(unsigned idx=0; idx<rNodes.size(); idx++)
     {
         DimensionalChastePoint<DIM> new_direction(0.0, 0.0, 0.0, reference_length);
-
         // Solution dependent contribution
         if(this->mpSolver)
         {
@@ -448,16 +448,17 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             if(my_index>=0 and my_index<=max_index)
             {
                 p_probe_locations->GetPoint(idx*probes_per_node + 1 + my_index, loc);
+                new_direction = DimensionalChastePoint<DIM>(loc[0], loc[1], loc[2], reference_length) -rNodes[idx]->rGetLocation();
             }
-            else
-            {
-                EXCEPTION("Out of bounds in sprout direction calculation");
-            }
-            new_direction = DimensionalChastePoint<DIM>(loc[0], loc[1], loc[2], reference_length) -rNodes[idx]->rGetLocation();
+//            else
+//            {
+//                EXCEPTION("Out of bounds in sprout direction calculation");
+//            }
         }
         units::quantity<unit::time> time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
         units::quantity<unit::length> increment_length = time_increment* mVelocity;
-        movement_vectors.push_back(OffsetAlongVector<DIM>(new_direction, increment_length));
+
+        movement_vectors.push_back(OffsetAlongVector<DIM>(new_direction.GetUnitVector(), increment_length, reference_length));
     }
 
     return movement_vectors;

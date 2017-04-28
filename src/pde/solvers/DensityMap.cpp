@@ -38,6 +38,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkWedge.h>
 #include <vtkVoxel.h>
 #include <vtkPoints.h>
+#include <vtkXMLUnstructuredGridWriter.h>
 #include "VesselSegment.hpp"
 #include "DensityMap.hpp"
 #include "GeometryTools.hpp"
@@ -87,13 +88,14 @@ vtkSmartPointer<vtkUnstructuredGrid> DensityMap<DIM>::GetSamplingGrid(vtkSmartPo
     for(unsigned idx=0; idx<pGrid->GetNumberOfCells(); idx++)
     {
         vtkSmartPointer<vtkWedge> p_wedge = vtkSmartPointer<vtkWedge>::New();
+        p_wedge->GetPointIds()->SetNumberOfIds(6);
         vtkSmartPointer<vtkPoints> p_points = pGrid->GetCell(idx)->GetPoints();
         for(unsigned jdx=0;jdx<p_points->GetNumberOfPoints();jdx++)
         {
-            vtkIdType id1 = p_newpoints->InsertNextPoint(p_points->GetPoint(jdx)[0], p_points->GetPoint(jdx)[1], -1.e-3);
+            vtkIdType id1 = p_newpoints->InsertNextPoint(p_points->GetPoint(jdx)[0], p_points->GetPoint(jdx)[1], -0.1);
             p_wedge->GetPointIds()->SetId(jdx, id1);
-            vtkIdType id2 = p_newpoints->InsertNextPoint(p_points->GetPoint(jdx)[0], p_points->GetPoint(jdx)[1], 1.e-3);
-            p_wedge->GetPointIds()->SetId(jdx+2, id2);
+            vtkIdType id2 = p_newpoints->InsertNextPoint(p_points->GetPoint(jdx)[0], p_points->GetPoint(jdx)[1], 1.0);
+            p_wedge->GetPointIds()->SetId(jdx+3, id2);
         }
         p_tri_grid->InsertNextCell(p_wedge->GetCellType(), p_wedge->GetPointIds());
     }
@@ -270,8 +272,6 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselSurfaceAreaDensity(bool up
             {
                 EXCEPTION("Can't cast to mesh");
             }
-
-            vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
             if(DIM==3)
             {
                 p_sampling_grid = vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid());
@@ -339,17 +339,16 @@ std::vector<double> DensityMap<DIM>::rGetVesselLineDensity(bool update)
             {
                 EXCEPTION("Can't cast to mesh");
             }
-
-            vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
             if(DIM==3)
             {
                 p_sampling_grid = vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid());
             }
             else
             {
-                p_sampling_grid = GetSamplingGrid(vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid()));
+                p_sampling_grid = this->GetSamplingGrid(vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid()));
             }
         }
+
         vtkSmartPointer<vtkCellLocator> p_sampling_locator = vtkSmartPointer<vtkCellLocator>::New();
         p_sampling_locator->SetDataSet(p_sampling_grid);
         p_sampling_locator->BuildLocator();
@@ -360,7 +359,6 @@ std::vector<double> DensityMap<DIM>::rGetVesselLineDensity(bool update)
             {
                 c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().GetLocation(length_scale);
                 c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().GetLocation(length_scale);
-
                 bool point1_in_cell = IsPointInCell(p_sampling_locator, point1_loc, idx);
                 bool point2_in_cell = IsPointInCell(p_sampling_locator, point2_loc, idx);
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,

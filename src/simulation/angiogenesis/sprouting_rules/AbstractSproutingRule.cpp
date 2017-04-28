@@ -44,7 +44,8 @@ AbstractSproutingRule<DIM>::AbstractSproutingRule()
     :mpSolver(),
      mSproutingProbability(0.00025 /(60.0*unit::seconds)),
      mpVesselNetwork(),
-     mVesselEndCutoff(0.0 * unit::metres)
+     mVesselEndCutoff(0.0 * unit::metres),
+     mOnlySproutIfPerfused(false)
 {
 
 }
@@ -61,6 +62,11 @@ void AbstractSproutingRule<DIM>::SetDiscreteContinuumSolver(boost::shared_ptr<Ab
     mpSolver = pSolver;
 }
 
+template<unsigned DIM>
+void AbstractSproutingRule<DIM>::SetOnlySproutIfPerfused(bool onlySproutIfPerfused)
+{
+    mOnlySproutIfPerfused = onlySproutIfPerfused;
+}
 
 template<unsigned DIM>
 void AbstractSproutingRule<DIM>::SetSproutingProbability(units::quantity<unit::rate> probability)

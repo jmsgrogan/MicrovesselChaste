@@ -163,17 +163,6 @@ void register_GridCalculator3_class(){
                 , ( bp::arg("pGrid") ) );
         
         }
-        { //::GridCalculator< 3 >::SetLocationValues
-        
-            typedef GridCalculator< 3 > exported_class_t;
-            typedef void ( exported_class_t::*SetLocationValues_function_type)( ::std::vector< double > const & ) ;
-            
-            GridCalculator3_exposer.def( 
-                "SetLocationValues"
-                , SetLocationValues_function_type( &::GridCalculator< 3 >::SetLocationValues )
-                , ( bp::arg("rPointSolution") ) );
-        
-        }
         { //::GridCalculator< 3 >::SetVesselNetwork
         
             typedef GridCalculator< 3 > exported_class_t;

@@ -50,7 +50,7 @@ template<unsigned DIM>
 AngiogenesisSolver<DIM>::AngiogenesisSolver() :
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
         mpNetwork(),
-        mNodeAnastamosisRadius(10.0 * unit::microns),
+        mNodeAnastamosisRadius(5.0 * unit::microns),
         mpMigrationRule(),
         mpSproutingRule(),
         mpBoundingDomain(),
@@ -59,7 +59,8 @@ AngiogenesisSolver<DIM>::AngiogenesisSolver() :
         mpCellPopulation(),
         mCellPopulationReferenceLength(5.0 * unit::microns),
         mTipCells(),
-        mCellNodeMap()
+        mCellNodeMap(),
+        mDoAnastamosis(true)
 {
 
 }
@@ -93,6 +94,12 @@ template<unsigned DIM>
 void AngiogenesisSolver<DIM>::SetBoundingDomain(boost::shared_ptr<Part<DIM> > pDomain)
 {
     mpBoundingDomain = pDomain;
+}
+
+template<unsigned DIM>
+void AngiogenesisSolver<DIM>::SetDoAnastomosis(bool doAnastomosis)
+{
+    mDoAnastamosis = doAnastomosis;
 }
 
 template<unsigned DIM>
@@ -141,7 +148,6 @@ void AngiogenesisSolver<DIM>::DoSprouting()
     {
         candidate_sprouts[idx]->SetIsMigrating(true);
     }
-
     UpdateNodalPositions(true);
 }
 
@@ -235,7 +241,6 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
                 candidate_tip_locations->InsertNextPoint(loc[0], loc[1], loc[2]);
             }
         }
-
         if (mpBoundingDomain)
         {
             candidate_tips_inside_domain = mpBoundingDomain->IsPointInPart(candidate_tip_locations);
@@ -411,15 +416,20 @@ void AngiogenesisSolver<DIM>::Increment()
 
     // Move any migrating nodes
     UpdateNodalPositions();
-
     // Check for anastamosis
-    DoAnastamosis();
+    if(mDoAnastamosis)
+    {
+        DoAnastamosis();
+    }
 
     // Do sprouting
     if (mpSproutingRule)
     {
         DoSprouting();
-        DoAnastamosis();
+        if(mDoAnastamosis)
+        {
+            DoAnastamosis();
+        }
     }
 
     // If there is a cell population, update it.

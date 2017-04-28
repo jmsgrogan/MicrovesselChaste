@@ -484,18 +484,6 @@
 .. autoclass:: microvessel_chaste.pde.SimpleParabolicFiniteElementSolver3
 	:members:
 
-.. autoclass:: microvessel_chaste.pde.AbstractGreensFunctionSolverBase2
-	:members:
-
-.. autoclass:: microvessel_chaste.pde.AbstractGreensFunctionSolverBase3
-	:members:
-
-.. autoclass:: microvessel_chaste.pde.SimpleLinearEllipticGreensFunctionSolver2
-	:members:
-
-.. autoclass:: microvessel_chaste.pde.SimpleLinearEllipticGreensFunctionSolver3
-	:members:
-
 .. autoclass:: microvessel_chaste.pde.FunctionMap2
 	:members:
 

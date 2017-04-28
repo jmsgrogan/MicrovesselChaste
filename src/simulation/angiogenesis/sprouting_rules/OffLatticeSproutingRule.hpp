@@ -85,6 +85,9 @@ public:
      */
     static boost::shared_ptr<OffLatticeSproutingRule<DIM> > Create();
 
+
+    void SetTipExclusionRadius(units::quantity<unit::length> exclusionRadius);
+
     /**
      * Overwritten method to return nodes which may sprout
      * @param rNodes nodes to check for sprouting

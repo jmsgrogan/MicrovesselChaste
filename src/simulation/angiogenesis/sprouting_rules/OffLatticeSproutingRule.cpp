@@ -62,6 +62,12 @@ OffLatticeSproutingRule<DIM>::~OffLatticeSproutingRule()
 }
 
 template <unsigned DIM>
+void OffLatticeSproutingRule<DIM>::SetTipExclusionRadius(units::quantity<unit::length> exclusionRadius)
+{
+    this->mTipExclusionRadius = exclusionRadius;
+}
+
+template <unsigned DIM>
 boost::shared_ptr<OffLatticeSproutingRule<DIM> > OffLatticeSproutingRule<DIM>::Create()
 {
     MAKE_PTR(OffLatticeSproutingRule<DIM>, pSelf);
@@ -106,6 +112,14 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::
     // Loop over all nodes and randomly select sprouts
     for(unsigned idx = 0; idx < rNodes.size(); idx++)
     {
+        if(this->mOnlySproutIfPerfused)
+        {
+            if(rNodes[idx]->GetFlowProperties()->GetPressure()==0.0*unit::pascals)
+            {
+                continue;
+            }
+        }
+
         // Check we are not too close to the end of the vessel
         if(rNodes[idx]->GetNumberOfSegments() != 2)
         {
@@ -130,9 +144,18 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::
             bool too_close = false;
             for(unsigned jdx=0; jdx<sprouts.size(); jdx++)
             {
-                if(rNodes[idx]->GetDistance(sprouts[jdx]->rGetLocation()) < mTipExclusionRadius)
+                // Any vessels same
+                bool sv0_nv0_same = (sprouts[jdx]->GetSegment(0)->GetVessel() == rNodes[idx]->GetSegment(0)->GetVessel());
+                bool sv1_nv0_same = (sprouts[jdx]->GetSegment(1)->GetVessel() == rNodes[idx]->GetSegment(0)->GetVessel());
+                bool sv0_nv1_same = (sprouts[jdx]->GetSegment(0)->GetVessel() == rNodes[idx]->GetSegment(1)->GetVessel());
+                bool sv1_nv1_same = (sprouts[jdx]->GetSegment(1)->GetVessel() == rNodes[idx]->GetSegment(1)->GetVessel());
+                bool any_same = (sv0_nv0_same or sv1_nv0_same or sv0_nv1_same or sv1_nv1_same);
+                if(any_same)
                 {
-                    too_close = true;
+                    if(rNodes[idx]->GetDistance(sprouts[jdx]->rGetLocation()) < mTipExclusionRadius)
+                    {
+                        too_close = true;
+                    }
                 }
             }
             if(too_close)
@@ -149,7 +172,6 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::
         double vegf_fraction = vegf_conc/(vegf_conc + mHalfMaxVegf);
         double max_prob_per_time_step = this->mSproutingProbability*SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
         double prob_tip_selection = max_prob_per_time_step*vegf_fraction;
-
         if (RandomNumberGenerator::Instance()->ranf() < prob_tip_selection)
         {
             sprouts.push_back(rNodes[idx]);

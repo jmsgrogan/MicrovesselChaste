@@ -113,6 +113,11 @@ class AngiogenesisSolver
      */
     std::map<boost::shared_ptr<Cell> , boost::shared_ptr<VesselNode<DIM> > > mCellNodeMap;
 
+    /**
+     * Whether to do anastamosis
+     */
+    bool mDoAnastamosis;
+
 public:
 
     /**
@@ -141,6 +146,8 @@ public:
      * @return bool true if a sprouting rule has been set
      */
     bool IsSproutingRuleSet();
+
+    void SetDoAnastomosis(bool doAnastomosis);
 
     /**
      * Run until the specified end time

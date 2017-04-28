@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef ABSTRACTSPROUTINGRULE_HPP_
 #define ABSTRACTSPROUTINGRULE_HPP_
 
@@ -77,6 +75,8 @@ protected:
      */
     units::quantity<unit::length> mVesselEndCutoff;
 
+    bool mOnlySproutIfPerfused;
+
 public:
 
     /**
@@ -88,6 +88,8 @@ public:
      * Destructor.
      */
     virtual ~AbstractSproutingRule();
+
+    void SetOnlySproutIfPerfused(bool onlySproutIfPerfused);
 
     /**
      * Set the DiscreteContinuum solver containing the VEGF field

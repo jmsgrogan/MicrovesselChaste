@@ -217,7 +217,7 @@ public:
      * Set the values of a field at all locations on the grid
      * @param pointSolution the value of the field
      */
-    void SetLocationValues(const std::vector<double>& rPointSolution);
+    //void SetLocationValues(const std::vector<double>& rPointSolution);
 
     /**
      * Set the vessel network

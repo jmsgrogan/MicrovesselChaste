@@ -255,6 +255,7 @@ boost::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::FormSprout(const Dimensional
     p_new_node_at_tip->SetIsMigrating(true);
     p_new_node_at_tip->GetFlowProperties()->SetIsInputNode(false);
     p_new_node_at_tip->GetFlowProperties()->SetIsOutputNode(false);
+    p_new_node_at_tip->GetFlowProperties()->SetPressure(0.0*unit::pascals);
     boost::shared_ptr<VesselSegment<DIM> > p_new_segment = VesselSegment<DIM>::Create(p_new_node, p_new_node_at_tip);
     p_new_segment->CopyDataFromExistingSegment(nearest_segment.first);
     p_new_segment->GetFlowProperties()->SetFlowRate(0.0*unit::metre_cubed_per_second);

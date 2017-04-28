@@ -36,4 +36,4 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # Need to load chaste on import to correctly set up the runtime environment
 import chaste
 from _chaste_project_MicrovesselChaste_preload import *
-import utility
+#import utility

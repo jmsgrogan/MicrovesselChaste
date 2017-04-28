@@ -34,7 +34,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-
 #ifndef OFFLATTICEMIGRATIONRULE_HPP_
 #define OFFLATTICEMIGRATIONRULE_HPP_
 
@@ -149,6 +148,8 @@ public:
      * @param strength the mutual attraction strength
      */
     void SetAttractionStrength(double strength);
+
+    void SetPersistenceAngleSdv(double angle);
 
 };
 
