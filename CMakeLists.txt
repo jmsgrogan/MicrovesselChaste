@@ -33,7 +33,7 @@
 find_package(Chaste COMPONENTS cell_based)
 
 # Microvessel Chaste needs some additional VTK libraries, take them all for now.
-find_package(VTK REQUIRED)
+find_package(VTK COMPONENTS vtkParallelCore vtkParallelMPI vtkIOMovie vtkRenderingAnnotation vtkRenderingFreeType vtkRenderingFreeTypeOpenGL vtkRenderingCore vtkRenderingOpenGL vtkInteractionStyle REQUIRED)
 list(APPEND Chaste_THIRD_PARTY_LIBRARIES ${VTK_LIBRARIES})
 
 chaste_do_project(MicrovesselChaste)
