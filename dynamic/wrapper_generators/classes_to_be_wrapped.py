@@ -17,7 +17,7 @@ geometry_classes = [CppClass('Polygon', include_vec_ptr_self=True),
                     CppClass('MappableGridGenerator'), CppClass('NetworkToSurface'),
                     CppClass('VesselSurfaceGenerator'), CppClass('BoundaryExtractor'),
                     CppClass('SurfaceCleaner'), 
-                    CppClass('GeometryFormat', needs_include_file = False),
+                    CppClass('GeometryFormat', component = "geometry", needs_include_file = False),
                     CppClass('GeometryWriter'),                  
                     #CppClass('std::vector', skip_wrapping=True, needs_include_file=False, needs_instantiation = False,
                           #template_args=[["units::quantity<unit::length>"]

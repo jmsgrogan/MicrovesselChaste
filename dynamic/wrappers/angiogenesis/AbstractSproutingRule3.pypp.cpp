@@ -127,6 +127,17 @@ void register_AbstractSproutingRule3_class(){
                 , ( bp::arg("pGrid") ) );
         
         }
+        { //::AbstractSproutingRule< 3 >::SetOnlySproutIfPerfused
+        
+            typedef AbstractSproutingRule< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetOnlySproutIfPerfused_function_type)( bool ) ;
+            
+            AbstractSproutingRule3_exposer.def( 
+                "SetOnlySproutIfPerfused"
+                , SetOnlySproutIfPerfused_function_type( &::AbstractSproutingRule< 3 >::SetOnlySproutIfPerfused )
+                , ( bp::arg("onlySproutIfPerfused") ) );
+        
+        }
         { //::AbstractSproutingRule< 3 >::SetSproutingProbability
         
             typedef AbstractSproutingRule< 3 > exported_class_t;

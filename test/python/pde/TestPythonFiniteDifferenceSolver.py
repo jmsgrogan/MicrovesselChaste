@@ -64,7 +64,7 @@ class TestFiniteDifferenceSolver(unittest.TestCase):
         bc = microvessel_chaste.pde.DiscreteContinuumBoundaryCondition3()
         bc.SetValue(30.0*mole_per_metre_cubed())
         
-        solver = microvessel_chaste.pde.FiniteDifferenceSolver3()
+        solver = microvessel_chaste.pde.SimpleLinearEllipticFiniteDifferenceSolver3()
         solver.SetGrid(grid)
         solver.SetPde(pde)
         solver.AddBoundaryCondition(bc)

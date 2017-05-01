@@ -113,6 +113,17 @@ void register_OffLatticeSproutingRule2_class(){
                 , ( bp::arg("rNodes") ) );
         
         }
+        { //::OffLatticeSproutingRule< 2 >::SetTipExclusionRadius
+        
+            typedef OffLatticeSproutingRule< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetTipExclusionRadius_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            OffLatticeSproutingRule2_exposer.def( 
+                "SetTipExclusionRadius"
+                , SetTipExclusionRadius_function_type( &::OffLatticeSproutingRule< 2 >::SetTipExclusionRadius )
+                , ( bp::arg("exclusionRadius") ) );
+        
+        }
         { //::AbstractSproutingRule< 2 >::SetGridCalculator
         
             typedef OffLatticeSproutingRule< 2 > exported_class_t;

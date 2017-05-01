@@ -36,17 +36,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "boost/python.hpp"
-#include "indexing_suite/container_suite.hpp"
-#include "indexing_suite/vector.hpp"
-#include "wrapper_header_collection.hpp"
-#include "vector_less__int__greater_.pypp.hpp"
+#ifndef GeometryFormat_hpp__pyplusplus_wrapper
+#define GeometryFormat_hpp__pyplusplus_wrapper
 
-namespace bp = boost::python;
+void register_GeometryFormat_class();
 
-void register_vector_less__int__greater__class(){
-
-    bp::class_< std::vector< int > >("vector_less__int__greater_")    
-        .def( bp::indexing::vector_suite< std::vector< int > >() );
-
-}
+#endif//GeometryFormat_hpp__pyplusplus_wrapper

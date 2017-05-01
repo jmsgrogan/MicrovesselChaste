@@ -78,9 +78,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "SegmentFlowProperties3.pypp.hpp"
 
-#include "VecLengthQuantity.pypp.hpp"
-
 #include "VectorBool.pypp.hpp"
+
+#include "VectorLengthQuantity.pypp.hpp"
 
 #include "VectorSharedPtrDimensionalChastePoint2.pypp.hpp"
 
@@ -153,7 +153,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
 
     register_VectorString_class();
 
-    register_VecLengthQuantity_class();
+    register_VectorLengthQuantity_class();
 
     register_VectorSharedPtrVesselSegment3_class();
 

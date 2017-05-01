@@ -56,7 +56,7 @@ void register_Part2_class(){
             Part2_exposer.def( 
                 "AddCircle"
                 , AddCircle_function_type( &::Part< 2 >::AddCircle )
-                , ( bp::arg("radius"), bp::arg("centre"), bp::arg("numSegments")=(unsigned int)(24) ) );
+                , ( bp::arg("radius"), bp::arg("centre"), bp::arg("numSegments") ) );
         
         }
         { //::Part< 2 >::AddCuboid
@@ -78,7 +78,7 @@ void register_Part2_class(){
             Part2_exposer.def( 
                 "AddCylinder"
                 , AddCylinder_function_type( &::Part< 2 >::AddCylinder )
-                , ( bp::arg("radius"), bp::arg("depth"), bp::arg("centre"), bp::arg("numSegments")=(unsigned int)(24) ) );
+                , ( bp::arg("radius"), bp::arg("depth"), bp::arg("centre"), bp::arg("numSegments") ) );
         
         }
         { //::Part< 2 >::AddHoleMarker
@@ -100,7 +100,7 @@ void register_Part2_class(){
             Part2_exposer.def( 
                 "AddPolygon"
                 , AddPolygon_function_type( &::Part< 2 >::AddPolygon )
-                , ( bp::arg("vertices"), bp::arg("newFacet")=(bool)(false), bp::arg("pFacet")=boost::shared_ptr<Facet<2> >() ) );
+                , ( bp::arg("vertices"), bp::arg("newFacet"), bp::arg("pFacet") ) );
         
         }
         { //::Part< 2 >::AddPolygon
@@ -111,7 +111,7 @@ void register_Part2_class(){
             Part2_exposer.def( 
                 "AddPolygon"
                 , AddPolygon_function_type( &::Part< 2 >::AddPolygon )
-                , ( bp::arg("pPolygon"), bp::arg("newFacet")=(bool)(false), bp::arg("pFacet")=boost::shared_ptr<Facet<2> >() ) );
+                , ( bp::arg("pPolygon"), bp::arg("newFacet"), bp::arg("pFacet") ) );
         
         }
         { //::Part< 2 >::AddRectangle
@@ -133,7 +133,7 @@ void register_Part2_class(){
             Part2_exposer.def( 
                 "AddVesselNetwork"
                 , AddVesselNetwork_function_type( &::Part< 2 >::AddVesselNetwork )
-                , ( bp::arg("pVesselNetwork"), bp::arg("surface")=(bool)(false) ) );
+                , ( bp::arg("pVesselNetwork"), bp::arg("surface") ) );
         
         }
         { //::Part< 2 >::AppendPart
@@ -188,6 +188,16 @@ void register_Part2_class(){
                 "Extrude"
                 , Extrude_function_type( &::Part< 2 >::Extrude )
                 , ( bp::arg("pPolygon"), bp::arg("distance") ) );
+        
+        }
+        { //::Part< 2 >::GetBoundingBox
+        
+            typedef Part< 2 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetBoundingBox_function_type)(  ) ;
+            
+            Part2_exposer.def( 
+                "GetBoundingBox"
+                , GetBoundingBox_function_type( &::Part< 2 >::GetBoundingBox ) );
         
         }
         { //::Part< 2 >::GetContainingGridIndices
@@ -375,7 +385,8 @@ void register_Part2_class(){
             
             Part2_exposer.def( 
                 "Write"
-                , Write_function_type( &::Part< 2 >::Write ));
+                , Write_function_type( &::Part< 2 >::Write )
+                , ( bp::arg("rFilename"), bp::arg("format") ) );
         
         }
         Part2_exposer.staticmethod( "Create" );

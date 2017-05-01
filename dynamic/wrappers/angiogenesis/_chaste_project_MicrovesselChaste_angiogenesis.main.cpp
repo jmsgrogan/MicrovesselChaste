@@ -100,6 +100,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "VectorDouble.pypp.hpp"
 
+#include "VectorInt.pypp.hpp"
+
 #include "VectorSharedPtrVesselNode2.pypp.hpp"
 
 #include "VectorSharedPtrVesselNode3.pypp.hpp"
@@ -110,14 +112,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "WallShearStressBasedRegressionSolver3.pypp.hpp"
 
-#include "vector_less__int__greater_.pypp.hpp"
-
 namespace bp = boost::python;
 
 BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_angiogenesis){
     register_VectorUnsigned_class();
 
-    register_vector_less__int__greater__class();
+    register_VectorInt_class();
 
     register_VectorDouble_class();
 

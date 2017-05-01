@@ -156,6 +156,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "SimpleNonLinearEllipticFiniteElementSolver3.pypp.hpp"
 
+#include "SimpleParabolicFiniteDifferenceSolver2.pypp.hpp"
+
+#include "SimpleParabolicFiniteDifferenceSolver3.pypp.hpp"
+
 #include "SimpleParabolicFiniteElementSolver2.pypp.hpp"
 
 #include "SimpleParabolicFiniteElementSolver3.pypp.hpp"
@@ -263,7 +267,11 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
 
     register_CellStateDependentDiscreteSource3_class();
 
+    register_SimpleParabolicFiniteDifferenceSolver2_class();
+
     register_CoupledLumpedSystemFiniteDifferenceSolver2_class();
+
+    register_SimpleParabolicFiniteDifferenceSolver3_class();
 
     register_CoupledLumpedSystemFiniteDifferenceSolver3_class();
 

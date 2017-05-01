@@ -210,6 +210,17 @@ void register_AngiogenesisSolver2_class(){
                 , ( bp::arg("pCellPopulation"), bp::arg("cellPopulationReferenceLength") ) );
         
         }
+        { //::AngiogenesisSolver< 2 >::SetDoAnastomosis
+        
+            typedef AngiogenesisSolver< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetDoAnastomosis_function_type)( bool ) ;
+            
+            AngiogenesisSolver2_exposer.def( 
+                "SetDoAnastomosis"
+                , SetDoAnastomosis_function_type( &::AngiogenesisSolver< 2 >::SetDoAnastomosis )
+                , ( bp::arg("doAnastomosis") ) );
+        
+        }
         { //::AngiogenesisSolver< 2 >::SetMigrationRule
         
             typedef AngiogenesisSolver< 2 > exported_class_t;

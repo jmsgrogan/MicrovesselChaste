@@ -39,7 +39,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "boost/python.hpp"
 #include "wrapper_header_collection.hpp"
 #include "Part3.pypp.hpp"
-#include "GeometryWriter.hpp"
 
 namespace bp = boost::python;
 
@@ -57,7 +56,7 @@ void register_Part3_class(){
             Part3_exposer.def( 
                 "AddCircle"
                 , AddCircle_function_type( &::Part< 3 >::AddCircle )
-                , ( bp::arg("radius"), bp::arg("centre"), bp::arg("numSegments")=(unsigned int)(24) ) );
+                , ( bp::arg("radius"), bp::arg("centre"), bp::arg("numSegments") ) );
         
         }
         { //::Part< 3 >::AddCuboid
@@ -79,7 +78,7 @@ void register_Part3_class(){
             Part3_exposer.def( 
                 "AddCylinder"
                 , AddCylinder_function_type( &::Part< 3 >::AddCylinder )
-                , ( bp::arg("radius"), bp::arg("depth"), bp::arg("centre"), bp::arg("numSegments")=(unsigned int)(24) ) );
+                , ( bp::arg("radius"), bp::arg("depth"), bp::arg("centre"), bp::arg("numSegments") ) );
         
         }
         { //::Part< 3 >::AddHoleMarker
@@ -101,7 +100,7 @@ void register_Part3_class(){
             Part3_exposer.def( 
                 "AddPolygon"
                 , AddPolygon_function_type( &::Part< 3 >::AddPolygon )
-                , ( bp::arg("vertices"), bp::arg("newFacet")=(bool)(false), bp::arg("pFacet")=boost::shared_ptr<Facet<3> >() ) );
+                , ( bp::arg("vertices"), bp::arg("newFacet"), bp::arg("pFacet") ) );
         
         }
         { //::Part< 3 >::AddPolygon
@@ -112,7 +111,7 @@ void register_Part3_class(){
             Part3_exposer.def( 
                 "AddPolygon"
                 , AddPolygon_function_type( &::Part< 3 >::AddPolygon )
-                , ( bp::arg("pPolygon"), bp::arg("newFacet")=(bool)(false), bp::arg("pFacet")=boost::shared_ptr<Facet<3> >() ) );
+                , ( bp::arg("pPolygon"), bp::arg("newFacet"), bp::arg("pFacet") ) );
         
         }
         { //::Part< 3 >::AddRectangle
@@ -134,7 +133,7 @@ void register_Part3_class(){
             Part3_exposer.def( 
                 "AddVesselNetwork"
                 , AddVesselNetwork_function_type( &::Part< 3 >::AddVesselNetwork )
-                , ( bp::arg("pVesselNetwork"), bp::arg("surface")=(bool)(false) ) );
+                , ( bp::arg("pVesselNetwork"), bp::arg("surface") ) );
         
         }
         { //::Part< 3 >::AppendPart
@@ -189,6 +188,16 @@ void register_Part3_class(){
                 "Extrude"
                 , Extrude_function_type( &::Part< 3 >::Extrude )
                 , ( bp::arg("pPolygon"), bp::arg("distance") ) );
+        
+        }
+        { //::Part< 3 >::GetBoundingBox
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetBoundingBox_function_type)(  ) ;
+            
+            Part3_exposer.def( 
+                "GetBoundingBox"
+                , GetBoundingBox_function_type( &::Part< 3 >::GetBoundingBox ) );
         
         }
         { //::Part< 3 >::GetContainingGridIndices
@@ -376,7 +385,8 @@ void register_Part3_class(){
             
             Part3_exposer.def( 
                 "Write"
-                , Write_function_type( &::Part< 3 >::Write ));
+                , Write_function_type( &::Part< 3 >::Write )
+                , ( bp::arg("rFilename"), bp::arg("format") ) );
         
         }
         Part3_exposer.staticmethod( "Create" );

@@ -77,6 +77,7 @@
 #include "SimpleLinearEllipticFiniteElementSolver.hpp"
 #include "SimpleNonLinearEllipticFiniteElementSolver.hpp"
 #include "SimpleParabolicFiniteElementSolver.hpp"
+#include "SimpleParabolicFiniteDifferenceSolver.hpp"
 #include "FunctionMap.hpp"
 #include "DensityMap.hpp"
 #include "FlowSolver.hpp"
@@ -255,6 +256,8 @@ template class SimpleNonLinearEllipticFiniteElementSolver<2 >;
 template class SimpleNonLinearEllipticFiniteElementSolver<3 >;
 template class SimpleParabolicFiniteElementSolver<2 >;
 template class SimpleParabolicFiniteElementSolver<3 >;
+template class SimpleParabolicFiniteDifferenceSolver<2 >;
+template class SimpleParabolicFiniteDifferenceSolver<3 >;
 template class FunctionMap<2 >;
 template class FunctionMap<3 >;
 template class DensityMap<2 >;
@@ -540,6 +543,8 @@ typedef SimpleNonLinearEllipticFiniteElementSolver<2 > SimpleNonLinearEllipticFi
 typedef SimpleNonLinearEllipticFiniteElementSolver<3 > SimpleNonLinearEllipticFiniteElementSolver3;
 typedef SimpleParabolicFiniteElementSolver<2 > SimpleParabolicFiniteElementSolver2;
 typedef SimpleParabolicFiniteElementSolver<3 > SimpleParabolicFiniteElementSolver3;
+typedef SimpleParabolicFiniteDifferenceSolver<2 > SimpleParabolicFiniteDifferenceSolver2;
+typedef SimpleParabolicFiniteDifferenceSolver<3 > SimpleParabolicFiniteDifferenceSolver3;
 typedef FunctionMap<2 > FunctionMap2;
 typedef FunctionMap<3 > FunctionMap3;
 typedef DensityMap<2 > DensityMap2;

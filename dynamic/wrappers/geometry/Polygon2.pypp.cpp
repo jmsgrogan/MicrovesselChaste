@@ -117,6 +117,16 @@ void register_Polygon2_class(){
                 , ( bp::arg("loc"), bp::arg("rLabel") ) );
         
         }
+        { //::Polygon< 2 >::GetBoundingBox
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetBoundingBox_function_type)(  ) ;
+            
+            Polygon2_exposer.def( 
+                "GetBoundingBox"
+                , GetBoundingBox_function_type( &::Polygon< 2 >::GetBoundingBox ) );
+        
+        }
         { //::Polygon< 2 >::GetCentroid
         
             typedef Polygon< 2 > exported_class_t;

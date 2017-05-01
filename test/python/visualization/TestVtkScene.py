@@ -4,6 +4,7 @@ import microvessel_chaste
 import microvessel_chaste.population.vessel
 from microvessel_chaste.utility import *
 import microvessel_chaste.visualization
+import microvessel_chaste.simulation
 import microvessel_chaste.mesh
 
 class TestVtkScene(unittest.TestCase):
@@ -13,7 +14,7 @@ class TestVtkScene(unittest.TestCase):
         file_handler = chaste.core.OutputFileHandler("Python/TestMicrovesselVtkScene/TestGrid2d");
 
         grid = microvessel_chaste.mesh.RegularGrid2()
-        grid.SetExtents([20, 20, 1]);
+        grid.SetDimensions([20, 20, 1]);
         grid.SetSpacing(20.e-6* metre());
 
         grid_values = []
@@ -41,7 +42,7 @@ class TestVtkScene(unittest.TestCase):
         file_handler = chaste.core.OutputFileHandler("Python/TestMicrovesselVtkScene/TestGrid3d");
 
         grid = microvessel_chaste.mesh.RegularGrid3()
-        grid.SetExtents([20, 20, 5]);
+        grid.SetDimensions([20, 20, 5]);
         grid.SetSpacing(20.e-6* metre());
 
         grid_values = []

@@ -36,9 +36,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef VecLengthQuantity_hpp__pyplusplus_wrapper
-#define VecLengthQuantity_hpp__pyplusplus_wrapper
+#ifndef per_pascal_hpp__pyplusplus_wrapper
+#define per_pascal_hpp__pyplusplus_wrapper
 
-void register_VecLengthQuantity_class();
+void register_per_pascal_class();
 
-#endif//VecLengthQuantity_hpp__pyplusplus_wrapper
+#endif//per_pascal_hpp__pyplusplus_wrapper

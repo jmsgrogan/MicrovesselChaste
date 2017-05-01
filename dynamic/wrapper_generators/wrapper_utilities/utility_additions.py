@@ -83,7 +83,7 @@ def update_builder(builder, class_collection):
    
     unit_names = ["membrane_permeability",
                   "volumetric_solubility",
-                  "solubility",
+                  #"solubility",
                   "diffusivity_per_concentration",
                   "diffusivity",
                   "flow_impedance",

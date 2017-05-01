@@ -265,6 +265,13 @@ public:
     void SetDimensions(c_vector<unsigned, 3> dimensions);
 
     /**
+     * Set the grid dimensions in x, y, z
+     * @param dimensions the grid dimensions
+     * @param updateVtk update the vtk representation at this point
+     */
+    void SetDimensions(unsigned x, unsigned y, unsigned z=1);
+
+    /**
      * Set the origin in x, y, z
      * @param origin the grid origin
      * @param updateVtk update the vtk representation at this point

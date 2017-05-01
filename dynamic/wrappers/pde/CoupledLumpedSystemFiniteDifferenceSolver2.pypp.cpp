@@ -304,12 +304,12 @@ BOOST_PYTHON_OPAQUE_SPECIALIZED_TYPE_ID( _p_Vec )
 
 BOOST_PYTHON_OPAQUE_SPECIALIZED_TYPE_ID( _p_Mat )
 
-BOOST_PYTHON_OPAQUE_SPECIALIZED_TYPE_ID( _p_TS )
+BOOST_PYTHON_OPAQUE_SPECIALIZED_TYPE_ID( _p_TS)
 
 void register_CoupledLumpedSystemFiniteDifferenceSolver2_class(){
 
     { //::CoupledLumpedSystemFiniteDifferenceSolver< 2 >
-        typedef bp::class_< CoupledLumpedSystemFiniteDifferenceSolver_less__2__greater__wrapper > CoupledLumpedSystemFiniteDifferenceSolver2_exposer_t;
+        typedef bp::class_< CoupledLumpedSystemFiniteDifferenceSolver_less__2__greater__wrapper, bp::bases< SimpleParabolicFiniteDifferenceSolver< 2 > > > CoupledLumpedSystemFiniteDifferenceSolver2_exposer_t;
         CoupledLumpedSystemFiniteDifferenceSolver2_exposer_t CoupledLumpedSystemFiniteDifferenceSolver2_exposer = CoupledLumpedSystemFiniteDifferenceSolver2_exposer_t( "CoupledLumpedSystemFiniteDifferenceSolver2", bp::init< >() );
         bp::scope CoupledLumpedSystemFiniteDifferenceSolver2_scope( CoupledLumpedSystemFiniteDifferenceSolver2_exposer );
         { //::CoupledLumpedSystemFiniteDifferenceSolver< 2 >::AssembleMatrix
@@ -605,7 +605,6 @@ void register_CoupledLumpedSystemFiniteDifferenceSolver2_class(){
         }
         CoupledLumpedSystemFiniteDifferenceSolver2_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< CoupledLumpedSystemFiniteDifferenceSolver<2> > >();
-        bp::implicitly_convertible< boost::shared_ptr< CoupledLumpedSystemFiniteDifferenceSolver< 2 > >, boost::shared_ptr< SimpleParabolicFiniteDifferenceSolver< 2 > > >();
         bp::implicitly_convertible< boost::shared_ptr< CoupledLumpedSystemFiniteDifferenceSolver< 2 > >, boost::shared_ptr< AbstractFiniteDifferenceSolverBase< 2 > > >();
         bp::implicitly_convertible< boost::shared_ptr< CoupledLumpedSystemFiniteDifferenceSolver< 2 > >, boost::shared_ptr< AbstractRegularGridDiscreteContinuumSolver< 2 > > >();
         bp::implicitly_convertible< boost::shared_ptr< CoupledLumpedSystemFiniteDifferenceSolver< 2 > >, boost::shared_ptr< AbstractDiscreteContinuumSolver< 2 > > >();

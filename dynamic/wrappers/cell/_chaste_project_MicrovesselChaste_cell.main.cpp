@@ -38,6 +38,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "boost/python.hpp"
 
+#include "indexing_suite/value_traits.hpp"
+
+#include "indexing_suite/container_suite.hpp"
+
+#include "indexing_suite/vector.hpp"
+
 #include "wrapper_header_collection.hpp"
 
 #include "AbstractCellMutationState.pypp.hpp"
@@ -70,11 +76,15 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "TipCellMutationState.pypp.hpp"
 
+#include "VectorTimeQuantity.pypp.hpp"
+
 #include "VesselCellMutationState.pypp.hpp"
 
 namespace bp = boost::python;
 
 BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_cell){
+    register_VectorTimeQuantity_class();
+
     register_AbstractCellMutationState_class();
 
     register_CancerCellMutationState_class();

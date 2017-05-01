@@ -5,6 +5,18 @@ dist: trusty
 # Compiler selection
 compiler:
   - gcc
+cache:
+  timeout: 1000
+  directories:
+  - ../chaste-build  # the build directory
+  - ../chaste-source  # the Chaste source directory
+
+before_install:
+  - wget https://www.dropbox.com/s/p05hu95q30rsllt/castxml-linux.tar.gz && tar -C "${TRAVIS_BUILD_DIR}"/../ -zxvf castxml-linux.tar.gz
+
+install:
+  - pip install pygccxml==1.7.2 https://bitbucket.org/ompl/pyplusplus/get/1.6.tar.gz
+
 # Build steps
 before_script:
   - sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 422C4D99
@@ -13,8 +25,44 @@ before_script:
   - sudo apt-get install libpq-dev libboost-all-dev python-numpy -y
   - sudo cp /usr/lib/x86_64-linux-gnu/libpq.so /usr/lib/
   - sudo apt-get install chaste-source -y
-  - git clone --depth=2 -b develop https://chaste.cs.ox.ac.uk/git/chaste.git chaste-source
+  - "export DISPLAY=:99.0" # For GUI tests
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
+  - |
+    if [ -d "${TRAVIS_BUILD_DIR}"/../chaste-source/projects/ ]; then
+        cd "${TRAVIS_BUILD_DIR}"/../chaste-source && git pull && cd ..
+    else
+        cd "${TRAVIS_BUILD_DIR}"/../ && git clone --depth=2 -b develop https://chaste.cs.ox.ac.uk/git/chaste.git chaste-source
+    fi
 script:
-  - ln -s $PWD chaste-source/projects/ && mkdir chaste-build && cd chaste-build
-#  - cmake ../chaste-source && make project_MicrovesselChaste -j 2 && ctest -L project_MicrovesselChaste -j 2
-  - cmake ../chaste-source && make project_MicrovesselChaste -j 2 && make project_MicrovesselChaste_Python -j 2
+  - |
+    if [ ! -d "${TRAVIS_BUILD_DIR}"/../chaste-source/projects/MicrovesselChaste/ ]; then
+        ln -s "${TRAVIS_BUILD_DIR}" "${TRAVIS_BUILD_DIR}"/../chaste-source/projects/
+    fi
+  - mkdir -p "${TRAVIS_BUILD_DIR}"/../chaste-build && cd "${TRAVIS_BUILD_DIR}"/../chaste-build
+  - |
+    if [[ -f touch_order.txt ]]; then
+      while read fn; do
+        touch $fn
+      done < touch_order.txt
+      # touch changed git files to trigger their rebuild
+      read PREVIOUS_GIT_COMMIT < previous_git_commit.txt
+      cd "${TRAVIS_BUILD_DIR}"
+      changed_files=`git diff --name-only $PREVIOUS_GIT_COMMIT HEAD`
+      echo "Previously cached Travis build based on git commit ${PREVIOUS_GIT_COMMIT}."
+      echo "... changed files since then:"
+      echo $changed_files
+      touch `echo $changed_files`
+      cd "${TRAVIS_BUILD_DIR}"/../chaste-build
+    else
+      cmake "${TRAVIS_BUILD_DIR}"/../chaste-source -DCASTXML_EXE_LOC="${TRAVIS_BUILD_DIR}"/../castxml/bin/castxml
+    fi
+    make project_MicrovesselChaste -j 2
+
+# # following: https://github.com/NLeSC/root-roofit-dev/blob/travis_make-optimize_deps/.travis.yml
+# Save the order of timestamps of the files so we can recreate it with touch in the next build.
+# N.B.: just tarring the build files doesn't work, since the git clone will still be newer.
+# The build tools (make at least) only care about order, not about absolute timestamps.
+before_cache:
+  - find . -type f -printf "%T+\t%p\n" | sort | cut -f 2 > touch_order.txt
+  - cd "${TRAVIS_BUILD_DIR}" && git rev-parse HEAD > "${TRAVIS_BUILD_DIR}"/../chaste-build/previous_git_commit.txt

@@ -41,7 +41,7 @@ from six.moves import StringIO
 import os.path
 import xml.etree.ElementTree as ET
 from pkg_resources import resource_filename
-from microvessel_chaste.visualization import VtkSceneMicrovesselModifier2, VtkSceneMicrovesselModifier3
+from microvessel_chaste.simulation import VtkSceneMicrovesselModifier2, VtkSceneMicrovesselModifier3
 import microvessel_chaste.utility
 
 try:

@@ -547,6 +547,17 @@ void register_RegularGrid2_class(){
                 , ( bp::arg("dimensions") ) );
         
         }
+        { //::RegularGrid< 2 >::SetDimensions
+        
+            typedef RegularGrid< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetDimensions_function_type)( unsigned int,unsigned int,unsigned int ) ;
+            
+            RegularGrid2_exposer.def( 
+                "SetDimensions"
+                , SetDimensions_function_type( &::RegularGrid< 2 >::SetDimensions )
+                , ( bp::arg("x"), bp::arg("y"), bp::arg("z")=(unsigned int)(1) ) );
+        
+        }
         { //::RegularGrid< 2 >::SetOrigin
         
             typedef RegularGrid< 2 > exported_class_t;

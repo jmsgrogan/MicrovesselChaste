@@ -36,9 +36,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef vector_less__int__greater__hpp__pyplusplus_wrapper
-#define vector_less__int__greater__hpp__pyplusplus_wrapper
+#ifndef mole_per_second_hpp__pyplusplus_wrapper
+#define mole_per_second_hpp__pyplusplus_wrapper
 
-void register_vector_less__int__greater__class();
+void register_mole_per_second_class();
 
-#endif//vector_less__int__greater__hpp__pyplusplus_wrapper
+#endif//mole_per_second_hpp__pyplusplus_wrapper

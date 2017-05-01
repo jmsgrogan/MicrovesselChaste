@@ -569,6 +569,20 @@ void RegularGrid<DIM>::SetDimensions(c_vector<unsigned, 3> dimensions)
 }
 
 template<unsigned DIM>
+void RegularGrid<DIM>::SetDimensions(unsigned x, unsigned y, unsigned z)
+{
+    c_vector<unsigned, 3> dimensions;
+    dimensions[0] = x;
+    dimensions[1] = y;
+    dimensions[2] = z;
+
+    mDimensions = dimensions;
+    UpdateExtents();
+    this->mVtkRepresentationUpToDate = false;
+    this->rGetCellVolumes(true, false);
+}
+
+template<unsigned DIM>
 void RegularGrid<DIM>::SetUpVtkGrid()
 {
     // Set up a VTK grid

@@ -40,7 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "indexing_suite/container_suite.hpp"
 #include "indexing_suite/vector.hpp"
 #include "wrapper_header_collection.hpp"
-#include "_pair_less__unsigned_int_comma__unsigned_int__greater___value_traits.pypp.hpp"
+#include "_PairUnsignedUnsigned__value_traits.pypp.hpp"
 #include "VectorPairUnsignedUnsigned.pypp.hpp"
 
 namespace bp = boost::python;

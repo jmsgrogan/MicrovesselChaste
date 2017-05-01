@@ -52,6 +52,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "Facet3.pypp.hpp"
 
+#include "GeometryFormat.pypp.hpp"
+
 #include "GeometryWriter.pypp.hpp"
 
 #include "MappableGridGenerator.pypp.hpp"
@@ -75,6 +77,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VectorDimensionalChastePoint2.pypp.hpp"
 
 #include "VectorDimensionalChastePoint3.pypp.hpp"
+
+#include "VectorLengthQuantity.pypp.hpp"
 
 #include "VectorPairUnsignedUnsigned.pypp.hpp"
 
@@ -115,6 +119,8 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_geometry){
 
     register_VectorString_class();
 
+    register_VectorLengthQuantity_class();
+
     register_VectorSharedPtrPolygon3_class();
 
     register_VectorSharedPtrPolygon2_class();
@@ -138,6 +144,8 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_geometry){
     register_Facet2_class();
 
     register_Facet3_class();
+
+    register_GeometryFormat_class();
 
     register_GeometryWriter_class();
 

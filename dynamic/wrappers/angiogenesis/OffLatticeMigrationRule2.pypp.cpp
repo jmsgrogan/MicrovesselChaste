@@ -146,6 +146,17 @@ void register_OffLatticeMigrationRule2_class(){
                 , ( bp::arg("strength") ) );
         
         }
+        { //::OffLatticeMigrationRule< 2 >::SetPersistenceAngleSdv
+        
+            typedef OffLatticeMigrationRule< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetPersistenceAngleSdv_function_type)( double ) ;
+            
+            OffLatticeMigrationRule2_exposer.def( 
+                "SetPersistenceAngleSdv"
+                , SetPersistenceAngleSdv_function_type( &::OffLatticeMigrationRule< 2 >::SetPersistenceAngleSdv )
+                , ( bp::arg("angle") ) );
+        
+        }
         { //::OffLatticeMigrationRule< 2 >::SetSproutingVelocity
         
             typedef OffLatticeMigrationRule< 2 > exported_class_t;

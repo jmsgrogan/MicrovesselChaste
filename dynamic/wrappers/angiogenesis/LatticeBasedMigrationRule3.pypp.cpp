@@ -187,8 +187,8 @@ void register_LatticeBasedMigrationRule3_class(){
         bp::register_ptr_to_python< boost::shared_ptr< LatticeBasedMigrationRule<3> > >();
         bp::implicitly_convertible< boost::shared_ptr< LatticeBasedMigrationRule< 3 > >, boost::shared_ptr< AbstractMigrationRule< 3 > > >();
         bp::implicitly_convertible< boost::shared_ptr< TipAttractionLatticeBasedMigrationRule< 3 > >, boost::shared_ptr< LatticeBasedMigrationRule< 3 > > >();
-        bp::implicitly_convertible< boost::shared_ptr< Owen2011MigrationRule< 3 > >, boost::shared_ptr< LatticeBasedMigrationRule< 3 > > >();
         bp::implicitly_convertible< boost::shared_ptr< CellPopulationMigrationRule< 3 > >, boost::shared_ptr< LatticeBasedMigrationRule< 3 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< Owen2011MigrationRule< 3 > >, boost::shared_ptr< LatticeBasedMigrationRule< 3 > > >();
     }
 
 }

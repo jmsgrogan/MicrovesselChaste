@@ -86,8 +86,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 """
 
-
-
 def add_autowrap_classes_to_builder(builder, component_name, classes):
     
     # Convience dict for call policies
@@ -268,6 +266,9 @@ def add_autowrap_classes_to_builder(builder, component_name, classes):
                 if eachClass.declaration_code is not None:
                     for eachLine in eachClass.declaration_code:
                         this_class.add_declaration_code(eachLine)
+
+    builder.class_('Part<3>').calldefs().use_default_arguments=False # Scoped enum problem
+    builder.class_('Part<2>').calldefs().use_default_arguments=False   
     
     return builder, classes
 
@@ -292,7 +293,9 @@ def pypp_template_name_fix(module_file):
     lines = []
     replacements = {"__-1_": "__neg1_",
                     "__-2_": "__neg2_",
-                    "__-3_": "__neg3_",}
+                    "__-3_": "__neg3_",
+                    "__-4_": "__neg4_",
+                    "__-5_": "__neg5_",}
     
     with open(module_file) as infile:
         for line in infile:
@@ -372,8 +375,9 @@ def do_module(module_name, builder, work_dir, classes):
     # Write the class names to file for building Python docs later on
     f = open(work_dir + '/class_names_for_doc.txt','w')
     for eachClass in classes:
-        for eachName in eachClass.get_short_names():
-            f.write('.. autoclass:: microvessel_chaste.' + module_name + '.' + eachName + '\n\t:members:\n\n')
+        if eachClass.component is not None and module_name in eachClass.component:
+            for eachName in eachClass.get_short_names():
+                f.write('.. autoclass:: microvessel_chaste.' + module_name + '.' + eachName + '\n\t:members:\n\n')
     f.close()
     return builder   
        
@@ -406,6 +410,7 @@ def generate_wrappers(args):
     
     # Don't wrap std library
     builder.global_ns.namespace('std').exclude()
+    builder.global_ns.namespace('boost').exclude()
     
     # Strip out Instantiation 'tricks' in the header file
     # todo - the first line is presumably no longer necessary
@@ -422,10 +427,10 @@ def generate_wrappers(args):
                     "visualization", "utility"]
     
     # Just for debugging
-    ignore_modules = ["vessel", "utility", "mesh", "geometry", 
-                      "cell", "flow", "angiogenesis", "simulation", "visualization"]
+    #ignore_modules = ["cell", "vessel", "pde", "mesh", "utility", 
+#                      "angiogenesis", "flow", "simulation", "visualization"]
     
-    #ignore_modules = []
+    ignore_modules = []
     
     for idx, module_name in enumerate(module_names):
         
