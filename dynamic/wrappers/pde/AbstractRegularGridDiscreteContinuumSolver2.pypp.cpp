@@ -200,6 +200,18 @@ struct AbstractRegularGridDiscreteContinuumSolver_less__2__greater__wrapper : Ab
         return AbstractDiscreteContinuumSolver< 2 >::GetSolution( pGrid );
     }
 
+    virtual ::std::vector< double > GetSolutionP( ::vtkPoints * pSamplePoints ) {
+        if( bp::override func_GetSolutionP = this->get_override( "GetSolutionP" ) )
+            return func_GetSolutionP( boost::python::ptr(pSamplePoints) );
+        else{
+            return this->AbstractDiscreteContinuumSolver< 2 >::GetSolutionP( boost::python::ptr(pSamplePoints) );
+        }
+    }
+    
+    ::std::vector< double > default_GetSolutionP( ::vtkPoints * pSamplePoints ) {
+        return AbstractDiscreteContinuumSolver< 2 >::GetSolutionP( boost::python::ptr(pSamplePoints) );
+    }
+
     virtual ::vtkSmartPointer< vtkDataSet > GetVtkSolution(  ) {
         if( bp::override func_GetVtkSolution = this->get_override( "GetVtkSolution" ) )
             return func_GetVtkSolution(  );
@@ -298,6 +310,11 @@ void register_AbstractRegularGridDiscreteContinuumSolver2_class(){
             , (::std::vector< double > ( ::AbstractDiscreteContinuumSolver<2>::* )( ::boost::shared_ptr< AbstractDiscreteContinuumGrid< 2, 2 > > ))(&::AbstractDiscreteContinuumSolver< 2 >::GetSolution)
             , (::std::vector< double > ( AbstractRegularGridDiscreteContinuumSolver_less__2__greater__wrapper::* )( ::boost::shared_ptr< AbstractDiscreteContinuumGrid< 2, 2 > > ))(&AbstractRegularGridDiscreteContinuumSolver_less__2__greater__wrapper::default_GetSolution)
             , ( bp::arg("pGrid") ) )    
+        .def( 
+            "GetSolutionP"
+            , (::std::vector< double > ( ::AbstractDiscreteContinuumSolver<2>::* )( ::vtkPoints * ))(&::AbstractDiscreteContinuumSolver< 2 >::GetSolutionP)
+            , (::std::vector< double > ( AbstractRegularGridDiscreteContinuumSolver_less__2__greater__wrapper::* )( ::vtkPoints * ))(&AbstractRegularGridDiscreteContinuumSolver_less__2__greater__wrapper::default_GetSolutionP)
+            , ( bp::arg("pSamplePoints") ) )    
         .def( 
             "GetVtkSolution"
             , (::vtkSmartPointer< vtkDataSet > ( ::AbstractDiscreteContinuumSolver<2>::* )(  ))(&::AbstractDiscreteContinuumSolver< 2 >::GetVtkSolution)

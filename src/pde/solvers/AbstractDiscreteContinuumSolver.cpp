@@ -172,6 +172,34 @@ std::vector<double> AbstractDiscreteContinuumSolver<DIM>::GetSolution(vtkSmartPo
 }
 
 template<unsigned DIM>
+std::vector<double> AbstractDiscreteContinuumSolver<DIM>::GetSolutionP(vtkPoints* pSamplePoints)
+{
+    std::vector<double> sampled_solution(pSamplePoints->GetNumberOfPoints(), 0.0);
+
+    // Sample the field at these locations
+    vtkSmartPointer<vtkPolyData> p_polydata = vtkSmartPointer<vtkPolyData>::New();
+    p_polydata->SetPoints(pSamplePoints);
+
+    vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
+    #if VTK_MAJOR_VERSION <= 5
+        p_probe_filter->SetInput(p_polydata);
+        p_probe_filter->SetSource(GetDensityMap()->GetGridCalculator()->GetGrid()->GetVtkGrid());
+    #else
+        p_probe_filter->SetInputData(p_polydata);
+        p_probe_filter->SetSourceData(GetDensityMap()->GetGridCalculator()->GetGrid()->GetVtkGrid());
+    #endif
+    p_probe_filter->Update();
+    vtkSmartPointer<vtkPointData> p_point_data = p_probe_filter->GetOutput()->GetPointData();
+
+    unsigned num_points = p_point_data->GetArray(this->mLabel.c_str())->GetNumberOfTuples();
+    for(unsigned idx=0; idx<num_points; idx++)
+    {
+        sampled_solution[idx] = p_point_data->GetArray(this->mLabel.c_str())->GetTuple1(idx);
+    }
+    return sampled_solution;
+}
+
+template<unsigned DIM>
 std::vector<double> AbstractDiscreteContinuumSolver<DIM>::GetSolution(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
 {
     return this->GetSolution(pGrid->GetPoints());

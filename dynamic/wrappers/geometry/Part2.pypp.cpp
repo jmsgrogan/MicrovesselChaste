@@ -56,7 +56,7 @@ void register_Part2_class(){
             Part2_exposer.def( 
                 "AddCircle"
                 , AddCircle_function_type( &::Part< 2 >::AddCircle )
-                , ( bp::arg("radius"), bp::arg("centre"), bp::arg("numSegments") ) );
+                , ( bp::arg("radius"), bp::arg("centre"), bp::arg("numSegments")=(unsigned int)(24) ) );
         
         }
         { //::Part< 2 >::AddCuboid
@@ -78,7 +78,7 @@ void register_Part2_class(){
             Part2_exposer.def( 
                 "AddCylinder"
                 , AddCylinder_function_type( &::Part< 2 >::AddCylinder )
-                , ( bp::arg("radius"), bp::arg("depth"), bp::arg("centre"), bp::arg("numSegments") ) );
+                , ( bp::arg("radius"), bp::arg("depth"), bp::arg("centre"), bp::arg("numSegments")=(unsigned int)(24) ) );
         
         }
         { //::Part< 2 >::AddHoleMarker
@@ -100,7 +100,7 @@ void register_Part2_class(){
             Part2_exposer.def( 
                 "AddPolygon"
                 , AddPolygon_function_type( &::Part< 2 >::AddPolygon )
-                , ( bp::arg("vertices"), bp::arg("newFacet"), bp::arg("pFacet") ) );
+                , ( bp::arg("vertices"), bp::arg("newFacet")=(bool)(false), bp::arg("pFacet")=boost::shared_ptr<Facet<2> >() ) );
         
         }
         { //::Part< 2 >::AddPolygon
@@ -111,7 +111,7 @@ void register_Part2_class(){
             Part2_exposer.def( 
                 "AddPolygon"
                 , AddPolygon_function_type( &::Part< 2 >::AddPolygon )
-                , ( bp::arg("pPolygon"), bp::arg("newFacet"), bp::arg("pFacet") ) );
+                , ( bp::arg("pPolygon"), bp::arg("newFacet")=(bool)(false), bp::arg("pFacet")=boost::shared_ptr<Facet<2> >() ) );
         
         }
         { //::Part< 2 >::AddRectangle
@@ -133,7 +133,7 @@ void register_Part2_class(){
             Part2_exposer.def( 
                 "AddVesselNetwork"
                 , AddVesselNetwork_function_type( &::Part< 2 >::AddVesselNetwork )
-                , ( bp::arg("pVesselNetwork"), bp::arg("surface") ) );
+                , ( bp::arg("pVesselNetwork"), bp::arg("surface")=(bool)(false) ) );
         
         }
         { //::Part< 2 >::AppendPart
@@ -295,11 +295,12 @@ void register_Part2_class(){
         { //::Part< 2 >::GetVtk
         
             typedef Part< 2 > exported_class_t;
-            typedef ::vtkSmartPointer< vtkPolyData > ( exported_class_t::*GetVtk_function_type)(  ) ;
+            typedef ::vtkSmartPointer< vtkPolyData > ( exported_class_t::*GetVtk_function_type)( bool ) ;
             
             Part2_exposer.def( 
                 "GetVtk"
-                , GetVtk_function_type( &::Part< 2 >::GetVtk ) );
+                , GetVtk_function_type( &::Part< 2 >::GetVtk )
+                , ( bp::arg("includeEdges")=(bool)(false) ) );
         
         }
         { //::Part< 2 >::IsPointInPart
@@ -381,12 +382,12 @@ void register_Part2_class(){
         { //::Part< 2 >::Write
         
             typedef Part< 2 > exported_class_t;
-            typedef void ( exported_class_t::*Write_function_type)( ::std::string const &,::GeometryFormat::Value ) ;
+            typedef void ( exported_class_t::*Write_function_type)( ::std::string const &,::GeometryFormat::Value,bool ) ;
             
             Part2_exposer.def( 
                 "Write"
                 , Write_function_type( &::Part< 2 >::Write )
-                , ( bp::arg("rFilename"), bp::arg("format") ) );
+                , ( bp::arg("rFilename"), bp::arg("format"), bp::arg("includeEdges") ) );
         
         }
         Part2_exposer.staticmethod( "Create" );

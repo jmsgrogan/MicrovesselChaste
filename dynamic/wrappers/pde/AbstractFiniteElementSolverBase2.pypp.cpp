@@ -178,6 +178,18 @@ struct AbstractFiniteElementSolverBase_less__2__greater__wrapper : AbstractFinit
         return AbstractDiscreteContinuumSolver< 2 >::GetSolution( pGrid );
     }
 
+    virtual ::std::vector< double > GetSolutionP( ::vtkPoints * pSamplePoints ) {
+        if( bp::override func_GetSolutionP = this->get_override( "GetSolutionP" ) )
+            return func_GetSolutionP( boost::python::ptr(pSamplePoints) );
+        else{
+            return this->AbstractDiscreteContinuumSolver< 2 >::GetSolutionP( boost::python::ptr(pSamplePoints) );
+        }
+    }
+    
+    ::std::vector< double > default_GetSolutionP( ::vtkPoints * pSamplePoints ) {
+        return AbstractDiscreteContinuumSolver< 2 >::GetSolutionP( boost::python::ptr(pSamplePoints) );
+    }
+
     virtual ::vtkSmartPointer< vtkDataSet > GetVtkSolution(  ) {
         if( bp::override func_GetVtkSolution = this->get_override( "GetVtkSolution" ) )
             return func_GetVtkSolution(  );
@@ -414,6 +426,19 @@ void register_AbstractFiniteElementSolverBase2_class(){
                 , ( bp::arg("pGrid") ) );
         
         }
+        { //::AbstractDiscreteContinuumSolver< 2 >::GetSolutionP
+        
+            typedef AbstractFiniteElementSolverBase< 2 > exported_class_t;
+            typedef ::std::vector< double > ( exported_class_t::*GetSolutionP_function_type)( ::vtkPoints * ) ;
+            typedef ::std::vector< double > ( AbstractFiniteElementSolverBase_less__2__greater__wrapper::*default_GetSolutionP_function_type)( ::vtkPoints * ) ;
+            
+            AbstractFiniteElementSolverBase2_exposer.def( 
+                "GetSolutionP"
+                , GetSolutionP_function_type(&::AbstractDiscreteContinuumSolver< 2 >::GetSolutionP)
+                , default_GetSolutionP_function_type(&AbstractFiniteElementSolverBase_less__2__greater__wrapper::default_GetSolutionP)
+                , ( bp::arg("pSamplePoints") ) );
+        
+        }
         { //::AbstractDiscreteContinuumSolver< 2 >::GetVtkSolution
         
             typedef AbstractFiniteElementSolverBase< 2 > exported_class_t;
@@ -493,9 +518,9 @@ void register_AbstractFiniteElementSolverBase2_class(){
         bp::register_ptr_to_python< boost::shared_ptr< AbstractFiniteElementSolverBase<2> > >();
         bp::implicitly_convertible< boost::shared_ptr< AbstractFiniteElementSolverBase< 2 > >, boost::shared_ptr< AbstractUnstructuredGridDiscreteContinuumSolver< 2 > > >();
         bp::implicitly_convertible< boost::shared_ptr< AbstractFiniteElementSolverBase< 2 > >, boost::shared_ptr< AbstractDiscreteContinuumSolver< 2 > > >();
-        bp::implicitly_convertible< boost::shared_ptr< SimpleLinearEllipticFiniteElementSolver< 2 > >, boost::shared_ptr< AbstractFiniteElementSolverBase< 2 > > >();
         bp::implicitly_convertible< boost::shared_ptr< SimpleParabolicFiniteElementSolver< 2 > >, boost::shared_ptr< AbstractFiniteElementSolverBase< 2 > > >();
         bp::implicitly_convertible< boost::shared_ptr< SimpleNonLinearEllipticFiniteElementSolver< 2 > >, boost::shared_ptr< AbstractFiniteElementSolverBase< 2 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< SimpleLinearEllipticFiniteElementSolver< 2 > >, boost::shared_ptr< AbstractFiniteElementSolverBase< 2 > > >();
         bp::implicitly_convertible< boost::shared_ptr< CoupledLumpedSystemFiniteElementSolver< 2 > >, boost::shared_ptr< AbstractFiniteElementSolverBase< 2 > > >();
     }
 

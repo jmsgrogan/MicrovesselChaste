@@ -277,7 +277,7 @@ public:
      * Return the a vtk polydata representation of the part
      * @return a vtk representation of the part
      */
-    vtkSmartPointer<vtkPolyData> GetVtk();
+    vtkSmartPointer<vtkPolyData> GetVtk(bool includeEdges = false);
 
     /**
      * Label a polygon edge if it is found
@@ -338,7 +338,7 @@ public:
      * @param rFilename the path to the file to be written, without extension
      * @param format the output format
      */
-    void Write(const std::string& rFilename, GeometryFormat::Value format = GeometryFormat::VTP);
+    void Write(const std::string& rFilename, GeometryFormat::Value format = GeometryFormat::VTP, bool includeEdges = false);
 
 };
 

@@ -267,8 +267,8 @@ def add_autowrap_classes_to_builder(builder, component_name, classes):
                     for eachLine in eachClass.declaration_code:
                         this_class.add_declaration_code(eachLine)
 
-    builder.class_('Part<3>').calldefs().use_default_arguments=False # Scoped enum problem
-    builder.class_('Part<2>').calldefs().use_default_arguments=False   
+    builder.class_('Part<3>').member_functions("Write").use_default_arguments=False # Scoped enum problem
+    builder.class_('Part<2>').member_functions("Write").use_default_arguments=False   
     
     return builder, classes
 
@@ -427,10 +427,10 @@ def generate_wrappers(args):
                     "visualization", "utility"]
     
     # Just for debugging
-    #ignore_modules = ["cell", "vessel", "pde", "mesh", "utility", 
-#                      "angiogenesis", "flow", "simulation", "visualization"]
+    ignore_modules = ["mesh", "pde", "cell", "vessel", "angiogenesis", "flow", "simulation", 
+                    "visualization", "utility"]
     
-    ignore_modules = []
+    #ignore_modules = []
     
     for idx, module_name in enumerate(module_names):
         

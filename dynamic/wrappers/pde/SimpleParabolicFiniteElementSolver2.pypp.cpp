@@ -154,6 +154,18 @@ struct SimpleParabolicFiniteElementSolver_less__2__greater__wrapper : SimplePara
         return AbstractDiscreteContinuumSolver< 2 >::GetSolution( pGrid );
     }
 
+    virtual ::std::vector< double > GetSolutionP( ::vtkPoints * pSamplePoints ) {
+        if( bp::override func_GetSolutionP = this->get_override( "GetSolutionP" ) )
+            return func_GetSolutionP( boost::python::ptr(pSamplePoints) );
+        else{
+            return this->AbstractDiscreteContinuumSolver< 2 >::GetSolutionP( boost::python::ptr(pSamplePoints) );
+        }
+    }
+    
+    ::std::vector< double > default_GetSolutionP( ::vtkPoints * pSamplePoints ) {
+        return AbstractDiscreteContinuumSolver< 2 >::GetSolutionP( boost::python::ptr(pSamplePoints) );
+    }
+
     virtual ::vtkSmartPointer< vtkDataSet > GetVtkSolution(  ) {
         if( bp::override func_GetVtkSolution = this->get_override( "GetVtkSolution" ) )
             return func_GetVtkSolution(  );
@@ -443,6 +455,19 @@ void register_SimpleParabolicFiniteElementSolver2_class(){
                 , GetSolution_function_type(&::AbstractDiscreteContinuumSolver< 2 >::GetSolution)
                 , default_GetSolution_function_type(&SimpleParabolicFiniteElementSolver_less__2__greater__wrapper::default_GetSolution)
                 , ( bp::arg("pGrid") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumSolver< 2 >::GetSolutionP
+        
+            typedef SimpleParabolicFiniteElementSolver< 2 > exported_class_t;
+            typedef ::std::vector< double > ( exported_class_t::*GetSolutionP_function_type)( ::vtkPoints * ) ;
+            typedef ::std::vector< double > ( SimpleParabolicFiniteElementSolver_less__2__greater__wrapper::*default_GetSolutionP_function_type)( ::vtkPoints * ) ;
+            
+            SimpleParabolicFiniteElementSolver2_exposer.def( 
+                "GetSolutionP"
+                , GetSolutionP_function_type(&::AbstractDiscreteContinuumSolver< 2 >::GetSolutionP)
+                , default_GetSolutionP_function_type(&SimpleParabolicFiniteElementSolver_less__2__greater__wrapper::default_GetSolutionP)
+                , ( bp::arg("pSamplePoints") ) );
         
         }
         { //::AbstractDiscreteContinuumSolver< 2 >::GetVtkSolution

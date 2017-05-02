@@ -207,6 +207,13 @@ public:
     virtual std::vector<double> GetSolution(vtkSmartPointer<vtkPoints> pSamplePoints);
 
     /**
+     * Return the value of the field at the requested points. Used by the Python wrapper only.
+     * @param pSamplePoints vtk sample points
+     * @return the value of the field ordered according to input point order
+     */
+    virtual std::vector<double> GetSolutionP(vtkPoints* pSamplePoints);
+
+    /**
      * Return the value of the field at all points on the supplied grid
      * @param pGrid the grid to be sampled
      * @return the value of the field ordered according to input point order
