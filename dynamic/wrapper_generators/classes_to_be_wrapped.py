@@ -26,7 +26,11 @@ geometry_classes = [CppClass('Polygon', include_vec_ptr_self=True),
 
 ################################## MESH ##########################################
 
-mesh_classes = [CppClass('AbstractDiscreteContinuumGrid'),
+mesh_classes = [
+                CppClass('AbstractMesh', component="mesh"),
+                CppClass('AbstractTetrahedralMesh', component="mesh"),
+                CppClass('TetrahedralMesh', component="mesh", excluded_methods = ["FreeTriangulateIo", "InitialiseTriangulateIo"]),
+                CppClass('AbstractDiscreteContinuumGrid'),
                 CppClass('DimensionalChastePoint', include_vec_ptr_self=True),
                 CppClass('DiscreteContinuumMesh'),
                 CppClass('DiscreteContinuumMeshGenerator'),

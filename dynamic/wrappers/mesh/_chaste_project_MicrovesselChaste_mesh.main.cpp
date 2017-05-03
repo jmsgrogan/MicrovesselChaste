@@ -44,11 +44,21 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "indexing_suite/vector.hpp"
 
+#include "indexing_suite/set.hpp"
+
 #include "wrapper_header_collection.hpp"
 
 #include "AbstractDiscreteContinuumGrid2_2.pypp.hpp"
 
 #include "AbstractDiscreteContinuumGrid3_3.pypp.hpp"
+
+#include "AbstractMesh2_2.pypp.hpp"
+
+#include "AbstractMesh3_3.pypp.hpp"
+
+#include "AbstractTetrahedralMesh2_2.pypp.hpp"
+
+#include "AbstractTetrahedralMesh3_3.pypp.hpp"
 
 #include "DimensionalChastePoint2.pypp.hpp"
 
@@ -78,6 +88,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "RegularGridWriter.pypp.hpp"
 
+#include "SetUnsigned.pypp.hpp"
+
+#include "TetrahedralMesh2_2.pypp.hpp"
+
+#include "TetrahedralMesh3_3.pypp.hpp"
+
 #include "VectorDimensionalChastePoint2.pypp.hpp"
 
 #include "VectorDimensionalChastePoint3.pypp.hpp"
@@ -98,6 +114,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "VectorVectorUnsigned.pypp.hpp"
 
+#include "__type.pypp.hpp"
+
+#include "__type.pypp.hpp"
+
 namespace bp = boost::python;
 
 BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_mesh){
@@ -117,19 +137,37 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_mesh){
 
     register_VectorDouble_class();
 
+    register___type_class();
+
+    register___type_class();
+
     register_VectorDimensionalChastePoint3_class();
 
     register_VectorDimensionalChastePoint2_class();
+
+    register_SetUnsigned_class();
 
     register_AbstractDiscreteContinuumGrid2_2_class();
 
     register_AbstractDiscreteContinuumGrid3_3_class();
 
+    register_AbstractMesh2_2_class();
+
+    register_AbstractMesh3_3_class();
+
+    register_AbstractTetrahedralMesh2_2_class();
+
+    register_AbstractTetrahedralMesh3_3_class();
+
     register_DimensionalChastePoint2_class();
 
     register_DimensionalChastePoint3_class();
 
+    register_TetrahedralMesh2_2_class();
+
     register_DiscreteContinuumMesh2_2_class();
+
+    register_TetrahedralMesh3_3_class();
 
     register_DiscreteContinuumMesh3_3_class();
 

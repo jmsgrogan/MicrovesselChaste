@@ -147,6 +147,118 @@ struct DiscreteContinuumMesh_less__3_comma__3__greater__wrapper : DiscreteContin
         AbstractDiscreteContinuumGrid< 3, 3 >::AllGatherPointData( rName );
     }
 
+    ::ChasteCuboid< 3 > CalculateBoundingBox( ::std::vector< Node<3> * > const & rNodes ) const {
+        return AbstractMesh< 3, 3 >::CalculateBoundingBox( boost::ref(rNodes) );
+    }
+
+    virtual ::ChasteCuboid< 3 > CalculateBoundingBox(  ) const  {
+        if( bp::override func_CalculateBoundingBox = this->get_override( "CalculateBoundingBox" ) )
+            return func_CalculateBoundingBox(  );
+        else{
+            return this->AbstractMesh< 3, 3 >::CalculateBoundingBox(  );
+        }
+    }
+    
+    ::ChasteCuboid< 3 > default_CalculateBoundingBox(  ) const  {
+        return AbstractMesh< 3, 3 >::CalculateBoundingBox( );
+    }
+
+    virtual bool CalculateDesignatedOwnershipOfBoundaryElement( unsigned int faceIndex ) {
+        if( bp::override func_CalculateDesignatedOwnershipOfBoundaryElement = this->get_override( "CalculateDesignatedOwnershipOfBoundaryElement" ) )
+            return func_CalculateDesignatedOwnershipOfBoundaryElement( faceIndex );
+        else{
+            return this->AbstractTetrahedralMesh< 3, 3 >::CalculateDesignatedOwnershipOfBoundaryElement( faceIndex );
+        }
+    }
+    
+    bool default_CalculateDesignatedOwnershipOfBoundaryElement( unsigned int faceIndex ) {
+        return AbstractTetrahedralMesh< 3, 3 >::CalculateDesignatedOwnershipOfBoundaryElement( faceIndex );
+    }
+
+    virtual bool CalculateDesignatedOwnershipOfElement( unsigned int elementIndex ) {
+        if( bp::override func_CalculateDesignatedOwnershipOfElement = this->get_override( "CalculateDesignatedOwnershipOfElement" ) )
+            return func_CalculateDesignatedOwnershipOfElement( elementIndex );
+        else{
+            return this->AbstractTetrahedralMesh< 3, 3 >::CalculateDesignatedOwnershipOfElement( elementIndex );
+        }
+    }
+    
+    bool default_CalculateDesignatedOwnershipOfElement( unsigned int elementIndex ) {
+        return AbstractTetrahedralMesh< 3, 3 >::CalculateDesignatedOwnershipOfElement( elementIndex );
+    }
+
+    virtual ::boost::numeric::ublas::c_vector< double, 2 > CalculateMinMaxEdgeLengths(  ) {
+        if( bp::override func_CalculateMinMaxEdgeLengths = this->get_override( "CalculateMinMaxEdgeLengths" ) )
+            return func_CalculateMinMaxEdgeLengths(  );
+        else{
+            return this->AbstractTetrahedralMesh< 3, 3 >::CalculateMinMaxEdgeLengths(  );
+        }
+    }
+    
+    ::boost::numeric::ublas::c_vector< double, 2 > default_CalculateMinMaxEdgeLengths(  ) {
+        return AbstractTetrahedralMesh< 3, 3 >::CalculateMinMaxEdgeLengths( );
+    }
+
+    virtual void Clear(  ) {
+        if( bp::override func_Clear = this->get_override( "Clear" ) )
+            func_Clear(  );
+        else{
+            this->TetrahedralMesh< 3, 3 >::Clear(  );
+        }
+    }
+    
+    void default_Clear(  ) {
+        TetrahedralMesh< 3, 3 >::Clear( );
+    }
+
+    virtual void ConstructCuboid( unsigned int width, unsigned int height, unsigned int depth ) {
+        if( bp::override func_ConstructCuboid = this->get_override( "ConstructCuboid" ) )
+            func_ConstructCuboid( width, height, depth );
+        else{
+            this->AbstractTetrahedralMesh< 3, 3 >::ConstructCuboid( width, height, depth );
+        }
+    }
+    
+    void default_ConstructCuboid( unsigned int width, unsigned int height, unsigned int depth ) {
+        AbstractTetrahedralMesh< 3, 3 >::ConstructCuboid( width, height, depth );
+    }
+
+    virtual void ConstructFromMeshReader( ::AbstractMeshReader< 3, 3 > & rMeshReader ) {
+        if( bp::override func_ConstructFromMeshReader = this->get_override( "ConstructFromMeshReader" ) )
+            func_ConstructFromMeshReader( boost::ref(rMeshReader) );
+        else{
+            this->TetrahedralMesh< 3, 3 >::ConstructFromMeshReader( boost::ref(rMeshReader) );
+        }
+    }
+    
+    void default_ConstructFromMeshReader( ::AbstractMeshReader< 3, 3 > & rMeshReader ) {
+        TetrahedralMesh< 3, 3 >::ConstructFromMeshReader( boost::ref(rMeshReader) );
+    }
+
+    virtual void ConstructLinearMesh( unsigned int width ) {
+        if( bp::override func_ConstructLinearMesh = this->get_override( "ConstructLinearMesh" ) )
+            func_ConstructLinearMesh( width );
+        else{
+            this->AbstractTetrahedralMesh< 3, 3 >::ConstructLinearMesh( width );
+        }
+    }
+    
+    void default_ConstructLinearMesh( unsigned int width ) {
+        AbstractTetrahedralMesh< 3, 3 >::ConstructLinearMesh( width );
+    }
+
+    virtual void ConstructRectangularMesh( unsigned int width, unsigned int height, bool stagger=true ) {
+        if( bp::override func_ConstructRectangularMesh = this->get_override( "ConstructRectangularMesh" ) )
+            func_ConstructRectangularMesh( width, height, stagger );
+        else{
+            this->AbstractTetrahedralMesh< 3, 3 >::ConstructRectangularMesh( width, height, stagger );
+        }
+    }
+    
+    void default_ConstructRectangularMesh( unsigned int width, unsigned int height, bool stagger=true ) {
+        AbstractTetrahedralMesh< 3, 3 >::ConstructRectangularMesh( width, height, stagger );
+    }
+
     virtual void GatherAllCellData(  ) {
         if( bp::override func_GatherAllCellData = this->get_override( "GatherAllCellData" ) )
             func_GatherAllCellData(  );
@@ -219,6 +331,18 @@ struct DiscreteContinuumMesh_less__3_comma__3__greater__wrapper : DiscreteContin
         return AbstractDiscreteContinuumGrid< 3, 3 >::GetCellLocation( index );
     }
 
+    virtual ::DistributedVectorFactory * GetDistributedVectorFactory(  ) {
+        if( bp::override func_GetDistributedVectorFactory = this->get_override( "GetDistributedVectorFactory" ) )
+            return func_GetDistributedVectorFactory(  );
+        else{
+            return this->AbstractMesh< 3, 3 >::GetDistributedVectorFactory(  );
+        }
+    }
+    
+    ::DistributedVectorFactory * default_GetDistributedVectorFactory(  ) {
+        return AbstractMesh< 3, 3 >::GetDistributedVectorFactory( );
+    }
+
     virtual unsigned int GetGlobalIndex( unsigned int localIndex ) {
         if( bp::override func_GetGlobalIndex = this->get_override( "GetGlobalIndex" ) )
             return func_GetGlobalIndex( localIndex );
@@ -255,6 +379,42 @@ struct DiscreteContinuumMesh_less__3_comma__3__greater__wrapper : DiscreteContin
         return AbstractDiscreteContinuumGrid< 3, 3 >::GetGlobalVtkGrid( );
     }
 
+    virtual void GetHaloNodeIndices( ::std::vector< unsigned int > & rHaloIndices ) const  {
+        if( bp::override func_GetHaloNodeIndices = this->get_override( "GetHaloNodeIndices" ) )
+            func_GetHaloNodeIndices( boost::ref(rHaloIndices) );
+        else{
+            this->AbstractTetrahedralMesh< 3, 3 >::GetHaloNodeIndices( boost::ref(rHaloIndices) );
+        }
+    }
+    
+    void default_GetHaloNodeIndices( ::std::vector< unsigned int > & rHaloIndices ) const  {
+        AbstractTetrahedralMesh< 3, 3 >::GetHaloNodeIndices( boost::ref(rHaloIndices) );
+    }
+
+    virtual void GetInverseJacobianForElement( unsigned int elementIndex, ::boost::numeric::ublas::c_matrix< double, 3, 3 > & rJacobian, double & rJacobianDeterminant, ::boost::numeric::ublas::c_matrix< double, 3, 3 > & rInverseJacobian ) const  {
+        if( bp::override func_GetInverseJacobianForElement = this->get_override( "GetInverseJacobianForElement" ) )
+            func_GetInverseJacobianForElement( elementIndex, boost::ref(rJacobian), rJacobianDeterminant, boost::ref(rInverseJacobian) );
+        else{
+            this->TetrahedralMesh< 3, 3 >::GetInverseJacobianForElement( elementIndex, boost::ref(rJacobian), rJacobianDeterminant, boost::ref(rInverseJacobian) );
+        }
+    }
+    
+    void default_GetInverseJacobianForElement( unsigned int elementIndex, ::boost::numeric::ublas::c_matrix< double, 3, 3 > & rJacobian, double & rJacobianDeterminant, ::boost::numeric::ublas::c_matrix< double, 3, 3 > & rInverseJacobian ) const  {
+        TetrahedralMesh< 3, 3 >::GetInverseJacobianForElement( elementIndex, boost::ref(rJacobian), rJacobianDeterminant, boost::ref(rInverseJacobian) );
+    }
+
+    virtual void GetJacobianForElement( unsigned int elementIndex, ::boost::numeric::ublas::c_matrix< double, 3, 3 > & rJacobian, double & rJacobianDeterminant ) const  {
+        if( bp::override func_GetJacobianForElement = this->get_override( "GetJacobianForElement" ) )
+            func_GetJacobianForElement( elementIndex, boost::ref(rJacobian), rJacobianDeterminant );
+        else{
+            this->TetrahedralMesh< 3, 3 >::GetJacobianForElement( elementIndex, boost::ref(rJacobian), rJacobianDeterminant );
+        }
+    }
+    
+    void default_GetJacobianForElement( unsigned int elementIndex, ::boost::numeric::ublas::c_matrix< double, 3, 3 > & rJacobian, double & rJacobianDeterminant ) const  {
+        TetrahedralMesh< 3, 3 >::GetJacobianForElement( elementIndex, boost::ref(rJacobian), rJacobianDeterminant );
+    }
+
     virtual int GetLocalIndex( unsigned int globalIndex ) {
         if( bp::override func_GetLocalIndex = this->get_override( "GetLocalIndex" ) )
             return func_GetLocalIndex( globalIndex );
@@ -265,6 +425,138 @@ struct DiscreteContinuumMesh_less__3_comma__3__greater__wrapper : DiscreteContin
     
     int default_GetLocalIndex( unsigned int globalIndex ) {
         return AbstractDiscreteContinuumGrid< 3, 3 >::GetLocalIndex( globalIndex );
+    }
+
+    virtual unsigned int GetMaximumNodeIndex(  ) {
+        if( bp::override func_GetMaximumNodeIndex = this->get_override( "GetMaximumNodeIndex" ) )
+            return func_GetMaximumNodeIndex(  );
+        else{
+            return this->AbstractTetrahedralMesh< 3, 3 >::GetMaximumNodeIndex(  );
+        }
+    }
+    
+    unsigned int default_GetMaximumNodeIndex(  ) {
+        return AbstractTetrahedralMesh< 3, 3 >::GetMaximumNodeIndex( );
+    }
+
+    virtual unsigned int GetNearestNodeIndex( ::ChastePoint< 3 > const & rTestPoint ) {
+        if( bp::override func_GetNearestNodeIndex = this->get_override( "GetNearestNodeIndex" ) )
+            return func_GetNearestNodeIndex( boost::ref(rTestPoint) );
+        else{
+            return this->AbstractMesh< 3, 3 >::GetNearestNodeIndex( boost::ref(rTestPoint) );
+        }
+    }
+    
+    unsigned int default_GetNearestNodeIndex( ::ChastePoint< 3 > const & rTestPoint ) {
+        return AbstractMesh< 3, 3 >::GetNearestNodeIndex( boost::ref(rTestPoint) );
+    }
+
+    virtual ::Node< 3 > * GetNodeOrHaloNode( unsigned int index ) const  {
+        if( bp::override func_GetNodeOrHaloNode = this->get_override( "GetNodeOrHaloNode" ) )
+            return func_GetNodeOrHaloNode( index );
+        else{
+            return this->AbstractMesh< 3, 3 >::GetNodeOrHaloNode( index );
+        }
+    }
+    
+    ::Node< 3 > * default_GetNodeOrHaloNode( unsigned int index ) const  {
+        return AbstractMesh< 3, 3 >::GetNodeOrHaloNode( index );
+    }
+
+    virtual unsigned int GetNumAllNodes(  ) const  {
+        if( bp::override func_GetNumAllNodes = this->get_override( "GetNumAllNodes" ) )
+            return func_GetNumAllNodes(  );
+        else{
+            return this->AbstractMesh< 3, 3 >::GetNumAllNodes(  );
+        }
+    }
+    
+    unsigned int default_GetNumAllNodes(  ) const  {
+        return AbstractMesh< 3, 3 >::GetNumAllNodes( );
+    }
+
+    virtual unsigned int GetNumBoundaryElements(  ) const  {
+        if( bp::override func_GetNumBoundaryElements = this->get_override( "GetNumBoundaryElements" ) )
+            return func_GetNumBoundaryElements(  );
+        else{
+            return this->AbstractTetrahedralMesh< 3, 3 >::GetNumBoundaryElements(  );
+        }
+    }
+    
+    unsigned int default_GetNumBoundaryElements(  ) const  {
+        return AbstractTetrahedralMesh< 3, 3 >::GetNumBoundaryElements( );
+    }
+
+    virtual unsigned int GetNumCableElements(  ) const  {
+        if( bp::override func_GetNumCableElements = this->get_override( "GetNumCableElements" ) )
+            return func_GetNumCableElements(  );
+        else{
+            return this->AbstractTetrahedralMesh< 3, 3 >::GetNumCableElements(  );
+        }
+    }
+    
+    unsigned int default_GetNumCableElements(  ) const  {
+        return AbstractTetrahedralMesh< 3, 3 >::GetNumCableElements( );
+    }
+
+    virtual unsigned int GetNumElements(  ) const  {
+        if( bp::override func_GetNumElements = this->get_override( "GetNumElements" ) )
+            return func_GetNumElements(  );
+        else{
+            return this->AbstractTetrahedralMesh< 3, 3 >::GetNumElements(  );
+        }
+    }
+    
+    unsigned int default_GetNumElements(  ) const  {
+        return AbstractTetrahedralMesh< 3, 3 >::GetNumElements( );
+    }
+
+    virtual unsigned int GetNumLocalBoundaryElements(  ) const  {
+        if( bp::override func_GetNumLocalBoundaryElements = this->get_override( "GetNumLocalBoundaryElements" ) )
+            return func_GetNumLocalBoundaryElements(  );
+        else{
+            return this->AbstractTetrahedralMesh< 3, 3 >::GetNumLocalBoundaryElements(  );
+        }
+    }
+    
+    unsigned int default_GetNumLocalBoundaryElements(  ) const  {
+        return AbstractTetrahedralMesh< 3, 3 >::GetNumLocalBoundaryElements( );
+    }
+
+    virtual unsigned int GetNumLocalElements(  ) const  {
+        if( bp::override func_GetNumLocalElements = this->get_override( "GetNumLocalElements" ) )
+            return func_GetNumLocalElements(  );
+        else{
+            return this->AbstractTetrahedralMesh< 3, 3 >::GetNumLocalElements(  );
+        }
+    }
+    
+    unsigned int default_GetNumLocalElements(  ) const  {
+        return AbstractTetrahedralMesh< 3, 3 >::GetNumLocalElements( );
+    }
+
+    virtual unsigned int GetNumNodes(  ) const  {
+        if( bp::override func_GetNumNodes = this->get_override( "GetNumNodes" ) )
+            return func_GetNumNodes(  );
+        else{
+            return this->AbstractMesh< 3, 3 >::GetNumNodes(  );
+        }
+    }
+    
+    unsigned int default_GetNumNodes(  ) const  {
+        return AbstractMesh< 3, 3 >::GetNumNodes( );
+    }
+
+    virtual unsigned int GetNumVertices(  ) const  {
+        if( bp::override func_GetNumVertices = this->get_override( "GetNumVertices" ) )
+            return func_GetNumVertices(  );
+        else{
+            return this->AbstractTetrahedralMesh< 3, 3 >::GetNumVertices(  );
+        }
+    }
+    
+    unsigned int default_GetNumVertices(  ) const  {
+        return AbstractTetrahedralMesh< 3, 3 >::GetNumVertices( );
     }
 
     virtual ::DimensionalChastePoint< 3 > GetPoint( unsigned int index ) {
@@ -291,6 +583,18 @@ struct DiscreteContinuumMesh_less__3_comma__3__greater__wrapper : DiscreteContin
         return AbstractDiscreteContinuumGrid< 3, 3 >::GetPoints( );
     }
 
+    virtual ::boost::numeric::ublas::c_vector< double, 3 > GetVectorFromAtoB( ::boost::numeric::ublas::c_vector< double, 3 > const & rLocationA, ::boost::numeric::ublas::c_vector< double, 3 > const & rLocationB ) {
+        if( bp::override func_GetVectorFromAtoB = this->get_override( "GetVectorFromAtoB" ) )
+            return func_GetVectorFromAtoB( boost::ref(rLocationA), boost::ref(rLocationB) );
+        else{
+            return this->AbstractMesh< 3, 3 >::GetVectorFromAtoB( boost::ref(rLocationA), boost::ref(rLocationB) );
+        }
+    }
+    
+    ::boost::numeric::ublas::c_vector< double, 3 > default_GetVectorFromAtoB( ::boost::numeric::ublas::c_vector< double, 3 > const & rLocationA, ::boost::numeric::ublas::c_vector< double, 3 > const & rLocationB ) {
+        return AbstractMesh< 3, 3 >::GetVectorFromAtoB( boost::ref(rLocationA), boost::ref(rLocationB) );
+    }
+
     virtual ::vtkSmartPointer< vtkCellLocator > GetVtkCellLocator(  ) {
         if( bp::override func_GetVtkCellLocator = this->get_override( "GetVtkCellLocator" ) )
             return func_GetVtkCellLocator(  );
@@ -315,6 +619,138 @@ struct DiscreteContinuumMesh_less__3_comma__3__greater__wrapper : DiscreteContin
         return AbstractDiscreteContinuumGrid< 3, 3 >::GetVtkGrid( );
     }
 
+    virtual void GetWeightedDirectionForBoundaryElement( unsigned int elementIndex, ::boost::numeric::ublas::c_vector< double, 3 > & rWeightedDirection, double & rJacobianDeterminant ) const  {
+        if( bp::override func_GetWeightedDirectionForBoundaryElement = this->get_override( "GetWeightedDirectionForBoundaryElement" ) )
+            func_GetWeightedDirectionForBoundaryElement( elementIndex, boost::ref(rWeightedDirection), rJacobianDeterminant );
+        else{
+            this->TetrahedralMesh< 3, 3 >::GetWeightedDirectionForBoundaryElement( elementIndex, boost::ref(rWeightedDirection), rJacobianDeterminant );
+        }
+    }
+    
+    void default_GetWeightedDirectionForBoundaryElement( unsigned int elementIndex, ::boost::numeric::ublas::c_vector< double, 3 > & rWeightedDirection, double & rJacobianDeterminant ) const  {
+        TetrahedralMesh< 3, 3 >::GetWeightedDirectionForBoundaryElement( elementIndex, boost::ref(rWeightedDirection), rJacobianDeterminant );
+    }
+
+    virtual void GetWeightedDirectionForElement( unsigned int elementIndex, ::boost::numeric::ublas::c_vector< double, 3 > & rWeightedDirection, double & rJacobianDeterminant ) const  {
+        if( bp::override func_GetWeightedDirectionForElement = this->get_override( "GetWeightedDirectionForElement" ) )
+            func_GetWeightedDirectionForElement( elementIndex, boost::ref(rWeightedDirection), rJacobianDeterminant );
+        else{
+            this->TetrahedralMesh< 3, 3 >::GetWeightedDirectionForElement( elementIndex, boost::ref(rWeightedDirection), rJacobianDeterminant );
+        }
+    }
+    
+    void default_GetWeightedDirectionForElement( unsigned int elementIndex, ::boost::numeric::ublas::c_vector< double, 3 > & rWeightedDirection, double & rJacobianDeterminant ) const  {
+        TetrahedralMesh< 3, 3 >::GetWeightedDirectionForElement( elementIndex, boost::ref(rWeightedDirection), rJacobianDeterminant );
+    }
+
+    virtual double GetWidth( unsigned int const & rDimension ) const  {
+        if( bp::override func_GetWidth = this->get_override( "GetWidth" ) )
+            return func_GetWidth( rDimension );
+        else{
+            return this->AbstractMesh< 3, 3 >::GetWidth( rDimension );
+        }
+    }
+    
+    double default_GetWidth( unsigned int const & rDimension ) const  {
+        return AbstractMesh< 3, 3 >::GetWidth( rDimension );
+    }
+
+    virtual void PermuteNodes(  ) {
+        if( bp::override func_PermuteNodes = this->get_override( "PermuteNodes" ) )
+            func_PermuteNodes(  );
+        else{
+            this->TetrahedralMesh< 3, 3 >::PermuteNodes(  );
+        }
+    }
+    
+    void default_PermuteNodes(  ) {
+        TetrahedralMesh< 3, 3 >::PermuteNodes( );
+    }
+
+    virtual void ReadNodesPerProcessorFile( ::std::string const & rNodesPerProcessorFile ) {
+        if( bp::override func_ReadNodesPerProcessorFile = this->get_override( "ReadNodesPerProcessorFile" ) )
+            func_ReadNodesPerProcessorFile( rNodesPerProcessorFile );
+        else{
+            this->TetrahedralMesh< 3, 3 >::ReadNodesPerProcessorFile( rNodesPerProcessorFile );
+        }
+    }
+    
+    void default_ReadNodesPerProcessorFile( ::std::string const & rNodesPerProcessorFile ) {
+        TetrahedralMesh< 3, 3 >::ReadNodesPerProcessorFile( rNodesPerProcessorFile );
+    }
+
+    virtual void RefreshJacobianCachedData(  ) {
+        if( bp::override func_RefreshJacobianCachedData = this->get_override( "RefreshJacobianCachedData" ) )
+            func_RefreshJacobianCachedData(  );
+        else{
+            this->TetrahedralMesh< 3, 3 >::RefreshJacobianCachedData(  );
+        }
+    }
+    
+    void default_RefreshJacobianCachedData(  ) {
+        TetrahedralMesh< 3, 3 >::RefreshJacobianCachedData( );
+    }
+
+    virtual void RefreshMesh(  ) {
+        if( bp::override func_RefreshMesh = this->get_override( "RefreshMesh" ) )
+            func_RefreshMesh(  );
+        else{
+            this->TetrahedralMesh< 3, 3 >::RefreshMesh(  );
+        }
+    }
+    
+    void default_RefreshMesh(  ) {
+        TetrahedralMesh< 3, 3 >::RefreshMesh( );
+    }
+
+    virtual void Rotate( ::boost::numeric::ublas::c_matrix< double, 3, 3 > rotationMatrix ) {
+        if( bp::override func_Rotate = this->get_override( "Rotate" ) )
+            func_Rotate( rotationMatrix );
+        else{
+            this->AbstractMesh< 3, 3 >::Rotate( rotationMatrix );
+        }
+    }
+    
+    void default_Rotate( ::boost::numeric::ublas::c_matrix< double, 3, 3 > rotationMatrix ) {
+        AbstractMesh< 3, 3 >::Rotate( rotationMatrix );
+    }
+
+    virtual void Scale( double const xFactor=1., double const yFactor=1., double const zFactor=1. ) {
+        if( bp::override func_Scale = this->get_override( "Scale" ) )
+            func_Scale( xFactor, yFactor, zFactor );
+        else{
+            this->AbstractMesh< 3, 3 >::Scale( xFactor, yFactor, zFactor );
+        }
+    }
+    
+    void default_Scale( double const xFactor=1., double const yFactor=1., double const zFactor=1. ) {
+        AbstractMesh< 3, 3 >::Scale( xFactor, yFactor, zFactor );
+    }
+
+    virtual void SetDistributedVectorFactory( ::DistributedVectorFactory * pFactory ) {
+        if( bp::override func_SetDistributedVectorFactory = this->get_override( "SetDistributedVectorFactory" ) )
+            func_SetDistributedVectorFactory( boost::python::ptr(pFactory) );
+        else{
+            this->AbstractMesh< 3, 3 >::SetDistributedVectorFactory( boost::python::ptr(pFactory) );
+        }
+    }
+    
+    void default_SetDistributedVectorFactory( ::DistributedVectorFactory * pFactory ) {
+        AbstractMesh< 3, 3 >::SetDistributedVectorFactory( boost::python::ptr(pFactory) );
+    }
+
+    virtual void SetElementOwnerships(  ){
+        if( bp::override func_SetElementOwnerships = this->get_override( "SetElementOwnerships" ) )
+            func_SetElementOwnerships(  );
+        else{
+            this->AbstractTetrahedralMesh< 3, 3 >::SetElementOwnerships(  );
+        }
+    }
+    
+    virtual void default_SetElementOwnerships(  ){
+        AbstractTetrahedralMesh< 3, 3 >::SetElementOwnerships( );
+    }
+
     virtual void SetUpVtkCellLocator(  ) {
         if( bp::override func_SetUpVtkCellLocator = this->get_override( "SetUpVtkCellLocator" ) )
             func_SetUpVtkCellLocator(  );
@@ -327,12 +763,60 @@ struct DiscreteContinuumMesh_less__3_comma__3__greater__wrapper : DiscreteContin
         AbstractDiscreteContinuumGrid< 3, 3 >::SetUpVtkCellLocator( );
     }
 
+    virtual unsigned int SolveBoundaryElementMapping( unsigned int index ) const {
+        if( bp::override func_SolveBoundaryElementMapping = this->get_override( "SolveBoundaryElementMapping" ) )
+            return func_SolveBoundaryElementMapping( index );
+        else{
+            return this->TetrahedralMesh< 3, 3 >::SolveBoundaryElementMapping( index );
+        }
+    }
+    
+    virtual unsigned int default_SolveBoundaryElementMapping( unsigned int index ) const {
+        return TetrahedralMesh< 3, 3 >::SolveBoundaryElementMapping( index );
+    }
+
+    virtual unsigned int SolveElementMapping( unsigned int index ) const {
+        if( bp::override func_SolveElementMapping = this->get_override( "SolveElementMapping" ) )
+            return func_SolveElementMapping( index );
+        else{
+            return this->TetrahedralMesh< 3, 3 >::SolveElementMapping( index );
+        }
+    }
+    
+    virtual unsigned int default_SolveElementMapping( unsigned int index ) const {
+        return TetrahedralMesh< 3, 3 >::SolveElementMapping( index );
+    }
+
+    virtual unsigned int SolveNodeMapping( unsigned int index ) const {
+        if( bp::override func_SolveNodeMapping = this->get_override( "SolveNodeMapping" ) )
+            return func_SolveNodeMapping( index );
+        else{
+            return this->TetrahedralMesh< 3, 3 >::SolveNodeMapping( index );
+        }
+    }
+    
+    virtual unsigned int default_SolveNodeMapping( unsigned int index ) const {
+        return TetrahedralMesh< 3, 3 >::SolveNodeMapping( index );
+    }
+
+    virtual void Translate( ::boost::numeric::ublas::c_vector< double, 3 > const & rDisplacement ) {
+        if( bp::override func_Translate = this->get_override( "Translate" ) )
+            func_Translate( boost::ref(rDisplacement) );
+        else{
+            this->AbstractMesh< 3, 3 >::Translate( boost::ref(rDisplacement) );
+        }
+    }
+    
+    void default_Translate( ::boost::numeric::ublas::c_vector< double, 3 > const & rDisplacement ) {
+        AbstractMesh< 3, 3 >::Translate( boost::ref(rDisplacement) );
+    }
+
 };
 
 void register_DiscreteContinuumMesh3_3_class(){
 
     { //::DiscreteContinuumMesh< 3, 3 >
-        typedef bp::class_< DiscreteContinuumMesh_less__3_comma__3__greater__wrapper, bp::bases< AbstractDiscreteContinuumGrid< 3, 3 > >, boost::noncopyable > DiscreteContinuumMesh3_3_exposer_t;
+        typedef bp::class_< DiscreteContinuumMesh_less__3_comma__3__greater__wrapper, bp::bases< TetrahedralMesh< 3, 3 >, AbstractDiscreteContinuumGrid< 3, 3 > >, boost::noncopyable > DiscreteContinuumMesh3_3_exposer_t;
         DiscreteContinuumMesh3_3_exposer_t DiscreteContinuumMesh3_3_exposer = DiscreteContinuumMesh3_3_exposer_t( "DiscreteContinuumMesh3_3", bp::init< >() );
         bp::scope DiscreteContinuumMesh3_3_scope( DiscreteContinuumMesh3_3_exposer );
         { //::DiscreteContinuumMesh< 3, 3 >::Create
@@ -499,6 +983,131 @@ void register_DiscreteContinuumMesh3_3_class(){
                 , ( bp::arg("rName") ) );
         
         }
+        { //::AbstractMesh< 3, 3 >::CalculateBoundingBox
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef ::ChasteCuboid< 3 > ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*CalculateBoundingBox_function_type)( ::std::vector< Node<3> * > const & ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "CalculateBoundingBox"
+                , CalculateBoundingBox_function_type( &DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::CalculateBoundingBox )
+                , ( bp::arg("rNodes") ) );
+        
+        }
+        { //::AbstractMesh< 3, 3 >::CalculateBoundingBox
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef ::ChasteCuboid< 3 > ( exported_class_t::*CalculateBoundingBox_function_type)(  ) const;
+            typedef ::ChasteCuboid< 3 > ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_CalculateBoundingBox_function_type)(  ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "CalculateBoundingBox"
+                , CalculateBoundingBox_function_type(&::AbstractMesh< 3, 3 >::CalculateBoundingBox)
+                , default_CalculateBoundingBox_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_CalculateBoundingBox) );
+        
+        }
+        { //::AbstractTetrahedralMesh< 3, 3 >::CalculateDesignatedOwnershipOfBoundaryElement
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef bool ( exported_class_t::*CalculateDesignatedOwnershipOfBoundaryElement_function_type)( unsigned int ) ;
+            typedef bool ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_CalculateDesignatedOwnershipOfBoundaryElement_function_type)( unsigned int ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "CalculateDesignatedOwnershipOfBoundaryElement"
+                , CalculateDesignatedOwnershipOfBoundaryElement_function_type(&::AbstractTetrahedralMesh< 3, 3 >::CalculateDesignatedOwnershipOfBoundaryElement)
+                , default_CalculateDesignatedOwnershipOfBoundaryElement_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_CalculateDesignatedOwnershipOfBoundaryElement)
+                , ( bp::arg("faceIndex") ) );
+        
+        }
+        { //::AbstractTetrahedralMesh< 3, 3 >::CalculateDesignatedOwnershipOfElement
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef bool ( exported_class_t::*CalculateDesignatedOwnershipOfElement_function_type)( unsigned int ) ;
+            typedef bool ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_CalculateDesignatedOwnershipOfElement_function_type)( unsigned int ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "CalculateDesignatedOwnershipOfElement"
+                , CalculateDesignatedOwnershipOfElement_function_type(&::AbstractTetrahedralMesh< 3, 3 >::CalculateDesignatedOwnershipOfElement)
+                , default_CalculateDesignatedOwnershipOfElement_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_CalculateDesignatedOwnershipOfElement)
+                , ( bp::arg("elementIndex") ) );
+        
+        }
+        { //::AbstractTetrahedralMesh< 3, 3 >::CalculateMinMaxEdgeLengths
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef ::boost::numeric::ublas::c_vector< double, 2 > ( exported_class_t::*CalculateMinMaxEdgeLengths_function_type)(  ) ;
+            typedef ::boost::numeric::ublas::c_vector< double, 2 > ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_CalculateMinMaxEdgeLengths_function_type)(  ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "CalculateMinMaxEdgeLengths"
+                , CalculateMinMaxEdgeLengths_function_type(&::AbstractTetrahedralMesh< 3, 3 >::CalculateMinMaxEdgeLengths)
+                , default_CalculateMinMaxEdgeLengths_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_CalculateMinMaxEdgeLengths) );
+        
+        }
+        { //::TetrahedralMesh< 3, 3 >::Clear
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*Clear_function_type)(  ) ;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_Clear_function_type)(  ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "Clear"
+                , Clear_function_type(&::TetrahedralMesh< 3, 3 >::Clear)
+                , default_Clear_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_Clear) );
+        
+        }
+        { //::AbstractTetrahedralMesh< 3, 3 >::ConstructCuboid
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*ConstructCuboid_function_type)( unsigned int,unsigned int,unsigned int ) ;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_ConstructCuboid_function_type)( unsigned int,unsigned int,unsigned int ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "ConstructCuboid"
+                , ConstructCuboid_function_type(&::AbstractTetrahedralMesh< 3, 3 >::ConstructCuboid)
+                , default_ConstructCuboid_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_ConstructCuboid)
+                , ( bp::arg("width"), bp::arg("height"), bp::arg("depth") ) );
+        
+        }
+        { //::TetrahedralMesh< 3, 3 >::ConstructFromMeshReader
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*ConstructFromMeshReader_function_type)( ::AbstractMeshReader< 3, 3 > & ) ;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_ConstructFromMeshReader_function_type)( ::AbstractMeshReader< 3, 3 > & ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "ConstructFromMeshReader"
+                , ConstructFromMeshReader_function_type(&::TetrahedralMesh< 3, 3 >::ConstructFromMeshReader)
+                , default_ConstructFromMeshReader_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_ConstructFromMeshReader)
+                , ( bp::arg("rMeshReader") ) );
+        
+        }
+        { //::AbstractTetrahedralMesh< 3, 3 >::ConstructLinearMesh
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*ConstructLinearMesh_function_type)( unsigned int ) ;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_ConstructLinearMesh_function_type)( unsigned int ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "ConstructLinearMesh"
+                , ConstructLinearMesh_function_type(&::AbstractTetrahedralMesh< 3, 3 >::ConstructLinearMesh)
+                , default_ConstructLinearMesh_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_ConstructLinearMesh)
+                , ( bp::arg("width") ) );
+        
+        }
+        { //::AbstractTetrahedralMesh< 3, 3 >::ConstructRectangularMesh
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*ConstructRectangularMesh_function_type)( unsigned int,unsigned int,bool ) ;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_ConstructRectangularMesh_function_type)( unsigned int,unsigned int,bool ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "ConstructRectangularMesh"
+                , ConstructRectangularMesh_function_type(&::AbstractTetrahedralMesh< 3, 3 >::ConstructRectangularMesh)
+                , default_ConstructRectangularMesh_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_ConstructRectangularMesh)
+                , ( bp::arg("width"), bp::arg("height"), bp::arg("stagger")=(bool)(true) ) );
+        
+        }
         { //::AbstractDiscreteContinuumGrid< 3, 3 >::GatherAllCellData
         
             typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
@@ -574,6 +1183,19 @@ void register_DiscreteContinuumMesh3_3_class(){
                 , ( bp::arg("index") ) );
         
         }
+        { //::AbstractMesh< 3, 3 >::GetDistributedVectorFactory
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef ::DistributedVectorFactory * ( exported_class_t::*GetDistributedVectorFactory_function_type)(  ) ;
+            typedef ::DistributedVectorFactory * ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetDistributedVectorFactory_function_type)(  ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetDistributedVectorFactory"
+                , GetDistributedVectorFactory_function_type(&::AbstractMesh< 3, 3 >::GetDistributedVectorFactory)
+                , default_GetDistributedVectorFactory_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetDistributedVectorFactory)
+                , bp::return_value_policy< bp::reference_existing_object >() );
+        
+        }
         { //::AbstractDiscreteContinuumGrid< 3, 3 >::GetGlobalIndex
         
             typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
@@ -612,6 +1234,45 @@ void register_DiscreteContinuumMesh3_3_class(){
                 , default_GetGlobalVtkGrid_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetGlobalVtkGrid) );
         
         }
+        { //::AbstractTetrahedralMesh< 3, 3 >::GetHaloNodeIndices
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*GetHaloNodeIndices_function_type)( ::std::vector< unsigned int > & ) const;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetHaloNodeIndices_function_type)( ::std::vector< unsigned int > & ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetHaloNodeIndices"
+                , GetHaloNodeIndices_function_type(&::AbstractTetrahedralMesh< 3, 3 >::GetHaloNodeIndices)
+                , default_GetHaloNodeIndices_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetHaloNodeIndices)
+                , ( bp::arg("rHaloIndices") ) );
+        
+        }
+        { //::TetrahedralMesh< 3, 3 >::GetInverseJacobianForElement
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*GetInverseJacobianForElement_function_type)( unsigned int,::boost::numeric::ublas::c_matrix< double, 3, 3 > &,double &,::boost::numeric::ublas::c_matrix< double, 3, 3 > & ) const;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetInverseJacobianForElement_function_type)( unsigned int,::boost::numeric::ublas::c_matrix< double, 3, 3 > &,double &,::boost::numeric::ublas::c_matrix< double, 3, 3 > & ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetInverseJacobianForElement"
+                , GetInverseJacobianForElement_function_type(&::TetrahedralMesh< 3, 3 >::GetInverseJacobianForElement)
+                , default_GetInverseJacobianForElement_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetInverseJacobianForElement)
+                , ( bp::arg("elementIndex"), bp::arg("rJacobian"), bp::arg("rJacobianDeterminant"), bp::arg("rInverseJacobian") ) );
+        
+        }
+        { //::TetrahedralMesh< 3, 3 >::GetJacobianForElement
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*GetJacobianForElement_function_type)( unsigned int,::boost::numeric::ublas::c_matrix< double, 3, 3 > &,double & ) const;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetJacobianForElement_function_type)( unsigned int,::boost::numeric::ublas::c_matrix< double, 3, 3 > &,double & ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetJacobianForElement"
+                , GetJacobianForElement_function_type(&::TetrahedralMesh< 3, 3 >::GetJacobianForElement)
+                , default_GetJacobianForElement_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetJacobianForElement)
+                , ( bp::arg("elementIndex"), bp::arg("rJacobian"), bp::arg("rJacobianDeterminant") ) );
+        
+        }
         { //::AbstractDiscreteContinuumGrid< 3, 3 >::GetLocalIndex
         
             typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
@@ -623,6 +1284,141 @@ void register_DiscreteContinuumMesh3_3_class(){
                 , GetLocalIndex_function_type(&::AbstractDiscreteContinuumGrid< 3, 3 >::GetLocalIndex)
                 , default_GetLocalIndex_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetLocalIndex)
                 , ( bp::arg("globalIndex") ) );
+        
+        }
+        { //::AbstractTetrahedralMesh< 3, 3 >::GetMaximumNodeIndex
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetMaximumNodeIndex_function_type)(  ) ;
+            typedef unsigned int ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetMaximumNodeIndex_function_type)(  ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetMaximumNodeIndex"
+                , GetMaximumNodeIndex_function_type(&::AbstractTetrahedralMesh< 3, 3 >::GetMaximumNodeIndex)
+                , default_GetMaximumNodeIndex_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetMaximumNodeIndex) );
+        
+        }
+        { //::AbstractMesh< 3, 3 >::GetNearestNodeIndex
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetNearestNodeIndex_function_type)( ::ChastePoint< 3 > const & ) ;
+            typedef unsigned int ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetNearestNodeIndex_function_type)( ::ChastePoint< 3 > const & ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetNearestNodeIndex"
+                , GetNearestNodeIndex_function_type(&::AbstractMesh< 3, 3 >::GetNearestNodeIndex)
+                , default_GetNearestNodeIndex_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetNearestNodeIndex)
+                , ( bp::arg("rTestPoint") ) );
+        
+        }
+        { //::AbstractMesh< 3, 3 >::GetNodeOrHaloNode
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef ::Node< 3 > * ( exported_class_t::*GetNodeOrHaloNode_function_type)( unsigned int ) const;
+            typedef ::Node< 3 > * ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetNodeOrHaloNode_function_type)( unsigned int ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetNodeOrHaloNode"
+                , GetNodeOrHaloNode_function_type(&::AbstractMesh< 3, 3 >::GetNodeOrHaloNode)
+                , default_GetNodeOrHaloNode_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetNodeOrHaloNode)
+                , ( bp::arg("index") )
+                , bp::return_value_policy< bp::reference_existing_object >() );
+        
+        }
+        { //::AbstractMesh< 3, 3 >::GetNumAllNodes
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetNumAllNodes_function_type)(  ) const;
+            typedef unsigned int ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetNumAllNodes_function_type)(  ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetNumAllNodes"
+                , GetNumAllNodes_function_type(&::AbstractMesh< 3, 3 >::GetNumAllNodes)
+                , default_GetNumAllNodes_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetNumAllNodes) );
+        
+        }
+        { //::AbstractTetrahedralMesh< 3, 3 >::GetNumBoundaryElements
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetNumBoundaryElements_function_type)(  ) const;
+            typedef unsigned int ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetNumBoundaryElements_function_type)(  ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetNumBoundaryElements"
+                , GetNumBoundaryElements_function_type(&::AbstractTetrahedralMesh< 3, 3 >::GetNumBoundaryElements)
+                , default_GetNumBoundaryElements_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetNumBoundaryElements) );
+        
+        }
+        { //::AbstractTetrahedralMesh< 3, 3 >::GetNumCableElements
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetNumCableElements_function_type)(  ) const;
+            typedef unsigned int ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetNumCableElements_function_type)(  ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetNumCableElements"
+                , GetNumCableElements_function_type(&::AbstractTetrahedralMesh< 3, 3 >::GetNumCableElements)
+                , default_GetNumCableElements_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetNumCableElements) );
+        
+        }
+        { //::AbstractTetrahedralMesh< 3, 3 >::GetNumElements
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetNumElements_function_type)(  ) const;
+            typedef unsigned int ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetNumElements_function_type)(  ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetNumElements"
+                , GetNumElements_function_type(&::AbstractTetrahedralMesh< 3, 3 >::GetNumElements)
+                , default_GetNumElements_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetNumElements) );
+        
+        }
+        { //::AbstractTetrahedralMesh< 3, 3 >::GetNumLocalBoundaryElements
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetNumLocalBoundaryElements_function_type)(  ) const;
+            typedef unsigned int ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetNumLocalBoundaryElements_function_type)(  ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetNumLocalBoundaryElements"
+                , GetNumLocalBoundaryElements_function_type(&::AbstractTetrahedralMesh< 3, 3 >::GetNumLocalBoundaryElements)
+                , default_GetNumLocalBoundaryElements_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetNumLocalBoundaryElements) );
+        
+        }
+        { //::AbstractTetrahedralMesh< 3, 3 >::GetNumLocalElements
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetNumLocalElements_function_type)(  ) const;
+            typedef unsigned int ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetNumLocalElements_function_type)(  ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetNumLocalElements"
+                , GetNumLocalElements_function_type(&::AbstractTetrahedralMesh< 3, 3 >::GetNumLocalElements)
+                , default_GetNumLocalElements_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetNumLocalElements) );
+        
+        }
+        { //::AbstractMesh< 3, 3 >::GetNumNodes
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetNumNodes_function_type)(  ) const;
+            typedef unsigned int ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetNumNodes_function_type)(  ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetNumNodes"
+                , GetNumNodes_function_type(&::AbstractMesh< 3, 3 >::GetNumNodes)
+                , default_GetNumNodes_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetNumNodes) );
+        
+        }
+        { //::AbstractTetrahedralMesh< 3, 3 >::GetNumVertices
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetNumVertices_function_type)(  ) const;
+            typedef unsigned int ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetNumVertices_function_type)(  ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetNumVertices"
+                , GetNumVertices_function_type(&::AbstractTetrahedralMesh< 3, 3 >::GetNumVertices)
+                , default_GetNumVertices_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetNumVertices) );
         
         }
         { //::AbstractDiscreteContinuumGrid< 3, 3 >::GetPoint
@@ -650,6 +1446,19 @@ void register_DiscreteContinuumMesh3_3_class(){
                 , default_GetPoints_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetPoints) );
         
         }
+        { //::AbstractMesh< 3, 3 >::GetVectorFromAtoB
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef ::boost::numeric::ublas::c_vector< double, 3 > ( exported_class_t::*GetVectorFromAtoB_function_type)( ::boost::numeric::ublas::c_vector< double, 3 > const &,::boost::numeric::ublas::c_vector< double, 3 > const & ) ;
+            typedef ::boost::numeric::ublas::c_vector< double, 3 > ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetVectorFromAtoB_function_type)( ::boost::numeric::ublas::c_vector< double, 3 > const &,::boost::numeric::ublas::c_vector< double, 3 > const & ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetVectorFromAtoB"
+                , GetVectorFromAtoB_function_type(&::AbstractMesh< 3, 3 >::GetVectorFromAtoB)
+                , default_GetVectorFromAtoB_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetVectorFromAtoB)
+                , ( bp::arg("rLocationA"), bp::arg("rLocationB") ) );
+        
+        }
         { //::AbstractDiscreteContinuumGrid< 3, 3 >::GetVtkCellLocator
         
             typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
@@ -674,6 +1483,176 @@ void register_DiscreteContinuumMesh3_3_class(){
                 , default_GetVtkGrid_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetVtkGrid) );
         
         }
+        { //::TetrahedralMesh< 3, 3 >::GetWeightedDirectionForBoundaryElement
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*GetWeightedDirectionForBoundaryElement_function_type)( unsigned int,::boost::numeric::ublas::c_vector< double, 3 > &,double & ) const;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetWeightedDirectionForBoundaryElement_function_type)( unsigned int,::boost::numeric::ublas::c_vector< double, 3 > &,double & ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetWeightedDirectionForBoundaryElement"
+                , GetWeightedDirectionForBoundaryElement_function_type(&::TetrahedralMesh< 3, 3 >::GetWeightedDirectionForBoundaryElement)
+                , default_GetWeightedDirectionForBoundaryElement_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetWeightedDirectionForBoundaryElement)
+                , ( bp::arg("elementIndex"), bp::arg("rWeightedDirection"), bp::arg("rJacobianDeterminant") ) );
+        
+        }
+        { //::TetrahedralMesh< 3, 3 >::GetWeightedDirectionForElement
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*GetWeightedDirectionForElement_function_type)( unsigned int,::boost::numeric::ublas::c_vector< double, 3 > &,double & ) const;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetWeightedDirectionForElement_function_type)( unsigned int,::boost::numeric::ublas::c_vector< double, 3 > &,double & ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetWeightedDirectionForElement"
+                , GetWeightedDirectionForElement_function_type(&::TetrahedralMesh< 3, 3 >::GetWeightedDirectionForElement)
+                , default_GetWeightedDirectionForElement_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetWeightedDirectionForElement)
+                , ( bp::arg("elementIndex"), bp::arg("rWeightedDirection"), bp::arg("rJacobianDeterminant") ) );
+        
+        }
+        { //::AbstractMesh< 3, 3 >::GetWidth
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef double ( exported_class_t::*GetWidth_function_type)( unsigned int const & ) const;
+            typedef double ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_GetWidth_function_type)( unsigned int const & ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "GetWidth"
+                , GetWidth_function_type(&::AbstractMesh< 3, 3 >::GetWidth)
+                , default_GetWidth_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_GetWidth)
+                , ( bp::arg("rDimension") ) );
+        
+        }
+        { //::TetrahedralMesh< 3, 3 >::PermuteNodes
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*PermuteNodes_function_type)(  ) ;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_PermuteNodes_function_type)(  ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "PermuteNodes"
+                , PermuteNodes_function_type(&::TetrahedralMesh< 3, 3 >::PermuteNodes)
+                , default_PermuteNodes_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_PermuteNodes) );
+        
+        }
+        { //::TetrahedralMesh< 3, 3 >::PermuteNodes
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*PermuteNodes_function_type)( ::std::vector< unsigned int > const & ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "PermuteNodes"
+                , PermuteNodes_function_type( &::TetrahedralMesh< 3, 3 >::PermuteNodes )
+                , ( bp::arg("perm") ) );
+        
+        }
+        { //::TetrahedralMesh< 3, 3 >::ReadNodesPerProcessorFile
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*ReadNodesPerProcessorFile_function_type)( ::std::string const & ) ;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_ReadNodesPerProcessorFile_function_type)( ::std::string const & ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "ReadNodesPerProcessorFile"
+                , ReadNodesPerProcessorFile_function_type(&::TetrahedralMesh< 3, 3 >::ReadNodesPerProcessorFile)
+                , default_ReadNodesPerProcessorFile_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_ReadNodesPerProcessorFile)
+                , ( bp::arg("rNodesPerProcessorFile") ) );
+        
+        }
+        { //::TetrahedralMesh< 3, 3 >::RefreshJacobianCachedData
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*RefreshJacobianCachedData_function_type)(  ) ;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_RefreshJacobianCachedData_function_type)(  ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "RefreshJacobianCachedData"
+                , RefreshJacobianCachedData_function_type(&::TetrahedralMesh< 3, 3 >::RefreshJacobianCachedData)
+                , default_RefreshJacobianCachedData_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_RefreshJacobianCachedData) );
+        
+        }
+        { //::TetrahedralMesh< 3, 3 >::RefreshMesh
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*RefreshMesh_function_type)(  ) ;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_RefreshMesh_function_type)(  ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "RefreshMesh"
+                , RefreshMesh_function_type(&::TetrahedralMesh< 3, 3 >::RefreshMesh)
+                , default_RefreshMesh_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_RefreshMesh) );
+        
+        }
+        { //::AbstractMesh< 3, 3 >::Rotate
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*Rotate_function_type)( ::boost::numeric::ublas::c_matrix< double, 3, 3 > ) ;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_Rotate_function_type)( ::boost::numeric::ublas::c_matrix< double, 3, 3 > ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "Rotate"
+                , Rotate_function_type(&::AbstractMesh< 3, 3 >::Rotate)
+                , default_Rotate_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_Rotate)
+                , ( bp::arg("rotationMatrix") ) );
+        
+        }
+        { //::AbstractMesh< 3, 3 >::Rotate
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*Rotate_function_type)( ::boost::numeric::ublas::c_vector< double, 3 >,double ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "Rotate"
+                , Rotate_function_type( &::AbstractMesh< 3, 3 >::Rotate )
+                , ( bp::arg("axis"), bp::arg("angle") ) );
+        
+        }
+        { //::AbstractMesh< 3, 3 >::Rotate
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*Rotate_function_type)( double ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "Rotate"
+                , Rotate_function_type( &::AbstractMesh< 3, 3 >::Rotate )
+                , ( bp::arg("theta") ) );
+        
+        }
+        { //::AbstractMesh< 3, 3 >::Scale
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*Scale_function_type)( double const,double const,double const ) ;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_Scale_function_type)( double const,double const,double const ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "Scale"
+                , Scale_function_type(&::AbstractMesh< 3, 3 >::Scale)
+                , default_Scale_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_Scale)
+                , ( bp::arg("xFactor")=1., bp::arg("yFactor")=1., bp::arg("zFactor")=1. ) );
+        
+        }
+        { //::AbstractMesh< 3, 3 >::SetDistributedVectorFactory
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetDistributedVectorFactory_function_type)( ::DistributedVectorFactory * ) ;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_SetDistributedVectorFactory_function_type)( ::DistributedVectorFactory * ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "SetDistributedVectorFactory"
+                , SetDistributedVectorFactory_function_type(&::AbstractMesh< 3, 3 >::SetDistributedVectorFactory)
+                , default_SetDistributedVectorFactory_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_SetDistributedVectorFactory)
+                , ( bp::arg("pFactory") ) );
+        
+        }
+        { //::AbstractTetrahedralMesh< 3, 3 >::SetElementOwnerships
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*SetElementOwnerships_function_type)(  ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "SetElementOwnerships"
+                , SetElementOwnerships_function_type( &DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_SetElementOwnerships ) );
+        
+        }
         { //::AbstractDiscreteContinuumGrid< 3, 3 >::SetUpVtkCellLocator
         
             typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
@@ -684,6 +1663,63 @@ void register_DiscreteContinuumMesh3_3_class(){
                 "SetUpVtkCellLocator"
                 , SetUpVtkCellLocator_function_type(&::AbstractDiscreteContinuumGrid< 3, 3 >::SetUpVtkCellLocator)
                 , default_SetUpVtkCellLocator_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_SetUpVtkCellLocator) );
+        
+        }
+        { //::TetrahedralMesh< 3, 3 >::SolveBoundaryElementMapping
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef unsigned int ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*SolveBoundaryElementMapping_function_type)( unsigned int ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "SolveBoundaryElementMapping"
+                , SolveBoundaryElementMapping_function_type( &DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_SolveBoundaryElementMapping )
+                , ( bp::arg("index") ) );
+        
+        }
+        { //::TetrahedralMesh< 3, 3 >::SolveElementMapping
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef unsigned int ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*SolveElementMapping_function_type)( unsigned int ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "SolveElementMapping"
+                , SolveElementMapping_function_type( &DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_SolveElementMapping )
+                , ( bp::arg("index") ) );
+        
+        }
+        { //::TetrahedralMesh< 3, 3 >::SolveNodeMapping
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef unsigned int ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*SolveNodeMapping_function_type)( unsigned int ) const;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "SolveNodeMapping"
+                , SolveNodeMapping_function_type( &DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_SolveNodeMapping )
+                , ( bp::arg("index") ) );
+        
+        }
+        { //::AbstractMesh< 3, 3 >::Translate
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*Translate_function_type)( ::boost::numeric::ublas::c_vector< double, 3 > const & ) ;
+            typedef void ( DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::*default_Translate_function_type)( ::boost::numeric::ublas::c_vector< double, 3 > const & ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "Translate"
+                , Translate_function_type(&::AbstractMesh< 3, 3 >::Translate)
+                , default_Translate_function_type(&DiscreteContinuumMesh_less__3_comma__3__greater__wrapper::default_Translate)
+                , ( bp::arg("rDisplacement") ) );
+        
+        }
+        { //::AbstractMesh< 3, 3 >::Translate
+        
+            typedef DiscreteContinuumMesh< 3, 3 > exported_class_t;
+            typedef void ( exported_class_t::*Translate_function_type)( double const,double const,double const ) ;
+            
+            DiscreteContinuumMesh3_3_exposer.def( 
+                "Translate"
+                , Translate_function_type( &::AbstractMesh< 3, 3 >::Translate )
+                , ( bp::arg("xMovement")=0., bp::arg("yMovement")=0., bp::arg("zMovement")=0. ) );
         
         }
         DiscreteContinuumMesh3_3_exposer.staticmethod( "Create" );

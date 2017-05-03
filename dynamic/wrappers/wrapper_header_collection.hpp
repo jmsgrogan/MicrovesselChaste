@@ -14,6 +14,9 @@
 #include "BoundaryExtractor.hpp"
 #include "SurfaceCleaner.hpp"
 #include "GeometryWriter.hpp"
+#include "AbstractMesh.hpp"
+#include "AbstractTetrahedralMesh.hpp"
+#include "TetrahedralMesh.hpp"
 #include "AbstractDiscreteContinuumGrid.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "DiscreteContinuumMesh.hpp"
@@ -150,6 +153,12 @@ template class NetworkToSurface<2 >;
 template class NetworkToSurface<3 >;
 template class VesselSurfaceGenerator<2 >;
 template class VesselSurfaceGenerator<3 >;
+template class AbstractMesh<2,2 >;
+template class AbstractMesh<3,3 >;
+template class AbstractTetrahedralMesh<2,2 >;
+template class AbstractTetrahedralMesh<3,3 >;
+template class TetrahedralMesh<2,2 >;
+template class TetrahedralMesh<3,3 >;
 template class AbstractDiscreteContinuumGrid<2,2 >;
 template class AbstractDiscreteContinuumGrid<3,3 >;
 template class DimensionalChastePoint<2 >;
@@ -404,6 +413,12 @@ typedef NetworkToSurface<2 > NetworkToSurface2;
 typedef NetworkToSurface<3 > NetworkToSurface3;
 typedef VesselSurfaceGenerator<2 > VesselSurfaceGenerator2;
 typedef VesselSurfaceGenerator<3 > VesselSurfaceGenerator3;
+typedef AbstractMesh<2,2 > AbstractMesh2_2;
+typedef AbstractMesh<3,3 > AbstractMesh3_3;
+typedef AbstractTetrahedralMesh<2,2 > AbstractTetrahedralMesh2_2;
+typedef AbstractTetrahedralMesh<3,3 > AbstractTetrahedralMesh3_3;
+typedef TetrahedralMesh<2,2 > TetrahedralMesh2_2;
+typedef TetrahedralMesh<3,3 > TetrahedralMesh3_3;
 typedef AbstractDiscreteContinuumGrid<2,2 > AbstractDiscreteContinuumGrid2_2;
 typedef AbstractDiscreteContinuumGrid<3,3 > AbstractDiscreteContinuumGrid3_3;
 typedef DimensionalChastePoint<2 > DimensionalChastePoint2;

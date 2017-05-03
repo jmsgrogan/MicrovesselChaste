@@ -810,6 +810,8 @@ void Part<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
     {
         polygons[idx]->RotateAboutAxis(axis, angle);
     }
+    mVtkIsUpToDate = false;
+
 }
 
 template<unsigned DIM>

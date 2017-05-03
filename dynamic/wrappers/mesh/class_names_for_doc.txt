@@ -1,3 +1,21 @@
+.. autoclass:: microvessel_chaste.mesh.AbstractMesh2_2
+	:members:
+
+.. autoclass:: microvessel_chaste.mesh.AbstractMesh3_3
+	:members:
+
+.. autoclass:: microvessel_chaste.mesh.AbstractTetrahedralMesh2_2
+	:members:
+
+.. autoclass:: microvessel_chaste.mesh.AbstractTetrahedralMesh3_3
+	:members:
+
+.. autoclass:: microvessel_chaste.mesh.TetrahedralMesh2_2
+	:members:
+
+.. autoclass:: microvessel_chaste.mesh.TetrahedralMesh3_3
+	:members:
+
 .. autoclass:: microvessel_chaste.mesh.AbstractDiscreteContinuumGrid2_2
 	:members:
 
