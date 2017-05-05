@@ -179,6 +179,12 @@ void CoupledInterfaceOdePdeSolver<DIM>::SetupLinearSystem(Vec currentSolution, b
 }
 
 template<unsigned DIM>
+double CoupledInterfaceOdePdeSolver<DIM>::GetDimensionlessLumpedSolution()
+{
+   return mCurrentLumpedSolution;
+}
+
+template<unsigned DIM>
 void CoupledInterfaceOdePdeSolver<DIM>::FollowingSolveLinearSystem(Vec currentSolution)
 {
     mCurrentTime += this->mLastWorkingTimeStep;

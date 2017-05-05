@@ -118,7 +118,6 @@ std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>
     // Return an empty vector
     std::vector<units::quantity<unit::concentration_flow_rate> > values(GetNumberOfPoints(),
             0.0*unit::mole_per_metre_cubed_per_second);
-
     return values;
 }
 

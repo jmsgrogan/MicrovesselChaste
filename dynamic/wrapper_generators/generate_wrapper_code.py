@@ -99,6 +99,7 @@ def add_autowrap_classes_to_builder(builder, component_name, classes):
     # choosing the Py++ 'return_opaque_pointer' option.
     petsc_mat_custom_code = "BOOST_PYTHON_OPAQUE_SPECIALIZED_TYPE_ID( _p_Mat )"
     petsc_vec_custom_code = "BOOST_PYTHON_OPAQUE_SPECIALIZED_TYPE_ID( _p_Vec )"
+    petsc_ts_custom_code = "BOOST_PYTHON_OPAQUE_SPECIALIZED_TYPE_ID( _p_TS )"
     
     # Remove any classes not in this module. Also use the class to collect cell and population writers.
     classes_not_in_module = []
@@ -268,7 +269,12 @@ def add_autowrap_classes_to_builder(builder, component_name, classes):
                         this_class.add_declaration_code(eachLine)
 
     builder.class_('Part<3>').member_functions("Write").use_default_arguments=False # Scoped enum problem
-    builder.class_('Part<2>').member_functions("Write").use_default_arguments=False   
+    builder.class_('Part<2>').member_functions("Write").use_default_arguments=False
+    if component_name == "pde":
+        builder.class_('SimpleParabolicFiniteDifferenceSolver<2>').add_declaration_code(petsc_ts_custom_code)
+        builder.class_('SimpleParabolicFiniteDifferenceSolver<3>').add_declaration_code(petsc_ts_custom_code)    
+        builder.class_('CoupledLumpedSystemFiniteDifferenceSolver<2>').add_declaration_code(petsc_ts_custom_code)   
+        builder.class_('CoupledLumpedSystemFiniteDifferenceSolver<3>').add_declaration_code(petsc_ts_custom_code)       
     
     return builder, classes
 
@@ -427,7 +433,7 @@ def generate_wrappers(args):
                     "visualization", "utility"]
     
     # Just for debugging
-    ignore_modules = ["pde", "geometry", "cell", "vessel", "angiogenesis", "flow", "simulation", 
+    ignore_modules = ["mesh", "geometry", "cell", "vessel", "angiogenesis", "flow", "simulation", 
                     "visualization", "utility"]
     
     #ignore_modules = []

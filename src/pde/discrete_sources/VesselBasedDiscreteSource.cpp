@@ -45,6 +45,7 @@ VesselBasedDiscreteSource<DIM>::VesselBasedDiscreteSource()
     :   DiscreteSource<DIM>(),
         mVesselPermeability(0.0*unit::metre_per_second),
         mReferenceConcentration(0.0*unit::mole_per_metre_cubed),
+        mHalfMaxUptakeConcentration(0.0*unit::mole_per_metre_cubed),
         mReferenceHaematocrit(1.0),
         mUptakeRatePerCell(-Connor17Parameters::mpReductionInVegfPerCell->GetValue("VesselBasedDiscreteSource")),
         mCellsPerMetre(Connor17Parameters::mpEcsPerLength->GetValue("VesselBasedDiscreteSource"))
@@ -92,6 +93,12 @@ void VesselBasedDiscreteSource<DIM>::SetUptakeRatePerCell(units::quantity<unit::
 }
 
 template<unsigned DIM>
+void VesselBasedDiscreteSource<DIM>::SetHalfMaxUptakeConcentration(units::quantity<unit::concentration> value)
+{
+
+}
+
+template<unsigned DIM>
 void VesselBasedDiscreteSource<DIM>::SetNumberOfCellsPerLength(units::quantity<unit::per_length> cellsPerLength)
 {
     mCellsPerMetre = cellsPerLength;
@@ -107,8 +114,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
     std::vector<double> vessel_densities = this->mpDensityMap->rGetVesselLineDensity(false);
     for(unsigned idx=0;idx<vessel_densities.size();idx++)
     {
-        values[idx] += vessel_densities[idx]*mCellsPerMetre*reference_length*
-                mUptakeRatePerCell*(1.0/units::pow<3>(reference_length));
+        values[idx] += vessel_densities[idx]*mCellsPerMetre*reference_length*mUptakeRatePerCell*(1.0/units::pow<3>(reference_length));
     }
     return values;
 }

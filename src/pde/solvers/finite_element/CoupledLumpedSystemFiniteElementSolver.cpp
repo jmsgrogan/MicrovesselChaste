@@ -124,6 +124,7 @@ template<unsigned DIM>
 void CoupledLumpedSystemFiniteElementSolver<DIM>::Solve()
 {
     AbstractFiniteElementSolverBase<DIM>::Solve();
+    this->IsSetupForSolve = true;
 
     // Set up the boundary conditions in the Chaste format
     boost::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> > p_bcc =
@@ -139,7 +140,16 @@ void CoupledLumpedSystemFiniteElementSolver<DIM>::Solve()
     if(boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM, DIM> > p_parabolic_pde =
             boost::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM, DIM> >(this->mpPde))
     {
-        Vec initial_guess = PetscTools::CreateAndSetVec(this->mpMesh->GetNumNodes(), 0.0);
+        Vec initial_guess;
+        if (this->mSolution.size()==0)
+        {
+            initial_guess = PetscTools::CreateAndSetVec(this->mpMesh->GetNumNodes(), 0.0);
+        }
+        else
+        {
+            initial_guess = PetscTools::CreateVec(this->mSolution);
+        }
+
         CoupledInterfaceOdePdeSolver<DIM> solver(this->mpMesh.get(), p_bcc.get(), p_parabolic_pde.get());
 
         /* The interface is exactly the same as the `SimpleLinearParabolicSolver`. */
@@ -156,16 +166,17 @@ void CoupledLumpedSystemFiniteElementSolver<DIM>::Solve()
         solver.SetReferenceLengthScale(this->mpMesh->GetReferenceLengthScale());
 
         Vec result = solver.Solve();
+
+        p_parabolic_pde->SetCurrentVegfInPellet(solver.GetDimensionlessLumpedSolution()*this->mReferenceConcentration);
+
         ReplicatableVector solution_repl(result);
 
-        this->mSolution = std::vector<double>(solution_repl.GetSize());
-        this->mConcentrations = std::vector<units::quantity<unit::concentration> >(solution_repl.GetSize());
+        std::vector<double> temp_solution =  std::vector<double>(solution_repl.GetSize());
         for(unsigned idx = 0; idx < solution_repl.GetSize(); idx++)
         {
-            this->mSolution[idx] = solution_repl[idx];
-            this->mConcentrations[idx] = solution_repl[idx]*this->mReferenceConcentration;
+            temp_solution[idx] = solution_repl[idx];
         }
-        this->UpdateSolution(this->mSolution);
+        this->UpdateSolution(temp_solution);
 
         if(mStoreIntermediate)
         {

@@ -144,6 +144,8 @@ public:
 
     void SetUseCoupling(bool useCoupling);
 
+    double GetDimensionlessLumpedSolution();
+
     /**
      * Return the intermediate solutions
      */

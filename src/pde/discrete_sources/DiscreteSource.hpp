@@ -100,16 +100,16 @@ public:
     static boost::shared_ptr<DiscreteSource<DIM> > Create();
 
     /**
-     * Return the values of the source strengths sampled on the regular grid
-     * @return a vector of source strengths
-     */
-    virtual std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInUValues();
-
-    /**
      * Return the density map
      * @param pMap the density map
      */
     boost::shared_ptr<DensityMap<DIM> > GetDensityMap();
+
+    /**
+     * Return the values of the source strengths sampled on the regular grid
+     * @return a vector of source strengths
+     */
+    virtual std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInUValues();
 
     /**
      * Return the values of the source strengths sampled on the regular grid

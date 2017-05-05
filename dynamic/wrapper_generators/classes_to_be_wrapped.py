@@ -85,6 +85,8 @@ flow_classes = [CppClass('FlowSolver'), CppClass('WallShearStressCalculator'),
 ################################## PDE ##########################################
 
 pde_classes = [CppClass('DiscreteContinuumBoundaryCondition'),
+               CppClass('BoundaryConditionType', needs_include_file=False, component = "pde"),
+               CppClass('BoundaryConditionSource', needs_include_file=False, component = "pde"),
                CppClass('DiscreteSource', include_vec_ptr_self=True), 
                CppClass('CellStateDependentDiscreteSource'),
                CppClass('CellBasedDiscreteSource'), 

@@ -4,6 +4,12 @@
 .. autoclass:: microvessel_chaste.pde.DiscreteContinuumBoundaryCondition3
 	:members:
 
+.. autoclass:: microvessel_chaste.pde.BoundaryConditionType
+	:members:
+
+.. autoclass:: microvessel_chaste.pde.BoundaryConditionSource
+	:members:
+
 .. autoclass:: microvessel_chaste.pde.DiscreteSource2
 	:members:
 

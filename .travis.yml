@@ -15,7 +15,7 @@ before_install:
   - wget https://www.dropbox.com/s/p05hu95q30rsllt/castxml-linux.tar.gz && tar -C "${TRAVIS_BUILD_DIR}"/../ -zxvf castxml-linux.tar.gz
 
 install:
-  - pip install pygccxml==1.7.2 https://bitbucket.org/ompl/pyplusplus/get/1.6.tar.gz
+  - pip install pygccxml==1.7.2 https://bitbucket.org/ompl/pyplusplus/get/1.6.tar.gz numpy matplotlib
 
 # Build steps
 before_script:

@@ -63,6 +63,11 @@ protected:
     units::quantity<unit::concentration> mReferenceConcentration;
 
     /**
+     * The concentration at half max binding rate
+     */
+    units::quantity<unit::concentration> mHalfMaxUptakeConcentration;
+
+    /**
      * The reference haematocrit, used as a proxy for vessel perfusion
      */
     units::quantity<unit::dimensionless> mReferenceHaematocrit;
@@ -124,6 +129,12 @@ public:
      * @param value the value of the source
      */
     void SetReferenceConcentration(units::quantity<unit::concentration> value);
+
+    /**
+     * Set the value of the half max uptake concentration
+     * @param value the half max uptake concentration
+     */
+    void SetHalfMaxUptakeConcentration(units::quantity<unit::concentration> value);
 
     /**
      * Set the value of the source for PRESCRIBED type sources

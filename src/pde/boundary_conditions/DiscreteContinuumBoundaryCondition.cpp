@@ -175,7 +175,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
         }
         else
         {
-            if(!(mIsNeumann  or mIsRobin))
+            if(!(mIsNeumann or mIsRobin))
             {
                 typename DiscreteContinuumMesh<DIM, DIM>::BoundaryNodeIterator iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 while (iter < p_mesh->GetBoundaryNodeIteratorEnd())

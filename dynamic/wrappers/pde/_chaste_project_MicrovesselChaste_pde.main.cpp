@@ -88,6 +88,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "AbstractUnstructuredGridDiscreteContinuumSolver3.pypp.hpp"
 
+#include "BoundaryConditionSource.pypp.hpp"
+
+#include "BoundaryConditionType.pypp.hpp"
+
 #include "CellBasedDiscreteSource2.pypp.hpp"
 
 #include "CellBasedDiscreteSource3.pypp.hpp"
@@ -254,6 +258,10 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
     register_AbstractMixedGridDiscreteContinuumSolver2_class();
 
     register_AbstractMixedGridDiscreteContinuumSolver3_class();
+
+    register_BoundaryConditionSource_class();
+
+    register_BoundaryConditionType_class();
 
     register_DiscreteSource2_class();
 

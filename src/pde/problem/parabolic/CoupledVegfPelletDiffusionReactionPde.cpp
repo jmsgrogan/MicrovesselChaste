@@ -181,30 +181,31 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 double CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeSourceTerm(const ChastePoint<SPACE_DIM>& rX,
         double u, Element<ELEMENT_DIM,SPACE_DIM>* pElement)
 {
-//    if(this->mDiscreteLinearSourceStrengths.size()>0)
-//    {
-//        if(pElement->GetIndex() >= this->mDiscreteLinearSourceStrengths.size())
-//        {
-//            EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
-//        }
-//        units::quantity<unit::rate> scaling_factor = (1.0/BaseUnits::Instance()->GetReferenceTimeScale());
-//        return ((this->mLinearInUTerm + this->mDiscreteLinearSourceStrengths[pElement->GetIndex()])/scaling_factor)*u;
-//    }
-//    else
-//    {
-        units::quantity<unit::rate> scaling_factor = (1.0/BaseUnits::Instance()->GetReferenceTimeScale());
-        return (this->mLinearInUTerm/scaling_factor)*u;
-//    }
+    units::quantity<unit::rate> scaling_factor = (1.0/BaseUnits::Instance()->GetReferenceTimeScale());
+    units::quantity<unit::concentration> reference_concentration = BaseUnits::Instance()->GetReferenceConcentrationScale();
+    double normalized_half_max_conc = mHalfMaxVegf/reference_concentration;
+
+    double rate = this->mLinearInUTerm/scaling_factor*u;
+    if(this->mDiscreteNonLinearSourceStrengths.size()>0)
+    {
+        if(pElement->GetIndex() >= this->mDiscreteNonLinearSourceStrengths.size())
+        {
+            EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
+        }
+        rate+= this->mDiscreteNonLinearSourceStrengths[pElement->GetIndex()]*(u/(u+normalized_half_max_conc))/(scaling_factor*BaseUnits::Instance()->GetReferenceConcentrationScale());
+    }
+    return rate;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::concentration_flow_rate> CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeSourceTerm(unsigned gridIndex,
                                                                                                                                                   units::quantity<unit::concentration> u)
 {
-    units::quantity<unit::concentration_flow_rate> rate = this->mLinearInUTerm*u;// +
-            //this->mDiscreteConstantSourceStrengths[gridIndex] + this->mDiscreteLinearSourceStrengths[gridIndex]*u;
-    //rate+= this->mDiscreteNonLinearSourceStrengths[gridIndex]*(u/(u+mHalfMaxVegf));
-
+    units::quantity<unit::concentration_flow_rate> rate = this->mLinearInUTerm*u;
+    if(this->mDiscreteNonLinearSourceStrengths.size()>0)
+    {
+        rate += this->mDiscreteNonLinearSourceStrengths[gridIndex]*(u/(u+mHalfMaxVegf));
+    }
     return rate;
 }
 
@@ -212,9 +213,11 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 units::quantity<unit::rate> CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeSourceTermPrime(unsigned gridIndex,
                                                                                                                                     units::quantity<unit::concentration> u)
 {
-    units::quantity<unit::rate> rate = this->mLinearInUTerm;// +
-            //this->mDiscreteLinearSourceStrengths[gridIndex];
-    //rate+= this->mDiscreteNonLinearSourceStrengths[gridIndex]*(mHalfMaxVegf/((u+mHalfMaxVegf)*(u+mHalfMaxVegf)));
+    units::quantity<unit::rate> rate = this->mLinearInUTerm;
+    if(this->mDiscreteNonLinearSourceStrengths.size()>0)
+    {
+        rate+= this->mDiscreteNonLinearSourceStrengths[gridIndex]*(mHalfMaxVegf/((u+mHalfMaxVegf)*(u+mHalfMaxVegf)));
+    }
     return rate;
 }
 
@@ -224,7 +227,7 @@ void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscre
     AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSourceStrengths();
     if(this->mDiscreteSources.size()>0)
     {
-        unsigned num_locations = this->mDiscreteSources[0]->GetDensityMap()->GetGridCalculator()->GetGrid()->GetNumberOfPoints();
+        unsigned num_locations = this->mDiscreteSources[0]->GetDensityMap()->GetGridCalculator()->GetGrid()->GetNumberOfCells();
         mDiscreteNonLinearSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(num_locations,
                 0.0*unit::mole_per_metre_cubed_per_second);
         for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)

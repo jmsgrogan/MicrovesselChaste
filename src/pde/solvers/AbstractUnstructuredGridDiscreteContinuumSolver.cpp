@@ -80,7 +80,7 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::Setup()
     }
 
     // Set up the VTK solution
-    this->mSolution = std::vector<double>(0.0, this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfPoints());
+    this->mSolution = std::vector<double>(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfPoints(), 0.0);
 }
 
 template<unsigned DIM>
@@ -98,6 +98,11 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateSolution(const 
     for (unsigned i = 0; i < data.size(); i++)
     {
         this->mSolution[i] = data[i];
+    }
+    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*this->mReferenceConcentration);
+    for (unsigned i = 0; i < data.size(); i++)
+    {
+        this->mConcentrations[i] = data[i]*this->mReferenceConcentration;
     }
 }
 

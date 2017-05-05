@@ -72,7 +72,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Setup()
         EXCEPTION("Can't cast to regular grid during Setup");
     }
 
-    this->mSolution = std::vector<double>(0.0, this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfPoints());
+    this->mSolution = std::vector<double>(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfPoints(), 0.0);
 }
 
 template<unsigned DIM>
