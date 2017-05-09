@@ -282,7 +282,11 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetUpVtkGrid()
     {
         unsigned local_proc_index = PetscTools::GetMyRank();
         vtkSmartPointer<vtkThreshold> p_threshold = vtkSmartPointer<vtkThreshold>::New();
+        #if VTK_MAJOR_VERSION <= 5
+        p_threshold->SetInput(p_grid);
+        #else
         p_threshold->SetInputData(p_grid);
+        #endif
         p_threshold->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_CELLS, "Processor Num");
         p_threshold->ThresholdBetween(local_proc_index, local_proc_index);
         p_threshold->Update();

@@ -151,7 +151,11 @@ vtkSmartPointer<vtkPolyData> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DI
         SetUpVtkGrid();
     }
     vtkSmartPointer<vtkGeometryFilter> p_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
+    #if VTK_MAJOR_VERSION <= 5
+    p_geom_filter->SetInput(mpVtkGrid);
+    #else
     p_geom_filter->SetInputData(mpVtkGrid);
+    #endif
     p_geom_filter->Update();
     return p_geom_filter->GetOutput();
 }
