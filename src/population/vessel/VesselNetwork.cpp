@@ -1273,3 +1273,6 @@ void VesselNetwork<DIM>::Write(const std::string& rFileName)
 template class VesselNetwork<2>;
 template class VesselNetwork<3>;
 
+#include "SerializationExportWrapperForCpp.hpp"
+EXPORT_TEMPLATE_CLASS1(VesselNetwork, 2)
+EXPORT_TEMPLATE_CLASS1(VesselNetwork, 3)

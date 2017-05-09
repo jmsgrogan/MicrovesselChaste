@@ -300,3 +300,7 @@ boost::shared_ptr<VesselSegment<DIM> > VesselSegment<DIM>::Shared()
 // Explicit instantiation
 template class VesselSegment<2>;
 template class VesselSegment<3>;
+
+//#include "SerializationExportWrapperForCpp.hpp"
+//EXPORT_TEMPLATE_CLASS1(VesselSegment, 2)
+//EXPORT_TEMPLATE_CLASS1(VesselSegment, 3)

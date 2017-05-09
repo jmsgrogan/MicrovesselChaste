@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef VESSEL_HPP_
 #define VESSEL_HPP_
 
@@ -42,6 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <map>
 #include <boost/enable_shared_from_this.hpp>
+#include "ChasteSerialization.hpp"
 #include "VesselSegment.hpp"
 #include "VesselNode.hpp"
 #include "DimensionalChastePoint.hpp"
@@ -71,6 +70,19 @@ template<unsigned DIM>
 class Vessel : public boost::enable_shared_from_this<Vessel<DIM> >, public AbstractVesselNetworkComponent<DIM>
 {
 private:
+
+//    friend class boost::serialization::access;
+//
+//    /**
+//     * Do the serialize
+//     * @param ar the archive
+//     * @param version the archive version number
+//     */
+//    template<class Archive>
+//    void serialize(Archive & ar, const unsigned int version)
+//    {
+//        ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
+//    }
 
     /**
      * Vessel segments
@@ -336,7 +348,6 @@ public:
      */
     void UpdateNodes();
 
-
 private:
 
     /**
@@ -344,5 +355,9 @@ private:
      */
     boost::shared_ptr<Vessel<DIM> > Shared();
 };
+
+//#include "SerializationExportWrapper.hpp"
+//EXPORT_TEMPLATE_CLASS1(Vessel, 2)
+//EXPORT_TEMPLATE_CLASS1(Vessel, 3)
 
 #endif /* VESSEL_HPP_ */

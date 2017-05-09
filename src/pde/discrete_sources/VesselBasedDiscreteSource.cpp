@@ -39,11 +39,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "GeometryTools.hpp"
 #include "Element.hpp"
 #include "Connor17Parameters.hpp"
+#include "Owen11Parameters.hpp"
 
 template<unsigned DIM>
 VesselBasedDiscreteSource<DIM>::VesselBasedDiscreteSource()
     :   DiscreteSource<DIM>(),
-        mVesselPermeability(0.0*unit::metre_per_second),
+        mVesselPermeability(Owen11Parameters::mpVesselOxygenPermeability->GetValue("VesselBasedDiscreteSource")),
         mReferenceConcentration(0.0*unit::mole_per_metre_cubed),
         mHalfMaxUptakeConcentration(0.0*unit::mole_per_metre_cubed),
         mReferenceHaematocrit(1.0),
@@ -81,7 +82,8 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
     double haematocrit_ratio = 1.0;
     for(unsigned idx=0;idx<vessel_densities.size();idx++)
     {
-        values[idx] += vessel_densities[idx]*mVesselPermeability * (1.0/reference_length) * mReferenceConcentration * haematocrit_ratio;;
+        std::cout << "CONST VAL IN CAL: "<< vessel_densities[idx]*mVesselPermeability * (1.0/reference_length) * mReferenceConcentration * haematocrit_ratio <<std::endl;
+        values[idx] += vessel_densities[idx]*mVesselPermeability * (1.0/reference_length) * mReferenceConcentration * haematocrit_ratio;
     }
     return values;
 }
@@ -133,7 +135,8 @@ std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLin
     std::vector<double> vessel_densities = this->mpDensityMap->rGetPerfusedVesselSurfaceAreaDensity(false);
     for(unsigned idx=0;idx<vessel_densities.size();idx++)
     {
-        values[idx] += vessel_densities[idx]*mVesselPermeability * (1.0/reference_length);
+        std::cout << "LIN VAL IN CAL: "<< vessel_densities[idx]*mVesselPermeability * (1.0/reference_length)<<std::endl;
+        values[idx] -= vessel_densities[idx]*mVesselPermeability * (1.0/reference_length);
     }
     return values;
 }

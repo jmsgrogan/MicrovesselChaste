@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
 
-#ifndef _ShrinkingStimulus_hpp
-#define _ShrinkingStimulus_hpp
+#ifndef _SHRINKINGSTIMULUSCALCULATOR_HPP
+#define _SHRINKINGSTIMULUSCALCULATOR_HPP
 
 #include "SmartPointers.hpp"
 #include "UnitCollection.hpp"

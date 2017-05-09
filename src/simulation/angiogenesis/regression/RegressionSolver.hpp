@@ -33,11 +33,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef REGRESSIONSOLVER_HPP_
 #define REGRESSIONSOLVER_HPP_
 
+#include "ChasteSerialization.hpp"
 #include "SmartPointers.hpp"
 #include "VesselNetwork.hpp"
 #include "UnitCollection.hpp"
@@ -48,6 +47,22 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 class RegressionSolver
 {
+
+private:
+
+    friend class boost::serialization::access;
+
+    /**
+     * Do the serialize
+     * @param ar the archive
+     * @param version the archive version number
+     */
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & mpNetwork;
+        ar & mReferenceTime;
+    }
 
 protected:
 
@@ -84,5 +99,9 @@ public:
      */
     virtual void Increment();
 };
+
+#include "SerializationExportWrapper.hpp"
+EXPORT_TEMPLATE_CLASS1(RegressionSolver, 2)
+EXPORT_TEMPLATE_CLASS1(RegressionSolver, 3)
 
 #endif /* REGRESSIONSOLVER_HPP_ */

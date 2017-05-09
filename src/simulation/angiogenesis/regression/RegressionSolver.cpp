@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "RegressionSolver.hpp"
 #include "BaseUnits.hpp"
 
@@ -67,3 +65,7 @@ void RegressionSolver<DIM>::Increment()
 // Explicit instantiation
 template class RegressionSolver<2>;
 template class RegressionSolver<3>;
+
+#include "SerializationExportWrapperForCpp.hpp"
+EXPORT_TEMPLATE_CLASS1(RegressionSolver, 2)
+EXPORT_TEMPLATE_CLASS1(RegressionSolver, 3)

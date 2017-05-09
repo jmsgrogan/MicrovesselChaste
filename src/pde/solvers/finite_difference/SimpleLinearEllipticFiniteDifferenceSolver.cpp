@@ -89,8 +89,9 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToMatrix()
             for (unsigned k = extents[0]; k <= extents[1]; k++) // X
             {
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
-                this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index,
-                        p_linear_pde->ComputeDiscreteLinearInUCoeffInSourceTerm(grid_index)*reference_time);
+                double discrete_linear_contrib = p_linear_pde->ComputeDiscreteLinearInUCoeffInSourceTerm(grid_index)*reference_time;
+                std::cout << "contrib: " << discrete_linear_contrib << " at " << grid_index<<std::endl;
+                this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index,discrete_linear_contrib);
             }
         }
     }
@@ -116,11 +117,14 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToRhs()
             for (unsigned k = extents[0]; k <= extents[1]; k++) // X
             {
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
-                this->mpLinearSystem->SetRhsVectorElement(grid_index,
-                        -p_linear_pde->ComputeDiscreteConstantInUSourceTerm(grid_index)*(reference_time/this->mReferenceConcentration));
+                double discrete_const_contrib = p_linear_pde->ComputeDiscreteConstantInUSourceTerm(grid_index)*(reference_time/this->mReferenceConcentration);
+                std::cout << "contrib: " << discrete_const_contrib << " at " << grid_index<<std::endl;
+
+                this->mpLinearSystem->SetRhsVectorElement(grid_index,-discrete_const_contrib);
             }
         }
     }
+    this->mpLinearSystem->FinaliseRhsVector();
 }
 
 template<unsigned DIM>
@@ -321,13 +325,24 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Update()
     AbstractFiniteDifferenceSolverBase<DIM>::Update();
 
     // Copy over the original matrix
-    this->mpLinearSystem->AssembleIntermediateLinearSystem();
-    MatCopy(mpInitialLhs, this->mpLinearSystem->rGetLhsMatrix(), DIFFERENT_NONZERO_PATTERN);
-    VecCopy(mpInitialRhs, this->mpLinearSystem->rGetRhsVector());
-//
+    //this->mpLinearSystem->AssembleIntermediateLinearSystem();
+
+    // Set up the linear system
+    Vec template_vec = this->mpRegularGrid->GetDistributedVectorFactory()->CreateVec();
+    this->mpLinearSystem = boost::shared_ptr<LinearSystem>(new LinearSystem(template_vec, 7));
+    PetscTools::Destroy(template_vec);
+
+    // Assemble the system
+    this->SetMatrixToAssemble(this->mpLinearSystem->rGetLhsMatrix());
+    this->SetVectorToAssemble(this->mpLinearSystem->rGetRhsVector());
+    this->AssembleMatrix();
+    this->AssembleVector();
+
+    //MatCopy(mpInitialLhs, this->mpLinearSystem->rGetLhsMatrix(), DIFFERENT_NONZERO_PATTERN);
+    //
 //    // Add discrete terms
-//    this->AddDiscreteTermsToMatrix();
-//    this->AddDiscreteTermsToRhs();
+    this->AddDiscreteTermsToMatrix();
+    this->AddDiscreteTermsToRhs();
 
     // Add boundary conditions
     //this->mpLinearSystem->AssembleIntermediateLinearSystem();

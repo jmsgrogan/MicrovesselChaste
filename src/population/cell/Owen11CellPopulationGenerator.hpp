@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef OWEN11CELLPOPULATIONGENERATOR_HPP_
 #define OWEN11CELLPOPULATIONGENERATOR_HPP_
 
@@ -93,6 +91,16 @@ class Owen11CellPopulationGenerator
     units::quantity<unit::length> mReferenceLength;
 
     /**
+     * Roughly what fraction of grid points are filled with cells
+     */
+    double mTargetCellDensity;
+
+    /**
+     * Whether to add a tumour
+     */
+    bool mAddTumour;
+
+    /**
      * The tumour radius
      */
     units::quantity<unit::length> mTumourRadius;
@@ -101,7 +109,6 @@ class Owen11CellPopulationGenerator
      * The reference length scale for the cellpopulation.
      */
     units::quantity<unit::length> mCellPopulationReferenceLength;
-
 
 public:
 
@@ -121,6 +128,10 @@ public:
      * Desctructor
      */
     ~Owen11CellPopulationGenerator();
+
+    void SetAddTumour(bool addTumour);
+
+    void SetCellFraction(double cellFraction);
 
     /**
      * Set the vessel network

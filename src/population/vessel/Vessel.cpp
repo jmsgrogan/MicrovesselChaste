@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "SmartPointers.hpp"
 #include "Exception.hpp"
 #include "UblasIncludes.hpp"
@@ -775,5 +773,9 @@ void Vessel<DIM>::UpdateNodes()
 }
 
 // Explicit instantiation
-template class Vessel<2> ;
-template class Vessel<3> ;
+template class Vessel<2>;
+template class Vessel<3>;
+
+//#include "SerializationExportWrapperForCpp.hpp"
+//EXPORT_TEMPLATE_CLASS1(Vessel, 2)
+//EXPORT_TEMPLATE_CLASS1(Vessel, 3)

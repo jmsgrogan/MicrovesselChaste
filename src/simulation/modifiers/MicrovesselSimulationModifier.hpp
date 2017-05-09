@@ -63,6 +63,9 @@ class MicrovesselSimulationModifier : public AbstractCellBasedSimulationModifier
     void serialize(Archive & archive, const unsigned int version)
     {
         archive & boost::serialization::base_object<AbstractCellBasedSimulationModifier<DIM,DIM> >(*this);
+        archive & mUpdateLabels;
+        archive & mCellPopulationReferenceLength;
+        archive & mCellPopulationReferenceConcentration;
     }
 
 private:

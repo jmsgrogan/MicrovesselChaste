@@ -33,14 +33,14 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef VESSELSEGMENT_HPP_
 #define VESSELSEGMENT_HPP_
 
 #include <vector>
 #include <string>
 #include <boost/enable_shared_from_this.hpp>
+#include "ChasteSerialization.hpp"
+#include <boost/serialization/base_object.hpp>
 #include "SegmentFlowProperties.hpp"
 #include "UblasVectorInclude.hpp"
 #include "ChastePoint.hpp"
@@ -71,6 +71,25 @@ class VesselSegment : public boost::enable_shared_from_this<VesselSegment<DIM> >
 private:
 
     /**
+     * Archiving.
+     */
+    //friend class boost::serialization::access;
+
+    /**
+     * Do the serialize
+     * @param ar the archive
+     * @param version the archive version number
+     */
+//    template<class Archive>
+//    void serialize(Archive & ar, const unsigned int version)
+//    {
+//        ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
+//        ar & mMaturity;
+//        //ar & mNodes;
+//        //ar & mpFlowProperties;
+//    }
+
+    /**
      * Container for segment nodes
      */
     std::pair<boost::shared_ptr<VesselNode<DIM> >, boost::shared_ptr<VesselNode<DIM> > > mNodes;
@@ -86,6 +105,11 @@ private:
     boost::shared_ptr<SegmentFlowProperties<DIM> > mpFlowProperties;
 
     /**
+     * A measure of vessel maturity
+     */
+    double mMaturity;
+
+    /**
      * Constructor - This is private as instances of this class must be created with a corresponding shared pointer. This is
      * implemented using the static Create method.
      *
@@ -93,11 +117,6 @@ private:
      * @param pNode2 the second node in the segment
      */
     VesselSegment(boost::shared_ptr<VesselNode<DIM> > pNode1, boost::shared_ptr<VesselNode<DIM> > pNode2);
-
-    /**
-     * A measure of vessel maturity
-     */
-    double mMaturity;
 
 public:
 
@@ -292,6 +311,9 @@ private:
      * Remove an adjoining vessel from the segment.
      */
     void RemoveVessel();
+//#include "SerializationExportWrapper.hpp"
+//EXPORT_TEMPLATE_CLASS1(VesselSegment, 2)
+//EXPORT_TEMPLATE_CLASS1(VesselSegment, 3)
 };
 
 #endif /* VESSELSEGMENT_HPP_ */

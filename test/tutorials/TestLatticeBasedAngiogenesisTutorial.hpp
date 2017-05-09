@@ -358,6 +358,7 @@ public:
                 boost::shared_ptr<VtkSceneMicrovesselModifier<2> >(new VtkSceneMicrovesselModifier<2>);
         p_scene_modifier->SetVtkScene(p_scene);
         p_scene_modifier->SetUpdateFrequency(2);
+
         p_microvessel_solver->AddMicrovesselModifier(p_scene_modifier);
         /*
          * The microvessel solution modifier will link the vessel and cell solvers. We need to explicitly tell is

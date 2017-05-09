@@ -66,6 +66,8 @@ Owen11CellPopulationGenerator<DIM>::Owen11CellPopulationGenerator() :
     mpNormalCellMutationState(),
     mpStalkCellMutationState(boost::shared_ptr<StalkCellMutationState>(new StalkCellMutationState)),
     mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
+    mTargetCellDensity(1.0),
+    mAddTumour(true),
     mTumourRadius(0.0*unit::metres),
     mCellPopulationReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
 {
@@ -83,6 +85,18 @@ template<unsigned DIM>
 Owen11CellPopulationGenerator<DIM>::~Owen11CellPopulationGenerator()
 {
 
+}
+
+template<unsigned DIM>
+void Owen11CellPopulationGenerator<DIM>::SetAddTumour(bool addTumour)
+{
+    mAddTumour = addTumour;
+}
+
+template<unsigned DIM>
+void Owen11CellPopulationGenerator<DIM>::SetCellFraction(double cellFraction)
+{
+    mTargetCellDensity = cellFraction;
 }
 
 template<unsigned DIM>
@@ -154,7 +168,11 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
     std::vector<unsigned> location_indices;
     for (unsigned index=0; index < p_mesh->GetNumNodes(); index++)
     {
-        location_indices.push_back(index);
+        double prob_placement = RandomNumberGenerator::Instance()->ranf();
+        if(prob_placement<mTargetCellDensity)
+        {
+            location_indices.push_back(index);
+        }
     }
 
     // Fill the grid with cells
@@ -196,7 +214,7 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
     //            cell_population.SetAbsoluteMovementThreshold(2.0 * spacing);
     //            cell_population.AddCellWriter<CellLabelWriter>();
 
-    cells_generator.GenerateBasicRandom(cells, p_mesh->GetNumNodes(), p_diff_type);
+    cells_generator.GenerateBasicRandom(cells, location_indices.size(), p_diff_type);
     boost::shared_ptr<CaBasedCellPopulation<DIM> > p_cell_population =
             boost::shared_ptr<CaBasedCellPopulation<DIM> >(new CaBasedCellPopulation<DIM> (*p_mesh, cells, location_indices, 2));
 
@@ -210,37 +228,40 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
     }
 
     // Set up tumour cells in the centre of the domain
-    if(DIM==2)
+    if(mAddTumour)
     {
-        DimensionalChastePoint<DIM> origin(double(dimensions[0])*spacing/(2.0*mReferenceLength),
-                                         double(dimensions[1])*spacing/(2.0*mReferenceLength),
-                                         0.0, mReferenceLength);
-        boost::shared_ptr<Part<DIM> > p_sub_domain = Part<DIM>::Create();
-        boost::shared_ptr<Polygon<DIM> > circle = p_sub_domain->AddCircle(mTumourRadius, origin);
-        for (unsigned ind = 0; ind < p_mesh->GetNumNodes(); ind++)
+        if(DIM==2)
         {
-            if (p_sub_domain->IsPointInPart(DimensionalChastePoint<DIM>(p_mesh->GetNode(ind)->rGetLocation(), mCellPopulationReferenceLength)))
+            DimensionalChastePoint<DIM> origin(double(dimensions[0])*spacing/(2.0*mReferenceLength),
+                                             double(dimensions[1])*spacing/(2.0*mReferenceLength),
+                                             0.0, mReferenceLength);
+            boost::shared_ptr<Part<DIM> > p_sub_domain = Part<DIM>::Create();
+            boost::shared_ptr<Polygon<DIM> > circle = p_sub_domain->AddCircle(mTumourRadius, origin);
+            for (unsigned ind = 0; ind < p_mesh->GetNumNodes(); ind++)
             {
-                p_cell_population->GetCellUsingLocationIndex(ind)->SetMutationState(mpCancerCellMutationState);
+                if (p_sub_domain->IsPointInPart(DimensionalChastePoint<DIM>(p_mesh->GetNode(ind)->rGetLocation(), mCellPopulationReferenceLength)))
+                {
+                    p_cell_population->GetCellUsingLocationIndex(ind)->SetMutationState(mpCancerCellMutationState);
+                }
             }
         }
-    }
-    else
-    {
-        double dimensionless_spacing = spacing/mReferenceLength;
-        c_vector<double, DIM> dimensionless_origin = p_grid->GetOrigin().GetLocation(mReferenceLength);
-
-        DimensionalChastePoint<DIM> origin(double(dimensions[0])*dimensionless_spacing/2.0 + dimensionless_origin[0],
-                                         double(dimensions[1])*dimensionless_spacing/2.0 + dimensionless_origin[0],
-                                         double(dimensions[2])*dimensionless_spacing/2.0 + dimensionless_origin[0],
-										 mReferenceLength);
-
-        for(unsigned idx=0; idx<p_grid->GetNumberOfPoints(); idx++)
+        else
         {
-            units::quantity<unit::length> distance = p_grid->GetPoint(idx).GetDistance(origin);
-            if(distance<=mTumourRadius)
+            double dimensionless_spacing = spacing/mReferenceLength;
+            c_vector<double, DIM> dimensionless_origin = p_grid->GetOrigin().GetLocation(mReferenceLength);
+
+            DimensionalChastePoint<DIM> origin(double(dimensions[0])*dimensionless_spacing/2.0 + dimensionless_origin[0],
+                                             double(dimensions[1])*dimensionless_spacing/2.0 + dimensionless_origin[0],
+                                             double(dimensions[2])*dimensionless_spacing/2.0 + dimensionless_origin[0],
+                                             mReferenceLength);
+
+            for(unsigned idx=0; idx<p_grid->GetNumberOfPoints(); idx++)
             {
-                p_cell_population->GetCellUsingLocationIndex(idx)->SetMutationState(mpCancerCellMutationState);
+                units::quantity<unit::length> distance = p_grid->GetPoint(idx).GetDistance(origin);
+                if(distance<=mTumourRadius)
+                {
+                    p_cell_population->GetCellUsingLocationIndex(idx)->SetMutationState(mpCancerCellMutationState);
+                }
             }
         }
     }

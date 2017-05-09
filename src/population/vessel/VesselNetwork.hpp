@@ -42,6 +42,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkSmartPointer.h>
 #include <vtkCellLocator.h>
 #include <vtkPolyData.h>
+#include "ChasteSerialization.hpp"
 #include "Vessel.hpp"
 #include "VesselSegment.hpp"
 #include "VesselNode.hpp"
@@ -57,6 +58,19 @@ class VesselNetwork : public boost::enable_shared_from_this<VesselNetwork<DIM> >
 {
 
 private:
+
+    friend class boost::serialization::access;
+
+    /**
+     * Do the serialize
+     * @param ar the archive
+     * @param version the archive version number
+     */
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
+    }
 
     /**
      * Container for Vessels in the VesselNetwork.
@@ -502,5 +516,9 @@ public:
     void Write(const std::string& rFileName);
 
 };
+
+#include "SerializationExportWrapper.hpp"
+EXPORT_TEMPLATE_CLASS1(VesselNetwork, 2)
+EXPORT_TEMPLATE_CLASS1(VesselNetwork, 3)
 
 #endif /* VESSELNETWORK_HPP_ */

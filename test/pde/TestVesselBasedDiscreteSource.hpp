@@ -54,6 +54,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DiscreteContinuumMesh.hpp"
 #include "VesselBasedDiscreteSource.hpp"
 #include "DensityMap.hpp"
+#include "Secomb04Parameters.hpp"
+#include "GenericParameters.hpp"
+#include "Owen11Parameters.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
@@ -174,52 +177,52 @@ public:
         solver.Write();
     }
 
-    void xTestSimpleLinearEllipticFiniteDifferenceSolver() throw(Exception)
+    void TestSimpleLinearEllipticFiniteDifferenceSolver() throw(Exception)
     {
         // Set up the vessel network
         units::quantity<unit::length> vessel_length(100.0*unit::microns);
         units::quantity<unit::length> reference_length(1.0*unit::microns);
-        VesselNetworkGenerator<3> generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<3>());
+        VesselNetworkGenerator<2> generator;
+        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length,
+                DimensionalChastePoint<2>());
+
+        p_network->GetVessels()[0]->GetFlowProperties()->SetHaematocrit(0.45);
 
         // Set up the grid
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(vessel_length, vessel_length, vessel_length, DimensionalChastePoint<3>());
-        DimensionalChastePoint<3> translation_vector(-vessel_length/(2.0*reference_length),
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(vessel_length, vessel_length, DimensionalChastePoint<2>());
+        DimensionalChastePoint<2> translation_vector(-vessel_length/(2.0*reference_length),
                                                      -vessel_length/(2.0*reference_length), 0.0, reference_length);
         p_domain->Translate(translation_vector);
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         units::quantity<unit::length> spacing(10.0*unit::microns);
         p_grid->GenerateFromPart(p_domain, spacing);
 
         // Choose the PDE
-        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
         units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
         units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e-7 * unit::mole_per_metre_cubed_per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
-        p_pde->SetContinuumConstantInUTerm(consumption_rate);
+        //p_pde->SetContinuumConstantInUTerm(consumption_rate);
 
         // Set up the discrete source
-        boost::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_source_lin = VesselBasedDiscreteSource<3>::Create();
-        p_vessel_source_lin->SetLinearInUValue(-1.e3*unit::per_second);
-        boost::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_source_const = VesselBasedDiscreteSource<3>::Create();
-        p_vessel_source_const->SetConstantInUValue(40.e-7* unit::mole_per_metre_cubed_per_second);
-
-        p_pde->AddDiscreteSource(p_vessel_source_lin);
-        p_pde->AddDiscreteSource(p_vessel_source_const);
-
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary2 = DiscreteContinuumBoundaryCondition<3>::Create();
-        p_boundary2->SetValue(1.0*unit::mole_per_metre_cubed);
+        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_source = VesselBasedDiscreteSource<2>::Create();
+        units::quantity<unit::solubility> oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
+                GenericParameters::mpGasConcentrationAtStp->GetValue("User");
+        units::quantity<unit::concentration> vessel_oxygen_concentration = oxygen_solubility_at_stp *
+                Owen11Parameters::mpReferencePartialPressure->GetValue("User");
+        p_vessel_source->SetReferenceConcentration(vessel_oxygen_concentration);
+        p_pde->AddDiscreteSource(p_vessel_source);
 
         // Set up and run the solver
-        SimpleLinearEllipticFiniteDifferenceSolver<3> solver;
+        SimpleLinearEllipticFiniteDifferenceSolver<2> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.SetVesselNetwork(p_network);
-        solver.AddBoundaryCondition(p_boundary2);
 
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteDifferenceSolver"));
         solver.SetFileHandler(p_output_file_handler);
+        p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"network.vtp");
         solver.SetWriteSolution(true);
         solver.Solve();
     }
