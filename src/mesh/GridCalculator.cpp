@@ -37,6 +37,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkLineSource.h>
 #include <vtkTubeFilter.h>
 #include <vtkSelectEnclosedPoints.h>
+#include <boost/lexical_cast.hpp>
 #include "PetscTools.hpp"
 #include "Exception.hpp"
 #include "GridCalculator.hpp"
@@ -236,10 +237,22 @@ bool GridCalculator<DIM>::HasUnstructuredGrid()
 template<unsigned DIM>
 bool GridCalculator<DIM>::IsSegmentAtLocation(unsigned index, bool update)
 {
-    if(update)
+    if(update or mSegmentMap.size()==0)
     {
-        rGetSegmentMap(update);
+        rGetSegmentMap(true);
     }
+    if(mSegmentMap.size()==0)
+    {
+        EXCEPTION("Zero size segment map after update. Something might be wrong with the grid.");
+    }
+
+    if(index>=mSegmentMap.size())
+    {
+        std::string request_index = boost::lexical_cast<std::string>(index);
+        std::string grid_size = boost::lexical_cast<std::string>(mSegmentMap.size());
+        EXCEPTION("The requested grid index " + request_index + "  is greater than the segment map size " + grid_size);
+    }
+
     return mSegmentMap[index].size()>0;
 }
 

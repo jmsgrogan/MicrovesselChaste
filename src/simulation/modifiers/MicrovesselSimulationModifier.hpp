@@ -40,6 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <boost/serialization/base_object.hpp>
 #include "AbstractCellBasedSimulationModifier.hpp"
 #include "MicrovesselSolver.hpp"
+#include "GridCalculator.hpp"
 
 /**
  * A modifier class which at each simulation time step in a cell based simulation increments
@@ -74,6 +75,11 @@ private:
      * The vascular tumour solver
      */
     boost::shared_ptr<MicrovesselSolver<DIM> > mpSolver;
+
+    /**
+     * A grid calculator for interacting with lattice based populations
+     */
+    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
 
     /**
      * The species labels for cell data updates
@@ -129,6 +135,8 @@ public:
      * @param pSolver pointer to the vascular tumour solver
      */
     void SetMicrovesselSolver(boost::shared_ptr<MicrovesselSolver<DIM> > pSolver);
+
+    void SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator);
 
     /**
      * Overridden SetupSolve() method.

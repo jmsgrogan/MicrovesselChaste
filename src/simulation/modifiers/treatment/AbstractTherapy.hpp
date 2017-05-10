@@ -33,71 +33,58 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef WALLSHEARSTRESSBASEDREGRESSIONSOLVER_HPP_
-#define WALLSHEARSTRESSBASEDREGRESSIONSOLVER_HPP_
+#ifndef ABSTRACTTHERAPY_HPP_
+#define ABSTRACTTHERAPY_HPP_
 
 #include "UnitCollection.hpp"
-#include "RegressionSolver.hpp"
+#include "AbstractMicrovesselModifier.hpp"
 
 /**
- * This class is for simulating modifications to the vessel network due to regression.
+ * Abstract classes for therapies that will be applied at specified
+ * time intervals and are directly related to the vasculature,
+ * e.g. anti-angiogenics and chemotherapy (transported by vessels).
  */
 template<unsigned DIM>
-class WallShearStressBasedRegressionSolver : public RegressionSolver<DIM>
+class AbstractTherapy : public AbstractMicrovesselModifier<DIM>
 {
-    /**
-     * Threshold wall shear stress level, below which vessels will be removed.
-     * This threshold should be prescribed in units of pascals.
-     */
-    units::quantity<unit::pressure> mThresholdWss;
+
+protected:
 
     /**
-     *  Maximum time that a vessel may exist with low wall shear stress.
-     *  After this amount of time a vessel is removed completely from
-     *  the vessel network.
-     *  This time should be prescribed in units of hours.
+     * Amount of supplied therapy
      */
-    units::quantity<unit::time> mMaxTimeWithLowWss;
+    units::quantity<unit::concentration> mAdministrationDose;
+
+    /**
+     * Times at which therapy is used
+     */
+    std::vector<units::quantity<unit::time> > mAdministrationTimes;
 
 public:
 
     /**
-     * Constructor.
+     * Default constructor.
      */
-    WallShearStressBasedRegressionSolver();
+    AbstractTherapy();
 
     /**
-     * Destructor.
+     * Add an administration time to the collection
+     * @param time an administration time
      */
-    virtual ~WallShearStressBasedRegressionSolver();
+    void AddAdministrationTime(units::quantity<unit::time> time);
 
     /**
-     * Factor constructor. Construct a new instance of the class and return a shared pointer to it.
-     * @return a pointer to a new instance of the class.
+     * Sets doseInjected, the radiation dose injected
+     * @param d dose delivered
      */
-    static boost::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > Create();
-
-    units::quantity<unit::pressure> GetLowWallShearStressThreshold();
-
-    units::quantity<unit::time> GetMaximumTimeWithLowWallShearStress();
+    void SetDoseInjected(units::quantity<unit::concentration> d);
 
     /**
-     *  Setter for mMaxTimeWithLowWss parameter.
-     *  @param time the max time for low WSS
+     * Sets the times of administration
+     * @param t the times of administration
      */
-    void SetMaximumTimeWithLowWallShearStress(units::quantity<unit::time> time);
-
-    /**
-     *  Setter for mThresholdWss parameter.
-     *  @param threshold the value of WSS below which it is considered too low for the vessel
-     */
-    void SetLowWallShearStressThreshold(units::quantity<unit::pressure> threshold);
-
-    /**
-     * Increment one step in time
-     */
-    virtual void Increment();
+    void SetAdministrationTimes(std::vector<units::quantity<unit::time> > t);
 
 };
 
-#endif /* WALLSHEARSTRESSBASEDREGRESSIONSOLVER_HPP_ */
+#endif /*ABSTRACTTHERAPY_HPP_*/

@@ -78,6 +78,11 @@ private:
     }
 
     /**
+     * Anti-angiogenic drug concentration in the vessel at this segment
+     */
+    units::quantity<unit::concentration> mAntiAngiogenicDrugConcentration;
+
+    /**
      * Haematocrit in the vessel at this segment
      */
     units::quantity<unit::dimensionless> mHaematocrit;
@@ -118,6 +123,12 @@ public:
      * Destructor
      */
     ~SegmentFlowProperties();
+
+    /**
+     * Return the anti-angiogenic drug concentration
+     * @return the segment anti-angiogenic drug concentration
+     */
+    units::quantity<unit::concentration> GetAntiAngiogenicDrugConcentration() const;
 
     /**
      * Return the  haematocrit

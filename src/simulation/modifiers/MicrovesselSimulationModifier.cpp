@@ -42,6 +42,7 @@ template<unsigned DIM>
 MicrovesselSimulationModifier<DIM>::MicrovesselSimulationModifier()
     : AbstractCellBasedSimulationModifier<DIM>(),
       mpSolver(),
+      mpGridCalculator(),
       mUpdateLabels(),
       mCellPopulationReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
       mCellPopulationReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale())
@@ -60,6 +61,12 @@ boost::shared_ptr<MicrovesselSimulationModifier<DIM> > MicrovesselSimulationModi
     return pSelf;
 }
 
+template <unsigned DIM>
+void MicrovesselSimulationModifier<DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator)
+{
+    mpGridCalculator = pGridCalculator;
+}
+
 template<unsigned DIM>
 void MicrovesselSimulationModifier<DIM>::SetupSolve(AbstractCellPopulation<DIM,DIM>& rCellPopulation, std::string outputDirectory)
 {
@@ -74,6 +81,12 @@ void MicrovesselSimulationModifier<DIM>::SetupSolve(AbstractCellPopulation<DIM,D
     else
     {
         EXCEPTION("A MicrovesselSolver is required for this modifier.");
+    }
+
+    // Update the grid calculator, if there is one
+    if(mpGridCalculator)
+    {
+        mpGridCalculator->rGetSegmentMap();
     }
 
     rCellPopulation.Update();
@@ -119,6 +132,12 @@ void MicrovesselSimulationModifier<DIM>::UpdateAtEndOfTimeStep(AbstractCellPopul
 {
     // Increment the solver
     mpSolver->Increment();
+
+    // Update the grid calulator, if there is one
+    if(mpGridCalculator)
+    {
+        mpGridCalculator->rGetSegmentMap();
+    }
 
     // Update the cell data
     UpdateCellData(rCellPopulation);

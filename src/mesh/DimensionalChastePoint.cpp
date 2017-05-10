@@ -33,13 +33,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "UblasIncludes.hpp"
 #include "DimensionalChastePoint.hpp"
 
 template<unsigned DIM>
 DimensionalChastePoint<DIM>::DimensionalChastePoint(double x, double y, double z, units::quantity<unit::length> referenceLength) :
+        mLocation(zero_vector<double>(DIM)),
         mReferenceLength(referenceLength),
         mIndex(0)
 {
@@ -258,5 +257,6 @@ void DimensionalChastePoint<DIM>::SetIndex(unsigned index)
 }
 
 // Explicit instantiation
+template class DimensionalChastePoint<1>;
 template class DimensionalChastePoint<2>;
 template class DimensionalChastePoint<3>;

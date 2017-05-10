@@ -33,77 +33,36 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-#include "AbstractSproutingRule.hpp"
-#include "RandomNumberGenerator.hpp"
-#include "VesselSegment.hpp"
-#include "Vessel.hpp"
+#include "BaseUnits.hpp"
+#include "AbstractTherapy.hpp"
 
 template<unsigned DIM>
-AbstractSproutingRule<DIM>::AbstractSproutingRule()
-    :mpSolver(),
-     mSproutingProbability(0.00025 /(60.0*unit::seconds)),
-     mpVesselNetwork(),
-     mVesselEndCutoff(0.0 * unit::metres),
-     mOnlySproutIfPerfused(false)
+AbstractTherapy<DIM>::AbstractTherapy() :
+        AbstractMicrovesselModifier<DIM>(),
+        mAdministrationDose(0.0*unit::mole_per_metre_cubed),
+        mAdministrationTimes()
 {
 
 }
 
 template<unsigned DIM>
-AbstractSproutingRule<DIM>::~AbstractSproutingRule()
+void AbstractTherapy<DIM>::AddAdministrationTime(units::quantity<unit::time> time)
 {
-
+    mAdministrationTimes.push_back(time);
 }
 
 template<unsigned DIM>
-void AbstractSproutingRule<DIM>::SetDiscreteContinuumSolver(boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver)
+void AbstractTherapy<DIM>::SetDoseInjected(units::quantity<unit::concentration> d)
 {
-    mpSolver = pSolver;
+    mAdministrationDose = d;
 }
 
 template<unsigned DIM>
-void AbstractSproutingRule<DIM>::SetOnlySproutIfPerfused(bool onlySproutIfPerfused)
+void AbstractTherapy<DIM>::SetAdministrationTimes(std::vector<units::quantity<unit::time> > t)
 {
-    mOnlySproutIfPerfused = onlySproutIfPerfused;
+    mAdministrationTimes = t;
 }
 
-template<unsigned DIM>
-void AbstractSproutingRule<DIM>::SetSproutingProbability(units::quantity<unit::rate> probability)
-{
-    mSproutingProbability = probability;
-}
+template class AbstractTherapy<2>;
+template class AbstractTherapy<3>;
 
-template<unsigned DIM>
-void AbstractSproutingRule<DIM>::SetVesselEndCutoff(units::quantity<unit::length> cutoff)
-{
-    mVesselEndCutoff = cutoff;
-}
-
-template<unsigned DIM>
-units::quantity<unit::rate> AbstractSproutingRule<DIM>::GetSproutingProbability()
-{
-    return mSproutingProbability;
-}
-
-template<unsigned DIM>
-void AbstractSproutingRule<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork)
-{
-    mpVesselNetwork = pVesselNetwork;
-}
-
-template<unsigned DIM>
-std::vector<boost::shared_ptr<VesselNode<DIM> > > AbstractSproutingRule<DIM>::GetSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
-{
-    return std::vector<boost::shared_ptr<VesselNode<DIM> > >();
-}
-
-template<unsigned DIM>
-void AbstractSproutingRule<DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGrid)
-{
-
-}
-
-// Explicit instantiation
-template class AbstractSproutingRule<2> ;
-template class AbstractSproutingRule<3> ;

@@ -31,81 +31,68 @@ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
- */
+*/
 
-#ifndef _AlarconHaematocritSolver_hpp
-#define _AlarconHaematocritSolver_hpp
+#ifndef GENERICANTIANGIOGENICTHERAPY_HPP_
+#define GENERICANTIANGIOGENICTHERAPY_HPP_
 
-#include "SmartPointers.hpp"
-#include "AbstractHaematocritSolver.hpp"
+#include "RandomNumberGenerator.hpp"
+#include "AbstractTherapy.hpp"
+#include "WallShearStressBasedRegressionSolver.hpp"
+#include "AbstractSproutingRule.hpp"
 #include "UnitCollection.hpp"
 
 /**
- * This solver calculates the distribution of haematocrit in branching vessel networks according to:
- * Alarcon et al. (2003), JTB, 225, pp257-274.
+ * A generic anti-angiogenic therapy which reduces sensitivity to VEGF and
+ * decreases time until regression.
  */
 template<unsigned DIM>
-class AlarconHaematocritSolver : public AbstractHaematocritSolver<DIM>
+class GenericAntiAngiogenicTherapy : public AbstractTherapy<DIM>
 {
+    units::quantity<unit::concentration> mCurrentConcentration;
 
-private:
+    units::quantity<unit::concentration> mConcentrationAtMaxEffect;
 
-    /**
-     * The threshold velocity ratio at which all haematocrit goes into the faster vessel
-     */
-    units::quantity<unit::dimensionless> mTHR;
+    units::quantity<unit::rate> mRemovalRate;
 
-    /**
-     * The partition coefficient for haematocrit
-     */
-    units::quantity<unit::dimensionless> mAlpha;
+    boost::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > mpRegressionSolver;
 
-    /**
-     * The arterial haematocrit level
-     */
-    units::quantity<unit::dimensionless> mHaematocrit;
+    boost::shared_ptr<AbstractSproutingRule<DIM> > mpSproutingRule;
+
+    units::quantity<unit::time> mPreviousTime;
+
+    units::quantity<unit::pressure> mInitialWSS;
+
+    units::quantity<unit::time> mInitialRegressionTime;
+
+    units::quantity<unit::rate> mInitialSproutingProbability;
 
 public:
 
     /**
-     * Constructor.
+     * Default constructor.
      */
-    AlarconHaematocritSolver();
+    GenericAntiAngiogenicTherapy();
+
+    virtual ~GenericAntiAngiogenicTherapy();
+
+    void SetRegressionSolver(boost::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > regressionSolver);
+
+    void SetSproutingRule(boost::shared_ptr<AbstractSproutingRule<DIM> > sproutingRule);
 
     /**
-     *  destructor.
+     * Overridden SetupSolve() method.
+     * Specify what to do in the simulation before the start of the time loop.
+     *
+     * @param outputDirectory the output directory, relative to where Chaste output is stored
      */
-    ~AlarconHaematocritSolver();
+    virtual void SetupSolve(std::string outputDirectory);
 
     /**
-     * Construct a new instance of the class and return a shared pointer to it.
-     * @return a pointer to a new class instance
+     * Overridden UpdateAtEndOfTimeStep() method.
+     * Specify what to do in the simulation at the end of each time step.
      */
-    static boost::shared_ptr<AlarconHaematocritSolver<DIM> > Create();
-
-    /**
-     *  Do the solve
-     */
-    void Calculate();
-
-    /**
-     * Set the threshold velocity ratio
-     * @param thr the threshold velocity ratio
-     */
-    void SetTHR(units::quantity<unit::dimensionless> thr);
-
-    /**
-     * Set the partition coefficient for haematocrit
-     * @param alpha the partition coefficient for haematocrit
-     */
-    void SetAlpha(units::quantity<unit::dimensionless> alpha);
-
-    /**
-     * Set the artial haematocrit
-     * @param haematocrit the arterial haematocrit
-     */
-    void SetHaematocrit(units::quantity<unit::dimensionless> haematocrit);
-
+    virtual void UpdateAtEndOfTimeStep();
 };
 
 #endif

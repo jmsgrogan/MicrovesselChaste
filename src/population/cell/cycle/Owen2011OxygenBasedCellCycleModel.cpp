@@ -420,7 +420,14 @@ void Owen2011OxygenBasedCellCycleModel::UpdateCellCyclePhase()
     double current_time = SimulationTime::Instance()->GetTime();
 
     // adjust ode parameters is called in here ... updates mutation state and oxygen concentration
-    mFinishedRunningOdes = SolveOdeToTime(current_time);
+    if(abs(current_time-mLastTime)>1.e-6 or current_time==0.0)
+    {
+        mFinishedRunningOdes = SolveOdeToTime(current_time);
+    }
+    else
+    {
+        mFinishedRunningOdes = false;
+    }
 
     // Check no concentrations have gone negative
     for (unsigned i=0; i<mpOdeSystem->GetNumberOfStateVariables(); i++)

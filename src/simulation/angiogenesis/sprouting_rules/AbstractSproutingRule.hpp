@@ -109,6 +109,8 @@ public:
      */
     void SetSproutingProbability(units::quantity<unit::rate> probability);
 
+    units::quantity<unit::rate> GetSproutingProbability();
+
     /**
      * Set the minimum distance to a vessel end at which sprouting can occur
      * @param cutoff the vessel end cutoff

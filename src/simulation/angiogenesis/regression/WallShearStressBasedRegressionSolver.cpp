@@ -62,6 +62,18 @@ boost::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > WallShearStressBas
 }
 
 template<unsigned DIM>
+units::quantity<unit::pressure> WallShearStressBasedRegressionSolver<DIM>::GetLowWallShearStressThreshold()
+{
+    return mThresholdWss;
+}
+
+template<unsigned DIM>
+units::quantity<unit::time> WallShearStressBasedRegressionSolver<DIM>::GetMaximumTimeWithLowWallShearStress()
+{
+    return mMaxTimeWithLowWss;
+}
+
+template<unsigned DIM>
 void WallShearStressBasedRegressionSolver<DIM>::SetMaximumTimeWithLowWallShearStress(units::quantity<unit::time> time)
 {
     mMaxTimeWithLowWss = time;

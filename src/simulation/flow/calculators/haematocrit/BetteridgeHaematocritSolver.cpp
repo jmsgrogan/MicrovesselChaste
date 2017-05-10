@@ -48,7 +48,8 @@ BetteridgeHaematocritSolver<DIM>::BetteridgeHaematocritSolver() : AbstractHaemat
     mHaematocrit(0.45),
     mSolveHighConnectivityNetworks(false),
     mTurnOffFungModel(false),
-    mUseRandomSplitting(false)
+    mUseRandomSplitting(false),
+    mExceptionOnFailedConverge(true)
 {
 
 }
@@ -57,6 +58,19 @@ template<unsigned DIM>
 BetteridgeHaematocritSolver<DIM>::~BetteridgeHaematocritSolver()
 {
 
+}
+
+template <unsigned DIM>
+boost::shared_ptr<BetteridgeHaematocritSolver<DIM> > BetteridgeHaematocritSolver<DIM>::Create()
+{
+    MAKE_PTR(BetteridgeHaematocritSolver<DIM>, pSelf);
+    return pSelf;
+}
+
+template <unsigned DIM>
+void BetteridgeHaematocritSolver<DIM>::SetExceptionOnFailedConverge(bool setException)
+{
+    mExceptionOnFailedConverge = setException;
 }
 
 template<unsigned DIM>
@@ -429,7 +443,15 @@ void BetteridgeHaematocritSolver<DIM>::Calculate()
         iterations++;
         if(iterations == max_iterations)
         {
-            EXCEPTION("Haematocrit calculation failed to converge.");
+            if(mExceptionOnFailedConverge)
+            {
+                EXCEPTION("Haematocrit calculation failed to converge.");
+            }
+            else
+            {
+                std::cout << "Warning: haematocrit calculation failed to converge" << std::endl;
+            }
+
         }
 
         PetscTools::Destroy(solution);

@@ -90,7 +90,6 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToMatrix()
             {
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
                 double discrete_linear_contrib = p_linear_pde->ComputeDiscreteLinearInUCoeffInSourceTerm(grid_index)*reference_time;
-                std::cout << "contrib: " << discrete_linear_contrib << " at " << grid_index<<std::endl;
                 this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index,discrete_linear_contrib);
             }
         }
@@ -118,8 +117,6 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToRhs()
             {
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
                 double discrete_const_contrib = p_linear_pde->ComputeDiscreteConstantInUSourceTerm(grid_index)*(reference_time/this->mReferenceConcentration);
-                std::cout << "contrib: " << discrete_const_contrib << " at " << grid_index<<std::endl;
-
                 this->mpLinearSystem->SetRhsVectorElement(grid_index,-discrete_const_contrib);
             }
         }

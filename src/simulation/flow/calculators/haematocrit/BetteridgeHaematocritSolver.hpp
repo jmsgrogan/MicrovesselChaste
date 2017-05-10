@@ -81,6 +81,11 @@ private:
      */
     bool mUseRandomSplitting;
 
+    /**
+     * Throw an exception if convergence fails
+     */
+    bool mExceptionOnFailedConverge;
+
 public:
 
     /**
@@ -94,9 +99,17 @@ public:
     ~BetteridgeHaematocritSolver();
 
     /**
+     * Construct a new instance of the class and return a shared pointer to it.
+     * @return a pointer to a new class instance
+     */
+    static boost::shared_ptr<BetteridgeHaematocritSolver<DIM> > Create();
+
+    /**
      *  Do the solve
      */
     void Calculate();
+
+    void SetExceptionOnFailedConverge(bool setException);
 
     /**
      * Set the threshold velocity ratio

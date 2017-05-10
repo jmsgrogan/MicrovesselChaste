@@ -33,66 +33,57 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef VOLUMEOUTPUTMODIFIER_HPP_
-#define VOLUMEOUTPUTMODIFIER_HPP_
+#ifndef TUMOURINSERTIONMODIFIER_HPP_
+#define TUMOURINSERTIONMODIFIER_HPP_
 
 #include <fstream>
 #include "SmartPointers.hpp"
+#include "UnitCollection.hpp"
 #include "AbstractCellBasedSimulationModifier.hpp"
+#include "DimensionalChastePoint.hpp"
 
 /**
- * A modifier class which at each simulation time step calculates the total tumour volume
- * and writes it to file.
+ * This class inserts a tumour into a cell population at the
+ * specified time by changing cell types with in a specified radius to a cancer
+ * mutation state.
  */
 template<unsigned DIM>
-class VolumeOutputModifier : public AbstractCellBasedSimulationModifier<DIM,DIM>
+class TumourInsertionModifier : public AbstractCellBasedSimulationModifier<DIM,DIM>
 {
     /**
-     * The cell length scale: m
+     * The insertion time
      */
-    double mCellLengthScale;
+    units::quantity<unit::time> mInsertionTime;
 
     /**
-     * The time scale: hours
+     * The insertion radius
      */
-    double mTimeScale;
+    units::quantity<unit::length> mInsertionRadius;
 
     /**
-     * The output file stream
+     * The insertion origin
      */
-    boost::shared_ptr<std::ofstream> mOutputFileStream;
+    DimensionalChastePoint<DIM> mInsertionOrigin;
 
-    /**
-     * The output frequency
-     */
-    unsigned mOutputFrequency;
-
-    /**
-     * Tumour volume only
-     */
-    bool mTumourVolumeOnly;
+    bool mTumourInserted;
 
 public:
 
     /**
      * Default constructor.
      */
-    VolumeOutputModifier();
+    TumourInsertionModifier();
 
     /**
      * Destructor.
      */
-    virtual ~VolumeOutputModifier();
+    virtual ~TumourInsertionModifier();
 
-    void SetCellLengthScale(double cellLengthScale);
+    void SetInsertionTime(units::quantity<unit::time> insertionTime);
 
-    void SetTimeScale(double timeScale);
+    void SetInsertionOrigin(DimensionalChastePoint<DIM> insertionOrigin);
 
-    void SetOutputFrequency(unsigned outputFrequency);
-
-    void SetUseTumourVolumeOnly(bool tumourVolumeOnly);
-
-    void SetOutputFileStream(boost::shared_ptr<std::ofstream> ofstream);
+    void SetInsertionRadius(units::quantity<unit::length> insertionRadius);
 
     /**
      * Overridden UpdateAtEndOfTimeStep() method.
@@ -129,4 +120,4 @@ public:
     void OutputSimulationModifierParameters(out_stream& rParamsFile);
 };
 
-#endif /*VOLUMEOUTPUTMODIFIER_HPP_*/
+#endif /*TUMOURINSERTIONMODIFIER_HPP_*/

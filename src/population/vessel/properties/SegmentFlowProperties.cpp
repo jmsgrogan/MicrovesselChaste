@@ -37,6 +37,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 template<unsigned DIM>
 SegmentFlowProperties<DIM>::SegmentFlowProperties() : AbstractVesselNetworkComponentFlowProperties<DIM>(),
+    mAntiAngiogenicDrugConcentration(0.0*unit::mole_per_metre_cubed),
     mHaematocrit(0.0),
     mFlowRate(0.0*unit::metre_cubed_per_second),
     mImpedance(0.0*unit::pascal_second_per_metre_cubed),
@@ -49,6 +50,12 @@ SegmentFlowProperties<DIM>::SegmentFlowProperties() : AbstractVesselNetworkCompo
 template<unsigned DIM>
 SegmentFlowProperties<DIM>::~SegmentFlowProperties()
 {
+}
+
+template<unsigned DIM>
+units::quantity<unit::concentration> SegmentFlowProperties<DIM>::GetAntiAngiogenicDrugConcentration() const
+{
+    return mAntiAngiogenicDrugConcentration;
 }
 
 template<unsigned DIM>
