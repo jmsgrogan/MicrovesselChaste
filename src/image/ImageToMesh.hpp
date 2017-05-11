@@ -33,10 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
-#ifndef ImageToMesh_HPP_
-#define ImageToMesh_HPP_
+#ifndef IMAGETOMESH_HPP_
+#define IMAGETOMESH_HPP_
 #include "SmartPointers.hpp"
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkImageData.h>
@@ -57,9 +55,24 @@ class ImageToMesh
     vtkSmartPointer<vtkImageData> mpImage;
 
     /**
+     *  The mesh boundary
+     */
+    vtkSmartPointer<vtkPolyData> mpMeshBoundary;
+
+    /**
      *  The target element size
      */
     units::quantity<unit::volume> mElementSize;
+
+    /**
+     *  The mesh holes
+     */
+    std::vector<DimensionalChastePoint<DIM> > mHoles;
+
+    /**
+     *  The mesh regions
+     */
+    std::vector<DimensionalChastePoint<DIM> > mRegions;
 
     /**
      *  The mesh
@@ -101,6 +114,10 @@ public:
      */
     void SetElementSize(units::quantity<unit::volume> elementSize);
 
+    vtkSmartPointer<vtkPolyData> GetMeshBoundary();
+
+    std::vector<DimensionalChastePoint<DIM> > GetMeshHoles();
+
     /**
      * Set the image to be meshed
      * @param pImage the input image
@@ -126,4 +143,4 @@ public:
 
 };
 
-#endif /*ImageToMesh_HPP_*/
+#endif /*IMAGETOMESH_HPP_*/

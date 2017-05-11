@@ -84,6 +84,8 @@ list (APPEND MicrovesselChaste_AUTO_MODULES cell)
 list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/population/cell/)
 list (APPEND MicrovesselChaste_AUTO_MODULES visualization)
 list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/visualization)
+list (APPEND MicrovesselChaste_AUTO_MODULES image)
+list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/image)
 
 list (APPEND MicrovesselChaste_PYTHON_MODULES ${MicrovesselChaste_AUTO_MODULES})
 list (APPEND MicrovesselChaste_PYTHON_MODULES preload)

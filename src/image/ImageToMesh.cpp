@@ -53,7 +53,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 ImageToMesh<DIM>::ImageToMesh()
     : mpImage(vtkSmartPointer<vtkImageData>::New()),
+      mpMeshBoundary(),
       mElementSize(0.0 * unit::metres * unit::metres* unit::metres),
+      mHoles(),
+      mRegions(),
       mMesh(),
       mpDomain()
 {
@@ -71,6 +74,18 @@ template<unsigned DIM>
 ImageToMesh<DIM>::~ImageToMesh()
 {
 
+}
+
+template<unsigned DIM>
+vtkSmartPointer<vtkPolyData> ImageToMesh<DIM>::GetMeshBoundary()
+{
+    return mpMeshBoundary;
+}
+
+template<unsigned DIM>
+std::vector<DimensionalChastePoint<DIM> > ImageToMesh<DIM>::GetMeshHoles()
+{
+    return mHoles;
 }
 
 template<unsigned DIM>
@@ -129,11 +144,12 @@ void ImageToMesh<DIM>::Update()
     extractor.SetDoSmoothing(true);
     extractor.SetSmoothingLength(10.0);
     extractor.Update();
+    mpMeshBoundary = extractor.GetOutput();
 
     if(DIM==2)
     {
         DiscreteContinuumMeshGenerator<DIM, DIM> temp_mesh_generator;
-        temp_mesh_generator.SetDomain(extractor.GetOutput());
+        temp_mesh_generator.SetDomain(mpMeshBoundary);
         if(mpDomain)
         {
             temp_mesh_generator.SetDomain(mpDomain);
@@ -173,7 +189,7 @@ void ImageToMesh<DIM>::Update()
         #endif
         p_image_probe->Update();
 
-        std::vector<DimensionalChastePoint<DIM> > holes;
+        mHoles.clear();
         std::vector<DimensionalChastePoint<DIM> > regions;
         for(unsigned idx=0; idx<p_image_probe->GetOutput()->GetPointData()->GetScalars()->GetNumberOfTuples(); idx++)
         {
@@ -190,7 +206,7 @@ void ImageToMesh<DIM>::Update()
                     }
                     else
                     {
-                        holes.push_back(DimensionalChastePoint<DIM>(loc, reference_length));
+                        mHoles.push_back(DimensionalChastePoint<DIM>(loc, reference_length));
                     }
                 }
                 else
@@ -198,14 +214,14 @@ void ImageToMesh<DIM>::Update()
                     c_vector<double, DIM> loc;
                     loc[0] = p_vtk_points->GetPoint(idx)[0];
                     loc[1] = p_vtk_points->GetPoint(idx)[1];
-                    holes.push_back(DimensionalChastePoint<DIM>(loc, reference_length));
+                    mHoles.push_back(DimensionalChastePoint<DIM>(loc, reference_length));
                 }
             }
         }
         DiscreteContinuumMeshGenerator<DIM, DIM> fine_mesh_generator;
-        fine_mesh_generator.SetDomain(extractor.GetOutput());
+        fine_mesh_generator.SetDomain(mpMeshBoundary);
         fine_mesh_generator.SetMaxElementArea(mElementSize);
-        fine_mesh_generator.SetHoles(holes);
+        fine_mesh_generator.SetHoles(mHoles);
         fine_mesh_generator.SetRegionMarkers(regions);
         if(mpDomain)
         {

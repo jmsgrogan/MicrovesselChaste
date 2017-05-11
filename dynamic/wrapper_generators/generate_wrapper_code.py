@@ -430,10 +430,10 @@ def generate_wrappers(args):
         classes = pickle.load(fp)
         
     module_names = ["mesh", "geometry", "cell", "vessel", "pde", "angiogenesis", "flow", "simulation", 
-                    "visualization", "utility"]
+                    "visualization", "utility", "image"]
     
     # Just for debugging
-    ignore_modules = ["mesh", "geometry", "cell", "vessel", "angiogenesis", "flow", "simulation", 
+    ignore_modules = ["mesh", "geometry", "cell", "vessel", "pde", "angiogenesis", "flow", "simulation", 
                     "visualization", "utility"]
     
     #ignore_modules = []

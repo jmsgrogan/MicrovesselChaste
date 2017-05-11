@@ -141,6 +141,10 @@
 #include "Connor17Parameters.hpp"
 #include "Secomb04Parameters.hpp"
 #include "GenericParameters.hpp"
+#include "ImageReader.hpp"
+#include "ImageToMesh.hpp"
+#include "ImageToSurface.hpp"
+#include "NetworkToImage.hpp"
 
 // Instantiate Template Classes 
 template class Polygon<2 >;
@@ -363,6 +367,10 @@ template class AbstractMicrovesselModifier<2 >;
 template class AbstractMicrovesselModifier<3 >;
 template class VtkSceneMicrovesselModifier<2 >;
 template class VtkSceneMicrovesselModifier<3 >;
+template class ImageToMesh<2 >;
+template class ImageToMesh<3 >;
+template class NetworkToImage<2 >;
+template class NetworkToImage<3 >;
 
 // Typedef for nicer naming in Py++ 
 namespace pyplusplus{ 
@@ -680,6 +688,10 @@ typedef AbstractMicrovesselModifier<2 > AbstractMicrovesselModifier2;
 typedef AbstractMicrovesselModifier<3 > AbstractMicrovesselModifier3;
 typedef VtkSceneMicrovesselModifier<2 > VtkSceneMicrovesselModifier2;
 typedef VtkSceneMicrovesselModifier<3 > VtkSceneMicrovesselModifier3;
+typedef ImageToMesh<2 > ImageToMesh2;
+typedef ImageToMesh<3 > ImageToMesh3;
+typedef NetworkToImage<2 > NetworkToImage2;
+typedef NetworkToImage<3 > NetworkToImage3;
 typedef units::quantity<unit:: number_density,double> NumberDensityQuantity;
 typedef std::vector<units::quantity<unit:: number_density,double> > VectorNumberDensityQuantity;
 typedef ParameterInstance<unit:: number_density> ParameterInstanceNumberDensityQuantity;

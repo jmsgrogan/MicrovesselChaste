@@ -147,6 +147,12 @@ visualization_classes = [CppClass('MicrovesselVtkScene'),
                   CppClass('VesselNetworkActorGenerator'),CppClass('AbstractActorGenerator'),
                   CppClass('AbstractMicrovesselModifier'),CppClass('VtkSceneMicrovesselModifier'),]
 
+################################## IMAGE ##########################################
+image_classes = [CppClass('ImageReader'), 
+                 CppClass('ImageToMesh'),
+                 CppClass('ImageToSurface'),
+                 CppClass('NetworkToImage')]
+
 ################################## UTILITY ##########################################
 
 units = {"membrane_permeability": "metre_per_second", 
@@ -222,3 +228,4 @@ extra_classes = [
 # This final list will be pulled in by the autowrapper code by name...i.e. don't change the name.
 classes = extra_classes + geometry_classes + mesh_classes + cell_classes + angiogenesis_classes + pde_classes 
 classes += flow_classes + simulation_classes + vessel_classes + visualization_classes + utility_classes
+classes += image_classes

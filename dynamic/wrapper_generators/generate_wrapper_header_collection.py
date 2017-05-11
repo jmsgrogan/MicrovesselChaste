@@ -59,7 +59,7 @@ def generate_class_data(args):
     # Traverse the source tree and get the filepath for each class to be wrapped
     source_root = args[1]
     component_keys = ["angiogenesis", "flow", "cell", "geometry", "pde", "mesh",
-                      "simulation", "utility", "tutorial", "vessel", "visualization"]
+                      "simulation", "utility", "tutorial", "vessel", "visualization", "image"]
     
     for root, dirnames, filenames in os.walk(source_root, followlinks=True):
         for filename in fnmatch.filter(filenames, '*.hpp'):

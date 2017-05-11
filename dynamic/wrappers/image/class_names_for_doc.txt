@@ -1,0 +1,18 @@
+.. autoclass:: microvessel_chaste.image.ImageReader
+	:members:
+
+.. autoclass:: microvessel_chaste.image.ImageToMesh2
+	:members:
+
+.. autoclass:: microvessel_chaste.image.ImageToMesh3
+	:members:
+
+.. autoclass:: microvessel_chaste.image.ImageToSurface
+	:members:
+
+.. autoclass:: microvessel_chaste.image.NetworkToImage2
+	:members:
+
+.. autoclass:: microvessel_chaste.image.NetworkToImage3
+	:members:
+
