@@ -39,6 +39,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <fstream>
 #include "SmartPointers.hpp"
 #include "AbstractCellBasedSimulationModifier.hpp"
+#include "UnitCollection.hpp"
 
 /**
  * A modifier class which at each simulation time step calculates the total tumour volume
@@ -72,6 +73,11 @@ class VolumeOutputModifier : public AbstractCellBasedSimulationModifier<DIM,DIM>
      */
     bool mTumourVolumeOnly;
 
+    /**
+     * Only start output after this time
+     */
+    units::quantity<unit::time> mStartTimeOffset;
+
 public:
 
     /**
@@ -83,6 +89,8 @@ public:
      * Destructor.
      */
     virtual ~VolumeOutputModifier();
+
+    void SetStartTimeOffset(units::quantity<unit::time> startTimeOffset);
 
     void SetCellLengthScale(double cellLengthScale);
 

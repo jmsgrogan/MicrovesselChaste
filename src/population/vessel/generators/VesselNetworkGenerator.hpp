@@ -112,7 +112,8 @@ public:
      */
     boost::shared_ptr<VesselNetwork<DIM> > GenerateHexagonalNetwork(units::quantity<unit::length> width,
                                                                     units::quantity<unit::length> height,
-                                                                    units::quantity<unit::length> vesselLength);
+                                                                    units::quantity<unit::length> vesselLength,
+                                                                    bool fillDomain=false);
     /**
      * Creates a hexagonal repeating unit
      * @param vesselLength the vessel length

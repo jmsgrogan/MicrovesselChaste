@@ -90,6 +90,16 @@ void register_SegmentFlowProperties3_class(){
         typedef bp::class_< SegmentFlowProperties_less__3__greater__wrapper, bp::bases< AbstractVesselNetworkComponentFlowProperties< 3 > > > SegmentFlowProperties3_exposer_t;
         SegmentFlowProperties3_exposer_t SegmentFlowProperties3_exposer = SegmentFlowProperties3_exposer_t( "SegmentFlowProperties3", bp::init< >() );
         bp::scope SegmentFlowProperties3_scope( SegmentFlowProperties3_exposer );
+        { //::SegmentFlowProperties< 3 >::GetAntiAngiogenicDrugConcentration
+        
+            typedef SegmentFlowProperties< 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetAntiAngiogenicDrugConcentration_function_type)(  ) const;
+            
+            SegmentFlowProperties3_exposer.def( 
+                "GetAntiAngiogenicDrugConcentration"
+                , GetAntiAngiogenicDrugConcentration_function_type( &::SegmentFlowProperties< 3 >::GetAntiAngiogenicDrugConcentration ) );
+        
+        }
         { //::SegmentFlowProperties< 3 >::GetFlowRate
         
             typedef SegmentFlowProperties< 3 > exported_class_t;

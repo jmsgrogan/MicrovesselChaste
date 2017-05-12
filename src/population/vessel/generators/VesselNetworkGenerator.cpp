@@ -578,7 +578,8 @@ void VesselNetworkGenerator<DIM>::MapToSphere(boost::shared_ptr<VesselNetwork<DI
 template<unsigned DIM>
 boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateHexagonalNetwork(units::quantity<unit::length> width,
                                                                                            units::quantity<unit::length> height,
-                                                                                           units::quantity<unit::length> vessel_length)
+                                                                                           units::quantity<unit::length> vessel_length,
+                                                                                           bool fillDomain)
 {
     // Vessels are laid out on a regular grid in a hexagonal pattern.
     // The repeating unit looks like this:
@@ -592,6 +593,19 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateHexa
     // The pattern may not reach the extents of the target area.
     unsigned units_in_x_direction = floor((width/mReferenceLength)/ unit_width);
     unsigned units_in_y_direction = floor((height/mReferenceLength) / unit_height);
+    bool extended_in_x = false;
+    bool extended_in_y = false;
+
+    if(fillDomain and (width/mReferenceLength)/ unit_width > float(units_in_x_direction))
+    {
+        units_in_x_direction+=1;
+        extended_in_x = true;
+    }
+    if(fillDomain and (height/mReferenceLength) / unit_height > float(units_in_y_direction))
+    {
+        units_in_y_direction+=1;
+        extended_in_y=true;
+    }
 
     // If the number of units is less than 1, just make a single unit in that direction
     if (units_in_x_direction < 1)
@@ -652,6 +666,85 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateHexa
     }
 
     pVesselNetwork->MergeCoincidentNodes();
+    pVesselNetwork->UpdateAll();
+
+    // Remove vessels with both nodes outside of the bounds
+    std::vector<boost::shared_ptr<Vessel<DIM> > > vessels = pVesselNetwork->GetVessels();
+    for(unsigned idx=0; idx<vessels.size(); idx++)
+    {
+        double x_loc_0 = vessels[idx]->GetStartNode()->rGetLocation().GetLocation(mReferenceLength)[0];
+        double y_loc_0 = vessels[idx]->GetStartNode()->rGetLocation().GetLocation(mReferenceLength)[1];
+        double x_loc_1 = vessels[idx]->GetEndNode()->rGetLocation().GetLocation(mReferenceLength)[0];
+        double y_loc_1 = vessels[idx]->GetEndNode()->rGetLocation().GetLocation(mReferenceLength)[1];
+        if(extended_in_x and x_loc_0>width/mReferenceLength and x_loc_1>width/mReferenceLength)
+        {
+            pVesselNetwork->RemoveVessel(vessels[idx], true);
+            pVesselNetwork->UpdateAll();
+        }
+        else if(extended_in_y and y_loc_0>height/mReferenceLength and y_loc_1>height/mReferenceLength)
+        {
+            pVesselNetwork->RemoveVessel(vessels[idx], true);
+            pVesselNetwork->UpdateAll();
+        }
+    }
+
+//    // Move single nodes outside the bounds to the bounds
+//    // Remove vessels with both nodes outside of the bounds
+//    vessels = pVesselNetwork->GetVessels();
+//    for(unsigned idx=0; idx<vessels.size(); idx++)
+//    {
+//        c_vector<double, DIM> loc_0 = vessels[idx]->GetStartNode()->rGetLocation().GetLocation(mReferenceLength);
+//        c_vector<double, DIM> loc_1 = vessels[idx]->GetEndNode()->rGetLocation().GetLocation(mReferenceLength);
+//
+//        if(loc_0[0]>width/mReferenceLength)
+//        {
+//            if(DIM==2)
+//            {
+//                vessels[idx]->GetStartNode()->SetLocation(width/mReferenceLength, loc_0[1], 0.0, mReferenceLength);
+//            }
+//            else
+//            {
+//                vessels[idx]->GetStartNode()->SetLocation(width/mReferenceLength, loc_0[1], loc_0[2], mReferenceLength);
+//            }
+//        }
+//        if(loc_1[0]>width/mReferenceLength)
+//        {
+//            if(DIM==2)
+//            {
+//                vessels[idx]->GetEndNode()->SetLocation(width/mReferenceLength, loc_1[1], 0.0, mReferenceLength);
+//            }
+//            else
+//            {
+//                vessels[idx]->GetEndNode()->SetLocation(width/mReferenceLength, loc_1[1], loc_1[2], mReferenceLength);
+//            }
+//        }
+//
+//        if(loc_0[1]>height/mReferenceLength)
+//        {
+//            if(DIM==2)
+//            {
+//                vessels[idx]->GetStartNode()->SetLocation(loc_0[0], height/mReferenceLength, 0.0, mReferenceLength);
+//            }
+//            else
+//            {
+//                vessels[idx]->GetStartNode()->SetLocation(loc_0[0], height/mReferenceLength, loc_0[2], mReferenceLength);
+//            }
+//        }
+//        if(loc_1[1]>height/mReferenceLength)
+//        {
+//            if(DIM==2)
+//            {
+//                vessels[idx]->GetEndNode()->SetLocation(loc_1[0], height/mReferenceLength, 0.0, mReferenceLength);
+//            }
+//            else
+//            {
+//                vessels[idx]->GetEndNode()->SetLocation(loc_1[0], height/mReferenceLength, loc_1[2], mReferenceLength);
+//            }
+//        }
+//    }
+
+    pVesselNetwork->UpdateAll();
+
     return pVesselNetwork;
 }
 

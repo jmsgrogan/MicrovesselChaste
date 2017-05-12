@@ -45,6 +45,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "MeshBasedCellPopulation.hpp"
 #include "VolumeOutputModifier.hpp"
 #include "CancerCellMutationState.hpp"
+#include "BaseUnits.hpp"
 
 template<unsigned DIM>
 VolumeOutputModifier<DIM>::VolumeOutputModifier()
@@ -53,13 +54,20 @@ VolumeOutputModifier<DIM>::VolumeOutputModifier()
       mTimeScale(1.0), //hours
       mOutputFileStream(),
       mOutputFrequency(1),
-      mTumourVolumeOnly(false)
+      mTumourVolumeOnly(false),
+      mStartTimeOffset(0.0*unit::seconds)
 {
 }
 
 template<unsigned DIM>
 VolumeOutputModifier<DIM>::~VolumeOutputModifier()
 {
+}
+
+template<unsigned DIM>
+void VolumeOutputModifier<DIM>::SetStartTimeOffset(units::quantity<unit::time> startTimeOffset)
+{
+    mStartTimeOffset = startTimeOffset;
 }
 
 template<unsigned DIM>
@@ -184,9 +192,15 @@ void VolumeOutputModifier<DIM>::UpdateCellData(AbstractCellPopulation<DIM,DIM>& 
             }
             if(mOutputFileStream->is_open())
             {
-                double current_time = SimulationTime::Instance()->GetTime() * mTimeScale;
-                double tumour_area = total_volume*(mCellLengthScale*mCellLengthScale);
-                (*mOutputFileStream) << current_time << "," << tumour_area << std::endl;
+                units::quantity<unit::time> dimensional_time =
+                        SimulationTime::Instance()->GetTime()*BaseUnits::Instance()->GetReferenceTimeScale();
+                units::quantity<unit::time> offset_time = dimensional_time - mStartTimeOffset;
+                if(offset_time>=0.0*unit::seconds)
+                {
+                    double current_time = offset_time / BaseUnits::Instance()->GetReferenceTimeScale();
+                    double tumour_area = total_volume*(mCellLengthScale*mCellLengthScale);
+                    (*mOutputFileStream) << current_time << "," << tumour_area << std::endl;
+                }
             }
         }
         else

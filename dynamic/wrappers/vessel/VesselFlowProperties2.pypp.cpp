@@ -100,6 +100,16 @@ void register_VesselFlowProperties2_class(){
                 , CheckSegments_function_type( &::VesselFlowProperties< 2 >::CheckSegments ) );
         
         }
+        { //::VesselFlowProperties< 2 >::GetAntiAngiogenicDrugConcentration
+        
+            typedef VesselFlowProperties< 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetAntiAngiogenicDrugConcentration_function_type)(  ) const;
+            
+            VesselFlowProperties2_exposer.def( 
+                "GetAntiAngiogenicDrugConcentration"
+                , GetAntiAngiogenicDrugConcentration_function_type( &::VesselFlowProperties< 2 >::GetAntiAngiogenicDrugConcentration ) );
+        
+        }
         { //::VesselFlowProperties< 2 >::GetFlowRate
         
             typedef VesselFlowProperties< 2 > exported_class_t;
