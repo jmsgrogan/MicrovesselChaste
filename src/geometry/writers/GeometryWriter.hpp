@@ -67,7 +67,7 @@ private:
     /**
      * The geometry to be written
      */
-    vtkSmartPointer<vtkPolyData> mpInputGeometry;
+    std::vector<vtkSmartPointer<vtkPolyData> > mpInputGeometries;
 
     /**
      * The output file name
@@ -101,7 +101,7 @@ public:
      * Set the geometry to be written in vtk format
      * @param pSurface the geometry to be written
      */
-    void SetInput(vtkSmartPointer<vtkPolyData> pSurface);
+    void AddInput(vtkSmartPointer<vtkPolyData> pSurface);
 
     /**
      * Set the output filename, without extension

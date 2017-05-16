@@ -37,11 +37,16 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define POLYGON_HPP_
 
 #include <vector>
+#include <string>
+#include <map>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
 #include <vtkPolygon.h>
 #include <vtkPoints.h>
 #include <vtkPlane.h>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/map.hpp>
+#include "ChasteSerialization.hpp"
 #include "UblasVectorInclude.hpp"
 #include "SmartPointers.hpp"
 #include "DimensionalChastePoint.hpp"
@@ -53,6 +58,25 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 class Polygon
 {
+    /**
+     * Archiving
+     */
+    friend class boost::serialization::access;
+
+    /**
+     * Do the serialize
+     * @param ar the archive
+     * @param version the archive version number
+     */
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & mVertices;
+        ar & mReferenceLength;
+        ar & mEdgeAttributes;
+        ar & mAttributes;
+    }
+
     /**
      * The vertices of the polygon. They should be co-planar.
      * Vertices should be unique, this is not ensured in the class.
@@ -67,7 +91,12 @@ class Polygon
     /**
      * Edge labels for boundary condition application
      */
-    std::vector<std::string> mEdgeLabels;
+    std::vector<std::map<std::string, double> > mEdgeAttributes;
+
+    /**
+     * Attributes for the polygon
+     */
+    std::map<std::string, double> mAttributes;
 
     /**
      * Is the VTK representation up to date
@@ -78,6 +107,13 @@ class Polygon
      * The VTK representation
      */
     vtkSmartPointer<vtkPolygon> mpVtkRepresentation;
+
+private:
+
+    /**
+     * Constructor for serialization only
+     */
+    Polygon();
 
 public:
 
@@ -111,6 +147,29 @@ public:
      * Desctructor
      */
     ~Polygon();
+
+    /**
+     * Add an attribute to the polygon
+     * @param rLabel the attribute label
+     * @param value the attribute value
+     */
+    void AddAttribute(const std::string& rLabel, double value);
+
+    /**
+     * Add an attribute to a polygon edge if it is found
+     * @param loc the search point
+     * @param rLabel the attribute label
+     * @param value the attribute value
+     * @return true if an edge is found
+     */
+    bool AddAttributeToEdgeIfFound(DimensionalChastePoint<DIM> loc, const std::string& rLabel, double value);
+
+    /**
+     * Apply the label to all edges
+     * @param rLabel the label
+     * @param value the attribute value
+     */
+    void AddAttributeToAllEdges(const std::string& rLabel, double value);
 
     /**
      * Add vertices
@@ -189,10 +248,16 @@ public:
     vtkSmartPointer<vtkPolygon> GetVtkPolygon();
 
     /**
-     * Return the edge labels
-     * @return the edge labels
+     * Return the edge attributes
+     * @return the edge attributes
      */
-    std::vector<std::string> GetEdgeLabels();
+    std::vector<std::map<std::string, double> > GetEdgeAttributes();
+
+    /**
+     * Return the polygon attributes
+     * @return the polygon attributes
+     */
+    std::map<std::string, double> GetAttributes();
 
     /**
      * Return the polygon vertices as a set of VtkPoints.
@@ -201,22 +266,19 @@ public:
     std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > GetVtkVertices();
 
     /**
-     * Label a polygon edge if it is found
+     * Return true if the edge at the input point has the supplied attribute label
      * @param loc the search point
      * @param rLabel the label
      * @return true if an edge is found
      */
-    bool LabelEdgeIfFound(DimensionalChastePoint<DIM> loc, const std::string& rLabel);
-
-    void LabelAllEdges(const std::string& rLabel);
+    bool EdgeHasAttribute(DimensionalChastePoint<DIM> loc, const std::string& rLabel);
 
     /**
-     * Return true if the edge at the input point has the supplied label
-     * @param loc the search point
+     * Return true if the polygon has the supplied attribute label
      * @param rLabel the label
-     * @return true if an edge is found
+     * @return true if an attribute is found
      */
-    bool EdgeHasLabel(DimensionalChastePoint<DIM> loc, const std::string& rLabel);
+    bool HasAttribute(const std::string& rLabel);
 
     /**
      * Replace an exiting vertex with the passed in one.
@@ -238,5 +300,9 @@ public:
      */
     void Translate(DimensionalChastePoint<DIM> translationVector);
 };
+
+#include "SerializationExportWrapper.hpp"
+EXPORT_TEMPLATE_CLASS1(Polygon, 2)
+EXPORT_TEMPLATE_CLASS1(Polygon, 3)
 
 #endif /* POLYGON_HPP_*/

@@ -33,41 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-/*
-
-Copyright (c) 2005-2016, University of Oxford.
- All rights reserved.
-
- University of Oxford means the Chancellor, Masters and Scholars of the
- University of Oxford, having an administrative office at Wellington
- Square, Oxford OX1 2JD, UK.
-
- This file is part of Chaste.
-
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice,
- this list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice,
- this list of conditions and the following disclaimer in the documentation
- and/or other materials provided with the distribution.
- * Neither the name of the University of Oxford nor the names of its
- contributors may be used to endorse or promote products derived from this
- software without specific prior written permission.
-
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
- */
-
 #include <math.h>
 #include <vector>
 #include "UblasIncludes.hpp"
@@ -86,8 +51,20 @@ MappableGridGenerator::~MappableGridGenerator()
 
 }
 
-boost::shared_ptr<Part<3> > MappableGridGenerator::GeneratePlane(unsigned numX, unsigned numY, bool withEndCaps)
+boost::shared_ptr<MappableGridGenerator> MappableGridGenerator::Create()
 {
+    MAKE_PTR(MappableGridGenerator, p_point);
+    return p_point;
+}
+
+boost::shared_ptr<Part<3> > MappableGridGenerator::GeneratePlane(unsigned numX, unsigned numY, bool isShell,
+        bool withEndCaps)
+{
+    if(numX == 0 or numY == 0)
+    {
+        EXCEPTION("The number of points in X and Y must be greater than 0.");
+    }
+
     // Make a regular grid of polygons
     // Front vertices
     std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices;
@@ -95,27 +72,20 @@ boost::shared_ptr<Part<3> > MappableGridGenerator::GeneratePlane(unsigned numX, 
     {
         for(unsigned idx=0; idx<numX; idx++)
         {
-            double x_location = double(idx);
-            double y_location = double(jdx);
-            double z_location = 0.0;
-
-            // Create the vertices
-            vertices.push_back(DimensionalChastePoint<3>::Create(x_location, y_location, z_location, mReferenceLength));
+            vertices.push_back(DimensionalChastePoint<3>::Create(double(idx), double(jdx), 0.0, mReferenceLength));
         }
     }
 
-    // Back vertices
-    for(unsigned jdx=0; jdx< numY; jdx++)
+    if(!isShell)
     {
-        for(unsigned idx=0; idx<numX; idx++)
+        // Back vertices
+        for(unsigned jdx=0; jdx< numY; jdx++)
         {
-            double x_location = double(idx);
-            double y_location = double(jdx);
-            double z_location = 1.0;
-
-            // Create the vertices
-            vertices.push_back(DimensionalChastePoint<3>::Create(x_location, y_location, z_location, mReferenceLength));
-
+            for(unsigned idx=0; idx<numX; idx++)
+            {
+                // Create the vertices
+                vertices.push_back(DimensionalChastePoint<3>::Create(double(idx), double(jdx), 1.0, mReferenceLength));
+            }
         }
     }
 
@@ -140,90 +110,93 @@ boost::shared_ptr<Part<3> > MappableGridGenerator::GeneratePlane(unsigned numX, 
         }
     }
 
-    // Back face
-    for(unsigned jdx=0; jdx< numY - 1; jdx++)
+    if(!isShell)
     {
-        for(unsigned idx=0; idx<numX - 1; idx++)
+        // Back face
+        for(unsigned jdx=0; jdx< numY - 1; jdx++)
         {
-            unsigned front_left_index = idx + numX * jdx + numX*numY;
-            unsigned front_right_index = idx + 1 + numX * jdx + numX*numY;
-            unsigned front_left_top_index = idx + numX * (jdx+1) + numX*numY;
-            unsigned front_right_top_index = idx + 1 + numX * (jdx+1) + numX*numY;
+            for(unsigned idx=0; idx<numX - 1; idx++)
+            {
+                unsigned front_left_index = idx + numX * jdx + numX*numY;
+                unsigned front_right_index = idx + 1 + numX * jdx + numX*numY;
+                unsigned front_left_top_index = idx + numX * (jdx+1) + numX*numY;
+                unsigned front_right_top_index = idx + 1 + numX * (jdx+1) + numX*numY;
+
+                std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > poly_vertices;
+                poly_vertices.push_back(vertices[front_left_index]);
+                poly_vertices.push_back(vertices[front_right_index]);
+                poly_vertices.push_back(vertices[front_right_top_index]);
+                poly_vertices.push_back(vertices[front_left_top_index]);
+                polygons.push_back(Polygon<3>::Create(poly_vertices));
+            }
+        }
+
+        if(withEndCaps)
+        {
+            // Left face
+            for(unsigned jdx=0; jdx< numY - 1; jdx++)
+            {
+                unsigned front_index = numX * jdx;
+                unsigned top_front_index = numX * (jdx+1);
+                unsigned back_index = numX * jdx + numX*numY;
+                unsigned top_back_index = numX * (jdx+1) + numX*numY;
+
+                std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > poly_vertices;
+                poly_vertices.push_back(vertices[front_index]);
+                poly_vertices.push_back(vertices[top_front_index]);
+                poly_vertices.push_back(vertices[top_back_index]);
+                poly_vertices.push_back(vertices[back_index]);
+                polygons.push_back(Polygon<3>::Create(poly_vertices));
+            }
+
+            // Right face
+            for(unsigned jdx=0; jdx< numY - 1; jdx++)
+            {
+                unsigned front_index = numX * (jdx+1) - 1;
+                unsigned top_front_index = numX * (jdx+2) - 1;
+                unsigned back_index = numX * (jdx + 1) - 1 + numX*numY;
+                unsigned top_back_index = numX * (jdx+2) -1 + numX*numY;
+
+                std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > poly_vertices;
+                poly_vertices.push_back(vertices[front_index]);
+                poly_vertices.push_back(vertices[top_front_index]);
+                poly_vertices.push_back(vertices[top_back_index]);
+                poly_vertices.push_back(vertices[back_index]);
+                polygons.push_back(Polygon<3>::Create(poly_vertices));
+            }
+        }
+
+        // Bottom face
+        for(unsigned idx=0; idx< numX - 1; idx++)
+        {
+            unsigned front_index = idx;
+            unsigned front_right_index = idx + 1;
+            unsigned back_index = idx + numX*numY;
+            unsigned back_right_index = idx + 1 + numX*numY;
 
             std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > poly_vertices;
-            poly_vertices.push_back(vertices[front_left_index]);
+            poly_vertices.push_back(vertices[front_index]);
             poly_vertices.push_back(vertices[front_right_index]);
-            poly_vertices.push_back(vertices[front_right_top_index]);
-            poly_vertices.push_back(vertices[front_left_top_index]);
-            polygons.push_back(Polygon<3>::Create(poly_vertices));
-        }
-    }
-
-    if(withEndCaps)
-    {
-        // Left face
-        for(unsigned jdx=0; jdx< numY - 1; jdx++)
-        {
-            unsigned front_index = numX * jdx;
-            unsigned top_front_index = numX * (jdx+1);
-            unsigned back_index = numX * jdx + numX*numY;
-            unsigned top_back_index = numX * (jdx+1) + numX*numY;
-
-            std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > poly_vertices;
-            poly_vertices.push_back(vertices[front_index]);
-            poly_vertices.push_back(vertices[top_front_index]);
-            poly_vertices.push_back(vertices[top_back_index]);
+            poly_vertices.push_back(vertices[back_right_index]);
             poly_vertices.push_back(vertices[back_index]);
             polygons.push_back(Polygon<3>::Create(poly_vertices));
         }
 
-        // Right face
-        for(unsigned jdx=0; jdx< numY - 1; jdx++)
+        // Top face
+        for(unsigned idx=0; idx< numX - 1; idx++)
         {
-            unsigned front_index = numX * (jdx+1) - 1;
-            unsigned top_front_index = numX * (jdx+2) - 1;
-            unsigned back_index = numX * (jdx + 1) - 1 + numX*numY;
-            unsigned top_back_index = numX * (jdx+2) -1 + numX*numY;
+            unsigned front_index = idx + numX*(numY-1);
+            unsigned front_right_index = idx + 1 + numX*(numY-1);
+            unsigned back_index = idx + + numX*(numY-1) + numX*numY;
+            unsigned back_right_index = idx + numX*(numY-1) + 1 + numX*numY;
 
             std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > poly_vertices;
             poly_vertices.push_back(vertices[front_index]);
-            poly_vertices.push_back(vertices[top_front_index]);
-            poly_vertices.push_back(vertices[top_back_index]);
+            poly_vertices.push_back(vertices[front_right_index]);
+            poly_vertices.push_back(vertices[back_right_index]);
             poly_vertices.push_back(vertices[back_index]);
             polygons.push_back(Polygon<3>::Create(poly_vertices));
         }
-    }
-
-    // Bottom face
-    for(unsigned idx=0; idx< numX - 1; idx++)
-    {
-        unsigned front_index = idx;
-        unsigned front_right_index = idx + 1;
-        unsigned back_index = idx + numX*numY;
-        unsigned back_right_index = idx + 1 + numX*numY;
-
-        std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > poly_vertices;
-        poly_vertices.push_back(vertices[front_index]);
-        poly_vertices.push_back(vertices[front_right_index]);
-        poly_vertices.push_back(vertices[back_right_index]);
-        poly_vertices.push_back(vertices[back_index]);
-        polygons.push_back(Polygon<3>::Create(poly_vertices));
-    }
-
-    // Top face
-    for(unsigned idx=0; idx< numX - 1; idx++)
-    {
-        unsigned front_index = idx + numX*(numY-1);
-        unsigned front_right_index = idx + 1 + numX*(numY-1);
-        unsigned back_index = idx + + numX*(numY-1) + numX*numY;
-        unsigned back_right_index = idx + numX*(numY-1) + 1 + numX*numY;
-
-        std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > poly_vertices;
-        poly_vertices.push_back(vertices[front_index]);
-        poly_vertices.push_back(vertices[front_right_index]);
-        poly_vertices.push_back(vertices[back_right_index]);
-        poly_vertices.push_back(vertices[back_index]);
-        polygons.push_back(Polygon<3>::Create(poly_vertices));
     }
 
     // Create a part
@@ -235,19 +208,23 @@ boost::shared_ptr<Part<3> > MappableGridGenerator::GeneratePlane(unsigned numX, 
     return p_part;
 }
 
-boost::shared_ptr<Part<3> > MappableGridGenerator::GenerateCylinder(double cylinderRadius,
-                                               double cylinderThickness,
-                                               double cylinderHeight,
-                                               unsigned numX,
-                                               unsigned numY,
-                                               double cylinderAngle)
+boost::shared_ptr<Part<3> > MappableGridGenerator::GenerateCylinder(
+        units::quantity<unit::length> cylinderRadius,
+        units::quantity<unit::length> cylinderThickness,
+        units::quantity<unit::length> cylinderHeight, unsigned numX, unsigned numY, double cylinderAngle)
 {
     if(cylinderAngle > 2.0 * M_PI)
     {
         EXCEPTION("The cylinder angle should be <= 2*pi");
     }
 
-    boost::shared_ptr<Part<3> > p_part = GeneratePlane(numX, numY, !(cylinderAngle == 2.0 * M_PI));
+    if(cylinderRadius <= 0.0*unit::metres or cylinderHeight <= 0.0*unit::metres)
+    {
+        EXCEPTION("The cylinder radius and height must be greater than 0.0");
+    }
+
+    boost::shared_ptr<Part<3> > p_part = GeneratePlane(numX, numY, cylinderThickness == 0.0*unit::metres,
+            !(cylinderAngle == 2.0 * M_PI));
 
     // Get the part extents
     std::vector<units::quantity<unit::length> > bbox = p_part->GetBoundingBox();
@@ -261,10 +238,14 @@ boost::shared_ptr<Part<3> > MappableGridGenerator::GenerateCylinder(double cylin
         double angle = x_frac * cylinderAngle;
 
         double y_frac = vertex_location[1]*mReferenceLength / (bbox[3] - bbox[2]);
-        double height = y_frac * cylinderHeight;
+        double height = y_frac * cylinderHeight/mReferenceLength;
 
-        double z_frac = vertex_location[2]*mReferenceLength / (bbox[5] - bbox[4]);
-        double radius = cylinderRadius - cylinderThickness * z_frac;
+        double z_frac = 0.0;
+        if(cylinderThickness > 0.0*unit::metres)
+        {
+            z_frac = vertex_location[2]*mReferenceLength / (bbox[5] - bbox[4]);
+        }
+        double radius = (cylinderRadius - cylinderThickness * z_frac)/mReferenceLength;
 
         // Get the new x
         c_vector<double, 3> new_position;
@@ -282,12 +263,9 @@ boost::shared_ptr<Part<3> > MappableGridGenerator::GenerateCylinder(double cylin
     return p_part;
 }
 
-boost::shared_ptr<Part<3> > MappableGridGenerator::GenerateHemisphere(double sphereRadius,
-                                               double sphereThickness,
-                                               unsigned numX,
-                                               unsigned numY,
-                                               double sphereAzimuthAngle,
-                                               double spherePolarAngle)
+boost::shared_ptr<Part<3> > MappableGridGenerator::GenerateHemisphere(units::quantity<unit::length> sphereRadius,
+        units::quantity<unit::length> sphereThickness, unsigned numX, unsigned numY,
+        double sphereAzimuthAngle, double spherePolarAngle)
 {
     if(sphereAzimuthAngle >= 2.0 * M_PI)
     {
@@ -299,7 +277,12 @@ boost::shared_ptr<Part<3> > MappableGridGenerator::GenerateHemisphere(double sph
         EXCEPTION("The polar angle should be < pi");
     }
 
-    boost::shared_ptr<Part<3> > p_part = GeneratePlane(numX, numY);
+    if(sphereRadius <= 0.0*unit::metres)
+    {
+        EXCEPTION("The sphere radius must be greater than 0.0");
+    }
+
+    boost::shared_ptr<Part<3> > p_part = GeneratePlane(numX, numY, sphereThickness == 0.0*unit::metres);
 
     // The part extents
     std::vector<units::quantity<unit::length> > bbox = p_part->GetBoundingBox();
@@ -315,8 +298,13 @@ boost::shared_ptr<Part<3> > MappableGridGenerator::GenerateHemisphere(double sph
         double y_frac = vertex_location[1]*mReferenceLength / (bbox[3] - bbox[2]);
         double polar_angle = y_frac * spherePolarAngle;
 
-        double z_frac = vertex_location[2]*mReferenceLength / (bbox[5] - bbox[4]);
-        double radius = sphereRadius - sphereThickness * z_frac;
+        double z_frac = 0.0;
+        if(sphereThickness > 0.0*unit::metres)
+        {
+            z_frac = vertex_location[2]*mReferenceLength / (bbox[5] - bbox[4]);
+        }
+
+        double radius = (sphereRadius - sphereThickness * z_frac)/mReferenceLength;
 
         // Get the new x
         c_vector<double, 3> new_position;
@@ -333,4 +321,9 @@ boost::shared_ptr<Part<3> > MappableGridGenerator::GenerateHemisphere(double sph
 
     p_part->MergeCoincidentVertices();
     return p_part;
+}
+
+units::quantity<unit::length> MappableGridGenerator::GetReferenceLengthScale()
+{
+    return mReferenceLength;
 }

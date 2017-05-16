@@ -45,13 +45,14 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkGeometryFilter.h>
 #include <vtkTriangleFilter.h>
 #include <vtkCleanPolyData.h>
+#include <vtkAppendPolyData.h>
 #include "SmartPointers.hpp"
 #include "Exception.hpp"
 #include "PetscTools.hpp"
 #include "GeometryWriter.hpp"
 
 GeometryWriter::GeometryWriter() :
-    mpInputGeometry(),
+    mpInputGeometries(),
     mFilename(),
     mFormat(GeometryFormat::VTP)
 {
@@ -74,9 +75,9 @@ void GeometryWriter::SetFileName(const std::string& rFileName)
     mFilename = rFileName;
 }
 
-void GeometryWriter::SetInput(vtkSmartPointer<vtkPolyData> pSurface)
+void GeometryWriter::AddInput(vtkSmartPointer<vtkPolyData> pSurface)
 {
-    mpInputGeometry = pSurface;
+    mpInputGeometries.push_back(pSurface);
 }
 
 void GeometryWriter::SetOutputFormat(GeometryFormat::Value format)
@@ -86,7 +87,7 @@ void GeometryWriter::SetOutputFormat(GeometryFormat::Value format)
 
 void GeometryWriter::Write(bool masterOnly)
 {
-    if(!mpInputGeometry)
+    if(mpInputGeometries.size()==0)
     {
         EXCEPTION("An input geometry is not set.");
     }
@@ -100,24 +101,36 @@ void GeometryWriter::Write(bool masterOnly)
     {
         if((masterOnly and PetscTools::AmMaster()) or !masterOnly)
         {
+
             vtkSmartPointer<vtkTriangleFilter> p_tri_filter = vtkSmartPointer<vtkTriangleFilter>::New();
-            #if VTK_MAJOR_VERSION <= 5
+            if(mpInputGeometries.size()==1)
+            {
+                #if VTK_MAJOR_VERSION <= 5
                 p_tri_filter->SetInput(mpInputGeometry);
-            #else
-                p_tri_filter->SetInputData(mpInputGeometry);
-            #endif
+                #else
+                p_tri_filter->SetInputData(mpInputGeometries[0]);
+                #endif
+            }
+            else
+            {
+                vtkSmartPointer<vtkAppendPolyData> p_append = vtkSmartPointer<vtkAppendPolyData>::New();
+                for(unsigned idx=0;idx<mpInputGeometries.size();idx++)
+                {
+                    #if VTK_MAJOR_VERSION <= 5
+                        p_append->AddInput(mpInputGeometries[idx]);
+                    #else
+                        p_append->AddInputData(mpInputGeometries[idx]);
+                    #endif
+                }
+                p_tri_filter->SetInputConnection(p_append->GetOutputPort());
+            }
 
             vtkSmartPointer<vtkCleanPolyData> p_clean_filter = vtkSmartPointer<vtkCleanPolyData>::New();
             p_clean_filter->SetInputConnection(p_tri_filter->GetOutputPort());
-            p_clean_filter->Update();
 
             vtkSmartPointer<vtkSTLWriter> writer = vtkSmartPointer<vtkSTLWriter>::New();
             writer->SetFileName(mFilename.c_str());
-            #if VTK_MAJOR_VERSION <= 5
-                writer->SetInput(p_clean_filter->GetOutput());
-            #else
-                writer->SetInputData(p_clean_filter->GetOutput());
-            #endif
+            writer->SetInputConnection(p_clean_filter->GetOutputPort());
             writer->SetFileTypeToASCII();
             writer->Write();
         }
@@ -128,11 +141,28 @@ void GeometryWriter::Write(bool masterOnly)
         {
             vtkSmartPointer<vtkXMLPolyDataWriter> writer = vtkSmartPointer<vtkXMLPolyDataWriter>::New();
             writer->SetFileName(mFilename.c_str());
-            #if VTK_MAJOR_VERSION <= 5
-                writer->SetInput(mpInputGeometry);
-            #else
-                writer->SetInputData(mpInputGeometry);
-            #endif
+
+            if(mpInputGeometries.size()==1)
+            {
+                #if VTK_MAJOR_VERSION <= 5
+                    writer->SetInput(mpInputGeometry);
+                #else
+                    writer->SetInputData(mpInputGeometries[0]);
+                #endif
+            }
+            else
+            {
+                vtkSmartPointer<vtkAppendPolyData> p_append = vtkSmartPointer<vtkAppendPolyData>::New();
+                for(unsigned idx=0;idx<mpInputGeometries.size();idx++)
+                {
+                    #if VTK_MAJOR_VERSION <= 5
+                        p_append->AddInput(mpInputGeometries[idx]);
+                    #else
+                        p_append->AddInputData(mpInputGeometries[idx]);
+                    #endif
+                }
+                writer->SetInputConnection(p_append->GetOutputPort());
+            }
             writer->Write();
         }
     }

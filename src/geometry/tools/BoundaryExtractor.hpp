@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef BoundaryExtractor_HPP_
-#define BoundaryExtractor_HPP_
+#ifndef BOUNDARYEXTRACTOR_HPP_
+#define BOUNDARYEXTRACTOR_HPP_
 
 #include "SmartPointers.hpp"
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning

@@ -41,6 +41,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
 #include <vtkPoints.h>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/map.hpp>
+#include "ChasteSerialization.hpp"
 #include "SmartPointers.hpp"
 #include "ChastePoint.hpp"
 #include "UblasVectorInclude.hpp"
@@ -60,6 +63,26 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 class Part
 {
+    /**
+     * Archiving
+     */
+    friend class boost::serialization::access;
+
+    /**
+     * Do the serialize
+     * @param ar the archive
+     * @param version the archive version number
+     */
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & mFacets;
+        ar & mHoleMarkers;
+        ar & mRegionMarkers;
+        ar & mReferenceLength;
+        ar & mAttributes;
+    }
+
     /**
      * Planar collections of polygons
      */
@@ -90,6 +113,11 @@ class Part
      */
     bool mVtkIsUpToDate;
 
+    /**
+     * Attributes for the part
+     */
+    std::map<std::string, double> mAttributes;
+
 public:
 
     /**
@@ -109,6 +137,37 @@ public:
     ~Part();
 
     /**
+     * Add an attribute to the polygon
+     * @param rLabel the attribute label
+     * @param value the attribute value
+     */
+    void AddAttribute(const std::string& rLabel, double value);
+
+    /**
+     * Label a polygon edge if it is found
+     * @param loc the search point
+     * @param rLabel the label
+     * @return true if an edge is found
+     */
+    void AddAttributeToEdgeIfFound(DimensionalChastePoint<DIM> loc, const std::string& rLabel, double value);
+
+    /**
+     * Label all polygons
+     * @param value the value
+     * @param rLabel the label
+     * @return true if an edge is found
+     */
+    void AddAttributeToPolygons(const std::string& rLabel, double value);
+
+    /**
+     * Label all polygons
+     * @param value the value
+     * @param rLabel the label
+     * @return true if an edge is found
+     */
+    void AddAttributeToPolygonIfFound(DimensionalChastePoint<DIM> loc, const std::string& rLabel, double value);
+
+    /**
      * Add a circle to the part. If a target facet is not specified the default position is normal to the z-axis.
      * @param radius the circle radius
      * @param centre the centre of the circle
@@ -116,8 +175,7 @@ public:
      * @return polygon corresponding to the circle, useful for further operations, such as extrusion.
      */
     boost::shared_ptr<Polygon<DIM> > AddCircle(units::quantity<unit::length> radius,
-                                         DimensionalChastePoint<DIM> centre,
-                                         unsigned numSegments = 24);
+                                         DimensionalChastePoint<DIM> centre, unsigned numSegments = 24);
 
     /**
      * Add a cylinder to the part.
@@ -126,8 +184,8 @@ public:
      * @param centre the centre of the base
      * @param numSegments the number of line segments the base is described with
      */
-    void AddCylinder(units::quantity<unit::length> radius, units::quantity<unit::length> depth, DimensionalChastePoint<DIM> centre,
-                     unsigned numSegments = 24);
+    void AddCylinder(units::quantity<unit::length> radius, units::quantity<unit::length> depth,
+            DimensionalChastePoint<DIM> centre, unsigned numSegments = 24);
 
     /**
      * Add a cuboid to the part.
@@ -146,6 +204,12 @@ public:
      * @param location the location of the hole
      */
     void AddHoleMarker(DimensionalChastePoint<DIM> location);
+
+    /**
+     * Add a region marker to the part
+     * @param location the location of the region
+     */
+    void AddRegionMarker(DimensionalChastePoint<DIM> location);
 
     /**
      * Add a polygon described by a vector or vertices. The vertices should be planar. This is not
@@ -222,13 +286,26 @@ public:
      * @param spacing the grid spacing
      * @return a vector of grid indices
      */
-    std::vector<unsigned> GetContainingGridIndices(unsigned num_x, unsigned num_y, unsigned num_z, units::quantity<unit::length> spacing);
+    std::vector<unsigned> GetContainingGridIndices(unsigned num_x, unsigned num_y,
+            unsigned num_z, units::quantity<unit::length> spacing);
 
     /**
      * Return the hole marker locations
      * @return the hole marker locations
      */
     std::vector<DimensionalChastePoint<DIM> > GetHoleMarkers();
+
+    /**
+     * Return the region marker locations
+     * @return the region marker locations
+     */
+    std::vector<DimensionalChastePoint<DIM> > GetRegionMarkers();
+
+    /**
+     * Return the part attributes
+     * @return the part attributes
+     */
+    std::map<std::string, double> GetAttributes();
 
     /**
      * Return the facets
@@ -280,20 +357,12 @@ public:
     vtkSmartPointer<vtkPolyData> GetVtk(bool includeEdges = false);
 
     /**
-     * Label a polygon edge if it is found
-     * @param loc the search point
-     * @param rLabel the label
-     * @return true if an edge is found
-     */
-    void LabelEdges(DimensionalChastePoint<DIM> loc, const std::string& rLabel);
-
-    /**
      * Return true if the edge at the input point has the supplied label
      * @param loc the search point
      * @param rLabel the label
      * @return true if an edge is found
      */
-    bool EdgeHasLabel(DimensionalChastePoint<DIM> loc, const std::string& rLabel);
+    bool EdgeHasAttribute(DimensionalChastePoint<DIM> loc, const std::string& rLabel);
 
     /**
      * Is the point inside the part
@@ -341,5 +410,9 @@ public:
     void Write(const std::string& rFilename, GeometryFormat::Value format = GeometryFormat::VTP, bool includeEdges = false);
 
 };
+
+#include "SerializationExportWrapper.hpp"
+EXPORT_TEMPLATE_CLASS1(Part, 2)
+EXPORT_TEMPLATE_CLASS1(Part, 3)
 
 #endif /*PART_HPP_*/

@@ -42,8 +42,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkLine.h>
 #include <vtkDoubleArray.h>
 #include <vtkCellData.h>
-#include <boost/random.hpp>
-#include <boost/generator_iterator.hpp>
+#include <vtkPointData.h>
 #include "VesselNode.hpp"
 #include "VesselSegment.hpp"
 #include "Vessel.hpp"
@@ -59,7 +58,8 @@ Part<DIM>::Part() :
         mHoleMarkers(),
         mRegionMarkers(),
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
-        mVtkIsUpToDate(false)
+        mVtkIsUpToDate(false),
+        mAttributes()
 {
 }
 
@@ -74,6 +74,45 @@ template<unsigned DIM>
 Part<DIM>::~Part()
 {
 
+}
+
+template<unsigned DIM>
+void Part<DIM>::AddAttribute(const std::string& rLabel, double value)
+{
+    mAttributes[rLabel] = value;
+}
+
+template<unsigned DIM>
+void Part<DIM>::AddAttributeToEdgeIfFound(DimensionalChastePoint<DIM> loc, const std::string& rLabel, double value)
+{
+    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+    for(unsigned idx=0; idx<polygons.size(); idx++)
+    {
+        polygons[idx]->AddAttributeToEdgeIfFound(loc, rLabel, value);
+    }
+}
+
+template<unsigned DIM>
+void Part<DIM>::AddAttributeToPolygonIfFound(DimensionalChastePoint<DIM> loc, const std::string& rLabel, double value)
+{
+    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+    for(unsigned idx=0; idx<polygons.size(); idx++)
+    {
+        if(polygons[idx]->ContainsPoint(loc))
+        {
+            polygons[idx]->AddAttribute(rLabel, value);
+        }
+    }
+}
+
+template<unsigned DIM>
+void Part<DIM>::AddAttributeToPolygons(const std::string& rLabel, double value)
+{
+    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+    for(unsigned idx=0; idx<polygons.size(); idx++)
+    {
+        polygons[idx]->AddAttribute(rLabel, value);
+    }
 }
 
 template<unsigned DIM>
@@ -126,6 +165,12 @@ template<unsigned DIM>
 void Part<DIM>::AddHoleMarker(DimensionalChastePoint<DIM> hole)
 {
     mHoleMarkers.push_back(hole);
+}
+
+template<unsigned DIM>
+void Part<DIM>::AddRegionMarker(DimensionalChastePoint<DIM> region)
+{
+    mRegionMarkers.push_back(region);
 }
 
 template<unsigned DIM>
@@ -285,6 +330,21 @@ void Part<DIM>::AddVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselN
 }
 
 template<unsigned DIM>
+bool Part<DIM>::EdgeHasAttribute(DimensionalChastePoint<DIM> loc, const std::string& rLabel)
+{
+    bool edge_has_label = false;
+    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+    for(unsigned idx=0; idx<polygons.size(); idx++)
+    {
+        if(polygons[idx]->EdgeHasAttribute(loc, rLabel))
+        {
+            return true;
+        }
+    }
+    return edge_has_label;
+}
+
+template<unsigned DIM>
 void Part<DIM>::Extrude(boost::shared_ptr<Polygon<DIM> > pPolygon, units::quantity<unit::length> depth)
 {
     if(DIM==2)
@@ -350,9 +410,21 @@ void Part<DIM>::BooleanWithNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesse
 }
 
 template<unsigned DIM>
+std::map<std::string, double> Part<DIM>::GetAttributes()
+{
+    return mAttributes;
+}
+
+template<unsigned DIM>
 std::vector<DimensionalChastePoint<DIM> > Part<DIM>::GetHoleMarkers()
 {
     return mHoleMarkers;
+}
+
+template<unsigned DIM>
+std::vector<DimensionalChastePoint<DIM> > Part<DIM>::GetRegionMarkers()
+{
+    return mRegionMarkers;
 }
 
 template<unsigned DIM>
@@ -529,40 +601,48 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
         return mVtkPart;
     }
 
-    vtkSmartPointer<vtkPolyData> p_part_data = vtkSmartPointer<vtkPolyData>::New();
-    vtkSmartPointer<vtkPoints> p_vertices = vtkSmartPointer<vtkPoints>::New();
-
-    p_part_data->Allocate(1, 1);
-    // Loop through each polygon, collect the vertices and set correct point ids
-
+    // Get unique edge and polygon labels
     std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
-    std::vector<boost::shared_ptr<Facet<DIM> > > facets = GetFacets();
-
-    std::set<std::string> facet_labels;
+    std::set<std::string> polygon_labels;
     std::set<std::string> edge_labels;
-    for(unsigned idx=0; idx<facets.size(); idx++)
+    std::set<std::string> vertex_labels;
+
+    for(unsigned idx=0; idx<polygons.size(); idx++)
     {
-        std::string facet_label = facets[idx]->GetLabel();
-        if(!facet_label.empty())
+        std::map<std::string, double> attribute_map = polygons[idx]->GetAttributes();
+        for(std::map<std::string, double>::iterator it = attribute_map.begin(); it != attribute_map.end(); ++it)
         {
-            facet_labels.insert(facet_label);
+            polygon_labels.insert(it->first);
         }
+
         if(includeEdges)
         {
-            for(unsigned jdx=0;jdx<facets[idx]->GetPolygons().size();jdx++)
+            std::vector<std::map<std::string, double> > edge_atts_per_polygon = polygons[idx]->GetEdgeAttributes();
+            for(unsigned jdx=0;jdx<edge_atts_per_polygon.size();jdx++)
             {
-                std::vector<std::string> edge_labels_per_polygon = facets[idx]->GetPolygons()[jdx]->GetEdgeLabels();
-                for(unsigned kdx=0;kdx<edge_labels_per_polygon.size();kdx++)
+                for(std::map<std::string, double>::iterator it = edge_atts_per_polygon[jdx].begin();
+                        it != edge_atts_per_polygon[jdx].end(); ++it)
                 {
-                    edge_labels.insert(edge_labels_per_polygon[kdx]);
+                    edge_labels.insert(it->first);
                 }
             }
         }
     }
+    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
+    for(unsigned idx=0;idx<vertices.size(); idx++)
+    {
+        std::map<std::string, double> attribute_map = vertices[idx]->GetAttributes();
+        for(std::map<std::string, double>::iterator it = attribute_map.begin(); it != attribute_map.end(); ++it)
+        {
+            vertex_labels.insert(it->first);
+        }
+    }
 
     std::vector<vtkSmartPointer<vtkDoubleArray> > vtk_cell_data;
+    std::vector<vtkSmartPointer<vtkDoubleArray> > vtk_vertex_data;
+
     std::set<std::string>::iterator it;
-    for (it = facet_labels.begin(); it != facet_labels.end(); it++)
+    for (it = polygon_labels.begin(); it != polygon_labels.end(); it++)
     {
         vtkSmartPointer<vtkDoubleArray> p_facet_info = vtkSmartPointer<vtkDoubleArray>::New();
         p_facet_info->SetNumberOfComponents(1);
@@ -576,94 +656,163 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
         p_facet_info->SetName((*it).c_str());
         vtk_cell_data.push_back(p_facet_info);
     }
-
-    unsigned vert_counter = 0;
-
-    for (vtkIdType idx = 0; idx < vtkIdType(facets.size()); idx++)
+    for (it = vertex_labels.begin(); it != vertex_labels.end(); it++)
     {
-        for (vtkIdType kdx = 0; kdx < vtkIdType(facets[idx]->GetPolygons().size()); kdx++)
-        {
-            std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = facets[idx]->GetPolygons()[kdx]->GetVertices();
-            vtkSmartPointer<vtkPolygon> p_polygon = vtkSmartPointer<vtkPolygon>::New();
-            p_polygon->GetPointIds()->SetNumberOfIds(vertices.size());
-            std::vector<std::string> internal_edge_labels = facets[idx]->GetPolygons()[kdx]->GetEdgeLabels();
-            for (vtkIdType jdx = 0; jdx < vtkIdType(vertices.size()); jdx++)
-            {
-                c_vector<double, DIM> vertex_location = vertices[jdx]->GetLocation(mReferenceLength);
-                if(DIM==3)
-                {
-                    p_vertices->InsertNextPoint(vertex_location[0], vertex_location[1], vertex_location[2]);
-                }
-                else
-                {
-                    p_vertices->InsertNextPoint(vertex_location[0], vertex_location[1], 0.0);
-                }
-                p_polygon->GetPointIds()->SetId(jdx, vert_counter);
+        vtkSmartPointer<vtkDoubleArray> p_facet_info = vtkSmartPointer<vtkDoubleArray>::New();
+        p_facet_info->SetNumberOfComponents(1);
+        p_facet_info->SetName((*it).c_str());
+        vtk_vertex_data.push_back(p_facet_info);
+    }
 
-                if(jdx>0 and includeEdges)
-                {
-                    vtkSmartPointer<vtkLine> p_line = vtkSmartPointer<vtkLine>::New();
-                    p_line->GetPointIds()->SetNumberOfIds(2);
-                    p_line->GetPointIds()->SetId(0, vert_counter-1);
-                    p_line->GetPointIds()->SetId(1, vert_counter);
-                    if(internal_edge_labels.size()>0)
-                    {
-                        for(unsigned mdx=0;mdx<vtk_cell_data.size();mdx++)
-                        {
-                            if(internal_edge_labels[jdx-1]==vtk_cell_data[mdx]->GetName())
-                            {
-                                vtk_cell_data[mdx]->InsertNextTuple1(1.0);
-                            }
-                            else
-                            {
-                                vtk_cell_data[mdx]->InsertNextTuple1(0.0);
-                            }
-                        }
-                    }
-                    p_part_data->InsertNextCell(p_line->GetCellType(), p_line->GetPointIds());
-                }
-                if(jdx==vtkIdType(vertices.size())-1 and includeEdges)
-                {
-                    vtkSmartPointer<vtkLine> p_line = vtkSmartPointer<vtkLine>::New();
-                    p_line->GetPointIds()->SetNumberOfIds(2);
-                    p_line->GetPointIds()->SetId(0, vert_counter);
-                    p_line->GetPointIds()->SetId(1, vert_counter-vertices.size()+1);
-                    if(internal_edge_labels.size()>0)
-                    {
-                        for(unsigned mdx=0;mdx<vtk_cell_data.size();mdx++)
-                        {
-                            if(internal_edge_labels[vertices.size()-1]==vtk_cell_data[mdx]->GetName())
-                            {
-                                vtk_cell_data[mdx]->InsertNextTuple1(1.0);
-                            }
-                            else
-                            {
-                                vtk_cell_data[mdx]->InsertNextTuple1(0.0);
-                            }
-                        }
-                    }
-                    p_part_data->InsertNextCell(p_line->GetCellType(), p_line->GetPointIds());
-                }
-                vert_counter++;
-            }
-            p_part_data->InsertNextCell(p_polygon->GetCellType(), p_polygon->GetPointIds());
-            for(unsigned mdx=0;mdx<vtk_cell_data.size();mdx++)
+    // Set up the vertices
+    vtkSmartPointer<vtkPolyData> p_part_data = vtkSmartPointer<vtkPolyData>::New();
+    vtkSmartPointer<vtkPoints> p_vertices = vtkSmartPointer<vtkPoints>::New();
+    p_part_data->Allocate(1, 1);
+
+    for(unsigned idx=0;idx<vertices.size();idx++)
+    {
+        vertices[idx]->SetIndex(idx);
+        c_vector<double, DIM> vertex_location = vertices[idx]->GetLocation(mReferenceLength);
+        if(DIM==3)
+        {
+            p_vertices->InsertNextPoint(vertex_location[0], vertex_location[1], vertex_location[2]);
+        }
+        else
+        {
+            p_vertices->InsertNextPoint(vertex_location[0], vertex_location[1], 0.0);
+        }
+
+        for(unsigned jdx=0;jdx<vtk_vertex_data.size();jdx++)
+        {
+            std::map<std::string, double> attribute_map = vertices[idx]->GetAttributes();
+            bool found_attribute = false;
+            for(std::map<std::string, double>::iterator it = attribute_map.begin(); it != attribute_map.end(); ++it)
             {
-                if(facets[idx]->GetLabel()==vtk_cell_data[mdx]->GetName())
+                if(it->first == vtk_vertex_data[jdx]->GetName())
                 {
-                    vtk_cell_data[mdx]->InsertNextTuple1(1.0);
+                    vtk_vertex_data[jdx]->InsertNextTuple1(it->second);
+                    found_attribute = true;
+                    break;
                 }
-                else
+            }
+            if(!found_attribute)
+            {
+                vtk_vertex_data[jdx]->InsertNextTuple1(0.0);
+            }
+        }
+    }
+
+    // Insertion order is important here, lines first then polys
+    if(includeEdges)
+    {
+        for (vtkIdType idx = 0; idx < vtkIdType(polygons.size()); idx++)
+        {
+            std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > local_vertices = polygons[idx]->GetVertices();
+            std::vector<std::map<std::string, double> > edge_atts_per_polygon = polygons[idx]->GetEdgeAttributes();
+            for (vtkIdType jdx = 0; jdx < vtkIdType(local_vertices.size()); jdx++)
+            {
+                if(jdx>0)
                 {
-                    vtk_cell_data[mdx]->InsertNextTuple1(0.0);
+                    vtkSmartPointer<vtkLine> p_line = vtkSmartPointer<vtkLine>::New();
+                    p_line->GetPointIds()->SetNumberOfIds(2);
+                    p_line->GetPointIds()->SetId(0, local_vertices[jdx-1]->GetIndex());
+                    p_line->GetPointIds()->SetId(1, local_vertices[jdx]->GetIndex());
+                    for(unsigned kdx=0;kdx<vtk_cell_data.size();kdx++)
+                    {
+                        bool found_attribute = false;
+                        for(std::map<std::string, double>::iterator it = edge_atts_per_polygon[jdx-1].begin();
+                                it != edge_atts_per_polygon[jdx-1].end(); ++it)
+                        {
+                            if(it->first == vtk_cell_data[kdx]->GetName())
+                            {
+                                vtk_cell_data[kdx]->InsertNextTuple1(it->second);
+                                found_attribute = true;
+                                break;
+                            }
+                        }
+                        if(!found_attribute)
+                        {
+                            vtk_cell_data[kdx]->InsertNextTuple1(0.0);
+                        }
+                    }
+                    p_part_data->InsertNextCell(p_line->GetCellType(), p_line->GetPointIds());
+                }
+                if(jdx==vtkIdType(local_vertices.size())-1)
+                {
+                    vtkSmartPointer<vtkLine> p_line = vtkSmartPointer<vtkLine>::New();
+                    p_line->GetPointIds()->SetNumberOfIds(2);
+                    p_line->GetPointIds()->SetId(0, local_vertices[jdx]->GetIndex());
+                    p_line->GetPointIds()->SetId(1, local_vertices[0]->GetIndex());
+                    for(unsigned kdx=0;kdx<vtk_cell_data.size();kdx++)
+                    {
+                        bool found_attribute = false;
+                        for(std::map<std::string, double>::iterator it = edge_atts_per_polygon[jdx].begin();
+                                it != edge_atts_per_polygon[jdx].end(); ++it)
+                        {
+                            if(it->first == vtk_cell_data[kdx]->GetName())
+                            {
+                                vtk_cell_data[kdx]->InsertNextTuple1(it->second);
+                                found_attribute = true;
+                                break;
+                            }
+                        }
+                        if(!found_attribute)
+                        {
+                            vtk_cell_data[kdx]->InsertNextTuple1(0.0);
+                        }
+                    }
+                    p_part_data->InsertNextCell(p_line->GetCellType(), p_line->GetPointIds());
                 }
             }
         }
     }
+
+    // Add polygons
+    for (vtkIdType idx = 0; idx < vtkIdType(polygons.size()); idx++)
+    {
+        std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > local_vertices = polygons[idx]->GetVertices();
+        vtkSmartPointer<vtkPolygon> p_polygon = vtkSmartPointer<vtkPolygon>::New();
+        p_polygon->GetPointIds()->SetNumberOfIds(local_vertices.size());
+        for (vtkIdType jdx = 0; jdx < vtkIdType(local_vertices.size()); jdx++)
+        {
+            p_polygon->GetPointIds()->SetId(jdx, local_vertices[jdx]->GetIndex());
+        }
+        p_part_data->InsertNextCell(p_polygon->GetCellType(), p_polygon->GetPointIds());
+
+        for(unsigned jdx=0;jdx<vtk_cell_data.size();jdx++)
+        {
+            bool found_attribute = false;
+            std::map<std::string, double> attribute_map = polygons[idx]->GetAttributes();
+            for(std::map<std::string, double>::iterator it = attribute_map.begin(); it != attribute_map.end(); ++it)
+            {
+                if(it->first == vtk_cell_data[jdx]->GetName())
+                {
+                    vtk_cell_data[jdx]->InsertNextTuple1(it->second);
+                    found_attribute = true;
+                    break;
+                }
+            }
+            if(!found_attribute)
+            {
+                vtk_cell_data[jdx]->InsertNextTuple1(0.0);
+            }
+        }
+    }
+
     p_part_data->SetPoints(p_vertices);
     for(unsigned idx=0;idx<vtk_cell_data.size();idx++)
     {
-        p_part_data->GetCellData()->AddArray(vtk_cell_data[idx]);
+        if(vtk_cell_data[idx]->GetNumberOfTuples()>0)
+        {
+            p_part_data->GetCellData()->AddArray(vtk_cell_data[idx]);
+        }
+    }
+    for(unsigned idx=0;idx<vtk_vertex_data.size();idx++)
+    {
+        if(vtk_vertex_data[idx]->GetNumberOfTuples()>0)
+        {
+            p_part_data->GetPointData()->AddArray(vtk_vertex_data[idx]);
+        }
     }
 
     vtkSmartPointer<vtkCleanPolyData> p_clean_data = vtkSmartPointer<vtkCleanPolyData>::New();
@@ -778,31 +927,6 @@ void Part<DIM>::MergeCoincidentVertices()
 }
 
 template<unsigned DIM>
-void Part<DIM>::LabelEdges(DimensionalChastePoint<DIM> loc, const std::string& rLabel)
-{
-    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
-    for(unsigned idx=0; idx<polygons.size(); idx++)
-    {
-        polygons[idx]->LabelEdgeIfFound(loc, rLabel);
-    }
-}
-
-template<unsigned DIM>
-bool Part<DIM>::EdgeHasLabel(DimensionalChastePoint<DIM> loc, const std::string& rLabel)
-{
-    bool edge_has_label = false;
-    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
-    for(unsigned idx=0; idx<polygons.size(); idx++)
-    {
-        if(polygons[idx]->EdgeHasLabel(loc, rLabel))
-        {
-            return true;
-        }
-    }
-    return edge_has_label;
-}
-
-template<unsigned DIM>
 void Part<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 {
     std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
@@ -839,11 +963,15 @@ void Part<DIM>::Write(const std::string& fileName, GeometryFormat::Value format,
 {
     GeometryWriter writer;
     writer.SetFileName(fileName);
-    writer.SetInput(GetVtk(includeEdges));
+    writer.AddInput(GetVtk(includeEdges));
     writer.SetOutputFormat(format);
     writer.Write();
 }
 
 // Explicit instantiation
-template class Part<2> ;
-template class Part<3> ;
+template class Part<2>;
+template class Part<3>;
+
+#include "SerializationExportWrapperForCpp.hpp"
+EXPORT_TEMPLATE_CLASS1(Part, 2)
+EXPORT_TEMPLATE_CLASS1(Part, 3)

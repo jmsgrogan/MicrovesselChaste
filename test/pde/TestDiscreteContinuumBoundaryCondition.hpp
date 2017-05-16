@@ -53,7 +53,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DiscreteContinuumMesh.hpp"
 #include "VesselBasedDiscreteSource.hpp"
 
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestDiscreteContinuumBoundaryCondition : public CxxTest::TestSuite
 {

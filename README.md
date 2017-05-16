@@ -2,6 +2,42 @@
 
 This is an add-on for agent-based modelling of microvessels with [Chaste](http://www.cs.ox.ac.uk/chaste/). See the [project website](https://jmsgrogan.github.io/MicrovesselChaste/) for more details.
 
+## Release Notes:
+
+### 3.4.3
+
+#### geometry
+* Added labelling for edges and polygons. Labels can now be written to VTK files.
+* Dropped voronoi generator based on tetgen. May replace with VTK version in future.
+
+#### mesh
+* Major refactor to present homogeneous interface to both regular grids and unstructured meshes. 
+* Initial support for parallel solution storage on grids.
+* Added a grid calculator for generating and storing maps of discrete entities to grid locations.
+* Significant performance improvements in the generation of disrete entity maps.
+
+#### pde
+* Major refactor of finite element and finite difference solvers. Now includes parabolic PDE solvers.
+* The density map now plays a fundamental role in relating discrete entity densitities to sink and source
+strengths in PDEs.
+* Easier application of boundary conditions through geometry labelling.
+
+#### vessel
+* Significant performance improvements in merging coincident nodes.
+
+#### python
+* Simplify automatic wrapper generation
+
+#### infra
+* Add travis CI
+* Keep up with Chaste modifications
+
+### 3.4.2
+
+* First public release
+
+
+
 ## Install from Source (Linux Only)
 
 The project can be used directly as a typical C++ Chaste project. First, Chaste dependencies need to be built following the [Chaste Install Guide](https://chaste.cs.ox.ac.uk/trac/wiki/InstallGuides/InstallGuide). 

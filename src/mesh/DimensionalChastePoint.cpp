@@ -40,7 +40,8 @@ template<unsigned DIM>
 DimensionalChastePoint<DIM>::DimensionalChastePoint(double x, double y, double z, units::quantity<unit::length> referenceLength) :
         mLocation(zero_vector<double>(DIM)),
         mReferenceLength(referenceLength),
-        mIndex(0)
+        mIndex(0),
+        mAttributes()
 {
     if(mReferenceLength == 0.0*unit::metres)
     {
@@ -64,7 +65,8 @@ DimensionalChastePoint<DIM>::DimensionalChastePoint(double x, double y, double z
 template<unsigned DIM>
 DimensionalChastePoint<DIM>::DimensionalChastePoint(c_vector<double, DIM> coords, units::quantity<unit::length> referenceLength) :
         mReferenceLength(referenceLength),
-        mIndex(0)
+        mIndex(0),
+        mAttributes()
 {
     if(mReferenceLength == 0.0*unit::metres)
     {
@@ -95,6 +97,18 @@ template<unsigned DIM>
 DimensionalChastePoint<DIM>::~DimensionalChastePoint()
 {
 
+}
+
+template<unsigned DIM>
+void DimensionalChastePoint<DIM>::AddAttribute(const std::string& rAttribute, double value)
+{
+    mAttributes[rAttribute] = value;
+}
+
+template<unsigned DIM>
+std::map<std::string, double> DimensionalChastePoint<DIM>::GetAttributes()
+{
+    return mAttributes;
 }
 
 template<unsigned DIM>

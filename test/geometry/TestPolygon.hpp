@@ -43,18 +43,21 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkPolygon.h>
 #include <vtkPoints.h>
 #include <vtkPlane.h>
+#include "CheckpointArchiveTypes.hpp"
+#include "ArchiveLocationInfo.hpp"
+#include "OutputFileHandler.hpp"
 #include "UblasIncludes.hpp"
 #include "SmartPointers.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "Polygon.hpp"
 
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestPolygon : public CxxTest::TestSuite
 {
 public:
 
-    void TestConstructor()
+    void TestConstructor() throw(Exception)
     {
         std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices;
         vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
@@ -67,7 +70,7 @@ public:
         TS_ASSERT_EQUALS(polygon2.GetVertices().size(), 1u);
     }
 
-    void TestFactoryConstructor()
+    void TestFactoryConstructor() throw(Exception)
     {
         std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices;
         vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
@@ -81,7 +84,7 @@ public:
         TS_ASSERT_EQUALS(p_polygon2->GetVertices().size(), 1u);
     }
 
-    void TestAddingVertices()
+    void TestAddingVertices() throw(Exception)
     {
         std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices;
         vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
@@ -104,7 +107,7 @@ public:
         TS_ASSERT_THROWS_THIS(p_polygon2->ReplaceVertex(100, vertices[0]), "Requested vertex index out of range");
     }
 
-    void TestVtkMethods()
+    void TestVtkMethods() throw(Exception)
     {
         std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices;
         vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
@@ -142,7 +145,7 @@ public:
         std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > vertex_pair = p_polygon->GetVtkVertices();
     }
 
-    void TestVtkMethods2d()
+    void TestVtkMethods2d() throw(Exception)
     {
         std::vector<boost::shared_ptr<DimensionalChastePoint<2> > > vertices;
         vertices.push_back(DimensionalChastePoint<2>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
@@ -176,7 +179,7 @@ public:
         std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > vertex_pair = p_polygon->GetVtkVertices();
     }
 
-    void TestTransforms()
+    void TestTransforms() throw(Exception)
     {
         std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices;
         vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
@@ -196,7 +199,7 @@ public:
         TS_ASSERT_DELTA(p_polygon->GetVertices()[1]->GetLocation(1.e-6*unit::metres)[0], -new_position.GetLocation(1.e-6*unit::metres)[1], 1.e-6);
     }
 
-    void TestGeometryOperations()
+    void TestGeometryOperations() throw(Exception)
     {
         std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices;
         vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
@@ -221,7 +224,7 @@ public:
         TS_ASSERT_DELTA(p_polygon->GetDistanceToEdges(DimensionalChastePoint<3>(1.5, 0.5, 0.0, 1.e-6*unit::metres)).value(), 0.5e-6, 1.e-8);
     }
 
-    void TestEdgeLabelling()
+    void TestLabelling() throw(Exception)
     {
         std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices;
         vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
@@ -231,11 +234,51 @@ public:
         boost::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(vertices);
 
         std::string test = "Test";
-        bool edge_found = p_polygon->LabelEdgeIfFound(DimensionalChastePoint<3>(0.5, 0.0, 0.0, 1.e-6*unit::metres), test);
-        std::vector<std::string> edge_labels = p_polygon->GetEdgeLabels();
+        bool edge_found = p_polygon->AddAttributeToEdgeIfFound(DimensionalChastePoint<3>(0.5, 0.0, 0.0, 1.e-6*unit::metres), test, 2.0);
+        std::vector<std::map<std::string, double> > edge_attributes = p_polygon->GetEdgeAttributes();
         TS_ASSERT(edge_found);
-        TS_ASSERT(edge_labels[0]==test or edge_labels[1]==test or edge_labels[2]==test or edge_labels[3]==test);
-        TS_ASSERT(p_polygon->EdgeHasLabel(DimensionalChastePoint<3>(0.5, 0.0, 0.0, 1.e-6*unit::metres), "Test"));
+        TS_ASSERT_DELTA(edge_attributes[0]["Test"], 2.0, 1.e-6);
+        TS_ASSERT(p_polygon->EdgeHasAttribute(DimensionalChastePoint<3>(0.5, 0.0, 0.0, 1.e-6*unit::metres), "Test"));
+
+        std::string poly_label = "TestPoly";
+        p_polygon->AddAttribute(poly_label, 2.0);
+        TS_ASSERT_DELTA(p_polygon->GetAttributes()[poly_label], 2.0, 1.e-6);
+    }
+
+    void TestArchiving() throw (Exception)
+    {
+        // Test Archiving
+        OutputFileHandler handler("archive", false);
+        ArchiveLocationInfo::SetArchiveDirectory(handler.FindFile(""));
+        std::string archive_filename = ArchiveLocationInfo::GetProcessUniqueFilePath("Polygon.arch");
+
+        std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices;
+        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 1.0, 0.0, 1.e-6*unit::metres));
+        boost::shared_ptr<Polygon<3> > p_polygon1 = Polygon<3>::Create(vertices);
+
+        // Save archive
+        {
+            std::ofstream ofs(archive_filename.c_str());
+            boost::archive::text_oarchive output_arch(ofs);
+            output_arch << p_polygon1;
+        }
+
+        // Load archive
+        {
+            boost::shared_ptr<Polygon<3> > p_polygon_from_archive;
+
+            // Read from this input file
+            std::ifstream ifs(archive_filename.c_str(), std::ios::binary);
+            boost::archive::text_iarchive input_arch(ifs);
+
+            // restore from the archive
+            input_arch >> p_polygon_from_archive;
+
+            // Check that we remember the reference length
+            TS_ASSERT_EQUALS(p_polygon_from_archive->GetVertices().size(), 3u);
+        }
     }
 };
 

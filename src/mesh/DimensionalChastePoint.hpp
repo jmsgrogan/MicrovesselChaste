@@ -37,6 +37,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define DIMENSIONALCHASTEPOINT_HPP_
 
 #include <vector>
+#include <map>
+#include <string>
+#include <boost/serialization/map.hpp>
 #include "ChasteSerialization.hpp"
 #include "SmartPointers.hpp"
 #include "UblasVectorInclude.hpp"
@@ -66,6 +69,7 @@ class DimensionalChastePoint
         ar & mReferenceLength;
         ar & mLocation;
         ar & mIndex;
+        ar & mAttributes;
     }
 
 protected:
@@ -87,6 +91,11 @@ protected:
      * An optional index
      */
     unsigned mIndex;
+
+    /**
+     * Attributes, for when used as geometry vertices
+     */
+    std::map<std::string, double> mAttributes;
 
 public:
 
@@ -131,6 +140,13 @@ public:
     virtual ~DimensionalChastePoint();
 
     /**
+     * Add an attribute
+     * @param rAttribute the label
+     * @param value the value
+     */
+    void AddAttribute(const std::string& rAttribute, double value);
+
+    /**
      * Get the distance between this point and the input point
      * @param rLocation the input point
      * @return the distance between this point and the input point
@@ -142,6 +158,12 @@ public:
      * @return the point index
      */
     unsigned GetIndex();
+
+    /**
+     * Return the attributes
+     * @return the attributes
+     */
+    std::map<std::string, double> GetAttributes();
 
     /**
      * Return a point midway between this point and the input point

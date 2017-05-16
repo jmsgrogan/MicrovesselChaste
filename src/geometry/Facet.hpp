@@ -42,6 +42,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkSmartPointer.h>
 #include <vtkPoints.h>
 #include <vtkPlane.h>
+#include <boost/serialization/vector.hpp>
+#include "ChasteSerialization.hpp"
 #include "SmartPointers.hpp"
 #include "UblasVectorInclude.hpp"
 #include "Polygon.hpp"
@@ -53,6 +55,24 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 class Facet
 {
+    /**
+     * Archiving
+     */
+    friend class boost::serialization::access;
+
+    /**
+     * Do the serialize
+     * @param ar the archive
+     * @param version the archive version number
+     */
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & mPolygons;
+        ar & mVertices;
+        ar & mVerticesUpToDate;
+    }
+
     /**
      * The polygons making up the facet
      */
@@ -71,19 +91,14 @@ class Facet
     bool mVerticesUpToDate;
 
     /**
-     * Data container, useful for specifying boundary conditions on facets
-     */
-    std::map<std::string, double> mData;
-
-    /**
-     * A label for the application of boundary conditions
-     */
-    std::string mLabel;
-
-    /**
      * The reference length scale
      */
     units::quantity<unit::length> mReferenceLength;
+
+    /**
+     * Constructor for serialization
+     */
+    Facet();
 
 public:
 
@@ -157,12 +172,6 @@ public:
     units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
-     * Get the label for boundary conditions
-     * @return label the boundary condition label
-     */
-    std::string GetLabel();
-
-    /**
      * Return the facet's plane
      * @return a vtk plane on the facet's plane
      */
@@ -200,12 +209,6 @@ public:
     void RotateAboutAxis(c_vector<double, 3> axis, double angle);
 
     /**
-     * Set the label for boundary conditions
-     * @param label the boundary condition label
-     */
-    void SetLabel(const std::string& label);
-
-    /**
      * Move the facet along the translation vector
      * @param translationVector the new location is the original + the translationVector
      */
@@ -217,5 +220,9 @@ public:
     void UpdateVertices();
 
 };
+
+#include "SerializationExportWrapper.hpp"
+EXPORT_TEMPLATE_CLASS1(Facet, 2)
+EXPORT_TEMPLATE_CLASS1(Facet, 3)
 
 #endif /*FACET_HPP_*/

@@ -33,20 +33,33 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkIdTypeArray.h>
 #include <vtkTriangle.h>
 #include <vtkDoubleArray.h>
 #include <vtkLine.h>
 #include "Exception.hpp"
-#include "Polygon.hpp"
 #include "GeometryTools.hpp"
+
+#include "Polygon.hpp"
+
+template<unsigned DIM>
+Polygon<DIM>::Polygon() :
+        mVertices(),
+        mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
+        mEdgeAttributes(),
+        mAttributes(),
+        mVtkRepresentationUpToDate(false),
+        mpVtkRepresentation()
+{
+
+}
 
 template<unsigned DIM>
 Polygon<DIM>::Polygon(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices) :
         mVertices(vertices),
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
-        mEdgeLabels(),
+        mEdgeAttributes(),
+        mAttributes(),
         mVtkRepresentationUpToDate(false),
         mpVtkRepresentation()
 {
@@ -57,7 +70,8 @@ template<unsigned DIM>
 Polygon<DIM>::Polygon(boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex) :
         mVertices(),
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
-        mEdgeLabels(),
+        mEdgeAttributes(),
+        mAttributes(),
         mVtkRepresentationUpToDate(false),
         mpVtkRepresentation()
 {
@@ -84,6 +98,50 @@ Polygon<DIM>::~Polygon()
 }
 
 template<unsigned DIM>
+void Polygon<DIM>::AddAttribute(const std::string& rLabel, double value)
+{
+    mAttributes[rLabel] = value;
+}
+
+template<unsigned DIM>
+bool Polygon<DIM>::AddAttributeToEdgeIfFound(DimensionalChastePoint<DIM> loc,
+        const std::string& rLabel, double value)
+{
+    // Cycle through the edges, check if it contains point, label if found
+    vtkSmartPointer<vtkPolygon> p_polygon = GetVtkPolygon();
+    unsigned num_edges = p_polygon->GetNumberOfEdges();
+    bool edge_found = false;
+    for(unsigned idx=0; idx<num_edges;idx++)
+    {
+        vtkSmartPointer<vtkPoints> p_line = p_polygon->GetEdge(idx)->GetPoints();
+        c_vector<double, 3> start_point;
+        p_line->GetPoint(0, &start_point[0]);
+        c_vector<double, 3> end_point;
+        p_line->GetPoint(1, &end_point[0]);
+        DimensionalChastePoint<DIM> start_loc = DimensionalChastePoint<DIM>(start_point[0], start_point[1],
+                start_point[2], mReferenceLength);
+        DimensionalChastePoint<DIM> end_loc = DimensionalChastePoint<DIM>(end_point[0], end_point[1],
+                end_point[2], mReferenceLength);
+        if(GetDistanceToLineSegment(start_loc, end_loc, loc)/mReferenceLength<1.e-3)
+        {
+            mEdgeAttributes[idx][rLabel]=value;
+            edge_found = true;
+        }
+    }
+    return edge_found;
+}
+
+template<unsigned DIM>
+void Polygon<DIM>::AddAttributeToAllEdges(const std::string& rLabel, double value)
+{
+    GetVtkPolygon();
+    for(unsigned idx=0;idx<mEdgeAttributes.size();idx++)
+    {
+        mEdgeAttributes[idx][rLabel] = value;
+    }
+}
+
+template<unsigned DIM>
 void Polygon<DIM>::AddVertices(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices)
 {
     // Add the new vertices
@@ -96,6 +154,19 @@ void Polygon<DIM>::AddVertex(boost::shared_ptr<DimensionalChastePoint<DIM> > pVe
 {
     mVertices.push_back(pVertex);
     mVtkRepresentationUpToDate = false;
+}
+
+template<unsigned DIM>
+std::vector<std::map<std::string, double> > Polygon<DIM>::GetEdgeAttributes()
+{
+    GetVtkPolygon();
+    return mEdgeAttributes;
+}
+
+template<unsigned DIM>
+std::map<std::string, double> Polygon<DIM>::GetAttributes()
+{
+    return mAttributes;
 }
 
 template<unsigned DIM>
@@ -156,21 +227,14 @@ vtkSmartPointer<vtkPolygon> Polygon<DIM>::GetVtkPolygon()
         }
 
         // Also set up edge labels
-        mEdgeLabels = std::vector<std::string>(p_vertices->GetNumberOfPoints(), "None");
+        mEdgeAttributes = std::vector<std::map<std::string, double> >(p_vertices->GetNumberOfPoints());
         mVtkRepresentationUpToDate = true;
     }
     return mpVtkRepresentation;
 }
 
 template<unsigned DIM>
-std::vector<std::string> Polygon<DIM>::GetEdgeLabels()
-{
-    GetVtkPolygon();
-    return mEdgeLabels;
-}
-
-template<unsigned DIM>
-bool Polygon<DIM>::EdgeHasLabel(DimensionalChastePoint<DIM> loc, const std::string& rLabel)
+bool Polygon<DIM>::EdgeHasAttribute(DimensionalChastePoint<DIM> loc, const std::string& rLabel)
 {
     // Cycle through the edges, check if it contains point, label if found
     bool edge_found = false;
@@ -178,7 +242,7 @@ bool Polygon<DIM>::EdgeHasLabel(DimensionalChastePoint<DIM> loc, const std::stri
     unsigned num_edges = p_polygon->GetNumberOfEdges();
     for(unsigned idx=0; idx<num_edges;idx++)
     {
-        if(mEdgeLabels[idx]!="None")
+        if(mEdgeAttributes[idx].count(rLabel))
         {
             vtkSmartPointer<vtkPoints> p_line = p_polygon->GetEdge(idx)->GetPoints();
             c_vector<double, 3> start_point;
@@ -191,10 +255,7 @@ bool Polygon<DIM>::EdgeHasLabel(DimensionalChastePoint<DIM> loc, const std::stri
                     end_point[2], mReferenceLength);
             if(GetDistanceToLineSegment(start_loc, end_loc, loc)/mReferenceLength<1.e-3)
             {
-                if(mEdgeLabels[idx] == rLabel)
-                {
-                    return true;
-                }
+                return true;
             }
         }
     }
@@ -202,40 +263,9 @@ bool Polygon<DIM>::EdgeHasLabel(DimensionalChastePoint<DIM> loc, const std::stri
 }
 
 template<unsigned DIM>
-bool Polygon<DIM>::LabelEdgeIfFound(DimensionalChastePoint<DIM> loc, const std::string& rLabel)
+bool Polygon<DIM>::HasAttribute(const std::string& rLabel)
 {
-    // Cycle through the edges, check if it contains point, label if found
-    vtkSmartPointer<vtkPolygon> p_polygon = GetVtkPolygon();
-    unsigned num_edges = p_polygon->GetNumberOfEdges();
-    bool edge_found = false;
-    for(unsigned idx=0; idx<num_edges;idx++)
-    {
-        vtkSmartPointer<vtkPoints> p_line = p_polygon->GetEdge(idx)->GetPoints();
-        c_vector<double, 3> start_point;
-        p_line->GetPoint(0, &start_point[0]);
-        c_vector<double, 3> end_point;
-        p_line->GetPoint(1, &end_point[0]);
-        DimensionalChastePoint<DIM> start_loc = DimensionalChastePoint<DIM>(start_point[0], start_point[1],
-                start_point[2], mReferenceLength);
-        DimensionalChastePoint<DIM> end_loc = DimensionalChastePoint<DIM>(end_point[0], end_point[1],
-                end_point[2], mReferenceLength);
-        if(GetDistanceToLineSegment(start_loc, end_loc, loc)/mReferenceLength<1.e-3)
-        {
-            mEdgeLabels[idx] = rLabel;
-            edge_found = true;
-        }
-    }
-    return edge_found;
-}
-
-template<unsigned DIM>
-void Polygon<DIM>::LabelAllEdges(const std::string& rLabel)
-{
-    GetVtkPolygon();
-    for(unsigned idx=0;idx<mEdgeLabels.size();idx++)
-    {
-        mEdgeLabels[idx]=rLabel;
-    }
+    return(mAttributes.count(rLabel)>0);
 }
 
 template<unsigned DIM>
@@ -432,4 +462,8 @@ void Polygon<DIM>::Translate(DimensionalChastePoint<DIM> translationVector)
 // Explicit instantiation
 template class Polygon<2>;
 template class Polygon<3>;
+
+#include "SerializationExportWrapperForCpp.hpp"
+EXPORT_TEMPLATE_CLASS1(Polygon, 2)
+EXPORT_TEMPLATE_CLASS1(Polygon, 3)
 

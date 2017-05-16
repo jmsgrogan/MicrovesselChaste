@@ -337,7 +337,7 @@ void AbstractGreensFunctionSolverBase<DIM>::WriteSolution(std::map<std::string, 
 
     GeometryWriter geometry_writer;
     geometry_writer.SetFileName(this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/segments.vtp");
-    geometry_writer.SetInput(pPolyData);
+    geometry_writer.AddInput(pPolyData);
     geometry_writer.Write();
 }
 

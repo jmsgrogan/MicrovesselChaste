@@ -33,15 +33,14 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTMAPPABLEGRIDGENERATOR_HPP_
 #define TESTMAPPABLEGRIDGENERATOR_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include <vector>
 #include <string>
-#include <math.h>
+#include "CheckpointArchiveTypes.hpp"
+#include "ArchiveLocationInfo.hpp"
 #include "FileFinder.hpp"
 #include "OutputFileHandler.hpp"
 #include "MappableGridGenerator.hpp"
@@ -49,7 +48,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DiscreteContinuumMesh.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
 #include "DimensionalChastePoint.hpp"
-#include "VtkMeshWriter.hpp"
+#include "MultiFormatMeshWriter.hpp"
+
+#include "PetscSetupAndFinalize.hpp"
 
 class TestMappableGridGenerator : public CxxTest::TestSuite
 {
@@ -58,13 +59,15 @@ public:
 
     void TestMakePlane() throw(Exception)
     {
+        OutputFileHandler file_handler("TestMappableGridGenerator", true);
+
         // Make one with and without end caps
         MappableGridGenerator generator;
         boost::shared_ptr<Part<3> > p_part = generator.GeneratePlane(10, 10);
         TS_ASSERT_EQUALS(p_part->GetVertices().size(), 200u);
         TS_ASSERT_EQUALS(p_part->GetPolygons().size(), 198u);
 
-        boost::shared_ptr<Part<3> > p_part_no_caps = generator.GeneratePlane(10, 10, false);
+        boost::shared_ptr<Part<3> > p_part_no_caps = generator.GeneratePlane(10, 10, false, false);
         TS_ASSERT_EQUALS(p_part_no_caps->GetVertices().size(), 200u);
         TS_ASSERT_EQUALS(p_part_no_caps->GetPolygons().size(), 180u);
 
@@ -73,24 +76,32 @@ public:
         p_mesh_generator->SetDomain(p_part);
         p_mesh_generator->Update();
 
-        VtkMeshWriter<3, 3> mesh_writer("TestMappableGridGenerator", "Plane", false);
-        mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
+        MultiFormatMeshWriter<3> mesh_writer;
+        mesh_writer.SetMesh(p_mesh_generator->GetMesh());
+        mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"plane");
+        mesh_writer.Write();
     }
 
     void TestMakeCylinder() throw(Exception)
     {
+        OutputFileHandler file_handler("TestMappableGridGenerator", false);
+
         // Make one closed cylinder, one open cylinder and one with too large an angle.
         MappableGridGenerator generator;
-        boost::shared_ptr<Part<3> > p_part = generator.GenerateCylinder(1.5, 0.1 , 5.0, 10, 10);
-        boost::shared_ptr<Part<3> > p_part_open = generator.GenerateCylinder(1.5, 0.1 , 5.0, 10, 10, M_PI);
-        TS_ASSERT_THROWS_ANYTHING(generator.GenerateCylinder(1.5, 0.1 , 5.0, 10, 10, 2.1*M_PI));
+        units::quantity<unit::length> radius = 1.5*unit::metres;
+        units::quantity<unit::length> thickness = 0.1*unit::metres;
+        units::quantity<unit::length> height = 5.0*unit::metres;
+
+        boost::shared_ptr<Part<3> > p_part = generator.GenerateCylinder(radius, thickness, height, 10, 10);
+        boost::shared_ptr<Part<3> > p_part_open = generator.GenerateCylinder(radius, thickness, height, 10, 10, M_PI);
+        TS_ASSERT_THROWS_ANYTHING(generator.GenerateCylinder(radius, thickness, height, 10, 10, 2.1*M_PI));
 
         // Make sure the vertices are in the expected locations
         std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices = p_part->GetVertices();
         for(unsigned idx=0; idx<vertices.size(); idx++)
         {
-            double loc_x = vertices[idx]->GetLocation(1.e-6*unit::metres)[0];
-            double loc_z = vertices[idx]->GetLocation(1.e-6*unit::metres)[2];
+            double loc_x = vertices[idx]->GetLocation(1.0*unit::metres)[0];
+            double loc_z = vertices[idx]->GetLocation(1.0*unit::metres)[2];
             double distance = std::sqrt(loc_x*loc_x + loc_z*loc_z);
             bool is_inside = (distance < 1.5  + 1.e-6) && (distance > 1.4  - 1.e-6);
             TS_ASSERT(is_inside);
@@ -100,25 +111,44 @@ public:
         boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
         p_mesh_generator->Update();
-        VtkMeshWriter<3, 3> mesh_writer("TestMappableGridGenerator", "Closed_Cylinder", false);
-        mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
+        MultiFormatMeshWriter<3> mesh_writer;
+        mesh_writer.SetMesh(p_mesh_generator->GetMesh());
+        mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"cylinder");
+        mesh_writer.Write();
     }
 
+    void TestMakeCylinderShell() throw(Exception)
+    {
+        OutputFileHandler file_handler("TestMappableGridGenerator", false);
+
+        // Make one closed cylinder, one open cylinder and one with too large an angle.
+        MappableGridGenerator generator;
+        units::quantity<unit::length> radius = 1.5*unit::metres;
+        units::quantity<unit::length> thickness = 0.0*unit::metres;
+        units::quantity<unit::length> height = 5.0*unit::metres;
+        boost::shared_ptr<Part<3> > p_part = generator.GenerateCylinder(radius, thickness, height, 10, 10);
+        p_part->Write(file_handler.GetOutputDirectoryFullPath()+"cylinder_shell.vtp");
+    }
 
     void TestMakeHemisphere() throw(Exception)
     {
+        OutputFileHandler file_handler("TestMappableGridGenerator", false);
+
         // Make one good and two 'bad' hemispheres
         MappableGridGenerator generator;
-        boost::shared_ptr<Part<3> > p_part = generator.GenerateHemisphere(1.5, 0.1 , 10, 10, M_PI, 0.5*M_PI);
-        TS_ASSERT_THROWS_ANYTHING(generator.GenerateHemisphere(1.5, 0.1 , 10, 10, 2.0*M_PI, 0.5*M_PI));
-        TS_ASSERT_THROWS_ANYTHING(generator.GenerateHemisphere(1.5, 0.1 , 10, 10, M_PI, 1.0*M_PI));
+        units::quantity<unit::length> radius = 1.5*unit::metres;
+        units::quantity<unit::length> thickness = 0.1*unit::metres;
+
+        boost::shared_ptr<Part<3> > p_part = generator.GenerateHemisphere(radius, thickness, 10, 10, M_PI, 0.5*M_PI);
+        TS_ASSERT_THROWS_ANYTHING(generator.GenerateHemisphere(radius, thickness, 10, 10, 2.0*M_PI, 0.5*M_PI));
+        TS_ASSERT_THROWS_ANYTHING(generator.GenerateHemisphere(radius, thickness, 10, 10, M_PI, 1.0*M_PI));
 
         // Make sure the vertices are in the expected locations
         std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices = p_part->GetVertices();
         for(unsigned idx=0; idx<vertices.size(); idx++)
         {
-            bool is_inside = (vertices[idx]->GetNorm2()/(1.e-6*unit::metres) < 1.5  + 1.e-6) &&
-                    (vertices[idx]->GetNorm2()/(1.e-6*unit::metres) > 1.4  - 1.e-6);
+            bool is_inside = (vertices[idx]->GetNorm2()/(1.0*unit::metres) < 1.5  + 1.e-6) &&
+                    (vertices[idx]->GetNorm2()/(1.0*unit::metres) > 1.4  - 1.e-6);
             TS_ASSERT(is_inside);
         }
 
@@ -126,8 +156,58 @@ public:
         boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
         p_mesh_generator->Update();
-        VtkMeshWriter<3, 3> mesh_writer("TestMappableGridGenerator", "Hemisphere", false);
-        mesh_writer.WriteFilesUsingMesh(*(p_mesh_generator->GetMesh()));
+
+        MultiFormatMeshWriter<3> mesh_writer;
+        mesh_writer.SetMesh(p_mesh_generator->GetMesh());
+        mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"hemisphere");
+        mesh_writer.Write();
+    }
+
+    void TestMakeHemisphereShell() throw(Exception)
+    {
+        OutputFileHandler file_handler("TestMappableGridGenerator", false);
+
+        // Make one good and two 'bad' hemispheres
+        MappableGridGenerator generator;
+        units::quantity<unit::length> radius = 1.5*unit::metres;
+        units::quantity<unit::length> thickness = 0.0*unit::metres;
+
+        boost::shared_ptr<Part<3> > p_part = generator.GenerateHemisphere(radius, thickness, 10, 10, M_PI, 0.5*M_PI);
+        p_part->Write(file_handler.GetOutputDirectoryFullPath()+"hemisphere_shell.vtp");
+    }
+
+    void TestArchiving() throw (Exception)
+    {
+        // Test Archiving
+        OutputFileHandler handler("archive", false);
+        ArchiveLocationInfo::SetArchiveDirectory(handler.FindFile(""));
+        std::string archive_filename = ArchiveLocationInfo::GetProcessUniqueFilePath("MappableGridGenerator.arch");
+
+        BaseUnits::Instance()->SetReferenceLengthScale(2.0*unit::metres);
+
+        // Save archive
+        {
+            boost::shared_ptr<MappableGridGenerator> p_generator = MappableGridGenerator::Create();
+            std::ofstream ofs(archive_filename.c_str());
+            boost::archive::text_oarchive output_arch(ofs);
+            output_arch << p_generator;
+        }
+
+        // Load archive
+        {
+            boost::shared_ptr<MappableGridGenerator> p_generator_from_archive;
+
+            // Read from this input file
+            std::ifstream ifs(archive_filename.c_str(), std::ios::binary);
+            boost::archive::text_iarchive input_arch(ifs);
+
+            // restore from the archive
+            input_arch >> p_generator_from_archive;
+
+            // Check that we remember the reference length
+            BaseUnits::Instance()->SetReferenceLengthScale(3.0*unit::metres);
+            TS_ASSERT_DELTA(p_generator_from_archive->GetReferenceLengthScale()/(1.0*unit::metres), 2.0, 1.e-6);
+        }
     }
 };
 

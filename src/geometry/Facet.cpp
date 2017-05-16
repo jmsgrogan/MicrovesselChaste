@@ -39,16 +39,23 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkTriangle.h>
 #include <vtkPolygon.h>
 #include "Exception.hpp"
-
 #include "Facet.hpp"
+
+template<unsigned DIM>
+Facet<DIM>::Facet() :
+        mPolygons(),
+        mVertices(),
+        mVerticesUpToDate(false),
+        mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
+{
+
+}
 
 template<unsigned DIM>
 Facet<DIM>::Facet(std::vector<boost::shared_ptr<Polygon<DIM> > > polygons) :
         mPolygons(polygons),
         mVertices(),
         mVerticesUpToDate(false),
-        mData(),
-        mLabel(),
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
 {
 
@@ -59,8 +66,6 @@ Facet<DIM>::Facet(boost::shared_ptr<Polygon<DIM> > pPolygon) :
         mPolygons(),
         mVertices(),
         mVerticesUpToDate(false),
-        mData(),
-        mLabel(),
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
 {
     mPolygons.push_back(pPolygon);
@@ -172,12 +177,6 @@ DimensionalChastePoint<DIM> Facet<DIM>::GetCentroid()
     {
         return DimensionalChastePoint<DIM>(return_centroid[0], return_centroid[1], 0.0, mReferenceLength);
     }
-}
-
-template<unsigned DIM>
-std::string Facet<DIM>::GetLabel()
-{
-    return mLabel;
 }
 
 template<unsigned DIM>
@@ -299,12 +298,6 @@ void Facet<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 }
 
 template<unsigned DIM>
-void Facet<DIM>::SetLabel(const std::string& label)
-{
-    mLabel= label;
-}
-
-template<unsigned DIM>
 void Facet<DIM>::Translate(DimensionalChastePoint<DIM> translationVector)
 {
     std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
@@ -337,3 +330,7 @@ void Facet<DIM>::UpdateVertices()
 // Explicit instantiation
 template class Facet<2>;
 template class Facet<3>;
+
+#include "SerializationExportWrapperForCpp.hpp"
+EXPORT_TEMPLATE_CLASS1(Facet, 2)
+EXPORT_TEMPLATE_CLASS1(Facet, 3)

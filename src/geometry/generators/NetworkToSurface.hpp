@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef NetworkToSurface_HPP_
-#define NetworkToSurface_HPP_
+#ifndef NETWORKTOSURFACE_HPP_
+#define NETWORKTOSURFACE_HPP_
 
 #include <vector>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning

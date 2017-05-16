@@ -90,7 +90,7 @@ void MultiFormatMeshWriter<DIM>::SetMesh(boost::shared_ptr<DiscreteContinuumMesh
 }
 
 template<unsigned DIM>
-void MultiFormatMeshWriter<DIM>::SetFilename(const std::string& filename)
+void MultiFormatMeshWriter<DIM>::SetFileName(const std::string& filename)
 {
     mFilepath = filename;
 }

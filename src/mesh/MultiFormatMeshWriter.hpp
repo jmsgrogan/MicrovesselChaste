@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef MULTIFORMATMESHWRITER_HPP_
 #define MULTIFORMATMESHWRITER_HPP_
 
@@ -113,7 +111,7 @@ public:
      * Set the filename for the writer without extension
      * @param rFilename the file name without extension
      */
-    void SetFilename(const std::string& rFilename);
+    void SetFileName(const std::string& rFilename);
 
     /**
      * Set the mesh in vtu format

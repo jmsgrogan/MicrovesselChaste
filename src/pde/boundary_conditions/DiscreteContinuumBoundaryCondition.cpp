@@ -117,7 +117,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
         pContainer->DefineConstantDirichletOnMeshBoundary(p_mesh.get(), mValue/mReferenceConcentration);
         apply_boundary = false;
     }
-    else if(mType == BoundaryConditionType::FACET || mType == BoundaryConditionType::VESSEL_VOLUME ||
+    else if(mType == BoundaryConditionType::POLYGON || mType == BoundaryConditionType::VESSEL_VOLUME ||
             mIsRobin || mIsNeumann or mType == BoundaryConditionType::EDGE)
     {
         use_boundry_nodes = true;
@@ -276,7 +276,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
             }
         }
     }
-    else if(mType == BoundaryConditionType::FACET)
+    else if(mType == BoundaryConditionType::POLYGON)
     {
         if(!mpDomain)
         {
@@ -284,10 +284,10 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
         }
         else
         {
-            std::vector<boost::shared_ptr<Facet<DIM> > > facets =  mpDomain->GetFacets();
-            for(unsigned jdx=0; jdx<facets.size();jdx++)
+            std::vector<boost::shared_ptr<Polygon<DIM> > > polygons =  mpDomain->GetPolygons();
+            for(unsigned jdx=0; jdx<polygons.size();jdx++)
             {
-                if(facets[jdx]->ContainsPoint(location) && (facets[jdx]->GetLabel() == mLabel))
+                if(polygons[jdx]->ContainsPoint(location) && (polygons[jdx]->HasAttribute(mLabel)))
                 {
                     return std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
                 }
@@ -302,7 +302,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
         }
         else
         {
-            if(mpDomain->EdgeHasLabel(location, mLabel))
+            if(mpDomain->EdgeHasAttribute(location, mLabel))
             {
                 return std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
             }
@@ -424,7 +424,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
             }
         }
     }
-    else if(mType == BoundaryConditionType::FACET)
+    else if(mType == BoundaryConditionType::POLYGON)
     {
         if(!mpDomain)
         {
@@ -432,35 +432,17 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
         }
         else
         {
-            units::quantity<unit::length> length_Scale = p_regular_grid->GetReferenceLengthScale();
-            double y_max = double(p_regular_grid->GetDimensions()[1]-1) * p_regular_grid->GetSpacing()/length_Scale;
             for(unsigned idx=0; idx<p_regular_grid->GetNumberOfPoints(); idx++)
             {
-                if(p_regular_grid->GetPoint(idx).GetLocation(length_Scale)[1] == y_max)
+                std::vector<boost::shared_ptr<Polygon<DIM> > > polygons =  mpDomain->GetPolygons();
+                for(unsigned jdx=0; jdx<polygons.size();jdx++)
                 {
-                    (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+                    if(polygons[jdx]->ContainsPoint(p_regular_grid->GetPoint(idx)) && polygons[jdx]->HasAttribute(mLabel))
+                    {
+                        (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+                        break;
+                    }
                 }
-
-    //            std::vector<boost::shared_ptr<Facet<DIM> > > facets =  mpDomain->GetFacets();
-    //            for(unsigned jdx=0; jdx<facets.size();jdx++)
-    //            {
-    //                if(facets[jdx]->ContainsPoint(mpRegularGrid->GetLocationOf1dIndex(idx)))
-    //                {
-    //                    if(BoundaryConditionSource::PRESCRIBED)
-    //                    {
-    //                        (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
-    //                        break;
-    //                    }
-    //                    else
-    //                    {
-    //                        if(facets[jdx]->GetLabel() == mLabel)
-    //                        {
-    //                            (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
-    //                            break;
-    //                        }
-    //                    }
-    //                }
-    //            }
             }
         }
     }
@@ -474,7 +456,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
         {
             for(unsigned idx=0; idx<p_regular_grid->GetNumberOfPoints(); idx++)
             {
-                if(mpDomain->EdgeHasLabel(p_regular_grid->GetPoint(idx), mLabel))
+                if(mpDomain->EdgeHasAttribute(p_regular_grid->GetPoint(idx), mLabel))
                 {
                     (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
                 }
@@ -564,7 +546,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::SetGridCalculator(boost::shared_pt
 }
 
 template<unsigned DIM>
-void DiscreteContinuumBoundaryCondition<DIM>::SetLabelName(const std::string& label)
+void DiscreteContinuumBoundaryCondition<DIM>::SetLabel(const std::string& label)
 {
     mLabel = label;
 }

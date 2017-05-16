@@ -56,7 +56,7 @@ struct BoundaryConditionType
      */
     enum Value
     {
-        POINT, FACET, OUTER, VESSEL_LINE, VESSEL_VOLUME, CELL, IN_PART, EDGE
+        POINT, POLYGON, EDGE, OUTER, VESSEL_LINE, VESSEL_VOLUME, CELL, IN_PART
     };
 };
 
@@ -127,8 +127,14 @@ protected:
      */
     units::quantity<unit::concentration> mReferenceConcentration;
 
+    /**
+     * Is this a Neumann type boundary conditions
+     */
     bool mIsNeumann;
 
+    /**
+     * Is this a Robin type boundary conditions
+     */
     bool mIsRobin;
 
 public:
@@ -149,7 +155,7 @@ public:
     static boost::shared_ptr<DiscreteContinuumBoundaryCondition<DIM> > Create();
 
     /**
-     * Return the type of boundary condition, POINT, FACET, OUTER etc.
+     * Return the type of boundary condition, POINT, POLYGON, OUTER etc.
      * @return the type of boundary condition
      */
     BoundaryConditionType::Value GetType();
@@ -187,15 +193,23 @@ public:
      */
     void SetDomain(boost::shared_ptr<Part<DIM> > pDomain);
 
+    /**
+     * Use a robin boundary condition
+     * @param isRobin use a robin boundary condition
+     */
     void SetIsRobin(bool isRobin);
 
+    /**
+     * Use a neumann boundary condition
+     * @param isNeumann use a neumann boundary condition
+     */
     void SetIsNeumann(bool isNeumann);
 
     /**
      * Set the name of the label used in LABEL type sources
      * @param rLabel the label for the source strength value
      */
-    void SetLabelName(const std::string& label);
+    void SetLabel(const std::string& label);
 
     /**
      * Set the points for POINT type boundary conditions

@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTGEOMETRYWRITER_HPP_
 #define TESTGEOMETRYWRITER_HPP_
 
@@ -47,7 +45,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "GeometryWriter.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
-#include "Debug.hpp"
 
 class TestGeometryWriter : public CxxTest::TestSuite
 {
@@ -58,27 +55,26 @@ public:
     {
         Part<3> part = Part<3>();
         part.AddCuboid(1.e-6*unit::metres, 1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
-        part.GetFacets()[0]->SetLabel("Facet 0");
-        part.GetFacets()[1]->SetLabel("Facet 1");
-        part.GetFacets()[2]->SetLabel("Facet 2");
-        part.GetFacets()[3]->SetLabel("Facet 3");
-        part.GetFacets()[4]->SetLabel("Facet 4");
-        part.GetFacets()[5]->SetLabel("Facet 5");
-        part.GetPolygons()[0]->LabelAllEdges("Edge 0");
-        part.GetPolygons()[1]->LabelAllEdges("Edge 1");
-        part.GetPolygons()[2]->LabelAllEdges("Edge 2");
-        part.GetPolygons()[3]->LabelAllEdges("Edge 3");
-        part.GetPolygons()[4]->LabelAllEdges("Edge 4");
-        part.GetPolygons()[5]->LabelAllEdges("Edge 5");
+        part.GetPolygons()[0]->AddAttribute("Polygon Number", 1.0);
+        part.GetPolygons()[1]->AddAttribute("Polygon Number", 2.0);
+        part.GetPolygons()[2]->AddAttribute("Polygon Number", 3.0);
+        part.GetPolygons()[3]->AddAttribute("Polygon Number", 4.0);
+        part.GetPolygons()[4]->AddAttribute("Polygon Number", 5.0);
+        part.GetPolygons()[5]->AddAttribute("Polygon Number", 6.0);
+        part.GetPolygons()[0]->AddAttributeToAllEdges("Parent Polygon", 0.0);
+        part.GetPolygons()[1]->AddAttributeToAllEdges("Parent Polygon", 1.0);
+        part.GetPolygons()[2]->AddAttributeToAllEdges("Parent Polygon", 2.0);
+        part.GetPolygons()[3]->AddAttributeToAllEdges("Parent Polygon", 3.0);
+        part.GetPolygons()[4]->AddAttributeToAllEdges("Parent Polygon", 4.0);
+        part.GetPolygons()[5]->AddAttributeToAllEdges("Parent Polygon", 5.0);
 
         OutputFileHandler output_file_handler("TestGeometryWriter/TestWriteCuboid");
-        part.Write(output_file_handler.GetOutputDirectoryFullPath() + "cube_alone_edges.vtp",
-                 GeometryFormat::VTP, true);
+        part.Write(output_file_handler.GetOutputDirectoryFullPath() + "cube_alone_edges.vtp", GeometryFormat::VTP, true);
 
         boost::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
         TS_ASSERT_THROWS_THIS(p_writer->Write(), "An input geometry is not set.");
 
-        p_writer->SetInput(part.GetVtk());
+        p_writer->AddInput(part.GetVtk());
         TS_ASSERT_THROWS_THIS(p_writer->Write(), "No file name set for the GeometryWriter.");
         p_writer->SetFileName(output_file_handler.GetOutputDirectoryFullPath() + "cube.vtp");
         p_writer->SetOutputFormat(GeometryFormat::VTP);
@@ -88,8 +84,7 @@ public:
         p_writer->SetOutputFormat(GeometryFormat::STL);
         p_writer->Write();
 
-        part.Write(output_file_handler.GetOutputDirectoryFullPath() + "cube_alone.vtp",
-                 GeometryFormat::VTP, false);
+        part.Write(output_file_handler.GetOutputDirectoryFullPath() + "cube_alone.vtp", GeometryFormat::VTP, false);
     }
 
 };
