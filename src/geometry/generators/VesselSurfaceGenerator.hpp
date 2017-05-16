@@ -47,8 +47,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Polygon.hpp"
 
 /**
- * Class for generating surface representations of vessel networks. The generated surface is suitable for
- * finite element meshing and can be returned in PLC or VTK formats. Units are not maintained.
+ * Class for generating simple surface representations of vessel networks.
+ * The surfaces won't neccessarily be closed if there are bifuctations. For closed surfaces
+ * on networks with bifurcations use the NetworkToSurface class.
  */
 template<unsigned DIM>
 class VesselSurfaceGenerator

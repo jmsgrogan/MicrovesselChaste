@@ -44,6 +44,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "SmartPointers.hpp"
 #include "VesselNetwork.hpp"
 #include "UnitCollection.hpp"
+#include "NetworkToImage.hpp"
 
 /**
  * This class generates a 2d or 3d triangulated surface from a vessel network (centrelines and radii).
@@ -55,14 +56,14 @@ template<unsigned DIM>
 class NetworkToSurface
 {
     /**
+     * The network to image tool
+     */
+    boost::shared_ptr<NetworkToImage<DIM> > mpNetworkToImage;
+
+    /**
      * The vessel network
      */
     boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
-
-    /**
-     * The spacing of the sampling grid.
-     */
-    units::quantity<unit::length> mSamplingGridSpacing;
 
     /**
      * The length for spline re-sampling
@@ -75,14 +76,39 @@ class NetworkToSurface
     vtkSmartPointer<vtkPolyData> mpSurface;
 
     /**
-     * The sampling image, can be used for assigning region attributes and identifing holes during meshing.
-     */
-    vtkSmartPointer<vtkImageData> mpImage;
-
-    /**
      * The reference length scale
      */
     units::quantity<unit::length> mReferenceLength;
+
+    /**
+     * Whether to do smoothing
+     */
+    bool mDoSmoothing;
+
+    /**
+     * Smoothing Iterations
+     */
+    unsigned mNumSmoothingIterations;
+
+    /**
+     * Feature angle
+     */
+    double mSmoothingFeatureAngle;
+
+    /**
+     * Band pass frequency
+     */
+    double mBandPassFrequency;
+
+    /**
+     * Target mesh length
+     */
+    double mTargetMeshLength;
+
+    /**
+     * Whether to do surface remeshing
+     */
+    bool mDoSurfaceRemeshing;
 
 public:
 
@@ -103,16 +129,40 @@ public:
     static boost::shared_ptr<NetworkToSurface<DIM> > Create();
 
     /**
+     * Return the tool used to convert the network to an image
+     * @return the tool used to convert the network to an image
+     */
+    boost::shared_ptr<NetworkToImage<DIM> > GetNetworkToImageTool();
+
+    /**
      * Return the vessel surface
      * @return a pointer to the vessel surface
      */
     vtkSmartPointer<vtkPolyData> GetSurface();
 
     /**
-     * Return the sampling image
-     * @return a pointer to the sampling image
+     * Whether to do smoothing
+     * @param doSmoothing whether to do smoothing
      */
-    vtkSmartPointer<vtkImageData> GetSamplingImage();
+    void SetDoSmoothing(bool doSmoothing);
+
+    /**
+     * The number of smoothing iterations
+     * @param numIterations the number of smoothing iterations
+     */
+    void SetNumSmoothingIterations(unsigned numIterations);
+
+    /**
+     * The smoothing feature angle
+     * @param featureAngle the smoothing feature angle
+     */
+    void SetSmoothingFeatureAngle(double featureAngle);
+
+    /**
+     * The smoothing bandpass frequency
+     * @param bandPassFrequency the smoothing bandpass frequency
+     */
+    void SetBandPassFrequency(double bandPassFrequency);
 
     /**
      * Set the vessel network
@@ -127,10 +177,16 @@ public:
     void SetResamplingSplineSize(units::quantity<unit::length> splineResampleSize);
 
     /**
-     * Set the re-sampling grid size
-     * @param sampleGridSize the resampling grid size
+     * Do surface remeshing
+     * @param doRemeshing do surface remeshing
      */
-    void SetResamplingGridSize(units::quantity<unit::length> sampleGridSize);
+    void SetDoSurfaceRemeshing(bool doRemeshing);
+
+    /**
+     * Remeshing target edge length
+     * @param length Remeshing target edge length
+     */
+    void SetRemeshingTargetEdgeLength(double length);
 
     /**
      * Do the meshing

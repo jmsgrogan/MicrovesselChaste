@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "NetworkToSurface.hpp"
-#include "NetworkToImage.hpp"
 #include <vtkMarchingSquares.h>
 #include <vtkMarchingCubes.h>
 #include <vtkCleanPolyData.h>
@@ -52,21 +50,28 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkProbeFilter.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkWindowedSincPolyDataFilter.h>
-//#include <vtkvmtkSimpleCapPolyData.h>
-//#include <vtkvmtkPolyDataSizingFunction.h>
-//#include <vtkvmtkPolyDataToUnstructuredGridFilter.h>
+#include <vtkvmtkSimpleCapPolyData.h>
+#include <vtkvmtkPolyDataSurfaceRemeshing.h>
+#include <vtkDecimatePro.h>
+#include "NetworkToSurface.hpp"
+#include "NetworkToImage.hpp"
 #include "UblasCustomFunctions.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
 
 template<unsigned DIM>
 NetworkToSurface<DIM>::NetworkToSurface() :
+    mpNetworkToImage(NetworkToImage<DIM>::Create()),
     mpNetwork(),
-    mSamplingGridSpacing(2.0 * 1.e-6 * unit::metres),
     mSplineResamplingLength(10.0 * 1.e-6 * unit::metres),
     mpSurface(),
-    mpImage(),
-    mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
+    mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
+    mDoSmoothing(true),
+    mNumSmoothingIterations(300),
+    mSmoothingFeatureAngle(30.0),
+    mBandPassFrequency(0.03),
+    mTargetMeshLength(1.0),
+    mDoSurfaceRemeshing(true)
 {
 
 }
@@ -85,15 +90,15 @@ NetworkToSurface<DIM>::~NetworkToSurface()
 }
 
 template<unsigned DIM>
-vtkSmartPointer<vtkPolyData> NetworkToSurface<DIM>::GetSurface()
+boost::shared_ptr<NetworkToImage<DIM> > NetworkToSurface<DIM>::GetNetworkToImageTool()
 {
-    return mpSurface;
+    return mpNetworkToImage;
 }
 
 template<unsigned DIM>
-vtkSmartPointer<vtkImageData> NetworkToSurface<DIM>::GetSamplingImage()
+vtkSmartPointer<vtkPolyData> NetworkToSurface<DIM>::GetSurface()
 {
-    return mpImage;
+    return mpSurface;
 }
 
 template<unsigned DIM>
@@ -109,9 +114,27 @@ void NetworkToSurface<DIM>::SetResamplingSplineSize(units::quantity<unit::length
 }
 
 template<unsigned DIM>
-void NetworkToSurface<DIM>::SetResamplingGridSize(units::quantity<unit::length> sampleGridSize)
+void NetworkToSurface<DIM>::SetDoSmoothing(bool doSmoothing)
 {
-    mSamplingGridSpacing = sampleGridSize;
+    mDoSmoothing = doSmoothing;
+}
+
+template<unsigned DIM>
+void NetworkToSurface<DIM>::SetNumSmoothingIterations(unsigned numIterations)
+{
+    mNumSmoothingIterations = numIterations;
+}
+
+template<unsigned DIM>
+void NetworkToSurface<DIM>::SetSmoothingFeatureAngle(double featureAngle)
+{
+    mSmoothingFeatureAngle = featureAngle;
+}
+
+template<unsigned DIM>
+void NetworkToSurface<DIM>::SetBandPassFrequency(double bandPassFrequency)
+{
+    mBandPassFrequency = bandPassFrequency;
 }
 
 template<unsigned DIM>
@@ -120,20 +143,16 @@ void NetworkToSurface<DIM>::Update()
     if(DIM==2)
     {
         // Interpolate the network onto a regular grid
-        boost::shared_ptr<NetworkToImage<DIM> > p_net_to_image = NetworkToImage<DIM>::Create();
-        p_net_to_image->SetNetwork(mpNetwork);
-        p_net_to_image->SetGridSpacing(mSamplingGridSpacing);
-        p_net_to_image->SetPaddingFactors(0.1, 0.1, 0.0);
-        p_net_to_image->SetImageDimension(2);
-        p_net_to_image->Update();
-        mpImage = p_net_to_image->GetOutput();
+        mpNetworkToImage->SetNetwork(mpNetwork);
+        mpNetworkToImage->SetImageDimension(2);
+        mpNetworkToImage->Update();
 
         // Get the outer boundaries of the network
         vtkSmartPointer<vtkMarchingSquares> p_squares = vtkSmartPointer<vtkMarchingSquares>::New();
         #if VTK_MAJOR_VERSION <= 5
-            p_squares->SetInput(mpImage);
+            p_squares->SetInput(mpNetworkToImage->GetOutput());
         #else
-            p_squares->SetInputData(mpImage);
+            p_squares->SetInputData(mpNetworkToImage->GetOutput());
         #endif
         p_squares->SetValue(0, 1);
 
@@ -219,7 +238,6 @@ void NetworkToSurface<DIM>::Update()
                 p_line->GetPointIds()->SetId(0, edge_ids[0]);
                 p_line->GetPointIds()->SetId(1, edge_ids[1]);
                 p_clipper->GetOutput()->GetLines()->InsertNextCell(p_line);
-
                 p_cleaned->DeepCopy(p_clipper->GetOutput());
             }
         }
@@ -228,38 +246,51 @@ void NetworkToSurface<DIM>::Update()
     else
     {
         // Interpolate the network onto a regular grid
-        boost::shared_ptr<NetworkToImage<DIM> > p_net_to_image = NetworkToImage<DIM>::Create();
-        p_net_to_image->SetNetwork(mpNetwork);
-        p_net_to_image->SetGridSpacing(mSamplingGridSpacing);
-        p_net_to_image->SetPaddingFactors(0.1, 0.1, 0.1);
-        p_net_to_image->SetImageDimension(3);
-        p_net_to_image->Update();
-        mpImage = p_net_to_image->GetOutput();
+        mpNetworkToImage->SetNetwork(mpNetwork);
+        mpNetworkToImage->SetImageDimension(3);
+        mpNetworkToImage->Update();
 
         // Get the outer boundaries of the network
         vtkSmartPointer<vtkMarchingCubes> p_cubes = vtkSmartPointer<vtkMarchingCubes>::New();
         #if VTK_MAJOR_VERSION <= 5
-            p_cubes->SetInput(mpImage);
+            p_cubes->SetInput(mpNetworkToImage->GetOutput());
         #else
-            p_cubes->SetInputData(mpImage);
+            p_cubes->SetInputData(mpNetworkToImage->GetOutput());
         #endif
         p_cubes->SetValue(0, 1);
 
         vtkSmartPointer<vtkCleanPolyData> p_cleaner = vtkSmartPointer<vtkCleanPolyData>::New();
         p_cleaner->SetInputConnection(p_cubes->GetOutputPort());
 
-        vtkSmartPointer<vtkWindowedSincPolyDataFilter> p_smoother = vtkSmartPointer<vtkWindowedSincPolyDataFilter>::New();
-        p_smoother->SetInputConnection(p_cleaner->GetOutputPort());
-        p_smoother->SetNumberOfIterations(500.0);
-        p_smoother->BoundarySmoothingOn();
-        p_smoother->FeatureEdgeSmoothingOn();
-        p_smoother->SetFeatureAngle(30.0);
-        p_smoother->SetPassBand(0.03);
-        p_smoother->NonManifoldSmoothingOn();
-        p_smoother->NormalizeCoordinatesOn();
-        p_smoother->Update();
+        // Optional pre decimation
+        vtkSmartPointer<vtkTriangleFilter> p_triangle = vtkSmartPointer<vtkTriangleFilter>::New();
+        p_triangle->SetInputConnection(p_cleaner->GetOutputPort());
+//
+//        vtkSmartPointer<vtkDecimatePro> p_pre_decimation = vtkSmartPointer<vtkDecimatePro>::New();
+//        p_pre_decimation->SetInputConnection(p_triangle->GetOutputPort());
+//        p_pre_decimation->SetPreserveTopology(1);
+//        p_pre_decimation->SetTargetReduction(0.8);
 
-        vtkSmartPointer<vtkPolyData> p_cleaned = p_smoother->GetOutput();
+        vtkSmartPointer<vtkPolyData> p_cleaned;
+        if(mDoSmoothing)
+        {
+            vtkSmartPointer<vtkWindowedSincPolyDataFilter> p_smoother = vtkSmartPointer<vtkWindowedSincPolyDataFilter>::New();
+            p_smoother->SetInputConnection(p_triangle->GetOutputPort());
+            p_smoother->SetNumberOfIterations(mNumSmoothingIterations);
+            p_smoother->BoundarySmoothingOn();
+            p_smoother->FeatureEdgeSmoothingOn();
+            p_smoother->SetFeatureAngle(mSmoothingFeatureAngle);
+            p_smoother->SetPassBand(mBandPassFrequency);
+            p_smoother->NonManifoldSmoothingOn();
+            p_smoother->NormalizeCoordinatesOn();
+            p_smoother->Update();
+            p_cleaned = p_smoother->GetOutput();
+        }
+        else
+        {
+            p_cleaner->Update();
+            p_cleaned = p_cleaner->GetOutput();
+        }
 
         // Open any ends marked as inlet or outlet nodes
         std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
@@ -306,27 +337,67 @@ void NetworkToSurface<DIM>::Update()
         }
 
         // Use vmtk to cap the surface
-//        vtkSmartPointer<vtkvmtkSimpleCapPolyData> p_capper = vtkSmartPointer<vtkvmtkSimpleCapPolyData>::New();
-//        p_capper->SetInputData(p_cleaned);
-//        p_capper->SetCellEntityIdsArrayName("CellEntityIds");
-//        p_capper->SetCellEntityIdOffset(1);
-//        p_capper->Update();
+        vtkSmartPointer<vtkvmtkSimpleCapPolyData> p_capper = vtkSmartPointer<vtkvmtkSimpleCapPolyData>::New();
+        p_capper->SetInputData(p_cleaned);
+        p_capper->SetCellEntityIdsArrayName("CellEntityIds");
+        p_capper->SetCellEntityIdOffset(1);
 
         vtkSmartPointer<vtkPolyDataNormals> p_normals = vtkSmartPointer<vtkPolyDataNormals>::New();
-//        p_normals->SetInputConnection(p_capper->GetOutputPort());
-        #if VTK_MAJOR_VERSION <= 5
-            p_normals->SetInput(p_cleaned);
-        #else
-            p_normals->SetInputData(p_cleaned);
-        #endif
-
+        p_normals->SetInputConnection(p_capper->GetOutputPort());
         p_normals->AutoOrientNormalsOn();
         p_normals->SplittingOff();
         p_normals->ConsistencyOn();
         p_normals->Update();
 
-        mpSurface = p_normals->GetOutput();
+        vtkSmartPointer<vtkTriangleFilter> p_triangle2 = vtkSmartPointer<vtkTriangleFilter>::New();
+        p_triangle2->SetInputConnection(p_normals->GetOutputPort());
+        p_triangle2->Update();
+
+        if(mDoSurfaceRemeshing)
+        {
+            // Surface remeshing
+            vtkSmartPointer<vtkvmtkPolyDataSurfaceRemeshing> p_remesh= vtkSmartPointer<vtkvmtkPolyDataSurfaceRemeshing>::New();
+            #if VTK_MAJOR_VERSION <= 5
+            p_remesh->SetInput(p_triangle2->GetOutput());
+            #else
+                p_remesh->SetInputData(p_triangle2->GetOutput());
+            #endif
+            p_remesh->SetElementSizeModeToTargetArea();
+            p_remesh->SetTargetArea(0.25*3.0*0.5*mTargetMeshLength*mTargetMeshLength);
+            p_remesh->SetTargetAreaFactor(1.0);
+            p_remesh->SetTriangleSplitFactor(5.0);
+            p_remesh->SetCellEntityIdsArrayName("CellEntityIds");
+            p_remesh->SetMaxArea(1.e16);
+            p_remesh->SetMinArea(0.0);
+            p_remesh->SetNumberOfIterations(10);
+            p_remesh->SetNumberOfConnectivityOptimizationIterations(20);
+            p_remesh->SetRelaxation(0.5);
+            p_remesh->SetMinAreaFactor(0.5);
+            p_remesh->SetAspectRatioThreshold(1.2);
+            p_remesh->SetInternalAngleTolerance(0.0);
+            p_remesh->SetNormalAngleTolerance(0.2);
+            p_remesh->SetCollapseAngleThreshold(0.2);
+            p_remesh->SetPreserveBoundaryEdges(0.0);
+            p_remesh->Update();
+            mpSurface = p_remesh->GetOutput();
+        }
+        else
+        {
+            mpSurface = p_triangle2->GetOutput();
+        }
     }
+}
+
+template<unsigned DIM>
+void NetworkToSurface<DIM>::SetDoSurfaceRemeshing(bool doRemeshing)
+{
+    mDoSurfaceRemeshing = doRemeshing;
+}
+
+template<unsigned DIM>
+void NetworkToSurface<DIM>::SetRemeshingTargetEdgeLength(double length)
+{
+    mTargetMeshLength = length;
 }
 
 // Explicit instantiation

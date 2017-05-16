@@ -43,7 +43,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Polygon.hpp"
 #include "Facet.hpp"
 
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestFacet : public CxxTest::TestSuite
 {
@@ -202,9 +202,6 @@ public:
         TS_ASSERT_DELTA(bbox[5].value(), 0.0, 1.e-6);
 
         TS_ASSERT_DELTA(p_facet->GetDistance(DimensionalChastePoint<3>(0.5, 0.5, 0.5,1.e-6*unit::metres )).value(), 0.5e-6, 1.e-8);
-
-        p_facet->SetLabel("MyLabel");
-        TS_ASSERT_EQUALS(p_facet->GetLabel(), "MyLabel");
 
         TS_ASSERT_DELTA(p_facet->GetPlane()->GetNormal()[0], 0.0, 1.e-6);
         TS_ASSERT_DELTA(p_facet->GetPlane()->GetNormal()[1], 0.0, 1.e-6);
