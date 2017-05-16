@@ -114,8 +114,16 @@ public:
      */
     void SetElementSize(units::quantity<unit::volume> elementSize);
 
+    /**
+     * Get the boundary of the mesh
+     * @return the mesh holes
+     */
     vtkSmartPointer<vtkPolyData> GetMeshBoundary();
 
+    /**
+     * Get mesh holes
+     * @return the mesh holes
+     */
     std::vector<DimensionalChastePoint<DIM> > GetMeshHoles();
 
     /**

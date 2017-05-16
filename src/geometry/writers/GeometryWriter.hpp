@@ -104,6 +104,11 @@ public:
     void AddInput(vtkSmartPointer<vtkPolyData> pSurface);
 
     /**
+     * Clear current inputs
+     */
+    void ClearInputs();
+
+    /**
      * Set the output filename, without extension
      * @param rFileName the full output path without extension
      */

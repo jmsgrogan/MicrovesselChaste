@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTIMAGETOMESH_HPP_
 #define TESTIMAGETOMESH_HPP_
 
@@ -50,11 +48,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "MultiFormatMeshWriter.hpp"
 #include "Part.hpp"
 
+#include "PetscAndVtkSetupAndFinalize.hpp"
+
 class TestImageToMesh : public CxxTest::TestSuite
 {
 public:
 
-    void Test2dMesh()
+    void Test2dMesh() throw(Exception)
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestImageToMesh/", false);

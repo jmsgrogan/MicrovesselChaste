@@ -40,6 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkSplineFilter.h>
 #include <vtkConnectivityFilter.h>
 #include <vtkGeometryFilter.h>
+#include <vtkPolyDataConnectivityFilter.h>
 #include "Exception.hpp"
 #include "BoundaryExtractor.hpp"
 
@@ -47,7 +48,8 @@ BoundaryExtractor::BoundaryExtractor()
     : mpInputSurface(),
       mpOutputSurface(),
       mSmoothingLength(1),
-      mDoSmoothing(true)
+      mDoSmoothing(true),
+      mRemoveDisconnected(false)
 {
 
 }
@@ -80,6 +82,11 @@ void BoundaryExtractor::SetInput(vtkSmartPointer<vtkPolyData> pInput)
     mpInputSurface = pInput;
 }
 
+void BoundaryExtractor::SetInputRaw(vtkPolyData* pInputSurface)
+{
+    mpInputSurface.TakeReference(pInputSurface);
+}
+
 void BoundaryExtractor::SetSmoothingLength(double value)
 {
     mSmoothingLength = value;
@@ -88,6 +95,11 @@ void BoundaryExtractor::SetSmoothingLength(double value)
 void BoundaryExtractor::SetDoSmoothing(bool doSmoothing)
 {
     mDoSmoothing = doSmoothing;
+}
+
+void BoundaryExtractor::SetRemoveDisconnected(bool removeDisconnected)
+{
+    mRemoveDisconnected = removeDisconnected;
 }
 
 void BoundaryExtractor::Update()
@@ -109,7 +121,6 @@ void BoundaryExtractor::Update()
 
     vtkSmartPointer<vtkTriangleFilter> p_triangle = vtkSmartPointer<vtkTriangleFilter>::New();
     p_triangle->SetInputConnection(p_clean->GetOutputPort());
-    p_triangle->Update();
 
     if(mDoSmoothing)
     {
@@ -128,16 +139,38 @@ void BoundaryExtractor::Update()
 
         vtkSmartPointer<vtkTriangleFilter> p_triangle2 = vtkSmartPointer<vtkTriangleFilter>::New();
         p_triangle2->SetInputConnection(p_geom->GetOutputPort());
-        p_triangle2->Update();
 
         vtkSmartPointer<vtkCleanPolyData> p_clean2 = vtkSmartPointer<vtkCleanPolyData>::New();
         p_clean2->SetInputConnection(p_triangle2->GetOutputPort());
-        p_clean2->Update();
 
-        mpOutputSurface = p_clean2->GetOutput();
+        if(mRemoveDisconnected)
+        {
+            vtkSmartPointer<vtkPolyDataConnectivityFilter> p_connectivity = vtkSmartPointer<vtkPolyDataConnectivityFilter>::New();
+            p_connectivity->SetInputConnection(p_clean2->GetOutputPort());
+            p_connectivity->SetExtractionModeToLargestRegion();
+            p_connectivity->Update();
+            mpOutputSurface = p_connectivity->GetOutput();
+        }
+        else
+        {
+            p_clean2->Update();
+            mpOutputSurface = p_clean2->GetOutput();
+        }
     }
     else
     {
-        mpOutputSurface = p_triangle->GetOutput();
+        if(mRemoveDisconnected)
+        {
+            vtkSmartPointer<vtkPolyDataConnectivityFilter> p_connectivity = vtkSmartPointer<vtkPolyDataConnectivityFilter>::New();
+            p_connectivity->SetInputConnection(p_triangle->GetOutputPort());
+            p_connectivity->SetExtractionModeToLargestRegion();
+            p_connectivity->Update();
+            mpOutputSurface = p_connectivity->GetOutput();
+        }
+        else
+        {
+            p_triangle->Update();
+            mpOutputSurface = p_triangle->GetOutput();
+        }
     }
 }

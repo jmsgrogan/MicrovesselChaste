@@ -51,7 +51,7 @@ class TestGeometryWriter : public CxxTest::TestSuite
 
 public:
 
-    void TestWriteCuboid()
+    void TestWriteCuboid() throw(Exception)
     {
         Part<3> part = Part<3>();
         part.AddCuboid(1.e-6*unit::metres, 1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));

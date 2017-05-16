@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTIMAGEREADERANDWRITER_HPP_
 #define TESTIMAGEREADERANDWRITER_HPP_
 
@@ -45,11 +43,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "FileFinder.hpp"
 #include "OutputFileHandler.hpp"
 
+#include "PetscAndVtkSetupAndFinalize.hpp"
+
 class TestImageReaderAndWriter : public CxxTest::TestSuite
 {
 public:
 
-    void TestImageIO()
+    void TestImageIO() throw(Exception)
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestImageReaderAndWriter/");

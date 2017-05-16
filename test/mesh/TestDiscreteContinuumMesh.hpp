@@ -98,7 +98,7 @@ private:
 
 public:
 
-    void TestMeshCircleInCirle()
+    void TestMeshCircleInCirle() throw(Exception)
     {
         boost::shared_ptr<Part<2> > p_part = Part<2>::Create();
         boost::shared_ptr<Polygon<2> > p_circle = p_part->AddCircle(0.33e-6*unit::metres,
@@ -127,7 +127,7 @@ public:
         mesh_writer.Write();
     }
 
-    void TestMeshCylinder()
+    void TestMeshCylinder() throw(Exception)
     {
         boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
         boost::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
@@ -151,7 +151,7 @@ public:
         mesh_writer.Write();
     }
 
-    void TestMeshCylinderWithVesselSurface()
+    void TestMeshCylinderWithVesselSurface() throw(Exception)
     {
         units::quantity<unit::length> vessel_length = 100.0* 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
@@ -177,7 +177,7 @@ public:
         mesh_writer.Write();
     }
 
-    void TestMeshCubeWithVesselSurface()
+    void TestMeshCubeWithVesselSurface() throw(Exception)
     {
         units::quantity<unit::length> vessel_length = 100.0* 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
@@ -203,7 +203,7 @@ public:
         mesh_writer.Write();
     }
 
-    void TestMeshCubeWithVesselSurfaceInternal()
+    void TestMeshCubeWithVesselSurfaceInternal() throw(Exception)
     {
         units::quantity<unit::length> vessel_length = 100.0* 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
@@ -230,7 +230,7 @@ public:
         mesh_writer.Write();
     }
 
-    void TestParrallelVesselSurfaceCube()
+    void TestParrallelVesselSurfaceCube() throw(Exception)
     {
         units::quantity<unit::length> vessel_length = 100.0* 1.e-6 * unit::metres;
         double radius = 10.0;

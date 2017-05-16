@@ -123,7 +123,6 @@ template<unsigned DIM>
 void ImageToMesh<DIM>::SetInputRaw(vtkImageData* pImage)
 {
     mpImage.TakeReference(pImage);
-//    pImage->Delete();
 }
 
 template<unsigned DIM>

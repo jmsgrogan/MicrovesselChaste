@@ -74,6 +74,11 @@ class ImageToSurface
      */
     bool mUseMarchingCubes;
 
+    /**
+     * Whether to remove disconnected small regions
+     */
+    bool mRemoveDisconnected;
+
 public:
 
     /**
@@ -122,6 +127,12 @@ public:
      * @param useMarchingCubes whether to use marching cubes for the segmentation
      */
     void SetUseMarchingCubes(bool useMarchingCubes);
+
+    /**
+     * Only retain the largest region
+     * @param removeDisconnected only retain the largest region
+     */
+    void SetRemoveDisconnected(bool removeDisconnected);
 
     /**
      * Run the update

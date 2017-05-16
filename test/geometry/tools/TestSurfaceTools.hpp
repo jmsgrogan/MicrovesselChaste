@@ -33,10 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
-#ifndef TESTIMAGETOSURFACE_HPP_
-#define TESTIMAGETOSURFACE_HPP_
+#ifndef TESTSURFACETOOLS_HPP_
+#define TESTSURFACETOOLS_HPP_
 
 #include <cxxtest/TestSuite.h>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
@@ -49,11 +47,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "OutputFileHandler.hpp"
 #include "UnitCollection.hpp"
 
+#include "PetscAndVtkSetupAndFinalize.hpp"
+
 class TestSurfaceTools : public CxxTest::TestSuite
 {
 public:
 
-    void TestExtractBoundary()
+    void TestExtractBoundary() throw(Exception)
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestSurfaceTools/");
@@ -70,15 +70,16 @@ public:
 
         boost::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"boundary.vtp").c_str());
-        p_writer->SetInput(p_extractor->GetOutput());
+        p_writer->AddInput(p_extractor->GetOutput());
         p_writer->Write();
+        p_writer->ClearInputs();
 
         p_extractor->SetDoSmoothing(true);
         p_extractor->SetSmoothingLength(10.0);
         p_extractor->Update();
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"boundary_smoothed.vtp").c_str());
-        p_writer->SetInput(p_extractor->GetOutput());
+        p_writer->AddInput(p_extractor->GetOutput());
         p_writer->Write();
     }
 };
-#endif
+#endif // TESTSURFACETOOLS_HPP_

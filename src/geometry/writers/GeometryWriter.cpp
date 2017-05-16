@@ -80,6 +80,11 @@ void GeometryWriter::AddInput(vtkSmartPointer<vtkPolyData> pSurface)
     mpInputGeometries.push_back(pSurface);
 }
 
+void GeometryWriter::ClearInputs()
+{
+    mpInputGeometries.clear();
+}
+
 void GeometryWriter::SetOutputFormat(GeometryFormat::Value format)
 {
     mFormat = format;

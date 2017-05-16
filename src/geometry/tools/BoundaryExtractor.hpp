@@ -67,6 +67,11 @@ class BoundaryExtractor
      */
     bool mDoSmoothing;
 
+    /**
+     *  Whether to remove disconnected regions
+     */
+    bool mRemoveDisconnected;
+
 public:
 
     /**
@@ -98,6 +103,13 @@ public:
     void SetInput(vtkSmartPointer<vtkPolyData> pInputSurface);
 
     /**
+     * A 2D surface from which boundary edges are to be extracted. Raw pointer
+     * for Python interface.
+     * @param pInputSurface the surface
+     */
+    void SetInputRaw(vtkPolyData* pInputSurface);
+
+    /**
      * A length for the spline resampling filter
      * @param value the resampling length
      */
@@ -108,6 +120,12 @@ public:
      * @param doSmoothing whether to do the smoothing
      */
     void SetDoSmoothing(bool doSmoothing);
+
+    /**
+     * Only retain the largest region
+     * @param removeDisconnected only retain the largest region
+     */
+    void SetRemoveDisconnected(bool removeDisconnected);
 
     /**
      * Run the tool

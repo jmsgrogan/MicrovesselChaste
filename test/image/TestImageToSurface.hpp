@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTIMAGETOSURFACE_HPP_
 #define TESTIMAGETOSURFACE_HPP_
 
@@ -54,7 +52,7 @@ class TestImageToSurface : public CxxTest::TestSuite
 {
 public:
 
-    void TestDefaultExtraction()
+    void TestDefaultExtraction() throw(Exception)
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestImageToSurface/");
@@ -85,8 +83,9 @@ public:
         // Write the surface to file
         boost::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"surface.vtp").c_str());
-        p_writer->SetInput(p_surface_extract->GetOutput());
+        p_writer->AddInput(p_surface_extract->GetOutput());
         p_writer->Write();
+        p_writer->ClearInputs();
 
         // Clean the surface
         boost::shared_ptr<SurfaceCleaner> p_cleaner = SurfaceCleaner::Create();
@@ -96,18 +95,20 @@ public:
         p_cleaner->Update();
 
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"surface_cleaned.vtp").c_str());
-        p_writer->SetInput(p_cleaner->GetOutput());
+        p_writer->AddInput(p_cleaner->GetOutput());
         p_writer->Write();
+        p_writer->ClearInputs();
 
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"surface_cleaned.stl").c_str());
         p_writer->SetOutputFormat(GeometryFormat::STL);
         p_writer->Write();
+        p_writer->ClearInputs();
 
         // Use marching cubes
         p_surface_extract->SetUseMarchingCubes(true);
         p_surface_extract->Update();
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"surface_marching_cubes.vtp").c_str());
-        p_writer->SetInput(p_surface_extract->GetOutput());
+        p_writer->AddInput(p_surface_extract->GetOutput());
         p_writer->Write();
     }
 };
