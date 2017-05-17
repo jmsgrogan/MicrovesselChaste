@@ -33,14 +33,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef OFFLATTICESPROUTINGRULE_HPP_
 #define OFFLATTICESPROUTINGRULE_HPP_
 
 #include <vector>
 #include <string>
-
 #include "AbstractSproutingRule.hpp"
 #include "VesselNode.hpp"
 #include "SmartPointers.hpp"
@@ -85,7 +82,10 @@ public:
      */
     static boost::shared_ptr<OffLatticeSproutingRule<DIM> > Create();
 
-
+    /**
+     * If a tip is closer than this distance do not sprout
+     * @param  exclusionRadius if a tip is closer than this distance do not sprout
+     */
     void SetTipExclusionRadius(units::quantity<unit::length> exclusionRadius);
 
     /**

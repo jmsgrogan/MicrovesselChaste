@@ -33,7 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
 #ifndef OFFLATTICEMIGRATIONRULE_HPP_
 #define OFFLATTICEMIGRATIONRULE_HPP_
 
@@ -99,6 +98,11 @@ class OffLatticeMigrationRule : public AbstractMigrationRule<DIM>
      */
     units::quantity<unit::length> mCriticalMutualAttractionLength;
 
+    /**
+     * Add a surface repulsion
+     */
+    bool mSurfaceRepulsion;
+
 public:
 
     /**
@@ -149,6 +153,10 @@ public:
      */
     void SetAttractionStrength(double strength);
 
+    /**
+     * Set the standard deviation of the persistence angle
+     * @param angle the standard deviation of the persistence angle
+     */
     void SetPersistenceAngleSdv(double angle);
 
 };

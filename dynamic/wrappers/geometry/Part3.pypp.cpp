@@ -48,6 +48,50 @@ void register_Part3_class(){
         typedef bp::class_< Part< 3 > > Part3_exposer_t;
         Part3_exposer_t Part3_exposer = Part3_exposer_t( "Part3", bp::init< >() );
         bp::scope Part3_scope( Part3_exposer );
+        { //::Part< 3 >::AddAttribute
+        
+            typedef Part< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddAttribute_function_type)( ::std::string const &,double ) ;
+            
+            Part3_exposer.def( 
+                "AddAttribute"
+                , AddAttribute_function_type( &::Part< 3 >::AddAttribute )
+                , ( bp::arg("rLabel"), bp::arg("value") ) );
+        
+        }
+        { //::Part< 3 >::AddAttributeToEdgeIfFound
+        
+            typedef Part< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddAttributeToEdgeIfFound_function_type)( ::DimensionalChastePoint< 3 >,::std::string const &,double ) ;
+            
+            Part3_exposer.def( 
+                "AddAttributeToEdgeIfFound"
+                , AddAttributeToEdgeIfFound_function_type( &::Part< 3 >::AddAttributeToEdgeIfFound )
+                , ( bp::arg("loc"), bp::arg("rLabel"), bp::arg("value") ) );
+        
+        }
+        { //::Part< 3 >::AddAttributeToPolygonIfFound
+        
+            typedef Part< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddAttributeToPolygonIfFound_function_type)( ::DimensionalChastePoint< 3 >,::std::string const &,double ) ;
+            
+            Part3_exposer.def( 
+                "AddAttributeToPolygonIfFound"
+                , AddAttributeToPolygonIfFound_function_type( &::Part< 3 >::AddAttributeToPolygonIfFound )
+                , ( bp::arg("loc"), bp::arg("rLabel"), bp::arg("value") ) );
+        
+        }
+        { //::Part< 3 >::AddAttributeToPolygons
+        
+            typedef Part< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddAttributeToPolygons_function_type)( ::std::string const &,double ) ;
+            
+            Part3_exposer.def( 
+                "AddAttributeToPolygons"
+                , AddAttributeToPolygons_function_type( &::Part< 3 >::AddAttributeToPolygons )
+                , ( bp::arg("rLabel"), bp::arg("value") ) );
+        
+        }
         { //::Part< 3 >::AddCircle
         
             typedef Part< 3 > exported_class_t;
@@ -125,6 +169,17 @@ void register_Part3_class(){
                 , ( bp::arg("sizeX"), bp::arg("sizeY"), bp::arg("origin") ) );
         
         }
+        { //::Part< 3 >::AddRegionMarker
+        
+            typedef Part< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddRegionMarker_function_type)( ::DimensionalChastePoint< 3 > ) ;
+            
+            Part3_exposer.def( 
+                "AddRegionMarker"
+                , AddRegionMarker_function_type( &::Part< 3 >::AddRegionMarker )
+                , ( bp::arg("location") ) );
+        
+        }
         { //::Part< 3 >::AddVesselNetwork
         
             typedef Part< 3 > exported_class_t;
@@ -168,14 +223,14 @@ void register_Part3_class(){
                 , Create_function_type( &::Part< 3 >::Create ) );
         
         }
-        { //::Part< 3 >::EdgeHasLabel
+        { //::Part< 3 >::EdgeHasAttribute
         
             typedef Part< 3 > exported_class_t;
-            typedef bool ( exported_class_t::*EdgeHasLabel_function_type)( ::DimensionalChastePoint< 3 >,::std::string const & ) ;
+            typedef bool ( exported_class_t::*EdgeHasAttribute_function_type)( ::DimensionalChastePoint< 3 >,::std::string const & ) ;
             
             Part3_exposer.def( 
-                "EdgeHasLabel"
-                , EdgeHasLabel_function_type( &::Part< 3 >::EdgeHasLabel )
+                "EdgeHasAttribute"
+                , EdgeHasAttribute_function_type( &::Part< 3 >::EdgeHasAttribute )
                 , ( bp::arg("loc"), bp::arg("rLabel") ) );
         
         }
@@ -188,6 +243,16 @@ void register_Part3_class(){
                 "Extrude"
                 , Extrude_function_type( &::Part< 3 >::Extrude )
                 , ( bp::arg("pPolygon"), bp::arg("distance") ) );
+        
+        }
+        { //::Part< 3 >::GetAttributes
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::std::map< std::string, double > ( exported_class_t::*GetAttributes_function_type)(  ) ;
+            
+            Part3_exposer.def( 
+                "GetAttributes"
+                , GetAttributes_function_type( &::Part< 3 >::GetAttributes ) );
         
         }
         { //::Part< 3 >::GetBoundingBox
@@ -262,6 +327,16 @@ void register_Part3_class(){
                 , GetReferenceLengthScale_function_type( &::Part< 3 >::GetReferenceLengthScale ) );
         
         }
+        { //::Part< 3 >::GetRegionMarkers
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::std::vector< DimensionalChastePoint<3> > ( exported_class_t::*GetRegionMarkers_function_type)(  ) ;
+            
+            Part3_exposer.def( 
+                "GetRegionMarkers"
+                , GetRegionMarkers_function_type( &::Part< 3 >::GetRegionMarkers ) );
+        
+        }
         { //::Part< 3 >::GetSegmentIndices
         
             typedef Part< 3 > exported_class_t;
@@ -323,17 +398,6 @@ void register_Part3_class(){
                 "IsPointInPart"
                 , IsPointInPart_function_type( &::Part< 3 >::IsPointInPart )
                 , ( bp::arg("pPoints") ) );
-        
-        }
-        { //::Part< 3 >::LabelEdges
-        
-            typedef Part< 3 > exported_class_t;
-            typedef void ( exported_class_t::*LabelEdges_function_type)( ::DimensionalChastePoint< 3 >,::std::string const & ) ;
-            
-            Part3_exposer.def( 
-                "LabelEdges"
-                , LabelEdges_function_type( &::Part< 3 >::LabelEdges )
-                , ( bp::arg("loc"), bp::arg("rLabel") ) );
         
         }
         { //::Part< 3 >::MergeCoincidentVertices

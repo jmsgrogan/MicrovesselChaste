@@ -58,14 +58,14 @@ void register_NetworkToSurface2_class(){
                 , Create_function_type( &::NetworkToSurface< 2 >::Create ) );
         
         }
-        { //::NetworkToSurface< 2 >::GetSamplingImage
+        { //::NetworkToSurface< 2 >::GetNetworkToImageTool
         
             typedef NetworkToSurface< 2 > exported_class_t;
-            typedef ::vtkSmartPointer< vtkImageData > ( exported_class_t::*GetSamplingImage_function_type)(  ) ;
+            typedef ::boost::shared_ptr< NetworkToImage< 2 > > ( exported_class_t::*GetNetworkToImageTool_function_type)(  ) ;
             
             NetworkToSurface2_exposer.def( 
-                "GetSamplingImage"
-                , GetSamplingImage_function_type( &::NetworkToSurface< 2 >::GetSamplingImage ) );
+                "GetNetworkToImageTool"
+                , GetNetworkToImageTool_function_type( &::NetworkToSurface< 2 >::GetNetworkToImageTool ) );
         
         }
         { //::NetworkToSurface< 2 >::GetSurface
@@ -78,15 +78,59 @@ void register_NetworkToSurface2_class(){
                 , GetSurface_function_type( &::NetworkToSurface< 2 >::GetSurface ) );
         
         }
-        { //::NetworkToSurface< 2 >::SetResamplingGridSize
+        { //::NetworkToSurface< 2 >::SetBandPassFrequency
         
             typedef NetworkToSurface< 2 > exported_class_t;
-            typedef void ( exported_class_t::*SetResamplingGridSize_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            typedef void ( exported_class_t::*SetBandPassFrequency_function_type)( double ) ;
             
             NetworkToSurface2_exposer.def( 
-                "SetResamplingGridSize"
-                , SetResamplingGridSize_function_type( &::NetworkToSurface< 2 >::SetResamplingGridSize )
-                , ( bp::arg("sampleGridSize") ) );
+                "SetBandPassFrequency"
+                , SetBandPassFrequency_function_type( &::NetworkToSurface< 2 >::SetBandPassFrequency )
+                , ( bp::arg("bandPassFrequency") ) );
+        
+        }
+        { //::NetworkToSurface< 2 >::SetDoSmoothing
+        
+            typedef NetworkToSurface< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetDoSmoothing_function_type)( bool ) ;
+            
+            NetworkToSurface2_exposer.def( 
+                "SetDoSmoothing"
+                , SetDoSmoothing_function_type( &::NetworkToSurface< 2 >::SetDoSmoothing )
+                , ( bp::arg("doSmoothing") ) );
+        
+        }
+        { //::NetworkToSurface< 2 >::SetDoSurfaceRemeshing
+        
+            typedef NetworkToSurface< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetDoSurfaceRemeshing_function_type)( bool ) ;
+            
+            NetworkToSurface2_exposer.def( 
+                "SetDoSurfaceRemeshing"
+                , SetDoSurfaceRemeshing_function_type( &::NetworkToSurface< 2 >::SetDoSurfaceRemeshing )
+                , ( bp::arg("doRemeshing") ) );
+        
+        }
+        { //::NetworkToSurface< 2 >::SetNumSmoothingIterations
+        
+            typedef NetworkToSurface< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetNumSmoothingIterations_function_type)( unsigned int ) ;
+            
+            NetworkToSurface2_exposer.def( 
+                "SetNumSmoothingIterations"
+                , SetNumSmoothingIterations_function_type( &::NetworkToSurface< 2 >::SetNumSmoothingIterations )
+                , ( bp::arg("numIterations") ) );
+        
+        }
+        { //::NetworkToSurface< 2 >::SetRemeshingTargetEdgeLength
+        
+            typedef NetworkToSurface< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetRemeshingTargetEdgeLength_function_type)( double ) ;
+            
+            NetworkToSurface2_exposer.def( 
+                "SetRemeshingTargetEdgeLength"
+                , SetRemeshingTargetEdgeLength_function_type( &::NetworkToSurface< 2 >::SetRemeshingTargetEdgeLength )
+                , ( bp::arg("length") ) );
         
         }
         { //::NetworkToSurface< 2 >::SetResamplingSplineSize
@@ -98,6 +142,17 @@ void register_NetworkToSurface2_class(){
                 "SetResamplingSplineSize"
                 , SetResamplingSplineSize_function_type( &::NetworkToSurface< 2 >::SetResamplingSplineSize )
                 , ( bp::arg("splineResampleSize") ) );
+        
+        }
+        { //::NetworkToSurface< 2 >::SetSmoothingFeatureAngle
+        
+            typedef NetworkToSurface< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetSmoothingFeatureAngle_function_type)( double ) ;
+            
+            NetworkToSurface2_exposer.def( 
+                "SetSmoothingFeatureAngle"
+                , SetSmoothingFeatureAngle_function_type( &::NetworkToSurface< 2 >::SetSmoothingFeatureAngle )
+                , ( bp::arg("featureAngle") ) );
         
         }
         { //::NetworkToSurface< 2 >::SetVesselNetwork

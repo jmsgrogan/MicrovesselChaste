@@ -68,6 +68,26 @@ void register_ImageToMesh2_class(){
                 , GetMesh_function_type( &::ImageToMesh< 2 >::GetMesh ) );
         
         }
+        { //::ImageToMesh< 2 >::GetMeshBoundary
+        
+            typedef ImageToMesh< 2 > exported_class_t;
+            typedef ::vtkSmartPointer< vtkPolyData > ( exported_class_t::*GetMeshBoundary_function_type)(  ) ;
+            
+            ImageToMesh2_exposer.def( 
+                "GetMeshBoundary"
+                , GetMeshBoundary_function_type( &::ImageToMesh< 2 >::GetMeshBoundary ) );
+        
+        }
+        { //::ImageToMesh< 2 >::GetMeshHoles
+        
+            typedef ImageToMesh< 2 > exported_class_t;
+            typedef ::std::vector< DimensionalChastePoint<2> > ( exported_class_t::*GetMeshHoles_function_type)(  ) ;
+            
+            ImageToMesh2_exposer.def( 
+                "GetMeshHoles"
+                , GetMeshHoles_function_type( &::ImageToMesh< 2 >::GetMeshHoles ) );
+        
+        }
         { //::ImageToMesh< 2 >::SetElementSize
         
             typedef ImageToMesh< 2 > exported_class_t;

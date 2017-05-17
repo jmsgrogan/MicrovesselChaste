@@ -41,6 +41,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
 #include <vtkPoints.h>
+#include <vtkCellLocator.h>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/map.hpp>
 #include "ChasteSerialization.hpp"
@@ -101,7 +102,7 @@ class Part
     /**
      * The locations of region markers (see PLC definition)
      */
-    std::vector<DimensionalChastePoint<DIM> > mRegionMarkers;
+    std::vector<std::pair<DimensionalChastePoint<DIM>, unsigned> > mRegionMarkers;
 
     /**
      * The reference length scale
@@ -117,6 +118,16 @@ class Part
      * Attributes for the part
      */
     std::map<std::string, double> mAttributes;
+
+    /**
+     * Handy for point/cell location operations
+     */
+    vtkSmartPointer<vtkCellLocator> mpVtkCellLocator;
+
+    /**
+     * Map of attribute labels for mesh attribute numbers
+     */
+    std::map<unsigned, std::string> mAttributeKeys;
 
 public:
 
@@ -208,8 +219,9 @@ public:
     /**
      * Add a region marker to the part
      * @param location the location of the region
+     * @param value the region value
      */
-    void AddRegionMarker(DimensionalChastePoint<DIM> location);
+    void AddRegionMarker(DimensionalChastePoint<DIM> location, unsigned value);
 
     /**
      * Add a polygon described by a vector or vertices. The vertices should be planar. This is not
@@ -249,8 +261,10 @@ public:
      * Add a vessel network to the part.
      * @param pVesselNetwork the vessel network to be added
      * @param surface true if a surface representation of the network is required
+     * @param removeVesselRegion remove vessel region from meshes
      */
-    void AddVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork, bool surface = false);
+    void AddVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork,
+            bool surface = false, bool removeVesselRegion = true);
 
     /**
      * Add a part to the existing one. This takes all the polygons from the incoming part and
@@ -299,13 +313,19 @@ public:
      * Return the region marker locations
      * @return the region marker locations
      */
-    std::vector<DimensionalChastePoint<DIM> > GetRegionMarkers();
+    std::vector<std::pair<DimensionalChastePoint<DIM>, unsigned> > GetRegionMarkers();
 
     /**
      * Return the part attributes
      * @return the part attributes
      */
     std::map<std::string, double> GetAttributes();
+
+    /**
+     * Return the attribute keys for the mesh
+     * @return the attribute keys for the mesh
+     */
+    std::map<unsigned, std::string> GetAttributesKeysForMesh(bool update = true);
 
     /**
      * Return the facets

@@ -51,6 +51,39 @@ void register_Polygon2_class(){
         bp::implicitly_convertible< std::vector< boost::shared_ptr<DimensionalChastePoint<2> > >, Polygon< 2 > >();
         Polygon2_exposer.def( bp::init< boost::shared_ptr< DimensionalChastePoint< 2 > > >(( bp::arg("pVertex") )) );
         bp::implicitly_convertible< boost::shared_ptr< DimensionalChastePoint< 2 > >, Polygon< 2 > >();
+        { //::Polygon< 2 >::AddAttribute
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AddAttribute_function_type)( ::std::string const &,double ) ;
+            
+            Polygon2_exposer.def( 
+                "AddAttribute"
+                , AddAttribute_function_type( &::Polygon< 2 >::AddAttribute )
+                , ( bp::arg("rLabel"), bp::arg("value") ) );
+        
+        }
+        { //::Polygon< 2 >::AddAttributeToAllEdges
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef void ( exported_class_t::*AddAttributeToAllEdges_function_type)( ::std::string const &,double ) ;
+            
+            Polygon2_exposer.def( 
+                "AddAttributeToAllEdges"
+                , AddAttributeToAllEdges_function_type( &::Polygon< 2 >::AddAttributeToAllEdges )
+                , ( bp::arg("rLabel"), bp::arg("value") ) );
+        
+        }
+        { //::Polygon< 2 >::AddAttributeToEdgeIfFound
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef bool ( exported_class_t::*AddAttributeToEdgeIfFound_function_type)( ::DimensionalChastePoint< 2 >,::std::string const &,double ) ;
+            
+            Polygon2_exposer.def( 
+                "AddAttributeToEdgeIfFound"
+                , AddAttributeToEdgeIfFound_function_type( &::Polygon< 2 >::AddAttributeToEdgeIfFound )
+                , ( bp::arg("loc"), bp::arg("rLabel"), bp::arg("value") ) );
+        
+        }
         { //::Polygon< 2 >::AddVertex
         
             typedef Polygon< 2 > exported_class_t;
@@ -106,15 +139,25 @@ void register_Polygon2_class(){
                 , ( bp::arg("pVertex") ) );
         
         }
-        { //::Polygon< 2 >::EdgeHasLabel
+        { //::Polygon< 2 >::EdgeHasAttribute
         
             typedef Polygon< 2 > exported_class_t;
-            typedef bool ( exported_class_t::*EdgeHasLabel_function_type)( ::DimensionalChastePoint< 2 >,::std::string const & ) ;
+            typedef bool ( exported_class_t::*EdgeHasAttribute_function_type)( ::DimensionalChastePoint< 2 >,::std::string const & ) ;
             
             Polygon2_exposer.def( 
-                "EdgeHasLabel"
-                , EdgeHasLabel_function_type( &::Polygon< 2 >::EdgeHasLabel )
+                "EdgeHasAttribute"
+                , EdgeHasAttribute_function_type( &::Polygon< 2 >::EdgeHasAttribute )
                 , ( bp::arg("loc"), bp::arg("rLabel") ) );
+        
+        }
+        { //::Polygon< 2 >::GetAttributes
+        
+            typedef Polygon< 2 > exported_class_t;
+            typedef ::std::map< std::string, double > ( exported_class_t::*GetAttributes_function_type)(  ) ;
+            
+            Polygon2_exposer.def( 
+                "GetAttributes"
+                , GetAttributes_function_type( &::Polygon< 2 >::GetAttributes ) );
         
         }
         { //::Polygon< 2 >::GetBoundingBox
@@ -159,14 +202,14 @@ void register_Polygon2_class(){
                 , ( bp::arg("rLocation") ) );
         
         }
-        { //::Polygon< 2 >::GetEdgeLabels
+        { //::Polygon< 2 >::GetEdgeAttributes
         
             typedef Polygon< 2 > exported_class_t;
-            typedef ::std::vector< std::string > ( exported_class_t::*GetEdgeLabels_function_type)(  ) ;
+            typedef ::std::vector< std::map< std::string, double > > ( exported_class_t::*GetEdgeAttributes_function_type)(  ) ;
             
             Polygon2_exposer.def( 
-                "GetEdgeLabels"
-                , GetEdgeLabels_function_type( &::Polygon< 2 >::GetEdgeLabels ) );
+                "GetEdgeAttributes"
+                , GetEdgeAttributes_function_type( &::Polygon< 2 >::GetEdgeAttributes ) );
         
         }
         { //::Polygon< 2 >::GetNormal
@@ -230,26 +273,15 @@ void register_Polygon2_class(){
                 , GetVtkVertices_function_type( &::Polygon< 2 >::GetVtkVertices ) );
         
         }
-        { //::Polygon< 2 >::LabelAllEdges
+        { //::Polygon< 2 >::HasAttribute
         
             typedef Polygon< 2 > exported_class_t;
-            typedef void ( exported_class_t::*LabelAllEdges_function_type)( ::std::string const & ) ;
+            typedef bool ( exported_class_t::*HasAttribute_function_type)( ::std::string const & ) ;
             
             Polygon2_exposer.def( 
-                "LabelAllEdges"
-                , LabelAllEdges_function_type( &::Polygon< 2 >::LabelAllEdges )
+                "HasAttribute"
+                , HasAttribute_function_type( &::Polygon< 2 >::HasAttribute )
                 , ( bp::arg("rLabel") ) );
-        
-        }
-        { //::Polygon< 2 >::LabelEdgeIfFound
-        
-            typedef Polygon< 2 > exported_class_t;
-            typedef bool ( exported_class_t::*LabelEdgeIfFound_function_type)( ::DimensionalChastePoint< 2 >,::std::string const & ) ;
-            
-            Polygon2_exposer.def( 
-                "LabelEdgeIfFound"
-                , LabelEdgeIfFound_function_type( &::Polygon< 2 >::LabelEdgeIfFound )
-                , ( bp::arg("loc"), bp::arg("rLabel") ) );
         
         }
         { //::Polygon< 2 >::ReplaceVertex

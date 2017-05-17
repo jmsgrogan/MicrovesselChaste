@@ -86,6 +86,16 @@ void register_ImageToSurface_class(){
                 , ( bp::arg("pImage") ) );
         
         }
+        { //::ImageToSurface::SetRemoveDisconnected
+        
+            typedef void ( ::ImageToSurface::*SetRemoveDisconnected_function_type)( bool ) ;
+            
+            ImageToSurface_exposer.def( 
+                "SetRemoveDisconnected"
+                , SetRemoveDisconnected_function_type( &::ImageToSurface::SetRemoveDisconnected )
+                , ( bp::arg("removeDisconnected") ) );
+        
+        }
         { //::ImageToSurface::SetThreshold
         
             typedef void ( ::ImageToSurface::*SetThreshold_function_type)( double,bool ) ;

@@ -199,8 +199,8 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
                     unsigned node2_index = (*surf_iter)->GetNodeGlobalIndex(1);
                     DimensionalChastePoint<DIM> loc1(p_mesh->GetNode(node1_index)->GetPoint().rGetLocation(), length_scale);
                     DimensionalChastePoint<DIM> loc2(p_mesh->GetNode(node2_index)->GetPoint().rGetLocation(), length_scale);
-                    std::pair<bool,units::quantity<unit::concentration> > result1 = GetValue(loc1,node_distance_tolerance);
-                    std::pair<bool,units::quantity<unit::concentration> > result2 = GetValue(loc2,node_distance_tolerance);
+                    std::pair<bool,units::quantity<unit::concentration> > result1 = GetValue(loc1, node_distance_tolerance);
+                    std::pair<bool,units::quantity<unit::concentration> > result2 = GetValue(loc2, node_distance_tolerance);
 
                     unsigned num_on_feature = 0;
                     num_on_feature += unsigned(result1.first);

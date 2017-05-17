@@ -40,17 +40,18 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "indexing_suite/container_suite.hpp"
 #include "indexing_suite/vector.hpp"
 #include "wrapper_header_collection.hpp"
-#include "VectorString.pypp.hpp"
+#include "_DimensionalChastePoint2__value_traits.pypp.hpp"
+#include "VectorDimensionalChastePoint2.pypp.hpp"
 
 namespace bp = boost::python;
 
-void register_VectorString_class(){
+void register_VectorDimensionalChastePoint2_class(){
 
-    { //::std::vector< std::string >
-        typedef bp::class_< std::vector< std::string > > VectorString_exposer_t;
-        VectorString_exposer_t VectorString_exposer = VectorString_exposer_t( "VectorString" );
-        bp::scope VectorString_scope( VectorString_exposer );
-        VectorString_exposer.def( bp::indexing::vector_suite< std::vector< std::string > >() );
+    { //::std::vector< DimensionalChastePoint<2> >
+        typedef bp::class_< std::vector< DimensionalChastePoint<2> > > VectorDimensionalChastePoint2_exposer_t;
+        VectorDimensionalChastePoint2_exposer_t VectorDimensionalChastePoint2_exposer = VectorDimensionalChastePoint2_exposer_t( "VectorDimensionalChastePoint2" );
+        bp::scope VectorDimensionalChastePoint2_scope( VectorDimensionalChastePoint2_exposer );
+        VectorDimensionalChastePoint2_exposer.def( bp::indexing::vector_suite< std::vector< DimensionalChastePoint<2> > >() );
     }
 
 }

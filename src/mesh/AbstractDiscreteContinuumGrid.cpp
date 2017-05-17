@@ -56,6 +56,7 @@ AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::AbstractDiscreteContinuum
     mpVtkCellLocator(vtkSmartPointer<vtkCellLocator>::New()),
     mVtkRepresentationUpToDate(false),
     mLocalGlobalMap()
+
 {
 
 }

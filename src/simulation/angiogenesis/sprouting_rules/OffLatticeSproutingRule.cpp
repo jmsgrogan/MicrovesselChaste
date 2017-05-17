@@ -62,12 +62,6 @@ OffLatticeSproutingRule<DIM>::~OffLatticeSproutingRule()
 }
 
 template <unsigned DIM>
-void OffLatticeSproutingRule<DIM>::SetTipExclusionRadius(units::quantity<unit::length> exclusionRadius)
-{
-    this->mTipExclusionRadius = exclusionRadius;
-}
-
-template <unsigned DIM>
 boost::shared_ptr<OffLatticeSproutingRule<DIM> > OffLatticeSproutingRule<DIM>::Create()
 {
     MAKE_PTR(OffLatticeSproutingRule<DIM>, pSelf);
@@ -120,12 +114,13 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::
             }
         }
 
-        // Check we are not too close to the end of the vessel
+        // Only nodes with two segments can sprout
         if(rNodes[idx]->GetNumberOfSegments() != 2)
         {
             continue;
         }
 
+        // Apply a vessel end cutoff if there is one
         if(this->mVesselEndCutoff > 0.0 * unit::metres)
         {
             if(rNodes[idx]->GetSegment(0)->GetVessel()->GetClosestEndNodeDistance(rNodes[idx]->rGetLocation())< this->mVesselEndCutoff)
@@ -178,6 +173,12 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::
         }
     }
     return sprouts;
+}
+
+template <unsigned DIM>
+void OffLatticeSproutingRule<DIM>::SetTipExclusionRadius(units::quantity<unit::length> exclusionRadius)
+{
+    this->mTipExclusionRadius = exclusionRadius;
 }
 
 // Explicit instantiation

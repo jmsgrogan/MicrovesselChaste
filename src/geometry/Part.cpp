@@ -43,6 +43,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkDoubleArray.h>
 #include <vtkCellData.h>
 #include <vtkPointData.h>
+#include <vtkPolyDataNormals.h>
 #include "VesselNode.hpp"
 #include "VesselSegment.hpp"
 #include "Vessel.hpp"
@@ -59,7 +60,9 @@ Part<DIM>::Part() :
         mRegionMarkers(),
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
         mVtkIsUpToDate(false),
-        mAttributes()
+        mAttributes(),
+        mpVtkCellLocator(),
+        mAttributeKeys()
 {
 }
 
@@ -168,9 +171,9 @@ void Part<DIM>::AddHoleMarker(DimensionalChastePoint<DIM> hole)
 }
 
 template<unsigned DIM>
-void Part<DIM>::AddRegionMarker(DimensionalChastePoint<DIM> region)
+void Part<DIM>::AddRegionMarker(DimensionalChastePoint<DIM> region, unsigned value)
 {
-    mRegionMarkers.push_back(region);
+    mRegionMarkers.push_back(std::pair<DimensionalChastePoint<DIM>, unsigned>(region, value));
 }
 
 template<unsigned DIM>
@@ -245,7 +248,8 @@ boost::shared_ptr<Polygon<DIM> > Part<DIM>::AddRectangle(units::quantity<unit::l
 }
 
 template<unsigned DIM>
-void Part<DIM>::AddVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork, bool surface)
+void Part<DIM>::AddVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork, bool surface,
+        bool removeVesselRegion)
 {
     if (!surface)
     {
@@ -298,6 +302,7 @@ void Part<DIM>::AddVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselN
 
         for (unsigned idx = 0; idx < polygons.size(); idx++)
         {
+            polygons[idx]->AddAttribute("Vessel Wall", 1.0);
             bool on_facet = false;
             DimensionalChastePoint<DIM> poly_centroid = polygons[idx]->GetCentroid();
             for (unsigned jdx = 0; jdx < mFacets.size(); jdx++)
@@ -320,10 +325,21 @@ void Part<DIM>::AddVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselN
             }
         }
 
-        std::vector<DimensionalChastePoint<DIM> > hole_locations = generator.GetHoles();
-        for(unsigned idx=0; idx<hole_locations.size(); idx++)
+        if(removeVesselRegion)
         {
-            AddHoleMarker(hole_locations[idx]);
+            std::vector<DimensionalChastePoint<DIM> > hole_locations = generator.GetHoles();
+            for(unsigned idx=0; idx<hole_locations.size(); idx++)
+            {
+                AddHoleMarker(hole_locations[idx]);
+            }
+        }
+        else
+        {
+            std::vector<DimensionalChastePoint<DIM> > region_locations = generator.GetHoles();
+            for(unsigned idx=0; idx<region_locations.size(); idx++)
+            {
+                AddRegionMarker(region_locations[idx], 2.0);
+            }
         }
     }
     mVtkIsUpToDate = false;
@@ -422,7 +438,7 @@ std::vector<DimensionalChastePoint<DIM> > Part<DIM>::GetHoleMarkers()
 }
 
 template<unsigned DIM>
-std::vector<DimensionalChastePoint<DIM> > Part<DIM>::GetRegionMarkers()
+std::vector<std::pair<DimensionalChastePoint<DIM>, unsigned> > Part<DIM>::GetRegionMarkers()
 {
     return mRegionMarkers;
 }
@@ -431,6 +447,54 @@ template<unsigned DIM>
 units::quantity<unit::length> Part<DIM>::GetReferenceLengthScale()
 {
     return mReferenceLength;
+}
+
+template<unsigned DIM>
+std::map<unsigned, std::string> Part<DIM>::GetAttributesKeysForMesh(bool update)
+{
+    if(update)
+    {
+        // Collect all attribute labels
+        std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+        std::set<std::string> attribute_labels;
+
+        for(unsigned idx=0; idx<polygons.size(); idx++)
+        {
+            std::map<std::string, double> attribute_map = polygons[idx]->GetAttributes();
+            for(std::map<std::string, double>::iterator it = attribute_map.begin(); it != attribute_map.end(); ++it)
+            {
+                attribute_labels.insert(it->first);
+            }
+
+            std::vector<std::map<std::string, double> > edge_atts_per_polygon = polygons[idx]->GetEdgeAttributes();
+            for(unsigned jdx=0;jdx<edge_atts_per_polygon.size();jdx++)
+            {
+                for(std::map<std::string, double>::iterator it = edge_atts_per_polygon[jdx].begin();
+                        it != edge_atts_per_polygon[jdx].end(); ++it)
+                {
+                    attribute_labels.insert(it->first);
+                }
+            }
+        }
+        std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
+        for(unsigned idx=0;idx<vertices.size(); idx++)
+        {
+            std::map<std::string, double> attribute_map = vertices[idx]->GetAttributes();
+            for(std::map<std::string, double>::iterator it = attribute_map.begin(); it != attribute_map.end(); ++it)
+            {
+                attribute_labels.insert(it->first);
+            }
+        }
+        mAttributeKeys.clear();
+        unsigned counter = 3; // Start on 3 as unlabelled regions default to 0, outer bounds default to 1 and vessel walls to 2
+        std::set<std::string>::iterator it;
+        for (it = attribute_labels.begin(); it != attribute_labels.end(); ++it)
+        {
+            mAttributeKeys[counter] = *it;
+            counter++;
+        }
+    }
+    return mAttributeKeys;
 }
 
 template<unsigned DIM>
@@ -821,9 +885,17 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
     #else
         p_clean_data->SetInputData(p_part_data);
     #endif
-    p_clean_data->Update();
 
-    mVtkPart = p_clean_data->GetOutput();
+    vtkSmartPointer<vtkPolyDataNormals> p_normals = vtkSmartPointer<vtkPolyDataNormals>::New();
+    p_normals->SetInputConnection(p_clean_data->GetOutputPort());
+    p_normals->ComputePointNormalsOn();
+    p_normals->ComputeCellNormalsOn();
+    p_normals->Update();
+    mVtkPart = p_normals->GetOutput();
+
+    mpVtkCellLocator = vtkSmartPointer<vtkCellLocator>::New();
+    mpVtkCellLocator->SetDataSet(mVtkPart);
+    mpVtkCellLocator->BuildLocator();
     mVtkIsUpToDate = true;
     return mVtkPart;
 }

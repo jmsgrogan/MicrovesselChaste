@@ -124,7 +124,8 @@ public:
     void SetUpVtkGrid();
 
     /**
-     * This is the same as the TetrahedralMesh implementation of ImportFromMesher but avoids some templating
+     * Similar to the TetrahedralMesh implementation of ImportFromMesher but also
+     * sets region and boundary attributes
      * @param mesherOutput tetgen output
      * @param numberOfElements the number of elements
      * @param elementList the element list
@@ -133,7 +134,8 @@ public:
      * @param edgeMarkerList an edge marker list
      */
     void ImportDiscreteContinuumMeshFromTetgen(tetgen::tetgenio& mesherOutput, unsigned numberOfElements, int *elementList,
-                          unsigned numberOfFaces, int *faceList, int *edgeMarkerList);
+                          unsigned numberOfFaces, int *faceList, int *edgeMarkerList, int* triFaceMarkerList,
+                          unsigned numberoftetrahedronattributes, double *tetrahedronattributelist);
 
 };
 

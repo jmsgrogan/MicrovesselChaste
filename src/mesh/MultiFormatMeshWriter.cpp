@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "Exception.hpp"
 #include <boost/filesystem.hpp>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
@@ -48,6 +46,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkCleanPolyData.h>
 #include <vtkIdList.h>
 #include <vtkCellArray.h>
+#include <vtkLine.h>
+#include <vtkIntArray.h>
 #include <vtkDataSetTriangleFilter.h>
 #include <vtkExtractUnstructuredGrid.h>
 #include <vtkDataSetSurfaceFilter.h>
@@ -59,7 +59,8 @@ MultiFormatMeshWriter<DIM>::MultiFormatMeshWriter()
     : mpVtkMesh(),
       mpMesh(),
       mFilepath(),
-      mOutputFormat(MeshFormat::VTU)
+      mOutputFormat(MeshFormat::VTU),
+      mAddBoundaryLabels(false)
 {
 
 }
@@ -84,9 +85,10 @@ void MultiFormatMeshWriter<DIM>::SetMesh(vtkSmartPointer<vtkUnstructuredGrid> pM
 }
 
 template<unsigned DIM>
-void MultiFormatMeshWriter<DIM>::SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh)
+void MultiFormatMeshWriter<DIM>::SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh, bool addBoundaryLabels)
 {
     mpMesh = pMesh;
+    mAddBoundaryLabels = addBoundaryLabels;
 }
 
 template<unsigned DIM>
@@ -115,6 +117,61 @@ void MultiFormatMeshWriter<DIM>::Write()
         if(mpMesh)
         {
             mpVtkMesh = vtkUnstructuredGrid::SafeDownCast(mpMesh->GetGlobalVtkGrid());
+
+            if(mAddBoundaryLabels)
+            {
+                unsigned num_elements = mpMesh->GetNumBoundaryElements();
+                vtkSmartPointer<vtkIntArray> p_element_attributes = vtkSmartPointer<vtkIntArray>::New();
+                p_element_attributes->SetName("Boundary Markers");
+                for(unsigned idx=0;idx<mpMesh->GetNumElements();idx++)
+                {
+                    p_element_attributes->InsertNextTuple1(0.0);
+                }
+
+                for(unsigned idx=0; idx<num_elements; idx++)
+                {
+                    BoundaryElement<DIM-1, DIM>* p_bound_element = mpMesh->GetBoundaryElement(idx);
+                    unsigned num_nodes = p_bound_element->GetNumNodes();
+
+                    if(DIM==3)
+                    {
+                        vtkSmartPointer<vtkTriangle> p_vtk_element = vtkSmartPointer<vtkTriangle>::New();
+                        for(unsigned jdx=0; jdx<num_nodes; jdx++)
+                        {
+                            p_vtk_element->GetPointIds()->SetId(jdx, p_bound_element->GetNode(jdx)->GetIndex());
+                        }
+                        mpVtkMesh->InsertNextCell(p_vtk_element->GetCellType(), p_vtk_element->GetPointIds());
+                    }
+                    else
+                    {
+                        vtkSmartPointer<vtkLine> p_vtk_element = vtkSmartPointer<vtkLine>::New();
+                        for(unsigned jdx=0; jdx<num_nodes; jdx++)
+                        {
+                            p_vtk_element->GetPointIds()->SetId(jdx, p_bound_element->GetNode(jdx)->GetIndex());
+                        }
+                        mpVtkMesh->InsertNextCell(p_vtk_element->GetCellType(), p_vtk_element->GetPointIds());
+                    }
+                    if(p_bound_element->GetNumElementAttributes()>0)
+                    {
+                        if(p_bound_element->rGetElementAttributes()[0]==0.0)
+                        {
+                            p_element_attributes->InsertNextTuple1(1.0);                        }
+                        else
+                        {
+                            p_element_attributes->InsertNextTuple1(p_bound_element->rGetElementAttributes()[0]);
+                        }
+                    }
+                    else
+                    {
+                        p_element_attributes->InsertNextTuple1(1.0);
+                    }
+                    for(unsigned jdx=0; jdx<unsigned(mpVtkMesh->GetCellData()->GetNumberOfArrays());jdx++)
+                    {
+                        mpVtkMesh->GetCellData()->GetArray(jdx)->InsertNextTuple1(0.0);
+                    }
+                }
+                mpVtkMesh->GetCellData()->AddArray(p_element_attributes);
+            }
         }
 
         if(!mpVtkMesh)

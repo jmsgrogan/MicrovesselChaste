@@ -38,6 +38,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "boost/python.hpp"
 
+#include "indexing_suite/value_traits.hpp"
+
+#include "indexing_suite/container_suite.hpp"
+
+#include "indexing_suite/vector.hpp"
+
 #include "wrapper_header_collection.hpp"
 
 #include "ImageReader.pypp.hpp"
@@ -52,9 +58,17 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "NetworkToImage3.pypp.hpp"
 
+#include "VectorDimensionalChastePoint2.pypp.hpp"
+
+#include "VectorDimensionalChastePoint3.pypp.hpp"
+
 namespace bp = boost::python;
 
 BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_image){
+    register_VectorDimensionalChastePoint3_class();
+
+    register_VectorDimensionalChastePoint2_class();
+
     register_ImageReader_class();
 
     register_ImageToMesh2_class();

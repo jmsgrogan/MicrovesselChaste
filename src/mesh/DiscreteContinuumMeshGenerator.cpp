@@ -342,7 +342,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
 
     triangulate((char*) mesher_command.c_str(), &mesher_input, &mesher_output, NULL);
 
-    mpMesh->ImportFromMesher(mesher_output, mesher_output.numberoftriangles, mesher_output.trianglelist,
+    this->mpMesh->ImportFromMesher(mesher_output, mesher_output.numberoftriangles, mesher_output.trianglelist,
                            mesher_output.numberofedges, mesher_output.edgelist, mesher_output.edgemarkerlist);
 
     mAttributes.clear();
@@ -364,13 +364,17 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
 {
-    // Only do this on master, since we don't use the mesh from other processors anyway
+    // Only do this on master as tetgen is serial
     if(PetscTools::AmMaster())
     {
         std::vector<DimensionalChastePoint<SPACE_DIM> > vertex_locations = mpDomain->GetVertexLocations();
         std::vector<DimensionalChastePoint<SPACE_DIM> > hole_locations = mpDomain->GetHoleMarkers();
+        std::vector<std::pair<DimensionalChastePoint<SPACE_DIM>, unsigned> > region_locations = mpDomain->GetRegionMarkers();
+
         unsigned num_vertices = vertex_locations.size();
+        unsigned num_regions = region_locations.size();
         unsigned num_holes = hole_locations.size();
+
         std::vector<boost::shared_ptr<Facet<SPACE_DIM> > > facets = mpDomain->GetFacets();
         unsigned num_facets = facets.size();
 
@@ -390,7 +394,20 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
             }
         }
 
-        // Add the holes
+        // Add the regions
+        mesher_input.regionlist = new double[(num_regions) * 5];
+        mesher_input.numberofregions = num_regions;
+        for (unsigned idx = 0; idx < num_regions; idx++)
+        {
+            c_vector<double, SPACE_DIM> region_location = region_locations[idx].first.GetLocation(mReferenceLength);
+            for (unsigned jdx = 0; jdx < 3; jdx++)
+            {
+                mesher_input.regionlist[5 * idx + jdx] = region_location[jdx];
+            }
+            mesher_input.regionlist[5 * idx + 3] = double(region_locations[idx].second);
+            mesher_input.regionlist[5 * idx + 4] = double(mMaxElementArea/units::pow<3>(mReferenceLength));
+        }
+
         mesher_input.holelist = new double[(num_holes) * 3];
         mesher_input.numberofholes = num_holes;
         for (unsigned idx = 0; idx < num_holes; idx++)
@@ -402,14 +419,45 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
             }
         }
 
+
         mesher_input.numberoffacets = num_facets;
         mesher_input.facetlist = new tetgen::tetgenio::facet[num_facets];
         mesher_input.facetmarkerlist = new int[num_facets];
+
+        // Get attribute keys
+        std::map<unsigned, std::string> attribute_keys = mpDomain->GetAttributesKeysForMesh(true);
+
         for (unsigned idx = 0; idx < num_facets; idx++)
         {
-            mesher_input.facetmarkerlist[idx] = 0;
-            f = &mesher_input.facetlist[idx];
+            // Use the first polygon to get the marker
             std::vector<boost::shared_ptr<Polygon<SPACE_DIM> > > polygons = facets[idx]->GetPolygons();
+            mesher_input.facetmarkerlist[idx] = 0;
+            if(polygons.size()>0)
+            {
+                std::map<std::string, double> attributes = polygons[0]->GetAttributes();
+                unsigned key=0;
+
+                // Are any attributes active, if so set their value in the marker list
+                for(std::map<std::string, double>::iterator it = attributes.begin(); it != attributes.end(); ++it)
+                {
+                    if(it->second>0.0)
+                    {
+                        // Find the key
+                        for(std::map<unsigned, std::string>::iterator it2 = attribute_keys.begin();
+                                it2 != attribute_keys.end(); ++it2)
+                        {
+                            if(it->first == it2->second)
+                            {
+                                key = it2->first;
+                                break;
+                            }
+                        }
+                    }
+                }
+                mesher_input.facetmarkerlist[idx] = int(key);
+            }
+
+            f = &mesher_input.facetlist[idx];
             f->numberofpolygons = polygons.size();
             f->polygonlist = new tetgen::tetgenio::polygon[f->numberofpolygons];
             f->numberofholes = 0;
@@ -447,11 +495,16 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
             double mesh_size = mMaxElementArea/units::pow<3>(mReferenceLength);
             mesher_command += "a" + boost::lexical_cast<std::string>(mesh_size);
         }
+        if(num_regions>0)
+        {
+            mesher_command += "A";
+        }
 
         // Library call - only do this on master
         tetgen::tetrahedralize((char*) mesher_command.c_str(), &mesher_input, &mesher_output);
-        mpMesh->ImportDiscreteContinuumMeshFromTetgen(mesher_output, mesher_output.numberoftetrahedra, mesher_output.tetrahedronlist,
-                               mesher_output.numberoftrifaces, mesher_output.trifacelist, NULL);
+        this->mpMesh->ImportDiscreteContinuumMeshFromTetgen(mesher_output, mesher_output.numberoftetrahedra, mesher_output.tetrahedronlist,
+                               mesher_output.numberoftrifaces, mesher_output.trifacelist, NULL, mesher_output.trifacemarkerlist,
+                               mesher_output.numberoftetrahedronattributes, mesher_output.tetrahedronattributelist);
 
         // if we are running parallel don't assume the resulting mesh is the same on all procs. Do a write-read
         // to make sure it is.
@@ -509,9 +562,8 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::MeshStl3d()
 
     // Library call
     tetgen::tetrahedralize((char*) mesher_command.c_str(), &mesher_input, &mesher_output);
-
-    mpMesh->ImportDiscreteContinuumMeshFromTetgen(mesher_output, mesher_output.numberoftetrahedra, mesher_output.tetrahedronlist,
-                           mesher_output.numberoftrifaces, mesher_output.trifacelist, NULL);
+    this->mpMesh->ImportDiscreteContinuumMeshFromTetgen(mesher_output, mesher_output.numberoftetrahedra, mesher_output.tetrahedronlist,
+                           mesher_output.numberoftrifaces, mesher_output.trifacelist, NULL, NULL, 0, NULL);
 
     delete[] writable;
 }

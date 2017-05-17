@@ -233,6 +233,9 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetUpVtkGrid()
     unsigned num_elements = element_connectivity.size();
     p_grid->Allocate(num_elements, num_elements);
 
+    vtkSmartPointer<vtkIntArray> p_element_attributes = vtkSmartPointer<vtkIntArray>::New();
+    p_element_attributes->SetName("Region Markers");
+
     for(unsigned idx=0; idx<num_elements; idx++)
     {
         if(ELEMENT_DIM==3)
@@ -244,6 +247,15 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetUpVtkGrid()
                 p_vtk_element->GetPointIds()->SetId(jdx, element_connectivity[idx][jdx]);
             }
             p_grid->InsertNextCell(p_vtk_element->GetCellType(), p_vtk_element->GetPointIds());
+
+            if(this->GetElement(idx)->GetNumElementAttributes()>0)
+            {
+                p_element_attributes->InsertNextTuple1(this->GetElement(idx)->rGetElementAttributes()[0]);
+            }
+            else
+            {
+                p_element_attributes->InsertNextTuple1(0.0);
+            }
         }
         else
         {
@@ -254,6 +266,15 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetUpVtkGrid()
                 p_vtk_element->GetPointIds()->SetId(jdx, element_connectivity[idx][jdx]);
             }
             p_grid->InsertNextCell(p_vtk_element->GetCellType(), p_vtk_element->GetPointIds());
+
+            if(this->GetElement(idx)->GetNumElementAttributes()>0)
+            {
+                p_element_attributes->InsertNextTuple1(this->GetElement(idx)->rGetElementAttributes()[0]);
+            }
+            else
+            {
+                p_element_attributes->InsertNextTuple1(0.0);
+            }
         }
     }
 
@@ -271,6 +292,7 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetUpVtkGrid()
     }
     p_grid->GetCellData()->AddArray(p_cell_data);
     p_grid->GetCellData()->AddArray(p_global_num_data);
+    p_grid->GetCellData()->AddArray(p_element_attributes);
 
     // Set up the local grid
     if(PetscTools::IsSequential())
@@ -395,7 +417,9 @@ vtkSmartPointer<vtkPoints> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetPoi
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::ImportDiscreteContinuumMeshFromTetgen(tetgen::tetgenio& mesherOutput, unsigned numberOfElements,
                                                           int *elementList, unsigned numberOfFaces, int *faceList,
-                                                          int *edgeMarkerList)
+                                                          int *edgeMarkerList, int* triFaceMarkerList,
+                                                          unsigned numberoftetrahedronattributes,
+                                                          double *tetrahedronattributelist)
 {
     unsigned nodes_per_element = mesherOutput.numberofcorners;
 
@@ -448,6 +472,10 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::ImportDiscreteContinuumMeshF
         try
         {
             p_element = new Element<ELEMENT_DIM, SPACE_DIM>(real_element_index, nodes);
+            if(numberoftetrahedronattributes>0 and tetrahedronattributelist!=NULL)
+            {
+                p_element->AddElementAttribute(tetrahedronattributelist[numberoftetrahedronattributes*real_element_index]);
+            }
 
             // Shouldn't throw after this point
             this->mElements.push_back(p_element);
@@ -507,6 +535,10 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::ImportDiscreteContinuumMeshF
             try
             {
                 p_b_element = new BoundaryElement<ELEMENT_DIM - 1, SPACE_DIM>(next_boundary_element_index, nodes);
+                if(triFaceMarkerList != NULL)
+                {
+                    p_b_element->AddElementAttribute(triFaceMarkerList[next_boundary_element_index]);
+                }
                 this->mBoundaryElements.push_back(p_b_element);
                 next_boundary_element_index++;
             }

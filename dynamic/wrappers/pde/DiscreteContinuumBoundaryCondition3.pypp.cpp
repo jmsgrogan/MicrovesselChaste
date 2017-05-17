@@ -133,14 +133,14 @@ void register_DiscreteContinuumBoundaryCondition3_class(){
                 , ( bp::arg("isRobin") ) );
         
         }
-        { //::DiscreteContinuumBoundaryCondition< 3 >::SetLabelName
+        { //::DiscreteContinuumBoundaryCondition< 3 >::SetLabel
         
             typedef DiscreteContinuumBoundaryCondition< 3 > exported_class_t;
-            typedef void ( exported_class_t::*SetLabelName_function_type)( ::std::string const & ) ;
+            typedef void ( exported_class_t::*SetLabel_function_type)( ::std::string const & ) ;
             
             DiscreteContinuumBoundaryCondition3_exposer.def( 
-                "SetLabelName"
-                , SetLabelName_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::SetLabelName )
+                "SetLabel"
+                , SetLabel_function_type( &::DiscreteContinuumBoundaryCondition< 3 >::SetLabel )
                 , ( bp::arg("label") ) );
         
         }

@@ -50,6 +50,17 @@ void register_DimensionalChastePoint3_class(){
         bp::scope DimensionalChastePoint3_scope( DimensionalChastePoint3_exposer );
         bp::implicitly_convertible< double, DimensionalChastePoint< 3 > >();
         DimensionalChastePoint3_exposer.def( bp::init< boost::numeric::ublas::c_vector< double, 3 >, boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > >(( bp::arg("coords"), bp::arg("referenceLength") )) );
+        { //::DimensionalChastePoint< 3 >::AddAttribute
+        
+            typedef DimensionalChastePoint< 3 > exported_class_t;
+            typedef void ( exported_class_t::*AddAttribute_function_type)( ::std::string const &,double ) ;
+            
+            DimensionalChastePoint3_exposer.def( 
+                "AddAttribute"
+                , AddAttribute_function_type( &::DimensionalChastePoint< 3 >::AddAttribute )
+                , ( bp::arg("rAttribute"), bp::arg("value") ) );
+        
+        }
         { //::DimensionalChastePoint< 3 >::Create
         
             typedef DimensionalChastePoint< 3 > exported_class_t;
@@ -70,6 +81,16 @@ void register_DimensionalChastePoint3_class(){
                 "Create"
                 , Create_function_type( &::DimensionalChastePoint< 3 >::Create )
                 , ( bp::arg("coords"), bp::arg("referenceLength") ) );
+        
+        }
+        { //::DimensionalChastePoint< 3 >::GetAttributes
+        
+            typedef DimensionalChastePoint< 3 > exported_class_t;
+            typedef ::std::map< std::string, double > ( exported_class_t::*GetAttributes_function_type)(  ) ;
+            
+            DimensionalChastePoint3_exposer.def( 
+                "GetAttributes"
+                , GetAttributes_function_type( &::DimensionalChastePoint< 3 >::GetAttributes ) );
         
         }
         { //::DimensionalChastePoint< 3 >::GetDistance

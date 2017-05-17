@@ -86,6 +86,26 @@ void register_BoundaryExtractor_class(){
                 , ( bp::arg("pInputSurface") ) );
         
         }
+        { //::BoundaryExtractor::SetInputRaw
+        
+            typedef void ( ::BoundaryExtractor::*SetInputRaw_function_type)( ::vtkPolyData * ) ;
+            
+            BoundaryExtractor_exposer.def( 
+                "SetInputRaw"
+                , SetInputRaw_function_type( &::BoundaryExtractor::SetInputRaw )
+                , ( bp::arg("pInputSurface") ) );
+        
+        }
+        { //::BoundaryExtractor::SetRemoveDisconnected
+        
+            typedef void ( ::BoundaryExtractor::*SetRemoveDisconnected_function_type)( bool ) ;
+            
+            BoundaryExtractor_exposer.def( 
+                "SetRemoveDisconnected"
+                , SetRemoveDisconnected_function_type( &::BoundaryExtractor::SetRemoveDisconnected )
+                , ( bp::arg("removeDisconnected") ) );
+        
+        }
         { //::BoundaryExtractor::SetSmoothingLength
         
             typedef void ( ::BoundaryExtractor::*SetSmoothingLength_function_type)( double ) ;

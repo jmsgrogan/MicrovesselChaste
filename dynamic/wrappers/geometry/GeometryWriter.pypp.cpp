@@ -48,6 +48,25 @@ void register_GeometryWriter_class(){
         typedef bp::class_< GeometryWriter > GeometryWriter_exposer_t;
         GeometryWriter_exposer_t GeometryWriter_exposer = GeometryWriter_exposer_t( "GeometryWriter", bp::init< >() );
         bp::scope GeometryWriter_scope( GeometryWriter_exposer );
+        { //::GeometryWriter::AddInput
+        
+            typedef void ( ::GeometryWriter::*AddInput_function_type)( ::vtkSmartPointer< vtkPolyData > ) ;
+            
+            GeometryWriter_exposer.def( 
+                "AddInput"
+                , AddInput_function_type( &::GeometryWriter::AddInput )
+                , ( bp::arg("pSurface") ) );
+        
+        }
+        { //::GeometryWriter::ClearInputs
+        
+            typedef void ( ::GeometryWriter::*ClearInputs_function_type)(  ) ;
+            
+            GeometryWriter_exposer.def( 
+                "ClearInputs"
+                , ClearInputs_function_type( &::GeometryWriter::ClearInputs ) );
+        
+        }
         { //::GeometryWriter::Create
         
             typedef ::boost::shared_ptr< GeometryWriter > ( *Create_function_type )(  );
@@ -65,16 +84,6 @@ void register_GeometryWriter_class(){
                 "SetFileName"
                 , SetFileName_function_type( &::GeometryWriter::SetFileName )
                 , ( bp::arg("rFileName") ) );
-        
-        }
-        { //::GeometryWriter::SetInput
-        
-            typedef void ( ::GeometryWriter::*SetInput_function_type)( ::vtkSmartPointer< vtkPolyData > ) ;
-            
-            GeometryWriter_exposer.def( 
-                "SetInput"
-                , SetInput_function_type( &::GeometryWriter::SetInput )
-                , ( bp::arg("pSurface") ) );
         
         }
         { //::GeometryWriter::SetOutputFormat

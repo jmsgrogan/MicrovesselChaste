@@ -46,6 +46,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "indexing_suite/set.hpp"
 
+#include "indexing_suite/map.hpp"
+
 #include "wrapper_header_collection.hpp"
 
 #include "AbstractDiscreteContinuumGrid2_2.pypp.hpp"
@@ -75,6 +77,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "GridCalculator2.pypp.hpp"
 
 #include "GridCalculator3.pypp.hpp"
+
+#include "MapStringDouble.pypp.hpp"
 
 #include "MeshReader.pypp.hpp"
 
@@ -146,6 +150,8 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_mesh){
     register_VectorDimensionalChastePoint2_class();
 
     register_SetUnsigned_class();
+
+    register_MapStringDouble_class();
 
     register_AbstractDiscreteContinuumGrid2_2_class();
 

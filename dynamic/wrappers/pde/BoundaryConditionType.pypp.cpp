@@ -50,13 +50,13 @@ void register_BoundaryConditionType_class(){
         bp::scope BoundaryConditionType_scope( BoundaryConditionType_exposer );
         bp::enum_< BoundaryConditionType::Value>("Value")
             .value("POINT", BoundaryConditionType::POINT)
-            .value("FACET", BoundaryConditionType::FACET)
+            .value("POLYGON", BoundaryConditionType::POLYGON)
+            .value("EDGE", BoundaryConditionType::EDGE)
             .value("OUTER", BoundaryConditionType::OUTER)
             .value("VESSEL_LINE", BoundaryConditionType::VESSEL_LINE)
             .value("VESSEL_VOLUME", BoundaryConditionType::VESSEL_VOLUME)
             .value("CELL", BoundaryConditionType::CELL)
             .value("IN_PART", BoundaryConditionType::IN_PART)
-            .value("EDGE", BoundaryConditionType::EDGE)
             .export_values()
             ;
     }

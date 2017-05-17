@@ -44,18 +44,60 @@ namespace bp = boost::python;
 
 void register_MappableGridGenerator_class(){
 
-    bp::class_< MappableGridGenerator >( "MappableGridGenerator", bp::init< >() )    
-        .def( 
-            "GenerateCylinder"
-            , (::boost::shared_ptr< Part< 3 > > ( ::MappableGridGenerator::* )( double,double,double,unsigned int,unsigned int,double ))( &::MappableGridGenerator::GenerateCylinder )
-            , ( bp::arg("cylinderRadius"), bp::arg("cylinderThickness"), bp::arg("cylinderHeight"), bp::arg("numX"), bp::arg("numY"), bp::arg("cylinderAngle")=2. * 3.1415926535897931 ) )    
-        .def( 
-            "GenerateHemisphere"
-            , (::boost::shared_ptr< Part< 3 > > ( ::MappableGridGenerator::* )( double,double,unsigned int,unsigned int,double,double ))( &::MappableGridGenerator::GenerateHemisphere )
-            , ( bp::arg("sphereRadius"), bp::arg("sphereThickness"), bp::arg("numX"), bp::arg("numY"), bp::arg("sphereAzimuthAngle")=2. * 3.1415926535897931, bp::arg("spherePolarAngle")=0.5 * 3.1415926535897931 ) )    
-        .def( 
-            "GeneratePlane"
-            , (::boost::shared_ptr< Part< 3 > > ( ::MappableGridGenerator::* )( unsigned int,unsigned int,bool ))( &::MappableGridGenerator::GeneratePlane )
-            , ( bp::arg("numX"), bp::arg("numY"), bp::arg("withEndCaps")=(bool)(true) ) );
+    { //::MappableGridGenerator
+        typedef bp::class_< MappableGridGenerator > MappableGridGenerator_exposer_t;
+        MappableGridGenerator_exposer_t MappableGridGenerator_exposer = MappableGridGenerator_exposer_t( "MappableGridGenerator", bp::init< >() );
+        bp::scope MappableGridGenerator_scope( MappableGridGenerator_exposer );
+        { //::MappableGridGenerator::Create
+        
+            typedef ::boost::shared_ptr< MappableGridGenerator > ( *Create_function_type )(  );
+            
+            MappableGridGenerator_exposer.def( 
+                "Create"
+                , Create_function_type( &::MappableGridGenerator::Create ) );
+        
+        }
+        { //::MappableGridGenerator::GenerateCylinder
+        
+            typedef ::boost::shared_ptr< Part< 3 > > ( ::MappableGridGenerator::*GenerateCylinder_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,unsigned int,unsigned int,double ) ;
+            
+            MappableGridGenerator_exposer.def( 
+                "GenerateCylinder"
+                , GenerateCylinder_function_type( &::MappableGridGenerator::GenerateCylinder )
+                , ( bp::arg("cylinderRadius"), bp::arg("cylinderThickness"), bp::arg("cylinderHeight"), bp::arg("numX"), bp::arg("numY"), bp::arg("cylinderAngle")=2. * 3.1415926535897931 ) );
+        
+        }
+        { //::MappableGridGenerator::GenerateHemisphere
+        
+            typedef ::boost::shared_ptr< Part< 3 > > ( ::MappableGridGenerator::*GenerateHemisphere_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double >,unsigned int,unsigned int,double,double ) ;
+            
+            MappableGridGenerator_exposer.def( 
+                "GenerateHemisphere"
+                , GenerateHemisphere_function_type( &::MappableGridGenerator::GenerateHemisphere )
+                , ( bp::arg("sphereRadius"), bp::arg("sphereThickness"), bp::arg("numX"), bp::arg("numY"), bp::arg("sphereAzimuthAngle")=2. * 3.1415926535897931, bp::arg("spherePolarAngle")=0.5 * 3.1415926535897931 ) );
+        
+        }
+        { //::MappableGridGenerator::GeneratePlane
+        
+            typedef ::boost::shared_ptr< Part< 3 > > ( ::MappableGridGenerator::*GeneratePlane_function_type)( unsigned int,unsigned int,bool,bool ) ;
+            
+            MappableGridGenerator_exposer.def( 
+                "GeneratePlane"
+                , GeneratePlane_function_type( &::MappableGridGenerator::GeneratePlane )
+                , ( bp::arg("numX"), bp::arg("numY"), bp::arg("isShell")=(bool)(false), bp::arg("withEndCaps")=(bool)(true) ) );
+        
+        }
+        { //::MappableGridGenerator::GetReferenceLengthScale
+        
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( ::MappableGridGenerator::*GetReferenceLengthScale_function_type)(  ) ;
+            
+            MappableGridGenerator_exposer.def( 
+                "GetReferenceLengthScale"
+                , GetReferenceLengthScale_function_type( &::MappableGridGenerator::GetReferenceLengthScale ) );
+        
+        }
+        MappableGridGenerator_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< MappableGridGenerator > >();
+    }
 
 }

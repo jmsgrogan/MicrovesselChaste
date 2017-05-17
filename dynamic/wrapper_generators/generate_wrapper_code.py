@@ -433,8 +433,8 @@ def generate_wrappers(args):
                     "visualization", "utility", "image"]
     
     # Just for debugging
-    ignore_modules = ["mesh", "geometry", "cell", "image", "pde", "angiogenesis", "flow", "simulation", 
-                    "visualization", "utility"]
+    ignore_modules = ["mesh", "geometry", "cell", "vessel", "angiogenesis", "flow", "simulation", 
+                    "visualization", "utility", "image"]
     
     #ignore_modules = []
     

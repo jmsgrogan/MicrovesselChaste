@@ -137,16 +137,6 @@ void register_Facet3_class(){
                 , ( bp::arg("rLocation") ) );
         
         }
-        { //::Facet< 3 >::GetLabel
-        
-            typedef Facet< 3 > exported_class_t;
-            typedef ::std::string ( exported_class_t::*GetLabel_function_type)(  ) ;
-            
-            Facet3_exposer.def( 
-                "GetLabel"
-                , GetLabel_function_type( &::Facet< 3 >::GetLabel ) );
-        
-        }
         { //::Facet< 3 >::GetNormal
         
             typedef Facet< 3 > exported_class_t;
@@ -206,17 +196,6 @@ void register_Facet3_class(){
                 "RotateAboutAxis"
                 , RotateAboutAxis_function_type( &::Facet< 3 >::RotateAboutAxis )
                 , ( bp::arg("axis"), bp::arg("angle") ) );
-        
-        }
-        { //::Facet< 3 >::SetLabel
-        
-            typedef Facet< 3 > exported_class_t;
-            typedef void ( exported_class_t::*SetLabel_function_type)( ::std::string const & ) ;
-            
-            Facet3_exposer.def( 
-                "SetLabel"
-                , SetLabel_function_type( &::Facet< 3 >::SetLabel )
-                , ( bp::arg("label") ) );
         
         }
         { //::Facet< 3 >::Translate

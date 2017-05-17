@@ -160,6 +160,17 @@ void register_VesselBasedDiscreteSource3_class(){
                 , default_GetNonlinearTermValues_function_type(&VesselBasedDiscreteSource_less__3__greater__wrapper::default_GetNonlinearTermValues) );
         
         }
+        { //::VesselBasedDiscreteSource< 3 >::SetHalfMaxUptakeConcentration
+        
+            typedef VesselBasedDiscreteSource< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetHalfMaxUptakeConcentration_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -3, 1 > >, boost::units::list< boost::units::dim< boost::units::amount_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            VesselBasedDiscreteSource3_exposer.def( 
+                "SetHalfMaxUptakeConcentration"
+                , SetHalfMaxUptakeConcentration_function_type( &::VesselBasedDiscreteSource< 3 >::SetHalfMaxUptakeConcentration )
+                , ( bp::arg("value") ) );
+        
+        }
         { //::VesselBasedDiscreteSource< 3 >::SetNumberOfCellsPerLength
         
             typedef VesselBasedDiscreteSource< 3 > exported_class_t;

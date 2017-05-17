@@ -44,6 +44,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "indexing_suite/vector.hpp"
 
+#include "indexing_suite/map.hpp"
+
 #include "wrapper_header_collection.hpp"
 
 #include "BoundaryExtractor.pypp.hpp"
@@ -55,6 +57,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "GeometryFormat.pypp.hpp"
 
 #include "GeometryWriter.pypp.hpp"
+
+#include "MapStringDouble.pypp.hpp"
 
 #include "MappableGridGenerator.pypp.hpp"
 
@@ -94,13 +98,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "VectorSharedPtrPolygon3.pypp.hpp"
 
-#include "VectorString.pypp.hpp"
-
 #include "VectorUnsigned.pypp.hpp"
 
 #include "VesselSurfaceGenerator2.pypp.hpp"
 
 #include "VesselSurfaceGenerator3.pypp.hpp"
+
+#include "__type.pypp.hpp"
 
 #include "vector_less__std_scope_vector_less__boost_scope_shared_ptr_less_Polygon_less_2_greater___greater___greater___greater_.pypp.hpp"
 
@@ -117,7 +121,7 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_geometry){
 
     register_VectorPairUnsignedUnsigned_class();
 
-    register_VectorString_class();
+    register___type_class();
 
     register_VectorLengthQuantity_class();
 
@@ -138,6 +142,8 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_geometry){
     register_VectorDimensionalChastePoint3_class();
 
     register_VectorDimensionalChastePoint2_class();
+
+    register_MapStringDouble_class();
 
     register_BoundaryExtractor_class();
 

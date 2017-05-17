@@ -50,7 +50,8 @@ OffLatticeMigrationRule<DIM>::OffLatticeMigrationRule()
       mChemotacticStrength(0.6),
       mAttractionStrength(0.0), // was 1.0
       mProbeLength(5.0 * 1.e-6 * unit::metres),
-      mCriticalMutualAttractionLength(100.0 * 1.e-6 *unit::metres)
+      mCriticalMutualAttractionLength(100.0 * 1.e-6 *unit::metres),
+      mSurfaceRepulsion(false)
 {
 
 }
@@ -228,6 +229,21 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
                         min_direction = dim_min_direction.GetUnitVector();
                     }
                 }
+            }
+
+            // Surface repulsion
+            units::quantity<unit::length> critical_repulsion_distance = 40.0e-6*unit::metres;
+            if(mSurfaceRepulsion and this->mpBoundingDomain)
+            {
+//                // Get the distance to and normal for the closest point on the domain
+//                units::quantity<unit::length> current_distance = 40.0e-6*unit::metres;
+//                if(current_distance<critical_repulsion_distance)
+//                {
+//                    c_vector<double, DIM> surface_normal;
+//                    double repulsion_strength = 5.0*(1.0-(current_distance*current_distance)/(critical_repulsion_distance*critical_repulsion_distance));
+//                    new_direction += strength * min_direction;
+//                    new_direction /= norm_2(new_direction);
+//                }
             }
 
             double strength = 0.0;

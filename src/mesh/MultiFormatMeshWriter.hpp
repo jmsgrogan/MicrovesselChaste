@@ -89,6 +89,11 @@ private:
      */
     MeshFormat::Value mOutputFormat;
 
+    /**
+     * Add boundary labels to the VTK output
+     */
+    bool mAddBoundaryLabels;
+
 public:
 
     /**
@@ -123,7 +128,7 @@ public:
      * Set the mesh in DiscreteContinuum mesh format
      * @param pMesh the mesh to write out
      */
-    void SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh);
+    void SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh, bool addBoundaryLabels=false);
 
     /**
      * Set the format for writer output

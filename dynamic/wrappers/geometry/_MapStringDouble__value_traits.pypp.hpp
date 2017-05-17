@@ -36,9 +36,27 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef VectorString_hpp__pyplusplus_wrapper
-#define VectorString_hpp__pyplusplus_wrapper
+#ifndef _MapStringDouble__value_traits_pypp_hpp_hpp__pyplusplus_wrapper
+#define _MapStringDouble__value_traits_pypp_hpp_hpp__pyplusplus_wrapper
 
-void register_VectorString_class();
+namespace boost { namespace python { namespace indexing {
 
-#endif//VectorString_hpp__pyplusplus_wrapper
+template<>
+struct value_traits< std::map< std::string, double > >{
+
+    static bool const equality_comparable = false;
+    
+
+    static bool const less_than_comparable = false;
+    
+
+    template<typename PythonClass, typename Policy>
+    static void visit_container_class(PythonClass &, Policy const &){
+        
+    }
+
+};
+
+}/*indexing*/ } /*python*/ } /*boost*/
+
+#endif//_MapStringDouble__value_traits_pypp_hpp_hpp__pyplusplus_wrapper

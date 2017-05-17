@@ -58,14 +58,14 @@ void register_MultiFormatMeshWriter3_class(){
                 , Create_function_type( &::MultiFormatMeshWriter< 3 >::Create ) );
         
         }
-        { //::MultiFormatMeshWriter< 3 >::SetFilename
+        { //::MultiFormatMeshWriter< 3 >::SetFileName
         
             typedef MultiFormatMeshWriter< 3 > exported_class_t;
-            typedef void ( exported_class_t::*SetFilename_function_type)( ::std::string const & ) ;
+            typedef void ( exported_class_t::*SetFileName_function_type)( ::std::string const & ) ;
             
             MultiFormatMeshWriter3_exposer.def( 
-                "SetFilename"
-                , SetFilename_function_type( &::MultiFormatMeshWriter< 3 >::SetFilename )
+                "SetFileName"
+                , SetFileName_function_type( &::MultiFormatMeshWriter< 3 >::SetFileName )
                 , ( bp::arg("rFilename") ) );
         
         }
