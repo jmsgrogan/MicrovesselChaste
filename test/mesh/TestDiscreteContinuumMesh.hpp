@@ -104,10 +104,15 @@ public:
         boost::shared_ptr<Part<2> > p_part = Part<2>::Create();
         boost::shared_ptr<Polygon<2> > p_circle = p_part->AddCircle(0.33e-6*unit::metres,
                 DimensionalChastePoint<2>(0.5, 0.5));
+        p_circle->AddAttributeToAllEdges("Outer Boundary", 1.0);
+
         boost::shared_ptr<Polygon<2> > p_circle2 = p_part->AddCircle(0.1e-6*unit::metres,
                 DimensionalChastePoint<2>(0.5, 0.5));
+        //p_circle2->AddAttributeToAllEdges("Inner Boundary", 1.0);
+
         p_part->AddRegionMarker(DimensionalChastePoint<2>(0.5, 0.5), 1.0);
-        p_part->Write(file_handler.GetOutputDirectoryFullPath()+"part.vtp");
+        p_part->GetVtk(true);
+        p_part->Write(file_handler.GetOutputDirectoryFullPath()+"part.vtp", GeometryFormat::VTP, true);
 
         boost::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator = DiscreteContinuumMeshGenerator<2>::Create();
         p_mesh_generator->SetDomain(p_part);
@@ -116,7 +121,7 @@ public:
 
         MultiFormatMeshWriter<2> mesh_writer;
         mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"circle");
-        mesh_writer.SetMesh(p_mesh_generator->GetMesh());
+        mesh_writer.SetMesh(p_mesh_generator->GetMesh(), true);
         mesh_writer.Write();
 
         // Add a hole
@@ -125,7 +130,7 @@ public:
         p_mesh_generator->SetHoles(holes);
         p_mesh_generator->Update();
         mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"circle_hole");
-        mesh_writer.SetMesh(p_mesh_generator->GetMesh());
+        mesh_writer.SetMesh(p_mesh_generator->GetMesh(), true);
         mesh_writer.Write();
     }
 

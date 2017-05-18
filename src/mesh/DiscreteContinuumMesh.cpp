@@ -552,6 +552,144 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::ImportDiscreteContinuumMeshF
     this->RefreshJacobianCachedData();
 }
 
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::ImportDiscreteContinuumMeshFromTri(triangulateio& mesherOutput, unsigned numberOfElements,
+                                                          int *elementList, unsigned numberOfFaces, int *faceList,
+                                                          int *edgeMarkerList, int* triFaceMarkerList,
+                                                          unsigned numberoftetrahedronattributes,
+                                                          double *tetrahedronattributelist)
+{
+    unsigned nodes_per_element = mesherOutput.numberofcorners;
+
+    assert(nodes_per_element == ELEMENT_DIM + 1 || nodes_per_element == (ELEMENT_DIM + 1) * (ELEMENT_DIM + 2) / 2);
+
+    for (unsigned i = 0; i < this->mBoundaryElements.size(); i++)
+    {
+        delete this->mBoundaryElements[i];
+    }
+    for (unsigned i = 0; i < this->mElements.size(); i++)
+    {
+        delete this->mElements[i];
+    }
+    for (unsigned i = 0; i < this->mNodes.size(); i++)
+    {
+        delete this->mNodes[i];
+    }
+
+    this->mNodes.clear();
+    this->mElements.clear();
+    this->mBoundaryElements.clear();
+    this->mBoundaryNodes.clear();
+
+    // Construct the nodes
+    for (unsigned node_index = 0; node_index < (unsigned) mesherOutput.numberofpoints; node_index++)
+    {
+        this->mNodes.push_back(new Node<SPACE_DIM>(node_index, &mesherOutput.pointlist[node_index * SPACE_DIM], false));
+    }
+
+    // Construct the elements
+    this->mElements.reserve(numberOfElements);
+
+    unsigned real_element_index = 0;
+    for (unsigned element_index = 0; element_index < numberOfElements; element_index++)
+    {
+        std::vector<Node<SPACE_DIM>*> nodes;
+        for (unsigned j = 0; j < ELEMENT_DIM + 1; j++)
+        {
+            unsigned global_node_index = elementList[element_index * (nodes_per_element) + j];
+            assert(global_node_index < this->mNodes.size());
+            nodes.push_back(this->mNodes[global_node_index]);
+
+        }
+
+        /*
+         * For some reason, tetgen in library mode makes its initial Delaunay mesh
+         * with very thin slivers. Hence we expect to ignore some of the elements!
+         */
+        Element<ELEMENT_DIM, SPACE_DIM>* p_element;
+        try
+        {
+            p_element = new Element<ELEMENT_DIM, SPACE_DIM>(real_element_index, nodes);
+            if(numberoftetrahedronattributes>0 and tetrahedronattributelist!=NULL)
+            {
+                p_element->AddElementAttribute(tetrahedronattributelist[numberoftetrahedronattributes*real_element_index]);
+            }
+
+            // Shouldn't throw after this point
+            this->mElements.push_back(p_element);
+
+            // Add the internals to quadratics
+            for (unsigned j = ELEMENT_DIM + 1; j < nodes_per_element; j++)
+            {
+                unsigned global_node_index = elementList[element_index * nodes_per_element + j];
+                assert(global_node_index < this->mNodes.size());
+                this->mElements[real_element_index]->AddNode(this->mNodes[global_node_index]);
+                this->mNodes[global_node_index]->AddElement(real_element_index);
+                this->mNodes[global_node_index]->MarkAsInternal();
+            }
+            real_element_index++;
+        }
+        catch (Exception &)
+        {
+            if (SPACE_DIM == 2)
+            {
+                WARNING("Triangle has produced a zero area (collinear) element");
+            }
+            else
+            {
+                WARNING("Tetgen has produced a zero volume (coplanar) element");
+            }
+        }
+    }
+
+    // Construct the BoundaryElements (and mark boundary nodes)
+    unsigned next_boundary_element_index = 0;
+    for (unsigned boundary_element_index = 0; boundary_element_index < numberOfFaces; boundary_element_index++)
+    {
+        /*
+         * Tetgen produces only boundary faces (set edgeMarkerList to NULL).
+         * Triangle marks which edges are on the boundary.
+         */
+        if (edgeMarkerList == NULL || edgeMarkerList[boundary_element_index] > 0)
+        {
+            std::vector<Node<SPACE_DIM>*> nodes;
+            for (unsigned j = 0; j < ELEMENT_DIM; j++)
+            {
+                unsigned global_node_index = faceList[boundary_element_index * ELEMENT_DIM + j];
+                assert(global_node_index < this->mNodes.size());
+                nodes.push_back(this->mNodes[global_node_index]);
+                if (!nodes[j]->IsBoundaryNode())
+                {
+                    nodes[j]->SetAsBoundaryNode();
+                    this->mBoundaryNodes.push_back(nodes[j]);
+                }
+            }
+
+            /*
+             * For some reason, tetgen in library mode makes its initial Delaunay mesh
+             * with very thin slivers. Hence we expect to ignore some of the elements!
+             */
+            BoundaryElement<ELEMENT_DIM - 1, SPACE_DIM>* p_b_element;
+            try
+            {
+                p_b_element = new BoundaryElement<ELEMENT_DIM - 1, SPACE_DIM>(next_boundary_element_index, nodes);
+                if(edgeMarkerList != NULL)
+                {
+                    p_b_element->AddElementAttribute(edgeMarkerList[boundary_element_index]);
+                }
+                this->mBoundaryElements.push_back(p_b_element);
+                next_boundary_element_index++;
+            }
+            catch (Exception &)
+            {
+                // Tetgen is feeding us lies  //Watch this space for coverage
+                assert(SPACE_DIM == 3);
+            }
+        }
+    }
+    this->RefreshJacobianCachedData();
+}
+
 // Explicit instantiation
 template class DiscreteContinuumMesh<2> ;
 template class DiscreteContinuumMesh<3> ;

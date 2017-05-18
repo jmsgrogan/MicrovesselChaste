@@ -625,33 +625,81 @@ std::vector<boost::shared_ptr<Facet<DIM> > > Part<DIM>::GetFacets()
 }
 
 template<unsigned DIM>
-std::vector<std::pair<unsigned, unsigned> > Part<DIM>::GetSegmentIndices()
+unsigned Part<DIM>::GetKeyForAttributes(std::map<std::string, double> rAttributes)
+{
+    unsigned key=2;
+    for(std::map<std::string, double>::iterator it = rAttributes.begin(); it != rAttributes.end(); ++it)
+    {
+        if(it->second>0.0)
+        {
+            // Find the key
+            for(std::map<unsigned, std::string>::iterator it2 = mAttributeKeys.begin(); it2 != mAttributeKeys.end(); ++it2)
+            {
+                if(it->first == it2->second)
+                {
+                    key = it2->first;
+                    break;
+                }
+            }
+        }
+    }
+    return key;
+}
+
+template<unsigned DIM>
+std::vector<std::pair<std::pair<unsigned, unsigned>, unsigned > > Part<DIM>::GetSegmentIndices()
 {
     // Make sure the vertex indexes are up-to-date.
     GetVertices();
 
-    std::vector<std::pair<unsigned, unsigned> > indexes;
+    std::vector<std::pair<std::pair<unsigned, unsigned>, unsigned > > indexes;
     std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = mFacets[0]->GetPolygons();
+    std::map<unsigned, std::string> attribute_keys = this->GetAttributesKeysForMesh(true);
 
     for (unsigned idx = 0; idx < polygons.size(); idx++)
     {
+        bool use_attributes = false;
+        std::vector<std::map<std::string, double> > attributes = polygons[idx]->GetEdgeAttributes();
+        if((attributes.size() == polygons[idx]->GetVertices().size())and attribute_keys.size()>0)
+        {
+            use_attributes = true;
+        }
+
         if (polygons[idx]->GetVertices().size() == 2)
         {
+            unsigned key = 2;
+            if(use_attributes)
+            {
+                key = GetKeyForAttributes(attributes[0]);
+            }
+            std::pair<unsigned, unsigned> vertex_indices(polygons[idx]->GetVertices()[0]->GetIndex(),
+                    polygons[idx]->GetVertices()[1]->GetIndex());
+
             indexes.push_back(
-                    std::pair<unsigned, unsigned>(polygons[idx]->GetVertices()[0]->GetIndex(),
-                                                  polygons[idx]->GetVertices()[1]->GetIndex()));
+                    std::pair<std::pair<unsigned, unsigned>, unsigned > (vertex_indices, key));
         }
         else if (polygons[idx]->GetVertices().size() > 1)
         {
             std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = polygons[idx]->GetVertices();
             for (unsigned jdx = 0; jdx < vertices.size() - 1; jdx++)
             {
+                unsigned key = 2;
+                if(use_attributes)
+                {
+                    key = GetKeyForAttributes(attributes[jdx]);
+                }
+                std::pair<unsigned, unsigned> vertex_indices(vertices[jdx]->GetIndex(), vertices[jdx + 1]->GetIndex());
                 indexes.push_back(
-                        std::pair<unsigned, unsigned>(vertices[jdx]->GetIndex(), vertices[jdx + 1]->GetIndex()));
+                        std::pair<std::pair<unsigned, unsigned>, unsigned >(vertex_indices, key));
             }
+            unsigned key = 2;
+            if(use_attributes)
+            {
+                key = GetKeyForAttributes(attributes[vertices.size() - 1]);
+            }
+            std::pair<unsigned, unsigned> vertex_indices(vertices[vertices.size() - 1]->GetIndex(), vertices[0]->GetIndex());
             indexes.push_back(
-                    std::pair<unsigned, unsigned>(vertices[vertices.size() - 1]->GetIndex(), vertices[0]->GetIndex()));
-
+                    std::pair<std::pair<unsigned, unsigned>, unsigned >(vertex_indices, key));
         }
     }
     return indexes;
@@ -886,12 +934,20 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
         p_clean_data->SetInputData(p_part_data);
     #endif
 
-    vtkSmartPointer<vtkPolyDataNormals> p_normals = vtkSmartPointer<vtkPolyDataNormals>::New();
-    p_normals->SetInputConnection(p_clean_data->GetOutputPort());
-    p_normals->ComputePointNormalsOn();
-    p_normals->ComputeCellNormalsOn();
-    p_normals->Update();
-    mVtkPart = p_normals->GetOutput();
+    if(!includeEdges)
+    {
+        vtkSmartPointer<vtkPolyDataNormals> p_normals = vtkSmartPointer<vtkPolyDataNormals>::New();
+        p_normals->SetInputConnection(p_clean_data->GetOutputPort());
+        p_normals->ComputePointNormalsOn();
+        p_normals->ComputeCellNormalsOn();
+        p_normals->Update();
+        mVtkPart = p_normals->GetOutput();
+    }
+    else
+    {
+        p_clean_data->Update();
+        mVtkPart = p_clean_data->GetOutput();
+    }
 
     mpVtkCellLocator = vtkSmartPointer<vtkCellLocator>::New();
     mpVtkCellLocator->SetDataSet(mVtkPart);

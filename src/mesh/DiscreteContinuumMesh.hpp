@@ -137,6 +137,20 @@ public:
                           unsigned numberOfFaces, int *faceList, int *edgeMarkerList, int* triFaceMarkerList,
                           unsigned numberoftetrahedronattributes, double *tetrahedronattributelist);
 
+    /**
+     * Similar to the TetrahedralMesh implementation of ImportFromMesher but also
+     * sets region and boundary attributes
+     * @param mesherOutput tetgen output
+     * @param numberOfElements the number of elements
+     * @param elementList the element list
+     * @param numberOfFaces the number of faces
+     * @param faceList the face list
+     * @param edgeMarkerList an edge marker list
+     */
+    void ImportDiscreteContinuumMeshFromTri(triangulateio& mesherOutput, unsigned numberOfElements, int *elementList,
+                          unsigned numberOfFaces, int *faceList, int *edgeMarkerList, int* triFaceMarkerList,
+                          unsigned numberoftetrahedronattributes, double *tetrahedronattributelist);
+
 };
 
 #endif /* DISCRETECONTINUUMMESH_HPP_*/

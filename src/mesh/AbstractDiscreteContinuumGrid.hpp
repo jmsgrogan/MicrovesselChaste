@@ -112,6 +112,11 @@ protected:
      */
     std::vector<unsigned> mLocalGlobalMap;
 
+    /**
+     * Map of attribute labels for mesh attribute numbers
+     */
+    std::map<unsigned, std::string> mAttributeKeys;
+
 public:
 
     /**
@@ -151,6 +156,12 @@ public:
      * @param rName the data name
      */
     virtual void AddCellData(const std::vector<double>& rCellValues, const std::string& rName = "Default Data");
+
+    /**
+     * Return the attribute keys for the mesh
+     * @return the attribute keys for the mesh
+     */
+    std::map<unsigned, std::string> GetAttributesKeys();
 
     /**
      * Return the bounding geometry on this processor
@@ -315,6 +326,12 @@ public:
      * @return a vtk cell locator for quickly finding elements
      */
     virtual vtkSmartPointer<vtkCellLocator> GetVtkCellLocator();
+
+    /**
+     * Set the attribute keys
+     * @param attributeKeys attribute keys for the mesh
+     */
+    void SetAttributesKeys(std::map<unsigned, std::string> attributeKeys);
 
     /**
      * Set the internal vtk representation of the grid

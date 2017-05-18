@@ -146,6 +146,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Update()
                 if (units::abs(bounding_box[4]) < 1.e-12*unit::metres && units::abs(bounding_box[5]) < 1.e-12*unit::metres)
                 {
                    Mesh2d();
+                   this->mpMesh->SetAttributesKeys(mpDomain->GetAttributesKeysForMesh(false));
                 }
                 else
                 {
@@ -175,6 +176,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Update()
             else
             {
                 Mesh3d();
+                this->mpMesh->SetAttributesKeys(mpDomain->GetAttributesKeysForMesh(false));
             }
         }
         else if(mpVtkDomain)
@@ -211,15 +213,18 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
             }
         }
 
-        std::vector<std::pair<unsigned, unsigned> > segments = mpDomain->GetSegmentIndices();
+        std::vector<std::pair<std::pair<unsigned, unsigned>, unsigned > > segments = mpDomain->GetSegmentIndices();
         unsigned num_segments = segments.size();
         mesher_input.segmentlist = (int *) malloc(num_segments * 2 * sizeof(int));
         mesher_input.numberofsegments = int(num_segments);
+        mesher_input.segmentmarkerlist = (int *) malloc(num_segments * sizeof(int));
         for (unsigned idx = 0; idx < num_segments; idx++)
         {
-            mesher_input.segmentlist[2 * idx] = int(segments[idx].first);
-            mesher_input.segmentlist[2 * idx + 1] = int(segments[idx].second);
+            mesher_input.segmentlist[2 * idx] = int(segments[idx].first.first);
+            mesher_input.segmentlist[2 * idx + 1] = int(segments[idx].first.second);
+            mesher_input.segmentmarkerlist[idx] = int(segments[idx].second);
         }
+
     }
     else if(!mpDomain and mpVtkDomain)
     {
@@ -271,7 +276,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
         }
 
         unsigned num_segments = mpVtkDomain->GetNumberOfLines();
-        std::vector<std::pair<unsigned, unsigned> > segments = mpDomain->GetSegmentIndices();
+        std::vector<std::pair<std::pair<unsigned, unsigned>, unsigned > > segments = mpDomain->GetSegmentIndices();
         unsigned num_part_segments = segments.size();
         mpVtkDomain->GetLines()->InitTraversal();
 
@@ -286,8 +291,8 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
         }
         for (unsigned idx = 0; idx < num_part_segments; idx++)
         {
-            mesher_input.segmentlist[2 * idx + 2 * num_segments] = int(segments[idx].first + num_points);
-            mesher_input.segmentlist[2 * idx + 1 + 2*num_segments] = int(segments[idx].second + num_points);
+            mesher_input.segmentlist[2 * idx + 2 * num_segments] = int(segments[idx].first.first + num_points);
+            mesher_input.segmentlist[2 * idx + 1 + 2*num_segments] = int(segments[idx].first.second + num_points);
         }
 
     }
@@ -310,10 +315,12 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
         }
     }
 
-    if (mRegions.size() > 0)
+    std::vector<std::pair<DimensionalChastePoint<SPACE_DIM>, unsigned> > region_locations = mpDomain->GetRegionMarkers();
+    if (mRegions.size() > 0 or region_locations.size()>0)
     {
-        mesher_input.regionlist = (double *) malloc(mRegions.size() * 4 * sizeof(double));
-        mesher_input.numberofregions = int(mRegions.size());
+        unsigned num_regions = mRegions.size() + region_locations.size();
+        mesher_input.regionlist = (double *) malloc(num_regions * 4 * sizeof(double));
+        mesher_input.numberofregions = int(num_regions);
         for (unsigned idx = 0; idx < mRegions.size(); idx++)
         {
             c_vector<double, SPACE_DIM> region_location = mRegions[idx].GetLocation(mReferenceLength);
@@ -324,6 +331,16 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
             mesher_input.regionlist[4 * idx + 2] = 1.0;
             mesher_input.regionlist[4 * idx + 3] = mMaxElementArea/units::pow<3>(mReferenceLength);
         }
+        for (unsigned idx = 0; idx < region_locations.size(); idx++)
+        {
+            c_vector<double, SPACE_DIM> region_location = region_locations[idx].first.GetLocation(mReferenceLength);
+            for (unsigned jdx = 0; jdx < 2; jdx++)
+            {
+                mesher_input.regionlist[4 * idx + jdx] = region_location[jdx];
+            }
+            mesher_input.regionlist[4 * idx + 2] = region_locations[idx].second;
+            mesher_input.regionlist[4 * idx + 3] = mMaxElementArea/units::pow<3>(mReferenceLength);
+        }
     }
 
     std::string mesher_command = "pqQze";
@@ -332,28 +349,25 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
         double mesh_size = mMaxElementArea/units::pow<3>(mReferenceLength);
         mesher_command += "a" + boost::lexical_cast<std::string>(mesh_size);
     }
-    if(mRegions.size()>0)
+
+    if(mRegions.size()>0 or region_locations.size()>0)
     {
-        if(mRegions.size()>0)
-        {
-            mesher_command += "A";
-        }
+        mesher_command += "A";
     }
 
     triangulate((char*) mesher_command.c_str(), &mesher_input, &mesher_output, NULL);
 
-    this->mpMesh->ImportFromMesher(mesher_output, mesher_output.numberoftriangles, mesher_output.trianglelist,
-                           mesher_output.numberofedges, mesher_output.edgelist, mesher_output.edgemarkerlist);
+    this->mpMesh->ImportDiscreteContinuumMeshFromTri(mesher_output, mesher_output.numberoftriangles, mesher_output.trianglelist,
+                           mesher_output.numberofedges, mesher_output.edgelist, mesher_output.edgemarkerlist, NULL, 0, NULL);
 
     mAttributes.clear();
-    if(mRegions.size()>0)
+    if(mRegions.size()>0 or region_locations.size()>0)
     {
         unsigned num_elements = mesher_output.numberoftriangles;
         for(unsigned idx=0; idx< num_elements; idx++)
         {
-            mAttributes.push_back(double(mesher_output.triangleattributelist[idx]));
+            this->mpMesh->GetElement(idx)->AddElementAttribute(double(mesher_output.triangleattributelist[idx]));
         }
-        mpMesh->AddCellAttributes(mAttributes);
     }
 
     //Tidy up triangle
@@ -418,7 +432,6 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
                 mesher_input.holelist[3 * idx + jdx] = hole_location[jdx];
             }
         }
-
 
         mesher_input.numberoffacets = num_facets;
         mesher_input.facetlist = new tetgen::tetgenio::facet[num_facets];
@@ -505,6 +518,73 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
         this->mpMesh->ImportDiscreteContinuumMeshFromTetgen(mesher_output, mesher_output.numberoftetrahedra, mesher_output.tetrahedronlist,
                                mesher_output.numberoftrifaces, mesher_output.trifacelist, NULL, mesher_output.trifacemarkerlist,
                                mesher_output.numberoftetrahedronattributes, mesher_output.tetrahedronattributelist);
+
+        // Tetgen doesn't have multiple labels per facet, so if we have more than one polygon per facet
+        // we need to do the labelling 'manually'. This is 'slow' but we don't expect to have many
+        // cases of facets with multiple polygons.
+        for(unsigned idx=0;idx<facets.size();idx++)
+        {
+            if(facets[idx]->GetPolygons().size()>1)
+            {
+                // Get original label
+                std::map<std::string, double> attributes = facets[idx]->GetPolygons()[0]->GetAttributes();
+                unsigned key=0;
+
+                // Are any attributes active, if so set their value in the marker list
+                for(std::map<std::string, double>::iterator it = attributes.begin(); it != attributes.end(); ++it)
+                {
+                    if(it->second>0.0)
+                    {
+                        // Find the key
+                        for(std::map<unsigned, std::string>::iterator it2 = attribute_keys.begin();
+                                it2 != attribute_keys.end(); ++it2)
+                        {
+                            if(it->first == it2->second)
+                            {
+                                key = it2->first;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // Find boundary elements with this label
+                for(unsigned jdx=0;jdx<this->mpMesh->GetNumBoundaryElements();jdx++)
+                {
+                    if(this->mpMesh->GetBoundaryElement(jdx)->GetUnsignedAttribute()==key)
+                    {
+                        c_vector<double, SPACE_DIM> centroid = this->mpMesh->GetBoundaryElement(jdx)->CalculateCentroid();
+                        for(unsigned kdx=1;kdx<facets[idx]->GetPolygons().size(); kdx++)
+                        {
+                            if(facets[idx]->GetPolygons()[kdx]->ContainsPoint(DimensionalChastePoint<SPACE_DIM>(centroid, mReferenceLength)))
+                            {
+                                std::map<std::string, double> attributes = facets[idx]->GetPolygons()[kdx]->GetAttributes();
+                                unsigned key=0;
+
+                                // Are any attributes active, if so set their value in the marker list
+                                for(std::map<std::string, double>::iterator it = attributes.begin(); it != attributes.end(); ++it)
+                                {
+                                    if(it->second>0.0)
+                                    {
+                                        // Find the key
+                                        for(std::map<unsigned, std::string>::iterator it2 = attribute_keys.begin();
+                                                it2 != attribute_keys.end(); ++it2)
+                                        {
+                                            if(it->first == it2->second)
+                                            {
+                                                key = it2->first;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                this->mpMesh->GetBoundaryElement(jdx)->SetAttribute(double(key));
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         // if we are running parallel don't assume the resulting mesh is the same on all procs. Do a write-read
         // to make sure it is.

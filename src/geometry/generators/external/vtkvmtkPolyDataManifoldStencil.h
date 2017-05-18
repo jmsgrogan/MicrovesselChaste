@@ -22,6 +22,8 @@
 // .SECTION Description
 // ..
 
+// Modified JGrogan May 17: Add 'using' to avoid compiler warnings for hidden virtual methods
+
 #ifndef __vtkvmtkPolyDataManifoldStencil_h
 #define __vtkvmtkPolyDataManifoldStencil_h
 
@@ -44,6 +46,8 @@ public:
 
   virtual void ComputeArea();
   virtual void ScaleWithArea() = 0;
+
+  using vtkvmtkStencil::DeepCopy; // Added by JGrogan May 17 to avoid compiler warnings for hidden virtual methods
 
   void DeepCopy(vtkvmtkPolyDataManifoldStencil *src);
 

@@ -82,6 +82,7 @@ class Part
         ar & mRegionMarkers;
         ar & mReferenceLength;
         ar & mAttributes;
+        ar & mAttributeKeys;
     }
 
     /**
@@ -356,7 +357,7 @@ public:
      * Return the segment indexes, used for 2D meshing
      * @return the indices of vertices corresponding to segments (edges) in the part
      */
-    std::vector<std::pair<unsigned, unsigned> > GetSegmentIndices();
+    std::vector<std::pair<std::pair<unsigned, unsigned>, unsigned > > GetSegmentIndices();
 
     /**
      * Return the unique vertices
@@ -375,6 +376,14 @@ public:
      * @return a vtk representation of the part
      */
     vtkSmartPointer<vtkPolyData> GetVtk(bool includeEdges = false);
+
+    /**
+     * Given an attribute value map return a suitable key. Assumes the
+     * part attribute map is already up to date.
+     * @param rAttributes the attributes
+     * @return a duitable key
+     */
+    unsigned GetKeyForAttributes(std::map<std::string, double> rAttributes);
 
     /**
      * Return true if the edge at the input point has the supplied label

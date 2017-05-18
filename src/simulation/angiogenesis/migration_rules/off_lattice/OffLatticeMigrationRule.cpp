@@ -232,19 +232,19 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             }
 
             // Surface repulsion
-            units::quantity<unit::length> critical_repulsion_distance = 40.0e-6*unit::metres;
-            if(mSurfaceRepulsion and this->mpBoundingDomain)
-            {
-//                // Get the distance to and normal for the closest point on the domain
-//                units::quantity<unit::length> current_distance = 40.0e-6*unit::metres;
-//                if(current_distance<critical_repulsion_distance)
-//                {
-//                    c_vector<double, DIM> surface_normal;
-//                    double repulsion_strength = 5.0*(1.0-(current_distance*current_distance)/(critical_repulsion_distance*critical_repulsion_distance));
-//                    new_direction += strength * min_direction;
-//                    new_direction /= norm_2(new_direction);
-//                }
-            }
+//            units::quantity<unit::length> critical_repulsion_distance = 40.0e-6*unit::metres;
+//            if(mSurfaceRepulsion and this->mpBoundingDomain)
+//            {
+////                // Get the distance to and normal for the closest point on the domain
+////                units::quantity<unit::length> current_distance = 40.0e-6*unit::metres;
+////                if(current_distance<critical_repulsion_distance)
+////                {
+////                    c_vector<double, DIM> surface_normal;
+////                    double repulsion_strength = 5.0*(1.0-(current_distance*current_distance)/(critical_repulsion_distance*critical_repulsion_distance));
+////                    new_direction += strength * min_direction;
+////                    new_direction /= norm_2(new_direction);
+////                }
+//            }
 
             double strength = 0.0;
             if(min_distance < mCriticalMutualAttractionLength)

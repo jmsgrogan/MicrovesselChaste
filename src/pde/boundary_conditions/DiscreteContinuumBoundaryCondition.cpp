@@ -193,48 +193,13 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
             else
             {
                 typename TetrahedralMesh<DIM,DIM>::BoundaryElementIterator surf_iter = p_mesh->GetBoundaryElementIteratorBegin();
+                std::map<unsigned, std::string> attribute_keys = this->mpDomain->GetAttributesKeysForMesh(false);
                 while (surf_iter != p_mesh->GetBoundaryElementIteratorEnd())
                 {
-                    unsigned node1_index = (*surf_iter)->GetNodeGlobalIndex(0);
-                    unsigned node2_index = (*surf_iter)->GetNodeGlobalIndex(1);
-                    DimensionalChastePoint<DIM> loc1(p_mesh->GetNode(node1_index)->GetPoint().rGetLocation(), length_scale);
-                    DimensionalChastePoint<DIM> loc2(p_mesh->GetNode(node2_index)->GetPoint().rGetLocation(), length_scale);
-                    std::pair<bool,units::quantity<unit::concentration> > result1 = GetValue(loc1, node_distance_tolerance);
-                    std::pair<bool,units::quantity<unit::concentration> > result2 = GetValue(loc2, node_distance_tolerance);
-
-                    unsigned num_on_feature = 0;
-                    num_on_feature += unsigned(result1.first);
-                    num_on_feature += unsigned(result2.first);
-                    if(DIM==2 and mType == BoundaryConditionType::EDGE)
+                    if(attribute_keys[(*surf_iter)->GetUnsignedAttribute()]==mLabel)
                     {
-                        if(num_on_feature==2)
-                        {
-                            ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result1.second/mReferenceConcentration);
-                            pContainer->AddNeumannBoundaryCondition(*surf_iter, p_fixed_boundary_condition);
-                        }
-                    }
-                    else if(DIM==3)
-                    {
-                        unsigned node3_index = (*surf_iter)->GetNodeGlobalIndex(2);
-                        DimensionalChastePoint<DIM> loc3(p_mesh->GetNode(node3_index)->GetPoint().rGetLocation(), length_scale);
-                        std::pair<bool,units::quantity<unit::concentration> > result3 = GetValue(loc3, node_distance_tolerance);
-                        num_on_feature += unsigned(result3.first);
-                        if(mType == BoundaryConditionType::EDGE)
-                        {
-                            if(num_on_feature==2)
-                            {
-                                ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result1.second/mReferenceConcentration);
-                                pContainer->AddNeumannBoundaryCondition(*surf_iter, p_fixed_boundary_condition);
-                            }
-                        }
-                        else
-                        {
-                            if(num_on_feature==3)
-                            {
-                                ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result1.second/mReferenceConcentration);
-                                pContainer->AddNeumannBoundaryCondition(*surf_iter, p_fixed_boundary_condition);
-                            }
-                        }
+                        ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(mValue/mReferenceConcentration);
+                        pContainer->AddNeumannBoundaryCondition(*surf_iter, p_fixed_boundary_condition);
                     }
                     surf_iter++;
                 }

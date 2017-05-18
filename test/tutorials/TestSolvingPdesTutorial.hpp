@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTSOLVINGPDESLITERATEPAPER_HPP_
 #define TESTSOLVINGPDESLITERATEPAPER_HPP_
 
@@ -136,14 +134,15 @@ public:
         /*
          * Add a Dirichlet boundary condition on the left face of the domain.
          */
-        p_domain->GetFacet(DimensionalChastePoint<3>(0.0,
+        p_domain->AddAttributeToPolygonIfFound(DimensionalChastePoint<3>(0.0,
                                                      domain_height/(2.0*reference_length),
-                                                     domain_depth/(2.0*reference_length)))->SetLabel("boundary_1");
+                                                     domain_depth/(2.0*reference_length)), "boundary_1", 1.0);
+
         boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_left_face_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
-        p_left_face_boundary->SetType(BoundaryConditionType::FACET);
+        p_left_face_boundary->SetType(BoundaryConditionType::POLYGON);
         p_left_face_boundary->SetDomain(p_domain);
         p_left_face_boundary->SetValue(10.0*unit::mole_per_metre_cubed);
-        p_left_face_boundary->SetLabelName("boundary_1");
+        p_left_face_boundary->SetLabel("boundary_1");
         /*
          * Set up the PDE solvers for the oxygen problem
          */

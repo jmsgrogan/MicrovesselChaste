@@ -55,7 +55,8 @@ AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::AbstractDiscreteContinuum
     mpCellLocations(),
     mpVtkCellLocator(vtkSmartPointer<vtkCellLocator>::New()),
     mVtkRepresentationUpToDate(false),
-    mLocalGlobalMap()
+    mLocalGlobalMap(),
+    mAttributeKeys()
 
 {
 
@@ -142,6 +143,12 @@ void AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::AddCellData(const st
         p_cell_data->SetTuple1(idx, rNodalValues[idx]);
     }
     mpVtkGrid->GetCellData()->AddArray(p_cell_data);
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+std::map<unsigned, std::string> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetAttributesKeys()
+{
+    return mAttributeKeys;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -474,6 +481,12 @@ vtkSmartPointer<vtkCellLocator> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE
         SetUpVtkGrid();
     }
     return mpVtkCellLocator;
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+void AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::SetAttributesKeys(std::map<unsigned, std::string> attributeKeys)
+{
+    mAttributeKeys = attributeKeys;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

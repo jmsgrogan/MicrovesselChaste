@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTMESHREADERANDWRITER_HPP_
 #define TESTMESHREADERANDWRITER_HPP_
 
@@ -57,12 +55,12 @@ public:
 
         // Read the file
         boost::shared_ptr<MeshReader> p_mesh_reader = MeshReader::Create();
-        p_mesh_reader->SetFilename(finder.GetAbsolutePath());
+        p_mesh_reader->SetFileName(finder.GetAbsolutePath());
         p_mesh_reader->Read();
 
         // Write it out in vtk format
         boost::shared_ptr<MultiFormatMeshWriter<3> > p_mesh_writer = MultiFormatMeshWriter<3>::Create();
-        p_mesh_writer->SetFilename(file_handler1.GetOutputDirectoryFullPath()+"bifurcation_mesh");
+        p_mesh_writer->SetFileName(file_handler1.GetOutputDirectoryFullPath()+"bifurcation_mesh");
         p_mesh_writer->SetMesh(p_mesh_reader->GetMesh());
         p_mesh_writer->SetOutputFormat(MeshFormat::VTU);
         p_mesh_writer->Write();
@@ -80,12 +78,12 @@ public:
 
         // Read the file
         MeshReader mesh_reader;
-        mesh_reader.SetFilename(finder.GetAbsolutePath());
+        mesh_reader.SetFileName(finder.GetAbsolutePath());
         mesh_reader.Read();
 
         // Write it out in vtk format
         MultiFormatMeshWriter<2> mesh_writer;
-        mesh_writer.SetFilename(file_handler1.GetOutputDirectoryFullPath()+"retinal_2d");
+        mesh_writer.SetFileName(file_handler1.GetOutputDirectoryFullPath()+"retinal_2d");
         mesh_writer.SetMesh(mesh_reader.GetMesh());
         mesh_writer.Write();
     }
