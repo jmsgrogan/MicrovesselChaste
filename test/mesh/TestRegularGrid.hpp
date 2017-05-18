@@ -306,7 +306,7 @@ public:
         GeometryWriter writer;
         writer.SetFileName(p_file_handler->GetOutputDirectoryFullPath()+
                 "domain_bounds"+boost::lexical_cast<std::string>(PetscTools::GetMyRank())+".vtp");
-        writer.SetInput(p_grid->GetBoundingGeometry());
+        writer.AddInput(p_grid->GetBoundingGeometry());
         writer.Write(false);
     }
 
@@ -324,7 +324,7 @@ public:
         GeometryWriter writer;
         writer.SetFileName(p_file_handler->GetOutputDirectoryFullPath()+
                 "domain_bounds3d"+boost::lexical_cast<std::string>(PetscTools::GetMyRank())+".vtp");
-        writer.SetInput(p_grid3d->GetBoundingGeometry());
+        writer.AddInput(p_grid3d->GetBoundingGeometry());
         writer.Write(false);
     }
 };

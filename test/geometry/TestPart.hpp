@@ -155,7 +155,7 @@ public:
         OutputFileHandler output_file_handler("TestPart", false);
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselLines2d.vtp"));
 
-        std::vector<std::pair<unsigned, unsigned> > segment_indices = p_domain->GetSegmentIndices();
+        std::vector<std::pair<std::pair<unsigned, unsigned>, unsigned > > segment_indices = p_domain->GetSegmentIndices();
         TS_ASSERT_EQUALS(segment_indices.size(), 4u);
     }
 
@@ -282,8 +282,6 @@ public:
     {
         Part<3> part = Part<3>();
         part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
-
-        std::vector<std::pair<unsigned, unsigned> > segment_indices = part.GetSegmentIndices();
     }
 
     void TestPointInPart() throw(Exception)

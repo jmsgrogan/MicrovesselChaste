@@ -49,7 +49,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DiscreteContinuumMeshGenerator.hpp"
 #include "MultiFormatMeshWriter.hpp"
 
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestCoupledLumpedSystemFiniteElementSolver : public CxxTest::TestSuite
 {
@@ -79,8 +79,8 @@ public:
         // Set up the mesh
         boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(10.0*unit::metres, 100.0*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
-        p_domain->LabelEdges(DimensionalChastePoint<2>(5.0, 100.0, 0, 1.0*unit::metres), "Top Boundary");
-        TS_ASSERT(p_domain->EdgeHasLabel(DimensionalChastePoint<2>(5.0, 100.0, 0, 1.0*unit::metres), "Top Boundary"));
+        p_domain->AddAttributeToEdgeIfFound(DimensionalChastePoint<2>(5.0, 100.0, 0, 1.0*unit::metres), "Top Boundary", 1.0);
+        TS_ASSERT(p_domain->EdgeHasAttribute(DimensionalChastePoint<2>(5.0, 100.0, 0, 1.0*unit::metres), "Top Boundary"));
 
         DiscreteContinuumMeshGenerator<2> mesh_generator;
         mesh_generator.SetDomain(p_domain);
@@ -119,7 +119,7 @@ public:
         p_boundary_condition->SetValue(boundary_concentration);
         p_boundary_condition->SetType(BoundaryConditionType::EDGE);
         p_boundary_condition->SetIsRobin(true);
-        p_boundary_condition->SetLabelName("Top Boundary");
+        p_boundary_condition->SetLabel("Top Boundary");
         p_boundary_condition->SetDomain(p_domain);
 
         boost::shared_ptr<CoupledLumpedSystemFiniteElementSolver<2> > p_solver =
@@ -189,7 +189,7 @@ public:
         p_domain->AddCircle(radius, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
         boost::shared_ptr<Polygon<2> > p_polygon = p_domain->AddCircle(cylinder_radius,
                 DimensionalChastePoint<2>(0.0, -delta/reference_length, 0.0, reference_length));
-        p_polygon->LabelAllEdges("Inner Boundary");
+        p_polygon->AddAttributeToAllEdges("Inner Boundary", 1.0);
         p_domain->AddHoleMarker(DimensionalChastePoint<2>(0.0, 0.0, 0.0, reference_length));
         p_domain->Write(p_handler->GetOutputDirectoryFullPath()+"cornea.vtp", GeometryFormat::VTP);
 
@@ -203,7 +203,7 @@ public:
 
         boost::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
         MultiFormatMeshWriter<2> mesh_writer;
-        mesh_writer.SetFilename(p_handler->GetOutputDirectoryFullPath()+"cornea_mesh");
+        mesh_writer.SetFileName(p_handler->GetOutputDirectoryFullPath()+"cornea_mesh");
         mesh_writer.SetMesh(p_mesh);
         mesh_writer.SetOutputFormat(MeshFormat::VTU);
         mesh_writer.Write();
@@ -216,7 +216,7 @@ public:
         p_boundary_condition->SetType(BoundaryConditionType::EDGE);
         p_boundary_condition->SetIsRobin(true);
         p_boundary_condition->SetDomain(p_domain);
-        p_boundary_condition->SetLabelName("Inner Boundary");
+        p_boundary_condition->SetLabel("Inner Boundary");
 
         // Choose the PDE
         boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
@@ -255,7 +255,7 @@ public:
         }
     }
 
-    void xTestSolveOnSphere()
+    void TestSolveOnSphere()
     {
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestCoupledLumpedSystemFiniteElementSolver/Sphere"));
 
@@ -272,8 +272,8 @@ public:
         unsigned num_divisions_y = 20;
         double azimuth_angle = 1.0 * M_PI;
         double polar_angle = 0.999 * M_PI;
-        boost::shared_ptr<Part<3> > p_domain = hemisphere_generator.GenerateHemisphere(radius/reference_length,
-                                                                                         thickness/reference_length,
+        boost::shared_ptr<Part<3> > p_domain = hemisphere_generator.GenerateHemisphere(radius,
+                                                                                         thickness,
                                                                                          num_divisions_x,
                                                                                          num_divisions_y,
                                                                                          azimuth_angle,
@@ -311,7 +311,7 @@ public:
 
         boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = mesh_generator.GetMesh();
         MultiFormatMeshWriter<3> mesh_writer;
-        mesh_writer.SetFilename(p_handler->GetOutputDirectoryFullPath()+"cornea_mesh");
+        mesh_writer.SetFileName(p_handler->GetOutputDirectoryFullPath()+"cornea_mesh");
         mesh_writer.SetMesh(p_mesh);
         mesh_writer.SetOutputFormat(MeshFormat::VTU);
         mesh_writer.Write();
@@ -319,16 +319,16 @@ public:
         // Set the BCs
         for(unsigned jdx=0;jdx<polygons.size();jdx++)
         {
-            p_domain->GetFacet(polygons[jdx]->GetCentroid())->SetLabel("Boundary");
+            p_vegf_domain->AddAttributeToPolygons("Boundary", 1.0);
         }
         boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary_condition =
                 DiscreteContinuumBoundaryCondition<3>::Create();
         units::quantity<unit::concentration> boundary_concentration(1.0* unit::mole_per_metre_cubed);
         p_boundary_condition->SetValue(boundary_concentration);
-        p_boundary_condition->SetType(BoundaryConditionType::FACET);
+        p_boundary_condition->SetType(BoundaryConditionType::POLYGON);
         p_boundary_condition->SetIsRobin(true);
         p_boundary_condition->SetDomain(p_domain);
-        p_boundary_condition->SetLabelName("Boundary");
+        p_boundary_condition->SetLabel("Boundary");
 
         // Choose the PDE
         boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<3> > p_pde = CoupledVegfPelletDiffusionReactionPde<3>::Create();

@@ -145,8 +145,8 @@ public:
         unsigned num_divisions_y = 10;
         double azimuth_angle = 1.0 * M_PI;
         double polar_angle = 0.5 * M_PI;
-        boost::shared_ptr<Part<3> > p_domain = hemisphere_generator.GenerateHemisphere(radius/reference_length,
-                                                                                         thickness/reference_length,
+        boost::shared_ptr<Part<3> > p_domain = hemisphere_generator.GenerateHemisphere(radius,
+                                                                                         thickness,
                                                                                          num_divisions_x,
                                                                                          num_divisions_y,
                                                                                          azimuth_angle,

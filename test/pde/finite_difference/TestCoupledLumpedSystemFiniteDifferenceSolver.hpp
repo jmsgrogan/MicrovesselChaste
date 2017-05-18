@@ -76,7 +76,7 @@ class TestCoupledLumpedSystemFiniteDifferenceSolver : public AbstractCellBasedWi
     }
 public:
 
-    void xTestPlaneSlowRelease() throw(Exception)
+    void TestPlaneSlowRelease() throw(Exception)
     {
         BaseUnits::Instance()->SetReferenceLengthScale(1.0*unit::metres);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed);
@@ -151,8 +151,8 @@ public:
 
         boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(2000e-6*unit::metres, 1000e-6*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
-        p_domain->LabelEdges(DimensionalChastePoint<2>(1000.0, 1000.0, 0, 1e-6*unit::metres), "Top Boundary");
-        TS_ASSERT(p_domain->EdgeHasLabel(DimensionalChastePoint<2>(1000.0, 1000.0, 0, 1e-6*unit::metres), "Top Boundary"));
+        p_domain->AddAttributeToEdgeIfFound(DimensionalChastePoint<2>(1000.0, 1000.0, 0, 1e-6*unit::metres), "Top Boundary", 1.0);
+        TS_ASSERT(p_domain->EdgeHasAttribute(DimensionalChastePoint<2>(1000.0, 1000.0, 0, 1e-6*unit::metres), "Top Boundary"));
 
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 50.0e-6*unit::metres);
@@ -200,7 +200,7 @@ public:
         p_boundary_condition->SetValue(boundary_concentration);
         p_boundary_condition->SetType(BoundaryConditionType::EDGE);
         p_boundary_condition->SetIsRobin(true);
-        p_boundary_condition->SetLabelName("Top Boundary");
+        p_boundary_condition->SetLabel("Top Boundary");
         p_boundary_condition->SetDomain(p_domain);
 
         // Reset vegf in pellet!
@@ -218,48 +218,7 @@ public:
         solver.SetUseCoupling(true);
         solver.SetEndTime(end_time);
         solver.SetWriteIntermediateSolutions(true, 20);
-        //solver.Solve();
-
-        // Test the intermediate solutions
-//        vtkSmartPointer<vtkPoints> p_sample_points = vtkSmartPointer<vtkPoints>::New();
-//        for(unsigned idx=0; idx<11; idx++)
-//        {
-//            p_sample_points->InsertNextPoint(1000.0, 1000.0-idx*100.0, 0.0);
-//        }
-//
-//        std::vector<std::pair<std::vector<double>, double> > intermediate_solutions = fd_solver.rGetIntermediateSolutions();
-//        double diff_nondim = vegf_diffusivity*(3600.0*unit::seconds)/(1.e-6*unit::metres*1.e-6*unit::metres);
-//        double perm_nondim = p_pde->GetCorneaPelletPermeability()*(3600.0*unit::seconds/(1.e-6*unit::metres));
-//        double conc_nondim = initial_vegf_concentration/(1.e-9*unit::mole_per_metre_cubed);
-//
-//        for(unsigned idx=0; idx<intermediate_solutions.size();idx++)
-//        {
-//            double time = intermediate_solutions[idx].second;
-//            if(time>0.01)
-//            {
-//                fd_solver.UpdateSolution(intermediate_solutions[idx].first);
-//                std::vector<units::quantity<unit::concentration> > solution = fd_solver.GetConcentrations(p_sample_points);
-//                for(unsigned jdx=0; jdx<11; jdx++)
-//                {
-//                    double c_numerical_nondim = solution[jdx]/(1.e-9*unit::mole_per_metre_cubed);
-//                }
-//            }
-//        }
-
-//        intermediate_solutions = solver.rGetIntermediateSolutions();
-//        for(unsigned idx=0; idx<intermediate_solutions.size();idx++)
-//        {
-//            double time = intermediate_solutions[idx].second;
-//            if(time>0.01)
-//            {
-//                solver.UpdateSolution(intermediate_solutions[idx].first);
-//                std::vector<units::quantity<unit::concentration> > solution = solver.GetConcentrations(p_sample_points);
-//                for(unsigned jdx=0; jdx<11; jdx++)
-//                {
-//                    double c_numerical_nondim = solution[jdx]/(1.e-9*unit::mole_per_metre_cubed);
-//                }
-//            }
-//        }
+        solver.Solve();
     }
 };
 
