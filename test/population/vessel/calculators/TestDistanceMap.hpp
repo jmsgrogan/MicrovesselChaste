@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTDISTANCEMAP_HPP_
 #define TESTDISTANCEMAP_HPP_
 
@@ -50,7 +48,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "RegularGrid.hpp"
 #include "PetscTools.hpp"
 
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestDistanceMap : public CxxTest::TestSuite
 {
@@ -90,7 +88,7 @@ public:
         solver.Solve();
     }
 
-    void xTest3dBifurcationNetwork()
+    void Test3dBifurcationNetwork()
     {
         std::string output_path = "TestDistanceMap/3dBifurcationNetwork";
         if(PetscTools::IsParallel())

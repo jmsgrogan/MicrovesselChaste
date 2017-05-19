@@ -48,6 +48,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DiscreteContinuumMesh.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
 #include "DimensionalChastePoint.hpp"
+#include "PetscTools.hpp"
 #include "MultiFormatMeshWriter.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
@@ -59,7 +60,12 @@ public:
 
     void TestMakePlane() throw(Exception)
     {
-        OutputFileHandler file_handler("TestMappableGridGenerator", true);
+        std::string output_directory = "TestMappableGridGenerator";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory);
 
         // Make one with and without end caps
         MappableGridGenerator generator;
@@ -78,13 +84,18 @@ public:
 
         MultiFormatMeshWriter<3> mesh_writer;
         mesh_writer.SetMesh(p_mesh_generator->GetMesh());
-        mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"plane");
+        mesh_writer.SetFileName(output_file_handler.GetOutputDirectoryFullPath()+"plane");
         mesh_writer.Write();
     }
 
     void TestMakeCylinder() throw(Exception)
     {
-        OutputFileHandler file_handler("TestMappableGridGenerator", false);
+        std::string output_directory = "TestMappableGridGenerator";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
 
         // Make one closed cylinder, one open cylinder and one with too large an angle.
         MappableGridGenerator generator;
@@ -113,13 +124,18 @@ public:
         p_mesh_generator->Update();
         MultiFormatMeshWriter<3> mesh_writer;
         mesh_writer.SetMesh(p_mesh_generator->GetMesh());
-        mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"cylinder");
+        mesh_writer.SetFileName(output_file_handler.GetOutputDirectoryFullPath()+"cylinder");
         mesh_writer.Write();
     }
 
     void TestMakeCylinderShell() throw(Exception)
     {
-        OutputFileHandler file_handler("TestMappableGridGenerator", false);
+        std::string output_directory = "TestMappableGridGenerator";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
 
         // Make one closed cylinder, one open cylinder and one with too large an angle.
         MappableGridGenerator generator;
@@ -127,12 +143,17 @@ public:
         units::quantity<unit::length> thickness = 0.0*unit::metres;
         units::quantity<unit::length> height = 5.0*unit::metres;
         boost::shared_ptr<Part<3> > p_part = generator.GenerateCylinder(radius, thickness, height, 10, 10);
-        p_part->Write(file_handler.GetOutputDirectoryFullPath()+"cylinder_shell.vtp");
+        p_part->Write(output_file_handler.GetOutputDirectoryFullPath()+"cylinder_shell.vtp");
     }
 
     void TestMakeHemisphere() throw(Exception)
     {
-        OutputFileHandler file_handler("TestMappableGridGenerator", false);
+        std::string output_directory = "TestMappableGridGenerator";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
 
         // Make one good and two 'bad' hemispheres
         MappableGridGenerator generator;
@@ -159,13 +180,18 @@ public:
 
         MultiFormatMeshWriter<3> mesh_writer;
         mesh_writer.SetMesh(p_mesh_generator->GetMesh());
-        mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"hemisphere");
+        mesh_writer.SetFileName(output_file_handler.GetOutputDirectoryFullPath()+"hemisphere");
         mesh_writer.Write();
     }
 
     void TestMakeHemisphereShell() throw(Exception)
     {
-        OutputFileHandler file_handler("TestMappableGridGenerator", false);
+        std::string output_directory = "TestMappableGridGenerator";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
 
         // Make one good and two 'bad' hemispheres
         MappableGridGenerator generator;
@@ -173,7 +199,7 @@ public:
         units::quantity<unit::length> thickness = 0.0*unit::metres;
 
         boost::shared_ptr<Part<3> > p_part = generator.GenerateHemisphere(radius, thickness, 10, 10, M_PI, 0.5*M_PI);
-        p_part->Write(file_handler.GetOutputDirectoryFullPath()+"hemisphere_shell.vtp");
+        p_part->Write(output_file_handler.GetOutputDirectoryFullPath()+"hemisphere_shell.vtp");
     }
 
     void TestArchiving() throw (Exception)

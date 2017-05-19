@@ -261,8 +261,8 @@ public:
     void TestHexNetworkVessel3d() throw(Exception)
     {
         VesselNetworkGenerator<3> network_generator = VesselNetworkGenerator<3>();
-        boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(500*1e-6*unit::metres,
-                500*1e-6*unit::metres, 100*1e-6*unit::metres, true);
+        boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(100*1e-6*unit::metres,
+                100*1e-6*unit::metres, 30*1e-6*unit::metres, true);
 
         boost::shared_ptr<VesselNode<3> > p_bottom_left_node = p_network->GetNearestNode(
                 DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1e-6*unit::metres));

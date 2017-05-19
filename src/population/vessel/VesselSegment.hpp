@@ -40,7 +40,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <boost/enable_shared_from_this.hpp>
 #include "ChasteSerialization.hpp"
-#include <boost/serialization/base_object.hpp>
 #include "SegmentFlowProperties.hpp"
 #include "UblasVectorInclude.hpp"
 #include "ChastePoint.hpp"
@@ -73,21 +72,21 @@ private:
     /**
      * Archiving.
      */
-    //friend class boost::serialization::access;
+    friend class boost::serialization::access;
 
     /**
      * Do the serialize
      * @param ar the archive
      * @param version the archive version number
      */
-//    template<class Archive>
-//    void serialize(Archive & ar, const unsigned int version)
-//    {
-//        ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
-//        ar & mMaturity;
-//        //ar & mNodes;
-//        //ar & mpFlowProperties;
-//    }
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
+        ar & mMaturity;
+        ar & mNodes;
+        ar & mpFlowProperties;
+    }
 
     /**
      * Container for segment nodes
@@ -108,6 +107,46 @@ private:
      * A measure of vessel maturity
      */
     double mMaturity;
+
+    /**
+     * The global index
+     */
+    unsigned mGlobalIndex;
+
+    /**
+     * The local index
+     */
+    unsigned mLocalIndex;
+
+    /**
+     * Owner rank
+     */
+    unsigned mOwnerRank;
+
+    /**
+     * Is this a Halo segment
+     */
+    bool mIsHalo;
+
+    /**
+     * Is there are Halo on another processor corresponding to this segment
+     */
+    bool mHasHalo;
+
+    /**
+     * Who owns the real segment
+     */
+    unsigned mOtherProcessorRank;
+
+    /**
+     * What is the segment index on the other processor
+     */
+    unsigned mOtherProcessorLocalIndex;
+
+    /**
+     * For serialization only
+     */
+    VesselSegment();
 
     /**
      * Constructor - This is private as instances of this class must be created with a corresponding shared pointer. This is
@@ -203,6 +242,48 @@ public:
      * @return the maturiy
      */
     double GetMaturity() const;
+
+    /**
+     * Return the global index
+     * @return the global index
+     */
+    unsigned GetGlobalIndex();
+
+    /**
+     * Return the local index
+     * @return the local index
+     */
+    unsigned GetLocalIndex();
+
+    /**
+     * Return the owner rank
+     * @return the owner rank
+     */
+    unsigned GetOwnerRank();
+
+    /**
+     * Is this a halo segment
+     * @return Is this a halo segment
+     */
+    bool IsHalo();
+
+    /**
+     * Is there a halo on another processor
+     * @return Is there a halo on another processor
+     */
+    bool HasHalo();
+
+    /**
+     * The rank of the processor storing the other segment
+     * @return the rank of the processor storing the other segment
+     */
+    unsigned GetOtherProcessorRank();
+
+    /**
+     * The index of the other segment on the other processor
+     * @return the index of the other segment on the other processor
+     */
+    unsigned GetOtherProcessorLocalIndex();
 
     /**
      * Return a pointer to the node specified by the index
@@ -311,9 +392,12 @@ private:
      * Remove an adjoining vessel from the segment.
      */
     void RemoveVessel();
-//#include "SerializationExportWrapper.hpp"
-//EXPORT_TEMPLATE_CLASS1(VesselSegment, 2)
-//EXPORT_TEMPLATE_CLASS1(VesselSegment, 3)
+
 };
+
+#include "SerializationExportWrapper.hpp"
+EXPORT_TEMPLATE_CLASS1(VesselSegment, 2)
+EXPORT_TEMPLATE_CLASS1(VesselSegment, 3)
+
 
 #endif /* VESSELSEGMENT_HPP_ */

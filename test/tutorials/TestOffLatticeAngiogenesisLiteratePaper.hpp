@@ -275,7 +275,7 @@ public:
         /*
          * Set the simulation time and run the solver. The result is shown at the top of the tutorial.
          */
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(200.0, 20);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(10.0, 2);
         p_microvessel_solver->Run();
     }
 };

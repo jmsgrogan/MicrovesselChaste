@@ -90,7 +90,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToMatrix()
             {
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
                 double discrete_linear_contrib = p_linear_pde->ComputeDiscreteLinearInUCoeffInSourceTerm(grid_index)*reference_time;
-                this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index,discrete_linear_contrib);
+                this->mpLinearSystem->AddToMatrixElement(grid_index, grid_index, discrete_linear_contrib);
             }
         }
     }
@@ -117,7 +117,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToRhs()
             {
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
                 double discrete_const_contrib = p_linear_pde->ComputeDiscreteConstantInUSourceTerm(grid_index)*(reference_time/this->mReferenceConcentration);
-                this->mpLinearSystem->SetRhsVectorElement(grid_index,-discrete_const_contrib);
+                this->mpLinearSystem->AddToRhsVectorElement(grid_index,-discrete_const_contrib);
             }
         }
     }
@@ -134,7 +134,6 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
     {
         EXCEPTION("PDE not recognized");
     }
-
     this->mpLinearSystem->ZeroLhsMatrix();
 
     c_vector<unsigned, 6> extents = this->mpRegularGrid->GetExtents();
@@ -336,8 +335,8 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Update()
     this->AssembleVector();
 
     //MatCopy(mpInitialLhs, this->mpLinearSystem->rGetLhsMatrix(), DIFFERENT_NONZERO_PATTERN);
-    //
-//    // Add discrete terms
+
+    // Add discrete terms
     this->AddDiscreteTermsToMatrix();
     this->AddDiscreteTermsToRhs();
 

@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTREGULARGRIDWRITER_HPP_
 #define TESTREGULARGRIDWRITER_HPP_
 
@@ -49,7 +47,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "RegularGridWriter.hpp"
 #include "OutputFileHandler.hpp"
 
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestRegularGridWriter : public AbstractCellBasedWithTimingsTestSuite
 {

@@ -41,12 +41,37 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "GeometryTools.hpp"
 
 template<unsigned DIM>
+VesselSegment<DIM>::VesselSegment() :
+        AbstractVesselNetworkComponent<DIM>(),
+        mNodes(),
+        mVessel(boost::weak_ptr<Vessel<DIM> >()),
+        mpFlowProperties(boost::shared_ptr<SegmentFlowProperties<DIM> >(new SegmentFlowProperties<DIM>())),
+        mMaturity(1.0),
+        mGlobalIndex(0),
+        mLocalIndex(0),
+        mOwnerRank(0),
+        mIsHalo(false),
+        mHasHalo(false),
+        mOtherProcessorRank(0),
+        mOtherProcessorLocalIndex(0)
+{
+
+}
+
+template<unsigned DIM>
 VesselSegment<DIM>::VesselSegment(boost::shared_ptr<VesselNode<DIM> > pNode1, boost::shared_ptr<VesselNode<DIM> > pNode2) :
         AbstractVesselNetworkComponent<DIM>(),
         mNodes(std::pair<boost::shared_ptr<VesselNode<DIM> >, boost::shared_ptr<VesselNode<DIM> > >(pNode1, pNode2)),
         mVessel(boost::weak_ptr<Vessel<DIM> >()),
         mpFlowProperties(boost::shared_ptr<SegmentFlowProperties<DIM> >(new SegmentFlowProperties<DIM>())),
-        mMaturity(1.0)
+        mMaturity(1.0),
+        mGlobalIndex(0),
+        mLocalIndex(0),
+        mOwnerRank(0),
+        mIsHalo(false),
+        mHasHalo(false),
+        mOtherProcessorRank(0),
+        mOtherProcessorLocalIndex(0)
 {
 }
 
@@ -56,7 +81,14 @@ VesselSegment<DIM>::VesselSegment(const VesselSegment<DIM>& rSegment) :
     mNodes(rSegment.GetNodes()),
     mVessel(boost::weak_ptr<Vessel<DIM> >()),
     mpFlowProperties(boost::shared_ptr<SegmentFlowProperties<DIM> >(new SegmentFlowProperties<DIM>())),
-    mMaturity(1.0)
+    mMaturity(1.0),
+    mGlobalIndex(0),
+    mLocalIndex(0),
+    mOwnerRank(0),
+    mIsHalo(false),
+    mHasHalo(false),
+    mOtherProcessorRank(0),
+    mOtherProcessorLocalIndex(0)
 {
     this->SetFlowProperties(*(rSegment.GetFlowProperties()));
 }
@@ -134,6 +166,48 @@ template<unsigned DIM>
 double VesselSegment<DIM>::GetMaturity() const
 {
     return mMaturity;
+}
+
+template<unsigned DIM>
+unsigned VesselSegment<DIM>::GetGlobalIndex()
+{
+    return mGlobalIndex;
+}
+
+template<unsigned DIM>
+unsigned VesselSegment<DIM>::GetLocalIndex()
+{
+    return mLocalIndex;
+}
+
+template<unsigned DIM>
+unsigned VesselSegment<DIM>::GetOwnerRank()
+{
+    return mOwnerRank;
+}
+
+template<unsigned DIM>
+bool VesselSegment<DIM>::IsHalo()
+{
+    return mIsHalo;
+}
+
+template<unsigned DIM>
+bool VesselSegment<DIM>::HasHalo()
+{
+    return mHasHalo;
+}
+
+template<unsigned DIM>
+unsigned VesselSegment<DIM>::GetOtherProcessorRank()
+{
+    return mOtherProcessorRank;
+}
+
+template<unsigned DIM>
+unsigned VesselSegment<DIM>::GetOtherProcessorLocalIndex()
+{
+    return mOtherProcessorLocalIndex;
 }
 
 template<unsigned DIM>
@@ -301,6 +375,6 @@ boost::shared_ptr<VesselSegment<DIM> > VesselSegment<DIM>::Shared()
 template class VesselSegment<2>;
 template class VesselSegment<3>;
 
-//#include "SerializationExportWrapperForCpp.hpp"
-//EXPORT_TEMPLATE_CLASS1(VesselSegment, 2)
-//EXPORT_TEMPLATE_CLASS1(VesselSegment, 3)
+#include "SerializationExportWrapperForCpp.hpp"
+EXPORT_TEMPLATE_CLASS1(VesselSegment, 2)
+EXPORT_TEMPLATE_CLASS1(VesselSegment, 3)

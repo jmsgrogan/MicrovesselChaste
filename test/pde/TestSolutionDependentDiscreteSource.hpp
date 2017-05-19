@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTSOLUTIONDEPENDENTDISCRETESOURCE_HPP_
 #define TESTSOLUTIONDEPENDENTDISCRETESOURCE_HPP_
 
@@ -54,7 +52,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DiscreteContinuumBoundaryCondition.hpp"
 #include "SolutionDependentDiscreteSource.hpp"
 
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestSolutionDependentDiscreteSource : public CxxTest::TestSuite
 {

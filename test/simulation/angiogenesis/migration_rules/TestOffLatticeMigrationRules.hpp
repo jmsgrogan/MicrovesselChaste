@@ -124,7 +124,7 @@ public:
         angiogenesis_solver.SetOutputFileHandler(p_handler);
         angiogenesis_solver.SetBoundingDomain(p_domain);
 
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(48.0, 96);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(12.0, 24);
         angiogenesis_solver.Run(true);
     }
 
@@ -186,7 +186,7 @@ public:
         angiogenesis_solver.SetOutputFileHandler(p_handler);
         //angiogenesis_solver.SetBoundingDomain(p_domain);
 
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(48.0, 96.0);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(12.0, 24.0);
         angiogenesis_solver.Run(true);
     }
 };

@@ -315,31 +315,35 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
         }
     }
 
-    std::vector<std::pair<DimensionalChastePoint<SPACE_DIM>, unsigned> > region_locations = mpDomain->GetRegionMarkers();
-    if (mRegions.size() > 0 or region_locations.size()>0)
+    std::vector<std::pair<DimensionalChastePoint<SPACE_DIM>, unsigned> > region_locations;
+    if(mpDomain)
     {
-        unsigned num_regions = mRegions.size() + region_locations.size();
-        mesher_input.regionlist = (double *) malloc(num_regions * 4 * sizeof(double));
-        mesher_input.numberofregions = int(num_regions);
-        for (unsigned idx = 0; idx < mRegions.size(); idx++)
+        region_locations = mpDomain->GetRegionMarkers();
+        if (mRegions.size() > 0 or region_locations.size()>0)
         {
-            c_vector<double, SPACE_DIM> region_location = mRegions[idx].GetLocation(mReferenceLength);
-            for (unsigned jdx = 0; jdx < 2; jdx++)
+            unsigned num_regions = mRegions.size() + region_locations.size();
+            mesher_input.regionlist = (double *) malloc(num_regions * 4 * sizeof(double));
+            mesher_input.numberofregions = int(num_regions);
+            for (unsigned idx = 0; idx < mRegions.size(); idx++)
             {
-                mesher_input.regionlist[4 * idx + jdx] = region_location[jdx];
+                c_vector<double, SPACE_DIM> region_location = mRegions[idx].GetLocation(mReferenceLength);
+                for (unsigned jdx = 0; jdx < 2; jdx++)
+                {
+                    mesher_input.regionlist[4 * idx + jdx] = region_location[jdx];
+                }
+                mesher_input.regionlist[4 * idx + 2] = 1.0;
+                mesher_input.regionlist[4 * idx + 3] = mMaxElementArea/units::pow<3>(mReferenceLength);
             }
-            mesher_input.regionlist[4 * idx + 2] = 1.0;
-            mesher_input.regionlist[4 * idx + 3] = mMaxElementArea/units::pow<3>(mReferenceLength);
-        }
-        for (unsigned idx = 0; idx < region_locations.size(); idx++)
-        {
-            c_vector<double, SPACE_DIM> region_location = region_locations[idx].first.GetLocation(mReferenceLength);
-            for (unsigned jdx = 0; jdx < 2; jdx++)
+            for (unsigned idx = 0; idx < region_locations.size(); idx++)
             {
-                mesher_input.regionlist[4 * idx + jdx] = region_location[jdx];
+                c_vector<double, SPACE_DIM> region_location = region_locations[idx].first.GetLocation(mReferenceLength);
+                for (unsigned jdx = 0; jdx < 2; jdx++)
+                {
+                    mesher_input.regionlist[4 * idx + jdx] = region_location[jdx];
+                }
+                mesher_input.regionlist[4 * idx + 2] = region_locations[idx].second;
+                mesher_input.regionlist[4 * idx + 3] = mMaxElementArea/units::pow<3>(mReferenceLength);
             }
-            mesher_input.regionlist[4 * idx + 2] = region_locations[idx].second;
-            mesher_input.regionlist[4 * idx + 3] = mMaxElementArea/units::pow<3>(mReferenceLength);
         }
     }
 

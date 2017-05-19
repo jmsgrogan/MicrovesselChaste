@@ -40,6 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <map>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/serialization/vector.hpp>
 #include "ChasteSerialization.hpp"
 #include "VesselSegment.hpp"
 #include "VesselNode.hpp"
@@ -71,18 +72,21 @@ class Vessel : public boost::enable_shared_from_this<Vessel<DIM> >, public Abstr
 {
 private:
 
-//    friend class boost::serialization::access;
-//
-//    /**
-//     * Do the serialize
-//     * @param ar the archive
-//     * @param version the archive version number
-//     */
-//    template<class Archive>
-//    void serialize(Archive & ar, const unsigned int version)
-//    {
-//        ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
-//    }
+    friend class boost::serialization::access;
+
+    /**
+     * Do the serialize
+     * @param ar the archive
+     * @param version the archive version number
+     */
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
+        ar & mSegments;
+        ar & mNodes;
+        ar & mpFlowProperties;
+    }
 
     /**
      * Vessel segments
@@ -103,6 +107,11 @@ private:
      * A flow property collection for the vessel
      */
     boost::shared_ptr<VesselFlowProperties<DIM> > mpFlowProperties;
+
+    /**
+     * For serialization only
+     */
+    Vessel();
 
     /**
      * Constructor. Kept private as the factory Create methods should be used instead.
@@ -356,8 +365,8 @@ private:
     boost::shared_ptr<Vessel<DIM> > Shared();
 };
 
-//#include "SerializationExportWrapper.hpp"
-//EXPORT_TEMPLATE_CLASS1(Vessel, 2)
-//EXPORT_TEMPLATE_CLASS1(Vessel, 3)
+#include "SerializationExportWrapper.hpp"
+EXPORT_TEMPLATE_CLASS1(Vessel, 2)
+EXPORT_TEMPLATE_CLASS1(Vessel, 3)
 
 #endif /* VESSEL_HPP_ */

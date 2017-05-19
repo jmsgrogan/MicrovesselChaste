@@ -97,7 +97,6 @@ public:
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"surface_cleaned.vtp").c_str());
         p_writer->AddInput(p_cleaner->GetOutput());
         p_writer->Write();
-        p_writer->ClearInputs();
 
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"surface_cleaned.stl").c_str());
         p_writer->SetOutputFormat(GeometryFormat::STL);

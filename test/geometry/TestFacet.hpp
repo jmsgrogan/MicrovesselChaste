@@ -38,6 +38,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <cxxtest/TestSuite.h>
 #include <vector>
+#include "CheckpointArchiveTypes.hpp"
+#include "ArchiveLocationInfo.hpp"
+#include "OutputFileHandler.hpp"
 #include "SmartPointers.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "Polygon.hpp"
@@ -232,6 +235,42 @@ public:
         TS_ASSERT_DELTA(bbox[3].value(), 1.e-6, 1.e-8);
 
         TS_ASSERT_DELTA(p_facet->GetDistance(DimensionalChastePoint<2>(1.5, 0.5, 0.0,1.e-6*unit::metres )).value(), 0.0e-6, 1.e-8);
+    }
+
+    void TestArchiving() throw (Exception)
+    {
+        // Test Archiving
+        OutputFileHandler handler("archive", false);
+        ArchiveLocationInfo::SetArchiveDirectory(handler.FindFile(""));
+        std::string archive_filename = ArchiveLocationInfo::GetProcessUniqueFilePath("Facet.arch");
+
+        std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices;
+        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 1.0, 0.0, 1.e-6*unit::metres));
+        boost::shared_ptr<Facet<3> > p_facet1 = Facet<3>::Create(Polygon<3>::Create(vertices));
+
+        // Save archive
+        {
+            std::ofstream ofs(archive_filename.c_str());
+            boost::archive::text_oarchive output_arch(ofs);
+            output_arch << p_facet1;
+        }
+
+        // Load archive
+        {
+            boost::shared_ptr<Facet<3> > p_facet_from_archive;
+
+            // Read from this input file
+            std::ifstream ifs(archive_filename.c_str(), std::ios::binary);
+            boost::archive::text_iarchive input_arch(ifs);
+
+            // restore from the archive
+            input_arch >> p_facet_from_archive;
+
+            // Check that we remember the reference length
+            TS_ASSERT_EQUALS(p_facet_from_archive->GetPolygons()[0]->GetVertices().size(), 3u);
+        }
     }
 };
 

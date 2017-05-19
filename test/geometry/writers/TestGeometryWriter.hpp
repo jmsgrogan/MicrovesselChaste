@@ -69,7 +69,6 @@ public:
         part.GetPolygons()[5]->AddAttributeToAllEdges("Parent Polygon", 5.0);
 
         OutputFileHandler output_file_handler("TestGeometryWriter/TestWriteCuboid");
-        part.Write(output_file_handler.GetOutputDirectoryFullPath() + "cube_alone_edges.vtp", GeometryFormat::VTP, true);
 
         boost::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
         TS_ASSERT_THROWS_THIS(p_writer->Write(), "An input geometry is not set.");

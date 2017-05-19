@@ -115,7 +115,7 @@ public:
         solver.Write();
     }
 
-    void xTestMeshFunction() throw(Exception)
+    void TestMeshFunction() throw(Exception)
     {
         units::quantity<unit::length> vessel_length(100.0*unit::microns);
         units::quantity<unit::length> reference_length(1.0*unit::microns);
@@ -227,7 +227,7 @@ public:
         solver.Solve();
     }
 
-    void xTestSimpleLinearEllipticFiniteElementSolver() throw(Exception)
+    void TestSimpleLinearEllipticFiniteElementSolver() throw(Exception)
     {
         // Set up the vessel network
         units::quantity<unit::length> vessel_length(100.0*unit::microns);

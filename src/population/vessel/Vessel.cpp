@@ -40,6 +40,17 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Vessel.hpp"
 
 template<unsigned DIM>
+Vessel<DIM>::Vessel() : AbstractVesselNetworkComponent<DIM>(),
+        mSegments(std::vector<boost::shared_ptr<VesselSegment<DIM> > >()),
+        mNodes(std::vector<boost::shared_ptr<VesselNode<DIM> > >()),
+        mNodesUpToDate(false),
+        mpFlowProperties(boost::shared_ptr<VesselFlowProperties<DIM> >(new VesselFlowProperties<DIM>()))
+{
+
+
+}
+
+template<unsigned DIM>
 Vessel<DIM>::Vessel(boost::shared_ptr<VesselSegment<DIM> > pSegment) : AbstractVesselNetworkComponent<DIM>(),
         mSegments(std::vector<boost::shared_ptr<VesselSegment<DIM> > >()),
         mNodes(std::vector<boost::shared_ptr<VesselNode<DIM> > >()),
@@ -48,7 +59,6 @@ Vessel<DIM>::Vessel(boost::shared_ptr<VesselSegment<DIM> > pSegment) : AbstractV
 {
     mSegments.push_back(pSegment);
     mpFlowProperties->UpdateSegments(mSegments);
-
 }
 
 template<unsigned DIM>
@@ -776,6 +786,6 @@ void Vessel<DIM>::UpdateNodes()
 template class Vessel<2>;
 template class Vessel<3>;
 
-//#include "SerializationExportWrapperForCpp.hpp"
-//EXPORT_TEMPLATE_CLASS1(Vessel, 2)
-//EXPORT_TEMPLATE_CLASS1(Vessel, 3)
+#include "SerializationExportWrapperForCpp.hpp"
+EXPORT_TEMPLATE_CLASS1(Vessel, 2)
+EXPORT_TEMPLATE_CLASS1(Vessel, 3)

@@ -44,6 +44,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UnitCollection.hpp"
 #include "OutputFileHandler.hpp"
 
+#include "PetscAndVtkSetupAndFinalize.hpp"
+
 class TestMechanicalStimulusCalculator : public CxxTest::TestSuite
 {
 

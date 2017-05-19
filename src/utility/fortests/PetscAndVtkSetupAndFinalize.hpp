@@ -41,11 +41,14 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * It controls the PETSc initialisation and finalisation.
  */
 
-#include "PetscSetupUtils.hpp"
 #include <cxxtest/GlobalFixture.h>
 #include <petsc.h>
-#include "PetscException.hpp"
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
+#include <vtkSmartPointer.h>
 #include <vtkMPIController.h>
+#include "PetscSetupUtils.hpp"
+#include "PetscException.hpp"
+
 #include "CommandLineArguments.hpp"
 
 class PetscAndVtkSetup : public CxxTest::GlobalFixture

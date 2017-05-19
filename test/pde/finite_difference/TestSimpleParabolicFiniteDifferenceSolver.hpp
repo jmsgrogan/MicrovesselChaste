@@ -151,7 +151,7 @@ public:
         }
     }
 
-    void xTestBox() throw(Exception)
+    void TestBox() throw(Exception)
     {
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-6*unit::mole_per_metre_cubed);
         BaseUnits::Instance()->SetReferenceTimeScale(3600.0*unit::seconds);

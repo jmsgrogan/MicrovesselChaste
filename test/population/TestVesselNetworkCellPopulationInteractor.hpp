@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef TESTVESSELNETWORKCELLPOPULATIONINTERACTOR_HPP
 #define TESTVESSELNETWORKCELLPOPULATIONINTERACTOR_HPP
 
@@ -64,7 +62,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DefaultCellProliferativeType.hpp"
 #include "VesselNetworkCellPopulationInteractor.hpp"
 
-#include "FakePetscSetup.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestVesselNetworkCellPopulationInteractor : public AbstractCellBasedWithTimingsTestSuite
 {

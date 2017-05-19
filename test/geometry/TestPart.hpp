@@ -54,6 +54,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Vessel.hpp"
 #include "VesselNetwork.hpp"
 #include "MappableGridGenerator.hpp"
+#include "PetscTools.hpp"
+#include "ObjectCommunicator.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
@@ -64,6 +66,13 @@ public:
 
     void TestAddRectangle() throw(Exception)
     {
+        std::string output_directory = "TestPart";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory);
+
         Part<3> part = Part<3>();
         part.AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1.e-6*unit::metres));
 
@@ -79,28 +88,46 @@ public:
         TS_ASSERT_DELTA(part.GetReferenceLengthScale().value(), 1.e-6, 1.e-8);
         TS_ASSERT_THROWS_THIS(part.GetFacet(DimensionalChastePoint<3>(4.0, 0.0, 0.0, 1.e-6*unit::metres)), "No facet found at input location");
         part.SetReferenceLengthScale(10.e-6*unit::metres);
-        OutputFileHandler output_file_handler("TestPart");
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Rectangle.vtp"));
     }
 
     void TestAddCuboid() throw(Exception)
     {
+        std::string output_directory = "TestPart";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
+
         Part<3> part = Part<3>();
         part.AddCuboid(1.e-6*unit::metres, 1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1.e-6*unit::metres));
-        OutputFileHandler output_file_handler("TestPart", false);
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Cuboid.vtp"));
     }
 
     void TestAddCylinder() throw(Exception)
     {
+        std::string output_directory = "TestPart";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
+
         Part<3> part = Part<3>();
         part.AddCylinder(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1.e-6*unit::metres), 24);
-        OutputFileHandler output_file_handler("TestPart", false);
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Cylinder.vtp"));
     }
 
     void TestComposite2DPart() throw(Exception)
     {
+        std::string output_directory = "TestPart";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
+
         boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
         p_part->AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
         p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
@@ -117,16 +144,21 @@ public:
         p_part4->AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
         p_part4->AddPolygon(p_part->GetPolygons()[1], false, p_part4->GetFacets()[0]);
 
-        OutputFileHandler output_file_handler("TestPart", false);
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath().append("Composite2DPart.vtp"));
     }
 
     void TestExtrudePart() throw(Exception)
     {
+        std::string output_directory = "TestPart";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
+
         boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
         boost::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
         p_part->Extrude(p_circle, 1.e-6*unit::metres);
-        OutputFileHandler output_file_handler("TestPart", false);
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath().append("ExtrudePart.vtp"));
 
         boost::shared_ptr<Part<2> > p_part2 = Part<2>::Create();
@@ -136,6 +168,13 @@ public:
 
     void TestAddParrallelVesselsLines2d() throw(Exception)
     {
+        std::string output_directory = "TestPart";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
+
         boost::shared_ptr<VesselNode<2> > p_start_top = VesselNode<2>::Create(0.0, 60.0, 0.0);
         boost::shared_ptr<VesselNode<2> > p_end_top = VesselNode<2>::Create(90.0, 60.0, 0.0);
         boost::shared_ptr<VesselNode<2> > p_start_bottom = VesselNode<2>::Create(10.0, 20.0, 0.0);
@@ -152,7 +191,6 @@ public:
                             DimensionalChastePoint<2>(0.0, 0.0, 0.0));
         p_domain->AddVesselNetwork(p_network);
 
-        OutputFileHandler output_file_handler("TestPart", false);
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselLines2d.vtp"));
 
         std::vector<std::pair<std::pair<unsigned, unsigned>, unsigned > > segment_indices = p_domain->GetSegmentIndices();
@@ -161,6 +199,13 @@ public:
 
     void TestAddParrallelVesselLines3d() throw(Exception)
     {
+        std::string output_directory = "TestPart";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
+
         boost::shared_ptr<VesselNode<3> > p_start_top = VesselNode<3>::Create(10.0, 60.0, 50.0);
         boost::shared_ptr<VesselNode<3> > p_end_top = VesselNode<3>::Create(90.0, 60.0, 50.0);
         boost::shared_ptr<VesselNode<3> > p_start_bottom = VesselNode<3>::Create(10.0, 20.0, 50.0);
@@ -178,12 +223,18 @@ public:
                             DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         p_domain->AddVesselNetwork(p_network);
 
-        OutputFileHandler output_file_handler("TestPart", false);
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselLines3d.vtp"));
     }
 
     void TestAddParrallelVesselsSurfaces2d() throw(Exception)
     {
+        std::string output_directory = "TestPart";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
+
         boost::shared_ptr<VesselNode<2> > p_start_top = VesselNode<2>::Create(10.0, 60.0, 0.0);
         boost::shared_ptr<VesselNode<2> > p_end_top = VesselNode<2>::Create(90.0, 60.0, 0.0);
         boost::shared_ptr<VesselNode<2> > p_start_bottom = VesselNode<2>::Create(10.0, 20.0, 0.0);
@@ -207,6 +258,13 @@ public:
 
     void TestAddParrallelVesselSurface3d() throw(Exception)
     {
+        std::string output_directory = "TestPart";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
+
         boost::shared_ptr<VesselNode<3> > p_start_top = VesselNode<3>::Create(10.0, 60.0, 50.0);
         boost::shared_ptr<VesselNode<3> > p_end_top = VesselNode<3>::Create(90.0, 60.0, 50.0);
         boost::shared_ptr<VesselNode<3> > p_start_bottom = VesselNode<3>::Create(10.0, 20.0, 50.0);
@@ -225,13 +283,18 @@ public:
                             100.0*1.e-6*unit::metres,
                             DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         p_domain->AddVesselNetwork(p_network, true);
-
-        OutputFileHandler output_file_handler("TestPart", false);
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselSurface3d.vtp"));
     }
 
     void TestAddVesselsSurface3dCylinder() throw(Exception)
     {
+        std::string output_directory = "TestPart";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
+
         units::quantity<unit::length> vessel_length = 100.0 * 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
@@ -244,7 +307,6 @@ public:
         part.Extrude(p_circle, vessel_length);
         part.AddVesselNetwork(p_network, true);
 
-        OutputFileHandler output_file_handler("TestPart", false);
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Vessels3dCylinderSurface.vtp"));
     }
 
@@ -311,6 +373,13 @@ public:
 
     void TestArchiving() throw (Exception)
     {
+        std::string output_directory = "TestPart";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
+
         // Test Archiving
         OutputFileHandler handler("archive", false);
         ArchiveLocationInfo::SetArchiveDirectory(handler.FindFile(""));
@@ -339,14 +408,18 @@ public:
             input_arch >> p_part_from_archive;
 
             // Visual check
-            OutputFileHandler output_file_handler("TestPart", false);
             p_part_from_archive->Write(output_file_handler.GetOutputDirectoryFullPath().append("PartFromArchive.vtp"));
         }
     }
 
     void TestLabelling() throw (Exception)
     {
-        OutputFileHandler output_file_handler("TestPart", false);
+        std::string output_directory = "TestPart";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
 
         // Circle 2D
         units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
@@ -412,6 +485,32 @@ public:
         p_hemi_pellet->AddAttributeToPolygons("Pellet Interface",  1.0);
         hemisphere->AppendPart(p_hemi_pellet);
         hemisphere->Write(output_file_handler.GetOutputDirectoryFullPath() + "hemisphere.vtp", GeometryFormat::VTP, true);
+    }
+
+    void TestSendAndReceive() throw (Exception)
+    {
+        EXIT_IF_SEQUENTIAL;
+
+        std::string output_directory = "TestPartParallel";
+        OutputFileHandler output_file_handler(output_directory, false);
+
+        ObjectCommunicator<Part<2> > part_comm;
+        if(PetscTools::GetMyRank() == 0)
+        {
+            boost::shared_ptr<Part<2> > p_domain = Part<2> ::Create();
+            p_domain->AddCircle(1.0*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+            part_comm.SendObject(p_domain, 1, 6789);
+        }
+        else if(PetscTools::GetMyRank() == 1)
+        {
+            MPI_Status status;
+            boost::shared_ptr<Part<2> > p_recv_domain = part_comm.RecvObject(0, 6789, status);
+
+            GeometryWriter writer;
+            writer.AddInput(p_recv_domain->GetVtk());
+            writer.SetFileName(output_file_handler.GetOutputDirectoryFullPath() + "receveid_part.vtp");
+            writer.Write(false);
+        }
     }
 };
 
