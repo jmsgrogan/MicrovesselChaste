@@ -36,27 +36,21 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef _PairUnsignedUnsigned__value_traits_pypp_hpp_hpp__pyplusplus_wrapper
-#define _PairUnsignedUnsigned__value_traits_pypp_hpp_hpp__pyplusplus_wrapper
+#include "boost/python.hpp"
+#include "indexing_suite/container_suite.hpp"
+#include "indexing_suite/map.hpp"
+#include "wrapper_header_collection.hpp"
+#include "map_less__unsigned_int_comma__std_scope_string__greater_.pypp.hpp"
 
-namespace boost { namespace python { namespace indexing {
+namespace bp = boost::python;
 
-template<>
-struct value_traits< std::pair< unsigned int, unsigned int > >{
+void register_map_less__unsigned_int_comma__std_scope_string__greater__class(){
 
-    static bool const equality_comparable = false;
-    
-
-    static bool const less_than_comparable = false;
-    
-
-    template<typename PythonClass, typename Policy>
-    static void visit_container_class(PythonClass &, Policy const &){
-        
+    { //::std::map< unsigned int, std::string >
+        typedef bp::class_< std::map< unsigned int, std::string > > map_less__unsigned_int_comma__std_scope_string__greater__exposer_t;
+        map_less__unsigned_int_comma__std_scope_string__greater__exposer_t map_less__unsigned_int_comma__std_scope_string__greater__exposer = map_less__unsigned_int_comma__std_scope_string__greater__exposer_t( "map_less__unsigned_int_comma__std_scope_string__greater_" );
+        bp::scope map_less__unsigned_int_comma__std_scope_string__greater__scope( map_less__unsigned_int_comma__std_scope_string__greater__exposer );
+        map_less__unsigned_int_comma__std_scope_string__greater__exposer.def( bp::indexing::map_suite< std::map< unsigned int, std::string > >() );
     }
 
-};
-
-}/*indexing*/ } /*python*/ } /*boost*/
-
-#endif//_PairUnsignedUnsigned__value_traits_pypp_hpp_hpp__pyplusplus_wrapper
+}

@@ -26,7 +26,8 @@ class TestPart(unittest.TestCase):
         part.AddCircle(0.33 * length_scale, centre, 24)
         
         # Get the VTK Representation
-        part.Write(file_handler.GetOutputDirectoryFullPath() + "original_part.vtp", microvessel_chaste.geometry.GeometryFormat.VTP)
+        part.Write(file_handler.GetOutputDirectoryFullPath() + "original_part.vtp", 
+                   microvessel_chaste.geometry.GeometryFormat.VTP, True)
         
 if __name__ == '__main__':
     unittest.main()

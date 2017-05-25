@@ -38,19 +38,19 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "boost/python.hpp"
 #include "indexing_suite/container_suite.hpp"
-#include "indexing_suite/vector.hpp"
+#include "indexing_suite/map.hpp"
 #include "wrapper_header_collection.hpp"
-#include "__type.pypp.hpp"
+#include "map_less__unsigned_int_comma__std_scope_string__greater_.pypp.hpp"
 
 namespace bp = boost::python;
 
-void register___type_class(){
+void register_map_less__unsigned_int_comma__std_scope_string__greater__class(){
 
-    { //::std::vector< Node<2> * >
-        typedef bp::class_< std::vector< Node<2> * > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< Node<2> * > >::with_policies(bp::return_internal_reference< >()) );
+    { //::std::map< unsigned int, std::string >
+        typedef bp::class_< std::map< unsigned int, std::string > > map_less__unsigned_int_comma__std_scope_string__greater__exposer_t;
+        map_less__unsigned_int_comma__std_scope_string__greater__exposer_t map_less__unsigned_int_comma__std_scope_string__greater__exposer = map_less__unsigned_int_comma__std_scope_string__greater__exposer_t( "map_less__unsigned_int_comma__std_scope_string__greater_" );
+        bp::scope map_less__unsigned_int_comma__std_scope_string__greater__scope( map_less__unsigned_int_comma__std_scope_string__greater__exposer );
+        map_less__unsigned_int_comma__std_scope_string__greater__exposer.def( bp::indexing::map_suite< std::map< unsigned int, std::string > >() );
     }
 
 }

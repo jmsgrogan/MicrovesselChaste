@@ -36,22 +36,27 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "boost/python.hpp"
-#include "indexing_suite/container_suite.hpp"
-#include "indexing_suite/vector.hpp"
-#include "wrapper_header_collection.hpp"
-#include "_pair_less__DimensionalChastePoint_less__2__greater__comma__unsigned_int__greater___value_traits.pypp.hpp"
-#include "__type.pypp.hpp"
+#ifndef _pair_less__DimensionalChastePoint_less__2__greater__comma__unsigned_int__greater___value_traits_pypp_hpp_hpp__pyplusplus_wrapper
+#define _pair_less__DimensionalChastePoint_less__2__greater__comma__unsigned_int__greater___value_traits_pypp_hpp_hpp__pyplusplus_wrapper
 
-namespace bp = boost::python;
+namespace boost { namespace python { namespace indexing {
 
-void register___type_class(){
+template<>
+struct value_traits< std::pair< DimensionalChastePoint< 2 >, unsigned int > >{
 
-    { //::std::vector< std::pair<DimensionalChastePoint<2>, unsigned int> >
-        typedef bp::class_< std::vector< std::pair<DimensionalChastePoint<2>, unsigned int> > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< std::pair<DimensionalChastePoint<2>, unsigned int> > >() );
+    static bool const equality_comparable = false;
+    
+
+    static bool const less_than_comparable = false;
+    
+
+    template<typename PythonClass, typename Policy>
+    static void visit_container_class(PythonClass &, Policy const &){
+        
     }
 
-}
+};
+
+}/*indexing*/ } /*python*/ } /*boost*/
+
+#endif//_pair_less__DimensionalChastePoint_less__2__greater__comma__unsigned_int__greater___value_traits_pypp_hpp_hpp__pyplusplus_wrapper

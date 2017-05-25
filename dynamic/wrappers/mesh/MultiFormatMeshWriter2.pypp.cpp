@@ -83,12 +83,12 @@ void register_MultiFormatMeshWriter2_class(){
         { //::MultiFormatMeshWriter< 2 >::SetMesh
         
             typedef MultiFormatMeshWriter< 2 > exported_class_t;
-            typedef void ( exported_class_t::*SetMesh_function_type)( ::boost::shared_ptr< DiscreteContinuumMesh< 2, 2 > > ) ;
+            typedef void ( exported_class_t::*SetMesh_function_type)( ::boost::shared_ptr< DiscreteContinuumMesh< 2, 2 > >,bool ) ;
             
             MultiFormatMeshWriter2_exposer.def( 
                 "SetMesh"
                 , SetMesh_function_type( &::MultiFormatMeshWriter< 2 >::SetMesh )
-                , ( bp::arg("pMesh") ) );
+                , ( bp::arg("pMesh"), bp::arg("addBoundaryLabels")=(bool)(false) ) );
         
         }
         { //::MultiFormatMeshWriter< 2 >::SetOutputFormat

@@ -359,6 +359,48 @@ void VesselSegment<DIM>::SetMaturity(double maturity)
 }
 
 template<unsigned DIM>
+void VesselSegment<DIM>::SetGlobalIndex(unsigned index)
+{
+    mGlobalIndex =index;
+}
+
+template<unsigned DIM>
+void VesselSegment<DIM>::SetLocalIndex(unsigned index)
+{
+    mLocalIndex = index;
+}
+
+template<unsigned DIM>
+void VesselSegment<DIM>::SetOwnerRank(unsigned rank)
+{
+    mOwnerRank = rank;
+}
+
+template<unsigned DIM>
+void VesselSegment<DIM>::SetIsHalo(bool isHalo)
+{
+    mIsHalo = isHalo;
+}
+
+template<unsigned DIM>
+void VesselSegment<DIM>::SetHasHalo(bool hasHalo)
+{
+    mHasHalo = hasHalo;
+}
+
+template<unsigned DIM>
+void VesselSegment<DIM>::SetOtherProcessorRank(unsigned otherRank)
+{
+    mOtherProcessorRank = otherRank;
+}
+
+template<unsigned DIM>
+void VesselSegment<DIM>::SetOtherProcessorLocalIndex(unsigned otherIndex)
+{
+    mOtherProcessorLocalIndex = otherIndex;
+}
+
+template<unsigned DIM>
 void VesselSegment<DIM>::SetFlowProperties(const SegmentFlowProperties<DIM> & rFlowProperties)
 {
     this->mpFlowProperties = boost::shared_ptr<SegmentFlowProperties<DIM> >(new SegmentFlowProperties<DIM> (rFlowProperties));

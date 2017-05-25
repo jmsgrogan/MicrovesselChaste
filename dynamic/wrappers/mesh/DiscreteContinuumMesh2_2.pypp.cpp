@@ -875,12 +875,23 @@ void register_DiscreteContinuumMesh2_2_class(){
         { //::DiscreteContinuumMesh< 2, 2 >::ImportDiscreteContinuumMeshFromTetgen
         
             typedef DiscreteContinuumMesh< 2, 2 > exported_class_t;
-            typedef void ( exported_class_t::*ImportDiscreteContinuumMeshFromTetgen_function_type)( ::tetgen::tetgenio &,unsigned int,int *,unsigned int,int *,int * ) ;
+            typedef void ( exported_class_t::*ImportDiscreteContinuumMeshFromTetgen_function_type)( ::tetgen::tetgenio &,unsigned int,int *,unsigned int,int *,int *,int *,unsigned int,double * ) ;
             
             DiscreteContinuumMesh2_2_exposer.def( 
                 "ImportDiscreteContinuumMeshFromTetgen"
                 , ImportDiscreteContinuumMeshFromTetgen_function_type( &::DiscreteContinuumMesh< 2, 2 >::ImportDiscreteContinuumMeshFromTetgen )
-                , ( bp::arg("mesherOutput"), bp::arg("numberOfElements"), bp::arg("elementList"), bp::arg("numberOfFaces"), bp::arg("faceList"), bp::arg("edgeMarkerList") ) );
+                , ( bp::arg("mesherOutput"), bp::arg("numberOfElements"), bp::arg("elementList"), bp::arg("numberOfFaces"), bp::arg("faceList"), bp::arg("edgeMarkerList"), bp::arg("triFaceMarkerList"), bp::arg("numberoftetrahedronattributes"), bp::arg("tetrahedronattributelist") ) );
+        
+        }
+        { //::DiscreteContinuumMesh< 2, 2 >::ImportDiscreteContinuumMeshFromTri
+        
+            typedef DiscreteContinuumMesh< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*ImportDiscreteContinuumMeshFromTri_function_type)( ::triangulateio &,unsigned int,int *,unsigned int,int *,int *,int *,unsigned int,double * ) ;
+            
+            DiscreteContinuumMesh2_2_exposer.def( 
+                "ImportDiscreteContinuumMeshFromTri"
+                , ImportDiscreteContinuumMeshFromTri_function_type( &::DiscreteContinuumMesh< 2, 2 >::ImportDiscreteContinuumMeshFromTri )
+                , ( bp::arg("mesherOutput"), bp::arg("numberOfElements"), bp::arg("elementList"), bp::arg("numberOfFaces"), bp::arg("faceList"), bp::arg("edgeMarkerList"), bp::arg("triFaceMarkerList"), bp::arg("numberoftetrahedronattributes"), bp::arg("tetrahedronattributelist") ) );
         
         }
         { //::DiscreteContinuumMesh< 2, 2 >::SetUpVtkGrid

@@ -172,23 +172,23 @@ void register_Part3_class(){
         { //::Part< 3 >::AddRegionMarker
         
             typedef Part< 3 > exported_class_t;
-            typedef void ( exported_class_t::*AddRegionMarker_function_type)( ::DimensionalChastePoint< 3 > ) ;
+            typedef void ( exported_class_t::*AddRegionMarker_function_type)( ::DimensionalChastePoint< 3 >,unsigned int ) ;
             
             Part3_exposer.def( 
                 "AddRegionMarker"
                 , AddRegionMarker_function_type( &::Part< 3 >::AddRegionMarker )
-                , ( bp::arg("location") ) );
+                , ( bp::arg("location"), bp::arg("value") ) );
         
         }
         { //::Part< 3 >::AddVesselNetwork
         
             typedef Part< 3 > exported_class_t;
-            typedef void ( exported_class_t::*AddVesselNetwork_function_type)( ::boost::shared_ptr< VesselNetwork< 3 > >,bool ) ;
+            typedef void ( exported_class_t::*AddVesselNetwork_function_type)( ::boost::shared_ptr< VesselNetwork< 3 > >,bool,bool ) ;
             
             Part3_exposer.def( 
                 "AddVesselNetwork"
                 , AddVesselNetwork_function_type( &::Part< 3 >::AddVesselNetwork )
-                , ( bp::arg("pVesselNetwork"), bp::arg("surface")=(bool)(false) ) );
+                , ( bp::arg("pVesselNetwork"), bp::arg("surface")=(bool)(false), bp::arg("removeVesselRegion")=(bool)(true) ) );
         
         }
         { //::Part< 3 >::AppendPart
@@ -255,6 +255,17 @@ void register_Part3_class(){
                 , GetAttributes_function_type( &::Part< 3 >::GetAttributes ) );
         
         }
+        { //::Part< 3 >::GetAttributesKeysForMesh
+        
+            typedef Part< 3 > exported_class_t;
+            typedef ::std::map< unsigned int, std::string > ( exported_class_t::*GetAttributesKeysForMesh_function_type)( bool ) ;
+            
+            Part3_exposer.def( 
+                "GetAttributesKeysForMesh"
+                , GetAttributesKeysForMesh_function_type( &::Part< 3 >::GetAttributesKeysForMesh )
+                , ( bp::arg("update")=(bool)(true) ) );
+        
+        }
         { //::Part< 3 >::GetBoundingBox
         
             typedef Part< 3 > exported_class_t;
@@ -307,6 +318,17 @@ void register_Part3_class(){
                 , GetHoleMarkers_function_type( &::Part< 3 >::GetHoleMarkers ) );
         
         }
+        { //::Part< 3 >::GetKeyForAttributes
+        
+            typedef Part< 3 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetKeyForAttributes_function_type)( ::std::map< std::string, double > ) ;
+            
+            Part3_exposer.def( 
+                "GetKeyForAttributes"
+                , GetKeyForAttributes_function_type( &::Part< 3 >::GetKeyForAttributes )
+                , ( bp::arg("rAttributes") ) );
+        
+        }
         { //::Part< 3 >::GetPolygons
         
             typedef Part< 3 > exported_class_t;
@@ -330,7 +352,7 @@ void register_Part3_class(){
         { //::Part< 3 >::GetRegionMarkers
         
             typedef Part< 3 > exported_class_t;
-            typedef ::std::vector< DimensionalChastePoint<3> > ( exported_class_t::*GetRegionMarkers_function_type)(  ) ;
+            typedef ::std::vector< std::pair<DimensionalChastePoint<3>, unsigned int> > ( exported_class_t::*GetRegionMarkers_function_type)(  ) ;
             
             Part3_exposer.def( 
                 "GetRegionMarkers"
@@ -340,7 +362,7 @@ void register_Part3_class(){
         { //::Part< 3 >::GetSegmentIndices
         
             typedef Part< 3 > exported_class_t;
-            typedef ::std::vector< std::pair<unsigned int, unsigned int> > ( exported_class_t::*GetSegmentIndices_function_type)(  ) ;
+            typedef ::std::vector< std::pair<std::pair<unsigned int, unsigned int>, unsigned int> > ( exported_class_t::*GetSegmentIndices_function_type)(  ) ;
             
             Part3_exposer.def( 
                 "GetSegmentIndices"

@@ -36,22 +36,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "boost/python.hpp"
-#include "indexing_suite/container_suite.hpp"
-#include "indexing_suite/vector.hpp"
-#include "wrapper_header_collection.hpp"
-#include "_pair_less__DimensionalChastePoint_less__2__greater__comma__unsigned_int__greater___value_traits.pypp.hpp"
-#include "__type.pypp.hpp"
+#ifndef vector_less__std_scope_pair_less_std_scope_pair_less_unsigned_int_comma__unsigned_int_greater__comma__unsigned_int_greater___greater__hpp__pyplusplus_wrapper
+#define vector_less__std_scope_pair_less_std_scope_pair_less_unsigned_int_comma__unsigned_int_greater__comma__unsigned_int_greater___greater__hpp__pyplusplus_wrapper
 
-namespace bp = boost::python;
+void register_vector_less__std_scope_pair_less_std_scope_pair_less_unsigned_int_comma__unsigned_int_greater__comma__unsigned_int_greater___greater__class();
 
-void register___type_class(){
-
-    { //::std::vector< std::pair<DimensionalChastePoint<2>, unsigned int> >
-        typedef bp::class_< std::vector< std::pair<DimensionalChastePoint<2>, unsigned int> > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< std::pair<DimensionalChastePoint<2>, unsigned int> > >() );
-    }
-
-}
+#endif//vector_less__std_scope_pair_less_std_scope_pair_less_unsigned_int_comma__unsigned_int_greater__comma__unsigned_int_greater___greater__hpp__pyplusplus_wrapper

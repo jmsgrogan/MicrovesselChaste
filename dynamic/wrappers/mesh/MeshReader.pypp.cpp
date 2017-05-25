@@ -75,13 +75,13 @@ void register_MeshReader_class(){
                 , Read_function_type( &::MeshReader::Read ) );
         
         }
-        { //::MeshReader::SetFilename
+        { //::MeshReader::SetFileName
         
-            typedef void ( ::MeshReader::*SetFilename_function_type)( ::std::string const & ) ;
+            typedef void ( ::MeshReader::*SetFileName_function_type)( ::std::string const & ) ;
             
             MeshReader_exposer.def( 
-                "SetFilename"
-                , SetFilename_function_type( &::MeshReader::SetFilename )
+                "SetFileName"
+                , SetFileName_function_type( &::MeshReader::SetFileName )
                 , ( bp::arg("rFilename") ) );
         
         }

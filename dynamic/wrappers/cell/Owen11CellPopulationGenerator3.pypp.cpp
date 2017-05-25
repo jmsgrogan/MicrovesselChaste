@@ -58,6 +58,28 @@ void register_Owen11CellPopulationGenerator3_class(){
                 , Create_function_type( &::Owen11CellPopulationGenerator< 3 >::Create ) );
         
         }
+        { //::Owen11CellPopulationGenerator< 3 >::SetAddTumour
+        
+            typedef Owen11CellPopulationGenerator< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetAddTumour_function_type)( bool ) ;
+            
+            Owen11CellPopulationGenerator3_exposer.def( 
+                "SetAddTumour"
+                , SetAddTumour_function_type( &::Owen11CellPopulationGenerator< 3 >::SetAddTumour )
+                , ( bp::arg("addTumour") ) );
+        
+        }
+        { //::Owen11CellPopulationGenerator< 3 >::SetCellFraction
+        
+            typedef Owen11CellPopulationGenerator< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetCellFraction_function_type)( double ) ;
+            
+            Owen11CellPopulationGenerator3_exposer.def( 
+                "SetCellFraction"
+                , SetCellFraction_function_type( &::Owen11CellPopulationGenerator< 3 >::SetCellFraction )
+                , ( bp::arg("cellFraction") ) );
+        
+        }
         { //::Owen11CellPopulationGenerator< 3 >::SetGridCalculator
         
             typedef Owen11CellPopulationGenerator< 3 > exported_class_t;

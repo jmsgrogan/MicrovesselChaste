@@ -104,6 +104,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "VectorDouble.pypp.hpp"
 
+#include "VectorNode2Ptr.pypp.hpp"
+
+#include "VectorNode3Ptr.pypp.hpp"
+
 #include "VectorUnsigned.pypp.hpp"
 
 #include "VectorVectorSharedPtrCell.pypp.hpp"
@@ -118,9 +122,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "VectorVectorUnsigned.pypp.hpp"
 
-#include "__type.pypp.hpp"
-
-#include "__type.pypp.hpp"
+#include "map_less__unsigned_int_comma__std_scope_string__greater_.pypp.hpp"
 
 namespace bp = boost::python;
 
@@ -141,15 +143,17 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_mesh){
 
     register_VectorDouble_class();
 
-    register___type_class();
+    register_VectorNode3Ptr_class();
 
-    register___type_class();
+    register_VectorNode2Ptr_class();
 
     register_VectorDimensionalChastePoint3_class();
 
     register_VectorDimensionalChastePoint2_class();
 
     register_SetUnsigned_class();
+
+    register_map_less__unsigned_int_comma__std_scope_string__greater__class();
 
     register_MapStringDouble_class();
 

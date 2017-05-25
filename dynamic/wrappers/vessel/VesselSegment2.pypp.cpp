@@ -210,6 +210,16 @@ void register_VesselSegment2_class(){
                 , GetFlowProperties_function_type( &::VesselSegment< 2 >::GetFlowProperties ) );
         
         }
+        { //::VesselSegment< 2 >::GetGlobalIndex
+        
+            typedef VesselSegment< 2 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetGlobalIndex_function_type)(  ) ;
+            
+            VesselSegment2_exposer.def( 
+                "GetGlobalIndex"
+                , GetGlobalIndex_function_type( &::VesselSegment< 2 >::GetGlobalIndex ) );
+        
+        }
         { //::VesselSegment< 2 >::GetLength
         
             typedef VesselSegment< 2 > exported_class_t;
@@ -218,6 +228,16 @@ void register_VesselSegment2_class(){
             VesselSegment2_exposer.def( 
                 "GetLength"
                 , GetLength_function_type( &::VesselSegment< 2 >::GetLength ) );
+        
+        }
+        { //::VesselSegment< 2 >::GetLocalIndex
+        
+            typedef VesselSegment< 2 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetLocalIndex_function_type)(  ) ;
+            
+            VesselSegment2_exposer.def( 
+                "GetLocalIndex"
+                , GetLocalIndex_function_type( &::VesselSegment< 2 >::GetLocalIndex ) );
         
         }
         { //::VesselSegment< 2 >::GetMaturity
@@ -272,6 +292,26 @@ void register_VesselSegment2_class(){
                 , ( bp::arg("pInputNode") ) );
         
         }
+        { //::VesselSegment< 2 >::GetOtherProcessorLocalIndex
+        
+            typedef VesselSegment< 2 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetOtherProcessorLocalIndex_function_type)(  ) ;
+            
+            VesselSegment2_exposer.def( 
+                "GetOtherProcessorLocalIndex"
+                , GetOtherProcessorLocalIndex_function_type( &::VesselSegment< 2 >::GetOtherProcessorLocalIndex ) );
+        
+        }
+        { //::VesselSegment< 2 >::GetOtherProcessorRank
+        
+            typedef VesselSegment< 2 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetOtherProcessorRank_function_type)(  ) ;
+            
+            VesselSegment2_exposer.def( 
+                "GetOtherProcessorRank"
+                , GetOtherProcessorRank_function_type( &::VesselSegment< 2 >::GetOtherProcessorRank ) );
+        
+        }
         { //::VesselSegment< 2 >::GetOutputData
         
             typedef VesselSegment< 2 > exported_class_t;
@@ -282,6 +322,16 @@ void register_VesselSegment2_class(){
                 "GetOutputData"
                 , GetOutputData_function_type(&::VesselSegment< 2 >::GetOutputData)
                 , default_GetOutputData_function_type(&VesselSegment_less__2__greater__wrapper::default_GetOutputData) );
+        
+        }
+        { //::VesselSegment< 2 >::GetOwnerRank
+        
+            typedef VesselSegment< 2 > exported_class_t;
+            typedef unsigned int ( exported_class_t::*GetOwnerRank_function_type)(  ) ;
+            
+            VesselSegment2_exposer.def( 
+                "GetOwnerRank"
+                , GetOwnerRank_function_type( &::VesselSegment< 2 >::GetOwnerRank ) );
         
         }
         { //::VesselSegment< 2 >::GetPointProjection
@@ -315,6 +365,16 @@ void register_VesselSegment2_class(){
                 , GetVessel_function_type( &::VesselSegment< 2 >::GetVessel ) );
         
         }
+        { //::VesselSegment< 2 >::HasHalo
+        
+            typedef VesselSegment< 2 > exported_class_t;
+            typedef bool ( exported_class_t::*HasHalo_function_type)(  ) ;
+            
+            VesselSegment2_exposer.def( 
+                "HasHalo"
+                , HasHalo_function_type( &::VesselSegment< 2 >::HasHalo ) );
+        
+        }
         { //::VesselSegment< 2 >::HasNode
         
             typedef VesselSegment< 2 > exported_class_t;
@@ -335,6 +395,16 @@ void register_VesselSegment2_class(){
                 "IsConnectedTo"
                 , IsConnectedTo_function_type( &::VesselSegment< 2 >::IsConnectedTo )
                 , ( bp::arg("pOtherSegment") ) );
+        
+        }
+        { //::VesselSegment< 2 >::IsHalo
+        
+            typedef VesselSegment< 2 > exported_class_t;
+            typedef bool ( exported_class_t::*IsHalo_function_type)(  ) ;
+            
+            VesselSegment2_exposer.def( 
+                "IsHalo"
+                , IsHalo_function_type( &::VesselSegment< 2 >::IsHalo ) );
         
         }
         { //::VesselSegment< 2 >::Remove
@@ -369,6 +439,50 @@ void register_VesselSegment2_class(){
                 , ( bp::arg("rFlowProperties") ) );
         
         }
+        { //::VesselSegment< 2 >::SetGlobalIndex
+        
+            typedef VesselSegment< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetGlobalIndex_function_type)( unsigned int ) ;
+            
+            VesselSegment2_exposer.def( 
+                "SetGlobalIndex"
+                , SetGlobalIndex_function_type( &::VesselSegment< 2 >::SetGlobalIndex )
+                , ( bp::arg("index") ) );
+        
+        }
+        { //::VesselSegment< 2 >::SetHasHalo
+        
+            typedef VesselSegment< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetHasHalo_function_type)( bool ) ;
+            
+            VesselSegment2_exposer.def( 
+                "SetHasHalo"
+                , SetHasHalo_function_type( &::VesselSegment< 2 >::SetHasHalo )
+                , ( bp::arg("hasHalo") ) );
+        
+        }
+        { //::VesselSegment< 2 >::SetIsHalo
+        
+            typedef VesselSegment< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetIsHalo_function_type)( bool ) ;
+            
+            VesselSegment2_exposer.def( 
+                "SetIsHalo"
+                , SetIsHalo_function_type( &::VesselSegment< 2 >::SetIsHalo )
+                , ( bp::arg("isHalo") ) );
+        
+        }
+        { //::VesselSegment< 2 >::SetLocalIndex
+        
+            typedef VesselSegment< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetLocalIndex_function_type)( unsigned int ) ;
+            
+            VesselSegment2_exposer.def( 
+                "SetLocalIndex"
+                , SetLocalIndex_function_type( &::VesselSegment< 2 >::SetLocalIndex )
+                , ( bp::arg("index") ) );
+        
+        }
         { //::VesselSegment< 2 >::SetMaturity
         
             typedef VesselSegment< 2 > exported_class_t;
@@ -378,6 +492,39 @@ void register_VesselSegment2_class(){
                 "SetMaturity"
                 , SetMaturity_function_type( &::VesselSegment< 2 >::SetMaturity )
                 , ( bp::arg("maturity") ) );
+        
+        }
+        { //::VesselSegment< 2 >::SetOtherProcessorLocalIndex
+        
+            typedef VesselSegment< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetOtherProcessorLocalIndex_function_type)( unsigned int ) ;
+            
+            VesselSegment2_exposer.def( 
+                "SetOtherProcessorLocalIndex"
+                , SetOtherProcessorLocalIndex_function_type( &::VesselSegment< 2 >::SetOtherProcessorLocalIndex )
+                , ( bp::arg("otherIndex") ) );
+        
+        }
+        { //::VesselSegment< 2 >::SetOtherProcessorRank
+        
+            typedef VesselSegment< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetOtherProcessorRank_function_type)( unsigned int ) ;
+            
+            VesselSegment2_exposer.def( 
+                "SetOtherProcessorRank"
+                , SetOtherProcessorRank_function_type( &::VesselSegment< 2 >::SetOtherProcessorRank )
+                , ( bp::arg("otherRank") ) );
+        
+        }
+        { //::VesselSegment< 2 >::SetOwnerRank
+        
+            typedef VesselSegment< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetOwnerRank_function_type)( unsigned int ) ;
+            
+            VesselSegment2_exposer.def( 
+                "SetOwnerRank"
+                , SetOwnerRank_function_type( &::VesselSegment< 2 >::SetOwnerRank )
+                , ( bp::arg("rank") ) );
         
         }
         { //::AbstractVesselNetworkComponent< 2 >::GetId

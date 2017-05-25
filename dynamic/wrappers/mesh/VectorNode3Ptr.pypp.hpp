@@ -36,9 +36,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef __type_hpp__pyplusplus_wrapper
-#define __type_hpp__pyplusplus_wrapper
+#ifndef VectorNode3Ptr_hpp__pyplusplus_wrapper
+#define VectorNode3Ptr_hpp__pyplusplus_wrapper
 
-void register___type_class();
+void register_VectorNode3Ptr_class();
 
-#endif//__type_hpp__pyplusplus_wrapper
+#endif//VectorNode3Ptr_hpp__pyplusplus_wrapper

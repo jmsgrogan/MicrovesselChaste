@@ -118,6 +118,41 @@ private:
      */
     unsigned mPtrComparisonId;
 
+    /**
+     * The global index
+     */
+    unsigned mGlobalIndex;
+
+    /**
+     * The local index
+     */
+    unsigned mLocalIndex;
+
+    /**
+     * Owner rank
+     */
+    unsigned mOwnerRank;
+
+    /**
+     * Is this a Halo node
+     */
+    bool mIsHalo;
+
+    /**
+     * Is there are Halo on another processor corresponding to this node
+     */
+    bool mHasHalo;
+
+    /**
+     * Who owns the real node
+     */
+    unsigned mOtherProcessorRank;
+
+    /**
+     * What is the node index on the other processor
+     */
+    unsigned mOtherProcessorLocalIndex;
+
 public:
 
     /**
@@ -269,6 +304,48 @@ public:
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > GetSegments() const;
 
     /**
+     * Return the global index
+     * @return the global index
+     */
+    unsigned GetGlobalIndex();
+
+    /**
+     * Return the local index
+     * @return the local index
+     */
+    unsigned GetLocalIndex();
+
+    /**
+     * Return the owner rank
+     * @return the owner rank
+     */
+    unsigned GetOwnerRank();
+
+    /**
+     * Is this a halo node
+     * @return Is this a halo node
+     */
+    bool IsHalo();
+
+    /**
+     * Is there a halo on another processor
+     * @return Is there a halo on another processor
+     */
+    bool HasHalo();
+
+    /**
+     * The rank of the processor storing the other node
+     * @return the rank of the processor storing the other node
+     */
+    unsigned GetOtherProcessorRank();
+
+    /**
+     * The index of the other node on the other processor
+     * @return the index of the other node on the other processor
+     */
+    unsigned GetOtherProcessorLocalIndex();
+
+    /**
      * Return true if the input segment is attached to the node
      *
      * @param pSegment a pointer to the segment to query
@@ -342,6 +419,48 @@ public:
      * @param lenthScale the reference length scale for node locations
      */
     void SetReferenceLengthScale(units::quantity<unit::length> lenthScale);
+
+    /**
+     * Set the global index
+     * @param index the global index
+     */
+    void SetGlobalIndex(unsigned index);
+
+    /**
+     * Set the local index
+     * @param index the local index
+     */
+    void SetLocalIndex(unsigned index);
+
+    /**
+     * Set the owner rank
+     * @param rank the owner rank
+     */
+    void SetOwnerRank(unsigned rank);
+
+    /**
+     * Set is this a halo node
+     * @param isHalo Is this a halo node
+     */
+    void SetIsHalo(bool isHalo);
+
+    /**
+     * Set is there a halo on another processor
+     * @param hasHalo Is there a halo on another processor
+     */
+    void SetHasHalo(bool hasHalo);
+
+    /**
+     * Set the rank of the processor storing the other node
+     * @param otherRank the rank of the processor storing the other node
+     */
+    void SetOtherProcessorRank(unsigned otherRank);
+
+    /**
+     * Set the index of the other node on the other processor
+     * @param otherIndex the index of the other node on the other processor
+     */
+    void SetOtherProcessorLocalIndex(unsigned otherIndex);
 
 private:
 

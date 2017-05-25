@@ -473,6 +473,16 @@ void register_AbstractDiscreteContinuumGrid2_2_class(){
                 , ( bp::arg("rName") ) );
         
         }
+        { //::AbstractDiscreteContinuumGrid< 2, 2 >::GetAttributesKeys
+        
+            typedef AbstractDiscreteContinuumGrid< 2, 2 > exported_class_t;
+            typedef ::std::map< unsigned int, std::string > ( exported_class_t::*GetAttributesKeys_function_type)(  ) ;
+            
+            AbstractDiscreteContinuumGrid2_2_exposer.def( 
+                "GetAttributesKeys"
+                , GetAttributesKeys_function_type( &::AbstractDiscreteContinuumGrid< 2, 2 >::GetAttributesKeys ) );
+        
+        }
         { //::AbstractDiscreteContinuumGrid< 2, 2 >::GetBoundingGeometry
         
             typedef AbstractDiscreteContinuumGrid< 2, 2 > exported_class_t;
@@ -678,6 +688,17 @@ void register_AbstractDiscreteContinuumGrid2_2_class(){
                 "GetVtkGrid"
                 , GetVtkGrid_function_type(&::AbstractDiscreteContinuumGrid< 2, 2 >::GetVtkGrid)
                 , default_GetVtkGrid_function_type(&AbstractDiscreteContinuumGrid_less__2_comma__2__greater__wrapper::default_GetVtkGrid) );
+        
+        }
+        { //::AbstractDiscreteContinuumGrid< 2, 2 >::SetAttributesKeys
+        
+            typedef AbstractDiscreteContinuumGrid< 2, 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetAttributesKeys_function_type)( ::std::map< unsigned int, std::string > ) ;
+            
+            AbstractDiscreteContinuumGrid2_2_exposer.def( 
+                "SetAttributesKeys"
+                , SetAttributesKeys_function_type( &::AbstractDiscreteContinuumGrid< 2, 2 >::SetAttributesKeys )
+                , ( bp::arg("attributeKeys") ) );
         
         }
         { //::AbstractDiscreteContinuumGrid< 2, 2 >::SetUpVtkCellLocator

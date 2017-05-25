@@ -518,10 +518,10 @@ void register_AbstractFiniteElementSolverBase3_class(){
         bp::register_ptr_to_python< boost::shared_ptr< AbstractFiniteElementSolverBase<3> > >();
         bp::implicitly_convertible< boost::shared_ptr< AbstractFiniteElementSolverBase< 3 > >, boost::shared_ptr< AbstractUnstructuredGridDiscreteContinuumSolver< 3 > > >();
         bp::implicitly_convertible< boost::shared_ptr< AbstractFiniteElementSolverBase< 3 > >, boost::shared_ptr< AbstractDiscreteContinuumSolver< 3 > > >();
-        bp::implicitly_convertible< boost::shared_ptr< SimpleParabolicFiniteElementSolver< 3 > >, boost::shared_ptr< AbstractFiniteElementSolverBase< 3 > > >();
-        bp::implicitly_convertible< boost::shared_ptr< SimpleNonLinearEllipticFiniteElementSolver< 3 > >, boost::shared_ptr< AbstractFiniteElementSolverBase< 3 > > >();
-        bp::implicitly_convertible< boost::shared_ptr< SimpleLinearEllipticFiniteElementSolver< 3 > >, boost::shared_ptr< AbstractFiniteElementSolverBase< 3 > > >();
         bp::implicitly_convertible< boost::shared_ptr< CoupledLumpedSystemFiniteElementSolver< 3 > >, boost::shared_ptr< AbstractFiniteElementSolverBase< 3 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< SimpleLinearEllipticFiniteElementSolver< 3 > >, boost::shared_ptr< AbstractFiniteElementSolverBase< 3 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< SimpleNonLinearEllipticFiniteElementSolver< 3 > >, boost::shared_ptr< AbstractFiniteElementSolverBase< 3 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< SimpleParabolicFiniteElementSolver< 3 > >, boost::shared_ptr< AbstractFiniteElementSolverBase< 3 > > >();
     }
 
 }

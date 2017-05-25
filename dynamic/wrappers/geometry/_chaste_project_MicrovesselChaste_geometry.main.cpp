@@ -84,7 +84,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "VectorLengthQuantity.pypp.hpp"
 
-#include "VectorPairUnsignedUnsigned.pypp.hpp"
+#include "VectorMapStringDouble.pypp.hpp"
+
+#include "VectorPairDimensionalChastePoint3Unsigned.pypp.hpp"
 
 #include "VectorSharedPtrDimensionalChastePoint2.pypp.hpp"
 
@@ -106,6 +108,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "__type.pypp.hpp"
 
+#include "map_less__unsigned_int_comma__std_scope_string__greater_.pypp.hpp"
+
+#include "vector_less__std_scope_pair_less_std_scope_pair_less_unsigned_int_comma__unsigned_int_greater__comma__unsigned_int_greater___greater_.pypp.hpp"
+
 #include "vector_less__std_scope_vector_less__boost_scope_shared_ptr_less_Polygon_less_2_greater___greater___greater___greater_.pypp.hpp"
 
 #include "vector_less__std_scope_vector_less__boost_scope_shared_ptr_less_Polygon_less_3_greater___greater___greater___greater_.pypp.hpp"
@@ -119,9 +125,13 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_geometry){
 
     register_vector_less__std_scope_vector_less__boost_scope_shared_ptr_less_Polygon_less_2_greater___greater___greater___greater__class();
 
-    register_VectorPairUnsignedUnsigned_class();
+    register_vector_less__std_scope_pair_less_std_scope_pair_less_unsigned_int_comma__unsigned_int_greater__comma__unsigned_int_greater___greater__class();
+
+    register_VectorPairDimensionalChastePoint3Unsigned_class();
 
     register___type_class();
+
+    register_VectorMapStringDouble_class();
 
     register_VectorLengthQuantity_class();
 
@@ -142,6 +152,8 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_geometry){
     register_VectorDimensionalChastePoint3_class();
 
     register_VectorDimensionalChastePoint2_class();
+
+    register_map_less__unsigned_int_comma__std_scope_string__greater__class();
 
     register_MapStringDouble_class();
 

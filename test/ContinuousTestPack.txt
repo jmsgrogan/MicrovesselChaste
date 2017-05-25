@@ -19,6 +19,7 @@ population/vessel/calculators/TestDistanceMap.hpp
 population/vessel/generators/TestVesselNetworkGenerator.hpp
 population/vessel/readers/TestVesselNetworkReader.hpp
 population/vessel/writers/TestVesselNetworkWriter.hpp
+population/vessel/parallel/TestVesselNetworkPartitioner.hpp
 population/TestVesselNetworkCellPopulationInteractor.hpp
 geometry/TestPolygon.hpp
 geometry/TestFacet.hpp

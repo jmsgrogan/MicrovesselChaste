@@ -40,18 +40,18 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "indexing_suite/container_suite.hpp"
 #include "indexing_suite/vector.hpp"
 #include "wrapper_header_collection.hpp"
-#include "_pair_less__DimensionalChastePoint_less__2__greater__comma__unsigned_int__greater___value_traits.pypp.hpp"
-#include "__type.pypp.hpp"
+#include "_pair_less__DimensionalChastePoint_less__3__greater__comma__unsigned_int__greater___value_traits.pypp.hpp"
+#include "VectorPairDimensionalChastePoint3Unsigned.pypp.hpp"
 
 namespace bp = boost::python;
 
-void register___type_class(){
+void register_VectorPairDimensionalChastePoint3Unsigned_class(){
 
-    { //::std::vector< std::pair<DimensionalChastePoint<2>, unsigned int> >
-        typedef bp::class_< std::vector< std::pair<DimensionalChastePoint<2>, unsigned int> > > __type_exposer_t;
-        __type_exposer_t __type_exposer = __type_exposer_t( "__type" );
-        bp::scope __type_scope( __type_exposer );
-        __type_exposer.def( bp::indexing::vector_suite< std::vector< std::pair<DimensionalChastePoint<2>, unsigned int> > >() );
+    { //::std::vector< std::pair<DimensionalChastePoint<3>, unsigned int> >
+        typedef bp::class_< std::vector< std::pair<DimensionalChastePoint<3>, unsigned int> > > VectorPairDimensionalChastePoint3Unsigned_exposer_t;
+        VectorPairDimensionalChastePoint3Unsigned_exposer_t VectorPairDimensionalChastePoint3Unsigned_exposer = VectorPairDimensionalChastePoint3Unsigned_exposer_t( "VectorPairDimensionalChastePoint3Unsigned" );
+        bp::scope VectorPairDimensionalChastePoint3Unsigned_scope( VectorPairDimensionalChastePoint3Unsigned_exposer );
+        VectorPairDimensionalChastePoint3Unsigned_exposer.def( bp::indexing::vector_suite< std::vector< std::pair<DimensionalChastePoint<3>, unsigned int> > >() );
     }
 
 }

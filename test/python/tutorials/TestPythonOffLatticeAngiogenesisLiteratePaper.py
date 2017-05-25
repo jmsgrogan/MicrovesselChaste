@@ -89,8 +89,8 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         num_divisions_y = 10
         azimuth_angle = 1.0 * np.pi
         polar_angle = 0.5 * np.pi
-        cornea = hemisphere_generator.GenerateHemisphere(radius/reference_length,
-                                                         thickness/reference_length,
+        cornea = hemisphere_generator.GenerateHemisphere(radius,
+                                                         thickness,
                                                          num_divisions_x,
                                                          num_divisions_y,
                                                          azimuth_angle,
@@ -145,7 +145,7 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         origin = microvessel_chaste.mesh.DimensionalChastePoint3(-150.0,900.0,0.0)
         pellet.AddCuboid(pellet_side_length, pellet_side_length, 5.0*pellet_side_length, origin)      
         pellet.Write(file_handler.GetOutputDirectoryFullPath()+"initial_vegf_pellet.vtp", 
-                     microvessel_chaste.geometry.GeometryFormat.VTP)
+                     microvessel_chaste.geometry.GeometryFormat.VTP, True)
         
         ## Now make a finite element mesh on the cornea.
         
@@ -167,8 +167,6 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         vegf_pde = microvessel_chaste.pde.DiscreteContinuumLinearEllipticPde3_3()
         vegf_pde.SetIsotropicDiffusionConstant(Owen11Parameters.mpVegfDiffusivity.GetValue("User"))
         vegf_pde.SetContinuumLinearInUTerm(-1.0*Owen11Parameters.mpVegfDecayRate.GetValue("User"))
-        vegf_pde.SetMesh(mesh)
-        vegf_pde.SetUseRegularGrid(False)
         vegf_pde.SetReferenceConcentration(1.e-9*mole_per_metre_cubed())
         
         ## Add a boundary condition to fix the VEGF concentration in the vegf subdomain.
@@ -181,10 +179,10 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         
         ## Set up the PDE solvers for the vegf problem. 
         
-        vegf_solver = microvessel_chaste.pde.FiniteElementSolver3()
+        vegf_solver = microvessel_chaste.pde.SimpleLinearEllipticFiniteElementSolver3()
         vegf_solver.SetPde(vegf_pde)
         vegf_solver.SetLabel("vegf")
-        vegf_solver.SetMesh(mesh)
+        vegf_solver.SetGrid(mesh)
         vegf_solver.AddBoundaryCondition(vegf_boundary)        
         
         ## Set up an angiogenesis solver and add sprouting and migration rules.

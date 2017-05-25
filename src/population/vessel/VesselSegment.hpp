@@ -372,6 +372,49 @@ public:
      */
     void SetMaturity(double maturity);
 
+    /**
+     * Set the global index
+     * @param index the global index
+     */
+    void SetGlobalIndex(unsigned index);
+
+    /**
+     * Set the local index
+     * @param index the local index
+     */
+    void SetLocalIndex(unsigned index);
+
+    /**
+     * Set the owner rank
+     * @param rank the owner rank
+     */
+    void SetOwnerRank(unsigned rank);
+
+    /**
+     * Set is this a halo segment
+     * @param isHalo Is this a halo segment
+     */
+    void SetIsHalo(bool isHalo);
+
+    /**
+     * Set is there a halo on another processor
+     * @param hasHalo Is there a halo on another processor
+     */
+    void SetHasHalo(bool hasHalo);
+
+    /**
+     * Set the rank of the processor storing the other segment
+     * @param otherRank the rank of the processor storing the other segment
+     */
+    void SetOtherProcessorRank(unsigned otherRank);
+
+    /**
+     * Set the index of the other segment on the other processor
+     * @param otherIndex the index of the other segment on the other processor
+     */
+    void SetOtherProcessorLocalIndex(unsigned otherIndex);
+
+
 private:
 
     /**
