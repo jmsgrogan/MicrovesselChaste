@@ -109,6 +109,36 @@ private:
     boost::shared_ptr<VesselFlowProperties<DIM> > mpFlowProperties;
 
     /**
+     * The global index
+     */
+    unsigned mGlobalIndex;
+
+    /**
+     * The local index
+     */
+    unsigned mLocalIndex;
+
+    /**
+     * Owner rank
+     */
+    unsigned mOwnerRank;
+
+    /**
+     * Is this a Halo vessel
+     */
+    bool mIsHalo;
+
+    /**
+     * Is there are Halo on another processor corresponding to this vessel
+     */
+    bool mHasHalo;
+
+    /**
+     * Who owns the real vessel
+     */
+    unsigned mOtherProcessorRank;
+
+    /**
      * For serialization only
      */
     Vessel();
@@ -323,6 +353,48 @@ public:
     boost::shared_ptr<VesselNode<DIM> > GetStartNode();
 
     /**
+     * Return the global index
+     * @return the global index
+     */
+    unsigned GetGlobalIndex();
+
+    /**
+     * Return the local index
+     * @return the local index
+     */
+    unsigned GetLocalIndex();
+
+    /**
+     * Return the owner rank
+     * @return the owner rank
+     */
+    unsigned GetOwnerRank();
+
+    /**
+     * Is this a halo vessel
+     * @return Is this a halo vessel
+     */
+    bool IsHalo();
+
+    /**
+     * Is there a halo on another processor
+     * @return Is there a halo on another processor
+     */
+    bool HasHalo();
+
+    /**
+     * The rank of the processor storing the other vessel
+     * @return the rank of the processor storing the other vessel
+     */
+    unsigned GetOtherProcessorRank();
+
+    /**
+     * The index of the other vessel on the other processor
+     * @return the index of the other vessel on the other processor
+     */
+    unsigned GetOtherProcessorLocalIndex();
+
+    /**
      * @param pOtherVessel the other vessel to check for connect
      * @return whether the vessel is connected to another vessel.
      */
@@ -351,6 +423,48 @@ public:
      * @param rFlowProperties the flow properties to be set
      */
     void SetFlowProperties(const VesselFlowProperties<DIM>& rFlowProperties);
+
+    /**
+     * Set the global index
+     * @param index the global index
+     */
+    void SetGlobalIndex(unsigned index);
+
+    /**
+     * Set the local index
+     * @param index the local index
+     */
+    void SetLocalIndex(unsigned index);
+
+    /**
+     * Set the owner rank
+     * @param rank the owner rank
+     */
+    void SetOwnerRank(unsigned rank);
+
+    /**
+     * Set is this a halo vessel
+     * @param isHalo Is this a halo vessel
+     */
+    void SetIsHalo(bool isHalo);
+
+    /**
+     * Set is there a halo on another processor
+     * @param hasHalo Is there a halo on another processor
+     */
+    void SetHasHalo(bool hasHalo);
+
+    /**
+     * Set the rank of the processor storing the other vessel
+     * @param otherRank the rank of the processor storing the other vessel
+     */
+    void SetOtherProcessorRank(unsigned otherRank);
+
+    /**
+     * Set the index of the other vessel on the other processor
+     * @param otherIndex the index of the other vessel on the other processor
+     */
+    void SetOtherProcessorLocalIndex(unsigned otherIndex);
 
     /**
      * Update the data in mNodes

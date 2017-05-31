@@ -37,12 +37,15 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define TESTVESSELNETWORKPARTITIONER_HPP_
 
 #include <cxxtest/TestSuite.h>
+#include <boost/lexical_cast.hpp>
 #include "SmartPointers.hpp"
 #include "VesselNetwork.hpp"
 #include "VesselSegment.hpp"
 #include "Vessel.hpp"
 #include "VesselNetworkGenerator.hpp"
 #include "VesselNetworkPartitioner.hpp"
+#include "PetscTools.hpp"
+#include "OutputFileHandler.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
@@ -50,21 +53,92 @@ class TestVesselNetworkPartitioner : public CxxTest::TestSuite
 {
 public:
 
-    void TestConstructor() throw (Exception)
+    void TestSingleVessel() throw (Exception)
     {
-        boost::shared_ptr<VesselNode<2> > pnode_1 = VesselNode<2>::Create();
-        boost::shared_ptr<VesselNode<2> > pnode_2 = VesselNode<2>::Create();
-        boost::shared_ptr<VesselNode<2> > pnode_3 = VesselNode<2>::Create();
+        std::string output_directory = "TestVesselNetworkPartitioner";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory);
+        std::vector<boost::shared_ptr<VesselNode<2> > > nodes;
+        nodes.push_back(VesselNode<2>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
+        nodes.push_back(VesselNode<2>::Create(50.0, 0.0, 0.0, 1.e-6*unit::metres));
+        nodes.push_back(VesselNode<2>::Create(150.0, 0.0, 0.0, 1.e-6*unit::metres));
+        nodes.push_back(VesselNode<2>::Create(220.0, 0.0, 0.0, 1.e-6*unit::metres));
 
-        // Make some vessels
-        boost::shared_ptr<Vessel<2> > pVessel1 = Vessel<2>::Create(pnode_1, pnode_2);
-        boost::shared_ptr<Vessel<2> > pVessel2 = Vessel<2>::Create(pnode_2, pnode_3);
-
+        boost::shared_ptr<Vessel<2> > pVessel1 = Vessel<2>::Create(nodes);
         boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        p_network->AddVessel(pVessel1);
 
         VesselNetworkPartitioner<2> partitioner;
         partitioner.SetVesselNetwork(p_network);
         partitioner.Update();
+
+        unsigned rank = PetscTools::GetMyRank();
+        p_network->Write(output_file_handler.GetOutputDirectoryFullPath()+"network_" +
+                boost::lexical_cast<std::string>(rank)+".vtp", false);
+    }
+
+    void TestHexagonalNetwork() throw (Exception)
+    {
+        std::string output_directory = "TestVesselNetworkPartitioner";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
+
+        VesselNetworkGenerator<2> generator;
+        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateHexagonalNetwork(500.0*1.e-6*unit::metres,
+                500.0*1.e-6*unit::metres, 100.0*1.e-6*unit::metres);
+
+        VesselNetworkPartitioner<2> partitioner;
+        partitioner.SetVesselNetwork(p_network);
+        partitioner.Update();
+
+        unsigned rank = PetscTools::GetMyRank();
+        p_network->Write(output_file_handler.GetOutputDirectoryFullPath()+"hex_network_" +
+                boost::lexical_cast<std::string>(rank)+".vtp", false);
+    }
+
+    void TestParallelFlowProblem() throw (Exception)
+    {
+        std::string output_directory = "TestVesselNetworkPartitioner/Flow";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
+
+        VesselNetworkGenerator<2> generator;
+        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateHexagonalNetwork(500.0*1.e-6*unit::metres,
+                500.0*1.e-6*unit::metres, 100.0*1.e-6*unit::metres);
+
+        VesselNetworkPartitioner<2> partitioner;
+        partitioner.SetVesselNetwork(p_network);
+        partitioner.Update();
+
+        unsigned rank = PetscTools::GetMyRank();
+        p_network->Write(output_file_handler.GetOutputDirectoryFullPath()+"pre_network_" +
+                boost::lexical_cast<std::string>(rank)+".vtp", false);
+
+        double impedance = 1.e12;
+        p_network->GetVesselSegments()[0]->GetFlowProperties()->SetImpedance(impedance*unit::pascal_second_per_metre_cubed);
+        p_network->SetSegmentProperties(p_network->GetVesselSegments()[0]);
+
+        p_network->GetVessels()[0]->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
+        p_network->GetVessels()[0]->GetFlowProperties()->SetPressure(3393*unit::pascals);
+        p_network->GetVessels()[0]->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
+        p_network->GetVessels()[0]->GetEndNode()->GetFlowProperties()->SetPressure(1000.5*unit::pascals);
+
+        FlowSolver<2> solver;
+        solver.SetVesselNetwork(p_network);
+        solver.SetUp();
+        solver.Solve();
+
+        p_network->Write(output_file_handler.GetOutputDirectoryFullPath()+"post_network_" +
+                boost::lexical_cast<std::string>(rank)+".vtp", false);
     }
 };
 

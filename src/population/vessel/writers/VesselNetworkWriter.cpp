@@ -217,14 +217,14 @@ void VesselNetworkWriter<DIM>::SetFileName(const std::string& rFileName)
 }
 
 template <unsigned DIM>
-void VesselNetworkWriter<DIM>::Write()
+void VesselNetworkWriter<DIM>::Write(bool masterOnly)
 {
     if(mFilename.empty())
     {
         EXCEPTION("No file name set for VesselNetworkWriter");
     }
 
-    if(PetscTools::AmMaster())
+    if(PetscTools::AmMaster() or !masterOnly)
     {
         vtkSmartPointer<vtkXMLPolyDataWriter> writer = vtkSmartPointer<vtkXMLPolyDataWriter>::New();
         writer->SetFileName(mFilename.c_str());

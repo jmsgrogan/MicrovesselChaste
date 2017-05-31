@@ -33,13 +33,16 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+#include <algorithm>
 #include "VesselNetworkPartitioner.hpp"
 #include "Exception.hpp"
 #include "PetscTools.hpp"
 
 template<unsigned DIM>
 VesselNetworkPartitioner<DIM>::VesselNetworkPartitioner() :
-    mpNetwork()
+    mpNetwork(),
+    mUseSimpleGeometricPartition(true),
+    mParitionAxis(0)
 {
 
 }
@@ -47,6 +50,18 @@ VesselNetworkPartitioner<DIM>::VesselNetworkPartitioner() :
 template<unsigned DIM>
 VesselNetworkPartitioner<DIM>::~VesselNetworkPartitioner()
 {
+}
+
+template<unsigned DIM>
+void VesselNetworkPartitioner<DIM>::SetUseSimpleGeometricPartitioning(bool useSimple)
+{
+    mUseSimpleGeometricPartition = useSimple;
+}
+
+template<unsigned DIM>
+void VesselNetworkPartitioner<DIM>::SetPartitionAxis(unsigned partitionAxis)
+{
+    mParitionAxis = partitionAxis;
 }
 
 template<unsigned DIM>
@@ -68,96 +83,145 @@ void VesselNetworkPartitioner<DIM>::Update()
     }
 
     // Partition extents
-    double domain_width = 100.0;
     unsigned rank = PetscTools::GetMyRank();
     unsigned num_procs = PetscTools::GetNumProcs();
-    double width_per_processor = domain_width/double(num_procs);
-    double processor_left_bound = double(rank)*width_per_processor;
-    double processor_right_bound = DBL_MAX;
-    if(rank<num_procs-1)
+
+    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = mpNetwork->GetExtents();
+    units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
+    double domain_width = 0.0;
+    double domain_start = 0.0;
+    double delta_x = extents.second.GetLocation(reference_length)[0] - extents.first.GetLocation(reference_length)[0];
+    double delta_y = extents.second.GetLocation(reference_length)[1] - extents.first.GetLocation(reference_length)[1];
+    double delta_z = 0.0;
+    if(DIM==3)
     {
-        processor_right_bound = domain_width;
-    }
-    else
-    {
-        processor_right_bound = (rank+1)*width_per_processor;
+        delta_z = extents.second.GetLocation(reference_length)[2] - extents.first.GetLocation(reference_length)[2];
     }
 
-    // Assign segments and nodes to processors
-    units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
+    if(mUseSimpleGeometricPartition)
+    {
+        if(mParitionAxis==0)
+        {
+            domain_width = delta_x/(double(num_procs));
+        }
+        else if(mParitionAxis==1)
+        {
+            domain_width = delta_y/(double(num_procs));
+        }
+        else if(mParitionAxis==2 and DIM==3)
+        {
+            domain_width = delta_z/(double(num_procs));
+        }
+        if(DIM==2 and mParitionAxis==2)
+        {
+            EXCEPTION("Can't partition across Z in 2D.");
+        }
+        domain_start = extents.first.GetLocation(reference_length)[mParitionAxis];
+    }
+
+    // Assign nodes, segments and vessels to processors
     std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = mpNetwork->GetVesselSegments();
     std::vector<boost::shared_ptr<Vessel<DIM> > > vessels = mpNetwork->GetVessels();
 
-    // Label nodes according to their processor
+    // All nodes not in the processor's domain are first labelled halos. Any nodes not contained
+    // in vessels or halo vessels are allowed to go out of scope later.
     for(unsigned idx=0;idx<nodes.size();idx++)
     {
-        double x_loc = nodes[idx]->rGetLocation().GetLocation(reference_length)[0];
-        unsigned processor_loc = std::floor(x_loc/domain_width);
+        nodes[idx]->SetGlobalIndex(idx);
+        double loc = 0.0;
+        if(mUseSimpleGeometricPartition)
+        {
+            loc = nodes[idx]->rGetLocation().GetLocation(reference_length)[mParitionAxis];
+        }
+        unsigned processor_loc = std::floor((loc-domain_start)/domain_width);
+        if(processor_loc>=num_procs)
+        {
+            processor_loc = num_procs-1;
+        }
+        std::cout << "node " << idx << " assigned to rank " << processor_loc << std::endl;
         nodes[idx]->SetOwnerRank(processor_loc);
         if(processor_loc!=rank)
         {
-
-        }
-    }
-    for(unsigned idx=0;idx<segments.size();idx++)
-    {
-        boost::shared_ptr<VesselNode<DIM> > p_start_node = segments[idx]->GetNodes().first;
-        boost::shared_ptr<VesselNode<DIM> > p_end_node = segments[idx]->GetNodes().second;
-        if(p_start_node->GetOwnerRank()!=rank and p_end_node->GetOwnerRank()==rank)
-        {
-            segments[idx]->SetIsHalo(true);
-            segments[idx]->SetOwnerRank(p_start_node->GetOwnerRank());
-        }
-        else if(p_start_node->GetOwnerRank()==rank and p_end_node->GetOwnerRank()!=rank)
-        {
-            segments[idx]->SetHasHalo(true);
-            segments[idx]->SetOtherProcessorRank(p_end_node->GetOwnerRank());
-        }
-        else if(p_start_node->GetOwnerRank()!=rank and p_end_node->GetOwnerRank()!=rank)
-        {
-            segments[idx]->SetIsHalo(true);
-            segments[idx]->SetOwnerRank(p_start_node->GetOwnerRank());
+            nodes[idx]->SetIsHalo(true);
         }
     }
 
-    // Identify Halos
-    for(unsigned idx=0;idx<nodes.size();idx++)
+    // Vessels with majority nodes on the processor are owned by the processor, vessels with
+    // any nodes in the domain are halos.
+    std::vector<boost::shared_ptr<Vessel<DIM> > > local_vessels;
+    std::vector<boost::shared_ptr<Vessel<DIM> > > halo_vessels;
+    std::cout << "num vessels" << vessels.size() << std::endl;
+    for(unsigned idx=0;idx<vessels.size();idx++)
     {
-        bool isHalo=false;
-        if(nodes[idx]->GetOwnerRank()!=rank)
+        vessels[idx]->SetGlobalIndex(idx);
+        std::vector<boost::shared_ptr<VesselNode<DIM> > > vessel_nodes = vessels[idx]->GetNodes();
+        std::vector<unsigned> nodes_per_proc(num_procs, 0);
+        unsigned num_nodes = vessel_nodes.size();
+        for(unsigned jdx=0;jdx<num_nodes;jdx++)
         {
-            for(unsigned jdx=0;jdx<nodes[idx]->GetSegments().size();jdx++)
+            nodes_per_proc[vessel_nodes[jdx]->GetOwnerRank()]++;
+        }
+
+        // Get lowest index of max value
+        std::vector<unsigned>::iterator result = std::max_element(nodes_per_proc.begin(), nodes_per_proc.end());
+        unsigned max_index = std::distance(nodes_per_proc.begin(), result);
+        unsigned max_value = nodes_per_proc[max_index];
+        std::cout << "vessel " << idx << " max id " << max_index << " max val " << max_value << std::endl;
+
+        if(double(max_value)>(num_nodes/2.0))
+        {
+            vessels[idx]->SetOwnerRank(max_index);
+        }
+        else if(double(max_value)==double(num_nodes/2.0) and vessels[idx]->GetStartNode()->GetOwnerRank()==max_index)
+        {
+            vessels[idx]->SetOwnerRank(max_index);
+        }
+
+        if(vessels[idx]->GetOwnerRank()!=rank)
+        {
+            if(nodes_per_proc[rank]>0)
             {
-                if(nodes[idx]->GetSegments()[jdx]->IsHalo())
+                halo_vessels.push_back(vessels[idx]);
+                vessels[idx]->SetIsHalo(true);
+                for(unsigned jdx=0;jdx<vessels[idx]->GetNodes().size();jdx++)
+                 {
+                     if(!vessel_nodes[jdx]->IsHalo())
+                     {
+                         vessel_nodes[jdx]->SetHasHalo(true);
+                     }
+                 }
+            }
+        }
+        else
+        {
+            local_vessels.push_back(vessels[idx]);
+            if(nodes_per_proc[rank]!=num_nodes)
+            {
+                vessels[idx]->SetHasHalo(true);
+                for(unsigned jdx=0;jdx<vessels[idx]->GetNodes().size();jdx++)
                 {
-                    isHalo = true;
-                    break;
+                    if(!vessel_nodes[jdx]->IsHalo())
+                    {
+                        vessel_nodes[jdx]->SetHasHalo(true);
+                    }
                 }
             }
         }
-        nodes[idx]->SetIsHalo(isHalo);
-    }
-
-    // Create halo segments
-    std::vector<boost::shared_ptr<Vessel<DIM> > > vessels_on_proc;
-    for(unsigned idx=0;idx<vessels.size();idx++)
-    {
-        bool remove_vessel = false;
-        // If no nodes or halos are on the proc remove the vessel
-        std::vector<boost::shared_ptr<VesselNode<DIM> > > vessel_nodes = vessels[idx]->GetNodes();
-        unsigned num_other_procs = 0;
-        for(unsigned jdx=0;jdx<vessel_nodes.size(); jdx++)
+        for(unsigned jdx=0;jdx<vessels[idx]->GetSegments().size(); jdx++)
         {
-            if(vessel_nodes[jdx]->GetOwnerRank()!=rank)
-            {
-
-            }
+            vessels[idx]->GetSegments()[jdx]->SetIsHalo(vessels[idx]->IsHalo());
+            vessels[idx]->GetSegments()[jdx]->SetOwnerRank(vessels[idx]->GetOwnerRank());
         }
     }
 
-    // Rebuild the vessel arrays in the network
+    std::cout << "rank " << rank << " num v " << local_vessels.size() << std::endl;
 
+    // Rebuild the vessel arrays in the network
+    mpNetwork->ClearVessels();
+    mpNetwork->AddVessels(local_vessels);
+    mpNetwork->AddVessels(halo_vessels);
+    mpNetwork->UpdateAll(false);
 }
 
 // Explicit instantiation

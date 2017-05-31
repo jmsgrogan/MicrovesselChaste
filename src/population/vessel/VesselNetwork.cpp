@@ -104,6 +104,19 @@ void VesselNetwork<DIM>::CopySegmentFlowProperties(unsigned index)
 }
 
 template <unsigned DIM>
+void VesselNetwork<DIM>::ClearVessels()
+{
+    mVessels.clear();
+    mSegments.clear();
+    mNodes.clear();
+    mVesselNodes.clear();
+    mSegmentsUpToDate = false;
+    mNodesUpToDate = false;
+    mVesselNodesUpToDate = false;
+    mVtkGeometryUpToDate = false;
+}
+
+template <unsigned DIM>
 std::vector<boost::shared_ptr<Vessel<DIM> > > VesselNetwork<DIM>::CopyVessels()
 {
     return CopyVessels(mVessels);
@@ -1203,33 +1216,35 @@ void VesselNetwork<DIM>::UpdateInternalVtkGeometry()
 {
     std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = GetNodes();
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = GetVesselSegments();
-    if(nodes.size()==0)
-    {
-        EXCEPTION("No nodes found in network.");
-    }
-    units::quantity<unit::length> length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
-    vtkSmartPointer<vtkPoints> p_node_points = vtkSmartPointer<vtkPoints>::New();
-    for(unsigned idx=0;idx<nodes.size();idx++)
-    {
-        nodes[idx]->SetComparisonId(idx);
-        c_vector<double, DIM> loc = nodes[idx]->rGetLocation().GetLocation(length_scale);
-        if(DIM==2)
-        {
-            p_node_points->InsertNextPoint(loc[0], loc[1], 0.0);
-        }
-        else
-        {
-            p_node_points->InsertNextPoint(&loc[0]);
-        }
-    }
 
+    vtkSmartPointer<vtkPoints> p_node_points = vtkSmartPointer<vtkPoints>::New();
     vtkSmartPointer<vtkCellArray> p_lines = vtkSmartPointer<vtkCellArray>::New();
-    for(unsigned idx=0;idx<segments.size();idx++)
+
+    if(nodes.size()>0)
     {
-        vtkSmartPointer<vtkLine> p_line = vtkSmartPointer<vtkLine>::New();
-        p_line->GetPointIds()->InsertId(0, segments[idx]->GetNode(0)->GetComparisonId());
-        p_line->GetPointIds()->InsertId(1, segments[idx]->GetNode(1)->GetComparisonId());
-        p_lines->InsertNextCell(p_line);
+        units::quantity<unit::length> length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
+
+        for(unsigned idx=0;idx<nodes.size();idx++)
+        {
+            nodes[idx]->SetComparisonId(idx);
+            c_vector<double, DIM> loc = nodes[idx]->rGetLocation().GetLocation(length_scale);
+            if(DIM==2)
+            {
+                p_node_points->InsertNextPoint(loc[0], loc[1], 0.0);
+            }
+            else
+            {
+                p_node_points->InsertNextPoint(&loc[0]);
+            }
+        }
+
+        for(unsigned idx=0;idx<segments.size();idx++)
+        {
+            vtkSmartPointer<vtkLine> p_line = vtkSmartPointer<vtkLine>::New();
+            p_line->GetPointIds()->InsertId(0, segments[idx]->GetNode(0)->GetComparisonId());
+            p_line->GetPointIds()->InsertId(1, segments[idx]->GetNode(1)->GetComparisonId());
+            p_lines->InsertNextCell(p_line);
+        }
     }
 
     mpVtkGeometry = vtkSmartPointer<vtkPolyData>::New();
@@ -1237,7 +1252,10 @@ void VesselNetwork<DIM>::UpdateInternalVtkGeometry()
     mpVtkGeometry->SetLines(p_lines);
     mpVtkSegmentCellLocator = vtkSmartPointer<vtkCellLocator>::New();
     mpVtkSegmentCellLocator->SetDataSet(mpVtkGeometry);
-    mpVtkSegmentCellLocator->BuildLocator();
+    if(GetNodes().size()>0)
+    {
+        mpVtkSegmentCellLocator->BuildLocator();
+    }
     mVtkGeometryUpToDate = true;
 }
 
@@ -1260,12 +1278,12 @@ bool VesselNetwork<DIM>::VesselCrossesLineSegment(const DimensionalChastePoint<D
 }
 
 template<unsigned DIM>
-void VesselNetwork<DIM>::Write(const std::string& rFileName)
+void VesselNetwork<DIM>::Write(const std::string& rFileName, bool masterOnly)
 {
     boost::shared_ptr<VesselNetworkWriter<DIM> > p_writer = VesselNetworkWriter<DIM>::Create();
     p_writer->SetFileName(rFileName);
     p_writer->SetVesselNetwork(this->shared_from_this());
-    p_writer->Write();
+    p_writer->Write(masterOnly);
 }
 
 // Explicit instantiation

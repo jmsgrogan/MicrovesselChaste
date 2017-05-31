@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef VESSELNETWORKWRITER_HPP_
 #define VESSELNETWORKWRITER_HPP_
 
@@ -113,7 +111,7 @@ public:
     /**
      * Do the write
      */
-    void Write();
+    void Write(bool masterOnly = true);
 
     /**
      * Return a vtk representation of the network

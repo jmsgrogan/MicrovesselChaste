@@ -210,6 +210,9 @@ std::map<std::string, double> VesselNode<DIM>::GetOutputData()
     this->mOutputData["Node Id"] = double(this->GetId());
     this->mOutputData["Node Radius m"] = this->GetRadius() / unit::metres;
     this->mOutputData["Node Is Migrating"] = double(this->IsMigrating());
+    this->mOutputData["Node Owner Rank"] = this->GetOwnerRank();
+    this->mOutputData["Node Is Halo"] = this->IsHalo();
+    this->mOutputData["Node Has Halo"] = this->HasHalo();
     return this->mOutputData;
 }
 

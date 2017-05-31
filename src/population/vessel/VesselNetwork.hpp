@@ -52,7 +52,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "AbstractVesselNetworkComponent.hpp"
 
 /**
- * A vessel network is a collection of vessels.
+ * A vessel network is a collection of vessels. The network can be distributed over processors, in
+ * which case only a portion of the network is stored. Vessel Nodes are divided geometrically amongst processors.
  */
 template<unsigned DIM>
 class VesselNetwork : public boost::enable_shared_from_this<VesselNetwork<DIM> >, public AbstractVesselNetworkComponent<DIM>
@@ -163,6 +164,8 @@ public:
      * @param index the segment index to be copied
      */
     void CopySegmentFlowProperties(unsigned index=0);
+
+    void ClearVessels();
 
     /**
      * Make a copy of all vessels, but with new nodes and segments in each copy. Return the new vessels.
@@ -515,7 +518,7 @@ public:
      * Write the network to file
      * @param rFileName the filename
      */
-    void Write(const std::string& rFileName);
+    void Write(const std::string& rFileName, bool masterOnly=true);
 
 };
 

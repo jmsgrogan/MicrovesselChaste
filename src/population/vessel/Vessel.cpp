@@ -44,7 +44,13 @@ Vessel<DIM>::Vessel() : AbstractVesselNetworkComponent<DIM>(),
         mSegments(std::vector<boost::shared_ptr<VesselSegment<DIM> > >()),
         mNodes(std::vector<boost::shared_ptr<VesselNode<DIM> > >()),
         mNodesUpToDate(false),
-        mpFlowProperties(boost::shared_ptr<VesselFlowProperties<DIM> >(new VesselFlowProperties<DIM>()))
+        mpFlowProperties(boost::shared_ptr<VesselFlowProperties<DIM> >(new VesselFlowProperties<DIM>())),
+        mGlobalIndex(0),
+        mLocalIndex(0),
+        mOwnerRank(0),
+        mIsHalo(false),
+        mHasHalo(false),
+        mOtherProcessorRank(0)
 {
 
 
@@ -55,7 +61,13 @@ Vessel<DIM>::Vessel(boost::shared_ptr<VesselSegment<DIM> > pSegment) : AbstractV
         mSegments(std::vector<boost::shared_ptr<VesselSegment<DIM> > >()),
         mNodes(std::vector<boost::shared_ptr<VesselNode<DIM> > >()),
         mNodesUpToDate(false),
-        mpFlowProperties(boost::shared_ptr<VesselFlowProperties<DIM> >(new VesselFlowProperties<DIM>()))
+        mpFlowProperties(boost::shared_ptr<VesselFlowProperties<DIM> >(new VesselFlowProperties<DIM>())),
+        mGlobalIndex(0),
+        mLocalIndex(0),
+        mOwnerRank(0),
+        mIsHalo(false),
+        mHasHalo(false),
+        mOtherProcessorRank(0)
 {
     mSegments.push_back(pSegment);
     mpFlowProperties->UpdateSegments(mSegments);
@@ -66,7 +78,13 @@ Vessel<DIM>::Vessel(std::vector<boost::shared_ptr<VesselSegment<DIM> > > segment
         mSegments(segments),
         mNodes(std::vector<boost::shared_ptr<VesselNode<DIM> > >()),
         mNodesUpToDate(false),
-        mpFlowProperties(boost::shared_ptr<VesselFlowProperties<DIM> >(new VesselFlowProperties<DIM>()))
+        mpFlowProperties(boost::shared_ptr<VesselFlowProperties<DIM> >(new VesselFlowProperties<DIM>())),
+        mGlobalIndex(0),
+        mLocalIndex(0),
+        mOwnerRank(0),
+        mIsHalo(false),
+        mHasHalo(false),
+        mOtherProcessorRank(0)
 {
     if (segments.size() > 1)
     {
@@ -101,7 +119,13 @@ Vessel<DIM>::Vessel(std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes) :
         mSegments(std::vector<boost::shared_ptr<VesselSegment<DIM> > >()),
         mNodes(std::vector<boost::shared_ptr<VesselNode<DIM> > >()),
         mNodesUpToDate(false),
-        mpFlowProperties(boost::shared_ptr<VesselFlowProperties<DIM> >(new VesselFlowProperties<DIM>()))
+        mpFlowProperties(boost::shared_ptr<VesselFlowProperties<DIM> >(new VesselFlowProperties<DIM>())),
+        mGlobalIndex(0),
+        mLocalIndex(0),
+        mOwnerRank(0),
+        mIsHalo(false),
+        mHasHalo(false),
+        mOtherProcessorRank(0)
 {
 
     if (nodes.size() < 2)
@@ -123,7 +147,13 @@ Vessel<DIM>::Vessel(boost::shared_ptr<VesselNode<DIM> > pStartNode, boost::share
     :        mSegments(std::vector<boost::shared_ptr<VesselSegment<DIM> > >()),
              mNodes(std::vector<boost::shared_ptr<VesselNode<DIM> > >()),
              mNodesUpToDate(false),
-             mpFlowProperties(boost::shared_ptr<VesselFlowProperties<DIM> >(new VesselFlowProperties<DIM>()))
+             mpFlowProperties(boost::shared_ptr<VesselFlowProperties<DIM> >(new VesselFlowProperties<DIM>())),
+             mGlobalIndex(0),
+             mLocalIndex(0),
+             mOwnerRank(0),
+             mIsHalo(false),
+             mHasHalo(false),
+             mOtherProcessorRank(0)
 {
     mSegments.push_back(VesselSegment<DIM>::Create(pStartNode, pEndNode));
     mpFlowProperties->UpdateSegments(mSegments);
@@ -452,6 +482,48 @@ boost::shared_ptr<VesselNode<DIM> > Vessel<DIM>::DivideSegment(const Dimensional
 }
 
 template<unsigned DIM>
+unsigned Vessel<DIM>::GetGlobalIndex()
+{
+    return mGlobalIndex;
+}
+
+template<unsigned DIM>
+unsigned Vessel<DIM>::GetLocalIndex()
+{
+    return mLocalIndex;
+}
+
+template<unsigned DIM>
+unsigned Vessel<DIM>::GetOwnerRank()
+{
+    return mOwnerRank;
+}
+
+template<unsigned DIM>
+bool Vessel<DIM>::IsHalo()
+{
+    return mIsHalo;
+}
+
+template<unsigned DIM>
+bool Vessel<DIM>::HasHalo()
+{
+    return mHasHalo;
+}
+
+template<unsigned DIM>
+unsigned Vessel<DIM>::GetOtherProcessorRank()
+{
+    return mOtherProcessorRank;
+}
+
+template<unsigned DIM>
+unsigned Vessel<DIM>::GetOtherProcessorLocalIndex()
+{
+return 0;
+}
+
+template<unsigned DIM>
 boost::shared_ptr<VesselFlowProperties<DIM> > Vessel<DIM>::GetFlowProperties() const
 {
     return this->mpFlowProperties;
@@ -466,6 +538,9 @@ std::map<std::string, double> Vessel<DIM>::GetOutputData()
     this->mOutputData["Vessel Id"] = double(this->GetId());
     this->mOutputData["Vessel Radius m"] = this->GetRadius() / unit::metres;
     this->mOutputData["Vessel Maturity"] = this->GetMaturity();
+    this->mOutputData["Vessel Owner Rank"] = this->GetOwnerRank();
+    this->mOutputData["Vessel Is Halo"] = this->IsHalo();
+    this->mOutputData["Vessel Has Halo"] = this->HasHalo();
     return this->mOutputData;
 }
 
@@ -733,6 +808,48 @@ void Vessel<DIM>::SetRadius(units::quantity<unit::length> radius)
     {
         mSegments[i]->SetRadius(radius);
     }
+}
+
+template<unsigned DIM>
+void Vessel<DIM>::SetGlobalIndex(unsigned index)
+{
+    mGlobalIndex =index;
+}
+
+template<unsigned DIM>
+void Vessel<DIM>::SetLocalIndex(unsigned index)
+{
+    mLocalIndex = index;
+}
+
+template<unsigned DIM>
+void Vessel<DIM>::SetOwnerRank(unsigned rank)
+{
+    mOwnerRank = rank;
+}
+
+template<unsigned DIM>
+void Vessel<DIM>::SetIsHalo(bool isHalo)
+{
+    mIsHalo = isHalo;
+}
+
+template<unsigned DIM>
+void Vessel<DIM>::SetHasHalo(bool hasHalo)
+{
+    mHasHalo = hasHalo;
+}
+
+template<unsigned DIM>
+void Vessel<DIM>::SetOtherProcessorRank(unsigned otherRank)
+{
+    mOtherProcessorRank = otherRank;
+}
+
+template<unsigned DIM>
+void Vessel<DIM>::SetOtherProcessorLocalIndex(unsigned otherIndex)
+{
+
 }
 
 template<unsigned DIM>

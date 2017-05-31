@@ -51,7 +51,23 @@ template<unsigned DIM>
 class VesselNetworkPartitioner
 {
 
+    /**
+     * The network to be partitioned
+     */
     boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
+
+    /**
+     * Partition into approx equal divisions along the specified axis
+     */
+    bool mUseSimpleGeometricPartition;
+
+    /**
+     * Axis for partitioning
+     * 0 - x
+     * 1 - y
+     * 2 - z
+     */
+    unsigned mParitionAxis;
 
 public:
 
@@ -64,6 +80,18 @@ public:
      * Destructor
      */
      ~VesselNetworkPartitioner();
+
+     /**
+      * Use simple geometric partitioning (default)
+      * @param useSimple whether to use simple geometric partitioning
+      */
+    void SetUseSimpleGeometricPartitioning(bool useSimple);
+
+    /**
+     * Set the partition axis, 0 - x, 1 - y, 2 - z
+     * @param partitionAxis the partition axis, 0 - x, 1 - y, 2 - z
+     */
+    void SetPartitionAxis(unsigned partitionAxis);
 
     /**
      * Set the vessel network
