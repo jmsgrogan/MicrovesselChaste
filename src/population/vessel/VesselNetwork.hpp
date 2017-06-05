@@ -49,6 +49,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNode.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "DistributedVectorFactory.hpp"
 #include "AbstractVesselNetworkComponent.hpp"
 
 /**
@@ -81,9 +82,14 @@ private:
     std::vector<boost::shared_ptr<Vessel<DIM> > > mVessels;
 
     /**
-     * Container for vessel segments in the VesselNetwork.
+     * Container for Halo Vessels in the VesselNetwork.
      */
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > mSegments;
+    std::vector<boost::shared_ptr<Vessel<DIM> > > mHaloVessels;
+
+    /**
+     * Container for Halo vessel segments in the VesselNetwork.
+     */
+    std::vector<boost::shared_ptr<VesselSegment<DIM> > > mHaloSegments;
 
     /**
      * Is the data in mSegments up to date.
@@ -96,6 +102,11 @@ private:
     std::vector<boost::shared_ptr<VesselNode<DIM> > > mNodes;
 
     /**
+     * Container for halo nodes in the VesselNetwork.
+     */
+    std::vector<boost::shared_ptr<VesselNode<DIM> > > mHaloNodes;
+
+    /**
      * Is the data in mNodes up to date.
      */
     bool mNodesUpToDate;
@@ -104,6 +115,11 @@ private:
      * Container for vessel nodes in the VesselNetwork.
      */
     std::vector<boost::shared_ptr<VesselNode<DIM> > > mVesselNodes;
+
+    /**
+     * Container for halo vessel nodes in the VesselNetwork.
+     */
+    std::vector<boost::shared_ptr<VesselNode<DIM> > > mHaloVesselNodes;
 
     /**
      * Is the data in mVesselNodes up to date.
@@ -128,6 +144,11 @@ private:
      * Is the vtk geometry representation up to date.
      */
     bool mVtkGeometryUpToDate;
+
+    /**
+     * Used for solving systems on vessel nodes
+     */
+    boost::shared_ptr<DistributedVectorFactory> mDistributedVectorFactory;
 
 public:
 
@@ -160,11 +181,8 @@ public:
     void AddVessels(std::vector<boost::shared_ptr<Vessel<DIM> > > vessels);
 
     /**
-     * Copy flow properties from the specified segment to all other segments
-     * @param index the segment index to be copied
+     * Remove all vessels from the network, used for parallel partitioning
      */
-    void CopySegmentFlowProperties(unsigned index=0);
-
     void ClearVessels();
 
     /**
@@ -208,91 +226,15 @@ public:
                                                const DimensionalChastePoint<DIM>& sproutTipLocation);
 
     /**
-     * Get distance to nearest node
-     * @param rLocation the probe point
-     * @return the distance to the node
-     */
-    units::quantity<unit::length> GetDistanceToNearestNode(const DimensionalChastePoint<DIM>& rLocation);
-
-    /**
-     * Get the node nearest to the specified location
-     * @param rLocation the probe point
-     * @return the nearest node
-     */
-    boost::shared_ptr<VesselNode<DIM> > GetNearestNode(const DimensionalChastePoint<DIM>& rLocation);
-
-    /**
-     * Get the node nearest to the specified node
-     * @param pInputNode the probe point
-     * @return the nearest node
-     */
-    boost::shared_ptr<VesselNode<DIM> > GetNearestNode(boost::shared_ptr<VesselNode<DIM> > pInputNode);
-
-    /**
-     * Get the segment nearest to the specified segment and the distance to it
-     * @param pSegment the probe segment
-     * @return the segment nearest to the specified segment and the distance to it
-     */
-    std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > GetNearestSegment(boost::shared_ptr<VesselSegment<DIM> > pSegment);
-
-    /**
-     * Return the distance to the nearest segment. Also over-rides the input segment with the nearest one
-     * if a segment is found. The input segment is set to NULL if a segment is not found in the optional
-     * bounding region.
-     * @param pNode the probe node
-     * @param pEmptySegment an empty segment pointer. Becomes the nearest segment if one is found or NULL otherwise.
-     * @param sameVessel can the segment be on the same vessel.
-     * @param radius an optional search radius, providing one significantly speeds up the search.
-     * @return the distance to the nearest segment. Large if none is found, check pEmptySegment instead.
-     */
-    units::quantity<unit::length> GetNearestSegment(boost::shared_ptr<VesselNode<DIM> > pNode,
-            boost::shared_ptr<VesselSegment<DIM> >& pEmptySegment,
-            bool sameVessel = true, units::quantity<unit::length> radius = 0.0*unit::metres);
-
-    /**
-     * Get the segment nearest to the specified location and the distance to it
-     * @param rLocation the probe location
-     * @return the segment nearest to the specified segment and the distance to it
-     */
-    std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > GetNearestSegment(const DimensionalChastePoint<DIM>& rLocation);
-
-    /**
-     * Get the vessel nearest to the specified location
-     * @param rLocation the probe location
-     * @return the vessel nearest to the specified segment and the distance to it
-     */
-    boost::shared_ptr<Vessel<DIM> > GetNearestVessel(const DimensionalChastePoint<DIM>& rLocation);
-
-    /**
      * Get index of the node
      * @param pNode the probe node
      * @return index of the node
      */
     unsigned GetNodeIndex(boost::shared_ptr<VesselNode<DIM> > pNode);
 
-    /**
-     * Get the number of nodes near to a specified point
-     * @param rLocation the probe point
-     * @param tolerance the tolerance for proximty calculation
-     * @return the number of nodes
-     */
-    unsigned NumberOfNodesNearLocation(const DimensionalChastePoint<DIM>&  rLocation, double tolerance = 0.0);
+    void SetDistributedVectorFactory(boost::shared_ptr<DistributedVectorFactory>  vectorFactory);
 
-    /**
-     * Return the nodes inside a sphere
-     * @param rCentre the centre of the sphere
-     * @param radius the sphere radius
-     * @return the nodes in the sphere
-     */
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > GetNodesInSphere(const DimensionalChastePoint<DIM>&  rCentre,
-            units::quantity<unit::length>  radius);
-
-    /**
-     * Return the extents of the vessel network in the form ((xmin, xmax), (ymin, ymax), (zmin, zmax))
-     * @param useRadii use the vessel radii in calculations
-     * @return the extents of the vessel network in the form ((xmin, xmax), (ymin, ymax), (zmin, zmax))
-     */
-    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > GetExtents(bool useRadii = false);
+    boost::shared_ptr<DistributedVectorFactory> GetDistributedVectorFactory();
 
     /**
      * Return the indexed node in the network
@@ -309,10 +251,28 @@ public:
     std::vector<boost::shared_ptr<VesselNode<DIM> > > GetNodes();
 
     /**
+     * Return the VTK representation of the network
+     * @return the VTK representation of the network
+     */
+    vtkSmartPointer<vtkPolyData> GetVtk();
+
+    /**
+     * Return the VTK cell locator for segments
+     * @return the VTK cell locator for segments
+     */
+    vtkSmartPointer<vtkCellLocator> GetVtkCellLocator();
+
+    /**
      * Return the number of nodes in the network.
      * @return the number of nodes in the network.
      */
     unsigned GetNumberOfNodes();
+
+    /**
+     * Return the number of nodes in the network.
+     * @return the number of nodes in the network.
+     */
+    std::vector<unsigned> GetNumberOfNodesPerProcess();
 
     /**
      * Return the number of vessel nodes in the network.
@@ -433,35 +393,6 @@ public:
     void RemoveShortVessels(units::quantity<unit::length> cutoff = 10.0* 1.e-6 * unit::metres, bool endsOnly = true);
 
     /**
-     * Set the nodal radii to the same value
-     * @param radius the node radius value
-     */
-    void SetNodeRadii(units::quantity<unit::length> radius);
-
-    /**
-     * Get the node radius by averaging its segments
-     */
-    void SetNodeRadiiFromSegments();
-
-    /**
-     * Set the properties of the segments in the network based on those of the prototype
-     * @param prototype a prototype segment from which to copy properties
-     */
-    void SetSegmentProperties(boost::shared_ptr<VesselSegment<DIM> > prototype);
-
-    /**
-     * Set the segment radii to the same value
-     * @param radius the segment radius
-     */
-    void SetSegmentRadii(units::quantity<unit::length> radius);
-
-    /**
-     * Set the segment viscosity to the same value
-     * @param viscosity the segment viscosity
-     */
-    void SetSegmentViscosity(units::quantity<unit::dynamic_viscosity> viscosity);
-
-    /**
      * Translate the network along the provided vector
      * @param rTranslationVector the translation vector
      */
@@ -504,15 +435,6 @@ public:
      * @param merge whether to merge co-incident nodes
      */
     void UpdateAll(bool merge=false);
-
-    /**
-     * Returns whether a vessel crosses a line segment.
-     * @param rCoord1 the start of the line segment
-     * @param rCoord2 the end of the line segment
-     * @param tolerance how close to crossing is considered crossing
-     * @return whether a vessel crosses a line segment.
-     */
-    bool VesselCrossesLineSegment(const DimensionalChastePoint<DIM>& rCoord1, const DimensionalChastePoint<DIM>& rCoord2, double tolerance = 1e-6);
 
     /**
      * Write the network to file

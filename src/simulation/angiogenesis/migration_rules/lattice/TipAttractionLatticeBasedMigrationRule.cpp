@@ -41,6 +41,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Owen11Parameters.hpp"
 #include "TipAttractionLatticeBasedMigrationRule.hpp"
 #include "Connor17Parameters.hpp"
+#include "VesselNetworkGeometryCalculator.hpp"
 
 template<unsigned DIM>
 TipAttractionLatticeBasedMigrationRule<DIM>::TipAttractionLatticeBasedMigrationRule()
@@ -122,8 +123,8 @@ std::vector<double> TipAttractionLatticeBasedMigrationRule<DIM>::GetNeighbourMov
 
     if(!this->mIsSprouting and mUseTipAttraction)
     {
-        std::vector<boost::shared_ptr<VesselNode<DIM> > > nearby_nodes = this->mpVesselNetwork->GetNodesInSphere(
-                pNode->rGetLocation(), mTipAttractionRadius);
+        std::vector<boost::shared_ptr<VesselNode<DIM> > > nearby_nodes = VesselNetworkGeometryCalculator<DIM>::GetNodesInSphere(
+                this->mpVesselNetwork, pNode->rGetLocation(), mTipAttractionRadius);
         // get the current vector
         c_vector<double, DIM> unit_vector = pNode->rGetLocation().GetLocation(reference_length) -
                 pNode->GetSegment(0)->GetOppositeNode(pNode)->rGetLocation().GetLocation(reference_length);
@@ -187,7 +188,8 @@ std::vector<double> TipAttractionLatticeBasedMigrationRule<DIM>::GetNeighbourMov
         bool vessel_crosses_line_segment = false;
         if(this->mUseMooreNeighbourhood)
         {
-            vessel_crosses_line_segment = this->mpVesselNetwork->VesselCrossesLineSegment(neighbour_location, pNode->rGetLocation());
+            vessel_crosses_line_segment = VesselNetworkGeometryCalculator<DIM>::VesselCrossesLineSegment(
+                    this->mpVesselNetwork, neighbour_location, pNode->rGetLocation());
         }
 
         if (!vessel_crosses_line_segment && !sprout_already_attached_to_vessel_at_location)

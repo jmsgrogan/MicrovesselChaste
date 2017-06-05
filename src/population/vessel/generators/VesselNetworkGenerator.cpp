@@ -40,6 +40,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Polygon.hpp"
 #include "Exception.hpp"
 #include "VesselNetworkGenerator.hpp"
+#include "VesselNetworkGeometryCalculator.hpp"
+#include "VesselNetworkPropertyManager.hpp"
 
 template<unsigned DIM>
 VesselNetworkGenerator<DIM>::VesselNetworkGenerator() :
@@ -132,7 +134,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateOval
     p_network->AddVessel(p_vessel_4);
     p_network->MergeCoincidentNodes(1.e-6);
 
-    p_network->SetSegmentProperties(p_vessel_1->GetSegments()[0]);
+    VesselNetworkPropertyManager<DIM>::SetSegmentProperties(p_network, p_vessel_1->GetSegments()[0]);
     p_vessel_1->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
     p_vessel_4->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
     return p_network;
@@ -345,7 +347,7 @@ void VesselNetworkGenerator<DIM>::PatternUnitByTranslation(boost::shared_ptr<Ves
                                                          std::vector<unsigned> numberOfUnits)
 {
     // Get unit dimensions
-    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = input_unit->GetExtents();
+    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = VesselNetworkGeometryCalculator<DIM>::GetExtents(input_unit);
 
     // For each number of units in each dimension copy the original vessels and move the copy to the desired location
     double num_x = 0;
@@ -548,7 +550,7 @@ void VesselNetworkGenerator<DIM>::MapToSphere(boost::shared_ptr<VesselNetwork<DI
                                               units::quantity<unit::length> radius, units::quantity<unit::length> thickess,
                                               double azimuthExtent, double polarExtent)
 {
-    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = pInputUnit->GetExtents();
+    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = VesselNetworkGeometryCalculator<DIM>::GetExtents(pInputUnit);
     std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = pInputUnit->GetNodes();
     for(unsigned idx =0; idx<nodes.size(); idx++)
     {

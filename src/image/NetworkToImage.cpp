@@ -42,6 +42,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "BaseUnits.hpp"
 #include "UblasIncludes.hpp"
 #include "UblasVectorInclude.hpp"
+#include "VesselNetworkGeometryCalculator.hpp"
 
 template<unsigned DIM>
 NetworkToImage<DIM>::NetworkToImage()
@@ -117,7 +118,7 @@ void NetworkToImage<DIM>::Update()
         EXCEPTION("No input vessel network set.");
     }
 
-    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = mpNetwork->GetExtents(true);
+    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = VesselNetworkGeometryCalculator<DIM>::GetExtents(mpNetwork, true);
     c_vector<double, DIM> range = ublas::element_prod(scalar_vector<double>(DIM, 1.0) + 2.0*mPaddingFactors, (extents.second - extents.first).GetLocation(mGridSpacing));
     c_vector<double, DIM> origin = (extents.first.GetLocation(mGridSpacing) - ublas::element_prod((extents.second - extents.first).GetLocation(mGridSpacing), mPaddingFactors));
 

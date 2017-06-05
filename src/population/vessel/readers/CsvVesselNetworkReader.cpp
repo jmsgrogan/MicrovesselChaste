@@ -33,13 +33,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "Exception.hpp"
 #include "CsvVesselNetworkReader.hpp"
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
 #include <fstream>
+#include "VesselNetworkGeometryCalculator.hpp"
 
 template<unsigned DIM>
 CsvVesselNetworkReader<DIM>::CsvVesselNetworkReader()
@@ -112,7 +111,7 @@ boost::shared_ptr<VesselNetwork<DIM> > CsvVesselNetworkReader<DIM>::Read()
     }
 
     // Need to flip in 'y' direction for consistency with VTK tools
-    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = p_network->GetExtents();
+    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = VesselNetworkGeometryCalculator<DIM>::GetExtents(p_network);
     units::quantity<unit::length> length_scale = extents.second.GetReferenceLengthScale();
     double y_max = extents.second.GetLocation(length_scale)[1];
 

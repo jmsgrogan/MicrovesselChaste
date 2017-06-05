@@ -45,6 +45,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNetworkWriter.hpp"
 #include "BaseUnits.hpp"
 #include "Timer.hpp"
+#include "VesselNetworkGeometryCalculator.hpp"
 
 template<unsigned DIM>
 AngiogenesisSolver<DIM>::AngiogenesisSolver() :
@@ -331,7 +332,7 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
             {
                 // Get the nearest segment and check if it is close enough to the node for a merge
                 boost::shared_ptr<VesselSegment<DIM> > p_nearest_segment;
-                units::quantity<unit::length> distance = mpNetwork->GetNearestSegment(nodes[idx],
+                units::quantity<unit::length> distance = VesselNetworkGeometryCalculator<DIM>::GetNearestSegment(mpNetwork, nodes[idx],
                         p_nearest_segment, false, 3.0*mNodeAnastamosisRadius);
 
                 if(p_nearest_segment)

@@ -46,6 +46,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNetworkPartitioner.hpp"
 #include "PetscTools.hpp"
 #include "OutputFileHandler.hpp"
+#include "VesselNetworkPropertyManager.hpp"
+#include "FlowSolver.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
@@ -112,8 +114,12 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         VesselNetworkGenerator<2> generator;
-        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateHexagonalNetwork(500.0*1.e-6*unit::metres,
-                500.0*1.e-6*unit::metres, 100.0*1.e-6*unit::metres);
+
+        units::quantity<unit::length> domain_size = 500.0*1.e-6*unit::metres;
+        units::quantity<unit::length> vessel_length = 100.0*1.e-6*unit::metres;
+        units::quantity<unit::length> reference_length = 1.e-6*unit::metres;
+        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateHexagonalNetwork(domain_size,
+                domain_size, vessel_length);
 
         VesselNetworkPartitioner<2> partitioner;
         partitioner.SetVesselNetwork(p_network);
@@ -125,16 +131,16 @@ public:
 
         double impedance = 1.e12;
         p_network->GetVesselSegments()[0]->GetFlowProperties()->SetImpedance(impedance*unit::pascal_second_per_metre_cubed);
-        p_network->SetSegmentProperties(p_network->GetVesselSegments()[0]);
-
-        p_network->GetVessels()[0]->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
-        p_network->GetVessels()[0]->GetFlowProperties()->SetPressure(3393*unit::pascals);
-        p_network->GetVessels()[0]->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
-        p_network->GetVessels()[0]->GetEndNode()->GetFlowProperties()->SetPressure(1000.5*unit::pascals);
+        VesselNetworkPropertyManager<2>::SetSegmentProperties(p_network, p_network->GetVesselSegments()[0]);
+        VesselNetworkPropertyManager<2>::AssignInflows(p_network,
+                DimensionalChastePoint<2>(0.0, 0.0, 0.0, reference_length), vessel_length/5.0);
+        VesselNetworkPropertyManager<2>::AssignOutflows(p_network,
+                DimensionalChastePoint<2>(domain_size/reference_length, domain_size/reference_length, 0.0, reference_length), vessel_length/5.0);
+        VesselNetworkPropertyManager<2>::SetInflowPressures(p_network, 3393*unit::pascals);
+        VesselNetworkPropertyManager<2>::SetOutflowPressures(p_network, 1000.5*unit::pascals);
 
         FlowSolver<2> solver;
         solver.SetVesselNetwork(p_network);
-        solver.SetUp();
         solver.Solve();
 
         p_network->Write(output_file_handler.GetOutputDirectoryFullPath()+"post_network_" +

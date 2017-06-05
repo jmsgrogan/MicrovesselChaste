@@ -37,6 +37,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNetworkPartitioner.hpp"
 #include "Exception.hpp"
 #include "PetscTools.hpp"
+#include "VesselNetworkGeometryCalculator.hpp"
 
 template<unsigned DIM>
 VesselNetworkPartitioner<DIM>::VesselNetworkPartitioner() :
@@ -86,7 +87,7 @@ void VesselNetworkPartitioner<DIM>::Update()
     unsigned rank = PetscTools::GetMyRank();
     unsigned num_procs = PetscTools::GetNumProcs();
 
-    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = mpNetwork->GetExtents();
+    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = VesselNetworkGeometryCalculator<DIM>::GetExtents(mpNetwork);
     units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
     double domain_width = 0.0;
     double domain_start = 0.0;
@@ -128,7 +129,6 @@ void VesselNetworkPartitioner<DIM>::Update()
     // in vessels or halo vessels are allowed to go out of scope later.
     for(unsigned idx=0;idx<nodes.size();idx++)
     {
-        nodes[idx]->SetGlobalIndex(idx);
         double loc = 0.0;
         if(mUseSimpleGeometricPartition)
         {
@@ -154,7 +154,6 @@ void VesselNetworkPartitioner<DIM>::Update()
     std::cout << "num vessels" << vessels.size() << std::endl;
     for(unsigned idx=0;idx<vessels.size();idx++)
     {
-        vessels[idx]->SetGlobalIndex(idx);
         std::vector<boost::shared_ptr<VesselNode<DIM> > > vessel_nodes = vessels[idx]->GetNodes();
         std::vector<unsigned> nodes_per_proc(num_procs, 0);
         unsigned num_nodes = vessel_nodes.size();
@@ -167,7 +166,6 @@ void VesselNetworkPartitioner<DIM>::Update()
         std::vector<unsigned>::iterator result = std::max_element(nodes_per_proc.begin(), nodes_per_proc.end());
         unsigned max_index = std::distance(nodes_per_proc.begin(), result);
         unsigned max_value = nodes_per_proc[max_index];
-        std::cout << "vessel " << idx << " max id " << max_index << " max val " << max_value << std::endl;
 
         if(double(max_value)>(num_nodes/2.0))
         {
@@ -215,12 +213,47 @@ void VesselNetworkPartitioner<DIM>::Update()
         }
     }
 
-    std::cout << "rank " << rank << " num v " << local_vessels.size() << std::endl;
+    // Get the number of nodes per rank
+    std::vector<unsigned> nodes_per_rank(num_procs, 0);
+    unsigned global_index_counter = 0;
+    for(unsigned idx=0;idx<num_procs;idx++)
+    {
+        unsigned local_index_counter = 0;
+        for(unsigned jdx=0; jdx<nodes.size();jdx++)
+        {
+            if(nodes[jdx]->GetOwnerRank()==idx and !nodes[jdx]->IsHalo())
+            {
+                nodes[jdx]->SetGlobalIndex(global_index_counter);
+                nodes[jdx]->SetLocalIndex(local_index_counter);
+                nodes_per_rank[idx]++;
+                global_index_counter++;
+                local_index_counter++;
+            }
+        }
+    }
 
     // Rebuild the vessel arrays in the network
+    std::cout << "rank " << rank << " num v " << local_vessels.size() << std::endl;
+
     mpNetwork->ClearVessels();
     mpNetwork->AddVessels(local_vessels);
     mpNetwork->AddVessels(halo_vessels);
+    unsigned low_index = 0;
+    if(rank>0)
+    {
+        unsigned sum_lower_ranks=0;
+        for(unsigned idx=0;idx<rank;idx++)
+        {
+            sum_lower_ranks+=nodes_per_rank[idx];
+        }
+        low_index = sum_lower_ranks;
+    }
+    unsigned high_index = low_index + nodes_per_rank[rank];
+
+    boost::shared_ptr<DistributedVectorFactory> p_vector_factory =
+            boost::shared_ptr<DistributedVectorFactory>(new DistributedVectorFactory(low_index, high_index, nodes.size()));
+
+    mpNetwork->SetDistributedVectorFactory(p_vector_factory);
     mpNetwork->UpdateAll(false);
 }
 
