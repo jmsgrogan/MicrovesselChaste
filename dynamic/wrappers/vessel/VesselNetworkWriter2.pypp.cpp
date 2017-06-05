@@ -104,11 +104,12 @@ void register_VesselNetworkWriter2_class(){
         { //::VesselNetworkWriter< 2 >::Write
         
             typedef VesselNetworkWriter< 2 > exported_class_t;
-            typedef void ( exported_class_t::*Write_function_type)(  ) ;
+            typedef void ( exported_class_t::*Write_function_type)( bool ) ;
             
             VesselNetworkWriter2_exposer.def( 
                 "Write"
-                , Write_function_type( &::VesselNetworkWriter< 2 >::Write ) );
+                , Write_function_type( &::VesselNetworkWriter< 2 >::Write )
+                , ( bp::arg("masterOnly")=(bool)(true) ) );
         
         }
         VesselNetworkWriter2_exposer.staticmethod( "Create" );

@@ -45,6 +45,8 @@ list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/popu
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/population/vessel/properties)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/population/vessel/calculators)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/population/vessel/generators)
+list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/population/vessel/converters)
+list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/population/vessel/parallel)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/population/vessel/readers)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/population/vessel/writers)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/population/cell)

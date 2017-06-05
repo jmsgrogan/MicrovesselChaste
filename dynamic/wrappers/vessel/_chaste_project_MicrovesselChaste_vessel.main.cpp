@@ -128,9 +128,21 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "VesselNetworkGraphCalculator3.pypp.hpp"
 
+#include "VesselNetworkPartitioner2.pypp.hpp"
+
+#include "VesselNetworkPartitioner3.pypp.hpp"
+
+#include "VesselNetworkPropertyManager2.pypp.hpp"
+
+#include "VesselNetworkPropertyManager3.pypp.hpp"
+
 #include "VesselNetworkReader2.pypp.hpp"
 
 #include "VesselNetworkReader3.pypp.hpp"
+
+#include "VesselNetworkVtkConverter2.pypp.hpp"
+
+#include "VesselNetworkVtkConverter3.pypp.hpp"
 
 #include "VesselNetworkWriter2.pypp.hpp"
 
@@ -227,9 +239,21 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_vessel){
 
     register_VesselNetworkGraphCalculator3_class();
 
+    register_VesselNetworkPartitioner2_class();
+
+    register_VesselNetworkPartitioner3_class();
+
+    register_VesselNetworkPropertyManager2_class();
+
+    register_VesselNetworkPropertyManager3_class();
+
     register_VesselNetworkReader2_class();
 
     register_VesselNetworkReader3_class();
+
+    register_VesselNetworkVtkConverter2_class();
+
+    register_VesselNetworkVtkConverter3_class();
 
     register_VesselNetworkWriter2_class();
 

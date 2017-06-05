@@ -113,6 +113,9 @@
 #include "VesselSegment.hpp"
 #include "Vessel.hpp"
 #include "VesselNetwork.hpp"
+#include "VesselNetworkVtkConverter.hpp"
+#include "VesselNetworkPropertyManager.hpp"
+#include "VesselNetworkPartitioner.hpp"
 #include "VesselNetworkGenerator.hpp"
 #include "AbstractVesselNetworkComponent.hpp"
 #include "VesselNetworkCellPopulationInteractor.hpp"
@@ -329,6 +332,12 @@ template class Vessel<2 >;
 template class Vessel<3 >;
 template class VesselNetwork<2 >;
 template class VesselNetwork<3 >;
+template class VesselNetworkVtkConverter<2 >;
+template class VesselNetworkVtkConverter<3 >;
+template class VesselNetworkPropertyManager<2 >;
+template class VesselNetworkPropertyManager<3 >;
+template class VesselNetworkPartitioner<2 >;
+template class VesselNetworkPartitioner<3 >;
 template class VesselNetworkGenerator<2 >;
 template class VesselNetworkGenerator<3 >;
 template class AbstractVesselNetworkComponent<2 >;
@@ -661,6 +670,12 @@ typedef std::vector<Vessel3Ptr> VectorVessel3Ptr;
 typedef std::vector<SharedPtrVessel3> VectorSharedPtrVessel3;
 typedef VesselNetwork<2 > VesselNetwork2;
 typedef VesselNetwork<3 > VesselNetwork3;
+typedef VesselNetworkVtkConverter<2 > VesselNetworkVtkConverter2;
+typedef VesselNetworkVtkConverter<3 > VesselNetworkVtkConverter3;
+typedef VesselNetworkPropertyManager<2 > VesselNetworkPropertyManager2;
+typedef VesselNetworkPropertyManager<3 > VesselNetworkPropertyManager3;
+typedef VesselNetworkPartitioner<2 > VesselNetworkPartitioner2;
+typedef VesselNetworkPartitioner<3 > VesselNetworkPartitioner3;
 typedef VesselNetworkGenerator<2 > VesselNetworkGenerator2;
 typedef VesselNetworkGenerator<3 > VesselNetworkGenerator3;
 typedef AbstractVesselNetworkComponent<2 > AbstractVesselNetworkComponent2;

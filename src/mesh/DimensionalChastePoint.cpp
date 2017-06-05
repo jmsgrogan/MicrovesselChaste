@@ -227,6 +227,9 @@ void DimensionalChastePoint<DIM>::RotateAboutAxis(c_vector<double, 3> axis, doub
 
     c_vector<double, DIM> old_location = this->mLocation;
     c_vector<double, DIM> new_location;
+    new_location[0] = 0.0;
+    new_location[1] = 0.0;
+
     if(DIM==3)
     {
         double dot_product = inner_prod(old_location, unit_axis);

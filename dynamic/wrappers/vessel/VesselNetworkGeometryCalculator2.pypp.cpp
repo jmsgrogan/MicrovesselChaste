@@ -61,86 +61,217 @@ void register_VesselNetworkGeometryCalculator2_class(){
         { //::VesselNetworkGeometryCalculator< 2 >::GetAverageInterSegmentDistance
         
             typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
-            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetAverageInterSegmentDistance_function_type)(  ) ;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( *GetAverageInterSegmentDistance_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > > );
             
             VesselNetworkGeometryCalculator2_exposer.def( 
                 "GetAverageInterSegmentDistance"
-                , GetAverageInterSegmentDistance_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetAverageInterSegmentDistance ) );
+                , GetAverageInterSegmentDistance_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetAverageInterSegmentDistance )
+                , ( bp::arg("pNetwork") ) );
         
         }
         { //::VesselNetworkGeometryCalculator< 2 >::GetAverageVesselLength
         
             typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
-            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetAverageVesselLength_function_type)(  ) ;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( *GetAverageVesselLength_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > > );
             
             VesselNetworkGeometryCalculator2_exposer.def( 
                 "GetAverageVesselLength"
-                , GetAverageVesselLength_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetAverageVesselLength ) );
+                , GetAverageVesselLength_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetAverageVesselLength )
+                , ( bp::arg("pNetwork") ) );
+        
+        }
+        { //::VesselNetworkGeometryCalculator< 2 >::GetDistanceToNearestNode
+        
+            typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( *GetDistanceToNearestNode_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > >,::DimensionalChastePoint< 2 > const & );
+            
+            VesselNetworkGeometryCalculator2_exposer.def( 
+                "GetDistanceToNearestNode"
+                , GetDistanceToNearestNode_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetDistanceToNearestNode )
+                , ( bp::arg("pNetwork"), bp::arg("rLocation") ) );
+        
+        }
+        { //::VesselNetworkGeometryCalculator< 2 >::GetExtents
+        
+            typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
+            typedef ::std::pair< DimensionalChastePoint< 2 >, DimensionalChastePoint< 2 > > ( *GetExtents_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > >,bool );
+            
+            VesselNetworkGeometryCalculator2_exposer.def( 
+                "GetExtents"
+                , GetExtents_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetExtents )
+                , ( bp::arg("pNetwork"), bp::arg("useRadii")=(bool)(false) ) );
         
         }
         { //::VesselNetworkGeometryCalculator< 2 >::GetInterCapillaryDistances
         
             typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
-            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( exported_class_t::*GetInterCapillaryDistances_function_type)(  ) ;
+            typedef ::std::vector< boost::units::quantity<boost::units::unit<boost::units::list<boost::units::dim<boost::units::length_base_dimension, boost::units::static_rational<1, 1> >, boost::units::dimensionless_type>, boost::units::homogeneous_system<boost::units::list<boost::units::si::meter_base_unit, boost::units::list<boost::units::scaled_base_unit<boost::units::cgs::gram_base_unit, boost::units::scale<10, boost::units::static_rational<3> > >, boost::units::list<boost::units::si::second_base_unit, boost::units::list<boost::units::si::ampere_base_unit, boost::units::list<boost::units::si::kelvin_base_unit, boost::units::list<boost::units::si::mole_base_unit, boost::units::list<boost::units::si::candela_base_unit, boost::units::list<boost::units::angle::radian_base_unit, boost::units::list<boost::units::angle::steradian_base_unit, boost::units::dimensionless_type> > > > > > > > > >, void>, double> > ( *GetInterCapillaryDistances_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > > );
             
             VesselNetworkGeometryCalculator2_exposer.def( 
                 "GetInterCapillaryDistances"
-                , GetInterCapillaryDistances_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetInterCapillaryDistances ) );
+                , GetInterCapillaryDistances_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetInterCapillaryDistances )
+                , ( bp::arg("pNetwork") ) );
+        
+        }
+        { //::VesselNetworkGeometryCalculator< 2 >::GetNearestNode
+        
+            typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< VesselNode< 2 > > ( *GetNearestNode_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > >,::DimensionalChastePoint< 2 > const & );
+            
+            VesselNetworkGeometryCalculator2_exposer.def( 
+                "GetNearestNode"
+                , GetNearestNode_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetNearestNode )
+                , ( bp::arg("pNetwork"), bp::arg("rLocation") ) );
+        
+        }
+        { //::VesselNetworkGeometryCalculator< 2 >::GetNearestNode
+        
+            typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< VesselNode< 2 > > ( *GetNearestNode_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > >,::boost::shared_ptr< VesselNode< 2 > > );
+            
+            VesselNetworkGeometryCalculator2_exposer.def( 
+                "GetNearestNode"
+                , GetNearestNode_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetNearestNode )
+                , ( bp::arg("pNetwork"), bp::arg("pInputNode") ) );
+        
+        }
+        { //::VesselNetworkGeometryCalculator< 2 >::GetNearestSegment
+        
+            typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
+            typedef ::std::pair< boost::shared_ptr< VesselSegment< 2 > >, boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > > ( *GetNearestSegment_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > >,::boost::shared_ptr< VesselSegment< 2 > > );
+            
+            VesselNetworkGeometryCalculator2_exposer.def( 
+                "GetNearestSegment"
+                , GetNearestSegment_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetNearestSegment )
+                , ( bp::arg("pNetwork"), bp::arg("pSegment") ) );
+        
+        }
+        { //::VesselNetworkGeometryCalculator< 2 >::GetNearestSegment
+        
+            typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( *GetNearestSegment_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > >,::boost::shared_ptr< VesselNode< 2 > >,::boost::shared_ptr< VesselSegment< 2 > > &,bool,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > );
+            
+            VesselNetworkGeometryCalculator2_exposer.def( 
+                "GetNearestSegment"
+                , GetNearestSegment_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetNearestSegment )
+                , ( bp::arg("pNetwork"), bp::arg("pNode"), bp::arg("pEmptySegment"), bp::arg("sameVessel")=(bool)(true), bp::arg("radius")=0. * unit::metres ) );
+        
+        }
+        { //::VesselNetworkGeometryCalculator< 2 >::GetNearestSegment
+        
+            typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
+            typedef ::std::pair< boost::shared_ptr< VesselSegment< 2 > >, boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > > ( *GetNearestSegment_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > >,::DimensionalChastePoint< 2 > const & );
+            
+            VesselNetworkGeometryCalculator2_exposer.def( 
+                "GetNearestSegment"
+                , GetNearestSegment_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetNearestSegment )
+                , ( bp::arg("pNetwork"), bp::arg("rLocation") ) );
+        
+        }
+        { //::VesselNetworkGeometryCalculator< 2 >::GetNearestVessel
+        
+            typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
+            typedef ::boost::shared_ptr< Vessel< 2 > > ( *GetNearestVessel_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > >,::DimensionalChastePoint< 2 > const & );
+            
+            VesselNetworkGeometryCalculator2_exposer.def( 
+                "GetNearestVessel"
+                , GetNearestVessel_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetNearestVessel )
+                , ( bp::arg("pNetwork"), bp::arg("rLocation") ) );
+        
+        }
+        { //::VesselNetworkGeometryCalculator< 2 >::GetNodesInSphere
+        
+            typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
+            typedef ::std::vector< boost::shared_ptr<VesselNode<2> > > ( *GetNodesInSphere_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > >,::DimensionalChastePoint< 2 > const &,::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > );
+            
+            VesselNetworkGeometryCalculator2_exposer.def( 
+                "GetNodesInSphere"
+                , GetNodesInSphere_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetNodesInSphere )
+                , ( bp::arg("pNetwork"), bp::arg("rCentre"), bp::arg("radius") ) );
+        
+        }
+        { //::VesselNetworkGeometryCalculator< 2 >::GetNumberOfNodesNearLocation
+        
+            typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
+            typedef unsigned int ( *GetNumberOfNodesNearLocation_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > >,::DimensionalChastePoint< 2 > const &,double );
+            
+            VesselNetworkGeometryCalculator2_exposer.def( 
+                "GetNumberOfNodesNearLocation"
+                , GetNumberOfNodesNearLocation_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetNumberOfNodesNearLocation )
+                , ( bp::arg("pNetwork"), bp::arg("rLocation"), bp::arg("tolerance")=0. ) );
         
         }
         { //::VesselNetworkGeometryCalculator< 2 >::GetTotalLength
         
             typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
-            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetTotalLength_function_type)(  ) ;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( *GetTotalLength_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > > );
             
             VesselNetworkGeometryCalculator2_exposer.def( 
                 "GetTotalLength"
-                , GetTotalLength_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetTotalLength ) );
+                , GetTotalLength_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetTotalLength )
+                , ( bp::arg("pNetwork") ) );
         
         }
         { //::VesselNetworkGeometryCalculator< 2 >::GetTotalSurfaceArea
         
             typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
-            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetTotalSurfaceArea_function_type)(  ) ;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 2, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( *GetTotalSurfaceArea_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > > );
             
             VesselNetworkGeometryCalculator2_exposer.def( 
                 "GetTotalSurfaceArea"
-                , GetTotalSurfaceArea_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetTotalSurfaceArea ) );
+                , GetTotalSurfaceArea_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetTotalSurfaceArea )
+                , ( bp::arg("pNetwork") ) );
         
         }
         { //::VesselNetworkGeometryCalculator< 2 >::GetTotalVolume
         
             typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
-            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 3, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetTotalVolume_function_type)(  ) ;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 3, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( *GetTotalVolume_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > > );
             
             VesselNetworkGeometryCalculator2_exposer.def( 
                 "GetTotalVolume"
-                , GetTotalVolume_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetTotalVolume ) );
+                , GetTotalVolume_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetTotalVolume )
+                , ( bp::arg("pNetwork") ) );
         
         }
         { //::VesselNetworkGeometryCalculator< 2 >::GetVesselLengthDistribution
         
             typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
-            typedef ::std::vector< unsigned int > ( exported_class_t::*GetVesselLengthDistribution_function_type)( double,unsigned int ) ;
+            typedef ::std::vector< unsigned int > ( *GetVesselLengthDistribution_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > >,double,unsigned int );
             
             VesselNetworkGeometryCalculator2_exposer.def( 
                 "GetVesselLengthDistribution"
                 , GetVesselLengthDistribution_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetVesselLengthDistribution )
-                , ( bp::arg("binSpacing")=10., bp::arg("numberOfBins")=(unsigned int)(10) ) );
+                , ( bp::arg("pNetwork"), bp::arg("binSpacing")=10., bp::arg("numberOfBins")=(unsigned int)(10) ) );
         
         }
-        { //::VesselNetworkGeometryCalculator< 2 >::SetVesselNetwork
+        { //::VesselNetworkGeometryCalculator< 2 >::VesselCrossesLineSegment
         
             typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
-            typedef void ( exported_class_t::*SetVesselNetwork_function_type)( ::boost::shared_ptr< VesselNetwork< 2 > > ) ;
+            typedef bool ( *VesselCrossesLineSegment_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > >,::DimensionalChastePoint< 2 > const &,::DimensionalChastePoint< 2 > const &,double );
             
             VesselNetworkGeometryCalculator2_exposer.def( 
-                "SetVesselNetwork"
-                , SetVesselNetwork_function_type( &::VesselNetworkGeometryCalculator< 2 >::SetVesselNetwork )
-                , ( bp::arg("pVesselNetwork") ) );
+                "VesselCrossesLineSegment"
+                , VesselCrossesLineSegment_function_type( &::VesselNetworkGeometryCalculator< 2 >::VesselCrossesLineSegment )
+                , ( bp::arg("pNetwork"), bp::arg("rCoord1"), bp::arg("rCoord2"), bp::arg("tolerance")=9.9999999999999995E-7 ) );
         
         }
         VesselNetworkGeometryCalculator2_exposer.staticmethod( "Create" );
+        VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetAverageInterSegmentDistance" );
+        VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetAverageVesselLength" );
+        VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetDistanceToNearestNode" );
+        VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetExtents" );
+        VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetInterCapillaryDistances" );
+        VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetNearestNode" );
+        VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetNearestSegment" );
+        VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetNearestVessel" );
+        VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetNodesInSphere" );
+        VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetNumberOfNodesNearLocation" );
+        VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetTotalLength" );
+        VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetTotalSurfaceArea" );
+        VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetTotalVolume" );
+        VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetVesselLengthDistribution" );
+        VesselNetworkGeometryCalculator2_exposer.staticmethod( "VesselCrossesLineSegment" );
         bp::register_ptr_to_python< boost::shared_ptr< VesselNetworkGeometryCalculator<2> > >();
     }
 

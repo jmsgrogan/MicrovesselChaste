@@ -46,6 +46,24 @@
 .. autoclass:: microvessel_chaste.vessel.VesselNetwork3
 	:members:
 
+.. autoclass:: microvessel_chaste.vessel.VesselNetworkVtkConverter2
+	:members:
+
+.. autoclass:: microvessel_chaste.vessel.VesselNetworkVtkConverter3
+	:members:
+
+.. autoclass:: microvessel_chaste.vessel.VesselNetworkPropertyManager2
+	:members:
+
+.. autoclass:: microvessel_chaste.vessel.VesselNetworkPropertyManager3
+	:members:
+
+.. autoclass:: microvessel_chaste.vessel.VesselNetworkPartitioner2
+	:members:
+
+.. autoclass:: microvessel_chaste.vessel.VesselNetworkPartitioner3
+	:members:
+
 .. autoclass:: microvessel_chaste.vessel.VesselNetworkGenerator2
 	:members:
 

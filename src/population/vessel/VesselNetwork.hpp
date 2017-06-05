@@ -82,14 +82,9 @@ private:
     std::vector<boost::shared_ptr<Vessel<DIM> > > mVessels;
 
     /**
-     * Container for Halo Vessels in the VesselNetwork.
-     */
-    std::vector<boost::shared_ptr<Vessel<DIM> > > mHaloVessels;
-
-    /**
      * Container for Halo vessel segments in the VesselNetwork.
      */
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > mHaloSegments;
+    std::vector<boost::shared_ptr<VesselSegment<DIM> > > mSegments;
 
     /**
      * Is the data in mSegments up to date.
@@ -102,11 +97,6 @@ private:
     std::vector<boost::shared_ptr<VesselNode<DIM> > > mNodes;
 
     /**
-     * Container for halo nodes in the VesselNetwork.
-     */
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > mHaloNodes;
-
-    /**
      * Is the data in mNodes up to date.
      */
     bool mNodesUpToDate;
@@ -115,11 +105,6 @@ private:
      * Container for vessel nodes in the VesselNetwork.
      */
     std::vector<boost::shared_ptr<VesselNode<DIM> > > mVesselNodes;
-
-    /**
-     * Container for halo vessel nodes in the VesselNetwork.
-     */
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > mHaloVesselNodes;
 
     /**
      * Is the data in mVesselNodes up to date.

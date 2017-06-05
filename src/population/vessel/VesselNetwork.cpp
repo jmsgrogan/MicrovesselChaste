@@ -161,7 +161,7 @@ boost::shared_ptr<DistributedVectorFactory> VesselNetwork<DIM>::GetDistributedVe
 template <unsigned DIM>
 std::vector<unsigned> VesselNetwork<DIM>::GetNumberOfNodesPerProcess()
 {
-
+    return std::vector<unsigned>(0, GetNodes().size());
 }
 
 template <unsigned DIM>
