@@ -52,8 +52,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNetworkGenerator.hpp"
 #include "UnitCollection.hpp"
 #include "Timer.hpp"
+#include "VesselNetworkGeometryCalculator.hpp"
+#include "VesselNetworkPropertyManager.hpp"
 
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestVesselNetwork : public CxxTest::TestSuite
 {
@@ -100,11 +102,10 @@ public:
         }
 
         // Make a network
-        VesselNetwork<3> vessel_network;
-        vessel_network.AddVessels(vessels);
-
-        vessel_network.SetNodeRadii(10.0e-6 * unit::metres);
-        vessel_network.SetSegmentRadii(12.0e-6 * unit::metres);
+        boost::shared_ptr<VesselNetwork<3> > p_vessel_network = VesselNetwork<3>::Create();
+        p_vessel_network->AddVessels(vessels);
+        VesselNetworkPropertyManager<3>::SetNodeRadii(p_vessel_network, 10.0e-6 * unit::metres);
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_vessel_network, 12.0e-6 * unit::metres);
     }
 
     void TestCopyingAndMovingNetwork() throw(Exception)
@@ -371,11 +372,12 @@ public:
         std::vector<boost::shared_ptr<Vessel<2> > > vessels;
         vessels.push_back(Vessel<2>::Create(VesselSegment<2>::Create(nodes[0], nodes[1])));
         vessels.push_back(Vessel<2>::Create(VesselSegment<2>::Create(nodes[1], nodes[2])));
-        VesselNetwork<2> vessel_network;
-        vessel_network.AddVessels(vessels);
+
+        boost::shared_ptr<VesselNetwork<2> > p_vessel_network = VesselNetwork<2>::Create();
+        p_vessel_network->AddVessels(vessels);
 
         boost::shared_ptr<VesselSegment<2> > p_nearest_segment;
-        units::quantity<unit::length> distance = vessel_network.GetNearestSegment(nodes[3], p_nearest_segment, false);
+        units::quantity<unit::length> distance = VesselNetworkGeometryCalculator<2>::GetNearestSegment(p_vessel_network, nodes[3], p_nearest_segment, false);
         TS_ASSERT(p_nearest_segment);
         TS_ASSERT_DELTA(double(distance/(1.e-6*unit::metres)), 5.0, 1.e-6);
     }

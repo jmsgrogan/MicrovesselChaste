@@ -47,6 +47,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNetworkGenerator.hpp"
 #include "UnitCollection.hpp"
 #include "VesselNetworkGeometryCalculator.hpp"
+#include "VesselNetworkPropertyManager.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
@@ -76,16 +77,13 @@ public:
         // Make a network
         boost::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
         p_network->AddVessels(vessels);
-        p_network->SetSegmentRadii(10.0*1.e-6*unit::metres);
 
         boost::shared_ptr<VesselNetworkGeometryCalculator<3> > p_calculator = VesselNetworkGeometryCalculator<3>::Create();
-        p_calculator->SetVesselNetwork(p_network);
-
-        TS_ASSERT_DELTA(p_calculator->GetAverageInterSegmentDistance().value(), 1.24402e-06, 1.e-3);
-        TS_ASSERT_DELTA(p_calculator->GetAverageVesselLength().value(), 1.66667e-06, 1.e-8);
-        TS_ASSERT_DELTA(p_calculator->GetTotalLength().value(), 5.e-6, 1.e-8);
-        TS_ASSERT_DELTA(p_calculator->GetTotalSurfaceArea().value(), 3.14159e-10, 1.e-12);
-        TS_ASSERT_DELTA(p_calculator->GetTotalVolume().value(), 1.5708e-15, 1.e-16);
+        TS_ASSERT_DELTA(p_calculator->GetAverageInterSegmentDistance(p_network).value(), 1.24402e-06, 1.e-3);
+        TS_ASSERT_DELTA(p_calculator->GetAverageVesselLength(p_network).value(), 1.66667e-06, 1.e-8);
+        TS_ASSERT_DELTA(p_calculator->GetTotalLength(p_network).value(), 5.e-6, 1.e-8);
+        TS_ASSERT_DELTA(p_calculator->GetTotalSurfaceArea(p_network).value(), 3.14159e-10, 1.e-12);
+        TS_ASSERT_DELTA(p_calculator->GetTotalVolume(p_network).value(), 1.5708e-15, 1.e-16);
     }
 };
 

@@ -108,8 +108,6 @@ public:
 
         boost::shared_ptr<Polygon<2> > p_circle2 = p_part->AddCircle(0.1e-6*unit::metres,
                 DimensionalChastePoint<2>(0.5, 0.5));
-        //p_circle2->AddAttributeToAllEdges("Inner Boundary", 1.0);
-
         p_part->AddRegionMarker(DimensionalChastePoint<2>(0.5, 0.5), 1.0);
         p_part->GetVtk(true);
         p_part->Write(file_handler.GetOutputDirectoryFullPath()+"part.vtp", GeometryFormat::VTP, true);
@@ -241,7 +239,7 @@ public:
 
         MultiFormatMeshWriter<3> mesh_writer;
         mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"cube");
-        mesh_writer.SetMesh(p_mesh_generator->GetMesh());
+        mesh_writer.SetMesh(p_mesh_generator->GetMesh(), true);
         mesh_writer.Write();
     }
 
@@ -269,7 +267,7 @@ public:
 
         MultiFormatMeshWriter<3> mesh_writer;
         mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"cube_internal");
-        mesh_writer.SetMesh(p_mesh_generator->GetMesh());
+        mesh_writer.SetMesh(p_mesh_generator->GetMesh(), true);
         mesh_writer.Write();
     }
 
@@ -295,7 +293,63 @@ public:
 
         MultiFormatMeshWriter<3> mesh_writer;
         mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"parallel");
-        mesh_writer.SetMesh(p_mesh_generator->GetMesh());
+        mesh_writer.SetMesh(p_mesh_generator->GetMesh(), true);
+        mesh_writer.Write();
+    }
+
+    void TestPatchOnFace() throw(Exception)
+    {
+        OutputFileHandler file_handler("TestDiscreteContinuumMesh/PatchOnFace");
+
+        units::quantity<unit::length> domain_width = 500.0e-6*unit::metres;
+        units::quantity<unit::length> pellet_width = 100.0e-6*unit::metres;
+        units::quantity<unit::length> domain_depth = 50.0e-6*unit::metres;
+        units::quantity<unit::length> pellet_depth = 10.0e-6*unit::metres;
+        units::quantity<unit::length> reference_length = 1.0e-6*unit::metres;
+
+        boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
+        p_part->AddCuboid(domain_width, domain_width, domain_depth, DimensionalChastePoint<3>(0.0, 0.0));
+
+        double left_coord = (domain_width-pellet_width)/(2.0*reference_length);
+        double right_coord = (domain_width+pellet_width)/(2.0*reference_length);
+        double gap = (domain_depth-pellet_depth)/(2.0*reference_length);
+
+        std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > points;
+        points.push_back(DimensionalChastePoint<3>::Create(left_coord, domain_width/reference_length, gap, reference_length));
+        points.push_back(DimensionalChastePoint<3>::Create(right_coord, domain_width/reference_length, gap, reference_length));
+        points.push_back(DimensionalChastePoint<3>::Create(left_coord, domain_width/reference_length, pellet_depth/reference_length-gap, reference_length));
+        points.push_back(DimensionalChastePoint<3>::Create(right_coord, domain_width/reference_length, pellet_depth/reference_length-gap, reference_length));
+
+        boost::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(points);
+        p_polygon->AddAttribute("Pellet Interface", 1.0);
+
+        std::vector<boost::shared_ptr<Facet<3> > > facets = p_part->GetFacets();
+        DimensionalChastePoint<3> probe = p_polygon->GetCentroid();
+        c_vector<double, 3> prob_norm = probe.GetLocation(reference_length);
+
+        std::cout << prob_norm[0] << "," << prob_norm[0] << "," << prob_norm[2] << std::endl;
+
+        for(unsigned idx=0;idx<facets.size();idx++)
+        {
+            units::quantity<unit::length> distance = facets[idx]->GetCentroid().GetDistance(probe);
+            c_vector<double, 3> facet_loc = facets[idx]->GetCentroid().GetLocation(reference_length);
+
+            std::cout << facets[idx]->GetCentroid()[0] << "," << facets[idx]->GetCentroid()[0] << "," << facets[idx]->GetCentroid()[2] << std::endl;
+            if(distance/reference_length <1.e-3)
+            {
+                p_part->AddPolygon(p_polygon, false, facets[idx]);
+            }
+        }
+        p_part->Write(file_handler.GetOutputDirectoryFullPath()+"patch.vtp", GeometryFormat::VTP, true);
+
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        p_mesh_generator->SetDomain(p_part);
+        p_mesh_generator->SetMaxElementArea(100.0*units::pow<3>(1.e-6 * unit::metres));
+        p_mesh_generator->Update();
+
+        MultiFormatMeshWriter<3> mesh_writer;
+        mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"patch");
+        mesh_writer.SetMesh(p_mesh_generator->GetMesh(), true);
         mesh_writer.Write();
     }
 };

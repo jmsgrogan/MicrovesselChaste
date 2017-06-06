@@ -55,6 +55,13 @@ VesselNetworkVtkConverter<DIM>::~VesselNetworkVtkConverter()
 
 }
 
+template <unsigned DIM>
+boost::shared_ptr<VesselNetworkVtkConverter<DIM> > VesselNetworkVtkConverter<DIM>::Create()
+{
+    MAKE_PTR(VesselNetworkVtkConverter<DIM>, pSelf);
+    return pSelf;
+}
+
 template<unsigned DIM>
 vtkSmartPointer<vtkPolyData> VesselNetworkVtkConverter<DIM>::GetVtkRepresentation(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {

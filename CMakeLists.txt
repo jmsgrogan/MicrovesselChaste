@@ -1,4 +1,4 @@
-# Copyright (c) 2005-2016, University of Oxford.
+# Copyright (c) 2005-2017, University of Oxford.
 # All rights reserved.
 # 
 # University of Oxford means the Chancellor, Masters and Scholars of the
@@ -32,8 +32,20 @@
 
 find_package(Chaste COMPONENTS cell_based)
 
-# Microvessel Chaste needs some additional VTK libraries, take them all for now.
-find_package(VTK COMPONENTS vtkParallelCore vtkParallelMPI vtkIOMovie vtkRenderingAnnotation vtkRenderingFreeType vtkRenderingFreeTypeOpenGL vtkRenderingCore vtkRenderingOpenGL vtkInteractionStyle REQUIRED)
+# Microvessel Chaste needs some additional VTK libraries
+
+if(VTK_MAJOR_VERSION EQUAL 5)
+    find_package(VTK COMPONENTS vtkParallelCore vtkParallelMPI vtkIOMovie vtkRenderingAnnotation 
+            vtkRenderingFreeType vtkRenderingFreeTypeOpenGL vtkRenderingCore 
+            vtkRenderingOpenGL vtkInteractionStyle REQUIRED)
+elseif( (VTK_MAJOR_VERSION EQUAL 6) AND (VTK_MINOR_VERSION LESS 3) )
+    find_package(VTK COMPONENTS vtkParallelCore vtkParallelMPI vtkIOMovie vtkRenderingAnnotation 
+            vtkRenderingFreeType vtkRenderingFreeTypeOpenGL vtkRenderingCore 
+            vtkRenderingOpenGL vtkInteractionStyle REQUIRED)
+else()
+    find_package(VTK COMPONENTS vtkParallelCore vtkParallelMPI vtkIOMovie vtkRenderingAnnotation 
+            vtkRenderingFreeType vtkRenderingCore vtkInteractionStyle REQUIRED)
+endif()
 list(APPEND Chaste_THIRD_PARTY_LIBRARIES ${VTK_LIBRARIES})
 
 chaste_do_project(MicrovesselChaste)
