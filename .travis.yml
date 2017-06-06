@@ -15,16 +15,20 @@ before_install:
   - wget https://www.dropbox.com/s/p05hu95q30rsllt/castxml-linux.tar.gz && tar -C "${TRAVIS_BUILD_DIR}"/../ -zxvf castxml-linux.tar.gz
 
 install:
-  - pip install pygccxml==1.7.2 https://bitbucket.org/ompl/pyplusplus/get/1.6.tar.gz numpy matplotlib
-
-# Build steps
-before_script:
   - sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 422C4D99
   - echo "deb http://www.cs.ox.ac.uk/chaste/ubuntu trusty/" | sudo tee -a /etc/apt/sources.list
   - sudo apt-get update -qq
   - sudo apt-get install libpq-dev libboost-all-dev python-numpy -y
   - sudo cp /usr/lib/x86_64-linux-gnu/libpq.so /usr/lib/
   - sudo apt-get install chaste-source -y
+  - export PETSC_DIR=/usr/lib/petscdir/3.4.2/
+  - export PETSC_ARCH=linux-gnu-c-opt
+  - pip install pygccxml==1.7.2 https://bitbucket.org/ompl/pyplusplus/get/1.6.tar.gz numpy matplotlib 
+  - wget https://bitbucket.org/petsc/petsc4py/downloads/petsc4py-3.4.tar.gz && tar -zxf petsc4py-3.4.tar.gz
+  - cd petsc4py-3.4 && python setup.py build && python setup.py install && cd ..
+
+# Build steps
+before_script:
   - "export DISPLAY=:99.0" # For GUI tests
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
@@ -57,7 +61,7 @@ script:
     else
       cmake "${TRAVIS_BUILD_DIR}"/../chaste-source -DCASTXML_EXE_LOC="${TRAVIS_BUILD_DIR}"/../castxml/bin/castxml
     fi
-    cmake . && make project_MicrovesselChaste -j 2 && ctest -L MicrovesselChaste -j 2 --verbose
+    cmake . && make project_MicrovesselChaste -j 2
 
 # # following: https://github.com/NLeSC/root-roofit-dev/blob/travis_make-optimize_deps/.travis.yml
 # Save the order of timestamps of the files so we can recreate it with touch in the next build.

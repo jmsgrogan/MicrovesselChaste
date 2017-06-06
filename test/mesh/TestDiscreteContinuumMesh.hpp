@@ -98,7 +98,7 @@ private:
 
 public:
 
-    void TestMeshCircleInCirle() throw(Exception)
+    void xTestMeshCircleInCirle() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/Circle");
         boost::shared_ptr<Part<2> > p_part = Part<2>::Create();
@@ -132,7 +132,7 @@ public:
         mesh_writer.Write();
     }
 
-    void TestMeshCylinder() throw(Exception)
+    void xTestMeshCylinder() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/Cylinder");
 
@@ -159,7 +159,7 @@ public:
         mesh_writer.Write();
     }
 
-    void TestMeshCylinderWithVesselSurface() throw(Exception)
+    void xTestMeshCylinderWithVesselSurface() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CylinderWithVesselSurface");
 
@@ -187,7 +187,7 @@ public:
         mesh_writer.Write();
     }
 
-    void TestMeshCylinderWithVesselSurfaceNoHole() throw(Exception)
+    void xTestMeshCylinderWithVesselSurfaceNoHole() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CylinderWithVesselSurfaceNoHole");
 
@@ -215,7 +215,7 @@ public:
         mesh_writer.Write();
     }
 
-    void TestMeshCubeWithVesselSurface() throw(Exception)
+    void xTestMeshCubeWithVesselSurface() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CubeWithVesselSurface");
 
@@ -243,7 +243,7 @@ public:
         mesh_writer.Write();
     }
 
-    void TestMeshCubeWithVesselSurfaceInternal() throw(Exception)
+    void xTestMeshCubeWithVesselSurfaceInternal() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CubeWithVesselSurface", false);
 
@@ -271,7 +271,7 @@ public:
         mesh_writer.Write();
     }
 
-    void TestParrallelVesselSurfaceCube() throw(Exception)
+    void xTestParrallelVesselSurfaceCube() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/ParrallelVesselSurface");
 
@@ -317,8 +317,8 @@ public:
         std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > points;
         points.push_back(DimensionalChastePoint<3>::Create(left_coord, domain_width/reference_length, gap, reference_length));
         points.push_back(DimensionalChastePoint<3>::Create(right_coord, domain_width/reference_length, gap, reference_length));
-        points.push_back(DimensionalChastePoint<3>::Create(left_coord, domain_width/reference_length, pellet_depth/reference_length-gap, reference_length));
-        points.push_back(DimensionalChastePoint<3>::Create(right_coord, domain_width/reference_length, pellet_depth/reference_length-gap, reference_length));
+        points.push_back(DimensionalChastePoint<3>::Create(right_coord, domain_width/reference_length, domain_depth/reference_length-gap, reference_length));
+        points.push_back(DimensionalChastePoint<3>::Create(left_coord, domain_width/reference_length, domain_depth/reference_length-gap, reference_length));
 
         boost::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(points);
         p_polygon->AddAttribute("Pellet Interface", 1.0);
@@ -327,14 +327,14 @@ public:
         DimensionalChastePoint<3> probe = p_polygon->GetCentroid();
         c_vector<double, 3> prob_norm = probe.GetLocation(reference_length);
 
-        std::cout << prob_norm[0] << "," << prob_norm[0] << "," << prob_norm[2] << std::endl;
+        std::cout << prob_norm[0] << "," << prob_norm[1] << "," << prob_norm[2] << std::endl;
 
         for(unsigned idx=0;idx<facets.size();idx++)
         {
             units::quantity<unit::length> distance = facets[idx]->GetCentroid().GetDistance(probe);
             c_vector<double, 3> facet_loc = facets[idx]->GetCentroid().GetLocation(reference_length);
 
-            std::cout << facets[idx]->GetCentroid()[0] << "," << facets[idx]->GetCentroid()[0] << "," << facets[idx]->GetCentroid()[2] << std::endl;
+            std::cout << facet_loc[0] << "," << facet_loc[1] << "," << facet_loc[2] << std::endl;
             if(distance/reference_length <1.e-3)
             {
                 p_part->AddPolygon(p_polygon, false, facets[idx]);

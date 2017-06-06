@@ -46,6 +46,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "FileFinder.hpp"
 #include "VesselNetworkReader.hpp"
 #include "VesselImpedanceCalculator.hpp"
+#include "VesselNetworkPropertyManager.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
@@ -75,7 +76,7 @@ public:
 
         double impedance = 1.e12;
         p_segment->GetFlowProperties()->SetImpedance(impedance*unit::pascal_second_per_metre_cubed);
-        p_vascular_network->SetSegmentProperties(p_segment);
+        VesselNetworkPropertyManager<3>::SetSegmentProperties(p_vascular_network, p_segment);
 
         p_vessel->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
         p_vessel->GetStartNode()->GetFlowProperties()->SetPressure(3393*unit::pascals);
@@ -112,7 +113,7 @@ public:
 
         double impedance = 1.e12;
         p_segment->GetFlowProperties()->SetImpedance(impedance*unit::pascal_second_per_metre_cubed);
-        p_vascular_network->SetSegmentProperties(p_segment);
+        VesselNetworkPropertyManager<3>::SetSegmentProperties(p_vascular_network, p_segment);
 
         p_vessel->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
         p_vessel->GetStartNode()->GetFlowProperties()->SetUseVelocityBoundaryCondition(true);
@@ -152,7 +153,7 @@ public:
 
         double impedance = 1.e12;
         p_segment1->GetFlowProperties()->SetImpedance(impedance*unit::pascal_second_per_metre_cubed);
-        p_vascular_network->SetSegmentProperties(p_segment1);
+        VesselNetworkPropertyManager<3>::SetSegmentProperties(p_vascular_network, p_segment);
 
         p_vessel1->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
         p_vessel1->GetStartNode()->GetFlowProperties()->SetUseVelocityBoundaryCondition(true);
@@ -201,7 +202,7 @@ public:
         p_vascular_network->AddVessel(p_vessel);
         double impedance = 1.e14;
         p_segment1->GetFlowProperties()->SetImpedance(1.e14*unit::pascal_second_per_metre_cubed);
-        p_vascular_network->SetSegmentProperties(p_segment1);
+        VesselNetworkPropertyManager<3>::SetSegmentProperties(p_vascular_network, p_segment);
 
         p_vessel->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
         p_vessel->GetStartNode()->GetFlowProperties()->SetPressure(3393*unit::pascals);
@@ -255,7 +256,7 @@ public:
 
         double impedance = 1.e14;
         p_segment1->GetFlowProperties()->SetImpedance(impedance*unit::pascal_second_per_metre_cubed);
-        p_vascular_network->SetSegmentProperties(p_segment1);
+        VesselNetworkPropertyManager<3>::SetSegmentProperties(p_vascular_network, p_segment);
 
         nodes[0]->GetFlowProperties()->SetIsInputNode(true);
         nodes[0]->GetFlowProperties()->SetPressure(3393*unit::pascals);
@@ -318,7 +319,7 @@ public:
 
         double impedance = 1.e14;
         p_segment1->GetFlowProperties()->SetImpedance(impedance*unit::pascal_second_per_metre_cubed);
-        p_vascular_network->SetSegmentProperties(p_segment1);
+        VesselNetworkPropertyManager<3>::SetSegmentProperties(p_vascular_network, p_segment);
 
         nodes[0]->GetFlowProperties()->SetIsInputNode(true);
         nodes[0]->GetFlowProperties()->SetPressure(3393*unit::pascals);
@@ -384,7 +385,7 @@ public:
 
         double impedance = 1.e14;
         p_segment1->GetFlowProperties()->SetImpedance(impedance*unit::pascal_second_per_metre_cubed);
-        p_vascular_network->SetSegmentProperties(p_segment1);
+        VesselNetworkPropertyManager<3>::SetSegmentProperties(p_vascular_network, p_segment);
 
         nodes[0]->GetFlowProperties()->SetIsInputNode(true);
         nodes[0]->GetFlowProperties()->SetPressure(3393*unit::pascals);
@@ -444,7 +445,7 @@ public:
 
         double impedance = 0.001;
         p_segment1->GetFlowProperties()->SetImpedance(impedance*unit::pascal_second_per_metre_cubed);
-        vascular_network->SetSegmentProperties(p_segment1);
+        VesselNetworkPropertyManager<3>::SetSegmentProperties(vascular_network, p_segment1);
 
         std::pair<DimensionalChastePoint<2>, DimensionalChastePoint<2> > network_extents = vascular_network->GetExtents();
         double y_middle = (network_extents.first.GetLocation(1.e-6*unit::metres)[1] + network_extents.second.GetLocation(1.e-6*unit::metres)[1]) / 2.0;
@@ -512,7 +513,7 @@ public:
         boost::shared_ptr<VesselNetwork<3> > p_network = p_network_reader->Read();
 
         p_network->GetVessel(0)->GetSegment(0)->GetFlowProperties()->SetViscosity(1.e-3 * unit::poiseuille);
-        p_network->SetSegmentProperties(p_network->GetVessel(0)->GetSegment(0));
+        VesselNetworkPropertyManager<3>::SetSegmentProperties(p_network, p_network->GetVessel(0)->GetSegment(0));
 
         VesselImpedanceCalculator<3> impedance_calculator;
         impedance_calculator.SetVesselNetwork(p_network);

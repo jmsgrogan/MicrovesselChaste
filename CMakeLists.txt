@@ -33,19 +33,21 @@
 find_package(Chaste COMPONENTS cell_based)
 
 # Microvessel Chaste needs some additional VTK libraries
-
 if(VTK_MAJOR_VERSION EQUAL 5)
-    find_package(VTK COMPONENTS vtkParallelCore vtkParallelMPI vtkIOMovie vtkRenderingAnnotation 
-            vtkRenderingFreeType vtkRenderingFreeTypeOpenGL vtkRenderingCore 
+    find_package(VTK COMPONENTS vtkParallelCore vtkParallelMPI vtkIOMovie vtkRenderingAnnotation
+            vtkRenderingFreeType vtkRenderingFreeTypeOpenGL vtkRenderingCore
             vtkRenderingOpenGL vtkInteractionStyle REQUIRED)
 elseif( (VTK_MAJOR_VERSION EQUAL 6) AND (VTK_MINOR_VERSION LESS 3) )
-    find_package(VTK COMPONENTS vtkParallelCore vtkParallelMPI vtkIOMovie vtkRenderingAnnotation 
-            vtkRenderingFreeType vtkRenderingFreeTypeOpenGL vtkRenderingCore 
-            vtkRenderingOpenGL vtkInteractionStyle REQUIRED)
+    find_package(VTK COMPONENTS vtkParallelCore vtkParallelMPI vtkIOMovie vtkRenderingAnnotation
+            vtkRenderingFreeType vtkRenderingFreeTypeOpenGL vtkFiltersVerdict vtkRenderingCore
+            vtkRenderingOpenGL vtkFiltersProgrammable vtkInteractionStyle vtkIOImage REQUIRED)
 else()
-    find_package(VTK COMPONENTS vtkParallelCore vtkParallelMPI vtkIOMovie vtkRenderingAnnotation 
-            vtkRenderingFreeType vtkRenderingCore vtkInteractionStyle REQUIRED)
+    find_package(VTK COMPONENTS vtkParallelCore vtkParallelMPI vtkIOImage vtkIOMovie vtkRenderingAnnotation
+            vtkRenderingFreeType vtkRenderingOpenGL vtkRenderingCore vtkFiltersProgrammable vtkFiltersVerdict vtkInteractionStyle REQUIRED)
 endif()
+
+list(APPEND Chaste_INCLUDES ${VTK_INCLUDE_DIRS})
+list(APPEND Chaste_project_MicrovesselChaste_INCLUDE_DIRS ${VTK_INCLUDE_DIRS})
 list(APPEND Chaste_THIRD_PARTY_LIBRARIES ${VTK_LIBRARIES})
 
 chaste_do_project(MicrovesselChaste)

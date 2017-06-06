@@ -389,7 +389,7 @@ c_vector<double, DIM> Polygon<DIM>::GetNormal()
 }
 
 template<unsigned DIM>
-bool Polygon<DIM>::ContainsPoint(const DimensionalChastePoint<DIM>& location)
+bool Polygon<DIM>::ContainsPoint(const DimensionalChastePoint<DIM>& location, double localTolerance)
 {
     bool contains_point = false;
     if (mVertices.size() >= 3)
@@ -413,10 +413,28 @@ bool Polygon<DIM>::ContainsPoint(const DimensionalChastePoint<DIM>& location)
         double bounds[6];
         p_polygon->GetPoints()->GetBounds(bounds);
 
+        if(localTolerance>0.0)
+        {
+            if(bounds[1]-bounds[0]<localTolerance)
+            {
+                bounds[0]-=localTolerance/2.0;
+                bounds[1]+=localTolerance/2.0;
+            }
+            if(bounds[3]-bounds[2]<localTolerance)
+            {
+                bounds[2]-=localTolerance/2.0;
+                bounds[3]+=localTolerance/2.0;
+            }
+            if(bounds[5]-bounds[4]<localTolerance)
+            {
+                bounds[4]-=localTolerance/2.0;
+                bounds[5]+=localTolerance/2.0;
+            }
+        }
+
         int contains = p_polygon->PointInPolygon(
                 point, p_polygon->GetPoints()->GetNumberOfPoints(),
                 static_cast<double*>(p_polygon->GetPoints()->GetData()->GetVoidPointer(0)), bounds, n);
-
         if (contains == 1)
         {
             contains_point = true;

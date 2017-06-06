@@ -560,7 +560,9 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
                         c_vector<double, SPACE_DIM> centroid = this->mpMesh->GetBoundaryElement(jdx)->CalculateCentroid();
                         for(unsigned kdx=1;kdx<facets[idx]->GetPolygons().size(); kdx++)
                         {
-                            if(facets[idx]->GetPolygons()[kdx]->ContainsPoint(DimensionalChastePoint<SPACE_DIM>(centroid, mReferenceLength)))
+                            c_vector<double, SPACE_DIM> cent = facets[idx]->GetPolygons()[kdx]->GetCentroid().GetLocation(mReferenceLength);
+                            if(facets[idx]->GetPolygons()[kdx]->ContainsPoint(
+                                    DimensionalChastePoint<SPACE_DIM>(centroid, mReferenceLength), 1.e-3))
                             {
                                 std::map<std::string, double> attributes = facets[idx]->GetPolygons()[kdx]->GetAttributes();
                                 unsigned key=0;

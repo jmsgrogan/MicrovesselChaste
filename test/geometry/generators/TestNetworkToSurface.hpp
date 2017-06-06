@@ -48,6 +48,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "PetscTools.hpp"
 #include "VesselNetworkGenerator.hpp"
 #include "RandomNumberGenerator.hpp"
+#include "VesselNetworkPropertyManager.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
@@ -73,8 +74,8 @@ public:
         boost::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(p_node1, p_node2);
         boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel);
-        p_network->SetSegmentRadii(radius* 1.e-6 * unit::metres);
-        p_network->SetNodeRadiiFromSegments();
+        VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, radius* 1.e-6 * unit::metres);
+        VesselNetworkPropertyManager<2>::SetNodeRadiiFromSegments(p_network);
 
         // Convert it to a surface
         boost::shared_ptr<NetworkToSurface<2> > p_converter = NetworkToSurface<2>::Create();
@@ -104,8 +105,8 @@ public:
         boost::shared_ptr<Vessel<3> > p_vessel = Vessel<3>::Create(p_node1, p_node2);
         boost::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_vessel);
-        p_network->SetSegmentRadii(radius* 1.e-6 * unit::metres);
-        p_network->SetNodeRadiiFromSegments();
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, radius* 1.e-6 * unit::metres);
+        VesselNetworkPropertyManager<3>::SetNodeRadiiFromSegments(p_network);
 
         // Convert it to a surface
         boost::shared_ptr<NetworkToSurface<3> > p_converter = NetworkToSurface<3>::Create();
@@ -152,8 +153,8 @@ public:
         p_network->AddVessel(p_vessel4);
         p_network->AddVessel(p_vessel5);
         p_network->AddVessel(p_vessel6);
-        p_network->SetSegmentRadii(radius* 1.e-6 * unit::metres);
-        p_network->SetNodeRadiiFromSegments();
+        VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, radius* 1.e-6 * unit::metres);
+        VesselNetworkPropertyManager<2>::SetNodeRadiiFromSegments(p_network);
         p_node1->GetFlowProperties()->SetIsInputNode(true);
         p_node6->GetFlowProperties()->SetIsOutputNode(true);
 
@@ -198,8 +199,8 @@ public:
         p_network->AddVessel(p_vessel4);
         p_network->AddVessel(p_vessel5);
         p_network->AddVessel(p_vessel6);
-        p_network->SetSegmentRadii(radius* 1.e-6 * unit::metres);
-        p_network->SetNodeRadiiFromSegments();
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, radius* 1.e-6 * unit::metres);
+        VesselNetworkPropertyManager<3>::SetNodeRadiiFromSegments(p_network);
         p_node1->GetFlowProperties()->SetIsInputNode(true);
         p_node6->GetFlowProperties()->SetIsOutputNode(true);
 
@@ -240,7 +241,7 @@ public:
             double rand = RandomNumberGenerator::Instance()->ranf();
             p_network->GetVesselSegments()[idx]->SetRadius((10.0+20.0*rand)*1.e-6*unit::metres);
         }
-        p_network->SetNodeRadiiFromSegments();
+        VesselNetworkPropertyManager<2>::SetNodeRadiiFromSegments(p_network);
 
         // Convert it to a surface
         NetworkToSurface<2> converter;
@@ -275,7 +276,7 @@ public:
             double rand = RandomNumberGenerator::Instance()->ranf();
             p_network->GetVesselSegments()[idx]->SetRadius((10.0+20.0*rand)*1.e-6*unit::metres);
         }
-        p_network->SetNodeRadiiFromSegments();
+        VesselNetworkPropertyManager<3>::SetNodeRadiiFromSegments(p_network);
 
         // Convert it to a surface
         NetworkToSurface<3> converter;

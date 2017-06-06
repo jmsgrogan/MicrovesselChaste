@@ -69,6 +69,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "VesselNode.hpp"
 #include "VesselNetwork.hpp"
+#include "VesselNetworkPropertyManager.hpp"
 /*
  * cells,
  */
@@ -294,9 +295,9 @@ public:
          * flow related stimuli.
          */
         units::quantity<unit::length> large_vessel_radius(25.0 * unit::microns);
-        p_network->SetSegmentRadii(large_vessel_radius);
+        VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, large_vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
-        p_network->SetSegmentViscosity(viscosity);
+        VesselNetworkPropertyManager<2>::SetSegmentViscosity(p_network, viscosity);
         /*
         * Set up the pre- and post flow calculators.
         */

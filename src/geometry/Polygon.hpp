@@ -186,9 +186,10 @@ public:
     /**
      * Return true if the specified location is in the polygon, uses vtk point in polygon.
      * @param rLocation the location to be tested
+     * @param tolerance if non-zero this is the distance to the polygon where points are still accepted
      * @return true if the location is in the polygon
      */
-    bool ContainsPoint(const DimensionalChastePoint<DIM>& rLocation);
+    bool ContainsPoint(const DimensionalChastePoint<DIM>& rLocation, double tolerance = 0.0);
 
     /**
      * Return the bounding box of the polygon
