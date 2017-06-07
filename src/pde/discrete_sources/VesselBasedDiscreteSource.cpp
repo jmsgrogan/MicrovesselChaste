@@ -119,11 +119,12 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
             0.0*unit::mole_per_metre_cubed_per_second);
 
     units::quantity<unit::length> reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
-    std::vector<double> vessel_densities = this->mpDensityMap->rGetVesselLineDensity(false);
+    std::vector<double> vessel_densities = this->mpDensityMap->rGetVesselLineDensity(true);
     for(unsigned idx=0;idx<vessel_densities.size();idx++)
     {
         values[idx] += vessel_densities[idx]*mCellsPerMetre*reference_length*mUptakeRatePerCell*(1.0/units::pow<3>(reference_length));
     }
+
     return values;
 }
 

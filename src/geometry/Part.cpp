@@ -1057,13 +1057,14 @@ void Part<DIM>::MergeCoincidentVertices()
 template<unsigned DIM>
 void Part<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 {
-    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
-    for(unsigned idx=0; idx<polygons.size(); idx++)
+    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     {
-        polygons[idx]->RotateAboutAxis(axis, angle);
+        for (unsigned idx = 0; idx < vertices.size(); idx++)
+        {
+            vertices[idx]->RotateAboutAxis(axis, angle);
+        }
     }
     mVtkIsUpToDate = false;
-
 }
 
 template<unsigned DIM>

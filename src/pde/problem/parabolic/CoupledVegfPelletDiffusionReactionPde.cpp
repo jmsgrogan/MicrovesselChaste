@@ -192,7 +192,13 @@ double CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeSou
         {
             EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
         }
-        rate+= this->mDiscreteNonLinearSourceStrengths[pElement->GetIndex()]*(u/(u+normalized_half_max_conc))/(scaling_factor*BaseUnits::Instance()->GetReferenceConcentrationScale());
+
+        double extra_source = this->mDiscreteNonLinearSourceStrengths[pElement->GetIndex()]*(u/(u+normalized_half_max_conc))/(scaling_factor*BaseUnits::Instance()->GetReferenceConcentrationScale());
+        rate+= extra_source;
+    }
+    if(u<=0.0)
+    {
+        rate=0.0;
     }
     return rate;
 }

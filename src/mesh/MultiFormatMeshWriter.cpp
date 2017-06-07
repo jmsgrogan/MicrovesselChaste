@@ -153,8 +153,6 @@ void MultiFormatMeshWriter<DIM>::Write()
                     }
                     if(p_bound_element->GetNumElementAttributes()>0)
                     {
-                        std::cout << "att " << p_bound_element->rGetElementAttributes()[0] << std::endl;
-                        std::cout << "natt " << p_bound_element->rGetElementAttributes().size() << std::endl;
                         if(p_bound_element->rGetElementAttributes()[0]==0.0)
                         {
                             p_element_attributes->InsertNextTuple1(1.0);

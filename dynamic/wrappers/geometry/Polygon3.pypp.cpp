@@ -109,12 +109,12 @@ void register_Polygon3_class(){
         { //::Polygon< 3 >::ContainsPoint
         
             typedef Polygon< 3 > exported_class_t;
-            typedef bool ( exported_class_t::*ContainsPoint_function_type)( ::DimensionalChastePoint< 3 > const & ) ;
+            typedef bool ( exported_class_t::*ContainsPoint_function_type)( ::DimensionalChastePoint< 3 > const &,double ) ;
             
             Polygon3_exposer.def( 
                 "ContainsPoint"
                 , ContainsPoint_function_type( &::Polygon< 3 >::ContainsPoint )
-                , ( bp::arg("rLocation") ) );
+                , ( bp::arg("rLocation"), bp::arg("tolerance")=0. ) );
         
         }
         { //::Polygon< 3 >::Create

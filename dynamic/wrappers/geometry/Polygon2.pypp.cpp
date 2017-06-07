@@ -109,12 +109,12 @@ void register_Polygon2_class(){
         { //::Polygon< 2 >::ContainsPoint
         
             typedef Polygon< 2 > exported_class_t;
-            typedef bool ( exported_class_t::*ContainsPoint_function_type)( ::DimensionalChastePoint< 2 > const & ) ;
+            typedef bool ( exported_class_t::*ContainsPoint_function_type)( ::DimensionalChastePoint< 2 > const &,double ) ;
             
             Polygon2_exposer.def( 
                 "ContainsPoint"
                 , ContainsPoint_function_type( &::Polygon< 2 >::ContainsPoint )
-                , ( bp::arg("rLocation") ) );
+                , ( bp::arg("rLocation"), bp::arg("tolerance")=0. ) );
         
         }
         { //::Polygon< 2 >::Create

@@ -55,6 +55,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNetwork.hpp"
 #include "UnitCollection.hpp"
 #include "PetscTools.hpp"
+#include "MappableGridGenerator.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
@@ -297,7 +298,7 @@ public:
         mesh_writer.Write();
     }
 
-    void TestPatchOnFace() throw(Exception)
+    void xTestPatchOnFace() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/PatchOnFace");
 
@@ -349,6 +350,65 @@ public:
 
         MultiFormatMeshWriter<3> mesh_writer;
         mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"patch");
+        mesh_writer.SetMesh(p_mesh_generator->GetMesh(), true);
+        mesh_writer.Write();
+    }
+
+    void TestPartInPart() throw(Exception)
+    {
+        OutputFileHandler file_handler("TestDiscreteContinuumMesh/Hemisphere");
+
+        MappableGridGenerator generator;
+        unsigned num_divisions_x = 20;
+        unsigned num_divisions_y = 20;
+        double azimuth_angle = 1.0 * M_PI;
+        double polar_angle = 0.999 * M_PI;
+        std::vector<DimensionalChastePoint<3> > holes;
+
+        units::quantity<unit::length> cornea_radius = 1300*1.e-6*unit::metres;
+        units::quantity<unit::length> cornea_thickness = 100*1.e-6*unit::metres;
+        units::quantity<unit::length> pellet_radius = 200*1.e-6*unit::metres;
+        units::quantity<unit::length> pellet_thickness = 50*1.e-6*unit::metres;
+        units::quantity<unit::length> reference_length = 1.e-6*unit::metres;
+        boost::shared_ptr<Part<3> > p_domain = generator.GenerateHemisphere(cornea_radius,
+                cornea_thickness, num_divisions_x, num_divisions_y, azimuth_angle, polar_angle);
+
+        double gap = (cornea_thickness - pellet_thickness)/(2.0*reference_length)/4.0;
+        double base = cornea_radius/reference_length + gap - cornea_thickness/reference_length;
+
+        boost::shared_ptr<Part<3> > p_pellet = Part<3>::Create();
+        p_pellet->AddCylinder(pellet_radius,pellet_thickness,
+                              DimensionalChastePoint<3>(0.0, 0.0, base, reference_length));
+
+        // Rotate the pellet
+        double rotation_angle = M_PI/8.0;
+        c_vector<double, 3> axis;
+        axis[0] = 0.0;
+        axis[1] = 1.0;
+        axis[2] = 0.0;
+        p_pellet->RotateAboutAxis(axis, rotation_angle);
+
+        DimensionalChastePoint<3> centre(0.0, 0.0, base + pellet_thickness/(2.0*reference_length), reference_length);
+        centre.RotateAboutAxis(axis, rotation_angle);
+
+        p_domain->AppendPart(p_pellet);
+        p_domain->AddHoleMarker(DimensionalChastePoint<3>(centre));
+
+        std::vector<boost::shared_ptr<Polygon<3> > > polygons = p_pellet->GetPolygons();
+        for(unsigned idx=0;idx<polygons.size();idx++)
+        {
+            polygons[idx]->AddAttribute("Pellet Interface", 1.0);
+        }
+
+        p_domain->Write(file_handler.GetOutputDirectoryFullPath()+"domain.vtp", GeometryFormat::VTP, true);
+
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        p_mesh_generator->SetDomain(p_domain);
+        //p_mesh_generator->SetMaxElementArea(1e4*units::pow<3>(1.e-18 * unit::metres));
+        p_mesh_generator->Update();
+
+        MultiFormatMeshWriter<3> mesh_writer;
+        mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"mesh");
         mesh_writer.SetMesh(p_mesh_generator->GetMesh(), true);
         mesh_writer.Write();
     }
