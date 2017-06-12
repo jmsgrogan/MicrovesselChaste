@@ -62,8 +62,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "RegularGrid.hpp"
 #include "DefaultCellProliferativeType.hpp"
 #include "GridCalculator.hpp"
+#include "VesselNetworkGeometryCalculator.hpp"
 
-#include "FakePetscSetup.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestAngiogenesisWithCaPopulation : public AbstractCellBasedWithTimingsTestSuite
 {
@@ -93,7 +94,7 @@ public:
         std::string output_filename = p_file_handler->GetOutputDirectoryFullPath().append("InitialVesselNetwork.vtp");
 
         DimensionalChastePoint<2> tip_position(10.0, 10.0);
-        p_network->GetNearestNode(tip_position)->SetIsMigrating(true);
+        VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, tip_position)->SetIsMigrating(true);
         p_network->Write(output_filename);
 
         // Set up the cell population

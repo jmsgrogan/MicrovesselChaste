@@ -46,6 +46,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "SimulationTime.hpp"
 #include "AlarconHaematocritSolver.hpp"
 #include "UnitCollection.hpp"
+#include "VesselNetworkPropertyManager.hpp"
+#include "VesselNetworkGeometryCalculator.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
@@ -196,9 +198,9 @@ public:
         p_segment->SetRadius(radius*1.e-6*unit::metres);
         double haematocrit = 0.45;
         p_segment->GetFlowProperties()->SetHaematocrit(haematocrit);
-        vascular_network->SetSegmentProperties(p_segment);
+        VesselNetworkPropertyManager<2>::SetSegmentProperties(vascular_network, p_segment);
 
-        std::pair<DimensionalChastePoint<2>, DimensionalChastePoint<2> > network_extents = vascular_network->GetExtents();
+        std::pair<DimensionalChastePoint<2>, DimensionalChastePoint<2> > network_extents = VesselNetworkGeometryCalculator<2>::GetExtents(vascular_network);
         double y_middle = (network_extents.first.GetLocation(1.e-6*unit::metres)[1] + network_extents.second.GetLocation(1.e-6*unit::metres)[1]) / 2.0;
         double x_middle = (network_extents.first.GetLocation(1.e-6*unit::metres)[0] + network_extents.second.GetLocation(1.e-6*unit::metres)[0]) / 2.0;
 

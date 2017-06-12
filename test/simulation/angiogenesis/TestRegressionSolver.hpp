@@ -50,8 +50,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "MicrovesselSolver.hpp"
 #include "OutputFileHandler.hpp"
 #include "UnitCollection.hpp"
+#include "VesselNetworkPropertyManager.hpp"
+#include "VesselNetworkGeometryCalculator.hpp"
 
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestRegressionSolver : public AbstractCellBasedWithTimingsTestSuite
 {
@@ -106,11 +108,11 @@ public:
         boost::shared_ptr<VesselSegment<2> > p_segment1 = VesselSegment<2>::Create(VesselNode<2>::Create(0.0, 0.0),
                                                                                    VesselNode<2>::Create(1.0, 0.0));
         p_segment1->GetFlowProperties()->SetImpedance(0.0001*unit::pascal_second_per_metre_cubed);
-        p_network->SetSegmentProperties(p_segment1);
+        VesselNetworkPropertyManager<2>::SetSegmentProperties(p_network, p_segment1);
 
         // Get the nearest node to the inlet and outlet
-        boost::shared_ptr<VesselNode<2> > p_inlet_node = p_network->GetNearestNode(DimensionalChastePoint<2>(742, 912));
-        boost::shared_ptr<VesselNode<2> > p_outlet_node = p_network->GetNearestNode(DimensionalChastePoint<2>(0, 0));
+        boost::shared_ptr<VesselNode<2> > p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, DimensionalChastePoint<2>(742, 912));
+        boost::shared_ptr<VesselNode<2> > p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, DimensionalChastePoint<2>(0, 0));
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
         p_inlet_node->GetFlowProperties()->SetPressure(3393*unit::pascals);
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);

@@ -41,6 +41,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "SmartPointers.hpp"
 #include "MathsCustomFunctions.hpp"
 #include "UnitCollection.hpp"
+#include "VesselNetworkPropertyManager.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
@@ -81,7 +82,7 @@ public:
         p_segment->SetRadius(radius);
         p_segment->GetFlowProperties()->SetViscosity(viscosity);
 
-        p_vascular_network->SetSegmentProperties(p_segment);
+        VesselNetworkPropertyManager<3>::SetSegmentProperties(p_vascular_network, p_segment);
 
         VesselImpedanceCalculator<3> calculator;
         calculator.SetVesselNetwork(p_vascular_network);

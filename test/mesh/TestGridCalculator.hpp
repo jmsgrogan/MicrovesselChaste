@@ -64,6 +64,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "GridCalculator.hpp"
 #include "Timer.hpp"
 #include "Node.hpp"
+#include "VesselNetworkPropertyManager.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
@@ -194,7 +195,7 @@ public:
         boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
                                                                                                 DimensionalChastePoint<2>(45.0, -0.1));
         units::quantity<unit::length> radius(11.0*unit::microns);
-        p_network->SetSegmentRadii(radius);
+        VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, radius);
 
         // Get a point-segment map
         boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();

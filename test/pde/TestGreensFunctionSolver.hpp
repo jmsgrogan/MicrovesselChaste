@@ -43,8 +43,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNetworkGenerator.hpp"
 #include "RegularGrid.hpp"
 #include "UnitCollection.hpp"
+#include "VesselNetworkPropertyManager.hpp"
 
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestGreenFunctionSolver : public CxxTest::TestSuite
 {
@@ -58,7 +59,7 @@ public:
         DimensionalChastePoint<3> centre(0.5, 0.5, 0.0);
 
         boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre, 14.0);
-        p_network->SetSegmentRadii(0.05*1.e-6*unit::metres);
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, 0.05*1.e-6*unit::metres);
 
         // Set up the grid
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();

@@ -63,6 +63,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNetworkGenerator.hpp"
 #include "UnitCollection.hpp"
 #include "BaseUnits.hpp"
+#include "VesselNetworkPropertyManager.hpp"
+#include "VesselNetworkGeometryCalculator.hpp"
 /*
  * A container for flow information (boundary conditions, pressure values) for nodes.
  */
@@ -93,7 +95,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /*
  * Keep this last.
  */
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestBloodFlowLiteratePaper : public AbstractCellBasedWithTimingsTestSuite
 {
@@ -148,9 +150,9 @@ public:
          * Now set the segment radii and viscosity values.
          */
         units::quantity<unit::length> vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
-        p_network->SetSegmentRadii(vessel_radius);
+        VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
-        p_network->SetSegmentViscosity(viscosity);
+        VesselNetworkPropertyManager<2>::SetSegmentViscosity(p_network, viscosity);
         /*
          * We use a calculator to work out the impedance of each vessel based on assumptions of Poiseuille flow and cylindrical vessels. This
          * updates the value of the impedance in the vessel.
@@ -217,8 +219,8 @@ public:
         */
         DimensionalChastePoint<3> inlet_locator(0.0, 0.0, 0.0, cell_width);
         DimensionalChastePoint<3> outlet_locator(target_width/cell_width, target_height/cell_width, 0.0, cell_width);
-        boost::shared_ptr<VesselNode<3> > p_inlet_node = p_network->GetNearestNode(inlet_locator);
-        boost::shared_ptr<VesselNode<3> > p_outlet_node = p_network->GetNearestNode(outlet_locator);
+        boost::shared_ptr<VesselNode<3> > p_inlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, inlet_locator);
+        boost::shared_ptr<VesselNode<3> > p_outlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, outlet_locator);
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
         p_inlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue());
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
@@ -228,9 +230,9 @@ public:
          * Now set the segment radii and viscosity values.
          */
         units::quantity<unit::length> vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
-        p_network->SetSegmentRadii(vessel_radius);
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
-        p_network->SetSegmentViscosity(viscosity);
+        VesselNetworkPropertyManager<3>::SetSegmentViscosity(p_network, viscosity);
         /*
          * Next some simple extra functionality is demonstrated by mapping the network onto a hemisphere
          */
@@ -300,8 +302,8 @@ public:
         */
         DimensionalChastePoint<3> inlet_locator(0.0, 0.0, 0.0, reference_length);
         DimensionalChastePoint<3> outlet_locator(target_width/reference_length, target_height/reference_length, 0.0, reference_length);
-        boost::shared_ptr<VesselNode<3> > p_inlet_node = p_network->GetNearestNode(inlet_locator);
-        boost::shared_ptr<VesselNode<3> > p_outlet_node = p_network->GetNearestNode(outlet_locator);
+        boost::shared_ptr<VesselNode<3> > p_inlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, inlet_locator);
+        boost::shared_ptr<VesselNode<3> > p_outlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, outlet_locator);
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
         p_inlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue());
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
@@ -310,9 +312,9 @@ public:
          * Set the radius and viscosity and write the initial network to file.
          */
         units::quantity<unit::length> vessel_radius(40.0*unit::microns);
-        p_network->SetSegmentRadii(vessel_radius);
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
-        p_network->SetSegmentViscosity(viscosity);
+        VesselNetworkPropertyManager<3>::SetSegmentViscosity(p_network, viscosity);
         p_network->Write(p_handler->GetOutputDirectoryFullPath()+"initial_network.vtp");
         /*
          * Set up the timer and time scale. The structural adaptation alrogithm works by calcualting growth or shrinkage stimuli
@@ -370,16 +372,16 @@ public:
 
         DimensionalChastePoint<3> inlet_locator(0.0, 0.0, 0.0, reference_length);
         DimensionalChastePoint<3> outlet_locator(target_width/reference_length, target_height/reference_length, 0.0, reference_length);
-        boost::shared_ptr<VesselNode<3> > p_inlet_node = p_network->GetNearestNode(inlet_locator);
-        boost::shared_ptr<VesselNode<3> > p_outlet_node = p_network->GetNearestNode(outlet_locator);
+        boost::shared_ptr<VesselNode<3> > p_inlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, inlet_locator);
+        boost::shared_ptr<VesselNode<3> > p_outlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, outlet_locator);
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
         p_inlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue());
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
         p_outlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue());
         units::quantity<unit::length> vessel_radius(40.0*unit::microns);
-        p_network->SetSegmentRadii(vessel_radius);
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
-        p_network->SetSegmentViscosity(viscosity);
+        VesselNetworkPropertyManager<3>::SetSegmentViscosity(p_network, viscosity);
         p_network->Write(p_handler->GetOutputDirectoryFullPath()+"initial_network.vtp");
 
         BaseUnits::Instance()->SetReferenceTimeScale(60.0*unit::seconds);

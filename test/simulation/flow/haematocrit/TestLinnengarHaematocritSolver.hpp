@@ -60,6 +60,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "StructuralAdaptationSolver.hpp"
 #include "ConstantHaematocritSolver.hpp"
 #include "BetteridgeHaematocritSolver.hpp"
+#include "VesselNetworkPropertyManager.hpp"
+#include "VesselNetworkGeometryCalculator.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
@@ -106,15 +108,17 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
         boost::shared_ptr<VesselSegment<2> > p_segment(VesselSegment<2>::Create(nodes[0], nodes[1]));
         p_segment->SetRadius(vessel_radius);
         p_segment->GetFlowProperties()->SetHaematocrit(inlet_haematocrit);
-        p_network->SetSegmentProperties(p_segment);
+        VesselNetworkPropertyManager<2>::SetSegmentProperties(p_network, p_segment);
         std::vector<boost::shared_ptr<VesselSegment<2> > > segments = p_network->GetVesselSegments();
         for(unsigned jdx=0; jdx<segments.size(); jdx++)
         {
             segments[jdx]->GetFlowProperties()->SetViscosity(visocity);
         }
 
-        boost::shared_ptr<VesselNode<2> > p_inlet_node = p_network->GetNearestNode(DimensionalChastePoint<2>(0.0, 0.0, 0.0, reference_length));
-        boost::shared_ptr<VesselNode<2> > p_outlet_node = p_network->GetNearestNode(DimensionalChastePoint<2>(domain_side_length/reference_length,
+        boost::shared_ptr<VesselNode<2> > p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
+                DimensionalChastePoint<2>(0.0, 0.0, 0.0, reference_length));
+        boost::shared_ptr<VesselNode<2> > p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
+                DimensionalChastePoint<2>(domain_side_length/reference_length,
                 domain_side_length/reference_length, 0.0, reference_length));
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
         p_inlet_node->GetFlowProperties()->SetPressure(5000*unit::pascals);

@@ -56,8 +56,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "FlowSolver.hpp"
 #include "UnitCollection.hpp"
 #include "GridCalculator.hpp"
+#include "VesselNetworkPropertyManager.hpp"
 
-#include "PetscSetupAndFinalize.hpp"
+#include "PetscAndVtkSetupAndFinalize.hpp"
 
 class TestLatticeBasedMigrationRules : public AbstractCellBasedWithTimingsTestSuite
 {
@@ -228,7 +229,7 @@ public:
         p_node5->GetFlowProperties()->SetIsOutputNode(true);
         p_node5->GetFlowProperties()->SetPressure(1000*unit::pascals);
 
-        p_network->SetSegmentRadii(10.0*1.e-6*unit::metres);
+        VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, 10.0*1.e-6*unit::metres);
         std::vector<boost::shared_ptr<VesselSegment<2> > > segments = p_network->GetVesselSegments();
         for(unsigned idx=0; idx<segments.size(); idx++)
         {

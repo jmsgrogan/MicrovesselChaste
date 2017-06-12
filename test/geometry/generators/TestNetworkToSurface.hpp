@@ -49,6 +49,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNetworkGenerator.hpp"
 #include "RandomNumberGenerator.hpp"
 #include "VesselNetworkPropertyManager.hpp"
+#include "VesselNetworkGeometryCalculator.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
@@ -230,10 +231,10 @@ public:
         boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(500*1e-6*unit::metres,
                 500*1e-6*unit::metres, 100*1e-6*unit::metres, true);
 
-        boost::shared_ptr<VesselNode<2> > p_bottom_left_node = p_network->GetNearestNode(
-                DimensionalChastePoint<2>(0.0, 0.0, 0.0, 1e-6*unit::metres));
-        boost::shared_ptr<VesselNode<2> > p_top_right_node = p_network->GetNearestNode(
-                DimensionalChastePoint<2>(600, 600, 0.0, 1e-6*unit::metres));
+        boost::shared_ptr<VesselNode<2> > p_bottom_left_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(
+                p_network, DimensionalChastePoint<2>(0.0, 0.0, 0.0, 1e-6*unit::metres));
+        boost::shared_ptr<VesselNode<2> > p_top_right_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(
+                p_network, DimensionalChastePoint<2>(600, 600, 0.0, 1e-6*unit::metres));
         p_bottom_left_node->GetFlowProperties()->SetIsInputNode(true);
         p_top_right_node->GetFlowProperties()->SetIsOutputNode(true);
         for(unsigned idx=0;idx<p_network->GetVesselSegments().size();idx++)
@@ -265,10 +266,10 @@ public:
         boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(100*1e-6*unit::metres,
                 100*1e-6*unit::metres, 30*1e-6*unit::metres, true);
 
-        boost::shared_ptr<VesselNode<3> > p_bottom_left_node = p_network->GetNearestNode(
-                DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1e-6*unit::metres));
-        boost::shared_ptr<VesselNode<3> > p_top_right_node = p_network->GetNearestNode(
-                DimensionalChastePoint<3>(600, 600, 0.0, 1e-6*unit::metres));
+        boost::shared_ptr<VesselNode<3> > p_bottom_left_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(
+                p_network, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1e-6*unit::metres));
+        boost::shared_ptr<VesselNode<3> > p_top_right_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(
+                p_network, DimensionalChastePoint<3>(600, 600, 0.0, 1e-6*unit::metres));
         p_bottom_left_node->GetFlowProperties()->SetIsInputNode(true);
         p_top_right_node->GetFlowProperties()->SetIsOutputNode(true);
         for(unsigned idx=0;idx<p_network->GetVesselSegments().size();idx++)

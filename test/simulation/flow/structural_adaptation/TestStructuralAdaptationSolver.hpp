@@ -47,6 +47,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "AlarconHaematocritSolver.hpp"
 #include "UnitCollection.hpp"
 #include "VesselImpedanceCalculator.hpp"
+#include "VesselNetworkPropertyManager.hpp"
+#include "VesselNetworkGeometryCalculator.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
@@ -138,7 +140,7 @@ public:
         double haematocrit = 0.45;
         p_segment1->GetFlowProperties()->SetHaematocrit(haematocrit);
         p_segment1->GetFlowProperties()->SetViscosity(1.e-3 * unit::poiseuille);
-        p_network->SetSegmentProperties(p_segment1);
+        VesselNetworkPropertyManager<2>::SetSegmentProperties(p_network, p_segment1);
 
         SimulationTime::Instance()->SetStartTime(0.0);
         SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(30, 1);
@@ -193,9 +195,9 @@ public:
         double haematocrit = 0.45;
         p_segment->GetFlowProperties()->SetHaematocrit(haematocrit);
         p_segment->GetFlowProperties()->SetViscosity(1.e-3 * unit::poiseuille);
-        vascular_network->SetSegmentProperties(p_segment);
+        VesselNetworkPropertyManager<2>::SetSegmentProperties(vascular_network, p_segment);
 
-        std::pair<DimensionalChastePoint<2>, DimensionalChastePoint<2> > network_extents = vascular_network->GetExtents();
+        std::pair<DimensionalChastePoint<2>, DimensionalChastePoint<2> > network_extents = VesselNetworkGeometryCalculator<2>::GetExtents(vascular_network);
         double y_middle = (network_extents.first.GetLocation(1.e-6*unit::metres)[1] + network_extents.second.GetLocation(1.e-6*unit::metres)[1]) / 2.0;
         double x_middle = (network_extents.first.GetLocation(1.e-6*unit::metres)[0] + network_extents.second.GetLocation(1.e-6*unit::metres)[0]) / 2.0;
 
