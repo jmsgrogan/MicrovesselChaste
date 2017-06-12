@@ -338,7 +338,11 @@ void NetworkToSurface<DIM>::Update()
 
         // Use vmtk to cap the surface
         vtkSmartPointer<vtkvmtkSimpleCapPolyData> p_capper = vtkSmartPointer<vtkvmtkSimpleCapPolyData>::New();
-        p_capper->SetInputData(p_cleaned);
+        #if VTK_MAJOR_VERSION <= 5
+            p_capper->SetInput(p_cleaned);
+        #else
+            p_capper->SetInputData(p_cleaned);
+        #endif
         p_capper->SetCellEntityIdsArrayName("CellEntityIds");
         p_capper->SetCellEntityIdOffset(1);
 
@@ -358,7 +362,7 @@ void NetworkToSurface<DIM>::Update()
             // Surface remeshing
             vtkSmartPointer<vtkvmtkPolyDataSurfaceRemeshing> p_remesh= vtkSmartPointer<vtkvmtkPolyDataSurfaceRemeshing>::New();
             #if VTK_MAJOR_VERSION <= 5
-            p_remesh->SetInput(p_triangle2->GetOutput());
+                p_remesh->SetInput(p_triangle2->GetOutput());
             #else
                 p_remesh->SetInputData(p_triangle2->GetOutput());
             #endif
