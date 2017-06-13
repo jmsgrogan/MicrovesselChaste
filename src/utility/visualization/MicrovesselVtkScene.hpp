@@ -44,7 +44,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     #include <vtkOggTheoraWriter.h>
     #if VTK_MINOR_VERSION > 0
         #include <vtkAutoInit.h>
+        #if VTK_MAJOR_VERSION > 6
+        VTK_MODULE_INIT(vtkRenderingOpenGL2);
+        #else
         VTK_MODULE_INIT(vtkRenderingOpenGL);
+        #endif
         VTK_MODULE_INIT(vtkRenderingFreeType);
     #else
         #define vtkRenderingCore_AUTOINIT 4(vtkInteractionStyle,vtkRenderingFreeType,vtkRenderingFreeTypeOpenGL,vtkRenderingOpenGL)
