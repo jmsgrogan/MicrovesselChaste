@@ -36,6 +36,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef VOLUMEOUTPUTMODIFIER_HPP_
 #define VOLUMEOUTPUTMODIFIER_HPP_
 
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <fstream>
 #include "SmartPointers.hpp"
 #include "AbstractCellBasedSimulationModifier.hpp"
