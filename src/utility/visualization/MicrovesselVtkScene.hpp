@@ -38,6 +38,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <vector>
 #include "SmartPointers.hpp"
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkVersion.h>
 #if VTK_MAJOR_VERSION > 5
     #include <vtkOggTheoraWriter.h>
@@ -50,7 +51,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         #define vtkRenderingVolume_AUTOINIT 1(vtkRenderingVolumeOpenGL)
     #endif
 #endif
-#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
 #include <vtkRenderer.h>
 #include <vtkLookupTable.h>

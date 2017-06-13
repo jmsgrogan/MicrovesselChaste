@@ -67,17 +67,24 @@ public:
 
     void TestGridFunction() throw(Exception)
     {
+
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler,
+                ("TestVesselBasedDiscreteSource/TestGridFunction", true));
+
         units::quantity<unit::length> vessel_length(100.0*unit::microns);
         units::quantity<unit::length> reference_length(1.0*unit::microns);
         VesselNetworkGenerator<2> generator;
-        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>());
+        boost::shared_ptr<VesselNetwork<2> > p_network =
+                generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>());
+        p_network->GetVessels()[0]->GetFlowProperties()->SetHaematocrit(0.4);
 
         // Set up the grid
         boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(vessel_length, vessel_length, DimensionalChastePoint<2>());
         DimensionalChastePoint<2> translation_vector(-vessel_length/(2.0*reference_length),
-                                                     -vessel_length/(2.0*reference_length), 0.0, reference_length);
+                                                     0.0, 0.0, reference_length);
         p_domain->Translate(translation_vector);
+
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         units::quantity<unit::length> spacing(10.0*unit::microns);
         p_grid->GenerateFromPart(p_domain, spacing);
@@ -110,23 +117,27 @@ public:
         }
 
         solver.UpdateSolution(solution);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestGridFunction", true));
         solver.SetFileHandler(p_output_file_handler);
         solver.Write();
+
+        p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"network.vtp");
     }
 
     void TestMeshFunction() throw(Exception)
     {
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestMeshFunction"));
+
         units::quantity<unit::length> vessel_length(100.0*unit::microns);
         units::quantity<unit::length> reference_length(1.0*unit::microns);
         VesselNetworkGenerator<2> generator;
         boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>());
+        p_network->GetVessels()[0]->GetFlowProperties()->SetHaematocrit(0.4);
 
         // Set up the grid
         boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(vessel_length, vessel_length, DimensionalChastePoint<2>());
         DimensionalChastePoint<2> translation_vector(-vessel_length/(2.0*reference_length),
-                                                     -vessel_length/(2.0*reference_length), 0.0, reference_length);
+                                                     0.0, 0.0, reference_length);
         p_domain->Translate(translation_vector);
 
         // Set up the grid
@@ -141,22 +152,13 @@ public:
         p_density_map->SetGrid(p_mesh_generator->GetMesh());
 
         // Set up the discrete source
-        std::vector<DimensionalChastePoint<2> > linear_consumption_points;
-        linear_consumption_points.push_back(DimensionalChastePoint<2>(50.0, 50.0, 0.0, 1.e-6 * unit::metres));
-        boost::shared_ptr<DiscreteSource<2> > p_linear_point_source = DiscreteSource<2>::Create();
+        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_linear_point_source = VesselBasedDiscreteSource<2>::Create();
         p_linear_point_source->SetLinearInUValue(1.0 * unit::per_second);
-        p_linear_point_source->SetPoints(linear_consumption_points);
         p_linear_point_source->SetDensityMap(p_density_map);
 
-        boost::shared_ptr<DiscreteSource<2> > p_const_point_source = DiscreteSource<2>::Create();
+        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_const_point_source = VesselBasedDiscreteSource<2>::Create();
         units::quantity<unit::concentration_flow_rate> consumption_rate(2.0 * unit::mole_per_metre_cubed_per_second);
         p_const_point_source->SetConstantInUValue(consumption_rate);
-        std::vector<DimensionalChastePoint<2> > constant_consumption_points;
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 25.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 25.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 75.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 75.0, 25.0, 1.e-6 * unit::metres));
-        p_const_point_source->SetPoints(constant_consumption_points);
         p_const_point_source->SetDensityMap(p_density_map);
 
         // Set up a function map
@@ -172,13 +174,17 @@ public:
             solution.push_back(double(point_rates[idx].value() + point_conc_rates[idx].value()));
         }
         solver.UpdateElementSolution(solution);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestMeshFunction", false));
         solver.SetFileHandler(p_output_file_handler);
         solver.Write();
+
+        p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"network.vtp");
     }
 
     void TestSimpleLinearEllipticFiniteDifferenceSolver() throw(Exception)
     {
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler,
+                ("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteDifferenceSolver"));
+
         // Set up the vessel network
         units::quantity<unit::length> vessel_length(100.0*unit::microns);
         units::quantity<unit::length> reference_length(1.0*unit::microns);
@@ -192,7 +198,7 @@ public:
         boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(vessel_length, vessel_length, DimensionalChastePoint<2>());
         DimensionalChastePoint<2> translation_vector(-vessel_length/(2.0*reference_length),
-                                                     -vessel_length/(2.0*reference_length), 0.0, reference_length);
+                                                     0.0, 0.0, reference_length);
         p_domain->Translate(translation_vector);
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         units::quantity<unit::length> spacing(10.0*unit::microns);
@@ -201,9 +207,9 @@ public:
         // Choose the PDE
         boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
         units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
-        units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e-7 * unit::mole_per_metre_cubed_per_second);
+        units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e0 * unit::mole_per_metre_cubed_per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
-        //p_pde->SetContinuumConstantInUTerm(consumption_rate);
+        p_pde->SetContinuumConstantInUTerm(consumption_rate);
 
         // Set up the discrete source
         boost::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_source = VesselBasedDiscreteSource<2>::Create();
@@ -220,7 +226,6 @@ public:
         solver.SetPde(p_pde);
         solver.SetVesselNetwork(p_network);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteDifferenceSolver"));
         solver.SetFileHandler(p_output_file_handler);
         p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"network.vtp");
         solver.SetWriteSolution(true);
@@ -229,52 +234,55 @@ public:
 
     void TestSimpleLinearEllipticFiniteElementSolver() throw(Exception)
     {
+        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler,
+                ("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteElementSolver"));
+
+
         // Set up the vessel network
         units::quantity<unit::length> vessel_length(100.0*unit::microns);
         units::quantity<unit::length> reference_length(1.0*unit::microns);
-        VesselNetworkGenerator<3> generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<3>());
+        VesselNetworkGenerator<2> generator;
+        boost::shared_ptr<VesselNetwork<2> > p_network =
+                generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>());
+        p_network->GetVessels()[0]->GetFlowProperties()->SetHaematocrit(0.45);
 
         // Set up the grid
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(vessel_length, vessel_length, vessel_length, DimensionalChastePoint<3>());
-        DimensionalChastePoint<3> translation_vector(-vessel_length/(2.0*reference_length),
-                                                     -vessel_length/(2.0*reference_length), 0.0, reference_length);
+        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        p_domain->AddRectangle(vessel_length, vessel_length, DimensionalChastePoint<2>());
+        DimensionalChastePoint<2> translation_vector(-vessel_length/(2.0*reference_length),
+                                                     0.0, 0.0, reference_length);
         p_domain->Translate(translation_vector);
 
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator =
+                DiscreteContinuumMeshGenerator<2>::Create();
         p_mesh_generator->SetDomain(p_domain);
         units::quantity<unit::length> spacing(10.0*unit::microns);
-        p_mesh_generator->SetMaxElementArea(spacing*spacing*spacing);
+        p_mesh_generator->SetMaxElementArea(units::pow<3>(0.02*vessel_length));
         p_mesh_generator->Update();
 
         // Choose the PDE
-        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
+        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde =
+                DiscreteContinuumLinearEllipticPde<2>::Create();
         units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
-        units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e-7 * unit::mole_per_metre_cubed_per_second);
+        units::quantity<unit::concentration_flow_rate> consumption_rate(-2.0 * unit::mole_per_metre_cubed_per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
         p_pde->SetContinuumConstantInUTerm(consumption_rate);
 
         // Set up the discrete source
-        boost::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_source_lin = VesselBasedDiscreteSource<3>::Create();
-        p_vessel_source_lin->SetLinearInUValue(-1.e3*unit::per_second);
-        boost::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_source_const = VesselBasedDiscreteSource<3>::Create();
-        p_vessel_source_const->SetConstantInUValue(40.e-7* unit::mole_per_metre_cubed_per_second);
-
-        p_pde->AddDiscreteSource(p_vessel_source_lin);
-        p_pde->AddDiscreteSource(p_vessel_source_const);
-
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary2 = DiscreteContinuumBoundaryCondition<3>::Create();
-        p_boundary2->SetValue(1.0*unit::mole_per_metre_cubed);
+        // Set up the discrete source
+        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_source = VesselBasedDiscreteSource<2>::Create();
+        units::quantity<unit::solubility> oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
+                GenericParameters::mpGasConcentrationAtStp->GetValue("User");
+        units::quantity<unit::concentration> vessel_oxygen_concentration = oxygen_solubility_at_stp *
+                Owen11Parameters::mpReferencePartialPressure->GetValue("User");
+        p_vessel_source->SetReferenceConcentration(vessel_oxygen_concentration);
+        p_pde->AddDiscreteSource(p_vessel_source);
 
         // Set up and run the solver
-        SimpleLinearEllipticFiniteElementSolver<3> solver;
+        SimpleLinearEllipticFiniteElementSolver<2> solver;
         solver.SetGrid(p_mesh_generator->GetMesh());
         solver.SetPde(p_pde);
         solver.SetVesselNetwork(p_network);
-        solver.AddBoundaryCondition(p_boundary2);
-
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteElementSolver"));
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();

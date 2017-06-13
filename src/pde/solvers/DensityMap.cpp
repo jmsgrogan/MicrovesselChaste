@@ -376,6 +376,7 @@ template<unsigned DIM>
 const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselSurfaceAreaDensity(bool update)
 {
     unsigned num_points = this->mpGridCalculator->GetGrid()->GetNumberOfCells();
+
     if(!update and mPerfusedVesselSurfaceAreaDensity.size() == num_points)
     {
         return mPerfusedVesselSurfaceAreaDensity;
@@ -384,6 +385,7 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselSurfaceAreaDensity
     {
         mPerfusedVesselSurfaceAreaDensity.clear();
         mPerfusedVesselSurfaceAreaDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfCells(), 0.0);
+
         std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
         units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetCellVolumes(true, true);
@@ -408,7 +410,6 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselSurfaceAreaDensity
                 EXCEPTION("Can't cast to mesh");
             }
 
-            vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
             if(DIM==3)
             {
                 p_sampling_grid = vtkUnstructuredGrid::SafeDownCast(this->mpGridCalculator->GetGrid()->GetGlobalVtkGrid());

@@ -37,6 +37,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define TESTVESSELNETWORK_HPP_
 
 #include <cxxtest/TestSuite.h>
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkPolyData.h>
 #include <vtkIdList.h>
 #include <vtkCellArray.h>

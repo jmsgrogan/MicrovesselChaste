@@ -80,7 +80,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
     units::quantity<unit::length> reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
 
 
-    std::vector<double> vessel_densities = this->mpDensityMap->rGetPerfusedVesselSurfaceAreaDensity(false);
+    std::vector<double> vessel_densities = this->mpDensityMap->rGetPerfusedVesselSurfaceAreaDensity(true);
     std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpDensityMap->GetGridCalculator()->rGetSegmentMap();
     for(unsigned idx=0;idx<vessel_densities.size();idx++)
     {
@@ -139,7 +139,7 @@ std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLin
     std::vector<units::quantity<unit::rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::per_second);
     units::quantity<unit::length> reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
-    std::vector<double> vessel_densities = this->mpDensityMap->rGetPerfusedVesselSurfaceAreaDensity(false);
+    std::vector<double> vessel_densities = this->mpDensityMap->rGetPerfusedVesselSurfaceAreaDensity(true);
     for(unsigned idx=0;idx<vessel_densities.size();idx++)
     {
         values[idx] -= vessel_densities[idx]*mVesselPermeability * (1.0/reference_length);

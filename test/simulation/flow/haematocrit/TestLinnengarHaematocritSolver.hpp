@@ -84,8 +84,8 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
     boost::shared_ptr<OutputFileHandler> p_file_handler =
                     boost::shared_ptr<OutputFileHandler>(new OutputFileHandler("TestLinnengarHaematocritSolver_depl", true));
 
-    double inlet_haematocrit = 0.1;
-    unsigned num_samples = 10;
+    double inlet_haematocrit = 0.4;
+    unsigned num_samples = 1;
 
     for(unsigned idx=0; idx<num_samples; idx++)
     {
@@ -121,7 +121,7 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
                 DimensionalChastePoint<2>(domain_side_length/reference_length,
                 domain_side_length/reference_length, 0.0, reference_length));
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
-        p_inlet_node->GetFlowProperties()->SetPressure(5000*unit::pascals);
+        p_inlet_node->GetFlowProperties()->SetPressure(8000*unit::pascals);
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
         p_outlet_node->GetFlowProperties()->SetPressure(2000*unit::pascals);
 
@@ -162,9 +162,9 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
         p_oxygen_solver->SetLabel("oxygen");
         p_oxygen_solver->SetGrid(p_grid);
 
-        boost::shared_ptr<LinnengarHaematocritSolver<2> > p_haematocrit_calculator = LinnengarHaematocritSolver<2>::Create();
+        //boost::shared_ptr<LinnengarHaematocritSolver<2> > p_haematocrit_calculator = LinnengarHaematocritSolver<2>::Create();
 
-        //boost::shared_ptr<ConstantHaematocritSolver<2> > p_haematocrit_calculator = ConstantHaematocritSolver<2>::Create();
+        boost::shared_ptr<ConstantHaematocritSolver<2> > p_haematocrit_calculator = ConstantHaematocritSolver<2>::Create();
         boost::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
 
         boost::shared_ptr<StructuralAdaptationSolver<2> > p_structural_adaptation_solver = StructuralAdaptationSolver<2>::Create();
