@@ -25,6 +25,8 @@
 #ifndef __vtkvmtkDataSetItem_h
 #define __vtkvmtkDataSetItem_h
 
+// JG: Add code to prevent deprecation warnings - June '17
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include "vtkObject.h"
 #include "vtkvmtkItem.h"
 #include "vtkDataSet.h"

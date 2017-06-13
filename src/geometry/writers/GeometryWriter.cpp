@@ -111,7 +111,7 @@ void GeometryWriter::Write(bool masterOnly)
             if(mpInputGeometries.size()==1)
             {
                 #if VTK_MAJOR_VERSION <= 5
-                p_tri_filter->SetInput(mpInputGeometry);
+                p_tri_filter->SetInput(mpInputGeometries[0]);
                 #else
                 p_tri_filter->SetInputData(mpInputGeometries[0]);
                 #endif
@@ -150,7 +150,7 @@ void GeometryWriter::Write(bool masterOnly)
             if(mpInputGeometries.size()==1)
             {
                 #if VTK_MAJOR_VERSION <= 5
-                    writer->SetInput(mpInputGeometry);
+                    writer->SetInput(mpInputGeometries[0]);
                 #else
                     writer->SetInputData(mpInputGeometries[0]);
                 #endif

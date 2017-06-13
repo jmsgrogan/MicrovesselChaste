@@ -25,6 +25,8 @@ Version:   $Revision: 1.5 $
 #ifndef __vtkvmtkPolyDataBoundaryExtractor_h
 #define __vtkvmtkPolyDataBoundaryExtractor_h
 
+// JG: Add code to prevent deprecation warnings - June '17
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include "vtkPolyDataAlgorithm.h"
 #include "vtkvmtkWin32Header.h"
 

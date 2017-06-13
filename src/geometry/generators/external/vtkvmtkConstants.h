@@ -1,6 +1,7 @@
 /*=========================================================================
 
   Program:   VMTK
+// JG: Add code to prevent deprecation warnings - June '17
   Module:    $RCSfile: vtkvmtkConstants.h,v $
   Language:  C++
   Date:      $Date: 2005/11/15 17:39:24 $
@@ -18,6 +19,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 
 #ifndef VTK_VMTK_LARGE_INTEGER
 #define VTK_VMTK_LARGE_INTEGER 2147483647

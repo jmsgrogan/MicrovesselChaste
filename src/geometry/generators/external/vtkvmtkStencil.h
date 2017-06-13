@@ -25,6 +25,8 @@
 #ifndef __vtkvmtkStencil_h
 #define __vtkvmtkStencil_h
 
+// JG: Add code to prevent deprecation warnings - June '17
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include "vtkObject.h"
 #include "vtkvmtkNeighborhood.h"
 //#include "vtkvmtkDifferentialGeometryWin32Header.h"
