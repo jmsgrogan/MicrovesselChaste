@@ -46,6 +46,15 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UnitCollection.hpp"
 #include "DimensionalChastePoint.hpp"
 
+
+/**
+ * Return an arbitary (for not random) unit normal for the supplied direction
+ * @param direction the direction
+ * @return an arbitary (for not random) unit normal
+ */
+template<unsigned DIM>
+c_vector<double, DIM> GetArbitaryUnitNormal(c_vector<double, DIM> direction);
+
 /**
  * Get the distance between two points
  * @param rLocation1 the input point 1
@@ -106,12 +115,15 @@ DimensionalChastePoint<DIM> GetPointProjectionOnLineSegment(const DimensionalCha
 /**
  * Return a vector of points projected at global normals to the central point a distance probeLength
  * @param rCentrePoint the probe centre
+ * @param currentDirection the current direction, nor normalized
  * @param probeLength the probe length
+ * @param numDivisions the number of division for gradient calculation
  * @return a vector of points projected at global normals to the central point
  */
 template<unsigned DIM>
 vtkSmartPointer<vtkPoints> GetProbeLocationsExternalPoint(DimensionalChastePoint<DIM> rCentrePoint,
-                                                                         units::quantity<unit::length> probeLength);
+        DimensionalChastePoint<DIM> currentDirection, units::quantity<unit::length> probeLength,
+        unsigned numDivisions=8);
 
 /**
  * Return a vector of points projected at orthogonal directions to the rInitialDirection about the rRotationAxis

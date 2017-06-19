@@ -69,6 +69,7 @@ simulation/angiogenesis/migration_rules/TestLatticeBasedMigrationRules.hpp
 simulation/angiogenesis/migration_rules/TestOffLatticeMigrationRules.hpp
 simulation/angiogenesis/sprouting_rules/TestSproutingRules.hpp
 simulation/angiogenesis/TestAngiogenesisSolver.hpp
+simulation/angiogenesis/TestOffLatticeAngiogenesis.hpp
 simulation/angiogenesis/TestRegressionSolver.hpp
 simulation/angiogenesis/TestAngiogenesisWithCaPopulation.hpp
 simulation/TestMicrovesselSimulationModifier.hpp

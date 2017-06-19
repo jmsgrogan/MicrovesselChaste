@@ -48,8 +48,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkUnsignedIntArray.h>
 #include <vtkArrayData.h>
 #include <vtkPolyData.h>
+#include <vtkUnstructuredGrid.h>
 #include "DimensionalChastePoint.hpp"
 #include "UnitCollection.hpp"
+#include "Part.hpp"
 
 /**
  * Grids are similar to vtkDataSet objects, but have extra (VTK based) convenience functions for
@@ -196,6 +198,8 @@ public:
      * @return the LOCAL cell data
      */
     vtkSmartPointer<vtkCellData> GetCellData();
+
+    vtkSmartPointer<vtkDataSet> CalculateDistanceMap(boost::shared_ptr<Part<SPACE_DIM> > pSamplePart);
 
     /**
      * Return the location of the supplied GLOBAL index

@@ -33,10 +33,16 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
+#include <vtkImageData.h>
+#include <vtkImageEuclideanDistance.h>
+#include <vtkGradientFilter.h>
+#include <vtkProbeFilter.h>
 #include "GeometryTools.hpp"
 #include "OffLatticeMigrationRule.hpp"
 #include "RandomNumberGenerator.hpp"
 #include "BaseUnits.hpp"
+#include "Debug.hpp"
 
 template<unsigned DIM>
 OffLatticeMigrationRule<DIM>::OffLatticeMigrationRule()
@@ -51,7 +57,9 @@ OffLatticeMigrationRule<DIM>::OffLatticeMigrationRule()
       mAttractionStrength(0.0), // was 1.0
       mProbeLength(5.0 * 1.e-6 * unit::metres),
       mCriticalMutualAttractionLength(100.0 * 1.e-6 *unit::metres),
-      mSurfaceRepulsion(false)
+      mSurfaceRepulsion(false),
+      mNumGradientEvaluationDivisions(8),
+      mpDomainDistanceMap()
 {
 
 }
@@ -67,6 +75,71 @@ template<unsigned DIM>
 OffLatticeMigrationRule<DIM>::~OffLatticeMigrationRule()
 {
 
+}
+
+template<unsigned DIM>
+void OffLatticeMigrationRule<DIM>::CalculateDomainDistanceMap()
+{
+    // No mesh provided, so need to set up our own
+    if(!this->mpBoundingDomain)
+    {
+        EXCEPTION("Can't calculate a domain distance map without a bounding domain.");
+    }
+
+    units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
+    std::vector<units::quantity<unit::length> > bbox = this->mpBoundingDomain->GetBoundingBox();
+    vtkSmartPointer<vtkImageData> p_image = vtkSmartPointer<vtkImageData>::New();
+
+    double spacing = (bbox[1] - bbox[0])/(20.0*reference_length);
+    unsigned num_x = unsigned((bbox[1] - bbox[0])/(reference_length*spacing)) + 1;
+    unsigned num_y = unsigned((bbox[3] - bbox[2])/(reference_length*spacing)) + 1;
+    unsigned num_z = unsigned((bbox[5] - bbox[4])/(reference_length*spacing)) + 1;
+    p_image->SetOrigin(bbox[0]/reference_length, bbox[2]/reference_length, bbox[4]/reference_length);
+    p_image->SetSpacing(spacing, spacing, spacing);
+    p_image->SetDimensions(num_x, num_y, num_z);
+
+    vtkSmartPointer<vtkImageEuclideanDistance> p_distance = vtkSmartPointer<vtkImageEuclideanDistance>::New();
+    p_distance->SetInputData( 0, this->mpBoundingDomain->GetVtk());
+    p_distance->SetInputData( 1, p_image);
+    p_distance->Update();
+    mpDomainDistanceMap = p_distance->GetOutput();
+
+    vtkSmartPointer<vtkGradientFilter> p_gradient = vtkSmartPointer<vtkGradientFilter>::New();
+    #if VTK_MAJOR_VERSION <= 5
+        p_gradient->SetInput(mpDomainDistanceMap);
+    #else
+        p_gradient->SetInputData(mpDomainDistanceMap);
+    #endif
+    p_gradient->SetResultArrayName("Gradients");
+    //p_gradient->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, this->mLabel.c_str());
+    p_gradient->Update();
+    mpDomainDistanceMap->GetPointData()->AddArray(p_gradient->GetOutput()->GetPointData()->GetArray("Gradients"));
+
+}
+
+template<unsigned DIM>
+void OffLatticeMigrationRule<DIM>::CalculateDomainDistanceMap(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
+{
+    if(!this->mpBoundingDomain)
+    {
+        EXCEPTION("Can't calculate a domain distance map without a bounding domain.");
+    }
+    MARK;
+    mpDomainDistanceMap = pGrid->CalculateDistanceMap(this->mpBoundingDomain);
+
+    MARK;
+    vtkSmartPointer<vtkGradientFilter> p_gradient = vtkSmartPointer<vtkGradientFilter>::New();
+    #if VTK_MAJOR_VERSION <= 5
+        p_gradient->SetInput(mpDomainDistanceMap);
+    #else
+        p_gradient->SetInputData(mpDomainDistanceMap);
+    #endif
+    p_gradient->SetResultArrayName("Gradients");
+    p_gradient->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, "Distance");
+    MARK;
+    p_gradient->Update();
+    MARK;
+    mpDomainDistanceMap->GetPointData()->AddArray(p_gradient->GetOutput()->GetPointData()->GetArray("Gradients"));
 }
 
 template<unsigned DIM>
@@ -94,6 +167,12 @@ void OffLatticeMigrationRule<DIM>::SetPersistenceAngleSdv(double angle)
 }
 
 template<unsigned DIM>
+void OffLatticeMigrationRule<DIM>::SetNumGradientEvaluationDivisions(unsigned numDivisions)
+{
+    mNumGradientEvaluationDivisions = numDivisions;
+}
+
+template<unsigned DIM>
 std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     if (this->mIsSprouting)
@@ -102,44 +181,113 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
     }
     else
     {
+        if(!mpDomainDistanceMap)
+        {
+            if(this->mpSolver)
+            {
+                CalculateDomainDistanceMap(this->mpSolver->GetDensityMap()->GetGridCalculator()->GetGrid());
+            }
+            else
+            {
+                CalculateDomainDistanceMap();
+            }
+
+            vtkSmartPointer<vtkGradientFilter> p_gradient = vtkSmartPointer<vtkGradientFilter>::New();
+            #if VTK_MAJOR_VERSION <= 5
+                p_gradient->SetInput(mpDomainDistanceMap);
+            #else
+                p_gradient->SetInputData(mpDomainDistanceMap);
+            #endif
+            p_gradient->SetResultArrayName("Gradients");
+            p_gradient->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, "Distance");
+            p_gradient->Update();
+        }
+
+        units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
         std::vector<DimensionalChastePoint<DIM> > movement_vectors;
 
         // We want to probe the PDE solution all at once first if needed, as this is an expensive operation if done node-by-node.
-        // Every node has 5 probes in 2D and 7 in 3D.
-        std::vector<units::quantity<unit::concentration> > probed_solutions;
-        unsigned probes_per_node = (2*DIM)+1;
+        // Every node has 4 probes in 2D and 6 in 3D.
+        std::vector<c_vector<double, 3> > solution_gradients(rNodes.size(), zero_vector<double>(3));
         vtkSmartPointer<vtkPoints> p_probe_locations = vtkSmartPointer<vtkPoints>::New();
-        std::vector<bool> candidate_locations_inside_domain(probes_per_node*rNodes.size(), true);
+
+        c_vector<double, DIM> current_loc;
+        c_vector<double, DIM> current_dir;
+        DimensionalChastePoint<DIM> currentDirection;
         if(this->mpSolver)
         {
             for(unsigned idx=0; idx<rNodes.size(); idx++)
             {
-                vtkSmartPointer<vtkPoints> local_probe_locations = GetProbeLocationsExternalPoint<DIM>(rNodes[idx]->rGetLocation(), mProbeLength);
-                for(unsigned jdx=0;jdx<probes_per_node; jdx++)
-                {
-                    p_probe_locations->InsertNextPoint(local_probe_locations->GetPoint(jdx));
-                }
+                p_probe_locations->InsertNextPoint(&current_loc[0]);
             }
             if(p_probe_locations->GetNumberOfPoints()>0)
             {
-                probed_solutions = this->mpSolver->GetConcentrations(p_probe_locations);
-            }
-
-            if (this->mpBoundingDomain)
-            {
-                candidate_locations_inside_domain = this->mpBoundingDomain->IsPointInPart(p_probe_locations);
+                solution_gradients = this->mpSolver->GetSolutionGradients(p_probe_locations);
             }
         }
+
+        // Also probe the distance map and gradients
+        std::vector<c_vector<double, 3> > distance_map_gradients(rNodes.size(), zero_vector<double>(3));
+        std::vector<double> distance_map_values(rNodes.size(), 0.0);
+
+        // Sample the field at these locations
+        vtkSmartPointer<vtkPolyData> p_polydata = vtkSmartPointer<vtkPolyData>::New();
+        p_polydata->SetPoints(p_probe_locations);
+
+        vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
+        #if VTK_MAJOR_VERSION <= 5
+            p_probe_filter->SetInput(p_polydata);
+            p_probe_filter->SetSource(mpDomainDistanceMap);
+        #else
+            p_probe_filter->SetInputData(p_polydata);
+            p_probe_filter->SetSourceData(mpDomainDistanceMap);
+        #endif
+        p_probe_filter->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, "Gradients");
+        p_probe_filter->Update();
+        vtkDataArray* p_results = p_probe_filter->GetOutput()->GetPointData()->GetArray("Gradients");
+        unsigned num_points = p_results->GetNumberOfTuples();
+        for(unsigned idx=0; idx<num_points; idx++)
+        {
+            c_vector<double, 3> result;
+            p_results->GetTuple(idx, &result[0]);
+            distance_map_gradients[idx] = result;
+        }
+        p_probe_filter->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, "Distance");
+        p_probe_filter->Update();
+        p_results = p_probe_filter->GetOutput()->GetPointData()->GetArray("Distance");
+        num_points = p_results->GetNumberOfTuples();
+        for(unsigned idx=0; idx<num_points; idx++)
+        {
+            distance_map_values[idx] = p_results->GetTuple1(idx);
+        }
+
         for(unsigned idx=0; idx<rNodes.size(); idx++)
         {
+            current_loc = rNodes[idx]->rGetLocation().GetLocation(reference_length);
+            currentDirection = rNodes[idx]->rGetLocation()-rNodes[idx]->GetSegments()[0]->GetOppositeNode(rNodes[idx])->rGetLocation();
+            current_dir = currentDirection.GetUnitVector();
+
             // Persistent random walk
-            units::quantity<unit::plane_angle> angle_x =
-                    RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0]/unit::radians, mSdvAngles[0]/unit::radians)*unit::radians;
-            units::quantity<unit::plane_angle> angle_y =
-                    RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[1]/unit::radians, mSdvAngles[1]/unit::radians)*unit::radians;
-            units::quantity<unit::plane_angle> angle_z =
-                    RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[2]/unit::radians, mSdvAngles[2]/unit::radians)*unit::radians;
-            DimensionalChastePoint<DIM> currentDirection = rNodes[idx]->rGetLocation()-rNodes[idx]->GetSegments()[0]->GetOppositeNode(rNodes[idx])->rGetLocation();
+            units::quantity<unit::plane_angle> angle_x = mMeanAngles[0];
+            if(mSdvAngles[0]>0.0*unit::radians)
+            {
+                angle_x =RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0]/unit::radians,
+                        mSdvAngles[0]/unit::radians)*unit::radians;
+
+            }
+            units::quantity<unit::plane_angle> angle_y = mMeanAngles[1];
+            if(mSdvAngles[1]>0.0*unit::radians)
+            {
+                angle_y = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[1]/unit::radians,
+                        mSdvAngles[1]/unit::radians)*unit::radians;
+
+            }
+            units::quantity<unit::plane_angle> angle_z = mMeanAngles[2];
+            if(mSdvAngles[2]>0.0*unit::radians)
+            {
+                angle_z = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[2]/unit::radians,
+                        mSdvAngles[2]/unit::radians)*unit::radians;
+            }
             c_vector<double, DIM> new_direction;
             if(DIM==3)
             {
@@ -158,55 +306,18 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             if(this->mpSolver)
             {
                 // Get the gradients
-                std::vector<units::quantity<unit::concentration_gradient> > gradients(probes_per_node-1, 0.0*unit::mole_per_metre_pow_4);
-                if(probed_solutions.size()>=idx*probes_per_node+probes_per_node)
+                c_vector<double, 3> gradient = solution_gradients[idx];
+                gradient/=norm_2(gradient);
+                if(DIM==3)
                 {
-                    for(unsigned jdx=1; jdx<probes_per_node; jdx++)
-                    {
-                        gradients[jdx-1] = ((probed_solutions[idx*probes_per_node+jdx] - probed_solutions[idx*probes_per_node]) / mProbeLength);
-                        if(!candidate_locations_inside_domain[idx*probes_per_node+jdx])
-                        {
-                            gradients[jdx-1] = 0.0*unit::mole_per_metre_pow_4;
-                        }
-                    }
+                    new_direction = new_direction + mChemotacticStrength*gradient;
                 }
-
-                // Get the index of the max viable gradient
-                units::quantity<unit::concentration_gradient> max_grad = 0.0 * unit::mole_per_metre_pow_4;
-                int my_index = -1;
-
-                for(unsigned jdx = 0; jdx<gradients.size(); jdx++)
+                else
                 {
-                    if(gradients[jdx]>max_grad)
-                    {
-                        max_grad = gradients[jdx];
-                        my_index = int(jdx);
-                    }
-                }
-
-                if(my_index == 0)
-                {
-                    new_direction += mChemotacticStrength* unit_vector<double>(DIM,0);
-                }
-                else if(my_index == 1)
-                {
-                    new_direction += mChemotacticStrength*-unit_vector<double>(DIM,0);
-                }
-                else if(my_index == 2)
-                {
-                    new_direction += mChemotacticStrength*unit_vector<double>(DIM,1);
-                }
-                else if(my_index == 3)
-                {
-                    new_direction += mChemotacticStrength*-unit_vector<double>(DIM,1);
-                }
-                else if(my_index == 4)
-                {
-                    new_direction += mChemotacticStrength*unit_vector<double>(DIM,2);
-                }
-                else if(my_index == 5)
-                {
-                    new_direction += mChemotacticStrength*-unit_vector<double>(DIM,2);
+                    c_vector<double, DIM> gradient_2d;
+                    gradient_2d[0] = gradient[0];
+                    gradient_2d[1] = gradient[1];
+                    new_direction = new_direction + mChemotacticStrength*gradient_2d;
                 }
             }
             new_direction /= norm_2(new_direction);
@@ -215,7 +326,6 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = this->mpVesselNetwork->GetNodes();
             units::quantity<unit::length> min_distance = 1.e12*unit::metres;
             c_vector<double, DIM> min_direction = zero_vector<double>(DIM);
-            units::quantity<unit::length> reference_length = currentDirection.GetReferenceLengthScale();
             for(unsigned jdx=0; jdx<nodes.size(); jdx++)
             {
                 if(IsPointInCone<DIM>(nodes[jdx]->rGetLocation(), rNodes[idx]->rGetLocation(), rNodes[idx]->rGetLocation() +
@@ -231,21 +341,6 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
                 }
             }
 
-            // Surface repulsion
-//            units::quantity<unit::length> critical_repulsion_distance = 40.0e-6*unit::metres;
-//            if(mSurfaceRepulsion and this->mpBoundingDomain)
-//            {
-////                // Get the distance to and normal for the closest point on the domain
-////                units::quantity<unit::length> current_distance = 40.0e-6*unit::metres;
-////                if(current_distance<critical_repulsion_distance)
-////                {
-////                    c_vector<double, DIM> surface_normal;
-////                    double repulsion_strength = 5.0*(1.0-(current_distance*current_distance)/(critical_repulsion_distance*critical_repulsion_distance));
-////                    new_direction += strength * min_direction;
-////                    new_direction /= norm_2(new_direction);
-////                }
-//            }
-
             double strength = 0.0;
             if(min_distance < mCriticalMutualAttractionLength)
             {
@@ -253,6 +348,33 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             }
             new_direction += strength * min_direction;
             new_direction /= norm_2(new_direction);
+
+            // Surface repulsion
+            double critical_repulsion_distance = (20.0e-6*unit::metres)/reference_length;
+            double max_repulsion_strength = 5.0;
+            if(this->mpBoundingDomain)
+            {
+                double current_distance = distance_map_values[idx];
+                if(current_distance<critical_repulsion_distance)
+                {
+                    c_vector<double, 3> distance_gradient = distance_map_gradients[idx];
+                    distance_gradient/=norm_2(distance_gradient);
+                    double value = 1.0-(2.0*current_distance/(critical_repulsion_distance+current_distance));
+                    double repulsion_strength = max_repulsion_strength*value;
+                    if(DIM==3)
+                    {
+                        new_direction += repulsion_strength * distance_gradient;
+                    }
+                    else
+                    {
+                        c_vector<double, DIM> dist_grad_2d;
+                        dist_grad_2d[0] = distance_gradient[0];
+                        dist_grad_2d[1] = distance_gradient[1];
+                        new_direction += repulsion_strength * dist_grad_2d;
+                    }
+                    new_direction /= norm_2(new_direction);
+                }
+            }
 
             // Get the movement increment
             units::quantity<unit::time> time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
@@ -296,7 +418,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
                                                                 rNodes[idx]->GetSegments()[1]->GetUnitTangent());
             for(unsigned jdx=0; jdx<DIM; jdx++)
             {
-                sum += abs(cross_product[jdx]);
+                sum += std::abs(cross_product[jdx]);
             }
         }
         else
@@ -305,7 +427,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             c_vector<double, DIM> tangent2 = rNodes[idx]->GetSegments()[1]->GetUnitTangent();
             for(unsigned jdx=0; jdx<DIM; jdx++)
             {
-                sum += abs(tangent1[jdx]-tangent2[jdx]);
+                sum += std::abs(tangent1[jdx]-tangent2[jdx]);
             }
         }
 

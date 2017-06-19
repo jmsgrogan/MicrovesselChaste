@@ -38,11 +38,48 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkTetra.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkCellLocator.h>
+#include <vtkSphereSource.h>
+#include <vtkPolyData.h>
+#include <vtkPoints.h>
 #include "Exception.hpp"
 #include "GeometryTools.hpp"
 #include "UblasVectorInclude.hpp"
 #include "UblasIncludes.hpp"
 #include "UblasCustomFunctions.hpp"
+
+template<unsigned DIM>
+c_vector<double, DIM> GetArbitaryUnitNormal(c_vector<double, DIM> direction)
+{
+    c_vector<double, DIM> normal;
+    if(DIM==2 or direction[2]==0.0)
+    {
+        if(direction[1] == 0.0)
+        {
+            normal[0] = 0.0;
+            normal[1] = 1.0;
+        }
+        else
+        {
+            normal[0] = 1.0;
+            normal[1] = -direction[0] /direction[1];
+        }
+    }
+    else
+    {
+        if(std::abs(direction[0]) + std::abs(direction[1]) == 0.0)
+        {
+            normal[0] = 1.0;
+            normal[1] = 1.0;
+        }
+        else
+        {
+            normal[0] = 1.0;
+            normal[1] = 1.0;
+            normal[2] = -(direction[0] + direction[1])/direction[2];
+        }
+    }
+    return normal/norm_2(normal);
+}
 
 template<unsigned DIM>
 units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation1,
@@ -132,37 +169,50 @@ units::quantity<unit::length> GetDistanceToLineSegment(const DimensionalChastePo
 
 template<unsigned DIM>
 vtkSmartPointer<vtkPoints> GetProbeLocationsExternalPoint(DimensionalChastePoint<DIM> rCentrePoint,
-                                                                         units::quantity<unit::length> probeLength)
+        DimensionalChastePoint<DIM> currentDirection, units::quantity<unit::length> probeLength,
+        unsigned numDivisions)
 {
     units::quantity<unit::length> length_scale = rCentrePoint.GetReferenceLengthScale();
     c_vector<double, DIM> central_point = rCentrePoint.GetLocation(length_scale);
+    c_vector<double, DIM> current_direction = currentDirection.GetUnitVector();
+
     double normalized_probe_length = probeLength/length_scale;
     vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
-
-    c_vector<double, DIM> loc1 = central_point+normalized_probe_length * unit_vector<double>(DIM,0);
-    c_vector<double, DIM> loc2 = central_point+normalized_probe_length * unit_vector<double>(DIM,0);
-    c_vector<double, DIM> loc3 = central_point+normalized_probe_length * unit_vector<double>(DIM,1);
-    c_vector<double, DIM> loc4 = central_point+normalized_probe_length * unit_vector<double>(DIM,1);
-
-    if(DIM==3)
-    {
-        c_vector<double, DIM> loc5 = central_point+normalized_probe_length * unit_vector<double>(DIM,2);
-        c_vector<double, DIM> loc6 = central_point+normalized_probe_length * unit_vector<double>(DIM,2);
-        p_points->InsertNextPoint(central_point[0], central_point[1], central_point[1]);
-        p_points->InsertNextPoint(loc1[0], loc1[1], loc1[1]);
-        p_points->InsertNextPoint(loc2[0], loc2[1], loc2[1]);
-        p_points->InsertNextPoint(loc3[0], loc3[1], loc3[1]);
-        p_points->InsertNextPoint(loc4[0], loc4[1], loc4[1]);
-        p_points->InsertNextPoint(loc5[0], loc5[1], loc5[1]);
-        p_points->InsertNextPoint(loc6[0], loc6[1], loc6[1]);
-    }
-    else
+    if(DIM==2)
     {
         p_points->InsertNextPoint(central_point[0], central_point[1], 0.0);
-        p_points->InsertNextPoint(loc1[0], loc1[1], 0.0);
-        p_points->InsertNextPoint(loc2[0], loc2[1], 0.0);
-        p_points->InsertNextPoint(loc3[0], loc3[1], 0.0);
-        p_points->InsertNextPoint(loc4[0], loc4[1], 0.0);
+        c_vector<double, 3> rotation_axis;
+        rotation_axis[0] = 0.0;
+        rotation_axis[1] = 0.0;
+        rotation_axis[2] = 1.0;
+        units::quantity<unit::plane_angle> angle_increment = (2.0*M_PI/double(numDivisions))*unit::radians;
+        for(unsigned idx=0;idx<numDivisions;idx++)
+        {
+            if(idx!=unsigned(numDivisions/2))
+            {
+                units::quantity<unit::plane_angle> angle = angle_increment*double(idx);
+                c_vector<double, DIM> rotated_loc = RotateAboutAxis<DIM>(current_direction, rotation_axis, angle);
+                c_vector<double, DIM> loc = central_point+normalized_probe_length * rotated_loc;
+                p_points->InsertNextPoint(loc[0], loc[1], 0.0);
+            }
+        }
+    }
+    else if(DIM==3)
+    {
+        vtkSmartPointer<vtkSphereSource> p_sphere_source = vtkSmartPointer<vtkSphereSource>::New();
+        p_sphere_source->SetCenter(&central_point[0]);
+        p_sphere_source->SetRadius(normalized_probe_length);
+        p_sphere_source->SetThetaResolution(numDivisions);
+        p_sphere_source->SetPhiResolution(numDivisions);
+        p_sphere_source->Update();
+        vtkSmartPointer<vtkPolyData> p_sphere = p_sphere_source->GetOutput();
+        c_vector<double, DIM> exluded_point = central_point-normalized_probe_length * current_direction;
+        for(unsigned idx=0;idx<p_sphere->GetNumberOfPoints();idx++)
+        {
+            c_vector<double, DIM> point_loc;
+            p_sphere->GetPoint(idx, &point_loc[0]);
+            p_points->InsertNextPoint(&point_loc[0]);
+        }
     }
     return p_points;
 }
@@ -183,27 +233,27 @@ vtkSmartPointer<vtkPoints> GetProbeLocationsInternalPoint(DimensionalChastePoint
     vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
     if(DIM==3)
     {
-        p_points->InsertNextPoint(central_point[0], central_point[1], central_point[2]);
+        p_points->InsertNextPoint(&central_point[0]);
         c_vector<double, DIM> unit_axis = rotation_axis/norm_2(rotation_axis);
         c_vector<double, DIM> new_direction = RotateAboutAxis<DIM>(initial_direction/norm_2(initial_direction), unit_axis, angle);
         new_direction /= norm_2(new_direction);
         c_vector<double, DIM> new_loc1 = central_point + normalized_probe_length*new_direction;
-        p_points->InsertNextPoint(new_loc1[0], new_loc1[1], new_loc1[2]);
+        p_points->InsertNextPoint(&new_loc1[0]);
 
         c_vector<double, DIM> new_direction_r1 = RotateAboutAxis<DIM>(new_direction, unit_axis, M_PI*unit::radians);
         new_direction_r1 /= norm_2(new_direction_r1);
         c_vector<double, DIM> new_loc2 = central_point + normalized_probe_length*new_direction_r1;
-        p_points->InsertNextPoint(new_loc2[0], new_loc2[1], new_loc2[2]);
+        p_points->InsertNextPoint(&new_loc2[0]);
 
         c_vector<double, DIM> new_direction_r2 = RotateAboutAxis<DIM>(new_direction, unit_axis, M_PI/2.0*unit::radians);
         new_direction_r2 /= norm_2(new_direction_r2);
         c_vector<double, DIM> new_loc3 = central_point + normalized_probe_length*new_direction_r2;
-        p_points->InsertNextPoint(new_loc3[0], new_loc3[1], new_loc3[2]);
+        p_points->InsertNextPoint(&new_loc3[0]);
 
         c_vector<double, DIM> new_direction_r3 = RotateAboutAxis<DIM>(new_direction, unit_axis, 3.0*M_PI/2.0*unit::radians);
         new_direction_r3 /= norm_2(new_direction_r3);
         c_vector<double, DIM> new_loc4 = central_point + normalized_probe_length*new_direction_r3;
-        p_points->InsertNextPoint(new_loc4[0], new_loc4[1], new_loc4[2]);
+        p_points->InsertNextPoint(&new_loc4[0]);
     }
     else
     {

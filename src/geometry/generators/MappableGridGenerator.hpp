@@ -45,6 +45,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * Generate a part consisting of a grid of unit rectangles or cuboids. It is useful for mapping
  * onto more complex geometries for subsequent meshing. 3-D only.
  */
+template<unsigned DIM>
 class MappableGridGenerator
 {
     /**
@@ -93,7 +94,7 @@ public:
      * @param withEndCaps include polygons at the ends of the plane, turned off for closed cylinder generation
      * @return pointer to a Part representation of the plane
      */
-    boost::shared_ptr<Part<3> > GeneratePlane(unsigned numX, unsigned numY, bool isShell = false,
+    boost::shared_ptr<Part<DIM> > GeneratePlane(unsigned numX, unsigned numY, bool isShell = false,
             bool withEndCaps = true);
 
     /**
@@ -107,7 +108,7 @@ public:
      * @param numY number of blocks over the cylinder height
      * @return pointer to a Part representation of the cylinder
      */
-    boost::shared_ptr<Part<3> > GenerateCylinder(units::quantity<unit::length> cylinderRadius,
+    boost::shared_ptr<Part<DIM> > GenerateCylinder(units::quantity<unit::length> cylinderRadius,
             units::quantity<unit::length> cylinderThickness,
             units::quantity<unit::length> cylinderHeight, unsigned numX, unsigned numY, double cylinderAngle = 2.0 * M_PI);
 
@@ -122,7 +123,7 @@ public:
      * @param numY number of blocks over the cylinder height
      * @return pointer to a Part representation of the hemisphere
      */
-    boost::shared_ptr<Part<3> > GenerateHemisphere(units::quantity<unit::length> sphereRadius,
+    boost::shared_ptr<Part<DIM> > GenerateHemisphere(units::quantity<unit::length> sphereRadius,
             units::quantity<unit::length> sphereThickness, unsigned numX, unsigned numY,
             double sphereAzimuthAngle = 2.0 * M_PI, double spherePolarAngle = 0.5 * M_PI);
 

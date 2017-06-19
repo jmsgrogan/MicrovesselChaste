@@ -40,6 +40,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkMPIController.h>
 #include <vtkPointData.h>
 #include <vtkCellData.h>
+#include <vtkDataSetSurfaceFilter.h>
+#include <vtkDistancePolyDataFilter.h>
+#include <vtkCellLocator.h>
+#include <vtkGenericCell.h>
 #include "PetscTools.hpp"
 #include "Exception.hpp"
 #include "AbstractDiscreteContinuumGrid.hpp"
@@ -186,6 +190,56 @@ vtkSmartPointer<vtkCellData> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DI
         SetUpVtkGrid();
     }
     return mpVtkGrid->GetCellData();
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+vtkSmartPointer<vtkDataSet> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::CalculateDistanceMap(
+        boost::shared_ptr<Part<SPACE_DIM> > pSamplePart)
+{
+    if (!this->mVtkRepresentationUpToDate)
+    {
+        SetUpVtkGrid();
+    }
+
+    // Get the outer boundary
+    vtkSmartPointer<vtkPolyData> p_bounds = vtkSmartPointer<vtkPolyData>::New();
+    if(SPACE_DIM==2)
+    {
+        vtkSmartPointer<vtkFeatureEdges> p_edges = vtkSmartPointer<vtkFeatureEdges>::New();
+        p_edges->SetInputData(pSamplePart->GetVtk());
+        p_edges->Update();
+        p_bounds = p_edges->GetOutput();
+    }
+    else
+    {
+        vtkSmartPointer<vtkDataSetSurfaceFilter> p_surf = vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
+        p_surf->SetInputData(pSamplePart->GetVtk());
+        p_surf->Update();
+        p_bounds = p_surf->GetOutput();
+    }
+
+    vtkSmartPointer<vtkCellLocator> p_locator = vtkSmartPointer<vtkCellLocator>::New();
+    p_locator->SetDataSet(p_bounds);
+    p_locator->BuildLocator();
+
+    vtkSmartPointer<vtkDoubleArray> p_distances = vtkSmartPointer<vtkDoubleArray>::New();
+    p_distances->SetName("Distance");
+
+    vtkSmartPointer<vtkGenericCell> p_generic_cell = vtkSmartPointer<vtkGenericCell>::New();
+    for(unsigned idx=0;idx<mpVtkGrid->GetNumberOfPoints();idx++)
+    {
+        //Find the closest points to TestPoint
+        double closestPoint[3];//the coordinates of the closest point will be returned here
+        double closestPointDist2; //the squared distance to the closest point will be returned here
+        vtkIdType cellId; //the cell id of the cell containing the closest point will be returned here
+        int subId;
+        p_locator->FindClosestPoint(mpVtkGrid->GetPoint(idx), closestPoint, p_generic_cell,
+                cellId, subId, closestPointDist2);
+        p_distances->InsertNextTuple1(std::sqrt(closestPointDist2));
+    }
+    mpVtkGrid->GetPointData()->AddArray(p_distances);
+
+    return mpVtkGrid;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

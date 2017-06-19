@@ -207,6 +207,13 @@ public:
     virtual std::vector<double> GetSolution(vtkSmartPointer<vtkPoints> pSamplePoints);
 
     /**
+     * Return the gradients of the field at the requested points
+     * @param pSamplePoints vtk sample points
+     * @return the gradient of the field ordered according to input point order
+     */
+    virtual std::vector<c_vector<double, 3 > > GetSolutionGradients(vtkSmartPointer<vtkPoints> pSamplePoints);
+
+    /**
      * Return the value of the field at the requested points. Used by the Python wrapper only.
      * @param pSamplePoints vtk sample points
      * @return the value of the field ordered according to input point order

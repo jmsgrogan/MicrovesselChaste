@@ -41,6 +41,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <boost/lexical_cast.hpp>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkUnstructuredGrid.h>
+#include <vtkXMLUnstructuredGridWriter.h>
 #include "SmartPointers.hpp"
 #include "Polygon.hpp"
 #include "Part.hpp"
@@ -354,11 +355,11 @@ public:
         mesh_writer.Write();
     }
 
-    void TestPartInPart() throw(Exception)
+    void xTestPartInPart() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/Hemisphere");
 
-        MappableGridGenerator generator;
+        MappableGridGenerator<3> generator;
         unsigned num_divisions_x = 20;
         unsigned num_divisions_y = 20;
         double azimuth_angle = 1.0 * M_PI;
@@ -411,6 +412,87 @@ public:
         mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"mesh");
         mesh_writer.SetMesh(p_mesh_generator->GetMesh(), true);
         mesh_writer.Write();
+    }
+
+    void TestDistanceMap3D() throw(Exception)
+    {
+        OutputFileHandler file_handler("TestDiscreteContinuumMesh/DistanceMap3D");
+
+        MappableGridGenerator<3> generator;
+        unsigned num_divisions_x = 20;
+        unsigned num_divisions_y = 20;
+        double azimuth_angle = 1.0 * M_PI;
+        double polar_angle = 0.999 * M_PI;
+        std::vector<DimensionalChastePoint<3> > holes;
+
+        units::quantity<unit::length> cornea_radius = 1300*1.e-6*unit::metres;
+        units::quantity<unit::length> cornea_thickness = 100*1.e-6*unit::metres;
+        boost::shared_ptr<Part<3> > p_domain = generator.GenerateHemisphere(cornea_radius,
+                cornea_thickness, num_divisions_x, num_divisions_y, azimuth_angle, polar_angle);
+
+        p_domain->Write(file_handler.GetOutputDirectoryFullPath()+"domain.vtp", GeometryFormat::VTP, true);
+
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        p_mesh_generator->SetDomain(p_domain);
+        p_mesh_generator->SetMaxElementArea(1e4*units::pow<3>(1.e-6 * unit::metres));
+        p_mesh_generator->Update();
+
+        MultiFormatMeshWriter<3> mesh_writer;
+        mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"mesh");
+        mesh_writer.SetMesh(p_mesh_generator->GetMesh(), true);
+        mesh_writer.Write();
+
+        vtkSmartPointer<vtkUnstructuredGrid> p_distance_map =
+                vtkUnstructuredGrid::SafeDownCast(p_mesh_generator->GetMesh()->CalculateDistanceMap(p_domain));
+        vtkSmartPointer<vtkXMLUnstructuredGridWriter> p_polydata_writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
+        p_polydata_writer->SetInputData(p_distance_map);
+        std::string output_path = file_handler.GetOutputDirectoryFullPath()+"distance_map.vtu";
+        p_polydata_writer->SetFileName(output_path.c_str());
+        p_polydata_writer->Write();
+    }
+
+    void TestDistanceMap2D() throw(Exception)
+    {
+        OutputFileHandler file_handler("TestDiscreteContinuumMesh/DistanceMap2D");
+        boost::shared_ptr<Part<2> > p_part = Part<2>::Create();
+        boost::shared_ptr<Polygon<2> > p_circle = p_part->AddCircle(0.33e-6*unit::metres,
+                DimensionalChastePoint<2>(0.5, 0.5));
+        p_circle->AddAttributeToAllEdges("Outer Boundary", 1.0);
+
+        boost::shared_ptr<Polygon<2> > p_circle2 = p_part->AddCircle(0.1e-6*unit::metres,
+                DimensionalChastePoint<2>(0.5, 0.5));
+        p_part->AddRegionMarker(DimensionalChastePoint<2>(0.5, 0.5), 1.0);
+        p_part->GetVtk(true);
+        p_part->Write(file_handler.GetOutputDirectoryFullPath()+"part.vtp", GeometryFormat::VTP, true);
+
+        boost::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator = DiscreteContinuumMeshGenerator<2>::Create();
+        p_mesh_generator->SetDomain(p_part);
+        p_mesh_generator->SetMaxElementArea(1.e-3*units::pow<3>(1.e-6 * unit::metres));
+        p_mesh_generator->Update();
+
+        MultiFormatMeshWriter<2> mesh_writer;
+        mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"circle");
+        mesh_writer.SetMesh(p_mesh_generator->GetMesh(), true);
+        mesh_writer.Write();
+
+        // Add a hole
+        std::vector<DimensionalChastePoint<2> > holes;
+        holes.push_back(DimensionalChastePoint<2>(0.5, 0.5));
+        p_mesh_generator->SetHoles(holes);
+        p_mesh_generator->SetMaxElementArea(1.e-3*units::pow<3>(1.e-6 * unit::metres));
+        p_mesh_generator->Update();
+
+        mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"circle_hole");
+        mesh_writer.SetMesh(p_mesh_generator->GetMesh(), true);
+        mesh_writer.Write();
+
+        vtkSmartPointer<vtkUnstructuredGrid> p_distance_map =
+                vtkUnstructuredGrid::SafeDownCast(p_mesh_generator->GetMesh()->CalculateDistanceMap(p_part));
+        vtkSmartPointer<vtkXMLUnstructuredGridWriter> p_polydata_writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
+        p_polydata_writer->SetInputData(p_distance_map);
+        std::string output_path = file_handler.GetOutputDirectoryFullPath()+"distance_map.vtu";
+        p_polydata_writer->SetFileName(output_path.c_str());
+        p_polydata_writer->Write();
     }
 };
 

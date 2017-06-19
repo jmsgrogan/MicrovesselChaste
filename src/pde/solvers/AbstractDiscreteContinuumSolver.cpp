@@ -40,6 +40,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkProbeFilter.h>
 #include <vtkSmartPointer.h>
 #include <vtkPoints.h>
+#include <vtkGradientFilter.h>
+#include <vtkDataArray.h>
 #include "AbstractDiscreteContinuumPde.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
 #include "BaseUnits.hpp"
@@ -167,6 +169,46 @@ std::vector<double> AbstractDiscreteContinuumSolver<DIM>::GetSolution(vtkSmartPo
     for(unsigned idx=0; idx<num_points; idx++)
     {
         sampled_solution[idx] = p_point_data->GetArray(this->mLabel.c_str())->GetTuple1(idx);
+    }
+    return sampled_solution;
+}
+
+template<unsigned DIM>
+std::vector<c_vector<double, 3 > > AbstractDiscreteContinuumSolver<DIM>::GetSolutionGradients(vtkSmartPointer<vtkPoints> pSamplePoints)
+{
+    std::vector<c_vector<double, 3 > > sampled_solution(pSamplePoints->GetNumberOfPoints(), zero_vector<double>(3));
+
+    // Sample the field at these locations
+    vtkSmartPointer<vtkPolyData> p_polydata = vtkSmartPointer<vtkPolyData>::New();
+    p_polydata->SetPoints(pSamplePoints);
+
+    vtkSmartPointer<vtkGradientFilter> p_gradient = vtkSmartPointer<vtkGradientFilter>::New();
+    #if VTK_MAJOR_VERSION <= 5
+        p_gradient->SetInput(GetDensityMap()->GetGridCalculator()->GetGrid()->GetVtkGrid());
+    #else
+        p_gradient->SetInputData(GetDensityMap()->GetGridCalculator()->GetGrid()->GetVtkGrid());
+    #endif
+    p_gradient->SetResultArrayName("Gradients");
+    p_gradient->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, this->mLabel.c_str());
+    p_gradient->Update();
+
+    vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
+    #if VTK_MAJOR_VERSION <= 5
+        p_probe_filter->SetInput(p_polydata);
+        p_probe_filter->SetSource(p_gradient->GetOutput());
+    #else
+        p_probe_filter->SetInputData(p_polydata);
+        p_probe_filter->SetSourceData(p_gradient->GetOutput());
+    #endif
+    p_probe_filter->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, "Gradients");
+    p_probe_filter->Update();
+    vtkDataArray* p_results = p_probe_filter->GetOutput()->GetPointData()->GetArray("Gradients");
+    unsigned num_points = p_results->GetNumberOfTuples();
+    for(unsigned idx=0; idx<num_points; idx++)
+    {
+        c_vector<double, 3> result;
+        p_results->GetTuple(idx, &result[0]);
+        sampled_solution[idx] = result;
     }
     return sampled_solution;
 }

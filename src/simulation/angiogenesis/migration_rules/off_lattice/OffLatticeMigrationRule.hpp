@@ -38,6 +38,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <vector>
 #include <string>
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
+#include <vtkSmartPointer.h>
+#include <vtkPolyData.h>
 #include "AbstractMigrationRule.hpp"
 #include "VesselNode.hpp"
 #include "SmartPointers.hpp"
@@ -103,6 +106,13 @@ class OffLatticeMigrationRule : public AbstractMigrationRule<DIM>
      */
     bool mSurfaceRepulsion;
 
+    /**
+     * Controls number of sample points used in gradient evaluation
+     */
+    unsigned mNumGradientEvaluationDivisions;
+
+    vtkSmartPointer<vtkDataSet> mpDomainDistanceMap;
+
 public:
 
     /**
@@ -114,6 +124,10 @@ public:
      * Destructor.
      */
     virtual ~OffLatticeMigrationRule();
+
+    void CalculateDomainDistanceMap();
+
+    void CalculateDomainDistanceMap(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
@@ -152,6 +166,13 @@ public:
      * @param strength the mutual attraction strength
      */
     void SetAttractionStrength(double strength);
+
+    /**
+     * Set number of sample points used in gradient evaluation. In 2D it
+     * should be an even number.
+     * @param numDivisions number of sample points used in gradient evaluation
+     */
+    void SetNumGradientEvaluationDivisions(unsigned numDivisions);
 
     /**
      * Set the standard deviation of the persistence angle
