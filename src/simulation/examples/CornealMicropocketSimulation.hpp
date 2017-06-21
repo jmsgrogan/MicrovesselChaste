@@ -279,6 +279,14 @@ class CornealMicropocketSimulation
 
     boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > mpSamplingGrid;
 
+    bool mOnlyPerfusedSprout;
+
+    unsigned mSampleFrequency;
+
+    std::vector<double> mStoredSample;
+
+    units::quantity<unit::velocity> mSproutVelocity;
+
 public:
 
     /**
@@ -297,13 +305,21 @@ public:
      */
     static boost::shared_ptr<CornealMicropocketSimulation> Create();
 
-    void DoSampling(std::ofstream& rStream,
-            boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver, double time, double multfact=1.0);
+    void SetTipVelocity(units::quantity<unit::velocity> velocity);
 
+    void SetOnlyPerfusedSprout(bool onlyPerfused);
+
+    void SetSampleFrequency(unsigned freq);
+
+    void DoSampling(std::ofstream& rStream,
+            boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver,
+            double time,
+            double multfact=1.0,
+            bool sampleOnce=false);
 
     boost::shared_ptr<Part<DIM> > SetUpDomain();
 
-    boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > SetUpGrid();
+    boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > SetUpGrid(bool mSampling=false);
 
     boost::shared_ptr<VesselNetwork<DIM> > SetUpVesselNetwork();
 

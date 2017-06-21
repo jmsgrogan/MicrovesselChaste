@@ -60,7 +60,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "MapStringDouble.pypp.hpp"
 
-#include "MappableGridGenerator.pypp.hpp"
+#include "MappableGridGenerator2.pypp.hpp"
+
+#include "MappableGridGenerator3.pypp.hpp"
 
 #include "NetworkToSurface2.pypp.hpp"
 
@@ -167,7 +169,9 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_geometry){
 
     register_GeometryWriter_class();
 
-    register_MappableGridGenerator_class();
+    register_MappableGridGenerator2_class();
+
+    register_MappableGridGenerator3_class();
 
     register_NetworkToSurface2_class();
 

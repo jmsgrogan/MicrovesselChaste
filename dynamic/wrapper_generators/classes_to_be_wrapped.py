@@ -133,7 +133,9 @@ simulation_classes = [CppClass('MicrovesselSolver'),
                       CppClass('AbstractMicrovesselModifier'),
                       CppClass('VtkSceneMicrovesselModifier'),
                       CppClass('Owen2011TrackingModifier'),
-                      CppClass('AbstractCellBasedSimulationModifier'),]
+                      CppClass('AbstractCellBasedSimulationModifier'),
+                      CppClass('CornealMicropocketSimulation'),
+                      CppClass('DomainType',needs_include_file=False, component = "simulation")]
 
 ################################## VESSEL ##########################################
 

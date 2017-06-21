@@ -268,19 +268,12 @@ void VesselNetwork<DIM>::ExtendVessel(boost::shared_ptr<Vessel<DIM> > pVessel, b
 }
 
 template <unsigned DIM>
-boost::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::FormSprout(const DimensionalChastePoint<DIM>& sproutBaseLocation,
+boost::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::FormSprout(boost::shared_ptr<VesselNode<DIM> > pSproutBase,
                                                                  const DimensionalChastePoint<DIM>& sproutTipLocation)
 {
-    // locate vessel at which the location of the sprout base exists
-    std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > nearest_segment = VesselNetworkGeometryCalculator<DIM>::GetNearestSegment(
-            this->shared_from_this(), sproutBaseLocation);
-    if (nearest_segment.second / BaseUnits::Instance()->GetReferenceLengthScale()  > 1e-6)
-    {
-        EXCEPTION("No vessel located at sprout base.");
-    }
-
     // divide vessel at location of sprout base
-    boost::shared_ptr<VesselNode<DIM> > p_new_node = DivideVessel(nearest_segment.first->GetVessel(), sproutBaseLocation);
+    boost::shared_ptr<VesselNode<DIM> > p_new_node = DivideVessel(pSproutBase->GetSegment(0)->GetVessel(),
+            pSproutBase->rGetLocation());
 
     // create new vessel
     boost::shared_ptr<VesselNode<DIM> > p_new_node_at_tip = VesselNode<DIM>::Create(p_new_node);
@@ -290,7 +283,7 @@ boost::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::FormSprout(const Dimensional
     p_new_node_at_tip->GetFlowProperties()->SetIsOutputNode(false);
     p_new_node_at_tip->GetFlowProperties()->SetPressure(0.0*unit::pascals);
     boost::shared_ptr<VesselSegment<DIM> > p_new_segment = VesselSegment<DIM>::Create(p_new_node, p_new_node_at_tip);
-    p_new_segment->CopyDataFromExistingSegment(nearest_segment.first);
+    p_new_segment->CopyDataFromExistingSegment(pSproutBase->GetSegment(0));
     p_new_segment->GetFlowProperties()->SetFlowRate(0.0*unit::metre_cubed_per_second);
     p_new_segment->GetFlowProperties()->SetImpedance(0.0*unit::pascal_second_per_metre_cubed);
     p_new_segment->GetFlowProperties()->SetHaematocrit(0.0);
@@ -298,9 +291,8 @@ boost::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::FormSprout(const Dimensional
     p_new_segment->SetMaturity(0.0);
 
     boost::shared_ptr<Vessel<DIM> > p_new_vessel = Vessel<DIM>::Create(p_new_segment);
-    // Sprouting won't save you.
-    p_new_vessel->GetFlowProperties()->SetRegressionTime(nearest_segment.first->GetVessel()->GetFlowProperties()->GetRegressionTime());
-    AddVessel(p_new_vessel);
+    p_new_vessel->GetFlowProperties()->SetRegressionTime(pSproutBase->GetSegment(0)->GetVessel()->GetFlowProperties()->GetRegressionTime());
+    AddVessel(p_new_vessel); // This calls modified()
     return p_new_vessel;
 }
 
@@ -544,6 +536,16 @@ std::vector<boost::shared_ptr<VesselSegment<DIM> > > VesselNetwork<DIM>::GetVess
         UpdateSegments();
     }
     return mSegments;
+}
+
+template <unsigned DIM>
+boost::shared_ptr<VesselSegment<DIM> > VesselNetwork<DIM>::GetVesselSegment(unsigned index)
+{
+    if(!mSegmentsUpToDate)
+    {
+        UpdateSegments();
+    }
+    return mSegments[index];
 }
 
 template <unsigned DIM>

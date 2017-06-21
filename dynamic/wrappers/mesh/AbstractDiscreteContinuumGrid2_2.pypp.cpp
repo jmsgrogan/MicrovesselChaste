@@ -423,6 +423,17 @@ void register_AbstractDiscreteContinuumGrid2_2_class(){
                 , ( bp::arg("rName") ) );
         
         }
+        { //::AbstractDiscreteContinuumGrid< 2, 2 >::CalculateDistanceMap
+        
+            typedef AbstractDiscreteContinuumGrid< 2, 2 > exported_class_t;
+            typedef ::vtkSmartPointer< vtkDataSet > ( exported_class_t::*CalculateDistanceMap_function_type)( ::boost::shared_ptr< Part< 2 > > ) ;
+            
+            AbstractDiscreteContinuumGrid2_2_exposer.def( 
+                "CalculateDistanceMap"
+                , CalculateDistanceMap_function_type( &::AbstractDiscreteContinuumGrid< 2, 2 >::CalculateDistanceMap )
+                , ( bp::arg("pSamplePart") ) );
+        
+        }
         { //::AbstractDiscreteContinuumGrid< 2, 2 >::GatherAllCellData
         
             typedef AbstractDiscreteContinuumGrid< 2, 2 > exported_class_t;

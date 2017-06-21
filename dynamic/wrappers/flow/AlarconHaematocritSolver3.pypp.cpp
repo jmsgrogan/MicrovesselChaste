@@ -74,22 +74,69 @@ struct AlarconHaematocritSolver_less__3__greater__wrapper : AlarconHaematocritSo
 
 void register_AlarconHaematocritSolver3_class(){
 
-    bp::class_< AlarconHaematocritSolver_less__3__greater__wrapper, bp::bases< AbstractHaematocritSolver< 3 > > >( "AlarconHaematocritSolver3", bp::init< >() )    
-        .def( 
-            "Calculate"
-            , (void ( ::AlarconHaematocritSolver<3>::* )(  ))(&::AlarconHaematocritSolver< 3 >::Calculate)
-            , (void ( AlarconHaematocritSolver_less__3__greater__wrapper::* )(  ))(&AlarconHaematocritSolver_less__3__greater__wrapper::default_Calculate) )    
-        .def( 
-            "SetAlpha"
-            , (void ( ::AlarconHaematocritSolver<3>::* )( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::AlarconHaematocritSolver< 3 >::SetAlpha )
-            , ( bp::arg("alpha") ) )    
-        .def( 
-            "SetHaematocrit"
-            , (void ( ::AlarconHaematocritSolver<3>::* )( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::AlarconHaematocritSolver< 3 >::SetHaematocrit )
-            , ( bp::arg("haematocrit") ) )    
-        .def( 
-            "SetTHR"
-            , (void ( ::AlarconHaematocritSolver<3>::* )( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::AlarconHaematocritSolver< 3 >::SetTHR )
-            , ( bp::arg("thr") ) );
+    { //::AlarconHaematocritSolver< 3 >
+        typedef bp::class_< AlarconHaematocritSolver_less__3__greater__wrapper, bp::bases< AbstractHaematocritSolver< 3 > > > AlarconHaematocritSolver3_exposer_t;
+        AlarconHaematocritSolver3_exposer_t AlarconHaematocritSolver3_exposer = AlarconHaematocritSolver3_exposer_t( "AlarconHaematocritSolver3", bp::init< >() );
+        bp::scope AlarconHaematocritSolver3_scope( AlarconHaematocritSolver3_exposer );
+        { //::AlarconHaematocritSolver< 3 >::Calculate
+        
+            typedef AlarconHaematocritSolver< 3 > exported_class_t;
+            typedef void ( exported_class_t::*Calculate_function_type)(  ) ;
+            typedef void ( AlarconHaematocritSolver_less__3__greater__wrapper::*default_Calculate_function_type)(  ) ;
+            
+            AlarconHaematocritSolver3_exposer.def( 
+                "Calculate"
+                , Calculate_function_type(&::AlarconHaematocritSolver< 3 >::Calculate)
+                , default_Calculate_function_type(&AlarconHaematocritSolver_less__3__greater__wrapper::default_Calculate) );
+        
+        }
+        { //::AlarconHaematocritSolver< 3 >::Create
+        
+            typedef AlarconHaematocritSolver< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< AlarconHaematocritSolver< 3 > > ( *Create_function_type )(  );
+            
+            AlarconHaematocritSolver3_exposer.def( 
+                "Create"
+                , Create_function_type( &::AlarconHaematocritSolver< 3 >::Create ) );
+        
+        }
+        { //::AlarconHaematocritSolver< 3 >::SetAlpha
+        
+            typedef AlarconHaematocritSolver< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetAlpha_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            AlarconHaematocritSolver3_exposer.def( 
+                "SetAlpha"
+                , SetAlpha_function_type( &::AlarconHaematocritSolver< 3 >::SetAlpha )
+                , ( bp::arg("alpha") ) );
+        
+        }
+        { //::AlarconHaematocritSolver< 3 >::SetHaematocrit
+        
+            typedef AlarconHaematocritSolver< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetHaematocrit_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            AlarconHaematocritSolver3_exposer.def( 
+                "SetHaematocrit"
+                , SetHaematocrit_function_type( &::AlarconHaematocritSolver< 3 >::SetHaematocrit )
+                , ( bp::arg("haematocrit") ) );
+        
+        }
+        { //::AlarconHaematocritSolver< 3 >::SetTHR
+        
+            typedef AlarconHaematocritSolver< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetTHR_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            AlarconHaematocritSolver3_exposer.def( 
+                "SetTHR"
+                , SetTHR_function_type( &::AlarconHaematocritSolver< 3 >::SetTHR )
+                , ( bp::arg("thr") ) );
+        
+        }
+        AlarconHaematocritSolver3_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< AlarconHaematocritSolver<3> > >();
+        bp::implicitly_convertible< boost::shared_ptr< AlarconHaematocritSolver< 3 > >, boost::shared_ptr< AbstractHaematocritSolver< 3 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< AlarconHaematocritSolver< 3 > >, boost::shared_ptr< AbstractVesselNetworkCalculator< 3 > > >();
+    }
 
 }

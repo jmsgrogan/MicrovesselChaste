@@ -190,6 +190,18 @@ struct SimpleParabolicFiniteDifferenceSolver_less__3__greater__wrapper : SimpleP
         return AbstractDiscreteContinuumSolver< 3 >::GetSolution( pGrid );
     }
 
+    virtual ::std::vector< boost::numeric::ublas::c_vector<double, 3> > GetSolutionGradients( ::vtkSmartPointer< vtkPoints > pSamplePoints ) {
+        if( bp::override func_GetSolutionGradients = this->get_override( "GetSolutionGradients" ) )
+            return func_GetSolutionGradients( pSamplePoints );
+        else{
+            return this->AbstractDiscreteContinuumSolver< 3 >::GetSolutionGradients( pSamplePoints );
+        }
+    }
+    
+    ::std::vector< boost::numeric::ublas::c_vector<double, 3> > default_GetSolutionGradients( ::vtkSmartPointer< vtkPoints > pSamplePoints ) {
+        return AbstractDiscreteContinuumSolver< 3 >::GetSolutionGradients( pSamplePoints );
+    }
+
     virtual ::std::vector< double > GetSolutionP( ::vtkPoints * pSamplePoints ) {
         if( bp::override func_GetSolutionP = this->get_override( "GetSolutionP" ) )
             return func_GetSolutionP( boost::python::ptr(pSamplePoints) );
@@ -556,6 +568,19 @@ void register_SimpleParabolicFiniteDifferenceSolver3_class(){
                 , GetSolution_function_type(&::AbstractDiscreteContinuumSolver< 3 >::GetSolution)
                 , default_GetSolution_function_type(&SimpleParabolicFiniteDifferenceSolver_less__3__greater__wrapper::default_GetSolution)
                 , ( bp::arg("pGrid") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumSolver< 3 >::GetSolutionGradients
+        
+            typedef SimpleParabolicFiniteDifferenceSolver< 3 > exported_class_t;
+            typedef ::std::vector< boost::numeric::ublas::c_vector<double, 3> > ( exported_class_t::*GetSolutionGradients_function_type)( ::vtkSmartPointer< vtkPoints > ) ;
+            typedef ::std::vector< boost::numeric::ublas::c_vector<double, 3> > ( SimpleParabolicFiniteDifferenceSolver_less__3__greater__wrapper::*default_GetSolutionGradients_function_type)( ::vtkSmartPointer< vtkPoints > ) ;
+            
+            SimpleParabolicFiniteDifferenceSolver3_exposer.def( 
+                "GetSolutionGradients"
+                , GetSolutionGradients_function_type(&::AbstractDiscreteContinuumSolver< 3 >::GetSolutionGradients)
+                , default_GetSolutionGradients_function_type(&SimpleParabolicFiniteDifferenceSolver_less__3__greater__wrapper::default_GetSolutionGradients)
+                , ( bp::arg("pSamplePoints") ) );
         
         }
         { //::AbstractDiscreteContinuumSolver< 3 >::GetSolutionP

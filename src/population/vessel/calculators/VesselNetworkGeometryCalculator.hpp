@@ -114,6 +114,9 @@ public:
             boost::shared_ptr<VesselSegment<DIM> >& pEmptySegment,
             bool sameVessel = true, units::quantity<unit::length> radius = 0.0*unit::metres);
 
+    static units::quantity<unit::length> GetNearestSegmentNonVtk(boost::shared_ptr<VesselNetwork<DIM> > pNetwork, boost::shared_ptr<VesselNode<DIM> > pNode,
+            boost::shared_ptr<VesselSegment<DIM> >& pEmptySegment, bool sameVessel = true);
+
     /**
      * Get the segment nearest to the specified location and the distance to it
      * @param rLocation the probe location

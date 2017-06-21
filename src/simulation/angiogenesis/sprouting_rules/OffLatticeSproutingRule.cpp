@@ -164,8 +164,14 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::
             vegf_conc = probed_solutions[idx];
         }
 
+        units::quantity<unit::length> reference_length_for_sprouting = 40.0e-6*unit::metres;
+        units::quantity<unit::length> node_length = (rNodes[idx]->GetSegment(0)->GetLength()+
+                rNodes[idx]->GetSegment(1)->GetLength())/2.0;
+        double length_factor = node_length/reference_length_for_sprouting;
+
         double vegf_fraction = vegf_conc/(vegf_conc + mHalfMaxVegf);
-        double max_prob_per_time_step = this->mSproutingProbability*SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
+        double max_prob_per_time_step = this->mSproutingProbability*SimulationTime::Instance()->GetTimeStep()*
+                BaseUnits::Instance()->GetReferenceTimeScale()*length_factor;
         double prob_tip_selection = max_prob_per_time_step*vegf_fraction;
         if (RandomNumberGenerator::Instance()->ranf() < prob_tip_selection)
         {

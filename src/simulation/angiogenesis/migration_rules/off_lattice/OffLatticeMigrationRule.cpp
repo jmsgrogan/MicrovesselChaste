@@ -38,11 +38,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkImageEuclideanDistance.h>
 #include <vtkGradientFilter.h>
 #include <vtkProbeFilter.h>
+#include <vtkUnstructuredGrid.h>
+#include <vtkXMLUnstructuredGridWriter.h>
 #include "GeometryTools.hpp"
 #include "OffLatticeMigrationRule.hpp"
 #include "RandomNumberGenerator.hpp"
 #include "BaseUnits.hpp"
-#include "Debug.hpp"
 
 template<unsigned DIM>
 OffLatticeMigrationRule<DIM>::OffLatticeMigrationRule()
@@ -57,7 +58,7 @@ OffLatticeMigrationRule<DIM>::OffLatticeMigrationRule()
       mAttractionStrength(0.0), // was 1.0
       mProbeLength(5.0 * 1.e-6 * unit::metres),
       mCriticalMutualAttractionLength(100.0 * 1.e-6 *unit::metres),
-      mSurfaceRepulsion(false),
+      mSurfaceRepulsion(true),
       mNumGradientEvaluationDivisions(8),
       mpDomainDistanceMap()
 {
@@ -110,10 +111,10 @@ void OffLatticeMigrationRule<DIM>::CalculateDomainDistanceMap()
     #else
         p_gradient->SetInputData(mpDomainDistanceMap);
     #endif
-    p_gradient->SetResultArrayName("Gradients");
-    //p_gradient->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, this->mLabel.c_str());
+    p_gradient->SetResultArrayName("Distance Gradients");
+    p_gradient->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, "Distance");
     p_gradient->Update();
-    mpDomainDistanceMap->GetPointData()->AddArray(p_gradient->GetOutput()->GetPointData()->GetArray("Gradients"));
+    mpDomainDistanceMap->GetPointData()->AddArray(p_gradient->GetOutput()->GetPointData()->GetArray("Distance Gradients"));
 
 }
 
@@ -124,22 +125,18 @@ void OffLatticeMigrationRule<DIM>::CalculateDomainDistanceMap(boost::shared_ptr<
     {
         EXCEPTION("Can't calculate a domain distance map without a bounding domain.");
     }
-    MARK;
     mpDomainDistanceMap = pGrid->CalculateDistanceMap(this->mpBoundingDomain);
 
-    MARK;
     vtkSmartPointer<vtkGradientFilter> p_gradient = vtkSmartPointer<vtkGradientFilter>::New();
     #if VTK_MAJOR_VERSION <= 5
         p_gradient->SetInput(mpDomainDistanceMap);
     #else
         p_gradient->SetInputData(mpDomainDistanceMap);
     #endif
-    p_gradient->SetResultArrayName("Gradients");
+    p_gradient->SetResultArrayName("Distance Gradients");
     p_gradient->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, "Distance");
-    MARK;
     p_gradient->Update();
-    MARK;
-    mpDomainDistanceMap->GetPointData()->AddArray(p_gradient->GetOutput()->GetPointData()->GetArray("Gradients"));
+    mpDomainDistanceMap->GetPointData()->AddArray(p_gradient->GetOutput()->GetPointData()->GetArray("Distance Gradients"));
 }
 
 template<unsigned DIM>
@@ -181,7 +178,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
     }
     else
     {
-        if(!mpDomainDistanceMap)
+        if(!mpDomainDistanceMap and mSurfaceRepulsion)
         {
             if(this->mpSolver)
             {
@@ -191,16 +188,6 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             {
                 CalculateDomainDistanceMap();
             }
-
-            vtkSmartPointer<vtkGradientFilter> p_gradient = vtkSmartPointer<vtkGradientFilter>::New();
-            #if VTK_MAJOR_VERSION <= 5
-                p_gradient->SetInput(mpDomainDistanceMap);
-            #else
-                p_gradient->SetInputData(mpDomainDistanceMap);
-            #endif
-            p_gradient->SetResultArrayName("Gradients");
-            p_gradient->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, "Distance");
-            p_gradient->Update();
         }
 
         units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
@@ -214,12 +201,20 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
         c_vector<double, DIM> current_loc;
         c_vector<double, DIM> current_dir;
         DimensionalChastePoint<DIM> currentDirection;
-        if(this->mpSolver)
+        for(unsigned idx=0; idx<rNodes.size(); idx++)
         {
-            for(unsigned idx=0; idx<rNodes.size(); idx++)
+            current_loc = rNodes[idx]->rGetLocation().GetLocation(reference_length);
+            if(DIM==3)
             {
                 p_probe_locations->InsertNextPoint(&current_loc[0]);
             }
+            else
+            {
+                p_probe_locations->InsertNextPoint(current_loc[0], current_loc[1], 0.0);
+            }
+        }
+        if(this->mpSolver)
+        {
             if(p_probe_locations->GetNumberOfPoints()>0)
             {
                 solution_gradients = this->mpSolver->GetSolutionGradients(p_probe_locations);
@@ -230,154 +225,237 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
         std::vector<c_vector<double, 3> > distance_map_gradients(rNodes.size(), zero_vector<double>(3));
         std::vector<double> distance_map_values(rNodes.size(), 0.0);
 
-        // Sample the field at these locations
-        vtkSmartPointer<vtkPolyData> p_polydata = vtkSmartPointer<vtkPolyData>::New();
-        p_polydata->SetPoints(p_probe_locations);
+        if(mSurfaceRepulsion)
+        {
+            // Sample the field at these locations
+            vtkSmartPointer<vtkPolyData> p_polydata = vtkSmartPointer<vtkPolyData>::New();
+            p_polydata->SetPoints(p_probe_locations);
 
-        vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
-        #if VTK_MAJOR_VERSION <= 5
-            p_probe_filter->SetInput(p_polydata);
-            p_probe_filter->SetSource(mpDomainDistanceMap);
-        #else
-            p_probe_filter->SetInputData(p_polydata);
-            p_probe_filter->SetSourceData(mpDomainDistanceMap);
-        #endif
-        p_probe_filter->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, "Gradients");
-        p_probe_filter->Update();
-        vtkDataArray* p_results = p_probe_filter->GetOutput()->GetPointData()->GetArray("Gradients");
-        unsigned num_points = p_results->GetNumberOfTuples();
-        for(unsigned idx=0; idx<num_points; idx++)
-        {
-            c_vector<double, 3> result;
-            p_results->GetTuple(idx, &result[0]);
-            distance_map_gradients[idx] = result;
-        }
-        p_probe_filter->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, "Distance");
-        p_probe_filter->Update();
-        p_results = p_probe_filter->GetOutput()->GetPointData()->GetArray("Distance");
-        num_points = p_results->GetNumberOfTuples();
-        for(unsigned idx=0; idx<num_points; idx++)
-        {
-            distance_map_values[idx] = p_results->GetTuple1(idx);
+            vtkSmartPointer<vtkProbeFilter> p_probe_filter = vtkSmartPointer<vtkProbeFilter>::New();
+            #if VTK_MAJOR_VERSION <= 5
+                p_probe_filter->SetInput(p_polydata);
+                p_probe_filter->SetSource(mpDomainDistanceMap);
+            #else
+                p_probe_filter->SetInputData(p_polydata);
+                p_probe_filter->SetSourceData(mpDomainDistanceMap);
+            #endif
+            p_probe_filter->SetValidPointMaskArrayName("Valid Distance");
+            p_probe_filter->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, "Distance Gradients");
+            p_probe_filter->Update();
+            vtkDataArray* p_results = p_probe_filter->GetOutput()->GetPointData()->GetArray("Distance Gradients");
+            unsigned num_points = p_results->GetNumberOfTuples();
+            for(unsigned idx=0; idx<num_points; idx++)
+            {
+                c_vector<double, 3> result;
+                p_results->GetTuple(idx, &result[0]);
+                distance_map_gradients[idx] = result;
+            }
+
+            p_probe_filter->SetValidPointMaskArrayName("Valid Distance");
+            p_probe_filter->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, "Distance");
+            p_probe_filter->Update();
+
+            p_results = p_probe_filter->GetOutput()->GetPointData()->GetArray("Distance");
+            num_points = p_results->GetNumberOfTuples();
+            for(unsigned idx=0; idx<num_points; idx++)
+            {
+                if(p_probe_filter->GetOutput()->GetPointData()->GetArray("Valid Distance")->GetTuple1(idx))
+                {
+                    distance_map_values[idx] = p_results->GetTuple1(idx);
+                }
+                else
+                {
+                    // Have left domain
+                    distance_map_values[idx] = -1.0;
+                }
+            }
         }
 
         for(unsigned idx=0; idx<rNodes.size(); idx++)
         {
-            current_loc = rNodes[idx]->rGetLocation().GetLocation(reference_length);
+            units::quantity<unit::time> time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
             currentDirection = rNodes[idx]->rGetLocation()-rNodes[idx]->GetSegments()[0]->GetOppositeNode(rNodes[idx])->rGetLocation();
             current_dir = currentDirection.GetUnitVector();
 
+            c_vector<double, DIM> new_direction = zero_vector<double>(DIM);
+            c_vector<double, DIM> persistence_direction = zero_vector<double>(DIM);
+            c_vector<double, DIM> repulsion_direction = zero_vector<double>(DIM);
+            c_vector<double, DIM> chemotaxis_direction = zero_vector<double>(DIM);
+            c_vector<double, DIM> attraction_direction = zero_vector<double>(DIM);
+
             // Persistent random walk
+            units::quantity<unit::rate> rate_of_angular_change = 1.0/(0.5*3600.0*unit::seconds);
+            double angle_fraction = rate_of_angular_change*time_increment;
+
             units::quantity<unit::plane_angle> angle_x = mMeanAngles[0];
             if(mSdvAngles[0]>0.0*unit::radians)
             {
                 angle_x =RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0]/unit::radians,
-                        mSdvAngles[0]/unit::radians)*unit::radians;
+                        mSdvAngles[0]/unit::radians)*unit::radians*angle_fraction;
 
             }
             units::quantity<unit::plane_angle> angle_y = mMeanAngles[1];
             if(mSdvAngles[1]>0.0*unit::radians)
             {
                 angle_y = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[1]/unit::radians,
-                        mSdvAngles[1]/unit::radians)*unit::radians;
+                        mSdvAngles[1]/unit::radians)*unit::radians*angle_fraction;
 
             }
             units::quantity<unit::plane_angle> angle_z = mMeanAngles[2];
             if(mSdvAngles[2]>0.0*unit::radians)
             {
                 angle_z = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[2]/unit::radians,
-                        mSdvAngles[2]/unit::radians)*unit::radians;
+                        mSdvAngles[2]/unit::radians)*unit::radians*angle_fraction;
             }
-            c_vector<double, DIM> new_direction;
+
             if(DIM==3)
             {
                 c_vector<double, DIM> new_direction_z = RotateAboutAxis<DIM>(currentDirection.GetUnitVector(), mGlobalZ, angle_z);
                 c_vector<double, DIM> new_direction_y = RotateAboutAxis<DIM>(new_direction_z, mGlobalY, angle_y);
-                new_direction = RotateAboutAxis<DIM>(new_direction_y, mGlobalX, angle_x);
-                new_direction /= norm_2(new_direction);
+                persistence_direction = RotateAboutAxis<DIM>(new_direction_y, mGlobalX, angle_x);
+                persistence_direction /= norm_2(persistence_direction);
             }
             else
             {
-                new_direction = RotateAboutAxis<DIM>(currentDirection.GetUnitVector(), mGlobalZ, angle_z);
-                new_direction /= norm_2(new_direction);
+                persistence_direction = RotateAboutAxis<DIM>(currentDirection.GetUnitVector(), mGlobalZ, angle_z);
+                persistence_direction /= norm_2(persistence_direction);
             }
 
             // Chemotaxis
-            if(this->mpSolver)
+            if(this->mpSolver and mChemotacticStrength>0.0)
             {
                 // Get the gradients
                 c_vector<double, 3> gradient = solution_gradients[idx];
-                gradient/=norm_2(gradient);
+                if (norm_2(gradient)>0.0)
+                {
+                    gradient/=norm_2(gradient);
+                }
+
                 if(DIM==3)
                 {
-                    new_direction = new_direction + mChemotacticStrength*gradient;
+                    chemotaxis_direction = gradient;
                 }
                 else
                 {
                     c_vector<double, DIM> gradient_2d;
                     gradient_2d[0] = gradient[0];
                     gradient_2d[1] = gradient[1];
-                    new_direction = new_direction + mChemotacticStrength*gradient_2d;
+                    chemotaxis_direction = gradient_2d;
                 }
             }
-            new_direction /= norm_2(new_direction);
 
-            // Mutual Attraction
-            std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = this->mpVesselNetwork->GetNodes();
-            units::quantity<unit::length> min_distance = 1.e12*unit::metres;
-            c_vector<double, DIM> min_direction = zero_vector<double>(DIM);
-            for(unsigned jdx=0; jdx<nodes.size(); jdx++)
+            if(mAttractionStrength>0.0)
             {
-                if(IsPointInCone<DIM>(nodes[jdx]->rGetLocation(), rNodes[idx]->rGetLocation(), rNodes[idx]->rGetLocation() +
-                                      DimensionalChastePoint<DIM>(currentDirection.GetLocation(reference_length) * double(mCriticalMutualAttractionLength/reference_length), reference_length), M_PI/3.0))
+                // Mutual Attraction
+                std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = this->mpVesselNetwork->GetNodes();
+                units::quantity<unit::length> min_distance = 1.e12*unit::metres;
+                c_vector<double, DIM> min_direction = zero_vector<double>(DIM);
+                for(unsigned jdx=0; jdx<nodes.size(); jdx++)
                 {
-                    units::quantity<unit::length> distance = rNodes[idx]->rGetLocation().GetDistance(nodes[jdx]->rGetLocation());
-                    if(distance < min_distance)
+                    if(IsPointInCone<DIM>(nodes[jdx]->rGetLocation(), rNodes[idx]->rGetLocation(), rNodes[idx]->rGetLocation() +
+                                          DimensionalChastePoint<DIM>(currentDirection.GetLocation(reference_length) * double(mCriticalMutualAttractionLength/reference_length), reference_length), M_PI/3.0))
                     {
-                        min_distance = distance;
-                        DimensionalChastePoint<DIM> dim_min_direction = nodes[jdx]->rGetLocation() - rNodes[idx]->rGetLocation();
-                        min_direction = dim_min_direction.GetUnitVector();
+                        units::quantity<unit::length> distance = rNodes[idx]->rGetLocation().GetDistance(nodes[jdx]->rGetLocation());
+                        if(distance < min_distance)
+                        {
+                            min_distance = distance;
+                            DimensionalChastePoint<DIM> dim_min_direction = nodes[jdx]->rGetLocation() - rNodes[idx]->rGetLocation();
+                            min_direction = dim_min_direction.GetUnitVector();
+                        }
                     }
                 }
-            }
 
-            double strength = 0.0;
-            if(min_distance < mCriticalMutualAttractionLength)
-            {
-                strength = mAttractionStrength *  (1.0 - (min_distance * min_distance) / (mCriticalMutualAttractionLength * mCriticalMutualAttractionLength));
+                double strength = 0.0;
+                if(min_distance < mCriticalMutualAttractionLength)
+                {
+                    strength = (1.0 - (min_distance * min_distance) / (mCriticalMutualAttractionLength * mCriticalMutualAttractionLength));
+                }
+                attraction_direction =  strength * min_direction;
+                attraction_direction /= norm_2(attraction_direction);
             }
-            new_direction += strength * min_direction;
-            new_direction /= norm_2(new_direction);
 
             // Surface repulsion
-            double critical_repulsion_distance = (20.0e-6*unit::metres)/reference_length;
-            double max_repulsion_strength = 5.0;
-            if(this->mpBoundingDomain)
+            if(mSurfaceRepulsion)
             {
-                double current_distance = distance_map_values[idx];
-                if(current_distance<critical_repulsion_distance)
+                double critical_repulsion_distance = (25.0e-6*unit::metres)/reference_length;
+                double max_repulsion_strength = 5.0;
+                if(this->mpBoundingDomain or this->mpSolver)
                 {
-                    c_vector<double, 3> distance_gradient = distance_map_gradients[idx];
-                    distance_gradient/=norm_2(distance_gradient);
-                    double value = 1.0-(2.0*current_distance/(critical_repulsion_distance+current_distance));
-                    double repulsion_strength = max_repulsion_strength*value;
-                    if(DIM==3)
+                    double current_distance = distance_map_values[idx];
+                    current_loc = rNodes[idx]->rGetLocation().GetLocation(reference_length);
+                    if(current_distance<critical_repulsion_distance)
                     {
-                        new_direction += repulsion_strength * distance_gradient;
+                        if(current_distance>=0.0)
+                        {
+                            c_vector<double, 3> distance_gradient = distance_map_gradients[idx];
+                            distance_gradient/=norm_2(distance_gradient);
+
+                            double value = 1.0-(2.0*current_distance/(critical_repulsion_distance+current_distance));
+                            double repulsion_strength = max_repulsion_strength*value;
+                            if(DIM==3)
+                            {
+                                double dot_prod = inner_prod(new_direction, distance_gradient);
+                                c_vector<double, DIM> arb_normal = GetArbitaryUnitNormal<DIM>(distance_gradient);
+                                if(dot_prod<-0.95 and dot_prod>-1.05)
+                                {
+                                    double angle = 2.0*M_PI*RandomNumberGenerator::Instance()->ranf();
+                                    c_vector<double, DIM> random_normal = RotateAboutAxis<DIM>(arb_normal, distance_gradient, angle*unit::radians);
+                                    repulsion_direction = 2.0 * repulsion_strength * random_normal;
+                                }
+                                else
+                                {
+                                    c_vector<double, DIM> directed_normal = current_dir -
+                                            inner_prod(current_dir, distance_gradient)*distance_gradient;
+                                    directed_normal /=norm_2(directed_normal);
+                                    repulsion_direction = repulsion_strength * (directed_normal + 0.1*distance_gradient);
+                                }
+                            }
+                            else
+                            {
+                                c_vector<double, DIM> dist_grad_2d;
+                                dist_grad_2d[0] = distance_gradient[0];
+                                dist_grad_2d[1] = distance_gradient[1];
+                                double dot_prod = inner_prod(new_direction, dist_grad_2d);
+                                c_vector<double, DIM> arb_normal = GetArbitaryUnitNormal<DIM>(dist_grad_2d);
+                                if(dot_prod<-0.95 and dot_prod>-1.05)
+                                {
+                                    double mult = 1.0;
+                                    if(RandomNumberGenerator::Instance()->ranf()<0.5)
+                                    {
+                                        mult=-1.0;
+                                    }
+                                    repulsion_direction= 2.0*repulsion_strength * mult*arb_normal;
+                                }
+                                else
+                                {
+                                    if(inner_prod(current_dir, arb_normal)<0.0)
+                                    {
+                                        arb_normal*=-1.0;
+                                    }
+                                    repulsion_direction = repulsion_strength * (arb_normal + 0.1*dist_grad_2d);
+
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // Have left domain...reflect back in, almost back on self
+                            repulsion_direction = max_repulsion_strength * -(current_dir+0.1*GetArbitaryUnitNormal<DIM>(current_dir));
+                        }
+                        repulsion_direction /= norm_2(repulsion_direction);
                     }
-                    else
-                    {
-                        c_vector<double, DIM> dist_grad_2d;
-                        dist_grad_2d[0] = distance_gradient[0];
-                        dist_grad_2d[1] = distance_gradient[1];
-                        new_direction += repulsion_strength * dist_grad_2d;
-                    }
-                    new_direction /= norm_2(new_direction);
                 }
             }
 
+            new_direction = (persistence_direction + mChemotacticStrength*chemotaxis_direction + mAttractionStrength*attraction_direction)/
+                    (1.0 + mChemotacticStrength +  mAttractionStrength);
+            new_direction /= norm_2(new_direction); // just making sure
+
+            // This goes last to over-ride everything else
+            new_direction += repulsion_direction;
+            new_direction /= norm_2(new_direction);
+
             // Get the movement increment
-            units::quantity<unit::time> time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
             units::quantity<unit::length> increment_length = time_increment* mVelocity;
             movement_vectors.push_back(OffsetAlongVector<DIM>(new_direction, increment_length, reference_length));
         }
@@ -392,139 +470,23 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
     units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
 
     // Collect the probe locations for each node
-    std::vector<units::quantity<unit::concentration> > probed_solutions;
-    unsigned probes_per_node = 3;
-    if(DIM==3)
-    {
-        probes_per_node = 5;
-    }
+    std::vector<units::quantity<unit::concentration> > probed_solutions(rNodes.size());
+    std::vector<c_vector<double, 3> > solution_gradients(rNodes.size(), zero_vector<double>(3));
     vtkSmartPointer<vtkPoints> p_probe_locations = vtkSmartPointer<vtkPoints>::New();
-    std::vector<bool> candidate_locations_inside_domain(probes_per_node*rNodes.size(), true);
-    // Get a normal to the segments, will depend on whether they are parallel
-    for(unsigned idx = 0; idx < rNodes.size(); idx++)
+
+    c_vector<double, DIM> current_loc;
+    c_vector<double, DIM> current_dir;
+    DimensionalChastePoint<DIM> currentDirection;
+    for(unsigned idx=0; idx<rNodes.size(); idx++)
     {
-        if(rNodes[idx]->GetNumberOfSegments() !=2)
-        {
-            EXCEPTION("Attempting to form sprout at tip or existing branch. This is not supported.");
-        }
-
-        c_vector<double, DIM> sprout_direction;
-        c_vector<double, DIM> cross_product;
-        double sum = 0.0;
-
+        current_loc = rNodes[idx]->rGetLocation().GetLocation(reference_length);
         if(DIM==3)
         {
-            cross_product = VectorProduct(rNodes[idx]->GetSegments()[0]->GetUnitTangent(),
-                                                                rNodes[idx]->GetSegments()[1]->GetUnitTangent());
-            for(unsigned jdx=0; jdx<DIM; jdx++)
-            {
-                sum += std::abs(cross_product[jdx]);
-            }
+            p_probe_locations->InsertNextPoint(&current_loc[0]);
         }
         else
         {
-            c_vector<double, DIM> tangent1 = rNodes[idx]->GetSegments()[0]->GetUnitTangent();
-            c_vector<double, DIM> tangent2 = rNodes[idx]->GetSegments()[1]->GetUnitTangent();
-            for(unsigned jdx=0; jdx<DIM; jdx++)
-            {
-                sum += std::abs(tangent1[jdx]-tangent2[jdx]);
-            }
-        }
-
-        if (sum<=1.e-6)
-        {
-            // more or less parallel segments, chose any normal to the first tangent
-            c_vector<double, DIM> normal;
-            c_vector<double, DIM> tangent = rNodes[idx]->GetSegments()[0]->GetUnitTangent();
-            if(DIM==2 or tangent[2]==0.0)
-            {
-                if(tangent[1] == 0.0)
-                {
-                    normal[0] = 0.0;
-                    normal[1] = 1.0;
-                }
-                else
-                {
-                    normal[0] = 1.0;
-                    normal[1] = -tangent[0] /tangent[1];
-                }
-            }
-            else
-            {
-                if(std::abs(tangent[0]) + std::abs(tangent[1]) == 0.0)
-                {
-                    normal[0] = 1.0;
-                    normal[1] = 1.0;
-                }
-                else
-                {
-                    normal[0] = 1.0;
-                    normal[1] = 1.0;
-                    normal[2] = -(tangent[0] + tangent[1])/tangent[2];
-                }
-            }
-            if(RandomNumberGenerator::Instance()->ranf()>=0.5)
-            {
-                sprout_direction = normal/norm_2(normal);
-            }
-            else
-            {
-                sprout_direction = -normal/norm_2(normal);
-            }
-        }
-        else
-        {
-            if(DIM==3)
-            {
-                // otherwise the direction is out of the plane of the segment tangents
-                if(RandomNumberGenerator::Instance()->ranf()>=0.5)
-                {
-                    sprout_direction = cross_product/norm_2(cross_product);
-                }
-                else
-                {
-                    sprout_direction = -cross_product/norm_2(cross_product);
-                }
-            }
-            else
-            {
-                c_vector<double, DIM> tangent1 = rNodes[idx]->GetSegments()[0]->GetUnitTangent();
-                c_vector<double, DIM> tangent2 = rNodes[idx]->GetSegments()[1]->GetUnitTangent();
-                c_vector<double, DIM> av_tangent = (tangent1 + tangent2)/2.0;
-                av_tangent/=norm_2(av_tangent);
-
-                c_vector<double, DIM> normal;
-                if(av_tangent[1] == 0.0)
-                {
-                    normal[0] = 0.0;
-                    normal[1] = 1.0;
-                }
-                else
-                {
-                    normal[0] = 1.0;
-                    normal[1] = -av_tangent[0] /av_tangent[1];
-                }
-
-                if(RandomNumberGenerator::Instance()->ranf()>=0.5)
-                {
-                    sprout_direction = normal/norm_2(normal);
-                }
-                else
-                {
-                    sprout_direction = -normal/norm_2(normal);
-                }
-            }
-        }
-        units::quantity<unit::plane_angle> angle = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0]/unit::radians,
-                                                                                                          mSdvAngles[0]/unit::radians)*unit::radians;
-        vtkSmartPointer<vtkPoints> p_local_probes = GetProbeLocationsInternalPoint<DIM>(DimensionalChastePoint<DIM>(sprout_direction, reference_length),
-                                                                                                rNodes[idx]->rGetLocation(),
-                                                                                                DimensionalChastePoint<DIM>(rNodes[idx]->GetSegments()[0]->GetUnitTangent(), reference_length),
-                                                                                                mProbeLength,
-                                                                                                angle);
-        for(unsigned jdx=0;jdx<probes_per_node; jdx++)
-        {
-            p_probe_locations->InsertNextPoint(p_local_probes->GetPoint(jdx));
+            p_probe_locations->InsertNextPoint(current_loc[0], current_loc[1], 0.0);
         }
     }
     if(this->mpSolver)
@@ -532,8 +494,12 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
         if(p_probe_locations->GetNumberOfPoints()>0)
         {
             probed_solutions = this->mpSolver->GetConcentrations(p_probe_locations);
+            solution_gradients = this->mpSolver->GetSolutionGradients(p_probe_locations);
         }
-
+    }
+    std::vector<bool> candidate_locations_inside_domain(rNodes.size(), true);
+    if(this->mpSolver)
+    {
         if (this->mpBoundingDomain)
         {
             candidate_locations_inside_domain = this->mpBoundingDomain->IsPointInPart(p_probe_locations);
@@ -543,60 +509,107 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
     // Decide on the sprout directions
     for(unsigned idx=0; idx<rNodes.size(); idx++)
     {
-        DimensionalChastePoint<DIM> new_direction(0.0, 0.0, 0.0, reference_length);
-        // Solution dependent contribution
+        current_loc = rNodes[idx]->rGetLocation().GetLocation(reference_length);
+        c_vector<double, DIM> new_direction = zero_vector<double>(DIM);
+
+        // Get the segment tangent
+        c_vector<double, DIM> dir1 = rNodes[idx]->GetSegment(0)->GetUnitTangent();
+        c_vector<double, DIM> dir2 = rNodes[idx]->GetSegment(1)->GetUnitTangent();
+
+        c_vector<double, DIM> av_tangent = (dir1+dir2);
+        if(norm_2(av_tangent)==0.0)
+        {
+            av_tangent = (dir1-dir2);
+        }
+        av_tangent/=norm_2(av_tangent);
         if(this->mpSolver)
         {
-            // Get the gradients
-            std::vector<units::quantity<unit::concentration_gradient> > gradients(probes_per_node-1, 0.0*unit::mole_per_metre_pow_4);
-            if(probed_solutions.size()>=idx*probes_per_node+probes_per_node)
+            c_vector<double, 3> gradient = solution_gradients[idx];
+            gradient/=norm_2(gradient);
+            if(DIM==3)
             {
-                for(unsigned jdx=1; jdx<probes_per_node; jdx++)
+                c_vector<double, 3> av_tangent_3d;
+                av_tangent_3d[0] = av_tangent[0];
+                av_tangent_3d[1] = av_tangent[1];
+                av_tangent_3d[2] = av_tangent[2];
+                c_vector<double, 3> rot_axis = VectorProduct(gradient, av_tangent_3d);
+                if(norm_2(rot_axis)==0.0)
                 {
-                    gradients[jdx-1] = ((probed_solutions[idx*probes_per_node+jdx] - probed_solutions[idx*probes_per_node]) / mProbeLength);
-                    if(!candidate_locations_inside_domain[idx*probes_per_node+jdx])
+                    new_direction = GetArbitaryUnitNormal<DIM>(av_tangent);
+                    double rand = RandomNumberGenerator::Instance()->ranf()*2.0*M_PI;
+                    new_direction = RotateAboutAxis<DIM>(av_tangent, new_direction, rand*unit::radians);
+                }
+                else
+                {
+                    double angle = std::acos(inner_prod(av_tangent, gradient));
+                    double angle_threshold = M_PI/20.0;
+                    double rot_angle = M_PI/2.0;
+                    if(angle<angle_threshold)
                     {
-                        gradients[jdx-1] = 0.0*unit::mole_per_metre_pow_4;
+                        if(RandomNumberGenerator::Instance()->ranf()>0.5)
+                        {
+                            rot_angle*=-1.0;
+                        }
                     }
+                    else if(angle<0.0)
+                    {
+                        rot_angle = -M_PI/2.0 - angle;
+                    }
+                    else if(angle >0.0)
+                    {
+                        rot_angle = M_PI/2.0 - angle;
+                    }
+                    new_direction = RotateAboutAxis<DIM>(gradient, rot_axis, rot_angle*unit::radians);
                 }
             }
             else
             {
-                EXCEPTION("Incorrect number of solution gradient probes per node.");
-            }
-
-            // Get the index of the max viable gradient
-            units::quantity<unit::concentration_gradient> max_grad = 0.0 * unit::mole_per_metre_pow_4;
-            int my_index = -1;
-            for(unsigned jdx = 0; jdx<gradients.size(); jdx++)
-            {
-                if(gradients[jdx]>=max_grad)
+                c_vector<double, 2> gradient_2d;
+                gradient_2d[0] = solution_gradients[idx][0];
+                gradient_2d[1] = solution_gradients[idx][1];
+                gradient_2d/=norm_2(gradient_2d);
+                double angle = std::acos(inner_prod(av_tangent, gradient_2d));
+                double rot_angle = M_PI/2.0;
+                double angle_threshold = M_PI/20.0;
+                if(angle<angle_threshold)
                 {
-                    max_grad = gradients[jdx];
-                    my_index = int(jdx);
+                    if(RandomNumberGenerator::Instance()->ranf()>0.5)
+                    {
+                        rot_angle*=-1.0;
+                    }
                 }
+                else if(angle<0.0)
+                {
+                    rot_angle = -M_PI/2.0 - angle;
+                }
+                else if(angle >0.0)
+                {
+                    rot_angle = M_PI/2.0 - angle;
+                }
+                c_vector<double, 3> rot_axis;
+                rot_axis[0] = 0.0;
+                rot_axis[1] = 0.0;
+                rot_axis[2] = 1.0;
+                new_direction = RotateAboutAxis<DIM>(gradient_2d, rot_axis, rot_angle*unit::radians);
             }
-
-            double loc[3];
-            int max_index=1;
-            if(DIM==3)
-            {
-                max_index = 3;
-            }
-            if(my_index>=0 and my_index<=max_index)
-            {
-                p_probe_locations->GetPoint(idx*probes_per_node + 1 + my_index, loc);
-                new_direction = DimensionalChastePoint<DIM>(loc[0], loc[1], loc[2], reference_length) -rNodes[idx]->rGetLocation();
-            }
-//            else
-//            {
-//                EXCEPTION("Out of bounds in sprout direction calculation");
-//            }
         }
+        else
+        {
+            if(DIM==2)
+            {
+                new_direction = GetArbitaryUnitNormal<DIM>(av_tangent);
+            }
+            else
+            {
+                new_direction = GetArbitaryUnitNormal<DIM>(av_tangent);
+                double rand = RandomNumberGenerator::Instance()->ranf()*2.0*M_PI;
+                new_direction = RotateAboutAxis<DIM>(av_tangent, new_direction, rand*unit::radians);
+            }
+        }
+        new_direction/=norm_2(new_direction);
         units::quantity<unit::time> time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
         units::quantity<unit::length> increment_length = time_increment* mVelocity;
-
-        movement_vectors.push_back(OffsetAlongVector<DIM>(new_direction.GetUnitVector(), increment_length, reference_length));
+        movement_vectors.push_back(OffsetAlongVector<DIM>(new_direction, increment_length, reference_length));
     }
 
     return movement_vectors;

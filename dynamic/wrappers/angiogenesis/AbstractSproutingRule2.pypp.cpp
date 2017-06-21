@@ -90,6 +90,16 @@ void register_AbstractSproutingRule2_class(){
         typedef bp::class_< AbstractSproutingRule_less__2__greater__wrapper > AbstractSproutingRule2_exposer_t;
         AbstractSproutingRule2_exposer_t AbstractSproutingRule2_exposer = AbstractSproutingRule2_exposer_t( "AbstractSproutingRule2", bp::init< >() );
         bp::scope AbstractSproutingRule2_scope( AbstractSproutingRule2_exposer );
+        { //::AbstractSproutingRule< 2 >::GetSproutingProbability
+        
+            typedef AbstractSproutingRule< 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetSproutingProbability_function_type)(  ) ;
+            
+            AbstractSproutingRule2_exposer.def( 
+                "GetSproutingProbability"
+                , GetSproutingProbability_function_type( &::AbstractSproutingRule< 2 >::GetSproutingProbability ) );
+        
+        }
         { //::AbstractSproutingRule< 2 >::GetSprouts
         
             typedef AbstractSproutingRule< 2 > exported_class_t;

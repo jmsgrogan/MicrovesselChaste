@@ -36,9 +36,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef MappableGridGenerator_hpp__pyplusplus_wrapper
-#define MappableGridGenerator_hpp__pyplusplus_wrapper
+#ifndef CornealMicropocketSimulation2_hpp__pyplusplus_wrapper
+#define CornealMicropocketSimulation2_hpp__pyplusplus_wrapper
 
-void register_MappableGridGenerator_class();
+void register_CornealMicropocketSimulation2_class();
 
-#endif//MappableGridGenerator_hpp__pyplusplus_wrapper
+#endif//CornealMicropocketSimulation2_hpp__pyplusplus_wrapper

@@ -172,6 +172,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "SolutionDependentDiscreteSource3.pypp.hpp"
 
+#include "VectorCVectorDouble3.pypp.hpp"
+
 #include "VectorConcentrationFlowRateQuantity.pypp.hpp"
 
 #include "VectorConcentrationQuantity.pypp.hpp"
@@ -210,6 +212,8 @@ BOOST_PYTHON_MODULE(_chaste_project_MicrovesselChaste_pde){
     register_VectorSharedPtrDiscreteSource3_class();
 
     register_VectorSharedPtrDiscreteSource2_class();
+
+    register_VectorCVectorDouble3_class();
 
     register_VectorDimensionalChastePoint3_class();
 

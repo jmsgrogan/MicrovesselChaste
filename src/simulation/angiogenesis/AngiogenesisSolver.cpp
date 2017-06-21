@@ -47,6 +47,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Timer.hpp"
 #include "VesselNetworkGeometryCalculator.hpp"
 
+#include "Debug.hpp"
+
 template<unsigned DIM>
 AngiogenesisSolver<DIM>::AngiogenesisSolver() :
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
@@ -195,8 +197,7 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
             {
                 if (sprouting)
                 {
-                    mpNetwork->FormSprout(tips[idx]->rGetLocation(),
-                            mpGridCalculator->GetGrid()->GetGlobalCellLocation(indices[idx]));
+                    mpNetwork->FormSprout(tips[idx], mpGridCalculator->GetGrid()->GetGlobalCellLocation(indices[idx]));
                     tips[idx]->SetIsMigrating(false);
                     mpNetwork->UpdateAll();
                 }
@@ -227,7 +228,6 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
         }
         mpMigrationRule->SetIsSprouting(sprouting);
         std::vector<DimensionalChastePoint<DIM> > movement_vectors = mpMigrationRule->GetDirections(tips);
-
         vtkSmartPointer<vtkPoints> candidate_tip_locations = vtkSmartPointer<vtkPoints>::New();
         std::vector<bool> candidate_tips_inside_domain(tips.size(), true);
         for (unsigned idx = 0; idx < tips.size(); idx++)
@@ -261,8 +261,7 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
                     DimensionalChastePoint<DIM> dimensional_loc(loc[0], loc[1], loc[2], mReferenceLength);
                     if (sprouting)
                     {
-                        mpNetwork->FormSprout(tips[idx]->rGetLocation(), dimensional_loc);
-                        mpNetwork->UpdateAll();
+                        mpNetwork->FormSprout(tips[idx], dimensional_loc);
                         tips[idx]->SetIsMigrating(false);
                     }
                     else
@@ -291,6 +290,9 @@ template<unsigned DIM>
 void AngiogenesisSolver<DIM>::DoAnastamosis()
 {
     std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
+    std::map<boost::shared_ptr<VesselNode<DIM> > , boost::shared_ptr<VesselSegment<DIM> > > node_segment_map;
+    std::map<boost::shared_ptr<VesselSegment<DIM> > , std::vector<boost::shared_ptr<VesselNode<DIM> > > > segment_node_map;
+
     for (unsigned idx = 0; idx < nodes.size(); idx++)
     {
         // If this is currently a tip
@@ -334,44 +336,76 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
                 boost::shared_ptr<VesselSegment<DIM> > p_nearest_segment;
                 units::quantity<unit::length> distance = VesselNetworkGeometryCalculator<DIM>::GetNearestSegment(mpNetwork, nodes[idx],
                         p_nearest_segment, false, 3.0*mNodeAnastamosisRadius);
-
                 if(p_nearest_segment)
                 {
                     if (distance <= mNodeAnastamosisRadius && nodes[idx]->GetSegment(0)->GetLength() > distance)
                     {
-                        // If there is a non-zero anastamosis radius move the tip onto the segment
-                        DimensionalChastePoint<DIM> original_location = nodes[idx]->rGetLocation();
-                        if (mNodeAnastamosisRadius > 0.0 * unit::metres)
-                        {
-                            DimensionalChastePoint<DIM> divide_location = p_nearest_segment->GetPointProjection(
-                                    original_location, true);
-                            nodes[idx]->SetLocation(divide_location);
-                        }
-                        boost::shared_ptr<VesselNode<DIM> > p_merge_node = mpNetwork->DivideVessel(
-                                p_nearest_segment->GetVessel(), nodes[idx]->rGetLocation());
-                        // Replace the node at the end of the migrating tip with the merge node
-                        if ((nodes[idx]->GetSegment(0)->GetNode(0) == p_merge_node)
-                                || (nodes[idx]->GetSegment(0)->GetNode(1) == p_merge_node))
-                        {
-                            nodes[idx]->SetLocation(original_location);
-                        }
-                        else
-                        {
-                            p_merge_node->SetIsMigrating(false);
-                            if (nodes[idx]->GetSegment(0)->GetNode(0) == nodes[idx])
-                            {
-                                nodes[idx]->GetSegment(0)->ReplaceNode(0, p_merge_node);
-                            }
-                            else
-                            {
-                                nodes[idx]->GetSegment(0)->ReplaceNode(1, p_merge_node);
-                            }
-                        }
-                        mpNetwork->UpdateAll();
+                        // Populate the segment node map
+                        node_segment_map[nodes[idx]] = p_nearest_segment;
+                        segment_node_map[p_nearest_segment].push_back(nodes[idx]);
                     }
                 }
             }
         }
+    }
+
+    typename std::map<boost::shared_ptr<VesselNode<DIM> > , boost::shared_ptr<VesselSegment<DIM> > >::iterator node_iter;
+    for(node_iter = node_segment_map.begin(); node_iter != node_segment_map.end(); node_iter++)
+    {
+        DimensionalChastePoint<DIM> original_location = (*node_iter).first->rGetLocation();
+        if (mNodeAnastamosisRadius > 0.0 * unit::metres)
+        {
+            DimensionalChastePoint<DIM> divide_location = (*node_iter).second->GetPointProjection(
+                    original_location, true);
+            (*node_iter).first->SetLocation(divide_location);
+        }
+
+        std::vector<boost::shared_ptr<VesselNode<DIM> > > other_nodes = segment_node_map[(*node_iter).second];
+
+        boost::shared_ptr<VesselNode<DIM> > p_merge_node = mpNetwork->DivideVessel(
+                (*node_iter).second->GetVessel(), (*node_iter).first->rGetLocation());
+
+        // If we have removed the segment and any other nodes need it, replace the segment in the map
+        if(p_merge_node->GetNumberOfSegments()>1)
+        {
+            if(p_merge_node->GetSegment(0)!=(*node_iter).second and p_merge_node->GetSegment(1)!=(*node_iter).second)
+            {
+                for(unsigned idx=0;idx<other_nodes.size();idx++)
+                {
+                    if(p_merge_node->GetSegment(0)->GetDistance(other_nodes[idx]->rGetLocation())>
+                    p_merge_node->GetSegment(1)->GetDistance(other_nodes[idx]->rGetLocation()))
+                    {
+                        node_segment_map[other_nodes[idx]] =  p_merge_node->GetSegment(1);
+                        segment_node_map[p_merge_node->GetSegment(1)].push_back(other_nodes[idx]);
+                    }
+                    else
+                    {
+                        node_segment_map[other_nodes[idx]] =  p_merge_node->GetSegment(0);
+                        segment_node_map[p_merge_node->GetSegment(0)].push_back(other_nodes[idx]);
+                    }
+                }
+            }
+        }
+
+        // Replace the node at the end of the migrating tip with the merge node
+        if (((*node_iter).first->GetSegment(0)->GetNode(0) == p_merge_node)
+                || ((*node_iter).first->GetSegment(0)->GetNode(1) == p_merge_node))
+        {
+            (*node_iter).first->SetLocation(original_location);
+        }
+        else
+        {
+            p_merge_node->SetIsMigrating(false);
+            if ((*node_iter).first->GetSegment(0)->GetNode(0) == (*node_iter).first)
+            {
+                (*node_iter).first->GetSegment(0)->ReplaceNode(0, p_merge_node);
+            }
+            else
+            {
+                (*node_iter).first->GetSegment(0)->ReplaceNode(1, p_merge_node);
+            }
+        }
+        mpNetwork->Modified();
     }
 }
 
@@ -417,6 +451,7 @@ void AngiogenesisSolver<DIM>::Increment()
 
     // Move any migrating nodes
     UpdateNodalPositions();
+
     // Check for anastamosis
     if(mDoAnastamosis)
     {
@@ -432,7 +467,6 @@ void AngiogenesisSolver<DIM>::Increment()
             DoAnastamosis();
         }
     }
-
     // If there is a cell population, update it.
     if (mpCellPopulation)
     {

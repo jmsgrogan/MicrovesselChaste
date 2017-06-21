@@ -54,8 +54,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "OffLatticeSproutingRule.hpp"
 #include "AngiogenesisSolver.hpp"
 #include "CoupledLumpedSystemFiniteElementSolver.hpp"
-
-#include "Debug.hpp"
+#include "Timer.hpp"
 
 template<unsigned DIM>
 CornealMicropocketSimulation<DIM>::CornealMicropocketSimulation() :
@@ -71,9 +70,9 @@ CornealMicropocketSimulation<DIM>::CornealMicropocketSimulation() :
     mElementArea3d(1e4*(1.e-18*unit::metres_cubed)),
     mNodeSpacing(40.0e-6*unit::metres),
     mDensityGridSpacing(40.0e-6*unit::metres),
-    mSampleSpacingX(20.0e-6*unit::metres),
-    mSampleSpacingY(20.0e-6*unit::metres),
-    mSampleSpacingZ(20.0e-6*unit::metres),
+    mSampleSpacingX(60.0e-6*unit::metres),
+    mSampleSpacingY(60.0e-6*unit::metres),
+    mSampleSpacingZ(33.0e-6*unit::metres),
     mUsePellet(true),
     mFinitePelletWidth(false),
     mSproutingProbability(0.5 /(3600.0*unit::seconds)),
@@ -89,7 +88,7 @@ CornealMicropocketSimulation<DIM>::CornealMicropocketSimulation() :
     mVegfBloodConcentration(0.0*unit::mole_per_metre_cubed),
     mVegfPermeability((3.e-4/3600.0)*unit::metre_per_second),
     mUptakeRatePerCell((4.e-18/3600.0)*unit::mole_per_second),
-    mPdeTimeIncrement(0.001),
+    mPdeTimeIncrement(0.01),
     mIncludeVesselSink(true),
     mUseFixedGradient(false),
     mUsePdeOnly(false),
@@ -106,7 +105,11 @@ CornealMicropocketSimulation<DIM>::CornealMicropocketSimulation() :
     mSampleLines(),
     mNumSampleY(1),
     mNumSampleZ(1),
-    mpSamplingGrid()
+    mpSamplingGrid(),
+    mOnlyPerfusedSprout(false),
+    mSampleFrequency(5),
+    mStoredSample(),
+    mSproutVelocity(20.0 *(1.e-6/3600.0) * unit::metre_per_second)
 {
 
 }
@@ -122,6 +125,54 @@ boost::shared_ptr<CornealMicropocketSimulation<DIM> > CornealMicropocketSimulati
 {
     MAKE_PTR(CornealMicropocketSimulation<DIM>, pSelf);
     return pSelf;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetTipVelocity(units::quantity<unit::velocity> velocity)
+{
+    mSproutVelocity = velocity;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetPelletHeight(units::quantity<unit::length> pelletHeight)
+{
+    mPelletHeight = pelletHeight;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetOnlyPerfusedSprout(bool onlyPerfused)
+{
+    mOnlyPerfusedSprout = onlyPerfused;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetCorneaRadius(units::quantity<unit::length> corneaRadius)
+{
+    mCorneaRadius = corneaRadius;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetPelletThickness(units::quantity<unit::length> pelletThickness)
+{
+    mPelletThickness = pelletThickness;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetPelletRadius(units::quantity<unit::length> pelletRadius)
+{
+    mPelletRadius = pelletRadius;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetLimbalOffset(units::quantity<unit::length> limbalOffset)
+{
+    mLimbalOffset = limbalOffset;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetSampleFrequency(unsigned freq)
+{
+    mSampleFrequency = freq;
 }
 
 template<unsigned DIM>
@@ -306,16 +357,26 @@ boost::shared_ptr<Part<DIM> > CornealMicropocketSimulation<DIM>::SetUpDomain()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulation<DIM>::SetUpGrid()
+boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulation<DIM>::SetUpGrid(bool mSampling)
 {
     if(mDomainType == DomainType::PLANAR_2D or mDomainType == DomainType::PLANAR_3D)
     {
         if(!mFinitePelletWidth)
         {
-            mpGrid = RegularGrid<DIM>::Create();
-            boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
-                        boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGrid);
-            p_regular_grid->GenerateFromPart(mpDomain, mGridSpacing);
+            if(mSampling)
+            {
+                mpSamplingGrid = RegularGrid<DIM>::Create();
+                boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
+                            boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpSamplingGrid);
+                p_regular_grid->GenerateFromPart(mpDomain, mGridSpacing*3.0);
+            }
+            else
+            {
+                mpGrid = RegularGrid<DIM>::Create();
+                boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
+                            boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGrid);
+                p_regular_grid->GenerateFromPart(mpDomain, mGridSpacing);
+            }
         }
         else
         {
@@ -323,14 +384,35 @@ boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulat
             generator.SetDomain(mpDomain);
             if(mDomainType == DomainType::PLANAR_2D)
             {
-                generator.SetMaxElementArea(mElementArea2d);
+                if(mSampling)
+                {
+                    generator.SetMaxElementArea(mElementArea2d*3.0);
+                }
+                else
+                {
+                    generator.SetMaxElementArea(mElementArea2d);
+                }
             }
             else
             {
-                generator.SetMaxElementArea(mElementArea3d);
+                if(mSampling)
+                {
+                    generator.SetMaxElementArea(mElementArea3d*40.0);
+                }
+                else
+                {
+                    generator.SetMaxElementArea(mElementArea3d);
+                }
             }
             generator.Update();
-            mpGrid = generator.GetMesh();
+            if(mSampling)
+            {
+                mpSamplingGrid = generator.GetMesh();
+            }
+            else
+            {
+                mpGrid = generator.GetMesh();
+            }
         }
     }
     else if(mDomainType == DomainType::CIRCLE_2D or mDomainType == DomainType::CIRCLE_3D or
@@ -340,18 +422,39 @@ boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulat
         generator.SetDomain(mpDomain);
         if(mDomainType == DomainType::CIRCLE_2D)
         {
-            generator.SetMaxElementArea(mElementArea2d);
+            if(mSampling)
+            {
+                generator.SetMaxElementArea(mElementArea2d*3.0);
+            }
+            else
+            {
+                generator.SetMaxElementArea(mElementArea2d);
+            }
         }
         else
         {
-            generator.SetMaxElementArea(mElementArea3d);
+            if(mSampling)
+            {
+                generator.SetMaxElementArea(mElementArea3d*40.0);
+            }
+            else
+            {
+                generator.SetMaxElementArea(mElementArea3d);
+            }
         }
         if (mHoles.size() > 0)
         {
             generator.SetHoles(mHoles);
         }
         generator.Update();
-        mpGrid = generator.GetMesh();
+        if(mSampling)
+        {
+            mpSamplingGrid = generator.GetMesh();
+        }
+        else
+        {
+            mpGrid = generator.GetMesh();
+        }
     }
     return mpGrid;
 }
@@ -969,21 +1072,35 @@ void CornealMicropocketSimulation<DIM>::SetVegfPermeability(units::quantity<unit
 
 template<unsigned DIM>
 void CornealMicropocketSimulation<DIM>::DoSampling(std::ofstream& rStream,
-        boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver, double time, double multfact)
+        boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver, double time, double multfact,
+        bool sampleOnce)
 {
     rStream << time << ",";
+
     for(unsigned idx=0;idx<mNumSampleY; idx++)
     {
-        double mean = 0.0;
-        for(unsigned jdx=0;jdx<mNumSampleZ; jdx++)
+        if(sampleOnce and time>0.0)
         {
-            unsigned sample_index = jdx*mNumSampleY + idx;
-            std::vector<double> solution = pSolver->GetSolution(mSampleLines[sample_index]);
-            double average = std::accumulate(solution.begin(), solution.end(), 0.0)/solution.size();
-            mean += average;
+            rStream << mStoredSample[idx] << ",";
         }
-        mean /= double(mNumSampleZ);
-        rStream << mean*multfact << ",";
+        else
+        {
+            double mean = 0.0;
+            for(unsigned jdx=0;jdx<mNumSampleZ; jdx++)
+            {
+                unsigned sample_index = jdx*mNumSampleY + idx;
+                std::vector<double> solution = pSolver->GetSolution(mSampleLines[sample_index]);
+                double average = std::accumulate(solution.begin(), solution.end(), 0.0)/solution.size();
+                mean += average;
+            }
+            mean /= double(mNumSampleZ);
+            rStream << mean*multfact << ",";
+
+            if(sampleOnce and time==0.0)
+            {
+                mStoredSample.push_back(mean*multfact);
+            }
+        }
     }
 
     rStream << "\n";
@@ -1002,6 +1119,8 @@ void CornealMicropocketSimulation<DIM>::Run()
     std::cout << "Running Simulation in: " << p_file_handler->GetOutputDirectoryFullPath() << std::endl;
     std::cout << "With Fixed Gradient: " << mUseFixedGradient << std::endl;
     std::cout << "With PDE Only: " << mUsePdeOnly << std::endl;
+
+    Timer::PrintAndReset("Starting Simulation");
 
     // Initialize length scales
     units::quantity<unit::length> reference_length = 1.e-6*unit::metres;
@@ -1031,13 +1150,14 @@ void CornealMicropocketSimulation<DIM>::Run()
         p_migration_rule->SetAttractionStrength(mAttractionStrength);
         p_migration_rule->SetChemotacticStrength(mChemotacticStrength);
         p_migration_rule->SetPersistenceAngleSdv((mPersistenceAngle/180.0)*M_PI);
+        p_migration_rule->SetSproutingVelocity(mSproutVelocity);
 
         boost::shared_ptr<OffLatticeSproutingRule<DIM> > p_sprouting_rule =
                 OffLatticeSproutingRule<DIM>::Create();
         p_sprouting_rule->SetDiscreteContinuumSolver(mpSolver);
         p_sprouting_rule->SetVesselNetwork(mpNetwork);
         p_sprouting_rule->SetSproutingProbability(mSproutingProbability);
-        //p_sprouting_rule->SetOnlySproutIfPerfused(true);
+        p_sprouting_rule->SetOnlySproutIfPerfused(mOnlyPerfusedSprout);
         p_sprouting_rule->SetTipExclusionRadius(mTipExclusionRadius);
 
         p_angiogenesis_solver->SetVesselNetwork(mpNetwork);
@@ -1053,17 +1173,7 @@ void CornealMicropocketSimulation<DIM>::Run()
     VesselNetworkWriter<DIM> network_writer;
 
     SetUpSamplePoints();
-    if(mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D)
-    {
-        mpSamplingGrid = RegularGrid<DIM>::Create();
-        boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
-                    boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpSamplingGrid);
-        p_regular_grid->GenerateFromPart(mpDomain, mDensityGridSpacing);
-    }
-    else
-    {
-        mpSamplingGrid = mpGrid;
-    }
+    SetUpGrid(true);
 
     std::vector<boost::shared_ptr<std::ofstream > > output_density_files;
     std::vector<std::string> output_density_quantities;
@@ -1131,8 +1241,13 @@ void CornealMicropocketSimulation<DIM>::Run()
     pde_output_file << "\n";
 
     double old_time = SimulationTime::Instance()->GetTime();
+    Timer::PrintAndReset("Simulation Set Up");
+
+    unsigned counter = 0;
     while (!SimulationTime::Instance()->IsFinished())
     {
+        bool sample_this_step =(counter%mSampleFrequency==0);
+
         std::cout << "Simulation Time: " << old_time << " of " << mTotalTime << std::endl;
         double elapsed_time = SimulationTime::Instance()->GetTimeStepsElapsed();
         double time = SimulationTime::Instance()->GetTime();
@@ -1154,69 +1269,81 @@ void CornealMicropocketSimulation<DIM>::Run()
             mpSolver->SetFileName("Vegf_Solution" + boost::lexical_cast<std::string>(elapsed_time));
             mpSolver->Solve();
         }
+        Timer::PrintAndReset("Solved PDE");
 
-        DoSampling(pde_output_file, mpSolver, time, 1e3);
+        if(sample_this_step)
+        {
+            DoSampling(pde_output_file, mpSolver, time, 1e3, mUseFixedGradient);
+        }
+
+        Timer::PrintAndReset("Did PDE Sampling");
 
         if(!mUsePdeOnly)
         {
-            DensityMap<DIM> density_map;
-            density_map.SetGrid(mpSamplingGrid);
-            density_map.SetVesselNetwork(mpNetwork);
-            boost::shared_ptr<FunctionMap<DIM> > p_density_map_result = FunctionMap<DIM>::Create();
-            p_density_map_result->SetGrid(mpSamplingGrid);
-            p_density_map_result->SetVesselNetwork(mpNetwork);
-            p_density_map_result->SetFileHandler(p_file_handler);
-
-            for(unsigned idx=0;idx<output_density_quantities.size();idx++)
+            if(sample_this_step)
             {
-                p_density_map_result->SetFileName("/" + output_density_quantities[idx] + "_Density" +
-                        boost::lexical_cast<std::string>(elapsed_time));
-                if(output_density_quantities[idx]=="Line")
-                {
-                    if(mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D)
-                    {
-                        p_density_map_result->UpdateSolution(density_map.rGetVesselLineDensity());
-                    }
-                    else
-                    {
-                        p_density_map_result->UpdateElementSolution(density_map.rGetVesselLineDensity());
-                    }
-                }
-                if(output_density_quantities[idx]=="Tip")
-                {
-                    if(mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D)
-                    {
-                        p_density_map_result->UpdateSolution(density_map.rGetVesselTipDensity());
-                    }
-                    else
-                    {
-                        p_density_map_result->UpdateElementSolution(density_map.rGetVesselTipDensity());
-                    }
-                }
-                if(output_density_quantities[idx]=="Branch")
-                {
-                    if(mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D)
-                    {
-                        p_density_map_result->UpdateSolution(density_map.rGetVesselBranchDensity());
-                    }
-                    else
-                    {
-                        p_density_map_result->UpdateElementSolution(density_map.rGetVesselBranchDensity());
-                    }
-                }
+                DensityMap<DIM> density_map;
+                density_map.SetGrid(mpSamplingGrid);
+                density_map.SetVesselNetwork(mpNetwork);
+                boost::shared_ptr<FunctionMap<DIM> > p_density_map_result = FunctionMap<DIM>::Create();
+                p_density_map_result->SetGrid(mpSamplingGrid);
+                p_density_map_result->SetVesselNetwork(mpNetwork);
+                p_density_map_result->SetFileHandler(p_file_handler);
 
-                p_density_map_result->Write();
-                DoSampling(*output_density_files[idx], p_density_map_result, time);
+                for(unsigned idx=0;idx<output_density_quantities.size();idx++)
+                {
+                    p_density_map_result->SetFileName("/" + output_density_quantities[idx] + "_Density" +
+                            boost::lexical_cast<std::string>(elapsed_time));
+                    if(output_density_quantities[idx]=="Line")
+                    {
+                        if(mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D)
+                        {
+                            p_density_map_result->UpdateSolution(density_map.rGetVesselLineDensity());
+                        }
+                        else
+                        {
+                            p_density_map_result->UpdateElementSolution(density_map.rGetVesselLineDensity());
+                        }
+                    }
+                    if(output_density_quantities[idx]=="Tip")
+                    {
+                        if(mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D)
+                        {
+                            p_density_map_result->UpdateSolution(density_map.rGetVesselTipDensity());
+                        }
+                        else
+                        {
+                            p_density_map_result->UpdateElementSolution(density_map.rGetVesselTipDensity());
+                        }
+                    }
+                    if(output_density_quantities[idx]=="Branch")
+                    {
+                        if(mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D)
+                        {
+                            p_density_map_result->UpdateSolution(density_map.rGetVesselBranchDensity());
+                        }
+                        else
+                        {
+                            p_density_map_result->UpdateElementSolution(density_map.rGetVesselBranchDensity());
+                        }
+                    }
+                    p_density_map_result->Write();
+                    Timer::PrintAndReset("Did Density Map Calc");
+                    DoSampling(*output_density_files[idx], p_density_map_result, time);
+                }
             }
             network_writer.SetFileName(
                     p_file_handler->GetOutputDirectoryFullPath() + "/vessel_network_" +
                     boost::lexical_cast<std::string>(elapsed_time) + ".vtp");
             network_writer.SetVesselNetwork(mpNetwork);
             network_writer.Write();
+            Timer::PrintAndReset("Did Network Sampling");
             p_angiogenesis_solver->Increment();
+            Timer::PrintAndReset("Did Angiogenesis");
         }
         SimulationTime::Instance()->IncrementTimeOneStep();
         old_time = time;
+        counter++;
     }
     if(!mUsePdeOnly)
     {

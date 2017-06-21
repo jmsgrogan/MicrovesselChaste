@@ -42,7 +42,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNetworkGeometryCalculator.hpp"
 #include "GeometryTools.hpp"
 
-
 template <unsigned DIM>
 VesselNetworkGeometryCalculator<DIM>::VesselNetworkGeometryCalculator()
 {
@@ -341,13 +340,35 @@ std::pair<boost::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> 
 }
 
 template <unsigned DIM>
+units::quantity<unit::length> VesselNetworkGeometryCalculator<DIM>::GetNearestSegmentNonVtk(boost::shared_ptr<VesselNetwork<DIM> > pNetwork,
+        boost::shared_ptr<VesselNode<DIM> > pNode,
+        boost::shared_ptr<VesselSegment<DIM> >& pEmptySegment, bool sameVessel)
+{
+    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
+
+    units::quantity<unit::length>  min_distance = DBL_MAX * unit::metres;
+    typename std::vector<boost::shared_ptr<VesselSegment<DIM> > >::iterator segment_iter;
+
+    DimensionalChastePoint<DIM> location = pNode->rGetLocation();
+    for(segment_iter = segments.begin(); segment_iter != segments.end(); segment_iter++)
+    {
+        units::quantity<unit::length>  segment_distance = (*segment_iter)->GetDistance(location);
+        bool skip = (pNode->IsAttachedTo(*segment_iter) and !sameVessel);
+        if (segment_distance < min_distance and !skip)
+        {
+            min_distance = segment_distance;
+            pEmptySegment = (*segment_iter) ;
+        }
+    }
+    return min_distance;
+}
+
+template <unsigned DIM>
 units::quantity<unit::length> VesselNetworkGeometryCalculator<DIM>::GetNearestSegment(boost::shared_ptr<VesselNetwork<DIM> > pNetwork,
         boost::shared_ptr<VesselNode<DIM> > pNode,
         boost::shared_ptr<VesselSegment<DIM> >& pEmptySegment,
         bool sameVessel, units::quantity<unit::length> radius)
 {
-
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
     units::quantity<unit::length> length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
 
     c_vector<double, DIM> loc = pNode->rGetLocation().GetLocation(length_scale);
@@ -385,14 +406,13 @@ units::quantity<unit::length> VesselNetworkGeometryCalculator<DIM>::GetNearestSe
         for(unsigned idx=0;idx<p_id_list->GetNumberOfIds();idx++)
         {
            unsigned index = p_id_list->GetId(idx);
-           if(pNode->IsAttachedTo(segments[index]) and !sameVessel)
+           if(pNode->IsAttachedTo(pNetwork->GetVesselSegment(index)) and !sameVessel)
            {
                continue;
            }
            p_close_lines->InsertNextCell(p_temp_network->GetCell(index));
            local_global_map[num_non_self] = index;
            num_non_self++;
-
         }
         if(num_non_self==0)
         {
@@ -430,7 +450,7 @@ units::quantity<unit::length> VesselNetworkGeometryCalculator<DIM>::GetNearestSe
         loc_3d[2] = 0.0;
         p_close_cell_locator->FindClosestPoint(&loc_3d[0], closest, cellId, subId, distance_sq);
     }
-    pEmptySegment = segments[local_global_map[cellId]];
+    pEmptySegment = pNetwork->GetVesselSegment(local_global_map[cellId]);
     units::quantity<unit::length> distance = std::sqrt(distance_sq)*length_scale;
     return distance;
 }

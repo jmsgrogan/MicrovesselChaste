@@ -57,7 +57,7 @@ class TestOffLatticeAngiogenesisSolver : public CxxTest::TestSuite
 
 public:
 
-    void xTest2dPlane() throw(Exception)
+    void Test2dPlane() throw(Exception)
     {
         CornealMicropocketSimulation<2> simulation;
         simulation.SetDomainType(DomainType::PLANAR_2D);
@@ -66,9 +66,11 @@ public:
         simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
         simulation.SetUseFixedGradient(true);
         simulation.SetPelletConcentration(1.e-10*unit::mole_per_metre_cubed);
-        simulation.SetTotalTime(72.0*3600.0*unit::seconds);
-        simulation.SetPersistenceAngle(5.0);
-        simulation.SetChemotacticStrength(0.5);
+        simulation.SetTotalTime(96.0*3600.0*unit::seconds);
+        simulation.SetPersistenceAngle(0.0);
+        simulation.SetChemotacticStrength(0.0);
+        simulation.SetOnlyPerfusedSprout(true);
+
         simulation.Run();
     }
 
@@ -80,14 +82,16 @@ public:
         simulation.SetIncludeVesselSink(false);
         simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
         simulation.SetUseFixedGradient(true);
-        simulation.SetPelletConcentration(1.e-10*unit::mole_per_metre_cubed);
+        simulation.SetPelletConcentration(8.e-10*unit::mole_per_metre_cubed);
         simulation.SetTotalTime(72.0*3600.0*unit::seconds);
-        simulation.SetPersistenceAngle(10.0);
-        simulation.SetChemotacticStrength(0.1);
+        simulation.SetPelletHeight(200.0e-6*unit::metres);
+        simulation.SetPersistenceAngle(0.0);
+        simulation.SetChemotacticStrength(0.0);
+        simulation.SetOnlyPerfusedSprout(true);
         simulation.Run();
     }
 
-    void XTest3dPlane() throw(Exception)
+    void Test3dPlane() throw(Exception)
     {
         CornealMicropocketSimulation<3> simulation;
         simulation.SetDomainType(DomainType::PLANAR_3D);
@@ -96,13 +100,15 @@ public:
         simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
         simulation.SetUseFixedGradient(true);
         simulation.SetPelletConcentration(1.e-10*unit::mole_per_metre_cubed);
-        simulation.SetTotalTime(72.0*3600.0*unit::seconds);
-        simulation.SetPersistenceAngle(5.0);
-        simulation.SetChemotacticStrength(0.5);
+        simulation.SetTotalTime(96.0*3600.0*unit::seconds);
+        simulation.SetPersistenceAngle(0.0);
+        simulation.SetChemotacticStrength(0.0);
+        //simulation.SetOnlyPerfusedSprout(true);
+        simulation.SetGridSpacing(20.0e-6*unit::metres);
         simulation.Run();
     }
 
-    void xTest3dCircle() throw(Exception)
+    void Test3dCircle() throw(Exception)
     {
         CornealMicropocketSimulation<3> simulation;
         simulation.SetDomainType(DomainType::CIRCLE_3D);
@@ -111,9 +117,10 @@ public:
         simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
         simulation.SetUseFixedGradient(true);
         simulation.SetPelletConcentration(1.e-10*unit::mole_per_metre_cubed);
-        simulation.SetTotalTime(72.0*3600.0*unit::seconds);
+        simulation.SetTotalTime(96.0*3600.0*unit::seconds);
         simulation.SetPersistenceAngle(5.0);
         simulation.SetChemotacticStrength(0.5);
+        simulation.SetPelletHeight(200.0e-6*unit::metres);
         simulation.Run();
     }
 
@@ -126,9 +133,10 @@ public:
         simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
         simulation.SetUseFixedGradient(true);
         simulation.SetPelletConcentration(1.e-10*unit::mole_per_metre_cubed);
-        simulation.SetTotalTime(72.0*3600.0*unit::seconds);
-        simulation.SetPersistenceAngle(5.0);
-        simulation.SetChemotacticStrength(0.5);
+        simulation.SetTotalTime(96.0*3600.0*unit::seconds);
+        simulation.SetPersistenceAngle(0.0);
+        simulation.SetChemotacticStrength(0.0);
+        simulation.SetOnlyPerfusedSprout(true);
         simulation.Run();
     }
 };

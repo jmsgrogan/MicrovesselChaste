@@ -74,34 +74,113 @@ struct BetteridgeHaematocritSolver_less__3__greater__wrapper : BetteridgeHaemato
 
 void register_BetteridgeHaematocritSolver3_class(){
 
-    bp::class_< BetteridgeHaematocritSolver_less__3__greater__wrapper, bp::bases< AbstractHaematocritSolver< 3 > > >( "BetteridgeHaematocritSolver3", bp::init< >() )    
-        .def( 
-            "Calculate"
-            , (void ( ::BetteridgeHaematocritSolver<3>::* )(  ))(&::BetteridgeHaematocritSolver< 3 >::Calculate)
-            , (void ( BetteridgeHaematocritSolver_less__3__greater__wrapper::* )(  ))(&BetteridgeHaematocritSolver_less__3__greater__wrapper::default_Calculate) )    
-        .def( 
-            "SetAlpha"
-            , (void ( ::BetteridgeHaematocritSolver<3>::* )( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::BetteridgeHaematocritSolver< 3 >::SetAlpha )
-            , ( bp::arg("alpha") ) )    
-        .def( 
-            "SetHaematocrit"
-            , (void ( ::BetteridgeHaematocritSolver<3>::* )( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::BetteridgeHaematocritSolver< 3 >::SetHaematocrit )
-            , ( bp::arg("haematocrit") ) )    
-        .def( 
-            "SetTHR"
-            , (void ( ::BetteridgeHaematocritSolver<3>::* )( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ))( &::BetteridgeHaematocritSolver< 3 >::SetTHR )
-            , ( bp::arg("thr") ) )    
-        .def( 
-            "SetTurnOffFungModel"
-            , (void ( ::BetteridgeHaematocritSolver<3>::* )( bool ))( &::BetteridgeHaematocritSolver< 3 >::SetTurnOffFungModel )
-            , ( bp::arg("turnOffFungModel") ) )    
-        .def( 
-            "SetUseHigherConnectivityBranches"
-            , (void ( ::BetteridgeHaematocritSolver<3>::* )( bool ))( &::BetteridgeHaematocritSolver< 3 >::SetUseHigherConnectivityBranches )
-            , ( bp::arg("useHighConnectivity") ) )    
-        .def( 
-            "SetUseRandomSplittingModel"
-            , (void ( ::BetteridgeHaematocritSolver<3>::* )( bool ))( &::BetteridgeHaematocritSolver< 3 >::SetUseRandomSplittingModel )
-            , ( bp::arg("useRandomSplittingModel") ) );
+    { //::BetteridgeHaematocritSolver< 3 >
+        typedef bp::class_< BetteridgeHaematocritSolver_less__3__greater__wrapper, bp::bases< AbstractHaematocritSolver< 3 > > > BetteridgeHaematocritSolver3_exposer_t;
+        BetteridgeHaematocritSolver3_exposer_t BetteridgeHaematocritSolver3_exposer = BetteridgeHaematocritSolver3_exposer_t( "BetteridgeHaematocritSolver3", bp::init< >() );
+        bp::scope BetteridgeHaematocritSolver3_scope( BetteridgeHaematocritSolver3_exposer );
+        { //::BetteridgeHaematocritSolver< 3 >::Calculate
+        
+            typedef BetteridgeHaematocritSolver< 3 > exported_class_t;
+            typedef void ( exported_class_t::*Calculate_function_type)(  ) ;
+            typedef void ( BetteridgeHaematocritSolver_less__3__greater__wrapper::*default_Calculate_function_type)(  ) ;
+            
+            BetteridgeHaematocritSolver3_exposer.def( 
+                "Calculate"
+                , Calculate_function_type(&::BetteridgeHaematocritSolver< 3 >::Calculate)
+                , default_Calculate_function_type(&BetteridgeHaematocritSolver_less__3__greater__wrapper::default_Calculate) );
+        
+        }
+        { //::BetteridgeHaematocritSolver< 3 >::Create
+        
+            typedef BetteridgeHaematocritSolver< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< BetteridgeHaematocritSolver< 3 > > ( *Create_function_type )(  );
+            
+            BetteridgeHaematocritSolver3_exposer.def( 
+                "Create"
+                , Create_function_type( &::BetteridgeHaematocritSolver< 3 >::Create ) );
+        
+        }
+        { //::BetteridgeHaematocritSolver< 3 >::SetAlpha
+        
+            typedef BetteridgeHaematocritSolver< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetAlpha_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            BetteridgeHaematocritSolver3_exposer.def( 
+                "SetAlpha"
+                , SetAlpha_function_type( &::BetteridgeHaematocritSolver< 3 >::SetAlpha )
+                , ( bp::arg("alpha") ) );
+        
+        }
+        { //::BetteridgeHaematocritSolver< 3 >::SetExceptionOnFailedConverge
+        
+            typedef BetteridgeHaematocritSolver< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetExceptionOnFailedConverge_function_type)( bool ) ;
+            
+            BetteridgeHaematocritSolver3_exposer.def( 
+                "SetExceptionOnFailedConverge"
+                , SetExceptionOnFailedConverge_function_type( &::BetteridgeHaematocritSolver< 3 >::SetExceptionOnFailedConverge )
+                , ( bp::arg("setException") ) );
+        
+        }
+        { //::BetteridgeHaematocritSolver< 3 >::SetHaematocrit
+        
+            typedef BetteridgeHaematocritSolver< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetHaematocrit_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            BetteridgeHaematocritSolver3_exposer.def( 
+                "SetHaematocrit"
+                , SetHaematocrit_function_type( &::BetteridgeHaematocritSolver< 3 >::SetHaematocrit )
+                , ( bp::arg("haematocrit") ) );
+        
+        }
+        { //::BetteridgeHaematocritSolver< 3 >::SetTHR
+        
+            typedef BetteridgeHaematocritSolver< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetTHR_function_type)( ::boost::units::quantity< boost::units::unit< boost::units::dimensionless_type, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ) ;
+            
+            BetteridgeHaematocritSolver3_exposer.def( 
+                "SetTHR"
+                , SetTHR_function_type( &::BetteridgeHaematocritSolver< 3 >::SetTHR )
+                , ( bp::arg("thr") ) );
+        
+        }
+        { //::BetteridgeHaematocritSolver< 3 >::SetTurnOffFungModel
+        
+            typedef BetteridgeHaematocritSolver< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetTurnOffFungModel_function_type)( bool ) ;
+            
+            BetteridgeHaematocritSolver3_exposer.def( 
+                "SetTurnOffFungModel"
+                , SetTurnOffFungModel_function_type( &::BetteridgeHaematocritSolver< 3 >::SetTurnOffFungModel )
+                , ( bp::arg("turnOffFungModel") ) );
+        
+        }
+        { //::BetteridgeHaematocritSolver< 3 >::SetUseHigherConnectivityBranches
+        
+            typedef BetteridgeHaematocritSolver< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetUseHigherConnectivityBranches_function_type)( bool ) ;
+            
+            BetteridgeHaematocritSolver3_exposer.def( 
+                "SetUseHigherConnectivityBranches"
+                , SetUseHigherConnectivityBranches_function_type( &::BetteridgeHaematocritSolver< 3 >::SetUseHigherConnectivityBranches )
+                , ( bp::arg("useHighConnectivity") ) );
+        
+        }
+        { //::BetteridgeHaematocritSolver< 3 >::SetUseRandomSplittingModel
+        
+            typedef BetteridgeHaematocritSolver< 3 > exported_class_t;
+            typedef void ( exported_class_t::*SetUseRandomSplittingModel_function_type)( bool ) ;
+            
+            BetteridgeHaematocritSolver3_exposer.def( 
+                "SetUseRandomSplittingModel"
+                , SetUseRandomSplittingModel_function_type( &::BetteridgeHaematocritSolver< 3 >::SetUseRandomSplittingModel )
+                , ( bp::arg("useRandomSplittingModel") ) );
+        
+        }
+        BetteridgeHaematocritSolver3_exposer.staticmethod( "Create" );
+        bp::register_ptr_to_python< boost::shared_ptr< BetteridgeHaematocritSolver<3> > >();
+        bp::implicitly_convertible< boost::shared_ptr< BetteridgeHaematocritSolver< 3 > >, boost::shared_ptr< AbstractHaematocritSolver< 3 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< BetteridgeHaematocritSolver< 3 > >, boost::shared_ptr< AbstractVesselNetworkCalculator< 3 > > >();
+    }
 
 }

@@ -182,6 +182,17 @@ void register_MicrovesselSimulationModifier2_class(){
                 , ( bp::arg("cellLengthScale") ) );
         
         }
+        { //::MicrovesselSimulationModifier< 2 >::SetGridCalculator
+        
+            typedef MicrovesselSimulationModifier< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetGridCalculator_function_type)( ::boost::shared_ptr< GridCalculator< 2 > > ) ;
+            
+            MicrovesselSimulationModifier2_exposer.def( 
+                "SetGridCalculator"
+                , SetGridCalculator_function_type( &::MicrovesselSimulationModifier< 2 >::SetGridCalculator )
+                , ( bp::arg("pGridCalculator") ) );
+        
+        }
         { //::MicrovesselSimulationModifier< 2 >::SetMicrovesselSolver
         
             typedef MicrovesselSimulationModifier< 2 > exported_class_t;

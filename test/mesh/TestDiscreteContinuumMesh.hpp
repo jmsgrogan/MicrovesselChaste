@@ -36,7 +36,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef TESTDISCRETECONTINUUMMESH_HPP_
 #define TESTDISCRETECONTINUUMMESH_HPP_
 
-#include <cxxtest/TestSuite.h>
+#include <cxTest/TestSuite.h>
 #include <vector>
 #include <boost/lexical_cast.hpp>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
@@ -60,7 +60,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
-class TestDiscreteContinuumMesh : public CxxTest::TestSuite
+class TestDiscreteContinuumMesh : public CxTest::TestSuite
 {
 private:
 
@@ -100,7 +100,7 @@ private:
 
 public:
 
-    void xTestMeshCircleInCirle() throw(Exception)
+    void TestMeshCircleInCirle() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/Circle");
         boost::shared_ptr<Part<2> > p_part = Part<2>::Create();
@@ -134,7 +134,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestMeshCylinder() throw(Exception)
+    void TestMeshCylinder() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/Cylinder");
 
@@ -161,7 +161,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestMeshCylinderWithVesselSurface() throw(Exception)
+    void TestMeshCylinderWithVesselSurface() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CylinderWithVesselSurface");
 
@@ -189,7 +189,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestMeshCylinderWithVesselSurfaceNoHole() throw(Exception)
+    void TestMeshCylinderWithVesselSurfaceNoHole() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CylinderWithVesselSurfaceNoHole");
 
@@ -217,7 +217,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestMeshCubeWithVesselSurface() throw(Exception)
+    void TestMeshCubeWithVesselSurface() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CubeWithVesselSurface");
 
@@ -245,7 +245,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestMeshCubeWithVesselSurfaceInternal() throw(Exception)
+    void TestMeshCubeWithVesselSurfaceInternal() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CubeWithVesselSurface", false);
 
@@ -273,7 +273,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestParrallelVesselSurfaceCube() throw(Exception)
+    void TestParrallelVesselSurfaceCube() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/ParrallelVesselSurface");
 
@@ -299,7 +299,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestPatchOnFace() throw(Exception)
+    void TestPatchOnFace() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/PatchOnFace");
 
@@ -355,7 +355,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestPartInPart() throw(Exception)
+    void TestPartInPart() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/Hemisphere");
 
@@ -427,8 +427,38 @@ public:
 
         units::quantity<unit::length> cornea_radius = 1300*1.e-6*unit::metres;
         units::quantity<unit::length> cornea_thickness = 100*1.e-6*unit::metres;
+        units::quantity<unit::length> pellet_radius = 200*1.e-6*unit::metres;
+        units::quantity<unit::length> pellet_thickness = 50*1.e-6*unit::metres;
+        units::quantity<unit::length> reference_length = 1.e-6*unit::metres;
         boost::shared_ptr<Part<3> > p_domain = generator.GenerateHemisphere(cornea_radius,
                 cornea_thickness, num_divisions_x, num_divisions_y, azimuth_angle, polar_angle);
+
+        double gap = (cornea_thickness - pellet_thickness)/(2.0*reference_length)/4.0;
+        double base = cornea_radius/reference_length + gap - cornea_thickness/reference_length;
+
+        boost::shared_ptr<Part<3> > p_pellet = Part<3>::Create();
+        p_pellet->AddCylinder(pellet_radius,pellet_thickness,
+                              DimensionalChastePoint<3>(0.0, 0.0, base, reference_length));
+
+        // Rotate the pellet
+        double rotation_angle = M_PI/8.0;
+        c_vector<double, 3> axis;
+        axis[0] = 0.0;
+        axis[1] = 1.0;
+        axis[2] = 0.0;
+        p_pellet->RotateAboutAxis(axis, rotation_angle);
+
+        DimensionalChastePoint<3> centre(0.0, 0.0, base + pellet_thickness/(2.0*reference_length), reference_length);
+        centre.RotateAboutAxis(axis, rotation_angle);
+
+        p_domain->AppendPart(p_pellet);
+        p_domain->AddHoleMarker(DimensionalChastePoint<3>(centre));
+
+        std::vector<boost::shared_ptr<Polygon<3> > > polygons = p_pellet->GetPolygons();
+        for(unsigned idx=0;idx<polygons.size();idx++)
+        {
+            polygons[idx]->AddAttribute("Pellet Interface", 1.0);
+        }
 
         p_domain->Write(file_handler.GetOutputDirectoryFullPath()+"domain.vtp", GeometryFormat::VTP, true);
 

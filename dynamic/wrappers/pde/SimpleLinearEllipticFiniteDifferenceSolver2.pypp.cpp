@@ -226,6 +226,18 @@ struct SimpleLinearEllipticFiniteDifferenceSolver_less__2__greater__wrapper : Si
         return AbstractDiscreteContinuumSolver< 2 >::GetSolution( pGrid );
     }
 
+    virtual ::std::vector< boost::numeric::ublas::c_vector<double, 3> > GetSolutionGradients( ::vtkSmartPointer< vtkPoints > pSamplePoints ) {
+        if( bp::override func_GetSolutionGradients = this->get_override( "GetSolutionGradients" ) )
+            return func_GetSolutionGradients( pSamplePoints );
+        else{
+            return this->AbstractDiscreteContinuumSolver< 2 >::GetSolutionGradients( pSamplePoints );
+        }
+    }
+    
+    ::std::vector< boost::numeric::ublas::c_vector<double, 3> > default_GetSolutionGradients( ::vtkSmartPointer< vtkPoints > pSamplePoints ) {
+        return AbstractDiscreteContinuumSolver< 2 >::GetSolutionGradients( pSamplePoints );
+    }
+
     virtual ::std::vector< double > GetSolutionP( ::vtkPoints * pSamplePoints ) {
         if( bp::override func_GetSolutionP = this->get_override( "GetSolutionP" ) )
             return func_GetSolutionP( boost::python::ptr(pSamplePoints) );
@@ -510,6 +522,19 @@ void register_SimpleLinearEllipticFiniteDifferenceSolver2_class(){
                 , GetSolution_function_type(&::AbstractDiscreteContinuumSolver< 2 >::GetSolution)
                 , default_GetSolution_function_type(&SimpleLinearEllipticFiniteDifferenceSolver_less__2__greater__wrapper::default_GetSolution)
                 , ( bp::arg("pGrid") ) );
+        
+        }
+        { //::AbstractDiscreteContinuumSolver< 2 >::GetSolutionGradients
+        
+            typedef SimpleLinearEllipticFiniteDifferenceSolver< 2 > exported_class_t;
+            typedef ::std::vector< boost::numeric::ublas::c_vector<double, 3> > ( exported_class_t::*GetSolutionGradients_function_type)( ::vtkSmartPointer< vtkPoints > ) ;
+            typedef ::std::vector< boost::numeric::ublas::c_vector<double, 3> > ( SimpleLinearEllipticFiniteDifferenceSolver_less__2__greater__wrapper::*default_GetSolutionGradients_function_type)( ::vtkSmartPointer< vtkPoints > ) ;
+            
+            SimpleLinearEllipticFiniteDifferenceSolver2_exposer.def( 
+                "GetSolutionGradients"
+                , GetSolutionGradients_function_type(&::AbstractDiscreteContinuumSolver< 2 >::GetSolutionGradients)
+                , default_GetSolutionGradients_function_type(&SimpleLinearEllipticFiniteDifferenceSolver_less__2__greater__wrapper::default_GetSolutionGradients)
+                , ( bp::arg("pSamplePoints") ) );
         
         }
         { //::AbstractDiscreteContinuumSolver< 2 >::GetSolutionP

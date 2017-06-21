@@ -90,6 +90,27 @@ void register_OffLatticeMigrationRule2_class(){
         typedef bp::class_< OffLatticeMigrationRule_less__2__greater__wrapper, bp::bases< AbstractMigrationRule< 2 > > > OffLatticeMigrationRule2_exposer_t;
         OffLatticeMigrationRule2_exposer_t OffLatticeMigrationRule2_exposer = OffLatticeMigrationRule2_exposer_t( "OffLatticeMigrationRule2", bp::init< >() );
         bp::scope OffLatticeMigrationRule2_scope( OffLatticeMigrationRule2_exposer );
+        { //::OffLatticeMigrationRule< 2 >::CalculateDomainDistanceMap
+        
+            typedef OffLatticeMigrationRule< 2 > exported_class_t;
+            typedef void ( exported_class_t::*CalculateDomainDistanceMap_function_type)(  ) ;
+            
+            OffLatticeMigrationRule2_exposer.def( 
+                "CalculateDomainDistanceMap"
+                , CalculateDomainDistanceMap_function_type( &::OffLatticeMigrationRule< 2 >::CalculateDomainDistanceMap ) );
+        
+        }
+        { //::OffLatticeMigrationRule< 2 >::CalculateDomainDistanceMap
+        
+            typedef OffLatticeMigrationRule< 2 > exported_class_t;
+            typedef void ( exported_class_t::*CalculateDomainDistanceMap_function_type)( ::boost::shared_ptr< AbstractDiscreteContinuumGrid< 2, 2 > > ) ;
+            
+            OffLatticeMigrationRule2_exposer.def( 
+                "CalculateDomainDistanceMap"
+                , CalculateDomainDistanceMap_function_type( &::OffLatticeMigrationRule< 2 >::CalculateDomainDistanceMap )
+                , ( bp::arg("pGrid") ) );
+        
+        }
         { //::OffLatticeMigrationRule< 2 >::Create
         
             typedef OffLatticeMigrationRule< 2 > exported_class_t;
@@ -144,6 +165,17 @@ void register_OffLatticeMigrationRule2_class(){
                 "SetChemotacticStrength"
                 , SetChemotacticStrength_function_type( &::OffLatticeMigrationRule< 2 >::SetChemotacticStrength )
                 , ( bp::arg("strength") ) );
+        
+        }
+        { //::OffLatticeMigrationRule< 2 >::SetNumGradientEvaluationDivisions
+        
+            typedef OffLatticeMigrationRule< 2 > exported_class_t;
+            typedef void ( exported_class_t::*SetNumGradientEvaluationDivisions_function_type)( unsigned int ) ;
+            
+            OffLatticeMigrationRule2_exposer.def( 
+                "SetNumGradientEvaluationDivisions"
+                , SetNumGradientEvaluationDivisions_function_type( &::OffLatticeMigrationRule< 2 >::SetNumGradientEvaluationDivisions )
+                , ( bp::arg("numDivisions") ) );
         
         }
         { //::OffLatticeMigrationRule< 2 >::SetPersistenceAngleSdv

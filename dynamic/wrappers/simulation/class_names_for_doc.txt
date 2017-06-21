@@ -16,6 +16,15 @@
 .. autoclass:: microvessel_chaste.simulation.AbstractCellBasedSimulationModifier3_3
 	:members:
 
+.. autoclass:: microvessel_chaste.simulation.CornealMicropocketSimulation2
+	:members:
+
+.. autoclass:: microvessel_chaste.simulation.CornealMicropocketSimulation3
+	:members:
+
+.. autoclass:: microvessel_chaste.simulation.DomainType
+	:members:
+
 .. autoclass:: microvessel_chaste.simulation.AbstractMicrovesselModifier2
 	:members:
 

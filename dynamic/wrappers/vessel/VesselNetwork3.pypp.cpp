@@ -82,16 +82,16 @@ struct VesselNetwork_less__3__greater__wrapper : VesselNetwork< 3 >, bp::wrapper
         VesselNetwork< 3 >::ExtendVessel( pVessel, pEndNode, pNewNode );
     }
 
-    virtual ::boost::shared_ptr< Vessel< 3 > > FormSprout( ::DimensionalChastePoint< 3 > const & sproutBaseLocation, ::DimensionalChastePoint< 3 > const & sproutTipLocation ) {
+    virtual ::boost::shared_ptr< Vessel< 3 > > FormSprout( ::boost::shared_ptr< VesselNode< 3 > > pSproutBase, ::DimensionalChastePoint< 3 > const & sproutTipLocation ) {
         if( bp::override func_FormSprout = this->get_override( "FormSprout" ) )
-            return func_FormSprout( boost::ref(sproutBaseLocation), boost::ref(sproutTipLocation) );
+            return func_FormSprout( pSproutBase, boost::ref(sproutTipLocation) );
         else{
-            return this->VesselNetwork< 3 >::FormSprout( boost::ref(sproutBaseLocation), boost::ref(sproutTipLocation) );
+            return this->VesselNetwork< 3 >::FormSprout( pSproutBase, boost::ref(sproutTipLocation) );
         }
     }
     
-    ::boost::shared_ptr< Vessel< 3 > > default_FormSprout( ::DimensionalChastePoint< 3 > const & sproutBaseLocation, ::DimensionalChastePoint< 3 > const & sproutTipLocation ) {
-        return VesselNetwork< 3 >::FormSprout( boost::ref(sproutBaseLocation), boost::ref(sproutTipLocation) );
+    ::boost::shared_ptr< Vessel< 3 > > default_FormSprout( ::boost::shared_ptr< VesselNode< 3 > > pSproutBase, ::DimensionalChastePoint< 3 > const & sproutTipLocation ) {
+        return VesselNetwork< 3 >::FormSprout( pSproutBase, boost::ref(sproutTipLocation) );
     }
 
     virtual ::std::map< std::string, double > GetOutputData(  ) {
@@ -290,14 +290,14 @@ void register_VesselNetwork3_class(){
         { //::VesselNetwork< 3 >::FormSprout
         
             typedef VesselNetwork< 3 > exported_class_t;
-            typedef ::boost::shared_ptr< Vessel< 3 > > ( exported_class_t::*FormSprout_function_type)( ::DimensionalChastePoint< 3 > const &,::DimensionalChastePoint< 3 > const & ) ;
-            typedef ::boost::shared_ptr< Vessel< 3 > > ( VesselNetwork_less__3__greater__wrapper::*default_FormSprout_function_type)( ::DimensionalChastePoint< 3 > const &,::DimensionalChastePoint< 3 > const & ) ;
+            typedef ::boost::shared_ptr< Vessel< 3 > > ( exported_class_t::*FormSprout_function_type)( ::boost::shared_ptr< VesselNode< 3 > >,::DimensionalChastePoint< 3 > const & ) ;
+            typedef ::boost::shared_ptr< Vessel< 3 > > ( VesselNetwork_less__3__greater__wrapper::*default_FormSprout_function_type)( ::boost::shared_ptr< VesselNode< 3 > >,::DimensionalChastePoint< 3 > const & ) ;
             
             VesselNetwork3_exposer.def( 
                 "FormSprout"
                 , FormSprout_function_type(&::VesselNetwork< 3 >::FormSprout)
                 , default_FormSprout_function_type(&VesselNetwork_less__3__greater__wrapper::default_FormSprout)
-                , ( bp::arg("sproutBaseLocation"), bp::arg("sproutTipLocation") ) );
+                , ( bp::arg("pSproutBase"), bp::arg("sproutTipLocation") ) );
         
         }
         { //::VesselNetwork< 3 >::GetDistributedVectorFactory
@@ -434,6 +434,17 @@ void register_VesselNetwork3_class(){
                 "GetVesselIndex"
                 , GetVesselIndex_function_type( &::VesselNetwork< 3 >::GetVesselIndex )
                 , ( bp::arg("pVessel") ) );
+        
+        }
+        { //::VesselNetwork< 3 >::GetVesselSegment
+        
+            typedef VesselNetwork< 3 > exported_class_t;
+            typedef ::boost::shared_ptr< VesselSegment< 3 > > ( exported_class_t::*GetVesselSegment_function_type)( unsigned int ) ;
+            
+            VesselNetwork3_exposer.def( 
+                "GetVesselSegment"
+                , GetVesselSegment_function_type( &::VesselNetwork< 3 >::GetVesselSegment )
+                , ( bp::arg("index") ) );
         
         }
         { //::VesselNetwork< 3 >::GetVesselSegmentIndex

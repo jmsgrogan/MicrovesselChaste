@@ -168,6 +168,17 @@ void register_VesselNetworkGeometryCalculator2_class(){
                 , ( bp::arg("pNetwork"), bp::arg("rLocation") ) );
         
         }
+        { //::VesselNetworkGeometryCalculator< 2 >::GetNearestSegmentNonVtk
+        
+            typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( *GetNearestSegmentNonVtk_function_type )( ::boost::shared_ptr< VesselNetwork< 2 > >,::boost::shared_ptr< VesselNode< 2 > >,::boost::shared_ptr< VesselSegment< 2 > > &,bool );
+            
+            VesselNetworkGeometryCalculator2_exposer.def( 
+                "GetNearestSegmentNonVtk"
+                , GetNearestSegmentNonVtk_function_type( &::VesselNetworkGeometryCalculator< 2 >::GetNearestSegmentNonVtk )
+                , ( bp::arg("pNetwork"), bp::arg("pNode"), bp::arg("pEmptySegment"), bp::arg("sameVessel")=(bool)(true) ) );
+        
+        }
         { //::VesselNetworkGeometryCalculator< 2 >::GetNearestVessel
         
             typedef VesselNetworkGeometryCalculator< 2 > exported_class_t;
@@ -264,6 +275,7 @@ void register_VesselNetworkGeometryCalculator2_class(){
         VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetInterCapillaryDistances" );
         VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetNearestNode" );
         VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetNearestSegment" );
+        VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetNearestSegmentNonVtk" );
         VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetNearestVessel" );
         VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetNodesInSphere" );
         VesselNetworkGeometryCalculator2_exposer.staticmethod( "GetNumberOfNodesNearLocation" );

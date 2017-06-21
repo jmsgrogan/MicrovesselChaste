@@ -200,6 +200,18 @@ struct AbstractRegularGridDiscreteContinuumSolver_less__2__greater__wrapper : Ab
         return AbstractDiscreteContinuumSolver< 2 >::GetSolution( pGrid );
     }
 
+    virtual ::std::vector< boost::numeric::ublas::c_vector<double, 3> > GetSolutionGradients( ::vtkSmartPointer< vtkPoints > pSamplePoints ) {
+        if( bp::override func_GetSolutionGradients = this->get_override( "GetSolutionGradients" ) )
+            return func_GetSolutionGradients( pSamplePoints );
+        else{
+            return this->AbstractDiscreteContinuumSolver< 2 >::GetSolutionGradients( pSamplePoints );
+        }
+    }
+    
+    ::std::vector< boost::numeric::ublas::c_vector<double, 3> > default_GetSolutionGradients( ::vtkSmartPointer< vtkPoints > pSamplePoints ) {
+        return AbstractDiscreteContinuumSolver< 2 >::GetSolutionGradients( pSamplePoints );
+    }
+
     virtual ::std::vector< double > GetSolutionP( ::vtkPoints * pSamplePoints ) {
         if( bp::override func_GetSolutionP = this->get_override( "GetSolutionP" ) )
             return func_GetSolutionP( boost::python::ptr(pSamplePoints) );
@@ -310,6 +322,11 @@ void register_AbstractRegularGridDiscreteContinuumSolver2_class(){
             , (::std::vector< double > ( ::AbstractDiscreteContinuumSolver<2>::* )( ::boost::shared_ptr< AbstractDiscreteContinuumGrid< 2, 2 > > ))(&::AbstractDiscreteContinuumSolver< 2 >::GetSolution)
             , (::std::vector< double > ( AbstractRegularGridDiscreteContinuumSolver_less__2__greater__wrapper::* )( ::boost::shared_ptr< AbstractDiscreteContinuumGrid< 2, 2 > > ))(&AbstractRegularGridDiscreteContinuumSolver_less__2__greater__wrapper::default_GetSolution)
             , ( bp::arg("pGrid") ) )    
+        .def( 
+            "GetSolutionGradients"
+            , (::std::vector< boost::numeric::ublas::c_vector<double, 3> > ( ::AbstractDiscreteContinuumSolver<2>::* )( ::vtkSmartPointer< vtkPoints > ))(&::AbstractDiscreteContinuumSolver< 2 >::GetSolutionGradients)
+            , (::std::vector< boost::numeric::ublas::c_vector<double, 3> > ( AbstractRegularGridDiscreteContinuumSolver_less__2__greater__wrapper::* )( ::vtkSmartPointer< vtkPoints > ))(&AbstractRegularGridDiscreteContinuumSolver_less__2__greater__wrapper::default_GetSolutionGradients)
+            , ( bp::arg("pSamplePoints") ) )    
         .def( 
             "GetSolutionP"
             , (::std::vector< double > ( ::AbstractDiscreteContinuumSolver<2>::* )( ::vtkPoints * ))(&::AbstractDiscreteContinuumSolver< 2 >::GetSolutionP)

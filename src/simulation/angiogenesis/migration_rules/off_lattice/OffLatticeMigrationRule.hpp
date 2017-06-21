@@ -111,6 +111,9 @@ class OffLatticeMigrationRule : public AbstractMigrationRule<DIM>
      */
     unsigned mNumGradientEvaluationDivisions;
 
+    /**
+     * Distance map for repulsion evaluation
+     */
     vtkSmartPointer<vtkDataSet> mpDomainDistanceMap;
 
 public:
@@ -125,8 +128,16 @@ public:
      */
     virtual ~OffLatticeMigrationRule();
 
+    /**
+     * Calculate the distance map for repulsion evaluation. This version
+     * is used when no solver is specified
+     */
     void CalculateDomainDistanceMap();
 
+    /**
+     * Calculate the distance map for repulsion evaluation on the supplied grid.
+     * @param pGrid get the distance map on this grid
+     */
     void CalculateDomainDistanceMap(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
 
     /**

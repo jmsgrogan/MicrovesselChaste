@@ -105,6 +105,7 @@
 #include "VtkSceneMicrovesselModifier.hpp"
 #include "Owen2011TrackingModifier.hpp"
 #include "AbstractCellBasedSimulationModifier.hpp"
+#include "CornealMicropocketSimulation.hpp"
 #include "VesselNetworkReader.hpp"
 #include "NodeFlowProperties.hpp"
 #include "SegmentFlowProperties.hpp"
@@ -156,6 +157,8 @@ template class Facet<2 >;
 template class Facet<3 >;
 template class Part<2 >;
 template class Part<3 >;
+template class MappableGridGenerator<2 >;
+template class MappableGridGenerator<3 >;
 template class NetworkToSurface<2 >;
 template class NetworkToSurface<3 >;
 template class VesselSurfaceGenerator<2 >;
@@ -316,6 +319,8 @@ template class Owen2011TrackingModifier<2 >;
 template class Owen2011TrackingModifier<3 >;
 template class AbstractCellBasedSimulationModifier<2,2 >;
 template class AbstractCellBasedSimulationModifier<3,3 >;
+template class CornealMicropocketSimulation<2 >;
+template class CornealMicropocketSimulation<3 >;
 template class VesselNetworkReader<2 >;
 template class VesselNetworkReader<3 >;
 template class NodeFlowProperties<2 >;
@@ -427,6 +432,8 @@ typedef std::vector<Facet3Ptr> VectorFacet3Ptr;
 typedef std::vector<SharedPtrFacet3> VectorSharedPtrFacet3;
 typedef Part<2 > Part2;
 typedef Part<3 > Part3;
+typedef MappableGridGenerator<2 > MappableGridGenerator2;
+typedef MappableGridGenerator<3 > MappableGridGenerator3;
 typedef NetworkToSurface<2 > NetworkToSurface2;
 typedef NetworkToSurface<3 > NetworkToSurface3;
 typedef VesselSurfaceGenerator<2 > VesselSurfaceGenerator2;
@@ -630,6 +637,8 @@ typedef Owen2011TrackingModifier<2 > Owen2011TrackingModifier2;
 typedef Owen2011TrackingModifier<3 > Owen2011TrackingModifier3;
 typedef AbstractCellBasedSimulationModifier<2,2 > AbstractCellBasedSimulationModifier2_2;
 typedef AbstractCellBasedSimulationModifier<3,3 > AbstractCellBasedSimulationModifier3_3;
+typedef CornealMicropocketSimulation<2 > CornealMicropocketSimulation2;
+typedef CornealMicropocketSimulation<3 > CornealMicropocketSimulation3;
 typedef VesselNetworkReader<2 > VesselNetworkReader2;
 typedef VesselNetworkReader<3 > VesselNetworkReader3;
 typedef NodeFlowProperties<2 > NodeFlowProperties2;

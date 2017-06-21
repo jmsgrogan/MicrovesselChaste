@@ -186,8 +186,8 @@ void register_LatticeBasedMigrationRule2_class(){
         LatticeBasedMigrationRule2_exposer.staticmethod( "Create" );
         bp::register_ptr_to_python< boost::shared_ptr< LatticeBasedMigrationRule<2> > >();
         bp::implicitly_convertible< boost::shared_ptr< LatticeBasedMigrationRule< 2 > >, boost::shared_ptr< AbstractMigrationRule< 2 > > >();
-        bp::implicitly_convertible< boost::shared_ptr< Owen2011MigrationRule< 2 > >, boost::shared_ptr< LatticeBasedMigrationRule< 2 > > >();
         bp::implicitly_convertible< boost::shared_ptr< TipAttractionLatticeBasedMigrationRule< 2 > >, boost::shared_ptr< LatticeBasedMigrationRule< 2 > > >();
+        bp::implicitly_convertible< boost::shared_ptr< Owen2011MigrationRule< 2 > >, boost::shared_ptr< LatticeBasedMigrationRule< 2 > > >();
         bp::implicitly_convertible< boost::shared_ptr< CellPopulationMigrationRule< 2 > >, boost::shared_ptr< LatticeBasedMigrationRule< 2 > > >();
     }
 

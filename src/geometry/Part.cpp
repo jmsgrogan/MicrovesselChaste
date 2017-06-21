@@ -184,6 +184,7 @@ void Part<DIM>::AppendPart(boost::shared_ptr<Part<DIM> > pPart)
     {
         this->AddPolygon(polygons[idx], true);
     }
+    mVtkIsUpToDate = false;
 }
 
 template<unsigned DIM>
@@ -936,12 +937,14 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
 
     if(!includeEdges)
     {
-        vtkSmartPointer<vtkPolyDataNormals> p_normals = vtkSmartPointer<vtkPolyDataNormals>::New();
-        p_normals->SetInputConnection(p_clean_data->GetOutputPort());
-        p_normals->ComputePointNormalsOn();
-        p_normals->ComputeCellNormalsOn();
-        p_normals->Update();
-        mVtkPart = p_normals->GetOutput();
+//        vtkSmartPointer<vtkPolyDataNormals> p_normals = vtkSmartPointer<vtkPolyDataNormals>::New();
+//        p_normals->SetInputConnection(p_clean_data->GetOutputPort());
+//        p_normals->ComputePointNormalsOn();
+//        p_normals->ComputeCellNormalsOn();
+//        p_normals->Update();
+//        mVtkPart = p_normals->GetOutput();
+          p_clean_data->Update();
+          mVtkPart = p_clean_data->GetOutput();
     }
     else
     {

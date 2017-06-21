@@ -188,7 +188,7 @@ std::vector<c_vector<double, 3 > > AbstractDiscreteContinuumSolver<DIM>::GetSolu
     #else
         p_gradient->SetInputData(GetDensityMap()->GetGridCalculator()->GetGrid()->GetVtkGrid());
     #endif
-    p_gradient->SetResultArrayName("Gradients");
+    p_gradient->SetResultArrayName("Solution Gradients");
     p_gradient->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, this->mLabel.c_str());
     p_gradient->Update();
 
@@ -200,9 +200,10 @@ std::vector<c_vector<double, 3 > > AbstractDiscreteContinuumSolver<DIM>::GetSolu
         p_probe_filter->SetInputData(p_polydata);
         p_probe_filter->SetSourceData(p_gradient->GetOutput());
     #endif
-    p_probe_filter->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, "Gradients");
+    p_probe_filter->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, "Solution Gradients");
+    p_probe_filter->SetValidPointMaskArrayName("Valid");
     p_probe_filter->Update();
-    vtkDataArray* p_results = p_probe_filter->GetOutput()->GetPointData()->GetArray("Gradients");
+    vtkDataArray* p_results = p_probe_filter->GetOutput()->GetPointData()->GetArray("Solution Gradients");
     unsigned num_points = p_results->GetNumberOfTuples();
     for(unsigned idx=0; idx<num_points; idx++)
     {

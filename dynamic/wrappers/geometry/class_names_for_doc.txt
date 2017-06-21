@@ -16,7 +16,10 @@
 .. autoclass:: microvessel_chaste.geometry.Part3
 	:members:
 
-.. autoclass:: microvessel_chaste.geometry.MappableGridGenerator
+.. autoclass:: microvessel_chaste.geometry.MappableGridGenerator2
+	:members:
+
+.. autoclass:: microvessel_chaste.geometry.MappableGridGenerator3
 	:members:
 
 .. autoclass:: microvessel_chaste.geometry.NetworkToSurface2

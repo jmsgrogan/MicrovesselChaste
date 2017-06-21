@@ -207,7 +207,7 @@ public:
      * @param sproutTipLocation the sprout tip
      * @return the new sprout
      */
-    virtual boost::shared_ptr<Vessel<DIM> > FormSprout(const DimensionalChastePoint<DIM>& sproutBaseLocation,
+    virtual boost::shared_ptr<Vessel<DIM> > FormSprout(boost::shared_ptr<VesselNode<DIM> > pSproutBase,
                                                const DimensionalChastePoint<DIM>& sproutTipLocation);
 
     /**
@@ -308,6 +308,8 @@ public:
      * @return the vessel segments in the network
      */
     std::vector<boost::shared_ptr<VesselSegment<DIM> > > GetVesselSegments();
+
+    boost::shared_ptr<VesselSegment<DIM> > GetVesselSegment(unsigned index);
 
     /**
      * Return the indexed vessel

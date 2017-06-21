@@ -88,6 +88,26 @@ void register_WallShearStressBasedRegressionSolver3_class(){
                 , Create_function_type( &::WallShearStressBasedRegressionSolver< 3 >::Create ) );
         
         }
+        { //::WallShearStressBasedRegressionSolver< 3 >::GetLowWallShearStressThreshold
+        
+            typedef WallShearStressBasedRegressionSolver< 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::length_base_dimension, boost::units::static_rational< -1, 1 > >, boost::units::list< boost::units::dim< boost::units::mass_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< -2, 1 > >, boost::units::dimensionless_type > > >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetLowWallShearStressThreshold_function_type)(  ) ;
+            
+            WallShearStressBasedRegressionSolver3_exposer.def( 
+                "GetLowWallShearStressThreshold"
+                , GetLowWallShearStressThreshold_function_type( &::WallShearStressBasedRegressionSolver< 3 >::GetLowWallShearStressThreshold ) );
+        
+        }
+        { //::WallShearStressBasedRegressionSolver< 3 >::GetMaximumTimeWithLowWallShearStress
+        
+            typedef WallShearStressBasedRegressionSolver< 3 > exported_class_t;
+            typedef ::boost::units::quantity< boost::units::unit< boost::units::list< boost::units::dim< boost::units::time_base_dimension, boost::units::static_rational< 1, 1 > >, boost::units::dimensionless_type >, boost::units::homogeneous_system< boost::units::list< boost::units::si::meter_base_unit, boost::units::list< boost::units::scaled_base_unit< boost::units::cgs::gram_base_unit, boost::units::scale< 10, boost::units::static_rational< 3 > > >, boost::units::list< boost::units::si::second_base_unit, boost::units::list< boost::units::si::ampere_base_unit, boost::units::list< boost::units::si::kelvin_base_unit, boost::units::list< boost::units::si::mole_base_unit, boost::units::list< boost::units::si::candela_base_unit, boost::units::list< boost::units::angle::radian_base_unit, boost::units::list< boost::units::angle::steradian_base_unit, boost::units::dimensionless_type > > > > > > > > > >, void >, double > ( exported_class_t::*GetMaximumTimeWithLowWallShearStress_function_type)(  ) ;
+            
+            WallShearStressBasedRegressionSolver3_exposer.def( 
+                "GetMaximumTimeWithLowWallShearStress"
+                , GetMaximumTimeWithLowWallShearStress_function_type( &::WallShearStressBasedRegressionSolver< 3 >::GetMaximumTimeWithLowWallShearStress ) );
+        
+        }
         { //::WallShearStressBasedRegressionSolver< 3 >::Increment
         
             typedef WallShearStressBasedRegressionSolver< 3 > exported_class_t;
