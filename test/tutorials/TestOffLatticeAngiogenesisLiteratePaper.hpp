@@ -138,7 +138,7 @@ public:
          * Set up the domain representing the cornea. This is a thin hemispherical shell. We assume some symmetry to
          * reduce computational expense.
          */
-        MappableGridGenerator hemisphere_generator;
+        MappableGridGenerator<3> hemisphere_generator;
         units::quantity<unit::length> radius(1400.0 * unit::microns);
         units::quantity<unit::length> thickness(100.0 * unit::microns);
         unsigned num_divisions_x = 10;

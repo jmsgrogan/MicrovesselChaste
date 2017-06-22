@@ -472,7 +472,7 @@ public:
         p_2d_planar_domain->Write(output_file_handler.GetOutputDirectoryFullPath() + "labelled_plane_2d.vtp", GeometryFormat::VTP, true);
 
         // Hemisphere 3D
-        MappableGridGenerator grid_generator;
+        MappableGridGenerator<3> grid_generator;
         boost::shared_ptr<Part<3> > hemisphere = grid_generator.GenerateHemisphere(cornea_radius,
                 cornea_thickness, 20, 20, double(1.0*M_PI), double(0.999*M_PI));
 

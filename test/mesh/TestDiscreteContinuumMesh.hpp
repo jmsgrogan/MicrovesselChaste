@@ -36,7 +36,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef TESTDISCRETECONTINUUMMESH_HPP_
 #define TESTDISCRETECONTINUUMMESH_HPP_
 
-#include <cxTest/TestSuite.h>
+#include <cxxtest/TestSuite.h>
 #include <vector>
 #include <boost/lexical_cast.hpp>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
@@ -60,7 +60,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
-class TestDiscreteContinuumMesh : public CxTest::TestSuite
+class TestDiscreteContinuumMesh : public CxxTest::TestSuite
 {
 private:
 

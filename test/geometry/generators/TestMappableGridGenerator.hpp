@@ -68,7 +68,7 @@ public:
         OutputFileHandler output_file_handler(output_directory);
 
         // Make one with and without end caps
-        MappableGridGenerator generator;
+        MappableGridGenerator<3> generator;
         boost::shared_ptr<Part<3> > p_part = generator.GeneratePlane(10, 10);
         TS_ASSERT_EQUALS(p_part->GetVertices().size(), 200u);
         TS_ASSERT_EQUALS(p_part->GetPolygons().size(), 198u);
@@ -98,7 +98,7 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         // Make one closed cylinder, one open cylinder and one with too large an angle.
-        MappableGridGenerator generator;
+        MappableGridGenerator<3> generator;
         units::quantity<unit::length> radius = 1.5*unit::metres;
         units::quantity<unit::length> thickness = 0.1*unit::metres;
         units::quantity<unit::length> height = 5.0*unit::metres;
@@ -138,7 +138,7 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         // Make one closed cylinder, one open cylinder and one with too large an angle.
-        MappableGridGenerator generator;
+        MappableGridGenerator<3> generator;
         units::quantity<unit::length> radius = 1.5*unit::metres;
         units::quantity<unit::length> thickness = 0.0*unit::metres;
         units::quantity<unit::length> height = 5.0*unit::metres;
@@ -156,7 +156,7 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         // Make one good and two 'bad' hemispheres
-        MappableGridGenerator generator;
+        MappableGridGenerator<3> generator;
         units::quantity<unit::length> radius = 1.5*unit::metres;
         units::quantity<unit::length> thickness = 0.1*unit::metres;
 
@@ -194,7 +194,7 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         // Make one good and two 'bad' hemispheres
-        MappableGridGenerator generator;
+        MappableGridGenerator<3> generator;
         units::quantity<unit::length> radius = 1.5*unit::metres;
         units::quantity<unit::length> thickness = 0.0*unit::metres;
 
@@ -213,7 +213,7 @@ public:
 
         // Save archive
         {
-            boost::shared_ptr<MappableGridGenerator> p_generator = MappableGridGenerator::Create();
+            boost::shared_ptr<MappableGridGenerator<3> > p_generator = MappableGridGenerator<3>::Create();
             std::ofstream ofs(archive_filename.c_str());
             boost::archive::text_oarchive output_arch(ofs);
             output_arch << p_generator;
@@ -221,7 +221,7 @@ public:
 
         // Load archive
         {
-            boost::shared_ptr<MappableGridGenerator> p_generator_from_archive;
+            boost::shared_ptr<MappableGridGenerator<3> > p_generator_from_archive;
 
             // Read from this input file
             std::ifstream ifs(archive_filename.c_str(), std::ios::binary);

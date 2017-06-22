@@ -628,12 +628,12 @@ public:
         {
             DimensionalChastePoint<3> loc1 = DimensionalChastePoint<3>(double(idx)*10, 10.0, 0.0, 1.e-6 * unit::metres);
             DimensionalChastePoint<3> loc2 = DimensionalChastePoint<3>(double(idx)*10, 20.0, 0.0, 1.e-6 * unit::metres);
-            p_network->FormSprout(loc1, loc2);
+            p_network->FormSprout(VesselNode<3>::Create(loc1), loc2);
         }
 
         DimensionalChastePoint<3> loc1 = DimensionalChastePoint<3>(10, 20.0, 0.0, 1.e-6 * unit::metres);
         DimensionalChastePoint<3> loc2 = DimensionalChastePoint<3>(20, 20.0, 0.0, 1.e-6 * unit::metres);
-        p_network->FormSprout(loc1, loc2);
+        p_network->FormSprout(VesselNode<3>::Create(loc1), loc2);
         p_network->MergeCoincidentNodes();
         p_network->UpdateSegments();
         p_network->UpdateNodes();

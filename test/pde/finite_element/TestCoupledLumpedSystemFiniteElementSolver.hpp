@@ -265,7 +265,7 @@ public:
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
 
-        MappableGridGenerator hemisphere_generator;
+        MappableGridGenerator<3> hemisphere_generator;
         units::quantity<unit::length> radius(1400.0 * unit::microns);
         units::quantity<unit::length> thickness(100.0 * unit::microns);
         unsigned num_divisions_x = 20;

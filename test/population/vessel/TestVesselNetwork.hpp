@@ -267,7 +267,7 @@ public:
 
         // form sprout
         units::quantity<unit::length> reference_length(1.0*unit::microns);
-        DimensionalChastePoint<2> sproutBaseLocation(1.0, 0.0, 0.0, reference_length);
+        boost::shared_ptr<VesselNode<2> >  sproutBaseLocation = VesselNode<2>::Create(1.0, 0.0, 0.0, reference_length);
         DimensionalChastePoint<2> sproutTipLocation(0.0, 1.0, 0.0, reference_length);
         boost::shared_ptr<Vessel<2> > newSprout = p_vessel_network->FormSprout(sproutBaseLocation, sproutTipLocation);
 
@@ -345,7 +345,7 @@ public:
         for(unsigned idx=1; idx<2; idx++)
         {
             units::quantity<unit::length> reference_length(1.0*unit::microns);
-            DimensionalChastePoint<3> base_location(double(idx)*10.0, 0.0, 0.0, reference_length);
+            boost::shared_ptr<VesselNode<3> > base_location = VesselNode<3>::Create(double(idx)*10.0, 0.0, 0.0, reference_length);
             DimensionalChastePoint<3> tip_location(double(idx)*10.0, 10.0, 0.0, reference_length);
             p_network->FormSprout(base_location, tip_location);
         }

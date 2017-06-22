@@ -737,7 +737,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
     {
         units::quantity<unit::length> domain_width = 2.0*M_PI*mCorneaRadius;
         unsigned num_sample_points_x = int(double(domain_width/mSampleSpacingX)) + 1;
-        unsigned mNumSampleY = int(double((mPelletHeight)/mSampleSpacingY)) + 1;
+        mNumSampleY = int(double((mPelletHeight)/mSampleSpacingY)) + 1;
 
         double dimless_sample_spacing_x = mSampleSpacingX/reference_length;
         double dimless_sample_spacing_y = mSampleSpacingY/reference_length;
@@ -1241,14 +1241,10 @@ void CornealMicropocketSimulation<DIM>::Run()
     pde_output_file << "\n";
 
     double old_time = SimulationTime::Instance()->GetTime();
-    Timer::PrintAndReset("Simulation Set Up");
-
     unsigned counter = 0;
     while (!SimulationTime::Instance()->IsFinished())
     {
         bool sample_this_step =(counter%mSampleFrequency==0);
-
-        std::cout << "Simulation Time: " << old_time << " of " << mTotalTime << std::endl;
         double elapsed_time = SimulationTime::Instance()->GetTimeStepsElapsed();
         double time = SimulationTime::Instance()->GetTime();
 
@@ -1269,14 +1265,11 @@ void CornealMicropocketSimulation<DIM>::Run()
             mpSolver->SetFileName("Vegf_Solution" + boost::lexical_cast<std::string>(elapsed_time));
             mpSolver->Solve();
         }
-        Timer::PrintAndReset("Solved PDE");
 
         if(sample_this_step)
         {
             DoSampling(pde_output_file, mpSolver, time, 1e3, mUseFixedGradient);
         }
-
-        Timer::PrintAndReset("Did PDE Sampling");
 
         if(!mUsePdeOnly)
         {
@@ -1328,7 +1321,6 @@ void CornealMicropocketSimulation<DIM>::Run()
                         }
                     }
                     p_density_map_result->Write();
-                    Timer::PrintAndReset("Did Density Map Calc");
                     DoSampling(*output_density_files[idx], p_density_map_result, time);
                 }
             }
@@ -1337,9 +1329,7 @@ void CornealMicropocketSimulation<DIM>::Run()
                     boost::lexical_cast<std::string>(elapsed_time) + ".vtp");
             network_writer.SetVesselNetwork(mpNetwork);
             network_writer.Write();
-            Timer::PrintAndReset("Did Network Sampling");
             p_angiogenesis_solver->Increment();
-            Timer::PrintAndReset("Did Angiogenesis");
         }
         SimulationTime::Instance()->IncrementTimeOneStep();
         old_time = time;
