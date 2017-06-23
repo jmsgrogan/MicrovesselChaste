@@ -52,10 +52,9 @@ ImageToSurface::ImageToSurface()
 
 }
 
-boost::shared_ptr<ImageToSurface> ImageToSurface::Create()
+std::shared_ptr<ImageToSurface> ImageToSurface::Create()
 {
-    MAKE_PTR(ImageToSurface, pSelf);
-    return pSelf;
+    return std::make_shared<ImageToSurface>();
 }
 
 ImageToSurface::~ImageToSurface()

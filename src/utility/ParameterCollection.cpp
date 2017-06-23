@@ -41,23 +41,23 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ParameterCollection.hpp"
 
 /** Pointer to the single instance */
-boost::shared_ptr<ParameterCollection> ParameterCollection::mpInstance = boost::shared_ptr<ParameterCollection>();
+std::shared_ptr<ParameterCollection> ParameterCollection::mpInstance = std::shared_ptr<ParameterCollection>();
 
 ParameterCollection* ParameterCollection::Instance()
 {
     if (!mpInstance)
     {
-        mpInstance = boost::shared_ptr<ParameterCollection>(new ParameterCollection);
+        mpInstance = std::shared_ptr<ParameterCollection>(new ParameterCollection);
         std::atexit(Destroy);
     }
     return mpInstance.get();
 }
 
-boost::shared_ptr<ParameterCollection> ParameterCollection::SharedInstance()
+std::shared_ptr<ParameterCollection> ParameterCollection::SharedInstance()
 {
     if (!mpInstance)
     {
-        mpInstance = boost::shared_ptr<ParameterCollection>(new ParameterCollection);
+        mpInstance = std::shared_ptr<ParameterCollection>(new ParameterCollection);
         std::atexit(Destroy);
     }
     return mpInstance;
@@ -80,7 +80,7 @@ void ParameterCollection::DumpToFile(const std::string& rFilename)
         myfile << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
         myfile << "<parameter_collection>" << std::endl;
 
-        typedef std::map<std::string, std::pair<std::string, boost::shared_ptr<BaseParameterInstance> > >::iterator it_type;
+        typedef std::map<std::string, std::pair<std::string, std::shared_ptr<BaseParameterInstance> > >::iterator it_type;
         for(it_type iterator = mParameters.begin(); iterator != mParameters.end(); iterator++)
         {
             myfile << "<parameter>" << std::endl;
@@ -93,22 +93,22 @@ void ParameterCollection::DumpToFile(const std::string& rFilename)
     }
 }
 
-boost::shared_ptr<BaseParameterInstance> ParameterCollection::GetParameter(const std::string& rName)
+std::shared_ptr<BaseParameterInstance> ParameterCollection::GetParameter(const std::string& rName)
 {
     return mParameters[rName].second;
 }
 
-void ParameterCollection::AddParameter(boost::shared_ptr<BaseParameterInstance> pParameter, const std::string& rFirstInstantiated)
+void ParameterCollection::AddParameter(std::shared_ptr<BaseParameterInstance> pParameter, const std::string& rFirstInstantiated)
 {
     // Check if the parameter already exists in the map
-    std::map<std::string, std::pair<std::string, boost::shared_ptr<BaseParameterInstance> > >::iterator it = mParameters.find(pParameter->GetName());
+    std::map<std::string, std::pair<std::string, std::shared_ptr<BaseParameterInstance> > >::iterator it = mParameters.find(pParameter->GetName());
     if(it != mParameters.end() && rFirstInstantiated != it->first)
     {
-        it->second = std::pair<std::string, boost::shared_ptr<BaseParameterInstance> >(rFirstInstantiated, pParameter);
+        it->second = std::pair<std::string, std::shared_ptr<BaseParameterInstance> >(rFirstInstantiated, pParameter);
     }
     else
     {
-        mParameters[pParameter->GetName()] = std::pair<std::string, boost::shared_ptr<BaseParameterInstance> >(rFirstInstantiated, pParameter);
+        mParameters[pParameter->GetName()] = std::pair<std::string, std::shared_ptr<BaseParameterInstance> >(rFirstInstantiated, pParameter);
     }
 }
 
@@ -116,7 +116,7 @@ void ParameterCollection::Destroy()
 {
     if (mpInstance)
     {
-        mpInstance = boost::shared_ptr<ParameterCollection>();
+        mpInstance = std::shared_ptr<ParameterCollection>();
     }
 }
 

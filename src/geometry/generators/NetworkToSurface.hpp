@@ -58,12 +58,12 @@ class NetworkToSurface
     /**
      * The network to image tool
      */
-    boost::shared_ptr<NetworkToImage<DIM> > mpNetworkToImage;
+    std::shared_ptr<NetworkToImage<DIM> > mpNetworkToImage;
 
     /**
      * The vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpNetwork;
 
     /**
      * The length for spline re-sampling
@@ -126,13 +126,13 @@ public:
      * Factory constructor method
      * @return a shared pointer to a new instance
      */
-    static boost::shared_ptr<NetworkToSurface<DIM> > Create();
+    static std::shared_ptr<NetworkToSurface<DIM> > Create();
 
     /**
      * Return the tool used to convert the network to an image
      * @return the tool used to convert the network to an image
      */
-    boost::shared_ptr<NetworkToImage<DIM> > GetNetworkToImageTool();
+    std::shared_ptr<NetworkToImage<DIM> > GetNetworkToImageTool();
 
     /**
      * Return the vessel surface
@@ -168,7 +168,7 @@ public:
      * Set the vessel network
      * @param pNetwork the network to be converted to a surface
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Set the re-sampling spline length

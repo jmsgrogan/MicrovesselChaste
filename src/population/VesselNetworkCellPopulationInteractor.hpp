@@ -33,11 +33,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef VESSELNETWORKCELLPOPULATIONINTERACTOR_HPP
 #define VESSELNETWORKCELLPOPULATIONINTERACTOR_HPP
 
+#include <memory>
 #include <vector>
 #include <string>
 #include "VesselNetwork.hpp"
@@ -58,7 +57,7 @@ protected:
     /**
      * The vessel network can be stored here. The cell population is not stored.
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpNetwork;
 
 public:
 
@@ -81,8 +80,8 @@ public:
      * @param cellLengthScale the cell population length scale
      */
     void LabelVesselsInCellPopulation(AbstractCellPopulation<DIM>& cellPopulation,  units::quantity<unit::length> cellLengthScale,
-                                      boost::shared_ptr<AbstractCellMutationState> pTipMutationState,
-                                      boost::shared_ptr<AbstractCellMutationState> pStalkState,
+            boost::shared_ptr<AbstractCellMutationState> pTipMutationState,
+            boost::shared_ptr<AbstractCellMutationState> pStalkState,
                                       double threshold = 1.25e-6);
 
     /**
@@ -114,7 +113,7 @@ public:
      * Set the vessel network
      * @param pNetwork the vessel network
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
 };
 

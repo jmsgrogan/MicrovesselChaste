@@ -127,11 +127,11 @@ MicrovesselVtkScene<DIM>::MicrovesselVtkScene()
       mAddAnnotations(false),
       mOutputFrequency(1),
       mIncludeAxes(false),
-      mpCellPopulationGenerator(boost::shared_ptr<CellPopulationActorGenerator<DIM> >(new CellPopulationActorGenerator<DIM>())),
-      mpPartGenerator(boost::shared_ptr<PartActorGenerator<DIM> >(new PartActorGenerator<DIM>())),
-      mpNetworkGenerator(boost::shared_ptr<VesselNetworkActorGenerator<DIM> >(new VesselNetworkActorGenerator<DIM>())),
-      mpDiscreteContinuumMeshGenerator(boost::shared_ptr<DiscreteContinuumMeshActorGenerator<DIM> >(new DiscreteContinuumMeshActorGenerator<DIM>())),
-      mpGridGenerator(boost::shared_ptr<RegularGridActorGenerator<DIM> >(new RegularGridActorGenerator<DIM>())),
+      mpCellPopulationGenerator(std::shared_ptr<CellPopulationActorGenerator<DIM> >(new CellPopulationActorGenerator<DIM>())),
+      mpPartGenerator(std::shared_ptr<PartActorGenerator<DIM> >(new PartActorGenerator<DIM>())),
+      mpNetworkGenerator(std::shared_ptr<VesselNetworkActorGenerator<DIM> >(new VesselNetworkActorGenerator<DIM>())),
+      mpDiscreteContinuumMeshGenerator(std::shared_ptr<DiscreteContinuumMeshActorGenerator<DIM> >(new DiscreteContinuumMeshActorGenerator<DIM>())),
+      mpGridGenerator(std::shared_ptr<RegularGridActorGenerator<DIM> >(new RegularGridActorGenerator<DIM>())),
       mLengthScale(BaseUnits::Instance()->GetReferenceLengthScale())
 {
     mpRenderer->SetBackground(1.0, 1.0, 1.0);
@@ -150,31 +150,31 @@ MicrovesselVtkScene<DIM>::~MicrovesselVtkScene()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<PartActorGenerator<DIM> > MicrovesselVtkScene<DIM>::GetPartActorGenerator()
+std::shared_ptr<PartActorGenerator<DIM> > MicrovesselVtkScene<DIM>::GetPartActorGenerator()
 {
     return mpPartGenerator;
 }
 
 template<unsigned DIM>
-boost::shared_ptr<DiscreteContinuumMeshActorGenerator<DIM> > MicrovesselVtkScene<DIM>::GetDiscreteContinuumMeshActorGenerator()
+std::shared_ptr<DiscreteContinuumMeshActorGenerator<DIM> > MicrovesselVtkScene<DIM>::GetDiscreteContinuumMeshActorGenerator()
 {
     return mpDiscreteContinuumMeshGenerator;
 }
 
 template<unsigned DIM>
-boost::shared_ptr<RegularGridActorGenerator<DIM> > MicrovesselVtkScene<DIM>::GetRegularGridActorGenerator()
+std::shared_ptr<RegularGridActorGenerator<DIM> > MicrovesselVtkScene<DIM>::GetRegularGridActorGenerator()
 {
     return mpGridGenerator;
 }
 
 template<unsigned DIM>
-boost::shared_ptr<VesselNetworkActorGenerator<DIM> > MicrovesselVtkScene<DIM>::GetVesselNetworkActorGenerator()
+std::shared_ptr<VesselNetworkActorGenerator<DIM> > MicrovesselVtkScene<DIM>::GetVesselNetworkActorGenerator()
 {
     return mpNetworkGenerator;
 }
 
 template<unsigned DIM>
-boost::shared_ptr<CellPopulationActorGenerator<DIM> > MicrovesselVtkScene<DIM>::GetCellPopulationActorGenerator()
+std::shared_ptr<CellPopulationActorGenerator<DIM> > MicrovesselVtkScene<DIM>::GetCellPopulationActorGenerator()
 {
     return mpCellPopulationGenerator;
 }
@@ -321,31 +321,31 @@ void MicrovesselVtkScene<DIM>::SetIsInteractive(bool isInteractive)
 }
 
 template<unsigned DIM>
-void MicrovesselVtkScene<DIM>::SetPart(boost::shared_ptr<Part<DIM> > pPart)
+void MicrovesselVtkScene<DIM>::SetPart(std::shared_ptr<Part<DIM> > pPart)
 {
     mpPartGenerator->SetPart(pPart);
 }
 
 template<unsigned DIM>
-void MicrovesselVtkScene<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void MicrovesselVtkScene<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpNetworkGenerator->SetVesselNetwork(pNetwork);
 }
 
 template<unsigned DIM>
-void MicrovesselVtkScene<DIM>::SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation)
+void MicrovesselVtkScene<DIM>::SetCellPopulation(std::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation)
 {
     mpCellPopulationGenerator->SetCellPopulation(pCellPopulation);
 }
 
 template<unsigned DIM>
-void MicrovesselVtkScene<DIM>::SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid)
+void MicrovesselVtkScene<DIM>::SetRegularGrid(std::shared_ptr<RegularGrid<DIM> > pGrid)
 {
     mpGridGenerator->SetRegularGrid(pGrid);
 }
 
 template<unsigned DIM>
-void MicrovesselVtkScene<DIM>::SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh)
+void MicrovesselVtkScene<DIM>::SetMesh(std::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh)
 {
     mpDiscreteContinuumMeshGenerator->SetDiscreteContinuumMesh(pMesh);
 }

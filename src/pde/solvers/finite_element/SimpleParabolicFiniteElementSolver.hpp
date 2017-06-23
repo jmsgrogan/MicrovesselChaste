@@ -104,7 +104,7 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a shared pointer to a class instance.
      */
-    static boost::shared_ptr<SimpleParabolicFiniteElementSolver<DIM> > Create();
+    static std::shared_ptr<SimpleParabolicFiniteElementSolver<DIM> > Create();
 
     /**
      * Return the intermediate solutions. Empty if not stored.

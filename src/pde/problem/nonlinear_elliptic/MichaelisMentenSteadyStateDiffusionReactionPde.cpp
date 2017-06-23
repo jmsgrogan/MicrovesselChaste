@@ -46,10 +46,9 @@ MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::Michaeli
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-boost::shared_ptr<MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM> > MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::Create()
+std::shared_ptr<MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM> > MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::Create()
 {
-    MAKE_PTR(MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM> >();
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

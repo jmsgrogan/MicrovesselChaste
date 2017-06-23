@@ -131,14 +131,14 @@ public:
      *
      * @return a shared pointer to the class instance
      */
-    static boost::shared_ptr<VesselNetworkReader<DIM> > Create();
+    static std::shared_ptr<VesselNetworkReader<DIM> > Create();
 
     /**
      * Do the read and return the vessel network
      *
      * @return the vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > Read();
+    std::shared_ptr<VesselNetwork<DIM> > Read();
 
     /**
      * Set the name of the radius array

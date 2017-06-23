@@ -81,14 +81,14 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to a new instance of the class
      */
-    static boost::shared_ptr<Owen2011SproutingRule<DIM> > Create();
+    static std::shared_ptr<Owen2011SproutingRule<DIM> > Create();
 
     /**
      * Overwritten method to return nodes which may sprout
      * @param rNodes nodes to check for sprouting
      * @return a vector of nodes which may sprout
      */
-    virtual std::vector<boost::shared_ptr<VesselNode<DIM> > > GetSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
+    virtual std::vector<std::shared_ptr<VesselNode<DIM> > > GetSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
 
     /**
      * Set the half max vegf

@@ -96,7 +96,7 @@ void VolumeOutputModifier<DIM>::SetTimeScale(double timeScale)
 }
 
 template<unsigned DIM>
-void VolumeOutputModifier<DIM>::SetOutputFileStream(boost::shared_ptr<std::ofstream> ofstream)
+void VolumeOutputModifier<DIM>::SetOutputFileStream(std::shared_ptr<std::ofstream> ofstream)
 {
     mOutputFileStream = ofstream;
 }

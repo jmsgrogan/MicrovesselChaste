@@ -91,7 +91,7 @@ protected:
     /**
      * Factory for producing vectors over the number of nodes in the grid.
      */
-    boost::shared_ptr<DistributedVectorFactory> mpDistributedVectorFactory;
+    std::shared_ptr<DistributedVectorFactory> mpDistributedVectorFactory;
 
 public:
 
@@ -104,7 +104,7 @@ public:
      * Factory constructor method
      * @return a shared pointer to a new grid
      */
-    static boost::shared_ptr<RegularGrid<DIM> > Create();
+    static std::shared_ptr<RegularGrid<DIM> > Create();
 
     /**
      * Desctructor
@@ -127,13 +127,13 @@ public:
      * @param pPart the part from which to get the bounding box
      * @param gridSize the grid spacing
      */
-    void GenerateFromPart(boost::shared_ptr<Part<DIM> > pPart, units::quantity<unit::length> gridSize);
+    void GenerateFromPart(std::shared_ptr<Part<DIM> > pPart, units::quantity<unit::length> gridSize);
 
     /**
      * Return the distributed vector factory
      * @return the distributed vector factory
      */
-    boost::shared_ptr<DistributedVectorFactory> GetDistributedVectorFactory();
+    std::shared_ptr<DistributedVectorFactory> GetDistributedVectorFactory();
 
     /**
      * Get the GLOBAL grid index for given x,y,z indices
@@ -304,7 +304,7 @@ public:
      * Write the grid and any field to file as a VTI file
      * @param pFileHandler a file handler for the write location
      */
-    void Write(boost::shared_ptr<OutputFileHandler> pFileHandler);
+    void Write(std::shared_ptr<OutputFileHandler> pFileHandler);
 };
 
 #endif /* REGULARGRID_HPP_*/

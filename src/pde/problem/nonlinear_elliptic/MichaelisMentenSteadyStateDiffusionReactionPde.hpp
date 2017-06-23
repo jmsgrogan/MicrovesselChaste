@@ -76,7 +76,7 @@ public:
      * Factory Constructor
      * @return a pointer to an instance of the pde
      */
-    static boost::shared_ptr<MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM> > Create();
+    static std::shared_ptr<MichaelisMentenSteadyStateDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM> > Create();
 
     /**
      * Over-ridden method to return the linear in U contribution to the Chaste FE solver

@@ -50,10 +50,9 @@ DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::~DiscreteContinuumLi
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-boost::shared_ptr<DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM> > DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::Create()
+std::shared_ptr<DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM> > DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::Create()
 {
-    MAKE_PTR(DiscreteContinuumLinearEllipticPde<ELEMENT_DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<DiscreteContinuumLinearEllipticPde<ELEMENT_DIM> >();
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

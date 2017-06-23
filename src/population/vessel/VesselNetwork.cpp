@@ -76,21 +76,20 @@ VesselNetwork<DIM>::~VesselNetwork()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<VesselNetwork<DIM> > VesselNetwork<DIM>::Create()
+std::shared_ptr<VesselNetwork<DIM> > VesselNetwork<DIM>::Create()
 {
-    MAKE_PTR(VesselNetwork<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<VesselNetwork<DIM> >();
 }
 
 template <unsigned DIM>
-void VesselNetwork<DIM>::AddVessel(boost::shared_ptr<Vessel<DIM> > pVessel)
+void VesselNetwork<DIM>::AddVessel(std::shared_ptr<Vessel<DIM> > pVessel)
 {
     mVessels.push_back(pVessel);
     Modified();
 }
 
 template <unsigned DIM>
-void VesselNetwork<DIM>::AddVessels(std::vector<boost::shared_ptr<Vessel<DIM> > > vessels)
+void VesselNetwork<DIM>::AddVessels(std::vector<std::shared_ptr<Vessel<DIM> > > vessels)
 {
     mVessels.insert(mVessels.end(), vessels.begin(), vessels.end());
     Modified();
@@ -110,21 +109,21 @@ void VesselNetwork<DIM>::ClearVessels()
 }
 
 template <unsigned DIM>
-std::vector<boost::shared_ptr<Vessel<DIM> > > VesselNetwork<DIM>::CopyVessels()
+std::vector<std::shared_ptr<Vessel<DIM> > > VesselNetwork<DIM>::CopyVessels()
 {
     return CopyVessels(mVessels);
 }
 
 template <unsigned DIM>
-std::vector<boost::shared_ptr<Vessel<DIM> > > VesselNetwork<DIM>::CopyVessels(std::vector<boost::shared_ptr<Vessel<DIM> > > vessels)
+std::vector<std::shared_ptr<Vessel<DIM> > > VesselNetwork<DIM>::CopyVessels(std::vector<std::shared_ptr<Vessel<DIM> > > vessels)
 {
-    typename std::vector<boost::shared_ptr<Vessel<DIM> > >::iterator vessel_iter;
-    std::vector<boost::shared_ptr<Vessel<DIM> > > new_vessels;
+    typename std::vector<std::shared_ptr<Vessel<DIM> > >::iterator vessel_iter;
+    std::vector<std::shared_ptr<Vessel<DIM> > > new_vessels;
     for(vessel_iter = vessels.begin(); vessel_iter != vessels.end(); vessel_iter++)
     {
-        typename std::vector<boost::shared_ptr<VesselSegment<DIM> > >::iterator segment_iter;
-        std::vector<boost::shared_ptr<VesselSegment<DIM> > > new_segments;
-        std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = (*vessel_iter)->GetSegments();
+        typename std::vector<std::shared_ptr<VesselSegment<DIM> > >::iterator segment_iter;
+        std::vector<std::shared_ptr<VesselSegment<DIM> > > new_segments;
+        std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = (*vessel_iter)->GetSegments();
         for(segment_iter = segments.begin(); segment_iter != segments.end(); segment_iter++)
         {
             new_segments.push_back(VesselSegment<DIM>::Create(VesselNode<DIM>::Create((*segment_iter)->GetNode(0)->rGetLocation()),
@@ -139,19 +138,19 @@ std::vector<boost::shared_ptr<Vessel<DIM> > > VesselNetwork<DIM>::CopyVessels(st
 }
 
 template <unsigned DIM>
-void VesselNetwork<DIM>::SetDistributedVectorFactory(boost::shared_ptr<DistributedVectorFactory>  vectorFactory)
+void VesselNetwork<DIM>::SetDistributedVectorFactory(std::shared_ptr<DistributedVectorFactory>  vectorFactory)
 {
     mDistributedVectorFactory = vectorFactory;
 }
 
 template <unsigned DIM>
-boost::shared_ptr<DistributedVectorFactory> VesselNetwork<DIM>::GetDistributedVectorFactory()
+std::shared_ptr<DistributedVectorFactory> VesselNetwork<DIM>::GetDistributedVectorFactory()
 {
     if(PetscTools::IsSequential())
     {
         unsigned low_index = 0;
         unsigned high_index = GetNodes().size();
-        return boost::shared_ptr<DistributedVectorFactory>(new DistributedVectorFactory(low_index, high_index, high_index));
+        return std::shared_ptr<DistributedVectorFactory>(new DistributedVectorFactory(low_index, high_index, high_index));
     }
     else
     {
@@ -166,10 +165,10 @@ std::vector<unsigned> VesselNetwork<DIM>::GetNumberOfNodesPerProcess()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<VesselNode<DIM> > VesselNetwork<DIM>::DivideVessel(boost::shared_ptr<Vessel<DIM> > pVessel,
+std::shared_ptr<VesselNode<DIM> > VesselNetwork<DIM>::DivideVessel(std::shared_ptr<Vessel<DIM> > pVessel,
                                                                      const DimensionalChastePoint<DIM>& location)
 {
-    boost::shared_ptr<VesselSegment<DIM> > p_segment;
+    std::shared_ptr<VesselSegment<DIM> > p_segment;
 
     // If the divide location coincides with one of the end nodes don't divide and return that node
     if (pVessel->GetStartNode()->IsCoincident(location) || pVessel->GetEndNode()->IsCoincident(location))
@@ -187,7 +186,7 @@ boost::shared_ptr<VesselNode<DIM> > VesselNetwork<DIM>::DivideVessel(boost::shar
     else
     {
         bool locatedInsideVessel = false;
-        std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = pVessel->GetSegments();
+        std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = pVessel->GetSegments();
         for (unsigned idx = 0; idx < segments.size(); idx++)
         {
             if (segments[idx]->GetDistance(location)/BaseUnits::Instance()->GetReferenceLengthScale() <= 1e-6)
@@ -203,12 +202,12 @@ boost::shared_ptr<VesselNode<DIM> > VesselNetwork<DIM>::DivideVessel(boost::shar
         }
     }
 
-    boost::shared_ptr<VesselNode<DIM> > p_new_node = pVessel->DivideSegment(location); // network segments and nodes out of date
+    std::shared_ptr<VesselNode<DIM> > p_new_node = pVessel->DivideSegment(location); // network segments and nodes out of date
 
     // create two new vessels and assign them the old vessel's properties
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > start_segments;
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > end_segments;
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = pVessel->GetSegments();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > start_segments;
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > end_segments;
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = pVessel->GetSegments();
     unsigned segment_index = segments.size()+1;
     for (unsigned idx = 0; idx < segments.size(); idx++)
     {
@@ -229,8 +228,8 @@ boost::shared_ptr<VesselNode<DIM> > VesselNetwork<DIM>::DivideVessel(boost::shar
         end_segments.push_back(segments[idx]);
     }
 
-    boost::shared_ptr<Vessel<DIM> > p_new_vessel1 = Vessel<DIM>::Create(start_segments);
-    boost::shared_ptr<Vessel<DIM> > p_new_vessel2 = Vessel<DIM>::Create(end_segments);
+    std::shared_ptr<Vessel<DIM> > p_new_vessel1 = Vessel<DIM>::Create(start_segments);
+    std::shared_ptr<Vessel<DIM> > p_new_vessel2 = Vessel<DIM>::Create(end_segments);
     p_new_vessel1->CopyDataFromExistingVessel(pVessel);
     p_new_vessel2->CopyDataFromExistingVessel(pVessel);
     p_new_vessel1->GetFlowProperties()->SetRegressionTime(pVessel->GetFlowProperties()->GetRegressionTime());
@@ -244,12 +243,12 @@ boost::shared_ptr<VesselNode<DIM> > VesselNetwork<DIM>::DivideVessel(boost::shar
 }
 
 template <unsigned DIM>
-void VesselNetwork<DIM>::ExtendVessel(boost::shared_ptr<Vessel<DIM> > pVessel, boost::shared_ptr<VesselNode<DIM> > pEndNode,
-                                        boost::shared_ptr<VesselNode<DIM> > pNewNode)
+void VesselNetwork<DIM>::ExtendVessel(std::shared_ptr<Vessel<DIM> > pVessel, std::shared_ptr<VesselNode<DIM> > pEndNode,
+                                        std::shared_ptr<VesselNode<DIM> > pNewNode)
 {
     if(pVessel->GetStartNode() == pEndNode)
     {
-        boost::shared_ptr<VesselSegment<DIM> > p_segment = VesselSegment<DIM>::Create(pNewNode, pEndNode);
+        std::shared_ptr<VesselSegment<DIM> > p_segment = VesselSegment<DIM>::Create(pNewNode, pEndNode);
         p_segment->SetFlowProperties(*(pEndNode->GetSegments()[0]->GetFlowProperties()));
         p_segment->SetRadius(pEndNode->GetSegments()[0]->GetRadius());
         p_segment->SetMaturity(0.0);
@@ -257,7 +256,7 @@ void VesselNetwork<DIM>::ExtendVessel(boost::shared_ptr<Vessel<DIM> > pVessel, b
     }
     else
     {
-        boost::shared_ptr<VesselSegment<DIM> > p_segment = VesselSegment<DIM>::Create(pEndNode, pNewNode);
+        std::shared_ptr<VesselSegment<DIM> > p_segment = VesselSegment<DIM>::Create(pEndNode, pNewNode);
         p_segment->SetFlowProperties(*(pEndNode->GetSegments()[0]->GetFlowProperties()));
         p_segment->SetRadius(pEndNode->GetSegments()[0]->GetRadius());
         p_segment->SetMaturity(0.0);
@@ -268,21 +267,21 @@ void VesselNetwork<DIM>::ExtendVessel(boost::shared_ptr<Vessel<DIM> > pVessel, b
 }
 
 template <unsigned DIM>
-boost::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::FormSprout(boost::shared_ptr<VesselNode<DIM> > pSproutBase,
+std::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::FormSprout(std::shared_ptr<VesselNode<DIM> > pSproutBase,
                                                                  const DimensionalChastePoint<DIM>& sproutTipLocation)
 {
     // divide vessel at location of sprout base
-    boost::shared_ptr<VesselNode<DIM> > p_new_node = DivideVessel(pSproutBase->GetSegment(0)->GetVessel(),
+    std::shared_ptr<VesselNode<DIM> > p_new_node = DivideVessel(pSproutBase->GetSegment(0)->GetVessel(),
             pSproutBase->rGetLocation());
 
     // create new vessel
-    boost::shared_ptr<VesselNode<DIM> > p_new_node_at_tip = VesselNode<DIM>::Create(p_new_node);
+    std::shared_ptr<VesselNode<DIM> > p_new_node_at_tip = VesselNode<DIM>::Create(p_new_node);
     p_new_node_at_tip->SetLocation(sproutTipLocation);
     p_new_node_at_tip->SetIsMigrating(true);
     p_new_node_at_tip->GetFlowProperties()->SetIsInputNode(false);
     p_new_node_at_tip->GetFlowProperties()->SetIsOutputNode(false);
     p_new_node_at_tip->GetFlowProperties()->SetPressure(0.0*unit::pascals);
-    boost::shared_ptr<VesselSegment<DIM> > p_new_segment = VesselSegment<DIM>::Create(p_new_node, p_new_node_at_tip);
+    std::shared_ptr<VesselSegment<DIM> > p_new_segment = VesselSegment<DIM>::Create(p_new_node, p_new_node_at_tip);
     p_new_segment->CopyDataFromExistingSegment(pSproutBase->GetSegment(0));
     p_new_segment->GetFlowProperties()->SetFlowRate(0.0*unit::metre_cubed_per_second);
     p_new_segment->GetFlowProperties()->SetImpedance(0.0*unit::pascal_second_per_metre_cubed);
@@ -290,7 +289,7 @@ boost::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::FormSprout(boost::shared_ptr
     p_new_segment->GetFlowProperties()->SetGrowthStimulus(0.0*unit::per_second);
     p_new_segment->SetMaturity(0.0);
 
-    boost::shared_ptr<Vessel<DIM> > p_new_vessel = Vessel<DIM>::Create(p_new_segment);
+    std::shared_ptr<Vessel<DIM> > p_new_vessel = Vessel<DIM>::Create(p_new_segment);
     p_new_vessel->GetFlowProperties()->SetRegressionTime(pSproutBase->GetSegment(0)->GetVessel()->GetFlowProperties()->GetRegressionTime());
     AddVessel(p_new_vessel); // This calls modified()
     return p_new_vessel;
@@ -306,7 +305,7 @@ std::map<std::string, double> VesselNetwork<DIM>::GetOutputData()
 template <unsigned DIM>
 void VesselNetwork<DIM>::RemoveShortVessels(units::quantity<unit::length> cutoff, bool endsOnly)
 {
-    std::vector<boost::shared_ptr<Vessel<DIM> > > vessels_to_remove;
+    std::vector<std::shared_ptr<Vessel<DIM> > > vessels_to_remove;
 
     for(unsigned idx=0; idx<mVessels.size(); idx++)
     {
@@ -332,7 +331,7 @@ void VesselNetwork<DIM>::RemoveShortVessels(units::quantity<unit::length> cutoff
 template <unsigned DIM>
 void VesselNetwork<DIM>::MergeShortVessels(units::quantity<unit::length> cutoff)
 {
-    std::vector<boost::shared_ptr<Vessel<DIM> > > vessels_to_merge;
+    std::vector<std::shared_ptr<Vessel<DIM> > > vessels_to_merge;
     for(unsigned idx=0; idx<mVessels.size(); idx++)
     {
         if(mVessels[idx]->GetLength() < cutoff)
@@ -362,7 +361,7 @@ void VesselNetwork<DIM>::Modified(bool nodesOutOfDate, bool segmentsOutOfDate, b
 }
 
 template <unsigned DIM>
-std::vector<boost::shared_ptr<VesselNode<DIM> > > VesselNetwork<DIM>::GetNodes()
+std::vector<std::shared_ptr<VesselNode<DIM> > > VesselNetwork<DIM>::GetNodes()
 {
     if(!mNodesUpToDate)
     {
@@ -392,7 +391,7 @@ vtkSmartPointer<vtkCellLocator> VesselNetwork<DIM>::GetVtkCellLocator()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<VesselNode<DIM> > VesselNetwork<DIM>::GetNode(unsigned index)
+std::shared_ptr<VesselNode<DIM> > VesselNetwork<DIM>::GetNode(unsigned index)
 {
     if(!mNodesUpToDate)
     {
@@ -422,13 +421,13 @@ unsigned VesselNetwork<DIM>::GetNumberOfVesselNodes()
 }
 
 template <unsigned DIM>
-unsigned VesselNetwork<DIM>::GetNodeIndex(boost::shared_ptr<VesselNode<DIM> > node)
+unsigned VesselNetwork<DIM>::GetNodeIndex(std::shared_ptr<VesselNode<DIM> > node)
 {
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > vec_nodes = GetNodes();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > vec_nodes = GetNodes();
 
     unsigned index = 0;
 
-    typename std::vector<boost::shared_ptr<VesselNode<DIM> > >::iterator it;
+    typename std::vector<std::shared_ptr<VesselNode<DIM> > >::iterator it;
     for(it = vec_nodes.begin(); it != vec_nodes.end(); it++)
     {
         if(*it == node)
@@ -448,7 +447,7 @@ unsigned VesselNetwork<DIM>::GetNumberOfVessels()
 }
 
 template <unsigned DIM>
-std::vector<boost::shared_ptr<VesselNode<DIM> > > VesselNetwork<DIM>::GetVesselEndNodes()
+std::vector<std::shared_ptr<VesselNode<DIM> > > VesselNetwork<DIM>::GetVesselEndNodes()
 {
     if(!mVesselNodesUpToDate)
     {
@@ -458,7 +457,7 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > VesselNetwork<DIM>::GetVesselE
 }
 
 template <unsigned DIM>
-boost::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::GetVessel(unsigned index)
+std::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::GetVessel(unsigned index)
 {
     if(index  >= mVessels.size())
     {
@@ -469,7 +468,7 @@ boost::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::GetVessel(unsigned index)
 }
 
 template <unsigned DIM>
-std::vector<boost::shared_ptr<Vessel<DIM> > > VesselNetwork<DIM>::GetVessels()
+std::vector<std::shared_ptr<Vessel<DIM> > > VesselNetwork<DIM>::GetVessels()
 {
     return mVessels;
 }
@@ -477,14 +476,14 @@ std::vector<boost::shared_ptr<Vessel<DIM> > > VesselNetwork<DIM>::GetVessels()
 template <unsigned DIM>
 unsigned VesselNetwork<DIM>::GetMaxBranchesOnNode()
 {
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = GetVesselEndNodes();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = GetVesselEndNodes();
     unsigned num_nodes = nodes.size();
 
     // Get maximum number of segments attached to a node in the whole network.
     unsigned max_num_branches = 0;
     for(unsigned node_index = 0; node_index < num_nodes; node_index++)
     {
-        boost::shared_ptr<VesselNode<DIM> > p_each_node = nodes[node_index];
+        std::shared_ptr<VesselNode<DIM> > p_each_node = nodes[node_index];
         unsigned num_segments_on_node = nodes[node_index]->GetNumberOfSegments();
 
         if (num_segments_on_node > max_num_branches)
@@ -496,10 +495,10 @@ unsigned VesselNetwork<DIM>::GetMaxBranchesOnNode()
 }
 
 template <unsigned DIM>
-unsigned VesselNetwork<DIM>::GetVesselIndex(boost::shared_ptr<Vessel<DIM> > pVessel)
+unsigned VesselNetwork<DIM>::GetVesselIndex(std::shared_ptr<Vessel<DIM> > pVessel)
 {
     unsigned index = 0;
-    typename std::vector<boost::shared_ptr<Vessel<DIM> > >::iterator it;
+    typename std::vector<std::shared_ptr<Vessel<DIM> > >::iterator it;
     for(it = mVessels.begin(); it != mVessels.end(); it++)
     {
         if(*it == pVessel)
@@ -512,11 +511,11 @@ unsigned VesselNetwork<DIM>::GetVesselIndex(boost::shared_ptr<Vessel<DIM> > pVes
 }
 
 template <unsigned DIM>
-unsigned VesselNetwork<DIM>::GetVesselSegmentIndex(boost::shared_ptr<VesselSegment<DIM> > pVesselSegment)
+unsigned VesselNetwork<DIM>::GetVesselSegmentIndex(std::shared_ptr<VesselSegment<DIM> > pVesselSegment)
 {
     unsigned index = 0;
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = GetVesselSegments();
-    typename std::vector<boost::shared_ptr<VesselSegment<DIM> > >::iterator it;
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = GetVesselSegments();
+    typename std::vector<std::shared_ptr<VesselSegment<DIM> > >::iterator it;
     for(it = segments.begin(); it != segments.end(); it++)
     {
         if(*it == pVesselSegment)
@@ -529,7 +528,7 @@ unsigned VesselNetwork<DIM>::GetVesselSegmentIndex(boost::shared_ptr<VesselSegme
 }
 
 template <unsigned DIM>
-std::vector<boost::shared_ptr<VesselSegment<DIM> > > VesselNetwork<DIM>::GetVesselSegments()
+std::vector<std::shared_ptr<VesselSegment<DIM> > > VesselNetwork<DIM>::GetVesselSegments()
 {
     if(!mSegmentsUpToDate)
     {
@@ -539,7 +538,7 @@ std::vector<boost::shared_ptr<VesselSegment<DIM> > > VesselNetwork<DIM>::GetVess
 }
 
 template <unsigned DIM>
-boost::shared_ptr<VesselSegment<DIM> > VesselNetwork<DIM>::GetVesselSegment(unsigned index)
+std::shared_ptr<VesselSegment<DIM> > VesselNetwork<DIM>::GetVesselSegment(unsigned index)
 {
     if(!mSegmentsUpToDate)
     {
@@ -549,9 +548,9 @@ boost::shared_ptr<VesselSegment<DIM> > VesselNetwork<DIM>::GetVesselSegment(unsi
 }
 
 template <unsigned DIM>
-bool VesselNetwork<DIM>::NodeIsInNetwork(boost::shared_ptr<VesselNode<DIM> > pSourceNode)
+bool VesselNetwork<DIM>::NodeIsInNetwork(std::shared_ptr<VesselNode<DIM> > pSourceNode)
 {
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = GetNodes();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = GetNodes();
     return (std::find(nodes.begin(), nodes.end(), pSourceNode) != nodes.end());
 }
 
@@ -562,25 +561,25 @@ void VesselNetwork<DIM>::MergeCoincidentNodes(double tolerance)
 }
 
 template <unsigned DIM>
-void VesselNetwork<DIM>::MergeCoincidentNodes(std::vector<boost::shared_ptr<Vessel<DIM> > > pVessels, double tolerance)
+void VesselNetwork<DIM>::MergeCoincidentNodes(std::vector<std::shared_ptr<Vessel<DIM> > > pVessels, double tolerance)
 {
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes;
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes;
     for(unsigned idx = 0; idx <pVessels.size(); idx++)
     {
-        std::vector<boost::shared_ptr<VesselNode<DIM> > > vessel_nodes = pVessels[idx]->GetNodes();
+        std::vector<std::shared_ptr<VesselNode<DIM> > > vessel_nodes = pVessels[idx]->GetNodes();
         nodes.insert(nodes.end(), vessel_nodes.begin(), vessel_nodes.end());
     }
     MergeCoincidentNodes(nodes, tolerance);
 }
 
 template <unsigned DIM>
-void VesselNetwork<DIM>::MergeCoincidentNodes(std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes, double tolerance)
+void VesselNetwork<DIM>::MergeCoincidentNodes(std::vector<std::shared_ptr<VesselNode<DIM> > > nodes, double tolerance)
 {
     if(nodes.size()==0)
     {
         return;
     }
-    typename std::vector<boost::shared_ptr<VesselSegment<DIM> > >::iterator it3;
+    typename std::vector<std::shared_ptr<VesselSegment<DIM> > >::iterator it3;
     vtkSmartPointer<vtkMergePoints> p_merge = vtkSmartPointer<vtkMergePoints>::New();
     vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
     double bounds[6];
@@ -623,7 +622,7 @@ void VesselNetwork<DIM>::MergeCoincidentNodes(std::vector<boost::shared_ptr<Vess
             }
             // Replace the node corresponding to 'it2' with the one corresponding to 'it'
             // in all segments.
-            std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = nodes[idx]->GetSegments();
+            std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = nodes[idx]->GetSegments();
             for(it3 = segments.begin(); it3 != segments.end(); it3++)
             {
                 if ((*it3)->GetNode(0) == nodes[idx])
@@ -647,16 +646,16 @@ void VesselNetwork<DIM>::Translate(DimensionalChastePoint<DIM> rTranslationVecto
 }
 
 template <unsigned DIM>
-void VesselNetwork<DIM>::Translate(DimensionalChastePoint<DIM> rTranslationVector, std::vector<boost::shared_ptr<Vessel<DIM> > > vessels)
+void VesselNetwork<DIM>::Translate(DimensionalChastePoint<DIM> rTranslationVector, std::vector<std::shared_ptr<Vessel<DIM> > > vessels)
 {
-    std::set<boost::shared_ptr<VesselNode<DIM> > > nodes;
+    std::set<std::shared_ptr<VesselNode<DIM> > > nodes;
     for(unsigned idx = 0; idx <vessels.size(); idx++)
     {
-        std::vector<boost::shared_ptr<VesselNode<DIM> > > vessel_nodes = vessels[idx]->GetNodes();
+        std::vector<std::shared_ptr<VesselNode<DIM> > > vessel_nodes = vessels[idx]->GetNodes();
         std::copy(vessel_nodes.begin(), vessel_nodes.end(), std::inserter(nodes, nodes.begin()));
     }
 
-    typename std::set<boost::shared_ptr<VesselNode<DIM> > >::iterator node_iter;
+    typename std::set<std::shared_ptr<VesselNode<DIM> > >::iterator node_iter;
     for(node_iter = nodes.begin(); node_iter != nodes.end(); node_iter++)
     {
         DimensionalChastePoint<DIM> old_loc = (*node_iter)->rGetLocation();
@@ -667,9 +666,9 @@ void VesselNetwork<DIM>::Translate(DimensionalChastePoint<DIM> rTranslationVecto
 }
 
 template <unsigned DIM>
-void VesselNetwork<DIM>::RemoveVessel(boost::shared_ptr<Vessel<DIM> > pVessel, bool deleteVessel)
+void VesselNetwork<DIM>::RemoveVessel(std::shared_ptr<Vessel<DIM> > pVessel, bool deleteVessel)
 {
-    typename std::vector<boost::shared_ptr<Vessel<DIM> > >::iterator it = std::find(mVessels.begin(), mVessels.end(), pVessel);
+    typename std::vector<std::shared_ptr<Vessel<DIM> > >::iterator it = std::find(mVessels.begin(), mVessels.end(), pVessel);
     if(it != mVessels.end())
     {
         if(deleteVessel)
@@ -704,7 +703,7 @@ template<unsigned DIM>
 void VesselNetwork<DIM>::UpdateNodes()
 {
     mNodes.clear();
-    typename std::vector<boost::shared_ptr<Vessel<DIM> > >::iterator it;
+    typename std::vector<std::shared_ptr<Vessel<DIM> > >::iterator it;
     for(it = mVessels.begin(); it != mVessels.end(); it++)
     {
         for (unsigned idx=0; idx<(*it)->GetNumberOfNodes(); idx++)
@@ -730,10 +729,10 @@ template<unsigned DIM>
 void VesselNetwork<DIM>::UpdateSegments()
 {
     mSegments.clear();
-    typename std::vector<boost::shared_ptr<Vessel<DIM> > >::iterator it;
+    typename std::vector<std::shared_ptr<Vessel<DIM> > >::iterator it;
     for(it = mVessels.begin(); it != mVessels.end(); it++)
     {
-        std::vector<boost::shared_ptr<VesselSegment<DIM> > > vessel_segments = (*it)->GetSegments();
+        std::vector<std::shared_ptr<VesselSegment<DIM> > > vessel_segments = (*it)->GetSegments();
         std::copy(vessel_segments.begin(), vessel_segments.end(), std::back_inserter(mSegments));
     }
     mSegmentsUpToDate = true;
@@ -743,7 +742,7 @@ template<unsigned DIM>
 void VesselNetwork<DIM>::UpdateVesselNodes()
 {
     mVesselNodes.clear();
-    typename std::vector<boost::shared_ptr<Vessel<DIM> > >::iterator it;
+    typename std::vector<std::shared_ptr<Vessel<DIM> > >::iterator it;
     for(it = mVessels.begin(); it != mVessels.end(); it++)
     {
         (*it)->UpdateNodes();
@@ -791,7 +790,7 @@ void VesselNetwork<DIM>::UpdateInternalVtkGeometry()
 template<unsigned DIM>
 void VesselNetwork<DIM>::Write(const std::string& rFileName, bool masterOnly)
 {
-    boost::shared_ptr<VesselNetworkWriter<DIM> > p_writer = VesselNetworkWriter<DIM>::Create();
+    std::shared_ptr<VesselNetworkWriter<DIM> > p_writer = VesselNetworkWriter<DIM>::Create();
     p_writer->SetFileName(rFileName);
     p_writer->SetVesselNetwork(this->shared_from_this());
     p_writer->Write(masterOnly);

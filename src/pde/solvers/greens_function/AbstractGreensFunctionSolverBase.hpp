@@ -69,7 +69,7 @@ protected:
     /**
      * A cuboidal tissue domain
      */
-    boost::shared_ptr<Part<DIM> > mpDomain;
+    std::shared_ptr<Part<DIM> > mpDomain;
 
     /**
      * The positions of point sinks
@@ -109,27 +109,27 @@ protected:
     /**
      * Map between vessel segments and point locations
      */
-    std::map<unsigned, boost::shared_ptr<VesselSegment<DIM> > > mSegmentPointMap;
+    std::map<unsigned, std::shared_ptr<VesselSegment<DIM> > > mSegmentPointMap;
 
     /**
      * Greens function matrix for tissue-tissue case
      */
-    boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length> , 2> > mGtt;
+    std::shared_ptr<boost::multi_array<units::quantity<unit::per_length> , 2> > mGtt;
 
     /**
      * Greens function matrix for vessel-vessel case
      */
-    boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length> , 2> > mGvv;
+    std::shared_ptr<boost::multi_array<units::quantity<unit::per_length> , 2> > mGvv;
 
     /**
      * Greens function matrix for vessel-tissue case
      */
-    boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length> , 2> > mGvt;
+    std::shared_ptr<boost::multi_array<units::quantity<unit::per_length> , 2> > mGvt;
 
     /**
      * Greens function matrix for tissue-vessel case
      */
-    boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length> , 2> > mGtv;
+    std::shared_ptr<boost::multi_array<units::quantity<unit::per_length> , 2> > mGtv;
 
     /**
      * Minimum subsegment length
@@ -162,25 +162,25 @@ public:
      * Update Gvv
      * @return Gvv
      */
-    virtual boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetVesselVesselInteractionMatrix();
+    virtual std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetVesselVesselInteractionMatrix();
 
     /**
      * Update Gtt
      * @return Gtt
      */
-    virtual boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetTissueTissueInteractionMatrix();
+    virtual std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetTissueTissueInteractionMatrix();
 
     /**
      * Update Gtv
      * @return Gtv
      */
-    virtual boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetTissueVesselInteractionMatrix();
+    virtual std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetTissueVesselInteractionMatrix();
 
     /**
      * Update Gvt
      * @return Gvt
      */
-    virtual boost::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetVesselTissueInteractionMatrix();
+    virtual std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetVesselTissueInteractionMatrix();
 
     /**
      * Set the minimum subsegment length

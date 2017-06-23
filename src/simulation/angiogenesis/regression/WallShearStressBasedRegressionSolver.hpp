@@ -75,7 +75,7 @@ public:
      * Factor constructor. Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to a new instance of the class.
      */
-    static boost::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > Create();
+    static std::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > Create();
 
     units::quantity<unit::pressure> GetLowWallShearStressThreshold();
 

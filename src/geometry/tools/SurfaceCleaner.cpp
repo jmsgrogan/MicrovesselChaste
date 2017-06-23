@@ -48,10 +48,10 @@ SurfaceCleaner::SurfaceCleaner()
 
 }
 
-boost::shared_ptr<SurfaceCleaner> SurfaceCleaner::Create()
+std::shared_ptr<SurfaceCleaner> SurfaceCleaner::Create()
 {
     MAKE_PTR(SurfaceCleaner, pSelf);
-    return pSelf;
+
 }
 
 SurfaceCleaner::~SurfaceCleaner()

@@ -53,10 +53,10 @@ SimpleLinearEllipticFiniteElementSolver<DIM>::~SimpleLinearEllipticFiniteElement
 }
 
 template <unsigned DIM>
-boost::shared_ptr<SimpleLinearEllipticFiniteElementSolver<DIM> > SimpleLinearEllipticFiniteElementSolver<DIM>::Create()
+std::shared_ptr<SimpleLinearEllipticFiniteElementSolver<DIM> > SimpleLinearEllipticFiniteElementSolver<DIM>::Create()
 {
-    MAKE_PTR(SimpleLinearEllipticFiniteElementSolver<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<SimpleLinearEllipticFiniteElementSolver<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -65,8 +65,8 @@ void SimpleLinearEllipticFiniteElementSolver<DIM>::Solve()
     AbstractFiniteElementSolverBase<DIM>::Solve();
 
     // Set up the boundary conditions in the Chaste format
-    boost::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> > p_bcc =
-            boost::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> >(new BoundaryConditionsContainer<DIM, DIM, 1> );
+    std::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> > p_bcc =
+            std::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> >(new BoundaryConditionsContainer<DIM, DIM, 1> );
 
     for(unsigned idx=0; idx<this->mBoundaryConditions.size(); idx++)
     {
@@ -75,8 +75,8 @@ void SimpleLinearEllipticFiniteElementSolver<DIM>::Solve()
     }
 
     // Check the type of pde
-    if(boost::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
-            boost::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde))
+    if(std::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
+            std::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde))
     {
         SimpleLinearEllipticSolver<DIM, DIM> static_solver(this->mpMesh.get(), p_linear_pde.get(), p_bcc.get());
         ReplicatableVector solution_repl(static_solver.Solve());

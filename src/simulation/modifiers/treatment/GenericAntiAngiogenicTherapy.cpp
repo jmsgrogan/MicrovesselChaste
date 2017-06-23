@@ -59,13 +59,13 @@ GenericAntiAngiogenicTherapy<DIM>::~GenericAntiAngiogenicTherapy()
 }
 
 template<unsigned DIM>
-void GenericAntiAngiogenicTherapy<DIM>::SetRegressionSolver(boost::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > regressionSolver)
+void GenericAntiAngiogenicTherapy<DIM>::SetRegressionSolver(std::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > regressionSolver)
 {
     mpRegressionSolver = regressionSolver;
 }
 
 template<unsigned DIM>
-void GenericAntiAngiogenicTherapy<DIM>::SetSproutingRule(boost::shared_ptr<AbstractSproutingRule<DIM> > sproutingRule)
+void GenericAntiAngiogenicTherapy<DIM>::SetSproutingRule(std::shared_ptr<AbstractSproutingRule<DIM> > sproutingRule)
 {
     mpSproutingRule = sproutingRule;
 }

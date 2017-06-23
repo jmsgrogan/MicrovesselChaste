@@ -159,7 +159,7 @@ public:
      * @param stateVariables optional initial conditions for state variables (only used in archiving)
      */
     Owen2011OxygenBasedCellCycleOdeSystem(units::quantity<unit::concentration> oxygenConcentration,
-                                             boost::shared_ptr<AbstractCellMutationState> mutation_state,
+            boost::shared_ptr<AbstractCellMutationState> mutation_state,
                                              std::vector<double> stateVariables=std::vector<double>());
 
     /**

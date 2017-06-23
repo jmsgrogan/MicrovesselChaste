@@ -90,7 +90,7 @@ class VesselNetworkActorGenerator : public AbstractActorGenerator<DIM>
     /**
      * The VesselNetwork
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
 
 public:
 
@@ -114,7 +114,7 @@ public:
      * Set the VesselNetwork
      * @param pVesselNetwork the VesselNetwork to render
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
 
 };
 

@@ -61,12 +61,12 @@ protected:
     /**
      * A DiscreteContinuum solver containing a solution field of interest
      */
-    boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > mpSolver;
+    std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > mpSolver;
 
     /**
      * The vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
 
     /**
      * Distinguish between sprouting and migrating events
@@ -76,17 +76,17 @@ protected:
     /**
      * The cell population, only used in certain child classes
      */
-    boost::shared_ptr<AbstractCellPopulation<DIM> > mpCellPopulation;
+    std::shared_ptr<AbstractCellPopulation<DIM> > mpCellPopulation;
 
     /**
      * A regular grid, used in some lattice based simulations
      */
-    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
+    std::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
 
     /**
      * The bounding domain, optional
      */
-    boost::shared_ptr<Part<DIM> > mpBoundingDomain;
+    std::shared_ptr<Part<DIM> > mpBoundingDomain;
 
     /**
      * Use Moore neighbourhood
@@ -109,21 +109,21 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a shared pointer to the class instance
      */
-    static boost::shared_ptr<AbstractMigrationRule<DIM> > Create();
+    static std::shared_ptr<AbstractMigrationRule<DIM> > Create();
 
     /**
      * Get the sprout directions
      * @param rNodes candidate sprout nodes
      * @return the sprout directions
      */
-    virtual std::vector<DimensionalChastePoint<DIM> > GetDirections(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
+    virtual std::vector<DimensionalChastePoint<DIM> > GetDirections(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
 
     /**
      * Get the sprout indices
      * @param rNodes candidate sprout nodes
      * @return the sprout indices
      */
-    virtual std::vector<int> GetIndices(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
+    virtual std::vector<int> GetIndices(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
 
     /**
      * Set whether this is a sprouting event
@@ -135,31 +135,31 @@ public:
      * Set the DiscreteContinuum solver containing the stimulus field
      * @param pSolver the DiscreteContinuum solver containing the stimulus field
      */
-    void SetDiscreteContinuumSolver(boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver);
+    void SetDiscreteContinuumSolver(std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver);
 
     /**
      * Set the vessel network
      * @param pNetwork the vessel network
      */
-    void SetNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Set the bounding domain
      * @param pPart the bounding domain
      */
-    void SetBoundingDomain(boost::shared_ptr<Part<DIM> > pPart);
+    void SetBoundingDomain(std::shared_ptr<Part<DIM> > pPart);
 
     /**
      * Set the lattice/grid for the vessel network
      * @param pGrid the grid for the vessel network
      */
-    void SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGrid);
+    void SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGrid);
 
     /**
      * Set the cell population
      * @param pCellPopulation the cell population
      */
-    void SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation);
+    void SetCellPopulation(std::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation);
 
     /**
      * Set whether to use a Moore or Von Neumann neighbourhood

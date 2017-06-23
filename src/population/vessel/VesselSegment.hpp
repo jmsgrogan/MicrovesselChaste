@@ -36,9 +36,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef VESSELSEGMENT_HPP_
 #define VESSELSEGMENT_HPP_
 
+#include <memory>
 #include <vector>
 #include <string>
-#include <boost/enable_shared_from_this.hpp>
 #include "ChasteSerialization.hpp"
 #include "SegmentFlowProperties.hpp"
 #include "UblasVectorInclude.hpp"
@@ -60,7 +60,7 @@ class VesselNode;
  * instead managed by the VesselNetwork class. Segments must always have two nodes.
  */
 template<unsigned DIM>
-class VesselSegment : public boost::enable_shared_from_this<VesselSegment<DIM> >, public AbstractVesselNetworkComponent<DIM>
+class VesselSegment : public std::enable_shared_from_this<VesselSegment<DIM> >, public AbstractVesselNetworkComponent<DIM>
 {
     /**
      * Allow vessels to manage adding and removing themselves from segments.
@@ -91,17 +91,17 @@ private:
     /**
      * Container for segment nodes
      */
-    std::pair<boost::shared_ptr<VesselNode<DIM> >, boost::shared_ptr<VesselNode<DIM> > > mNodes;
+    std::pair<std::shared_ptr<VesselNode<DIM> >, std::shared_ptr<VesselNode<DIM> > > mNodes;
 
     /**
      * Weak pointer to the vessel owning this segment
      */
-    boost::weak_ptr<Vessel<DIM> > mVessel;
+    std::weak_ptr<Vessel<DIM> > mVessel;
 
     /**
      * A flow property collection for the segment
      */
-    boost::shared_ptr<SegmentFlowProperties<DIM> > mpFlowProperties;
+    std::shared_ptr<SegmentFlowProperties<DIM> > mpFlowProperties;
 
     /**
      * A measure of vessel maturity
@@ -155,7 +155,7 @@ private:
      * @param pNode1 the first node in the segment
      * @param pNode2 the second node in the segment
      */
-    VesselSegment(boost::shared_ptr<VesselNode<DIM> > pNode1, boost::shared_ptr<VesselNode<DIM> > pNode2);
+    VesselSegment(std::shared_ptr<VesselNode<DIM> > pNode1, std::shared_ptr<VesselNode<DIM> > pNode2);
 
 public:
 
@@ -175,8 +175,8 @@ public:
      * @param pNode2 the second node in the segment
      * @return a pointer to the newly created segment
      */
-    static boost::shared_ptr<VesselSegment<DIM> > Create(boost::shared_ptr<VesselNode<DIM> > pNode1,
-                                                           boost::shared_ptr<VesselNode<DIM> > pNode2);
+    static std::shared_ptr<VesselSegment<DIM> > Create(std::shared_ptr<VesselNode<DIM> > pNode1,
+                                                           std::shared_ptr<VesselNode<DIM> > pNode2);
 
     /**
      * Construct a new instance of the class and return a shared pointer to it. Also manage the association of segments to nodes by
@@ -185,7 +185,7 @@ public:
      * @param pSegment the segment to be copied
      * @return a pointer to the newly created segment
      */
-    static boost::shared_ptr<VesselSegment<DIM> > Create(boost::shared_ptr<VesselSegment<DIM> > pSegment);
+    static std::shared_ptr<VesselSegment<DIM> > Create(std::shared_ptr<VesselSegment<DIM> > pSegment);
 
     /*
      * Destructor
@@ -197,7 +197,7 @@ public:
      * copied.
      * @param pTargetSegment the segment from which data is to be copied
      */
-    void CopyDataFromExistingSegment(const boost::shared_ptr<VesselSegment<DIM> > pTargetSegment);
+    void CopyDataFromExistingSegment(const std::shared_ptr<VesselSegment<DIM> > pTargetSegment);
 
     /**
      * Return the segment data.
@@ -220,7 +220,7 @@ public:
      *
      * @return the flow properties of the component
      */
-    boost::shared_ptr<SegmentFlowProperties<DIM> > GetFlowProperties() const;
+    std::shared_ptr<SegmentFlowProperties<DIM> > GetFlowProperties() const;
 
     /**
      * Return the dimensional length
@@ -290,7 +290,7 @@ public:
      * @param index the node index
      * @return a pointer to the node specified by the index
      */
-    boost::shared_ptr<VesselNode<DIM> > GetNode(unsigned index) const;
+    std::shared_ptr<VesselNode<DIM> > GetNode(unsigned index) const;
 
     /**
      * Return a pointer to the node on the other side of the segment
@@ -298,14 +298,14 @@ public:
      * @param pInputNode the node to get the opposite one to
      * @return a pointer to the node on the other side of the segment
      */
-    boost::shared_ptr<VesselNode<DIM> > GetOppositeNode(boost::shared_ptr<VesselNode<DIM> > pInputNode) const;
+    std::shared_ptr<VesselNode<DIM> > GetOppositeNode(std::shared_ptr<VesselNode<DIM> > pInputNode) const;
 
     /**
      * Return the segment nodes as a pair
      *
      * @return the segment nodes as a pair
      */
-    std::pair<boost::shared_ptr<VesselNode<DIM> >, boost::shared_ptr<VesselNode<DIM> > > GetNodes() const;
+    std::pair<std::shared_ptr<VesselNode<DIM> >, std::shared_ptr<VesselNode<DIM> > > GetNodes() const;
 
     /**
      * Return the projection of a point onto the segment. If the projection is outside the segment an
@@ -329,14 +329,14 @@ public:
      *
      * @return the vessel attached to the segment
      */
-    boost::shared_ptr<Vessel<DIM> > GetVessel() const;
+    std::shared_ptr<Vessel<DIM> > GetVessel() const;
 
     /**
      * Return whether the node is in the segment.
      * @param pNode the query node
      * @return whether the node is in the segment
      */
-    bool HasNode(boost::shared_ptr<VesselNode<DIM> > pNode) const;
+    bool HasNode(std::shared_ptr<VesselNode<DIM> > pNode) const;
 
     /**
      * Return whether the segment is connected to another segment.
@@ -344,7 +344,7 @@ public:
      * @param pOtherSegment the segment to check connectivity with
      * @return whether the segment is connected to the input segment
      */
-    bool IsConnectedTo(boost::shared_ptr<VesselSegment<DIM> > pOtherSegment) const;
+    bool IsConnectedTo(std::shared_ptr<VesselSegment<DIM> > pOtherSegment) const;
 
     /**
      * Replace the node at the specified index with the passed in node.
@@ -352,7 +352,7 @@ public:
      * @param oldNodeIndex the index of the node to be replaced
      * @param pNewNode the node to be added to the segment
      */
-    void ReplaceNode(unsigned oldNodeIndex, boost::shared_ptr<VesselNode<DIM> > pNewNode);
+    void ReplaceNode(unsigned oldNodeIndex, std::shared_ptr<VesselNode<DIM> > pNewNode);
 
     /**
      * Remove the segment from its nodes.
@@ -418,18 +418,18 @@ public:
 private:
 
     /**
-     * Return a boost::shared_ptr to this object
+     * Return a std::shared_ptr to this object
      *
      * @return a shared pointer to the segment
      */
-    boost::shared_ptr<VesselSegment<DIM> > Shared();
+    std::shared_ptr<VesselSegment<DIM> > Shared();
 
     /**
      * Add an adjoining Vessel to the segment.
      *
      * @param pVessel a vessel to be added to the segment
      */
-    void AddVessel(boost::shared_ptr<Vessel<DIM> > pVessel);
+    void AddVessel(std::shared_ptr<Vessel<DIM> > pVessel);
 
     /**
      * Remove an adjoining vessel from the segment.

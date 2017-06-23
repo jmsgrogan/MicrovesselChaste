@@ -62,7 +62,7 @@ public:
      * Factory constructor method
      * @return a shared pointer to a new solver
      */
-    static boost::shared_ptr<DistanceMap<DIM> > Create();
+    static std::shared_ptr<DistanceMap<DIM> > Create();
 
     /**
      * Destructor

@@ -56,10 +56,9 @@ NetworkToImage<DIM>::NetworkToImage()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<NetworkToImage<DIM> > NetworkToImage<DIM>::Create()
+std::shared_ptr<NetworkToImage<DIM> > NetworkToImage<DIM>::Create()
 {
-    MAKE_PTR(NetworkToImage<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<NetworkToImage<DIM> >();
 }
 
 template<unsigned DIM>
@@ -82,7 +81,7 @@ vtkSmartPointer<vtkImageData> NetworkToImage<DIM>::GetOutput()
 }
 
 template<unsigned DIM>
-void NetworkToImage<DIM>::SetNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void NetworkToImage<DIM>::SetNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpNetwork = pNetwork;
 }
@@ -122,7 +121,7 @@ void NetworkToImage<DIM>::Update()
     c_vector<double, DIM> range = ublas::element_prod(scalar_vector<double>(DIM, 1.0) + 2.0*mPaddingFactors, (extents.second - extents.first).GetLocation(mGridSpacing));
     c_vector<double, DIM> origin = (extents.first.GetLocation(mGridSpacing) - ublas::element_prod((extents.second - extents.first).GetLocation(mGridSpacing), mPaddingFactors));
 
-    boost::shared_ptr<RegularGrid<DIM> > p_grid = RegularGrid<DIM>::Create();
+    std::shared_ptr<RegularGrid<DIM> > p_grid = RegularGrid<DIM>::Create();
     p_grid->SetSpacing(mGridSpacing);
     c_vector<double, 3> dimensions;
     dimensions[0] = unsigned(range[0])+1;
@@ -138,7 +137,7 @@ void NetworkToImage<DIM>::Update()
     p_grid->SetDimensions(dimensions);
     p_grid->SetOrigin(DimensionalChastePoint<DIM>(origin, mGridSpacing));
 
-    boost::shared_ptr<DistanceMap<DIM> > p_distance_map = DistanceMap<DIM>::Create();
+    std::shared_ptr<DistanceMap<DIM> > p_distance_map = DistanceMap<DIM>::Create();
     p_distance_map->SetVesselNetwork(mpNetwork);
     p_distance_map->SetGrid(p_grid);
     p_distance_map->SetUseSegmentRadii(true);

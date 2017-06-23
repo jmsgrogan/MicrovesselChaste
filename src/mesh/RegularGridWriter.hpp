@@ -81,7 +81,7 @@ public:
      * Factory constructor method
      * @return a shared pointer to a instance of this class
      */
-    static boost::shared_ptr<RegularGridWriter> Create();
+    static std::shared_ptr<RegularGridWriter> Create();
 
     /**
      * Set the filename for the writer

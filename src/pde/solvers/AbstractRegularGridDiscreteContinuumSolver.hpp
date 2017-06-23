@@ -61,7 +61,7 @@ protected:
     /**
      * The regular grid
      */
-    boost::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
+    std::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
 
 public:
 

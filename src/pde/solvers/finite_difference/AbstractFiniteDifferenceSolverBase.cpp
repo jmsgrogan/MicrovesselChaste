@@ -72,7 +72,7 @@ void AbstractFiniteDifferenceSolverBase<DIM>::AddDiscreteTermsToRhs()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > AbstractFiniteDifferenceSolverBase<DIM>::GetRGBoundaryConditions()
+std::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > AbstractFiniteDifferenceSolverBase<DIM>::GetRGBoundaryConditions()
 {
     return mpBoundaryConditions;
 }
@@ -116,7 +116,7 @@ void AbstractFiniteDifferenceSolverBase<DIM>::Setup()
     }
 
     // Set up an discrete sources
-    std::vector<boost::shared_ptr<DiscreteSource<DIM> > > discrete_sources = this->mpPde->GetDiscreteSources();
+    std::vector<std::shared_ptr<DiscreteSource<DIM> > > discrete_sources = this->mpPde->GetDiscreteSources();
     for(unsigned idx=0;idx<discrete_sources.size();idx++)
     {
         discrete_sources[idx]->SetDensityMap(this->mpDensityMap);
@@ -124,7 +124,7 @@ void AbstractFiniteDifferenceSolverBase<DIM>::Setup()
 
     // Set up the boundary conditions. Use a different description from normal DiscreteContinuum BCs for efficiency.
     unsigned num_points = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfPoints();
-    mpBoundaryConditions = boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > (new std::vector<std::pair<bool, units::quantity<unit::concentration> > >(num_points));
+    mpBoundaryConditions = std::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > (new std::vector<std::pair<bool, units::quantity<unit::concentration> > >(num_points));
     for(unsigned idx=0; idx<num_points; idx++)
     {
         (*mpBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(false, 0.0*this->mReferenceConcentration);

@@ -60,7 +60,7 @@ class MicrovesselSolver
     /**
      * The vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpNetwork;
 
     /**
      * The frequency of file based output
@@ -70,27 +70,27 @@ class MicrovesselSolver
     /**
      * Filehandler containing output directory information
      */
-    boost::shared_ptr<OutputFileHandler> mpOutputFileHandler;
+    std::shared_ptr<OutputFileHandler> mpOutputFileHandler;
 
     /**
      * The collection of DiscreteContinuum solvers
      */
-    std::vector<boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > > mDiscreteContinuumSolvers;
+    std::vector<std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > > mDiscreteContinuumSolvers;
 
     /**
      * The structural adaptation solver for the vessel network
      */
-    boost::shared_ptr<StructuralAdaptationSolver<DIM> > mpStructuralAdaptationSolver;
+    std::shared_ptr<StructuralAdaptationSolver<DIM> > mpStructuralAdaptationSolver;
 
     /**
      * The angiogenesis solver for the vessel network
      */
-    boost::shared_ptr<AngiogenesisSolver<DIM> > mpAngiogenesisSolver;
+    std::shared_ptr<AngiogenesisSolver<DIM> > mpAngiogenesisSolver;
 
     /**
      * The regression solver for the vessel network
      */
-    boost::shared_ptr<RegressionSolver<DIM> > mpRegressionSolver;
+    std::shared_ptr<RegressionSolver<DIM> > mpRegressionSolver;
 
     /**
      * Can the solution from one DiscreteContinuumSolver be sent directly to
@@ -106,12 +106,12 @@ class MicrovesselSolver
     /**
      * A collection of modifiers for the solver
      */
-    std::vector<boost::shared_ptr<AbstractMicrovesselModifier<DIM> > > mMicrovesselModifiers;
+    std::vector<std::shared_ptr<AbstractMicrovesselModifier<DIM> > > mMicrovesselModifiers;
 
     /**
      * A cell population
      */
-    boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > mpCellPopulation;
+    std::shared_ptr<AbstractCellPopulation<DIM,DIM> > mpCellPopulation;
 
 
 public:
@@ -130,25 +130,25 @@ public:
      * Factory constructor method
      * @return a shared pointer to a new solver
      */
-    static boost::shared_ptr<MicrovesselSolver> Create();
+    static std::shared_ptr<MicrovesselSolver> Create();
 
     /**
      * Add a DiscreteContinuum solver to the collection
      * @param pDiscreteContinuumSolver a discrete-continuum solver
      */
-    void AddDiscreteContinuumSolver(boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pDiscreteContinuumSolver);
+    void AddDiscreteContinuumSolver(std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pDiscreteContinuumSolver);
 
     /**
      * Add a MicrovesselModifier to the collection
      * @param pMicrovesselModifier a microvessel modifier
      */
-    void AddMicrovesselModifier(boost::shared_ptr<AbstractMicrovesselModifier<DIM> > pMicrovesselModifier);
+    void AddMicrovesselModifier(std::shared_ptr<AbstractMicrovesselModifier<DIM> > pMicrovesselModifier);
 
     /**
      * Return the current DiscreteContinuum solvers
      * @return the DiscreteContinuum solvers
      */
-    std::vector<boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > > GetDiscreteContinuumSolvers();
+    std::vector<std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > > GetDiscreteContinuumSolvers();
 
     /**
      * Increment one step in time
@@ -164,13 +164,13 @@ public:
      * Set the angiogenesis solver for the network
      * @param pAngiogenesisSolver the solver for structural adaptation
      */
-    void SetAngiogenesisSolver(boost::shared_ptr<AngiogenesisSolver<DIM> > pAngiogenesisSolver);
+    void SetAngiogenesisSolver(std::shared_ptr<AngiogenesisSolver<DIM> > pAngiogenesisSolver);
 
     /**
      * Set the output directory for results
      * @param pFileHandler output file handler containing output directory information
      */
-    void SetOutputFileHandler(boost::shared_ptr<OutputFileHandler> pFileHandler);
+    void SetOutputFileHandler(std::shared_ptr<OutputFileHandler> pFileHandler);
 
     /**
      * Set the results output frequency
@@ -188,7 +188,7 @@ public:
      * Set the structural adaptation solver for the network
      * @param pStructuralAdaptationSolver the solver for structural adaptation
      */
-    void SetStructuralAdaptationSolver(boost::shared_ptr<StructuralAdaptationSolver<DIM> > pStructuralAdaptationSolver);
+    void SetStructuralAdaptationSolver(std::shared_ptr<StructuralAdaptationSolver<DIM> > pStructuralAdaptationSolver);
 
     /**
      * This is called by the MicrovesselSimulationModifier to set up the simulation
@@ -217,19 +217,19 @@ public:
      * Set the vessel network
      * @param pNetwork the vessel network
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Set the cell population, only needed for visualization
      * @param pCellPopulation the cell population
      */
-    void SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > pCellPopulation);
+    void SetCellPopulation(std::shared_ptr<AbstractCellPopulation<DIM,DIM> > pCellPopulation);
 
     /**
      * Set the regression solver
      * @param pRegressionSolver the regression solver for the network
      */
-    void SetRegressionSolver(boost::shared_ptr<RegressionSolver<DIM> > pRegressionSolver);
+    void SetRegressionSolver(std::shared_ptr<RegressionSolver<DIM> > pRegressionSolver);
 
     /**
      * Update the cell data with any PDE solutions corresponding to the supplied labels

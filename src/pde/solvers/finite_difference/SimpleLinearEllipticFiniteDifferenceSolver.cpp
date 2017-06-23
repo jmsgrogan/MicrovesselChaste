@@ -56,14 +56,14 @@ SimpleLinearEllipticFiniteDifferenceSolver<DIM>::~SimpleLinearEllipticFiniteDiff
 }
 
 template <unsigned DIM>
-boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<DIM> > SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Create()
+std::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<DIM> > SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Create()
 {
-    MAKE_PTR(SimpleLinearEllipticFiniteDifferenceSolver<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<SimpleLinearEllipticFiniteDifferenceSolver<DIM> >();
+
 }
 
 template<unsigned DIM>
-boost::shared_ptr<LinearSystem> SimpleLinearEllipticFiniteDifferenceSolver<DIM>::GetLinearSystem()
+std::shared_ptr<LinearSystem> SimpleLinearEllipticFiniteDifferenceSolver<DIM>::GetLinearSystem()
 {
     return mpLinearSystem;
 }
@@ -71,8 +71,8 @@ boost::shared_ptr<LinearSystem> SimpleLinearEllipticFiniteDifferenceSolver<DIM>:
 template<unsigned DIM>
 void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToMatrix()
 {
-    boost::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
-                boost::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
+    std::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
+                std::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
     if(!p_linear_pde)
     {
         EXCEPTION("PDE not recognized");
@@ -100,8 +100,8 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToMatrix()
 template<unsigned DIM>
 void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToRhs()
 {
-    boost::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
-                boost::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
+    std::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
+                std::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
     if(!p_linear_pde)
     {
         EXCEPTION("PDE not recognized");
@@ -127,8 +127,8 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToRhs()
 template<unsigned DIM>
 void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
 {
-    boost::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
-                boost::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
+    std::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
+                std::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
 
     if(!p_linear_pde)
     {
@@ -263,8 +263,8 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
 template<unsigned DIM>
 void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleVector()
 {
-    boost::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
-                boost::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
+    std::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
+                std::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
     if(!p_linear_pde)
     {
         EXCEPTION("PDE not recognized");
@@ -297,7 +297,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Setup()
 
     // Set up the linear system
     Vec template_vec = this->mpRegularGrid->GetDistributedVectorFactory()->CreateVec();
-    this->mpLinearSystem = boost::shared_ptr<LinearSystem>(new LinearSystem(template_vec, 7));
+    this->mpLinearSystem = std::shared_ptr<LinearSystem>(new LinearSystem(template_vec, 7));
     PetscTools::Destroy(template_vec);
 
     // Assemble the system
@@ -325,7 +325,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Update()
 
     // Set up the linear system
     Vec template_vec = this->mpRegularGrid->GetDistributedVectorFactory()->CreateVec();
-    this->mpLinearSystem = boost::shared_ptr<LinearSystem>(new LinearSystem(template_vec, 7));
+    this->mpLinearSystem = std::shared_ptr<LinearSystem>(new LinearSystem(template_vec, 7));
     PetscTools::Destroy(template_vec);
 
     // Assemble the system

@@ -65,11 +65,9 @@ RegularGrid<DIM>::RegularGrid() :
 }
 
 template<unsigned DIM>
-boost::shared_ptr<RegularGrid<DIM> > RegularGrid<DIM>::Create()
+std::shared_ptr<RegularGrid<DIM> > RegularGrid<DIM>::Create()
 {
-    typedef RegularGrid<DIM> Reg_Grid_Templated;
-    MAKE_PTR(Reg_Grid_Templated, pSelf);
-    return pSelf;
+    return std::make_shared<RegularGrid<DIM> >();
 }
 
 template<unsigned DIM>
@@ -270,7 +268,7 @@ DimensionalChastePoint<DIM> RegularGrid<DIM>::GetGlobalCellLocation(unsigned ind
 }
 
 template<unsigned DIM>
-boost::shared_ptr<DistributedVectorFactory> RegularGrid<DIM>::GetDistributedVectorFactory()
+std::shared_ptr<DistributedVectorFactory> RegularGrid<DIM>::GetDistributedVectorFactory()
 {
     return mpDistributedVectorFactory;
 }
@@ -328,7 +326,7 @@ const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::rGetMooreNeighbourD
 }
 
 template<unsigned DIM>
-void RegularGrid<DIM>::GenerateFromPart(boost::shared_ptr<Part<DIM> > pPart, units::quantity<unit::length> gridSize)
+void RegularGrid<DIM>::GenerateFromPart(std::shared_ptr<Part<DIM> > pPart, units::quantity<unit::length> gridSize)
 {
     mSpacing = gridSize;
     std::vector<units::quantity<unit::length> > spatial_extents = pPart->GetBoundingBox();
@@ -704,7 +702,7 @@ void RegularGrid<DIM>::UpdateExtents()
 
     // Set up the distributed vector factory and let PETSc decide on splitting
     mpDistributedVectorFactory =
-            boost::shared_ptr<DistributedVectorFactory>(new DistributedVectorFactory(low_index, high_index, num_points));
+            std::shared_ptr<DistributedVectorFactory>(new DistributedVectorFactory(low_index, high_index, num_points));
 
     unsigned lo = mpDistributedVectorFactory->GetLow();
     unsigned hi = mpDistributedVectorFactory->GetHigh();
@@ -766,7 +764,7 @@ void RegularGrid<DIM>::SetUpVtkCellLocator()
 }
 
 template<unsigned DIM>
-void RegularGrid<DIM>::Write(boost::shared_ptr<OutputFileHandler> pFileHandler)
+void RegularGrid<DIM>::Write(std::shared_ptr<OutputFileHandler> pFileHandler)
 {
     // Write the global grid. First everyone adds their point values to the global grid.
     this->GatherAllPointData();

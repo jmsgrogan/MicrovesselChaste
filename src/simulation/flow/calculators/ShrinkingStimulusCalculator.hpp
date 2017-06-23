@@ -68,7 +68,7 @@ public:
      * Factor constructor. Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to a new instance of the class.
      */
-    static boost::shared_ptr<ShrinkingStimulusCalculator<DIM> > Create();
+    static std::shared_ptr<ShrinkingStimulusCalculator<DIM> > Create();
 
     /**
      * Get the default value of the shrinking stimulus

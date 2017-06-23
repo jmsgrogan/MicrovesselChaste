@@ -63,7 +63,7 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return share pointer to the network
      */
-    static boost::shared_ptr<VesselNetworkVtkConverter<DIM> > Create();
+    static std::shared_ptr<VesselNetworkVtkConverter<DIM> > Create();
 
     /**
      * Destructor
@@ -73,12 +73,12 @@ public:
     /**
      * Get the VTK representation local to this processor
      */
-    static vtkSmartPointer<vtkPolyData> GetVtkRepresentation(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    static vtkSmartPointer<vtkPolyData> GetVtkRepresentation(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Get the global VTK representation
      */
-    static vtkSmartPointer<vtkPolyData> GetGlobalVtkRepresentation(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    static vtkSmartPointer<vtkPolyData> GetGlobalVtkRepresentation(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
 };
 

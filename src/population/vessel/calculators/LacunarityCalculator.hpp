@@ -45,7 +45,7 @@ template<unsigned DIM>
 class LacunarityCalculator : public AbstractRegularGridDiscreteContinuumSolver<DIM>
 {
 
-    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpNetwork;
 
 
 public:
@@ -55,9 +55,9 @@ public:
     /* Factory constructor method
      * @return a shared pointer to a new solver
      */
-    static boost::shared_ptr<LacunarityCalculator<DIM> > Create();
+    static std::shared_ptr<LacunarityCalculator<DIM> > Create();
 
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     ~LacunarityCalculator();
 

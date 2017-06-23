@@ -52,10 +52,10 @@ Owen2011MigrationRule<DIM>::Owen2011MigrationRule()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<Owen2011MigrationRule<DIM> > Owen2011MigrationRule<DIM>::Create()
+std::shared_ptr<Owen2011MigrationRule<DIM> > Owen2011MigrationRule<DIM>::Create()
 {
-    MAKE_PTR(Owen2011MigrationRule<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<Owen2011MigrationRule<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -77,7 +77,7 @@ void Owen2011MigrationRule<DIM>::SetCellMotilityParameter(units::quantity<unit::
 }
 
 template<unsigned DIM>
-std::vector<int> Owen2011MigrationRule<DIM>::GetIndices(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<int> Owen2011MigrationRule<DIM>::GetIndices(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     if(!this->mpSolver)
     {
@@ -91,7 +91,7 @@ std::vector<int> Owen2011MigrationRule<DIM>::GetIndices(const std::vector<boost:
 }
 
 template<unsigned DIM>
-std::vector<double> Owen2011MigrationRule<DIM>::GetNeighbourMovementProbabilities(boost::shared_ptr<VesselNode<DIM> > pNode,
+std::vector<double> Owen2011MigrationRule<DIM>::GetNeighbourMovementProbabilities(std::shared_ptr<VesselNode<DIM> > pNode,
                                                        std::vector<unsigned> neighbourIndices, unsigned gridIndex)
 {
     std::vector<double> probability_of_moving(neighbourIndices.size(), 0.0);

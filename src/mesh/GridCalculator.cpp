@@ -61,11 +61,9 @@ GridCalculator<DIM>::GridCalculator() :
 }
 
 template<unsigned DIM>
-boost::shared_ptr<GridCalculator<DIM> > GridCalculator<DIM>::Create()
+std::shared_ptr<GridCalculator<DIM> > GridCalculator<DIM>::Create()
 {
-    typedef GridCalculator<DIM> GridCalculator_Templated;
-    MAKE_PTR(GridCalculator_Templated, pSelf);
-    return pSelf;
+    return std::make_shared<GridCalculator<DIM> >();
 }
 
 template<unsigned DIM>
@@ -81,7 +79,7 @@ bool GridCalculator<DIM>::CellPopulationIsSet()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > GridCalculator<DIM>::GetGrid()
+std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > GridCalculator<DIM>::GetGrid()
 {
     if(!mpGrid)
     {
@@ -91,7 +89,7 @@ boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > GridCalculator<DIM>::GetG
 }
 
 template<unsigned DIM>
-boost::shared_ptr<VesselNetwork<DIM> > GridCalculator<DIM>::GetVesselNetwork()
+std::shared_ptr<VesselNetwork<DIM> > GridCalculator<DIM>::GetVesselNetwork()
 {
     if(!mpNetwork)
     {
@@ -136,7 +134,7 @@ std::vector<std::vector<unsigned> > GridCalculator<DIM>::GetPointMap(const std::
 }
 
 template<unsigned DIM>
-const std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >& GridCalculator<DIM>::rGetVesselNodeMap(bool update)
+const std::vector<std::vector<std::shared_ptr<VesselNode<DIM> > > >& GridCalculator<DIM>::rGetVesselNodeMap(bool update)
 {
     if (!update)
     {
@@ -148,10 +146,10 @@ const std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >& GridCalcu
         EXCEPTION("A vessel network has not been set. Can not create a point node map.");
     }
 
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
     units::quantity<unit::length> grid_length = mpGrid->GetReferenceLengthScale();
     mVesselNodeMap.clear();
-    mVesselNodeMap = std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >(mpGrid->GetNumberOfCells());
+    mVesselNodeMap = std::vector<std::vector<std::shared_ptr<VesselNode<DIM> > > >(mpGrid->GetNumberOfCells());
 
     for(unsigned idx=0;idx<nodes.size();idx++)
     {
@@ -258,7 +256,7 @@ bool GridCalculator<DIM>::IsSegmentAtLocation(unsigned index, bool update)
 }
 
 template<unsigned DIM>
-const std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >& GridCalculator<DIM>::rGetSegmentMap(
+const std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > >& GridCalculator<DIM>::rGetSegmentMap(
         bool update, bool useVesselSurface)
 {
     if (!update)
@@ -274,10 +272,10 @@ const std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >& GridCa
     mpGrid->GetGlobalVtkGrid();
 
     mSegmentMap.clear();
-    mSegmentMap = std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >(mpGrid->GetNumberOfCells());
+    mSegmentMap = std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > >(mpGrid->GetNumberOfCells());
     units::quantity<unit::length> grid_length = mpGrid->GetReferenceLengthScale();
 
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = mpNetwork->GetVesselSegments();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = mpNetwork->GetVesselSegments();
     for (unsigned jdx = 0; jdx < segments.size(); jdx++)
     {
         c_vector<double, DIM> loc1 = segments[jdx]->GetNode(0)->rGetLocation().GetLocation(grid_length);
@@ -361,15 +359,15 @@ void GridCalculator<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPo
 }
 
 template<unsigned DIM>
-void GridCalculator<DIM>::SetGrid(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
+void GridCalculator<DIM>::SetGrid(std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
 {
     mpGrid = pGrid;
-    mHasRegularGrid = bool(boost::dynamic_pointer_cast<RegularGrid<DIM> >(pGrid));
+    mHasRegularGrid = bool(std::dynamic_pointer_cast<RegularGrid<DIM> >(pGrid));
     mHasUnstructuredGrid = !mHasRegularGrid;
 }
 
 template<unsigned DIM>
-void GridCalculator<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void GridCalculator<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpNetwork = pNetwork;
 }

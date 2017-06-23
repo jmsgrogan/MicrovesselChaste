@@ -72,7 +72,7 @@ void RadiusCalculator<DIM>::SetTimestep(units::quantity<unit::time>  dt)
 template<unsigned DIM>
 void RadiusCalculator<DIM>::Calculate()
 {
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
     for (unsigned segment_index = 0; segment_index < segments.size(); segment_index++)
     {
         units::quantity<unit::rate> total_stimulus = segments[segment_index]->GetFlowProperties()->GetGrowthStimulus();

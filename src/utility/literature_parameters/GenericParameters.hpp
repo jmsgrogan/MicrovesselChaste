@@ -48,12 +48,12 @@ struct GenericParameters
     /**
      * Capillary Radius: R
      */
-    static const boost::shared_ptr<ParameterInstance<unit::length> > mpCapillaryRadius;
+    static const std::shared_ptr<ParameterInstance<unit::length> > mpCapillaryRadius;
 
     /**
      * Gas concentration at STP
      */
-    static const boost::shared_ptr<ParameterInstance<unit::concentration> > mpGasConcentrationAtStp;
+    static const std::shared_ptr<ParameterInstance<unit::concentration> > mpGasConcentrationAtStp;
 };
 
 #endif /*GENERICPARAMETERS_HPP_*/

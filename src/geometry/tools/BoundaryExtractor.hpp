@@ -88,7 +88,7 @@ public:
      * Factory constructor method
      * @return a pointer to a class instance
      */
-    static boost::shared_ptr<BoundaryExtractor> Create();
+    static std::shared_ptr<BoundaryExtractor> Create();
 
     /**
      * Get the boundary edges

@@ -124,7 +124,7 @@ public:
      * @param referenceLength the reference length
      * @return a pointer to the point
      */
-    static boost::shared_ptr<DimensionalChastePoint<DIM> > Create(double x, double y, double z, units::quantity<unit::length> referenceLength);
+    static std::shared_ptr<DimensionalChastePoint<DIM> > Create(double x, double y, double z, units::quantity<unit::length> referenceLength);
 
     /**
      * Factory Constructor
@@ -132,7 +132,7 @@ public:
      * @param referenceLength the reference length
      * @return a pointer to the point
      */
-    static boost::shared_ptr<DimensionalChastePoint<DIM> > Create(c_vector<double, DIM> coords, units::quantity<unit::length> referenceLength);
+    static std::shared_ptr<DimensionalChastePoint<DIM> > Create(c_vector<double, DIM> coords, units::quantity<unit::length> referenceLength);
 
     /**
      * Destructor

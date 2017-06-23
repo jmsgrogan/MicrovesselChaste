@@ -57,7 +57,7 @@ AbstractSproutingRule<DIM>::~AbstractSproutingRule()
 }
 
 template<unsigned DIM>
-void AbstractSproutingRule<DIM>::SetDiscreteContinuumSolver(boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver)
+void AbstractSproutingRule<DIM>::SetDiscreteContinuumSolver(std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver)
 {
     mpSolver = pSolver;
 }
@@ -87,19 +87,19 @@ units::quantity<unit::rate> AbstractSproutingRule<DIM>::GetSproutingProbability(
 }
 
 template<unsigned DIM>
-void AbstractSproutingRule<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork)
+void AbstractSproutingRule<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork)
 {
     mpVesselNetwork = pVesselNetwork;
 }
 
 template<unsigned DIM>
-std::vector<boost::shared_ptr<VesselNode<DIM> > > AbstractSproutingRule<DIM>::GetSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<std::shared_ptr<VesselNode<DIM> > > AbstractSproutingRule<DIM>::GetSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
-    return std::vector<boost::shared_ptr<VesselNode<DIM> > >();
+    return std::vector<std::shared_ptr<VesselNode<DIM> > >();
 }
 
 template<unsigned DIM>
-void AbstractSproutingRule<DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGrid)
+void AbstractSproutingRule<DIM>::SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGrid)
 {
 
 }

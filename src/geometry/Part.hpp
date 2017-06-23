@@ -88,7 +88,7 @@ class Part
     /**
      * Planar collections of polygons
      */
-    std::vector<boost::shared_ptr<Facet<DIM> > > mFacets;
+    std::vector<std::shared_ptr<Facet<DIM> > > mFacets;
 
     /**
      * A vtk representation of the part
@@ -141,7 +141,7 @@ public:
      * Factory constructor method
      * @return a shared pointer to a new part
      */
-    static boost::shared_ptr<Part<DIM> > Create();
+    static std::shared_ptr<Part<DIM> > Create();
 
     /**
      * Destructor
@@ -186,7 +186,7 @@ public:
      * @param numSegments the number of linear segments the circle is described with
      * @return polygon corresponding to the circle, useful for further operations, such as extrusion.
      */
-    boost::shared_ptr<Polygon<DIM> > AddCircle(units::quantity<unit::length> radius,
+    std::shared_ptr<Polygon<DIM> > AddCircle(units::quantity<unit::length> radius,
                                          DimensionalChastePoint<DIM> centre, unsigned numSegments = 24);
 
     /**
@@ -232,9 +232,9 @@ public:
      * @param pFacet an optional facet that the circle can be generated on
      * @return the new polygon, useful for further operations, such as extrusion.
      */
-    boost::shared_ptr<Polygon<DIM> > AddPolygon(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices,
+    std::shared_ptr<Polygon<DIM> > AddPolygon(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices,
                                           bool newFacet = false,
-                                          boost::shared_ptr<Facet<DIM> > pFacet = boost::shared_ptr<Facet<DIM> >());
+                                          std::shared_ptr<Facet<DIM> > pFacet = std::shared_ptr<Facet<DIM> >());
 
     /**
      * Add a polygon
@@ -243,9 +243,9 @@ public:
      * @param pFacet an optional facet that the polygon can be generated on
      * @return the new polygon, useful for further operations, such as extrusion.
      */
-    boost::shared_ptr<Polygon<DIM> > AddPolygon(boost::shared_ptr<Polygon<DIM> > pPolygon,
+    std::shared_ptr<Polygon<DIM> > AddPolygon(std::shared_ptr<Polygon<DIM> > pPolygon,
                                           bool newFacet = false,
-                                          boost::shared_ptr<Facet<DIM> > pFacet = boost::shared_ptr<Facet<DIM> >());
+                                          std::shared_ptr<Facet<DIM> > pFacet = std::shared_ptr<Facet<DIM> >());
 
     /**
      * Add a rectangle to the part, oriented by default with out of plane direction along the z-axis.
@@ -254,7 +254,7 @@ public:
      * @param origin the bottom left corner
      * @return the new polygon, useful for further operations, such as extrusion.
      */
-    boost::shared_ptr<Polygon<DIM> > AddRectangle(units::quantity<unit::length> sizeX,
+    std::shared_ptr<Polygon<DIM> > AddRectangle(units::quantity<unit::length> sizeX,
                                             units::quantity<unit::length> sizeY,
                                             DimensionalChastePoint<DIM> origin);
 
@@ -264,7 +264,7 @@ public:
      * @param surface true if a surface representation of the network is required
      * @param removeVesselRegion remove vessel region from meshes
      */
-    void AddVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork,
+    void AddVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork,
             bool surface = false, bool removeVesselRegion = true);
 
     /**
@@ -272,20 +272,20 @@ public:
      * adds them to new facets on the existing part.
      * @param pPart the part to be appended
      */
-    void AppendPart(boost::shared_ptr<Part<DIM> > pPart);
+    void AppendPart(std::shared_ptr<Part<DIM> > pPart);
 
     /**
      * Remove vessels outside the part
      * @param pVesselNetwork the vessel network to be pruned
      */
-    void BooleanWithNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
+    void BooleanWithNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
 
     /**
      * Extrude the part along the z-axis, inserting planar faces in place of edges.
      * @param pPolygon the polygon to extrude
      * @param distance the extrusion distance
      */
-    void Extrude(boost::shared_ptr<Polygon<DIM> > pPolygon, units::quantity<unit::length> distance);
+    void Extrude(std::shared_ptr<Polygon<DIM> > pPolygon, units::quantity<unit::length> distance);
 
     /**
      * Return the bounding box
@@ -332,20 +332,20 @@ public:
      * Return the facets
      * @return the facets
      */
-    std::vector<boost::shared_ptr<Facet<DIM> > > GetFacets();
+    std::vector<std::shared_ptr<Facet<DIM> > > GetFacets();
 
     /**
      * Return the FIRST facet found on the point. Strict method, returns exception if there is no facet at the point.
      * @param rLocation the probe point
      * @return the FIRST found facet on the point.
      */
-    boost::shared_ptr<Facet<DIM> > GetFacet(const DimensionalChastePoint<DIM>& rLocation);
+    std::shared_ptr<Facet<DIM> > GetFacet(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Return the polygons
      * @return the polygons
      */
-    std::vector<boost::shared_ptr<Polygon<DIM> > > GetPolygons();
+    std::vector<std::shared_ptr<Polygon<DIM> > > GetPolygons();
 
     /**
      * Return the reference length scale
@@ -363,7 +363,7 @@ public:
      * Return the unique vertices
      * @return the unique vertices
      */
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > GetVertices();
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > GetVertices();
 
     /**
      * Return the vertex locations

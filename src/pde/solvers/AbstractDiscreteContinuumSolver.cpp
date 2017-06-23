@@ -70,7 +70,7 @@ AbstractDiscreteContinuumSolver<DIM>::~AbstractDiscreteContinuumSolver()
 }
 
 template<unsigned DIM>
-void AbstractDiscreteContinuumSolver<DIM>::AddBoundaryCondition(boost::shared_ptr<DiscreteContinuumBoundaryCondition<DIM> > pBoundaryCondition)
+void AbstractDiscreteContinuumSolver<DIM>::AddBoundaryCondition(std::shared_ptr<DiscreteContinuumBoundaryCondition<DIM> > pBoundaryCondition)
 {
     mBoundaryConditions.push_back(pBoundaryCondition);
 }
@@ -88,13 +88,13 @@ const std::string& AbstractDiscreteContinuumSolver<DIM>::GetLabel()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<DensityMap<DIM> > AbstractDiscreteContinuumSolver<DIM>::GetDensityMap()
+std::shared_ptr<DensityMap<DIM> > AbstractDiscreteContinuumSolver<DIM>::GetDensityMap()
 {
     return mpDensityMap;
 }
 
 template<unsigned DIM>
-boost::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > AbstractDiscreteContinuumSolver<DIM>::GetPde()
+std::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > AbstractDiscreteContinuumSolver<DIM>::GetPde()
 {
     if(!mpPde)
     {
@@ -140,7 +140,7 @@ std::vector<units::quantity<unit::concentration> > AbstractDiscreteContinuumSolv
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration> > AbstractDiscreteContinuumSolver<DIM>::GetConcentrations(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
+std::vector<units::quantity<unit::concentration> > AbstractDiscreteContinuumSolver<DIM>::GetConcentrations(std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
 {
     return this->GetConcentrations(pGrid->GetPoints());
 }
@@ -243,7 +243,7 @@ std::vector<double> AbstractDiscreteContinuumSolver<DIM>::GetSolutionP(vtkPoints
 }
 
 template<unsigned DIM>
-std::vector<double> AbstractDiscreteContinuumSolver<DIM>::GetSolution(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
+std::vector<double> AbstractDiscreteContinuumSolver<DIM>::GetSolution(std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
 {
     return this->GetSolution(pGrid->GetPoints());
 }
@@ -267,7 +267,7 @@ vtkSmartPointer<vtkDataSet> AbstractDiscreteContinuumSolver<DIM>::GetVtkSolution
 }
 
 template<unsigned DIM>
-void AbstractDiscreteContinuumSolver<DIM>::SetFileHandler(boost::shared_ptr<OutputFileHandler> pOutputFileHandler)
+void AbstractDiscreteContinuumSolver<DIM>::SetFileHandler(std::shared_ptr<OutputFileHandler> pOutputFileHandler)
 {
     mpOutputFileHandler = pOutputFileHandler;
 }
@@ -285,19 +285,19 @@ void AbstractDiscreteContinuumSolver<DIM>::SetLabel(const std::string& rLabel)
 }
 
 template<unsigned DIM>
-void AbstractDiscreteContinuumSolver<DIM>::SetGrid(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
+void AbstractDiscreteContinuumSolver<DIM>::SetGrid(std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
 {
     mpDensityMap->SetGrid(pGrid);
 }
 
 template<unsigned DIM>
-void AbstractDiscreteContinuumSolver<DIM>::SetDensityMap(boost::shared_ptr<DensityMap<DIM> > pDensityMap)
+void AbstractDiscreteContinuumSolver<DIM>::SetDensityMap(std::shared_ptr<DensityMap<DIM> > pDensityMap)
 {
     mpDensityMap = pDensityMap;
 }
 
 template<unsigned DIM>
-void AbstractDiscreteContinuumSolver<DIM>::SetPde(boost::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > pPde)
+void AbstractDiscreteContinuumSolver<DIM>::SetPde(std::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > pPde)
 {
     mpPde = pPde;
 }
@@ -317,7 +317,7 @@ void AbstractDiscreteContinuumSolver<DIM>::SetCellPopulation(AbstractCellPopulat
 }
 
 template<unsigned DIM>
-void AbstractDiscreteContinuumSolver<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void AbstractDiscreteContinuumSolver<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpDensityMap->SetVesselNetwork(pNetwork);
 }

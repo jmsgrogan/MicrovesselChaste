@@ -67,10 +67,9 @@ DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::DiscreteContinuumMeshGen
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-boost::shared_ptr<DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM> > DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Create()
+std::shared_ptr<DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM> > DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Create()
 {
-    MAKE_PTR(DiscreteContinuumMeshGenerator<ELEMENT_DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<DiscreteContinuumMeshGenerator<ELEMENT_DIM> >();
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -80,7 +79,7 @@ DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::~DiscreteContinuumMeshGe
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::GetMesh()
+std::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::GetMesh()
 {
     if(!mpMesh)
     {
@@ -90,7 +89,7 @@ boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > DiscreteContin
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::SetDomain(boost::shared_ptr<Part<SPACE_DIM> > pDomain)
+void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::SetDomain(std::shared_ptr<Part<SPACE_DIM> > pDomain)
 {
     mpDomain = pDomain;
 }
@@ -129,7 +128,7 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Update()
 {
     // Create a mesh
-    mpMesh = boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> >(new DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>());
+    mpMesh = std::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> >(new DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>());
 
     // For 2D parts use triangle
     if (ELEMENT_DIM == 2)
@@ -393,7 +392,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
         unsigned num_regions = region_locations.size();
         unsigned num_holes = hole_locations.size();
 
-        std::vector<boost::shared_ptr<Facet<SPACE_DIM> > > facets = mpDomain->GetFacets();
+        std::vector<std::shared_ptr<Facet<SPACE_DIM> > > facets = mpDomain->GetFacets();
         unsigned num_facets = facets.size();
 
         class tetgen::tetgenio mesher_input, mesher_output;
@@ -447,7 +446,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
         for (unsigned idx = 0; idx < num_facets; idx++)
         {
             // Use the first polygon to get the marker
-            std::vector<boost::shared_ptr<Polygon<SPACE_DIM> > > polygons = facets[idx]->GetPolygons();
+            std::vector<std::shared_ptr<Polygon<SPACE_DIM> > > polygons = facets[idx]->GetPolygons();
             mesher_input.facetmarkerlist[idx] = 0;
             if(polygons.size()>0)
             {
@@ -610,7 +609,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
         OutputFileHandler output_handler("", false);
         std::string output_dir = output_handler.GetOutputDirectoryFullPath();
         TrianglesMeshReader<ELEMENT_DIM,SPACE_DIM> mesh_reader(output_dir+"temp_mesh");
-        mpMesh = boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> >(new DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>);
+        mpMesh = std::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> >(new DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>);
         mpMesh->ConstructFromMeshReader(mesh_reader);
     }
 }

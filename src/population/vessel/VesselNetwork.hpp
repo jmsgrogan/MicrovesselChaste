@@ -57,7 +57,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * which case only a portion of the network is stored. Vessel Nodes are divided geometrically amongst processors.
  */
 template<unsigned DIM>
-class VesselNetwork : public boost::enable_shared_from_this<VesselNetwork<DIM> >, public AbstractVesselNetworkComponent<DIM>
+class VesselNetwork : public std::enable_shared_from_this<VesselNetwork<DIM> >, public AbstractVesselNetworkComponent<DIM>
 {
 
 private:
@@ -79,12 +79,12 @@ private:
     /**
      * Container for Vessels in the VesselNetwork.
      */
-    std::vector<boost::shared_ptr<Vessel<DIM> > > mVessels;
+    std::vector<std::shared_ptr<Vessel<DIM> > > mVessels;
 
     /**
      * Container for Halo vessel segments in the VesselNetwork.
      */
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > mSegments;
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > mSegments;
 
     /**
      * Is the data in mSegments up to date.
@@ -94,7 +94,7 @@ private:
     /**
      * Container for nodes in the VesselNetwork.
      */
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > mNodes;
+    std::vector<std::shared_ptr<VesselNode<DIM> > > mNodes;
 
     /**
      * Is the data in mNodes up to date.
@@ -104,7 +104,7 @@ private:
     /**
      * Container for vessel nodes in the VesselNetwork.
      */
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > mVesselNodes;
+    std::vector<std::shared_ptr<VesselNode<DIM> > > mVesselNodes;
 
     /**
      * Is the data in mVesselNodes up to date.
@@ -133,7 +133,7 @@ private:
     /**
      * Used for solving systems on vessel nodes
      */
-    boost::shared_ptr<DistributedVectorFactory> mDistributedVectorFactory;
+    std::shared_ptr<DistributedVectorFactory> mDistributedVectorFactory;
 
 public:
 
@@ -146,7 +146,7 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return share pointer to the network
      */
-    static boost::shared_ptr<VesselNetwork<DIM> > Create();
+    static std::shared_ptr<VesselNetwork<DIM> > Create();
 
     /**
      * Destructor
@@ -157,13 +157,13 @@ public:
      * Adds a vessel to the VesselNetwork.
      * @param pVessel the vessel
      */
-    void AddVessel(boost::shared_ptr<Vessel<DIM> > pVessel);
+    void AddVessel(std::shared_ptr<Vessel<DIM> > pVessel);
 
     /**
      * Adds a collection of vessels to the VesselNetwork
      * @param vessels the vessels
      */
-    void AddVessels(std::vector<boost::shared_ptr<Vessel<DIM> > > vessels);
+    void AddVessels(std::vector<std::shared_ptr<Vessel<DIM> > > vessels);
 
     /**
      * Remove all vessels from the network, used for parallel partitioning
@@ -174,14 +174,14 @@ public:
      * Make a copy of all vessels, but with new nodes and segments in each copy. Return the new vessels.
      * @return the new vessels
      */
-    std::vector<boost::shared_ptr<Vessel<DIM> > > CopyVessels();
+    std::vector<std::shared_ptr<Vessel<DIM> > > CopyVessels();
 
     /**
      * Make a copy of the selected vessels, but with new nodes and segments in each copy. Return the new vessels.
      * @param vessels the vessels to be copied
      * @return the new vessels
      */
-    std::vector<boost::shared_ptr<Vessel<DIM> > > CopyVessels(std::vector<boost::shared_ptr<Vessel<DIM> > > vessels);
+    std::vector<std::shared_ptr<Vessel<DIM> > > CopyVessels(std::vector<std::shared_ptr<Vessel<DIM> > > vessels);
 
     /**
      * Divides a vessel into two at the specified location.
@@ -189,7 +189,7 @@ public:
      * @param rLocation the division location
      * @return the node at the division location
      */
-    virtual boost::shared_ptr<VesselNode<DIM> > DivideVessel(boost::shared_ptr<Vessel<DIM> > pVessel,
+    virtual std::shared_ptr<VesselNode<DIM> > DivideVessel(std::shared_ptr<Vessel<DIM> > pVessel,
                                                      const DimensionalChastePoint<DIM>& rLocation);
 
     /**
@@ -198,8 +198,8 @@ public:
      * @param pEndNode the node that the new segment will start on, should already be on the end of the vessel
      * @param pNewNode the new node to be added to the end of the vessel
      */
-    virtual void ExtendVessel(boost::shared_ptr<Vessel<DIM> > pVessel, boost::shared_ptr<VesselNode<DIM> > pEndNode,
-                      boost::shared_ptr<VesselNode<DIM> > pNewNode);
+    virtual void ExtendVessel(std::shared_ptr<Vessel<DIM> > pVessel, std::shared_ptr<VesselNode<DIM> > pEndNode,
+                      std::shared_ptr<VesselNode<DIM> > pNewNode);
 
     /**
      * Forms a sprout at the specified locations.
@@ -207,7 +207,7 @@ public:
      * @param sproutTipLocation the sprout tip
      * @return the new sprout
      */
-    virtual boost::shared_ptr<Vessel<DIM> > FormSprout(boost::shared_ptr<VesselNode<DIM> > pSproutBase,
+    virtual std::shared_ptr<Vessel<DIM> > FormSprout(std::shared_ptr<VesselNode<DIM> > pSproutBase,
                                                const DimensionalChastePoint<DIM>& sproutTipLocation);
 
     /**
@@ -215,11 +215,11 @@ public:
      * @param pNode the probe node
      * @return index of the node
      */
-    unsigned GetNodeIndex(boost::shared_ptr<VesselNode<DIM> > pNode);
+    unsigned GetNodeIndex(std::shared_ptr<VesselNode<DIM> > pNode);
 
-    void SetDistributedVectorFactory(boost::shared_ptr<DistributedVectorFactory>  vectorFactory);
+    void SetDistributedVectorFactory(std::shared_ptr<DistributedVectorFactory>  vectorFactory);
 
-    boost::shared_ptr<DistributedVectorFactory> GetDistributedVectorFactory();
+    std::shared_ptr<DistributedVectorFactory> GetDistributedVectorFactory();
 
     /**
      * Return the indexed node in the network
@@ -227,13 +227,13 @@ public:
      * @param index the node index
      * @return the node
      */
-    boost::shared_ptr<VesselNode<DIM> > GetNode(unsigned index);
+    std::shared_ptr<VesselNode<DIM> > GetNode(unsigned index);
 
     /**
      * Return the nodes in the network
      * @return all the network nodes
      */
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > GetNodes();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > GetNodes();
 
     /**
      * Return the VTK representation of the network
@@ -287,49 +287,49 @@ public:
      * Return the only the nodes at the ends of vessels in the network
      * @return the nodes at the ends of vessels in the network
      */
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > GetVesselEndNodes();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > GetVesselEndNodes();
 
     /**
      * Return the Index of the specified vessel
      * @param pVessel the query vessel
      * @return the Index of the specified vessel
      */
-    unsigned GetVesselIndex(boost::shared_ptr<Vessel<DIM> > pVessel);
+    unsigned GetVesselIndex(std::shared_ptr<Vessel<DIM> > pVessel);
 
     /**
      * Return the Index of the specified vessel segment
      * @param pVesselSegment the query segment
      * @return the Index of the specified vessel segment
      */
-    unsigned GetVesselSegmentIndex(boost::shared_ptr<VesselSegment<DIM> > pVesselSegment);
+    unsigned GetVesselSegmentIndex(std::shared_ptr<VesselSegment<DIM> > pVesselSegment);
 
     /**
      * Return the vessel segments in the network
      * @return the vessel segments in the network
      */
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > GetVesselSegments();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > GetVesselSegments();
 
-    boost::shared_ptr<VesselSegment<DIM> > GetVesselSegment(unsigned index);
+    std::shared_ptr<VesselSegment<DIM> > GetVesselSegment(unsigned index);
 
     /**
      * Return the indexed vessel
      * @param index the query index
      * @return the indexed vessel
      */
-    boost::shared_ptr<Vessel<DIM> > GetVessel(unsigned index);
+    std::shared_ptr<Vessel<DIM> > GetVessel(unsigned index);
 
     /**
      * Return the vessels in the network
      * @return the vessels in the network
      */
-    std::vector<boost::shared_ptr<Vessel<DIM> > > GetVessels();
+    std::vector<std::shared_ptr<Vessel<DIM> > > GetVessels();
 
     /**
      * Return whether node is in network.
      * @param pSourceNode the node
      * @return is the node in the network
      */
-    bool NodeIsInNetwork(boost::shared_ptr<VesselNode<DIM> > pSourceNode);
+    bool NodeIsInNetwork(std::shared_ptr<VesselNode<DIM> > pSourceNode);
 
     /**
      * Merge short vessels in the network
@@ -350,7 +350,7 @@ public:
      * @param pVessels the vessels for merging
      * @param tolerance how close together are nodes for them to be coincident
      */
-    void MergeCoincidentNodes(std::vector<boost::shared_ptr<Vessel<DIM> > > pVessels, double tolerance = 0.0);
+    void MergeCoincidentNodes(std::vector<std::shared_ptr<Vessel<DIM> > > pVessels, double tolerance = 0.0);
 
     /**
      * Merge nodes with the same spatial location. Useful for
@@ -358,7 +358,7 @@ public:
      * @param nodes the nodes to merge
      * @param tolerance how close together are nodes for them to be coincident
      */
-    void MergeCoincidentNodes(std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes, double tolerance = 0.0);
+    void MergeCoincidentNodes(std::vector<std::shared_ptr<VesselNode<DIM> > > nodes, double tolerance = 0.0);
 
     /**
      * Convenience method to signify when node, segment and vessel storage have gone out of date.
@@ -370,7 +370,7 @@ public:
      * @param pVessel the vessel to remove
      * @param deleteVessel also remove the vessel from its child segments and nodes if true.
      */
-    void RemoveVessel(boost::shared_ptr<Vessel<DIM> > pVessel, bool deleteVessel = false);
+    void RemoveVessel(std::shared_ptr<Vessel<DIM> > pVessel, bool deleteVessel = false);
 
     /**
      * Remove short vessels from the network
@@ -390,7 +390,7 @@ public:
      * @param rTranslationVector the translation vector
      * @param vessels the vessels to translate
      */
-    void Translate(DimensionalChastePoint<DIM> rTranslationVector, std::vector<boost::shared_ptr<Vessel<DIM> > > vessels);
+    void Translate(DimensionalChastePoint<DIM> rTranslationVector, std::vector<std::shared_ptr<Vessel<DIM> > > vessels);
 
     /**
      * Update the network node collection

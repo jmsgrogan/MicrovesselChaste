@@ -75,7 +75,7 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a new reader
      */
-    static boost::shared_ptr<CsvVesselNetworkReader<DIM> > Create();
+    static std::shared_ptr<CsvVesselNetworkReader<DIM> > Create();
 
     /**
      * Set the input file name
@@ -87,7 +87,7 @@ public:
      * Do the read and return the vessel network
      * @return the vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > Read();
+    std::shared_ptr<VesselNetwork<DIM> > Read();
 
 };
 

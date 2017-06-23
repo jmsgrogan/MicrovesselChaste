@@ -194,7 +194,7 @@ vtkSmartPointer<vtkCellData> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DI
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 vtkSmartPointer<vtkDataSet> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::CalculateDistanceMap(
-        boost::shared_ptr<Part<SPACE_DIM> > pSamplePart)
+        std::shared_ptr<Part<SPACE_DIM> > pSamplePart)
 {
     if (!this->mVtkRepresentationUpToDate)
     {

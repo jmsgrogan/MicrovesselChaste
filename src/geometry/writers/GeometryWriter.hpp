@@ -90,7 +90,7 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a shared pointer to the class
      */
-    static boost::shared_ptr<GeometryWriter> Create();
+    static std::shared_ptr<GeometryWriter> Create();
 
     /**
      * Destructor

@@ -55,10 +55,10 @@ WallShearStressBasedRegressionSolver<DIM>::~WallShearStressBasedRegressionSolver
 }
 
 template<unsigned DIM>
-boost::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > WallShearStressBasedRegressionSolver<DIM>::Create()
+std::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > WallShearStressBasedRegressionSolver<DIM>::Create()
 {
-    MAKE_PTR(WallShearStressBasedRegressionSolver<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<WallShearStressBasedRegressionSolver<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -93,7 +93,7 @@ void WallShearStressBasedRegressionSolver<DIM>::Increment()
         EXCEPTION("The regression solver needs an initial vessel network");
     }
 
-    std::vector<boost::shared_ptr<Vessel<DIM> > > vessels = this->mpNetwork->GetVessels();
+    std::vector<std::shared_ptr<Vessel<DIM> > > vessels = this->mpNetwork->GetVessels();
     for(unsigned idx=0;idx<vessels.size(); idx++)
     {
         // if wall shear stress of vessel is below threshold then start regression timer, unless it has already been started

@@ -77,10 +77,10 @@ NetworkToSurface<DIM>::NetworkToSurface() :
 }
 
 template<unsigned DIM>
-boost::shared_ptr<NetworkToSurface<DIM> > NetworkToSurface<DIM>::Create()
+std::shared_ptr<NetworkToSurface<DIM> > NetworkToSurface<DIM>::Create()
 {
-    MAKE_PTR(NetworkToSurface<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<NetworkToSurface<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -90,7 +90,7 @@ NetworkToSurface<DIM>::~NetworkToSurface()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<NetworkToImage<DIM> > NetworkToSurface<DIM>::GetNetworkToImageTool()
+std::shared_ptr<NetworkToImage<DIM> > NetworkToSurface<DIM>::GetNetworkToImageTool()
 {
     return mpNetworkToImage;
 }
@@ -102,7 +102,7 @@ vtkSmartPointer<vtkPolyData> NetworkToSurface<DIM>::GetSurface()
 }
 
 template<unsigned DIM>
-void NetworkToSurface<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void NetworkToSurface<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpNetwork = pNetwork;
 }
@@ -176,7 +176,7 @@ void NetworkToSurface<DIM>::Update()
         vtkSmartPointer<vtkPolyData> p_cleaned = p_triangle->GetOutput();
 
         // Want flat ends on input and output network nodes. It is important to do this after smoothing
-        std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
+        std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
         c_vector<double, 3> box_axis = unit_vector<double>(3,0);
 
         for(unsigned idx=0; idx< nodes.size(); idx++)
@@ -293,7 +293,7 @@ void NetworkToSurface<DIM>::Update()
         }
 
         // Open any ends marked as inlet or outlet nodes
-        std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
+        std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
         c_vector<double, 3> box_axis = unit_vector<double>(3,0);
         for(unsigned idx=0; idx< nodes.size(); idx++)
         {

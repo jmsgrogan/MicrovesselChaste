@@ -66,10 +66,10 @@ SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::~SimpleNonLinearEllipticFini
 }
 
 template <unsigned DIM>
-boost::shared_ptr<SimpleNonLinearEllipticFiniteDifferenceSolver<DIM> > SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::Create()
+std::shared_ptr<SimpleNonLinearEllipticFiniteDifferenceSolver<DIM> > SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::Create()
 {
-    MAKE_PTR(SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<SimpleNonLinearEllipticFiniteDifferenceSolver<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -128,8 +128,8 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     units::quantity<unit::length> spacing = this->mpRegularGrid->GetSpacing();
 
-    boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > p_nonlinear_pde =
-                boost::dynamic_pointer_cast<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> >(this->GetPde());
+    std::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > p_nonlinear_pde =
+                std::dynamic_pointer_cast<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> >(this->GetPde());
     if(!p_nonlinear_pde)
     {
         EXCEPTION("Could not correctly cast PDE");
@@ -261,8 +261,8 @@ void SimpleNonLinearEllipticFiniteDifferenceSolver<DIM>::AssembleVector()
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     units::quantity<unit::length> spacing = this->mpRegularGrid->GetSpacing();
 
-    boost::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > p_nonlinear_pde =
-                boost::dynamic_pointer_cast<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> >(this->mpPde);
+    std::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> > p_nonlinear_pde =
+                std::dynamic_pointer_cast<AbstractDiscreteContinuumNonLinearEllipticPde<DIM, DIM> >(this->mpPde);
     if(!p_nonlinear_pde)
     {
         EXCEPTION("Could not correctly cast PDE");

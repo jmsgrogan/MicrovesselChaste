@@ -96,13 +96,13 @@ public:
      * @param seeds User provided seed locations for the vessel locations, used with CUSTOM distribution type
      * @return a shared pointer to the vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > GenerateParrallelNetwork(boost::shared_ptr<Part<DIM> > domain,
+    std::shared_ptr<VesselNetwork<DIM> > GenerateParrallelNetwork(std::shared_ptr<Part<DIM> > domain,
                                                                         units::quantity<unit::per_area> targetDensity,
                                                                         VesselDistribution::Value distrbutionType,
                                                                         units::quantity<unit::length> exclusionDistance = 0.0*unit::metres,
                                                                         bool useBbox = false,
-                                                                        std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > seeds =
-                                                                                std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > >());
+                                                                        std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > seeds =
+                                                                                std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > >());
     /**
      * Creates a hexagonal network corresponding to that of Alarcon et al. (2006)
      * @param width the widht
@@ -110,7 +110,7 @@ public:
      * @param vesselLength the vessel length
      * @return a shared pointer to the vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > GenerateHexagonalNetwork(units::quantity<unit::length> width,
+    std::shared_ptr<VesselNetwork<DIM> > GenerateHexagonalNetwork(units::quantity<unit::length> width,
                                                                     units::quantity<unit::length> height,
                                                                     units::quantity<unit::length> vesselLength,
                                                                     bool fillDomain=false);
@@ -119,7 +119,7 @@ public:
      * @param vesselLength the vessel length
      * @return a shared pointer to the vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > GenerateHexagonalUnit(units::quantity<unit::length> vesselLength);
+    std::shared_ptr<VesselNetwork<DIM> > GenerateHexagonalUnit(units::quantity<unit::length> vesselLength);
 
     /**
      * Creates a bifurcation repeating unit
@@ -127,7 +127,7 @@ public:
      * @param startPosition the start position of the unit
      * @return a shared pointer to the vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > GenerateBifurcationUnit(units::quantity<unit::length> vesselLength,
+    std::shared_ptr<VesselNetwork<DIM> > GenerateBifurcationUnit(units::quantity<unit::length> vesselLength,
                                                                    DimensionalChastePoint<DIM> startPosition);
 
     /**
@@ -138,7 +138,7 @@ public:
      * @param axis the alignment axis
      * @return a shared pointer to the vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > GenerateSingleVessel(units::quantity<unit::length> vesselLength,
+    std::shared_ptr<VesselNetwork<DIM> > GenerateSingleVessel(units::quantity<unit::length> vesselLength,
                                                                 DimensionalChastePoint<DIM> startPosition,
                                                                     unsigned divisions = 0, unsigned axis = 2);
 
@@ -150,7 +150,7 @@ public:
      * @param a_param a length parameter
      * @return a shared pointer to the vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > GenerateOvalNetwork(units::quantity<unit::length> scaleFactor,
+    std::shared_ptr<VesselNetwork<DIM> > GenerateOvalNetwork(units::quantity<unit::length> scaleFactor,
                                                                      unsigned num_increments = 40,
                                                                      double a_param = 0.5,
                                                                      double b_param = 1.0);
@@ -159,14 +159,14 @@ public:
      * @param pPart the input part
      * @return a shared pointer to the vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > GenerateFromPart(boost::shared_ptr<Part<DIM> > pPart);
+    std::shared_ptr<VesselNetwork<DIM> > GenerateFromPart(std::shared_ptr<Part<DIM> > pPart);
 
     /**
      * Pattern Unit. Coincident nodes are automatically merged in this method.
      * @param pInputUnit the input unit
      * @param numberOfUnits the number of units in each direction
      */
-    void PatternUnitByTranslation(boost::shared_ptr<VesselNetwork<DIM> > pInputUnit, std::vector<unsigned> numberOfUnits);
+    void PatternUnitByTranslation(std::shared_ptr<VesselNetwork<DIM> > pInputUnit, std::vector<unsigned> numberOfUnits);
 
     /**
      * Map the network onto a sphere
@@ -176,7 +176,7 @@ public:
      * @param azimuthExtent the azimuth extents
      * @param polarExtent the polar extents
      */
-    void MapToSphere(boost::shared_ptr<VesselNetwork<DIM> > pInputUnit,
+    void MapToSphere(std::shared_ptr<VesselNetwork<DIM> > pInputUnit,
                      units::quantity<unit::length> radius,
                      units::quantity<unit::length> thickess,
                      double azimuthExtent,

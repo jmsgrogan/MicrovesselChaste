@@ -63,7 +63,7 @@ private:
     /**
      * The vessel segments to average or sum quantities over. The Vessel class must keep this up-to-date.
      */
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > mSegments;
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > mSegments;
 
     /**
      * Whether a vessel is currently undergoing regression. A vessel can be saved from this fate.
@@ -233,7 +233,7 @@ public:
      * Update the vessel segments
      * @param segments the vessel segments
      */
-    void UpdateSegments(std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments);
+    void UpdateSegments(std::vector<std::shared_ptr<VesselSegment<DIM> > > segments);
 
 };
 

@@ -57,7 +57,7 @@ class VesselSurfaceGenerator
     /**
      * The vessel network for which the surface will be generated.
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
 
     /**
      * A VTK representation of the surface.
@@ -75,7 +75,7 @@ public:
      * Constructor
      * @param pVesselNetwork the vessel network to generate the surface on
      */
-    VesselSurfaceGenerator(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
+    VesselSurfaceGenerator(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
 
     /**
      * Destructor
@@ -86,13 +86,13 @@ public:
      * Return the surface in the form of a vector of PLC polygons for each segment
      * @return a vector of PLC polygons for each segment
      */
-    std::vector<std::vector<boost::shared_ptr<Polygon<DIM> > > > GetSurface();
+    std::vector<std::vector<std::shared_ptr<Polygon<DIM> > > > GetSurface();
 
     /**
      * Return the surface in the form of a vector of PLC polygons
      * @return a vector of PLC polygons
      */
-    std::vector<boost::shared_ptr<Polygon<DIM> > > GetSurfacePolygons();
+    std::vector<std::shared_ptr<Polygon<DIM> > > GetSurfacePolygons();
 
     /**
      * Return the locations of PLC holes in the network. Holes are points that are situated on the

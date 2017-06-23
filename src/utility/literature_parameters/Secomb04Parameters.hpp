@@ -48,7 +48,7 @@ struct Secomb04Parameters
     /**
      * Oxygen solubility: \alpha_{eff}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::volumetric_solubility> > mpOxygenVolumetricSolubility;
+    static const std::shared_ptr<ParameterInstance<unit::volumetric_solubility> > mpOxygenVolumetricSolubility;
 
 };
 

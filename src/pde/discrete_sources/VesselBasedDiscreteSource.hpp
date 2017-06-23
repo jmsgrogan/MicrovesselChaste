@@ -98,7 +98,7 @@ public:
      * Factory constructor method
      * @return a pointer to an instance of the class
      */
-    static boost::shared_ptr<VesselBasedDiscreteSource<DIM> > Create();
+    static std::shared_ptr<VesselBasedDiscreteSource<DIM> > Create();
 
     /**
      * Return the values of the source strengths sampled on the regular grid

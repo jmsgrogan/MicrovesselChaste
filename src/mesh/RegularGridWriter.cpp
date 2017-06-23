@@ -52,10 +52,9 @@ RegularGridWriter::RegularGridWriter()
 
 }
 
-boost::shared_ptr<RegularGridWriter> RegularGridWriter::Create()
+std::shared_ptr<RegularGridWriter> RegularGridWriter::Create()
 {
-    MAKE_PTR(RegularGridWriter, pSelf);
-    return pSelf;
+    return std::make_shared<RegularGridWriter>();
 }
 
 RegularGridWriter::~RegularGridWriter()

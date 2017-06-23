@@ -81,7 +81,7 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to a new instance of the class
      */
-    static boost::shared_ptr<CellPopulationMigrationRule<DIM> > Create();
+    static std::shared_ptr<CellPopulationMigrationRule<DIM> > Create();
 
     /**
      * Calculate the grid index that each migrating node will move into. Set to -1 if the
@@ -89,7 +89,7 @@ public:
      * @param rNodes nodes to calculate indices
      * @return a vector of grid indices to move nodes into
      */
-    virtual std::vector<int> GetIndices(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
+    virtual std::vector<int> GetIndices(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
 
     /**
      * Method to set volume fraction for particular type of cell.
@@ -115,7 +115,7 @@ protected:
      * @param gridIndex the current grid index
      * @return a vector of movement probabilities corresponding to each neighbour index
      */
-    virtual std::vector<double> GetNeighbourMovementProbabilities(boost::shared_ptr<VesselNode<DIM> > pNode,
+    virtual std::vector<double> GetNeighbourMovementProbabilities(std::shared_ptr<VesselNode<DIM> > pNode,
                                                            std::vector<unsigned> neighbourIndices, unsigned gridIndex);
 
 };

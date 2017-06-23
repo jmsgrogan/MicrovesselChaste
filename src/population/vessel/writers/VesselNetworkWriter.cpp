@@ -67,14 +67,14 @@ VesselNetworkWriter<DIM>::~VesselNetworkWriter()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<VesselNetworkWriter<DIM> > VesselNetworkWriter<DIM>::Create()
+std::shared_ptr<VesselNetworkWriter<DIM> > VesselNetworkWriter<DIM>::Create()
 {
-    MAKE_PTR(VesselNetworkWriter<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<VesselNetworkWriter<DIM> >();
+
 }
 
 template <unsigned DIM>
-void VesselNetworkWriter<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void VesselNetworkWriter<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpVesselNetwork = pNetwork;
     mIsVtkNetworkUpToDate = false;
@@ -104,7 +104,7 @@ vtkSmartPointer<vtkPolyData> VesselNetworkWriter<DIM>::GetOutput()
     if(mpVesselNetwork->GetNumberOfVessels()>0)
     {
         // Set up the vessel data arrays.
-    	std::vector<boost::shared_ptr<Vessel<DIM> > > vessels = mpVesselNetwork->GetVessels();
+    	std::vector<std::shared_ptr<Vessel<DIM> > > vessels = mpVesselNetwork->GetVessels();
         std::vector<vtkSmartPointer<vtkDoubleArray> > pVesselInfoVector;
         std::map<std::string, double>::iterator vessel_map_iterator;
         std::map<std::string, double> vessel_data_map = vessels[0]->GetOutputData();
@@ -118,7 +118,7 @@ vtkSmartPointer<vtkPolyData> VesselNetworkWriter<DIM>::GetOutput()
         }
 
         // Set up node data arrays
-        std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpVesselNetwork->GetNodes();
+        std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = mpVesselNetwork->GetNodes();
         std::vector<vtkSmartPointer<vtkDoubleArray> > pNodeInfoVector;
         std::map<std::string, double>::iterator vtk_node_map_iterator;
         std::map<std::string, double> vtk_node_map = vessels[0]->GetStartNode()->GetOutputData();
@@ -163,11 +163,11 @@ vtkSmartPointer<vtkPolyData> VesselNetworkWriter<DIM>::GetOutput()
         }
 
         // Create the vessels
-        typename std::vector<boost::shared_ptr<Vessel<DIM> > >::iterator it;
+        typename std::vector<std::shared_ptr<Vessel<DIM> > >::iterator it;
         for(it = vessels.begin(); it < vessels.end(); it++)
         {
             vtkSmartPointer<vtkLine> pLine = vtkSmartPointer<vtkLine>::New();
-            std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = (*it)->GetSegments();
+            std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = (*it)->GetSegments();
             for(unsigned i = 0; i < segments.size(); i++)
             {
                 pLine->GetPointIds()->InsertId(i, segments[i]->GetNode(0)->GetId());

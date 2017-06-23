@@ -51,16 +51,16 @@ WallShearStressCalculator<DIM>::~WallShearStressCalculator()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<WallShearStressCalculator<DIM> > WallShearStressCalculator<DIM>::Create()
+std::shared_ptr<WallShearStressCalculator<DIM> > WallShearStressCalculator<DIM>::Create()
 {
-    MAKE_PTR(WallShearStressCalculator<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<WallShearStressCalculator<DIM> >();
+
 }
 
 template<unsigned DIM>
 void WallShearStressCalculator<DIM>::Calculate()
 {
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
     for (unsigned segment_index = 0; segment_index < segments.size(); segment_index++)
     {
         units::quantity<unit::flow_rate> flow_rate =

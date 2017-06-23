@@ -51,7 +51,7 @@ class SimpleLinearEllipticFiniteDifferenceSolver : public AbstractFiniteDifferen
     /**
      * The system to be solved.
      */
-    boost::shared_ptr<LinearSystem> mpLinearSystem;
+    std::shared_ptr<LinearSystem> mpLinearSystem;
 
     /**
      * The initial matrix without discrete terms
@@ -79,7 +79,7 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a shared pointer to a class instance.
      */
-    static boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<DIM> > Create();
+    static std::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<DIM> > Create();
 
     /**
      * Over-ridden method to add discrete terms
@@ -104,7 +104,7 @@ public:
     /**
      * @return the linear system
      */
-    virtual boost::shared_ptr<LinearSystem> GetLinearSystem();
+    virtual std::shared_ptr<LinearSystem> GetLinearSystem();
 
     /**
      * Overridden setup method

@@ -260,24 +260,24 @@ class CornealMicropocketSimulation
      */
     unsigned mRandomSeed;
 
-    boost::shared_ptr<Part<DIM> > mpDomain;
+    std::shared_ptr<Part<DIM> > mpDomain;
 
     std::vector<DimensionalChastePoint<DIM> > mHoles;
 
     std::string mWorkDirectory;
 
-    boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > mpGrid;
+    std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > mpGrid;
 
-    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpNetwork;
 
-    boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > mpSolver;
+    std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > mpSolver;
 
     std::vector<vtkSmartPointer<vtkPoints> > mSampleLines;
 
     unsigned mNumSampleY;
     unsigned mNumSampleZ;
 
-    boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > mpSamplingGrid;
+    std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > mpSamplingGrid;
 
     bool mOnlyPerfusedSprout;
 
@@ -303,7 +303,7 @@ public:
      * Factory constructor method
      * @return a shared pointer to a new solver
      */
-    static boost::shared_ptr<CornealMicropocketSimulation> Create();
+    static std::shared_ptr<CornealMicropocketSimulation> Create();
 
     void SetTipVelocity(units::quantity<unit::velocity> velocity);
 
@@ -312,16 +312,16 @@ public:
     void SetSampleFrequency(unsigned freq);
 
     void DoSampling(std::ofstream& rStream,
-            boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver,
+            std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver,
             double time,
             double multfact=1.0,
             bool sampleOnce=false);
 
-    boost::shared_ptr<Part<DIM> > SetUpDomain();
+    std::shared_ptr<Part<DIM> > SetUpDomain();
 
-    boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > SetUpGrid(bool mSampling=false);
+    std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > SetUpGrid(bool mSampling=false);
 
-    boost::shared_ptr<VesselNetwork<DIM> > SetUpVesselNetwork();
+    std::shared_ptr<VesselNetwork<DIM> > SetUpVesselNetwork();
 
     void SetUpSolver();
 

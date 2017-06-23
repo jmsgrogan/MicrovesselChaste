@@ -77,12 +77,12 @@ class ImageToMesh
     /**
      *  The mesh
      */
-    boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > mMesh;
+    std::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > mMesh;
 
     /**
      * Tissue domain (optional)
      */
-    boost::shared_ptr<Part<DIM> > mpDomain;
+    std::shared_ptr<Part<DIM> > mpDomain;
 
 public:
 
@@ -100,13 +100,13 @@ public:
      * Factory constructor method
      * @return a pointer to the converter
      */
-    static boost::shared_ptr<ImageToMesh<DIM> > Create();
+    static std::shared_ptr<ImageToMesh<DIM> > Create();
 
     /**
      * Get the mesh
      * @return the finite element mesh
      */
-    boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > GetMesh();
+    std::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > GetMesh();
 
     /**
      * Set the element size
@@ -142,7 +142,7 @@ public:
      * Add a tissue domain to the mesh
      * @param pTissueDomain a tissue domain for meshing
      */
-    void SetTissueDomain(boost::shared_ptr<Part<DIM> > pTissueDomain);
+    void SetTissueDomain(std::shared_ptr<Part<DIM> > pTissueDomain);
 
     /**
      * Do the meshing

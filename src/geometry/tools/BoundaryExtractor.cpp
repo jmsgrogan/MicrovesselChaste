@@ -55,10 +55,10 @@ BoundaryExtractor::BoundaryExtractor()
 
 }
 
-boost::shared_ptr<BoundaryExtractor> BoundaryExtractor::Create()
+std::shared_ptr<BoundaryExtractor> BoundaryExtractor::Create()
 {
     MAKE_PTR(BoundaryExtractor, pSelf);
-    return pSelf;
+
 }
 
 BoundaryExtractor::~BoundaryExtractor()

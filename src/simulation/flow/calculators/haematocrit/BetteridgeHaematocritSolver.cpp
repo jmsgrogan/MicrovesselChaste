@@ -61,10 +61,9 @@ BetteridgeHaematocritSolver<DIM>::~BetteridgeHaematocritSolver()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<BetteridgeHaematocritSolver<DIM> > BetteridgeHaematocritSolver<DIM>::Create()
+std::shared_ptr<BetteridgeHaematocritSolver<DIM> > BetteridgeHaematocritSolver<DIM>::Create()
 {
-    MAKE_PTR(BetteridgeHaematocritSolver<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<BetteridgeHaematocritSolver<DIM> >();
 }
 
 template <unsigned DIM>
@@ -113,7 +112,7 @@ template<unsigned DIM>
 void BetteridgeHaematocritSolver<DIM>::Calculate()
 {
     // Give the vessels unique Ids
-    std::vector<boost::shared_ptr<Vessel<DIM> > > vessels = this->mpNetwork->GetVessels();
+    std::vector<std::shared_ptr<Vessel<DIM> > > vessels = this->mpNetwork->GetVessels();
     std::vector<double> random_assignment;
     if(mUseRandomSplitting)
     {
@@ -163,7 +162,7 @@ void BetteridgeHaematocritSolver<DIM>::Calculate()
         else
         {
             // Identify inflow node
-            boost::shared_ptr<VesselNode<DIM> > p_inflow_node;
+            std::shared_ptr<VesselNode<DIM> > p_inflow_node;
             units::quantity<unit::flow_rate> flow_rate= vessels[idx]->GetFlowProperties()->GetFlowRate();
             if(flow_rate >0 * unit::metre_cubed_per_second)
             {
@@ -177,8 +176,8 @@ void BetteridgeHaematocritSolver<DIM>::Calculate()
             // Identify number of inflow and outflow vessels
             if(p_inflow_node->GetNumberOfSegments()>1)
             {
-                std::vector<boost::shared_ptr<Vessel<DIM> > > parent_vessels;
-                std::vector<boost::shared_ptr<Vessel<DIM> > > competitor_vessels;
+                std::vector<std::shared_ptr<Vessel<DIM> > > parent_vessels;
+                std::vector<std::shared_ptr<Vessel<DIM> > > competitor_vessels;
                 for(unsigned jdx=0; jdx<p_inflow_node->GetSegments().size(); jdx++)
                 {
                     // if not this vessel

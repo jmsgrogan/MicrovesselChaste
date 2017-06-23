@@ -53,10 +53,9 @@ ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::~ParabolicDiffusionReacti
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-boost::shared_ptr<ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM> > ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::Create()
+std::shared_ptr<ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM> > ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::Create()
 {
-    MAKE_PTR(ParabolicDiffusionReactionPde<ELEMENT_DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<ParabolicDiffusionReactionPde<ELEMENT_DIM> >();
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

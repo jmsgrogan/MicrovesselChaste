@@ -61,10 +61,10 @@ VesselBasedDiscreteSource<DIM>::~VesselBasedDiscreteSource()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<VesselBasedDiscreteSource<DIM> > VesselBasedDiscreteSource<DIM>::Create()
+std::shared_ptr<VesselBasedDiscreteSource<DIM> > VesselBasedDiscreteSource<DIM>::Create()
 {
-    MAKE_PTR(VesselBasedDiscreteSource<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<VesselBasedDiscreteSource<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -81,7 +81,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
 
 
     std::vector<double> vessel_densities = this->mpDensityMap->rGetPerfusedVesselSurfaceAreaDensity(true);
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpDensityMap->GetGridCalculator()->rGetSegmentMap();
+    std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpDensityMap->GetGridCalculator()->rGetSegmentMap();
     for(unsigned idx=0;idx<vessel_densities.size();idx++)
     {
         double haematocrit_ratio = 0.0;

@@ -77,10 +77,10 @@ SimpleParabolicFiniteDifferenceSolver<DIM>::~SimpleParabolicFiniteDifferenceSolv
 }
 
 template <unsigned DIM>
-boost::shared_ptr<SimpleParabolicFiniteDifferenceSolver<DIM> > SimpleParabolicFiniteDifferenceSolver<DIM>::Create()
+std::shared_ptr<SimpleParabolicFiniteDifferenceSolver<DIM> > SimpleParabolicFiniteDifferenceSolver<DIM>::Create()
 {
-    MAKE_PTR(SimpleParabolicFiniteDifferenceSolver<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<SimpleParabolicFiniteDifferenceSolver<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -196,8 +196,8 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleMatrix()
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     units::quantity<unit::length> spacing = this->mpRegularGrid->GetSpacing();
 
-    boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM> > p_parabolic_pde =
-                boost::dynamic_pointer_cast<AbstractDiscreteContinuumParabolicPde<DIM> >(this->GetPde());
+    std::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM> > p_parabolic_pde =
+                std::dynamic_pointer_cast<AbstractDiscreteContinuumParabolicPde<DIM> >(this->GetPde());
 
     double diffusion_term = (p_parabolic_pde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
     PetscMatTools::Zero(this->mMatrixToAssemble);
@@ -300,8 +300,8 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::AssembleVector()
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     units::quantity<unit::length> spacing = this->mpRegularGrid->GetSpacing();
 
-    boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > p_parabolic_pde =
-                boost::dynamic_pointer_cast<AbstractDiscreteContinuumParabolicPde<DIM, DIM> >(this->GetPde());
+    std::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > p_parabolic_pde =
+                std::dynamic_pointer_cast<AbstractDiscreteContinuumParabolicPde<DIM, DIM> >(this->GetPde());
     double diffusion_term = (p_parabolic_pde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
 
     // compute function value, given current guess

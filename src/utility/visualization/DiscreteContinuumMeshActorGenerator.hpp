@@ -55,7 +55,7 @@ class DiscreteContinuumMeshActorGenerator : public AbstractActorGenerator<DIM>
     /**
      * The DiscreteContinuumMesh
      */
-    boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > mpDiscreteContinuumMesh;
+    std::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > mpDiscreteContinuumMesh;
 
 public:
 
@@ -79,7 +79,7 @@ public:
      * Set the DiscreteContinuumMesh
      * @param pDiscreteContinuumMesh the DiscreteContinuumMesh to render
      */
-    void SetDiscreteContinuumMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > pDiscreteContinuumMesh);
+    void SetDiscreteContinuumMesh(std::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > pDiscreteContinuumMesh);
 };
 
 #endif /* DISCRETECONTINUUMMESHACTORGENERATOR_HPP_*/

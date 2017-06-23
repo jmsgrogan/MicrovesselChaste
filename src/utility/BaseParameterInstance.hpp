@@ -36,9 +36,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef BASEPARAMETERINSTANCE_HPP_
 #define BASEPARAMETERINSTANCE_HPP_
 
+#include <memory>
 #include <ostream>
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include "ChasteSerialization.hpp"
 #include "SmartPointers.hpp"
 #include "UnitCollection.hpp"
@@ -49,7 +48,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * hard-coded metadata. The main purpose of this class is to allow storage of many derived classes in the same map in
  * a ParameterCollection.
  */
-class BaseParameterInstance : public boost::enable_shared_from_this<BaseParameterInstance>
+class BaseParameterInstance : public std::enable_shared_from_this<BaseParameterInstance>
 {
     /**
      * Archiving
@@ -122,7 +121,7 @@ public:
      * Factory constructor method
      * @return a shared pointer to a new instance
      */
-    static boost::shared_ptr<BaseParameterInstance> Create();
+    static std::shared_ptr<BaseParameterInstance> Create();
 
     /**
      * Return the parameter name
@@ -190,7 +189,7 @@ public:
      * @param rParameter the class instance
      * @return the output stream
      */
-    friend std::ostream& operator<< (std::ostream& stream, const boost::shared_ptr<BaseParameterInstance>& rParameter);
+    friend std::ostream& operator<< (std::ostream& stream, const std::shared_ptr<BaseParameterInstance>& rParameter);
 
 };
 

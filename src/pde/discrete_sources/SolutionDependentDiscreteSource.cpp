@@ -52,10 +52,10 @@ SolutionDependentDiscreteSource<DIM>::~SolutionDependentDiscreteSource()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<SolutionDependentDiscreteSource<DIM> > SolutionDependentDiscreteSource<DIM>::Create()
+std::shared_ptr<SolutionDependentDiscreteSource<DIM> > SolutionDependentDiscreteSource<DIM>::Create()
 {
-    MAKE_PTR(SolutionDependentDiscreteSource<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<SolutionDependentDiscreteSource<DIM> >();
+
 }
 
 template<unsigned DIM>

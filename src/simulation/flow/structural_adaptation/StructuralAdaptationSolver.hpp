@@ -56,22 +56,22 @@ private:
     /**
      * A solver to calculate flow rates and pressures in the network
      */
-    boost::shared_ptr<FlowSolver<DIM> > mpFlowSolver;
+    std::shared_ptr<FlowSolver<DIM> > mpFlowSolver;
 
     /**
      * A calculator to determine radius changes
      */
-    boost::shared_ptr<RadiusCalculator<DIM> > mpRadiusCalculator;
+    std::shared_ptr<RadiusCalculator<DIM> > mpRadiusCalculator;
 
     /**
      * Calculators to be run before the flow solve
      */
-    std::vector<boost::shared_ptr<AbstractVesselNetworkCalculator<DIM> > > mPreFlowSolveCalculators;
+    std::vector<std::shared_ptr<AbstractVesselNetworkCalculator<DIM> > > mPreFlowSolveCalculators;
 
     /**
      * Calculators to be run after the flow solve
      */
-    std::vector<boost::shared_ptr<AbstractVesselNetworkCalculator<DIM> > > mPostFlowSolveCalculators;
+    std::vector<std::shared_ptr<AbstractVesselNetworkCalculator<DIM> > > mPostFlowSolveCalculators;
 
 
 public:
@@ -90,13 +90,13 @@ public:
      * Factor constructor. Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to a new instance of the class.
      */
-    static boost::shared_ptr<StructuralAdaptationSolver<DIM> > Create();
+    static std::shared_ptr<StructuralAdaptationSolver<DIM> > Create();
 
     /**
      * Get the flow calculator
      * @return the flow solver.
      */
-    boost::shared_ptr<FlowSolver<DIM> > GetFlowSolver();
+    std::shared_ptr<FlowSolver<DIM> > GetFlowSolver();
 
     /**
      * Perform a single iteration to update the radius and calculators
@@ -107,25 +107,25 @@ public:
      * Add a vessel network calculator to be run before the flow solve
      * @param pCalculator a vessel network calculator
      */
-    void AddPreFlowSolveCalculator(boost::shared_ptr<AbstractVesselNetworkCalculator<DIM> > pCalculator);
+    void AddPreFlowSolveCalculator(std::shared_ptr<AbstractVesselNetworkCalculator<DIM> > pCalculator);
 
     /**
      * Add a vessel network calculator to be run before the flow solve
      * @param pCalculator a vessel network calculator
      */
-    void AddPostFlowSolveCalculator(boost::shared_ptr<AbstractVesselNetworkCalculator<DIM> > pCalculator);
+    void AddPostFlowSolveCalculator(std::shared_ptr<AbstractVesselNetworkCalculator<DIM> > pCalculator);
 
     /**
      * Set the flow calculator
      * @param pSolver the flow solver.
      */
-    void SetFlowSolver(boost::shared_ptr<FlowSolver<DIM> > pSolver);
+    void SetFlowSolver(std::shared_ptr<FlowSolver<DIM> > pSolver);
 
     /**
      * Set the radius calculator
      * @param pCalculator the radius calculator.
      */
-    void SetRadiusCalculator(boost::shared_ptr<RadiusCalculator<DIM> > pCalculator);
+    void SetRadiusCalculator(std::shared_ptr<RadiusCalculator<DIM> > pCalculator);
 
     /**
      * To be called if the vessel network changes between solves

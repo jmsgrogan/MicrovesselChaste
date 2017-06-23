@@ -120,7 +120,7 @@ public:
      * Factory Constructor
      * @return a pointer to an instance of the pde
      */
-    static boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM> > Create();
+    static std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM> > Create();
 
     /**
      * @return computed source term.

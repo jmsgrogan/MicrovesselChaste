@@ -52,7 +52,7 @@ private:
     /**
      * Container for the VesselNetwork.
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
 
 public:
 
@@ -65,7 +65,7 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to the class instance
      */
-    static boost::shared_ptr<VesselNetworkGraphCalculator<DIM> > Create();
+    static std::shared_ptr<VesselNetworkGraphCalculator<DIM> > Create();
 
     /**
      * Destructor
@@ -76,7 +76,7 @@ public:
      * Set the vessel network
      * @param pVesselNetwork the vessel network
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
 
     /**
      * Return the indices of each node attached to a node
@@ -96,7 +96,7 @@ public:
      * @param pQueryNode the query node
      * @return whether a node is connected to a source node.
      */
-    bool IsConnected(boost::shared_ptr<VesselNode<DIM> > pSourceNode, boost::shared_ptr<VesselNode<DIM> > pQueryNode);
+    bool IsConnected(std::shared_ptr<VesselNode<DIM> > pSourceNode, std::shared_ptr<VesselNode<DIM> > pQueryNode);
 
     /**
      * Return whether a vector of nodes is connected to a vector of source nodes.
@@ -104,8 +104,8 @@ public:
      * @param queryNodes the query nodes
      * @return whether a node is connected to a source node.
      */
-    std::vector<bool> IsConnected(std::vector<boost::shared_ptr<VesselNode<DIM> > > sourceNodes,
-                                  std::vector<boost::shared_ptr<VesselNode<DIM> > > queryNodes);
+    std::vector<bool> IsConnected(std::vector<std::shared_ptr<VesselNode<DIM> > > sourceNodes,
+                                  std::vector<std::shared_ptr<VesselNode<DIM> > > queryNodes);
 
     /**
      * Outputs connectivity of vessels to file in graphviz format (.gv).

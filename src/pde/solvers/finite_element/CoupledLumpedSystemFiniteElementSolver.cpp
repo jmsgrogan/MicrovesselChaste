@@ -63,10 +63,9 @@ CoupledLumpedSystemFiniteElementSolver<DIM>::~CoupledLumpedSystemFiniteElementSo
 }
 
 template <unsigned DIM>
-boost::shared_ptr<CoupledLumpedSystemFiniteElementSolver<DIM> > CoupledLumpedSystemFiniteElementSolver<DIM>::Create()
+std::shared_ptr<CoupledLumpedSystemFiniteElementSolver<DIM> > CoupledLumpedSystemFiniteElementSolver<DIM>::Create()
 {
-    MAKE_PTR(CoupledLumpedSystemFiniteElementSolver<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<CoupledLumpedSystemFiniteElementSolver<DIM> >();
 }
 
 template <unsigned DIM>
@@ -127,8 +126,8 @@ void CoupledLumpedSystemFiniteElementSolver<DIM>::Solve()
     this->IsSetupForSolve = true;
 
     // Set up the boundary conditions in the Chaste format
-    boost::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> > p_bcc =
-            boost::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> >(new BoundaryConditionsContainer<DIM, DIM, 1> );
+    std::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> > p_bcc =
+            std::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> >(new BoundaryConditionsContainer<DIM, DIM, 1> );
 
     for(unsigned idx=0; idx<this->mBoundaryConditions.size(); idx++)
     {
@@ -137,8 +136,8 @@ void CoupledLumpedSystemFiniteElementSolver<DIM>::Solve()
     }
 
     // Check the type of pde
-    if(boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM, DIM> > p_parabolic_pde =
-            boost::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM, DIM> >(this->mpPde))
+    if(std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM, DIM> > p_parabolic_pde =
+            std::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM, DIM> >(this->mpPde))
     {
         Vec initial_guess;
         if (this->mSolution.size()==0)

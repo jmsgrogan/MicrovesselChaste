@@ -61,7 +61,7 @@ class AngiogenesisSolver
     /**
      * The vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpNetwork;
 
     /**
      * The radius in which anastamosis is allowed in angiogenesis simulations
@@ -71,32 +71,32 @@ class AngiogenesisSolver
     /**
      * The migration rule for tip cells
      */
-    boost::shared_ptr<AbstractMigrationRule<DIM> > mpMigrationRule;
+    std::shared_ptr<AbstractMigrationRule<DIM> > mpMigrationRule;
 
     /**
      * The sprouting rule for angiogenesis
      */
-    boost::shared_ptr<AbstractSproutingRule<DIM> > mpSproutingRule;
+    std::shared_ptr<AbstractSproutingRule<DIM> > mpSproutingRule;
 
     /**
      * The bounding domain for the vessel network
      */
-    boost::shared_ptr<Part<DIM> > mpBoundingDomain;
+    std::shared_ptr<Part<DIM> > mpBoundingDomain;
 
     /**
      * File handler containing output directory information
      */
-    boost::shared_ptr<OutputFileHandler> mpFileHandler;
+    std::shared_ptr<OutputFileHandler> mpFileHandler;
 
     /**
      * The grid calculator for lattice based angiogenesis simulations
      */
-    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
+    std::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
 
     /**
      * The cell population for discrete cell angiogenesis models
      */
-    boost::shared_ptr<AbstractCellPopulation<DIM> > mpCellPopulation;
+    std::shared_ptr<AbstractCellPopulation<DIM> > mpCellPopulation;
 
     /**
      * The reference length scale for the cellpopulation.
@@ -106,12 +106,12 @@ class AngiogenesisSolver
     /**
      * Tip cell collection for discrete cell angiogenesis models
      */
-    std::vector<boost::shared_ptr<Cell> > mTipCells;
+    std::vector<std::shared_ptr<Cell> > mTipCells;
 
     /**
      * Cell node map for discrete cell angiogenesis models
      */
-    std::map<boost::shared_ptr<Cell> , boost::shared_ptr<VesselNode<DIM> > > mCellNodeMap;
+    std::map<std::shared_ptr<Cell> , std::shared_ptr<VesselNode<DIM> > > mCellNodeMap;
 
     /**
      * Whether to do anastamosis
@@ -134,7 +134,7 @@ public:
      * Factory constructor method
      * @return a shared pointer to a new solver
      */
-    static boost::shared_ptr<AngiogenesisSolver<DIM> > Create();
+    static std::shared_ptr<AngiogenesisSolver<DIM> > Create();
 
     /**
      * Increment the solver one step in time
@@ -165,44 +165,44 @@ public:
      * A domain which vessels a not permitted to leave
      * @param pDomain the domain which vessels a not permitted to leave
      */
-    void SetBoundingDomain(boost::shared_ptr<Part<DIM> > pDomain);
+    void SetBoundingDomain(std::shared_ptr<Part<DIM> > pDomain);
 
     /**
      * Set a cell population for discrete cell solves
      * @param pCellPopulation the cell population for discrete cell solves
      * @param cellPopulationReferenceLength the cell population reference length
      */
-    void SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation, units::quantity<unit::length> cellPopulationReferenceLength);
+    void SetCellPopulation(std::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation, units::quantity<unit::length> cellPopulationReferenceLength);
 
     /**
      * Add a migration rule for tip cells
      * @param pMigrationRule a migration rule for tip cells
      */
-    void SetMigrationRule(boost::shared_ptr<AbstractMigrationRule<DIM> > pMigrationRule);
+    void SetMigrationRule(std::shared_ptr<AbstractMigrationRule<DIM> > pMigrationRule);
 
     /**
      * Set the output file handler
      * @param pHandler the output file handler
      */
-    void SetOutputFileHandler(boost::shared_ptr<OutputFileHandler> pHandler);
+    void SetOutputFileHandler(std::shared_ptr<OutputFileHandler> pHandler);
 
     /**
      * Set the rule for managing sprouting
      * @param pSproutingRule the rule for vessel sprouting
      */
-    void SetSproutingRule(boost::shared_ptr<AbstractSproutingRule<DIM> > pSproutingRule);
+    void SetSproutingRule(std::shared_ptr<AbstractSproutingRule<DIM> > pSproutingRule);
 
     /**
      * Set a vessel grid, this means that on-lattice rules will be used
      * @param pVesselGrid the grid for the vessel network
      */
-    void SetVesselGridCalculator(boost::shared_ptr<GridCalculator<DIM> >pVesselGrid);
+    void SetVesselGridCalculator(std::shared_ptr<GridCalculator<DIM> >pVesselGrid);
 
     /**
      * Set the vessel network
      * @param pNetwork the vessel network
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
 protected:
 

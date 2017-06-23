@@ -60,7 +60,7 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return share pointer to the manager
      */
-    static boost::shared_ptr<VesselNetworkPropertyManager<DIM> > Create();
+    static std::shared_ptr<VesselNetworkPropertyManager<DIM> > Create();
 
     /**
      * Destructor
@@ -72,7 +72,7 @@ public:
      * @param location the search location
      * @param searchRadius the search radius
      */
-    static void AssignInflows(boost::shared_ptr<VesselNetwork<DIM> > pNetwork,
+    static void AssignInflows(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
             DimensionalChastePoint<DIM> location, units::quantity<unit::length> searchRadius);
 
     /**
@@ -80,58 +80,58 @@ public:
      * @param location the search location
      * @param searchRadius the search radius
      */
-    static void AssignOutflows(boost::shared_ptr<VesselNetwork<DIM> > pNetwork, DimensionalChastePoint<DIM> location, units::quantity<unit::length> searchRadius);
+    static void AssignOutflows(std::shared_ptr<VesselNetwork<DIM> > pNetwork, DimensionalChastePoint<DIM> location, units::quantity<unit::length> searchRadius);
 
     /**
      * Copy flow properties from the specified segment to all other vessel network segments
      * @param index the segment index to be copied
      */
-    static void CopySegmentFlowProperties(boost::shared_ptr<VesselNetwork<DIM> > pNetwork, unsigned index=0);
+    static void CopySegmentFlowProperties(std::shared_ptr<VesselNetwork<DIM> > pNetwork, unsigned index=0);
 
     /**
      * Return the inflow nodes
      * @return the inflow nodes
      */
-    static std::vector<boost::shared_ptr<VesselNode<DIM> > > GetInflowNodes(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    static std::vector<std::shared_ptr<VesselNode<DIM> > > GetInflowNodes(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Return the outflow nodes
      * @return the outflow nodes
      */
-    static std::vector<boost::shared_ptr<VesselNode<DIM> > > GetOutflowNodes(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    static std::vector<std::shared_ptr<VesselNode<DIM> > > GetOutflowNodes(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Set the nodal radii to the same value
      * @param radius the node radius value
      */
-    static void SetNodeRadii(boost::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::length> radius);
+    static void SetNodeRadii(std::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::length> radius);
 
     /**
      * Get the node radius by averaging its segments
      */
-    static void SetNodeRadiiFromSegments(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    static void SetNodeRadiiFromSegments(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
-    static void SetInflowPressures(boost::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::pressure> pressure);
+    static void SetInflowPressures(std::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::pressure> pressure);
 
-    static void SetOutflowPressures(boost::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::pressure> pressure);
+    static void SetOutflowPressures(std::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::pressure> pressure);
 
     /**
      * Set the properties of the segments in the network based on those of the prototype
      * @param prototype a prototype segment from which to copy properties
      */
-    static void SetSegmentProperties(boost::shared_ptr<VesselNetwork<DIM> > pNetwork, boost::shared_ptr<VesselSegment<DIM> > prototype);
+    static void SetSegmentProperties(std::shared_ptr<VesselNetwork<DIM> > pNetwork, std::shared_ptr<VesselSegment<DIM> > prototype);
 
     /**
      * Set the segment radii to the same value
      * @param radius the segment radius
      */
-    static void SetSegmentRadii(boost::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::length> radius);
+    static void SetSegmentRadii(std::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::length> radius);
 
     /**
      * Set the segment viscosity to the same value
      * @param viscosity the segment viscosity
      */
-    static void SetSegmentViscosity(boost::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::dynamic_viscosity> viscosity);
+    static void SetSegmentViscosity(std::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::dynamic_viscosity> viscosity);
 
 };
 

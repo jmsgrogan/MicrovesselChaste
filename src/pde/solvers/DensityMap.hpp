@@ -100,7 +100,7 @@ class DensityMap
     /**
      * A grid calculator
      */
-    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
+    std::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
 
 public:
 
@@ -113,7 +113,7 @@ public:
      * Factory constructor method
      * @return a shared pointer to a new solver
      */
-    static boost::shared_ptr<DensityMap<DIM> > Create();
+    static std::shared_ptr<DensityMap<DIM> > Create();
 
     /**
      * Destructor
@@ -124,7 +124,7 @@ public:
      * Return the vessel network
      * @return the vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > GetVesselNetwork();
+    std::shared_ptr<VesselNetwork<DIM> > GetVesselNetwork();
 
     /**
      * Return the grid in a form suitable for length of line in box computations
@@ -138,13 +138,13 @@ public:
      * @param pGrid the input grid
      * @return the processed grid
      */
-    vtkSmartPointer<vtkUnstructuredGrid> GetSamplingGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
+    vtkSmartPointer<vtkUnstructuredGrid> GetSamplingGrid(std::shared_ptr<RegularGrid<DIM> > pGrid);
 
     /**
      * Return the grid calculator
      * @return the grid calculator
      */
-    boost::shared_ptr<GridCalculator<DIM> > GetGridCalculator();
+    std::shared_ptr<GridCalculator<DIM> > GetGridCalculator();
 
     /**
      * Get the vessel surface area density
@@ -239,7 +239,7 @@ public:
      * Set the vessel network
      * @param pNetwork the vessel network
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Set the cell population
@@ -255,13 +255,13 @@ public:
      * Set the grid
      * @param pGrid the grid
      */
-    void SetGrid(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
+    void SetGrid(std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
 
     /**
      * Set the grid calculator directly
      * @param pGridCalculator the grid calculator
      */
-    void SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator);
+    void SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGridCalculator);
 
 };
 

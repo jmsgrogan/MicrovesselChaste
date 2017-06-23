@@ -39,7 +39,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <string>
 #include <map>
-#include <boost/enable_shared_from_this.hpp>
 #include "ChasteSerialization.hpp"
 #include "SmartPointers.hpp"
 #include "DimensionalChastePoint.hpp"
@@ -62,7 +61,7 @@ class VesselSegment;
  * straight line vessel segments.
  */
 template<unsigned DIM>
-class VesselNode : public boost::enable_shared_from_this<VesselNode<DIM> >, public AbstractVesselNetworkComponent<DIM>
+class VesselNode : public std::enable_shared_from_this<VesselNode<DIM> >, public AbstractVesselNetworkComponent<DIM>
 {
 private:
 
@@ -100,7 +99,7 @@ private:
     /**
      * Collection of pointers to Vessel Segments connected to this node.
      */
-    std::vector<boost::weak_ptr<VesselSegment<DIM> > > mSegments;
+    std::vector<std::weak_ptr<VesselSegment<DIM> > > mSegments;
 
     /**
      * Is the vessel allowed to extend at this node
@@ -110,7 +109,7 @@ private:
     /**
      * A flow property collection for the node
      */
-    boost::shared_ptr<NodeFlowProperties<DIM> > mpFlowProperties;
+    std::shared_ptr<NodeFlowProperties<DIM> > mpFlowProperties;
 
     /**
      * This is used for comparing nodes in some VesselNetwork methods.
@@ -203,7 +202,7 @@ public:
      * @param v3  the node's z-coordinate (defaults to 0 micron)
      * @return a pointer to the newly created node
      */
-    static boost::shared_ptr<VesselNode<DIM> > Create(double v1 = 0.0, double v2 = 0.0, double v3 = 0.0);
+    static std::shared_ptr<VesselNode<DIM> > Create(double v1 = 0.0, double v2 = 0.0, double v3 = 0.0);
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
@@ -214,7 +213,7 @@ public:
      * @param referenceLength the reference length scale
      * @return a pointer to the newly created node
      */
-    static boost::shared_ptr<VesselNode<DIM> > Create(double v1, double v2, double v3, units::quantity<unit::length> referenceLength);
+    static std::shared_ptr<VesselNode<DIM> > Create(double v1, double v2, double v3, units::quantity<unit::length> referenceLength);
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
@@ -222,7 +221,7 @@ public:
      * @param location the node's location (defaults to 0.0  micron)
      * @return a pointer to the newly created node
      */
-    static boost::shared_ptr<VesselNode<DIM> > Create(const DimensionalChastePoint<DIM>& location);
+    static std::shared_ptr<VesselNode<DIM> > Create(const DimensionalChastePoint<DIM>& location);
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
@@ -230,7 +229,7 @@ public:
      * @param rExistingNode the node to copy from
      * @return a pointer to the newly created node
      */
-    static boost::shared_ptr<VesselNode<DIM> > Create(const VesselNode<DIM>& rExistingNode);
+    static std::shared_ptr<VesselNode<DIM> > Create(const VesselNode<DIM>& rExistingNode);
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
@@ -238,7 +237,7 @@ public:
      * @param pExistingNode the node to copy from
      * @return a pointer to the newly created node
      */
-    static boost::shared_ptr<VesselNode<DIM> > Create(boost::shared_ptr<VesselNode<DIM> > pExistingNode);
+    static std::shared_ptr<VesselNode<DIM> > Create(std::shared_ptr<VesselNode<DIM> > pExistingNode);
 
     /**
      * Return the Id for comparing pointer contents
@@ -259,7 +258,7 @@ public:
      *
      * @return the flow properties of the component
      */
-    boost::shared_ptr<NodeFlowProperties<DIM> > GetFlowProperties() const;
+    std::shared_ptr<NodeFlowProperties<DIM> > GetFlowProperties() const;
 
     /**
      * Return a reference to the location of the node, default is micron
@@ -294,14 +293,14 @@ public:
      * @param index the segment index
      * @return a vector of pointers to the attached vessel segments
      */
-    boost::shared_ptr<VesselSegment<DIM> > GetSegment(unsigned index) const;
+    std::shared_ptr<VesselSegment<DIM> > GetSegment(unsigned index) const;
 
     /**
      * Return a vector of pointers to the attached vessel segments.
      *
      * @return a vector of pointers to the attached vessel segments
      */
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > GetSegments() const;
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > GetSegments() const;
 
     /**
      * Return the global index
@@ -351,7 +350,7 @@ public:
      * @param pSegment a pointer to the segment to query
      * @return whether the input segment is attached to the node
      */
-    bool IsAttachedTo(const boost::shared_ptr<VesselSegment<DIM> > pSegment) const;
+    bool IsAttachedTo(const std::shared_ptr<VesselSegment<DIM> > pSegment) const;
 
     /**
      * Return true if the node is coincident with the input location
@@ -469,14 +468,14 @@ private:
      *
      *  @param pVesselSegment the segment to be added
      */
-    void AddSegment(boost::shared_ptr<VesselSegment<DIM> > pVesselSegment);
+    void AddSegment(std::shared_ptr<VesselSegment<DIM> > pVesselSegment);
 
     /**
      * Remove a vessel segment from the node. Private because node-segment connectivity needs to be managed.
      *
      *  @param pVesselSegment the segment to be removed
      */
-    void RemoveSegment(boost::shared_ptr<VesselSegment<DIM> > pVesselSegment);
+    void RemoveSegment(std::shared_ptr<VesselSegment<DIM> > pVesselSegment);
 };
 
 #include "SerializationExportWrapper.hpp"

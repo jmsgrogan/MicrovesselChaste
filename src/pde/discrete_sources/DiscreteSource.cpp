@@ -54,10 +54,10 @@ DiscreteSource<DIM>::~DiscreteSource()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<DiscreteSource<DIM> > DiscreteSource<DIM>::Create()
+std::shared_ptr<DiscreteSource<DIM> > DiscreteSource<DIM>::Create()
 {
-    MAKE_PTR(DiscreteSource<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<DiscreteSource<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -144,7 +144,7 @@ void DiscreteSource<DIM>::SetPoints(std::vector<DimensionalChastePoint<DIM> > po
 }
 
 template<unsigned DIM>
-boost::shared_ptr<DensityMap<DIM> > DiscreteSource<DIM>::GetDensityMap()
+std::shared_ptr<DensityMap<DIM> > DiscreteSource<DIM>::GetDensityMap()
 {
     return mpDensityMap;
 }
@@ -162,7 +162,7 @@ void DiscreteSource<DIM>::SetLinearInUValue(units::quantity<unit::rate> value)
 }
 
 template<unsigned DIM>
-void DiscreteSource<DIM>::SetDensityMap(boost::shared_ptr<DensityMap<DIM> > pMap)
+void DiscreteSource<DIM>::SetDensityMap(std::shared_ptr<DensityMap<DIM> > pMap)
 {
     mpDensityMap = pMap;
 }

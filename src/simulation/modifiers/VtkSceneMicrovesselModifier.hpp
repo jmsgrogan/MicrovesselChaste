@@ -53,7 +53,7 @@ class VtkSceneMicrovesselModifier : public AbstractMicrovesselModifier<DIM>
     /**
      * The scene
      */
-    boost::shared_ptr<MicrovesselVtkScene<DIM> > mpScene;
+    std::shared_ptr<MicrovesselVtkScene<DIM> > mpScene;
 
     /**
      * The scene update frequency
@@ -76,7 +76,7 @@ public:
      * Return the scene
      * @return the scene
      */
-    boost::shared_ptr<MicrovesselVtkScene<DIM> > GetVtkScene();
+    std::shared_ptr<MicrovesselVtkScene<DIM> > GetVtkScene();
 
     /**
      * Overridden SetupSolve() method.
@@ -97,7 +97,7 @@ public:
      * Set the scene
      * @param pScene the scene
      */
-    void SetVtkScene(boost::shared_ptr<MicrovesselVtkScene<DIM> > pScene);
+    void SetVtkScene(std::shared_ptr<MicrovesselVtkScene<DIM> > pScene);
 
     /**
      * Set the frequency of output

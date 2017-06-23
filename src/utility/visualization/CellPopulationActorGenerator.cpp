@@ -145,8 +145,8 @@ void CellPopulationActorGenerator<DIM>::AddCaBasedCellPopulationActor(vtkSmartPo
     vtkSmartPointer<vtkImageData> p_potts_grid = vtkSmartPointer<vtkImageData>::New();
     vtkSmartPointer<vtkGeometryFilter> p_geom_filter = vtkSmartPointer<vtkGeometryFilter>::New();
 
-    boost::shared_ptr<CaBasedCellPopulation<DIM> > p_ca_population =
-            boost::dynamic_pointer_cast<CaBasedCellPopulation<DIM> >(mpCellPopulation);
+    std::shared_ptr<CaBasedCellPopulation<DIM> > p_ca_population =
+            std::dynamic_pointer_cast<CaBasedCellPopulation<DIM> >(mpCellPopulation);
 
     if(p_ca_population and mShowPottsMeshEdges)
     {
@@ -219,8 +219,8 @@ void CellPopulationActorGenerator<DIM>::AddPottsBasedCellPopulationActor(vtkSmar
 {
     vtkSmartPointer<vtkImageData> p_potts_grid = vtkSmartPointer<vtkImageData>::New();
 
-    boost::shared_ptr<PottsBasedCellPopulation<DIM> > p_potts_population =
-            boost::dynamic_pointer_cast<PottsBasedCellPopulation<DIM> >(mpCellPopulation);
+    std::shared_ptr<PottsBasedCellPopulation<DIM> > p_potts_population =
+            std::dynamic_pointer_cast<PottsBasedCellPopulation<DIM> >(mpCellPopulation);
 
     if(p_potts_population and mShowPottsMeshEdges)
     {
@@ -456,8 +456,8 @@ void CellPopulationActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRenderer> pR
     }
 
     // Show cell centres if requested
-    if(mShowCellCentres or boost::dynamic_pointer_cast<CaBasedCellPopulation<DIM> >(mpCellPopulation) or
-            boost::dynamic_pointer_cast<NodeBasedCellPopulation<DIM> >(mpCellPopulation))
+    if(mShowCellCentres or std::dynamic_pointer_cast<CaBasedCellPopulation<DIM> >(mpCellPopulation) or
+            std::dynamic_pointer_cast<NodeBasedCellPopulation<DIM> >(mpCellPopulation))
     {
         vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
         vtkSmartPointer<vtkDoubleArray> p_cell_color_reference_data = vtkSmartPointer<vtkDoubleArray>::New();
@@ -597,19 +597,19 @@ void CellPopulationActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRenderer> pR
         }
     }
 
-    if(boost::dynamic_pointer_cast<MeshBasedCellPopulation<DIM> >(mpCellPopulation) and (mShowMutableMeshEdges or mShowVoronoiMeshEdges))
+    if(std::dynamic_pointer_cast<MeshBasedCellPopulation<DIM> >(mpCellPopulation) and (mShowMutableMeshEdges or mShowVoronoiMeshEdges))
     {
         AddMeshBasedCellPopulationActor(pRenderer);
     }
-    else if (boost::dynamic_pointer_cast<VertexBasedCellPopulation<DIM> >(mpCellPopulation) and mShowVoronoiMeshEdges)
+    else if (std::dynamic_pointer_cast<VertexBasedCellPopulation<DIM> >(mpCellPopulation) and mShowVoronoiMeshEdges)
     {
         AddVertexBasedCellPopulationActor(pRenderer);
     }
-    else if (boost::dynamic_pointer_cast<PottsBasedCellPopulation<DIM> >(mpCellPopulation) and (mShowPottsMeshEdges or mShowPottsMeshOutlines))
+    else if (std::dynamic_pointer_cast<PottsBasedCellPopulation<DIM> >(mpCellPopulation) and (mShowPottsMeshEdges or mShowPottsMeshOutlines))
     {
         AddPottsBasedCellPopulationActor(pRenderer);
     }
-    else if (boost::dynamic_pointer_cast<CaBasedCellPopulation<DIM> >(mpCellPopulation) and mShowPottsMeshEdges)
+    else if (std::dynamic_pointer_cast<CaBasedCellPopulation<DIM> >(mpCellPopulation) and mShowPottsMeshEdges)
     {
         AddCaBasedCellPopulationActor(pRenderer);
     }
@@ -618,7 +618,7 @@ void CellPopulationActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRenderer> pR
 template<unsigned DIM>
 void CellPopulationActorGenerator<DIM>::AddVertexBasedCellPopulationActor(vtkSmartPointer<vtkRenderer> pRenderer)
 {
-    boost::shared_ptr<VertexBasedCellPopulation<DIM> > p_cell_population = boost::dynamic_pointer_cast<VertexBasedCellPopulation<DIM> >(mpCellPopulation);
+    std::shared_ptr<VertexBasedCellPopulation<DIM> > p_cell_population = std::dynamic_pointer_cast<VertexBasedCellPopulation<DIM> >(mpCellPopulation);
 
     if(!p_cell_population)
     {
@@ -804,9 +804,9 @@ void CellPopulationActorGenerator<DIM>::AddVertexBasedCellPopulationActor(vtkSma
 template<unsigned DIM>
 void CellPopulationActorGenerator<DIM>::AddMeshBasedCellPopulationActor(vtkSmartPointer<vtkRenderer> pRenderer)
 {
-    boost::shared_ptr<MeshBasedCellPopulation<DIM> > p_cell_population = boost::dynamic_pointer_cast<MeshBasedCellPopulation<DIM> >(mpCellPopulation);
-    boost::shared_ptr<MeshBasedCellPopulationWithGhostNodes<DIM> > p_cell_population_with_ghost =
-            boost::dynamic_pointer_cast<MeshBasedCellPopulationWithGhostNodes<DIM> >(mpCellPopulation);
+    std::shared_ptr<MeshBasedCellPopulation<DIM> > p_cell_population = std::dynamic_pointer_cast<MeshBasedCellPopulation<DIM> >(mpCellPopulation);
+    std::shared_ptr<MeshBasedCellPopulationWithGhostNodes<DIM> > p_cell_population_with_ghost =
+            std::dynamic_pointer_cast<MeshBasedCellPopulationWithGhostNodes<DIM> >(mpCellPopulation);
 
 
     if(!p_cell_population)
@@ -1100,7 +1100,7 @@ void CellPopulationActorGenerator<DIM>::AddMeshBasedCellPopulationActor(vtkSmart
 }
 
 template<unsigned DIM>
-void CellPopulationActorGenerator<DIM>::SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation)
+void CellPopulationActorGenerator<DIM>::SetCellPopulation(std::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation)
 {
     this->mpCellPopulation = pCellPopulation;
 }

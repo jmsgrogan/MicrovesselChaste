@@ -58,18 +58,18 @@ private:
      * Nodes in the vessel network. Stored in the flow solver to avoid
      * recalculation by the vessel network class.
      */
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > mNodes;
+    std::vector<std::shared_ptr<VesselNode<DIM> > > mNodes;
 
     /**
      * Vessels in the vessel network. Stored in the flow solver to avoid
      * recalculation by the vessel network class.
      */
-    std::vector<boost::shared_ptr<Vessel<DIM> > > mVessels;
+    std::vector<std::shared_ptr<Vessel<DIM> > > mVessels;
 
     /**
      * The vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
 
     /**
      * A node-vessel connectivity map
@@ -94,7 +94,7 @@ private:
     /**
      * The linear system to be solved for the nodal pressures
      */
-    boost::shared_ptr<LinearSystem> mpLinearSystem;
+    std::shared_ptr<LinearSystem> mpLinearSystem;
 
     /**
      * Whether to use a direct or iterative solver, the former is recommended.
@@ -122,7 +122,7 @@ public:
      * Factor constructor. Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to a new instance of the class.
      */
-    static boost::shared_ptr<FlowSolver<DIM> > Create();
+    static std::shared_ptr<FlowSolver<DIM> > Create();
 
     /**
      * Set whether to use a direct solver, an iterative one is used if false (not recommended).
@@ -139,7 +139,7 @@ public:
      * Set the vessel network to use in the solver.
      * @param pVesselNetwork the vessel network.
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
 
     /**
      * Run the flow solver and update the pressure and flow rate data in the vessel network

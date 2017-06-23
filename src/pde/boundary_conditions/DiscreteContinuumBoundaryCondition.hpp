@@ -84,7 +84,7 @@ protected:
     /**
      * A part for prescribing part and facet based conditions
      */
-    boost::shared_ptr<Part<DIM> > mpDomain;
+    std::shared_ptr<Part<DIM> > mpDomain;
 
     /**
      * Point locations for POINT type conditions
@@ -115,12 +115,12 @@ protected:
     /**
      * The grid calculator
      */
-    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
+    std::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
 
     /**
      * The vessel network
      */
-    boost::shared_ptr<VesselNetwork <DIM> > mpNetwork;
+    std::shared_ptr<VesselNetwork <DIM> > mpNetwork;
 
     /**
      * The reference concentration
@@ -152,7 +152,7 @@ public:
     /**
      * Factory constructor method
      */
-    static boost::shared_ptr<DiscreteContinuumBoundaryCondition<DIM> > Create();
+    static std::shared_ptr<DiscreteContinuumBoundaryCondition<DIM> > Create();
 
     /**
      * Return the type of boundary condition, POINT, POLYGON, OUTER etc.
@@ -178,20 +178,20 @@ public:
      * Update the boundary conditions container for use with the finite element solver
      * @param pContainer the boundary condition container
      */
-    void UpdateBoundaryConditions(boost::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> > pContainer);
+    void UpdateBoundaryConditions(std::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> > pContainer);
 
     /**
      * Update the boundary conditions on the regular grid
      * @param pBoundaryConditions the boundary condition container
      * @param tolerance the tolerance for evaluating if a point is on a boundary
      */
-    void UpdateBoundaryConditions(boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > pBoundaryConditions);
+    void UpdateBoundaryConditions(std::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > pBoundaryConditions);
 
     /**
      * Set a domain for use in the calculation of FACET type boundary conditions
      * @param pDomain the part containing labelled facets for the boundary condition
      */
-    void SetDomain(boost::shared_ptr<Part<DIM> > pDomain);
+    void SetDomain(std::shared_ptr<Part<DIM> > pDomain);
 
     /**
      * Use a robin boundary condition
@@ -227,7 +227,7 @@ public:
      * Set the regular grid
      * @param pGridCalculator the regular grid
      */
-    void SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator);
+    void SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGridCalculator);
 
     /**
      * Set where the value of the boundary condition is obtained, e.g. LABEL, PRESCRIBED
@@ -245,7 +245,7 @@ public:
      * Set the vessel network
      * @param pNetwork the vessel network
      */
-    void SetNetwork(boost::shared_ptr<VesselNetwork <DIM> > pNetwork);
+    void SetNetwork(std::shared_ptr<VesselNetwork <DIM> > pNetwork);
 
     /**
      * Set the default value of the boundary condition for any points on the boundary

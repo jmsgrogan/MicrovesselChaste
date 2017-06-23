@@ -138,27 +138,27 @@ public:
      * Calculate the distance map for repulsion evaluation on the supplied grid.
      * @param pGrid get the distance map on this grid
      */
-    void CalculateDomainDistanceMap(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
+    void CalculateDomainDistanceMap(std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
      * @return pointer to a new class instance
      */
-    static boost::shared_ptr<OffLatticeMigrationRule<DIM> > Create();
+    static std::shared_ptr<OffLatticeMigrationRule<DIM> > Create();
 
     /**
      * Return the movement vector (new_location - oriringal_location) for the input nodes, if they can't move set it to the zero vector
      * @param rNodes nodes to calculate indices
      * @return a vector of movement vectors
      */
-    std::vector<DimensionalChastePoint<DIM> > GetDirections(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
+    std::vector<DimensionalChastePoint<DIM> > GetDirections(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
 
     /**
      * Get the sprout directions
      * @param rNodes nodes to calculate directions
      * @return a vector of movement vectors
      */
-    std::vector<DimensionalChastePoint<DIM> > GetDirectionsForSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
+    std::vector<DimensionalChastePoint<DIM> > GetDirectionsForSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
 
     /**
      * Set the sprout velocity

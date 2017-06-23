@@ -66,10 +66,10 @@ VesselNetworkReader<DIM>::~VesselNetworkReader()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<VesselNetworkReader<DIM> > VesselNetworkReader<DIM>::Create()
+std::shared_ptr<VesselNetworkReader<DIM> > VesselNetworkReader<DIM>::Create()
 {
-    MAKE_PTR(VesselNetworkReader<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<VesselNetworkReader<DIM> >();
+
 }
 
 template <unsigned DIM>
@@ -97,7 +97,7 @@ void VesselNetworkReader<DIM>::SetReferenceLengthScale(units::quantity<unit::len
 }
 
 template<unsigned DIM>
-boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkReader<DIM>::Read()
+std::shared_ptr<VesselNetwork<DIM> > VesselNetworkReader<DIM>::Read()
 {
     if(mFileName.empty())
     {
@@ -105,7 +105,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkReader<DIM>::Read()
     }
 
     // Create an empty vessel network
-    boost::shared_ptr<VesselNetwork<DIM> > p_network = VesselNetwork<DIM>::Create();
+    std::shared_ptr<VesselNetwork<DIM> > p_network = VesselNetwork<DIM>::Create();
 
     // Create a VTK PolyData object based on the contents of the input VTK file
     vtkSmartPointer<vtkXMLPolyDataReader> p_reader = vtkSmartPointer<vtkXMLPolyDataReader>::New();
@@ -142,7 +142,7 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkReader<DIM>::Read()
 
     // Create the nodes
     vtkSmartPointer<vtkPointData> p_point_data = vtkSmartPointer<vtkPointData>::New();
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes;
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes;
     for (vtkIdType i = 0; i < p_polydata->GetNumberOfPoints(); i++)
     {
         double point_coords[3];
@@ -183,11 +183,11 @@ boost::shared_ptr<VesselNetwork<DIM> > VesselNetworkReader<DIM>::Read()
         vtkIdType num_segments;
         vtkIdType* pSegmentList;
         pCellArray->GetNextCell(num_segments, pSegmentList);
-        std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments;
+        std::vector<std::shared_ptr<VesselSegment<DIM> > > segments;
         // Add segments to the vessels in order
         for (int j = 1; j < num_segments; j++)
         {
-            boost::shared_ptr<VesselSegment<DIM> > p_segment = VesselSegment<DIM>::Create(nodes[pSegmentList[j - 1]],nodes[pSegmentList[j]]);
+            std::shared_ptr<VesselSegment<DIM> > p_segment = VesselSegment<DIM>::Create(nodes[pSegmentList[j - 1]],nodes[pSegmentList[j]]);
             if(unsigned(radii.size())> pSegmentList[j])
             {
                 p_segment->SetRadius(radii[pSegmentList[j]] * mReferenceLength);

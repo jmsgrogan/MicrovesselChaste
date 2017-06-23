@@ -90,7 +90,7 @@ public:
      * Factory constructor method
      * @return a pointer the surface cleaner
      */
-    static boost::shared_ptr<SurfaceCleaner> Create();
+    static std::shared_ptr<SurfaceCleaner> Create();
 
     /**
      * Return the cleaned surface

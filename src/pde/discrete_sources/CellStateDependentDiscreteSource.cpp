@@ -53,10 +53,10 @@ CellStateDependentDiscreteSource<DIM>::~CellStateDependentDiscreteSource()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<CellStateDependentDiscreteSource<DIM> > CellStateDependentDiscreteSource<DIM>::Create()
+std::shared_ptr<CellStateDependentDiscreteSource<DIM> > CellStateDependentDiscreteSource<DIM>::Create()
 {
-    MAKE_PTR(CellStateDependentDiscreteSource<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<CellStateDependentDiscreteSource<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -70,7 +70,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > CellStateDependentD
     std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::mole_per_metre_cubed_per_second);
 
-    boost::shared_ptr<ApoptoticCellProperty> apoptotic_property(new ApoptoticCellProperty);
+    std::shared_ptr<ApoptoticCellProperty> apoptotic_property(new ApoptoticCellProperty);
     unsigned apoptotic_label = apoptotic_property->GetColour();
 
     // Loop through all points

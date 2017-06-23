@@ -64,10 +64,9 @@ GeometryWriter::~GeometryWriter()
 
 }
 
-boost::shared_ptr<GeometryWriter > GeometryWriter::Create()
+std::shared_ptr<GeometryWriter > GeometryWriter::Create()
 {
-    MAKE_PTR(GeometryWriter, pSelf);
-    return pSelf;
+    return std::make_shared<GeometryWriter>();
 }
 
 void GeometryWriter::SetFileName(const std::string& rFileName)

@@ -58,7 +58,7 @@ protected:
     /**
      * A DiscreteContinuum solver containing a solution field of interest
      */
-    boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > mpSolver;
+    std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > mpSolver;
 
     /**
      * The probability that a sprout will form per unit time
@@ -68,7 +68,7 @@ protected:
     /**
      * Vessel network, useful if sprouting depends on neighbouring nodes
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
 
     /**
      * How far from vessel ends can sprouts form
@@ -95,13 +95,13 @@ public:
      * Set the DiscreteContinuum solver containing the VEGF field
      * @param pSolver the DiscreteContinuum solver containing the VEGF field
      */
-    void SetDiscreteContinuumSolver(boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver);
+    void SetDiscreteContinuumSolver(std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver);
 
     /**
      * Set the vessel network
      * @param pVesselNetwork pointer to a new method for the class
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
 
     /**
      * Set the sprouting probability
@@ -122,13 +122,13 @@ public:
      * @param rNodes nodes to check for sprouting
      * @return a vector of nodes which may sprout
      */
-    virtual std::vector<boost::shared_ptr<VesselNode<DIM> > > GetSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
+    virtual std::vector<std::shared_ptr<VesselNode<DIM> > > GetSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
 
     /**
      * Set a grid for the vessel network, implemented in some, but not all, child classes.
      * @param pGrid the grid for the vessel network
      */
-    virtual void SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGrid);
+    virtual void SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGrid);
 };
 
 #endif /* ABSTRACTSPROUTINGRULE_HPP_ */

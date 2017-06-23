@@ -36,6 +36,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef VESSEL_HPP_
 #define VESSEL_HPP_
 
+#include <memory>
 #include <vector>
 #include <string>
 #include <map>
@@ -68,7 +69,7 @@ struct SegmentLocation
  * Vessel data and properties are derived from averaging or summing over their segments as required.
  */
 template<unsigned DIM>
-class Vessel : public boost::enable_shared_from_this<Vessel<DIM> >, public AbstractVesselNetworkComponent<DIM>
+class Vessel : public std::enable_shared_from_this<Vessel<DIM> >, public AbstractVesselNetworkComponent<DIM>
 {
 private:
 
@@ -91,12 +92,12 @@ private:
     /**
      * Vessel segments
      */
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > mSegments;
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > mSegments;
 
     /**
      * Nodes
      */
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > mNodes;
+    std::vector<std::shared_ptr<VesselNode<DIM> > > mNodes;
 
     /**
      * Is the data in mNodes up to date.
@@ -106,7 +107,7 @@ private:
     /**
      * A flow property collection for the vessel
      */
-    boost::shared_ptr<VesselFlowProperties<DIM> > mpFlowProperties;
+    std::shared_ptr<VesselFlowProperties<DIM> > mpFlowProperties;
 
     /**
      * The global index
@@ -149,7 +150,7 @@ private:
      * The vessel should always have at least one segment.
      * @param pSegment the input segment
      */
-    Vessel(boost::shared_ptr<VesselSegment<DIM> > pSegment);
+    Vessel(std::shared_ptr<VesselSegment<DIM> > pSegment);
 
     /**
      * Alternate Constructor. Kept private as the factory Create methods should be used instead.
@@ -157,7 +158,7 @@ private:
      * The vessel should always have at least one segment. This is useful for initializing with many segments at once.
      * @param segments a collection of segments, should be joined end to tip
      */
-    Vessel(std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments);
+    Vessel(std::vector<std::shared_ptr<VesselSegment<DIM> > > segments);
 
     /**
      * Alternate Constructor. Kept private as the factory Create methods should be used instead.
@@ -165,7 +166,7 @@ private:
      * Initialize with a vector of nodes. The nodes are joined by segments in order. The ends are not closed.
      * @param nodes these nodes will be joined to form the vessel
      */
-    Vessel(std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes);
+    Vessel(std::vector<std::shared_ptr<VesselNode<DIM> > > nodes);
 
     /**
      * Alternate Constructor. Kept private as the factory Create methods should be used instead.
@@ -173,7 +174,7 @@ private:
      * @param pStartNode the start node
      * @param pEndNode the end node
      */
-    Vessel(boost::shared_ptr<VesselNode<DIM> > pStartNode, boost::shared_ptr<VesselNode<DIM> > pEndNode);
+    Vessel(std::shared_ptr<VesselNode<DIM> > pStartNode, std::shared_ptr<VesselNode<DIM> > pEndNode);
 
 public:
 
@@ -182,21 +183,21 @@ public:
      * @param pSegment the input segment
      * @return a pointer to the vessel
      */
-    static boost::shared_ptr<Vessel<DIM> > Create(boost::shared_ptr<VesselSegment<DIM> > pSegment);
+    static std::shared_ptr<Vessel<DIM> > Create(std::shared_ptr<VesselSegment<DIM> > pSegment);
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
      * @param segments a collection of segments, should be joined end to tip
      * @return a pointer to the vessel
      */
-    static boost::shared_ptr<Vessel<DIM> > Create(std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments);
+    static std::shared_ptr<Vessel<DIM> > Create(std::vector<std::shared_ptr<VesselSegment<DIM> > > segments);
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
      * @param nodes these nodes will be joined to form the vessel
      * @return a pointer to the vessel
      */
-    static boost::shared_ptr<Vessel<DIM> > Create(std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes);
+    static std::shared_ptr<Vessel<DIM> > Create(std::vector<std::shared_ptr<VesselNode<DIM> > > nodes);
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
@@ -204,8 +205,8 @@ public:
      * @param pEndNode the end node
      * @return a pointer to the vessel
      */
-    static boost::shared_ptr<Vessel<DIM> > Create(boost::shared_ptr<VesselNode<DIM> > pStartNode,
-                                                  boost::shared_ptr<VesselNode<DIM> > pEndNode);
+    static std::shared_ptr<Vessel<DIM> > Create(std::shared_ptr<VesselNode<DIM> > pStartNode,
+                                                  std::shared_ptr<VesselNode<DIM> > pEndNode);
 
     /**
      * Destructor.
@@ -216,19 +217,19 @@ public:
      * Add a single segment to either end of the vessel
      * @param pSegment the segment
      */
-    void AddSegment(boost::shared_ptr<VesselSegment<DIM> > pSegment);
+    void AddSegment(std::shared_ptr<VesselSegment<DIM> > pSegment);
 
     /**
      * Add a collection of segments to either end of the vessel
      * @param pSegments the segments
      */
-    void AddSegments(std::vector<boost::shared_ptr<VesselSegment<DIM> > > pSegments);
+    void AddSegments(std::vector<std::shared_ptr<VesselSegment<DIM> > > pSegments);
 
     /**
      * Copy the member data from the input vessel.
      * @param pTargetVessel the vessel to be copied from
      */
-    void CopyDataFromExistingVessel(boost::shared_ptr<Vessel<DIM> > pTargetVessel);
+    void CopyDataFromExistingVessel(std::shared_ptr<Vessel<DIM> > pTargetVessel);
 
     /**
      * Divide the vessel at the specified location
@@ -236,7 +237,7 @@ public:
      * @param distanceTolerance how far from a segment should the probe point be
      * @return the node at the division
      */
-    boost::shared_ptr<VesselNode<DIM> > DivideSegment(const DimensionalChastePoint<DIM>& rLocation,
+    std::shared_ptr<VesselNode<DIM> > DivideSegment(const DimensionalChastePoint<DIM>& rLocation,
                                                       double distanceTolerance = 1.e-6);
 
     /**
@@ -256,26 +257,26 @@ public:
     /**
      * @return vector of vessels connected to this one
      */
-    std::vector<boost::shared_ptr<Vessel<DIM> > > GetConnectedVessels();
+    std::vector<std::shared_ptr<Vessel<DIM> > > GetConnectedVessels();
 
     /**
      * @return shared pointer to the second node of the last segment
      */
-    boost::shared_ptr<VesselNode<DIM> > GetEndNode();
+    std::shared_ptr<VesselNode<DIM> > GetEndNode();
 
     /**
      * Return the flow properties of the component
      *
      * @return the flow properties of the component
      */
-    boost::shared_ptr<VesselFlowProperties<DIM> > GetFlowProperties() const;
+    std::shared_ptr<VesselFlowProperties<DIM> > GetFlowProperties() const;
 
     /**
      * @param pQueryNode the query node
      * @return shared pointer to the node at the opposite end of the vessel
      * to the supplied one.
      */
-    boost::shared_ptr<VesselNode<DIM> > GetNodeAtOppositeEnd(boost::shared_ptr<VesselNode<DIM> > pQueryNode);
+    std::shared_ptr<VesselNode<DIM> > GetNodeAtOppositeEnd(std::shared_ptr<VesselNode<DIM> > pQueryNode);
 
     /**
      * Return the length
@@ -303,21 +304,21 @@ public:
      * @param index the query index
      * @return the vessel node
      */
-    boost::shared_ptr<VesselNode<DIM> > GetNode(unsigned index);
+    std::shared_ptr<VesselNode<DIM> > GetNode(unsigned index);
 
     /**
      * Return the vessel's nodes
      *
      * @return the vessel nodes
      */
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > GetNodes();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > GetNodes();
 
     /**
      * Return a reference to the vessel node vector, avoids a copy
      *
      * @return a reference to the vessel node vector
      */
-    const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rGetNodes();
+    const std::vector<std::shared_ptr<VesselNode<DIM> > >& rGetNodes();
 
     /**
      * Return the number of nodes in the vessel
@@ -340,17 +341,17 @@ public:
      * @param index the segment index to return
      * @return the indexed segment
      */
-    boost::shared_ptr<VesselSegment<DIM> > GetSegment(unsigned index);
+    std::shared_ptr<VesselSegment<DIM> > GetSegment(unsigned index);
 
     /**
      * @return all the vessel segments
      */
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > GetSegments();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > GetSegments();
 
     /**
      * @return the vessel stat node
      */
-    boost::shared_ptr<VesselNode<DIM> > GetStartNode();
+    std::shared_ptr<VesselNode<DIM> > GetStartNode();
 
     /**
      * Return the global index
@@ -398,7 +399,7 @@ public:
      * @param pOtherVessel the other vessel to check for connect
      * @return whether the vessel is connected to another vessel.
      */
-    bool IsConnectedTo(boost::shared_ptr<Vessel<DIM> > pOtherVessel);
+    bool IsConnectedTo(std::shared_ptr<Vessel<DIM> > pOtherVessel);
 
     /**
      * Remove the vessel from all its segments
@@ -474,9 +475,9 @@ public:
 private:
 
     /**
-     * @return boost::shared_ptr<Vessel<DIM> >
+     * @return std::shared_ptr<Vessel<DIM> >
      */
-    boost::shared_ptr<Vessel<DIM> > Shared();
+    std::shared_ptr<Vessel<DIM> > Shared();
 };
 
 #include "SerializationExportWrapper.hpp"

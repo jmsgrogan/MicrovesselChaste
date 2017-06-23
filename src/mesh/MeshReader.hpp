@@ -73,7 +73,7 @@ public:
      *  Factory constructor method
      * @return a shared pointer to a new instance
      */
-    static boost::shared_ptr<MeshReader> Create();
+    static std::shared_ptr<MeshReader> Create();
 
     /**
      * Get the mesh in vtu format

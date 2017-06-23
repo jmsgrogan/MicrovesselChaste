@@ -90,7 +90,7 @@ protected:
     /**
      * The vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
 
 public:
 
@@ -170,7 +170,7 @@ public:
      *  Set the vessel network
      *  @param pNetwork pointer to the vessel network
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      *  Method used to implement a structural adaptation algorithm on a vessel network.

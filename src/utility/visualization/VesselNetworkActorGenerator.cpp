@@ -244,7 +244,7 @@ void VesselNetworkActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRenderer> pRe
 }
 
 template<unsigned DIM>
-void VesselNetworkActorGenerator<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork)
+void VesselNetworkActorGenerator<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork)
 {
     this->mpVesselNetwork = pVesselNetwork;
 }

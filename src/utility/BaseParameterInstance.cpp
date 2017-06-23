@@ -64,10 +64,9 @@ BaseParameterInstance::~BaseParameterInstance()
 
 }
 
-boost::shared_ptr<BaseParameterInstance> BaseParameterInstance::Create()
+std::shared_ptr<BaseParameterInstance> BaseParameterInstance::Create()
 {
-    MAKE_PTR(BaseParameterInstance, pSelf);
-    return pSelf;
+    return std::make_shared<BaseParameterInstance>();
 }
 
 void BaseParameterInstance::RegisterWithCollection(const std::string& rCallingClass)
@@ -122,7 +121,7 @@ void BaseParameterInstance::SetSymbol(const std::string& rSymbol)
     mSymbol = rSymbol;
 }
 
-std::ostream& operator <<(std::ostream& stream, const boost::shared_ptr<BaseParameterInstance>& rParameter)
+std::ostream& operator <<(std::ostream& stream, const std::shared_ptr<BaseParameterInstance>& rParameter)
 {
     stream<< "<name>" << rParameter->GetName() <<"</name>\n";
     stream<< "<value>" << rParameter->GetValueAsString() << "</value>\n";

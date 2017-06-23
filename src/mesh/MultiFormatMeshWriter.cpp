@@ -66,10 +66,9 @@ MultiFormatMeshWriter<DIM>::MultiFormatMeshWriter()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<MultiFormatMeshWriter<DIM> > MultiFormatMeshWriter<DIM>::Create()
+std::shared_ptr<MultiFormatMeshWriter<DIM> > MultiFormatMeshWriter<DIM>::Create()
 {
-    MAKE_PTR(MultiFormatMeshWriter<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<MultiFormatMeshWriter<DIM> >();
 }
 
 template<unsigned DIM>
@@ -85,7 +84,7 @@ void MultiFormatMeshWriter<DIM>::SetMesh(vtkSmartPointer<vtkUnstructuredGrid> pM
 }
 
 template<unsigned DIM>
-void MultiFormatMeshWriter<DIM>::SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh, bool addBoundaryLabels)
+void MultiFormatMeshWriter<DIM>::SetMesh(std::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh, bool addBoundaryLabels)
 {
     mpMesh = pMesh;
     mAddBoundaryLabels = addBoundaryLabels;

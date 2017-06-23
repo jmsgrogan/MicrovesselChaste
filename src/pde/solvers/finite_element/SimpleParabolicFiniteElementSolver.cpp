@@ -61,10 +61,10 @@ SimpleParabolicFiniteElementSolver<DIM>::~SimpleParabolicFiniteElementSolver()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<SimpleParabolicFiniteElementSolver<DIM> > SimpleParabolicFiniteElementSolver<DIM>::Create()
+std::shared_ptr<SimpleParabolicFiniteElementSolver<DIM> > SimpleParabolicFiniteElementSolver<DIM>::Create()
 {
-    MAKE_PTR(SimpleParabolicFiniteElementSolver<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<SimpleParabolicFiniteElementSolver<DIM> >();
+
 }
 
 template <unsigned DIM>
@@ -118,8 +118,8 @@ void SimpleParabolicFiniteElementSolver<DIM>::Solve()
     AbstractFiniteElementSolverBase<DIM>::Solve();
 
     // Set up the boundary conditions in the Chaste format
-    boost::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> > p_bcc =
-            boost::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> >(new BoundaryConditionsContainer<DIM, DIM, 1> );
+    std::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> > p_bcc =
+            std::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> >(new BoundaryConditionsContainer<DIM, DIM, 1> );
 
     for(unsigned idx=0; idx<this->mBoundaryConditions.size(); idx++)
     {
@@ -128,8 +128,8 @@ void SimpleParabolicFiniteElementSolver<DIM>::Solve()
     }
 
     // Check the type of pde
-    if(boost::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > p_parabolic_pde =
-            boost::dynamic_pointer_cast<AbstractDiscreteContinuumParabolicPde<DIM, DIM> >(this->mpPde))
+    if(std::shared_ptr<AbstractDiscreteContinuumParabolicPde<DIM, DIM> > p_parabolic_pde =
+            std::dynamic_pointer_cast<AbstractDiscreteContinuumParabolicPde<DIM, DIM> >(this->mpPde))
     {
         Vec initial_guess = PetscTools::CreateAndSetVec(this->mpMesh->GetNumNodes(), 0.0);
         SimpleLinearParabolicSolverWithStorage<DIM, DIM> solver(this->mpMesh.get(), p_parabolic_pde.get(), p_bcc.get());

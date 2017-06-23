@@ -56,7 +56,7 @@ private:
     /**
      * Container for the vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
 
     /**
      * A vtk representation of the network
@@ -89,7 +89,7 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a shared pointer to the class
      */
-    static boost::shared_ptr<VesselNetworkWriter<DIM> > Create();
+    static std::shared_ptr<VesselNetworkWriter<DIM> > Create();
 
     /**
      * Destructor
@@ -100,7 +100,7 @@ public:
      * Set the vessel network
      * @param pNetwork the vessel network
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Adds a collection of vessels to the VesselNetwork

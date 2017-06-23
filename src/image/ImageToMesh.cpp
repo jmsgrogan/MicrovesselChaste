@@ -64,10 +64,9 @@ ImageToMesh<DIM>::ImageToMesh()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<ImageToMesh<DIM> > ImageToMesh<DIM>::Create()
+std::shared_ptr<ImageToMesh<DIM> > ImageToMesh<DIM>::Create()
 {
-    MAKE_PTR(ImageToMesh, pSelf);
-    return pSelf;
+    return std::make_shared<ImageToMesh>();
 }
 
 template<unsigned DIM>
@@ -89,7 +88,7 @@ std::vector<DimensionalChastePoint<DIM> > ImageToMesh<DIM>::GetMeshHoles()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > ImageToMesh<DIM>::GetMesh()
+std::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > ImageToMesh<DIM>::GetMesh()
 {
     if(mMesh)
     {
@@ -102,7 +101,7 @@ boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > ImageToMesh<DIM>::GetMesh()
 }
 
 template<unsigned DIM>
-void ImageToMesh<DIM>::SetTissueDomain(boost::shared_ptr<Part<DIM> > pTissueDomain)
+void ImageToMesh<DIM>::SetTissueDomain(std::shared_ptr<Part<DIM> > pTissueDomain)
 {
     mpDomain = pTissueDomain;
 }
@@ -154,7 +153,7 @@ void ImageToMesh<DIM>::Update()
             temp_mesh_generator.SetDomain(mpDomain);
         }
         temp_mesh_generator.Update();
-        boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > p_temp_mesh = temp_mesh_generator.GetMesh();
+        std::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > p_temp_mesh = temp_mesh_generator.GetMesh();
 
         vtkSmartPointer<vtkPoints> mesh_points = p_temp_mesh->GetPoints();
         std::vector<std::vector<unsigned> > mesh_connectivity = p_temp_mesh->GetConnectivity();
@@ -227,7 +226,7 @@ void ImageToMesh<DIM>::Update()
             fine_mesh_generator.SetDomain(mpDomain);
         }
         fine_mesh_generator.Update();
-        boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > p_fine_mesh = fine_mesh_generator.GetMesh();
+        std::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > p_fine_mesh = fine_mesh_generator.GetMesh();
         mMesh = p_fine_mesh;
     }
     else

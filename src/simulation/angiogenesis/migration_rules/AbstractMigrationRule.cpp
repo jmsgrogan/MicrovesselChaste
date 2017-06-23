@@ -57,10 +57,10 @@ AbstractMigrationRule<DIM>::~AbstractMigrationRule()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<AbstractMigrationRule<DIM> > AbstractMigrationRule<DIM>::Create()
+std::shared_ptr<AbstractMigrationRule<DIM> > AbstractMigrationRule<DIM>::Create()
 {
-    MAKE_PTR(AbstractMigrationRule<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<AbstractMigrationRule<DIM> >();
+
 }
 
 template <unsigned DIM>
@@ -70,19 +70,19 @@ void AbstractMigrationRule<DIM>::SetUseMooreNeighbourhood(bool useMooreNeighbour
 }
 
 template <unsigned DIM>
-std::vector<DimensionalChastePoint<DIM> > AbstractMigrationRule<DIM>::GetDirections(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<DimensionalChastePoint<DIM> > AbstractMigrationRule<DIM>::GetDirections(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     return std::vector<DimensionalChastePoint<DIM> >();
 }
 
 template <unsigned DIM>
-std::vector<int> AbstractMigrationRule<DIM>::GetIndices(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<int> AbstractMigrationRule<DIM>::GetIndices(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     return std::vector<int>();
 }
 
 template<unsigned DIM>
-void AbstractMigrationRule<DIM>::SetBoundingDomain(boost::shared_ptr<Part<DIM> > pPart)
+void AbstractMigrationRule<DIM>::SetBoundingDomain(std::shared_ptr<Part<DIM> > pPart)
 {
     mpBoundingDomain = pPart;
 }
@@ -94,25 +94,25 @@ void AbstractMigrationRule<DIM>::SetIsSprouting(bool isSprouting)
 }
 
 template<unsigned DIM>
-void AbstractMigrationRule<DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGrid)
+void AbstractMigrationRule<DIM>::SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGrid)
 {
     mpGridCalculator = pGrid;
 }
 
 template<unsigned DIM>
-void AbstractMigrationRule<DIM>::SetDiscreteContinuumSolver(boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver)
+void AbstractMigrationRule<DIM>::SetDiscreteContinuumSolver(std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver)
 {
     mpSolver = pSolver;
 }
 
 template<unsigned DIM>
-void AbstractMigrationRule<DIM>::SetNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void AbstractMigrationRule<DIM>::SetNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpVesselNetwork = pNetwork;
 }
 
 template<unsigned DIM>
-void AbstractMigrationRule<DIM>::SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pPopulation)
+void AbstractMigrationRule<DIM>::SetCellPopulation(std::shared_ptr<AbstractCellPopulation<DIM> > pPopulation)
 {
     mpCellPopulation = pPopulation;
 }

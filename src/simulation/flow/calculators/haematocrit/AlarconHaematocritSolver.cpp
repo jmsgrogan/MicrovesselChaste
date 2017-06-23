@@ -56,17 +56,16 @@ AlarconHaematocritSolver<DIM>::~AlarconHaematocritSolver()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<AlarconHaematocritSolver<DIM> > AlarconHaematocritSolver<DIM>::Create()
+std::shared_ptr<AlarconHaematocritSolver<DIM> > AlarconHaematocritSolver<DIM>::Create()
 {
-    MAKE_PTR(AlarconHaematocritSolver<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<AlarconHaematocritSolver<DIM> >();
 }
 
 template<unsigned DIM>
 void AlarconHaematocritSolver<DIM>::Calculate()
 {
     // Give the vessels unique Ids
-    std::vector<boost::shared_ptr<Vessel<DIM> > > vessels = this->mpNetwork->GetVessels();
+    std::vector<std::shared_ptr<Vessel<DIM> > > vessels = this->mpNetwork->GetVessels();
     for(unsigned idx=0; idx<vessels.size(); idx++)
     {
         vessels[idx]->SetId(idx);
@@ -114,7 +113,7 @@ void AlarconHaematocritSolver<DIM>::Calculate()
         else
         {
             // Identify the inflow node for this vessel
-            boost::shared_ptr<VesselNode<DIM> > p_inflow_node;
+            std::shared_ptr<VesselNode<DIM> > p_inflow_node;
             units::quantity<unit::flow_rate> flow_rate = vessels[idx]->GetFlowProperties()->GetFlowRate();
             if(flow_rate >0.0 * unit::metre_cubed_per_second)
             {
@@ -129,8 +128,8 @@ void AlarconHaematocritSolver<DIM>::Calculate()
             // a parent vessel and do not feed in, i.e. they compete for haematocrit
             if(p_inflow_node->GetNumberOfSegments()>1)
             {
-                std::vector<boost::shared_ptr<Vessel<DIM> > > parent_vessels;
-                std::vector<boost::shared_ptr<Vessel<DIM> > > competitor_vessels;
+                std::vector<std::shared_ptr<Vessel<DIM> > > parent_vessels;
+                std::vector<std::shared_ptr<Vessel<DIM> > > competitor_vessels;
                 for(unsigned jdx=0; jdx<p_inflow_node->GetSegments().size(); jdx++)
                 {
                     // if not this vessel

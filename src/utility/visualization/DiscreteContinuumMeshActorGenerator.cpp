@@ -168,7 +168,7 @@ void DiscreteContinuumMeshActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRende
 }
 
 template<unsigned DIM>
-void DiscreteContinuumMeshActorGenerator<DIM>::SetDiscreteContinuumMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > pDiscreteContinuumMesh)
+void DiscreteContinuumMeshActorGenerator<DIM>::SetDiscreteContinuumMesh(std::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > pDiscreteContinuumMesh)
 {
     mpDiscreteContinuumMesh = pDiscreteContinuumMesh;
 }

@@ -103,7 +103,7 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a shared pointer to a class instance.
      */
-    static boost::shared_ptr<CoupledLumpedSystemFiniteElementSolver<DIM> > Create();
+    static std::shared_ptr<CoupledLumpedSystemFiniteElementSolver<DIM> > Create();
 
     /**
      * Return the intermediate solutions. Empty if not stored.

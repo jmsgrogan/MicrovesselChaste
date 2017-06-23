@@ -62,14 +62,14 @@ OffLatticeSproutingRule<DIM>::~OffLatticeSproutingRule()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<OffLatticeSproutingRule<DIM> > OffLatticeSproutingRule<DIM>::Create()
+std::shared_ptr<OffLatticeSproutingRule<DIM> > OffLatticeSproutingRule<DIM>::Create()
 {
-    MAKE_PTR(OffLatticeSproutingRule<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<OffLatticeSproutingRule<DIM> >();
+
 }
 
 template<unsigned DIM>
-std::vector<boost::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::GetSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<std::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::GetSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     if(!this->mpVesselNetwork)
     {
@@ -101,7 +101,7 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::
     }
 
     // Set up the output sprouts vector
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > sprouts;
+    std::vector<std::shared_ptr<VesselNode<DIM> > > sprouts;
 
     // Loop over all nodes and randomly select sprouts
     for(unsigned idx = 0; idx < rNodes.size(); idx++)

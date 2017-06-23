@@ -51,19 +51,19 @@ VesselNetworkPropertyManager<DIM>::~VesselNetworkPropertyManager()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<VesselNetworkPropertyManager<DIM> > VesselNetworkPropertyManager<DIM>::Create()
+std::shared_ptr<VesselNetworkPropertyManager<DIM> > VesselNetworkPropertyManager<DIM>::Create()
 {
-    MAKE_PTR(VesselNetworkPropertyManager<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<VesselNetworkPropertyManager<DIM> >();
+
 }
 
 template <unsigned DIM>
-void VesselNetworkPropertyManager<DIM>::AssignInflows(boost::shared_ptr<VesselNetwork<DIM> > pNetwork,
+void VesselNetworkPropertyManager<DIM>::AssignInflows(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
         DimensionalChastePoint<DIM> location, units::quantity<unit::length> searchRadius)
 {
     if(pNetwork->GetNodes().size()>0)
     {
-        std::vector<boost::shared_ptr<VesselNode<DIM> > > inside_nodes = VesselNetworkGeometryCalculator<DIM>::GetNodesInSphere(
+        std::vector<std::shared_ptr<VesselNode<DIM> > > inside_nodes = VesselNetworkGeometryCalculator<DIM>::GetNodesInSphere(
                 pNetwork, location, searchRadius);
         for(unsigned idx=0;idx<inside_nodes.size();idx++)
         {
@@ -73,12 +73,12 @@ void VesselNetworkPropertyManager<DIM>::AssignInflows(boost::shared_ptr<VesselNe
 }
 
 template <unsigned DIM>
-void VesselNetworkPropertyManager<DIM>::AssignOutflows(boost::shared_ptr<VesselNetwork<DIM> > pNetwork,
+void VesselNetworkPropertyManager<DIM>::AssignOutflows(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
         DimensionalChastePoint<DIM> location, units::quantity<unit::length> searchRadius)
 {
     if(pNetwork->GetNodes().size()>0)
     {
-        std::vector<boost::shared_ptr<VesselNode<DIM> > > outside_nodes = VesselNetworkGeometryCalculator<DIM>::GetNodesInSphere(
+        std::vector<std::shared_ptr<VesselNode<DIM> > > outside_nodes = VesselNetworkGeometryCalculator<DIM>::GetNodesInSphere(
                 pNetwork, location, searchRadius);
         for(unsigned idx=0;idx<outside_nodes.size();idx++)
         {
@@ -88,10 +88,10 @@ void VesselNetworkPropertyManager<DIM>::AssignOutflows(boost::shared_ptr<VesselN
 }
 
 template <unsigned DIM>
-void VesselNetworkPropertyManager<DIM>::SetInflowPressures(boost::shared_ptr<VesselNetwork<DIM> > pNetwork,
+void VesselNetworkPropertyManager<DIM>::SetInflowPressures(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
         units::quantity<unit::pressure> pressure)
 {
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
     for(unsigned idx=0; idx<nodes.size(); idx++)
     {
         if(nodes[idx]->GetFlowProperties()->IsInputNode())
@@ -102,9 +102,9 @@ void VesselNetworkPropertyManager<DIM>::SetInflowPressures(boost::shared_ptr<Ves
 }
 
 template <unsigned DIM>
-void VesselNetworkPropertyManager<DIM>::SetOutflowPressures(boost::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::pressure> pressure)
+void VesselNetworkPropertyManager<DIM>::SetOutflowPressures(std::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::pressure> pressure)
 {
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
     for(unsigned idx=0; idx<nodes.size(); idx++)
     {
         if(nodes[idx]->GetFlowProperties()->IsOutputNode())
@@ -115,11 +115,11 @@ void VesselNetworkPropertyManager<DIM>::SetOutflowPressures(boost::shared_ptr<Ve
 }
 
 template <unsigned DIM>
-void VesselNetworkPropertyManager<DIM>::CopySegmentFlowProperties(boost::shared_ptr<VesselNetwork<DIM> > pNetwork, unsigned index)
+void VesselNetworkPropertyManager<DIM>::CopySegmentFlowProperties(std::shared_ptr<VesselNetwork<DIM> > pNetwork, unsigned index)
 {
-    boost::shared_ptr<SegmentFlowProperties<DIM> > properties = pNetwork->GetVesselSegments()[index]->GetFlowProperties();
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
-    typename std::vector<boost::shared_ptr<VesselSegment<DIM> > >::iterator it;
+    std::shared_ptr<SegmentFlowProperties<DIM> > properties = pNetwork->GetVesselSegments()[index]->GetFlowProperties();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
+    typename std::vector<std::shared_ptr<VesselSegment<DIM> > >::iterator it;
     for(it = segments.begin(); it != segments.end(); it++)
     {
         (*it)->SetFlowProperties(*properties);
@@ -128,9 +128,9 @@ void VesselNetworkPropertyManager<DIM>::CopySegmentFlowProperties(boost::shared_
 
 
 template <unsigned DIM>
-void VesselNetworkPropertyManager<DIM>::SetNodeRadiiFromSegments(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void VesselNetworkPropertyManager<DIM>::SetNodeRadiiFromSegments(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
     for(unsigned idx=0; idx<nodes.size(); idx++)
     {
         units::quantity<unit::length> av_radius = 0.0 * unit::metres;
@@ -145,10 +145,10 @@ void VesselNetworkPropertyManager<DIM>::SetNodeRadiiFromSegments(boost::shared_p
 }
 
 template <unsigned DIM>
-std::vector<boost::shared_ptr<VesselNode<DIM> > > VesselNetworkPropertyManager<DIM>::GetInflowNodes(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+std::vector<std::shared_ptr<VesselNode<DIM> > > VesselNetworkPropertyManager<DIM>::GetInflowNodes(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > inflow_nodes;
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > inflow_nodes;
     for(unsigned idx=0;idx<nodes.size();idx++)
     {
         if(nodes[idx]->GetFlowProperties()->IsInputNode())
@@ -160,10 +160,10 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > VesselNetworkPropertyManager<D
 }
 
 template <unsigned DIM>
-std::vector<boost::shared_ptr<VesselNode<DIM> > > VesselNetworkPropertyManager<DIM>::GetOutflowNodes(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+std::vector<std::shared_ptr<VesselNode<DIM> > > VesselNetworkPropertyManager<DIM>::GetOutflowNodes(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > outflow_nodes;
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > outflow_nodes;
     for(unsigned idx=0;idx<nodes.size();idx++)
     {
         if(nodes[idx]->GetFlowProperties()->IsOutputNode())
@@ -175,11 +175,11 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > VesselNetworkPropertyManager<D
 }
 
 template <unsigned DIM>
-void VesselNetworkPropertyManager<DIM>::SetSegmentProperties(boost::shared_ptr<VesselNetwork<DIM> > pNetwork,
-        boost::shared_ptr<VesselSegment<DIM> >  prototype)
+void VesselNetworkPropertyManager<DIM>::SetSegmentProperties(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
+        std::shared_ptr<VesselSegment<DIM> >  prototype)
 {
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
-    typename std::vector<boost::shared_ptr<VesselSegment<DIM> > >::iterator it;
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
+    typename std::vector<std::shared_ptr<VesselSegment<DIM> > >::iterator it;
     for(it = segments.begin(); it != segments.end(); it++)
     {
         (*it)->SetRadius(prototype->GetRadius());
@@ -191,10 +191,10 @@ void VesselNetworkPropertyManager<DIM>::SetSegmentProperties(boost::shared_ptr<V
 }
 
 template <unsigned DIM>
-void VesselNetworkPropertyManager<DIM>::SetNodeRadii(boost::shared_ptr<VesselNetwork<DIM> > pNetwork,
+void VesselNetworkPropertyManager<DIM>::SetNodeRadii(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
         units::quantity<unit::length> radius)
 {
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
 
     for(unsigned idx=0; idx<nodes.size();idx++)
     {
@@ -203,10 +203,10 @@ void VesselNetworkPropertyManager<DIM>::SetNodeRadii(boost::shared_ptr<VesselNet
 }
 
 template <unsigned DIM>
-void VesselNetworkPropertyManager<DIM>::SetSegmentRadii(boost::shared_ptr<VesselNetwork<DIM> > pNetwork,
+void VesselNetworkPropertyManager<DIM>::SetSegmentRadii(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
         units::quantity<unit::length> radius)
 {
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
 
     for(unsigned idx=0; idx<segments.size();idx++)
     {
@@ -215,10 +215,10 @@ void VesselNetworkPropertyManager<DIM>::SetSegmentRadii(boost::shared_ptr<Vessel
 }
 
 template <unsigned DIM>
-void VesselNetworkPropertyManager<DIM>::SetSegmentViscosity(boost::shared_ptr<VesselNetwork<DIM> > pNetwork,
+void VesselNetworkPropertyManager<DIM>::SetSegmentViscosity(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
         units::quantity<unit::dynamic_viscosity> viscosity)
 {
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
     for(unsigned idx=0; idx<segments.size(); idx++)
     {
         segments[idx]->GetFlowProperties()->SetViscosity(viscosity);

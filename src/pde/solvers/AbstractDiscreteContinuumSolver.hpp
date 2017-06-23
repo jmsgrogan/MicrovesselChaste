@@ -71,7 +71,7 @@ protected:
     /**
      * File handler containing the output directory
      */
-    boost::shared_ptr<OutputFileHandler> mpOutputFileHandler;
+    std::shared_ptr<OutputFileHandler> mpOutputFileHandler;
 
     /**
      *  The filename for output
@@ -96,12 +96,12 @@ protected:
     /**
      * The PDE to be solved
      */
-    boost::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > mpPde;
+    std::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > mpPde;
 
     /**
      * The DiscreteContinuum boundary conditions, optional
      */
-    std::vector<boost::shared_ptr<DiscreteContinuumBoundaryCondition<DIM> > > mBoundaryConditions;
+    std::vector<std::shared_ptr<DiscreteContinuumBoundaryCondition<DIM> > > mBoundaryConditions;
 
     /**
      * This is used internally to scale concentrations before and after linear system solves, reads and writes.
@@ -123,7 +123,7 @@ protected:
     /**
      * A density map
      */
-    boost::shared_ptr<DensityMap<DIM> > mpDensityMap;
+    std::shared_ptr<DensityMap<DIM> > mpDensityMap;
 
 public:
 
@@ -141,7 +141,7 @@ public:
      * Add a DiscreteContinuum boundary condition for the domain
      * @param pBoundaryCondition the boundary condition
      */
-    void AddBoundaryCondition(boost::shared_ptr<DiscreteContinuumBoundaryCondition<DIM> > pBoundaryCondition);
+    void AddBoundaryCondition(std::shared_ptr<DiscreteContinuumBoundaryCondition<DIM> > pBoundaryCondition);
 
     /**
      * Return the value of the field with ordering determined by child classes
@@ -154,7 +154,7 @@ public:
      * @param pGrid the sampling grid
      * @return the value of the field ordered according to grid order
      */
-    virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
+    virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
 
     /**
      * Return the value of the field at the requested points
@@ -167,7 +167,7 @@ public:
      * Return the density map
      * @return the density map
      */
-    boost::shared_ptr<DensityMap<DIM> > GetDensityMap();
+    std::shared_ptr<DensityMap<DIM> > GetDensityMap();
 
     /**
      * Return the name of the field being solved for
@@ -179,7 +179,7 @@ public:
      * Return the PDE
      * @return the DiscreteContinuum linear elliptic pde
      */
-    boost::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > GetPde();
+    std::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > GetPde();
 
     /**
      * Return the reference length scale, needs a grid first
@@ -225,7 +225,7 @@ public:
      * @param pGrid the grid to be sampled
      * @return the value of the field ordered according to input point order
      */
-    virtual std::vector<double> GetSolution(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
+    virtual std::vector<double> GetSolution(std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
 
     /**
      * Return the solution as vtk data
@@ -237,7 +237,7 @@ public:
      * Set the file handler containing the working directory
      * @param pOutputFileHandler the file handler containing the working directory
      */
-    void SetFileHandler(boost::shared_ptr<OutputFileHandler> pOutputFileHandler);
+    void SetFileHandler(std::shared_ptr<OutputFileHandler> pOutputFileHandler);
 
     /**
      * Set the file name for output
@@ -255,7 +255,7 @@ public:
      *  Set the PDE to be solved
      * @param pPde the pde to be solved
      */
-    void SetPde(boost::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > pPde);
+    void SetPde(std::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > pPde);
 
     /**
      * Operations to be performed prior to the first solve
@@ -279,18 +279,18 @@ public:
      * supply a density map.
      * @param pGrid the grid
      */
-    void SetGrid(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
+    void SetGrid(std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
 
     /**
      * Set the density map
      */
-    void SetDensityMap(boost::shared_ptr<DensityMap<DIM> > pDensityMap);
+    void SetDensityMap(std::shared_ptr<DensityMap<DIM> > pDensityMap);
 
     /**
      * Set the vessel network
      * @param pNetwork the vessel network
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Set the cell population

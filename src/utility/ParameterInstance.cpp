@@ -62,21 +62,19 @@ ParameterInstance<UNIT>::~ParameterInstance()
 }
 
 template<class UNIT>
-boost::shared_ptr<ParameterInstance<UNIT> > ParameterInstance<UNIT>::Create()
+std::shared_ptr<ParameterInstance<UNIT> > ParameterInstance<UNIT>::Create()
 {
-    MAKE_PTR(ParameterInstance<UNIT>, pSelf);
-    return pSelf;
+    return std::make_shared<ParameterInstance<UNIT> >();
 }
 
 template<class UNIT>
-boost::shared_ptr<ParameterInstance<UNIT> > ParameterInstance<UNIT>::Create(units::quantity<UNIT> value,
+std::shared_ptr<ParameterInstance<UNIT> > ParameterInstance<UNIT>::Create(units::quantity<UNIT> value,
                                                                             const std::string& rName,
                                                                             const std::string& rShortDescription,
                                                                             const std::string& rSymbol,
                                                                             const std::string& rBibliographicInfromation)
 {
-    MAKE_PTR_ARGS(ParameterInstance<UNIT>, pSelf, (value,rName,rShortDescription,rSymbol, rBibliographicInfromation));
-    return pSelf;
+    return std::make_shared<ParameterInstance<UNIT> >(value,rName,rShortDescription,rSymbol, rBibliographicInfromation);
 }
 
 template<class UNIT>

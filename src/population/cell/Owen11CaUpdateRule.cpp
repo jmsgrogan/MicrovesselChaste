@@ -121,7 +121,7 @@ double Owen11CaUpdateRule<1>::EvaluateProbability(unsigned currentNodeIndex,
 }
 
 template<unsigned DIM>
-void Owen11CaUpdateRule<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork)
+void Owen11CaUpdateRule<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork)
 {
     mpVesselNetwork = pVesselNetwork;
 }
@@ -133,7 +133,7 @@ void Owen11CaUpdateRule<DIM>::SetReferenceLengthScale(units::quantity<unit::leng
 }
 
 template<unsigned DIM>
-void Owen11CaUpdateRule<DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pRegularGrid)
+void Owen11CaUpdateRule<DIM>::SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pRegularGrid)
 {
     mpGridCalculator = pRegularGrid;
 }

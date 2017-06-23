@@ -75,12 +75,12 @@ class DiscreteContinuumMeshGenerator
     /**
      * The mesh
      */
-    boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > mpMesh;
+    std::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > mpMesh;
 
     /**
      * A part to be meshed. This may not be the final mesh geometry if extra vtk polydata is included.
      */
-    boost::shared_ptr<Part<SPACE_DIM> > mpDomain;
+    std::shared_ptr<Part<SPACE_DIM> > mpDomain;
 
     /**
      * A vtk surface to be meshed
@@ -128,19 +128,19 @@ public:
      * Factory constructor method
      * @return a shared pointer to a new mesh generator
      */
-    static boost::shared_ptr<DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM> > Create();
+    static std::shared_ptr<DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM> > Create();
 
     /**
      * Return the mesh
      * @return the mesh
      */
-    boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > GetMesh();
+    std::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > GetMesh();
 
     /**
      * Set the domain for meshing
      * @param pDomain the domain for meshing
      */
-    void SetDomain(boost::shared_ptr<Part<SPACE_DIM> > pDomain);
+    void SetDomain(std::shared_ptr<Part<SPACE_DIM> > pDomain);
 
     /**
      * Set the domain for meshing

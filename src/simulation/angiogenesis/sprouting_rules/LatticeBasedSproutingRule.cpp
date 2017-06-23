@@ -51,10 +51,10 @@ LatticeBasedSproutingRule<DIM>::LatticeBasedSproutingRule()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<LatticeBasedSproutingRule<DIM> > LatticeBasedSproutingRule<DIM>::Create()
+std::shared_ptr<LatticeBasedSproutingRule<DIM> > LatticeBasedSproutingRule<DIM>::Create()
 {
-    MAKE_PTR(LatticeBasedSproutingRule<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<LatticeBasedSproutingRule<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -64,7 +64,7 @@ LatticeBasedSproutingRule<DIM>::~LatticeBasedSproutingRule()
 }
 
 template<unsigned DIM>
-void LatticeBasedSproutingRule<DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGrid)
+void LatticeBasedSproutingRule<DIM>::SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGrid)
 {
     mpGridCalculator = pGrid;
 }
@@ -76,7 +76,7 @@ void LatticeBasedSproutingRule<DIM>::SetTipExclusionRadius(units::quantity<unit:
 }
 
 template<unsigned DIM>
-std::vector<boost::shared_ptr<VesselNode<DIM> > > LatticeBasedSproutingRule<DIM>::GetSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<std::shared_ptr<VesselNode<DIM> > > LatticeBasedSproutingRule<DIM>::GetSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     if(!this->mpVesselNetwork)
     {
@@ -84,7 +84,7 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > LatticeBasedSproutingRule<DIM>
     }
 
     // Set up the output sprouts vector
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > sprouts;
+    std::vector<std::shared_ptr<VesselNode<DIM> > > sprouts;
 
     // Loop over all nodes and randomly select sprouts
     for(unsigned idx = 0; idx < rNodes.size(); idx++)

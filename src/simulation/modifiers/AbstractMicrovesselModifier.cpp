@@ -49,19 +49,19 @@ AbstractMicrovesselModifier<DIM>::~AbstractMicrovesselModifier()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<AbstractCellPopulation<DIM> > AbstractMicrovesselModifier<DIM>::GetCellPopulation()
+std::shared_ptr<AbstractCellPopulation<DIM> > AbstractMicrovesselModifier<DIM>::GetCellPopulation()
 {
     return mpCellPopulation;
 }
 
 template<unsigned DIM>
-boost::shared_ptr<VesselNetwork<DIM> > AbstractMicrovesselModifier<DIM>::GetVesselNetwork()
+std::shared_ptr<VesselNetwork<DIM> > AbstractMicrovesselModifier<DIM>::GetVesselNetwork()
 {
     return mpNetwork;
 }
 
 template<unsigned DIM>
-void AbstractMicrovesselModifier<DIM>::AddDiscreteContinuumSolver(boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pDiscreteContinuumSolver)
+void AbstractMicrovesselModifier<DIM>::AddDiscreteContinuumSolver(std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pDiscreteContinuumSolver)
 {
     mDiscreteContinuumSolvers.push_back(pDiscreteContinuumSolver);
 }
@@ -73,7 +73,7 @@ unsigned AbstractMicrovesselModifier<DIM>::GetNumberOfDiscreteContinuumSolvers()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > AbstractMicrovesselModifier<DIM>::GetDiscreteContinuumSolver(unsigned index)
+std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > AbstractMicrovesselModifier<DIM>::GetDiscreteContinuumSolver(unsigned index)
 {
     if(index<mDiscreteContinuumSolvers.size())
     {
@@ -86,13 +86,13 @@ boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > AbstractMicrovesselModi
 }
 
 template<unsigned DIM>
-void AbstractMicrovesselModifier<DIM>::SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > pCellPopulation)
+void AbstractMicrovesselModifier<DIM>::SetCellPopulation(std::shared_ptr<AbstractCellPopulation<DIM,DIM> > pCellPopulation)
 {
     mpCellPopulation = pCellPopulation;
 }
 
 template<unsigned DIM>
-void AbstractMicrovesselModifier<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void AbstractMicrovesselModifier<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpNetwork = pNetwork;
 }

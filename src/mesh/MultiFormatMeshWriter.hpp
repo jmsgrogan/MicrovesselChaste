@@ -77,7 +77,7 @@ private:
     /**
      *  The mesh to be written in DiscreteContinuumMesh format
      */
-    boost::shared_ptr<DiscreteContinuumMesh<DIM> > mpMesh;
+    std::shared_ptr<DiscreteContinuumMesh<DIM> > mpMesh;
 
     /**
      *  The output path
@@ -110,7 +110,7 @@ public:
      * Factory constructor method
      * @return a shared pointer to a instance of this class
      */
-    static boost::shared_ptr<MultiFormatMeshWriter> Create();
+    static std::shared_ptr<MultiFormatMeshWriter> Create();
 
     /**
      * Set the filename for the writer without extension
@@ -128,7 +128,7 @@ public:
      * Set the mesh in DiscreteContinuum mesh format
      * @param pMesh the mesh to write out
      */
-    void SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh, bool addBoundaryLabels=false);
+    void SetMesh(std::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh, bool addBoundaryLabels=false);
 
     /**
      * Set the format for writer output

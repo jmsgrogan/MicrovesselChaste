@@ -76,13 +76,13 @@ class Facet
     /**
      * The polygons making up the facet
      */
-    std::vector<boost::shared_ptr<Polygon<DIM> > > mPolygons;
+    std::vector<std::shared_ptr<Polygon<DIM> > > mPolygons;
 
     /**
      * Unique vertices in the facet. This is not always up-to-date.
      * Use GetVertices() to ensure up-to-date vertices are used.
      */
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > mVertices;
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > mVertices;
 
     /**
      * Whether mVertices is up-to-date. This should be set false when new
@@ -106,27 +106,27 @@ public:
      * Constructor
      * @param polygons a facet is made from these polygons
      */
-    Facet(std::vector<boost::shared_ptr<Polygon<DIM> > > polygons);
+    Facet(std::vector<std::shared_ptr<Polygon<DIM> > > polygons);
 
     /**
      * Constructor
      * @param pPolygon a single polygon for the facet
      */
-    Facet(boost::shared_ptr<Polygon<DIM> > pPolygon);
+    Facet(std::shared_ptr<Polygon<DIM> > pPolygon);
 
     /**
      * Factory constructor method
      * @param polygons planar polygons
      * @return a shared pointer to a new facet
      */
-    static boost::shared_ptr<Facet<DIM> > Create(std::vector<boost::shared_ptr<Polygon<DIM> > > polygons);
+    static std::shared_ptr<Facet<DIM> > Create(std::vector<std::shared_ptr<Polygon<DIM> > > polygons);
 
     /**
      * Factory constructor method
      * @param pPolygon a polygon
      * @return a smart pointer to a new facet
      */
-    static boost::shared_ptr<Facet<DIM> > Create(boost::shared_ptr<Polygon<DIM> > pPolygon);
+    static std::shared_ptr<Facet<DIM> > Create(std::shared_ptr<Polygon<DIM> > pPolygon);
 
     /**
      * Desctructor
@@ -137,13 +137,13 @@ public:
      * Add polygons
      * @param polygons planar polygons
      */
-    void AddPolygons(std::vector<boost::shared_ptr<Polygon<DIM> > > polygons);
+    void AddPolygons(std::vector<std::shared_ptr<Polygon<DIM> > > polygons);
 
     /**
      * Add polygon
      * @param pPolygon a polygon
      */
-    void AddPolygon(boost::shared_ptr<Polygon<DIM> > pPolygon);
+    void AddPolygon(std::shared_ptr<Polygon<DIM> > pPolygon);
 
     /**
      * Return true if the specified location is in the facet
@@ -187,13 +187,13 @@ public:
      * Return the polygons
      * @return the polygons making up the facet
      */
-    std::vector<boost::shared_ptr<Polygon<DIM> > > GetPolygons();
+    std::vector<std::shared_ptr<Polygon<DIM> > > GetPolygons();
 
     /**
      * Return the vertices
      * @return the unique vertices in the facet
      */
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > GetVertices();
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > GetVertices();
 
     /**
      * Return the facet vertices as a set of VtkPoints.

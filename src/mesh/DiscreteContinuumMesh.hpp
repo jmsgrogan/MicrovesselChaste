@@ -85,7 +85,7 @@ public:
      * Factory constructor method
      * @return a shared pointer to a new mesh
      */
-    static boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > Create();
+    static std::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > Create();
 
     /**
      * Return the element connectivity

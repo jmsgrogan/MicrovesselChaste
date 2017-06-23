@@ -56,18 +56,18 @@ class Owen11CellPopulationGenerator
     /**
      * A vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
 
     /**
      * A grid for the cells
      */
-    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
+    std::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
 
     /**
      * A potts mesh generator. We store this because we can't let it go out of scope in the
      * lifetime of the Owen11CellPopulationGenerator.
      */
-    boost::shared_ptr<PottsMeshGenerator<DIM> > mpPottsMeshGenerator;
+    std::shared_ptr<PottsMeshGenerator<DIM> > mpPottsMeshGenerator;
 
     /**
      * Mutation state for cancer cells
@@ -122,7 +122,7 @@ public:
      *
      * @return a shared pointer to a new population
      */
-    static boost::shared_ptr<Owen11CellPopulationGenerator<DIM> > Create();
+    static std::shared_ptr<Owen11CellPopulationGenerator<DIM> > Create();
 
     /**
      * Desctructor
@@ -138,14 +138,14 @@ public:
      *
      * @param pNetwork the vessel network
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Set the regular grid
      *
      * @param pGrid the regular grid
      */
-    void SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGrid);
+    void SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGrid);
 
     /**
      * Set the reference length
@@ -166,7 +166,7 @@ public:
      *
      * @return a pointer to the cell population
      */
-    boost::shared_ptr<CaBasedCellPopulation<DIM> > Update();
+    std::shared_ptr<CaBasedCellPopulation<DIM> > Update();
 };
 
 #endif /* Owen11CellPopulationGenerator_HPP_*/

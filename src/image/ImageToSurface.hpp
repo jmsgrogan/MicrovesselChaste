@@ -95,7 +95,7 @@ public:
      * Factory constructor method
      * @return a pointer to the converter
      */
-    static boost::shared_ptr<ImageToSurface> Create();
+    static std::shared_ptr<ImageToSurface> Create();
 
     /**
      * Return the filter output

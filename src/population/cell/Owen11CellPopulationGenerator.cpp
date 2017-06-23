@@ -75,10 +75,10 @@ Owen11CellPopulationGenerator<DIM>::Owen11CellPopulationGenerator() :
 }
 
 template<unsigned DIM>
-boost::shared_ptr<Owen11CellPopulationGenerator<DIM> > Owen11CellPopulationGenerator<DIM>::Create()
+std::shared_ptr<Owen11CellPopulationGenerator<DIM> > Owen11CellPopulationGenerator<DIM>::Create()
 {
-    MAKE_PTR(Owen11CellPopulationGenerator<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<Owen11CellPopulationGenerator<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -100,13 +100,13 @@ void Owen11CellPopulationGenerator<DIM>::SetCellFraction(double cellFraction)
 }
 
 template<unsigned DIM>
-void Owen11CellPopulationGenerator<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void Owen11CellPopulationGenerator<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpVesselNetwork = pNetwork;
 }
 
 template<unsigned DIM>
-void Owen11CellPopulationGenerator<DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGrid)
+void Owen11CellPopulationGenerator<DIM>::SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGrid)
 {
     mpGridCalculator = pGrid;
 }
@@ -124,15 +124,15 @@ void Owen11CellPopulationGenerator<DIM>::SetTumourRadius(units::quantity<unit::l
 }
 
 template<unsigned DIM>
-boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM>::Update()
+std::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM>::Update()
 {
     if(!mpGridCalculator)
     {
         EXCEPTION("A regular grid is required to set of the cell population");
     }
 
-    boost::shared_ptr<RegularGrid<DIM > > p_grid =
-            boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+    std::shared_ptr<RegularGrid<DIM > > p_grid =
+            std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
     if(!p_grid)
     {
         EXCEPTION("Can't cast to regular grid during Setup");
@@ -145,7 +145,7 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
         extents_z = dimensions[2];
     }
 
-    mpPottsMeshGenerator = boost::shared_ptr<PottsMeshGenerator<DIM> >(new PottsMeshGenerator<DIM>(dimensions[0], 0, 0,
+    mpPottsMeshGenerator = std::shared_ptr<PottsMeshGenerator<DIM> >(new PottsMeshGenerator<DIM>(dimensions[0], 0, 0,
             dimensions[1], 0, 0,
                                                                                                    extents_z, 0, 0));
 
@@ -196,7 +196,7 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
 //    }
 
     //            // Create a tumour cells in a cylinder in the middle of the domain
-    //            boost::shared_ptr<Part<3> > p_tumour_cell_region = GetInitialTumourCellRegion();
+    //            std::shared_ptr<Part<3> > p_tumour_cell_region = GetInitialTumourCellRegion();
     //            std::vector<unsigned> location_indices = p_tumour_cell_region->GetContainingGridIndices(num_x, num_y, num_z, spacing);
     //
     //            std::vector<Node<3>*> nodes;
@@ -215,8 +215,8 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
     //            cell_population.AddCellWriter<CellLabelWriter>();
 
     cells_generator.GenerateBasicRandom(cells, location_indices.size(), p_diff_type);
-    boost::shared_ptr<CaBasedCellPopulation<DIM> > p_cell_population =
-            boost::shared_ptr<CaBasedCellPopulation<DIM> >(new CaBasedCellPopulation<DIM> (*p_mesh, cells, location_indices, 2));
+    std::shared_ptr<CaBasedCellPopulation<DIM> > p_cell_population =
+            std::shared_ptr<CaBasedCellPopulation<DIM> >(new CaBasedCellPopulation<DIM> (*p_mesh, cells, location_indices, 2));
 
     // Label stalk cells if the is a vessel network
     if(mpVesselNetwork)
@@ -235,8 +235,8 @@ boost::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM
             DimensionalChastePoint<DIM> origin(double(dimensions[0])*spacing/(2.0*mReferenceLength),
                                              double(dimensions[1])*spacing/(2.0*mReferenceLength),
                                              0.0, mReferenceLength);
-            boost::shared_ptr<Part<DIM> > p_sub_domain = Part<DIM>::Create();
-            boost::shared_ptr<Polygon<DIM> > circle = p_sub_domain->AddCircle(mTumourRadius, origin);
+            std::shared_ptr<Part<DIM> > p_sub_domain = Part<DIM>::Create();
+            std::shared_ptr<Polygon<DIM> > circle = p_sub_domain->AddCircle(mTumourRadius, origin);
             for (unsigned ind = 0; ind < p_mesh->GetNumNodes(); ind++)
             {
                 if (p_sub_domain->IsPointInPart(DimensionalChastePoint<DIM>(p_mesh->GetNode(ind)->rGetLocation(), mCellPopulationReferenceLength)))

@@ -50,10 +50,9 @@ DistanceMap<DIM>::DistanceMap()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<DistanceMap<DIM> > DistanceMap<DIM>::Create()
+std::shared_ptr<DistanceMap<DIM> > DistanceMap<DIM>::Create()
 {
-    MAKE_PTR(DistanceMap, pSelf);
-    return pSelf;
+    return std::make_shared<DistanceMap>();
 }
 
 template<unsigned DIM>
@@ -77,7 +76,7 @@ void DistanceMap<DIM>::Solve()
     unsigned num_points = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfPoints();
     std::vector<double> distances(num_points, 0.0);
 
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments;
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments;
     segments = this->mpDensityMap->GetVesselNetwork()->GetVesselSegments();
     units::quantity<unit::length> ref_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
 

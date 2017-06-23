@@ -199,7 +199,7 @@ public:
      */
     vtkSmartPointer<vtkCellData> GetCellData();
 
-    vtkSmartPointer<vtkDataSet> CalculateDistanceMap(boost::shared_ptr<Part<SPACE_DIM> > pSamplePart);
+    vtkSmartPointer<vtkDataSet> CalculateDistanceMap(std::shared_ptr<Part<SPACE_DIM> > pSamplePart);
 
     /**
      * Return the location of the supplied GLOBAL index

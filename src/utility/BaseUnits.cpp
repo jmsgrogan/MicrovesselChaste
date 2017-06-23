@@ -38,13 +38,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "BaseUnits.hpp"
 
 /** Pointer to the single instance */
-boost::shared_ptr<BaseUnits> BaseUnits::mpInstance = boost::shared_ptr<BaseUnits>();
+std::shared_ptr<BaseUnits> BaseUnits::mpInstance = std::shared_ptr<BaseUnits>();
 
-boost::shared_ptr<BaseUnits> BaseUnits::SharedInstance()
+std::shared_ptr<BaseUnits> BaseUnits::SharedInstance()
 {
     if (!mpInstance)
     {
-        mpInstance = boost::shared_ptr<BaseUnits>(new BaseUnits);
+        mpInstance = std::shared_ptr<BaseUnits>(new BaseUnits);
         std::atexit(Destroy);
     }
     return mpInstance;
@@ -54,7 +54,7 @@ BaseUnits* BaseUnits::Instance()
 {
     if (!mpInstance)
     {
-        mpInstance = boost::shared_ptr<BaseUnits>(new BaseUnits);
+        mpInstance = std::shared_ptr<BaseUnits>(new BaseUnits);
         std::atexit(Destroy);
     }
     return mpInstance.get();
@@ -103,6 +103,6 @@ void BaseUnits::Destroy()
 {
     if (mpInstance)
     {
-        mpInstance = boost::shared_ptr<BaseUnits>();
+        mpInstance = std::shared_ptr<BaseUnits>();
     }
 }

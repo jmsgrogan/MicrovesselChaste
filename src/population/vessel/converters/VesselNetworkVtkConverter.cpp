@@ -56,17 +56,17 @@ VesselNetworkVtkConverter<DIM>::~VesselNetworkVtkConverter()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<VesselNetworkVtkConverter<DIM> > VesselNetworkVtkConverter<DIM>::Create()
+std::shared_ptr<VesselNetworkVtkConverter<DIM> > VesselNetworkVtkConverter<DIM>::Create()
 {
-    MAKE_PTR(VesselNetworkVtkConverter<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<VesselNetworkVtkConverter<DIM> >();
+
 }
 
 template<unsigned DIM>
-vtkSmartPointer<vtkPolyData> VesselNetworkVtkConverter<DIM>::GetVtkRepresentation(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+vtkSmartPointer<vtkPolyData> VesselNetworkVtkConverter<DIM>::GetVtkRepresentation(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
 
     vtkSmartPointer<vtkPoints> p_node_points = vtkSmartPointer<vtkPoints>::New();
     vtkSmartPointer<vtkCellArray> p_lines = vtkSmartPointer<vtkCellArray>::New();
@@ -104,10 +104,10 @@ vtkSmartPointer<vtkPolyData> VesselNetworkVtkConverter<DIM>::GetVtkRepresentatio
 }
 
 template<unsigned DIM>
-vtkSmartPointer<vtkPolyData> VesselNetworkVtkConverter<DIM>::GetGlobalVtkRepresentation(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+vtkSmartPointer<vtkPolyData> VesselNetworkVtkConverter<DIM>::GetGlobalVtkRepresentation(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
 
     vtkSmartPointer<vtkPoints> p_node_points = vtkSmartPointer<vtkPoints>::New();
     vtkSmartPointer<vtkCellArray> p_lines = vtkSmartPointer<vtkCellArray>::New();

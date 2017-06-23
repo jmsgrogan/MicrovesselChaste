@@ -290,7 +290,7 @@ unsigned Owen11CaBasedDivisionRule<1>::CalculateDaughterNodeIndex(CellPtr pNewCe
 }
 
 template<unsigned SPACE_DIM>
-void Owen11CaBasedDivisionRule<SPACE_DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<SPACE_DIM> > pVesselNetwork)
+void Owen11CaBasedDivisionRule<SPACE_DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<SPACE_DIM> > pVesselNetwork)
 {
     mpVesselNetwork = pVesselNetwork;
 }
@@ -302,7 +302,7 @@ void Owen11CaBasedDivisionRule<SPACE_DIM>::SetReferenceLengthScale(units::quanti
 }
 
 template<unsigned SPACE_DIM>
-void Owen11CaBasedDivisionRule<SPACE_DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<SPACE_DIM> > pRegularGrid)
+void Owen11CaBasedDivisionRule<SPACE_DIM>::SetGridCalculator(std::shared_ptr<GridCalculator<SPACE_DIM> > pRegularGrid)
 {
     mpGridCalculator = pRegularGrid;
 }

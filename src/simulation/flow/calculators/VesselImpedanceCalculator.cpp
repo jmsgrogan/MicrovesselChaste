@@ -85,16 +85,16 @@ VesselImpedanceCalculator<DIM>::~VesselImpedanceCalculator()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<VesselImpedanceCalculator<DIM> > VesselImpedanceCalculator<DIM>::Create()
+std::shared_ptr<VesselImpedanceCalculator<DIM> > VesselImpedanceCalculator<DIM>::Create()
 {
-    MAKE_PTR(VesselImpedanceCalculator<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<VesselImpedanceCalculator<DIM> >();
+
 }
 
 template<unsigned DIM>
 void VesselImpedanceCalculator<DIM>::Calculate()
 {
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
     for (unsigned idx = 0; idx < segments.size(); idx++)
     {
         units::quantity<unit::dynamic_viscosity> viscosity = segments[idx]->GetFlowProperties()->GetViscosity();

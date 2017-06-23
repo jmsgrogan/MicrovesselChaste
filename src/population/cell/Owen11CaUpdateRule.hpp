@@ -76,12 +76,12 @@ private:
     /**
      * Vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
 
     /**
      * Regular Grid
      */
-    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
+    std::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
 
     /**
      * Reference length scale
@@ -152,14 +152,14 @@ public:
      *
      * @param pVesselNetwork The vessel network
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
 
     /**
      * Set the regular grid
      *
      * @param pRegularGrid The regular grid
      */
-    void SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator);
+    void SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGridCalculator);
 
     /**
      * Set the reference length scale

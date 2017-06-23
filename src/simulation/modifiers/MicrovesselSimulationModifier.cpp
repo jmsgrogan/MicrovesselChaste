@@ -55,14 +55,14 @@ MicrovesselSimulationModifier<DIM>::~MicrovesselSimulationModifier()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<MicrovesselSimulationModifier<DIM> > MicrovesselSimulationModifier<DIM>::Create()
+std::shared_ptr<MicrovesselSimulationModifier<DIM> > MicrovesselSimulationModifier<DIM>::Create()
 {
-    MAKE_PTR(MicrovesselSimulationModifier<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<MicrovesselSimulationModifier<DIM> >();
+
 }
 
 template <unsigned DIM>
-void MicrovesselSimulationModifier<DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator)
+void MicrovesselSimulationModifier<DIM>::SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGridCalculator)
 {
     mpGridCalculator = pGridCalculator;
 }
@@ -110,7 +110,7 @@ void MicrovesselSimulationModifier<DIM>::SetCellDataUpdateLabels(std::vector<std
 }
 
 template<unsigned DIM>
-void MicrovesselSimulationModifier<DIM>::SetMicrovesselSolver(boost::shared_ptr<MicrovesselSolver<DIM> > pSolver)
+void MicrovesselSimulationModifier<DIM>::SetMicrovesselSolver(std::shared_ptr<MicrovesselSolver<DIM> > pSolver)
 {
     mpSolver = pSolver;
 }

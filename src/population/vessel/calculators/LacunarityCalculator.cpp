@@ -46,10 +46,9 @@ LacunarityCalculator<DIM>::LacunarityCalculator() :
 }
 
 template<unsigned DIM>
-boost::shared_ptr<LacunarityCalculator<DIM> > LacunarityCalculator<DIM>::Create()
+std::shared_ptr<LacunarityCalculator<DIM> > LacunarityCalculator<DIM>::Create()
 {
-    MAKE_PTR(LacunarityCalculator, pSelf);
-    return pSelf;
+    return std::make_shared<LacunarityCalculator >();
 }
 
 template<unsigned DIM>
@@ -59,7 +58,7 @@ LacunarityCalculator<DIM>::~LacunarityCalculator()
 }
 
 template<unsigned DIM>
-void LacunarityCalculator<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void LacunarityCalculator<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpNetwork = pNetwork;
 }
@@ -67,8 +66,8 @@ void LacunarityCalculator<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork
 template<unsigned DIM>
 void LacunarityCalculator<DIM>::Solve()
 {
-    boost::shared_ptr<RegularGrid<DIM > > p_grid =
-            boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
+    std::shared_ptr<RegularGrid<DIM > > p_grid =
+            std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
     if(!p_grid)
     {
         EXCEPTION("Can't cast to regular grid during Setup");
@@ -76,7 +75,7 @@ void LacunarityCalculator<DIM>::Solve()
 
     unsigned extents_x = p_grid->GetDimensions()[0];
 
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments;
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments;
     segments = this->mpNetwork->GetVesselSegments();
 
     // Get the box widths

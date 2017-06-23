@@ -65,10 +65,10 @@ FlowSolver<DIM>::~FlowSolver()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<FlowSolver<DIM> > FlowSolver<DIM>::Create()
+std::shared_ptr<FlowSolver<DIM> > FlowSolver<DIM>::Create()
 {
-    MAKE_PTR(FlowSolver<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<FlowSolver<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -85,7 +85,7 @@ void FlowSolver<DIM>::SetUp()
     unsigned max_branches = mpVesselNetwork->GetMaxBranchesOnNode();
 
     // Set up the system
-    mpLinearSystem = boost::shared_ptr<LinearSystem>(new LinearSystem(num_nodes, max_branches + 1));
+    mpLinearSystem = std::shared_ptr<LinearSystem>(new LinearSystem(num_nodes, max_branches + 1));
 
     // Note: If the network is small the preconditioner is turned off in LinearSystem,
     // so an iterative solver is used instead.
@@ -97,7 +97,7 @@ void FlowSolver<DIM>::SetUp()
 
     // Get the boundary condition nodes
     mBoundaryConditionNodeIndices.clear();
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > boundary_condition_nodes;
+    std::vector<std::shared_ptr<VesselNode<DIM> > > boundary_condition_nodes;
     for (unsigned node_index = 0; node_index < num_nodes; node_index++)
     {
         if (mNodes[node_index]->GetFlowProperties()->IsInputNode()
@@ -109,7 +109,7 @@ void FlowSolver<DIM>::SetUp()
     }
 
     // Get the nodes that correspond to segments that are not connected to the rest of the network
-    boost::shared_ptr<VesselNetworkGraphCalculator<DIM> > p_graph_calculator = VesselNetworkGraphCalculator<DIM>::Create();
+    std::shared_ptr<VesselNetworkGraphCalculator<DIM> > p_graph_calculator = VesselNetworkGraphCalculator<DIM>::Create();
     p_graph_calculator->SetVesselNetwork(mpVesselNetwork);
     mNodeVesselConnectivity = p_graph_calculator->GetNodeVesselConnectivity();
     mNodeNodeConnectivity = p_graph_calculator->GetNodeNodeConnectivity();
@@ -135,7 +135,7 @@ void FlowSolver<DIM>::SetUseDirectSolver(bool useDirectSolver)
 }
 
 template<unsigned DIM>
-void FlowSolver<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork)
+void FlowSolver<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork)
 {
     mpVesselNetwork = pVesselNetwork;
 }
@@ -219,7 +219,7 @@ void FlowSolver<DIM>::Update(bool runSetup)
     {
         if(mNodes[mBoundaryConditionNodeIndices[bc_index]]->GetFlowProperties()->UseVelocityBoundaryCondition())
         {
-            boost::shared_ptr<Vessel<DIM> > p_vessel = mNodes[mBoundaryConditionNodeIndices[bc_index]]->GetSegment(0)->GetVessel();
+            std::shared_ptr<Vessel<DIM> > p_vessel = mNodes[mBoundaryConditionNodeIndices[bc_index]]->GetSegment(0)->GetVessel();
             units::quantity<unit::flow_rate> flow_rate = boost::units::fabs(p_vessel->GetFlowProperties()->GetFlowRate());
             units::quantity<unit::flow_impedance> impedance = p_vessel->GetFlowProperties()->GetImpedance();
             double pressure_drop = flow_rate * impedance/ unit::pascals;
@@ -268,7 +268,7 @@ void FlowSolver<DIM>::Solve()
             flow_rate = 0.0 * unit::metre_cubed_per_second;
         }
 
-        std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = mVessels[vessel_index]->GetSegments();
+        std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = mVessels[vessel_index]->GetSegments();
         units::quantity<unit::pressure> pressure = start_node_pressure;
         for (unsigned segment_index = 0; segment_index < segments.size() - 1; segment_index++)
         {

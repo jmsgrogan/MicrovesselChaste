@@ -51,7 +51,7 @@ RegressionSolver<DIM>::~RegressionSolver()
 }
 
 template<unsigned DIM>
-void RegressionSolver<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void RegressionSolver<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpNetwork = pNetwork;
 }

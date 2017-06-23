@@ -46,10 +46,9 @@ MeshReader::MeshReader()
 
 }
 
-boost::shared_ptr<MeshReader> MeshReader::Create()
+std::shared_ptr<MeshReader> MeshReader::Create()
 {
-    MAKE_PTR(MeshReader, pSelf);
-    return pSelf;
+    return std::make_shared<MeshReader>();
 }
 
 MeshReader::~MeshReader()

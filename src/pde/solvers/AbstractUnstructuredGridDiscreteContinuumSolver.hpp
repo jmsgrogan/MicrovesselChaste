@@ -60,7 +60,7 @@ protected:
     /**
      * The finite element mesh
      */
-    boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > mpMesh;
+    std::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > mpMesh;
 
 public:
 

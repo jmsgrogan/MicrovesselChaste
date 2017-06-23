@@ -51,10 +51,10 @@ CellBasedDiscreteSource<DIM>::~CellBasedDiscreteSource()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<CellBasedDiscreteSource<DIM> > CellBasedDiscreteSource<DIM>::Create()
+std::shared_ptr<CellBasedDiscreteSource<DIM> > CellBasedDiscreteSource<DIM>::Create()
 {
-    MAKE_PTR(CellBasedDiscreteSource<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<CellBasedDiscreteSource<DIM> >();
+
 }
 
 template<unsigned DIM>

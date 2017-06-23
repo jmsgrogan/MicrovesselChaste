@@ -104,7 +104,7 @@ public:
      * Factory constructor method
      * @return a shared pointer to a new instance
      */
-    static boost::shared_ptr<ParameterInstance<UNIT> > Create();
+    static std::shared_ptr<ParameterInstance<UNIT> > Create();
 
     /**
      * Factory constructor method
@@ -115,7 +115,7 @@ public:
      * @param rBibliographicInfromation a Bibtex formatted literature source.
      * @return a shared pointer to a new instance
      */
-    static boost::shared_ptr<ParameterInstance<UNIT> > Create(units::quantity<UNIT> value,
+    static std::shared_ptr<ParameterInstance<UNIT> > Create(units::quantity<UNIT> value,
                                                               const std::string& rName,
                                                               const std::string& rShortDescription,
                                                               const std::string& rSymbol,

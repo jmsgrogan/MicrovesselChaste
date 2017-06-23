@@ -73,7 +73,7 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::Setup()
         EXCEPTION("Mesh needed before Setup can be called.");
     }
 
-    mpMesh = boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
+    mpMesh = std::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
     if(!mpMesh)
     {
         EXCEPTION("Can't cast to mesh during Setup");

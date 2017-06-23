@@ -155,27 +155,27 @@ class MicrovesselVtkScene
     /**
      * The cell population actor generator
      */
-    boost::shared_ptr<CellPopulationActorGenerator<DIM> > mpCellPopulationGenerator;
+    std::shared_ptr<CellPopulationActorGenerator<DIM> > mpCellPopulationGenerator;
 
     /**
      * The part actor generator
      */
-    boost::shared_ptr<PartActorGenerator<DIM> > mpPartGenerator;
+    std::shared_ptr<PartActorGenerator<DIM> > mpPartGenerator;
 
     /**
      * The vessel network actor generator
      */
-    boost::shared_ptr<VesselNetworkActorGenerator<DIM> > mpNetworkGenerator;
+    std::shared_ptr<VesselNetworkActorGenerator<DIM> > mpNetworkGenerator;
 
     /**
      * The mesh actor generator
      */
-    boost::shared_ptr<DiscreteContinuumMeshActorGenerator<DIM> > mpDiscreteContinuumMeshGenerator;
+    std::shared_ptr<DiscreteContinuumMeshActorGenerator<DIM> > mpDiscreteContinuumMeshGenerator;
 
     /**
      * The regular grid actor generator
      */
-    boost::shared_ptr<RegularGridActorGenerator<DIM> > mpGridGenerator;
+    std::shared_ptr<RegularGridActorGenerator<DIM> > mpGridGenerator;
 
     /**
      * Scale features using this length. e.g. set to micron if we want
@@ -216,27 +216,27 @@ public:
     /**
      * @return the part actor generator
      */
-    boost::shared_ptr<PartActorGenerator<DIM> > GetPartActorGenerator();
+    std::shared_ptr<PartActorGenerator<DIM> > GetPartActorGenerator();
 
     /**
      * @return the mesh actor generator
      */
-    boost::shared_ptr<DiscreteContinuumMeshActorGenerator<DIM> > GetDiscreteContinuumMeshActorGenerator();
+    std::shared_ptr<DiscreteContinuumMeshActorGenerator<DIM> > GetDiscreteContinuumMeshActorGenerator();
 
     /**
      * @return the grid actor generator
      */
-    boost::shared_ptr<RegularGridActorGenerator<DIM> > GetRegularGridActorGenerator();
+    std::shared_ptr<RegularGridActorGenerator<DIM> > GetRegularGridActorGenerator();
 
     /**
      * @return the vessel network actor generator
      */
-    boost::shared_ptr<VesselNetworkActorGenerator<DIM> > GetVesselNetworkActorGenerator();
+    std::shared_ptr<VesselNetworkActorGenerator<DIM> > GetVesselNetworkActorGenerator();
 
     /**
      * @return the cell population actor generator
      */
-    boost::shared_ptr<CellPopulationActorGenerator<DIM> > GetCellPopulationActorGenerator();
+    std::shared_ptr<CellPopulationActorGenerator<DIM> > GetCellPopulationActorGenerator();
 
     /**
      * Update the renderer, this will update the population actor and write output images
@@ -253,31 +253,31 @@ public:
     * Set the cell population
     * @param pCellPopulation the cell population for rendering
     */
-    void SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation);
+    void SetCellPopulation(std::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation);
 
     /**
     * Set the part
     * @param pPart the part rendering
     */
-    void SetPart(boost::shared_ptr<Part<DIM> > pPart);
+    void SetPart(std::shared_ptr<Part<DIM> > pPart);
 
     /**
     * Set the vessel network
     * @param pNetwork the vessel network for rendering
     */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
     * Set the grid
     * @param pGrid the grid for rendering
     */
-    void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid);
+    void SetRegularGrid(std::shared_ptr<RegularGrid<DIM> > pGrid);
 
     /**
     * Set the mesh
     * @param pMesh the mesh for rendering
     */
-    void SetMesh(boost::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh);
+    void SetMesh(std::shared_ptr<DiscreteContinuumMesh<DIM> > pMesh);
 
     /**
      * Set the path for output

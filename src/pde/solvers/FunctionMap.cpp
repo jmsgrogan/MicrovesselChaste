@@ -43,10 +43,9 @@ FunctionMap<DIM>::FunctionMap()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<FunctionMap<DIM> > FunctionMap<DIM>::Create()
+std::shared_ptr<FunctionMap<DIM> > FunctionMap<DIM>::Create()
 {
-    MAKE_PTR(FunctionMap, pSelf);
-    return pSelf;
+    return std::make_shared<FunctionMap>();
 }
 
 template<unsigned DIM>

@@ -54,17 +54,15 @@ ImageReader::ImageReader()
 
 }
 
-boost::shared_ptr<ImageReader> ImageReader::Create()
+std::shared_ptr<ImageReader> ImageReader::Create()
 {
-    MAKE_PTR(ImageReader, pSelf);
-    return pSelf;
+    return std::make_shared<ImageReader>();
 }
 
 ImageReader::~ImageReader()
 {
 
 }
-
 
 vtkSmartPointer<vtkImageData> ImageReader::GetImage()
 {

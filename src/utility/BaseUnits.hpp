@@ -61,7 +61,7 @@ class BaseUnits : public SerializableSingleton<BaseUnits>
     /**
      * A pointer to the singleton instance of this class.
      */
-    static boost::shared_ptr<BaseUnits> mpInstance;
+    static std::shared_ptr<BaseUnits> mpInstance;
 
     /**
      * The time unit for increments
@@ -91,7 +91,7 @@ public:
      * @return a pointer to the unit collection object.
      * The first time this is called the unit collection object is created.
      */
-    static boost::shared_ptr<BaseUnits> SharedInstance();
+    static std::shared_ptr<BaseUnits> SharedInstance();
 
     /**
      * @return the reference time scale

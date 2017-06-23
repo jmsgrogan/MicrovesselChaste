@@ -50,10 +50,10 @@ ShrinkingStimulusCalculator<DIM>::~ShrinkingStimulusCalculator()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<ShrinkingStimulusCalculator<DIM> > ShrinkingStimulusCalculator<DIM>::Create()
+std::shared_ptr<ShrinkingStimulusCalculator<DIM> > ShrinkingStimulusCalculator<DIM>::Create()
 {
-    MAKE_PTR(ShrinkingStimulusCalculator<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<ShrinkingStimulusCalculator<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -71,7 +71,7 @@ void ShrinkingStimulusCalculator<DIM>::SetStimulus(units::quantity<unit::rate> s
 template<unsigned DIM>
 void ShrinkingStimulusCalculator<DIM>::Calculate()
 {
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
     for (unsigned segment_index = 0; segment_index < segments.size(); segment_index++)
     {
         segments[segment_index]->GetFlowProperties()->SetGrowthStimulus(segments[segment_index]->GetFlowProperties()->GetGrowthStimulus() - mDefaultStimulus);

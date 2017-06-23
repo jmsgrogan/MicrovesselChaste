@@ -57,38 +57,38 @@ StructuralAdaptationSolver<DIM>::~StructuralAdaptationSolver()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<StructuralAdaptationSolver<DIM> > StructuralAdaptationSolver<DIM>::Create()
+std::shared_ptr<StructuralAdaptationSolver<DIM> > StructuralAdaptationSolver<DIM>::Create()
 {
-    MAKE_PTR(StructuralAdaptationSolver<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<StructuralAdaptationSolver<DIM> >();
+
 }
 
 template<unsigned DIM>
-boost::shared_ptr<FlowSolver<DIM> > StructuralAdaptationSolver<DIM>::GetFlowSolver()
+std::shared_ptr<FlowSolver<DIM> > StructuralAdaptationSolver<DIM>::GetFlowSolver()
 {
     return mpFlowSolver;
 }
 
 template<unsigned DIM>
-void StructuralAdaptationSolver<DIM>::SetRadiusCalculator(boost::shared_ptr<RadiusCalculator<DIM> > pCalculator)
+void StructuralAdaptationSolver<DIM>::SetRadiusCalculator(std::shared_ptr<RadiusCalculator<DIM> > pCalculator)
 {
     mpRadiusCalculator = pCalculator;
 }
 
 template<unsigned DIM>
-void StructuralAdaptationSolver<DIM>::AddPreFlowSolveCalculator(boost::shared_ptr<AbstractVesselNetworkCalculator<DIM> > pCalculator)
+void StructuralAdaptationSolver<DIM>::AddPreFlowSolveCalculator(std::shared_ptr<AbstractVesselNetworkCalculator<DIM> > pCalculator)
 {
     mPreFlowSolveCalculators.push_back(pCalculator);
 }
 
 template<unsigned DIM>
-void StructuralAdaptationSolver<DIM>::AddPostFlowSolveCalculator(boost::shared_ptr<AbstractVesselNetworkCalculator<DIM> > pCalculator)
+void StructuralAdaptationSolver<DIM>::AddPostFlowSolveCalculator(std::shared_ptr<AbstractVesselNetworkCalculator<DIM> > pCalculator)
 {
     mPostFlowSolveCalculators.push_back(pCalculator);
 }
 
 template<unsigned DIM>
-void StructuralAdaptationSolver<DIM>::SetFlowSolver(boost::shared_ptr<FlowSolver<DIM> > pCalculator)
+void StructuralAdaptationSolver<DIM>::SetFlowSolver(std::shared_ptr<FlowSolver<DIM> > pCalculator)
 {
     mpFlowSolver = pCalculator;
 }
@@ -132,7 +132,7 @@ void StructuralAdaptationSolver<DIM>::Iterate()
     mpFlowSolver->Update(false);
     mpFlowSolver->Solve();
 
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpVesselNetwork->GetVesselSegments();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpVesselNetwork->GetVesselSegments();
     for (unsigned idx = 0; idx < segments.size(); idx++)
     {
         segments[idx]->GetFlowProperties()->SetGrowthStimulus(0.0*(1.0/(unit::seconds)));

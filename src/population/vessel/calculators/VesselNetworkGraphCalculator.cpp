@@ -101,10 +101,10 @@ VesselNetworkGraphCalculator<DIM>::~VesselNetworkGraphCalculator()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<VesselNetworkGraphCalculator<DIM> > VesselNetworkGraphCalculator<DIM>::Create()
+std::shared_ptr<VesselNetworkGraphCalculator<DIM> > VesselNetworkGraphCalculator<DIM>::Create()
 {
-    MAKE_PTR(VesselNetworkGraphCalculator<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<VesselNetworkGraphCalculator<DIM> >();
+
 }
 
 template <unsigned DIM>
@@ -115,23 +115,23 @@ std::vector<std::vector<unsigned> > VesselNetworkGraphCalculator<DIM>::GetNodeNo
 		EXCEPTION("Vessel network not set in graph calculator");
 	}
 
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpVesselNetwork->GetVesselEndNodes();
-    std::vector<boost::shared_ptr<Vessel<DIM> > > vessels = mpVesselNetwork->GetVessels();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = mpVesselNetwork->GetVesselEndNodes();
+    std::vector<std::shared_ptr<Vessel<DIM> > > vessels = mpVesselNetwork->GetVessels();
     std::vector<std::vector<unsigned> > node_vessel_connectivity = GetNodeVesselConnectivity();
 
     std::vector<std::vector<unsigned> > connectivity;
     for (unsigned node_index = 0; node_index < nodes.size(); node_index++)
     {
         std::vector<unsigned> node_indexes;
-        boost::shared_ptr<VesselNode<DIM> > p_node = nodes[node_index];
+        std::shared_ptr<VesselNode<DIM> > p_node = nodes[node_index];
         unsigned num_branches = node_vessel_connectivity[node_index].size();
         for (unsigned vessel_index = 0; vessel_index < num_branches; vessel_index++)
         {
-            boost::shared_ptr<Vessel<DIM> > p_vessel = vessels[node_vessel_connectivity[node_index][vessel_index]];
+            std::shared_ptr<Vessel<DIM> > p_vessel = vessels[node_vessel_connectivity[node_index][vessel_index]];
 
             // Get the node at the other end of the vessel
-            boost::shared_ptr<VesselNode<DIM> > p_other_node = p_vessel->GetNodeAtOppositeEnd(p_node);
-            typename std::vector<boost::shared_ptr<VesselNode<DIM> > >::iterator node_iter = std::find(nodes.begin(), nodes.end(), p_other_node);
+            std::shared_ptr<VesselNode<DIM> > p_other_node = p_vessel->GetNodeAtOppositeEnd(p_node);
+            typename std::vector<std::shared_ptr<VesselNode<DIM> > >::iterator node_iter = std::find(nodes.begin(), nodes.end(), p_other_node);
             unsigned other_node_index = std::distance(nodes.begin(), node_iter);
             node_indexes.push_back(other_node_index);
         }
@@ -148,21 +148,21 @@ std::vector<std::vector<unsigned> > VesselNetworkGraphCalculator<DIM>::GetNodeVe
 		EXCEPTION("Vessel network not set in graph calculator");
 	}
 
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpVesselNetwork->GetVesselEndNodes();
-    std::vector<boost::shared_ptr<Vessel<DIM> > > vessels = mpVesselNetwork->GetVessels();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = mpVesselNetwork->GetVesselEndNodes();
+    std::vector<std::shared_ptr<Vessel<DIM> > > vessels = mpVesselNetwork->GetVessels();
     unsigned num_nodes = nodes.size();
     std::vector<std::vector<unsigned> > connectivity;
     for (unsigned node_index = 0; node_index < num_nodes; node_index++)
     {
-        boost::shared_ptr<VesselNode<DIM> > p_node = nodes[node_index];
+        std::shared_ptr<VesselNode<DIM> > p_node = nodes[node_index];
         std::vector<unsigned> vessel_indexes;
 
         unsigned num_segments_on_node = p_node->GetNumberOfSegments();
         for (unsigned segment_index = 0; segment_index < num_segments_on_node; segment_index++)
         {
-            boost::shared_ptr<Vessel<DIM> > p_vessel = p_node->GetSegments()[segment_index]->GetVessel();
+            std::shared_ptr<Vessel<DIM> > p_vessel = p_node->GetSegments()[segment_index]->GetVessel();
 
-            typename std::vector<boost::shared_ptr<Vessel<DIM> > >::iterator vessel_iter =
+            typename std::vector<std::shared_ptr<Vessel<DIM> > >::iterator vessel_iter =
                     std::find(vessels.begin(), vessels.end(), p_vessel);
             unsigned vessel_index = std::distance(vessels.begin(), vessel_iter);
             vessel_indexes.push_back(vessel_index);
@@ -173,7 +173,7 @@ std::vector<std::vector<unsigned> > VesselNetworkGraphCalculator<DIM>::GetNodeVe
 }
 
 template <unsigned DIM>
-bool VesselNetworkGraphCalculator<DIM>::IsConnected(boost::shared_ptr<VesselNode<DIM> > pSourceNode, boost::shared_ptr<VesselNode<DIM> > pQueryNode)
+bool VesselNetworkGraphCalculator<DIM>::IsConnected(std::shared_ptr<VesselNode<DIM> > pSourceNode, std::shared_ptr<VesselNode<DIM> > pQueryNode)
 {
 	if(!mpVesselNetwork)
 	{
@@ -194,8 +194,8 @@ bool VesselNetworkGraphCalculator<DIM>::IsConnected(boost::shared_ptr<VesselNode
         return true;
     }
 
-    boost::shared_ptr<Vessel<DIM> > p_source_vessel = pSourceNode->GetSegments()[0]->GetVessel();
-    boost::shared_ptr<Vessel<DIM> > p_query_vessel = pQueryNode->GetSegments()[0]->GetVessel();
+    std::shared_ptr<Vessel<DIM> > p_source_vessel = pSourceNode->GetSegments()[0]->GetVessel();
+    std::shared_ptr<Vessel<DIM> > p_query_vessel = pQueryNode->GetSegments()[0]->GetVessel();
 
     if (p_source_vessel == p_query_vessel || p_source_vessel->IsConnectedTo(p_query_vessel))
     {
@@ -203,8 +203,8 @@ bool VesselNetworkGraphCalculator<DIM>::IsConnected(boost::shared_ptr<VesselNode
     }
 
     // Assign the vessel nodes unique IDs
-    std::vector<boost::shared_ptr<VesselNode<DIM> > >  vessel_nodes = mpVesselNetwork->GetVesselEndNodes();
-    typename std::vector<boost::shared_ptr<VesselNode<DIM> > >::iterator node_iter;
+    std::vector<std::shared_ptr<VesselNode<DIM> > >  vessel_nodes = mpVesselNetwork->GetVesselEndNodes();
+    typename std::vector<std::shared_ptr<VesselNode<DIM> > >::iterator node_iter;
     unsigned counter = 0;
     for(node_iter = vessel_nodes.begin(); node_iter != vessel_nodes.end(); node_iter++)
     {
@@ -213,15 +213,15 @@ bool VesselNetworkGraphCalculator<DIM>::IsConnected(boost::shared_ptr<VesselNode
     }
 
     // Get the start nodes of the containing and query vessels
-    boost::shared_ptr<VesselNode<DIM> > pEquivalentSourceNode = p_source_vessel->GetStartNode();
-    boost::shared_ptr<VesselNode<DIM> > pEquivalentQueryNode = p_query_vessel->GetStartNode();
+    std::shared_ptr<VesselNode<DIM> > pEquivalentSourceNode = p_source_vessel->GetStartNode();
+    std::shared_ptr<VesselNode<DIM> > pEquivalentQueryNode = p_query_vessel->GetStartNode();
 
     // construct graph representation of vessel network
     typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS> Graph;
 
     Graph G;
 
-    std::vector<boost::shared_ptr<Vessel<DIM> > >  vessels = mpVesselNetwork->GetVessels();
+    std::vector<std::shared_ptr<Vessel<DIM> > >  vessels = mpVesselNetwork->GetVessels();
     for (unsigned i = 0; i < vessels.size(); i++)
     {
         add_edge(vessels[i]->GetStartNode()->GetId(), vessels[i]->GetEndNode()->GetId(), G);
@@ -246,8 +246,8 @@ bool VesselNetworkGraphCalculator<DIM>::IsConnected(boost::shared_ptr<VesselNode
 }
 
 template <unsigned DIM>
-std::vector<bool > VesselNetworkGraphCalculator<DIM>::IsConnected(std::vector<boost::shared_ptr<VesselNode<DIM> > > sourceNodes,
-        std::vector<boost::shared_ptr<VesselNode<DIM> > > queryNodes)
+std::vector<bool > VesselNetworkGraphCalculator<DIM>::IsConnected(std::vector<std::shared_ptr<VesselNode<DIM> > > sourceNodes,
+        std::vector<std::shared_ptr<VesselNode<DIM> > > queryNodes)
 {
 	if(!mpVesselNetwork)
 	{
@@ -255,9 +255,9 @@ std::vector<bool > VesselNetworkGraphCalculator<DIM>::IsConnected(std::vector<bo
 	}
 
     // Assign the vessel nodes unique IDs
-    std::vector<boost::shared_ptr<VesselNode<DIM> > >  vessel_nodes = mpVesselNetwork->GetVesselEndNodes();
+    std::vector<std::shared_ptr<VesselNode<DIM> > >  vessel_nodes = mpVesselNetwork->GetVesselEndNodes();
 
-    typename std::vector<boost::shared_ptr<VesselNode<DIM> > >::iterator node_iter;
+    typename std::vector<std::shared_ptr<VesselNode<DIM> > >::iterator node_iter;
     unsigned counter = 0;
     for(node_iter = vessel_nodes.begin(); node_iter != vessel_nodes.end(); node_iter++)
     {
@@ -271,7 +271,7 @@ std::vector<bool > VesselNetworkGraphCalculator<DIM>::IsConnected(std::vector<bo
 
     Graph G;
 
-    std::vector<boost::shared_ptr<Vessel<DIM> > >  vessels = mpVesselNetwork->GetVessels();
+    std::vector<std::shared_ptr<Vessel<DIM> > >  vessels = mpVesselNetwork->GetVessels();
     for (unsigned i = 0; i < vessels.size(); i++)
     {
         add_edge(vessels[i]->GetStartNode()->GetId(), vessels[i]->GetEndNode()->GetId(), G);
@@ -286,9 +286,9 @@ std::vector<bool > VesselNetworkGraphCalculator<DIM>::IsConnected(std::vector<bo
             EXCEPTION("Source node is not in network.");
         }
 
-        boost::shared_ptr<VesselNode<DIM> > pSourceNode = sourceNodes[i];
-        boost::shared_ptr<Vessel<DIM> > p_source_vessel = pSourceNode->GetSegments()[0]->GetVessel();
-        boost::shared_ptr<VesselNode<DIM> > pEquivalentSourceNode = p_source_vessel->GetStartNode();
+        std::shared_ptr<VesselNode<DIM> > pSourceNode = sourceNodes[i];
+        std::shared_ptr<Vessel<DIM> > p_source_vessel = pSourceNode->GetSegments()[0]->GetVessel();
+        std::shared_ptr<VesselNode<DIM> > pEquivalentSourceNode = p_source_vessel->GetStartNode();
 
         // a vector to hold the discover time property for each vertex
         std::vector<Size> dtime(num_vertices(G));
@@ -305,7 +305,7 @@ std::vector<bool > VesselNetworkGraphCalculator<DIM>::IsConnected(std::vector<bo
                 EXCEPTION("Query node is not in network.");
             }
 
-            boost::shared_ptr<VesselNode<DIM> > pQueryNode = queryNodes[j];
+            std::shared_ptr<VesselNode<DIM> > pQueryNode = queryNodes[j];
 
             if (pSourceNode == pQueryNode)
             {
@@ -313,14 +313,14 @@ std::vector<bool > VesselNetworkGraphCalculator<DIM>::IsConnected(std::vector<bo
                 continue;
             }
 
-            boost::shared_ptr<Vessel<DIM> > p_query_vessel = pQueryNode->GetSegments()[0]->GetVessel();
+            std::shared_ptr<Vessel<DIM> > p_query_vessel = pQueryNode->GetSegments()[0]->GetVessel();
             if (p_source_vessel == p_query_vessel || p_source_vessel->IsConnectedTo(p_query_vessel))
             {
                 connected[j] = true;
                 continue;
             }
 
-            boost::shared_ptr<VesselNode<DIM> > pEquivalentQueryNode = p_query_vessel->GetStartNode();
+            std::shared_ptr<VesselNode<DIM> > pEquivalentQueryNode = p_query_vessel->GetStartNode();
 
             if (dtime[pEquivalentQueryNode->GetId()] > 0)
             {
@@ -342,8 +342,8 @@ void VesselNetworkGraphCalculator<DIM>::WriteConnectivity(const std::string& out
 
     // construct graph representation of vessel network
     boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS> G;
-    typename std::vector<boost::shared_ptr<VesselNode<DIM> > >::iterator node_iterator;
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpVesselNetwork->GetVesselEndNodes();
+    typename std::vector<std::shared_ptr<VesselNode<DIM> > >::iterator node_iterator;
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = mpVesselNetwork->GetVesselEndNodes();
 
     for (node_iterator = nodes.begin(); node_iterator != nodes.end(); node_iterator++)
     {
@@ -357,8 +357,8 @@ void VesselNetworkGraphCalculator<DIM>::WriteConnectivity(const std::string& out
         }
     }
 
-    std::vector<boost::shared_ptr<Vessel<DIM> > >  vessels = mpVesselNetwork->GetVessels();
-    typename std::vector<boost::shared_ptr<Vessel<DIM> > >::iterator vessel_iterator;
+    std::vector<std::shared_ptr<Vessel<DIM> > >  vessels = mpVesselNetwork->GetVessels();
+    typename std::vector<std::shared_ptr<Vessel<DIM> > >::iterator vessel_iterator;
     for (vessel_iterator = vessels.begin(); vessel_iterator != vessels.end(); vessel_iterator++)
     {
         if ((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1 && (*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
@@ -378,7 +378,7 @@ void VesselNetworkGraphCalculator<DIM>::WriteConnectivity(const std::string& out
 }
 
 template <unsigned DIM>
-void VesselNetworkGraphCalculator<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork)
+void VesselNetworkGraphCalculator<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork)
 {
     mpVesselNetwork = pVesselNetwork;
 }

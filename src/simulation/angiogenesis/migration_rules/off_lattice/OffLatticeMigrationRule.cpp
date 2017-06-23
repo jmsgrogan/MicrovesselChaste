@@ -66,10 +66,10 @@ OffLatticeMigrationRule<DIM>::OffLatticeMigrationRule()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<OffLatticeMigrationRule<DIM> > OffLatticeMigrationRule<DIM>::Create()
+std::shared_ptr<OffLatticeMigrationRule<DIM> > OffLatticeMigrationRule<DIM>::Create()
 {
-    MAKE_PTR(OffLatticeMigrationRule<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<OffLatticeMigrationRule<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -119,7 +119,7 @@ void OffLatticeMigrationRule<DIM>::CalculateDomainDistanceMap()
 }
 
 template<unsigned DIM>
-void OffLatticeMigrationRule<DIM>::CalculateDomainDistanceMap(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
+void OffLatticeMigrationRule<DIM>::CalculateDomainDistanceMap(std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
 {
     if(!this->mpBoundingDomain)
     {
@@ -170,7 +170,7 @@ void OffLatticeMigrationRule<DIM>::SetNumGradientEvaluationDivisions(unsigned nu
 }
 
 template<unsigned DIM>
-std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     if (this->mIsSprouting)
     {
@@ -347,7 +347,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             if(mAttractionStrength>0.0)
             {
                 // Mutual Attraction
-                std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = this->mpVesselNetwork->GetNodes();
+                std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = this->mpVesselNetwork->GetNodes();
                 units::quantity<unit::length> min_distance = 1.e12*unit::metres;
                 c_vector<double, DIM> min_direction = zero_vector<double>(DIM);
                 for(unsigned jdx=0; jdx<nodes.size(); jdx++)
@@ -464,7 +464,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
 }
 
 template<unsigned DIM>
-std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     std::vector<DimensionalChastePoint<DIM> > movement_vectors;
     units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();

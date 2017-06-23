@@ -163,7 +163,7 @@ void AbstractStructuralAdaptationSolver<DIM>::Solve()
         out << "#Iteration   Maximum relative change in radius in network\n\n";
     }
 
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = mpVesselNetwork->GetVesselSegments();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = mpVesselNetwork->GetVesselSegments();
     std::vector<units::quantity<unit::length> > previous_radii(segments.size());
     for (unsigned segment_index = 0; segment_index < segments.size(); segment_index++)
     {
@@ -198,7 +198,7 @@ void AbstractStructuralAdaptationSolver<DIM>::Solve()
 }
 
 template<unsigned DIM>
-void AbstractStructuralAdaptationSolver<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void AbstractStructuralAdaptationSolver<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpVesselNetwork = pNetwork;
 }

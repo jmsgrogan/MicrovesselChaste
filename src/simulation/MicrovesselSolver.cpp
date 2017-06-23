@@ -66,14 +66,14 @@ MicrovesselSolver<DIM>::~MicrovesselSolver()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<MicrovesselSolver<DIM> > MicrovesselSolver<DIM>::Create()
+std::shared_ptr<MicrovesselSolver<DIM> > MicrovesselSolver<DIM>::Create()
 {
-    MAKE_PTR(MicrovesselSolver<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<MicrovesselSolver<DIM> >();
+
 }
 
 template<unsigned DIM>
-void MicrovesselSolver<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void MicrovesselSolver<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpNetwork = pNetwork;
 }
@@ -85,19 +85,19 @@ void MicrovesselSolver<DIM>::SetUpdatePdeEachSolve(bool doUpdate)
 }
 
 template<unsigned DIM>
-void MicrovesselSolver<DIM>::AddDiscreteContinuumSolver(boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pDiscreteContinuumSolver)
+void MicrovesselSolver<DIM>::AddDiscreteContinuumSolver(std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pDiscreteContinuumSolver)
 {
     mDiscreteContinuumSolvers.push_back(pDiscreteContinuumSolver);
 }
 
 template<unsigned DIM>
-void MicrovesselSolver<DIM>::AddMicrovesselModifier(boost::shared_ptr<AbstractMicrovesselModifier<DIM> > pMicrovesselModifier)
+void MicrovesselSolver<DIM>::AddMicrovesselModifier(std::shared_ptr<AbstractMicrovesselModifier<DIM> > pMicrovesselModifier)
 {
     mMicrovesselModifiers.push_back(pMicrovesselModifier);
 }
 
 template<unsigned DIM>
-std::vector<boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > > MicrovesselSolver<DIM>::GetDiscreteContinuumSolvers()
+std::vector<std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > > MicrovesselSolver<DIM>::GetDiscreteContinuumSolvers()
 {
     return mDiscreteContinuumSolvers;
 }
@@ -143,8 +143,8 @@ void MicrovesselSolver<DIM>::Increment()
             {
                 for(unsigned jdx=0; jdx<mDiscreteContinuumSolvers[idx]->GetPde()->GetDiscreteSources().size(); jdx++)
                 {
-                    boost::shared_ptr<SolutionDependentDiscreteSource<DIM> > p_solution_dep_source =
-                            boost::dynamic_pointer_cast<SolutionDependentDiscreteSource<DIM> >(mDiscreteContinuumSolvers[idx]->GetPde()->GetDiscreteSources()[jdx]);
+                    std::shared_ptr<SolutionDependentDiscreteSource<DIM> > p_solution_dep_source =
+                            std::dynamic_pointer_cast<SolutionDependentDiscreteSource<DIM> >(mDiscreteContinuumSolvers[idx]->GetPde()->GetDiscreteSources()[jdx]);
                     if(p_solution_dep_source)
                     {
                         if(mDiscreteContinuumSolversHaveCompatibleGridIndexing)
@@ -187,7 +187,7 @@ void MicrovesselSolver<DIM>::Increment()
         mpNetwork->UpdateAll();
         if (mOutputFrequency > 0 && num_steps % mOutputFrequency == 0)
         {
-            boost::shared_ptr<VesselNetworkWriter<DIM> > p_network_writer = VesselNetworkWriter<DIM>::Create();
+            std::shared_ptr<VesselNetworkWriter<DIM> > p_network_writer = VesselNetworkWriter<DIM>::Create();
             p_network_writer->SetVesselNetwork(mpNetwork);
             p_network_writer->SetFileName(
                     mpOutputFileHandler->GetOutputDirectoryFullPath() + "/VesselNetwork_inc_"
@@ -206,7 +206,7 @@ void MicrovesselSolver<DIM>::Run()
 {
     if (this->mpNetwork)
     {
-        boost::shared_ptr<VesselNetworkWriter<DIM> > p_network_writer = VesselNetworkWriter<DIM>::Create();
+        std::shared_ptr<VesselNetworkWriter<DIM> > p_network_writer = VesselNetworkWriter<DIM>::Create();
         mpNetwork->UpdateAll(true);
         p_network_writer->SetVesselNetwork(mpNetwork);
         p_network_writer->SetFileName(mpOutputFileHandler->GetOutputDirectoryFullPath() + "/VesselNetwork_inc_0.vtp");
@@ -223,19 +223,19 @@ void MicrovesselSolver<DIM>::Run()
 }
 
 template<unsigned DIM>
-void MicrovesselSolver<DIM>::SetAngiogenesisSolver(boost::shared_ptr<AngiogenesisSolver<DIM> > pAngiogenesisSolver)
+void MicrovesselSolver<DIM>::SetAngiogenesisSolver(std::shared_ptr<AngiogenesisSolver<DIM> > pAngiogenesisSolver)
 {
     mpAngiogenesisSolver = pAngiogenesisSolver;
 }
 
 template<unsigned DIM>
-void MicrovesselSolver<DIM>::SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > pCellPopulation)
+void MicrovesselSolver<DIM>::SetCellPopulation(std::shared_ptr<AbstractCellPopulation<DIM,DIM> > pCellPopulation)
 {
     mpCellPopulation = pCellPopulation;
 }
 
 template<unsigned DIM>
-void MicrovesselSolver<DIM>::SetOutputFileHandler(boost::shared_ptr<OutputFileHandler> pFileHandler)
+void MicrovesselSolver<DIM>::SetOutputFileHandler(std::shared_ptr<OutputFileHandler> pFileHandler)
 {
     mpOutputFileHandler = pFileHandler;
 }
@@ -253,8 +253,8 @@ void MicrovesselSolver<DIM>::SetupFromModifier(AbstractCellPopulation<DIM,DIM>& 
                                                const std::string& rDirectory)
 {
     // Set up an output file handler
-    mpOutputFileHandler = boost::shared_ptr<OutputFileHandler>(new OutputFileHandler(rDirectory, false));
-    boost::shared_ptr<DensityMap<DIM> > p_default_density_map;
+    mpOutputFileHandler = std::shared_ptr<OutputFileHandler>(new OutputFileHandler(rDirectory, false));
+    std::shared_ptr<DensityMap<DIM> > p_default_density_map;
 
     // Set up all the DiscreteContinuum solvers
     for(unsigned idx=0; idx<mDiscreteContinuumSolvers.size(); idx++)
@@ -281,7 +281,7 @@ template<unsigned DIM>
 void MicrovesselSolver<DIM>::Setup()
 {
     // Set up all the DiscreteContinuum solvers
-    boost::shared_ptr<DensityMap<DIM> > p_default_density_map;
+    std::shared_ptr<DensityMap<DIM> > p_default_density_map;
     for(unsigned idx=0; idx<mDiscreteContinuumSolvers.size(); idx++)
     {
         mDiscreteContinuumSolvers[idx]->SetFileHandler(mpOutputFileHandler);
@@ -306,7 +306,7 @@ void MicrovesselSolver<DIM>::Setup()
 }
 
 template<unsigned DIM>
-void MicrovesselSolver<DIM>::SetStructuralAdaptationSolver(boost::shared_ptr<StructuralAdaptationSolver<DIM> > pStructuralAdaptationSolver)
+void MicrovesselSolver<DIM>::SetStructuralAdaptationSolver(std::shared_ptr<StructuralAdaptationSolver<DIM> > pStructuralAdaptationSolver)
 {
     mpStructuralAdaptationSolver = pStructuralAdaptationSolver;
 }
@@ -338,7 +338,7 @@ void MicrovesselSolver<DIM>::UpdateCellData(std::vector<std::string> labels)
 }
 
 template<unsigned DIM>
-void MicrovesselSolver<DIM>::SetRegressionSolver(boost::shared_ptr<RegressionSolver<DIM> > pRegressionSolver)
+void MicrovesselSolver<DIM>::SetRegressionSolver(std::shared_ptr<RegressionSolver<DIM> > pRegressionSolver)
 {
     mpRegressionSolver = pRegressionSolver;
 }

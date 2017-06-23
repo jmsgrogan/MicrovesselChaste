@@ -80,7 +80,7 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a shared pointer to a class instance.
      */
-    static boost::shared_ptr<AbstractFiniteElementSolverBase<DIM> > Create();
+    static std::shared_ptr<AbstractFiniteElementSolverBase<DIM> > Create();
 
     /**
      * Overridden solve method

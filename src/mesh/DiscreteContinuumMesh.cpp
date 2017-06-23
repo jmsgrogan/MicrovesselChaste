@@ -73,10 +73,9 @@ DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::DiscreteContinuumMesh() :
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-boost::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::Create()
+std::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> > DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::Create()
 {
-    MAKE_PTR(DiscreteContinuumMesh<ELEMENT_DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<DiscreteContinuumMesh<ELEMENT_DIM> >();
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

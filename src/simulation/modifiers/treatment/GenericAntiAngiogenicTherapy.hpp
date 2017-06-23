@@ -55,9 +55,9 @@ class GenericAntiAngiogenicTherapy : public AbstractTherapy<DIM>
 
     units::quantity<unit::rate> mRemovalRate;
 
-    boost::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > mpRegressionSolver;
+    std::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > mpRegressionSolver;
 
-    boost::shared_ptr<AbstractSproutingRule<DIM> > mpSproutingRule;
+    std::shared_ptr<AbstractSproutingRule<DIM> > mpSproutingRule;
 
     units::quantity<unit::time> mPreviousTime;
 
@@ -76,9 +76,9 @@ public:
 
     virtual ~GenericAntiAngiogenicTherapy();
 
-    void SetRegressionSolver(boost::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > regressionSolver);
+    void SetRegressionSolver(std::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > regressionSolver);
 
-    void SetSproutingRule(boost::shared_ptr<AbstractSproutingRule<DIM> > sproutingRule);
+    void SetSproutingRule(std::shared_ptr<AbstractSproutingRule<DIM> > sproutingRule);
 
     /**
      * Overridden SetupSolve() method.

@@ -62,7 +62,7 @@ class VolumeOutputModifier : public AbstractCellBasedSimulationModifier<DIM,DIM>
     /**
      * The output file stream
      */
-    boost::shared_ptr<std::ofstream> mOutputFileStream;
+    std::shared_ptr<std::ofstream> mOutputFileStream;
 
     /**
      * The output frequency
@@ -101,7 +101,7 @@ public:
 
     void SetUseTumourVolumeOnly(bool tumourVolumeOnly);
 
-    void SetOutputFileStream(boost::shared_ptr<std::ofstream> ofstream);
+    void SetOutputFileStream(std::shared_ptr<std::ofstream> ofstream);
 
     /**
      * Overridden UpdateAtEndOfTimeStep() method.

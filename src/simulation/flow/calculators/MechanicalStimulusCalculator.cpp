@@ -54,10 +54,9 @@ MechanicalStimulusCalculator<DIM>::~MechanicalStimulusCalculator()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<MechanicalStimulusCalculator<DIM> > MechanicalStimulusCalculator<DIM>::Create()
+std::shared_ptr<MechanicalStimulusCalculator<DIM> > MechanicalStimulusCalculator<DIM>::Create()
 {
-    MAKE_PTR(MechanicalStimulusCalculator<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<MechanicalStimulusCalculator<DIM> >();
 }
 
 template<unsigned DIM>
@@ -87,7 +86,7 @@ void MechanicalStimulusCalculator<DIM>::SetTauP(units::quantity<unit::pressure> 
 template<unsigned DIM>
 void MechanicalStimulusCalculator<DIM>::Calculate()
 {
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
 
     units::quantity<unit::length> cm(0.01*unit::metres);
     units::quantity<unit::mass> g(1.e-3*unit::kg);

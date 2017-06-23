@@ -81,7 +81,7 @@ class Polygon
      * The vertices of the polygon. They should be co-planar.
      * Vertices should be unique, this is not ensured in the class.
      */
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > mVertices;
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > mVertices;
 
     /**
      * The reference length scale
@@ -121,27 +121,27 @@ public:
      * Constructor
      * @param vertices a vector of planar vertices, to be joined in the order they are added.
      */
-    Polygon(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices);
+    Polygon(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices);
 
     /**
      * Constructor
      * @param pVertex a vertex
      */
-    Polygon(boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex);
+    Polygon(std::shared_ptr<DimensionalChastePoint<DIM> > pVertex);
 
     /**
      * Factory constructor method
      * @param vertices a vector of planar vertices, to be joined in the order they are added.
      * @return a shared pointer to a new polygon
      */
-    static boost::shared_ptr<Polygon> Create(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices);
+    static std::shared_ptr<Polygon> Create(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices);
 
     /**
      * Factory constructor method
      * @param pVertex a vertex
      * @return a shared pointer to a new polygon
      */
-    static boost::shared_ptr<Polygon> Create(boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex);
+    static std::shared_ptr<Polygon> Create(std::shared_ptr<DimensionalChastePoint<DIM> > pVertex);
 
     /**
      * Desctructor
@@ -175,13 +175,13 @@ public:
      * Add vertices
      * @param vertices a vector of planar vertices, to be joined in the order they are added.
      */
-    void AddVertices(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices);
+    void AddVertices(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices);
 
     /**
      * Add vertex
      * @param pVertex a vertex to be added. It is best to add multiple vertices at once.
      */
-    void AddVertex(boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex);
+    void AddVertex(std::shared_ptr<DimensionalChastePoint<DIM> > pVertex);
 
     /**
      * Return true if the specified location is in the polygon, uses vtk point in polygon.
@@ -234,13 +234,13 @@ public:
      * @param idx index of the vertex to return
      * @return pointer to the indexed vertex
      */
-    boost::shared_ptr<DimensionalChastePoint<DIM> > GetVertex(unsigned idx);
+    std::shared_ptr<DimensionalChastePoint<DIM> > GetVertex(unsigned idx);
 
     /**
      * Return the vertices
      * @return the polygon's vertices
      */
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > GetVertices();
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > GetVertices();
 
     /**
      * Return a pointer to a VtkPolygon representation.
@@ -286,7 +286,7 @@ public:
      * @param idx the index of the vertex to be replaced
      * @param pVertex the new vertex
      */
-    void ReplaceVertex(unsigned idx, boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex);
+    void ReplaceVertex(unsigned idx, std::shared_ptr<DimensionalChastePoint<DIM> > pVertex);
 
     /**
      * Rotate about the specified axis by the specified angle

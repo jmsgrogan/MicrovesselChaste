@@ -43,7 +43,7 @@ AbstractVesselNetworkCalculator<DIM>::AbstractVesselNetworkCalculator()
 }
 
 template<unsigned DIM>
-void AbstractVesselNetworkCalculator<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> >  pNetwork)
+void AbstractVesselNetworkCalculator<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> >  pNetwork)
 {
     mpNetwork = pNetwork;
 }

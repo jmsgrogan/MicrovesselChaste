@@ -59,10 +59,10 @@ TipAttractionLatticeBasedMigrationRule<DIM>::TipAttractionLatticeBasedMigrationR
 }
 
 template <unsigned DIM>
-boost::shared_ptr<TipAttractionLatticeBasedMigrationRule<DIM> > TipAttractionLatticeBasedMigrationRule<DIM>::Create()
+std::shared_ptr<TipAttractionLatticeBasedMigrationRule<DIM> > TipAttractionLatticeBasedMigrationRule<DIM>::Create()
 {
-    MAKE_PTR(TipAttractionLatticeBasedMigrationRule<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<TipAttractionLatticeBasedMigrationRule<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -91,7 +91,7 @@ void TipAttractionLatticeBasedMigrationRule<DIM>::SetUseTipAttraction(bool useTi
 }
 
 template<unsigned DIM>
-std::vector<int> TipAttractionLatticeBasedMigrationRule<DIM>::GetIndices(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<int> TipAttractionLatticeBasedMigrationRule<DIM>::GetIndices(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     if(!this->mpSolver)
     {
@@ -105,7 +105,7 @@ std::vector<int> TipAttractionLatticeBasedMigrationRule<DIM>::GetIndices(const s
 }
 
 template<unsigned DIM>
-std::vector<double> TipAttractionLatticeBasedMigrationRule<DIM>::GetNeighbourMovementProbabilities(boost::shared_ptr<VesselNode<DIM> > pNode,
+std::vector<double> TipAttractionLatticeBasedMigrationRule<DIM>::GetNeighbourMovementProbabilities(std::shared_ptr<VesselNode<DIM> > pNode,
                                                        std::vector<unsigned> neighbourIndices, unsigned gridIndex)
 {
     std::vector<double> probability_of_moving(neighbourIndices.size(), 0.0);
@@ -123,7 +123,7 @@ std::vector<double> TipAttractionLatticeBasedMigrationRule<DIM>::GetNeighbourMov
 
     if(!this->mIsSprouting and mUseTipAttraction)
     {
-        std::vector<boost::shared_ptr<VesselNode<DIM> > > nearby_nodes = VesselNetworkGeometryCalculator<DIM>::GetNodesInSphere(
+        std::vector<std::shared_ptr<VesselNode<DIM> > > nearby_nodes = VesselNetworkGeometryCalculator<DIM>::GetNodesInSphere(
                 this->mpVesselNetwork, pNode->rGetLocation(), mTipAttractionRadius);
         // get the current vector
         c_vector<double, DIM> unit_vector = pNode->rGetLocation().GetLocation(reference_length) -

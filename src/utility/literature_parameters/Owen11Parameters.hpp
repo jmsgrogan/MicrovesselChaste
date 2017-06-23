@@ -48,237 +48,237 @@ struct Owen11Parameters
     /**
      * Network Inlet Pressure: P_in
      */
-    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpInletPressure;
+    static const std::shared_ptr<ParameterInstance<unit::pressure> > mpInletPressure;
 
     /**
      * Network Outlet Pressure: P_out
      */
-    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpOutletPressure;
+    static const std::shared_ptr<ParameterInstance<unit::pressure> > mpOutletPressure;
 
     /**
      * Plasma viscosity \mu_{plasma}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::dynamic_viscosity> > mpPlasmaViscosity;
+    static const std::shared_ptr<ParameterInstance<unit::dynamic_viscosity> > mpPlasmaViscosity;
 
     /**
      * Minimum cell cycle period T_{min}_{normal}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::time> > mpMinimumCellCyclePeriodNormal;
+    static const std::shared_ptr<ParameterInstance<unit::time> > mpMinimumCellCyclePeriodNormal;
 
     /**
      * Minimum cell cycle period T_{min}_{cancer}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::time> > mpMinimumCellCyclePeriodCancer;
+    static const std::shared_ptr<ParameterInstance<unit::time> > mpMinimumCellCyclePeriodCancer;
 
     /**
      * Time for death due to sustained quiescence T_{death}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::time> > mpTimeToDeathDueToQuiescence;
+    static const std::shared_ptr<ParameterInstance<unit::time> > mpTimeToDeathDueToQuiescence;
 
     /**
      * Oxygen partial pressure at half max cell cycle rate C_{\phi}_{normal}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenPartialPressureAtHalfMaxCycleRateNormal;
+    static const std::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenPartialPressureAtHalfMaxCycleRateNormal;
 
     /**
      * Oxygen partial pressure at half max cell cycle rate C_{\phi}_{cancer}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenPartialPressureAtHalfMaxCycleRateCancer;
+    static const std::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenPartialPressureAtHalfMaxCycleRateCancer;
 
     /**
      * Oxygen partial pressure at quiescence C^{enter}_{quiesc}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenPartialPressureAtQuiescence;
+    static const std::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenPartialPressureAtQuiescence;
 
     /**
      * Oxygen partial pressure to leave quiescence C^{leave}_{quiesc}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenPartialPressureLeaveQuiescence;
+    static const std::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenPartialPressureLeaveQuiescence;
 
     /**
      * Chemotactic sensitivity \chi
      */
-    static const boost::shared_ptr<ParameterInstance<unit::diffusivity_per_concentration> > mpChemotacticSensitivity;
+    static const std::shared_ptr<ParameterInstance<unit::diffusivity_per_concentration> > mpChemotacticSensitivity;
 
     /**
      * Maximum cell motility D_{normal}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::diffusivity> > mpCellMotilityNormal;
+    static const std::shared_ptr<ParameterInstance<unit::diffusivity> > mpCellMotilityNormal;
 
     /**
      * Maximum cell motility D_{cancer}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::diffusivity> > mpCellMotilityCancer;
+    static const std::shared_ptr<ParameterInstance<unit::diffusivity> > mpCellMotilityCancer;
 
     /**
      * Maximum cell motility D_{endo}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::diffusivity> > mpCellMotilityEndothelial;
+    static const std::shared_ptr<ParameterInstance<unit::diffusivity> > mpCellMotilityEndothelial;
 
 //    /**
 //     * p53 concentration for apoptosis p53_{THR}
 //     */
-//    static const boost::shared_ptr<ParameterInstance<unit::concentration> > mpP53ConcentrationForApoptosis;
+//    static const std::shared_ptr<ParameterInstance<unit::concentration> > mpP53ConcentrationForApoptosis;
 
     /**
      * Vessel permeability to oxygen \psi_{c}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::membrane_permeability> > mpVesselOxygenPermeability;
+    static const std::shared_ptr<ParameterInstance<unit::membrane_permeability> > mpVesselOxygenPermeability;
 
     /**
      * Vessel permeability to vegf \psi_{v}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::membrane_permeability> > mpVesselVegfPermeability;
+    static const std::shared_ptr<ParameterInstance<unit::membrane_permeability> > mpVesselVegfPermeability;
 
     /**
      * Cell oxygen consumption rate \k_c^{cell}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpCellOxygenConsumptionRate;
+    static const std::shared_ptr<ParameterInstance<unit::rate> > mpCellOxygenConsumptionRate;
 
     /**
      * Cell vegf secretion rate \k_v^{cell}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::concentration_flow_rate> > mpCellVegfSecretionRate;
+    static const std::shared_ptr<ParameterInstance<unit::concentration_flow_rate> > mpCellVegfSecretionRate;
 
     /**
      * Maximum rate of sprouting P^{max}_{sprout}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpMaximumSproutingRate;
+    static const std::shared_ptr<ParameterInstance<unit::rate> > mpMaximumSproutingRate;
 
     /**
      * VEGF concentration at half maximal vessel sprouting probability V_{sprout}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::concentration> > mpVegfConventrationAtHalfMaxProbSprouting;
+    static const std::shared_ptr<ParameterInstance<unit::concentration> > mpVegfConventrationAtHalfMaxProbSprouting;
 
     /**
      * Sprouting exclusion radius (R_{ex})
      */
-    static const boost::shared_ptr<ParameterInstance<unit::length> > mpSproutingExclusionRadius;
+    static const std::shared_ptr<ParameterInstance<unit::length> > mpSproutingExclusionRadius;
 
     /**
      * Maximum vessel survivial time with low wall shear stress T_{prune}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::time> > mpMaxTimeWithLowWallShearStress;
+    static const std::shared_ptr<ParameterInstance<unit::time> > mpMaxTimeWithLowWallShearStress;
 
     /**
      * Critical wall shear stress for vessel pruning \tau_{wall}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpCriticalWallShearStress;
+    static const std::shared_ptr<ParameterInstance<unit::pressure> > mpCriticalWallShearStress;
 
     /**
      * Master step time \delta t
      */
-    static const boost::shared_ptr<ParameterInstance<unit::time> > mpMasterStepTime;
+    static const std::shared_ptr<ParameterInstance<unit::time> > mpMasterStepTime;
 
     /**
      * Simulation duration T_{final}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::time> > mpSimulationDuration;
+    static const std::shared_ptr<ParameterInstance<unit::time> > mpSimulationDuration;
 
     /**
      * Lattice spacing \delta x
      */
-    static const boost::shared_ptr<ParameterInstance<unit::length> > mpLatticeSpacing;
+    static const std::shared_ptr<ParameterInstance<unit::length> > mpLatticeSpacing;
 
     /**
      * Oxygen diffusivity D_{c}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::diffusivity> > mpOxygenDiffusivity;
+    static const std::shared_ptr<ParameterInstance<unit::diffusivity> > mpOxygenDiffusivity;
 
     /**
      * Vegf diffusivity D_{v}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::diffusivity> > mpVegfDiffusivity;
+    static const std::shared_ptr<ParameterInstance<unit::diffusivity> > mpVegfDiffusivity;
 
     /**
      * Vegf decay rate \delta_{v}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpVegfDecayRate;
+    static const std::shared_ptr<ParameterInstance<unit::rate> > mpVegfDecayRate;
 
     /**
      * Inflow haematocrit H_{in}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::dimensionless> > mpInflowHaematocrit;
+    static const std::shared_ptr<ParameterInstance<unit::dimensionless> > mpInflowHaematocrit;
 
     /**
      * Intracellular p53 production rate constant k_7
      */
-    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpP53ProductionRateConstant;
+    static const std::shared_ptr<ParameterInstance<unit::rate> > mpP53ProductionRateConstant;
 
     /**
      * Max p53 degradation rate k_dash_7
      */
-    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpP53MaxDegradationRate;
+    static const std::shared_ptr<ParameterInstance<unit::rate> > mpP53MaxDegradationRate;
 
     /**
      * Tissue oxygen tension for half-max p53 degradation C_{p53}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenTensionForHalfMaxP53Degradation;
+    static const std::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenTensionForHalfMaxP53Degradation;
 
     /**
      * Basal VEGF production rate in cell k_8
      */
-    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpCellVegfProductionRate;
+    static const std::shared_ptr<ParameterInstance<unit::rate> > mpCellVegfProductionRate;
 
     /**
      * Max VEGF production rate in cell k_8_dash
      */
-    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpMaxCellVegfProductionRate;
+    static const std::shared_ptr<ParameterInstance<unit::rate> > mpMaxCellVegfProductionRate;
 
     /**
      * Effect of P53 on vegf production k_8_dash_dash
      */
-    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpP53EffectOnVegfProduction;
+    static const std::shared_ptr<ParameterInstance<unit::rate> > mpP53EffectOnVegfProduction;
 
     /**
      * Effect of VEGF on VEGF production j_5
      */
-    static const boost::shared_ptr<ParameterInstance<unit::dimensionless> > mpVegfEffectOnVegfProduction;
+    static const std::shared_ptr<ParameterInstance<unit::dimensionless> > mpVegfEffectOnVegfProduction;
 
     /**
      * Tissue oxygen tension for half-max vegf degradation C_{VEGF}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenTensionForHalfMaxVegfDegradation;
+    static const std::shared_ptr<ParameterInstance<unit::pressure> > mpOxygenTensionForHalfMaxVegfDegradation;
 
     /**
      * Vessel radius update timestep \epsilon_t
      */
-    static const boost::shared_ptr<ParameterInstance<unit::time> > mpVesselRadiusUpdateTimestep;
+    static const std::shared_ptr<ParameterInstance<unit::time> > mpVesselRadiusUpdateTimestep;
 
     /**
      * Minimum possible radius R_{MIN}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::length> > mpMinimumRadius;
+    static const std::shared_ptr<ParameterInstance<unit::length> > mpMinimumRadius;
 
     /**
      * Maximum possible radius R_{MAX}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::length> > mpMaximumRadius;
+    static const std::shared_ptr<ParameterInstance<unit::length> > mpMaximumRadius;
 
     /**
      * Reference flow rate for metabolic stimulus Q_{ref}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::flow_rate> > mpReferenceFlowRateForMetabolicStimulus;
+    static const std::shared_ptr<ParameterInstance<unit::flow_rate> > mpReferenceFlowRateForMetabolicStimulus;
 
     /**
      * Shrinking tendency k_s
      */
-    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpShrinkingTendency;
+    static const std::shared_ptr<ParameterInstance<unit::rate> > mpShrinkingTendency;
 
     /**
      * Shrinking to intravascaulr pressure k_p
      */
-    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpSensitivityToIntravascularPressure;
+    static const std::shared_ptr<ParameterInstance<unit::rate> > mpSensitivityToIntravascularPressure;
 
     /**
      * Basal metabolic stimulus k^0_m
      */
-    static const boost::shared_ptr<ParameterInstance<unit::rate> > mpBasalMetabolicStimulus;
+    static const std::shared_ptr<ParameterInstance<unit::rate> > mpBasalMetabolicStimulus;
 
     /**
      * Reference partial pressure of inlet haematocrit vessels C_{Ref}
      */
-    static const boost::shared_ptr<ParameterInstance<unit::pressure> > mpReferencePartialPressure;
+    static const std::shared_ptr<ParameterInstance<unit::pressure> > mpReferencePartialPressure;
 
 };
 

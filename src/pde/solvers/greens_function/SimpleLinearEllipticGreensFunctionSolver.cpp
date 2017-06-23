@@ -69,8 +69,8 @@ void SimpleLinearEllipticGreensFunctionSolver<DIM>::Solve()
     this->UpdateGreensFunctionMatrices(1, 1, 1, 1);
 
     // Get the sink rates
-    boost::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_elliptic_pde =
-                boost::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
+    std::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_elliptic_pde =
+                std::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
     if(!p_elliptic_pde)
     {
         EXCEPTION("PDE type not recognized in Green's function solver.");

@@ -73,10 +73,10 @@ CoupledLumpedSystemFiniteDifferenceSolver<DIM>::~CoupledLumpedSystemFiniteDiffer
 }
 
 template <unsigned DIM>
-boost::shared_ptr<CoupledLumpedSystemFiniteDifferenceSolver<DIM> > CoupledLumpedSystemFiniteDifferenceSolver<DIM>::Create()
+std::shared_ptr<CoupledLumpedSystemFiniteDifferenceSolver<DIM> > CoupledLumpedSystemFiniteDifferenceSolver<DIM>::Create()
 {
-    MAKE_PTR(CoupledLumpedSystemFiniteDifferenceSolver<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<CoupledLumpedSystemFiniteDifferenceSolver<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -157,8 +157,8 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     units::quantity<unit::length> spacing = this->mpRegularGrid->GetSpacing();
 
-    boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_pde =
-            boost::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM> >(this->mpPde);
+    std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_pde =
+            std::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM> >(this->mpPde);
 
     double diffusion_term = (p_coupled_pde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
     unsigned num_points_xy = dimensions[0]*dimensions[1];
@@ -302,8 +302,8 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleVector()
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     units::quantity<unit::length> spacing = this->mpRegularGrid->GetSpacing();
 
-    boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_pde =
-            boost::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM> >(this->mpPde);
+    std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_pde =
+            std::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM> >(this->mpPde);
     double diffusion_term = (p_coupled_pde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
 
     // compute function value, given current guess
@@ -464,8 +464,8 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::Solve()
         PetscVecTools::SetElement(previous_solution, idx, this->mSolution[idx]);
     }
 
-    boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_pde =
-            boost::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM> >(this->mpPde);
+    std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_pde =
+            std::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM> >(this->mpPde);
     PetscVecTools::SetElement(previous_solution, number_of_points, p_coupled_pde->GetCurrentVegfInPellet()/this->mReferenceConcentration);
 
     TS ts; // time stepper

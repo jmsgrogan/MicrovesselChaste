@@ -102,7 +102,7 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to a new class instance
      */
-    static boost::shared_ptr<LinnengarHaematocritSolver<DIM> > Create();
+    static std::shared_ptr<LinnengarHaematocritSolver<DIM> > Create();
 
     /**
      *  Do the solve

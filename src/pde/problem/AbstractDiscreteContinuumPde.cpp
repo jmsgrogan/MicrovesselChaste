@@ -56,7 +56,7 @@ AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::~AbstractDiscreteContinuum
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::AddDiscreteSource(boost::shared_ptr<DiscreteSource<SPACE_DIM> > pDiscreteSource)
+void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::AddDiscreteSource(std::shared_ptr<DiscreteSource<SPACE_DIM> > pDiscreteSource)
 {
     mDiscreteSources.push_back(pDiscreteSource);
 }
@@ -68,7 +68,7 @@ units::quantity<unit::diffusivity> AbstractDiscreteContinuumPde<ELEMENT_DIM, SPA
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-std::vector<boost::shared_ptr<DiscreteSource<SPACE_DIM> > > AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::GetDiscreteSources()
+std::vector<std::shared_ptr<DiscreteSource<SPACE_DIM> > > AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::GetDiscreteSources()
 {
     return mDiscreteSources;
 }

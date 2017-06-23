@@ -84,7 +84,7 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to the newly created instance
      */
-    static boost::shared_ptr<MappableGridGenerator> Create();
+    static std::shared_ptr<MappableGridGenerator> Create();
 
     /**
      * Generate a planar grid with one block in the z direction
@@ -94,7 +94,7 @@ public:
      * @param withEndCaps include polygons at the ends of the plane, turned off for closed cylinder generation
      * @return pointer to a Part representation of the plane
      */
-    boost::shared_ptr<Part<DIM> > GeneratePlane(unsigned numX, unsigned numY, bool isShell = false,
+    std::shared_ptr<Part<DIM> > GeneratePlane(unsigned numX, unsigned numY, bool isShell = false,
             bool withEndCaps = true);
 
     /**
@@ -108,7 +108,7 @@ public:
      * @param numY number of blocks over the cylinder height
      * @return pointer to a Part representation of the cylinder
      */
-    boost::shared_ptr<Part<DIM> > GenerateCylinder(units::quantity<unit::length> cylinderRadius,
+    std::shared_ptr<Part<DIM> > GenerateCylinder(units::quantity<unit::length> cylinderRadius,
             units::quantity<unit::length> cylinderThickness,
             units::quantity<unit::length> cylinderHeight, unsigned numX, unsigned numY, double cylinderAngle = 2.0 * M_PI);
 
@@ -123,7 +123,7 @@ public:
      * @param numY number of blocks over the cylinder height
      * @return pointer to a Part representation of the hemisphere
      */
-    boost::shared_ptr<Part<DIM> > GenerateHemisphere(units::quantity<unit::length> sphereRadius,
+    std::shared_ptr<Part<DIM> > GenerateHemisphere(units::quantity<unit::length> sphereRadius,
             units::quantity<unit::length> sphereThickness, unsigned numX, unsigned numY,
             double sphereAzimuthAngle = 2.0 * M_PI, double spherePolarAngle = 0.5 * M_PI);
 

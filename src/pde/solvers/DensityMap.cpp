@@ -38,7 +38,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkWedge.h>
 #include <vtkVoxel.h>
 #include <vtkPoints.h>
-#include <vtkXMLUnstructuredGridWriter.h>
 #include "VesselSegment.hpp"
 #include "DensityMap.hpp"
 #include "GeometryTools.hpp"
@@ -61,10 +60,9 @@ DensityMap<DIM>::DensityMap() :
 }
 
 template<unsigned DIM>
-boost::shared_ptr<DensityMap<DIM> > DensityMap<DIM>::Create()
+std::shared_ptr<DensityMap<DIM> > DensityMap<DIM>::Create()
 {
-    MAKE_PTR(DensityMap<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<DensityMap<DIM> >();
 }
 
 template<unsigned DIM>
@@ -74,7 +72,7 @@ DensityMap<DIM>::~DensityMap()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<VesselNetwork<DIM> > DensityMap<DIM>::GetVesselNetwork()
+std::shared_ptr<VesselNetwork<DIM> > DensityMap<DIM>::GetVesselNetwork()
 {
     return mpGridCalculator->GetVesselNetwork();
 }
@@ -104,7 +102,7 @@ vtkSmartPointer<vtkUnstructuredGrid> DensityMap<DIM>::GetSamplingGrid(vtkSmartPo
 }
 
 template<unsigned DIM>
-vtkSmartPointer<vtkUnstructuredGrid> DensityMap<DIM>::GetSamplingGrid(boost::shared_ptr<RegularGrid<DIM> > pGrid)
+vtkSmartPointer<vtkUnstructuredGrid> DensityMap<DIM>::GetSamplingGrid(std::shared_ptr<RegularGrid<DIM> > pGrid)
 {
     vtkSmartPointer<vtkUnstructuredGrid> p_tri_grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
     p_tri_grid->Allocate(1,1);
@@ -232,7 +230,7 @@ bool DensityMap<DIM>::IsPointInCell(vtkSmartPointer<vtkCellLocator> pCellLocator
 }
 
 template<unsigned DIM>
-boost::shared_ptr<GridCalculator<DIM> > DensityMap<DIM>::GetGridCalculator()
+std::shared_ptr<GridCalculator<DIM> > DensityMap<DIM>::GetGridCalculator()
 {
     return this->mpGridCalculator;
 }
@@ -249,15 +247,15 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselSurfaceAreaDensity(bool up
     {
         mVesselSurfaceAreaDensity.clear();
         mVesselSurfaceAreaDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfCells(), 0.0);
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
+        std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
         units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetCellVolumes(true, true);
         vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
 
         if(this->mpGridCalculator->HasStructuredGrid())
         {
-            boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
-                    boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+            std::shared_ptr<RegularGrid<DIM> > p_regular_grid =
+                    std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
             if(!p_regular_grid)
             {
                 EXCEPTION("Can't cast to regular grid");
@@ -266,8 +264,8 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselSurfaceAreaDensity(bool up
         }
         else
         {
-            boost::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
-                    boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
+            std::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
+                    std::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
             if(!p_mesh)
             {
                 EXCEPTION("Can't cast to mesh");
@@ -316,15 +314,15 @@ std::vector<double> DensityMap<DIM>::rGetVesselLineDensity(bool update)
     {
         mVesselLineDensity.clear();
         mVesselLineDensity = std::vector<double>(num_points, 0.0);
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap(update);
+        std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap(update);
         units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetCellVolumes(true, true);
 
         vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
         if(this->mpGridCalculator->HasStructuredGrid())
         {
-            boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
-                    boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+            std::shared_ptr<RegularGrid<DIM> > p_regular_grid =
+                    std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
             if(!p_regular_grid)
             {
                 EXCEPTION("Can't cast to regular grid");
@@ -333,8 +331,8 @@ std::vector<double> DensityMap<DIM>::rGetVesselLineDensity(bool update)
         }
         else
         {
-            boost::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
-                    boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
+            std::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
+                    std::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
             if(!p_mesh)
             {
                 EXCEPTION("Can't cast to mesh");
@@ -386,15 +384,15 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselSurfaceAreaDensity
         mPerfusedVesselSurfaceAreaDensity.clear();
         mPerfusedVesselSurfaceAreaDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfCells(), 0.0);
 
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
+        std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
         units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetCellVolumes(true, true);
         vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
 
         if(this->mpGridCalculator->HasStructuredGrid())
         {
-            boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
-                    boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+            std::shared_ptr<RegularGrid<DIM> > p_regular_grid =
+                    std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
             if(!p_regular_grid)
             {
                 EXCEPTION("Can't cast to regular grid");
@@ -403,8 +401,8 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselSurfaceAreaDensity
         }
         else
         {
-            boost::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
-                    boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
+            std::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
+                    std::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
             if(!p_mesh)
             {
                 EXCEPTION("Can't cast to mesh");
@@ -458,15 +456,15 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselLineDensity(bool u
     {
         mPerfusedVesselLineDensity.clear();
         mPerfusedVesselLineDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfCells(), 0.0);
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
+        std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
         units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetCellVolumes(true, true);
         vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
 
         if(this->mpGridCalculator->HasStructuredGrid())
         {
-            boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
-                    boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+            std::shared_ptr<RegularGrid<DIM> > p_regular_grid =
+                    std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
             if(!p_regular_grid)
             {
                 EXCEPTION("Can't cast to regular grid");
@@ -475,8 +473,8 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselLineDensity(bool u
         }
         else
         {
-            boost::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
-                    boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
+            std::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
+                    std::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
             if(!p_mesh)
             {
                 EXCEPTION("Can't cast to mesh");
@@ -530,7 +528,7 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselTipDensity(bool update)
     {
         mVesselTipDensity.clear();
         mVesselTipDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfCells(), 0.0);
-        std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > node_map = this->mpGridCalculator->rGetVesselNodeMap();
+        std::vector<std::vector<std::shared_ptr<VesselNode<DIM> > > > node_map = this->mpGridCalculator->rGetVesselNodeMap();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetCellVolumes(true, true);
         for(unsigned idx=0; idx<node_map.size();idx++)
         {
@@ -558,7 +556,7 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselBranchDensity(bool update)
     {
         mVesselBranchDensity.clear();
         mVesselBranchDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfCells(), 0.0);
-        std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > node_map = this->mpGridCalculator->rGetVesselNodeMap();
+        std::vector<std::vector<std::shared_ptr<VesselNode<DIM> > > > node_map = this->mpGridCalculator->rGetVesselNodeMap();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetCellVolumes(true, true);
         for(unsigned idx=0; idx<node_map.size();idx++)
         {
@@ -586,15 +584,15 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselQuantityDensity(const std:
     {
         mVesselQuantityDensity.clear();
         mVesselQuantityDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfCells(), 0.0);
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
+        std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
         units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetCellVolumes(true, true);
         vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
 
         if(this->mpGridCalculator->HasStructuredGrid())
         {
-            boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
-                    boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+            std::shared_ptr<RegularGrid<DIM> > p_regular_grid =
+                    std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
             if(!p_regular_grid)
             {
                 EXCEPTION("Can't cast to regular grid");
@@ -603,8 +601,8 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselQuantityDensity(const std:
         }
         else
         {
-            boost::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
-                    boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
+            std::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
+                    std::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
             if(!p_mesh)
             {
                 EXCEPTION("Can't cast to mesh");
@@ -709,19 +707,19 @@ void DensityMap<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopula
 }
 
 template<unsigned DIM>
-void DensityMap<DIM>::SetGrid(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
+void DensityMap<DIM>::SetGrid(std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
 {
     mpGridCalculator->SetGrid(pGrid);
 }
 
 template<unsigned DIM>
-void DensityMap<DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator)
+void DensityMap<DIM>::SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGridCalculator)
 {
     mpGridCalculator = pGridCalculator;
 }
 
 template<unsigned DIM>
-void DensityMap<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void DensityMap<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpGridCalculator->SetVesselNetwork(pNetwork);
 }

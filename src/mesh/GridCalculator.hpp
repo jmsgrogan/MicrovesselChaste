@@ -64,7 +64,7 @@ class GridCalculator
     /**
      * The vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpNetwork;
 
     /**
      * The cell population.
@@ -89,17 +89,17 @@ class GridCalculator
     /**
      * A map of vessel nodes corresponding to points or elements
      */
-    std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > mVesselNodeMap;
+    std::vector<std::vector<std::shared_ptr<VesselNode<DIM> > > > mVesselNodeMap;
 
     /**
      * A map of vessel segments corresponding to a points or elements
      */
-    std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > mSegmentMap;
+    std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > > mSegmentMap;
 
     /**
      * The grid
      */
-    boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > mpGrid;
+    std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > mpGrid;
 
     /**
      * Use regular grid
@@ -122,7 +122,7 @@ public:
      * Factory constructor method
      * @return a shared pointer to a new grid calculator
      */
-    static boost::shared_ptr<GridCalculator<DIM> > Create();
+    static std::shared_ptr<GridCalculator<DIM> > Create();
 
     /**
      * Desctructor
@@ -160,14 +160,14 @@ public:
      * Return the vessel network
      * @return the vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > GetVesselNetwork();
+    std::shared_ptr<VesselNetwork<DIM> > GetVesselNetwork();
 
     /**
      * Return the vessel node map
      * @param update update the vessel node map
      * @return the vessel node map
      */
-    const std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > >& rGetVesselNodeMap(bool update = true);
+    const std::vector<std::vector<std::shared_ptr<VesselNode<DIM> > > >& rGetVesselNodeMap(bool update = true);
 
     /**
      * Return the segments map
@@ -175,14 +175,14 @@ public:
      * @param useVesselSurface use the vessel surface for distance calculations
      * @return the segment map
      */
-    const std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > >& rGetSegmentMap(bool update = true,
+    const std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > >& rGetSegmentMap(bool update = true,
             bool useVesselSurface = false);
 
     /**
      * Return the grid itself
      * @return the grid itself
      */
-    boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > GetGrid();
+    std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > GetGrid();
 
     /**
      * Return true if the solver uses a regular grid to store solutions
@@ -224,13 +224,13 @@ public:
      * Set the vessel network
      * @param pNetwork the vessel network
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Set the grid
      * @param pGrid the grid
      */
-    void SetGrid(boost::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
+    void SetGrid(std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
 
 };
 

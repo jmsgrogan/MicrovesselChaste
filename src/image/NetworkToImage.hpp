@@ -58,7 +58,7 @@ class NetworkToImage
     /**
      *  The vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpNetwork;
 
     /**
      *  The grid spacing
@@ -92,7 +92,7 @@ public:
      * Factory constructor method
      * @return a pointer to the class
      */
-    static boost::shared_ptr<NetworkToImage<DIM> > Create();
+    static std::shared_ptr<NetworkToImage<DIM> > Create();
 
     /**
      * Get the image
@@ -104,7 +104,7 @@ public:
      * Set the vessel network
      * @param pNetwork the network
      */
-    void SetNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Set the pixel spacing for the image

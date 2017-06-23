@@ -88,7 +88,7 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to a new instance of the class
      */
-    static boost::shared_ptr<Owen2011MigrationRule<DIM> > Create();
+    static std::shared_ptr<Owen2011MigrationRule<DIM> > Create();
 
     /**
      * Calculate the grid index that each migrating node will move into. Set to -1 if the
@@ -96,7 +96,7 @@ public:
      * @param rNodes nodes to calculate indices
      * @return a vector of grid indices to move nodes into
      */
-    std::vector<int> GetIndices(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
+    std::vector<int> GetIndices(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
 
     /**
      * Set the cell chemotactic parameter
@@ -120,7 +120,7 @@ private:
      * @param gridIndex the grid index
      * @return a vector of movement probabilities corresponding to each neighbour index
      */
-    std::vector<double> GetNeighbourMovementProbabilities(boost::shared_ptr<VesselNode<DIM> > pNode,
+    std::vector<double> GetNeighbourMovementProbabilities(std::shared_ptr<VesselNode<DIM> > pNode,
                                                            std::vector<unsigned> neighbourIndices, unsigned gridIndex);
 };
 

@@ -73,13 +73,13 @@ void VtkSceneMicrovesselModifier<DIM>::UpdateAtEndOfTimeStep()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<MicrovesselVtkScene<DIM> > VtkSceneMicrovesselModifier<DIM>::GetVtkScene()
+std::shared_ptr<MicrovesselVtkScene<DIM> > VtkSceneMicrovesselModifier<DIM>::GetVtkScene()
 {
     return mpScene;
 }
 
 template<unsigned DIM>
-void VtkSceneMicrovesselModifier<DIM>::SetVtkScene(boost::shared_ptr<MicrovesselVtkScene<DIM> > pScene)
+void VtkSceneMicrovesselModifier<DIM>::SetVtkScene(std::shared_ptr<MicrovesselVtkScene<DIM> > pScene)
 {
     mpScene = pScene;
 }

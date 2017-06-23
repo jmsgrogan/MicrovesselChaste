@@ -292,7 +292,7 @@ void VesselFlowProperties<DIM>::ResetRegressionTimer()
 }
 
 template<unsigned DIM>
-void VesselFlowProperties<DIM>::UpdateSegments(std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments)
+void VesselFlowProperties<DIM>::UpdateSegments(std::vector<std::shared_ptr<VesselSegment<DIM> > > segments)
 {
     mSegments = segments;
 }

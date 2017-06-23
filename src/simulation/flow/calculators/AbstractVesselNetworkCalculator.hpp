@@ -52,7 +52,7 @@ protected:
     /**
      * The vessel network.
      */
-    boost::shared_ptr<VesselNetwork<DIM> >  mpNetwork;
+    std::shared_ptr<VesselNetwork<DIM> >  mpNetwork;
     
 public:
     
@@ -70,7 +70,7 @@ public:
      * Set the vessel network.
      * @param pNetwork the vessel network
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> >  pNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> >  pNetwork);
 
     /**
      * Run the calculator. Over-ridden in child classes.

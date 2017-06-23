@@ -67,10 +67,10 @@ Part<DIM>::Part() :
 }
 
 template<unsigned DIM>
-boost::shared_ptr<Part<DIM> > Part<DIM>::Create()
+std::shared_ptr<Part<DIM> > Part<DIM>::Create()
 {
-    MAKE_PTR(Part<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<Part<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -88,7 +88,7 @@ void Part<DIM>::AddAttribute(const std::string& rLabel, double value)
 template<unsigned DIM>
 void Part<DIM>::AddAttributeToEdgeIfFound(DimensionalChastePoint<DIM> loc, const std::string& rLabel, double value)
 {
-    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+    std::vector<std::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
     for(unsigned idx=0; idx<polygons.size(); idx++)
     {
         polygons[idx]->AddAttributeToEdgeIfFound(loc, rLabel, value);
@@ -98,7 +98,7 @@ void Part<DIM>::AddAttributeToEdgeIfFound(DimensionalChastePoint<DIM> loc, const
 template<unsigned DIM>
 void Part<DIM>::AddAttributeToPolygonIfFound(DimensionalChastePoint<DIM> loc, const std::string& rLabel, double value)
 {
-    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+    std::vector<std::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
     for(unsigned idx=0; idx<polygons.size(); idx++)
     {
         if(polygons[idx]->ContainsPoint(loc))
@@ -111,7 +111,7 @@ void Part<DIM>::AddAttributeToPolygonIfFound(DimensionalChastePoint<DIM> loc, co
 template<unsigned DIM>
 void Part<DIM>::AddAttributeToPolygons(const std::string& rLabel, double value)
 {
-    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+    std::vector<std::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
     for(unsigned idx=0; idx<polygons.size(); idx++)
     {
         polygons[idx]->AddAttribute(rLabel, value);
@@ -119,10 +119,10 @@ void Part<DIM>::AddAttributeToPolygons(const std::string& rLabel, double value)
 }
 
 template<unsigned DIM>
-boost::shared_ptr<Polygon<DIM> > Part<DIM>::AddCircle(units::quantity<unit::length> radius,
+std::shared_ptr<Polygon<DIM> > Part<DIM>::AddCircle(units::quantity<unit::length> radius,
                                                 DimensionalChastePoint<DIM> centre, unsigned numSegments)
 {
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices;
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices;
     double seg_angle = 2.0 * M_PI / double(numSegments);
     for (unsigned idx = 0; idx < numSegments; idx++)
     {
@@ -148,7 +148,7 @@ void Part<DIM>::AddCylinder(units::quantity<unit::length> radius,
                             DimensionalChastePoint<DIM> centre,
                             unsigned numSegments)
 {
-    boost::shared_ptr<Polygon<DIM> > p_circle = AddCircle(radius, centre, numSegments);
+    std::shared_ptr<Polygon<DIM> > p_circle = AddCircle(radius, centre, numSegments);
     Extrude(p_circle, depth);
     mVtkIsUpToDate = false;
 }
@@ -159,7 +159,7 @@ void Part<DIM>::AddCuboid(units::quantity<unit::length> sizeX,
                           units::quantity<unit::length> sizeZ,
                           DimensionalChastePoint<DIM> origin)
 {
-    boost::shared_ptr<Polygon<DIM> > p_rectangle = AddRectangle(sizeX, sizeY, origin);
+    std::shared_ptr<Polygon<DIM> > p_rectangle = AddRectangle(sizeX, sizeY, origin);
     Extrude(p_rectangle, sizeZ);
     mVtkIsUpToDate = false;
 }
@@ -177,9 +177,9 @@ void Part<DIM>::AddRegionMarker(DimensionalChastePoint<DIM> region, unsigned val
 }
 
 template<unsigned DIM>
-void Part<DIM>::AppendPart(boost::shared_ptr<Part<DIM> > pPart)
+void Part<DIM>::AppendPart(std::shared_ptr<Part<DIM> > pPart)
 {
-    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = pPart->GetPolygons();
+    std::vector<std::shared_ptr<Polygon<DIM> > > polygons = pPart->GetPolygons();
     for(unsigned idx=0; idx<polygons.size(); idx++)
     {
         this->AddPolygon(polygons[idx], true);
@@ -188,18 +188,18 @@ void Part<DIM>::AppendPart(boost::shared_ptr<Part<DIM> > pPart)
 }
 
 template<unsigned DIM>
-boost::shared_ptr<Polygon<DIM> > Part<DIM>::AddPolygon(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices, bool newFacet,
-                                                                                   boost::shared_ptr<Facet<DIM> > pFacet)
+std::shared_ptr<Polygon<DIM> > Part<DIM>::AddPolygon(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices, bool newFacet,
+                                                                                   std::shared_ptr<Facet<DIM> > pFacet)
 {
-    boost::shared_ptr<Polygon<DIM> > p_polygon = Polygon<DIM>::Create(vertices);
+    std::shared_ptr<Polygon<DIM> > p_polygon = Polygon<DIM>::Create(vertices);
     AddPolygon(p_polygon, newFacet, pFacet);
     mVtkIsUpToDate = false;
     return p_polygon;
 }
 
 template<unsigned DIM>
-boost::shared_ptr<Polygon<DIM> > Part<DIM>::AddPolygon(boost::shared_ptr<Polygon<DIM> > pPolygon, bool newFacet,
-                                                 boost::shared_ptr<Facet<DIM> > pFacet)
+std::shared_ptr<Polygon<DIM> > Part<DIM>::AddPolygon(std::shared_ptr<Polygon<DIM> > pPolygon, bool newFacet,
+                                                 std::shared_ptr<Facet<DIM> > pFacet)
 {
     if (!pFacet)
     {
@@ -221,12 +221,12 @@ boost::shared_ptr<Polygon<DIM> > Part<DIM>::AddPolygon(boost::shared_ptr<Polygon
 }
 
 template<unsigned DIM>
-boost::shared_ptr<Polygon<DIM> > Part<DIM>::AddRectangle(units::quantity<unit::length> sizeX,
+std::shared_ptr<Polygon<DIM> > Part<DIM>::AddRectangle(units::quantity<unit::length> sizeX,
                                                    units::quantity<unit::length> sizeY,
                                                    DimensionalChastePoint<DIM> origin)
 {
     c_vector<double, DIM> dimensionless_origin = origin.GetLocation(mReferenceLength);
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices;
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices;
     if(DIM==3)
     {
         vertices.push_back(DimensionalChastePoint<DIM>::Create(dimensionless_origin[0], dimensionless_origin[1], dimensionless_origin[2], mReferenceLength));
@@ -249,13 +249,13 @@ boost::shared_ptr<Polygon<DIM> > Part<DIM>::AddRectangle(units::quantity<unit::l
 }
 
 template<unsigned DIM>
-void Part<DIM>::AddVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork, bool surface,
+void Part<DIM>::AddVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork, bool surface,
         bool removeVesselRegion)
 {
     if (!surface)
     {
-        std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices;
-        std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = pVesselNetwork->GetNodes();
+        std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices;
+        std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pVesselNetwork->GetNodes();
         for (unsigned idx = 0; idx < nodes.size(); idx++)
         {
             units::quantity<unit::length> length_Scale = nodes[idx]->rGetLocation().GetReferenceLengthScale();
@@ -275,11 +275,11 @@ void Part<DIM>::AddVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselN
         }
 
         // Create polygons and facets for each vessel
-        std::vector<boost::shared_ptr<Vessel<DIM> > > vessels = pVesselNetwork->GetVessels();
+        std::vector<std::shared_ptr<Vessel<DIM> > > vessels = pVesselNetwork->GetVessels();
         for (unsigned idx = 0; idx < vessels.size(); idx++)
         {
-            std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = vessels[idx]->GetSegments();
-            std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > segment_vertices;
+            std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = vessels[idx]->GetSegments();
+            std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > segment_vertices;
             for (unsigned jdx = 0; jdx < segments.size(); jdx++)
             {
                 unsigned node0_index = pVesselNetwork->GetNodeIndex(segments[jdx]->GetNode(0));
@@ -290,7 +290,7 @@ void Part<DIM>::AddVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselN
                 }
                 segment_vertices.push_back(vertices[node1_index]);
             }
-            boost::shared_ptr<Polygon<DIM> > p_polygon = Polygon<DIM>::Create(segment_vertices);
+            std::shared_ptr<Polygon<DIM> > p_polygon = Polygon<DIM>::Create(segment_vertices);
             mFacets.push_back(Facet<DIM>::Create(p_polygon));
         }
     }
@@ -298,7 +298,7 @@ void Part<DIM>::AddVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselN
     {
         // Add any polygons on existing facets to the facet
         VesselSurfaceGenerator<DIM> generator(pVesselNetwork);
-        std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = generator.GetSurfacePolygons();
+        std::vector<std::shared_ptr<Polygon<DIM> > > polygons = generator.GetSurfacePolygons();
         std::vector<bool> polygon_on_facet;
 
         for (unsigned idx = 0; idx < polygons.size(); idx++)
@@ -350,7 +350,7 @@ template<unsigned DIM>
 bool Part<DIM>::EdgeHasAttribute(DimensionalChastePoint<DIM> loc, const std::string& rLabel)
 {
     bool edge_has_label = false;
-    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+    std::vector<std::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
     for(unsigned idx=0; idx<polygons.size(); idx++)
     {
         if(polygons[idx]->EdgeHasAttribute(loc, rLabel))
@@ -362,15 +362,15 @@ bool Part<DIM>::EdgeHasAttribute(DimensionalChastePoint<DIM> loc, const std::str
 }
 
 template<unsigned DIM>
-void Part<DIM>::Extrude(boost::shared_ptr<Polygon<DIM> > pPolygon, units::quantity<unit::length> depth)
+void Part<DIM>::Extrude(std::shared_ptr<Polygon<DIM> > pPolygon, units::quantity<unit::length> depth)
 {
     if(DIM==2)
     {
         EXCEPTION("Only parts in 3D space can be extruded.");
     }
     // Loop through the vertices and create new ones at the offset depth
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > original_vertices = pPolygon->GetVertices();
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > new_vertices;
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > original_vertices = pPolygon->GetVertices();
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > new_vertices;
     for (unsigned idx = 0; idx < original_vertices.size(); idx++)
     {
         c_vector<double, DIM> vertex_location = original_vertices[idx]->GetLocation(mReferenceLength);
@@ -397,7 +397,7 @@ void Part<DIM>::Extrude(boost::shared_ptr<Polygon<DIM> > pPolygon, units::quanti
         {
             index2 = 0;
         }
-        boost::shared_ptr<Polygon<DIM> > p_polygon = Polygon<DIM>::Create(original_vertices[idx]);
+        std::shared_ptr<Polygon<DIM> > p_polygon = Polygon<DIM>::Create(original_vertices[idx]);
         p_polygon->AddVertex(original_vertices[index2]);
         p_polygon->AddVertex(new_vertices[index2]);
         p_polygon->AddVertex(new_vertices[idx]);
@@ -405,16 +405,16 @@ void Part<DIM>::Extrude(boost::shared_ptr<Polygon<DIM> > pPolygon, units::quanti
     }
 
     // Close the lid
-    boost::shared_ptr<Polygon<DIM> > p_polygon = Polygon<DIM>::Create(new_vertices);
+    std::shared_ptr<Polygon<DIM> > p_polygon = Polygon<DIM>::Create(new_vertices);
     mFacets.push_back(Facet<DIM>::Create(p_polygon));
     mVtkIsUpToDate = false;
 }
 
 template <unsigned DIM>
-void Part<DIM>::BooleanWithNetwork(boost::shared_ptr<VesselNetwork<DIM> > pVesselNetwork)
+void Part<DIM>::BooleanWithNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork)
 {
     // Remove any vessel with both nodes outside the domain
-    std::vector<boost::shared_ptr<Vessel<DIM> > > vessels = pVesselNetwork->GetVessels();
+    std::vector<std::shared_ptr<Vessel<DIM> > > vessels = pVesselNetwork->GetVessels();
     for(unsigned idx=0;idx<vessels.size();idx++)
     {
         if(!IsPointInPart(vessels[idx]->GetStartNode()->rGetLocation()) &&
@@ -456,7 +456,7 @@ std::map<unsigned, std::string> Part<DIM>::GetAttributesKeysForMesh(bool update)
     if(update)
     {
         // Collect all attribute labels
-        std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+        std::vector<std::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
         std::set<std::string> attribute_labels;
 
         for(unsigned idx=0; idx<polygons.size(); idx++)
@@ -477,7 +477,7 @@ std::map<unsigned, std::string> Part<DIM>::GetAttributesKeysForMesh(bool update)
                 }
             }
         }
-        std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
+        std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
         for(unsigned idx=0;idx<vertices.size(); idx++)
         {
             std::map<std::string, double> attribute_map = vertices[idx]->GetAttributes();
@@ -499,7 +499,7 @@ std::map<unsigned, std::string> Part<DIM>::GetAttributesKeysForMesh(bool update)
 }
 
 template<unsigned DIM>
-boost::shared_ptr<Facet<DIM> > Part<DIM>::GetFacet(const DimensionalChastePoint<DIM>& location)
+std::shared_ptr<Facet<DIM> > Part<DIM>::GetFacet(const DimensionalChastePoint<DIM>& location)
 {
     for(unsigned idx=0; idx<mFacets.size(); idx++)
     {
@@ -512,18 +512,18 @@ boost::shared_ptr<Facet<DIM> > Part<DIM>::GetFacet(const DimensionalChastePoint<
 }
 
 template<unsigned DIM>
-std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > Part<DIM>::GetVertices()
+std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > Part<DIM>::GetVertices()
 {
-    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
-    std::set<boost::shared_ptr<DimensionalChastePoint<DIM> > > unique_vertices;
+    std::vector<std::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+    std::set<std::shared_ptr<DimensionalChastePoint<DIM> > > unique_vertices;
     for (unsigned idx = 0; idx < polygons.size(); idx++)
     {
-        std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > polygon_vertices = polygons[idx]->GetVertices();
+        std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > polygon_vertices = polygons[idx]->GetVertices();
         std::copy(polygon_vertices.begin(), polygon_vertices.end(),
                   std::inserter(unique_vertices, unique_vertices.end()));
     }
 
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices;
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices;
     vertices.insert(vertices.end(), unique_vertices.begin(), unique_vertices.end());
 
     for (unsigned idx = 0; idx < vertices.size(); idx++)
@@ -560,7 +560,7 @@ template<unsigned DIM>
 std::vector<DimensionalChastePoint<DIM> > Part<DIM>::GetVertexLocations()
 {
     std::vector<DimensionalChastePoint<DIM> > vertex_locs;
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     for (unsigned idx = 0; idx < vertices.size(); idx++)
     {
         vertex_locs.push_back(*vertices[idx]);
@@ -569,12 +569,12 @@ std::vector<DimensionalChastePoint<DIM> > Part<DIM>::GetVertexLocations()
 }
 
 template<unsigned DIM>
-std::vector<boost::shared_ptr<Polygon<DIM> > > Part<DIM>::GetPolygons()
+std::vector<std::shared_ptr<Polygon<DIM> > > Part<DIM>::GetPolygons()
 {
-    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons;
+    std::vector<std::shared_ptr<Polygon<DIM> > > polygons;
     for (unsigned idx = 0; idx < mFacets.size(); idx++)
     {
-        std::vector<boost::shared_ptr<Polygon<DIM> > > facet_polygons = mFacets[idx]->GetPolygons();
+        std::vector<std::shared_ptr<Polygon<DIM> > > facet_polygons = mFacets[idx]->GetPolygons();
         polygons.insert(polygons.end(), facet_polygons.begin(), facet_polygons.end());
     }
     return polygons;
@@ -583,7 +583,7 @@ std::vector<boost::shared_ptr<Polygon<DIM> > > Part<DIM>::GetPolygons()
 template<unsigned DIM>
 std::vector<units::quantity<unit::length> > Part<DIM>::GetBoundingBox()
 {
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     c_vector<double, 6> box;
 
     for (unsigned idx = 0; idx < vertices.size(); idx++)
@@ -620,7 +620,7 @@ std::vector<units::quantity<unit::length> > Part<DIM>::GetBoundingBox()
 }
 
 template<unsigned DIM>
-std::vector<boost::shared_ptr<Facet<DIM> > > Part<DIM>::GetFacets()
+std::vector<std::shared_ptr<Facet<DIM> > > Part<DIM>::GetFacets()
 {
     return mFacets;
 }
@@ -654,7 +654,7 @@ std::vector<std::pair<std::pair<unsigned, unsigned>, unsigned > > Part<DIM>::Get
     GetVertices();
 
     std::vector<std::pair<std::pair<unsigned, unsigned>, unsigned > > indexes;
-    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = mFacets[0]->GetPolygons();
+    std::vector<std::shared_ptr<Polygon<DIM> > > polygons = mFacets[0]->GetPolygons();
     std::map<unsigned, std::string> attribute_keys = this->GetAttributesKeysForMesh(true);
 
     for (unsigned idx = 0; idx < polygons.size(); idx++)
@@ -681,7 +681,7 @@ std::vector<std::pair<std::pair<unsigned, unsigned>, unsigned > > Part<DIM>::Get
         }
         else if (polygons[idx]->GetVertices().size() > 1)
         {
-            std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = polygons[idx]->GetVertices();
+            std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = polygons[idx]->GetVertices();
             for (unsigned jdx = 0; jdx < vertices.size() - 1; jdx++)
             {
                 unsigned key = 2;
@@ -715,7 +715,7 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
     }
 
     // Get unique edge and polygon labels
-    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+    std::vector<std::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
     std::set<std::string> polygon_labels;
     std::set<std::string> edge_labels;
     std::set<std::string> vertex_labels;
@@ -741,7 +741,7 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
             }
         }
     }
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     for(unsigned idx=0;idx<vertices.size(); idx++)
     {
         std::map<std::string, double> attribute_map = vertices[idx]->GetAttributes();
@@ -820,7 +820,7 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
     {
         for (vtkIdType idx = 0; idx < vtkIdType(polygons.size()); idx++)
         {
-            std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > local_vertices = polygons[idx]->GetVertices();
+            std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > local_vertices = polygons[idx]->GetVertices();
             std::vector<std::map<std::string, double> > edge_atts_per_polygon = polygons[idx]->GetEdgeAttributes();
             for (vtkIdType jdx = 0; jdx < vtkIdType(local_vertices.size()); jdx++)
             {
@@ -883,7 +883,7 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
     // Add polygons
     for (vtkIdType idx = 0; idx < vtkIdType(polygons.size()); idx++)
     {
-        std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > local_vertices = polygons[idx]->GetVertices();
+        std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > local_vertices = polygons[idx]->GetVertices();
         vtkSmartPointer<vtkPolygon> p_polygon = vtkSmartPointer<vtkPolygon>::New();
         p_polygon->GetPointIds()->SetNumberOfIds(local_vertices.size());
         for (vtkIdType jdx = 0; jdx < vtkIdType(local_vertices.size()); jdx++)
@@ -1027,15 +1027,15 @@ template<unsigned DIM>
 void Part<DIM>::MergeCoincidentVertices()
 {
     // Loop through the nodes of each polygon. If it is in another polygon, replace it.
-    std::vector<boost::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
+    std::vector<std::shared_ptr<Polygon<DIM> > > polygons = GetPolygons();
     for(unsigned idx=0; idx<polygons.size(); idx++)
     {
         for(unsigned jdx=0; jdx<polygons.size(); jdx++)
         {
             if(idx != jdx)
             {
-                std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > p1_verts = polygons[idx]->GetVertices();
-                std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > p2_verts = polygons[jdx]->GetVertices();
+                std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > p1_verts = polygons[idx]->GetVertices();
+                std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > p2_verts = polygons[jdx]->GetVertices();
                 for(unsigned mdx=0; mdx<p1_verts.size(); mdx++)
                 {
                     for(unsigned ndx=0; ndx<p2_verts.size(); ndx++)
@@ -1060,7 +1060,7 @@ void Part<DIM>::MergeCoincidentVertices()
 template<unsigned DIM>
 void Part<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 {
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     {
         for (unsigned idx = 0; idx < vertices.size(); idx++)
         {
@@ -1080,7 +1080,7 @@ void Part<DIM>::SetReferenceLengthScale(units::quantity<unit::length> referenceL
 template<unsigned DIM>
 void Part<DIM>::Translate(DimensionalChastePoint<DIM> vector)
 {
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     {
         for (unsigned idx = 0; idx < vertices.size(); idx++)
         {

@@ -51,17 +51,17 @@ class AbstractMicrovesselModifier
     /**
      * The vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpNetwork;
 
     /**
      * The cell population
      */
-    boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > mpCellPopulation;
+    std::shared_ptr<AbstractCellPopulation<DIM,DIM> > mpCellPopulation;
 
     /**
      * A discrete continuum solver
      */
-    std::vector<boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > > mDiscreteContinuumSolvers;
+    std::vector<std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > > mDiscreteContinuumSolvers;
 
 public:
 
@@ -79,17 +79,17 @@ public:
      * Add a discrete continuum solver
      * @param pDiscreteContinuumSolver a discrete continuum solver
      */
-    void AddDiscreteContinuumSolver(boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pDiscreteContinuumSolver);
+    void AddDiscreteContinuumSolver(std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pDiscreteContinuumSolver);
 
     /**
      * @return the cell population
      */
-    boost::shared_ptr<AbstractCellPopulation<DIM> > GetCellPopulation();
+    std::shared_ptr<AbstractCellPopulation<DIM> > GetCellPopulation();
 
     /**
      * @return the vessel network
      */
-    boost::shared_ptr<VesselNetwork<DIM> > GetVesselNetwork();
+    std::shared_ptr<VesselNetwork<DIM> > GetVesselNetwork();
 
     /**
      * @return the number of solvers
@@ -101,19 +101,19 @@ public:
      * @param index the indexed solver
      * @return the number of solvers
      */
-    boost::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > GetDiscreteContinuumSolver(unsigned index);
+    std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > GetDiscreteContinuumSolver(unsigned index);
 
     /**
      * Set the cell population
      * @param pCellPopulation the cell population
      */
-    void SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM,DIM> > pCellPopulation);
+    void SetCellPopulation(std::shared_ptr<AbstractCellPopulation<DIM,DIM> > pCellPopulation);
 
     /**
      * Set the vessel network
      * @param pNetwork the vessel network
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Overridden SetupSolve() method.

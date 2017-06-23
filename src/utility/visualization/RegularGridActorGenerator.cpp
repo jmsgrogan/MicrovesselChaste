@@ -235,7 +235,7 @@ void RegularGridActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRenderer> pRend
 }
 
 template<unsigned DIM>
-void RegularGridActorGenerator<DIM>::SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pRegularGrid)
+void RegularGridActorGenerator<DIM>::SetRegularGrid(std::shared_ptr<RegularGrid<DIM> > pRegularGrid)
 {
     mpRegularGrid = pRegularGrid;
 }

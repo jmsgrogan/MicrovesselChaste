@@ -66,7 +66,7 @@ void VesselNetworkPartitioner<DIM>::SetPartitionAxis(unsigned partitionAxis)
 }
 
 template<unsigned DIM>
-void VesselNetworkPartitioner<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void VesselNetworkPartitioner<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpNetwork = pNetwork;
 }
@@ -121,9 +121,9 @@ void VesselNetworkPartitioner<DIM>::Update()
     }
 
     // Assign nodes, segments and vessels to processors
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = mpNetwork->GetVesselSegments();
-    std::vector<boost::shared_ptr<Vessel<DIM> > > vessels = mpNetwork->GetVessels();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = mpNetwork->GetVesselSegments();
+    std::vector<std::shared_ptr<Vessel<DIM> > > vessels = mpNetwork->GetVessels();
 
     // All nodes not in the processor's domain are first labelled halos. Any nodes not contained
     // in vessels or halo vessels are allowed to go out of scope later.
@@ -149,12 +149,12 @@ void VesselNetworkPartitioner<DIM>::Update()
 
     // Vessels with majority nodes on the processor are owned by the processor, vessels with
     // any nodes in the domain are halos.
-    std::vector<boost::shared_ptr<Vessel<DIM> > > local_vessels;
-    std::vector<boost::shared_ptr<Vessel<DIM> > > halo_vessels;
+    std::vector<std::shared_ptr<Vessel<DIM> > > local_vessels;
+    std::vector<std::shared_ptr<Vessel<DIM> > > halo_vessels;
     std::cout << "num vessels" << vessels.size() << std::endl;
     for(unsigned idx=0;idx<vessels.size();idx++)
     {
-        std::vector<boost::shared_ptr<VesselNode<DIM> > > vessel_nodes = vessels[idx]->GetNodes();
+        std::vector<std::shared_ptr<VesselNode<DIM> > > vessel_nodes = vessels[idx]->GetNodes();
         std::vector<unsigned> nodes_per_proc(num_procs, 0);
         unsigned num_nodes = vessel_nodes.size();
         for(unsigned jdx=0;jdx<num_nodes;jdx++)
@@ -250,8 +250,8 @@ void VesselNetworkPartitioner<DIM>::Update()
     }
     unsigned high_index = low_index + nodes_per_rank[rank];
 
-    boost::shared_ptr<DistributedVectorFactory> p_vector_factory =
-            boost::shared_ptr<DistributedVectorFactory>(new DistributedVectorFactory(low_index, high_index, nodes.size()));
+    std::shared_ptr<DistributedVectorFactory> p_vector_factory =
+            std::shared_ptr<DistributedVectorFactory>(new DistributedVectorFactory(low_index, high_index, nodes.size()));
 
     mpNetwork->SetDistributedVectorFactory(p_vector_factory);
     mpNetwork->UpdateAll(false);

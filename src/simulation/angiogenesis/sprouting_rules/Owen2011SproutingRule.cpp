@@ -56,10 +56,10 @@ Owen2011SproutingRule<DIM>::Owen2011SproutingRule()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<Owen2011SproutingRule<DIM> > Owen2011SproutingRule<DIM>::Create()
+std::shared_ptr<Owen2011SproutingRule<DIM> > Owen2011SproutingRule<DIM>::Create()
 {
-    MAKE_PTR(Owen2011SproutingRule<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<Owen2011SproutingRule<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -75,7 +75,7 @@ void Owen2011SproutingRule<DIM>::SetHalfMaxVegf(units::quantity<unit::concentrat
 }
 
 template<unsigned DIM>
-std::vector<boost::shared_ptr<VesselNode<DIM> > > Owen2011SproutingRule<DIM>::GetSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<std::shared_ptr<VesselNode<DIM> > > Owen2011SproutingRule<DIM>::GetSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     MARK;
     if(!this->mpGridCalculator)
@@ -92,7 +92,7 @@ std::vector<boost::shared_ptr<VesselNode<DIM> > > Owen2011SproutingRule<DIM>::Ge
     this->mVegfField = this->mpSolver->GetConcentrations(this->mpGridCalculator->GetGrid());
     MARK;
     // Set up the output sprouts vector
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > sprouts;
+    std::vector<std::shared_ptr<VesselNode<DIM> > > sprouts;
 
     // Loop over all nodes and randomly select sprouts
     for(unsigned idx = 0; idx < rNodes.size(); idx++)

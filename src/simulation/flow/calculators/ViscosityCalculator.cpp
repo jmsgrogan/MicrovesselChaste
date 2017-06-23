@@ -53,10 +53,10 @@ ViscosityCalculator<DIM>::~ViscosityCalculator()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<ViscosityCalculator<DIM> > ViscosityCalculator<DIM>::Create()
+std::shared_ptr<ViscosityCalculator<DIM> > ViscosityCalculator<DIM>::Create()
 {
-    MAKE_PTR(ViscosityCalculator<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<ViscosityCalculator<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -68,7 +68,7 @@ void ViscosityCalculator<DIM>::SetPlasmaViscosity(units::quantity<unit::dynamic_
 template<unsigned DIM>
 void ViscosityCalculator<DIM>::Calculate()
 {
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
     for (unsigned segment_index = 0; segment_index < segments.size(); segment_index++)
     {
         units::quantity<unit::length> radius = segments[segment_index]->GetRadius();

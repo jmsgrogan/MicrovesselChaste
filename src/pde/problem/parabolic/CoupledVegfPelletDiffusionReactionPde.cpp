@@ -63,10 +63,9 @@ CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::~CoupledVegfPelle
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM> > CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::Create()
+std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM> > CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::Create()
 {
-    MAKE_PTR(CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM> >();
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

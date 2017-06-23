@@ -55,7 +55,7 @@ class RegularGridActorGenerator : public AbstractActorGenerator<DIM>
     /**
      * The RegularGrid
      */
-    boost::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
+    std::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
 
     /**
      * The edge opacity
@@ -89,7 +89,7 @@ public:
      * Set the RegularGrid
      * @param pRegularGrid the RegularGrid to render
      */
-    void SetRegularGrid(boost::shared_ptr<RegularGrid<DIM> > pRegularGrid);
+    void SetRegularGrid(std::shared_ptr<RegularGrid<DIM> > pRegularGrid);
 
     /**
      * Set the opacity for the edges

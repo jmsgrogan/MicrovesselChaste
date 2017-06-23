@@ -54,10 +54,10 @@ MetabolicStimulusCalculator<DIM>::~MetabolicStimulusCalculator()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<MetabolicStimulusCalculator<DIM> > MetabolicStimulusCalculator<DIM>::Create()
+std::shared_ptr<MetabolicStimulusCalculator<DIM> > MetabolicStimulusCalculator<DIM>::Create()
 {
-    MAKE_PTR(MetabolicStimulusCalculator<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<MetabolicStimulusCalculator<DIM> >();
+
 }
 
 
@@ -100,7 +100,7 @@ void MetabolicStimulusCalculator<DIM>::SetMaxStimulus(units::quantity<unit::rate
 template<unsigned DIM>
 void MetabolicStimulusCalculator<DIM>::Calculate()
 {
-    std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
+    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
     for (unsigned idx = 0; idx < segments.size(); idx++)
     {
         units::quantity<unit::rate> metabolic_stimulus;

@@ -53,14 +53,14 @@ CsvVesselNetworkReader<DIM>::~CsvVesselNetworkReader()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<CsvVesselNetworkReader<DIM> > CsvVesselNetworkReader<DIM>::Create()
+std::shared_ptr<CsvVesselNetworkReader<DIM> > CsvVesselNetworkReader<DIM>::Create()
 {
-    MAKE_PTR(CsvVesselNetworkReader<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<CsvVesselNetworkReader<DIM> >();
+
 }
 
 template<unsigned DIM>
-boost::shared_ptr<VesselNetwork<DIM> > CsvVesselNetworkReader<DIM>::Read()
+std::shared_ptr<VesselNetwork<DIM> > CsvVesselNetworkReader<DIM>::Read()
 {
     if(mFileName.empty())
     {
@@ -74,7 +74,7 @@ boost::shared_ptr<VesselNetwork<DIM> > CsvVesselNetworkReader<DIM>::Read()
     }
 
     // Create an empty vessel network
-    boost::shared_ptr<VesselNetwork<DIM> > p_network = VesselNetwork<DIM>::Create();
+    std::shared_ptr<VesselNetwork<DIM> > p_network = VesselNetwork<DIM>::Create();
 
     typedef boost::tokenizer< boost::escaped_list_separator<char> > Tokenizer;
     std::vector<std::string> vec;

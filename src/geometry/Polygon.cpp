@@ -55,7 +55,7 @@ Polygon<DIM>::Polygon() :
 }
 
 template<unsigned DIM>
-Polygon<DIM>::Polygon(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices) :
+Polygon<DIM>::Polygon(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices) :
         mVertices(vertices),
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
         mEdgeAttributes(),
@@ -67,7 +67,7 @@ Polygon<DIM>::Polygon(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> 
 }
 
 template<unsigned DIM>
-Polygon<DIM>::Polygon(boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex) :
+Polygon<DIM>::Polygon(std::shared_ptr<DimensionalChastePoint<DIM> > pVertex) :
         mVertices(),
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
         mEdgeAttributes(),
@@ -79,17 +79,15 @@ Polygon<DIM>::Polygon(boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex) :
 }
 
 template<unsigned DIM>
-boost::shared_ptr<Polygon<DIM> > Polygon<DIM>::Create(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices)
+std::shared_ptr<Polygon<DIM> > Polygon<DIM>::Create(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices)
 {
-    MAKE_PTR_ARGS(Polygon<DIM> , pSelf, (vertices));
-    return pSelf;
+    return std::make_shared<Polygon<DIM> >(vertices);
 }
 
 template<unsigned DIM>
-boost::shared_ptr<Polygon<DIM> > Polygon<DIM>::Create(boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex)
+std::shared_ptr<Polygon<DIM> > Polygon<DIM>::Create(std::shared_ptr<DimensionalChastePoint<DIM> > pVertex)
 {
-    MAKE_PTR_ARGS(Polygon<DIM> , pSelf, (pVertex));
-    return pSelf;
+    return std::make_shared<Polygon<DIM> >(pVertex);
 }
 
 template<unsigned DIM>
@@ -142,7 +140,7 @@ void Polygon<DIM>::AddAttributeToAllEdges(const std::string& rLabel, double valu
 }
 
 template<unsigned DIM>
-void Polygon<DIM>::AddVertices(std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices)
+void Polygon<DIM>::AddVertices(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices)
 {
     // Add the new vertices
     mVertices.insert(mVertices.end(), vertices.begin(), vertices.end());
@@ -150,7 +148,7 @@ void Polygon<DIM>::AddVertices(std::vector<boost::shared_ptr<DimensionalChastePo
 }
 
 template<unsigned DIM>
-void Polygon<DIM>::AddVertex(boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex)
+void Polygon<DIM>::AddVertex(std::shared_ptr<DimensionalChastePoint<DIM> > pVertex)
 {
     mVertices.push_back(pVertex);
     mVtkRepresentationUpToDate = false;
@@ -170,7 +168,7 @@ std::map<std::string, double> Polygon<DIM>::GetAttributes()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<DimensionalChastePoint<DIM> > Polygon<DIM>::GetVertex(unsigned idx)
+std::shared_ptr<DimensionalChastePoint<DIM> > Polygon<DIM>::GetVertex(unsigned idx)
 {
     if(idx >= mVertices.size())
     {
@@ -183,7 +181,7 @@ boost::shared_ptr<DimensionalChastePoint<DIM> > Polygon<DIM>::GetVertex(unsigned
 }
 
 template<unsigned DIM>
-std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > Polygon<DIM>::GetVertices()
+std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > Polygon<DIM>::GetVertices()
 {
     return mVertices;
 }
@@ -444,7 +442,7 @@ bool Polygon<DIM>::ContainsPoint(const DimensionalChastePoint<DIM>& location, do
 }
 
 template<unsigned DIM>
-void Polygon<DIM>::ReplaceVertex(unsigned idx, boost::shared_ptr<DimensionalChastePoint<DIM> > pVertex)
+void Polygon<DIM>::ReplaceVertex(unsigned idx, std::shared_ptr<DimensionalChastePoint<DIM> > pVertex)
 {
     if(idx >= mVertices.size())
     {

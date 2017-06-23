@@ -66,7 +66,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Setup()
         EXCEPTION("Regular grid DiscreteContinuum solvers need a grid before Setup can be called.");
     }
 
-    mpRegularGrid = boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
+    mpRegularGrid = std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
     if(!mpRegularGrid)
     {
         EXCEPTION("Can't cast to regular grid during Setup");
@@ -172,7 +172,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::Write()
         writer.SetFilename((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/solution" + extension));
     }
 
-    boost::shared_ptr<RegularGrid<DIM> >pRegularGrid = boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
+    std::shared_ptr<RegularGrid<DIM> >pRegularGrid = std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
     if(!pRegularGrid)
     {
         EXCEPTION("Can't cast to regular grid during Write");

@@ -66,10 +66,10 @@ DiscreteContinuumBoundaryCondition<DIM>::~DiscreteContinuumBoundaryCondition()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<DiscreteContinuumBoundaryCondition<DIM> > DiscreteContinuumBoundaryCondition<DIM>::Create()
+std::shared_ptr<DiscreteContinuumBoundaryCondition<DIM> > DiscreteContinuumBoundaryCondition<DIM>::Create()
 {
-    MAKE_PTR(DiscreteContinuumBoundaryCondition<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<DiscreteContinuumBoundaryCondition<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -97,15 +97,15 @@ void DiscreteContinuumBoundaryCondition<DIM>::SetIsNeumann(bool isNeumann)
 }
 
 template<unsigned DIM>
-void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> > pContainer)
+void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shared_ptr<BoundaryConditionsContainer<DIM, DIM, 1> > pContainer)
 {
     double node_distance_tolerance = 1.e-3;
     bool apply_boundary = true;
     bool use_boundry_nodes = false;
 
     // Need a mesh for this rule
-    boost::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
-            boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
+    std::shared_ptr<DiscreteContinuumMesh<DIM> > p_mesh =
+            std::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpGridCalculator->GetGrid());
     if(!p_mesh)
     {
         EXCEPTION("Can't cast to mesh");
@@ -249,7 +249,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
         }
         else
         {
-            std::vector<boost::shared_ptr<Polygon<DIM> > > polygons =  mpDomain->GetPolygons();
+            std::vector<std::shared_ptr<Polygon<DIM> > > polygons =  mpDomain->GetPolygons();
             for(unsigned jdx=0; jdx<polygons.size();jdx++)
             {
                 if(polygons[jdx]->ContainsPoint(location) && (polygons[jdx]->HasAttribute(mLabel)))
@@ -282,7 +282,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
         }
         else
         {
-            std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
+            std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
             for (unsigned jdx = 0; jdx <  segments.size(); jdx++)
             {
                 if (segments[jdx]->GetDistance(location) <= tolerance*length_scale)
@@ -304,7 +304,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
         }
         else
         {
-            std::vector<boost::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
+            std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
             for (unsigned jdx = 0; jdx <  segments.size(); jdx++)
             {
                 if (segments[jdx]->GetDistance(location) <= segments[jdx]->GetRadius() + tolerance*length_scale)
@@ -347,7 +347,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
 }
 
 template<unsigned DIM>
-void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > >pBoundaryConditions)
+void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > >pBoundaryConditions)
 {
     if(! mpGridCalculator)
     {
@@ -355,8 +355,8 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
     }
 
     // Need a regular grid for this rule
-    boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
-            boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+    std::shared_ptr<RegularGrid<DIM> > p_regular_grid =
+            std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
 
     if(!p_regular_grid)
     {
@@ -399,7 +399,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
         {
             for(unsigned idx=0; idx<p_regular_grid->GetNumberOfPoints(); idx++)
             {
-                std::vector<boost::shared_ptr<Polygon<DIM> > > polygons =  mpDomain->GetPolygons();
+                std::vector<std::shared_ptr<Polygon<DIM> > > polygons =  mpDomain->GetPolygons();
                 for(unsigned jdx=0; jdx<polygons.size();jdx++)
                 {
                     if(polygons[jdx]->ContainsPoint(p_regular_grid->GetPoint(idx)) && polygons[jdx]->HasAttribute(mLabel))
@@ -430,7 +430,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
     }
     else if(mType == BoundaryConditionType::VESSEL_LINE or mType == BoundaryConditionType::VESSEL_VOLUME)
     {
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<DIM> > > > point_segment_map = mpGridCalculator->rGetSegmentMap(true, !(mType == BoundaryConditionType::VESSEL_LINE));
+        std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > > point_segment_map = mpGridCalculator->rGetSegmentMap(true, !(mType == BoundaryConditionType::VESSEL_LINE));
         for(unsigned idx=0; idx<point_segment_map.size(); idx++)
         {
             if(point_segment_map[idx].size()>0)
@@ -463,7 +463,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(boost::sh
 }
 
 template<unsigned DIM>
-void DiscreteContinuumBoundaryCondition<DIM>::SetDomain(boost::shared_ptr<Part<DIM> > pDomain)
+void DiscreteContinuumBoundaryCondition<DIM>::SetDomain(std::shared_ptr<Part<DIM> > pDomain)
 {
     mpDomain = pDomain;
 }
@@ -505,7 +505,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::SetType(BoundaryConditionType::Val
 }
 
 template<unsigned DIM>
-void DiscreteContinuumBoundaryCondition<DIM>::SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator)
+void DiscreteContinuumBoundaryCondition<DIM>::SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGridCalculator)
 {
     mpGridCalculator = pGridCalculator;
 }
@@ -517,7 +517,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::SetLabel(const std::string& label)
 }
 
 template<unsigned DIM>
-void DiscreteContinuumBoundaryCondition<DIM>::SetNetwork(boost::shared_ptr<VesselNetwork <DIM> > pNetwork)
+void DiscreteContinuumBoundaryCondition<DIM>::SetNetwork(std::shared_ptr<VesselNetwork <DIM> > pNetwork)
 {
     mpNetwork = pNetwork;
 }

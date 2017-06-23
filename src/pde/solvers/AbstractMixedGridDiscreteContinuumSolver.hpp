@@ -59,12 +59,12 @@ protected:
     /**
      * The finite element mesh
      */
-    boost::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > mpMesh;
+    std::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > mpMesh;
 
     /**
      * The regular grid
      */
-    boost::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
+    std::shared_ptr<RegularGrid<DIM> > mpRegularGrid;
 
 public:
 

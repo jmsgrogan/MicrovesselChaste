@@ -56,12 +56,12 @@ class ParameterCollection : public SerializableSingleton<ParameterCollection>
     /**
      * A pointer to the singleton instance of this class.
      */
-    static boost::shared_ptr<ParameterCollection> mpInstance;
+    static std::shared_ptr<ParameterCollection> mpInstance;
 
     /**
      * Parameter Collection
      */
-    std::map<std::string, std::pair<std::string, boost::shared_ptr<BaseParameterInstance> > > mParameters;
+    std::map<std::string, std::pair<std::string, std::shared_ptr<BaseParameterInstance> > > mParameters;
 
 public:
 
@@ -76,14 +76,14 @@ public:
      * @return a pointer to the singleton instance
      * The first time this is called the simulation object is created.
      */
-    static boost::shared_ptr<ParameterCollection> SharedInstance();
+    static std::shared_ptr<ParameterCollection> SharedInstance();
 
     /**
      * Add a parameter
      * @param pParameter the parameter to add, note it is a base class pointer
      * @param rFirstInstantiated the class where it is first instantiated
      */
-    void AddParameter(boost::shared_ptr<BaseParameterInstance> pParameter, const std::string& rFirstInstantiated);
+    void AddParameter(std::shared_ptr<BaseParameterInstance> pParameter, const std::string& rFirstInstantiated);
 
     /**
      * Destroy the current ParameterCollection instance.
@@ -102,7 +102,7 @@ public:
      * @param rName the name of the parameter to return.
      * @return the parameter instance, as a base class pointer
      */
-    boost::shared_ptr<BaseParameterInstance> GetParameter(const std::string& rName);
+    std::shared_ptr<BaseParameterInstance> GetParameter(const std::string& rName);
 
 protected:
 

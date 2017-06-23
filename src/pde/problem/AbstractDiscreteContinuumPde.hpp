@@ -70,7 +70,7 @@ protected:
     /**
      * The collection of discrete sources for addition to the continuum terms
      */
-    std::vector<boost::shared_ptr<DiscreteSource<SPACE_DIM> > > mDiscreteSources;
+    std::vector<std::shared_ptr<DiscreteSource<SPACE_DIM> > > mDiscreteSources;
 
     /**
      * This is used internally to scale concentrations before and after linear system solves, reads and writes.
@@ -105,7 +105,7 @@ public:
      * Add a discrete source to the pde
      * @param pDiscreteSource a pointer the discrete source
      */
-    void AddDiscreteSource(boost::shared_ptr<DiscreteSource<SPACE_DIM> > pDiscreteSource);
+    void AddDiscreteSource(std::shared_ptr<DiscreteSource<SPACE_DIM> > pDiscreteSource);
 
     /**
      * Return the diffusion constant for isotropic diffusion
@@ -117,7 +117,7 @@ public:
      * Return the collection of discrete sources
      * @return vector of pointers to the discrete sources
      */
-    std::vector<boost::shared_ptr<DiscreteSource<SPACE_DIM> > > GetDiscreteSources();
+    std::vector<std::shared_ptr<DiscreteSource<SPACE_DIM> > > GetDiscreteSources();
 
     /**
      * Set the isotropic diffusion constant

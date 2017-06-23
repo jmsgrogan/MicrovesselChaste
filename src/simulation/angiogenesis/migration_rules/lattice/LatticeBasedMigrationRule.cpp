@@ -47,10 +47,9 @@ LatticeBasedMigrationRule<DIM>::LatticeBasedMigrationRule()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<LatticeBasedMigrationRule<DIM> > LatticeBasedMigrationRule<DIM>::Create()
+std::shared_ptr<LatticeBasedMigrationRule<DIM> > LatticeBasedMigrationRule<DIM>::Create()
 {
-    MAKE_PTR(LatticeBasedMigrationRule<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<LatticeBasedMigrationRule<DIM> >();
 }
 
 template<unsigned DIM>
@@ -60,7 +59,7 @@ LatticeBasedMigrationRule<DIM>::~LatticeBasedMigrationRule()
 }
 
 template<unsigned DIM>
-std::vector<double> LatticeBasedMigrationRule<DIM>::GetNeighbourMovementProbabilities(boost::shared_ptr<VesselNode<DIM> > pNode,
+std::vector<double> LatticeBasedMigrationRule<DIM>::GetNeighbourMovementProbabilities(std::shared_ptr<VesselNode<DIM> > pNode,
                                                        std::vector<unsigned> neighbourIndices, unsigned gridIndex)
 {
     std::vector<double> probability_of_moving(neighbourIndices.size(), 0.0);
@@ -131,7 +130,7 @@ void LatticeBasedMigrationRule<DIM>::SetMovementProbability(double movementProba
 }
 
 template<unsigned DIM>
-std::vector<int> LatticeBasedMigrationRule<DIM>::GetIndices(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<int> LatticeBasedMigrationRule<DIM>::GetIndices(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     if(!this->mpGridCalculator)
     {
@@ -147,11 +146,11 @@ std::vector<int> LatticeBasedMigrationRule<DIM>::GetIndices(const std::vector<bo
     std::vector<int> indices(rNodes.size(), -1);
 
     // Get the point-node map from the regular grid
-    std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > point_node_map = this->mpGridCalculator->rGetVesselNodeMap();
+    std::vector<std::vector<std::shared_ptr<VesselNode<DIM> > > > point_node_map = this->mpGridCalculator->rGetVesselNodeMap();
 
     // Need a regular grid for this rule
-    boost::shared_ptr<RegularGrid<DIM> > p_regular_grid =
-            boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
+    std::shared_ptr<RegularGrid<DIM> > p_regular_grid =
+            std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGridCalculator->GetGrid());
 
     if(!p_regular_grid)
     {

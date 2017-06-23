@@ -79,7 +79,7 @@ protected:
     /**
      * The density map
      */
-    boost::shared_ptr<DensityMap<DIM> > mpDensityMap;
+    std::shared_ptr<DensityMap<DIM> > mpDensityMap;
 
 public:
 
@@ -97,13 +97,13 @@ public:
      * Factory constructor method
      * @return a pointer to an instance of the class
      */
-    static boost::shared_ptr<DiscreteSource<DIM> > Create();
+    static std::shared_ptr<DiscreteSource<DIM> > Create();
 
     /**
      * Return the density map
      * @param pMap the density map
      */
-    boost::shared_ptr<DensityMap<DIM> > GetDensityMap();
+    std::shared_ptr<DensityMap<DIM> > GetDensityMap();
 
     /**
      * Return the values of the source strengths sampled on the regular grid
@@ -158,7 +158,7 @@ public:
      * Set the density map for the calculator
      * @param pMap the density map
      */
-    void SetDensityMap(boost::shared_ptr<DensityMap<DIM> > pMap);
+    void SetDensityMap(std::shared_ptr<DensityMap<DIM> > pMap);
 
     /**
      * Update the required entries in the density map, if needed

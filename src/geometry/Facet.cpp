@@ -52,7 +52,7 @@ Facet<DIM>::Facet() :
 }
 
 template<unsigned DIM>
-Facet<DIM>::Facet(std::vector<boost::shared_ptr<Polygon<DIM> > > polygons) :
+Facet<DIM>::Facet(std::vector<std::shared_ptr<Polygon<DIM> > > polygons) :
         mPolygons(polygons),
         mVertices(),
         mVerticesUpToDate(false),
@@ -62,7 +62,7 @@ Facet<DIM>::Facet(std::vector<boost::shared_ptr<Polygon<DIM> > > polygons) :
 }
 
 template<unsigned DIM>
-Facet<DIM>::Facet(boost::shared_ptr<Polygon<DIM> > pPolygon) :
+Facet<DIM>::Facet(std::shared_ptr<Polygon<DIM> > pPolygon) :
         mPolygons(),
         mVertices(),
         mVerticesUpToDate(false),
@@ -72,17 +72,15 @@ Facet<DIM>::Facet(boost::shared_ptr<Polygon<DIM> > pPolygon) :
 }
 
 template<unsigned DIM>
-boost::shared_ptr<Facet<DIM> > Facet<DIM>::Create(std::vector<boost::shared_ptr<Polygon<DIM> > > polygons)
+std::shared_ptr<Facet<DIM> > Facet<DIM>::Create(std::vector<std::shared_ptr<Polygon<DIM> > > polygons)
 {
-    MAKE_PTR_ARGS(Facet<DIM>, pSelf, (polygons));
-    return pSelf;
+    return std::make_shared<Facet<DIM> >(polygons);
 }
 
 template<unsigned DIM>
-boost::shared_ptr<Facet<DIM> > Facet<DIM>::Create(boost::shared_ptr<Polygon<DIM> > pPolygon)
+std::shared_ptr<Facet<DIM> > Facet<DIM>::Create(std::shared_ptr<Polygon<DIM> > pPolygon)
 {
-    MAKE_PTR_ARGS(Facet<DIM>, pSelf, (pPolygon));
-    return pSelf;
+    return std::make_shared<Facet<DIM> >(pPolygon);
 }
 
 template<unsigned DIM>
@@ -91,14 +89,14 @@ Facet<DIM>::~Facet()
 }
 
 template<unsigned DIM>
-void Facet<DIM>::AddPolygons(std::vector<boost::shared_ptr<Polygon<DIM> > > polygons)
+void Facet<DIM>::AddPolygons(std::vector<std::shared_ptr<Polygon<DIM> > > polygons)
 {
     mPolygons.insert(mPolygons.end(), polygons.begin(), polygons.end());
     mVerticesUpToDate = false;
 }
 
 template<unsigned DIM>
-void Facet<DIM>::AddPolygon(boost::shared_ptr<Polygon<DIM> > pPolygon)
+void Facet<DIM>::AddPolygon(std::shared_ptr<Polygon<DIM> > pPolygon)
 {
     mPolygons.push_back(pPolygon);
     mVerticesUpToDate = false;
@@ -122,7 +120,7 @@ bool Facet<DIM>::ContainsPoint(const DimensionalChastePoint<DIM>& location)
 template<unsigned DIM>
 std::vector<units::quantity<unit::length> > Facet<DIM>::GetBoundingBox()
 {
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     c_vector<double, 6> box;
 
     for (unsigned idx = 0; idx < vertices.size(); idx++)
@@ -200,7 +198,7 @@ units::quantity<unit::length> Facet<DIM>::GetDistance(const DimensionalChastePoi
 template<unsigned DIM>
 c_vector<double, DIM> Facet<DIM>::GetNormal()
 {
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     if (vertices.size() < 3)
     {
         EXCEPTION("At least 3 vertices are required to generate a normal.");
@@ -248,13 +246,13 @@ vtkSmartPointer<vtkPlane> Facet<DIM>::GetPlane()
 }
 
 template<unsigned DIM>
-std::vector<boost::shared_ptr<Polygon<DIM> > > Facet<DIM>::GetPolygons()
+std::vector<std::shared_ptr<Polygon<DIM> > > Facet<DIM>::GetPolygons()
 {
     return mPolygons;
 }
 
 template<unsigned DIM>
-std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > Facet<DIM>::GetVertices()
+std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > Facet<DIM>::GetVertices()
 {
     if (!mVerticesUpToDate)
     {
@@ -268,7 +266,7 @@ std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > Facet<DI
 {
     vtkSmartPointer<vtkIdTypeArray> p_vertexIds = vtkSmartPointer<vtkIdTypeArray>::New();
     vtkSmartPointer<vtkPoints> p_vertices = vtkSmartPointer<vtkPoints>::New();
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
 
     p_vertices->SetNumberOfPoints(vertices.size());
     for (vtkIdType idx = 0; idx < vtkIdType(vertices.size()); idx++)
@@ -290,7 +288,7 @@ std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > Facet<DI
 template<unsigned DIM>
 void Facet<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 {
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     for(unsigned idx=0; idx<vertices.size(); idx++)
     {
         vertices[idx]->RotateAboutAxis(axis, angle);
@@ -300,7 +298,7 @@ void Facet<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 template<unsigned DIM>
 void Facet<DIM>::Translate(DimensionalChastePoint<DIM> translationVector)
 {
-    std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
+    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     for(unsigned idx=0; idx<vertices.size(); idx++)
     {
         vertices[idx]->Translate(translationVector);
@@ -310,14 +308,14 @@ void Facet<DIM>::Translate(DimensionalChastePoint<DIM> translationVector)
 template<unsigned DIM>
 void Facet<DIM>::UpdateVertices()
 {
-    std::set<boost::shared_ptr<DimensionalChastePoint<DIM> > > unique_vertices;
+    std::set<std::shared_ptr<DimensionalChastePoint<DIM> > > unique_vertices;
     for (unsigned idx = 0; idx < mPolygons.size(); idx++)
     {
-        std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > > polygon_vertices = mPolygons[idx]->GetVertices();
+        std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > polygon_vertices = mPolygons[idx]->GetVertices();
         std::copy(polygon_vertices.begin(), polygon_vertices.end(),
                   std::inserter(unique_vertices, unique_vertices.end()));
     }
-    mVertices = std::vector<boost::shared_ptr<DimensionalChastePoint<DIM> > >();
+    mVertices = std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > >();
     mVertices.insert(mVertices.end(), unique_vertices.begin(), unique_vertices.end());
 
     for (unsigned idx = 0; idx < mVertices.size(); idx++)

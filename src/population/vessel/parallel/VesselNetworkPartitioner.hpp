@@ -54,7 +54,7 @@ class VesselNetworkPartitioner
     /**
      * The network to be partitioned
      */
-    boost::shared_ptr<VesselNetwork<DIM> > mpNetwork;
+    std::shared_ptr<VesselNetwork<DIM> > mpNetwork;
 
     /**
      * Partition into approx equal divisions along the specified axis
@@ -98,7 +98,7 @@ public:
      *
      * @param pNetwork the vessel network
      */
-    void SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Do the partitioning

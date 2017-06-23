@@ -77,7 +77,7 @@ public:
      * Factory Constructor
      * @return a pointer to an instance of the pde
      */
-    static boost::shared_ptr<DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM> > Create();
+    static std::shared_ptr<DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM> > Create();
 
     /**
      * Overwritten method to return the constant in U contribution to the Chaste FE solver

@@ -80,17 +80,15 @@ DimensionalChastePoint<DIM>::DimensionalChastePoint(c_vector<double, DIM> coords
 }
 
 template<unsigned DIM>
-boost::shared_ptr<DimensionalChastePoint<DIM> > DimensionalChastePoint<DIM>::Create(double x, double y, double z, units::quantity<unit::length> referenceLength)
+std::shared_ptr<DimensionalChastePoint<DIM> > DimensionalChastePoint<DIM>::Create(double x, double y, double z, units::quantity<unit::length> referenceLength)
 {
-    MAKE_PTR_ARGS(DimensionalChastePoint<DIM>, p_point, (x, y, z, referenceLength));
-    return p_point;
+    return std::make_shared<DimensionalChastePoint<DIM> >(x, y, z, referenceLength);
 }
 
 template<unsigned DIM>
-boost::shared_ptr<DimensionalChastePoint<DIM> > DimensionalChastePoint<DIM>::Create(c_vector<double, DIM> coords, units::quantity<unit::length> referenceLength)
+std::shared_ptr<DimensionalChastePoint<DIM> > DimensionalChastePoint<DIM>::Create(c_vector<double, DIM> coords, units::quantity<unit::length> referenceLength)
 {
-    MAKE_PTR_ARGS(DimensionalChastePoint<DIM>, p_point, (coords, referenceLength));
-    return p_point;
+    return std::make_shared<DimensionalChastePoint<DIM> >(coords, referenceLength);
 }
 
 template<unsigned DIM>

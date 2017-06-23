@@ -61,10 +61,10 @@ AbstractFiniteElementSolverBase<DIM>::~AbstractFiniteElementSolverBase()
 }
 
 template <unsigned DIM>
-boost::shared_ptr<AbstractFiniteElementSolverBase<DIM> > AbstractFiniteElementSolverBase<DIM>::Create()
+std::shared_ptr<AbstractFiniteElementSolverBase<DIM> > AbstractFiniteElementSolverBase<DIM>::Create()
 {
-    MAKE_PTR(AbstractFiniteElementSolverBase<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<AbstractFiniteElementSolverBase<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -77,7 +77,7 @@ void AbstractFiniteElementSolverBase<DIM>::Setup()
         EXCEPTION("This solver needs a PDE to be set before calling Setup.");
     }
 
-    std::vector<boost::shared_ptr<DiscreteSource<DIM> > > discrete_sources = this->mpPde->GetDiscreteSources();
+    std::vector<std::shared_ptr<DiscreteSource<DIM> > > discrete_sources = this->mpPde->GetDiscreteSources();
     for(unsigned idx=0;idx<discrete_sources.size();idx++)
     {
         discrete_sources[idx]->SetDensityMap(this->mpDensityMap);

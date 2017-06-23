@@ -75,10 +75,10 @@ AngiogenesisSolver<DIM>::~AngiogenesisSolver()
 }
 
 template<unsigned DIM>
-boost::shared_ptr<AngiogenesisSolver<DIM> > AngiogenesisSolver<DIM>::Create()
+std::shared_ptr<AngiogenesisSolver<DIM> > AngiogenesisSolver<DIM>::Create()
 {
-    MAKE_PTR(AngiogenesisSolver<DIM>, pSelf);
-    return pSelf;
+    return std::make_shared<AngiogenesisSolver<DIM> >();
+
 }
 
 template<unsigned DIM>
@@ -94,7 +94,7 @@ void AngiogenesisSolver<DIM>::SetAnastamosisRadius(units::quantity<unit::length>
 }
 
 template<unsigned DIM>
-void AngiogenesisSolver<DIM>::SetBoundingDomain(boost::shared_ptr<Part<DIM> > pDomain)
+void AngiogenesisSolver<DIM>::SetBoundingDomain(std::shared_ptr<Part<DIM> > pDomain)
 {
     mpBoundingDomain = pDomain;
 }
@@ -106,38 +106,38 @@ void AngiogenesisSolver<DIM>::SetDoAnastomosis(bool doAnastomosis)
 }
 
 template<unsigned DIM>
-void AngiogenesisSolver<DIM>::SetCellPopulation(boost::shared_ptr<AbstractCellPopulation<DIM> > cell_population, units::quantity<unit::length> cellPopulationReferenceLength)
+void AngiogenesisSolver<DIM>::SetCellPopulation(std::shared_ptr<AbstractCellPopulation<DIM> > cell_population, units::quantity<unit::length> cellPopulationReferenceLength)
 {
     mpCellPopulation = cell_population;
     mCellPopulationReferenceLength = cellPopulationReferenceLength;
 }
 
 template<unsigned DIM>
-void AngiogenesisSolver<DIM>::SetMigrationRule(boost::shared_ptr<AbstractMigrationRule<DIM> > pMigrationRule)
+void AngiogenesisSolver<DIM>::SetMigrationRule(std::shared_ptr<AbstractMigrationRule<DIM> > pMigrationRule)
 {
     mpMigrationRule = pMigrationRule;
 }
 
 template<unsigned DIM>
-void AngiogenesisSolver<DIM>::SetOutputFileHandler(boost::shared_ptr<OutputFileHandler> pHandler)
+void AngiogenesisSolver<DIM>::SetOutputFileHandler(std::shared_ptr<OutputFileHandler> pHandler)
 {
     mpFileHandler = pHandler;
 }
 
 template<unsigned DIM>
-void AngiogenesisSolver<DIM>::SetSproutingRule(boost::shared_ptr<AbstractSproutingRule<DIM> > pSproutingRule)
+void AngiogenesisSolver<DIM>::SetSproutingRule(std::shared_ptr<AbstractSproutingRule<DIM> > pSproutingRule)
 {
     mpSproutingRule = pSproutingRule;
 }
 
 template<unsigned DIM>
-void AngiogenesisSolver<DIM>::SetVesselGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pVesselGrid)
+void AngiogenesisSolver<DIM>::SetVesselGridCalculator(std::shared_ptr<GridCalculator<DIM> > pVesselGrid)
 {
     mpGridCalculator = pVesselGrid;
 }
 
 template<unsigned DIM>
-void AngiogenesisSolver<DIM>::SetVesselNetwork(boost::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void AngiogenesisSolver<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     mpNetwork = pNetwork;
 }
@@ -146,7 +146,7 @@ template<unsigned DIM>
 void AngiogenesisSolver<DIM>::DoSprouting()
 {
     // Get the candidate sprouts and set them as migrating
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > candidate_sprouts = mpSproutingRule->GetSprouts(mpNetwork->GetNodes());
+    std::vector<std::shared_ptr<VesselNode<DIM> > > candidate_sprouts = mpSproutingRule->GetSprouts(mpNetwork->GetNodes());
     for (unsigned idx = 0; idx < candidate_sprouts.size(); idx++)
     {
         candidate_sprouts[idx]->SetIsMigrating(true);
@@ -158,8 +158,8 @@ template<unsigned DIM>
 void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
 {
     // Move any nodes marked as migrating, either new sprouts or tips
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > tips;
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
+    std::vector<std::shared_ptr<VesselNode<DIM> > > tips;
     for (unsigned idx = 0; idx < nodes.size(); idx++)
     {
         if (sprouting)
@@ -203,7 +203,7 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
                 }
                 else
                 {
-                    boost::shared_ptr<VesselNode<DIM> > p_new_node = VesselNode<DIM>::Create(tips[idx]);
+                    std::shared_ptr<VesselNode<DIM> > p_new_node = VesselNode<DIM>::Create(tips[idx]);
                     p_new_node->SetLocation(mpGridCalculator->GetGrid()->GetGlobalCellLocation(indices[idx]));
                     mpNetwork->ExtendVessel(tips[idx]->GetSegment(0)->GetVessel(), tips[idx], p_new_node);
                     tips[idx]->SetIsMigrating(false);
@@ -266,7 +266,7 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
                     }
                     else
                     {
-                        boost::shared_ptr<VesselNode<DIM> > p_new_node = VesselNode<DIM>::Create(tips[idx]);
+                        std::shared_ptr<VesselNode<DIM> > p_new_node = VesselNode<DIM>::Create(tips[idx]);
                         p_new_node->SetLocation(dimensional_loc);
                         mpNetwork->ExtendVessel(tips[idx]->GetSegment(0)->GetVessel(), tips[idx], p_new_node);
                         tips[idx]->SetIsMigrating(false);
@@ -289,9 +289,9 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
 template<unsigned DIM>
 void AngiogenesisSolver<DIM>::DoAnastamosis()
 {
-    std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
-    std::map<boost::shared_ptr<VesselNode<DIM> > , boost::shared_ptr<VesselSegment<DIM> > > node_segment_map;
-    std::map<boost::shared_ptr<VesselSegment<DIM> > , std::vector<boost::shared_ptr<VesselNode<DIM> > > > segment_node_map;
+    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
+    std::map<std::shared_ptr<VesselNode<DIM> > , std::shared_ptr<VesselSegment<DIM> > > node_segment_map;
+    std::map<std::shared_ptr<VesselSegment<DIM> > , std::vector<std::shared_ptr<VesselNode<DIM> > > > segment_node_map;
 
     for (unsigned idx = 0; idx < nodes.size(); idx++)
     {
@@ -300,12 +300,12 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
         {
             if (mpGridCalculator)
             {
-                std::vector<std::vector<boost::shared_ptr<VesselNode<DIM> > > > point_node_map = mpGridCalculator->rGetVesselNodeMap();
+                std::vector<std::vector<std::shared_ptr<VesselNode<DIM> > > > point_node_map = mpGridCalculator->rGetVesselNodeMap();
                 unsigned grid_index = mpGridCalculator->GetGrid()->GetNearestCellIndex(nodes[idx]->rGetLocation());
 
                 if (point_node_map[grid_index].size() >= 2)
                 {
-                    boost::shared_ptr<VesselNode<DIM> > p_merge_node = VesselNode<DIM>::Create(nodes[idx]);
+                    std::shared_ptr<VesselNode<DIM> > p_merge_node = VesselNode<DIM>::Create(nodes[idx]);
                     if (point_node_map[grid_index][0] == nodes[idx])
                     {
                         p_merge_node = mpNetwork->DivideVessel(
@@ -333,7 +333,7 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
             else
             {
                 // Get the nearest segment and check if it is close enough to the node for a merge
-                boost::shared_ptr<VesselSegment<DIM> > p_nearest_segment;
+                std::shared_ptr<VesselSegment<DIM> > p_nearest_segment;
                 units::quantity<unit::length> distance = VesselNetworkGeometryCalculator<DIM>::GetNearestSegment(mpNetwork, nodes[idx],
                         p_nearest_segment, false, 3.0*mNodeAnastamosisRadius);
                 if(p_nearest_segment)
@@ -349,7 +349,7 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
         }
     }
 
-    typename std::map<boost::shared_ptr<VesselNode<DIM> > , boost::shared_ptr<VesselSegment<DIM> > >::iterator node_iter;
+    typename std::map<std::shared_ptr<VesselNode<DIM> > , std::shared_ptr<VesselSegment<DIM> > >::iterator node_iter;
     for(node_iter = node_segment_map.begin(); node_iter != node_segment_map.end(); node_iter++)
     {
         DimensionalChastePoint<DIM> original_location = (*node_iter).first->rGetLocation();
@@ -360,9 +360,9 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
             (*node_iter).first->SetLocation(divide_location);
         }
 
-        std::vector<boost::shared_ptr<VesselNode<DIM> > > other_nodes = segment_node_map[(*node_iter).second];
+        std::vector<std::shared_ptr<VesselNode<DIM> > > other_nodes = segment_node_map[(*node_iter).second];
 
-        boost::shared_ptr<VesselNode<DIM> > p_merge_node = mpNetwork->DivideVessel(
+        std::shared_ptr<VesselNode<DIM> > p_merge_node = mpNetwork->DivideVessel(
                 (*node_iter).second->GetVessel(), (*node_iter).first->rGetLocation());
 
         // If we have removed the segment and any other nodes need it, replace the segment in the map
@@ -485,7 +485,7 @@ void AngiogenesisSolver<DIM>::Increment()
         }
 
         // Then create new tip cells corresponding to vessel tips
-        std::vector<boost::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
+        std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
         for (unsigned idx = 0; idx < nodes.size(); idx++)
         {
             if (nodes[idx]->IsMigrating())
@@ -520,7 +520,7 @@ template<unsigned DIM>
 void AngiogenesisSolver<DIM>::Run(bool writeOutput)
 {
     // Set up a vessel network writer
-    boost::shared_ptr<VesselNetworkWriter<DIM> > p_network_writer = VesselNetworkWriter<DIM>::Create();
+    std::shared_ptr<VesselNetworkWriter<DIM> > p_network_writer = VesselNetworkWriter<DIM>::Create();
 
     // Loop for the duration of the simulation time
     while (!SimulationTime::Instance()->IsFinished())

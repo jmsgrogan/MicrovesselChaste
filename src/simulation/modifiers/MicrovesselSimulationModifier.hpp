@@ -74,12 +74,12 @@ private:
     /**
      * The vascular tumour solver
      */
-    boost::shared_ptr<MicrovesselSolver<DIM> > mpSolver;
+    std::shared_ptr<MicrovesselSolver<DIM> > mpSolver;
 
     /**
      * A grid calculator for interacting with lattice based populations
      */
-    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
+    std::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
 
     /**
      * The species labels for cell data updates
@@ -112,7 +112,7 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a shared pointer to the class instance
      */
-    static boost::shared_ptr<MicrovesselSimulationModifier<DIM> > Create();
+    static std::shared_ptr<MicrovesselSimulationModifier<DIM> > Create();
 
     /**
      * Overridden OutputSimulationModifierParameters() method.
@@ -134,9 +134,9 @@ public:
      *
      * @param pSolver pointer to the vascular tumour solver
      */
-    void SetMicrovesselSolver(boost::shared_ptr<MicrovesselSolver<DIM> > pSolver);
+    void SetMicrovesselSolver(std::shared_ptr<MicrovesselSolver<DIM> > pSolver);
 
-    void SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGridCalculator);
+    void SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGridCalculator);
 
     /**
      * Overridden SetupSolve() method.

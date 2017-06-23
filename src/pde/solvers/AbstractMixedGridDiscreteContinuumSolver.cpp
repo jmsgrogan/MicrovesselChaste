@@ -77,7 +77,7 @@ void AbstractMixedGridDiscreteContinuumSolver<DIM>::Setup()
 
     if(this->mpDensityMap->GetGridCalculator()->HasUnstructuredGrid())
     {
-        mpMesh = boost::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
+        mpMesh = std::dynamic_pointer_cast<DiscreteContinuumMesh<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
         if(!mpMesh)
         {
             EXCEPTION("Can't cast to mesh during Setup");
@@ -85,7 +85,7 @@ void AbstractMixedGridDiscreteContinuumSolver<DIM>::Setup()
     }
     else
     {
-        mpRegularGrid = boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
+        mpRegularGrid = std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
         if(!mpRegularGrid)
         {
             EXCEPTION("Can't cast to regular grid during Setup");
@@ -228,7 +228,7 @@ void AbstractMixedGridDiscreteContinuumSolver<DIM>::Write()
                 writer.SetFilename((this->mpOutputFileHandler->GetOutputDirectoryFullPath() + "/solution" + extension));
             }
 
-            boost::shared_ptr<RegularGrid<DIM> >pRegularGrid = boost::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
+            std::shared_ptr<RegularGrid<DIM> >pRegularGrid = std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpDensityMap->GetGridCalculator()->GetGrid());
             if(!pRegularGrid)
             {
                 EXCEPTION("Can't cast to regular grid during Write");

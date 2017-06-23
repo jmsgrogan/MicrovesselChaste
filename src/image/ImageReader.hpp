@@ -91,7 +91,7 @@ public:
      * Factory constructor method
      * @return a shared pointer to a instance of this class
      */
-    static boost::shared_ptr<ImageReader> Create();
+    static std::shared_ptr<ImageReader> Create();
 
     /**
      * Get the image in vti format

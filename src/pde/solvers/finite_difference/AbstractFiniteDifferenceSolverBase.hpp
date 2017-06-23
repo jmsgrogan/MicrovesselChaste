@@ -55,7 +55,7 @@ protected:
      * Solver specific copy of boundary condition information, used for efficiency. It is a
      * vector of pairs of whether to apply-concentration values ordered by grid index.
      */
-    boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > mpBoundaryConditions;
+    std::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > mpBoundaryConditions;
 
     /**
      * Do the boundary conditions need to be udpated each solve.
@@ -118,7 +118,7 @@ public:
      * Get the boundary conditions in the finite difference representation
      * @return pointer to the vector of boundary conditions, which is pairs of whether to apply-concentration values ordered by grid index.
      */
-    boost::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > GetRGBoundaryConditions();
+    std::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > GetRGBoundaryConditions();
 
     /**
      * Set the matrix that needs to be assembled.

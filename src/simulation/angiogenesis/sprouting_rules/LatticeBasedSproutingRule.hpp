@@ -58,7 +58,7 @@ protected:
     /**
      * The lattice/grid for the vessel simulation
      */
-    boost::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
+    std::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
 
     /**
      * Tip exclusion radius
@@ -81,20 +81,20 @@ public:
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to a new instance of the class
      */
-    static boost::shared_ptr<LatticeBasedSproutingRule<DIM> > Create();
+    static std::shared_ptr<LatticeBasedSproutingRule<DIM> > Create();
 
     /**
      * Overwritten method to return nodes which may sprout
      * @param rNodes nodes to check for sprouting
      * @return a vector of nodes which may sprout
      */
-    virtual std::vector<boost::shared_ptr<VesselNode<DIM> > > GetSprouts(const std::vector<boost::shared_ptr<VesselNode<DIM> > >& rNodes);
+    virtual std::vector<std::shared_ptr<VesselNode<DIM> > > GetSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
 
     /**
      * Set the lattice/grid for the vessel network
      * @param pGrid the grid for the vessel network
      */
-    void SetGridCalculator(boost::shared_ptr<GridCalculator<DIM> > pGrid);
+    void SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGrid);
 
     /**
      * Set the minimum distance from an existing tip that a sprout can form
