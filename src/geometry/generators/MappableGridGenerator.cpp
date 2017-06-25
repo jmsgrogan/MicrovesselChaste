@@ -35,6 +35,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <math.h>
 #include <vector>
+#include "Exception.hpp"
 #include "UblasIncludes.hpp"
 #include "Polygon.hpp"
 #include "DimensionalChastePoint.hpp"

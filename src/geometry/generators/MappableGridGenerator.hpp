@@ -36,8 +36,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef MAPPABLEGRIDGENERATOR_HPP_
 #define MAPPABLEGRIDGENERATOR_HPP_
 
+#include <memory>
 #include "ChasteSerialization.hpp"
-#include "SmartPointers.hpp"
 #include "UnitCollection.hpp"
 #include "Part.hpp"
 

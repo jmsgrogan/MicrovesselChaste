@@ -36,10 +36,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef NODEFLOWPROPERTIES_HPP_
 #define NODEFLOWPROPERTIES_HPP_
 
-#include <string>
-#include <map>
-#include <boost/enable_shared_from_this.hpp>
-#include "ChasteSerialization.hpp"
+//#include <string>
+//#include <map>
+#include "ChasteSerialization.hpp" // NOLINT
 #include "AbstractVesselNetworkComponentFlowProperties.hpp"
 
 /**
@@ -49,7 +48,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * an instance of the class.
  */
 template<unsigned DIM>
-class NodeFlowProperties : public boost::enable_shared_from_this<NodeFlowProperties<DIM> >, public AbstractVesselNetworkComponentFlowProperties<DIM>
+class NodeFlowProperties : public std::enable_shared_from_this<NodeFlowProperties<DIM> >, public AbstractVesselNetworkComponentFlowProperties<DIM>
 {
 
 private:

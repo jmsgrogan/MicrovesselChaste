@@ -36,6 +36,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef DISCRETECONTINUUMBOUNDARYCONDITION_HPP_
 #define DISCRETECONTINUUMBOUNDARYCONDITION_HPP_
 
+#include <memory>
 #include <vector>
 #include <string>
 #include <vtkSmartPointer.h>
@@ -60,7 +61,7 @@ struct BoundaryConditionType
     };
 };
 
-/*
+/**
  * Helper struct for defining the source of the boundary condition value.
  * It can be from a data array or a single prescribed value.
  */

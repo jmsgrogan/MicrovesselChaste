@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "AbstractVesselNetworkComponentProperties.hpp"
 
 template<unsigned DIM>
@@ -50,5 +48,5 @@ AbstractVesselNetworkComponentProperties<DIM>::~AbstractVesselNetworkComponentPr
 }
 
 // Explicit instantiation
-template class AbstractVesselNetworkComponentProperties<2> ;
-template class AbstractVesselNetworkComponentProperties<3> ;
+template class AbstractVesselNetworkComponentProperties<2>;
+template class AbstractVesselNetworkComponentProperties<3>;

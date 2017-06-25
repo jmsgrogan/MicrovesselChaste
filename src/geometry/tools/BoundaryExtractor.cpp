@@ -39,9 +39,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkTriangleFilter.h>
 #include <vtkStripper.h>
 #include <vtkSplineFilter.h>
-#include <vtkConnectivityFilter.h>
 #include <vtkGeometryFilter.h>
-#include <vtkPolyDataConnectivityFilter.h>
+#include <vtkVersion.h>
 #include "Exception.hpp"
 #include "BoundaryExtractor.hpp"
 
@@ -57,8 +56,7 @@ BoundaryExtractor::BoundaryExtractor()
 
 std::shared_ptr<BoundaryExtractor> BoundaryExtractor::Create()
 {
-    MAKE_PTR(BoundaryExtractor, pSelf);
-
+    return std::make_shared<BoundaryExtractor>();
 }
 
 BoundaryExtractor::~BoundaryExtractor()

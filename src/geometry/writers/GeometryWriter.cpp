@@ -34,19 +34,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 #define _BACKWARD_BACKWARD_WARNING_H 1
-#include <vtkDoubleArray.h>
-#include <vtkCellData.h>
-#include <vtkCellArray.h>
-#include <vtkPointData.h>
-#include <vtkLine.h>
 #include <vtkXMLPolyDataWriter.h>
 #include <vtkSTLWriter.h>
 #include <vtkVersion.h>
-#include <vtkGeometryFilter.h>
 #include <vtkTriangleFilter.h>
 #include <vtkCleanPolyData.h>
-#include <vtkAppendPolyData.h>
-#include "SmartPointers.hpp"
 #include "Exception.hpp"
 #include "PetscTools.hpp"
 #include "GeometryWriter.hpp"

@@ -38,6 +38,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkIdTypeArray.h>
 #include <vtkTriangle.h>
 #include <vtkPolygon.h>
+#include "BaseUnits.hpp"
 #include "Exception.hpp"
 #include "Facet.hpp"
 

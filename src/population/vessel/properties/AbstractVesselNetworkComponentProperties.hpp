@@ -33,16 +33,14 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef ABSTRACTVESSELNETWORKCOMPONENTPROPERTIES_HPP_
 #define ABSTRACTVESSELNETWORKCOMPONENTPROPERTIES_HPP_
 
+#include <memory>
 #include <string>
 #include <map>
-#include <boost/enable_shared_from_this.hpp>
-#include "ChasteSerialization.hpp"
-#include "ClassIsAbstract.hpp"
+#include "ChasteSerialization.hpp"  // NOLINT
+#include "ClassIsAbstract.hpp"  // NOLINT
 #include "UnitCollection.hpp"
 
 /**
@@ -50,7 +48,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * It provides a common interface that can be used in VTK writers.
  */
 template<unsigned DIM>
-class AbstractVesselNetworkComponentProperties: public boost::enable_shared_from_this<AbstractVesselNetworkComponentProperties<DIM> >
+class AbstractVesselNetworkComponentProperties: public std::enable_shared_from_this<AbstractVesselNetworkComponentProperties<DIM> >
 {
     /**
      * Archiving

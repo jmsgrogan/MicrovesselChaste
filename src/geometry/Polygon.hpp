@@ -39,6 +39,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <string>
 #include <map>
+#include <memory>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
 #include <vtkPolygon.h>
@@ -47,8 +48,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/map.hpp>
 #include "ChasteSerialization.hpp"
-#include "UblasVectorInclude.hpp"
-#include "SmartPointers.hpp"
+#include "UblasIncludes.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "UnitCollection.hpp"
 

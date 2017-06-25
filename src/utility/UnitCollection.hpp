@@ -39,36 +39,36 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <map>
 #include <string>
 #include <sstream>
-#include <boost/units/quantity.hpp>
-#include <boost/units/derived_dimension.hpp>
-#include <boost/units/make_scaled_unit.hpp>
-#include <boost/units/scaled_base_unit.hpp>
-#include <boost/units/scale.hpp>
-#include <boost/units/static_rational.hpp>
-#include <boost/units/units_fwd.hpp>
-#include <boost/units/io.hpp>
-#include <boost/units/reduce_unit.hpp>
-#include <boost/units/pow.hpp>
-#include <boost/units/cmath.hpp>
+#include <boost/units/quantity.hpp>  // NOLINT
+#include <boost/units/derived_dimension.hpp>  // NOLINT
+#include <boost/units/make_scaled_unit.hpp>  // NOLINT
+#include <boost/units/scaled_base_unit.hpp>  // NOLINT
+#include <boost/units/scale.hpp>  // NOLINT
+#include <boost/units/static_rational.hpp>  // NOLINT
+#include <boost/units/units_fwd.hpp>  // NOLINT
+#include <boost/units/io.hpp>  // NOLINT
+#include <boost/units/reduce_unit.hpp>  // NOLINT
+#include <boost/units/pow.hpp>  // NOLINT
+#include <boost/units/cmath.hpp>  // NOLINT
 
-#include <boost/units/systems/si.hpp>
-#include <boost/units/systems/si/base.hpp>
-#include <boost/units/systems/si/io.hpp>
-#include <boost/units/systems/si/dimensionless.hpp>
-#include <boost/units/systems/si/time.hpp>
-#include <boost/units/systems/si/length.hpp>
-#include <boost/units/systems/si/force.hpp>
-#include <boost/units/systems/si/pressure.hpp>
-#include <boost/units/systems/si/mass.hpp>
-#include <boost/units/systems/si/amount.hpp>
-#include <boost/units/systems/si/plane_angle.hpp>
-#include <boost/units/systems/si/absorbed_dose.hpp>
+#include <boost/units/systems/si.hpp>  // NOLINT
+#include <boost/units/systems/si/base.hpp>  // NOLINT
+#include <boost/units/systems/si/io.hpp>  // NOLINT
+#include <boost/units/systems/si/dimensionless.hpp>  // NOLINT
+#include <boost/units/systems/si/time.hpp>  // NOLINT
+#include <boost/units/systems/si/length.hpp>  // NOLINT
+#include <boost/units/systems/si/force.hpp>  // NOLINT
+#include <boost/units/systems/si/pressure.hpp>  // NOLINT
+#include <boost/units/systems/si/mass.hpp>  // NOLINT
+#include <boost/units/systems/si/amount.hpp>  // NOLINT
+#include <boost/units/systems/si/plane_angle.hpp>  // NOLINT
+#include <boost/units/systems/si/absorbed_dose.hpp>  // NOLINT
 
-#include <boost/units/base_units/metric/minute.hpp>
-#include <boost/units/base_units/metric/hour.hpp>
-#include <boost/units/base_units/metric/day.hpp>
-#include <boost/units/base_units/metric/mmHg.hpp>
-#include <boost/units/base_units/metric/micron.hpp>
+#include <boost/units/base_units/metric/minute.hpp>  // NOLINT
+#include <boost/units/base_units/metric/hour.hpp>  // NOLINT
+#include <boost/units/base_units/metric/day.hpp>  // NOLINT
+#include <boost/units/base_units/metric/mmHg.hpp>  // NOLINT
+#include <boost/units/base_units/metric/micron.hpp>  // NOLINT
 
 /**
  * This is a collection of Boost units and quantities.
@@ -224,7 +224,7 @@ namespace unit{
     typedef units::unit<per_absorbed_dose_squared_dimension, units::si::system> per_absorbed_dose_squared;
     BOOST_UNITS_STATIC_CONSTANT(per_gray_squared, per_absorbed_dose_squared);
 
-};
+}; // unit
 
 
 #endif /* UNITCOLLECTIONS_HPP */

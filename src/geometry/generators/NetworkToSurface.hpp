@@ -36,12 +36,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef NETWORKTOSURFACE_HPP_
 #define NETWORKTOSURFACE_HPP_
 
+#include <memory>
 #include <vector>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkPolyData.h>
 #include <vtkImageData.h>
 #include <vtkSmartPointer.h>
-#include "SmartPointers.hpp"
+#include <boost/units/quantity.hpp>
 #include "VesselNetwork.hpp"
 #include "UnitCollection.hpp"
 #include "NetworkToImage.hpp"

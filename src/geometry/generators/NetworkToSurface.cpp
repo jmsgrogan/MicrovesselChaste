@@ -33,6 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+#include <math.h>
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkMarchingSquares.h>
 #include <vtkMarchingCubes.h>
 #include <vtkCleanPolyData.h>
@@ -58,6 +60,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UblasCustomFunctions.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "BaseUnits.hpp"
 
 template<unsigned DIM>
 NetworkToSurface<DIM>::NetworkToSurface() :
