@@ -106,8 +106,8 @@ list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DI
 #list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/image)
 
 list (APPEND MicrovesselChaste_PYTHON_MODULES ${MicrovesselChaste_AUTO_MODULES})
-list (APPEND MicrovesselChaste_PYTHON_MODULES preload)
-list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/)
+#list (APPEND MicrovesselChaste_PYTHON_MODULES preload)
+#list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/python/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/python/ PATTERN "*.so" EXCLUDE)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/python/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/python/test/)
