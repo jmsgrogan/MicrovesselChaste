@@ -1,0 +1,5 @@
+#ifndef AbstractVesselNetworkComponentFlowProperties2_hpp__pyplusplus_wrapper
+#define AbstractVesselNetworkComponentFlowProperties2_hpp__pyplusplus_wrapper
+namespace py = pybind11;
+void register_AbstractVesselNetworkComponentFlowProperties2_class(py::module &m);
+#endif // AbstractVesselNetworkComponentFlowProperties2_hpp__pyplusplus_wrapper

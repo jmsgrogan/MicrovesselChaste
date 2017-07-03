@@ -1,0 +1,5 @@
+#ifndef AbstractFiniteElementSolverBase3_hpp__pyplusplus_wrapper
+#define AbstractFiniteElementSolverBase3_hpp__pyplusplus_wrapper
+namespace py = pybind11;
+void register_AbstractFiniteElementSolverBase3_class(py::module &m);
+#endif // AbstractFiniteElementSolverBase3_hpp__pyplusplus_wrapper

@@ -1,0 +1,5 @@
+#ifndef CellPopulationActorGenerator3_hpp__pyplusplus_wrapper
+#define CellPopulationActorGenerator3_hpp__pyplusplus_wrapper
+namespace py = pybind11;
+void register_CellPopulationActorGenerator3_class(py::module &m);
+#endif // CellPopulationActorGenerator3_hpp__pyplusplus_wrapper

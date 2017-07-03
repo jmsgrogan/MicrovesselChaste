@@ -1,0 +1,5 @@
+#ifndef TipAttractionLatticeBasedMigrationRule3_hpp__pyplusplus_wrapper
+#define TipAttractionLatticeBasedMigrationRule3_hpp__pyplusplus_wrapper
+namespace py = pybind11;
+void register_TipAttractionLatticeBasedMigrationRule3_class(py::module &m);
+#endif // TipAttractionLatticeBasedMigrationRule3_hpp__pyplusplus_wrapper

@@ -64,34 +64,46 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dynamic/  ${PYTHON_NUMPY_INCLUDE
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrappers)
 include_directories(${CMAKE_SOURCE_DIR}/projects/PyChaste/src)
 
+set (CMAKE_CXX_STANDARD 11)
+if(CMAKE_COMPILER_IS_GNUCXX)
+        # https://svn.boost.org/trac/boost/ticket/9240
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fext-numeric-literals")
+endif()
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dynamic/pybind11/include)
+
+set(PYBIND11_PYTHON_VERSION 2.7)
+set(PYBIND11_CPP_STANDARD -std=c++11)
+#add_subdirectory(dynamic/pybind11)
+include_directories(${PYTHON_INCLUDE_DIRS})
+
 ######### Build the Python modules ###################### 
 set (MicrovesselChaste_AUTO_MODULES "")
 set (MicrovesselChaste_PYTHON_MODULES "")
 set (MicrovesselChaste_PYTHON_MODULE_LOCATIONS "")
 
 # Auto wrapper
-list (APPEND MicrovesselChaste_AUTO_MODULES utility)
-list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/utility)
+#list (APPEND MicrovesselChaste_AUTO_MODULES utility)
+#list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/utility)
 list (APPEND MicrovesselChaste_AUTO_MODULES geometry)
 list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/geometry)
-list (APPEND MicrovesselChaste_AUTO_MODULES mesh)
-list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/mesh)
-list (APPEND MicrovesselChaste_AUTO_MODULES vessel)
-list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/population/vessel/)
-list (APPEND MicrovesselChaste_AUTO_MODULES pde)
-list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/pde/)
-list (APPEND MicrovesselChaste_AUTO_MODULES flow)
-list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/simulation/)
-list (APPEND MicrovesselChaste_AUTO_MODULES simulation)
-list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/simulation/)
-list (APPEND MicrovesselChaste_AUTO_MODULES angiogenesis)
-list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/simulation/)
-list (APPEND MicrovesselChaste_AUTO_MODULES cell)
-list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/population/cell/)
-list (APPEND MicrovesselChaste_AUTO_MODULES visualization)
-list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/visualization)
-list (APPEND MicrovesselChaste_AUTO_MODULES image)
-list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/image)
+#list (APPEND MicrovesselChaste_AUTO_MODULES mesh)
+#list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/mesh)
+#list (APPEND MicrovesselChaste_AUTO_MODULES vessel)
+#list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/population/vessel/)
+#list (APPEND MicrovesselChaste_AUTO_MODULES pde)
+#list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/pde/)
+#list (APPEND MicrovesselChaste_AUTO_MODULES flow)
+#list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/simulation/)
+#list (APPEND MicrovesselChaste_AUTO_MODULES simulation)
+#list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/simulation/)
+#list (APPEND MicrovesselChaste_AUTO_MODULES angiogenesis)
+#list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/simulation/)
+#list (APPEND MicrovesselChaste_AUTO_MODULES cell)
+#list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/population/cell/)
+#list (APPEND MicrovesselChaste_AUTO_MODULES visualization)
+#list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/visualization)
+#list (APPEND MicrovesselChaste_AUTO_MODULES image)
+#list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/image)
 
 list (APPEND MicrovesselChaste_PYTHON_MODULES ${MicrovesselChaste_AUTO_MODULES})
 list (APPEND MicrovesselChaste_PYTHON_MODULES preload)
@@ -103,9 +115,6 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/doc/ DESTINATION ${CMAKE_CURRENT_BINARY_DI
 
 # Loop through each module that uses auto wrapper code generation and make the wrapper code
 add_custom_target(project_MicrovesselChaste_Python_Bindings)
-SET(arguments ${CMAKE_SOURCE_DIR})
-LIST(APPEND arguments ${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrappers/)
-add_custom_command(TARGET project_MicrovesselChaste_Python_Bindings COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrapper_generators/generate_wrapper_header_collection.py ${arguments})
 
 list(LENGTH MicrovesselChaste_AUTO_MODULES len1_auto)
 math(EXPR len2_auto "${len1_auto} - 1")
@@ -114,22 +123,16 @@ foreach(val RANGE ${len2_auto})
     file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrappers/${python_module})
 endforeach()
 
-SET(arguments ${CMAKE_CURRENT_SOURCE_DIR})
-LIST(APPEND arguments ${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrappers/wrapper_header_collection.hpp)
+SET(arguments ${CMAKE_SOURCE_DIR}/)
+LIST(APPEND arguments ${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrappers/)
+LIST(APPEND arguments ${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrapper_generators/package_info.yaml)
 LIST(APPEND arguments ${CASTXML_EXE_LOC})
 LIST(APPEND arguments ${MicrovesselChaste_INCLUDE_DIRS})
 LIST(APPEND arguments ${Chaste_INCLUDE_DIRS})
 LIST(APPEND arguments ${Chaste_THIRD_PARTY_INCLUDE_DIRS})
-add_custom_command(TARGET project_MicrovesselChaste_Python_Bindings COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrapper_generators/generate_wrapper_code.py ${arguments})
+add_custom_command(TARGET project_MicrovesselChaste_Python_Bindings COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrapper_generators/generate.py ${arguments})
 
 # Build the modules
-
-IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
-set(BOOST_PYTHON_LIB_ALL ${Boost_PYTHON_LIBRARY_DEBUG})
-ELSE()
-set(BOOST_PYTHON_LIB_ALL ${Boost_PYTHON_LIBRARY_RELEASE})
-ENDIF()
-
 list(LENGTH MicrovesselChaste_PYTHON_MODULES len1)
 math(EXPR len2 "${len1} - 1")
 foreach(val RANGE ${len2})
@@ -144,9 +147,10 @@ foreach(val RANGE ${len2})
     add_library(_chaste_project_MicrovesselChaste_${python_module} SHARED ${MODULE_SOURCES})
     set_target_properties(_chaste_project_MicrovesselChaste_${python_module} PROPERTIES PREFIX ""  SUFFIX ".so"
     LIBRARY_OUTPUT_DIRECTORY ${python_module_location})
-    
+    target_compile_features(_chaste_project_MicrovesselChaste_${python_module} PRIVATE cxx_range_for)
+
     # order is important, boost python and python come first
-    target_link_libraries(_chaste_project_MicrovesselChaste_${python_module} ${BOOST_PYTHON_LIB_ALL} ${PYTHON_LIBRARIES} ${Chaste_THIRD_PARTY_LIBRARIES} ${Chaste_LIBRARIES} ${PROJECT_MicrovesselChaste_LIB})
+    target_link_libraries(_chaste_project_MicrovesselChaste_${python_module} pybind11::module ${PYTHON_LIBRARIES} ${Chaste_THIRD_PARTY_LIBRARIES} ${Chaste_LIBRARIES} ${PROJECT_MicrovesselChaste_LIB})
     add_dependencies(_chaste_project_MicrovesselChaste_${python_module} chaste_project_MicrovesselChaste)
 
 endforeach()

@@ -1,0 +1,5 @@
+#ifndef DiscreteContinuumLinearEllipticPde2_2_hpp__pyplusplus_wrapper
+#define DiscreteContinuumLinearEllipticPde2_2_hpp__pyplusplus_wrapper
+namespace py = pybind11;
+void register_DiscreteContinuumLinearEllipticPde2_2_class(py::module &m);
+#endif // DiscreteContinuumLinearEllipticPde2_2_hpp__pyplusplus_wrapper

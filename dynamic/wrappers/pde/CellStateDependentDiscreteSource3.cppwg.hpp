@@ -1,0 +1,5 @@
+#ifndef CellStateDependentDiscreteSource3_hpp__pyplusplus_wrapper
+#define CellStateDependentDiscreteSource3_hpp__pyplusplus_wrapper
+namespace py = pybind11;
+void register_CellStateDependentDiscreteSource3_class(py::module &m);
+#endif // CellStateDependentDiscreteSource3_hpp__pyplusplus_wrapper

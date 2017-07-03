@@ -1,0 +1,5 @@
+#ifndef VesselNetworkCellPopulationInteractor2_hpp__pyplusplus_wrapper
+#define VesselNetworkCellPopulationInteractor2_hpp__pyplusplus_wrapper
+namespace py = pybind11;
+void register_VesselNetworkCellPopulationInteractor2_class(py::module &m);
+#endif // VesselNetworkCellPopulationInteractor2_hpp__pyplusplus_wrapper

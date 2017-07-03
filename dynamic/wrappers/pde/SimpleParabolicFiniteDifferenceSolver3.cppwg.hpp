@@ -1,0 +1,5 @@
+#ifndef SimpleParabolicFiniteDifferenceSolver3_hpp__pyplusplus_wrapper
+#define SimpleParabolicFiniteDifferenceSolver3_hpp__pyplusplus_wrapper
+namespace py = pybind11;
+void register_SimpleParabolicFiniteDifferenceSolver3_class(py::module &m);
+#endif // SimpleParabolicFiniteDifferenceSolver3_hpp__pyplusplus_wrapper
