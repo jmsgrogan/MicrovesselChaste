@@ -176,7 +176,7 @@ void CornealMicropocketSimulation<DIM>::SetSampleFrequency(unsigned freq)
 }
 
 template<unsigned DIM>
-std::shared_ptr<Part<DIM> > CornealMicropocketSimulation<DIM>::SetUpDomain()
+PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
 {
     mpDomain = Part<DIM>::Create();
     mHoles.clear();
@@ -292,7 +292,7 @@ std::shared_ptr<Part<DIM> > CornealMicropocketSimulation<DIM>::SetUpDomain()
         {
             double gap = (mCorneaThickness - mPelletThickness)/(2.0*reference_length);
 
-             std::shared_ptr<Part<DIM> > p_pellet = Part<DIM>::Create();
+             PartPtr<DIM> p_pellet = Part<DIM>::Create();
              p_circle = p_pellet->AddCircle(mPelletRadius,
                      DimensionalChastePoint<DIM>(0.0, -1.0*delta/reference_length, 0.0, reference_length), 24);
              p_pellet->Extrude(p_circle, mPelletThickness);
@@ -323,7 +323,7 @@ std::shared_ptr<Part<DIM> > CornealMicropocketSimulation<DIM>::SetUpDomain()
 
         if(mUsePellet)
         {
-            std::shared_ptr<Part<DIM> > p_pellet_domain = Part<DIM>::Create();
+            PartPtr<DIM> p_pellet_domain = Part<DIM>::Create();
             double gap = (mCorneaThickness - mPelletThickness)/(2.0*reference_length)/4.0;
             double base = mCorneaRadius/reference_length + gap - mCorneaThickness/reference_length;
 

@@ -86,7 +86,7 @@ protected:
     /**
      * The bounding domain, optional
      */
-    std::shared_ptr<Part<DIM> > mpBoundingDomain;
+    PartPtr<DIM> mpBoundingDomain;
 
     /**
      * Use Moore neighbourhood
@@ -147,7 +147,7 @@ public:
      * Set the bounding domain
      * @param pPart the bounding domain
      */
-    void SetBoundingDomain(std::shared_ptr<Part<DIM> > pPart);
+    void SetBoundingDomain(PartPtr<DIM> pPart);
 
     /**
      * Set the lattice/grid for the vessel network

@@ -38,8 +38,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 #define _BACKWARD_BACKWARD_WARNING_H 1
-#include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
+
+/**
+ * Forward declare VTK members
+ */
+class vtkPolyData;
 
 /**
  * Helper struct for specifying the output geometry format

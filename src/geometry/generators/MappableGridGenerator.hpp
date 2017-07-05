@@ -94,7 +94,7 @@ public:
      * @param withEndCaps include polygons at the ends of the plane, turned off for closed cylinder generation
      * @return pointer to a Part representation of the plane
      */
-    std::shared_ptr<Part<DIM> > GeneratePlane(unsigned numX, unsigned numY, bool isShell = false,
+    PartPtr<DIM> GeneratePlane(unsigned numX, unsigned numY, bool isShell = false,
             bool withEndCaps = true);
 
     /**
@@ -108,7 +108,7 @@ public:
      * @param numY number of blocks over the cylinder height
      * @return pointer to a Part representation of the cylinder
      */
-    std::shared_ptr<Part<DIM> > GenerateCylinder(QLength cylinderRadius,
+    PartPtr<DIM> GenerateCylinder(QLength cylinderRadius,
             QLength cylinderThickness,
             QLength cylinderHeight, unsigned numX, unsigned numY, double cylinderAngle = 2.0 * M_PI);
 
@@ -123,7 +123,7 @@ public:
      * @param numY number of blocks over the cylinder height
      * @return pointer to a Part representation of the hemisphere
      */
-    std::shared_ptr<Part<DIM> > GenerateHemisphere(QLength sphereRadius,
+    PartPtr<DIM> GenerateHemisphere(QLength sphereRadius,
             QLength sphereThickness, unsigned numX, unsigned numY,
             double sphereAzimuthAngle = 2.0 * M_PI, double spherePolarAngle = 0.5 * M_PI);
 

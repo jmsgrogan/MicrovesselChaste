@@ -82,7 +82,7 @@ class ImageToMesh
     /**
      * Tissue domain (optional)
      */
-    std::shared_ptr<Part<DIM> > mpDomain;
+    PartPtr<DIM> mpDomain;
 
 public:
 
@@ -142,7 +142,7 @@ public:
      * Add a tissue domain to the mesh
      * @param pTissueDomain a tissue domain for meshing
      */
-    void SetTissueDomain(std::shared_ptr<Part<DIM> > pTissueDomain);
+    void SetTissueDomain(PartPtr<DIM> pTissueDomain);
 
     /**
      * Do the meshing

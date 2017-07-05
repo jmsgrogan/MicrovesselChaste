@@ -36,7 +36,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef DISTANCEMAP_HPP_
 #define DISTANCEMAP_HPP_
 
-#include "SmartPointers.hpp"
+#include <memory>
 #include "AbstractRegularGridDiscreteContinuumSolver.hpp"
 
 /**

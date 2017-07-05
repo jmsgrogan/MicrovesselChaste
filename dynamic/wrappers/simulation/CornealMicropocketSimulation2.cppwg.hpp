@@ -1,5 +1,0 @@
-#ifndef CornealMicropocketSimulation2_hpp__pyplusplus_wrapper
-#define CornealMicropocketSimulation2_hpp__pyplusplus_wrapper
-namespace py = pybind11;
-void register_CornealMicropocketSimulation2_class(py::module &m);
-#endif // CornealMicropocketSimulation2_hpp__pyplusplus_wrapper

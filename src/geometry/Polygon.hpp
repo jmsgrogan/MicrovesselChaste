@@ -42,16 +42,21 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <memory>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
-#include <vtkPolygon.h>
-#include <vtkPoints.h>
-#include <vtkPlane.h>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/map.hpp>
 #include "ChasteSerialization.hpp"
 #include "UblasIncludes.hpp"
+#include "UblasVectorInclude.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "UnitCollection.hpp"
 
+/**
+ * Forward declare VTK members
+ */
+class vtkPolygon;
+class vtkPoints;
+class vtkPlane;
+class vtkIdTypeArray;
 
 /**
  * A collection of planar vertices, joined in the order they are added.

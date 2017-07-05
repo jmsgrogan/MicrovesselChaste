@@ -38,20 +38,25 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 #include <vector>
-#include "SmartPointers.hpp"
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
-#include <vtkDataSet.h>
-#include <vtkCellLocator.h>
-#include <vtkPoints.h>
-#include <vtkDoubleArray.h>
-#include <vtkUnsignedIntArray.h>
-#include <vtkArrayData.h>
-#include <vtkPolyData.h>
-#include <vtkUnstructuredGrid.h>
 #include "DimensionalChastePoint.hpp"
 #include "UnitCollection.hpp"
 #include "Part.hpp"
+
+/**
+ * Forward declare VTK members
+ */
+class vtkDataSet;
+class vtkCellLocator;
+class vtkPoints;
+class vtkDoubleArray;
+class vtkUnsignedIntArray;
+class vtkArrayData;
+class vtkPolyData;
+class vtkUnstructuredGrid;
+class vtkPointData;
+class vtkCellData;
 
 /**
  * Grids are similar to vtkDataSet objects, but have extra (VTK based) convenience functions for

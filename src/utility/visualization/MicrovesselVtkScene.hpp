@@ -259,7 +259,7 @@ public:
     * Set the part
     * @param pPart the part rendering
     */
-    void SetPart(std::shared_ptr<Part<DIM> > pPart);
+    void SetPart(PartPtr<DIM> pPart);
 
     /**
     * Set the vessel network

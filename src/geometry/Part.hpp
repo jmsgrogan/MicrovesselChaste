@@ -39,22 +39,25 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <memory>
 #include <vector>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
-#include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
-#include <vtkPoints.h>
-#include <vtkCellLocator.h>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/map.hpp>
 #include "ChasteSerialization.hpp"
 #include "ChastePoint.hpp"
 #include "UblasIncludes.hpp"
 #include "DimensionalChastePoint.hpp"
-#include "Polygon.hpp"
-#include "Facet.hpp"
-#include "VesselNetwork.hpp"
-#include "DimensionalChastePoint.hpp"
 #include "UnitCollection.hpp"
 #include "GeometryWriter.hpp"
+#include "VesselNetwork.hpp"
+#include "Polygon.hpp"
+#include "Facet.hpp"
+
+/**
+ * Forward declare VTK members
+ */
+class vtkPolyData;
+class vtkCellLocator;
+class vtkPoints;
 
 /**
  * A geometric feature described using a PLC (piecewise linear complex) description
@@ -88,7 +91,7 @@ class Part
     /**
      * Planar collections of polygons
      */
-    std::vector<std::shared_ptr<Facet<DIM> > > mFacets;
+    std::vector<FacetPtr<DIM> > mFacets;
 
     /**
      * A vtk representation of the part
@@ -186,7 +189,7 @@ public:
      * @param numSegments the number of linear segments the circle is described with
      * @return polygon corresponding to the circle, useful for further operations, such as extrusion.
      */
-    std::shared_ptr<Polygon<DIM> > AddCircle(QLength radius,
+    PolygonPtr<DIM> AddCircle(QLength radius,
                                          DimensionalChastePoint<DIM> centre, unsigned numSegments = 24);
 
     /**
@@ -232,9 +235,9 @@ public:
      * @param pFacet an optional facet that the circle can be generated on
      * @return the new polygon, useful for further operations, such as extrusion.
      */
-    std::shared_ptr<Polygon<DIM> > AddPolygon(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices,
+    PolygonPtr<DIM> AddPolygon(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices,
                                           bool newFacet = false,
-                                          std::shared_ptr<Facet<DIM> > pFacet = std::shared_ptr<Facet<DIM> >());
+                                          FacetPtr<DIM> pFacet = FacetPtr<DIM>());
 
     /**
      * Add a polygon
@@ -243,9 +246,9 @@ public:
      * @param pFacet an optional facet that the polygon can be generated on
      * @return the new polygon, useful for further operations, such as extrusion.
      */
-    std::shared_ptr<Polygon<DIM> > AddPolygon(std::shared_ptr<Polygon<DIM> > pPolygon,
+    PolygonPtr<DIM> AddPolygon(PolygonPtr<DIM> pPolygon,
                                           bool newFacet = false,
-                                          std::shared_ptr<Facet<DIM> > pFacet = std::shared_ptr<Facet<DIM> >());
+                                          FacetPtr<DIM> pFacet = FacetPtr<DIM>());
 
     /**
      * Add a rectangle to the part, oriented by default with out of plane direction along the z-axis.
@@ -254,7 +257,7 @@ public:
      * @param origin the bottom left corner
      * @return the new polygon, useful for further operations, such as extrusion.
      */
-    std::shared_ptr<Polygon<DIM> > AddRectangle(QLength sizeX,
+    PolygonPtr<DIM> AddRectangle(QLength sizeX,
                                             QLength sizeY,
                                             DimensionalChastePoint<DIM> origin);
 
@@ -285,7 +288,7 @@ public:
      * @param pPolygon the polygon to extrude
      * @param distance the extrusion distance
      */
-    void Extrude(std::shared_ptr<Polygon<DIM> > pPolygon, QLength distance);
+    void Extrude(PolygonPtr<DIM> pPolygon, QLength distance);
 
     /**
      * Return the bounding box
@@ -332,20 +335,20 @@ public:
      * Return the facets
      * @return the facets
      */
-    std::vector<std::shared_ptr<Facet<DIM> > > GetFacets();
+    std::vector<FacetPtr<DIM> > GetFacets();
 
     /**
      * Return the FIRST facet found on the point. Strict method, returns exception if there is no facet at the point.
      * @param rLocation the probe point
      * @return the FIRST found facet on the point.
      */
-    std::shared_ptr<Facet<DIM> > GetFacet(const DimensionalChastePoint<DIM>& rLocation);
+    FacetPtr<DIM> GetFacet(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Return the polygons
      * @return the polygons
      */
-    std::vector<std::shared_ptr<Polygon<DIM> > > GetPolygons();
+    std::vector<PolygonPtr<DIM> > GetPolygons();
 
     /**
      * Return the reference length scale
@@ -439,6 +442,12 @@ public:
     void Write(const std::string& rFilename, GeometryFormat::Value format = GeometryFormat::VTP, bool includeEdges = false);
 
 };
+
+/**
+ * Convenience typedef
+ */
+template<unsigned DIM>
+using PartPtr = std::shared_ptr<Part<DIM> >;
 
 #include "SerializationExportWrapper.hpp"
 EXPORT_TEMPLATE_CLASS1(Part, 2)

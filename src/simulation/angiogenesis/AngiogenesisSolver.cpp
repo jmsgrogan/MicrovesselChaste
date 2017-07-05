@@ -94,7 +94,7 @@ void AngiogenesisSolver<DIM>::SetAnastamosisRadius(QLength radius)
 }
 
 template<unsigned DIM>
-void AngiogenesisSolver<DIM>::SetBoundingDomain(std::shared_ptr<Part<DIM> > pDomain)
+void AngiogenesisSolver<DIM>::SetBoundingDomain(PartPtr<DIM> pDomain)
 {
     mpBoundingDomain = pDomain;
 }

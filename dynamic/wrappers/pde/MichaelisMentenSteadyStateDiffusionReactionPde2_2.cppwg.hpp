@@ -1,5 +1,0 @@
-#ifndef MichaelisMentenSteadyStateDiffusionReactionPde2_2_hpp__pyplusplus_wrapper
-#define MichaelisMentenSteadyStateDiffusionReactionPde2_2_hpp__pyplusplus_wrapper
-namespace py = pybind11;
-void register_MichaelisMentenSteadyStateDiffusionReactionPde2_2_class(py::module &m);
-#endif // MichaelisMentenSteadyStateDiffusionReactionPde2_2_hpp__pyplusplus_wrapper

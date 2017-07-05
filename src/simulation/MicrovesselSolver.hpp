@@ -36,11 +36,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef MICROVESSELSOLVER_HPP_
 #define MICROVESSELSOLVER_HPP_
 
+#include <memory>
 #include <vector>
 #include <string>
 
 #include "StructuralAdaptationSolver.hpp"
-#include "SmartPointers.hpp"
 #include "VesselNetwork.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
 #include "AbstractDiscreteContinuumGrid.hpp"

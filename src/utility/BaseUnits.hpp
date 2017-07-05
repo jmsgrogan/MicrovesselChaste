@@ -36,7 +36,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef BASEUNITS_HPP_
 #define BASEUNITS_HPP_
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include "ChasteSerialization.hpp"
 #include <boost/serialization/shared_ptr.hpp>
 #include "SerializableSingleton.hpp"

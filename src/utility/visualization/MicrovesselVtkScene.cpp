@@ -321,7 +321,7 @@ void MicrovesselVtkScene<DIM>::SetIsInteractive(bool isInteractive)
 }
 
 template<unsigned DIM>
-void MicrovesselVtkScene<DIM>::SetPart(std::shared_ptr<Part<DIM> > pPart)
+void MicrovesselVtkScene<DIM>::SetPart(PartPtr<DIM> pPart)
 {
     mpPartGenerator->SetPart(pPart);
 }

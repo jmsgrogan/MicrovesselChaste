@@ -1,5 +1,0 @@
-#ifndef AbstractDiscreteContinuumGrid2_2_hpp__pyplusplus_wrapper
-#define AbstractDiscreteContinuumGrid2_2_hpp__pyplusplus_wrapper
-namespace py = pybind11;
-void register_AbstractDiscreteContinuumGrid2_2_class(py::module &m);
-#endif // AbstractDiscreteContinuumGrid2_2_hpp__pyplusplus_wrapper

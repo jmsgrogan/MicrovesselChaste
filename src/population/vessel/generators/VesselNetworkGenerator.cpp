@@ -141,7 +141,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateOvalNe
 }
 
 template<unsigned DIM>
-std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParrallelNetwork(std::shared_ptr<Part<DIM> > domain,
+std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParrallelNetwork(PartPtr<DIM> domain,
                                                                                              QArea targetDensity,
                                                                     VesselDistribution::Value distributionType,
                                                                     QLength exclusionDistance,
@@ -523,12 +523,12 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateSingle
 }
 
 template<unsigned DIM>
-std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateFromPart(std::shared_ptr<Part<DIM> > part)
+std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateFromPart(PartPtr<DIM> part)
 {
     std::shared_ptr<VesselNetwork<DIM> > p_network = VesselNetwork<DIM>::Create();
 
     // Get the polygons
-    std::vector<std::shared_ptr<Polygon<DIM> > > polygons = part->GetPolygons();
+    std::vector<PolygonPtr<DIM> > polygons = part->GetPolygons();
     std::vector<std::shared_ptr<Vessel<DIM> > > vessels;
     for (unsigned idx = 0; idx < polygons.size(); idx++)
     {

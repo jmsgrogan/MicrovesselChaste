@@ -46,6 +46,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkThreshold.h>
 #include <vtkVersion.h>
 #include <vtkUnstructuredGrid.h>
+#include <vtkPoints.h>
+#include <vtkDoubleArray.h>
 #include "Exception.hpp"
 #include "Warnings.hpp"
 #include "Facet.hpp"

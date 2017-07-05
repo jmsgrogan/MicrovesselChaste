@@ -39,7 +39,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <memory>
 #include <ostream>
 #include "ChasteSerialization.hpp"
-#include "SmartPointers.hpp"
 #include "UnitCollection.hpp"
 
 /**

@@ -36,9 +36,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef PARAMETERINSTANCE_HPP_
 #define PARAMETERINSTANCE_HPP_
 
+#include <memory>
 #include "ChasteSerialization.hpp"
 #include <boost/serialization/base_object.hpp>
-#include "SmartPointers.hpp"
 #include "UnitCollection.hpp"
 #include "BaseParameterInstance.hpp"
 

@@ -1,5 +1,0 @@
-#ifndef AbstractMixedGridDiscreteContinuumSolver2_hpp__pyplusplus_wrapper
-#define AbstractMixedGridDiscreteContinuumSolver2_hpp__pyplusplus_wrapper
-namespace py = pybind11;
-void register_AbstractMixedGridDiscreteContinuumSolver2_class(py::module &m);
-#endif // AbstractMixedGridDiscreteContinuumSolver2_hpp__pyplusplus_wrapper

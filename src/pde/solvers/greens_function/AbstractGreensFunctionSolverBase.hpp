@@ -69,7 +69,7 @@ protected:
     /**
      * A cuboidal tissue domain
      */
-    std::shared_ptr<Part<DIM> > mpDomain;
+    PartPtr<DIM> mpDomain;
 
     /**
      * The positions of point sinks

@@ -1,5 +1,0 @@
-#ifndef AbstractVesselNetworkComponentChemicalProperties2_hpp__pyplusplus_wrapper
-#define AbstractVesselNetworkComponentChemicalProperties2_hpp__pyplusplus_wrapper
-namespace py = pybind11;
-void register_AbstractVesselNetworkComponentChemicalProperties2_class(py::module &m);
-#endif // AbstractVesselNetworkComponentChemicalProperties2_hpp__pyplusplus_wrapper

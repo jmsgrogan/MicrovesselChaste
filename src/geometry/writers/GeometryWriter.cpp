@@ -35,6 +35,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <memory>
 #define _BACKWARD_BACKWARD_WARNING_H 1
+#include <vtkPolyData.h>
 #include <vtkXMLPolyDataWriter.h>
 #include <vtkSTLWriter.h>
 #include <vtkVersion.h>

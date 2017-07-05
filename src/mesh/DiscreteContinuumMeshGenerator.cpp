@@ -39,6 +39,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkCellArray.h>
 #include <vtkLine.h>
 #include <vtkPoints.h>
+#include <vtkPolyData.h>
 #include "Exception.hpp"
 #include "Warnings.hpp"
 #include "Facet.hpp"

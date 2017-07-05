@@ -40,8 +40,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <map>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
-#include <vtkPoints.h>
-#include <vtkPlane.h>
 #include <boost/serialization/vector.hpp>
 #include "ChasteSerialization.hpp"
 #include "SmartPointers.hpp"
@@ -50,6 +48,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UnitCollection.hpp"
 #include "DimensionalChastePoint.hpp"
 
+/**
+ * Forward declare VTK members
+ */
+class vtkPoints;
+class vtkPlane;
 
 /**
  * A collection of planar polygons
@@ -121,14 +124,14 @@ public:
      * @param polygons planar polygons
      * @return a shared pointer to a new facet
      */
-    static std::shared_ptr<Facet<DIM> > Create(std::vector<std::shared_ptr<Polygon<DIM> > > polygons);
+    static std::shared_ptr<Facet<DIM> > Create(std::vector<PolygonPtr<DIM> > polygons);
 
     /**
      * Factory constructor method
      * @param pPolygon a polygon
      * @return a smart pointer to a new facet
      */
-    static std::shared_ptr<Facet<DIM> > Create(std::shared_ptr<Polygon<DIM> > pPolygon);
+    static std::shared_ptr<Facet<DIM> > Create(PolygonPtr<DIM> pPolygon);
 
     /**
      * Desctructor
@@ -139,13 +142,13 @@ public:
      * Add polygons
      * @param polygons planar polygons
      */
-    void AddPolygons(std::vector<std::shared_ptr<Polygon<DIM> > > polygons);
+    void AddPolygons(std::vector<PolygonPtr<DIM> > polygons);
 
     /**
      * Add polygon
      * @param pPolygon a polygon
      */
-    void AddPolygon(std::shared_ptr<Polygon<DIM> > pPolygon);
+    void AddPolygon(PolygonPtr<DIM> pPolygon);
 
     /**
      * Return true if the specified location is in the facet
@@ -189,7 +192,7 @@ public:
      * Return the polygons
      * @return the polygons making up the facet
      */
-    std::vector<std::shared_ptr<Polygon<DIM> > > GetPolygons();
+    std::vector<PolygonPtr<DIM> > GetPolygons();
 
     /**
      * Return the vertices
@@ -222,6 +225,12 @@ public:
     void UpdateVertices();
 
 };
+
+/**
+ * Convenience typedef
+ */
+template<unsigned DIM>
+using FacetPtr = std::shared_ptr<Facet<DIM> >;
 
 #include "SerializationExportWrapper.hpp"
 EXPORT_TEMPLATE_CLASS1(Facet, 2)

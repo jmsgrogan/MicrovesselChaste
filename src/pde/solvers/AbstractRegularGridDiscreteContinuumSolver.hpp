@@ -36,16 +36,20 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef ABSTRACTREGULARGRIDDISCRETECONTINUUMSOLVER_HPP_
 #define ABSTRACTREGULARGRIDDISCRETECONTINUUMSOLVER_HPP_
 
+#include <memory>
 #include <vector>
 #include <string>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
-#include <vtkImageData.h>
 #include <vtkSmartPointer.h>
-#include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
 #include "UnitCollection.hpp"
 #include "RegularGrid.hpp"
+
+/**
+ * Forward declare VTK members
+ */
+class vtkImageData;
 
 /**
  * An abstract solver class for DiscreteContinuum continuum-discrete problems using structured grids.

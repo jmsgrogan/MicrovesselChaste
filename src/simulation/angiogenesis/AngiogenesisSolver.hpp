@@ -36,9 +36,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef ANGIOGENESISSOLVER_HPP_
 #define ANGIOGENESISSOLVER_HPP_
 
+#include <memory>
 #include <vector>
 #include <string>
-#include "SmartPointers.hpp"
 #include "VesselNetwork.hpp"
 #include "Part.hpp"
 #include "GridCalculator.hpp"
@@ -81,7 +81,7 @@ class AngiogenesisSolver
     /**
      * The bounding domain for the vessel network
      */
-    std::shared_ptr<Part<DIM> > mpBoundingDomain;
+    PartPtr<DIM> mpBoundingDomain;
 
     /**
      * File handler containing output directory information
@@ -165,7 +165,7 @@ public:
      * A domain which vessels a not permitted to leave
      * @param pDomain the domain which vessels a not permitted to leave
      */
-    void SetBoundingDomain(std::shared_ptr<Part<DIM> > pDomain);
+    void SetBoundingDomain(PartPtr<DIM> pDomain);
 
     /**
      * Set a cell population for discrete cell solves

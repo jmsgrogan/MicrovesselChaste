@@ -1,5 +1,0 @@
-#ifndef MechanicalStimulusCalculator2_hpp__pyplusplus_wrapper
-#define MechanicalStimulusCalculator2_hpp__pyplusplus_wrapper
-namespace py = pybind11;
-void register_MechanicalStimulusCalculator2_class(py::module &m);
-#endif // MechanicalStimulusCalculator2_hpp__pyplusplus_wrapper

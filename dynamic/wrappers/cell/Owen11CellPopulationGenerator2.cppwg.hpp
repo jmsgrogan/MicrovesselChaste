@@ -1,5 +1,0 @@
-#ifndef Owen11CellPopulationGenerator2_hpp__pyplusplus_wrapper
-#define Owen11CellPopulationGenerator2_hpp__pyplusplus_wrapper
-namespace py = pybind11;
-void register_Owen11CellPopulationGenerator2_class(py::module &m);
-#endif // Owen11CellPopulationGenerator2_hpp__pyplusplus_wrapper

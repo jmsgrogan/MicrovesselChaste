@@ -39,14 +39,17 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
-#include <vtkPoints.h>
-#include <vtkDoubleArray.h>
-#include "SmartPointers.hpp"
 #include "TetrahedralMesh.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
 #include "AbstractDiscreteContinuumGrid.hpp"
 #include "UnitCollection.hpp"
+
+/**
+ * Forward declare VTK members
+ */
+class vtkPoints;
+class vtkDoubleArray;
 
 // Forward declaration
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

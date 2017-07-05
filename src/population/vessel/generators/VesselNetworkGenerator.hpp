@@ -96,7 +96,7 @@ public:
      * @param seeds User provided seed locations for the vessel locations, used with CUSTOM distribution type
      * @return a shared pointer to the vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > GenerateParrallelNetwork(std::shared_ptr<Part<DIM> > domain,
+    std::shared_ptr<VesselNetwork<DIM> > GenerateParrallelNetwork(PartPtr<DIM> domain,
                                                                         QArea targetDensity,
                                                                         VesselDistribution::Value distrbutionType,
                                                                         QLength exclusionDistance = 0.0*unit::metres,
@@ -159,7 +159,7 @@ public:
      * @param pPart the input part
      * @return a shared pointer to the vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > GenerateFromPart(std::shared_ptr<Part<DIM> > pPart);
+    std::shared_ptr<VesselNetwork<DIM> > GenerateFromPart(PartPtr<DIM> pPart);
 
     /**
      * Pattern Unit. Coincident nodes are automatically merged in this method.

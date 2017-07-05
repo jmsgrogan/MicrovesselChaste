@@ -38,6 +38,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkIdTypeArray.h>
 #include <vtkTriangle.h>
 #include <vtkPolygon.h>
+#include <vtkPoints.h>
+#include <vtkPlane.h>
 #include "BaseUnits.hpp"
 #include "Exception.hpp"
 #include "Facet.hpp"
@@ -53,7 +55,7 @@ Facet<DIM>::Facet() :
 }
 
 template<unsigned DIM>
-Facet<DIM>::Facet(std::vector<std::shared_ptr<Polygon<DIM> > > polygons) :
+Facet<DIM>::Facet(std::vector<PolygonPtr<DIM> > polygons) :
         mPolygons(polygons),
         mVertices(),
         mVerticesUpToDate(false),
@@ -63,7 +65,7 @@ Facet<DIM>::Facet(std::vector<std::shared_ptr<Polygon<DIM> > > polygons) :
 }
 
 template<unsigned DIM>
-Facet<DIM>::Facet(std::shared_ptr<Polygon<DIM> > pPolygon) :
+Facet<DIM>::Facet(PolygonPtr<DIM> pPolygon) :
         mPolygons(),
         mVertices(),
         mVerticesUpToDate(false),
@@ -73,13 +75,13 @@ Facet<DIM>::Facet(std::shared_ptr<Polygon<DIM> > pPolygon) :
 }
 
 template<unsigned DIM>
-std::shared_ptr<Facet<DIM> > Facet<DIM>::Create(std::vector<std::shared_ptr<Polygon<DIM> > > polygons)
+std::shared_ptr<Facet<DIM> > Facet<DIM>::Create(std::vector<PolygonPtr<DIM> > polygons)
 {
     return std::make_shared<Facet<DIM> >(polygons);
 }
 
 template<unsigned DIM>
-std::shared_ptr<Facet<DIM> > Facet<DIM>::Create(std::shared_ptr<Polygon<DIM> > pPolygon)
+std::shared_ptr<Facet<DIM> > Facet<DIM>::Create(PolygonPtr<DIM> pPolygon)
 {
     return std::make_shared<Facet<DIM> >(pPolygon);
 }
@@ -90,14 +92,14 @@ Facet<DIM>::~Facet()
 }
 
 template<unsigned DIM>
-void Facet<DIM>::AddPolygons(std::vector<std::shared_ptr<Polygon<DIM> > > polygons)
+void Facet<DIM>::AddPolygons(std::vector<PolygonPtr<DIM> > polygons)
 {
     mPolygons.insert(mPolygons.end(), polygons.begin(), polygons.end());
     mVerticesUpToDate = false;
 }
 
 template<unsigned DIM>
-void Facet<DIM>::AddPolygon(std::shared_ptr<Polygon<DIM> > pPolygon)
+void Facet<DIM>::AddPolygon(PolygonPtr<DIM> pPolygon)
 {
     mPolygons.push_back(pPolygon);
     mVerticesUpToDate = false;
@@ -247,7 +249,7 @@ vtkSmartPointer<vtkPlane> Facet<DIM>::GetPlane()
 }
 
 template<unsigned DIM>
-std::vector<std::shared_ptr<Polygon<DIM> > > Facet<DIM>::GetPolygons()
+std::vector<PolygonPtr<DIM> > Facet<DIM>::GetPolygons()
 {
     return mPolygons;
 }

@@ -249,7 +249,7 @@ std::pair<bool, QConcentration > DiscreteContinuumBoundaryCondition<DIM>::GetVal
         }
         else
         {
-            std::vector<std::shared_ptr<Polygon<DIM> > > polygons =  mpDomain->GetPolygons();
+            std::vector<PolygonPtr<DIM> > polygons =  mpDomain->GetPolygons();
             for(unsigned jdx=0; jdx<polygons.size();jdx++)
             {
                 if(polygons[jdx]->ContainsPoint(location) && (polygons[jdx]->HasAttribute(mLabel)))
@@ -399,7 +399,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shar
         {
             for(unsigned idx=0; idx<p_regular_grid->GetNumberOfPoints(); idx++)
             {
-                std::vector<std::shared_ptr<Polygon<DIM> > > polygons =  mpDomain->GetPolygons();
+                std::vector<PolygonPtr<DIM> > polygons =  mpDomain->GetPolygons();
                 for(unsigned jdx=0; jdx<polygons.size();jdx++)
                 {
                     if(polygons[jdx]->ContainsPoint(p_regular_grid->GetPoint(idx)) && polygons[jdx]->HasAttribute(mLabel))
@@ -463,7 +463,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shar
 }
 
 template<unsigned DIM>
-void DiscreteContinuumBoundaryCondition<DIM>::SetDomain(std::shared_ptr<Part<DIM> > pDomain)
+void DiscreteContinuumBoundaryCondition<DIM>::SetDomain(PartPtr<DIM> pDomain)
 {
     mpDomain = pDomain;
 }

@@ -41,7 +41,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <boost/serialization/map.hpp>
 #include "ChasteSerialization.hpp"
-#include "SmartPointers.hpp"
 #include "UblasVectorInclude.hpp"
 #include "UnitCollection.hpp"
 #include "BaseUnits.hpp"

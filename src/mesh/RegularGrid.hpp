@@ -38,7 +38,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <vector>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
-#include <vtkDataSet.h>
 #include <vtkSmartPointer.h>
 #include "UblasIncludes.hpp"
 #include "SmartPointers.hpp"
@@ -48,6 +47,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DimensionalChastePoint.hpp"
 #include "DistributedVectorFactory.hpp"
 #include "AbstractDiscreteContinuumGrid.hpp"
+
+/**
+ * Forward declare VTK members
+ */
+class vtkDataSet;
 
 /**
  * A 'rectangular' grid with equal spacing in all directions. It can be used for
@@ -127,7 +131,7 @@ public:
      * @param pPart the part from which to get the bounding box
      * @param gridSize the grid spacing
      */
-    void GenerateFromPart(std::shared_ptr<Part<DIM> > pPart, QLength gridSize);
+    void GenerateFromPart(PartPtr<DIM> pPart, QLength gridSize);
 
     /**
      * Return the distributed vector factory

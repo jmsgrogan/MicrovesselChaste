@@ -33,14 +33,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef ABSTRACTVESSELNETWORKCOMPONENTCHEMICALPROPERTIES_HPP_
 #define ABSTRACTVESSELNETWORKCOMPONENTCHEMICALPROPERTIES_HPP_
 
 #include <string>
 #include <map>
-#include <boost/enable_shared_from_this.hpp>
 #include "ChasteSerialization.hpp"
 #include "ClassIsAbstract.hpp"
 #include "UnitCollection.hpp"

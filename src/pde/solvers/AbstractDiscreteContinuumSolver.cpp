@@ -42,6 +42,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkPoints.h>
 #include <vtkGradientFilter.h>
 #include <vtkDataArray.h>
+#include <vtkDataSet.h>
 #include "AbstractDiscreteContinuumPde.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
 #include "BaseUnits.hpp"

@@ -87,8 +87,8 @@ void TumourInsertionModifier<DIM>::UpdateAtEndOfTimeStep(AbstractCellPopulation<
 
         if(DIM==2)
         {
-            std::shared_ptr<Part<DIM> > p_sub_domain = Part<DIM>::Create();
-            std::shared_ptr<Polygon<DIM> > circle = p_sub_domain->AddCircle(mInsertionRadius, mInsertionOrigin);
+            PartPtr<DIM> p_sub_domain = Part<DIM>::Create();
+            PolygonPtr<DIM> circle = p_sub_domain->AddCircle(mInsertionRadius, mInsertionOrigin);
             for (unsigned ind = 0; ind < rCellPopulation.rGetMesh().GetNumNodes(); ind++)
             {
                 if (p_sub_domain->IsPointInPart(DimensionalChastePoint<DIM>(rCellPopulation.rGetMesh().GetNode(ind)->rGetLocation(),

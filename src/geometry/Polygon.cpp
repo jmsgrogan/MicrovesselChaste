@@ -38,6 +38,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkTriangle.h>
 #include <vtkDoubleArray.h>
 #include <vtkLine.h>
+#include <vtkPolygon.h>
+#include <vtkPoints.h>
+#include <vtkPlane.h>
 #include "Exception.hpp"
 #include "GeometryTools.hpp"
 #include "BaseUnits.hpp"
@@ -81,13 +84,13 @@ Polygon<DIM>::Polygon(std::shared_ptr<DimensionalChastePoint<DIM> > pVertex) :
 }
 
 template<unsigned DIM>
-std::shared_ptr<Polygon<DIM> > Polygon<DIM>::Create(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices)
+PolygonPtr<DIM> Polygon<DIM>::Create(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices)
 {
     return std::make_shared<Polygon<DIM> >(vertices);
 }
 
 template<unsigned DIM>
-std::shared_ptr<Polygon<DIM> > Polygon<DIM>::Create(std::shared_ptr<DimensionalChastePoint<DIM> > pVertex)
+PolygonPtr<DIM> Polygon<DIM>::Create(std::shared_ptr<DimensionalChastePoint<DIM> > pVertex)
 {
     return std::make_shared<Polygon<DIM> >(pVertex);
 }

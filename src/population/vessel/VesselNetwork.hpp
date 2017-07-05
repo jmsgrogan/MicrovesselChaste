@@ -41,8 +41,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <map>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
-#include <vtkCellLocator.h>
-#include <vtkPolyData.h>
 #include "ChasteSerialization.hpp"
 #include "Vessel.hpp"
 #include "VesselSegment.hpp"
@@ -51,6 +49,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UnitCollection.hpp"
 #include "DistributedVectorFactory.hpp"
 #include "AbstractVesselNetworkComponent.hpp"
+
+/**
+ * Forward declare VTK members
+ */
+class vtkPolyData;
+class vtkCellLocator;
 
 /**
  * A vessel network is a collection of vessels. The network can be distributed over processors, in

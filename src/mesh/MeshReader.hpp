@@ -36,11 +36,15 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef MESHREADER_HPP_
 #define MESHREADER_HPP_
 
+#include <memory>
 #include <vector>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
-#include <vtkUnstructuredGrid.h>
 #include <vtkSmartPointer.h>
-#include "SmartPointers.hpp"
+
+/**
+ * Forward declare VTK members
+ */
+class vtkUnstructuredGrid;
 
 /**
  * Read a vtk unstructured mesh from file. This is a simple wrapper over the vtk unstructured grid reader.

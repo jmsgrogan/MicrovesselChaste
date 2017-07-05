@@ -235,8 +235,8 @@ std::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM>:
             DimensionalChastePoint<DIM> origin(double(dimensions[0])*spacing/(2.0*mReferenceLength),
                                              double(dimensions[1])*spacing/(2.0*mReferenceLength),
                                              0.0, mReferenceLength);
-            std::shared_ptr<Part<DIM> > p_sub_domain = Part<DIM>::Create();
-            std::shared_ptr<Polygon<DIM> > circle = p_sub_domain->AddCircle(mTumourRadius, origin);
+            PartPtr<DIM> p_sub_domain = Part<DIM>::Create();
+            PolygonPtr<DIM> circle = p_sub_domain->AddCircle(mTumourRadius, origin);
             for (unsigned ind = 0; ind < p_mesh->GetNumNodes(); ind++)
             {
                 if (p_sub_domain->IsPointInPart(DimensionalChastePoint<DIM>(p_mesh->GetNode(ind)->rGetLocation(), mCellPopulationReferenceLength)))

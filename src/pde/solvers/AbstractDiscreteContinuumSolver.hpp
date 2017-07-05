@@ -39,7 +39,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <string>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning for now (gcc4.3)
-#include <vtkDataSet.h>
 #include <vtkSmartPointer.h>
 #include "OutputFileHandler.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
@@ -48,6 +47,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UnitCollection.hpp"
 #include "DensityMap.hpp"
 #include "AbstractDiscreteContinuumGrid.hpp"
+
+/**
+ * Forward declare VTK members
+ */
+class vtkDataSet;
 
 /**
  * Forward declaration as some PDEs can have DiscreteContinuumSolvers in their DiscreteSources

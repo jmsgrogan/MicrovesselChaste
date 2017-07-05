@@ -34,6 +34,14 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
+#include <vtkDataSet.h>
+#include <vtkCellLocator.h>
+#include <vtkPoints.h>
+#include <vtkDoubleArray.h>
+#include <vtkUnsignedIntArray.h>
+#include <vtkArrayData.h>
+#include <vtkPolyData.h>
+#include <vtkUnstructuredGrid.h>
 #include <vtkFeatureEdges.h>
 #include <vtkGeometryFilter.h>
 #include <vtkVersion.h>

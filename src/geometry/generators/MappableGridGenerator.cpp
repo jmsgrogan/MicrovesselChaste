@@ -61,7 +61,7 @@ std::shared_ptr<MappableGridGenerator<DIM> > MappableGridGenerator<DIM>::Create(
 }
 
 template<unsigned DIM>
-std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GeneratePlane(unsigned numX, unsigned numY, bool isShell,
+PartPtr<DIM> MappableGridGenerator<DIM>::GeneratePlane(unsigned numX, unsigned numY, bool isShell,
         bool withEndCaps)
 {
     if(numX == 0 or numY == 0)
@@ -95,7 +95,7 @@ std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GeneratePlane(unsigned n
 
     // Make the polygons
     // Front face
-    std::vector<std::shared_ptr<Polygon<DIM> > > polygons;
+    std::vector<PolygonPtr<DIM> > polygons;
     for(unsigned jdx=0; jdx< numY - 1; jdx++)
     {
         for(unsigned idx=0; idx<numX - 1; idx++)
@@ -204,7 +204,7 @@ std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GeneratePlane(unsigned n
     }
 
     // Create a part
-    std::shared_ptr<Part<DIM> > p_part = Part<DIM>::Create();
+    PartPtr<DIM> p_part = Part<DIM>::Create();
     for(unsigned idx=0; idx<polygons.size(); idx++)
     {
         p_part->AddPolygon(polygons[idx], true);
@@ -213,7 +213,7 @@ std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GeneratePlane(unsigned n
 }
 
 template<unsigned DIM>
-std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GenerateCylinder(
+PartPtr<DIM> MappableGridGenerator<DIM>::GenerateCylinder(
         QLength cylinderRadius,
         QLength cylinderThickness,
         QLength cylinderHeight, unsigned numX, unsigned numY, double cylinderAngle)
@@ -228,7 +228,7 @@ std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GenerateCylinder(
         EXCEPTION("The cylinder radius and height must be greater than 0.0");
     }
 
-    std::shared_ptr<Part<DIM> > p_part = GeneratePlane(numX, numY, cylinderThickness == 0.0*unit::metres,
+    PartPtr<DIM> p_part = GeneratePlane(numX, numY, cylinderThickness == 0.0*unit::metres,
             !(cylinderAngle == 2.0 * M_PI));
 
     // Get the part extents
@@ -269,7 +269,7 @@ std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GenerateCylinder(
 }
 
 template<unsigned DIM>
-std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GenerateHemisphere(QLength sphereRadius,
+PartPtr<DIM> MappableGridGenerator<DIM>::GenerateHemisphere(QLength sphereRadius,
         QLength sphereThickness, unsigned numX, unsigned numY,
         double sphereAzimuthAngle, double spherePolarAngle)
 {
@@ -288,7 +288,7 @@ std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GenerateHemisphere(QLeng
         EXCEPTION("The sphere radius must be greater than 0.0");
     }
 
-    std::shared_ptr<Part<DIM> > p_part = GeneratePlane(numX, numY, sphereThickness == 0.0*unit::metres);
+    PartPtr<DIM> p_part = GeneratePlane(numX, numY, sphereThickness == 0.0*unit::metres);
 
     // The part extents
     std::vector<QLength > bbox = p_part->GetBoundingBox();

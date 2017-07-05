@@ -36,9 +36,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef ABSTRACTDISCRETECONTINUUMPDE_HPP_
 #define ABSTRACTDISCRETECONTINUUMPDE_HPP_
 
+#include <memory>
 #include <string>
 #include "UblasIncludes.hpp"
-#include "SmartPointers.hpp"
 #include "UblasVectorInclude.hpp"
 #include "GeometryTools.hpp"
 #include "UnitCollection.hpp"

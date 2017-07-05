@@ -38,9 +38,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <memory>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
-#include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
 
+/**
+ * Forward declare VTK members
+ */
+class vtkPolyData;
 /**
 * This class tries to improve the quality of a triangulated vtk polydata surface through decimation
 * and then linear subdivision. It is useful for removing 'staircase' effects in surfaces derived from pixel/voxel

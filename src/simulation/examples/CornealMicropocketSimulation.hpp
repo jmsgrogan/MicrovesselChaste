@@ -260,7 +260,7 @@ class CornealMicropocketSimulation
      */
     unsigned mRandomSeed;
 
-    std::shared_ptr<Part<DIM> > mpDomain;
+    PartPtr<DIM> mpDomain;
 
     std::vector<DimensionalChastePoint<DIM> > mHoles;
 
@@ -317,7 +317,7 @@ public:
             double multfact=1.0,
             bool sampleOnce=false);
 
-    std::shared_ptr<Part<DIM> > SetUpDomain();
+    PartPtr<DIM> SetUpDomain();
 
     std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > SetUpGrid(bool mSampling=false);
 

@@ -36,6 +36,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkDecimatePro.h>
 #include <vtkLinearSubdivisionFilter.h>
+#include <vtkPolyData.h>
 #include "Exception.hpp"
 #include "SurfaceCleaner.hpp"
 

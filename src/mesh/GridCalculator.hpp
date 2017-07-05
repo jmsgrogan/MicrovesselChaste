@@ -39,7 +39,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
-#include <vtkPoints.h>
 #include "UblasIncludes.hpp"
 #include "SmartPointers.hpp"
 #include "VesselNetwork.hpp"
@@ -52,6 +51,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "RegularGrid.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "AbstractDiscreteContinuumGrid.hpp"
+
+/**
+ * Forward declare VTK members
+ */
+class vtkPoints;
 
 /**
  * A class for working with structured and unstructured grids and discrete entities.

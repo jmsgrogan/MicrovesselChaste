@@ -36,9 +36,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef ABSTRACTMIXEDGRIDDISCRETECONTINUUMSOLVER_HPP_
 #define ABSTRACTMIXEDGRIDDISCRETECONTINUUMSOLVER_HPP_
 
+#include <memory>
 #include <vector>
 #include <string>
-#include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
 #include "RegularGrid.hpp"

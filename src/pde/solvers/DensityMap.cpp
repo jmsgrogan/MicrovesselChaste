@@ -38,6 +38,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkWedge.h>
 #include <vtkVoxel.h>
 #include <vtkPoints.h>
+#include <vtkUnstructuredGrid.h>
 #include "VesselSegment.hpp"
 #include "DensityMap.hpp"
 #include "GeometryTools.hpp"

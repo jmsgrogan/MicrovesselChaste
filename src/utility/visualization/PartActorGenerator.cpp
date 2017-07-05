@@ -171,7 +171,7 @@ void PartActorGenerator<DIM>::AddActor(vtkSmartPointer<vtkRenderer> pRenderer)
 }
 
 template<unsigned DIM>
-void PartActorGenerator<DIM>::SetPart(std::shared_ptr<Part<DIM> > pPart)
+void PartActorGenerator<DIM>::SetPart(PartPtr<DIM> pPart)
 {
     this->mpPart = pPart;
 }

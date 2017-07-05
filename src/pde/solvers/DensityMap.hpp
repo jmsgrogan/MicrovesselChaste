@@ -36,13 +36,18 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef DENSITYMAP_HPP_
 #define DENSITYMAP_HPP_
 
-#include <vtkUnstructuredGrid.h>
-#include "SmartPointers.hpp"
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
+#include <vtkSmartPointer.h>
 #include "AbstractCellMutationState.hpp"
 #include "VesselNetwork.hpp"
 #include "RegularGrid.hpp"
 #include "GridCalculator.hpp"
 #include "AbstractCellPopulation.hpp"
+
+/**
+ * Forward declare VTK members
+ */
+class vtkUnstructuredGrid;
 
 /**
  * This class is central to the discrete continuum solvers. It calculates the density of discrete entities (vessels, biological cells)

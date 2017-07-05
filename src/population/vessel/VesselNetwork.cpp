@@ -33,15 +33,17 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
 
+#include <iostream>
+#include <math.h>
+#include <cfloat>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkMergePoints.h>
 #include <vtkIdList.h>
 #include <vtkCellArray.h>
 #include <vtkPoints.h>
 #include <vtkLine.h>
-#include <iostream>
-#include <math.h>
-#include <cfloat>
+#include <vtkCellLocator.h>
+#include <vtkPolyData.h>
 #include "SmartPointers.hpp"
 #include "OutputFileHandler.hpp"
 #include "SegmentFlowProperties.hpp"

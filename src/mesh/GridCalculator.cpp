@@ -38,6 +38,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkLineSource.h>
 #include <vtkTubeFilter.h>
 #include <vtkSelectEnclosedPoints.h>
+#include <vtkPoints.h>
+#include <vtkCellLocator.h>
 #include <boost/lexical_cast.hpp>
 #include "PetscTools.hpp"
 #include "Exception.hpp"

@@ -41,6 +41,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkSplineFilter.h>
 #include <vtkGeometryFilter.h>
 #include <vtkPolyDataConnectivityFilter.h>
+#include <vtkPolyData.h>
 #include <vtkVersion.h>
 #include "Exception.hpp"
 #include "BoundaryExtractor.hpp"

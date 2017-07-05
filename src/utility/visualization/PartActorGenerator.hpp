@@ -57,7 +57,7 @@ class PartActorGenerator : public AbstractActorGenerator<DIM>
     /**
      * The part
      */
-    std::shared_ptr<Part<DIM> > mpPart;
+    PartPtr<DIM> mpPart;
 
 public:
 
@@ -81,7 +81,7 @@ public:
      * Set the part
      * @param pPart the part to render
      */
-    void SetPart(std::shared_ptr<Part<DIM> > pPart);
+    void SetPart(PartPtr<DIM> pPart);
 
 };
 

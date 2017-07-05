@@ -86,13 +86,13 @@ public:
      * Return the surface in the form of a vector of PLC polygons for each segment
      * @return a vector of PLC polygons for each segment
      */
-    std::vector<std::vector<std::shared_ptr<Polygon<DIM> > > > GetSurface();
+    std::vector<std::vector<PolygonPtr<DIM> > > GetSurface();
 
     /**
      * Return the surface in the form of a vector of PLC polygons
      * @return a vector of PLC polygons
      */
-    std::vector<std::shared_ptr<Polygon<DIM> > > GetSurfacePolygons();
+    std::vector<PolygonPtr<DIM> > GetSurfacePolygons();
 
     /**
      * Return the locations of PLC holes in the network. Holes are points that are situated on the

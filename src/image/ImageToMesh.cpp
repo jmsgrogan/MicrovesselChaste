@@ -101,7 +101,7 @@ std::shared_ptr<DiscreteContinuumMesh<DIM, DIM> > ImageToMesh<DIM>::GetMesh()
 }
 
 template<unsigned DIM>
-void ImageToMesh<DIM>::SetTissueDomain(std::shared_ptr<Part<DIM> > pTissueDomain)
+void ImageToMesh<DIM>::SetTissueDomain(PartPtr<DIM> pTissueDomain)
 {
     mpDomain = pTissueDomain;
 }

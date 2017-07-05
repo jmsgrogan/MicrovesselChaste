@@ -38,7 +38,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <vector>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
-#include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
 #include "SmartPointers.hpp"
 #include "ChastePoint.hpp"
@@ -46,6 +45,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Part.hpp"
 #include "Cell.hpp"
 #include "DimensionalChastePoint.hpp"
+
+/**
+ * Forward declare VTK members
+ */
+class vtkPolyData;
 
 // Jonathan Shewchuk's triangle and Hang Si's tetgen.
 #define REAL double

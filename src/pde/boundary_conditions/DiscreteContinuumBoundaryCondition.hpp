@@ -85,7 +85,7 @@ protected:
     /**
      * A part for prescribing part and facet based conditions
      */
-    std::shared_ptr<Part<DIM> > mpDomain;
+    PartPtr<DIM> mpDomain;
 
     /**
      * Point locations for POINT type conditions
@@ -192,7 +192,7 @@ public:
      * Set a domain for use in the calculation of FACET type boundary conditions
      * @param pDomain the part containing labelled facets for the boundary condition
      */
-    void SetDomain(std::shared_ptr<Part<DIM> > pDomain);
+    void SetDomain(PartPtr<DIM> pDomain);
 
     /**
      * Use a robin boundary condition

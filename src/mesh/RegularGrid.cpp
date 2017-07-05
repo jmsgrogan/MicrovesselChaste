@@ -44,6 +44,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkPoints.h>
 #include <vtkSmartPointer.h>
 #include <vtkLine.h>
+#include <vtkDataSet.h>
+#include <vtkCellLocator.h>
 #include <boost/math/special_functions/round.hpp>
 #include "PetscTools.hpp"
 #include "Exception.hpp"
@@ -326,7 +328,7 @@ const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::rGetMooreNeighbourD
 }
 
 template<unsigned DIM>
-void RegularGrid<DIM>::GenerateFromPart(std::shared_ptr<Part<DIM> > pPart, QLength gridSize)
+void RegularGrid<DIM>::GenerateFromPart(PartPtr<DIM> pPart, QLength gridSize)
 {
     mSpacing = gridSize;
     std::vector<QLength > spatial_extents = pPart->GetBoundingBox();

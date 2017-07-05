@@ -82,7 +82,7 @@ std::vector<int> AbstractMigrationRule<DIM>::GetIndices(const std::vector<std::s
 }
 
 template<unsigned DIM>
-void AbstractMigrationRule<DIM>::SetBoundingDomain(std::shared_ptr<Part<DIM> > pPart)
+void AbstractMigrationRule<DIM>::SetBoundingDomain(PartPtr<DIM> pPart)
 {
     mpBoundingDomain = pPart;
 }
