@@ -79,7 +79,7 @@ public:
 //        std::cout << rh1 << std::endl;
 //
 //        // Length
-//        units::quantity<unit::length> lm1(3.0*unit::metres);
+//        QLength lm1(3.0*unit::metres);
 //        std::cout << lm1 << std::endl;
 //
 //        // Force

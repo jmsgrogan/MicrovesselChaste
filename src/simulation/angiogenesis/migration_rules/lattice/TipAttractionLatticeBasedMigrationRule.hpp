@@ -74,7 +74,7 @@ protected:
     /**
      * The tip attraction radius
      */
-    units::quantity<unit::length> mTipAttractionRadius;
+    QLength mTipAttractionRadius;
 
     /**
      * The tip attraction angle

@@ -158,7 +158,7 @@ void ImageToMesh<DIM>::Update()
         vtkSmartPointer<vtkPoints> mesh_points = p_temp_mesh->GetPoints();
         std::vector<std::vector<unsigned> > mesh_connectivity = p_temp_mesh->GetConnectivity();
 
-        units::quantity<unit::length> reference_length = p_temp_mesh->GetReferenceLengthScale();
+        QLength reference_length = p_temp_mesh->GetReferenceLengthScale();
         vtkSmartPointer<vtkPoints> p_vtk_points = vtkSmartPointer<vtkPoints>::New();
         for(unsigned idx = 0; idx<mesh_connectivity.size(); idx++)
         {

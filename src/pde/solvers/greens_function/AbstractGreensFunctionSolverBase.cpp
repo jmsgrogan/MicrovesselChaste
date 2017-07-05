@@ -78,7 +78,7 @@ AbstractGreensFunctionSolverBase<DIM>::~AbstractGreensFunctionSolverBase()
 }
 
 template<unsigned DIM>
-void AbstractGreensFunctionSolverBase<DIM>::SetSubSegmentCutoff(units::quantity<unit::length> value)
+void AbstractGreensFunctionSolverBase<DIM>::SetSubSegmentCutoff(QLength value)
 {
     mSubsegmentCutoff = value;
 }
@@ -87,7 +87,7 @@ template<unsigned DIM>
 void AbstractGreensFunctionSolverBase<DIM>::GenerateSubSegments()
 {
     // Set up the sub-segment points and map to original segments
-    units::quantity<unit::length> max_subsegment_length = mSubsegmentCutoff;
+    QLength max_subsegment_length = mSubsegmentCutoff;
 
     std::vector<std::shared_ptr<Vessel<DIM> > > vessels = this->mpDensityMap->GetVesselNetwork()->GetVessels();
     typename std::vector<std::shared_ptr<Vessel<DIM> > >::iterator vessel_iter;
@@ -101,7 +101,7 @@ void AbstractGreensFunctionSolverBase<DIM>::GenerateSubSegments()
         std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = (*vessel_iter)->GetSegments();
         for (segment_iter = segments.begin(); segment_iter != segments.end(); segment_iter++)
         {
-            units::quantity<unit::length> segment_length = (*segment_iter)->GetLength();
+            QLength segment_length = (*segment_iter)->GetLength();
 
             // If the segment is shorter than the max length just use its mid-point
             if (segment_length < 1.01 * max_subsegment_length)
@@ -118,7 +118,7 @@ void AbstractGreensFunctionSolverBase<DIM>::GenerateSubSegments()
 
                 double subsegment_length_factor = segment_length / max_subsegment_length;
                 unsigned num_subsegments = std::floor(subsegment_length_factor) + 1;
-                units::quantity<unit::length> subsegment_length = segment_length / double(num_subsegments);
+                QLength subsegment_length = segment_length / double(num_subsegments);
                 DimensionalChastePoint<DIM> increment = (end_point - start_point);
                 for (unsigned i = 0; i < num_subsegments; i++)
                 {
@@ -181,12 +181,12 @@ std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Abstr
         {
             if (iter <= iter2)
             {
-                units::quantity<unit::length> distance = mSubSegmentCoordinates[iter2].GetDistance(mSubSegmentCoordinates[iter]);
+                QLength distance = mSubSegmentCoordinates[iter2].GetDistance(mSubSegmentCoordinates[iter]);
                 units::quantity<unit::per_length> term;
                 if (distance < mSegmentPointMap[iter]->GetRadius())
                 {
-                    units::quantity<unit::length> radius = mSegmentPointMap[iter]->GetRadius();
-                    units::quantity<unit::length> max_segment_length = std::max(mSubSegmentLengths[iter], mSubSegmentLengths[iter2]);
+                    QLength radius = mSegmentPointMap[iter]->GetRadius();
+                    QLength max_segment_length = std::max(mSubSegmentLengths[iter], mSubSegmentLengths[iter2]);
                     double green_correction = 0.6 * std::exp(-0.45 * max_segment_length /radius);
                     if (iter != iter2)
                     {
@@ -213,7 +213,7 @@ std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Abstr
     unsigned num_points = mSinkCoordinates.size();
     double coefficient = 1.0 / (4.0 * M_PI);
     units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpRegularGrid->GetSpacing());
-    units::quantity<unit::length> equivalent_tissue_point_radius = units::root<3>(tissue_point_volume * 0.75 / M_PI);
+    QLength equivalent_tissue_point_radius = units::root<3>(tissue_point_volume * 0.75 / M_PI);
     std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2 > > p_interaction_matrix(new boost::multi_array<units::quantity<unit::per_length>, 2>(boost::extents[num_points][num_points]));
     for (index iter = 0; iter < num_points; iter++)
     {
@@ -221,7 +221,7 @@ std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Abstr
         {
             if (iter < iter2)
             {
-                units::quantity<unit::length> distance = mSinkCoordinates[iter2].GetDistance(mSinkCoordinates[iter]);
+                QLength distance = mSinkCoordinates[iter2].GetDistance(mSinkCoordinates[iter]);
                 (*p_interaction_matrix)[iter][iter2] = coefficient / distance;
                 (*p_interaction_matrix)[iter2][iter] = coefficient / distance;
             }
@@ -242,7 +242,7 @@ std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Abstr
     unsigned num_subsegments = mSubSegmentCoordinates.size();
 
     units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpRegularGrid->GetSpacing());
-    units::quantity<unit::length> equivalent_tissue_point_radius = units::root<3>(tissue_point_volume * 0.75 / M_PI);
+    QLength equivalent_tissue_point_radius = units::root<3>(tissue_point_volume * 0.75 / M_PI);
     double coefficient = 1.0 / (4.0 * M_PI);
 
     std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > p_interaction_matrix(new boost::multi_array<units::quantity<unit::per_length>, 2>(boost::extents[num_sinks][num_subsegments]));
@@ -250,7 +250,7 @@ std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Abstr
     {
         for (index iter2 = 0; iter2 < num_subsegments; iter2++)
         {
-            units::quantity<unit::length> distance = mSinkCoordinates[iter2].GetDistance(mSinkCoordinates[iter]);
+            QLength distance = mSinkCoordinates[iter2].GetDistance(mSinkCoordinates[iter]);
             units::quantity<unit::per_length> term;
             if (distance <= equivalent_tissue_point_radius)
             {
@@ -275,14 +275,14 @@ std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Abstr
     double coefficient = 1.0 / (4.0 * M_PI);
 
     units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpRegularGrid->GetSpacing());
-    units::quantity<unit::length> equivalent_tissue_point_radius = units::root<3>(tissue_point_volume * 0.75 / M_PI);
+    QLength equivalent_tissue_point_radius = units::root<3>(tissue_point_volume * 0.75 / M_PI);
 
     std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > p_interaction_matrix(new boost::multi_array<units::quantity<unit::per_length>, 2>(boost::extents[num_subsegments][num_sinks]));
     for (index iter = 0; iter < num_subsegments; iter++)
     {
         for (index iter2 = 0; iter2 < num_sinks; iter2++)
         {
-            units::quantity<unit::length> distance = mSinkCoordinates[iter2].GetDistance(mSinkCoordinates[iter]);
+            QLength distance = mSinkCoordinates[iter2].GetDistance(mSinkCoordinates[iter]);
             units::quantity<unit::per_length> term;
             if (distance <= equivalent_tissue_point_radius)
             {
@@ -310,7 +310,7 @@ void AbstractGreensFunctionSolverBase<DIM>::WriteSolution(std::map<std::string, 
     // Add the segment points
     vtkSmartPointer<vtkPolyData> pPolyData = vtkSmartPointer<vtkPolyData>::New();
     vtkSmartPointer<vtkPoints> pPoints = vtkSmartPointer<vtkPoints>::New();
-    units::quantity<unit::length> grid_length_scale = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
+    QLength grid_length_scale = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
 
     for (unsigned i = 0; i < mSubSegmentCoordinates.size(); i++)
     {

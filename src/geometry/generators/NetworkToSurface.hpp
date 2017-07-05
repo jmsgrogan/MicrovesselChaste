@@ -69,7 +69,7 @@ class NetworkToSurface
     /**
      * The length for spline re-sampling
      */
-    units::quantity<unit::length> mSplineResamplingLength;
+    QLength mSplineResamplingLength;
 
     /**
      * The surface
@@ -79,7 +79,7 @@ class NetworkToSurface
     /**
      * The reference length scale
      */
-    units::quantity<unit::length> mReferenceLength;
+    QLength mReferenceLength;
 
     /**
      * Whether to do smoothing
@@ -175,7 +175,7 @@ public:
      * Set the re-sampling spline length
      * @param splineResampleSize the spline resampling size
      */
-    void SetResamplingSplineSize(units::quantity<unit::length> splineResampleSize);
+    void SetResamplingSplineSize(QLength splineResampleSize);
 
     /**
      * Do surface remeshing

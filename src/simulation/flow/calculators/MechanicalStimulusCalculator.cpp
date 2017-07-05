@@ -88,7 +88,7 @@ void MechanicalStimulusCalculator<DIM>::Calculate()
 {
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
 
-    units::quantity<unit::length> cm(0.01*unit::metres);
+    QLength cm(0.01*unit::metres);
     units::quantity<unit::mass> g(1.e-3*unit::kg);
     units::quantity<unit::force> dyne(g*cm/(unit::seconds*unit::seconds));
     units::quantity<unit::pressure> dyne_per_centi_metre_squared(dyne/(cm*cm));

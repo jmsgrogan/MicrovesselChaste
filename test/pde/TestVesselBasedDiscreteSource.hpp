@@ -71,8 +71,8 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler,
                 ("TestVesselBasedDiscreteSource/TestGridFunction", true));
 
-        units::quantity<unit::length> vessel_length(100.0*unit::microns);
-        units::quantity<unit::length> reference_length(1.0*unit::microns);
+        QLength vessel_length(100.0*unit::microns);
+        QLength reference_length(1.0*unit::microns);
         VesselNetworkGenerator<2> generator;
         boost::shared_ptr<VesselNetwork<2> > p_network =
                 generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>());
@@ -86,7 +86,7 @@ public:
         p_domain->Translate(translation_vector);
 
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        units::quantity<unit::length> spacing(10.0*unit::microns);
+        QLength spacing(10.0*unit::microns);
         p_grid->GenerateFromPart(p_domain, spacing);
 
         // Set up a density map
@@ -127,8 +127,8 @@ public:
     {
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestMeshFunction"));
 
-        units::quantity<unit::length> vessel_length(100.0*unit::microns);
-        units::quantity<unit::length> reference_length(1.0*unit::microns);
+        QLength vessel_length(100.0*unit::microns);
+        QLength reference_length(1.0*unit::microns);
         VesselNetworkGenerator<2> generator;
         boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>());
         p_network->GetVessels()[0]->GetFlowProperties()->SetHaematocrit(0.4);
@@ -186,8 +186,8 @@ public:
                 ("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteDifferenceSolver"));
 
         // Set up the vessel network
-        units::quantity<unit::length> vessel_length(100.0*unit::microns);
-        units::quantity<unit::length> reference_length(1.0*unit::microns);
+        QLength vessel_length(100.0*unit::microns);
+        QLength reference_length(1.0*unit::microns);
         VesselNetworkGenerator<2> generator;
         boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length,
                 DimensionalChastePoint<2>());
@@ -201,7 +201,7 @@ public:
                                                      0.0, 0.0, reference_length);
         p_domain->Translate(translation_vector);
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        units::quantity<unit::length> spacing(10.0*unit::microns);
+        QLength spacing(10.0*unit::microns);
         p_grid->GenerateFromPart(p_domain, spacing);
 
         // Choose the PDE
@@ -239,8 +239,8 @@ public:
 
 
         // Set up the vessel network
-        units::quantity<unit::length> vessel_length(100.0*unit::microns);
-        units::quantity<unit::length> reference_length(1.0*unit::microns);
+        QLength vessel_length(100.0*unit::microns);
+        QLength reference_length(1.0*unit::microns);
         VesselNetworkGenerator<2> generator;
         boost::shared_ptr<VesselNetwork<2> > p_network =
                 generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>());
@@ -256,7 +256,7 @@ public:
         boost::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator =
                 DiscreteContinuumMeshGenerator<2>::Create();
         p_mesh_generator->SetDomain(p_domain);
-        units::quantity<unit::length> spacing(10.0*unit::microns);
+        QLength spacing(10.0*unit::microns);
         p_mesh_generator->SetMaxElementArea(units::pow<3>(0.02*vessel_length));
         p_mesh_generator->Update();
 

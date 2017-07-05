@@ -86,9 +86,9 @@ class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
 
     boost::shared_ptr<Part<3> > GetSimulationDomain()
     {
-        units::quantity<unit::length> domain_x(800.0*unit::microns);
-        units::quantity<unit::length> domain_y(800.0*unit::microns);
-        units::quantity<unit::length> domain_z(200.0*unit::microns);
+        QLength domain_x(800.0*unit::microns);
+        QLength domain_y(800.0*unit::microns);
+        QLength domain_z(200.0*unit::microns);
         boost::shared_ptr<Part<3> > p_domain = Part<3> ::Create();
         p_domain->AddCuboid(domain_x, domain_y, domain_z, DimensionalChastePoint<3>());
         return p_domain;
@@ -135,8 +135,8 @@ class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
 
     boost::shared_ptr<Part<3> > GetInitialTumourCellRegion()
     {
-        units::quantity<unit::length> radius(100.0*unit::microns);
-        units::quantity<unit::length> depth(200.0*unit::microns);
+        QLength radius(100.0*unit::microns);
+        QLength depth(200.0*unit::microns);
         boost::shared_ptr<Part<3> > p_domain = Part<3> ::Create();
         boost::shared_ptr<Polygon<3> > circle = p_domain->AddCircle(radius, DimensionalChastePoint<3>(400.0, 400.0, 0.0, 1.e-6*unit::metres));
         p_domain->Extrude(circle, depth);
@@ -203,8 +203,8 @@ public:
         boost::shared_ptr<Part<3> > p_domain = GetSimulationDomain();
 
         // Create a lattice for the cell population
-        units::quantity<unit::length> spacing(40.0*unit::microns);
-        units::quantity<unit::length> cell_lenth_scale(1.0*unit::microns);
+        QLength spacing(40.0*unit::microns);
+        QLength cell_lenth_scale(1.0*unit::microns);
         unsigned num_x = unsigned(p_domain->GetBoundingBox()[1]/spacing) + 1;
         unsigned num_y = unsigned(p_domain->GetBoundingBox()[3]/spacing) + 1;
         unsigned num_z = unsigned(p_domain->GetBoundingBox()[5]/spacing) + 1;
@@ -262,8 +262,8 @@ public:
         boost::shared_ptr<Part<3> > p_domain = GetSimulationDomain();
 
         // Create nodes corresponding to cell positions
-        units::quantity<unit::length> spacing(40.0*unit::microns);
-        units::quantity<unit::length> cell_lenth_scale(40.0*unit::microns);
+        QLength spacing(40.0*unit::microns);
+        QLength cell_lenth_scale(40.0*unit::microns);
         unsigned num_x = unsigned(p_domain->GetBoundingBox()[1]/spacing) + 1;
         unsigned num_y = unsigned(p_domain->GetBoundingBox()[3]/spacing) + 1;
         unsigned num_z = unsigned(p_domain->GetBoundingBox()[5]/spacing) + 1;

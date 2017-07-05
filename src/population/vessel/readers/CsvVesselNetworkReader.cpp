@@ -112,7 +112,7 @@ std::shared_ptr<VesselNetwork<DIM> > CsvVesselNetworkReader<DIM>::Read()
 
     // Need to flip in 'y' direction for consistency with VTK tools
     std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = VesselNetworkGeometryCalculator<DIM>::GetExtents(p_network);
-    units::quantity<unit::length> length_scale = extents.second.GetReferenceLengthScale();
+    QLength length_scale = extents.second.GetReferenceLengthScale();
     double y_max = extents.second.GetLocation(length_scale)[1];
 
     for(unsigned idx=0; idx<p_network->GetNumberOfNodes();idx++)

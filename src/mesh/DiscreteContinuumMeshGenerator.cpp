@@ -141,7 +141,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Update()
         {
             if(mpDomain)
             {
-                std::vector<units::quantity<unit::length> > bounding_box = mpDomain->GetBoundingBox();
+                std::vector<QLength > bounding_box = mpDomain->GetBoundingBox();
                 if (units::abs(bounding_box[4]) < 1.e-12*unit::metres && units::abs(bounding_box[5]) < 1.e-12*unit::metres)
                 {
                    Mesh2d();
@@ -167,7 +167,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Update()
     {
         if(mpDomain)
         {
-            std::vector<units::quantity<unit::length> > bounding_box = mpDomain->GetBoundingBox();
+            std::vector<QLength > bounding_box = mpDomain->GetBoundingBox();
             if (units::abs(bounding_box[4]) < 1.e-12*unit::metres && units::abs(bounding_box[5]) < 1.e-12*unit::metres)
             {
                 EXCEPTION("The part is two-dimensional, use the 2D meshing functionality.");

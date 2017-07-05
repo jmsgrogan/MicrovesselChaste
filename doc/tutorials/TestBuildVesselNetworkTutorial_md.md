@@ -108,7 +108,7 @@ to a different reference length, a cell width. Note that the syntax `reference_l
 `reference_length = 1.0 * unit::microns` is used when instantiating quantities.
 
 ```cpp
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         DimensionalChastePoint<2> my_point(25.0, 50.0, 0.0, reference_length);
 ```
 
@@ -122,7 +122,7 @@ We can use the unit test framework to check our coordinate values are assigned a
 If we want our coordinates in terms of a fictitious cell width unit we just have to rescale the reference length.
 
 ```cpp
-        units::quantity<unit::length> cell_width(25.0 * unit::microns);
+        QLength cell_width(25.0 * unit::microns);
         my_point.SetReferenceLengthScale(cell_width);
         TS_ASSERT_DELTA(my_point.GetLocation(cell_width)[0], 1.0, 1.e-6);
         TS_ASSERT_DELTA(my_point.GetLocation(cell_width)[1], 2.0, 1.e-6);
@@ -222,12 +222,12 @@ Create a hexagonal network in 3D space using a generator. Specify the target net
 length. The use of dimensional analysis is demonstrated by now using a fictitious 'cell width' reference length unit instead of microns.
 
 ```cpp
-        units::quantity<unit::length> cell_width(25.0 * unit::microns);
+        QLength cell_width(25.0 * unit::microns);
         BaseUnits::Instance()->SetReferenceLengthScale(cell_width);
         BaseUnits::Instance()->SetReferenceTimeScale(60.0 * unit::seconds);
-        units::quantity<unit::length> target_width = 60.0 * cell_width;
-        units::quantity<unit::length> target_height = 30.0 * cell_width;
-        units::quantity<unit::length> vessel_length = 4.0 * cell_width;
+        QLength target_width = 60.0 * cell_width;
+        QLength target_height = 30.0 * cell_width;
+        QLength vessel_length = 4.0 * cell_width;
 ```
 
 Note that the generator is given the reference length scale. This is not imperative, but helps to ensure that all point coordinates
@@ -251,7 +251,7 @@ if we wanted.
         VesselNetworkWriter<3> writer;
         writer.SetFileName(p_handler->GetOutputDirectoryFullPath() + "hexagonal_network.vtp");
         writer.SetVesselNetwork(p_network);
-        units::quantity<unit::length> micron_length_scale(1.0*unit::microns);
+        QLength micron_length_scale(1.0*unit::microns);
         writer.SetReferenceLengthScale(micron_length_scale);
         writer.Write();
 ```
@@ -314,11 +314,11 @@ class TestBuildVesselNetworkLiteratePaper : public AbstractCellBasedWithTimingsT
 public:
     void TestBuildNetworkManually() throw (Exception)
     {
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         DimensionalChastePoint<2> my_point(25.0, 50.0, 0.0, reference_length);
         TS_ASSERT_DELTA(my_point.GetLocation(reference_length)[0], 25.0, 1.e-6);
         TS_ASSERT_DELTA(my_point.GetLocation(reference_length)[1], 50.0, 1.e-6);
-        units::quantity<unit::length> cell_width(25.0 * unit::microns);
+        QLength cell_width(25.0 * unit::microns);
         my_point.SetReferenceLengthScale(cell_width);
         TS_ASSERT_DELTA(my_point.GetLocation(cell_width)[0], 1.0, 1.e-6);
         TS_ASSERT_DELTA(my_point.GetLocation(cell_width)[1], 2.0, 1.e-6);
@@ -355,12 +355,12 @@ public:
     }
     void TestBuildNetworkFromGeneratorAndReadFromFile() throw (Exception)
     {
-        units::quantity<unit::length> cell_width(25.0 * unit::microns);
+        QLength cell_width(25.0 * unit::microns);
         BaseUnits::Instance()->SetReferenceLengthScale(cell_width);
         BaseUnits::Instance()->SetReferenceTimeScale(60.0 * unit::seconds);
-        units::quantity<unit::length> target_width = 60.0 * cell_width;
-        units::quantity<unit::length> target_height = 30.0 * cell_width;
-        units::quantity<unit::length> vessel_length = 4.0 * cell_width;
+        QLength target_width = 60.0 * cell_width;
+        QLength target_height = 30.0 * cell_width;
+        QLength vessel_length = 4.0 * cell_width;
         VesselNetworkGenerator<3> network_generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
                                                                                                     target_height,
@@ -371,7 +371,7 @@ public:
         VesselNetworkWriter<3> writer;
         writer.SetFileName(p_handler->GetOutputDirectoryFullPath() + "hexagonal_network.vtp");
         writer.SetVesselNetwork(p_network);
-        units::quantity<unit::length> micron_length_scale(1.0*unit::microns);
+        QLength micron_length_scale(1.0*unit::microns);
         writer.SetReferenceLengthScale(micron_length_scale);
         writer.Write();
         VesselNetworkReader<3> network_reader;

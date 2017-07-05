@@ -78,7 +78,7 @@ std::vector<std::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::Ge
 
     std::vector<units::quantity<unit::concentration> > probed_solutions(rNodes.size(), 0.0*unit::mole_per_metre_cubed);
     vtkSmartPointer<vtkPoints> p_probe_locations = vtkSmartPointer<vtkPoints>::New();
-    units::quantity<unit::length> reference_length = this->mpSolver->GetReferenceLength();
+    QLength reference_length = this->mpSolver->GetReferenceLength();
 
     if(this->mpSolver)
     {
@@ -164,8 +164,8 @@ std::vector<std::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::Ge
             vegf_conc = probed_solutions[idx];
         }
 
-        units::quantity<unit::length> reference_length_for_sprouting = 40.0e-6*unit::metres;
-        units::quantity<unit::length> node_length = (rNodes[idx]->GetSegment(0)->GetLength()+
+        QLength reference_length_for_sprouting = 40.0e-6*unit::metres;
+        QLength node_length = (rNodes[idx]->GetSegment(0)->GetLength()+
                 rNodes[idx]->GetSegment(1)->GetLength())/2.0;
         double length_factor = node_length/reference_length_for_sprouting;
 
@@ -182,7 +182,7 @@ std::vector<std::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::Ge
 }
 
 template <unsigned DIM>
-void OffLatticeSproutingRule<DIM>::SetTipExclusionRadius(units::quantity<unit::length> exclusionRadius)
+void OffLatticeSproutingRule<DIM>::SetTipExclusionRadius(QLength exclusionRadius)
 {
     this->mTipExclusionRadius = exclusionRadius;
 }

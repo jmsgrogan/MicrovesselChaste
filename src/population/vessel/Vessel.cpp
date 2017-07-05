@@ -378,8 +378,8 @@ std::shared_ptr<VesselNode<DIM> > Vessel<DIM>::DivideSegment(const DimensionalCh
 
     // The node's data is averaged from the original segments's nodes
     // Get the closest node
-    units::quantity<unit::length> distance0 = pVesselSegment->GetNode(0)->GetDistance(location);
-    units::quantity<unit::length> distance1 = pVesselSegment->GetNode(1)->GetDistance(location);
+    QLength distance0 = pVesselSegment->GetNode(0)->GetDistance(location);
+    QLength distance1 = pVesselSegment->GetNode(1)->GetDistance(location);
     unsigned closest_index;
 
     if (distance0 <= distance1)
@@ -545,10 +545,10 @@ std::map<std::string, double> Vessel<DIM>::GetOutputData()
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> Vessel<DIM>::GetClosestEndNodeDistance(const DimensionalChastePoint<DIM>& rLocation)
+QLength Vessel<DIM>::GetClosestEndNodeDistance(const DimensionalChastePoint<DIM>& rLocation)
 {
-    units::quantity<unit::length> distance_1 = this->GetStartNode()->GetDistance(rLocation);
-    units::quantity<unit::length> distance_2 = this->GetEndNode()->GetDistance(rLocation);
+    QLength distance_1 = this->GetStartNode()->GetDistance(rLocation);
+    QLength distance_2 = this->GetEndNode()->GetDistance(rLocation);
     if(distance_1 > distance_2)
     {
         return distance_2;
@@ -560,13 +560,13 @@ units::quantity<unit::length> Vessel<DIM>::GetClosestEndNodeDistance(const Dimen
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> Vessel<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation) const
+QLength Vessel<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation) const
 {
     // Get the distance to the nearest segment in the vessel
-    units::quantity<unit::length> nearest_distance = DBL_MAX * unit::metres;
+    QLength nearest_distance = DBL_MAX * unit::metres;
     for(unsigned idx=0; idx<mSegments.size(); idx++)
     {
-        units::quantity<unit::length> seg_distance = mSegments[idx]->GetDistance(rLocation);
+        QLength seg_distance = mSegments[idx]->GetDistance(rLocation);
         if(seg_distance < nearest_distance)
         {
             nearest_distance = seg_distance;
@@ -635,9 +635,9 @@ std::shared_ptr<VesselNode<DIM> > Vessel<DIM>::GetNodeAtOppositeEnd(
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> Vessel<DIM>::GetLength() const
+QLength Vessel<DIM>::GetLength() const
 {
-    units::quantity<unit::length> length = 0.0 * unit::metres;
+    QLength length = 0.0 * unit::metres;
     for (unsigned i = 0; i < mSegments.size(); i++)
     {
         length += mSegments[i]->GetLength();
@@ -646,9 +646,9 @@ units::quantity<unit::length> Vessel<DIM>::GetLength() const
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> Vessel<DIM>::GetRadius() const
+QLength Vessel<DIM>::GetRadius() const
 {
-    units::quantity<unit::length> radius = 0.0 * unit::metres;
+    QLength radius = 0.0 * unit::metres;
     for (unsigned i = 0; i < mSegments.size(); i++)
     {
         radius += mSegments[i]->GetRadius();
@@ -802,7 +802,7 @@ void Vessel<DIM>::SetFlowProperties(const VesselFlowProperties<DIM> & rFlowPrope
 }
 
 template<unsigned DIM>
-void Vessel<DIM>::SetRadius(units::quantity<unit::length> radius)
+void Vessel<DIM>::SetRadius(QLength radius)
 {
     for (unsigned i = 0; i < mSegments.size(); i++)
     {

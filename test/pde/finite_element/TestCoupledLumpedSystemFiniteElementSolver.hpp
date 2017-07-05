@@ -160,7 +160,7 @@ public:
                 std::vector<units::quantity<unit::concentration> > solution = p_solver->GetConcentrations(p_sample_points);
                 for(unsigned jdx=0; jdx<11; jdx++)
                 {
-                    units::quantity<unit::length> x = double(jdx)*10.0*unit::metres;
+                    QLength x = double(jdx)*10.0*unit::metres;
                     double x_nondim = x/(1.0*unit::metres);
                     double c_analytical_nondim = SolveRobinBoundary(x_nondim, time, diff_nondim, perm_nondim, conc_nondim);
                     double c_numerical_nondim = solution[jdx]/(1.0*unit::mole_per_metre_cubed);
@@ -174,16 +174,16 @@ public:
     {
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestCoupledLumpedSystemFiniteElementSolver/Circle"));
 
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         units::quantity<unit::time> reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
 
-        units::quantity<unit::length> radius(1300.0 * unit::microns);
-        units::quantity<unit::length> cylinder_radius(300.0*unit::microns);
-        units::quantity<unit::length> pellet_spacing(700.0 * unit::microns);
-        units::quantity<unit::length> delta = pellet_spacing-radius+cylinder_radius;
+        QLength radius(1300.0 * unit::microns);
+        QLength cylinder_radius(300.0*unit::microns);
+        QLength pellet_spacing(700.0 * unit::microns);
+        QLength delta = pellet_spacing-radius+cylinder_radius;
 
         boost::shared_ptr<Part<2> > p_domain = Part<2> ::Create();
         p_domain->AddCircle(radius, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
@@ -241,8 +241,8 @@ public:
         solver.Solve();
 
         vtkSmartPointer<vtkPoints> p_sample_points = vtkSmartPointer<vtkPoints>::New();
-        units::quantity<unit::length> cell_spacing(40.0*unit::microns);
-        units::quantity<unit::length> sampling_radius = radius-0.2e-6*unit::metres;
+        QLength cell_spacing(40.0*unit::microns);
+        QLength sampling_radius = radius-0.2e-6*unit::metres;
         unsigned num_cells = cell_spacing/(2.0*M_PI*sampling_radius) +1u;
         double sweep_angle = 2.0*M_PI/num_cells;
 
@@ -259,15 +259,15 @@ public:
     {
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestCoupledLumpedSystemFiniteElementSolver/Sphere"));
 
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         units::quantity<unit::time> reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
 
         MappableGridGenerator<3> hemisphere_generator;
-        units::quantity<unit::length> radius(1400.0 * unit::microns);
-        units::quantity<unit::length> thickness(100.0 * unit::microns);
+        QLength radius(1400.0 * unit::microns);
+        QLength thickness(100.0 * unit::microns);
         unsigned num_divisions_x = 20;
         unsigned num_divisions_y = 20;
         double azimuth_angle = 1.0 * M_PI;
@@ -281,8 +281,8 @@ public:
         p_domain->Write(p_handler->GetOutputDirectoryFullPath()+"cornea.vtp", GeometryFormat::VTP);
 
         boost::shared_ptr<Part<3> > p_vegf_domain = Part<3> ::Create();
-        units::quantity<unit::length> cylinder_radius(300.0*unit::microns);
-        units::quantity<unit::length> cylinder_height(40.0*unit::microns);
+        QLength cylinder_radius(300.0*unit::microns);
+        QLength cylinder_height(40.0*unit::microns);
         DimensionalChastePoint<3> pellet_base(0.0, 0.0, 1305.0);
         DimensionalChastePoint<3> pellet_centre(0.0, 0.0, 1325.0);
         p_vegf_domain->AddCylinder(cylinder_radius, cylinder_height, pellet_base);

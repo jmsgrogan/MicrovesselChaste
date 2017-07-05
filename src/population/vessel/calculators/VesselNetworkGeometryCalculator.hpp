@@ -73,7 +73,7 @@ public:
      * @param rLocation the probe point
      * @return the distance to the node
      */
-    static units::quantity<unit::length> GetDistanceToNearestNode(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
+    static QLength GetDistanceToNearestNode(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
             const DimensionalChastePoint<DIM>& rLocation);
 
     /**
@@ -97,7 +97,7 @@ public:
      * @param pSegment the probe segment
      * @return the segment nearest to the specified segment and the distance to it
      */
-    static std::pair<std::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > GetNearestSegment(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
+    static std::pair<std::shared_ptr<VesselSegment<DIM> >, QLength > GetNearestSegment(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
             std::shared_ptr<VesselSegment<DIM> > pSegment);
 
     /**
@@ -110,11 +110,11 @@ public:
      * @param radius an optional search radius, providing one significantly speeds up the search.
      * @return the distance to the nearest segment. Large if none is found, check pEmptySegment instead.
      */
-    static units::quantity<unit::length> GetNearestSegment(std::shared_ptr<VesselNetwork<DIM> > pNetwork, std::shared_ptr<VesselNode<DIM> > pNode,
+    static QLength GetNearestSegment(std::shared_ptr<VesselNetwork<DIM> > pNetwork, std::shared_ptr<VesselNode<DIM> > pNode,
             std::shared_ptr<VesselSegment<DIM> >& pEmptySegment,
-            bool sameVessel = true, units::quantity<unit::length> radius = 0.0*unit::metres);
+            bool sameVessel = true, QLength radius = 0.0*unit::metres);
 
-    static units::quantity<unit::length> GetNearestSegmentNonVtk(std::shared_ptr<VesselNetwork<DIM> > pNetwork, std::shared_ptr<VesselNode<DIM> > pNode,
+    static QLength GetNearestSegmentNonVtk(std::shared_ptr<VesselNetwork<DIM> > pNetwork, std::shared_ptr<VesselNode<DIM> > pNode,
             std::shared_ptr<VesselSegment<DIM> >& pEmptySegment, bool sameVessel = true);
 
     /**
@@ -122,7 +122,7 @@ public:
      * @param rLocation the probe location
      * @return the segment nearest to the specified segment and the distance to it
      */
-    static std::pair<std::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > GetNearestSegment(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
+    static std::pair<std::shared_ptr<VesselSegment<DIM> >, QLength > GetNearestSegment(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
             const DimensionalChastePoint<DIM>& rLocation);
 
     /**
@@ -137,13 +137,13 @@ public:
      * Get the intercapillary distance using a 2d measure
      * @return
      */
-    static std::vector<units::quantity<unit::length> > GetInterCapillaryDistances(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    static std::vector<QLength > GetInterCapillaryDistances(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Return the total length of the network
      * @return the total length of the network
      */
-    static units::quantity<unit::length> GetTotalLength(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    static QLength GetTotalLength(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Return the total volume of the network
@@ -161,13 +161,13 @@ public:
      * Return the average distance between segments
      * @return the average distance between segments
      */
-    static units::quantity<unit::length> GetAverageInterSegmentDistance(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    static QLength GetAverageInterSegmentDistance(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Return the average vessel length
      * @return the average vessel length
      */
-    static units::quantity<unit::length> GetAverageVesselLength(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    static QLength GetAverageVesselLength(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Return a histogram of vessel length distributions
@@ -193,7 +193,7 @@ public:
      * @return the nodes in the sphere
      */
     static std::vector<std::shared_ptr<VesselNode<DIM> > > GetNodesInSphere(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-            const DimensionalChastePoint<DIM>&  rCentre, units::quantity<unit::length>  radius);
+            const DimensionalChastePoint<DIM>&  rCentre, QLength  radius);
 
     /**
      * Return the extents of the vessel network in the form ((xmin, xmax), (ymin, ymax), (zmin, zmax))

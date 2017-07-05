@@ -248,7 +248,7 @@ public:
      * @param cellPopulationReferenceConcentration the concentration scale for the cell population
      */
     void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
-                           units::quantity<unit::length> cellPopulationReferenceLength,
+                           QLength cellPopulationReferenceLength,
                            units::quantity<unit::concentration> cellPopulationReferenceConcentration);
 
     /**

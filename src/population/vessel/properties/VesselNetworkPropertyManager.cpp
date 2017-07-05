@@ -59,7 +59,7 @@ std::shared_ptr<VesselNetworkPropertyManager<DIM> > VesselNetworkPropertyManager
 
 template <unsigned DIM>
 void VesselNetworkPropertyManager<DIM>::AssignInflows(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-        DimensionalChastePoint<DIM> location, units::quantity<unit::length> searchRadius)
+        DimensionalChastePoint<DIM> location, QLength searchRadius)
 {
     if(pNetwork->GetNodes().size()>0)
     {
@@ -74,7 +74,7 @@ void VesselNetworkPropertyManager<DIM>::AssignInflows(std::shared_ptr<VesselNetw
 
 template <unsigned DIM>
 void VesselNetworkPropertyManager<DIM>::AssignOutflows(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-        DimensionalChastePoint<DIM> location, units::quantity<unit::length> searchRadius)
+        DimensionalChastePoint<DIM> location, QLength searchRadius)
 {
     if(pNetwork->GetNodes().size()>0)
     {
@@ -133,7 +133,7 @@ void VesselNetworkPropertyManager<DIM>::SetNodeRadiiFromSegments(std::shared_ptr
     std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
     for(unsigned idx=0; idx<nodes.size(); idx++)
     {
-        units::quantity<unit::length> av_radius = 0.0 * unit::metres;
+        QLength av_radius = 0.0 * unit::metres;
         for(unsigned jdx=0; jdx<nodes[idx]->GetNumberOfSegments(); jdx++)
         {
             av_radius += nodes[idx]->GetSegment(jdx)->GetRadius();
@@ -192,7 +192,7 @@ void VesselNetworkPropertyManager<DIM>::SetSegmentProperties(std::shared_ptr<Ves
 
 template <unsigned DIM>
 void VesselNetworkPropertyManager<DIM>::SetNodeRadii(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-        units::quantity<unit::length> radius)
+        QLength radius)
 {
     std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
 
@@ -204,7 +204,7 @@ void VesselNetworkPropertyManager<DIM>::SetNodeRadii(std::shared_ptr<VesselNetwo
 
 template <unsigned DIM>
 void VesselNetworkPropertyManager<DIM>::SetSegmentRadii(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-        units::quantity<unit::length> radius)
+        QLength radius)
 {
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
 

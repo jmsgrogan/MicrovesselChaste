@@ -178,8 +178,8 @@ void AlarconHaematocritSolver<DIM>::Calculate()
                     }
 
                     // There is a bifurcation, apply a haematocrit splitting rule
-                    units::quantity<unit::length> my_radius = vessels[idx]->GetRadius();
-                    units::quantity<unit::length> competitor_radius = competitor_vessels[0]->GetRadius();
+                    QLength my_radius = vessels[idx]->GetRadius();
+                    QLength competitor_radius = competitor_vessels[0]->GetRadius();
                     units::quantity<unit::velocity> my_velocity = units::fabs(flow_rate)/(M_PI * my_radius * my_radius);
                     units::quantity<unit::velocity> competitor_velocity = units::fabs(competitor_vessels[0]->GetFlowProperties()->GetFlowRate())/(M_PI * competitor_radius * competitor_radius);
 

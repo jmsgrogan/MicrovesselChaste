@@ -66,7 +66,7 @@ protected:
     /**
      * The spacing between grid points
      */
-    units::quantity<unit::length> mSpacing;
+    QLength mSpacing;
 
     /**
      * The number of grid points in each direction
@@ -127,7 +127,7 @@ public:
      * @param pPart the part from which to get the bounding box
      * @param gridSize the grid spacing
      */
-    void GenerateFromPart(std::shared_ptr<Part<DIM> > pPart, units::quantity<unit::length> gridSize);
+    void GenerateFromPart(std::shared_ptr<Part<DIM> > pPart, QLength gridSize);
 
     /**
      * Return the distributed vector factory
@@ -210,7 +210,7 @@ public:
      *
      * @return the grid spacing
      */
-    units::quantity<unit::length> GetSpacing();
+    QLength GetSpacing();
 
     /**
      * The bounding box for the grid point. In 2D the z bounds are +1 and -1 to
@@ -283,7 +283,7 @@ public:
      * @param spacing the grid spacing
      * @param updateVtk update the vtk representation at this point
      */
-    void SetSpacing(units::quantity<unit::length> spacing);
+    void SetSpacing(QLength spacing);
 
     /**
      * Set the internal vtk representation of the grid

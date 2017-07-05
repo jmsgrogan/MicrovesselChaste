@@ -131,7 +131,7 @@ public:
         vessel_network.MergeCoincidentNodes();
 
         // Move the network
-        units::quantity<unit::length> reference_length(1.0*unit::microns);
+        QLength reference_length(1.0*unit::microns);
         DimensionalChastePoint<3> translation_vector(0.0, 2.0, 0.0, reference_length);
         vessel_network.Translate(translation_vector);
         TS_ASSERT_DELTA(vessel_network.GetVessels()[0]->GetSegments()[0]->GetNode(0)->rGetLocation().GetLocation(reference_length)[0], 0.0, 1.e-6);
@@ -193,7 +193,7 @@ public:
          TS_ASSERT_EQUALS(vessel_network.GetNumberOfNodes(), 2u);
 
          // Do the divide
-         units::quantity<unit::length> reference_length(1.0*unit::microns);
+         QLength reference_length(1.0*unit::microns);
          DimensionalChastePoint<3> location(0.66, 0.0, 0.0, reference_length);
          vessel_network.DivideVessel(vessel_network.GetVessels()[0], location);
          TS_ASSERT_EQUALS(vessel_network.GetNumberOfVessels(), 2u);
@@ -221,7 +221,7 @@ public:
         TS_ASSERT_EQUALS(p_vascular_network.GetNumberOfNodes(), 5u);
 
         // Do the divide
-        units::quantity<unit::length> reference_length(1.0*unit::microns);
+        QLength reference_length(1.0*unit::microns);
         DimensionalChastePoint<3> location(3.0, 0.0, 0.0, reference_length);
         p_vascular_network.DivideVessel(p_vascular_network.GetVessels()[0], location);
         TS_ASSERT_EQUALS(p_vascular_network.GetNumberOfVessels(), 2u);
@@ -266,7 +266,7 @@ public:
         p_vessel_network->AddVessel(p_vessel1);
 
         // form sprout
-        units::quantity<unit::length> reference_length(1.0*unit::microns);
+        QLength reference_length(1.0*unit::microns);
         boost::shared_ptr<VesselNode<2> >  sproutBaseLocation = VesselNode<2>::Create(1.0, 0.0, 0.0, reference_length);
         DimensionalChastePoint<2> sproutTipLocation(0.0, 1.0, 0.0, reference_length);
         boost::shared_ptr<Vessel<2> > newSprout = p_vessel_network->FormSprout(sproutBaseLocation, sproutTipLocation);
@@ -344,7 +344,7 @@ public:
         // Add some sprouts
         for(unsigned idx=1; idx<2; idx++)
         {
-            units::quantity<unit::length> reference_length(1.0*unit::microns);
+            QLength reference_length(1.0*unit::microns);
             boost::shared_ptr<VesselNode<3> > base_location = VesselNode<3>::Create(double(idx)*10.0, 0.0, 0.0, reference_length);
             DimensionalChastePoint<3> tip_location(double(idx)*10.0, 10.0, 0.0, reference_length);
             p_network->FormSprout(base_location, tip_location);
@@ -378,7 +378,7 @@ public:
         p_vessel_network->AddVessels(vessels);
 
         boost::shared_ptr<VesselSegment<2> > p_nearest_segment;
-        units::quantity<unit::length> distance = VesselNetworkGeometryCalculator<2>::GetNearestSegment(p_vessel_network, nodes[3], p_nearest_segment, false);
+        QLength distance = VesselNetworkGeometryCalculator<2>::GetNearestSegment(p_vessel_network, nodes[3], p_nearest_segment, false);
         TS_ASSERT(p_nearest_segment);
         TS_ASSERT_DELTA(double(distance/(1.e-6*unit::metres)), 5.0, 1.e-6);
     }

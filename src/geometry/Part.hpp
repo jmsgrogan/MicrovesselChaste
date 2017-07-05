@@ -108,7 +108,7 @@ class Part
     /**
      * The reference length scale
      */
-    units::quantity<unit::length> mReferenceLength;
+    QLength mReferenceLength;
 
     /**
      * Is the vtk representation up-to-date
@@ -186,7 +186,7 @@ public:
      * @param numSegments the number of linear segments the circle is described with
      * @return polygon corresponding to the circle, useful for further operations, such as extrusion.
      */
-    std::shared_ptr<Polygon<DIM> > AddCircle(units::quantity<unit::length> radius,
+    std::shared_ptr<Polygon<DIM> > AddCircle(QLength radius,
                                          DimensionalChastePoint<DIM> centre, unsigned numSegments = 24);
 
     /**
@@ -196,7 +196,7 @@ public:
      * @param centre the centre of the base
      * @param numSegments the number of line segments the base is described with
      */
-    void AddCylinder(units::quantity<unit::length> radius, units::quantity<unit::length> depth,
+    void AddCylinder(QLength radius, QLength depth,
             DimensionalChastePoint<DIM> centre, unsigned numSegments = 24);
 
     /**
@@ -206,9 +206,9 @@ public:
      * @param sizeZ the dimension in z
      * @param origin the bottom, left, front corner
      */
-    void AddCuboid(units::quantity<unit::length> sizeX,
-                   units::quantity<unit::length> sizeY,
-                   units::quantity<unit::length> sizeZ,
+    void AddCuboid(QLength sizeX,
+                   QLength sizeY,
+                   QLength sizeZ,
                    DimensionalChastePoint<DIM> origin);
 
     /**
@@ -254,8 +254,8 @@ public:
      * @param origin the bottom left corner
      * @return the new polygon, useful for further operations, such as extrusion.
      */
-    std::shared_ptr<Polygon<DIM> > AddRectangle(units::quantity<unit::length> sizeX,
-                                            units::quantity<unit::length> sizeY,
+    std::shared_ptr<Polygon<DIM> > AddRectangle(QLength sizeX,
+                                            QLength sizeY,
                                             DimensionalChastePoint<DIM> origin);
 
     /**
@@ -285,13 +285,13 @@ public:
      * @param pPolygon the polygon to extrude
      * @param distance the extrusion distance
      */
-    void Extrude(std::shared_ptr<Polygon<DIM> > pPolygon, units::quantity<unit::length> distance);
+    void Extrude(std::shared_ptr<Polygon<DIM> > pPolygon, QLength distance);
 
     /**
      * Return the bounding box
      * @return the bounding box of the part (xmin, xmax, ymin, ymax, zmin, zmax)
      */
-    std::vector<units::quantity<unit::length> > GetBoundingBox();
+    std::vector<QLength > GetBoundingBox();
 
     /**
      * Return the indices of the grid that are inside the part
@@ -302,7 +302,7 @@ public:
      * @return a vector of grid indices
      */
     std::vector<unsigned> GetContainingGridIndices(unsigned num_x, unsigned num_y,
-            unsigned num_z, units::quantity<unit::length> spacing);
+            unsigned num_z, QLength spacing);
 
     /**
      * Return the hole marker locations
@@ -351,7 +351,7 @@ public:
      * Return the reference length scale
      * @return the reference length scale
      */
-    units::quantity<unit::length> GetReferenceLengthScale();
+    QLength GetReferenceLengthScale();
 
     /**
      * Return the segment indexes, used for 2D meshing
@@ -423,7 +423,7 @@ public:
      * Set the reference length scale
      * @param referenceLength the reference length scale
      */
-    void SetReferenceLengthScale(units::quantity<unit::length> referenceLength);
+    void SetReferenceLengthScale(QLength referenceLength);
 
     /**
      * Move the part along the translation vector

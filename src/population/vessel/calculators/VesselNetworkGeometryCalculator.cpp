@@ -58,15 +58,15 @@ template <unsigned DIM>
 std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > VesselNetworkGeometryCalculator<DIM>::GetExtents(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
         bool useRadii)
 {
-    units::quantity<unit::length> x_max = -DBL_MAX*unit::metres;
-    units::quantity<unit::length> y_max = -DBL_MAX*unit::metres;
-    units::quantity<unit::length> z_max = -DBL_MAX*unit::metres;
+    QLength x_max = -DBL_MAX*unit::metres;
+    QLength y_max = -DBL_MAX*unit::metres;
+    QLength z_max = -DBL_MAX*unit::metres;
 
     std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
     typename std::vector<std::shared_ptr<VesselNode<DIM> > >::iterator it;
     for(it = nodes.begin(); it != nodes.end(); it++)
     {
-        units::quantity<unit::length> length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
+        QLength length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
         c_vector<double, DIM> location = (*it)->rGetLocation().GetLocation(length_scale);
         if(location[0]*length_scale > x_max)
         {
@@ -97,12 +97,12 @@ std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > VesselNetwo
         }
     }
 
-    units::quantity<unit::length> x_min = x_max;
-    units::quantity<unit::length> y_min = y_max;
-    units::quantity<unit::length> z_min = z_max;
+    QLength x_min = x_max;
+    QLength y_min = y_max;
+    QLength z_min = z_max;
     for(it = nodes.begin(); it != nodes.end(); it++)
     {
-        units::quantity<unit::length> length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
+        QLength length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
         c_vector<double, DIM> location = (*it)->rGetLocation().GetLocation(length_scale);
         if(location[0]*length_scale < x_min)
         {
@@ -133,7 +133,7 @@ std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > VesselNetwo
         }
     }
 
-    units::quantity<unit::length> base_length = BaseUnits::Instance()->GetReferenceLengthScale();
+    QLength base_length = BaseUnits::Instance()->GetReferenceLengthScale();
     std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > bbox(DimensionalChastePoint<DIM>(x_min/base_length, y_min/base_length, z_min/base_length, base_length),
                                                                               DimensionalChastePoint<DIM>(x_max/base_length, y_max/base_length, z_max/base_length, base_length));
     return bbox;
@@ -141,7 +141,7 @@ std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > VesselNetwo
 
 template<unsigned DIM>
 std::vector<std::shared_ptr<VesselNode<DIM> > > VesselNetworkGeometryCalculator<DIM>::GetNodesInSphere(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-        const DimensionalChastePoint<DIM>&  rCentre, units::quantity<unit::length> radius)
+        const DimensionalChastePoint<DIM>&  rCentre, QLength radius)
 {
     std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
     std::vector<std::shared_ptr<VesselNode<DIM> > > inside_nodes;
@@ -163,17 +163,17 @@ std::shared_ptr<VesselNetworkGeometryCalculator<DIM> > VesselNetworkGeometryCalc
 }
 
 template <unsigned DIM>
-units::quantity<unit::length> VesselNetworkGeometryCalculator<DIM>::GetDistanceToNearestNode(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
+QLength VesselNetworkGeometryCalculator<DIM>::GetDistanceToNearestNode(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
         const DimensionalChastePoint<DIM>& rLocation)
 {
     std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
     std::shared_ptr<VesselNode<DIM> > nearest_node;
-    units::quantity<unit::length> min_distance = DBL_MAX*unit::metres;
+    QLength min_distance = DBL_MAX*unit::metres;
 
     typename std::vector<std::shared_ptr<VesselNode<DIM> > >::iterator node_iter;
     for(node_iter = nodes.begin(); node_iter != nodes.end(); node_iter++)
     {
-        units::quantity<unit::length> node_distance = (*node_iter)->GetDistance(rLocation);
+        QLength node_distance = (*node_iter)->GetDistance(rLocation);
         if (node_distance < min_distance)
         {
             min_distance = node_distance;
@@ -189,14 +189,14 @@ std::shared_ptr<VesselNode<DIM> > VesselNetworkGeometryCalculator<DIM>::GetNeare
 {
     std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
     std::shared_ptr<VesselNode<DIM> > nearest_node;
-    units::quantity<unit::length> min_distance = DBL_MAX*unit::metres;
+    QLength min_distance = DBL_MAX*unit::metres;
 
     typename std::vector<std::shared_ptr<VesselNode<DIM> > >::iterator node_iter;
     for(node_iter = nodes.begin(); node_iter != nodes.end(); node_iter++)
     {
         if((*node_iter) != pInputNode)
         {
-            units::quantity<unit::length> node_distance = (*node_iter)->GetDistance(pInputNode->rGetLocation());
+            QLength node_distance = (*node_iter)->GetDistance(pInputNode->rGetLocation());
             if (node_distance < min_distance)
             {
                 min_distance = node_distance;
@@ -213,12 +213,12 @@ std::shared_ptr<VesselNode<DIM> > VesselNetworkGeometryCalculator<DIM>::GetNeare
 {
     std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
     std::shared_ptr<VesselNode<DIM> > nearest_node;
-    units::quantity<unit::length> min_distance = DBL_MAX*unit::metres;
+    QLength min_distance = DBL_MAX*unit::metres;
 
     typename std::vector<std::shared_ptr<VesselNode<DIM> > >::iterator node_iter;
     for(node_iter = nodes.begin(); node_iter != nodes.end(); node_iter++)
     {
-        units::quantity<unit::length> node_distance = (*node_iter)->GetDistance(location);
+        QLength node_distance = (*node_iter)->GetDistance(location);
         if (node_distance < min_distance)
         {
             min_distance = node_distance;
@@ -230,12 +230,12 @@ std::shared_ptr<VesselNode<DIM> > VesselNetworkGeometryCalculator<DIM>::GetNeare
 }
 
 template <unsigned DIM>
-std::pair<std::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > VesselNetworkGeometryCalculator<DIM>::GetNearestSegment(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
+std::pair<std::shared_ptr<VesselSegment<DIM> >, QLength > VesselNetworkGeometryCalculator<DIM>::GetNearestSegment(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
         std::shared_ptr<VesselSegment<DIM> > pSegment)
 {
     std::shared_ptr<VesselSegment<DIM> > nearest_segment;
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
-    units::quantity<unit::length> length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
+    QLength length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
 
     double min_distance = DBL_MAX;
     typename std::vector<std::shared_ptr<VesselSegment<DIM> > >::iterator segment_iter;
@@ -334,25 +334,25 @@ std::pair<std::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > 
         }
 
     }
-    std::pair<std::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > return_pair =
-            std::pair<std::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> >(nearest_segment, min_distance * length_scale);
+    std::pair<std::shared_ptr<VesselSegment<DIM> >, QLength > return_pair =
+            std::pair<std::shared_ptr<VesselSegment<DIM> >, QLength >(nearest_segment, min_distance * length_scale);
     return return_pair;
 }
 
 template <unsigned DIM>
-units::quantity<unit::length> VesselNetworkGeometryCalculator<DIM>::GetNearestSegmentNonVtk(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
+QLength VesselNetworkGeometryCalculator<DIM>::GetNearestSegmentNonVtk(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
         std::shared_ptr<VesselNode<DIM> > pNode,
         std::shared_ptr<VesselSegment<DIM> >& pEmptySegment, bool sameVessel)
 {
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
 
-    units::quantity<unit::length>  min_distance = DBL_MAX * unit::metres;
+    QLength  min_distance = DBL_MAX * unit::metres;
     typename std::vector<std::shared_ptr<VesselSegment<DIM> > >::iterator segment_iter;
 
     DimensionalChastePoint<DIM> location = pNode->rGetLocation();
     for(segment_iter = segments.begin(); segment_iter != segments.end(); segment_iter++)
     {
-        units::quantity<unit::length>  segment_distance = (*segment_iter)->GetDistance(location);
+        QLength  segment_distance = (*segment_iter)->GetDistance(location);
         bool skip = (pNode->IsAttachedTo(*segment_iter) and !sameVessel);
         if (segment_distance < min_distance and !skip)
         {
@@ -364,12 +364,12 @@ units::quantity<unit::length> VesselNetworkGeometryCalculator<DIM>::GetNearestSe
 }
 
 template <unsigned DIM>
-units::quantity<unit::length> VesselNetworkGeometryCalculator<DIM>::GetNearestSegment(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
+QLength VesselNetworkGeometryCalculator<DIM>::GetNearestSegment(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
         std::shared_ptr<VesselNode<DIM> > pNode,
         std::shared_ptr<VesselSegment<DIM> >& pEmptySegment,
-        bool sameVessel, units::quantity<unit::length> radius)
+        bool sameVessel, QLength radius)
 {
-    units::quantity<unit::length> length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
+    QLength length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
 
     c_vector<double, DIM> loc = pNode->rGetLocation().GetLocation(length_scale);
     vtkSmartPointer<vtkIdList> p_id_list = vtkSmartPointer<vtkIdList>::New();
@@ -451,30 +451,30 @@ units::quantity<unit::length> VesselNetworkGeometryCalculator<DIM>::GetNearestSe
         p_close_cell_locator->FindClosestPoint(&loc_3d[0], closest, cellId, subId, distance_sq);
     }
     pEmptySegment = pNetwork->GetVesselSegment(local_global_map[cellId]);
-    units::quantity<unit::length> distance = std::sqrt(distance_sq)*length_scale;
+    QLength distance = std::sqrt(distance_sq)*length_scale;
     return distance;
 }
 
 template <unsigned DIM>
-std::pair<std::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> >  VesselNetworkGeometryCalculator<DIM>::GetNearestSegment(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
+std::pair<std::shared_ptr<VesselSegment<DIM> >, QLength >  VesselNetworkGeometryCalculator<DIM>::GetNearestSegment(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
         const DimensionalChastePoint<DIM>& location)
 {
     std::shared_ptr<VesselSegment<DIM> > nearest_segment;
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
 
-    units::quantity<unit::length>  min_distance = DBL_MAX * unit::metres;
+    QLength  min_distance = DBL_MAX * unit::metres;
     typename std::vector<std::shared_ptr<VesselSegment<DIM> > >::iterator segment_iter;
     for(segment_iter = segments.begin(); segment_iter != segments.end(); segment_iter++)
     {
-        units::quantity<unit::length>  segment_distance = (*segment_iter)->GetDistance(location);
+        QLength  segment_distance = (*segment_iter)->GetDistance(location);
         if (segment_distance < min_distance)
         {
             min_distance = segment_distance;
             nearest_segment = (*segment_iter) ;
         }
     }
-    std::pair<std::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > return_pair =
-            std::pair<std::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> >(nearest_segment, min_distance);
+    std::pair<std::shared_ptr<VesselSegment<DIM> >, QLength > return_pair =
+            std::pair<std::shared_ptr<VesselSegment<DIM> >, QLength >(nearest_segment, min_distance);
     return return_pair;
 }
 
@@ -486,18 +486,18 @@ std::shared_ptr<Vessel<DIM> > VesselNetworkGeometryCalculator<DIM>::GetNearestVe
 }
 
 template <unsigned DIM>
-std::vector<units::quantity<unit::length> > VesselNetworkGeometryCalculator<DIM>::GetInterCapillaryDistances(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
+std::vector<QLength > VesselNetworkGeometryCalculator<DIM>::GetInterCapillaryDistances(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     std::vector<std::shared_ptr<Vessel<DIM> > > vessels = pNetwork->GetVessels();
-    std::vector<units::quantity<unit::length> > distances;
+    std::vector<QLength > distances;
     for(unsigned idx=0; idx<vessels.size(); idx++)
     {
-        units::quantity<unit::length> min_distance = 1.e6 * unit::metres;
+        QLength min_distance = 1.e6 * unit::metres;
         for(unsigned jdx=0; jdx<vessels.size(); jdx++)
         {
             if(vessels[idx]!=vessels[jdx])
             {
-                units::quantity<unit::length> distance = vessels[idx]->GetStartNode()->GetDistance(vessels[jdx]->GetStartNode()->rGetLocation());
+                QLength distance = vessels[idx]->GetStartNode()->GetDistance(vessels[jdx]->GetStartNode()->rGetLocation());
                 if(distance < min_distance)
                 {
                     min_distance = distance;
@@ -510,10 +510,10 @@ std::vector<units::quantity<unit::length> > VesselNetworkGeometryCalculator<DIM>
 }
 
 template <unsigned DIM>
-units::quantity<unit::length> VesselNetworkGeometryCalculator<DIM>::GetTotalLength(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
+QLength VesselNetworkGeometryCalculator<DIM>::GetTotalLength(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     std::vector<std::shared_ptr<Vessel<DIM> > > vessels = pNetwork->GetVessels();
-    units::quantity<unit::length>  length = 0.0* unit::metres;
+    QLength  length = 0.0* unit::metres;
     for(unsigned idx=0; idx<vessels.size(); idx++)
     {
         length += vessels[idx]->GetLength();
@@ -546,7 +546,7 @@ units::quantity<unit::area> VesselNetworkGeometryCalculator<DIM>::GetTotalSurfac
 }
 
 template <unsigned DIM>
-units::quantity<unit::length>  VesselNetworkGeometryCalculator<DIM>::GetAverageInterSegmentDistance(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
+QLength  VesselNetworkGeometryCalculator<DIM>::GetAverageInterSegmentDistance(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
 
@@ -558,15 +558,15 @@ units::quantity<unit::length>  VesselNetworkGeometryCalculator<DIM>::GetAverageI
     }
 
     // get intersegment distances
-    units::quantity<unit::length>  av_dist = 0.0 * unit::metres;
+    QLength  av_dist = 0.0 * unit::metres;
     for(unsigned idx=0; idx<segments.size(); idx++)
     {
-        units::quantity<unit::length> min_dist = 1.e6 * unit::metres;
+        QLength min_dist = 1.e6 * unit::metres;
         for(unsigned jdx=0; jdx<segments.size(); jdx++)
         {
             if(segments[idx] != segments[jdx] && segments[idx]->GetVessel() != segments[jdx]->GetVessel())
             {
-                units::quantity<unit::length> dist = GetDistance(midpoints[idx], midpoints[jdx]);
+                QLength dist = GetDistance(midpoints[idx], midpoints[jdx]);
                 if(dist < min_dist)
                 {
                     min_dist = dist;
@@ -579,7 +579,7 @@ units::quantity<unit::length>  VesselNetworkGeometryCalculator<DIM>::GetAverageI
 }
 
 template <unsigned DIM>
-units::quantity<unit::length> VesselNetworkGeometryCalculator<DIM>::GetAverageVesselLength(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
+QLength VesselNetworkGeometryCalculator<DIM>::GetAverageVesselLength(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
     return GetTotalLength(pNetwork) / double(pNetwork->GetVessels().size());
 }
@@ -627,11 +627,11 @@ bool VesselNetworkGeometryCalculator<DIM>::VesselCrossesLineSegment(std::shared_
                                                   double tolerance)
 {
     std::shared_ptr<VesselSegment<DIM> > temp_segment = VesselSegment<DIM>::Create(VesselNode<DIM>::Create(coordinate_1), VesselNode<DIM>::Create(coordinate_2));
-    std::pair<std::shared_ptr<VesselSegment<DIM> >, units::quantity<unit::length> > nearest_segment = GetNearestSegment(pNetwork, temp_segment);
+    std::pair<std::shared_ptr<VesselSegment<DIM> >, QLength > nearest_segment = GetNearestSegment(pNetwork, temp_segment);
 
     // todo a false here does not necessarily guarantee that a vessel does not cross a line segment since get nearest
     // segment only returns one segment
-    units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
+    QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
     double nearest_seg_dist = nearest_segment.second / reference_length;
     double coord1_distance = nearest_segment.first->GetDistance(coordinate_1) / reference_length;
     double coord2_distance = nearest_segment.first->GetDistance(coordinate_2) / reference_length;

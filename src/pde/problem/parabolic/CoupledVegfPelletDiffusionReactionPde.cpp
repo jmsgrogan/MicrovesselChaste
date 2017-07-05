@@ -99,7 +99,7 @@ units::quantity<unit::membrane_permeability> CoupledVegfPelletDiffusionReactionP
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::length> CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetPelletDepth()
+QLength CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetPelletDepth()
 {
     return mPelletDepth;
 }
@@ -159,7 +159,7 @@ void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetPelletVol
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetPelletDepth(units::quantity<unit::length> depth)
+void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetPelletDepth(QLength depth)
 {
     mPelletDepth = depth;
 }

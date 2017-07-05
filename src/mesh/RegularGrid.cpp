@@ -326,10 +326,10 @@ const std::vector<std::vector<unsigned> >& RegularGrid<DIM>::rGetMooreNeighbourD
 }
 
 template<unsigned DIM>
-void RegularGrid<DIM>::GenerateFromPart(std::shared_ptr<Part<DIM> > pPart, units::quantity<unit::length> gridSize)
+void RegularGrid<DIM>::GenerateFromPart(std::shared_ptr<Part<DIM> > pPart, QLength gridSize)
 {
     mSpacing = gridSize;
-    std::vector<units::quantity<unit::length> > spatial_extents = pPart->GetBoundingBox();
+    std::vector<QLength > spatial_extents = pPart->GetBoundingBox();
     double norm_x = (spatial_extents[1] - spatial_extents[0]) / gridSize;
     double norm_y = (spatial_extents[3] - spatial_extents[2]) / gridSize;
     mDimensions[0] = unsigned(boost::math::iround(norm_x))+1;
@@ -375,7 +375,7 @@ DimensionalChastePoint<DIM> RegularGrid<DIM>::GetOrigin()
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> RegularGrid<DIM>::GetSpacing()
+QLength RegularGrid<DIM>::GetSpacing()
 {
     return mSpacing;
 }
@@ -452,7 +452,7 @@ c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned gridIndex, boo
 template<unsigned DIM>
 c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsigned yIndex, unsigned zIndex, bool jiggle)
 {
-    units::quantity<unit::length> scale_factor = this->GetReferenceLengthScale();
+    QLength scale_factor = this->GetReferenceLengthScale();
     double dimensionless_spacing = GetSpacing()/scale_factor;
     double jiggle_size = 1.e-3 * dimensionless_spacing;
 
@@ -548,7 +548,7 @@ void RegularGrid<DIM>::SetOrigin(DimensionalChastePoint<DIM> origin)
 }
 
 template<unsigned DIM>
-void RegularGrid<DIM>::SetSpacing(units::quantity<unit::length> spacing)
+void RegularGrid<DIM>::SetSpacing(QLength spacing)
 {
     mSpacing = spacing;
     UpdateExtents();

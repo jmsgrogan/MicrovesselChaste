@@ -86,7 +86,7 @@ void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetReferenceConcentra
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetReferenceLength(units::quantity<unit::length> referenceLength)
+void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetReferenceLength(QLength referenceLength)
 {
     mReferenceLengthScale = referenceLength;
 }

@@ -163,7 +163,7 @@ public:
      * @param v3  the node's z-coordinate
      * @param referenceLength the reference length scale, defaults to micron
      */
-    VesselNode(double v1, double v2, double v3, units::quantity<unit::length> referenceLength);
+    VesselNode(double v1, double v2, double v3, QLength referenceLength);
 
     /**
      * Constructor.
@@ -213,7 +213,7 @@ public:
      * @param referenceLength the reference length scale
      * @return a pointer to the newly created node
      */
-    static std::shared_ptr<VesselNode<DIM> > Create(double v1, double v2, double v3, units::quantity<unit::length> referenceLength);
+    static std::shared_ptr<VesselNode<DIM> > Create(double v1, double v2, double v3, QLength referenceLength);
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
@@ -251,7 +251,7 @@ public:
      * @param rLocation the location to calculate the distance to
      * @return the distance to the location
      */
-    units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation) const;
+    QLength GetDistance(const DimensionalChastePoint<DIM>& rLocation) const;
 
     /**
      * Return the flow properties of the component
@@ -286,7 +286,7 @@ public:
      *
      * @return a ublas c_vector at the location of the node
      */
-    units::quantity<unit::length> GetReferenceLengthScale() const;
+    QLength GetReferenceLengthScale() const;
 
     /**
      * Return a pointer to the indexed vessel segment
@@ -408,7 +408,7 @@ public:
      * @param z the z location
      * @param referenceLength the reference length scale
      */
-    void SetLocation(double x, double y, double z=0.0, units::quantity<unit::length> referenceLength = 1.e-6*unit::metres);
+    void SetLocation(double x, double y, double z=0.0, QLength referenceLength = 1.e-6*unit::metres);
 
     /**
      * Set the length scale used to dimensionalize the node location as stored in mLocation.
@@ -417,7 +417,7 @@ public:
      *
      * @param lenthScale the reference length scale for node locations
      */
-    void SetReferenceLengthScale(units::quantity<unit::length> lenthScale);
+    void SetReferenceLengthScale(QLength lenthScale);
 
     /**
      * Set the global index

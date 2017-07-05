@@ -76,7 +76,7 @@ private:
     /**
      * The reference length scale for the output.
      */
-    units::quantity<unit::length> mReferenceLength;
+    QLength mReferenceLength;
 
 public:
 
@@ -124,7 +124,7 @@ public:
      *
      * @param rReferenceLength the reference length scale
      */
-    void SetReferenceLengthScale(units::quantity<unit::length> rReferenceLength);
+    void SetReferenceLengthScale(QLength rReferenceLength);
 
 };
 

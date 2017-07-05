@@ -295,7 +295,7 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        units::quantity<unit::length> vessel_length = 100.0 * 1.e-6 * unit::metres;
+        QLength vessel_length = 100.0 * 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
                 DimensionalChastePoint<3>(0.0, 0.0, 0.0));
@@ -422,13 +422,13 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         // Circle 2D
-        units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
-        units::quantity<unit::length> cornea_radius = 1300*1e-6*unit::metres;
-        units::quantity<unit::length> cornea_thickness = 100*1e-6*unit::metres;
-        units::quantity<unit::length> pellet_thickness = 80*1e-6*unit::metres;
-        units::quantity<unit::length> pellet_height = 1000*1e-6*unit::metres;
-        units::quantity<unit::length> pellet_radius = 150*1e-6*unit::metres;
-        units::quantity<unit::length> delta = pellet_height-cornea_radius+pellet_radius;
+        QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
+        QLength cornea_radius = 1300*1e-6*unit::metres;
+        QLength cornea_thickness = 100*1e-6*unit::metres;
+        QLength pellet_thickness = 80*1e-6*unit::metres;
+        QLength pellet_height = 1000*1e-6*unit::metres;
+        QLength pellet_radius = 150*1e-6*unit::metres;
+        QLength delta = pellet_height-cornea_radius+pellet_radius;
         boost::shared_ptr<Part<2> > p_domain = Part<2> ::Create();
         p_domain->AddCircle(cornea_radius, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
 

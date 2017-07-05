@@ -70,7 +70,7 @@ void LatticeBasedSproutingRule<DIM>::SetGridCalculator(std::shared_ptr<GridCalcu
 }
 
 template<unsigned DIM>
-void LatticeBasedSproutingRule<DIM>::SetTipExclusionRadius(units::quantity<unit::length> tipExclusionRadius)
+void LatticeBasedSproutingRule<DIM>::SetTipExclusionRadius(QLength tipExclusionRadius)
 {
     mTipExclusionRadius = tipExclusionRadius;
 }

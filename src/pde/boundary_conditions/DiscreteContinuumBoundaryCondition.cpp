@@ -110,7 +110,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shar
     {
         EXCEPTION("Can't cast to mesh");
     }
-    units::quantity<unit::length> length_scale = p_mesh->GetReferenceLengthScale();
+    QLength length_scale = p_mesh->GetReferenceLengthScale();
 
     if(mType == BoundaryConditionType::OUTER)
     {
@@ -211,7 +211,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shar
 template<unsigned DIM>
 std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundaryCondition<DIM>::GetValue(DimensionalChastePoint<DIM> location, double tolerance)
 {
-    units::quantity<unit::length> length_scale = location.GetReferenceLengthScale();
+    QLength length_scale = location.GetReferenceLengthScale();
     std::pair<bool, units::quantity<unit::concentration> > result(false, 0.0*unit::mole_per_metre_cubed);
     if(mType == BoundaryConditionType::POINT)
     {

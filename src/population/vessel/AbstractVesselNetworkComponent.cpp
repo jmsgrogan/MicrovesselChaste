@@ -88,7 +88,7 @@ std::vector<std::string> AbstractVesselNetworkComponent<DIM>::GetOutputDataKeys(
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> AbstractVesselNetworkComponent<DIM>::GetRadius() const
+QLength AbstractVesselNetworkComponent<DIM>::GetRadius() const
 {
     return mRadius;
 }
@@ -106,7 +106,7 @@ void AbstractVesselNetworkComponent<DIM>::SetId(unsigned id)
 }
 
 template<unsigned DIM>
-void AbstractVesselNetworkComponent<DIM>::SetRadius(units::quantity<unit::length> radius)
+void AbstractVesselNetworkComponent<DIM>::SetRadius(QLength radius)
 {
     mRadius = radius;
 }

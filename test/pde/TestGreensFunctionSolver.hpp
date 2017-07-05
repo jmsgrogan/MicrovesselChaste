@@ -54,7 +54,7 @@ public:
 
     void TestSingleVessel3d()
     {
-        units::quantity<unit::length> vessel_length = 2.0e-6*unit::metres;
+        QLength vessel_length = 2.0e-6*unit::metres;
         VesselNetworkGenerator<3> generator;
         DimensionalChastePoint<3> centre(0.5, 0.5, 0.0);
 

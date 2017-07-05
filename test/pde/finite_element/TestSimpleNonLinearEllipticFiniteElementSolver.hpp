@@ -158,7 +158,7 @@ public:
         std::vector<units::quantity<unit::concentration> > solution = solver.GetConcentrations(p_sample_points);
         for(unsigned idx=0; idx<11; idx++)
         {
-            units::quantity<unit::length> x = double(idx)*0.1*unit::metres;
+            QLength x = double(idx)*0.1*unit::metres;
             double gamma = (-consumption_rate*1.0*unit::metres*1.0*unit::metres)/(boundary_concentration*diffusivity);
             double k = half_max_concentration/boundary_concentration;
             double x_nondim = x/(1.0*unit::metres);

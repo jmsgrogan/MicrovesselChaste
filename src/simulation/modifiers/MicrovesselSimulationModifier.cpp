@@ -116,7 +116,7 @@ void MicrovesselSimulationModifier<DIM>::SetMicrovesselSolver(std::shared_ptr<Mi
 }
 
 template<unsigned DIM>
-void MicrovesselSimulationModifier<DIM>::SetCellPopulationLengthScale(units::quantity<unit::length> cellLengthScale)
+void MicrovesselSimulationModifier<DIM>::SetCellPopulationLengthScale(QLength cellLengthScale)
 {
     mCellPopulationReferenceLength = cellLengthScale;
 }

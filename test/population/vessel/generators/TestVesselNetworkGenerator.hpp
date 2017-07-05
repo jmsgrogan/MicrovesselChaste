@@ -54,8 +54,8 @@ public:
     {
         // Generate the network
         VesselNetworkGenerator<2> network_generator;
-        units::quantity<unit::length> length(10000.0*unit::microns);
-        units::quantity<unit::length> vessel_length(40.0*unit::microns);
+        QLength length(10000.0*unit::microns);
+        QLength vessel_length(40.0*unit::microns);
         Timer::Reset();
         boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(length,
                 length, vessel_length);
@@ -71,7 +71,7 @@ public:
     void TestGenerateAndWriteHexagonalNetwork() throw (Exception)
     {
         // Specify the network dimensions
-        units::quantity<unit::length> vessel_length = 5.0* 1.e-6 * unit::metres;
+        QLength vessel_length = 5.0* 1.e-6 * unit::metres;
 
         // Generate the network
         VesselNetworkGenerator<2> vascular_network_generator;
@@ -90,7 +90,7 @@ public:
     void TestGenerate3dHexagonalNetwork() throw (Exception)
     {
         // Specify the network dimensions
-        units::quantity<unit::length> vessel_length = 40.0* 1.e-6 * unit::metres;
+        QLength vessel_length = 40.0* 1.e-6 * unit::metres;
 
         // Generate the network
         VesselNetworkGenerator<3> vascular_network_generator;
@@ -110,7 +110,7 @@ public:
     {
         boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
         units::quantity<unit::per_area> target_density(1.e-4/(1.e-6 * unit::metres*1.e-6 * unit::metres));
-        units::quantity<unit::length> exclusion_distance(20.0*unit::microns);
+        QLength exclusion_distance(20.0*unit::microns);
 
         p_part->AddCuboid(1000.0* 1.e-6 * unit::metres,
                           1000.0* 1.e-6 * unit::metres,

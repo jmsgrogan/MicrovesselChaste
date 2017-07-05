@@ -121,7 +121,7 @@ std::vector<double> Owen2011MigrationRule<DIM>::GetNeighbourMovementProbabilitie
         {
             units::quantity<unit::concentration> VEGF_diff = mVegfField[neighbourIndices[jdx]] - mVegfField[gridIndex];
             units::quantity<unit::time> dt = SimulationTime::Instance()->GetTimeStep() * BaseUnits::Instance()->GetReferenceTimeScale();
-            units::quantity<unit::length> dij = pNode->rGetLocation().GetDistance(neighbour_location);
+            QLength dij = pNode->rGetLocation().GetDistance(neighbour_location);
             probability_of_moving[jdx] = ((mCellMotility * dt)/(2.0*dij*dij))*(1.0 + mCellChemotacticParameter*VEGF_diff/(2.0*mCellMotility));
             if (probability_of_moving[jdx] < 0.0)
             {

@@ -86,7 +86,7 @@ private:
     /**
      * Reference length scale
      */
-    units::quantity<unit::length> mReferenceLengthScale;
+    QLength mReferenceLengthScale;
 
     /**
      * Cancer cell carrying capacity
@@ -166,7 +166,7 @@ public:
      *
      * @param referenceLengthScale the reference length scale
      */
-    void SetReferenceLengthScale(units::quantity<unit::length> referenceLengthScale);
+    void SetReferenceLengthScale(QLength referenceLengthScale);
 
     /**
      * Set mDiffusionParameter.

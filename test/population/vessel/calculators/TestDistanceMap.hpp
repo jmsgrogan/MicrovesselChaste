@@ -65,7 +65,7 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, (output_path));
 
         // Set up the vessel network
-        units::quantity<unit::length> vessel_length = 100 * 1.e-6 * unit::metres;
+        QLength vessel_length = 100 * 1.e-6 * unit::metres;
         VesselNetworkGenerator<2> generator;
         boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length,
                 DimensionalChastePoint<2>(40.0, 0.0, 0.0, 1.e-6 * unit::metres));
@@ -98,7 +98,7 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, (output_path, false));
 
         // Set up the vessel network
-        units::quantity<unit::length> vessel_length = 100 * 1.e-6 * unit::metres;
+        QLength vessel_length = 100 * 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateBifurcationUnit(vessel_length,
                                                                                            DimensionalChastePoint<3>(0.0,

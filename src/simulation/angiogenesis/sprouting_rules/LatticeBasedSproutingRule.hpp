@@ -63,7 +63,7 @@ protected:
     /**
      * Tip exclusion radius
      */
-    units::quantity<unit::length> mTipExclusionRadius;
+    QLength mTipExclusionRadius;
 
 public:
 
@@ -100,7 +100,7 @@ public:
      * Set the minimum distance from an existing tip that a sprout can form
      * @param tipExclusionRadius the minimum distance from an existing tip that a sprout can form
      */
-    void SetTipExclusionRadius(units::quantity<unit::length> tipExclusionRadius);
+    void SetTipExclusionRadius(QLength tipExclusionRadius);
 };
 
 #endif /* LATTICEBASEDSPROUTINGRULE_HPP_ */

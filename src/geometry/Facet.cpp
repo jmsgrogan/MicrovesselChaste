@@ -119,7 +119,7 @@ bool Facet<DIM>::ContainsPoint(const DimensionalChastePoint<DIM>& location)
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::length> > Facet<DIM>::GetBoundingBox()
+std::vector<QLength > Facet<DIM>::GetBoundingBox()
 {
     std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     c_vector<double, 6> box;
@@ -148,7 +148,7 @@ std::vector<units::quantity<unit::length> > Facet<DIM>::GetBoundingBox()
         }
     }
 
-    std::vector<units::quantity<unit::length> > box_vector(6);
+    std::vector<QLength > box_vector(6);
     for(unsigned idx=0; idx<6; idx++)
     {
         box_vector[idx] = box[idx] * mReferenceLength;
@@ -179,7 +179,7 @@ DimensionalChastePoint<DIM> Facet<DIM>::GetCentroid()
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> Facet<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation)
+QLength Facet<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation)
 {
     double location_array[3];
     for(unsigned idx=0; idx<DIM;idx++)

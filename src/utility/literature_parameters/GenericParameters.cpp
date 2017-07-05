@@ -36,7 +36,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UnitCollection.hpp"
 #include "GenericParameters.hpp"
 
-units::quantity<unit::length> radius(5.0*unit::microns);
+QLength radius(5.0*unit::microns);
 const std::shared_ptr<ParameterInstance<unit::length> > GenericParameters::mpCapillaryRadius =
         std::shared_ptr<ParameterInstance<unit::length> >(new ParameterInstance<unit::length> (radius,
                                                                                    "Generic_CapillaryRadius",

@@ -105,14 +105,14 @@ public:
         /*
          * We will work in microns
          */
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         /*
          * Set up a simulation domain, which will be a cuboid.
          */
-        units::quantity<unit::length> domain_width(100.0 * 1.e-6 * unit::microns);
-        units::quantity<unit::length> domain_height(100.0 * 1.e-6 * unit::microns);
-        units::quantity<unit::length> domain_depth(20.0 * 1.e-6 * unit::microns);
+        QLength domain_width(100.0 * 1.e-6 * unit::microns);
+        QLength domain_height(100.0 * 1.e-6 * unit::microns);
+        QLength domain_depth(20.0 * 1.e-6 * unit::microns);
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(domain_width, domain_height, domain_depth, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         /*

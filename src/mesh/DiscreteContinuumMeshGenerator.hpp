@@ -110,7 +110,7 @@ class DiscreteContinuumMeshGenerator
     /**
      * The reference length scale for the mesh
      */
-    units::quantity<unit::length> mReferenceLength;
+    QLength mReferenceLength;
 
 public:
 

@@ -63,10 +63,10 @@ public:
     {
         // Solve two problems on the same grid
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        units::quantity<unit::length> domain_length(100.0*unit::microns);
+        QLength domain_length(100.0*unit::microns);
         p_domain->AddCuboid(domain_length, domain_length, domain_length, DimensionalChastePoint<3>());
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        units::quantity<unit::length> spacing(10.0*unit::microns);
+        QLength spacing(10.0*unit::microns);
         p_grid->GenerateFromPart(p_domain, spacing);
 
         // Choose the PDE

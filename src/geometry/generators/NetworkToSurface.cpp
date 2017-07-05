@@ -111,7 +111,7 @@ void NetworkToSurface<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> 
 }
 
 template<unsigned DIM>
-void NetworkToSurface<DIM>::SetResamplingSplineSize(units::quantity<unit::length> splineResampleSize)
+void NetworkToSurface<DIM>::SetResamplingSplineSize(QLength splineResampleSize)
 {
     mSplineResamplingLength = splineResampleSize;
 }

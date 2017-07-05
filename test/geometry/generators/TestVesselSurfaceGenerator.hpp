@@ -59,7 +59,7 @@ public:
 
     void TestSingleSegmentVessel() throw(Exception)
     {
-        units::quantity<unit::length> vessel_length = 100.0 * 1.e-6 * unit::metres;
+        QLength vessel_length = 100.0 * 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         p_network->GetVessels()[0]->GetStartNode()->SetRadius(10.0e-6 * unit::metres);
@@ -198,7 +198,7 @@ public:
 
     void Test2dFails() throw(Exception)
     {
-        units::quantity<unit::length> vessel_length = 100.0 * 1.e-6 * unit::metres;
+        QLength vessel_length = 100.0 * 1.e-6 * unit::metres;
         VesselNetworkGenerator<2> generator;
         boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
         p_network->GetVessels()[0]->GetStartNode()->SetRadius(10.0e-6 * unit::metres);

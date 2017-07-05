@@ -37,7 +37,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNode.hpp"
 
 template<unsigned DIM>
-VesselNode<DIM>::VesselNode(double v1, double v2, double v3, units::quantity<unit::length> referenceLength) : AbstractVesselNetworkComponent<DIM>(),
+VesselNode<DIM>::VesselNode(double v1, double v2, double v3, QLength referenceLength) : AbstractVesselNetworkComponent<DIM>(),
         mLocation(DimensionalChastePoint<DIM>(v1 ,v2, v3, referenceLength)),
         mSegments(std::vector<std::weak_ptr<VesselSegment<DIM> > >()),
         mIsMigrating(false),
@@ -117,7 +117,7 @@ VesselNode<DIM>::~VesselNode()
 }
 
 template<unsigned DIM>
-std::shared_ptr<VesselNode<DIM> > VesselNode<DIM>::Create(double v1, double v2, double v3, units::quantity<unit::length> referenceLength)
+std::shared_ptr<VesselNode<DIM> > VesselNode<DIM>::Create(double v1, double v2, double v3, QLength referenceLength)
 {
     return std::make_shared<VesselNode<DIM> >(v1, v2, v3, referenceLength);
 }
@@ -172,7 +172,7 @@ unsigned VesselNode<DIM>::GetComparisonId()
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> VesselNode<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation) const
+QLength VesselNode<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation) const
 {
     return mLocation.GetDistance(rLocation);
 }
@@ -211,7 +211,7 @@ std::map<std::string, double> VesselNode<DIM>::GetOutputData()
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> VesselNode<DIM>::GetReferenceLengthScale() const
+QLength VesselNode<DIM>::GetReferenceLengthScale() const
 {
     return mLocation.GetReferenceLengthScale();
 }
@@ -336,7 +336,7 @@ void VesselNode<DIM>::SetLocation(const DimensionalChastePoint<DIM>& location)
 }
 
 template<unsigned DIM>
-void VesselNode<DIM>::SetLocation(double x, double y, double z, units::quantity<unit::length> referenceLength)
+void VesselNode<DIM>::SetLocation(double x, double y, double z, QLength referenceLength)
 {
     this->mLocation = DimensionalChastePoint<DIM>(x,y,z,referenceLength);
 }
@@ -348,7 +348,7 @@ void VesselNode<DIM>::SetIsMigrating(bool isMigrating)
 }
 
 template<unsigned DIM>
-void VesselNode<DIM>::SetReferenceLengthScale(units::quantity<unit::length> lengthScale)
+void VesselNode<DIM>::SetReferenceLengthScale(QLength lengthScale)
 {
     this->mLocation.SetReferenceLengthScale(lengthScale);
 }

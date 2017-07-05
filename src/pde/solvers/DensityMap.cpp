@@ -248,7 +248,7 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselSurfaceAreaDensity(bool up
         mVesselSurfaceAreaDensity.clear();
         mVesselSurfaceAreaDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfCells(), 0.0);
         std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
-        units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
+        QLength length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetCellVolumes(true, true);
         vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
 
@@ -293,7 +293,7 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselSurfaceAreaDensity(bool up
                 bool point2_in_cell = IsPointInCell(p_sampling_locator, point2_loc, idx);
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
                         idx, point1_in_cell, point2_in_cell);
-                units::quantity<unit::length> length_in_cell = dimless_length_in_cell*length_scale;
+                QLength length_in_cell = dimless_length_in_cell*length_scale;
                 units::quantity<unit::area> surface_area = 2.0*M_PI*segment_map[idx][jdx]->GetRadius()*length_in_cell;
                 mVesselSurfaceAreaDensity[idx] += ((surface_area/(length_scale*length_scale))/grid_volumes[idx]);
             }
@@ -315,7 +315,7 @@ std::vector<double> DensityMap<DIM>::rGetVesselLineDensity(bool update)
         mVesselLineDensity.clear();
         mVesselLineDensity = std::vector<double>(num_points, 0.0);
         std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap(update);
-        units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
+        QLength length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetCellVolumes(true, true);
 
         vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
@@ -361,7 +361,7 @@ std::vector<double> DensityMap<DIM>::rGetVesselLineDensity(bool update)
                 bool point2_in_cell = IsPointInCell(p_sampling_locator, point2_loc, idx);
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
                         idx, point1_in_cell, point2_in_cell);
-                units::quantity<unit::length> length_in_cell = dimless_length_in_cell*length_scale;
+                QLength length_in_cell = dimless_length_in_cell*length_scale;
                 double grid_volume = grid_volumes[idx];
                 mVesselLineDensity[idx] += (length_in_cell/length_scale)/grid_volume;
             }
@@ -385,7 +385,7 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselSurfaceAreaDensity
         mPerfusedVesselSurfaceAreaDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfCells(), 0.0);
 
         std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
-        units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
+        QLength length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetCellVolumes(true, true);
         vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
 
@@ -431,7 +431,7 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselSurfaceAreaDensity
                 bool point2_in_cell = IsPointInCell(p_sampling_locator, point2_loc, idx);
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
                         idx, point1_in_cell, point2_in_cell);
-                units::quantity<unit::length> length_in_cell = dimless_length_in_cell*length_scale;
+                QLength length_in_cell = dimless_length_in_cell*length_scale;
                 units::quantity<unit::area> surface_area = 2.0*M_PI*segment_map[idx][jdx]->GetRadius()*length_in_cell;
                 if(segment_map[idx][jdx]->GetVessel()->GetFlowProperties()->GetHaematocrit()==0.0)
                 {
@@ -457,7 +457,7 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselLineDensity(bool u
         mPerfusedVesselLineDensity.clear();
         mPerfusedVesselLineDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfCells(), 0.0);
         std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
-        units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
+        QLength length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetCellVolumes(true, true);
         vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
 
@@ -504,7 +504,7 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselLineDensity(bool u
                 bool point2_in_cell = IsPointInCell(p_sampling_locator, point2_loc, idx);
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
                         idx, point1_in_cell, point2_in_cell);
-                units::quantity<unit::length> length_in_cell = dimless_length_in_cell*length_scale;
+                QLength length_in_cell = dimless_length_in_cell*length_scale;
                 if(segment_map[idx][jdx]->GetVessel()->GetFlowProperties()->GetHaematocrit()==0.0)
                 {
                     length_in_cell*= 0.0;
@@ -585,7 +585,7 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselQuantityDensity(const std:
         mVesselQuantityDensity.clear();
         mVesselQuantityDensity = std::vector<double>(this->mpGridCalculator->GetGrid()->GetNumberOfCells(), 0.0);
         std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
-        units::quantity<unit::length> length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
+        QLength length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetCellVolumes(true, true);
         vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
 
@@ -632,7 +632,7 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselQuantityDensity(const std:
                 bool point2_in_cell = IsPointInCell(p_sampling_locator, point2_loc, idx);
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
                         idx, point1_in_cell, point2_in_cell);
-                units::quantity<unit::length> length_in_cell = dimless_length_in_cell*length_scale;
+                QLength length_in_cell = dimless_length_in_cell*length_scale;
                 double amount = segment_map[idx][jdx]->GetFlowProperties()->GetOutputData()[rQuantity];
                 if(segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit()==0.0)
                 {
@@ -700,7 +700,7 @@ const std::vector<double>& DensityMap<DIM>::rGetCellDensity(boost::shared_ptr<Ab
 
 template<unsigned DIM>
 void DensityMap<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
-                                                             units::quantity<unit::length> cellPopulationReferenceLength,
+                                                             QLength cellPopulationReferenceLength,
                                                              units::quantity<unit::concentration> cellPopulationReferenceConcentration)
 {
     mpGridCalculator->SetCellPopulation(rCellPopulation, cellPopulationReferenceLength, cellPopulationReferenceConcentration);

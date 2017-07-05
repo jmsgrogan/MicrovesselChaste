@@ -73,7 +73,7 @@ class VesselNetworkGenerator
     /**
      * The reference length scale for the vessel network, default in microns.
      */
-    units::quantity<unit::length> mReferenceLength;
+    QLength mReferenceLength;
 
 public:
 
@@ -99,7 +99,7 @@ public:
     std::shared_ptr<VesselNetwork<DIM> > GenerateParrallelNetwork(std::shared_ptr<Part<DIM> > domain,
                                                                         units::quantity<unit::per_area> targetDensity,
                                                                         VesselDistribution::Value distrbutionType,
-                                                                        units::quantity<unit::length> exclusionDistance = 0.0*unit::metres,
+                                                                        QLength exclusionDistance = 0.0*unit::metres,
                                                                         bool useBbox = false,
                                                                         std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > seeds =
                                                                                 std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > >());
@@ -110,16 +110,16 @@ public:
      * @param vesselLength the vessel length
      * @return a shared pointer to the vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > GenerateHexagonalNetwork(units::quantity<unit::length> width,
-                                                                    units::quantity<unit::length> height,
-                                                                    units::quantity<unit::length> vesselLength,
+    std::shared_ptr<VesselNetwork<DIM> > GenerateHexagonalNetwork(QLength width,
+                                                                    QLength height,
+                                                                    QLength vesselLength,
                                                                     bool fillDomain=false);
     /**
      * Creates a hexagonal repeating unit
      * @param vesselLength the vessel length
      * @return a shared pointer to the vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > GenerateHexagonalUnit(units::quantity<unit::length> vesselLength);
+    std::shared_ptr<VesselNetwork<DIM> > GenerateHexagonalUnit(QLength vesselLength);
 
     /**
      * Creates a bifurcation repeating unit
@@ -127,7 +127,7 @@ public:
      * @param startPosition the start position of the unit
      * @return a shared pointer to the vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > GenerateBifurcationUnit(units::quantity<unit::length> vesselLength,
+    std::shared_ptr<VesselNetwork<DIM> > GenerateBifurcationUnit(QLength vesselLength,
                                                                    DimensionalChastePoint<DIM> startPosition);
 
     /**
@@ -138,7 +138,7 @@ public:
      * @param axis the alignment axis
      * @return a shared pointer to the vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > GenerateSingleVessel(units::quantity<unit::length> vesselLength,
+    std::shared_ptr<VesselNetwork<DIM> > GenerateSingleVessel(QLength vesselLength,
                                                                 DimensionalChastePoint<DIM> startPosition,
                                                                     unsigned divisions = 0, unsigned axis = 2);
 
@@ -150,7 +150,7 @@ public:
      * @param a_param a length parameter
      * @return a shared pointer to the vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > GenerateOvalNetwork(units::quantity<unit::length> scaleFactor,
+    std::shared_ptr<VesselNetwork<DIM> > GenerateOvalNetwork(QLength scaleFactor,
                                                                      unsigned num_increments = 40,
                                                                      double a_param = 0.5,
                                                                      double b_param = 1.0);
@@ -177,8 +177,8 @@ public:
      * @param polarExtent the polar extents
      */
     void MapToSphere(std::shared_ptr<VesselNetwork<DIM> > pInputUnit,
-                     units::quantity<unit::length> radius,
-                     units::quantity<unit::length> thickess,
+                     QLength radius,
+                     QLength thickess,
                      double azimuthExtent,
                      double polarExtent);
 
@@ -187,7 +187,7 @@ public:
      *
      * @param rLengthScale the reference length scale
      */
-    void SetReferenceLengthScale(units::quantity<unit::length> rReferenceLength);
+    void SetReferenceLengthScale(QLength rReferenceLength);
 
 };
 

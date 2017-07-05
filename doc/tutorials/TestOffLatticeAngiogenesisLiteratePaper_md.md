@@ -123,7 +123,7 @@ allow non-dimensionalisation when sending quantities to external solvers and re-
 results. For our purposes microns for length and hours for time are suitable base units.
 
 ```cpp
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         units::quantity<unit::time> reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
@@ -135,8 +135,8 @@ reduce computational expense.
 
 ```cpp
         MappableGridGenerator hemisphere_generator;
-        units::quantity<unit::length> radius(1400.0 * unit::microns);
-        units::quantity<unit::length> thickness(100.0 * unit::microns);
+        QLength radius(1400.0 * unit::microns);
+        QLength thickness(100.0 * unit::microns);
         unsigned num_divisions_x = 10;
         unsigned num_divisions_y = 10;
         double azimuth_angle = 1.0 * M_PI;
@@ -159,8 +159,8 @@ Set up a vessel network, with divisions roughly every 'cell length'. Initially i
 
 ```cpp
         VesselNetworkGenerator<3> network_generator;
-        units::quantity<unit::length> vessel_length = M_PI * radius;
-        units::quantity<unit::length> cell_length(40.0 * unit::microns);
+        QLength vessel_length = M_PI * radius;
+        QLength cell_length(40.0 * unit::microns);
         boost::shared_ptr<VesselNetwork<3> > p_network  = network_generator.GenerateSingleVessel(vessel_length,
                                                                                                  DimensionalChastePoint<3>(0.0, 4000.0, 0.0),
                                                                                                  unsigned(vessel_length/cell_length) + 1, 0);
@@ -191,7 +191,7 @@ as a fixed concentration of VEGF in a cuboidal region. First set up the vegf sub
 
 ```cpp
         boost::shared_ptr<Part<3> > p_vegf_domain = Part<3> ::Create();
-        units::quantity<unit::length> pellet_side_length(300.0*unit::microns);
+        QLength pellet_side_length(300.0*unit::microns);
         p_vegf_domain->AddCuboid(pellet_side_length, pellet_side_length, 5.0*pellet_side_length, DimensionalChastePoint<3>(-150.0,
                                                                                                                            900.0,
                                                                                                                            0.0));
@@ -354,14 +354,14 @@ public:
     {
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestOffLatticeAngiogenesisLiteratePaper"));
         RandomNumberGenerator::Instance()->Reseed(12345);
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         units::quantity<unit::time> reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
         MappableGridGenerator hemisphere_generator;
-        units::quantity<unit::length> radius(1400.0 * unit::microns);
-        units::quantity<unit::length> thickness(100.0 * unit::microns);
+        QLength radius(1400.0 * unit::microns);
+        QLength thickness(100.0 * unit::microns);
         unsigned num_divisions_x = 10;
         unsigned num_divisions_y = 10;
         double azimuth_angle = 1.0 * M_PI;
@@ -379,8 +379,8 @@ public:
         p_scene->SetIsInteractive(true);
         p_scene->Start();
         VesselNetworkGenerator<3> network_generator;
-        units::quantity<unit::length> vessel_length = M_PI * radius;
-        units::quantity<unit::length> cell_length(40.0 * unit::microns);
+        QLength vessel_length = M_PI * radius;
+        QLength cell_length(40.0 * unit::microns);
         boost::shared_ptr<VesselNetwork<3> > p_network  = network_generator.GenerateSingleVessel(vessel_length,
                                                                                                  DimensionalChastePoint<3>(0.0, 4000.0, 0.0),
                                                                                                  unsigned(vessel_length/cell_length) + 1, 0);
@@ -406,7 +406,7 @@ public:
         p_scene->Start();
 
         boost::shared_ptr<Part<3> > p_vegf_domain = Part<3> ::Create();
-        units::quantity<unit::length> pellet_side_length(300.0*unit::microns);
+        QLength pellet_side_length(300.0*unit::microns);
         p_vegf_domain->AddCuboid(pellet_side_length, pellet_side_length, 5.0*pellet_side_length, DimensionalChastePoint<3>(-150.0,
                                                                                                                            900.0,
                                                                                                                            0.0));

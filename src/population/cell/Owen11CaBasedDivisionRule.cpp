@@ -296,7 +296,7 @@ void Owen11CaBasedDivisionRule<SPACE_DIM>::SetVesselNetwork(std::shared_ptr<Vess
 }
 
 template<unsigned SPACE_DIM>
-void Owen11CaBasedDivisionRule<SPACE_DIM>::SetReferenceLengthScale(units::quantity<unit::length> referenceLengthScale)
+void Owen11CaBasedDivisionRule<SPACE_DIM>::SetReferenceLengthScale(QLength referenceLengthScale)
 {
     mReferenceLengthScale = referenceLengthScale;
 }

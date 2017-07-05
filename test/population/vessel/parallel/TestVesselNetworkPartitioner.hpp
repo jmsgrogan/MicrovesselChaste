@@ -115,9 +115,9 @@ public:
 
         VesselNetworkGenerator<2> generator;
 
-        units::quantity<unit::length> domain_size = 500.0*1.e-6*unit::metres;
-        units::quantity<unit::length> vessel_length = 100.0*1.e-6*unit::metres;
-        units::quantity<unit::length> reference_length = 1.e-6*unit::metres;
+        QLength domain_size = 500.0*1.e-6*unit::metres;
+        QLength vessel_length = 100.0*1.e-6*unit::metres;
+        QLength reference_length = 1.e-6*unit::metres;
         boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateHexagonalNetwork(domain_size,
                 domain_size, vessel_length);
 

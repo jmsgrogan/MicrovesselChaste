@@ -85,7 +85,7 @@ protected:
      * values in mLocation will be changed accordingly. i.e. if the reference length scale is changed
      * from 1 micron to 40 micron, the value in mLocation will be divided by 40.
      */
-    units::quantity<unit::length> mReferenceLength;
+    QLength mReferenceLength;
 
     /**
      * An optional index
@@ -107,14 +107,14 @@ public:
      * @param z z position of vertex
      * @param referenceLength the reference length
      */
-    DimensionalChastePoint(double x= 0.0, double y = 0.0, double z = 0.0, units::quantity<unit::length> referenceLength = 1.e-6*unit::metres);
+    DimensionalChastePoint(double x= 0.0, double y = 0.0, double z = 0.0, QLength referenceLength = 1.e-6*unit::metres);
 
     /**
      * Constructor
      * @param coords a vector of x, y, z coordinates
      * @param referenceLength the reference length
      */
-    DimensionalChastePoint(c_vector<double, DIM> coords, units::quantity<unit::length> referenceLength);
+    DimensionalChastePoint(c_vector<double, DIM> coords, QLength referenceLength);
 
     /**
      * Factory Constructor
@@ -124,7 +124,7 @@ public:
      * @param referenceLength the reference length
      * @return a pointer to the point
      */
-    static std::shared_ptr<DimensionalChastePoint<DIM> > Create(double x, double y, double z, units::quantity<unit::length> referenceLength);
+    static std::shared_ptr<DimensionalChastePoint<DIM> > Create(double x, double y, double z, QLength referenceLength);
 
     /**
      * Factory Constructor
@@ -132,7 +132,7 @@ public:
      * @param referenceLength the reference length
      * @return a pointer to the point
      */
-    static std::shared_ptr<DimensionalChastePoint<DIM> > Create(c_vector<double, DIM> coords, units::quantity<unit::length> referenceLength);
+    static std::shared_ptr<DimensionalChastePoint<DIM> > Create(c_vector<double, DIM> coords, QLength referenceLength);
 
     /**
      * Destructor
@@ -151,7 +151,7 @@ public:
      * @param rLocation the input point
      * @return the distance between this point and the input point
      */
-    units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation) const;
+    QLength GetDistance(const DimensionalChastePoint<DIM>& rLocation) const;
 
     /**
      * Return the index
@@ -176,27 +176,27 @@ public:
      * Return the length of the vector between this point and the origin
      * @return the length of the vector between this point and the origin
      */
-    units::quantity<unit::length> GetNorm2();
+    QLength GetNorm2();
 
     /**
      * Return the reference length scale for the point, default is micron
      * @return the reference length scale
      */
-    units::quantity<unit::length> GetReferenceLengthScale() const;
+    QLength GetReferenceLengthScale() const;
 
     /**
      * Return a non-dimensional location, normalized by the supplied length scale
      * @param scale the length scale for the point
      * @return the location of the Point.
      */
-    c_vector<double, DIM> GetLocation(units::quantity<unit::length> scale);
+    c_vector<double, DIM> GetLocation(QLength scale);
 
     /**
      * Return a non-dimensional location, normalized by the supplied length scale
      * @param scale the length scale for the point
      * @return the location of the Point.  Constant non-liberal variety.
      */
-    const c_vector<double, DIM> GetLocation(units::quantity<unit::length> scale) const;
+    const c_vector<double, DIM> GetLocation(QLength scale) const;
 
     /**
      * Return a point one unit from the origin in the direction along the vector between this point and the origin
@@ -260,7 +260,7 @@ public:
      *
      * @param lenthScale the reference length scale for point locations
      */
-    void SetReferenceLengthScale(units::quantity<unit::length> lenthScale);
+    void SetReferenceLengthScale(QLength lenthScale);
 
     /**
      * Set the index

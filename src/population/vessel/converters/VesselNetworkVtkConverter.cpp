@@ -73,7 +73,7 @@ vtkSmartPointer<vtkPolyData> VesselNetworkVtkConverter<DIM>::GetVtkRepresentatio
 
     if(nodes.size()>0)
     {
-        units::quantity<unit::length> length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
+        QLength length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
         for(unsigned idx=0;idx<nodes.size();idx++)
         {
             nodes[idx]->SetComparisonId(idx);
@@ -114,7 +114,7 @@ vtkSmartPointer<vtkPolyData> VesselNetworkVtkConverter<DIM>::GetGlobalVtkReprese
 
     if(nodes.size()>0)
     {
-        units::quantity<unit::length> length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
+        QLength length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
         for(unsigned idx=0;idx<nodes.size();idx++)
         {
             nodes[idx]->SetComparisonId(idx);

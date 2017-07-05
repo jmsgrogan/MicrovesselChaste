@@ -63,7 +63,7 @@ class NetworkToImage
     /**
      *  The grid spacing
      */
-    units::quantity<unit::length> mGridSpacing;
+    QLength mGridSpacing;
 
     /**
      *  The padding factors in each direction
@@ -110,7 +110,7 @@ public:
      * Set the pixel spacing for the image
      * @param spacing the pixel spacing
      */
-    void SetGridSpacing(units::quantity<unit::length> spacing);
+    void SetGridSpacing(QLength spacing);
 
     /**
      * Set the padding factors for the image. This is multiplied by the network extents

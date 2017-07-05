@@ -77,7 +77,7 @@ public:
 
         p_vascular_network->AddVessel(p_vessel);
         units::quantity<unit::dynamic_viscosity> viscosity = 2e-3 * unit::poiseuille;
-        units::quantity<unit::length> radius = 5e-6 * unit::metres;
+        QLength radius = 5e-6 * unit::metres;
 
         p_segment->SetRadius(radius);
         p_segment->GetFlowProperties()->SetViscosity(viscosity);

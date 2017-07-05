@@ -58,7 +58,7 @@ class TumourInsertionModifier : public AbstractCellBasedSimulationModifier<DIM,D
     /**
      * The insertion radius
      */
-    units::quantity<unit::length> mInsertionRadius;
+    QLength mInsertionRadius;
 
     /**
      * The insertion origin
@@ -83,7 +83,7 @@ public:
 
     void SetInsertionOrigin(DimensionalChastePoint<DIM> insertionOrigin);
 
-    void SetInsertionRadius(units::quantity<unit::length> insertionRadius);
+    void SetInsertionRadius(QLength insertionRadius);
 
     /**
      * Overridden UpdateAtEndOfTimeStep() method.

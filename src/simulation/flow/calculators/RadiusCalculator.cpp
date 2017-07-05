@@ -52,13 +52,13 @@ RadiusCalculator<DIM>::~RadiusCalculator()
 }
 
 template<unsigned DIM>
-void RadiusCalculator<DIM>::SetMinRadius(units::quantity<unit::length> minRadius)
+void RadiusCalculator<DIM>::SetMinRadius(QLength minRadius)
 {
     mMinRadius = minRadius;
 }
 
 template<unsigned DIM>
-void RadiusCalculator<DIM>::SetMaxRadius(units::quantity<unit::length> maxRadius)
+void RadiusCalculator<DIM>::SetMaxRadius(QLength maxRadius)
 {
     mMaxRadius = maxRadius;
 }
@@ -76,7 +76,7 @@ void RadiusCalculator<DIM>::Calculate()
     for (unsigned segment_index = 0; segment_index < segments.size(); segment_index++)
     {
         units::quantity<unit::rate> total_stimulus = segments[segment_index]->GetFlowProperties()->GetGrowthStimulus();
-        units::quantity<unit::length> radius = segments[segment_index]->GetRadius();
+        QLength radius = segments[segment_index]->GetRadius();
         radius = radius*(1.0 + mTimeStep * total_stimulus);
 
         // Only change the radius if there is a stimulus, so we can use this calculator without stimulii

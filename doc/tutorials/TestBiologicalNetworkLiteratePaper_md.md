@@ -130,7 +130,7 @@ allow non-dimensionalisation when sending quantities to external solvers and re-
 results. For our purposes microns for length and hours for time are suitable base units.
 
 ```cpp
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         units::quantity<unit::time> reference_time(1.0* unit::hours);
         units::quantity<unit::concentration> reference_concentration(1.e-6* unit::mole_per_metre_cubed);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
@@ -156,7 +156,7 @@ to other vessels at both ends. Note that units are explicitly specified for all 
 ok to allow some small disconnected regions to remain for our purposes.
 
 ```cpp
-        units::quantity<unit::length> short_vessel_cutoff = 40.0e-6 * unit::metres;
+        QLength short_vessel_cutoff = 40.0e-6 * unit::metres;
         bool remove_end_vessels_only = true;
         p_network->RemoveShortVessels(short_vessel_cutoff, remove_end_vessels_only);
         p_network->UpdateAll();
@@ -181,8 +181,8 @@ we sample a small region. We can use some geometry tools to help.
 ```cpp
         boost::shared_ptr<Part<3> > p_cylinder = Part<3>::Create();
         DimensionalChastePoint<3> centre(2300.0, 2300.0, -5.0, 1.e-6*unit::metres);
-        units::quantity<unit::length> radius = 600.0e-6*unit::metres;
-        units::quantity<unit::length> depth = 205.e-6*unit::metres;
+        QLength radius = 600.0e-6*unit::metres;
+        QLength depth = 205.e-6*unit::metres;
         p_cylinder->AddCylinder(radius, depth, centre, 24);
         p_cylinder->BooleanWithNetwork(p_network);
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "cleaned_cut_network.vtp");
@@ -206,7 +206,7 @@ A record of all parameters used in a simulation can be dumped to file on complet
 
 ```cpp
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        units::quantity<unit::length> grid_spacing = 40.0e-6*unit::metres;
+        QLength grid_spacing = 40.0e-6*unit::metres;
         p_grid->SetSpacing(grid_spacing);
 ```
 
@@ -273,7 +273,7 @@ the population using conventional Cell Based Chaste methods.
         boost::shared_ptr<Owen11CellPopulationGenerator<3> > p_cell_population_genenerator = Owen11CellPopulationGenerator<3>::Create();
         p_cell_population_genenerator->SetRegularGrid(p_grid);
         p_cell_population_genenerator->SetVesselNetwork(p_network);
-        units::quantity<unit::length> tumour_radius(300.0 * unit::microns);
+        QLength tumour_radius(300.0 * unit::microns);
         p_cell_population_genenerator->SetTumourRadius(tumour_radius);
         boost::shared_ptr<CaBasedCellPopulation<3> > p_cell_population = p_cell_population_genenerator->Update();
 
@@ -370,7 +370,7 @@ depend on haematocrit and diameter. This solver manages growth and shrinkage of 
 flow related stimuli.
 
 ```cpp
-        units::quantity<unit::length> large_vessel_radius(25.0 * unit::microns);
+        QLength large_vessel_radius(25.0 * unit::microns);
         p_network->SetSegmentRadii(large_vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
         p_network->SetSegmentViscosity(viscosity);
@@ -587,7 +587,7 @@ public:
     {
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestBiologicalNetworkLiteratePaper"));
         RandomNumberGenerator::Instance()->Reseed(12345);
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         units::quantity<unit::time> reference_time(1.0* unit::hours);
         units::quantity<unit::concentration> reference_concentration(1.e-6* unit::mole_per_metre_cubed);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
@@ -601,7 +601,7 @@ public:
         p_vessel_reader->SetMergeCoincidentPoints(true);
         p_vessel_reader->SetTargetSegmentLength(40.0e-6*unit::metres);
         boost::shared_ptr<VesselNetwork<3> >  p_network = p_vessel_reader->Read();
-        units::quantity<unit::length> short_vessel_cutoff = 40.0e-6 * unit::metres;
+        QLength short_vessel_cutoff = 40.0e-6 * unit::metres;
         bool remove_end_vessels_only = true;
         p_network->RemoveShortVessels(short_vessel_cutoff, remove_end_vessels_only);
         p_network->UpdateAll();
@@ -616,8 +616,8 @@ public:
 
         boost::shared_ptr<Part<3> > p_cylinder = Part<3>::Create();
         DimensionalChastePoint<3> centre(2300.0, 2300.0, -5.0, 1.e-6*unit::metres);
-        units::quantity<unit::length> radius = 600.0e-6*unit::metres;
-        units::quantity<unit::length> depth = 205.e-6*unit::metres;
+        QLength radius = 600.0e-6*unit::metres;
+        QLength depth = 205.e-6*unit::metres;
         p_cylinder->AddCylinder(radius, depth, centre, 24);
         p_cylinder->BooleanWithNetwork(p_network);
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "cleaned_cut_network.vtp");
@@ -626,7 +626,7 @@ public:
         bbox.push_back(DimensionalChastePoint<3>(1500.0, 1600.0, -10.0, 1.e-6*unit::metres));
         bbox.push_back(DimensionalChastePoint<3>(3100.0, 3000.0, 300.0, 1.e-6*unit::metres));
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        units::quantity<unit::length> grid_spacing = 40.0e-6*unit::metres;
+        QLength grid_spacing = 40.0e-6*unit::metres;
         p_grid->SetSpacing(grid_spacing);
         c_vector<double, 3> botom_front_left =  bbox[0].GetLocation(grid_spacing);
         c_vector<double, 3> top_back_right =  bbox[1].GetLocation(grid_spacing);
@@ -663,7 +663,7 @@ public:
         boost::shared_ptr<Owen11CellPopulationGenerator<3> > p_cell_population_genenerator = Owen11CellPopulationGenerator<3>::Create();
         p_cell_population_genenerator->SetRegularGrid(p_grid);
         p_cell_population_genenerator->SetVesselNetwork(p_network);
-        units::quantity<unit::length> tumour_radius(300.0 * unit::microns);
+        QLength tumour_radius(300.0 * unit::microns);
         p_cell_population_genenerator->SetTumourRadius(tumour_radius);
         boost::shared_ptr<CaBasedCellPopulation<3> > p_cell_population = p_cell_population_genenerator->Update();
 
@@ -716,7 +716,7 @@ public:
         p_vegf_solver->SetPde(p_vegf_pde);
         p_vegf_solver->SetLabel("VEGF_Extracellular");
         p_vegf_solver->SetGrid(p_grid);
-        units::quantity<unit::length> large_vessel_radius(25.0 * unit::microns);
+        QLength large_vessel_radius(25.0 * unit::microns);
         p_network->SetSegmentRadii(large_vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
         p_network->SetSegmentViscosity(viscosity);

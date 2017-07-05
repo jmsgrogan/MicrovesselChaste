@@ -73,7 +73,7 @@ protected:
     /**
      * How far from vessel ends can sprouts form
      */
-    units::quantity<unit::length> mVesselEndCutoff;
+    QLength mVesselEndCutoff;
 
     bool mOnlySproutIfPerfused;
 
@@ -115,7 +115,7 @@ public:
      * Set the minimum distance to a vessel end at which sprouting can occur
      * @param cutoff the vessel end cutoff
      */
-    void SetVesselEndCutoff(units::quantity<unit::length> cutoff);
+    void SetVesselEndCutoff(QLength cutoff);
 
     /**
      * Return the nodes which may form sprouts

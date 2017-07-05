@@ -74,7 +74,7 @@ class GridCalculator
     /**
      * The reference length scale for the cellpopulation.
      */
-    units::quantity<unit::length> mCellPopulationReferenceLength;
+    QLength mCellPopulationReferenceLength;
 
     /**
      * The reference concentration scale for the cellpopulation.
@@ -211,7 +211,7 @@ public:
      * @param cellPopulationReferenceConcentration the concentration scale for the cell population
      */
     void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
-                           units::quantity<unit::length> cellPopulationReferenceLength,
+                           QLength cellPopulationReferenceLength,
                            units::quantity<unit::concentration> cellPopulationReferenceConcentration);
 
     /**

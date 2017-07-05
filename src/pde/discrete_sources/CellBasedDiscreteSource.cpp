@@ -69,7 +69,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > CellBasedDiscreteSo
     std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::mole_per_metre_cubed_per_second);
     std::vector<double> cell_densities = this->mpDensityMap->rGetCellDensity(true);
-    units::quantity<unit::length> reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
+    QLength reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
     for(unsigned idx=0;idx<cell_densities.size();idx++)
     {
         values[idx] += mCellConstantInUValue*cell_densities[idx]/units::pow<3>(reference_length);

@@ -98,7 +98,7 @@ void CoupledInterfaceOdePdeSolver<DIM>::SetDimensionlessPermeability(double perm
 }
 
 template<unsigned DIM>
-void CoupledInterfaceOdePdeSolver<DIM>::SetReferenceLengthScale(units::quantity<unit::length> referenceLengthScale)
+void CoupledInterfaceOdePdeSolver<DIM>::SetReferenceLengthScale(QLength referenceLengthScale)
 {
     mReferenceLengthScale = referenceLengthScale;
 }
@@ -147,7 +147,7 @@ void CoupledInterfaceOdePdeSolver<DIM>::SetupLinearSystem(Vec currentSolution, b
             NullSurfaceIntegralCalculator<DIM> surf_calc(this->mpMesh, mpBoundaryConditions);
             surf_calc.SetCurrentSolution(currentSolution);
 
-            units::quantity<unit::length> depth=mReferenceLengthScale;
+            QLength depth=mReferenceLengthScale;
             if(DIM==2)
             {
                 depth=p_coupled_pde->GetPelletDepth();

@@ -133,7 +133,7 @@ public:
                 std::vector<units::quantity<unit::concentration> > solution = solver.GetConcentrations(p_sample_points);
                 for(unsigned jdx=0; jdx<11; jdx++)
                 {
-                    units::quantity<unit::length> x = double(jdx)*10.0*unit::metres;
+                    QLength x = double(jdx)*10.0*unit::metres;
                     double x_nondim = x/(1.0*unit::metres);
                     double c_analytical_nondim = SolveRobinBoundary(x_nondim, time, diff_nondim, 1.0, 1.0);
                     double c_numerical_nondim = solution[jdx]/initial_vegf_concentration;

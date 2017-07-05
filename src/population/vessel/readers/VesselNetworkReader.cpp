@@ -85,13 +85,13 @@ void VesselNetworkReader<DIM>::SetMergeCoincidentPoints(bool mergePoints)
 }
 
 template <unsigned DIM>
-void VesselNetworkReader<DIM>::SetTargetSegmentLength(units::quantity<unit::length> targetSegmentLength)
+void VesselNetworkReader<DIM>::SetTargetSegmentLength(QLength targetSegmentLength)
 {
 	mTargetSegmentLength = targetSegmentLength;
 }
 
 template <unsigned DIM>
-void VesselNetworkReader<DIM>::SetReferenceLengthScale(units::quantity<unit::length> rReferenceLength)
+void VesselNetworkReader<DIM>::SetReferenceLengthScale(QLength rReferenceLength)
 {
     mReferenceLength = rReferenceLength;
 }

@@ -103,7 +103,7 @@ protected:
      */
     double mCurrentLumpedSolution;
 
-    units::quantity<unit::length> mReferenceLengthScale;
+    QLength mReferenceLengthScale;
 
     bool mUseCoupling;
 
@@ -138,7 +138,7 @@ public:
 
     void SetDimensionlessPermeability(double permeability);
 
-    void SetReferenceLengthScale(units::quantity<unit::length> referenceLengthScale);
+    void SetReferenceLengthScale(QLength referenceLengthScale);
 
     void SetInitialDimensionlessLumpedSolution(double solution);
 

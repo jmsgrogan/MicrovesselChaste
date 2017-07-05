@@ -56,7 +56,7 @@ TumourInsertionModifier<DIM>::~TumourInsertionModifier()
 }
 
 template<unsigned DIM>
-void TumourInsertionModifier<DIM>::SetInsertionRadius(units::quantity<unit::length> insertionRadius)
+void TumourInsertionModifier<DIM>::SetInsertionRadius(QLength insertionRadius)
 {
     mInsertionRadius = insertionRadius;
 }
@@ -81,7 +81,7 @@ void TumourInsertionModifier<DIM>::UpdateAtEndOfTimeStep(AbstractCellPopulation<
     double current_time = SimulationTime::Instance()->GetTime();
     if(current_time*BaseUnits::Instance()->GetReferenceTimeScale()>=mInsertionTime and !mTumourInserted)
     {
-        units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
+        QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
         boost::shared_ptr<CancerCellMutationState> p_mutation_state =
                 boost::shared_ptr<CancerCellMutationState>(new CancerCellMutationState);
 

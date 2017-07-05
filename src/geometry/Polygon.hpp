@@ -52,6 +52,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DimensionalChastePoint.hpp"
 #include "UnitCollection.hpp"
 
+
+/**
+ * Convenience typedef
+ */
+template<unsigned DIM>
+using PolygonPtr = std::shared_ptr<Polygon<DIM> >;
+
 /**
  * A collection of planar vertices, joined in the order they are added.
  */
@@ -86,7 +93,7 @@ class Polygon
     /**
      * The reference length scale
      */
-    units::quantity<unit::length> mReferenceLength;
+    QLength mReferenceLength;
 
     /**
      * Edge labels for boundary condition application
@@ -195,7 +202,7 @@ public:
      * Return the bounding box of the polygon
      * @return the bounding box (xmin, xmax, ymin, ymax, zmin, zmax)
      */
-    std::vector<units::quantity<unit::length> > GetBoundingBox();
+    std::vector<QLength > GetBoundingBox();
 
     /**
      * Return the centroid of the polygon
@@ -208,14 +215,14 @@ public:
      * @param rLocation the location of the point to get the distance from
      * @return the distance to the plane containing the polygon
      */
-    units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation);
+    QLength GetDistance(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Return the shortest distance to the polygon's edges
      * @param rLocation the location of the point to get the distance from
      * @return the shortest distance to the polygon edges
      */
-    units::quantity<unit::length> GetDistanceToEdges(const DimensionalChastePoint<DIM>& rLocation);
+    QLength GetDistanceToEdges(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Return the polygon's plane

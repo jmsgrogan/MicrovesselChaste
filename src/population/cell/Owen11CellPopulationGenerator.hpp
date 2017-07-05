@@ -88,7 +88,7 @@ class Owen11CellPopulationGenerator
      * The reference length scale for the population, default in microns. This is needed as units can't be combined
      * with c_vectors, which hold the cell's location.
      */
-    units::quantity<unit::length> mReferenceLength;
+    QLength mReferenceLength;
 
     /**
      * Roughly what fraction of grid points are filled with cells
@@ -103,12 +103,12 @@ class Owen11CellPopulationGenerator
     /**
      * The tumour radius
      */
-    units::quantity<unit::length> mTumourRadius;
+    QLength mTumourRadius;
 
     /**
      * The reference length scale for the cellpopulation.
      */
-    units::quantity<unit::length> mCellPopulationReferenceLength;
+    QLength mCellPopulationReferenceLength;
 
 public:
 
@@ -152,14 +152,14 @@ public:
      *
      * @param lengthScale the reference length
      */
-    void SetReferenceLengthScale(units::quantity<unit::length> lengthScale);
+    void SetReferenceLengthScale(QLength lengthScale);
 
     /**
      * Set the tumour radius
      *
      * @param tumourRadius the tumour radius
      */
-    void SetTumourRadius(units::quantity<unit::length> tumourRadius);
+    void SetTumourRadius(QLength tumourRadius);
 
     /**
      * Generate the cell population

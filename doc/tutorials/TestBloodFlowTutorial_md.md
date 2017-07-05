@@ -97,14 +97,14 @@ more complex networks, structural adaptation and vessel regression.
 We will work in microns
 
 ```cpp
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
 ```
 
 First make the network using a generator. Start with a simple unit.
 
 ```cpp
-        units::quantity<unit::length> vessel_length(100.0*unit::microns);
+        QLength vessel_length(100.0*unit::microns);
         DimensionalChastePoint<2> start_point(0.0, 0.0);
         VesselNetworkGenerator<2> network_generator;
         boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateBifurcationUnit(vessel_length, start_point);
@@ -143,7 +143,7 @@ some extra metadata storage. We will take some parameter values from a paper by 
 Now set the segment radii and viscosity values.
 
 ```cpp
-        units::quantity<unit::length> vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
+        QLength vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
         p_network->SetSegmentRadii(vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         p_network->SetSegmentViscosity(viscosity);
@@ -215,11 +215,11 @@ This time we solve a flow problem and then use the solution to calculate the hae
 assuming it has no effect on the flow. Set up the network as before
 
 ```cpp
-        units::quantity<unit::length> cell_width(25.0 * unit::microns);
+        QLength cell_width(25.0 * unit::microns);
         BaseUnits::Instance()->SetReferenceLengthScale(cell_width);
-        units::quantity<unit::length> target_width = 100.0 * cell_width;
-        units::quantity<unit::length> target_height = 30.0 * cell_width;
-        units::quantity<unit::length> vessel_length = 4.0 * cell_width;
+        QLength target_width = 100.0 * cell_width;
+        QLength target_height = 30.0 * cell_width;
+        QLength vessel_length = 4.0 * cell_width;
         VesselNetworkGenerator<3> network_generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
                                                                                                     target_height,
@@ -242,7 +242,7 @@ We will use a locator to mark the bottom left and top right nodes as respective 
 Now set the segment radii and viscosity values.
 
 ```cpp
-        units::quantity<unit::length> vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
+        QLength vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
         p_network->SetSegmentRadii(vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         p_network->SetSegmentViscosity(viscosity);
@@ -251,8 +251,8 @@ Now set the segment radii and viscosity values.
 Next some simple extra functionality is demonstrated by mapping the network onto a hemisphere
 
 ```cpp
-        units::quantity<unit::length> sphere_radius = 400.0 * cell_width;
-        units::quantity<unit::length> sphere_thickess = 1.0 * cell_width;
+        QLength sphere_radius = 400.0 * cell_width;
+        QLength sphere_thickess = 1.0 * cell_width;
         double sphere_azimuth = M_PI;
         double sphere_polar = M_PI/2.0;
         network_generator.MapToSphere(p_network, sphere_radius, sphere_thickess, sphere_azimuth, sphere_polar);
@@ -314,16 +314,16 @@ In this test the vessel network will adapt over time as a result of flow conditi
 We will work in microns
 
 ```cpp
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
 ```
 
 Set up a hexagonal vessel network
 
 ```cpp
-        units::quantity<unit::length> target_width(8000*unit::microns);
-        units::quantity<unit::length> target_height(2000*unit::microns);
-        units::quantity<unit::length> vessel_length(300.0*unit::microns);
+        QLength target_width(8000*unit::microns);
+        QLength target_height(2000*unit::microns);
+        QLength vessel_length(300.0*unit::microns);
         VesselNetworkGenerator<3> network_generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
                                                                                                     target_height,
@@ -346,7 +346,7 @@ We will use a locator to mark the bottom left and top right nodes as respective 
 Set the radius and viscosity and write the initial network to file.
 
 ```cpp
-        units::quantity<unit::length> vessel_radius(40.0*unit::microns);
+        QLength vessel_radius(40.0*unit::microns);
         p_network->SetSegmentRadii(vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         p_network->SetSegmentViscosity(viscosity);
@@ -405,11 +405,11 @@ to regression in low wall shear stress regions.
 Set up the problem as before.
 
 ```cpp
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
-        units::quantity<unit::length> target_width(8000*unit::microns);
-        units::quantity<unit::length> target_height(2000*unit::microns);
-        units::quantity<unit::length> vessel_length(300.0*unit::microns);
+        QLength target_width(8000*unit::microns);
+        QLength target_height(2000*unit::microns);
+        QLength vessel_length(300.0*unit::microns);
         VesselNetworkGenerator<3> network_generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
                                                                                                     target_height,
@@ -423,7 +423,7 @@ Set up the problem as before.
         p_inlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue());
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
         p_outlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue());
-        units::quantity<unit::length> vessel_radius(40.0*unit::microns);
+        QLength vessel_radius(40.0*unit::microns);
         p_network->SetSegmentRadii(vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         p_network->SetSegmentViscosity(viscosity);
@@ -519,9 +519,9 @@ class TestBloodFlowLiteratePaper : public AbstractCellBasedWithTimingsTestSuite
 public:
     void TestSimpleFlowProblem() throw (Exception)
     {
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
-        units::quantity<unit::length> vessel_length(100.0*unit::microns);
+        QLength vessel_length(100.0*unit::microns);
         DimensionalChastePoint<2> start_point(0.0, 0.0);
         VesselNetworkGenerator<2> network_generator;
         boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateBifurcationUnit(vessel_length, start_point);
@@ -534,7 +534,7 @@ public:
         p_network->GetNode(0)->GetFlowProperties()->SetPressure(inlet_pressure);
         p_network->GetNode(p_network->GetNumberOfNodes()-1)->GetFlowProperties()->SetIsOutputNode(true);
         p_network->GetNode(p_network->GetNumberOfNodes()-1)->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue());
-        units::quantity<unit::length> vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
+        QLength vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
         p_network->SetSegmentRadii(vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         p_network->SetSegmentViscosity(viscosity);
@@ -557,11 +557,11 @@ public:
     void TestFlowProblemWithHaematocrit() throw (Exception)
     {
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestBloodFlowLiteratePaper/TestFlowProblemWithHaematocrit", false));
-        units::quantity<unit::length> cell_width(25.0 * unit::microns);
+        QLength cell_width(25.0 * unit::microns);
         BaseUnits::Instance()->SetReferenceLengthScale(cell_width);
-        units::quantity<unit::length> target_width = 100.0 * cell_width;
-        units::quantity<unit::length> target_height = 30.0 * cell_width;
-        units::quantity<unit::length> vessel_length = 4.0 * cell_width;
+        QLength target_width = 100.0 * cell_width;
+        QLength target_height = 30.0 * cell_width;
+        QLength vessel_length = 4.0 * cell_width;
         VesselNetworkGenerator<3> network_generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
                                                                                                     target_height,
@@ -575,12 +575,12 @@ public:
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
         p_outlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue());
 
-        units::quantity<unit::length> vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
+        QLength vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
         p_network->SetSegmentRadii(vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         p_network->SetSegmentViscosity(viscosity);
-        units::quantity<unit::length> sphere_radius = 400.0 * cell_width;
-        units::quantity<unit::length> sphere_thickess = 1.0 * cell_width;
+        QLength sphere_radius = 400.0 * cell_width;
+        QLength sphere_thickess = 1.0 * cell_width;
         double sphere_azimuth = M_PI;
         double sphere_polar = M_PI/2.0;
         network_generator.MapToSphere(p_network, sphere_radius, sphere_thickess, sphere_azimuth, sphere_polar);
@@ -602,11 +602,11 @@ public:
     void TestFlowProblemStucturalAdaptation() throw (Exception)
     {
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestBloodFlowLiteratePaper/TestFlowProblemStucturalAdaptation", false));
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
-        units::quantity<unit::length> target_width(8000*unit::microns);
-        units::quantity<unit::length> target_height(2000*unit::microns);
-        units::quantity<unit::length> vessel_length(300.0*unit::microns);
+        QLength target_width(8000*unit::microns);
+        QLength target_height(2000*unit::microns);
+        QLength vessel_length(300.0*unit::microns);
         VesselNetworkGenerator<3> network_generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
                                                                                                     target_height,
@@ -619,7 +619,7 @@ public:
         p_inlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue());
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
         p_outlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue());
-        units::quantity<unit::length> vessel_radius(40.0*unit::microns);
+        QLength vessel_radius(40.0*unit::microns);
         p_network->SetSegmentRadii(vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         p_network->SetSegmentViscosity(viscosity);
@@ -648,11 +648,11 @@ public:
     void TestFlowProblemStucturalAdaptationWithRegression() throw (Exception)
     {
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestBloodFlowLiteratePaper/TestFlowProblemStucturalAdaptationWithRegression", false));
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
-        units::quantity<unit::length> target_width(8000*unit::microns);
-        units::quantity<unit::length> target_height(2000*unit::microns);
-        units::quantity<unit::length> vessel_length(300.0*unit::microns);
+        QLength target_width(8000*unit::microns);
+        QLength target_height(2000*unit::microns);
+        QLength vessel_length(300.0*unit::microns);
         VesselNetworkGenerator<3> network_generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
                                                                                                     target_height,
@@ -666,7 +666,7 @@ public:
         p_inlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue());
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
         p_outlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue());
-        units::quantity<unit::length> vessel_radius(40.0*unit::microns);
+        QLength vessel_radius(40.0*unit::microns);
         p_network->SetSegmentRadii(vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         p_network->SetSegmentViscosity(viscosity);

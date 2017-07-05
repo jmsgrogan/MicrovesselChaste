@@ -78,37 +78,37 @@ class CornealMicropocketSimulation
     /**
      * The cornea radius
      */
-    units::quantity<unit::length> mCorneaRadius;
+    QLength mCorneaRadius;
 
     /**
      * The cornea thickness
      */
-    units::quantity<unit::length> mCorneaThickness;
+    QLength mCorneaThickness;
 
     /**
      * The pellet height
      */
-    units::quantity<unit::length> mPelletHeight;
+    QLength mPelletHeight;
 
     /**
      * The pellet thickness
      */
-    units::quantity<unit::length> mPelletThickness;
+    QLength mPelletThickness;
 
     /**
      * The pellet radius
      */
-    units::quantity<unit::length> mPelletRadius;
+    QLength mPelletRadius;
 
     /**
      * The limbal offset
      */
-    units::quantity<unit::length> mLimbalOffset;
+    QLength mLimbalOffset;
 
     /**
      * The grid spacing
      */
-    units::quantity<unit::length> mGridSpacing;
+    QLength mGridSpacing;
 
     /**
      * The element area (2D)
@@ -123,27 +123,27 @@ class CornealMicropocketSimulation
     /**
      * The node spacing
      */
-    units::quantity<unit::length> mNodeSpacing;
+    QLength mNodeSpacing;
 
     /**
      * The density grid spacing
      */
-    units::quantity<unit::length> mDensityGridSpacing;
+    QLength mDensityGridSpacing;
 
     /**
      * The sample x
      */
-    units::quantity<unit::length> mSampleSpacingX;
+    QLength mSampleSpacingX;
 
     /**
      * The sample Y
      */
-    units::quantity<unit::length> mSampleSpacingY;
+    QLength mSampleSpacingY;
 
     /**
      * The sample Z
      */
-    units::quantity<unit::length> mSampleSpacingZ;
+    QLength mSampleSpacingZ;
 
     /**
      * Whether to use a pellet
@@ -178,7 +178,7 @@ class CornealMicropocketSimulation
     /**
      * The tip exclusion radius
      */
-    units::quantity<unit::length> mTipExclusionRadius;
+    QLength mTipExclusionRadius;
 
     /**
      * Whether to do anastomosis
@@ -339,43 +339,43 @@ public:
      * Set the cornea radius
      * @param corneaRadius the cornea radius
      */
-    void SetCorneaRadius(units::quantity<unit::length> corneaRadius);
+    void SetCorneaRadius(QLength corneaRadius);
 
     /**
      * Set the cornea thickness
      * @param corneaRadius the cornea thickness
      */
-    void SetCorneaThickness(units::quantity<unit::length> corneaThickness);
+    void SetCorneaThickness(QLength corneaThickness);
 
     /**
      * Set the pellet height
      * @param pelletHeight the pellet height
      */
-    void SetPelletHeight(units::quantity<unit::length> pelletHeight);
+    void SetPelletHeight(QLength pelletHeight);
 
     /**
      * Set the pellet thickness
      * @param pelletThickness the pellet thickness
      */
-    void SetPelletThickness(units::quantity<unit::length> pelletThickness);
+    void SetPelletThickness(QLength pelletThickness);
 
     /**
      * Set the pellet radius
      * @param pelletRadius the pellet radius
      */
-    void SetPelletRadius(units::quantity<unit::length> pelletRadius);
+    void SetPelletRadius(QLength pelletRadius);
 
     /**
      * Set the limbal offset
      * @param limbalOffset the limbal offset
      */
-    void SetLimbalOffset(units::quantity<unit::length> limbalOffset);
+    void SetLimbalOffset(QLength limbalOffset);
 
     void SetAttractionStrength(double attractionStrength);
 
     void SetChemotacticStrength(double chemotacticStrength);
 
-    void SetDensityGridSpacing(units::quantity<unit::length> densityGridSpacing);
+    void SetDensityGridSpacing(QLength densityGridSpacing);
 
     void SetDoAnastamosis(bool doAnastamosis);
 
@@ -385,11 +385,11 @@ public:
 
     void SetFinitePelletWidth(bool finitePelletWidth);
 
-    void SetGridSpacing(units::quantity<unit::length> gridSpacing);
+    void SetGridSpacing(QLength gridSpacing);
 
     void SetIncludeVesselSink(bool includeVesselSink);
 
-    void SetNodeSpacing(units::quantity<unit::length> nodeSpacing);
+    void SetNodeSpacing(QLength nodeSpacing);
 
     void SetPdeTimeIncrement(double pdeTimeIncrement);
 
@@ -401,17 +401,17 @@ public:
 
     void SetRunNumber(unsigned runNumber);
 
-    void SetSampleSpacingX(units::quantity<unit::length> sampleSpacingX);
+    void SetSampleSpacingX(QLength sampleSpacingX);
 
-    void SetSampleSpacingY(units::quantity<unit::length> sampleSpacingY);
+    void SetSampleSpacingY(QLength sampleSpacingY);
 
-    void SetSampleSpacingZ(units::quantity<unit::length> sampleSpacingZ);
+    void SetSampleSpacingZ(QLength sampleSpacingZ);
 
     void SetSproutingProbability(units::quantity<unit::rate> sproutingProbability);
 
     void SetTimeStepSize(units::quantity<unit::time> timeStepSize);
 
-    void SetTipExclusionRadius(units::quantity<unit::length> tipExclusionRadius);
+    void SetTipExclusionRadius(QLength tipExclusionRadius);
 
     void SetTotalTime(units::quantity<unit::time> totalTime);
 

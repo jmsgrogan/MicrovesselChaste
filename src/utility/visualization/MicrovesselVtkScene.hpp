@@ -181,7 +181,7 @@ class MicrovesselVtkScene
      * Scale features using this length. e.g. set to micron if we want
      * to render features in microns
      */
-    units::quantity<unit::length> mLengthScale;
+    QLength mLengthScale;
 
 public:
 

@@ -75,7 +75,7 @@ void AbstractSproutingRule<DIM>::SetSproutingProbability(units::quantity<unit::r
 }
 
 template<unsigned DIM>
-void AbstractSproutingRule<DIM>::SetVesselEndCutoff(units::quantity<unit::length> cutoff)
+void AbstractSproutingRule<DIM>::SetVesselEndCutoff(QLength cutoff)
 {
     mVesselEndCutoff = cutoff;
 }

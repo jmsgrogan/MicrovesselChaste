@@ -86,7 +86,7 @@ double Owen11CaUpdateRule<DIM>::EvaluateProbability(unsigned currentNodeIndex,
        // Get the sprouting probability
        c_vector<double, DIM> node_index_location = rCellPopulation.GetNode(currentNodeIndex)->rGetLocation();
        c_vector<double, DIM> node_neighbour_location = rCellPopulation.GetNode(targetNodeIndex)->rGetLocation();
-       units::quantity<unit::length> grid_distance = norm_2(rCellPopulation.rGetMesh().GetVectorFromAtoB(node_index_location,
+       QLength grid_distance = norm_2(rCellPopulation.rGetMesh().GetVectorFromAtoB(node_index_location,
                                                                                                          node_neighbour_location))*mReferenceLengthScale;
 
        units::quantity<unit::time> time_increment = dt*BaseUnits::Instance()->GetReferenceTimeScale();
@@ -127,7 +127,7 @@ void Owen11CaUpdateRule<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM
 }
 
 template<unsigned DIM>
-void Owen11CaUpdateRule<DIM>::SetReferenceLengthScale(units::quantity<unit::length> referenceLengthScale)
+void Owen11CaUpdateRule<DIM>::SetReferenceLengthScale(QLength referenceLengthScale)
 {
     mReferenceLengthScale = referenceLengthScale;
 }

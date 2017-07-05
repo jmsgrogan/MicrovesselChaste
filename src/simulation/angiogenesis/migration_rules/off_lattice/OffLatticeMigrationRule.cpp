@@ -87,8 +87,8 @@ void OffLatticeMigrationRule<DIM>::CalculateDomainDistanceMap()
         EXCEPTION("Can't calculate a domain distance map without a bounding domain.");
     }
 
-    units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
-    std::vector<units::quantity<unit::length> > bbox = this->mpBoundingDomain->GetBoundingBox();
+    QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
+    std::vector<QLength > bbox = this->mpBoundingDomain->GetBoundingBox();
     vtkSmartPointer<vtkImageData> p_image = vtkSmartPointer<vtkImageData>::New();
 
     double spacing = (bbox[1] - bbox[0])/(20.0*reference_length);
@@ -190,7 +190,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             }
         }
 
-        units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
+        QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
         std::vector<DimensionalChastePoint<DIM> > movement_vectors;
 
         // We want to probe the PDE solution all at once first if needed, as this is an expensive operation if done node-by-node.
@@ -348,14 +348,14 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             {
                 // Mutual Attraction
                 std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = this->mpVesselNetwork->GetNodes();
-                units::quantity<unit::length> min_distance = 1.e12*unit::metres;
+                QLength min_distance = 1.e12*unit::metres;
                 c_vector<double, DIM> min_direction = zero_vector<double>(DIM);
                 for(unsigned jdx=0; jdx<nodes.size(); jdx++)
                 {
                     if(IsPointInCone<DIM>(nodes[jdx]->rGetLocation(), rNodes[idx]->rGetLocation(), rNodes[idx]->rGetLocation() +
                                           DimensionalChastePoint<DIM>(currentDirection.GetLocation(reference_length) * double(mCriticalMutualAttractionLength/reference_length), reference_length), M_PI/3.0))
                     {
-                        units::quantity<unit::length> distance = rNodes[idx]->rGetLocation().GetDistance(nodes[jdx]->rGetLocation());
+                        QLength distance = rNodes[idx]->rGetLocation().GetDistance(nodes[jdx]->rGetLocation());
                         if(distance < min_distance)
                         {
                             min_distance = distance;
@@ -456,7 +456,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             new_direction /= norm_2(new_direction);
 
             // Get the movement increment
-            units::quantity<unit::length> increment_length = time_increment* mVelocity;
+            QLength increment_length = time_increment* mVelocity;
             movement_vectors.push_back(OffsetAlongVector<DIM>(new_direction, increment_length, reference_length));
         }
         return movement_vectors;
@@ -467,7 +467,7 @@ template<unsigned DIM>
 std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     std::vector<DimensionalChastePoint<DIM> > movement_vectors;
-    units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
+    QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
 
     // Collect the probe locations for each node
     std::vector<units::quantity<unit::concentration> > probed_solutions(rNodes.size());
@@ -608,7 +608,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
         }
         new_direction/=norm_2(new_direction);
         units::quantity<unit::time> time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
-        units::quantity<unit::length> increment_length = time_increment* mVelocity;
+        QLength increment_length = time_increment* mVelocity;
         movement_vectors.push_back(OffsetAlongVector<DIM>(new_direction, increment_length, reference_length));
     }
 

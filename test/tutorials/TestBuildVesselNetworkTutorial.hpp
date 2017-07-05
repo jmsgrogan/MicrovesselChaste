@@ -114,7 +114,7 @@ public:
          * to a different reference length, a cell width. Note that the syntax `reference_length(1.0 * unit::microns)` rather than
          * `reference_length = 1.0 * unit::microns` is used when instantiating quantities.
          */
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         DimensionalChastePoint<2> my_point(25.0, 50.0, 0.0, reference_length);
         /*
          * We can use the unit test framework to check our coordinate values are assigned as expected.
@@ -124,7 +124,7 @@ public:
         /*
          * If we want our coordinates in terms of a fictitious cell width unit we just have to rescale the reference length.
          */
-        units::quantity<unit::length> cell_width(25.0 * unit::microns);
+        QLength cell_width(25.0 * unit::microns);
         my_point.SetReferenceLengthScale(cell_width);
         TS_ASSERT_DELTA(my_point.GetLocation(cell_width)[0], 1.0, 1.e-6);
         TS_ASSERT_DELTA(my_point.GetLocation(cell_width)[1], 2.0, 1.e-6);
@@ -208,12 +208,12 @@ public:
          * Create a hexagonal network in 3D space using a generator. Specify the target network width and height and the desired vessel
          * length. The use of dimensional analysis is demonstrated by now using a fictitious 'cell width' reference length unit instead of microns.
          */
-        units::quantity<unit::length> cell_width(25.0 * unit::microns);
+        QLength cell_width(25.0 * unit::microns);
         BaseUnits::Instance()->SetReferenceLengthScale(cell_width);
         BaseUnits::Instance()->SetReferenceTimeScale(60.0 * unit::seconds);
-        units::quantity<unit::length> target_width = 60.0 * cell_width;
-        units::quantity<unit::length> target_height = 30.0 * cell_width;
-        units::quantity<unit::length> vessel_length = 4.0 * cell_width;
+        QLength target_width = 60.0 * cell_width;
+        QLength target_height = 30.0 * cell_width;
+        QLength vessel_length = 4.0 * cell_width;
         /*
          * Note that the generator is given the reference length scale. This is not imperative, but helps to ensure that all point coordinates
          * are stored with the same reference length scale. This is helpful when combining with computational grids and cell populations later on.
@@ -233,7 +233,7 @@ public:
         VesselNetworkWriter<3> writer;
         writer.SetFileName(p_handler->GetOutputDirectoryFullPath() + "hexagonal_network.vtp");
         writer.SetVesselNetwork(p_network);
-        units::quantity<unit::length> micron_length_scale(1.0*unit::microns);
+        QLength micron_length_scale(1.0*unit::microns);
         writer.SetReferenceLengthScale(micron_length_scale);
         writer.Write();
         /*

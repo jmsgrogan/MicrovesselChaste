@@ -185,7 +185,7 @@ public:
      * Return the reference length scale, needs a grid first
      * @return the reference length value
      */
-    units::quantity<unit::length> GetReferenceLength();
+    QLength GetReferenceLength();
 
     /**
      * Return the reference concentration value.
@@ -299,7 +299,7 @@ public:
      * @param cellPopulationReferenceConcentration the concentration scale for the cell population
      */
     void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
-                           units::quantity<unit::length> cellPopulationReferenceLength,
+                           QLength cellPopulationReferenceLength,
                            units::quantity<unit::concentration> cellPopulationReferenceConcentration);
 
     /**

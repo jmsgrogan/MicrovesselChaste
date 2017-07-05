@@ -213,7 +213,7 @@ public:
      * @param location the point the get the distance from
      * @return the distance to the segment
      */
-    units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& location) const;
+    QLength GetDistance(const DimensionalChastePoint<DIM>& location) const;
 
     /**
      * Return the flow properties of the component
@@ -227,7 +227,7 @@ public:
      *
      * @return the segment length
      */
-    units::quantity<unit::length> GetLength() const;
+    QLength GetLength() const;
 
     /**
      * Return a point mid-way along the vessel segment

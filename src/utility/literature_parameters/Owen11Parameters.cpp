@@ -57,7 +57,7 @@ const std::shared_ptr<ParameterInstance<unit::pressure> > Owen11Parameters::mpOu
                                                                                    "Vessel network outlet pressure",
                                                                                    "P_{out}",
                                                                                    bib_info));
-units::quantity<unit::length> cm (0.01*unit::metres);
+QLength cm (0.01*unit::metres);
 units::quantity<unit::mass> g(1.e-3 *unit::kg);
 units::quantity<unit::time> min(60.0*unit::seconds);
 units::quantity<unit::dynamic_viscosity> plasma_visocity(0.72*g/(cm*min));
@@ -183,7 +183,7 @@ const std::shared_ptr<ParameterInstance<unit::concentration> > Owen11Parameters:
                                                                                    "V_{sprout}",
                                                                                    bib_info));
 
-units::quantity<unit::length> um(1.e-6*unit::metres);
+QLength um(1.e-6*unit::metres);
 const std::shared_ptr<ParameterInstance<unit::length> > Owen11Parameters::mpSproutingExclusionRadius =
         std::shared_ptr<ParameterInstance<unit::length> >(new ParameterInstance<unit::length> (80.0 * um,
                                                                                    "Owen11_SproutingExclusionRadius",

@@ -214,9 +214,9 @@ std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GeneratePlane(unsigned n
 
 template<unsigned DIM>
 std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GenerateCylinder(
-        units::quantity<unit::length> cylinderRadius,
-        units::quantity<unit::length> cylinderThickness,
-        units::quantity<unit::length> cylinderHeight, unsigned numX, unsigned numY, double cylinderAngle)
+        QLength cylinderRadius,
+        QLength cylinderThickness,
+        QLength cylinderHeight, unsigned numX, unsigned numY, double cylinderAngle)
 {
     if(cylinderAngle > 2.0 * M_PI)
     {
@@ -232,7 +232,7 @@ std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GenerateCylinder(
             !(cylinderAngle == 2.0 * M_PI));
 
     // Get the part extents
-    std::vector<units::quantity<unit::length> > bbox = p_part->GetBoundingBox();
+    std::vector<QLength > bbox = p_part->GetBoundingBox();
 
     // Get the vertices
     std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = p_part->GetVertices();
@@ -269,8 +269,8 @@ std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GenerateCylinder(
 }
 
 template<unsigned DIM>
-std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GenerateHemisphere(units::quantity<unit::length> sphereRadius,
-        units::quantity<unit::length> sphereThickness, unsigned numX, unsigned numY,
+std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GenerateHemisphere(QLength sphereRadius,
+        QLength sphereThickness, unsigned numX, unsigned numY,
         double sphereAzimuthAngle, double spherePolarAngle)
 {
     if(sphereAzimuthAngle >= 2.0 * M_PI)
@@ -291,7 +291,7 @@ std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GenerateHemisphere(units
     std::shared_ptr<Part<DIM> > p_part = GeneratePlane(numX, numY, sphereThickness == 0.0*unit::metres);
 
     // The part extents
-    std::vector<units::quantity<unit::length> > bbox = p_part->GetBoundingBox();
+    std::vector<QLength > bbox = p_part->GetBoundingBox();
 
     // Get the vertices
     std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = p_part->GetVertices();
@@ -330,7 +330,7 @@ std::shared_ptr<Part<DIM> > MappableGridGenerator<DIM>::GenerateHemisphere(units
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> MappableGridGenerator<DIM>::GetReferenceLengthScale()
+QLength MappableGridGenerator<DIM>::GetReferenceLengthScale()
 {
     return mReferenceLength;
 }

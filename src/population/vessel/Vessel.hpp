@@ -245,14 +245,14 @@ public:
      * @param rLocation the location to probe
      * @return the distance to the closest end node
      */
-    units::quantity<unit::length> GetClosestEndNodeDistance(const DimensionalChastePoint<DIM>& rLocation);
+    QLength GetClosestEndNodeDistance(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Return the distance from the vessel to the input location
      * @param rLocation the location to probe
      * @return the distance from the vessel to the input location
      */
-    units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation) const;
+    QLength GetDistance(const DimensionalChastePoint<DIM>& rLocation) const;
 
     /**
      * @return vector of vessels connected to this one
@@ -283,14 +283,14 @@ public:
      *
      * @return the length
      */
-    units::quantity<unit::length> GetLength() const;
+    QLength GetLength() const;
 
     /**
      * Return the radius
      *
      * @return the radius
      */
-    units::quantity<unit::length> GetRadius() const;
+    QLength GetRadius() const;
 
     /**
      * Return the maturity
@@ -416,7 +416,7 @@ public:
      * Set the radius
      * @param radius the radius
      */
-    void SetRadius(units::quantity<unit::length> radius);
+    void SetRadius(QLength radius);
 
     /**
      * Set the flow properties of the vessel

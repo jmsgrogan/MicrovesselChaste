@@ -76,10 +76,10 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
     // Iterate over vessel lengths
     std::vector<double> lengths;
     std::vector<double> average_oxygen_concentration;
-    units::quantity<unit::length> length_increment = 20.0 * 1.e-6 * unit::metres;
-    units::quantity<unit::length> domain_side_length = 2000.0 * 1.e-6 * unit::metres;
-    units::quantity<unit::length> reference_length = 1.e-6 * unit::metres;
-    units::quantity<unit::length> vessel_radius = 10.e-6*unit::metres;
+    QLength length_increment = 20.0 * 1.e-6 * unit::metres;
+    QLength domain_side_length = 2000.0 * 1.e-6 * unit::metres;
+    QLength reference_length = 1.e-6 * unit::metres;
+    QLength vessel_radius = 10.e-6*unit::metres;
     units::quantity<unit::dynamic_viscosity> visocity = 1.e-3*unit::poiseuille;
     boost::shared_ptr<OutputFileHandler> p_file_handler =
                     boost::shared_ptr<OutputFileHandler>(new OutputFileHandler("TestLinnengarHaematocritSolver_depl", true));
@@ -94,7 +94,7 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
                         boost::shared_ptr<OutputFileHandler>(new OutputFileHandler("TestLinnengarHaematocritSolver_depl/Length_"+extension, true));
 
         // Specify the network dimensions
-        units::quantity<unit::length> vessel_length = double(idx+1)*length_increment;
+        QLength vessel_length = double(idx+1)*length_increment;
 
         // Generate the network
         VesselNetworkGenerator<2> generator;
@@ -126,7 +126,7 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
         p_outlet_node->GetFlowProperties()->SetPressure(2000*unit::pascals);
 
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        units::quantity<unit::length> grid_spacing = 5.0e-6*unit::metres;
+        QLength grid_spacing = 5.0e-6*unit::metres;
         p_grid->SetSpacing(grid_spacing);
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = unsigned(domain_side_length/(grid_spacing)) + 1; // num x

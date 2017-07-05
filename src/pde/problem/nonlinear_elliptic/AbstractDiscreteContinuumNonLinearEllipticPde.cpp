@@ -53,7 +53,7 @@ AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::~Abstract
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 c_matrix<double, SPACE_DIM, SPACE_DIM> AbstractDiscreteContinuumNonLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiffusionTerm(const ChastePoint<SPACE_DIM>&, double u)
 {
-    units::quantity<unit::length> length_scale = this->mReferenceLengthScale;
+    QLength length_scale = this->mReferenceLengthScale;
     units::quantity<unit::time> time_scale = this->mReferenceTimeScale;
     double dimensionless_diffusivity = this->mDiffusivity*time_scale/(length_scale*length_scale);
     return identity_matrix<double>(SPACE_DIM)*dimensionless_diffusivity;

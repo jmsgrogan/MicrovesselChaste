@@ -139,7 +139,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
     c_vector<unsigned, 6> extents = this->mpRegularGrid->GetExtents();
     c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
-    units::quantity<unit::length> spacing = this->mpRegularGrid->GetSpacing();
+    QLength spacing = this->mpRegularGrid->GetSpacing();
     double diffusion_term = (p_linear_pde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
 
     for (unsigned i = extents[4]; i <= extents[5]; i++) // Z

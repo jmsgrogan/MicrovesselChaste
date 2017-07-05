@@ -79,7 +79,7 @@ public:
      * @param threshold the max distance from a cell location to vessel centre for labelling
      * @param cellLengthScale the cell population length scale
      */
-    void LabelVesselsInCellPopulation(AbstractCellPopulation<DIM>& cellPopulation,  units::quantity<unit::length> cellLengthScale,
+    void LabelVesselsInCellPopulation(AbstractCellPopulation<DIM>& cellPopulation,  QLength cellLengthScale,
             boost::shared_ptr<AbstractCellMutationState> pTipMutationState,
             boost::shared_ptr<AbstractCellMutationState> pStalkState,
                                       double threshold = 1.25e-6);
@@ -91,7 +91,7 @@ public:
      * @param cellLengthScale the cell population length scale
      * @param threshold tolerance for point to vessel calculation
      */
-    void PartitionNetworkOverCells(AbstractCellPopulation<DIM>& rCellPopulation, units::quantity<unit::length> cellLengthScale, double threshold = 1.25e-6);
+    void PartitionNetworkOverCells(AbstractCellPopulation<DIM>& rCellPopulation, QLength cellLengthScale, double threshold = 1.25e-6);
 
     /**
      * Remove any cells not overlapping with the vessel network. Does not label the cells.
@@ -99,7 +99,7 @@ public:
      * @param cellLengthScale the cell population length scale
      * @param threshold the max distance from a cell location to vessel centre for killing.
      */
-    void KillNonVesselOverlappingCells(AbstractCellPopulation<DIM>& rCellPopulation,  units::quantity<unit::length> cellLengthScale, double threshold = 1.25e-6);
+    void KillNonVesselOverlappingCells(AbstractCellPopulation<DIM>& rCellPopulation,  QLength cellLengthScale, double threshold = 1.25e-6);
 
     /**
      * Remove any cells overlapping with the vessel network. Does not label the cells.
@@ -107,7 +107,7 @@ public:
      * @param cellLengthScale the cell population length scale
      * @param threshold the max distance from a cell location to vessel centre for killing.
      */
-    void KillOverlappingVesselCells(AbstractCellPopulation<DIM>& rCellPopulation,  units::quantity<unit::length> cellLengthScale, double threshold = 1.25e-6);
+    void KillOverlappingVesselCells(AbstractCellPopulation<DIM>& rCellPopulation,  QLength cellLengthScale, double threshold = 1.25e-6);
 
     /**
      * Set the vessel network

@@ -130,7 +130,7 @@ public:
         OutputFileHandler file_handler1 = OutputFileHandler("TestMicrovesselVtkScene/TestVesselNetwork");
 
         // Specify the network dimensions
-        units::quantity<unit::length> vessel_length = 40.0* 1.e-6 * unit::metres;
+        QLength vessel_length = 40.0* 1.e-6 * unit::metres;
 
         // Generate the network
         VesselNetworkGenerator<3> vascular_network_generator;

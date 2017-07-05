@@ -141,7 +141,7 @@ public:
                 std::vector<units::quantity<unit::concentration> > solution = solver.GetConcentrations();
                 for(unsigned jdx=0; jdx<11; jdx++)
                 {
-                    units::quantity<unit::length> x = double(jdx)*0.1*unit::metres;
+                    QLength x = double(jdx)*0.1*unit::metres;
                     double x_nondim = x/(1.0*unit::metres);
                     double c_analytical_nondim = Solve1DParabolic(x_nondim, diff_nondim, time);
                     double c_numerical_nondim = solution[jdx]/boundary_concentration;

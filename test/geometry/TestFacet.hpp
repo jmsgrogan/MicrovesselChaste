@@ -196,7 +196,7 @@ public:
         boost::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(vertices);
         boost::shared_ptr<Facet<3> > p_facet = Facet<3>::Create(p_polygon);
 
-        std::vector<units::quantity<unit::length> > bbox = p_facet->GetBoundingBox();
+        std::vector<QLength > bbox = p_facet->GetBoundingBox();
         TS_ASSERT_DELTA(bbox[0].value(), -0.5e-6, 1.e-8);
         TS_ASSERT_DELTA(bbox[1].value(), 1.e-6, 1.e-8);
         TS_ASSERT_DELTA(bbox[2].value(), 0.0, 1.e-6);
@@ -228,7 +228,7 @@ public:
         boost::shared_ptr<Polygon<2> > p_polygon = Polygon<2>::Create(vertices);
         boost::shared_ptr<Facet<2> > p_facet = Facet<2>::Create(p_polygon);
 
-        std::vector<units::quantity<unit::length> > bbox = p_facet->GetBoundingBox();
+        std::vector<QLength > bbox = p_facet->GetBoundingBox();
         TS_ASSERT_DELTA(bbox[0].value(), -0.5e-6, 1.e-8);
         TS_ASSERT_DELTA(bbox[1].value(), 1.e-6, 1.e-8);
         TS_ASSERT_DELTA(bbox[2].value(), 0.0, 1.e-6);

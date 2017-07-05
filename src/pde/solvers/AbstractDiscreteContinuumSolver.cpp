@@ -104,7 +104,7 @@ std::shared_ptr<AbstractDiscreteContinuumPde<DIM, DIM> > AbstractDiscreteContinu
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> AbstractDiscreteContinuumSolver<DIM>::GetReferenceLength()
+QLength AbstractDiscreteContinuumSolver<DIM>::GetReferenceLength()
 {
     return mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
 }
@@ -310,7 +310,7 @@ void AbstractDiscreteContinuumSolver<DIM>::SetReferenceConcentration(units::quan
 
 template<unsigned DIM>
 void AbstractDiscreteContinuumSolver<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
-                                                             units::quantity<unit::length> cellPopulationReferenceLength,
+                                                             QLength cellPopulationReferenceLength,
                                                              units::quantity<unit::concentration> cellPopulationReferenceConcentration)
 {
     mpDensityMap->SetCellPopulation(rCellPopulation, cellPopulationReferenceLength, cellPopulationReferenceConcentration);

@@ -67,7 +67,7 @@ class MappableGridGenerator
     /**
      * The reference length scale
      */
-    units::quantity<unit::length> mReferenceLength;
+    QLength mReferenceLength;
 
 public:
     /**
@@ -108,9 +108,9 @@ public:
      * @param numY number of blocks over the cylinder height
      * @return pointer to a Part representation of the cylinder
      */
-    std::shared_ptr<Part<DIM> > GenerateCylinder(units::quantity<unit::length> cylinderRadius,
-            units::quantity<unit::length> cylinderThickness,
-            units::quantity<unit::length> cylinderHeight, unsigned numX, unsigned numY, double cylinderAngle = 2.0 * M_PI);
+    std::shared_ptr<Part<DIM> > GenerateCylinder(QLength cylinderRadius,
+            QLength cylinderThickness,
+            QLength cylinderHeight, unsigned numX, unsigned numY, double cylinderAngle = 2.0 * M_PI);
 
     /**
      * Generate a hemispherical grid, where the planar grid is mapped on to a sphere
@@ -123,8 +123,8 @@ public:
      * @param numY number of blocks over the cylinder height
      * @return pointer to a Part representation of the hemisphere
      */
-    std::shared_ptr<Part<DIM> > GenerateHemisphere(units::quantity<unit::length> sphereRadius,
-            units::quantity<unit::length> sphereThickness, unsigned numX, unsigned numY,
+    std::shared_ptr<Part<DIM> > GenerateHemisphere(QLength sphereRadius,
+            QLength sphereThickness, unsigned numX, unsigned numY,
             double sphereAzimuthAngle = 2.0 * M_PI, double spherePolarAngle = 0.5 * M_PI);
 
 
@@ -132,7 +132,7 @@ public:
      * Return the adopted reference length scale
      * @return the adopted reference length scale
      */
-    units::quantity<unit::length> GetReferenceLengthScale();
+    QLength GetReferenceLengthScale();
 };
 
 #endif /*MAPPABLEGRIDGENERATOR_HPP_*/

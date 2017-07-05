@@ -81,7 +81,7 @@ void VesselNetworkWriter<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DI
 }
 
 template <unsigned DIM>
-void VesselNetworkWriter<DIM>::SetReferenceLengthScale(units::quantity<unit::length> rReferenceLength)
+void VesselNetworkWriter<DIM>::SetReferenceLengthScale(QLength rReferenceLength)
 {
     mReferenceLength = rReferenceLength;
 }

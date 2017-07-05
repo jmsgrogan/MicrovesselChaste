@@ -145,7 +145,7 @@ void VesselSegment<DIM>::CopyDataFromExistingSegment(const std::shared_ptr<Vesse
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> VesselSegment<DIM>::GetDistance(const DimensionalChastePoint<DIM>& location) const
+QLength VesselSegment<DIM>::GetDistance(const DimensionalChastePoint<DIM>& location) const
 {
     return GetDistanceToLineSegment(mNodes.first->rGetLocation(), mNodes.second->rGetLocation(), location);
 }
@@ -157,7 +157,7 @@ std::shared_ptr<SegmentFlowProperties<DIM> > VesselSegment<DIM>::GetFlowProperti
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> VesselSegment<DIM>::GetLength() const
+QLength VesselSegment<DIM>::GetLength() const
 {
     return mNodes.second->GetDistance(mNodes.first->rGetLocation());
 }

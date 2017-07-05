@@ -73,14 +73,14 @@ public:
      * @param searchRadius the search radius
      */
     static void AssignInflows(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-            DimensionalChastePoint<DIM> location, units::quantity<unit::length> searchRadius);
+            DimensionalChastePoint<DIM> location, QLength searchRadius);
 
     /**
      * Any nodes within the specified radius of the input location are assigned as outflows
      * @param location the search location
      * @param searchRadius the search radius
      */
-    static void AssignOutflows(std::shared_ptr<VesselNetwork<DIM> > pNetwork, DimensionalChastePoint<DIM> location, units::quantity<unit::length> searchRadius);
+    static void AssignOutflows(std::shared_ptr<VesselNetwork<DIM> > pNetwork, DimensionalChastePoint<DIM> location, QLength searchRadius);
 
     /**
      * Copy flow properties from the specified segment to all other vessel network segments
@@ -104,7 +104,7 @@ public:
      * Set the nodal radii to the same value
      * @param radius the node radius value
      */
-    static void SetNodeRadii(std::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::length> radius);
+    static void SetNodeRadii(std::shared_ptr<VesselNetwork<DIM> > pNetwork, QLength radius);
 
     /**
      * Get the node radius by averaging its segments
@@ -125,7 +125,7 @@ public:
      * Set the segment radii to the same value
      * @param radius the segment radius
      */
-    static void SetSegmentRadii(std::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::length> radius);
+    static void SetSegmentRadii(std::shared_ptr<VesselNetwork<DIM> > pNetwork, QLength radius);
 
     /**
      * Set the segment viscosity to the same value

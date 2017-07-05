@@ -303,7 +303,7 @@ std::map<std::string, double> VesselNetwork<DIM>::GetOutputData()
 }
 
 template <unsigned DIM>
-void VesselNetwork<DIM>::RemoveShortVessels(units::quantity<unit::length> cutoff, bool endsOnly)
+void VesselNetwork<DIM>::RemoveShortVessels(QLength cutoff, bool endsOnly)
 {
     std::vector<std::shared_ptr<Vessel<DIM> > > vessels_to_remove;
 
@@ -329,7 +329,7 @@ void VesselNetwork<DIM>::RemoveShortVessels(units::quantity<unit::length> cutoff
 }
 
 template <unsigned DIM>
-void VesselNetwork<DIM>::MergeShortVessels(units::quantity<unit::length> cutoff)
+void VesselNetwork<DIM>::MergeShortVessels(QLength cutoff)
 {
     std::vector<std::shared_ptr<Vessel<DIM> > > vessels_to_merge;
     for(unsigned idx=0; idx<mVessels.size(); idx++)
@@ -591,7 +591,7 @@ void VesselNetwork<DIM>::MergeCoincidentNodes(std::vector<std::shared_ptr<Vessel
     bounds[5] = 10;
     p_merge->SetTolerance(tolerance);
     p_merge->InitPointInsertion(p_points, bounds);
-    units::quantity<unit::length> length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
+    QLength length_scale = BaseUnits::Instance()->GetReferenceLengthScale();
     std::vector<int> unique_index_map= std::vector<int>(nodes.size(), -1);
     for(unsigned idx=0; idx<nodes.size(); idx++)
     {

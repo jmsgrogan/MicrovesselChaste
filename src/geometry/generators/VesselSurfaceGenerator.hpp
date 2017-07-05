@@ -67,7 +67,7 @@ class VesselSurfaceGenerator
     /**
      * The reference length scale
      */
-    units::quantity<unit::length> mReferenceLength;
+    QLength mReferenceLength;
 
 public:
 

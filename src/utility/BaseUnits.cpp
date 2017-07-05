@@ -79,12 +79,12 @@ void BaseUnits::SetReferenceTimeScale(units::quantity<unit::time> referenceTimeS
     mTime = referenceTimeScale;
 }
 
-units::quantity<unit::length> BaseUnits::GetReferenceLengthScale()
+QLength BaseUnits::GetReferenceLengthScale()
 {
     return mLength;
 }
 
-void BaseUnits::SetReferenceLengthScale(units::quantity<unit::length> referenceLengthScale)
+void BaseUnits::SetReferenceLengthScale(QLength referenceLengthScale)
 {
     mLength = referenceLengthScale;
 }

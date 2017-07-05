@@ -82,7 +82,7 @@ protected:
     /**
      * The reference length scale, used to scale diffusivity to the mesh size
      */
-    units::quantity<unit::length> mReferenceLengthScale;
+    QLength mReferenceLengthScale;
 
     /**
      * The reference time scale, used to scale diffusivity
@@ -135,7 +135,7 @@ public:
      * Set the reference length
      * @param referenceLength the reference length
      */
-    void SetReferenceLength(units::quantity<unit::length> referenceLength);
+    void SetReferenceLength(QLength referenceLength);
 
     /**
      * Set the reference time

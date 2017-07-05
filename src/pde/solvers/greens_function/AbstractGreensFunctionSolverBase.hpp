@@ -89,7 +89,7 @@ protected:
     /**
      * Subsegment lengths
      */
-    std::vector<units::quantity<unit::length> > mSubSegmentLengths;
+    std::vector<QLength > mSubSegmentLengths;
 
     /**
      * Sink rate ordered by point index
@@ -134,7 +134,7 @@ protected:
     /**
      * Minimum subsegment length
      */
-    units::quantity<unit::length> mSubsegmentCutoff;
+    QLength mSubsegmentCutoff;
 
 public:
 
@@ -186,7 +186,7 @@ public:
      * Set the minimum subsegment length
      * @param value the minimum subsegment length
      */
-    void SetSubSegmentCutoff(units::quantity<unit::length> value);
+    void SetSubSegmentCutoff(QLength value);
 
     /**
      * Do the solve

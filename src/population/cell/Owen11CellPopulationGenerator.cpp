@@ -112,13 +112,13 @@ void Owen11CellPopulationGenerator<DIM>::SetGridCalculator(std::shared_ptr<GridC
 }
 
 template<unsigned DIM>
-void Owen11CellPopulationGenerator<DIM>::SetReferenceLengthScale(units::quantity<unit::length> lengthScale)
+void Owen11CellPopulationGenerator<DIM>::SetReferenceLengthScale(QLength lengthScale)
 {
     mReferenceLength = lengthScale;
 }
 
 template<unsigned DIM>
-void Owen11CellPopulationGenerator<DIM>::SetTumourRadius(units::quantity<unit::length> tumourRadius)
+void Owen11CellPopulationGenerator<DIM>::SetTumourRadius(QLength tumourRadius)
 {
     mTumourRadius = tumourRadius;
 }
@@ -154,7 +154,7 @@ std::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM>:
     // There is a bug in Chaste causing index out of bounds for large grid spacing. It may be better to use a scaling here
     // so grid spacing is always one.
 
-    units::quantity<unit::length> spacing = p_grid->GetSpacing();
+    QLength spacing = p_grid->GetSpacing();
     if(DIM==2)
     {
         p_mesh->Scale(spacing/mCellPopulationReferenceLength, spacing/mCellPopulationReferenceLength);
@@ -257,7 +257,7 @@ std::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM>:
 
             for(unsigned idx=0; idx<p_grid->GetNumberOfPoints(); idx++)
             {
-                units::quantity<unit::length> distance = p_grid->GetPoint(idx).GetDistance(origin);
+                QLength distance = p_grid->GetPoint(idx).GetDistance(origin);
                 if(distance<=mTumourRadius)
                 {
                     p_cell_population->GetCellUsingLocationIndex(idx)->SetMutationState(mpCancerCellMutationState);

@@ -62,7 +62,7 @@ c_vector<double, DIM> GetArbitaryUnitNormal(c_vector<double, DIM> direction);
  * @return the distance between this point and the input point
  */
 template<unsigned DIM>
-units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation1,
+QLength GetDistance(const DimensionalChastePoint<DIM>& rLocation1,
                                                  const DimensionalChastePoint<DIM>& rLocation2);
 
 /**
@@ -73,7 +73,7 @@ units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLo
  * @return the distance between the line and probe point
  */
 template<unsigned DIM>
-units::quantity<unit::length> GetDistanceToLineSegment(const DimensionalChastePoint<DIM>& rStartLocation,
+QLength GetDistanceToLineSegment(const DimensionalChastePoint<DIM>& rStartLocation,
                                                  const DimensionalChastePoint<DIM>& rEndLocation,
                                                  const DimensionalChastePoint<DIM>& rProbeLocation);
 
@@ -94,7 +94,7 @@ units::quantity<unit::area> GetDotProduct(const DimensionalChastePoint<DIM>& rLo
  * @return the dot product of the vectors between each point and the origin
  */
 template<unsigned DIM>
-units::quantity<unit::length> GetDotProduct(const DimensionalChastePoint<DIM>& rLocation1,
+QLength GetDotProduct(const DimensionalChastePoint<DIM>& rLocation1,
                                                  const c_vector<double, DIM>& rLocation2);
 /**
  * Return the projection of a point onto the line defined by the start and end locations
@@ -122,7 +122,7 @@ DimensionalChastePoint<DIM> GetPointProjectionOnLineSegment(const DimensionalCha
  */
 template<unsigned DIM>
 vtkSmartPointer<vtkPoints> GetProbeLocationsExternalPoint(DimensionalChastePoint<DIM> rCentrePoint,
-        DimensionalChastePoint<DIM> currentDirection, units::quantity<unit::length> probeLength,
+        DimensionalChastePoint<DIM> currentDirection, QLength probeLength,
         unsigned numDivisions=8);
 
 /**
@@ -138,7 +138,7 @@ template<unsigned DIM>
 vtkSmartPointer<vtkPoints> GetProbeLocationsInternalPoint(DimensionalChastePoint<DIM> rInitialDirection,
                                                                          DimensionalChastePoint<DIM> rCentralPoint,
                                                                          DimensionalChastePoint<DIM> rRotationAxis,
-                                                                         units::quantity<unit::length> probeLength,
+                                                                         QLength probeLength,
                                                                          units::quantity<unit::plane_angle> angle);
 
 /**
@@ -163,7 +163,7 @@ bool IsPointInCone(const DimensionalChastePoint<DIM>& rPoint,
  */
 template<unsigned DIM>
 bool IsPointInBox(const DimensionalChastePoint<DIM>& rPoint,
-                  const DimensionalChastePoint<DIM>& rLocation, units::quantity<unit::length> spacing);
+                  const DimensionalChastePoint<DIM>& rLocation, QLength spacing);
 
 /**
  * Is the point inside the cube box defined by a centre location and bounds
@@ -174,7 +174,7 @@ bool IsPointInBox(const DimensionalChastePoint<DIM>& rPoint,
  */
 template<unsigned DIM>
 bool IsPointInBox(const DimensionalChastePoint<DIM>& rPoint,
-        const c_vector<double, 6>& rBoundingBox, units::quantity<unit::length> lengthScale);
+        const c_vector<double, 6>& rBoundingBox, QLength lengthScale);
 
 /**
  * Is the point inside the tetrahedron given by the vector of vertex locations
@@ -193,9 +193,9 @@ bool IsPointInTetra(const DimensionalChastePoint<DIM>& rPoint, const std::vector
  * @return the length of the line in the box
  */
 template<unsigned DIM>
-units::quantity<unit::length> LengthOfLineInBox(const DimensionalChastePoint<DIM>& rStartPoint,
+QLength LengthOfLineInBox(const DimensionalChastePoint<DIM>& rStartPoint,
                          const DimensionalChastePoint<DIM>& rEndPoint,
-                         const DimensionalChastePoint<DIM>& rBoxCentre, units::quantity<unit::length> spacing);
+                         const DimensionalChastePoint<DIM>& rBoxCentre, QLength spacing);
 
 /**
  * Return the length of the line given by a start point and end point
@@ -206,10 +206,10 @@ units::quantity<unit::length> LengthOfLineInBox(const DimensionalChastePoint<DIM
  * @return the length of the line in the box
  */
 template<unsigned DIM>
-units::quantity<unit::length> LengthOfLineInBox(const DimensionalChastePoint<DIM>& rStartPoint,
+QLength LengthOfLineInBox(const DimensionalChastePoint<DIM>& rStartPoint,
                          const DimensionalChastePoint<DIM>& rEndPoint,
                          const c_vector<double, 6>& rBoundingBox,
-                         units::quantity<unit::length> lengthScale);
+                         QLength lengthScale);
 
 /**
  * Return the length of the line given by a start point and end point in the tetrahedron given by vertex locations
@@ -219,7 +219,7 @@ units::quantity<unit::length> LengthOfLineInBox(const DimensionalChastePoint<DIM
  * @return the length of the line in the tetrahedron
  */
 template<unsigned DIM>
-units::quantity<unit::length> LengthOfLineInTetra(const DimensionalChastePoint<DIM>& rStartPoint,
+QLength LengthOfLineInTetra(const DimensionalChastePoint<DIM>& rStartPoint,
                                                   const DimensionalChastePoint<DIM>& rEndPoint,
                            const std::vector<DimensionalChastePoint<DIM> >& locations);
 
@@ -230,7 +230,7 @@ units::quantity<unit::length> LengthOfLineInTetra(const DimensionalChastePoint<D
  * @return a point offset a prescribed distance along the direction
  */
 template<unsigned DIM>
-DimensionalChastePoint<DIM> OffsetAlongVector(const DimensionalChastePoint<DIM>& rVector, units::quantity<unit::length> offset);
+DimensionalChastePoint<DIM> OffsetAlongVector(const DimensionalChastePoint<DIM>& rVector, QLength offset);
 
 /**
  * Return a point offset a prescribed distance along the unit vector of the input vector. Used by sprouting rules
@@ -240,8 +240,8 @@ DimensionalChastePoint<DIM> OffsetAlongVector(const DimensionalChastePoint<DIM>&
  * @return a point offset a prescribed distance along the direction
  */
 template<unsigned DIM>
-DimensionalChastePoint<DIM> OffsetAlongVector(const c_vector<double, DIM>& rVector, units::quantity<unit::length> offset,
-                                              units::quantity<unit::length> referenceLength);
+DimensionalChastePoint<DIM> OffsetAlongVector(const c_vector<double, DIM>& rVector, QLength offset,
+                                              QLength referenceLength);
 
 /**
  * Rotate the supplied vector about the axis by the specified angle.

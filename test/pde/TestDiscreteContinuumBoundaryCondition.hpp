@@ -63,8 +63,8 @@ public:
     void TestSimpleLinearEllipticFiniteDifferenceSolver() throw(Exception)
     {
         // Set up the vessel network
-        units::quantity<unit::length> vessel_length(100.0*unit::microns);
-        units::quantity<unit::length> reference_length(1.0*unit::microns);
+        QLength vessel_length(100.0*unit::microns);
+        QLength reference_length(1.0*unit::microns);
         VesselNetworkGenerator<3> generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<3>());
 
@@ -75,7 +75,7 @@ public:
                                                      -vessel_length/(2.0*reference_length), 0.0, reference_length);
         p_domain->Translate(translation_vector);
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        units::quantity<unit::length> spacing(10.0*unit::microns);
+        QLength spacing(10.0*unit::microns);
         p_grid->GenerateFromPart(p_domain, spacing);
 
         // Choose the PDE
@@ -112,8 +112,8 @@ public:
     void TestSimpleLinearEllipticFiniteElementSolver() throw(Exception)
     {
         // Set up the vessel network
-        units::quantity<unit::length> vessel_length(100.0*unit::microns);
-        units::quantity<unit::length> reference_length(1.0*unit::microns);
+        QLength vessel_length(100.0*unit::microns);
+        QLength reference_length(1.0*unit::microns);
         VesselNetworkGenerator<3> generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<3>());
 
@@ -126,7 +126,7 @@ public:
 
         boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_domain);
-        units::quantity<unit::length> spacing(10.0*unit::microns);
+        QLength spacing(10.0*unit::microns);
         p_mesh_generator->SetMaxElementArea(spacing*spacing*spacing);
         p_mesh_generator->Update();
 

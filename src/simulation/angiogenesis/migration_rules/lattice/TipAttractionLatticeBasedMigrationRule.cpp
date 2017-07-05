@@ -117,9 +117,9 @@ std::vector<double> TipAttractionLatticeBasedMigrationRule<DIM>::GetNeighbourMov
     DimensionalChastePoint<DIM> sprout_point;
     units::quantity<unit::velocity> tip_attraction_strength = 0.0*unit::metres_per_second;
     units::quantity<unit::velocity> sprout_attraction_strength = 0.0*unit::metres_per_second;
-    units::quantity<unit::length> closest_tip_distance = 1e6*unit::metres;
-    units::quantity<unit::length> closest_sprout_distance = 1e6*unit::metres;
-    units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
+    QLength closest_tip_distance = 1e6*unit::metres;
+    QLength closest_sprout_distance = 1e6*unit::metres;
+    QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
 
     if(!this->mIsSprouting and mUseTipAttraction)
     {
@@ -142,7 +142,7 @@ std::vector<double> TipAttractionLatticeBasedMigrationRule<DIM>::GetNeighbourMov
             }
             if(std::abs(angle)<mTipAttractionAngle+1.e-3)
             {
-                units::quantity<unit::length> tip_nbr_distance = pNode->GetDistance(nearby_nodes[idx]->rGetLocation());
+                QLength tip_nbr_distance = pNode->GetDistance(nearby_nodes[idx]->rGetLocation());
                 if(nearby_nodes[idx]->IsMigrating())
                 {
                     if(tip_nbr_distance<closest_tip_distance)
@@ -209,7 +209,7 @@ std::vector<double> TipAttractionLatticeBasedMigrationRule<DIM>::GetNeighbourMov
                 k = 26.0/6.0;
             }
             units::quantity<unit::time> dt = SimulationTime::Instance()->GetTimeStep() * BaseUnits::Instance()->GetReferenceTimeScale();
-            units::quantity<unit::length> dij = pNode->rGetLocation().GetDistance(neighbour_location);
+            QLength dij = pNode->rGetLocation().GetDistance(neighbour_location);
             probability_of_moving[jdx] = (dt/(k*dij*dij))*(mCellMotility + mCellChemotacticParameter*VEGF_diff);
 
             if(!this->mIsSprouting and mUseTipAttraction)

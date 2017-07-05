@@ -38,7 +38,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DimensionalChastePoint.hpp"
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM>::DimensionalChastePoint(double x, double y, double z, units::quantity<unit::length> referenceLength) :
+DimensionalChastePoint<DIM>::DimensionalChastePoint(double x, double y, double z, QLength referenceLength) :
         mLocation(zero_vector<double>(DIM)),
         mReferenceLength(referenceLength),
         mIndex(0),
@@ -64,7 +64,7 @@ DimensionalChastePoint<DIM>::DimensionalChastePoint(double x, double y, double z
 }
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM>::DimensionalChastePoint(c_vector<double, DIM> coords, units::quantity<unit::length> referenceLength) :
+DimensionalChastePoint<DIM>::DimensionalChastePoint(c_vector<double, DIM> coords, QLength referenceLength) :
         mReferenceLength(referenceLength),
         mIndex(0),
         mAttributes()
@@ -81,13 +81,13 @@ DimensionalChastePoint<DIM>::DimensionalChastePoint(c_vector<double, DIM> coords
 }
 
 template<unsigned DIM>
-std::shared_ptr<DimensionalChastePoint<DIM> > DimensionalChastePoint<DIM>::Create(double x, double y, double z, units::quantity<unit::length> referenceLength)
+std::shared_ptr<DimensionalChastePoint<DIM> > DimensionalChastePoint<DIM>::Create(double x, double y, double z, QLength referenceLength)
 {
     return std::make_shared<DimensionalChastePoint<DIM> >(x, y, z, referenceLength);
 }
 
 template<unsigned DIM>
-std::shared_ptr<DimensionalChastePoint<DIM> > DimensionalChastePoint<DIM>::Create(c_vector<double, DIM> coords, units::quantity<unit::length> referenceLength)
+std::shared_ptr<DimensionalChastePoint<DIM> > DimensionalChastePoint<DIM>::Create(c_vector<double, DIM> coords, QLength referenceLength)
 {
     return std::make_shared<DimensionalChastePoint<DIM> >(coords, referenceLength);
 }
@@ -111,31 +111,31 @@ std::map<std::string, double> DimensionalChastePoint<DIM>::GetAttributes()
 }
 
 template<unsigned DIM>
-c_vector<double, DIM> DimensionalChastePoint<DIM>::GetLocation(units::quantity<unit::length> scale)
+c_vector<double, DIM> DimensionalChastePoint<DIM>::GetLocation(QLength scale)
 {
     return mLocation*(mReferenceLength/scale);
 }
 
 template<unsigned DIM>
-const c_vector<double, DIM> DimensionalChastePoint<DIM>::GetLocation(units::quantity<unit::length> scale) const
+const c_vector<double, DIM> DimensionalChastePoint<DIM>::GetLocation(QLength scale) const
 {
     return mLocation*(mReferenceLength/scale);
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> DimensionalChastePoint<DIM>::GetReferenceLengthScale() const
+QLength DimensionalChastePoint<DIM>::GetReferenceLengthScale() const
 {
     return mReferenceLength;
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> DimensionalChastePoint<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation) const
+QLength DimensionalChastePoint<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation) const
 {
     return norm_2(rLocation.GetLocation(mReferenceLength) - mLocation)*mReferenceLength;
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> DimensionalChastePoint<DIM>::GetNorm2()
+QLength DimensionalChastePoint<DIM>::GetNorm2()
 {
     return norm_2(mLocation)*mReferenceLength;
 }
@@ -203,7 +203,7 @@ bool DimensionalChastePoint<DIM>::IsCoincident(const DimensionalChastePoint<DIM>
 }
 
 template<unsigned DIM>
-void DimensionalChastePoint<DIM>::SetReferenceLengthScale(units::quantity<unit::length> lenthScale)
+void DimensionalChastePoint<DIM>::SetReferenceLengthScale(QLength lenthScale)
 {
     if(lenthScale == 0.0*unit::metres)
     {

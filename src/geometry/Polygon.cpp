@@ -285,12 +285,12 @@ DimensionalChastePoint<DIM> Polygon<DIM>::GetCentroid()
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::length> > Polygon<DIM>::GetBoundingBox()
+std::vector<QLength > Polygon<DIM>::GetBoundingBox()
 {
     c_vector<double, 6> box;
     GetVtkPolygon()->GetPoints()->GetBounds(&box[0]);
 
-    std::vector<units::quantity<unit::length> > box_vector(6);
+    std::vector<QLength > box_vector(6);
     for(unsigned idx=0; idx<6; idx++)
     {
         box_vector[idx] = box[idx] * mReferenceLength;
@@ -299,7 +299,7 @@ std::vector<units::quantity<unit::length> > Polygon<DIM>::GetBoundingBox()
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> Polygon<DIM>::GetDistance(const DimensionalChastePoint<DIM>& location)
+QLength Polygon<DIM>::GetDistance(const DimensionalChastePoint<DIM>& location)
 {
     double point[3];
     for (unsigned idx = 0; idx < DIM; idx++)
@@ -317,7 +317,7 @@ units::quantity<unit::length> Polygon<DIM>::GetDistance(const DimensionalChasteP
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> Polygon<DIM>::GetDistanceToEdges(const DimensionalChastePoint<DIM>& location)
+QLength Polygon<DIM>::GetDistanceToEdges(const DimensionalChastePoint<DIM>& location)
 {
     double point[3];
     for (unsigned idx = 0; idx < DIM; idx++)

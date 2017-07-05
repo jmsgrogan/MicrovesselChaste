@@ -84,12 +84,12 @@ public:
         dimensions[1] = 11;
         dimensions[2] = 1;
         p_grid->SetDimensions(dimensions);
-        units::quantity<unit::length> spacing(10.0*unit::microns);
+        QLength spacing(10.0*unit::microns);
         p_grid->SetSpacing(spacing);
 
         // Set up vessel network
         VesselNetworkGenerator<2> network_generator;
-        units::quantity<unit::length> length(92.0*unit::microns);
+        QLength length(92.0*unit::microns);
         boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
                                                                                                 DimensionalChastePoint<2>(50.0, 4.0));
         // Get a point-segment map
@@ -136,12 +136,12 @@ public:
         dimensions[1] = 11;
         dimensions[2] = 1;
         p_grid->SetDimensions(dimensions);
-        units::quantity<unit::length> spacing(10.0*unit::microns);
+        QLength spacing(10.0*unit::microns);
         p_grid->SetSpacing(spacing);
 
         // Set up vessel network
         VesselNetworkGenerator<2> network_generator;
-        units::quantity<unit::length> length(92.0*unit::microns);
+        QLength length(92.0*unit::microns);
         boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
                                                                                                 DimensionalChastePoint<2>(45.0, 4.0));
         // Get a point-segment map
@@ -186,15 +186,15 @@ public:
         dimensions[1] = 11;
         dimensions[2] = 1;
         p_grid->SetDimensions(dimensions);
-        units::quantity<unit::length> spacing(10.0*unit::microns);
+        QLength spacing(10.0*unit::microns);
         p_grid->SetSpacing(spacing);
 
         // Set up vessel network
         VesselNetworkGenerator<2> network_generator;
-        units::quantity<unit::length> length(100.0*unit::microns);
+        QLength length(100.0*unit::microns);
         boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
                                                                                                 DimensionalChastePoint<2>(45.0, -0.1));
-        units::quantity<unit::length> radius(11.0*unit::microns);
+        QLength radius(11.0*unit::microns);
         VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, radius);
 
         // Get a point-segment map
@@ -242,13 +242,13 @@ public:
         dimensions[1] = 100;
         dimensions[2] = 1;
         p_grid->SetDimensions(dimensions);
-        units::quantity<unit::length> spacing(10.0*unit::microns);
+        QLength spacing(10.0*unit::microns);
         p_grid->SetSpacing(spacing);
 
         // Set up vessel network
         VesselNetworkGenerator<2> network_generator;
-        units::quantity<unit::length> length(1000.0*unit::microns);
-        units::quantity<unit::length> vessel_length(40.0*unit::microns);
+        QLength length(1000.0*unit::microns);
+        QLength vessel_length(40.0*unit::microns);
         boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(length, length, vessel_length);
 
         // Get a point-segment map

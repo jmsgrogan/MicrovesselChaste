@@ -134,7 +134,7 @@ void CornealMicropocketSimulation<DIM>::SetTipVelocity(units::quantity<unit::vel
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetPelletHeight(units::quantity<unit::length> pelletHeight)
+void CornealMicropocketSimulation<DIM>::SetPelletHeight(QLength pelletHeight)
 {
     mPelletHeight = pelletHeight;
 }
@@ -146,25 +146,25 @@ void CornealMicropocketSimulation<DIM>::SetOnlyPerfusedSprout(bool onlyPerfused)
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetCorneaRadius(units::quantity<unit::length> corneaRadius)
+void CornealMicropocketSimulation<DIM>::SetCorneaRadius(QLength corneaRadius)
 {
     mCorneaRadius = corneaRadius;
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetPelletThickness(units::quantity<unit::length> pelletThickness)
+void CornealMicropocketSimulation<DIM>::SetPelletThickness(QLength pelletThickness)
 {
     mPelletThickness = pelletThickness;
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetPelletRadius(units::quantity<unit::length> pelletRadius)
+void CornealMicropocketSimulation<DIM>::SetPelletRadius(QLength pelletRadius)
 {
     mPelletRadius = pelletRadius;
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetLimbalOffset(units::quantity<unit::length> limbalOffset)
+void CornealMicropocketSimulation<DIM>::SetLimbalOffset(QLength limbalOffset)
 {
     mLimbalOffset = limbalOffset;
 }
@@ -181,11 +181,11 @@ std::shared_ptr<Part<DIM> > CornealMicropocketSimulation<DIM>::SetUpDomain()
     mpDomain = Part<DIM>::Create();
     mHoles.clear();
 
-    units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
+    QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
     if(mDomainType == DomainType::PLANAR_2D)
     {
-        units::quantity<unit::length> domain_width = 2.0 * M_PI * mCorneaRadius;
-        units::quantity<unit::length> domain_height = mPelletHeight + mLimbalOffset;
+        QLength domain_width = 2.0 * M_PI * mCorneaRadius;
+        QLength domain_height = mPelletHeight + mLimbalOffset;
         if(!mUsePellet)
         {
             mpDomain->AddRectangle(domain_width,
@@ -217,8 +217,8 @@ std::shared_ptr<Part<DIM> > CornealMicropocketSimulation<DIM>::SetUpDomain()
     }
     else if(mDomainType == DomainType::PLANAR_3D)
     {
-        units::quantity<unit::length> domain_width = 2.0 * M_PI * mCorneaRadius;
-        units::quantity<unit::length> domain_height = mPelletHeight + mLimbalOffset;
+        QLength domain_width = 2.0 * M_PI * mCorneaRadius;
+        QLength domain_height = mPelletHeight + mLimbalOffset;
         double norm_domain_height = domain_height/reference_length;
         double norm_domain_width = domain_width/reference_length;
         if(!mUsePellet)
@@ -230,7 +230,7 @@ std::shared_ptr<Part<DIM> > CornealMicropocketSimulation<DIM>::SetUpDomain()
             {
                 DimensionalChastePoint<DIM> probe_loc(norm_domain_width/2.0,
                         norm_domain_height, mCorneaThickness/(2.0*reference_length));
-                units::quantity<unit::length> distance = facets[idx]->GetCentroid().GetDistance(probe_loc);
+                QLength distance = facets[idx]->GetCentroid().GetDistance(probe_loc);
                 if (double(distance/reference_length) < 1e-3)
                 {
                     facets[idx]->GetPolygons()[0]->AddAttribute("Pellet Interface", 1.0);
@@ -260,7 +260,7 @@ std::shared_ptr<Part<DIM> > CornealMicropocketSimulation<DIM>::SetUpDomain()
             {
                 DimensionalChastePoint<DIM> probe_loc(norm_domain_width/2.0,
                         norm_domain_height, mCorneaThickness/(2.0*reference_length));
-                units::quantity<unit::length> distance = facets[idx]->GetCentroid().GetDistance(probe_loc);
+                QLength distance = facets[idx]->GetCentroid().GetDistance(probe_loc);
                 if (double(distance/reference_length) < 1e-3)
                 {
                     mpDomain->AddPolygon(p_polygon, false, facets[idx]);
@@ -270,7 +270,7 @@ std::shared_ptr<Part<DIM> > CornealMicropocketSimulation<DIM>::SetUpDomain()
     }
     else if(mDomainType == DomainType::CIRCLE_2D)
     {
-        units::quantity<unit::length> delta = mPelletHeight + mLimbalOffset -mCorneaRadius + mPelletRadius;
+        QLength delta = mPelletHeight + mLimbalOffset -mCorneaRadius + mPelletRadius;
         mpDomain->AddCircle(mCorneaRadius, DimensionalChastePoint<DIM>(0.0, 0.0, 0.0), 24);
         if (mUsePellet)
         {
@@ -283,7 +283,7 @@ std::shared_ptr<Part<DIM> > CornealMicropocketSimulation<DIM>::SetUpDomain()
     }
     else if(mDomainType == DomainType::CIRCLE_3D)
     {
-        units::quantity<unit::length> delta = mPelletHeight + mLimbalOffset -mCorneaRadius+mPelletRadius;
+        QLength delta = mPelletHeight + mLimbalOffset -mCorneaRadius+mPelletRadius;
         std::shared_ptr<Polygon<DIM > > p_circle = mpDomain->AddCircle(mCorneaRadius,
                 DimensionalChastePoint<DIM>(0.0, 0.0, 0.0), 24);
         mpDomain->Extrude(p_circle, mCorneaThickness);
@@ -462,13 +462,13 @@ std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulatio
 template<unsigned DIM>
 std::shared_ptr<VesselNetwork<DIM> > CornealMicropocketSimulation<DIM>::SetUpVesselNetwork()
 {
-    units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
+    QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
     mpNetwork = VesselNetwork<DIM>::Create();
 
     if(mDomainType == DomainType::PLANAR_2D or mDomainType == DomainType::PLANAR_3D)
     {
         VesselNetworkGenerator<DIM> generator;
-        units::quantity<unit::length> domain_length = 2.0*M_PI*mCorneaRadius;
+        QLength domain_length = 2.0*M_PI*mCorneaRadius;
         unsigned divisions = unsigned(float(domain_length/mNodeSpacing)) - 2;
         unsigned alignment_axis = 0;
         double midpoint = 0.0;
@@ -489,7 +489,7 @@ std::shared_ptr<VesselNetwork<DIM> > CornealMicropocketSimulation<DIM>::SetUpVes
     }
     else if(mDomainType == DomainType::CIRCLE_2D or mDomainType == DomainType::CIRCLE_3D)
     {
-        units::quantity<unit::length> sampling_radius = mCorneaRadius-mLimbalOffset;
+        QLength sampling_radius = mCorneaRadius-mLimbalOffset;
         unsigned num_nodes = int(double((2.0*M_PI*sampling_radius)/mNodeSpacing)) + 1;
         double sweep_angle = 2.0*M_PI/double(num_nodes);
         double midpoint = 0.0;
@@ -521,7 +521,7 @@ std::shared_ptr<VesselNetwork<DIM> > CornealMicropocketSimulation<DIM>::SetUpVes
     {
         double dimless_cornea_mid_radius = double((mCorneaRadius-mCorneaThickness/2.0)/reference_length);
         double dimless_offset = double(mLimbalOffset/reference_length);
-        units::quantity<unit::length> sampling_radius = std::sqrt(dimless_cornea_mid_radius*dimless_cornea_mid_radius-
+        QLength sampling_radius = std::sqrt(dimless_cornea_mid_radius*dimless_cornea_mid_radius-
                 dimless_offset*dimless_offset)*reference_length;
         unsigned num_nodes = int(double((2.0*M_PI*sampling_radius)/mNodeSpacing)) + 1;
         double sweep_angle = 2.0*M_PI/double(num_nodes);
@@ -552,7 +552,7 @@ std::shared_ptr<VesselNetwork<DIM> > CornealMicropocketSimulation<DIM>::SetUpVes
 template<unsigned DIM>
 void CornealMicropocketSimulation<DIM>::SetUpSolver()
 {
-    units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
+    QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
     units::quantity<unit::concentration> reference_concentration =
             BaseUnits::Instance()->GetReferenceConcentrationScale();
     std::shared_ptr<OutputFileHandler> file_handler =
@@ -732,10 +732,10 @@ template<unsigned DIM>
 void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
 {
     mSampleLines.clear();
-    units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
+    QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
     if(mDomainType == DomainType::PLANAR_2D)
     {
-        units::quantity<unit::length> domain_width = 2.0*M_PI*mCorneaRadius;
+        QLength domain_width = 2.0*M_PI*mCorneaRadius;
         unsigned num_sample_points_x = int(double(domain_width/mSampleSpacingX)) + 1;
         mNumSampleY = int(double((mPelletHeight)/mSampleSpacingY)) + 1;
 
@@ -755,7 +755,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
     }
     else if(mDomainType == DomainType::PLANAR_3D)
     {
-        units::quantity<unit::length> domain_width = 2.0*M_PI*mCorneaRadius;
+        QLength domain_width = 2.0*M_PI*mCorneaRadius;
         unsigned num_sample_points_x = int(double(domain_width/mSampleSpacingX)) + 1;
         mNumSampleY = int(double((mPelletHeight)/mSampleSpacingY)) + 1;
         mNumSampleZ = int(double(mCorneaThickness/mSampleSpacingZ)) + 1;
@@ -781,13 +781,13 @@ void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
     }
     else if(mDomainType == DomainType::CIRCLE_2D)
     {
-        units::quantity<unit::length> domain_width = 2.0*M_PI*mCorneaRadius;
+        QLength domain_width = 2.0*M_PI*mCorneaRadius;
         unsigned num_sample_points_x = int(double(domain_width/mSampleSpacingX)) + 1;
         mNumSampleY = int(double((mPelletHeight)/mSampleSpacingY)) + 1;
         for(unsigned idx=0;idx<mNumSampleY;idx++)
         {
             vtkSmartPointer<vtkPoints> p_sample_points = vtkSmartPointer<vtkPoints>::New();
-            units::quantity<unit::length> sampling_radius = mCorneaRadius-mLimbalOffset-
+            QLength sampling_radius = mCorneaRadius-mLimbalOffset-
                     double(idx)*mSampleSpacingY;
             unsigned num_nodes = int(double((2.0*M_PI*sampling_radius)/mNodeSpacing)) + 1;
             double sweep_angle = 2.0*M_PI/double(num_nodes);
@@ -803,7 +803,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
     }
     else if(mDomainType == DomainType::CIRCLE_3D)
     {
-        units::quantity<unit::length> domain_width = 2.0*M_PI*mCorneaRadius;
+        QLength domain_width = 2.0*M_PI*mCorneaRadius;
         unsigned num_sample_points_x = int(double(domain_width/mSampleSpacingX)) + 1;
         mNumSampleY = int(double((mPelletHeight)/mSampleSpacingY)) + 1;
         mNumSampleZ = int(double(mCorneaThickness/mSampleSpacingZ)) + 1;
@@ -813,7 +813,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
             for(unsigned idx=0;idx<mNumSampleY;idx++)
             {
                 vtkSmartPointer<vtkPoints> p_sample_points = vtkSmartPointer<vtkPoints>::New();
-                units::quantity<unit::length> sampling_radius = mCorneaRadius-mLimbalOffset-
+                QLength sampling_radius = mCorneaRadius-mLimbalOffset-
                         double(idx)*mSampleSpacingY;
                 unsigned num_nodes = int(double((2.0*M_PI*sampling_radius)/mNodeSpacing)) + 1;
                 double sweep_angle = 2.0*M_PI/double(num_nodes);
@@ -833,7 +833,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
         double pellet_angle = std::asin(double(mPelletHeight/mCorneaRadius));
         double offset_angle = std::asin(double(mLimbalOffset/mCorneaRadius));
 
-        units::quantity<unit::length> y_extent = mCorneaRadius*(pellet_angle-offset_angle);
+        QLength y_extent = mCorneaRadius*(pellet_angle-offset_angle);
         mNumSampleY = int(float(y_extent/mSampleSpacingY)) + 1;
         mNumSampleZ = int(float(mCorneaThickness/mSampleSpacingZ)) + 1;
 
@@ -844,10 +844,10 @@ void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
                 vtkSmartPointer<vtkPoints> p_sample_points = vtkSmartPointer<vtkPoints>::New();
                 double current_angle = offset_angle +
                         double(idx)*(pellet_angle-offset_angle)/double(mNumSampleY);
-                units::quantity<unit::length> sample_offset_from_outside = double(kdx)*mSampleSpacingZ;
-                units::quantity<unit::length> current_radius =
+                QLength sample_offset_from_outside = double(kdx)*mSampleSpacingZ;
+                QLength current_radius =
                         (mCorneaRadius-sample_offset_from_outside)*std::cos(current_angle);
-                units::quantity<unit::length> current_height =
+                QLength current_height =
                         (mCorneaRadius-sample_offset_from_outside)*std::sin(current_angle);
                 unsigned num_nodes = int(double((2.0*M_PI*current_radius)/mNodeSpacing)) + 1;
                 double sweep_angle = 2.0*M_PI/num_nodes;
@@ -877,13 +877,13 @@ void CornealMicropocketSimulation<DIM>::SetChemotacticStrength(double chemotacti
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetCorneaThickness(units::quantity<unit::length> corneaThickness)
+void CornealMicropocketSimulation<DIM>::SetCorneaThickness(QLength corneaThickness)
 {
     mCorneaThickness = corneaThickness;
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetDensityGridSpacing(units::quantity<unit::length> densityGridSpacing)
+void CornealMicropocketSimulation<DIM>::SetDensityGridSpacing(QLength densityGridSpacing)
 {
     mDensityGridSpacing = densityGridSpacing;
 }
@@ -914,7 +914,7 @@ void CornealMicropocketSimulation<DIM>::SetFinitePelletWidth(bool finitePelletWi
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetGridSpacing(units::quantity<unit::length> gridSpacing)
+void CornealMicropocketSimulation<DIM>::SetGridSpacing(QLength gridSpacing)
 {
     mGridSpacing = gridSpacing;
 }
@@ -926,7 +926,7 @@ void CornealMicropocketSimulation<DIM>::SetIncludeVesselSink(bool includeVesselS
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetNodeSpacing(units::quantity<unit::length> nodeSpacing)
+void CornealMicropocketSimulation<DIM>::SetNodeSpacing(QLength nodeSpacing)
 {
     mNodeSpacing = nodeSpacing;
 }
@@ -962,20 +962,20 @@ void CornealMicropocketSimulation<DIM>::SetRunNumber(unsigned runNumber)
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetSampleSpacingX(units::quantity<unit::length> sampleSpacingX)
+void CornealMicropocketSimulation<DIM>::SetSampleSpacingX(QLength sampleSpacingX)
 {
     mSampleSpacingX = sampleSpacingX;
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetSampleSpacingY(units::quantity<unit::length> sampleSpacingY)
+void CornealMicropocketSimulation<DIM>::SetSampleSpacingY(QLength sampleSpacingY)
 {
     mSampleSpacingY = sampleSpacingY;
 }
 
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetSampleSpacingZ(units::quantity<unit::length> sampleSpacingZ)
+void CornealMicropocketSimulation<DIM>::SetSampleSpacingZ(QLength sampleSpacingZ)
 {
     mSampleSpacingZ = sampleSpacingZ;
 }
@@ -993,7 +993,7 @@ void CornealMicropocketSimulation<DIM>::SetTimeStepSize(units::quantity<unit::ti
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetTipExclusionRadius(units::quantity<unit::length> tipExclusionRadius)
+void CornealMicropocketSimulation<DIM>::SetTipExclusionRadius(QLength tipExclusionRadius)
 {
     mTipExclusionRadius = tipExclusionRadius;
 }
@@ -1123,7 +1123,7 @@ void CornealMicropocketSimulation<DIM>::Run()
     Timer::PrintAndReset("Starting Simulation");
 
     // Initialize length scales
-    units::quantity<unit::length> reference_length = 1.e-6*unit::metres;
+    QLength reference_length = 1.e-6*unit::metres;
     units::quantity<unit::time> reference_time = 3600.0*unit::seconds;
     units::quantity<unit::concentration> reference_concentration = 1.e-6*unit::mole_per_metre_cubed;
     BaseUnits::Instance()->SetReferenceLengthScale(reference_length);

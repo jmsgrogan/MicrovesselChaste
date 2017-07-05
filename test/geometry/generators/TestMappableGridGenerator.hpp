@@ -99,9 +99,9 @@ public:
 
         // Make one closed cylinder, one open cylinder and one with too large an angle.
         MappableGridGenerator<3> generator;
-        units::quantity<unit::length> radius = 1.5*unit::metres;
-        units::quantity<unit::length> thickness = 0.1*unit::metres;
-        units::quantity<unit::length> height = 5.0*unit::metres;
+        QLength radius = 1.5*unit::metres;
+        QLength thickness = 0.1*unit::metres;
+        QLength height = 5.0*unit::metres;
 
         boost::shared_ptr<Part<3> > p_part = generator.GenerateCylinder(radius, thickness, height, 10, 10);
         boost::shared_ptr<Part<3> > p_part_open = generator.GenerateCylinder(radius, thickness, height, 10, 10, M_PI);
@@ -139,9 +139,9 @@ public:
 
         // Make one closed cylinder, one open cylinder and one with too large an angle.
         MappableGridGenerator<3> generator;
-        units::quantity<unit::length> radius = 1.5*unit::metres;
-        units::quantity<unit::length> thickness = 0.0*unit::metres;
-        units::quantity<unit::length> height = 5.0*unit::metres;
+        QLength radius = 1.5*unit::metres;
+        QLength thickness = 0.0*unit::metres;
+        QLength height = 5.0*unit::metres;
         boost::shared_ptr<Part<3> > p_part = generator.GenerateCylinder(radius, thickness, height, 10, 10);
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath()+"cylinder_shell.vtp");
     }
@@ -157,8 +157,8 @@ public:
 
         // Make one good and two 'bad' hemispheres
         MappableGridGenerator<3> generator;
-        units::quantity<unit::length> radius = 1.5*unit::metres;
-        units::quantity<unit::length> thickness = 0.1*unit::metres;
+        QLength radius = 1.5*unit::metres;
+        QLength thickness = 0.1*unit::metres;
 
         boost::shared_ptr<Part<3> > p_part = generator.GenerateHemisphere(radius, thickness, 10, 10, M_PI, 0.5*M_PI);
         TS_ASSERT_THROWS_ANYTHING(generator.GenerateHemisphere(radius, thickness, 10, 10, 2.0*M_PI, 0.5*M_PI));
@@ -195,8 +195,8 @@ public:
 
         // Make one good and two 'bad' hemispheres
         MappableGridGenerator<3> generator;
-        units::quantity<unit::length> radius = 1.5*unit::metres;
-        units::quantity<unit::length> thickness = 0.0*unit::metres;
+        QLength radius = 1.5*unit::metres;
+        QLength thickness = 0.0*unit::metres;
 
         boost::shared_ptr<Part<3> > p_part = generator.GenerateHemisphere(radius, thickness, 10, 10, M_PI, 0.5*M_PI);
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath()+"hemisphere_shell.vtp");

@@ -77,7 +77,7 @@ protected:
     /**
      * The reference length scale for the grid
      */
-    units::quantity<unit::length> mReferenceLength;
+    QLength mReferenceLength;
 
     /**
      * A global vtk representation
@@ -323,7 +323,7 @@ public:
      * Return the reference length scale
      * @return the reference length scale
      */
-    units::quantity<unit::length> GetReferenceLengthScale();
+    QLength GetReferenceLengthScale();
 
     /**
      * Return a vtk cell locator for quickly finding elements

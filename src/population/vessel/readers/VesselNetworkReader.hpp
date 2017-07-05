@@ -107,12 +107,12 @@ class VesselNetworkReader
      * If this is non-zero the network will be re-sampled to a target segment length using
      * a vtk spline filter.
      */
-    units::quantity<unit::length> mTargetSegmentLength;
+    QLength mTargetSegmentLength;
 
     /**
      * The reference length scale for the vessel network, default in microns.
      */
-    units::quantity<unit::length> mReferenceLength;
+    QLength mReferenceLength;
 
 public:
 
@@ -159,7 +159,7 @@ public:
      *
      * @param targetSegmentLength the target segment length
      */
-    void SetTargetSegmentLength(units::quantity<unit::length> targetSegmentLength);
+    void SetTargetSegmentLength(QLength targetSegmentLength);
 
     /**
      * Set the full path the file
@@ -173,7 +173,7 @@ public:
      *
      * @param rReferenceLength the reference length scale
      */
-    void SetReferenceLengthScale(units::quantity<unit::length> rReferenceLength);
+    void SetReferenceLengthScale(QLength rReferenceLength);
 };
 
 #endif /* VESSELNETWORKREADER_HPP_ */

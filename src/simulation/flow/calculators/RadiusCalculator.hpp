@@ -53,12 +53,12 @@ protected:
     /**
      * The minimum allowed radius.
      */
-    units::quantity<unit::length> mMinRadius;
+    QLength mMinRadius;
 
     /**
      * The maximum allowed radius.
      */
-    units::quantity<unit::length> mMaxRadius;
+    QLength mMaxRadius;
 
     /**
      * The time step for radius update
@@ -81,13 +81,13 @@ public:
      * Set the minimum radius
      * @param  minRadius the minimum radius
      */
-    void SetMinRadius(units::quantity<unit::length> minRadius);
+    void SetMinRadius(QLength minRadius);
 
     /**
      * Set the maximum radius
      * @param  maxRadius the maximum radius
      */
-    void SetMaxRadius(units::quantity<unit::length> maxRadius);
+    void SetMaxRadius(QLength maxRadius);
 
     /**
      * Set the time increment

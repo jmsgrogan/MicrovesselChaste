@@ -88,7 +88,7 @@ bool AngiogenesisSolver<DIM>::IsSproutingRuleSet()
 }
 
 template<unsigned DIM>
-void AngiogenesisSolver<DIM>::SetAnastamosisRadius(units::quantity<unit::length> radius)
+void AngiogenesisSolver<DIM>::SetAnastamosisRadius(QLength radius)
 {
     mNodeAnastamosisRadius = radius;
 }
@@ -106,7 +106,7 @@ void AngiogenesisSolver<DIM>::SetDoAnastomosis(bool doAnastomosis)
 }
 
 template<unsigned DIM>
-void AngiogenesisSolver<DIM>::SetCellPopulation(std::shared_ptr<AbstractCellPopulation<DIM> > cell_population, units::quantity<unit::length> cellPopulationReferenceLength)
+void AngiogenesisSolver<DIM>::SetCellPopulation(std::shared_ptr<AbstractCellPopulation<DIM> > cell_population, QLength cellPopulationReferenceLength)
 {
     mpCellPopulation = cell_population;
     mCellPopulationReferenceLength = cellPopulationReferenceLength;
@@ -334,7 +334,7 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
             {
                 // Get the nearest segment and check if it is close enough to the node for a merge
                 std::shared_ptr<VesselSegment<DIM> > p_nearest_segment;
-                units::quantity<unit::length> distance = VesselNetworkGeometryCalculator<DIM>::GetNearestSegment(mpNetwork, nodes[idx],
+                QLength distance = VesselNetworkGeometryCalculator<DIM>::GetNearestSegment(mpNetwork, nodes[idx],
                         p_nearest_segment, false, 3.0*mNodeAnastamosisRadius);
                 if(p_nearest_segment)
                 {

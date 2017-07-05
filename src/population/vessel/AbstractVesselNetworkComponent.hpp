@@ -84,7 +84,7 @@ protected:
     /**
      * The component radius
      */
-    units::quantity<unit::length> mRadius;
+    QLength mRadius;
 
 public:
 
@@ -131,7 +131,7 @@ public:
      *
      * @return the radius of the component
      */
-    virtual units::quantity<unit::length> GetRadius() const;
+    virtual QLength GetRadius() const;
 
     /**
      * Assign the Id
@@ -150,7 +150,7 @@ public:
      * Set the component radius
      * @param radius the component radius
      */
-    virtual void SetRadius(units::quantity<unit::length> radius);
+    virtual void SetRadius(QLength radius);
 
 };
 

@@ -87,7 +87,7 @@ void NetworkToImage<DIM>::SetNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwo
 }
 
 template<unsigned DIM>
-void NetworkToImage<DIM>::SetGridSpacing(units::quantity<unit::length> spacing)
+void NetworkToImage<DIM>::SetGridSpacing(QLength spacing)
 {
     mGridSpacing = spacing;
 }

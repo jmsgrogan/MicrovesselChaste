@@ -126,8 +126,8 @@ public:
         // Analytical c = k*x*x/(2*D) - k*x*w/D+c_0
         for(unsigned idx=0; idx<6; idx++)
         {
-            units::quantity<unit::length> x = double(idx)*1.0*unit::metres;
-            units::quantity<unit::length> w = 5.0*unit::metres;
+            QLength x = double(idx)*1.0*unit::metres;
+            QLength w = 5.0*unit::metres;
             units::quantity<unit::concentration> c = -consumption_rate*x*x/(2.0*diffusivity)-
                     x*-consumption_rate*w/diffusivity + boundary_concentration;
             double norm_analytical = c/(1.0* unit::mole_per_metre_cubed);
@@ -139,11 +139,11 @@ public:
     void Test3dKroghCylinderNetworkSurface() throw(Exception)
     {
         // Set up the vessel network
-        units::quantity<unit::length> micron_length_scale = 1.e-6*unit::metres;
+        QLength micron_length_scale = 1.e-6*unit::metres;
         BaseUnits::Instance()->SetReferenceLengthScale(micron_length_scale);
         BaseUnits::Instance()->SetReferenceTimeScale(3600.0*unit::seconds);
 
-        units::quantity<unit::length> vessel_length = 100.0 * micron_length_scale;
+        QLength vessel_length = 100.0 * micron_length_scale;
         VesselNetworkGenerator<3> generator;
         DimensionalChastePoint<3> centre(vessel_length/(2.0*micron_length_scale), vessel_length/(2.0*micron_length_scale), 0.0, micron_length_scale);
         boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre);

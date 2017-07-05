@@ -78,15 +78,15 @@ void DistanceMap<DIM>::Solve()
 
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments;
     segments = this->mpDensityMap->GetVesselNetwork()->GetVesselSegments();
-    units::quantity<unit::length> ref_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
+    QLength ref_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
 
     for(unsigned idx=0;idx<num_points; idx++)
     {
         DimensionalChastePoint<DIM> location = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetPoint(idx);
-        units::quantity<unit::length> min_distance = DBL_MAX * unit::metres;
+        QLength min_distance = DBL_MAX * unit::metres;
         for (unsigned jdx = 0; jdx <  segments.size(); jdx++)
         {
-            units::quantity<unit::length> seg_dist = segments[jdx]->GetDistance(location);
+            QLength seg_dist = segments[jdx]->GetDistance(location);
             if(this->mUseSegmentRadii && seg_dist<=segments[jdx]->GetRadius())
             {
                 seg_dist = 0.0 * unit::metres;

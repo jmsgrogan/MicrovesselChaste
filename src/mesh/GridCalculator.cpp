@@ -116,7 +116,7 @@ std::vector<std::vector<unsigned> > GridCalculator<DIM>::GetPointMap(vtkSmartPoi
 template<unsigned DIM>
 std::vector<std::vector<unsigned> > GridCalculator<DIM>::GetPointMap(const std::vector<DimensionalChastePoint<DIM> >& rInputPoints)
 {
-    units::quantity<unit::length> grid_length = mpGrid->GetReferenceLengthScale();
+    QLength grid_length = mpGrid->GetReferenceLengthScale();
     vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
     for(unsigned idx=0; idx<rInputPoints.size(); idx++)
     {
@@ -147,7 +147,7 @@ const std::vector<std::vector<std::shared_ptr<VesselNode<DIM> > > >& GridCalcula
     }
 
     std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
-    units::quantity<unit::length> grid_length = mpGrid->GetReferenceLengthScale();
+    QLength grid_length = mpGrid->GetReferenceLengthScale();
     mVesselNodeMap.clear();
     mVesselNodeMap = std::vector<std::vector<std::shared_ptr<VesselNode<DIM> > > >(mpGrid->GetNumberOfCells());
 
@@ -195,7 +195,7 @@ const std::vector<std::vector<CellPtr> >& GridCalculator<DIM>::rGetCellMap(bool 
     mCellMap.clear();
     mCellMap = std::vector<std::vector<CellPtr> >(mpGrid->GetNumberOfCells());
 
-    units::quantity<unit::length> grid_length = mpGrid->GetReferenceLengthScale();
+    QLength grid_length = mpGrid->GetReferenceLengthScale();
     double cell_mesh_length_scaling = mCellPopulationReferenceLength/grid_length;
     for (typename AbstractCellPopulation<DIM>::Iterator cell_iter = mpCellPopulation->Begin();
             cell_iter != mpCellPopulation->End(); ++cell_iter)
@@ -273,7 +273,7 @@ const std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > >& GridCalc
 
     mSegmentMap.clear();
     mSegmentMap = std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > >(mpGrid->GetNumberOfCells());
-    units::quantity<unit::length> grid_length = mpGrid->GetReferenceLengthScale();
+    QLength grid_length = mpGrid->GetReferenceLengthScale();
 
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = mpNetwork->GetVesselSegments();
     for (unsigned jdx = 0; jdx < segments.size(); jdx++)
@@ -350,7 +350,7 @@ const std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > >& GridCalc
 
 template<unsigned DIM>
 void GridCalculator<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
-        units::quantity<unit::length> cellPopulationReferenceLength,
+        QLength cellPopulationReferenceLength,
         units::quantity<unit::concentration> cellPopulationReferenceConcentration)
 {
     mpCellPopulation = &rCellPopulation;

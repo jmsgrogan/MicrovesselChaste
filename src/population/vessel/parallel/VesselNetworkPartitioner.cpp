@@ -88,7 +88,7 @@ void VesselNetworkPartitioner<DIM>::Update()
     unsigned num_procs = PetscTools::GetNumProcs();
 
     std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = VesselNetworkGeometryCalculator<DIM>::GetExtents(mpNetwork);
-    units::quantity<unit::length> reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
+    QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
     double domain_width = 0.0;
     double domain_start = 0.0;
     double delta_x = extents.second.GetLocation(reference_length)[0] - extents.first.GetLocation(reference_length)[0];

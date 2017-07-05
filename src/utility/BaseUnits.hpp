@@ -71,7 +71,7 @@ class BaseUnits : public SerializableSingleton<BaseUnits>
     /**
      * The length unit
      */
-    units::quantity<unit::length> mLength;
+    QLength mLength;
 
     /**
      * The concentration unit
@@ -101,7 +101,7 @@ public:
     /**
      * @return the reference time scale
      */
-    units::quantity<unit::length> GetReferenceLengthScale();
+    QLength GetReferenceLengthScale();
 
     /**
      * @return the reference time scale
@@ -118,7 +118,7 @@ public:
      * Sets reference length scale
      * @param referenceLengthScale the reference length scale
      */
-    void SetReferenceLengthScale(units::quantity<unit::length> referenceLengthScale);
+    void SetReferenceLengthScale(QLength referenceLengthScale);
 
     /**
      * Sets reference concentration scale

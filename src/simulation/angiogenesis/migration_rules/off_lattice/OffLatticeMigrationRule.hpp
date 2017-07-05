@@ -94,12 +94,12 @@ class OffLatticeMigrationRule : public AbstractMigrationRule<DIM>
     /**
      * Length of probe into solution
      */
-    units::quantity<unit::length> mProbeLength;
+    QLength mProbeLength;
 
     /**
      * Length beyond which there is no mutual attraction
      */
-    units::quantity<unit::length> mCriticalMutualAttractionLength;
+    QLength mCriticalMutualAttractionLength;
 
     /**
      * Add a surface repulsion

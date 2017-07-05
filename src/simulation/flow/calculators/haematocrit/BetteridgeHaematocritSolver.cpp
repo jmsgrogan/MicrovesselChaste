@@ -280,8 +280,8 @@ void BetteridgeHaematocritSolver<DIM>::Calculate()
                         units::quantity<unit::flow_rate> parent0_flow_rate = parent_vessels[0]->GetFlowProperties()->GetFlowRate();
 
                         // There is a bifurcation, apply a haematocrit splitting rule
-                        units::quantity<unit::length> my_radius = vessels[idx]->GetRadius();
-                        units::quantity<unit::length> competitor_radius = competitor_vessels[0]->GetRadius();
+                        QLength my_radius = vessels[idx]->GetRadius();
+                        QLength competitor_radius = competitor_vessels[0]->GetRadius();
                         units::quantity<unit::velocity> my_velocity = units::fabs(flow_rate)/(M_PI * my_radius * my_radius);
                         units::quantity<unit::velocity> competitor_velocity = fabs(competitor0_flow_rate)/(M_PI * competitor_radius * competitor_radius);
 
@@ -388,8 +388,8 @@ void BetteridgeHaematocritSolver<DIM>::Calculate()
                     units::quantity<unit::flow_rate> competitor0_flow_rate = vessels[update_indices[idx][2]]->GetFlowProperties()->GetFlowRate();
                     units::quantity<unit::flow_rate> parent0_flow_rate = vessels[update_indices[idx][1]]->GetFlowProperties()->GetFlowRate();
 
-                    units::quantity<unit::length> my_radius = vessels[update_indices[idx][0]]->GetRadius();
-                    units::quantity<unit::length> competitor_radius = vessels[update_indices[idx][2]]->GetRadius();
+                    QLength my_radius = vessels[update_indices[idx][0]]->GetRadius();
+                    QLength competitor_radius = vessels[update_indices[idx][2]]->GetRadius();
                     units::quantity<unit::velocity> my_velocity = fabs(self_flow_rate)/(M_PI * my_radius * my_radius);
                     units::quantity<unit::velocity> competitor_velocity = fabs(competitor0_flow_rate)/(M_PI * competitor_radius * competitor_radius);
                     units::quantity<unit::dimensionless> alpha = 1.0 - vessels[update_indices[idx][1]]->GetFlowProperties()->GetHaematocrit();

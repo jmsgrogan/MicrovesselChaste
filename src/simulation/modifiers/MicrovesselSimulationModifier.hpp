@@ -89,7 +89,7 @@ private:
     /**
      * The reference length scale for the cellpopulation.
      */
-    units::quantity<unit::length> mCellPopulationReferenceLength;
+    QLength mCellPopulationReferenceLength;
 
     /**
      * The reference concentration scale for the cellpopulation.
@@ -152,7 +152,7 @@ public:
      *
      * @param cellLengthScale  the length scale for the cell population
      */
-    void SetCellPopulationLengthScale(units::quantity<unit::length> cellLengthScale);
+    void SetCellPopulationLengthScale(QLength cellLengthScale);
 
     /**
      * Set the concentration scale for the cell population

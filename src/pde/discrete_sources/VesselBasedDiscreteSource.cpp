@@ -77,7 +77,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
     std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::mole_per_metre_cubed_per_second);
 
-    units::quantity<unit::length> reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
+    QLength reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
 
 
     std::vector<double> vessel_densities = this->mpDensityMap->rGetPerfusedVesselSurfaceAreaDensity(true);
@@ -118,7 +118,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
     std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::mole_per_metre_cubed_per_second);
 
-    units::quantity<unit::length> reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
+    QLength reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
     std::vector<double> vessel_densities = this->mpDensityMap->rGetVesselLineDensity(true);
     for(unsigned idx=0;idx<vessel_densities.size();idx++)
     {
@@ -138,7 +138,7 @@ std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLin
 
     std::vector<units::quantity<unit::rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::per_second);
-    units::quantity<unit::length> reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
+    QLength reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
     std::vector<double> vessel_densities = this->mpDensityMap->rGetPerfusedVesselSurfaceAreaDensity(true);
     for(unsigned idx=0;idx<vessel_densities.size();idx++)
     {

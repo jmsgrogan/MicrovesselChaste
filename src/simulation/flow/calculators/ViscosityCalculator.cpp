@@ -71,7 +71,7 @@ void ViscosityCalculator<DIM>::Calculate()
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
     for (unsigned segment_index = 0; segment_index < segments.size(); segment_index++)
     {
-        units::quantity<unit::length> radius = segments[segment_index]->GetRadius();
+        QLength radius = segments[segment_index]->GetRadius();
         units::quantity<unit::dimensionless> haematocrit = segments[segment_index]->GetFlowProperties()->GetHaematocrit();
 
         // This equation assumes the radius is in micron so manually converted. No dimensional checking is done here, it may not

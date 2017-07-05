@@ -136,7 +136,7 @@ allow non-dimensionalisation when sending quantities to external solvers and re-
 results. For our purposes microns for length and hours for time are suitable base units.
 
 ```cpp
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         units::quantity<unit::time> reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
@@ -150,7 +150,7 @@ A record of all parameters used in a simulation can be dumped to file on complet
 
 ```cpp
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        units::quantity<unit::length> grid_spacing = Owen11Parameters::mpLatticeSpacing->GetValue("User");
+        QLength grid_spacing = Owen11Parameters::mpLatticeSpacing->GetValue("User");
         p_grid->SetSpacing(grid_spacing);
         std::vector<unsigned> extents(3, 1);
         extents[0] = 51; // num x
@@ -210,7 +210,7 @@ the population using conventional Cell Based Chaste methods.
         boost::shared_ptr<Owen11CellPopulationGenerator<2> > p_cell_population_genenerator = Owen11CellPopulationGenerator<2>::Create();
         p_cell_population_genenerator->SetRegularGrid(p_grid);
         p_cell_population_genenerator->SetVesselNetwork(p_network);
-        units::quantity<unit::length> tumour_radius(300.0 * unit::microns);
+        QLength tumour_radius(300.0 * unit::microns);
         p_cell_population_genenerator->SetTumourRadius(tumour_radius);
         boost::shared_ptr<CaBasedCellPopulation<2> > p_cell_population = p_cell_population_genenerator->Update();
 
@@ -308,7 +308,7 @@ depend on haematocrit and diameter. This solver manages growth and shrinkage of 
 flow related stimuli.
 
 ```cpp
-        units::quantity<unit::length> large_vessel_radius(25.0 * unit::microns);
+        QLength large_vessel_radius(25.0 * unit::microns);
         p_network->SetSegmentRadii(large_vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
         p_network->SetSegmentViscosity(viscosity);
@@ -516,12 +516,12 @@ public:
     {
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestLatticeBasedAngiogenesisTutorial"));
         RandomNumberGenerator::Instance()->Reseed(12345);
-        units::quantity<unit::length> reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0 * unit::microns);
         units::quantity<unit::time> reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        units::quantity<unit::length> grid_spacing = Owen11Parameters::mpLatticeSpacing->GetValue("User");
+        QLength grid_spacing = Owen11Parameters::mpLatticeSpacing->GetValue("User");
         p_grid->SetSpacing(grid_spacing);
         std::vector<unsigned> extents(3, 1);
         extents[0] = 51; // num x
@@ -557,7 +557,7 @@ public:
         boost::shared_ptr<Owen11CellPopulationGenerator<2> > p_cell_population_genenerator = Owen11CellPopulationGenerator<2>::Create();
         p_cell_population_genenerator->SetRegularGrid(p_grid);
         p_cell_population_genenerator->SetVesselNetwork(p_network);
-        units::quantity<unit::length> tumour_radius(300.0 * unit::microns);
+        QLength tumour_radius(300.0 * unit::microns);
         p_cell_population_genenerator->SetTumourRadius(tumour_radius);
         boost::shared_ptr<CaBasedCellPopulation<2> > p_cell_population = p_cell_population_genenerator->Update();
 
@@ -611,7 +611,7 @@ public:
         p_vegf_solver->SetPde(p_vegf_pde);
         p_vegf_solver->SetLabel("VEGF_Extracellular");
         p_vegf_solver->SetGrid(p_grid);
-        units::quantity<unit::length> large_vessel_radius(25.0 * unit::microns);
+        QLength large_vessel_radius(25.0 * unit::microns);
         p_network->SetSegmentRadii(large_vessel_radius);
         units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
         p_network->SetSegmentViscosity(viscosity);

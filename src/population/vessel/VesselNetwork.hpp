@@ -335,7 +335,7 @@ public:
      * Merge short vessels in the network
      * @param cutoff how short is short
      */
-    void MergeShortVessels(units::quantity<unit::length> cutoff = 10.0 * 1.e-6 * unit::metres);
+    void MergeShortVessels(QLength cutoff = 10.0 * 1.e-6 * unit::metres);
 
     /**
      * Merge nodes with the same spatial location. Useful for
@@ -377,7 +377,7 @@ public:
      * @param cutoff the minumum vessel length
      * @param endsOnly just remove vessels with connectivity 1
      */
-    void RemoveShortVessels(units::quantity<unit::length> cutoff = 10.0* 1.e-6 * unit::metres, bool endsOnly = true);
+    void RemoveShortVessels(QLength cutoff = 10.0* 1.e-6 * unit::metres, bool endsOnly = true);
 
     /**
      * Translate the network along the provided vector

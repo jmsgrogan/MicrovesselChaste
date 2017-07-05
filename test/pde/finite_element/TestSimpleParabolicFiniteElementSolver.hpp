@@ -153,7 +153,7 @@ public:
             std::vector<units::quantity<unit::concentration> > solution = p_solver->GetConcentrations(p_sample_points);
             for(unsigned jdx=0; jdx<11; jdx++)
             {
-                units::quantity<unit::length> x = double(jdx)*0.1*unit::metres;
+                QLength x = double(jdx)*0.1*unit::metres;
                 double x_nondim = x/(1.0*unit::metres);
                 double c_analytical_nondim = Solve1DParabolic(x_nondim, diff_nondim, time);
                 double c_numerical_nondim = solution[jdx]/boundary_concentration;
@@ -165,12 +165,12 @@ public:
     void Test3dKroghCylinderNetworkSurface() throw(Exception)
     {
         // Set up the vessel network
-        units::quantity<unit::length> micron_length_scale = 1.e-6*unit::metres;
+        QLength micron_length_scale = 1.e-6*unit::metres;
         BaseUnits::Instance()->SetReferenceLengthScale(micron_length_scale);
         BaseUnits::Instance()->SetReferenceTimeScale(3600.0*unit::seconds);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
 
-        units::quantity<unit::length> vessel_length = 100.0 * micron_length_scale;
+        QLength vessel_length = 100.0 * micron_length_scale;
         VesselNetworkGenerator<3> generator;
         DimensionalChastePoint<3> centre(vessel_length/(2.0*micron_length_scale), vessel_length/(2.0*micron_length_scale), 0.0, micron_length_scale);
         boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre);

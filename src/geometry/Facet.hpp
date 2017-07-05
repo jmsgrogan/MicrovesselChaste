@@ -79,7 +79,7 @@ class Facet
     /**
      * The polygons making up the facet
      */
-    std::vector<std::shared_ptr<Polygon<DIM> > > mPolygons;
+    std::vector<PolygonPtr<DIM> > mPolygons;
 
     /**
      * Unique vertices in the facet. This is not always up-to-date.
@@ -96,7 +96,7 @@ class Facet
     /**
      * The reference length scale
      */
-    units::quantity<unit::length> mReferenceLength;
+    QLength mReferenceLength;
 
     /**
      * Constructor for serialization
@@ -109,13 +109,13 @@ public:
      * Constructor
      * @param polygons a facet is made from these polygons
      */
-    Facet(std::vector<std::shared_ptr<Polygon<DIM> > > polygons);
+    Facet(std::vector<PolygonPtr<DIM> > polygons);
 
     /**
      * Constructor
      * @param pPolygon a single polygon for the facet
      */
-    Facet(std::shared_ptr<Polygon<DIM> > pPolygon);
+    Facet(PolygonPtr<DIM> pPolygon);
 
     /**
      * Factory constructor method
@@ -159,7 +159,7 @@ public:
      * Return the bounding box of the facet
      * @return the bounding box (xmin, xmax, ymin, ymax, zmin, zmax)
      */
-    std::vector<units::quantity<unit::length> > GetBoundingBox();
+    std::vector<QLength> GetBoundingBox();
 
     /**
      * Return the centroid of the facet
@@ -172,7 +172,7 @@ public:
      * @param rLocation reference to the location of the point for distance calculation
      * @return the distance to the facet
      */
-    units::quantity<unit::length> GetDistance(const DimensionalChastePoint<DIM>& rLocation);
+    QLength GetDistance(const DimensionalChastePoint<DIM>& rLocation);
 
     /**
      * Return the facet's plane

@@ -170,7 +170,7 @@ public:
     void TestHexagonalNetwork() throw(Exception)
 	{
         // Specify the network dimensions
-        units::quantity<unit::length> vessel_length = 83.0 * 1.e-6 * unit::metres;
+        QLength vessel_length = 83.0 * 1.e-6 * unit::metres;
 
         // Generate the network
         VesselNetworkGenerator<2> vascular_network_generator;

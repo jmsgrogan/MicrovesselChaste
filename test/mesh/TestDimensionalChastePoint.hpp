@@ -54,8 +54,8 @@ public:
     void TestConstructorsAndScaling()
     {
         // Create points using constructors
-        units::quantity<unit::length> reference_scale1(5.0 * unit::metres);
-        units::quantity<unit::length> reference_scale2(10.0 * unit::metres);
+        QLength reference_scale1(5.0 * unit::metres);
+        QLength reference_scale2(10.0 * unit::metres);
         DimensionalChastePoint<2> point3 = DimensionalChastePoint<2>(1.0/5.0, 2.0/5.0, 0.0, reference_scale1);
         TS_ASSERT_DELTA(point3.GetLocation(reference_scale1)[0], 0.2, 1.e-6);
         TS_ASSERT_DELTA(point3.GetLocation(reference_scale1)[1], 0.4, 1.e-6);
@@ -92,7 +92,7 @@ public:
 
     void TestZeroReferenceLengthExceptions()
     {
-        units::quantity<unit::length> reference_scale(0.0 * unit::metres);
+        QLength reference_scale(0.0 * unit::metres);
         TS_ASSERT_THROWS_THIS(DimensionalChastePoint<2>(1.0, 2.0, 0.0, reference_scale), "Point has zero reference length");
 
         c_vector<double, 2> point_location;
@@ -100,14 +100,14 @@ public:
         point_location[1] = 3.0;
         TS_ASSERT_THROWS_THIS(DimensionalChastePoint<2>(point_location, reference_scale), "Point has zero reference length");
 
-        units::quantity<unit::length> reference_scale1(1.0 * unit::metres);
+        QLength reference_scale1(1.0 * unit::metres);
         DimensionalChastePoint<2> point1 = DimensionalChastePoint<2>(1.0, 2.0, 0.0, reference_scale1);
         TS_ASSERT_THROWS_THIS(point1.SetReferenceLengthScale(reference_scale), "Attempted to assign a zero length scale");
     }
 
     void TestGeometryOperations()
     {
-        units::quantity<unit::length> reference_scale(1.0 * unit::metres);
+        QLength reference_scale(1.0 * unit::metres);
         DimensionalChastePoint<2> point1 = DimensionalChastePoint<2>(1.0, 2.0, 0.0, reference_scale);
         DimensionalChastePoint<2> point2 = DimensionalChastePoint<2>(2.0, 3.0, 0.0, reference_scale);
         TS_ASSERT_DELTA(point1.GetDistance(point2).value(), std::sqrt(2.0), 1.e-6);
@@ -115,7 +115,7 @@ public:
         TS_ASSERT_DELTA(point1.GetMidPoint(point2).GetLocation(reference_scale)[1], 2.5, 1.e-6);
         TS_ASSERT_DELTA(point1.GetNorm2().value(), std::sqrt(5.0), 1.e-6);
 
-        units::quantity<unit::length> reference_scale2(5.0 * unit::metres);
+        QLength reference_scale2(5.0 * unit::metres);
         c_vector<double, 2> scaled_location = point1.GetLocation(reference_scale2);
         TS_ASSERT_DELTA(scaled_location[0], 1.0/5.0, 1.e-6);
         TS_ASSERT_DELTA(scaled_location[1], 2.0/5.0, 1.e-6);
@@ -147,7 +147,7 @@ public:
 
     void TestOverloadedOperators()
     {
-        units::quantity<unit::length> reference_scale(1.0 * unit::metres);
+        QLength reference_scale(1.0 * unit::metres);
         DimensionalChastePoint<2> point1 = DimensionalChastePoint<2>(1.0, 2.0, 0.0, reference_scale);
         DimensionalChastePoint<2> point2 = DimensionalChastePoint<2>(2.0, 3.0, 0.0, reference_scale);
 
@@ -174,7 +174,7 @@ public:
         OutputFileHandler handler("archive", false);
         ArchiveLocationInfo::SetArchiveDirectory(handler.FindFile(""));
         std::string archive_filename = ArchiveLocationInfo::GetProcessUniqueFilePath("DimensionalChastePoint.arch");
-        units::quantity<unit::length> reference_length(10.0*unit::microns);
+        QLength reference_length(10.0*unit::microns);
         // Save archive
         {
 

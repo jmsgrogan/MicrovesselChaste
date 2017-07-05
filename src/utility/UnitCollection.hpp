@@ -36,195 +36,382 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef UNITCOLLECTIONS_HPP
 #define UNITCOLLECTIONS_HPP
 
-#include <map>
-#include <string>
-#include <sstream>
-#include <boost/units/quantity.hpp>  // NOLINT
-#include <boost/units/derived_dimension.hpp>  // NOLINT
-#include <boost/units/make_scaled_unit.hpp>  // NOLINT
-#include <boost/units/scaled_base_unit.hpp>  // NOLINT
-#include <boost/units/scale.hpp>  // NOLINT
-#include <boost/units/static_rational.hpp>  // NOLINT
-#include <boost/units/units_fwd.hpp>  // NOLINT
-#include <boost/units/io.hpp>  // NOLINT
-#include <boost/units/reduce_unit.hpp>  // NOLINT
-#include <boost/units/pow.hpp>  // NOLINT
-#include <boost/units/cmath.hpp>  // NOLINT
-
-#include <boost/units/systems/si.hpp>  // NOLINT
-#include <boost/units/systems/si/base.hpp>  // NOLINT
-#include <boost/units/systems/si/io.hpp>  // NOLINT
-#include <boost/units/systems/si/dimensionless.hpp>  // NOLINT
-#include <boost/units/systems/si/time.hpp>  // NOLINT
-#include <boost/units/systems/si/length.hpp>  // NOLINT
-#include <boost/units/systems/si/force.hpp>  // NOLINT
-#include <boost/units/systems/si/pressure.hpp>  // NOLINT
-#include <boost/units/systems/si/mass.hpp>  // NOLINT
-#include <boost/units/systems/si/amount.hpp>  // NOLINT
-#include <boost/units/systems/si/plane_angle.hpp>  // NOLINT
-#include <boost/units/systems/si/absorbed_dose.hpp>  // NOLINT
-
-#include <boost/units/base_units/metric/minute.hpp>  // NOLINT
-#include <boost/units/base_units/metric/hour.hpp>  // NOLINT
-#include <boost/units/base_units/metric/day.hpp>  // NOLINT
-#include <boost/units/base_units/metric/mmHg.hpp>  // NOLINT
-#include <boost/units/base_units/metric/micron.hpp>  // NOLINT
+#include <ratio>
 
 /**
- * This is a collection of Boost units and quantities.
- * The SI system is the base system. A dimension is composed of the base dimensions of time, mass, length
- * etc raised to an integer power. A unit is a specific amount in a dimension (e.g. length^1) and system (e.g. since using SI it is a metre). It is instantiated as
- * a static constant with a useful name 'e.g. metres' using BOOST_UNITS_STATIC_CONSTANT for thread safety.
- * A quantity is an unit and a amount together (e.g. [moles, 2.0] to represent two moles).
- *
- * Some fundamental SI quantities, such as length, are redefined here. This is not neccessary for C++, but allows them to be used in Python wrapping.
- */
-namespace units = boost::units;
+* Simple Unit Library based on a sample by Benjamin Jurke
+* https://benjaminjurke.com/content/articles/2015/compile-time-numerical-unit-dimension-checking/#fn:3
+*/
+
+template<typename MassDim, typename LengthDim, typename TimeDim, typename AmountDim, typename AngleDim>
+class RQuantity
+{
+private:
+
+    double value;
+
+public:
+
+    constexpr RQuantity() :
+        value(1.0)
+    {
+
+    }
+    constexpr RQuantity(double val) :
+            value(val)
+    {
+
+    }
+    constexpr RQuantity(long double val) :
+            value(static_cast<double>(val))
+    {
+
+    }
+
+    // The intrinsic operations for a quantity with a unit is addition and subtraction
+    constexpr RQuantity const& operator+=(const RQuantity& rhs)
+    {
+        value += rhs.value;
+        return *this;
+    }
+    constexpr RQuantity const& operator-=(const RQuantity& rhs)
+    {
+        value -= rhs.value;
+        return *this;
+    }
+
+    // Returns the value of the quantity in multiples of the specified unit
+    constexpr double Convert(const RQuantity& rhs) const
+    {
+        return value / rhs.value;
+    }
+
+    // returns the raw value of the quantity (should not be used)
+    constexpr double getValue() const
+    {
+        return value;
+    }
+};
+
+
+// Predefined (physical unit) quantity types:
+// ------------------------------------------
+#define QUANTITY_TYPE(_Mdim, _Ldim, _Tdim, _Amdim, _Adim, name) \
+    typedef RQuantity<std::ratio<_Mdim>, std::ratio<_Ldim>, std::ratio<_Tdim>, std::ratio<_Amdim>, std::ratio<_Adim>> name;
+
+// Dimensionless
+QUANTITY_TYPE(0, 0, 0, 0, 0, QDimensionless);
+
+// Angle:
+QUANTITY_TYPE(0, 0, 0, 0, 1, QAngle);
+
+// Time
+QUANTITY_TYPE(0, 0, 1, 0, 0, QTime);
+QUANTITY_TYPE(0, 0, -1, 0, 0, QRate);
+
+// Length
+QUANTITY_TYPE(0, 1, 0, 0, 0, QLength );
+QUANTITY_TYPE(0, 2, 0, 0, 0, QArea);
+QUANTITY_TYPE(0, 3, 0, 0, 0, QVolume);
+QUANTITY_TYPE(0, -1, 0, 0, 0, QPerLength);
+QUANTITY_TYPE(0, -2, 0, 0, 0, QPerArea);
+
+// Mass
+QUANTITY_TYPE(1, 0, 0, 0, 0, QMass);
+QUANTITY_TYPE(1, 0, -1, 0, 0, QMassFlowRate);
+QUANTITY_TYPE(1, -2, -1, 0, 0, QMassFlux);
+
+// Amount
+QUANTITY_TYPE(0, 0, 0, 1, 0, QAmount);
+QUANTITY_TYPE(0, 0, -1, 1, 0, QMolarFlowRate);
+QUANTITY_TYPE(0, -3, -1, 1, 0, QConcentrationFlowRate);
+QUANTITY_TYPE(0, -2, -1, 1, 0, QMolarFlux);
+QUANTITY_TYPE(0, -5, -1, 1, 0, QConcentrationFlux);
+QUANTITY_TYPE(0, -3, 0, 1, 0, QConcentration);
+QUANTITY_TYPE(0, -4, 0, 1, 0, QConcentrationGradient);
+QUANTITY_TYPE(0, 3, -1, -1, 0, QRatePerConcentration);
+QUANTITY_TYPE(-1, 0, 0, 1, 0, QMolarMass);
+QUANTITY_TYPE(0, -3, 0, 0, 0, QNumberDensity);
+
+// Velocity
+QUANTITY_TYPE(0, 1, -1, 0, 0, QVelocity);
+
+// Force/pressure/stress
+QUANTITY_TYPE(1, 1, -2, 0, 0, QForce);
+QUANTITY_TYPE(1, -1, -2, 0, 0, QPressure);
+
+// Flow
+QUANTITY_TYPE(1, -1, -1, 0, 0, QDynamicViscosity);
+QUANTITY_TYPE(0, 3, -1, 0, 0, QFlowRate);
+QUANTITY_TYPE(1, -4, -1, 0, 0, QFlowImpedance);
+
+// Diffusivity, Solubility, Permeability
+QUANTITY_TYPE(0, 2, -1, 0, 0, QDiffusivity);
+QUANTITY_TYPE(0, 5, -1, -1, 0, QDiffusivityPerConcentration);
+QUANTITY_TYPE(-1, -2, 2, 1, 0, QSolubility);
+QUANTITY_TYPE(-1, 1, 2, 0, 0, QVolumetricSolubility);
+QUANTITY_TYPE(1, -1, 0, 0, 0, QMembrancePermeability);
+
+// Radiation
+QUANTITY_TYPE(0, 2, -2, 0, 0, QAbsorbedDose);
+QUANTITY_TYPE(0, -2, 2, 0, 0, QPerAbsorbedDose);
+QUANTITY_TYPE(0, -4, 4, 0, 0, QPerAbsorbedDoseSquared);
+
+
+
+// Standard arithmetic operators:
+// ------------------------------
+template <typename M, typename L, typename T, typename Am, typename A>
+constexpr RQuantity<M, L, T, Am, A>
+    operator+(const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<M, L, T, Am, A>& rhs)
+{
+    return RQuantity<M, L, T, Am, A>(lhs.getValue() + rhs.getValue());
+}
+template <typename M, typename L, typename T, typename Am, typename A>
+constexpr RQuantity<M, L, T, Am, A>
+    operator-(const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<M, L, T, Am, A>& rhs)
+{
+    return RQuantity<M, L, T, Am, A>(lhs.getValue() - rhs.getValue());
+}
+template <typename M1, typename L1, typename T1, typename Am1, typename A1,
+          typename M2, typename L2, typename T2, typename Am2, typename A2>
+constexpr RQuantity<std::ratio_add<M1, M2>, std::ratio_add<L1, L2>,
+                    std::ratio_add<T1, T2>, std::ratio_add<Am1, Am2>,
+                    std::ratio_add<A1, A2>>
+    operator*(const RQuantity<M1, L1, T1, Am1, A1>& lhs, const RQuantity<M2, L2, T2, Am2, A2>& rhs)
+{
+    return RQuantity<std::ratio_add<M1, M2>, std::ratio_add<L1, L2>,
+                     std::ratio_add<T1, T2>, std::ratio_add<Am1, Am2>, std::ratio_add<A1, A2>>
+                    (lhs.getValue()*rhs.getValue());
+}
+template <typename M, typename L, typename T,  typename Am, typename A>
+constexpr RQuantity<M, L, T, Am, A>
+    operator*(const double& lhs, const RQuantity<M, L, T, Am, A>& rhs)
+{
+    return RQuantity<M, L, T, Am, A>(lhs*rhs.getValue());
+}
+template <typename M1, typename L1, typename T1, typename Am1, typename A1,
+          typename M2, typename L2, typename T2, typename Am2, typename A2>
+constexpr RQuantity<std::ratio_subtract<M1, M2>, std::ratio_subtract<L1, L2>,
+                    std::ratio_subtract<T1, T2>, std::ratio_subtract<Am1, Am2>,
+                    std::ratio_subtract<A1, A2>>
+    operator/(const RQuantity<M1, L1, T1, Am1, A1>& lhs, const RQuantity<M2, L2, T2, Am2,A2>& rhs)
+{
+    return RQuantity<std::ratio_subtract<M1, M2>, std::ratio_subtract<L1, L2>,
+                     std::ratio_subtract<T1, T2>,  std::ratio_subtract<Am1, Am2>,
+                     std::ratio_subtract<A1, A2>>
+                    (lhs.getValue() / rhs.getValue());
+}
+template <typename M, typename L, typename T,  typename Am,  typename A>
+constexpr RQuantity<std::ratio_subtract<std::ratio<0>, M>, std::ratio_subtract<std::ratio<0>, L>,
+                    std::ratio_subtract<std::ratio<0>, T>, std::ratio_subtract<std::ratio<0>, Am>,
+                    std::ratio_subtract<std::ratio<0>, A>>
+    operator/(double x, const RQuantity<M, L, T, Am, A>& rhs)
+{
+    return RQuantity<std::ratio_subtract<std::ratio<0>, M>, std::ratio_subtract<std::ratio<0>, L>,
+                     std::ratio_subtract<std::ratio<0>, T>, std::ratio_subtract<std::ratio<0>, Am>,
+                     std::ratio_subtract<std::ratio<0>, A>>
+                    (x / rhs.getValue());
+}
+template <typename M, typename L, typename T,  typename Am,  typename A>
+constexpr RQuantity<M, L, T, Am, A>
+    operator/(const RQuantity<M, L, T, Am, A>& rhs, double x)
+{
+    return RQuantity<M, L, T, Am, A>(rhs.getValue() / x);
+}
+
+
+// Comparison operators for quantities:
+// ------------------------------------
+template <typename M, typename L, typename T,  typename Am,  typename A>
+constexpr bool operator==(const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<M, L, T, Am, A>& rhs)
+{
+    return (lhs.getValue() == rhs.getValue());
+}
+template <typename M, typename L, typename T,  typename Am,  typename A>
+constexpr bool operator!=(const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<M, L, T, Am, A>& rhs)
+{
+    return (lhs.getValue() != rhs.getValue());
+}
+template <typename M, typename L, typename T,  typename Am,  typename A>
+constexpr bool operator<=(const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<M, L, T, Am, A>& rhs)
+{
+    return (lhs.getValue() <= rhs.getValue());
+}
+template <typename M, typename L, typename T,  typename Am,  typename A>
+constexpr bool operator>=(const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<M, L, T, Am, A>& rhs)
+{
+    return (lhs.getValue() >= rhs.getValue());
+}
+template <typename M, typename L, typename T,  typename Am,  typename A>
+constexpr bool operator< (const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<M, L, T, Am, A>& rhs)
+{
+    return (lhs.getValue()<rhs.getValue());
+}
+template <typename M, typename L, typename T,  typename Am,  typename A>
+constexpr bool operator> (const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<M, L, T, Am, A>& rhs)
+{
+    return (lhs.getValue()>rhs.getValue());
+}
+
+
+// Predefined units:
+// -----------------
 namespace unit{
 
-    typedef units::unit<units::dimensionless_type, units::si::system> dimensionless;
-    BOOST_UNITS_STATIC_CONSTANT(no_unit, dimensionless);
+// Dimensionless
+constexpr QDimensionless dimensionless(1.0);
 
-    // angle
-    typedef units::derived_dimension<units::plane_angle_base_dimension, -1>::type plane_angle_dimension;
-    //typedef units::unit<plane_angle_dimension, units::si::system> plane_angle;
-    typedef units::si::plane_angle plane_angle;
-    BOOST_UNITS_STATIC_CONSTANT(radians, plane_angle);
+// Angle
+constexpr QAngle radian(1.0);
+constexpr QAngle degree = static_cast<double>(2_pi / 360.0) * radian;
 
-    // Time
-    typedef units::derived_dimension<units::time_base_dimension, 1>::type time_dimension;
-    typedef units::unit<time_dimension, units::si::system> time;
-    BOOST_UNITS_STATIC_CONSTANT(seconds, time);
-    BOOST_UNITS_STATIC_CONSTANT(minutes, units::metric::minute_base_unit::unit_type);
-    BOOST_UNITS_STATIC_CONSTANT(hours, units::metric::hour_base_unit::unit_type);
-    BOOST_UNITS_STATIC_CONSTANT(days, units::metric::day_base_unit::unit_type);
-    typedef units::derived_dimension<units::time_base_dimension, -1>::type rate_dimension;
-    typedef units::unit<rate_dimension, units::si::system> rate;
-    BOOST_UNITS_STATIC_CONSTANT(per_second, rate);
-    typedef units::make_scaled_unit<rate, units::scale<60, units::static_rational<-1> > >::type per_minute_type;
-    BOOST_UNITS_STATIC_CONSTANT(per_minute, per_minute_type);
-    typedef units::make_scaled_unit<rate, units::scale<3600, units::static_rational<-1> > >::type per_hour_type;
-    BOOST_UNITS_STATIC_CONSTANT(per_hour, per_hour_type);
+// Time
+constexpr QTime second(1.0);
+constexpr QTime minute = 60.0 * second;
+constexpr QTime hour = 60.0 * minute;
+constexpr QTime day = 24.0 * hour;
+constexpr QRate per_second(1.0);
+constexpr QRate per_minute = (1.0/60.0)*per_second;
+constexpr QRate per_hour = (1.0/60.0)*per_minute;
 
-    // Length
-    typedef units::derived_dimension<units::length_base_dimension, 1>::type length_dimension;
-    typedef units::unit<length_dimension, units::si::system> length;
-    BOOST_UNITS_STATIC_CONSTANT(metres, length);
-    typedef units::derived_dimension<units::length_base_dimension, 2>::type area_dimension;
-    typedef units::unit<area_dimension, units::si::system> area;
-    BOOST_UNITS_STATIC_CONSTANT(metres_squared, area);
-    typedef units::derived_dimension<units::length_base_dimension, 3>::type volume_dimension;
-    typedef units::unit<volume_dimension, units::si::system> volume;
-    BOOST_UNITS_STATIC_CONSTANT(metres_cubed, volume);
+// Length
+constexpr QLength  metres(1.0);
+constexpr QLength  micron = metres / 1.e6;
+constexpr QArea meters_squared = metres*metres;
+constexpr QVolume meters_cubed = metres*meters_squared;
 
-    BOOST_UNITS_STATIC_CONSTANT(microns, units::metric::micron_base_unit::unit_type);
-    typedef units::derived_dimension<units::length_base_dimension, -1>::type per_length_dimension;
-    typedef units::unit<per_length_dimension, units::si::system> per_length;
-    BOOST_UNITS_STATIC_CONSTANT(per_metre, per_length);
-    typedef units::derived_dimension<units::length_base_dimension, -2>::type per_area_dimension;
-    typedef units::unit<per_area_dimension, units::si::system> per_area;
-    BOOST_UNITS_STATIC_CONSTANT(per_metre_squared, per_area);
+constexpr QPerLength per_metre(1.0);
+constexpr QPerArea per_metre_squared = per_metre*per_metre;
 
-    // Mass
-    typedef units::derived_dimension<units::mass_base_dimension, 1>::type mass_dimension;
-    typedef units::unit<mass_dimension, units::si::system> mass;
-    BOOST_UNITS_STATIC_CONSTANT(kg, mass);
-    typedef units::derived_dimension<units::mass_base_dimension, 1, units::time_base_dimension, -1>::type mass_flow_rate_dimension;
-    typedef units::unit<mass_flow_rate_dimension, units::si::system> mass_flow_rate;
-    BOOST_UNITS_STATIC_CONSTANT(kg_per_second, mass_flow_rate);
-    typedef units::derived_dimension<units::mass_base_dimension, 1, units::length_base_dimension, -2, units::time_base_dimension, -1>::type mass_flux_dimension;
-    typedef units::unit<mass_flux_dimension, units::si::system> mass_flux;
-    BOOST_UNITS_STATIC_CONSTANT(kg_per_metre_squared_per_second, mass_flux);
+// Mass
+constexpr QMass kg(1.0);
+constexpr QMassFlowRate kg_per_second(1.0);
+constexpr QMassFlux kg_per_metre_squred_per_second(1.0);
 
-    // Amount
-    typedef units::si::amount amount;
-    BOOST_UNITS_STATIC_CONSTANT(moles, units::si::amount);
-    typedef units::derived_dimension<units::amount_base_dimension, 1, units::time_base_dimension, -1>::type molar_flow_rate_dimension;
-    typedef units::unit<molar_flow_rate_dimension, units::si::system> molar_flow_rate;
-    BOOST_UNITS_STATIC_CONSTANT(mole_per_second, molar_flow_rate);
-    typedef units::derived_dimension<units::amount_base_dimension, 1, units::length_base_dimension, -3, units::time_base_dimension, -1>::type concentration_flow_rate_dimension;
-    typedef units::unit<concentration_flow_rate_dimension, units::si::system> concentration_flow_rate;
-    BOOST_UNITS_STATIC_CONSTANT(mole_per_metre_cubed_per_second, concentration_flow_rate);
-    typedef units::derived_dimension<units::amount_base_dimension, 1, units::length_base_dimension, -2, units::time_base_dimension, -1>::type molar_flux_dimension;
-    typedef units::unit<molar_flux_dimension, units::si::system> molar_flux;
-    BOOST_UNITS_STATIC_CONSTANT(mole_per_metre_squared_per_second, molar_flux);
-    typedef units::derived_dimension<units::amount_base_dimension, 1, units::length_base_dimension, -5, units::time_base_dimension, -1>::type concentration_flux_dimension;
-    typedef units::unit<concentration_flux_dimension, units::si::system> concentration_flux;
-    BOOST_UNITS_STATIC_CONSTANT(mole_per_metre_pow5_per_second, concentration_flux);
-    typedef units::derived_dimension<units::amount_base_dimension, 1, units::length_base_dimension, -3>::type concentration_dimension;
-    typedef units::unit<concentration_dimension, units::si::system> concentration;
-    BOOST_UNITS_STATIC_CONSTANT(mole_per_metre_cubed, concentration);
-    typedef units::derived_dimension<units::amount_base_dimension, 1, units::length_base_dimension, -4>::type concentration_gradient_dimension;
-    typedef units::unit<concentration_gradient_dimension, units::si::system> concentration_gradient;
-    BOOST_UNITS_STATIC_CONSTANT(mole_per_metre_pow_4, concentration_gradient);
-    typedef units::derived_dimension<units::amount_base_dimension, -1, units::time_base_dimension, -1, units::length_base_dimension, 3>::type rate_per_concentration_dimension;
-    typedef units::unit<rate_per_concentration_dimension, units::si::system> rate_per_concentration;
-    BOOST_UNITS_STATIC_CONSTANT(metre_cubed_per_mole_per_second, rate_per_concentration);
-    typedef units::derived_dimension<units::amount_base_dimension, 1, units::mass_base_dimension, -1>::type molar_mass_dimension;
-    typedef units::unit<molar_mass_dimension, units::si::system> molar_mass;
-    BOOST_UNITS_STATIC_CONSTANT(mole_per_kg, molar_mass);
-    typedef units::derived_dimension<units::length_base_dimension, -3>::type number_density_dimension;
-    typedef units::unit<number_density_dimension, units::si::system> number_density;
-    BOOST_UNITS_STATIC_CONSTANT(per_metre_cubed, number_density);
+// Amount
+constexpr QAmount moles(1.0);
+constexpr QMolarFlowRate mole_per_second(1.0);
+constexpr QConcentrationFlowRate mole_per_metre_cubed_per_second(1.0);
+constexpr QMolarFlux mole_per_metre_squared_per_second(1.0);
+constexpr QConcentrationFlux mole_per_metre_pow5_per_second(1.0);
+constexpr QConcentration mole_per_metre_cubed(1.0);
+constexpr QConcentration molar = 1.e-3*mole_per_metre_cubed;
+constexpr QConcentration nanomolar = 1.e-9*molar;
+constexpr QConcentrationGradient mole_per_metre_pow4(1.0);
+constexpr QRatePerConcentration metre_cubed_per_mole_per_second(1.0);
+constexpr QMolarMass mole_per_kg(1.0);
+constexpr QNumberDensity per_metre_cubed(1.0);
 
-    // Velocity
-    typedef units::derived_dimension<units::length_base_dimension, 1, units::time_base_dimension, -1>::type velocity_dimension;
-    typedef units::unit<velocity_dimension, units::si::system> velocity;
-    BOOST_UNITS_STATIC_CONSTANT(metres_per_second, velocity);
+// Velocity
+constexpr QVelocity metres_per_second(1.0);
 
-    // Force/Pressure/Stress
-    typedef units::derived_dimension<units::mass_base_dimension, 1, units::length_base_dimension, 1, units::time_base_dimension, -2>::type force_dimension;
-    typedef units::unit<force_dimension, units::si::system> force;
-    BOOST_UNITS_STATIC_CONSTANT(newtons, force);
+// Force, pressure, stress
+constexpr QForce newtons(1.0);
+constexpr QPressure pascals(1.0);
+constexpr QPressure mmHg = 133.32239 * pascals;
 
-    typedef units::derived_dimension<units::mass_base_dimension, 1, units::length_base_dimension, -1, units::time_base_dimension, -2>::type pressure_dimension;
-    typedef units::unit<pressure_dimension, units::si::system> pressure;
-    BOOST_UNITS_STATIC_CONSTANT(pascals, pressure);
-    BOOST_UNITS_STATIC_CONSTANT(mmHg, units::metric::mmHg_base_unit::unit_type);
+// Flow
+constexpr QDynamicViscosity poiseuille(1.0);
+constexpr QFlowRate metre_cubed_per_second(1.0);
+constexpr QFlowImpedance pascal_second_per_metre_cubed(1.0);
 
-    // Flow
-    typedef units::derived_dimension<units::mass_base_dimension, 1, units::length_base_dimension, -1, units::time_base_dimension, -1>::type dynamic_viscosity_dimension;
-    typedef units::unit<dynamic_viscosity_dimension, units::si::system> dynamic_viscosity;
-    BOOST_UNITS_STATIC_CONSTANT(poiseuille, dynamic_viscosity);
-    typedef units::derived_dimension<units::length_base_dimension, 3, units::time_base_dimension, -1>::type flow_rate_dimension;
-    typedef units::unit<flow_rate_dimension, units::si::system> flow_rate;
-    BOOST_UNITS_STATIC_CONSTANT(metre_cubed_per_second, flow_rate);
-    typedef units::derived_dimension<units::mass_base_dimension, 1, units::length_base_dimension, -4, units::time_base_dimension, -1>::type flow_impedance_dimension;
-    typedef units::unit<flow_impedance_dimension, units::si::system> flow_impedance;
-    BOOST_UNITS_STATIC_CONSTANT(pascal_second_per_metre_cubed, flow_impedance);
+// Diffusivity, Solubility, Permeability
+constexpr QDiffusivity metre_squared_per_second(1.0);
+constexpr QDiffusivityPerConcentration metre_pow5_per_second_per_mole(1.0);
+constexpr QSolubility mole_per_metre_cubed_per_pascal(1.0);
+constexpr QVolumetricSolubility per_pascal(1.0);
+constexpr QMembrancePermeability metre_per_second(1.0);
 
-    // Diffusivity, Solubility, Permeability
-    typedef units::derived_dimension<units::length_base_dimension, 2, units::time_base_dimension, -1>::type diffusivity_dimension;
-    typedef units::unit<diffusivity_dimension, units::si::system> diffusivity;
-    BOOST_UNITS_STATIC_CONSTANT(metre_squared_per_second, diffusivity);
-    typedef units::derived_dimension<units::length_base_dimension, 5, units::time_base_dimension, -1, units::amount_base_dimension, -1>::type diffusivity_per_concentration_dimension;
-    typedef units::unit<diffusivity_per_concentration_dimension, units::si::system> diffusivity_per_concentration;
-    BOOST_UNITS_STATIC_CONSTANT(metre_pow5_per_second_per_mole, diffusivity_per_concentration);
-    typedef units::derived_dimension<units::amount_base_dimension, 1, units::mass_base_dimension, -1, units::length_base_dimension, -2, units::time_base_dimension, 2>::type solubility_dimension;
-    typedef units::unit<solubility_dimension, units::si::system> solubility;
-    BOOST_UNITS_STATIC_CONSTANT(mole_per_metre_cubed_per_pascal, solubility);
-    typedef units::derived_dimension<units::mass_base_dimension, -1, units::length_base_dimension, 1, units::time_base_dimension, 2>::type volumetric_solubility_dimension;
-    typedef units::unit<volumetric_solubility_dimension, units::si::system> volumetric_solubility;
-    BOOST_UNITS_STATIC_CONSTANT(per_pascal, volumetric_solubility);
+// Radiation
+constexpr QAbsorbedDose gray(1.0);
+constexpr QPerAbsorbedDose per_gray(1.0);
+constexpr QPerAbsorbedDoseSquared per_gray_squared(1.0);
+}
 
-    typedef units::derived_dimension<units::length_base_dimension, 1, units::time_base_dimension, -1>::type membrane_permeability_dimension;
-    typedef units::unit<membrane_permeability_dimension, units::si::system> membrane_permeability;
-    BOOST_UNITS_STATIC_CONSTANT(metre_per_second, membrane_permeability);
+// Physical unit literals:
+// -----------------------
 
-    // Radiation
-    typedef units::derived_dimension<units::length_base_dimension, 2, units::time_base_dimension, -2>::type absorbed_dose_dimension;
-    typedef units::unit<absorbed_dose_dimension, units::si::system> absorbed_dose;
-    BOOST_UNITS_STATIC_CONSTANT(gray, absorbed_dose);
+// literals for time units
+constexpr QTime operator"" _s(long double x) { return QTime(x); };
+constexpr QTime operator"" _min(long double x) { return static_cast<double>(x)*unit::minute; };
+constexpr QTime operator"" _h(long double x) { return static_cast<double>(x)*unit::hour; };
+constexpr QTime operator"" _day(long double x) { return static_cast<double>(x)*unit::day; };
+constexpr QTime operator"" _s(unsigned long long int x) { return QTime(static_cast<double>(x)); };
+constexpr QTime operator"" _min(unsigned long long int x) { return static_cast<double>(x)*unit::minute; };
+constexpr QTime operator"" _h(unsigned long long int x) { return static_cast<double>(x)*unit::hour; };
+constexpr QTime operator"" _day(unsigned long long int x) { return static_cast<double>(x)*unit::day; };
 
-    typedef units::derived_dimension<units::length_base_dimension, -2, units::time_base_dimension, 2>::type per_absorbed_dose_dimension;
-    typedef units::unit<per_absorbed_dose_dimension, units::si::system> per_absorbed_dose;
-    BOOST_UNITS_STATIC_CONSTANT(per_gray, per_absorbed_dose);
+// literals for length units
+constexpr QLength  operator"" _m(long double x) { return static_cast<double>(x)*unit::metres; }
+constexpr QLength  operator"" _m(unsigned long long int  x) { return static_cast<double>(x)*unit::metres; }
+constexpr QLength  operator"" _um(long double x) { return static_cast<double>(x)*unit::micron; }
+constexpr QLength  operator"" _um(unsigned long long int  x) { return static_cast<double>(x)*unit::micron; }
 
-    typedef units::derived_dimension<units::length_base_dimension, -4, units::time_base_dimension, 4>::type per_absorbed_dose_squared_dimension;
-    typedef units::unit<per_absorbed_dose_squared_dimension, units::si::system> per_absorbed_dose_squared;
-    BOOST_UNITS_STATIC_CONSTANT(per_gray_squared, per_absorbed_dose_squared);
+// literals for mass units
+constexpr QMass operator"" _kg(long double x) { return QMass(x); };
+constexpr QMass operator"" _kg(unsigned long long int x) { return QMass(static_cast<double>(x)); };
 
-}; // unit
+// literals for amount units
+constexpr QConcentration operator"" _M(long double x) {  return static_cast<double>(x)*unit::molar; };
+constexpr QConcentration operator"" _M(unsigned long long int x) {  return static_cast<double>(x)*unit::molar; };
+constexpr QConcentration operator"" _nM(long double x) {  return static_cast<double>(x)*unit::nanomolar; };
+constexpr QConcentration operator"" _nM(unsigned long long int x) {  return static_cast<double>(x)*unit::nanomolar; };
 
+// literals for force units
+constexpr QForce operator"" _N(long double x) { return QForce(x); };
+constexpr QForce operator"" _N(unsigned long long int x) { return QForce(static_cast<double>(x)); };
+
+// literals for pressure units
+constexpr QPressure operator"" _Pa(long double x) { return QPressure(x); };
+constexpr QPressure operator"" _Pa(unsigned long long int x)
+                                  { return QPressure(static_cast<double>(x)); };
+
+
+// Angular unit literals:
+// ----------------------
+constexpr long double operator"" _pi(long double x)
+    { return static_cast<double>(x) * 3.1415926535897932384626433832795; }
+constexpr long double operator"" _pi(unsigned long long int x)
+    { return static_cast<double>(x) * 3.1415926535897932384626433832795; }
+
+// literals for angle units
+constexpr QAngle operator"" _rad(long double x) { return QAngle(x); };
+constexpr QAngle operator"" _rad(unsigned long long int x) { return QAngle(static_cast<double>(x)); };
+constexpr QAngle operator"" _deg(long double x) { return static_cast<double>(x)*unit::degree; };
+constexpr QAngle operator"" _deg(unsigned long long int x) { return static_cast<double>(x)*unit::degree; };
+
+// Conversion macro, which utilizes the string literals
+#define ConvertTo(_x, _y) (_x).Convert(1.0_##_y)
+
+
+
+// Typesafe mathematical operations:
+// ---------------------------------
+template <typename M, typename L, typename T, typename Am, typename A>
+constexpr RQuantity<std::ratio_divide<M, std::ratio<2>>, std::ratio_divide<L, std::ratio<2>>,
+                    std::ratio_divide<T, std::ratio<2>>, std::ratio_divide<Am, std::ratio<2>>,
+                    std::ratio_divide<A, std::ratio<2>>>
+    Qsqrt(const RQuantity<M, L, T, Am, A>& num)
+{
+    return RQuantity<std::ratio_divide<M, std::ratio<2>>, std::ratio_divide<L, std::ratio<2>>,
+                     std::ratio_divide<T, std::ratio<2>>, std::ratio_divide<Am, std::ratio<2>>,
+                     std::ratio_divide<A, std::ratio<2>>>
+                    (sqrt(num.getValue()));
+}
+
+// Typesafe trigonometric operations
+inline double sin(const QAngle &num)
+{
+    return sin(num.getValue());
+}
+inline double cos(const QAngle &num)
+{
+    return cos(num.getValue());
+}
+inline double tan(const QAngle &num)
+{
+    return tan(num.getValue());
+}
 
 #endif /* UNITCOLLECTIONS_HPP */

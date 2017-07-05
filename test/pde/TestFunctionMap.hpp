@@ -68,14 +68,14 @@ public:
     void TestGridFunction() throw(Exception)
     {
         BaseUnits::Instance()->SetReferenceLengthScale(1.e-6*unit::metres);
-        units::quantity<unit::length> length(100.0*unit::microns);
+        QLength length(100.0*unit::microns);
 
         // Set up the grid
         boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(length, length, DimensionalChastePoint<2>());
 
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        units::quantity<unit::length> grid_spacing(5.0*unit::microns);
+        QLength grid_spacing(5.0*unit::microns);
         p_grid->GenerateFromPart(p_domain, grid_spacing);
 
         // Set up a function map
@@ -100,7 +100,7 @@ public:
     void TestMeshFunction() throw(Exception)
     {
         BaseUnits::Instance()->SetReferenceLengthScale(1.e-6*unit::metres);
-        units::quantity<unit::length> length(100.0*unit::microns);
+        QLength length(100.0*unit::microns);
 
         // Set up the grid
         boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();

@@ -164,7 +164,7 @@ void AbstractStructuralAdaptationSolver<DIM>::Solve()
     }
 
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = mpVesselNetwork->GetVesselSegments();
-    std::vector<units::quantity<unit::length> > previous_radii(segments.size());
+    std::vector<QLength > previous_radii(segments.size());
     for (unsigned segment_index = 0; segment_index < segments.size(); segment_index++)
     {
         previous_radii[segment_index] = segments[segment_index]->GetRadius();
@@ -180,7 +180,7 @@ void AbstractStructuralAdaptationSolver<DIM>::Solve()
         std::vector<double> relative_change(segments.size());
         for (unsigned segment_index = 0; segment_index < segments.size(); segment_index++)
         {
-            units::quantity<unit::length> current_radius = segments[segment_index]->GetRadius();
+            QLength current_radius = segments[segment_index]->GetRadius();
             relative_change[segment_index] = fabs(1.0 - current_radius / previous_radii[segment_index]);
             previous_radii[segment_index] = current_radius;
         }

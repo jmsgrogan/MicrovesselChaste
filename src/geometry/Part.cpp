@@ -120,7 +120,7 @@ void Part<DIM>::AddAttributeToPolygons(const std::string& rLabel, double value)
 }
 
 template<unsigned DIM>
-std::shared_ptr<Polygon<DIM> > Part<DIM>::AddCircle(units::quantity<unit::length> radius,
+std::shared_ptr<Polygon<DIM> > Part<DIM>::AddCircle(QLength radius,
                                                 DimensionalChastePoint<DIM> centre, unsigned numSegments)
 {
     std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices;
@@ -144,8 +144,8 @@ std::shared_ptr<Polygon<DIM> > Part<DIM>::AddCircle(units::quantity<unit::length
 }
 
 template<unsigned DIM>
-void Part<DIM>::AddCylinder(units::quantity<unit::length> radius,
-                            units::quantity<unit::length> depth,
+void Part<DIM>::AddCylinder(QLength radius,
+                            QLength depth,
                             DimensionalChastePoint<DIM> centre,
                             unsigned numSegments)
 {
@@ -155,9 +155,9 @@ void Part<DIM>::AddCylinder(units::quantity<unit::length> radius,
 }
 
 template<unsigned DIM>
-void Part<DIM>::AddCuboid(units::quantity<unit::length> sizeX,
-                          units::quantity<unit::length> sizeY,
-                          units::quantity<unit::length> sizeZ,
+void Part<DIM>::AddCuboid(QLength sizeX,
+                          QLength sizeY,
+                          QLength sizeZ,
                           DimensionalChastePoint<DIM> origin)
 {
     std::shared_ptr<Polygon<DIM> > p_rectangle = AddRectangle(sizeX, sizeY, origin);
@@ -222,8 +222,8 @@ std::shared_ptr<Polygon<DIM> > Part<DIM>::AddPolygon(std::shared_ptr<Polygon<DIM
 }
 
 template<unsigned DIM>
-std::shared_ptr<Polygon<DIM> > Part<DIM>::AddRectangle(units::quantity<unit::length> sizeX,
-                                                   units::quantity<unit::length> sizeY,
+std::shared_ptr<Polygon<DIM> > Part<DIM>::AddRectangle(QLength sizeX,
+                                                   QLength sizeY,
                                                    DimensionalChastePoint<DIM> origin)
 {
     c_vector<double, DIM> dimensionless_origin = origin.GetLocation(mReferenceLength);
@@ -259,7 +259,7 @@ void Part<DIM>::AddVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNet
         std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pVesselNetwork->GetNodes();
         for (unsigned idx = 0; idx < nodes.size(); idx++)
         {
-            units::quantity<unit::length> length_Scale = nodes[idx]->rGetLocation().GetReferenceLengthScale();
+            QLength length_Scale = nodes[idx]->rGetLocation().GetReferenceLengthScale();
             vertices.push_back(DimensionalChastePoint<DIM>::Create(nodes[idx]->rGetLocation().GetLocation(length_Scale), length_Scale));
         }
 
@@ -363,7 +363,7 @@ bool Part<DIM>::EdgeHasAttribute(DimensionalChastePoint<DIM> loc, const std::str
 }
 
 template<unsigned DIM>
-void Part<DIM>::Extrude(std::shared_ptr<Polygon<DIM> > pPolygon, units::quantity<unit::length> depth)
+void Part<DIM>::Extrude(std::shared_ptr<Polygon<DIM> > pPolygon, QLength depth)
 {
     if(DIM==2)
     {
@@ -446,7 +446,7 @@ std::vector<std::pair<DimensionalChastePoint<DIM>, unsigned> > Part<DIM>::GetReg
 }
 
 template<unsigned DIM>
-units::quantity<unit::length> Part<DIM>::GetReferenceLengthScale()
+QLength Part<DIM>::GetReferenceLengthScale()
 {
     return mReferenceLength;
 }
@@ -535,7 +535,7 @@ std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > Part<DIM>::GetVertic
 }
 
 template<unsigned DIM>
-std::vector<unsigned> Part<DIM>::GetContainingGridIndices(unsigned num_x, unsigned num_y, unsigned num_z, units::quantity<unit::length> spacing)
+std::vector<unsigned> Part<DIM>::GetContainingGridIndices(unsigned num_x, unsigned num_y, unsigned num_z, QLength spacing)
 {
     double scaled_spacing = spacing/mReferenceLength;
     std::vector<unsigned> location_indices;
@@ -582,7 +582,7 @@ std::vector<std::shared_ptr<Polygon<DIM> > > Part<DIM>::GetPolygons()
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::length> > Part<DIM>::GetBoundingBox()
+std::vector<QLength > Part<DIM>::GetBoundingBox()
 {
     std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
     c_vector<double, 6> box;
@@ -611,7 +611,7 @@ std::vector<units::quantity<unit::length> > Part<DIM>::GetBoundingBox()
         }
     }
 
-    std::vector<units::quantity<unit::length> > box_vector(6, 0.0*unit::metres);
+    std::vector<QLength > box_vector(6, 0.0*unit::metres);
     for(unsigned idx=0; idx<6; idx++)
     {
         box_vector[idx] = box[idx] * mReferenceLength;
@@ -1072,7 +1072,7 @@ void Part<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 }
 
 template<unsigned DIM>
-void Part<DIM>::SetReferenceLengthScale(units::quantity<unit::length> referenceLength)
+void Part<DIM>::SetReferenceLengthScale(QLength referenceLength)
 {
     mReferenceLength = referenceLength;
     mVtkIsUpToDate = false;

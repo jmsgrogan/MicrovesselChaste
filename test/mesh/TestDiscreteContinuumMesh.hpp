@@ -165,7 +165,7 @@ public:
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CylinderWithVesselSurface");
 
-        units::quantity<unit::length> vessel_length = 100.0* 1.e-6 * unit::metres;
+        QLength vessel_length = 100.0* 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
                                                                                         DimensionalChastePoint<3>(0.0, 0.0));
@@ -193,7 +193,7 @@ public:
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CylinderWithVesselSurfaceNoHole");
 
-        units::quantity<unit::length> vessel_length = 100.0* 1.e-6 * unit::metres;
+        QLength vessel_length = 100.0* 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
         boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
                                                                                         DimensionalChastePoint<3>(0.0, 0.0));
@@ -221,7 +221,7 @@ public:
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CubeWithVesselSurface");
 
-        units::quantity<unit::length> vessel_length = 100.0* 1.e-6 * unit::metres;
+        QLength vessel_length = 100.0* 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
         DimensionalChastePoint<3> centre(vessel_length/(2.0* 1.e-6 * unit::metres), vessel_length/(2.0* 1.e-6 * unit::metres));
         boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre);
@@ -249,7 +249,7 @@ public:
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CubeWithVesselSurface", false);
 
-        units::quantity<unit::length> vessel_length = 100.0* 1.e-6 * unit::metres;
+        QLength vessel_length = 100.0* 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
         DimensionalChastePoint<3> centre(vessel_length/(2.0* 1.e-6 * unit::metres), vessel_length/(2.0* 1.e-6 * unit::metres));
         boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre);
@@ -277,7 +277,7 @@ public:
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/ParrallelVesselSurface");
 
-        units::quantity<unit::length> vessel_length = 100.0* 1.e-6 * unit::metres;
+        QLength vessel_length = 100.0* 1.e-6 * unit::metres;
         double radius = 10.0;
         double spacing = 3.0 * radius;
         unsigned num_vessels_per_row = 5;
@@ -303,11 +303,11 @@ public:
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/PatchOnFace");
 
-        units::quantity<unit::length> domain_width = 500.0e-6*unit::metres;
-        units::quantity<unit::length> pellet_width = 100.0e-6*unit::metres;
-        units::quantity<unit::length> domain_depth = 50.0e-6*unit::metres;
-        units::quantity<unit::length> pellet_depth = 10.0e-6*unit::metres;
-        units::quantity<unit::length> reference_length = 1.0e-6*unit::metres;
+        QLength domain_width = 500.0e-6*unit::metres;
+        QLength pellet_width = 100.0e-6*unit::metres;
+        QLength domain_depth = 50.0e-6*unit::metres;
+        QLength pellet_depth = 10.0e-6*unit::metres;
+        QLength reference_length = 1.0e-6*unit::metres;
 
         boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
         p_part->AddCuboid(domain_width, domain_width, domain_depth, DimensionalChastePoint<3>(0.0, 0.0));
@@ -333,7 +333,7 @@ public:
 
         for(unsigned idx=0;idx<facets.size();idx++)
         {
-            units::quantity<unit::length> distance = facets[idx]->GetCentroid().GetDistance(probe);
+            QLength distance = facets[idx]->GetCentroid().GetDistance(probe);
             c_vector<double, 3> facet_loc = facets[idx]->GetCentroid().GetLocation(reference_length);
 
             std::cout << facet_loc[0] << "," << facet_loc[1] << "," << facet_loc[2] << std::endl;
@@ -366,11 +366,11 @@ public:
         double polar_angle = 0.999 * M_PI;
         std::vector<DimensionalChastePoint<3> > holes;
 
-        units::quantity<unit::length> cornea_radius = 1300*1.e-6*unit::metres;
-        units::quantity<unit::length> cornea_thickness = 100*1.e-6*unit::metres;
-        units::quantity<unit::length> pellet_radius = 200*1.e-6*unit::metres;
-        units::quantity<unit::length> pellet_thickness = 50*1.e-6*unit::metres;
-        units::quantity<unit::length> reference_length = 1.e-6*unit::metres;
+        QLength cornea_radius = 1300*1.e-6*unit::metres;
+        QLength cornea_thickness = 100*1.e-6*unit::metres;
+        QLength pellet_radius = 200*1.e-6*unit::metres;
+        QLength pellet_thickness = 50*1.e-6*unit::metres;
+        QLength reference_length = 1.e-6*unit::metres;
         boost::shared_ptr<Part<3> > p_domain = generator.GenerateHemisphere(cornea_radius,
                 cornea_thickness, num_divisions_x, num_divisions_y, azimuth_angle, polar_angle);
 
@@ -425,11 +425,11 @@ public:
         double polar_angle = 0.999 * M_PI;
         std::vector<DimensionalChastePoint<3> > holes;
 
-        units::quantity<unit::length> cornea_radius = 1300*1.e-6*unit::metres;
-        units::quantity<unit::length> cornea_thickness = 100*1.e-6*unit::metres;
-        units::quantity<unit::length> pellet_radius = 200*1.e-6*unit::metres;
-        units::quantity<unit::length> pellet_thickness = 50*1.e-6*unit::metres;
-        units::quantity<unit::length> reference_length = 1.e-6*unit::metres;
+        QLength cornea_radius = 1300*1.e-6*unit::metres;
+        QLength cornea_thickness = 100*1.e-6*unit::metres;
+        QLength pellet_radius = 200*1.e-6*unit::metres;
+        QLength pellet_thickness = 50*1.e-6*unit::metres;
+        QLength reference_length = 1.e-6*unit::metres;
         boost::shared_ptr<Part<3> > p_domain = generator.GenerateHemisphere(cornea_radius,
                 cornea_thickness, num_divisions_x, num_divisions_y, azimuth_angle, polar_angle);
 

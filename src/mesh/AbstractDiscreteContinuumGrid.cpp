@@ -259,7 +259,7 @@ int AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetLocalIndex(unsigne
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::length> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetReferenceLengthScale()
+QLength AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetReferenceLengthScale()
 {
     return mReferenceLength;
 }

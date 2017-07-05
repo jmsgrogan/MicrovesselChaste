@@ -208,7 +208,7 @@ public:
         vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 1.0, 0.0, 1.e-6*unit::metres));
         boost::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(vertices);
 
-        std::vector<units::quantity<unit::length> > bbox = p_polygon->GetBoundingBox();
+        std::vector<QLength > bbox = p_polygon->GetBoundingBox();
         TS_ASSERT_DELTA(bbox[0].value(), 0.0, 1.e-6);
         TS_ASSERT_DELTA(bbox[1].value(), 1.e-6, 1.e-8);
         TS_ASSERT_DELTA(bbox[2].value(), 0.0, 1.e-6);

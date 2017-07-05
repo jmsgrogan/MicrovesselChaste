@@ -52,7 +52,7 @@ class OffLatticeSproutingRule : public AbstractSproutingRule<DIM>
     /**
      * Tip exclusion radius
      */
-    units::quantity<unit::length> mTipExclusionRadius;
+    QLength mTipExclusionRadius;
 
     /**
      * The half maximum vegf
@@ -86,7 +86,7 @@ public:
      * If a tip is closer than this distance do not sprout
      * @param  exclusionRadius if a tip is closer than this distance do not sprout
      */
-    void SetTipExclusionRadius(units::quantity<unit::length> exclusionRadius);
+    void SetTipExclusionRadius(QLength exclusionRadius);
 
     /**
      * Overwritten method to return nodes which may sprout

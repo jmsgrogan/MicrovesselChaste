@@ -198,7 +198,7 @@ public:
      * @param rDirectory the output directory for writing to
      */
     void SetupFromModifier(AbstractCellPopulation<DIM,DIM>& rCellPopulation,
-                           units::quantity<unit::length> cellReferenceLength,
+                           QLength cellReferenceLength,
                            units::quantity<unit::concentration> cellReferenceConcentration,
                            const std::string& rDirectory);
 

@@ -155,7 +155,7 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
     c_vector<unsigned, 6> extents = this->mpRegularGrid->GetExtents();
     c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
-    units::quantity<unit::length> spacing = this->mpRegularGrid->GetSpacing();
+    QLength spacing = this->mpRegularGrid->GetSpacing();
 
     std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_pde =
             std::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM> >(this->mpPde);
@@ -300,7 +300,7 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleVector()
     c_vector<unsigned, 6> extents = this->mpRegularGrid->GetExtents();
     c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
     units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
-    units::quantity<unit::length> spacing = this->mpRegularGrid->GetSpacing();
+    QLength spacing = this->mpRegularGrid->GetSpacing();
 
     std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_pde =
             std::dynamic_pointer_cast<CoupledVegfPelletDiffusionReactionPde<DIM> >(this->mpPde);
