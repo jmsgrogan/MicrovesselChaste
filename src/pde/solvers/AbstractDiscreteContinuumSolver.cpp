@@ -76,7 +76,7 @@ void AbstractDiscreteContinuumSolver<DIM>::AddBoundaryCondition(std::shared_ptr<
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration> > AbstractDiscreteContinuumSolver<DIM>::GetConcentrations()
+std::vector<QConcentration > AbstractDiscreteContinuumSolver<DIM>::GetConcentrations()
 {
     return mConcentrations;
 }
@@ -110,9 +110,9 @@ QLength AbstractDiscreteContinuumSolver<DIM>::GetReferenceLength()
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration> > AbstractDiscreteContinuumSolver<DIM>::GetConcentrations(vtkSmartPointer<vtkPoints> pSamplePoints)
+std::vector<QConcentration > AbstractDiscreteContinuumSolver<DIM>::GetConcentrations(vtkSmartPointer<vtkPoints> pSamplePoints)
 {
-    std::vector<units::quantity<unit::concentration> > sampled_solution(pSamplePoints->GetNumberOfPoints(),
+    std::vector<QConcentration > sampled_solution(pSamplePoints->GetNumberOfPoints(),
             0.0*this->mReferenceConcentration);
 
 
@@ -140,7 +140,7 @@ std::vector<units::quantity<unit::concentration> > AbstractDiscreteContinuumSolv
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration> > AbstractDiscreteContinuumSolver<DIM>::GetConcentrations(std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
+std::vector<QConcentration > AbstractDiscreteContinuumSolver<DIM>::GetConcentrations(std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid)
 {
     return this->GetConcentrations(pGrid->GetPoints());
 }
@@ -249,7 +249,7 @@ std::vector<double> AbstractDiscreteContinuumSolver<DIM>::GetSolution(std::share
 }
 
 template<unsigned DIM>
-units::quantity<unit::concentration> AbstractDiscreteContinuumSolver<DIM>::GetReferenceConcentration()
+QConcentration AbstractDiscreteContinuumSolver<DIM>::GetReferenceConcentration()
 {
     return mReferenceConcentration;
 }
@@ -303,7 +303,7 @@ void AbstractDiscreteContinuumSolver<DIM>::SetPde(std::shared_ptr<AbstractDiscre
 }
 
 template<unsigned DIM>
-void AbstractDiscreteContinuumSolver<DIM>::SetReferenceConcentration(units::quantity<unit::concentration> referenceConcentration)
+void AbstractDiscreteContinuumSolver<DIM>::SetReferenceConcentration(QConcentration referenceConcentration)
 {
     mReferenceConcentration = referenceConcentration;
 }
@@ -311,7 +311,7 @@ void AbstractDiscreteContinuumSolver<DIM>::SetReferenceConcentration(units::quan
 template<unsigned DIM>
 void AbstractDiscreteContinuumSolver<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
                                                              QLength cellPopulationReferenceLength,
-                                                             units::quantity<unit::concentration> cellPopulationReferenceConcentration)
+                                                             QConcentration cellPopulationReferenceConcentration)
 {
     mpDensityMap->SetCellPopulation(rCellPopulation, cellPopulationReferenceLength, cellPopulationReferenceConcentration);
 }
@@ -335,7 +335,7 @@ void AbstractDiscreteContinuumSolver<DIM>::UpdateSolution(const std::vector<doub
 }
 
 template<unsigned DIM>
-void AbstractDiscreteContinuumSolver<DIM>::UpdateSolution(const std::vector<units::quantity<unit::concentration> >& data)
+void AbstractDiscreteContinuumSolver<DIM>::UpdateSolution(const std::vector<QConcentration >& data)
 {
     mConcentrations = data;
 }

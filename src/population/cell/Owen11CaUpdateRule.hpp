@@ -71,7 +71,7 @@ private:
     /**
      * Diffusion parameter for update rule.
      */
-    units::quantity<unit::diffusivity> mDiffusionParameter;
+    QDiffusivity mDiffusionParameter;
 
     /**
      * Vessel network
@@ -145,7 +145,7 @@ public:
     /**
       * @return mDiffusionParameter
       */
-    units::quantity<unit::diffusivity> GetDiffusionParameter();
+    QDiffusivity GetDiffusionParameter();
 
     /**
      * Set the vessel network
@@ -173,7 +173,7 @@ public:
      *
      * @param diffusionParameter the new value of mDiffusionParameter
      */
-    void SetDiffusionParameter(units::quantity<unit::diffusivity> diffusionParameter);
+    void SetDiffusionParameter(QDiffusivity diffusionParameter);
 
     /**
      * Overridden OutputUpdateRuleParameters() method.

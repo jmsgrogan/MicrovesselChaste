@@ -69,31 +69,31 @@ std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM> > 
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::rate>  CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetPelletFreeDecayRate()
+QRate  CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetPelletFreeDecayRate()
 {
     return mPelletFreeDecayRate;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::dimensionless>  CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetPelletBindingConstant()
+QDimensionless  CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetPelletBindingConstant()
 {
     return mPelletVegfBindingConstant;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::concentration> CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetInitialVegfInPellet()
+QConcentration CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetInitialVegfInPellet()
 {
     return mInitialVegfInPellet;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::concentration> CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetCurrentVegfInPellet()
+QConcentration CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetCurrentVegfInPellet()
 {
     return mCurrentVegfInPellet;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::membrane_permeability> CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetCorneaPelletPermeability()
+QMembranePermeability CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetCorneaPelletPermeability()
 {
     return mCorneaPelletPermeability;
 }
@@ -105,55 +105,55 @@ QLength CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetPellet
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::area> CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetPelletSurfaceArea()
+QArea CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetPelletSurfaceArea()
 {
     return mPelletSurfaceArea;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::volume> CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetPelletVolume()
+QVolume CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::GetPelletVolume()
 {
     return mPelletVolume;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetPelletFreeDecayRate(units::quantity<unit::rate> rate)
+void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetPelletFreeDecayRate(QRate rate)
 {
     mPelletFreeDecayRate = rate;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetPelletBindingConstant(units::quantity<unit::dimensionless> bindingConstant)
+void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetPelletBindingConstant(QDimensionless bindingConstant)
 {
     mPelletVegfBindingConstant = bindingConstant;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetInitialVegfInPellet(units::quantity<unit::concentration> initialVegf)
+void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetInitialVegfInPellet(QConcentration initialVegf)
 {
     mInitialVegfInPellet = initialVegf;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetCurrentVegfInPellet(units::quantity<unit::concentration> currentVegf)
+void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetCurrentVegfInPellet(QConcentration currentVegf)
 {
     mCurrentVegfInPellet = currentVegf;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetCorneaPelletPermeability(units::quantity<unit::membrane_permeability> permeability)
+void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetCorneaPelletPermeability(QMembranePermeability permeability)
 {
     mCorneaPelletPermeability = permeability;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetPelletSurfaceArea(units::quantity<unit::area> surfaceArea)
+void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetPelletSurfaceArea(QArea surfaceArea)
 {
     mPelletSurfaceArea = surfaceArea;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetPelletVolume(units::quantity<unit::volume> volume)
+void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetPelletVolume(QVolume volume)
 {
     mPelletVolume = volume;
 }
@@ -165,13 +165,13 @@ void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetPelletDep
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetHalfMaxVegfConcentration(units::quantity<unit::concentration> halfMax)
+void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetHalfMaxVegfConcentration(QConcentration halfMax)
 {
     mHalfMaxVegf = halfMax;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetContinuumLinearInUTerm(units::quantity<unit::rate> linearInUTerm)
+void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetContinuumLinearInUTerm(QRate linearInUTerm)
 {
     mLinearInUTerm = linearInUTerm;
 }
@@ -180,8 +180,8 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 double CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeSourceTerm(const ChastePoint<SPACE_DIM>& rX,
         double u, Element<ELEMENT_DIM,SPACE_DIM>* pElement)
 {
-    units::quantity<unit::rate> scaling_factor = (1.0/BaseUnits::Instance()->GetReferenceTimeScale());
-    units::quantity<unit::concentration> reference_concentration = BaseUnits::Instance()->GetReferenceConcentrationScale();
+    QRate scaling_factor = (1.0/BaseUnits::Instance()->GetReferenceTimeScale());
+    QConcentration reference_concentration = BaseUnits::Instance()->GetReferenceConcentrationScale();
     double normalized_half_max_conc = mHalfMaxVegf/reference_concentration;
 
     double rate = this->mLinearInUTerm/scaling_factor*u;
@@ -193,7 +193,7 @@ double CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeSou
         }
 
         double extra_source = this->mDiscreteNonLinearSourceStrengths[pElement->GetIndex()]*(u/(u+normalized_half_max_conc))/(scaling_factor*BaseUnits::Instance()->GetReferenceConcentrationScale());
-        rate+= extra_source;
+        rate = rate + extra_source;
     }
     if(u<=0.0)
     {
@@ -203,25 +203,25 @@ double CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeSou
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::concentration_flow_rate> CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeSourceTerm(unsigned gridIndex,
-                                                                                                                                                  units::quantity<unit::concentration> u)
+QConcentrationFlowRate CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeSourceTerm(unsigned gridIndex,
+                                                                                                                                                  QConcentration u)
 {
-    units::quantity<unit::concentration_flow_rate> rate = this->mLinearInUTerm*u;
+    QConcentrationFlowRate rate = this->mLinearInUTerm*u;
     if(this->mDiscreteNonLinearSourceStrengths.size()>0)
     {
-        rate += this->mDiscreteNonLinearSourceStrengths[gridIndex]*(u/(u+mHalfMaxVegf));
+        rate = rate + this->mDiscreteNonLinearSourceStrengths[gridIndex]*(u/(u+mHalfMaxVegf));
     }
     return rate;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::rate> CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeSourceTermPrime(unsigned gridIndex,
-                                                                                                                                    units::quantity<unit::concentration> u)
+QRate CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeSourceTermPrime(unsigned gridIndex,
+                                                                                                                                    QConcentration u)
 {
-    units::quantity<unit::rate> rate = this->mLinearInUTerm;
+    QRate rate = this->mLinearInUTerm;
     if(this->mDiscreteNonLinearSourceStrengths.size()>0)
     {
-        rate+= this->mDiscreteNonLinearSourceStrengths[gridIndex]*(mHalfMaxVegf/((u+mHalfMaxVegf)*(u+mHalfMaxVegf)));
+        rate = rate + this->mDiscreteNonLinearSourceStrengths[gridIndex]*(mHalfMaxVegf/((u+mHalfMaxVegf)*(u+mHalfMaxVegf)));
     }
     return rate;
 }
@@ -233,13 +233,13 @@ void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscre
     if(this->mDiscreteSources.size()>0)
     {
         unsigned num_locations = this->mDiscreteSources[0]->GetDensityMap()->GetGridCalculator()->GetGrid()->GetNumberOfCells();
-        mDiscreteNonLinearSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(num_locations,
+        mDiscreteNonLinearSourceStrengths = std::vector<QConcentrationFlowRate >(num_locations,
                 0.0*unit::mole_per_metre_cubed_per_second);
         for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
         {
-            std::vector<units::quantity<unit::concentration_flow_rate> > result = this->mDiscreteSources[idx]->GetNonlinearTermValues();
+            std::vector<QConcentrationFlowRate > result = this->mDiscreteSources[idx]->GetNonlinearTermValues();
             std::transform(mDiscreteNonLinearSourceStrengths.begin( ), mDiscreteNonLinearSourceStrengths.end( ),
-                           result.begin( ), mDiscreteNonLinearSourceStrengths.begin( ),std::plus<units::quantity<unit::concentration_flow_rate> >( ));
+                           result.begin( ), mDiscreteNonLinearSourceStrengths.begin( ),std::plus<QConcentrationFlowRate >( ));
         }
     }
 }

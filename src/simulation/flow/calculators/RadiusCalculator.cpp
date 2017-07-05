@@ -64,7 +64,7 @@ void RadiusCalculator<DIM>::SetMaxRadius(QLength maxRadius)
 }
 
 template<unsigned DIM>
-void RadiusCalculator<DIM>::SetTimestep(units::quantity<unit::time>  dt)
+void RadiusCalculator<DIM>::SetTimestep(QTime  dt)
 {
     mTimeStep = dt;
 }
@@ -75,7 +75,7 @@ void RadiusCalculator<DIM>::Calculate()
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
     for (unsigned segment_index = 0; segment_index < segments.size(); segment_index++)
     {
-        units::quantity<unit::rate> total_stimulus = segments[segment_index]->GetFlowProperties()->GetGrowthStimulus();
+        QRate total_stimulus = segments[segment_index]->GetFlowProperties()->GetGrowthStimulus();
         QLength radius = segments[segment_index]->GetRadius();
         radius = radius*(1.0 + mTimeStep * total_stimulus);
 

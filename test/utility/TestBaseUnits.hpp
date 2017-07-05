@@ -93,7 +93,7 @@ public:
 
         // Restore
         {
-            boost::shared_ptr<BaseUnits> p_base_units = BaseUnits::SharedInstance();
+            std::shared_ptr<BaseUnits> p_base_units = BaseUnits::SharedInstance();
 
             std::ifstream ifs(archive_filename.c_str(), std::ios::binary);
             boost::archive::text_iarchive input_arch(ifs);

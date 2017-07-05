@@ -49,7 +49,7 @@ class WallShearStressBasedRegressionSolver : public RegressionSolver<DIM>
      * Threshold wall shear stress level, below which vessels will be removed.
      * This threshold should be prescribed in units of pascals.
      */
-    units::quantity<unit::pressure> mThresholdWss;
+    QPressure mThresholdWss;
 
     /**
      *  Maximum time that a vessel may exist with low wall shear stress.
@@ -57,7 +57,7 @@ class WallShearStressBasedRegressionSolver : public RegressionSolver<DIM>
      *  the vessel network.
      *  This time should be prescribed in units of hours.
      */
-    units::quantity<unit::time> mMaxTimeWithLowWss;
+    QTime mMaxTimeWithLowWss;
 
 public:
 
@@ -77,21 +77,21 @@ public:
      */
     static std::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > Create();
 
-    units::quantity<unit::pressure> GetLowWallShearStressThreshold();
+    QPressure GetLowWallShearStressThreshold();
 
-    units::quantity<unit::time> GetMaximumTimeWithLowWallShearStress();
+    QTime GetMaximumTimeWithLowWallShearStress();
 
     /**
      *  Setter for mMaxTimeWithLowWss parameter.
      *  @param time the max time for low WSS
      */
-    void SetMaximumTimeWithLowWallShearStress(units::quantity<unit::time> time);
+    void SetMaximumTimeWithLowWallShearStress(QTime time);
 
     /**
      *  Setter for mThresholdWss parameter.
      *  @param threshold the value of WSS below which it is considered too low for the vessel
      */
-    void SetLowWallShearStressThreshold(units::quantity<unit::pressure> threshold);
+    void SetLowWallShearStressThreshold(QPressure threshold);
 
     /**
      * Increment one step in time

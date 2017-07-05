@@ -54,7 +54,7 @@ public:
     void TestConstructor() throw (Exception)
     {
         // Make some nodes
-        std::vector<boost::shared_ptr<VesselNode<2> > > nodes;
+        std::vector<std::shared_ptr<VesselNode<2> > > nodes;
         nodes.push_back(VesselNode<2>::Create(1.0, 2.0));
         nodes.push_back(VesselNode<2>::Create(3.0, 4.0));
 
@@ -63,7 +63,7 @@ public:
                               "Attempted to assign the same node to both ends of a vessel segment.");
 
         // Make a segment
-        boost::shared_ptr<VesselSegment<2> > p_segment = VesselSegment<2>::Create(nodes[0], nodes[1]);
+        std::shared_ptr<VesselSegment<2> > p_segment = VesselSegment<2>::Create(nodes[0], nodes[1]);
 
         // Check the locations
         TS_ASSERT(p_segment->GetNodes().first->IsCoincident(nodes[0]->rGetLocation()));
@@ -74,7 +74,7 @@ public:
                               "A node index other than 0 or 1 has been requested for a Vessel Segment.");
 
         // Test replacing a node
-        std::vector<boost::shared_ptr<VesselNode<2> > > nodes2;
+        std::vector<std::shared_ptr<VesselNode<2> > > nodes2;
         nodes2.push_back(VesselNode<2>::Create(6.0, 7.0));
         nodes2.push_back(VesselNode<2>::Create(8.0, 9.0));
 
@@ -88,7 +88,7 @@ public:
 
     void TestSimpleGetAndSetMethods() throw (Exception)
     {
-        boost::shared_ptr<VesselSegment<3> > pSegment = VesselSegment<3>::Create(VesselNode<3>::Create(),
+        std::shared_ptr<VesselSegment<3> > pSegment = VesselSegment<3>::Create(VesselNode<3>::Create(),
                                                                                       VesselNode<3>::Create(1.0));
 
         // Test simple Getters and Setters
@@ -107,16 +107,16 @@ public:
     void TestGeometricFeatures() throw (Exception)
     {
         //Check the returned length
-        std::vector<boost::shared_ptr<VesselNode<2> > > nodes;
+        std::vector<std::shared_ptr<VesselNode<2> > > nodes;
         nodes.push_back(VesselNode<2>::Create(6.0, 7.0));
         nodes.push_back(VesselNode<2>::Create(8.0, 9.0));
 
-        std::vector<boost::shared_ptr<VesselNode<3> > > nodes_3d;
+        std::vector<std::shared_ptr<VesselNode<3> > > nodes_3d;
         nodes_3d.push_back(VesselNode<3>::Create(3.0, 4.0, 5.0));
         nodes_3d.push_back(VesselNode<3>::Create(6.0, 7.0, 8.0));
 
-        boost::shared_ptr<VesselSegment<2> > p_segment1 = VesselSegment<2>::Create(nodes[0], nodes[1]);
-        boost::shared_ptr<VesselSegment<3> > p_segment2 = VesselSegment<3>::Create(nodes_3d[0], nodes_3d[1]);
+        std::shared_ptr<VesselSegment<2> > p_segment1 = VesselSegment<2>::Create(nodes[0], nodes[1]);
+        std::shared_ptr<VesselSegment<3> > p_segment2 = VesselSegment<3>::Create(nodes_3d[0], nodes_3d[1]);
 
         TS_ASSERT_DELTA(p_segment1->GetLength()/p_segment1->GetNode(0)->GetReferenceLengthScale(), std::sqrt(8.0), 1.e-6);
         TS_ASSERT_DELTA(p_segment2->GetLength()/p_segment2->GetNode(0)->GetReferenceLengthScale(), std::sqrt(27.0), 1.e-6);
@@ -132,40 +132,40 @@ public:
     void TestAddingAndRemovingVessels() throw (Exception)
     {
         // Make some nodes
-        std::vector<boost::shared_ptr<VesselNode<2> > > nodes;
+        std::vector<std::shared_ptr<VesselNode<2> > > nodes;
         nodes.push_back(VesselNode<2>::Create(4.0, 3.0));
         nodes.push_back(VesselNode<2>::Create(4.0, 5.0));
         nodes.push_back(VesselNode<2>::Create(5.0, 6.0));
 
         // Make some vessel segments1
-        boost::shared_ptr<VesselSegment<2> > pSegment = VesselSegment<2>::Create(nodes[0], nodes[1]);
-        boost::shared_ptr<VesselSegment<2> > pSegment2 = VesselSegment<2>::Create(nodes[1], nodes[2]);
+        std::shared_ptr<VesselSegment<2> > pSegment = VesselSegment<2>::Create(nodes[0], nodes[1]);
+        std::shared_ptr<VesselSegment<2> > pSegment2 = VesselSegment<2>::Create(nodes[1], nodes[2]);
 
-        TS_ASSERT_THROWS_THIS(boost::shared_ptr<Vessel<2> > vessel = pSegment->GetVessel(),
+        TS_ASSERT_THROWS_THIS(std::shared_ptr<Vessel<2> > vessel = pSegment->GetVessel(),
                               "A vessel has been requested but this segment doesn't have one.");
 
         // Make a vessel and check that it has been suitably added to the segment
-        boost::shared_ptr<Vessel<2> > pVessel = Vessel<2>::Create(pSegment);
+        std::shared_ptr<Vessel<2> > pVessel = Vessel<2>::Create(pSegment);
         TS_ASSERT(pSegment->GetNode(0)->IsCoincident(pSegment->GetVessel()->GetSegments()[0]->GetNode(0)->rGetLocation()));
 
         // Add a different vessel
-        boost::shared_ptr<Vessel<2> > pVessel2 = Vessel<2>::Create(pSegment);
+        std::shared_ptr<Vessel<2> > pVessel2 = Vessel<2>::Create(pSegment);
         TS_ASSERT(pSegment->GetNode(0)->IsCoincident(pSegment->GetVessel()->GetSegments()[0]->GetNode(0)->rGetLocation()));
 
         // Try removing a segment from the vessel
         pVessel->AddSegment(pSegment2);
         pVessel->RemoveSegments(SegmentLocation::Start);
         TS_ASSERT_THROWS_THIS(pVessel->RemoveSegments(SegmentLocation::End), "Vessel must have at least one segment.");
-        TS_ASSERT_THROWS_THIS(boost::shared_ptr<Vessel<2> > vessel = pSegment->GetVessel(),
+        TS_ASSERT_THROWS_THIS(std::shared_ptr<Vessel<2> > vessel = pSegment->GetVessel(),
                               "A vessel has been requested but this segment doesn't have one.");
     }
 
     void TestRemoveMethod() throw (Exception)
     {
         // Make a segment
-        boost::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0);
-        boost::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(1.0);
-        boost::shared_ptr<VesselSegment<3> > pSegment1 = VesselSegment<3>::Create(p_node1, p_node2);
+        std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0);
+        std::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(1.0);
+        std::shared_ptr<VesselSegment<3> > pSegment1 = VesselSegment<3>::Create(p_node1, p_node2);
 
         // Delete the segment
         pSegment1->Remove();

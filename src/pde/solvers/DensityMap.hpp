@@ -249,7 +249,7 @@ public:
      */
     void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
                            QLength cellPopulationReferenceLength,
-                           units::quantity<unit::concentration> cellPopulationReferenceConcentration);
+                           QConcentration cellPopulationReferenceConcentration);
 
     /**
      * Set the grid

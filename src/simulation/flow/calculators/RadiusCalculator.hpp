@@ -63,7 +63,7 @@ protected:
     /**
      * The time step for radius update
      */
-    units::quantity<unit::time> mTimeStep;
+    QTime mTimeStep;
     
 public:
     
@@ -93,7 +93,7 @@ public:
      * Set the time increment
      * @param  dt the time increment for radius update
      */
-    void SetTimestep(units::quantity<unit::time> dt);
+    void SetTimestep(QTime dt);
     
     /**
      * Do the calculation.

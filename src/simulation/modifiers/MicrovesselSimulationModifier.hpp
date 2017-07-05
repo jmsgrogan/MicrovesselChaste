@@ -94,7 +94,7 @@ private:
     /**
      * The reference concentration scale for the cellpopulation.
      */
-    units::quantity<unit::concentration> mCellPopulationReferenceConcentration;
+    QConcentration mCellPopulationReferenceConcentration;
 
 public:
 
@@ -159,7 +159,7 @@ public:
      *
      * @param cellConcentrationScale the concentration scale for the cell population
      */
-    void SetCellPopulationConcentrationScale(units::quantity<unit::concentration> cellConcentrationScale);
+    void SetCellPopulationConcentrationScale(QConcentration cellConcentrationScale);
 
     /**
      * Overridden UpdateAtEndOfTimeStep() method.

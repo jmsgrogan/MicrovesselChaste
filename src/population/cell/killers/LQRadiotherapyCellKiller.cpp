@@ -33,41 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-/*
-
- Copyright (c) 2005-2016, University of Oxford.
- All rights reserved.
-
- University of Oxford means the Chancellor, Masters and Scholars of the
- University of Oxford, having an administrative office at Wellington
- Square, Oxford OX1 2JD, UK.
-
- This file is part of Chaste.
-
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice,
- this list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice,
- this list of conditions and the following disclaimer in the documentation
- and/or other materials provided with the distribution.
- * Neither the name of the University of Oxford nor the names of its
- contributors may be used to endorse or promote products derived from this
- software without specific prior written permission.
-
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
- */
-
 #include "LQRadiotherapyCellKiller.hpp"
 #include "CancerCellMutationState.hpp"
 #include "StalkCellMutationState.hpp"
@@ -93,25 +58,25 @@ LQRadiotherapyCellKiller<DIM>::LQRadiotherapyCellKiller(AbstractCellPopulation<D
         mBetaMax(0.03 * unit::per_gray_squared),
         mUseOer(false)
 {
-    units::quantity<unit::solubility> oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("LQRadiotherapyCellKiller") *
+    QSolubility oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("LQRadiotherapyCellKiller") *
             GenericParameters::mpGasConcentrationAtStp->GetValue("LQRadiotherapyCellKiller");
-    mKOer = oxygen_solubility_at_stp * 3.28 * unit::pascals;
+    mKOer = oxygen_solubility_at_stp * (3.28 * unit::pascals);
 }
 
 template<unsigned DIM>
-void LQRadiotherapyCellKiller<DIM>::AddTimeOfRadiation(units::quantity<unit::time> time)
+void LQRadiotherapyCellKiller<DIM>::AddTimeOfRadiation(QTime time)
 {
     mRadiationTimes.push_back(time);
 }
 
 template<unsigned DIM>
-void LQRadiotherapyCellKiller<DIM>::SetDoseInjected(units::quantity<unit::absorbed_dose> d)
+void LQRadiotherapyCellKiller<DIM>::SetDoseInjected(QAbsorbedDose d)
 {
     mDose = d;
 }
 
 template<unsigned DIM>
-void LQRadiotherapyCellKiller<DIM>::SetTimeOfRadiation(std::vector<units::quantity<unit::time> > t)
+void LQRadiotherapyCellKiller<DIM>::SetTimeOfRadiation(std::vector<QTime > t)
 {
     mRadiationTimes = t;
 }
@@ -141,19 +106,19 @@ void LQRadiotherapyCellKiller<DIM>::SetOerBetaMin(double value)
 }
 
 template<unsigned DIM>
-void LQRadiotherapyCellKiller<DIM>::SetOerConstant(units::quantity<unit::concentration> value)
+void LQRadiotherapyCellKiller<DIM>::SetOerConstant(QConcentration value)
 {
     mKOer = value;
 }
 
 template<unsigned DIM>
-void LQRadiotherapyCellKiller<DIM>::SetAlphaMax(units::quantity<unit::per_absorbed_dose> value)
+void LQRadiotherapyCellKiller<DIM>::SetAlphaMax(QPerAbsorbedDose value)
 {
     mAlphaMax = value;
 }
 
 template<unsigned DIM>
-void LQRadiotherapyCellKiller<DIM>::SetBetaMax(units::quantity<unit::per_absorbed_dose_squared> value)
+void LQRadiotherapyCellKiller<DIM>::SetBetaMax(QPerAbsorbedDoseSquared value)
 {
     mBetaMax = value;
 }
@@ -165,16 +130,16 @@ void LQRadiotherapyCellKiller<DIM>::UseOer(bool useOer)
 }
 
 template<unsigned DIM>
-void LQRadiotherapyCellKiller<DIM>::SetCancerousRadiosensitivity(units::quantity<unit::per_absorbed_dose> alpha,
-                                                                 units::quantity<unit::per_absorbed_dose_squared> beta)
+void LQRadiotherapyCellKiller<DIM>::SetCancerousRadiosensitivity(QPerAbsorbedDose alpha,
+                                                                 QPerAbsorbedDoseSquared beta)
 {
     cancerousLinearRadiosensitivity = alpha;
     cancerousQuadraticRadiosensitivity = beta;
 }
 
 template<unsigned DIM>
-void LQRadiotherapyCellKiller<DIM>::SetNormalRadiosensitivity(units::quantity<unit::per_absorbed_dose> alpha,
-                                                              units::quantity<unit::per_absorbed_dose_squared> beta)
+void LQRadiotherapyCellKiller<DIM>::SetNormalRadiosensitivity(QPerAbsorbedDose alpha,
+                                                              QPerAbsorbedDoseSquared beta)
 {
     normalLinearRadiosensitivity = alpha;
     normalQuadraticRadiosensitivity = beta;
@@ -193,12 +158,12 @@ void LQRadiotherapyCellKiller<DIM>::CheckAndLabelSingleCellForApoptosis(CellPtr 
                 double death_probability = 0.0;
                 if (mUseOer)
                 {
-                    units::quantity<unit::concentration> oxygen =
+                    QConcentration oxygen =
                             pCell->GetCellData()->GetItem("oxygen")*BaseUnits::Instance()->GetReferenceConcentrationScale();
                     double oer_alpha = (mOerAlphaMax - mOerAlphaMin) * mKOer / (oxygen + mKOer) + mOerAlphaMin;
                     double oer_beta = (mOerBetaMax - mOerBetaMin) * mKOer / (oxygen + mKOer) + mOerBetaMin;
-                    units::quantity<unit::per_absorbed_dose> alpha = mAlphaMax / oer_alpha;
-                    units::quantity<unit::per_absorbed_dose_squared> beta = mBetaMax / (oer_beta * oer_beta);
+                    QPerAbsorbedDose alpha = mAlphaMax / oer_alpha;
+                    QPerAbsorbedDoseSquared beta = mBetaMax / (oer_beta * oer_beta);
                     death_probability = 1.0 - exp(-alpha * mDose - beta * mDose * mDose);
                 }
                 else

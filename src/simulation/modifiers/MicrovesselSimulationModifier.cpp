@@ -122,7 +122,7 @@ void MicrovesselSimulationModifier<DIM>::SetCellPopulationLengthScale(QLength ce
 }
 
 template<unsigned DIM>
-void MicrovesselSimulationModifier<DIM>::SetCellPopulationConcentrationScale(units::quantity<unit::concentration> cellConcentrationScale)
+void MicrovesselSimulationModifier<DIM>::SetCellPopulationConcentrationScale(QConcentration cellConcentrationScale)
 {
     mCellPopulationReferenceConcentration = cellConcentrationScale;
 }

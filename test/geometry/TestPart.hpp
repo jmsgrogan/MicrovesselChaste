@@ -128,19 +128,19 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_part = Part<3>::Create();
         p_part->AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
         p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
 
-        boost::shared_ptr<Part<3> > p_part2 = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_part2 = Part<3>::Create();
         p_part2->AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
         p_part2->AddPolygon(p_part->GetPolygons()[1], true);
 
-        boost::shared_ptr<Part<3> > p_part3 = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_part3 = Part<3>::Create();
         p_part3->AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
         p_part3->AddPolygon(p_part->GetPolygons()[1], false);
 
-        boost::shared_ptr<Part<3> > p_part4 = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_part4 = Part<3>::Create();
         p_part4->AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
         p_part4->AddPolygon(p_part->GetPolygons()[1], false, p_part4->GetFacets()[0]);
 
@@ -156,13 +156,13 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        boost::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
+        std::shared_ptr<Part<3> > p_part = Part<3>::Create();
+        std::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
         p_part->Extrude(p_circle, 1.e-6*unit::metres);
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath().append("ExtrudePart.vtp"));
 
-        boost::shared_ptr<Part<2> > p_part2 = Part<2>::Create();
-        boost::shared_ptr<Polygon<2> > p_circle2 = p_part2->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<2>(0.5, 0.5));
+        std::shared_ptr<Part<2> > p_part2 = Part<2>::Create();
+        std::shared_ptr<Polygon<2> > p_circle2 = p_part2->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<2>(0.5, 0.5));
         TS_ASSERT_THROWS_THIS(p_part2->Extrude(p_circle2, 1.e-6*unit::metres), "Only parts in 3D space can be extruded.");
     }
 
@@ -175,17 +175,17 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        boost::shared_ptr<VesselNode<2> > p_start_top = VesselNode<2>::Create(0.0, 60.0, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_end_top = VesselNode<2>::Create(90.0, 60.0, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_start_bottom = VesselNode<2>::Create(10.0, 20.0, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_end_bottom = VesselNode<2>::Create(100.0, 20.0, 0.0);
-        boost::shared_ptr<Vessel<2> > p_top_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_top, p_end_top));
-        boost::shared_ptr<Vessel<2> > p_bottom_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_bottom, p_end_bottom));
-        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        std::shared_ptr<VesselNode<2> > p_start_top = VesselNode<2>::Create(0.0, 60.0, 0.0);
+        std::shared_ptr<VesselNode<2> > p_end_top = VesselNode<2>::Create(90.0, 60.0, 0.0);
+        std::shared_ptr<VesselNode<2> > p_start_bottom = VesselNode<2>::Create(10.0, 20.0, 0.0);
+        std::shared_ptr<VesselNode<2> > p_end_bottom = VesselNode<2>::Create(100.0, 20.0, 0.0);
+        std::shared_ptr<Vessel<2> > p_top_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_top, p_end_top));
+        std::shared_ptr<Vessel<2> > p_bottom_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_bottom, p_end_bottom));
+        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_top_vessel);
         p_network->AddVessel(p_bottom_vessel);
 
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(100.0*1.e-6*unit::metres,
                             100.0*1.e-6*unit::metres,
                             DimensionalChastePoint<2>(0.0, 0.0, 0.0));
@@ -206,17 +206,17 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        boost::shared_ptr<VesselNode<3> > p_start_top = VesselNode<3>::Create(10.0, 60.0, 50.0);
-        boost::shared_ptr<VesselNode<3> > p_end_top = VesselNode<3>::Create(90.0, 60.0, 50.0);
-        boost::shared_ptr<VesselNode<3> > p_start_bottom = VesselNode<3>::Create(10.0, 20.0, 50.0);
-        boost::shared_ptr<VesselNode<3> > p_end_bottom = VesselNode<3>::Create(90.0, 20.0, 50.0);
-        boost::shared_ptr<Vessel<3> > p_top_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_top, p_end_top));
-        boost::shared_ptr<Vessel<3> > p_bottom_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_bottom, p_end_bottom));
-        boost::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        std::shared_ptr<VesselNode<3> > p_start_top = VesselNode<3>::Create(10.0, 60.0, 50.0);
+        std::shared_ptr<VesselNode<3> > p_end_top = VesselNode<3>::Create(90.0, 60.0, 50.0);
+        std::shared_ptr<VesselNode<3> > p_start_bottom = VesselNode<3>::Create(10.0, 20.0, 50.0);
+        std::shared_ptr<VesselNode<3> > p_end_bottom = VesselNode<3>::Create(90.0, 20.0, 50.0);
+        std::shared_ptr<Vessel<3> > p_top_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_top, p_end_top));
+        std::shared_ptr<Vessel<3> > p_bottom_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_bottom, p_end_bottom));
+        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_top_vessel);
         p_network->AddVessel(p_bottom_vessel);
 
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(100.0*1.e-6*unit::metres,
                             100.0*1.e-6*unit::metres,
                             100.0*1.e-6*unit::metres,
@@ -235,20 +235,20 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        boost::shared_ptr<VesselNode<2> > p_start_top = VesselNode<2>::Create(10.0, 60.0, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_end_top = VesselNode<2>::Create(90.0, 60.0, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_start_bottom = VesselNode<2>::Create(10.0, 20.0, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_end_bottom = VesselNode<2>::Create(90.0, 20.0, 0.0);
-        boost::shared_ptr<Vessel<2> > p_top_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_top, p_end_top));
-        boost::shared_ptr<Vessel<2> > p_bottom_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_bottom, p_end_bottom));
+        std::shared_ptr<VesselNode<2> > p_start_top = VesselNode<2>::Create(10.0, 60.0, 0.0);
+        std::shared_ptr<VesselNode<2> > p_end_top = VesselNode<2>::Create(90.0, 60.0, 0.0);
+        std::shared_ptr<VesselNode<2> > p_start_bottom = VesselNode<2>::Create(10.0, 20.0, 0.0);
+        std::shared_ptr<VesselNode<2> > p_end_bottom = VesselNode<2>::Create(90.0, 20.0, 0.0);
+        std::shared_ptr<Vessel<2> > p_top_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_top, p_end_top));
+        std::shared_ptr<Vessel<2> > p_bottom_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_bottom, p_end_bottom));
         p_top_vessel->GetSegment(0)->SetRadius(10.0*1.e-6*unit::metres);
         p_bottom_vessel->GetSegment(0)->SetRadius(10.0*1.e-6*unit::metres);
 
-        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_top_vessel);
         p_network->AddVessel(p_bottom_vessel);
 
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(100.0*1.e-6*unit::metres,
                             100.0*1.e-6*unit::metres,
                             DimensionalChastePoint<2>(0.0, 0.0, 0.0));
@@ -265,19 +265,19 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        boost::shared_ptr<VesselNode<3> > p_start_top = VesselNode<3>::Create(10.0, 60.0, 50.0);
-        boost::shared_ptr<VesselNode<3> > p_end_top = VesselNode<3>::Create(90.0, 60.0, 50.0);
-        boost::shared_ptr<VesselNode<3> > p_start_bottom = VesselNode<3>::Create(10.0, 20.0, 50.0);
-        boost::shared_ptr<VesselNode<3> > p_end_bottom = VesselNode<3>::Create(90.0, 20.0, 50.0);
-        boost::shared_ptr<Vessel<3> > p_top_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_top, p_end_top));
-        boost::shared_ptr<Vessel<3> > p_bottom_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_bottom, p_end_bottom));
+        std::shared_ptr<VesselNode<3> > p_start_top = VesselNode<3>::Create(10.0, 60.0, 50.0);
+        std::shared_ptr<VesselNode<3> > p_end_top = VesselNode<3>::Create(90.0, 60.0, 50.0);
+        std::shared_ptr<VesselNode<3> > p_start_bottom = VesselNode<3>::Create(10.0, 20.0, 50.0);
+        std::shared_ptr<VesselNode<3> > p_end_bottom = VesselNode<3>::Create(90.0, 20.0, 50.0);
+        std::shared_ptr<Vessel<3> > p_top_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_top, p_end_top));
+        std::shared_ptr<Vessel<3> > p_bottom_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_bottom, p_end_bottom));
         p_top_vessel->GetSegment(0)->SetRadius(10.0*1.e-6*unit::metres);
         p_bottom_vessel->GetSegment(0)->SetRadius(10.0*1.e-6*unit::metres);
-        boost::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_top_vessel);
         p_network->AddVessel(p_bottom_vessel);
 
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(100.0*1.e-6*unit::metres,
                             100.0*1.e-6*unit::metres,
                             100.0*1.e-6*unit::metres,
@@ -297,13 +297,13 @@ public:
 
         QLength vessel_length = 100.0 * 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
                 DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         p_network->GetVessels()[0]->GetStartNode()->SetRadius(5.0e-6 * unit::metres);
         p_network->GetVessels()[0]->GetEndNode()->SetRadius(5.0e-6 * unit::metres);
 
         Part<3> part = Part<3>();
-        boost::shared_ptr<Polygon<3> > p_circle = part.AddCircle(vessel_length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        std::shared_ptr<Polygon<3> > p_circle = part.AddCircle(vessel_length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         part.Extrude(p_circle, vessel_length);
         part.AddVesselNetwork(p_network, true);
 
@@ -312,17 +312,17 @@ public:
 
     void TestBooleanWithNetwork() throw(Exception)
     {
-        boost::shared_ptr<VesselNode<2> > p_start_top = VesselNode<2>::Create(10.0, 60.0, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_end_top = VesselNode<2>::Create(90.0, 60.0, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_start_bottom = VesselNode<2>::Create(10.0, 20.0, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_end_bottom = VesselNode<2>::Create(90.0, 20.0, 0.0);
-        boost::shared_ptr<Vessel<2> > p_top_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_top, p_end_top));
-        boost::shared_ptr<Vessel<2> > p_bottom_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_bottom, p_end_bottom));
-        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        std::shared_ptr<VesselNode<2> > p_start_top = VesselNode<2>::Create(10.0, 60.0, 0.0);
+        std::shared_ptr<VesselNode<2> > p_end_top = VesselNode<2>::Create(90.0, 60.0, 0.0);
+        std::shared_ptr<VesselNode<2> > p_start_bottom = VesselNode<2>::Create(10.0, 20.0, 0.0);
+        std::shared_ptr<VesselNode<2> > p_end_bottom = VesselNode<2>::Create(90.0, 20.0, 0.0);
+        std::shared_ptr<Vessel<2> > p_top_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_top, p_end_top));
+        std::shared_ptr<Vessel<2> > p_bottom_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_bottom, p_end_bottom));
+        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_top_vessel);
         p_network->AddVessel(p_bottom_vessel);
 
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(50.0*1.e-6*unit::metres,
                             50.0*1.e-6*unit::metres,
                             DimensionalChastePoint<2>(0.0, 0.0, 0.0));
@@ -385,7 +385,7 @@ public:
         ArchiveLocationInfo::SetArchiveDirectory(handler.FindFile(""));
         std::string archive_filename = ArchiveLocationInfo::GetProcessUniqueFilePath("Part.arch");
 
-        boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_part = Part<3>::Create();
         p_part->AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres,
                 DimensionalChastePoint<3>(0.0, 0.0, 0.0));
 
@@ -398,7 +398,7 @@ public:
 
         // Load archive
         {
-            boost::shared_ptr<Part<3> > p_part_from_archive;
+            std::shared_ptr<Part<3> > p_part_from_archive;
 
             // Read from this input file
             std::ifstream ifs(archive_filename.c_str(), std::ios::binary);
@@ -429,10 +429,10 @@ public:
         QLength pellet_height = 1000*1e-6*unit::metres;
         QLength pellet_radius = 150*1e-6*unit::metres;
         QLength delta = pellet_height-cornea_radius+pellet_radius;
-        boost::shared_ptr<Part<2> > p_domain = Part<2> ::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2> ::Create();
         p_domain->AddCircle(cornea_radius, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
 
-        boost::shared_ptr<Polygon<2> > p_polygon = p_domain->AddCircle(pellet_radius,
+        std::shared_ptr<Polygon<2> > p_polygon = p_domain->AddCircle(pellet_radius,
                 DimensionalChastePoint<2>(0.0, -delta/reference_length, 0.0, reference_length));
         p_polygon->AddAttribute("Pellet", 1.0);
         p_polygon->AddAttributeToAllEdges("Pellet Boundary", 1.0);
@@ -441,12 +441,12 @@ public:
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath() + "labelled_circle_2d.vtp", GeometryFormat::VTP, true);
 
         // Circle 3D
-        boost::shared_ptr<Part<3> > p_circ_3d_domain = Part<3> ::Create();
-        boost::shared_ptr<Polygon<3> > p_circle = p_circ_3d_domain->AddCircle(cornea_radius, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        std::shared_ptr<Part<3> > p_circ_3d_domain = Part<3> ::Create();
+        std::shared_ptr<Polygon<3> > p_circle = p_circ_3d_domain->AddCircle(cornea_radius, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         p_circ_3d_domain->Extrude(p_circle, cornea_thickness);
 
-        boost::shared_ptr<Part<3> > p_circ_3d_pellet = Part<3> ::Create();
-        boost::shared_ptr<Polygon<3> > p_pellet_circle = p_circ_3d_pellet->AddCircle(pellet_radius,
+        std::shared_ptr<Part<3> > p_circ_3d_pellet = Part<3> ::Create();
+        std::shared_ptr<Polygon<3> > p_pellet_circle = p_circ_3d_pellet->AddCircle(pellet_radius,
                         DimensionalChastePoint<3>(0.0, -1.0*delta/reference_length, 0.0, reference_length));
         p_circ_3d_pellet->Extrude(p_pellet_circle, pellet_thickness);
         p_circ_3d_pellet->AddAttributeToPolygons("Pellet Interface",  1.0);
@@ -454,7 +454,7 @@ public:
         p_circ_3d_domain->Write(output_file_handler.GetOutputDirectoryFullPath() + "labelled_circle_3d.vtp", GeometryFormat::VTP, true);
 
         // Plane 2D
-        std::vector<boost::shared_ptr<DimensionalChastePoint<2> > > points;
+        std::vector<std::shared_ptr<DimensionalChastePoint<2> > > points;
         points.push_back(DimensionalChastePoint<2>::Create(0.0, 0.0, 0.0, reference_length));
         points.push_back(DimensionalChastePoint<2>::Create(2.0*M_PI*cornea_radius/reference_length, 0.0, 0.0, reference_length));
         points.push_back(DimensionalChastePoint<2>::Create(2.0*M_PI*cornea_radius/reference_length, pellet_height/reference_length, 0.0,
@@ -464,8 +464,8 @@ public:
         points.push_back(DimensionalChastePoint<2>::Create(2.0*M_PI*cornea_radius/(2.0*reference_length) - 2.0*M_PI*pellet_radius/(2.0*reference_length), pellet_height/reference_length, 0.0,
                 reference_length));
         points.push_back(DimensionalChastePoint<2>::Create(0.0, pellet_height/reference_length, 0.0, reference_length));
-        boost::shared_ptr<Polygon<2> > p_temp_polygon = Polygon<2>::Create(points);
-        boost::shared_ptr<Part<2> > p_2d_planar_domain = Part<2>::Create();
+        std::shared_ptr<Polygon<2> > p_temp_polygon = Polygon<2>::Create(points);
+        std::shared_ptr<Part<2> > p_2d_planar_domain = Part<2>::Create();
         p_2d_planar_domain->AddPolygon(p_temp_polygon);
         p_2d_planar_domain->AddAttributeToEdgeIfFound(DimensionalChastePoint<2>(2.0*M_PI*cornea_radius/(2.0*reference_length),
                 pellet_height/reference_length, 0, reference_length), "Pellet Interface", 1.0);
@@ -473,10 +473,10 @@ public:
 
         // Hemisphere 3D
         MappableGridGenerator<3> grid_generator;
-        boost::shared_ptr<Part<3> > hemisphere = grid_generator.GenerateHemisphere(cornea_radius,
+        std::shared_ptr<Part<3> > hemisphere = grid_generator.GenerateHemisphere(cornea_radius,
                 cornea_thickness, 20, 20, double(1.0*M_PI), double(0.999*M_PI));
 
-        boost::shared_ptr<Part<3> > p_hemi_pellet = Part<3> ::Create();
+        std::shared_ptr<Part<3> > p_hemi_pellet = Part<3> ::Create();
         double gap = (cornea_thickness- pellet_thickness)/(2.0*reference_length)/4.0;
         double base = cornea_radius/reference_length + gap - cornea_thickness/reference_length;
         p_hemi_pellet->AddCylinder(pellet_radius,
@@ -497,14 +497,14 @@ public:
         ObjectCommunicator<Part<2> > part_comm;
         if(PetscTools::GetMyRank() == 0)
         {
-            boost::shared_ptr<Part<2> > p_domain = Part<2> ::Create();
+            std::shared_ptr<Part<2> > p_domain = Part<2> ::Create();
             p_domain->AddCircle(1.0*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
             part_comm.SendObject(p_domain, 1, 6789);
         }
         else if(PetscTools::GetMyRank() == 1)
         {
             MPI_Status status;
-            boost::shared_ptr<Part<2> > p_recv_domain = part_comm.RecvObject(0, 6789, status);
+            std::shared_ptr<Part<2> > p_recv_domain = part_comm.RecvObject(0, 6789, status);
 
             GeometryWriter writer;
             writer.AddInput(p_recv_domain->GetVtk());

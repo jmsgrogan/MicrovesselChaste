@@ -77,22 +77,22 @@ public:
         BaseUnits::Instance()->SetReferenceTimeScale(1.0*unit::seconds);
 
         // Set up the mesh
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(10.0*unit::metres, 100.0*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
         p_domain->AddAttributeToEdgeIfFound(DimensionalChastePoint<2>(5.0, 100.0, 0, 1.0*unit::metres), "Top Boundary", 1.0);
         TS_ASSERT(p_domain->EdgeHasAttribute(DimensionalChastePoint<2>(5.0, 100.0, 0, 1.0*unit::metres), "Top Boundary"));
 
         DiscreteContinuumMeshGenerator<2> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-        mesh_generator.SetMaxElementArea(4.0*(units::pow<3>(1.0*unit::metres)));
+        mesh_generator.SetMaxElementArea(4.0*(Qpow3(1.0*unit::metres)));
         mesh_generator.Update();
-        boost::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
+        std::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
 
-        boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_pde =
+        std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_pde =
                 CoupledVegfPelletDiffusionReactionPde<2>::Create();
-        units::quantity<unit::diffusivity> vegf_diffusivity(2.3* unit::metre_squared_per_second);
+        QDiffusivity vegf_diffusivity(2.3* unit::metre_squared_per_second);
         p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
-        units::quantity<unit::concentration> initial_vegf_concentration(1.0*unit::mole_per_metre_cubed);
+        QConcentration initial_vegf_concentration(1.0*unit::mole_per_metre_cubed);
         p_pde->SetCurrentVegfInPellet(initial_vegf_concentration);
         p_pde->SetCorneaPelletPermeability(1.0*unit::metre_per_second);
         p_pde->SetPelletFreeDecayRate(0.0*unit::per_second);
@@ -113,16 +113,16 @@ public:
             }
             surf_iter++;
         }
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition =
+        std::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition =
                 DiscreteContinuumBoundaryCondition<2>::Create();
-        units::quantity<unit::concentration> boundary_concentration(1.0* unit::mole_per_metre_cubed);
+        QConcentration boundary_concentration(1.0* unit::mole_per_metre_cubed);
         p_boundary_condition->SetValue(boundary_concentration);
         p_boundary_condition->SetType(BoundaryConditionType::EDGE);
         p_boundary_condition->SetIsRobin(true);
         p_boundary_condition->SetLabel("Top Boundary");
         p_boundary_condition->SetDomain(p_domain);
 
-        boost::shared_ptr<CoupledLumpedSystemFiniteElementSolver<2> > p_solver =
+        std::shared_ptr<CoupledLumpedSystemFiniteElementSolver<2> > p_solver =
                 CoupledLumpedSystemFiniteElementSolver<2>::Create();
         p_solver->SetGrid(p_mesh);
         p_solver->SetPde(p_pde);
@@ -157,7 +157,7 @@ public:
             if(time>10.0)
             {
                 p_solver->UpdateSolution(intermediate_solutions[idx].first);
-                std::vector<units::quantity<unit::concentration> > solution = p_solver->GetConcentrations(p_sample_points);
+                std::vector<QConcentration > solution = p_solver->GetConcentrations(p_sample_points);
                 for(unsigned jdx=0; jdx<11; jdx++)
                 {
                     QLength x = double(jdx)*10.0*unit::metres;
@@ -175,7 +175,7 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestCoupledLumpedSystemFiniteElementSolver/Circle"));
 
         QLength reference_length(1.0 * unit::microns);
-        units::quantity<unit::time> reference_time(1.0* unit::hours);
+        QTime reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
@@ -185,9 +185,9 @@ public:
         QLength pellet_spacing(700.0 * unit::microns);
         QLength delta = pellet_spacing-radius+cylinder_radius;
 
-        boost::shared_ptr<Part<2> > p_domain = Part<2> ::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2> ::Create();
         p_domain->AddCircle(radius, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
-        boost::shared_ptr<Polygon<2> > p_polygon = p_domain->AddCircle(cylinder_radius,
+        std::shared_ptr<Polygon<2> > p_polygon = p_domain->AddCircle(cylinder_radius,
                 DimensionalChastePoint<2>(0.0, -delta/reference_length, 0.0, reference_length));
         p_polygon->AddAttributeToAllEdges("Inner Boundary", 1.0);
         p_domain->AddHoleMarker(DimensionalChastePoint<2>(0.0, 0.0, 0.0, reference_length));
@@ -195,13 +195,13 @@ public:
 
         DiscreteContinuumMeshGenerator<2> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-        mesh_generator.SetMaxElementArea(1e4*(units::pow<3>(1.e-6*unit::metres))); // 1e4 for 'good' mesh
+        mesh_generator.SetMaxElementArea(1e4*(Qpow3(1.e-6*unit::metres))); // 1e4 for 'good' mesh
         std::vector<DimensionalChastePoint<2> > holes;
         holes.push_back(DimensionalChastePoint<2>(0.0, -delta/reference_length, 0.0, reference_length));
         mesh_generator.SetHoles(holes);
         mesh_generator.Update();
 
-        boost::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
+        std::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
         MultiFormatMeshWriter<2> mesh_writer;
         mesh_writer.SetFileName(p_handler->GetOutputDirectoryFullPath()+"cornea_mesh");
         mesh_writer.SetMesh(p_mesh);
@@ -209,9 +209,9 @@ public:
         mesh_writer.Write();
 
         // Set the BCs
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition =
+        std::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition =
                 DiscreteContinuumBoundaryCondition<2>::Create();
-        units::quantity<unit::concentration> boundary_concentration(1.0* unit::mole_per_metre_cubed);
+        QConcentration boundary_concentration(1.0* unit::mole_per_metre_cubed);
         p_boundary_condition->SetValue(boundary_concentration);
         p_boundary_condition->SetType(BoundaryConditionType::EDGE);
         p_boundary_condition->SetIsRobin(true);
@@ -219,12 +219,12 @@ public:
         p_boundary_condition->SetLabel("Inner Boundary");
 
         // Choose the PDE
-        boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
-        units::quantity<unit::diffusivity> vegf_diffusivity(6.94e-11 * unit::metre_squared_per_second);
-        units::quantity<unit::rate> vegf_decay_rate((-0.8/3600.0) * unit::per_second);
+        std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
+        QDiffusivity vegf_diffusivity(6.94e-11 * unit::metre_squared_per_second);
+        QRate vegf_decay_rate((-0.8/3600.0) * unit::per_second);
         p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
         p_pde->SetContinuumLinearInUTerm(vegf_decay_rate);
-        units::quantity<unit::concentration> initial_vegf_concentration(3.93e-4*unit::mole_per_metre_cubed);
+        QConcentration initial_vegf_concentration(3.93e-4*unit::mole_per_metre_cubed);
         p_pde->SetCurrentVegfInPellet(initial_vegf_concentration);
 
         CoupledLumpedSystemFiniteElementSolver<2> solver;
@@ -260,7 +260,7 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestCoupledLumpedSystemFiniteElementSolver/Sphere"));
 
         QLength reference_length(1.0 * unit::microns);
-        units::quantity<unit::time> reference_time(1.0* unit::hours);
+        QTime reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
@@ -272,7 +272,7 @@ public:
         unsigned num_divisions_y = 20;
         double azimuth_angle = 1.0 * M_PI;
         double polar_angle = 0.999 * M_PI;
-        boost::shared_ptr<Part<3> > p_domain = hemisphere_generator.GenerateHemisphere(radius,
+        std::shared_ptr<Part<3> > p_domain = hemisphere_generator.GenerateHemisphere(radius,
                                                                                          thickness,
                                                                                          num_divisions_x,
                                                                                          num_divisions_y,
@@ -280,7 +280,7 @@ public:
                                                                                          polar_angle);
         p_domain->Write(p_handler->GetOutputDirectoryFullPath()+"cornea.vtp", GeometryFormat::VTP);
 
-        boost::shared_ptr<Part<3> > p_vegf_domain = Part<3> ::Create();
+        std::shared_ptr<Part<3> > p_vegf_domain = Part<3> ::Create();
         QLength cylinder_radius(300.0*unit::microns);
         QLength cylinder_height(40.0*unit::microns);
         DimensionalChastePoint<3> pellet_base(0.0, 0.0, 1305.0);
@@ -288,7 +288,7 @@ public:
         p_vegf_domain->AddCylinder(cylinder_radius, cylinder_height, pellet_base);
 
         // Rotate the part
-        std::vector<boost::shared_ptr<Polygon<3> > > polygons = p_vegf_domain->GetPolygons();
+        std::vector<std::shared_ptr<Polygon<3> > > polygons = p_vegf_domain->GetPolygons();
         c_vector<double, 3> rotation_axis;
         rotation_axis[0] = 0.0;
         rotation_axis[1] = 1.0;
@@ -306,10 +306,10 @@ public:
 
         DiscreteContinuumMeshGenerator<3> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-        mesh_generator.SetMaxElementArea(1e6*(units::pow<3>(1.e-6*unit::metres))); // 1e4 for 'good' mesh
+        mesh_generator.SetMaxElementArea(1e6*(Qpow3(1.e-6*unit::metres))); // 1e4 for 'good' mesh
         mesh_generator.Update();
 
-        boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = mesh_generator.GetMesh();
+        std::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = mesh_generator.GetMesh();
         MultiFormatMeshWriter<3> mesh_writer;
         mesh_writer.SetFileName(p_handler->GetOutputDirectoryFullPath()+"cornea_mesh");
         mesh_writer.SetMesh(p_mesh);
@@ -321,9 +321,9 @@ public:
         {
             p_vegf_domain->AddAttributeToPolygons("Boundary", 1.0);
         }
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary_condition =
+        std::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary_condition =
                 DiscreteContinuumBoundaryCondition<3>::Create();
-        units::quantity<unit::concentration> boundary_concentration(1.0* unit::mole_per_metre_cubed);
+        QConcentration boundary_concentration(1.0* unit::mole_per_metre_cubed);
         p_boundary_condition->SetValue(boundary_concentration);
         p_boundary_condition->SetType(BoundaryConditionType::POLYGON);
         p_boundary_condition->SetIsRobin(true);
@@ -331,12 +331,12 @@ public:
         p_boundary_condition->SetLabel("Boundary");
 
         // Choose the PDE
-        boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<3> > p_pde = CoupledVegfPelletDiffusionReactionPde<3>::Create();
-        units::quantity<unit::diffusivity> vegf_diffusivity(6.94e-11 * unit::metre_squared_per_second);
-        units::quantity<unit::rate> vegf_decay_rate((-0.8/3600.0) * unit::per_second);
+        std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<3> > p_pde = CoupledVegfPelletDiffusionReactionPde<3>::Create();
+        QDiffusivity vegf_diffusivity(6.94e-11 * unit::metre_squared_per_second);
+        QRate vegf_decay_rate((-0.8/3600.0) * unit::per_second);
         p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
         p_pde->SetContinuumLinearInUTerm(vegf_decay_rate);
-        units::quantity<unit::concentration> initial_vegf_concentration(3.93e-1*unit::mole_per_metre_cubed);
+        QConcentration initial_vegf_concentration(3.93e-1*unit::mole_per_metre_cubed);
         p_pde->SetCurrentVegfInPellet(initial_vegf_concentration);
         p_pde->SetPelletBindingConstant(100.0);
         p_pde->SetCorneaPelletPermeability(0.002*p_pde->GetCorneaPelletPermeability());

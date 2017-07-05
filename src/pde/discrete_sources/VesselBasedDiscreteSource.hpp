@@ -55,32 +55,32 @@ protected:
     /**
      * The vessel permeability
      */
-    units::quantity<unit::membrane_permeability> mVesselPermeability;
+    QMembranePermeability mVesselPermeability;
 
     /**
      * The reference concentration, supplied by well perfused vessels
      */
-    units::quantity<unit::concentration> mReferenceConcentration;
+    QConcentration mReferenceConcentration;
 
     /**
      * The concentration at half max binding rate
      */
-    units::quantity<unit::concentration> mHalfMaxUptakeConcentration;
+    QConcentration mHalfMaxUptakeConcentration;
 
     /**
      * The reference haematocrit, used as a proxy for vessel perfusion
      */
-    units::quantity<unit::dimensionless> mReferenceHaematocrit;
+    QDimensionless mReferenceHaematocrit;
 
     /**
      * Uptake rate per cell (nonlinear model only)
      */
-    units::quantity<unit::molar_flow_rate> mUptakeRatePerCell;
+    QMolarFlowRate mUptakeRatePerCell;
 
     /**
      * Cell per metre (nonlinear model only)
      */
-    units::quantity<unit::per_length> mCellsPerMetre;
+    QPerLength mCellsPerMetre;
 
 public:
 
@@ -104,55 +104,55 @@ public:
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInUValues();
+    std::vector<QConcentrationFlowRate > GetConstantInUValues();
 
     /**
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    std::vector<units::quantity<unit::rate> > GetLinearInUValues();
+    std::vector<QRate > GetLinearInUValues();
 
     /**
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    std::vector<units::quantity<unit::concentration_flow_rate> > GetNonlinearTermValues();
+    std::vector<QConcentrationFlowRate > GetNonlinearTermValues();
 
     /**
      * Set the value of the source for PRESCRIBED type sources
      * @param value the value of the source
      */
-    void SetVesselPermeability(units::quantity<unit::membrane_permeability> value);
+    void SetVesselPermeability(QMembranePermeability value);
 
     /**
      * Set the value of the source for PRESCRIBED type sources
      * @param value the value of the source
      */
-    void SetReferenceConcentration(units::quantity<unit::concentration> value);
+    void SetReferenceConcentration(QConcentration value);
 
     /**
      * Set the value of the half max uptake concentration
      * @param value the half max uptake concentration
      */
-    void SetHalfMaxUptakeConcentration(units::quantity<unit::concentration> value);
+    void SetHalfMaxUptakeConcentration(QConcentration value);
 
     /**
      * Set the value of the source for PRESCRIBED type sources
      * @param value the value of the source
      */
-    void SetReferenceHaematocrit(units::quantity<unit::dimensionless> value);
+    void SetReferenceHaematocrit(QDimensionless value);
 
     /**
      * Set the rate of uptake per cell, non-linear model only
      * @param ratePerCell the rate of uptake per cell
      */
-    void SetUptakeRatePerCell(units::quantity<unit::molar_flow_rate> ratePerCell);
+    void SetUptakeRatePerCell(QMolarFlowRate ratePerCell);
 
     /**
      * Set the number of cells per unit vessel length, non-linear model only
      * @param cellsPerLength the number of cells per unit vessel length
      */
-    void SetNumberOfCellsPerLength(units::quantity<unit::per_length> cellsPerLength);
+    void SetNumberOfCellsPerLength(QPerLength cellsPerLength);
 
 };
 

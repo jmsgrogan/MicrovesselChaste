@@ -46,6 +46,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UblasVectorInclude.hpp"
 #include "UblasIncludes.hpp"
 #include "UblasCustomFunctions.hpp"
+#include "UnitCollection.hpp"
 
 template<unsigned DIM>
 c_vector<double, DIM> GetArbitaryUnitNormal(c_vector<double, DIM> direction)
@@ -90,7 +91,7 @@ QLength GetDistance(const DimensionalChastePoint<DIM>& rLocation1,
 }
 
 template<unsigned DIM>
-units::quantity<unit::area> GetDotProduct(const DimensionalChastePoint<DIM>& rLocation1,
+QArea GetDotProduct(const DimensionalChastePoint<DIM>& rLocation1,
                                           const DimensionalChastePoint<DIM>& rLocation2)
 {
     QLength reference_length = rLocation1.GetReferenceLengthScale();
@@ -114,8 +115,8 @@ DimensionalChastePoint<DIM> GetPointProjectionOnLineSegment(const DimensionalCha
 {
     DimensionalChastePoint<DIM> segment_vector = rEndLocation - rStartLocation;
     DimensionalChastePoint<DIM> point_vector = rProbeLocation - rStartLocation;
-    units::quantity<unit::area> dp_segment_point = GetDotProduct(segment_vector, point_vector);
-    units::quantity<unit::area> dp_segment_segment = GetDotProduct(segment_vector, segment_vector);
+    QArea dp_segment_point = GetDotProduct(segment_vector, point_vector);
+    QArea dp_segment_segment = GetDotProduct(segment_vector, segment_vector);
 
     if (dp_segment_point <= 0.0*unit::metres*unit::metres || dp_segment_segment <= dp_segment_point)
     {
@@ -147,14 +148,14 @@ QLength GetDistanceToLineSegment(const DimensionalChastePoint<DIM>& rStartLocati
                                                  const DimensionalChastePoint<DIM>& rProbeLocation)
 {
     DimensionalChastePoint<DIM> segment_vector = rEndLocation - rStartLocation;
-    units::quantity<unit::area> dp_segment_point = GetDotProduct(segment_vector, rProbeLocation - rStartLocation);
+    QArea dp_segment_point = GetDotProduct(segment_vector, rProbeLocation - rStartLocation);
     // Point projection is outside segment, return node0 distance
     if (dp_segment_point <= 0.0*unit::metres*unit::metres)
     {
         return rStartLocation.GetDistance(rProbeLocation);
     }
 
-    units::quantity<unit::area> dp_segment_segment = GetDotProduct(segment_vector, segment_vector);
+    QArea dp_segment_segment = GetDotProduct(segment_vector, segment_vector);
     // Point projection is outside segment, return node1 distance
     if (dp_segment_segment <= dp_segment_point)
     {
@@ -185,12 +186,12 @@ vtkSmartPointer<vtkPoints> GetProbeLocationsExternalPoint(DimensionalChastePoint
         rotation_axis[0] = 0.0;
         rotation_axis[1] = 0.0;
         rotation_axis[2] = 1.0;
-        units::quantity<unit::plane_angle> angle_increment = (2.0*M_PI/double(numDivisions))*unit::radians;
+        QAngle angle_increment = (2.0*M_PI/double(numDivisions))*unit::radians;
         for(unsigned idx=0;idx<numDivisions;idx++)
         {
             if(idx!=unsigned(numDivisions/2))
             {
-                units::quantity<unit::plane_angle> angle = angle_increment*double(idx);
+                QAngle angle = angle_increment*double(idx);
                 c_vector<double, DIM> rotated_loc = RotateAboutAxis<DIM>(current_direction, rotation_axis, angle);
                 c_vector<double, DIM> loc = central_point+normalized_probe_length * rotated_loc;
                 p_points->InsertNextPoint(loc[0], loc[1], 0.0);
@@ -222,7 +223,7 @@ vtkSmartPointer<vtkPoints> GetProbeLocationsInternalPoint(DimensionalChastePoint
                                                                          DimensionalChastePoint<DIM> rCentralPoint,
                                                                          DimensionalChastePoint<DIM> rRotationAxis,
                                                                          QLength probeLength,
-                                                                         units::quantity<unit::plane_angle> angle)
+                                                                         QAngle angle)
 {
     QLength length_scale = rCentralPoint.GetReferenceLengthScale();
     c_vector<double, DIM> central_point = rCentralPoint.GetLocation(length_scale);
@@ -276,7 +277,7 @@ bool IsPointInCone(const DimensionalChastePoint<DIM>& rPoint,
     DimensionalChastePoint<DIM> apex_to_point = rApex - rPoint;
     DimensionalChastePoint<DIM> apex_to_base = rApex - rBase;
     QLength dist_apex_base = apex_to_base.GetNorm2();
-    units::quantity<unit::area> dp_point_base = GetDotProduct(apex_to_point, apex_to_base);
+    QArea dp_point_base = GetDotProduct(apex_to_point, apex_to_base);
     bool in_infinite_cone = dp_point_base / (apex_to_point.GetNorm2() * dist_apex_base) > std::cos(aperture/2.0);
     if(!in_infinite_cone)
     {
@@ -566,10 +567,10 @@ DimensionalChastePoint<DIM> OffsetAlongVector(const c_vector<double, DIM>& rVect
 
 template<unsigned DIM>
 DimensionalChastePoint<DIM> RotateAboutAxis(const DimensionalChastePoint<DIM>& rDirection,
-                                      const DimensionalChastePoint<3>& rAxis, units::quantity<unit::plane_angle> angle)
+                                      const DimensionalChastePoint<3>& rAxis, QAngle angle)
 {
-    double sin_a = units::sin(angle);
-    double cos_a = units::cos(angle);
+    double sin_a = Qsin(angle);
+    double cos_a = Qcos(angle);
     c_vector<double, DIM> new_direction;
     QLength length_scale = rDirection.GetReferenceLengthScale();
     c_vector<double, DIM> dimensionless_direction = rDirection.GetLocation(length_scale);
@@ -595,10 +596,10 @@ DimensionalChastePoint<DIM> RotateAboutAxis(const DimensionalChastePoint<DIM>& r
 
 template<unsigned DIM>
 c_vector<double, DIM> RotateAboutAxis(const c_vector<double, DIM>& rDirection,
-                                      const c_vector<double, 3>& rAxis, units::quantity<unit::plane_angle> angle)
+                                      const c_vector<double, 3>& rAxis, QAngle angle)
 {
-    double sin_a = units::sin(angle);
-    double cos_a = units::cos(angle);
+    double sin_a = Qsin(angle);
+    double cos_a = Qcos(angle);
     c_vector<double, DIM> new_direction = zero_vector<double>(DIM);
 
     if(DIM==3)

@@ -53,43 +53,43 @@ SegmentFlowProperties<DIM>::~SegmentFlowProperties()
 }
 
 template<unsigned DIM>
-units::quantity<unit::concentration> SegmentFlowProperties<DIM>::GetAntiAngiogenicDrugConcentration() const
+QConcentration SegmentFlowProperties<DIM>::GetAntiAngiogenicDrugConcentration() const
 {
     return mAntiAngiogenicDrugConcentration;
 }
 
 template<unsigned DIM>
-units::quantity<unit::dimensionless> SegmentFlowProperties<DIM>::GetHaematocrit() const
+QDimensionless SegmentFlowProperties<DIM>::GetHaematocrit() const
 {
     return mHaematocrit;
 }
 
 template<unsigned DIM>
-units::quantity<unit::flow_rate> SegmentFlowProperties<DIM>::GetFlowRate() const
+QFlowRate SegmentFlowProperties<DIM>::GetFlowRate() const
 {
     return mFlowRate;
 }
 
 template<unsigned DIM>
-units::quantity<unit::flow_impedance> SegmentFlowProperties<DIM>::GetImpedance() const
+QFlowImpedance SegmentFlowProperties<DIM>::GetImpedance() const
 {
     return mImpedance;
 }
 
 template<unsigned DIM>
-units::quantity<unit::dynamic_viscosity> SegmentFlowProperties<DIM>::GetViscosity() const
+QDynamicViscosity SegmentFlowProperties<DIM>::GetViscosity() const
 {
     return mViscosity;
 }
 
 template<unsigned DIM>
-units::quantity<unit::pressure> SegmentFlowProperties<DIM>::GetWallShearStress() const
+QPressure SegmentFlowProperties<DIM>::GetWallShearStress() const
 {
     return mWallShearStress;
 }
 
 template<unsigned DIM>
-units::quantity<unit::rate> SegmentFlowProperties<DIM>::GetGrowthStimulus() const
+QRate SegmentFlowProperties<DIM>::GetGrowthStimulus() const
 {
     return mStimulus;
 }
@@ -108,37 +108,37 @@ std::map<std::string, double> SegmentFlowProperties<DIM>::GetOutputData() const
 }
 
 template<unsigned DIM>
-void SegmentFlowProperties<DIM>::SetHaematocrit(units::quantity<unit::dimensionless> haematocrit)
+void SegmentFlowProperties<DIM>::SetHaematocrit(QDimensionless haematocrit)
 {
     mHaematocrit = haematocrit;
 }
 
 template<unsigned DIM>
-void SegmentFlowProperties<DIM>::SetFlowRate(units::quantity<unit::flow_rate> flowRate)
+void SegmentFlowProperties<DIM>::SetFlowRate(QFlowRate flowRate)
 {
     mFlowRate = flowRate;
 }
 
 template<unsigned DIM>
-void SegmentFlowProperties<DIM>::SetImpedance(units::quantity<unit::flow_impedance> impedance)
+void SegmentFlowProperties<DIM>::SetImpedance(QFlowImpedance impedance)
 {
     mImpedance = impedance;
 }
 
 template<unsigned DIM>
-void SegmentFlowProperties<DIM>::SetViscosity(units::quantity<unit::dynamic_viscosity> viscosity)
+void SegmentFlowProperties<DIM>::SetViscosity(QDynamicViscosity viscosity)
 {
     mViscosity = viscosity;
 }
 
 template<unsigned DIM>
-void SegmentFlowProperties<DIM>::SetWallShearStress(units::quantity<unit::pressure> value)
+void SegmentFlowProperties<DIM>::SetWallShearStress(QPressure value)
 {
     mWallShearStress = value;
 }
 
 template<unsigned DIM>
-void SegmentFlowProperties<DIM>::SetGrowthStimulus(units::quantity<unit::rate> value)
+void SegmentFlowProperties<DIM>::SetGrowthStimulus(QRate value)
 {
     mStimulus = value;
 }

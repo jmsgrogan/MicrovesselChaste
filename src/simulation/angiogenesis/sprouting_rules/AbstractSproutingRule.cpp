@@ -69,7 +69,7 @@ void AbstractSproutingRule<DIM>::SetOnlySproutIfPerfused(bool onlySproutIfPerfus
 }
 
 template<unsigned DIM>
-void AbstractSproutingRule<DIM>::SetSproutingProbability(units::quantity<unit::rate> probability)
+void AbstractSproutingRule<DIM>::SetSproutingProbability(QRate probability)
 {
     mSproutingProbability = probability;
 }
@@ -81,7 +81,7 @@ void AbstractSproutingRule<DIM>::SetVesselEndCutoff(QLength cutoff)
 }
 
 template<unsigned DIM>
-units::quantity<unit::rate> AbstractSproutingRule<DIM>::GetSproutingProbability()
+QRate AbstractSproutingRule<DIM>::GetSproutingProbability()
 {
     return mSproutingProbability;
 }

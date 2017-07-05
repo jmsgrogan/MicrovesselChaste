@@ -66,7 +66,7 @@ class BaseUnits : public SerializableSingleton<BaseUnits>
     /**
      * The time unit for increments
      */
-    units::quantity<unit::time> mTime;
+    QTime mTime;
 
     /**
      * The length unit
@@ -76,7 +76,7 @@ class BaseUnits : public SerializableSingleton<BaseUnits>
     /**
      * The concentration unit
      */
-    units::quantity<unit::concentration> mConcentration;
+    QConcentration mConcentration;
 
 public:
 
@@ -96,7 +96,7 @@ public:
     /**
      * @return the reference time scale
      */
-    units::quantity<unit::time> GetReferenceTimeScale();
+    QTime GetReferenceTimeScale();
 
     /**
      * @return the reference time scale
@@ -106,13 +106,13 @@ public:
     /**
      * @return the reference time scale
      */
-    units::quantity<unit::concentration> GetReferenceConcentrationScale();
+    QConcentration GetReferenceConcentrationScale();
 
     /**
      * Sets reference time scale
      * @param referenceTimeScale the reference time scale
      */
-    void SetReferenceTimeScale(units::quantity<unit::time> referenceTimeScale);
+    void SetReferenceTimeScale(QTime referenceTimeScale);
 
     /**
      * Sets reference length scale
@@ -124,7 +124,7 @@ public:
      * Sets reference concentration scale
      * @param referenceConcentrationScale the reference concentration scale
      */
-    void SetReferenceConcentrationScale(units::quantity<unit::concentration> referenceConcentrationScale);
+    void SetReferenceConcentrationScale(QConcentration referenceConcentrationScale);
 
     /**
      * Destroy the current BaseUnits instance

@@ -57,13 +57,13 @@ std::shared_ptr<ShrinkingStimulusCalculator<DIM> > ShrinkingStimulusCalculator<D
 }
 
 template<unsigned DIM>
-units::quantity<unit::rate> ShrinkingStimulusCalculator<DIM>::GetStimulus()
+QRate ShrinkingStimulusCalculator<DIM>::GetStimulus()
 {
     return mDefaultStimulus;
 }
 
 template<unsigned DIM>
-void ShrinkingStimulusCalculator<DIM>::SetStimulus(units::quantity<unit::rate> stimulus)
+void ShrinkingStimulusCalculator<DIM>::SetStimulus(QRate stimulus)
 {
     mDefaultStimulus = stimulus;
 }

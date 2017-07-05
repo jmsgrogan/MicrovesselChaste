@@ -56,7 +56,7 @@ public:
     void TestConnnectedMethods() throw(Exception)
     {
         // Make some nodes
-        std::vector<boost::shared_ptr<VesselNode<3> > > nodes;
+        std::vector<std::shared_ptr<VesselNode<3> > > nodes;
         nodes.push_back(VesselNode<3>::Create(1.0, 2.0, 6.0));
         nodes.push_back(VesselNode<3>::Create(3.0, 4.0, 7.0));
         nodes.push_back(VesselNode<3>::Create(3.0, 4.0, 7.0));
@@ -64,16 +64,16 @@ public:
         nodes.push_back(VesselNode<3>::Create(3.0, 4.0, 9.0));
 
         // Make some vessels
-        boost::shared_ptr<Vessel<3> > pVessel1(Vessel<3>::Create(nodes[0], nodes[1]));
-        boost::shared_ptr<Vessel<3> > pVessel2(Vessel<3>::Create(nodes[2], nodes[3]));
-        boost::shared_ptr<Vessel<3> > pVessel3(Vessel<3>::Create(nodes[3], nodes[4]));
+        std::shared_ptr<Vessel<3> > pVessel1(Vessel<3>::Create(nodes[0], nodes[1]));
+        std::shared_ptr<Vessel<3> > pVessel2(Vessel<3>::Create(nodes[2], nodes[3]));
+        std::shared_ptr<Vessel<3> > pVessel3(Vessel<3>::Create(nodes[3], nodes[4]));
 
-        std::vector<boost::shared_ptr<Vessel<3> > > vessels;
+        std::vector<std::shared_ptr<Vessel<3> > > vessels;
         vessels.push_back(pVessel2);
         vessels.push_back(pVessel3);
 
         // Make a network
-        boost::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(pVessel1);
         p_network->AddVessels(vessels);
 
@@ -93,8 +93,8 @@ public:
         TS_ASSERT(p_network->NodeIsInNetwork(nodes[4]));
         TS_ASSERT_EQUALS(p_network->GetNodes().size(), 4u);
 
-        boost::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(1.0 , 1.0 , 1.0);
-        boost::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(5.0 , 5.0 , 1.0);
+        std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(1.0 , 1.0 , 1.0);
+        std::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(5.0 , 5.0 , 1.0);
         p_network->AddVessel(Vessel<3>::Create(p_node1, p_node2));
 
         TS_ASSERT(p_network->NodeIsInNetwork(nodes[0]));
@@ -105,18 +105,18 @@ public:
         TS_ASSERT(p_network->NodeIsInNetwork(p_node1));
         TS_ASSERT(p_network->NodeIsInNetwork(p_node2));
 
-        boost::shared_ptr<VesselNetworkGraphCalculator<3> > p_graph_calculator = VesselNetworkGraphCalculator<3>::Create();
+        std::shared_ptr<VesselNetworkGraphCalculator<3> > p_graph_calculator = VesselNetworkGraphCalculator<3>::Create();
         p_graph_calculator->SetVesselNetwork(p_network);
 
         TS_ASSERT(p_graph_calculator->IsConnected(nodes[0], nodes[4]));
         TS_ASSERT(!p_graph_calculator->IsConnected(nodes[0], p_node2));
         TS_ASSERT(p_graph_calculator->IsConnected(p_node1, p_node2));
 
-        std::vector<boost::shared_ptr<VesselNode<3> > > source_nodes;
+        std::vector<std::shared_ptr<VesselNode<3> > > source_nodes;
         source_nodes.push_back(nodes[0]);
         source_nodes.push_back(p_node1);
 
-        std::vector<boost::shared_ptr<VesselNode<3> > > query_nodes;
+        std::vector<std::shared_ptr<VesselNode<3> > > query_nodes;
         query_nodes.push_back(nodes[0]);
         if (p_network->NodeIsInNetwork(nodes[1]))
         {

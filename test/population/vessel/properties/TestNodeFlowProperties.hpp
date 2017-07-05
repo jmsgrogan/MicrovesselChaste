@@ -76,10 +76,10 @@ public:
 
         // Save archive
         {
-            boost::shared_ptr<AbstractVesselNetworkComponentProperties<3> > p_properties =
-                    boost::shared_ptr<AbstractVesselNetworkComponentProperties<3> >(new NodeFlowProperties<3>());
+            std::shared_ptr<AbstractVesselNetworkComponentProperties<3> > p_properties =
+                    std::shared_ptr<AbstractVesselNetworkComponentProperties<3> >(new NodeFlowProperties<3>());
 
-            boost::shared_ptr<NodeFlowProperties<3> > p_cast_properties =
+            std::shared_ptr<NodeFlowProperties<3> > p_cast_properties =
                     boost::dynamic_pointer_cast<NodeFlowProperties<3> >(p_properties);
 
             p_cast_properties->SetIsInputNode(true);
@@ -94,7 +94,7 @@ public:
 
         // Load archive
         {
-            boost::shared_ptr<AbstractVesselNetworkComponentProperties<3> > p_properties_from_archive;
+            std::shared_ptr<AbstractVesselNetworkComponentProperties<3> > p_properties_from_archive;
 
             // Read from this input file
             std::ifstream ifs(archive_filename.c_str(), std::ios::binary);
@@ -102,7 +102,7 @@ public:
 
             // restore from the archive
             input_arch >> p_properties_from_archive;
-            boost::shared_ptr<NodeFlowProperties<3> > p_cast_properties =
+            std::shared_ptr<NodeFlowProperties<3> > p_cast_properties =
                     boost::dynamic_pointer_cast<NodeFlowProperties<3> >(p_properties_from_archive);
 
             TS_ASSERT(p_cast_properties->IsInputNode());

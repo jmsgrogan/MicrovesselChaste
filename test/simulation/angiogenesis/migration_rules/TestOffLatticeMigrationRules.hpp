@@ -70,10 +70,10 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestOffLatticeMigrationRules/2d"));
 
         // Set up the grid
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(1000*1.e-6*unit::metres, 1000*1.e-6*unit::metres, DimensionalChastePoint<2>());
 
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         QLength spacing(40.0*unit::microns); //um
         p_grid->SetSpacing(spacing);
 
@@ -84,9 +84,9 @@ public:
         p_grid->SetDimensions(dimensions);
 
         // Prescribe a linearly increasing vegf field using a function map
-        boost::shared_ptr<FunctionMap<2> > p_funciton_map = FunctionMap<2>::Create();
+        std::shared_ptr<FunctionMap<2> > p_funciton_map = FunctionMap<2>::Create();
         p_funciton_map->SetGrid(p_grid);
-        std::vector<units::quantity<unit::concentration> > vegf_field = std::vector<units::quantity<unit::concentration> >(dimensions[0] * dimensions[1] * dimensions[2], 0.0*unit::mole_per_metre_cubed);
+        std::vector<QConcentration > vegf_field = std::vector<QConcentration >(dimensions[0] * dimensions[1] * dimensions[2], 0.0*unit::mole_per_metre_cubed);
         for (unsigned idx = 0; idx < dimensions[0] * dimensions[1] * dimensions[2]; idx++)
         {
             vegf_field[idx] = 0.3*p_grid->GetPoint(idx).GetLocation(spacing)[0] / (double(dimensions[0]))*1.e-9*unit::mole_per_metre_cubed;
@@ -103,16 +103,16 @@ public:
         QLength length = spacing * double(dimensions[1] - 1); // full domain in y direction
         unsigned divisions = dimensions[1] - 2; // divide the vessel to coincide with grid
         unsigned alignment_axis = 1; // pointing y direction
-        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(length,
+        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(length,
                                                                                         DimensionalChastePoint<2>(2.0, 0.0, 0.0, spacing),
                                                                                             divisions, alignment_axis);
 
-        boost::shared_ptr<OffLatticeMigrationRule<2> > p_migration_rule = OffLatticeMigrationRule<2>::Create();
+        std::shared_ptr<OffLatticeMigrationRule<2> > p_migration_rule = OffLatticeMigrationRule<2>::Create();
         p_migration_rule->SetDiscreteContinuumSolver(p_funciton_map);
         p_migration_rule->SetNetwork(p_network);
 
 
-        boost::shared_ptr<OffLatticeSproutingRule<2> > p_sprouting_rule = OffLatticeSproutingRule<2>::Create();
+        std::shared_ptr<OffLatticeSproutingRule<2> > p_sprouting_rule = OffLatticeSproutingRule<2>::Create();
         p_sprouting_rule->SetDiscreteContinuumSolver(p_funciton_map);
         p_sprouting_rule->SetVesselNetwork(p_network);
         p_sprouting_rule->SetSproutingProbability(5.e-03 /(60.0*unit::seconds));
@@ -133,10 +133,10 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestOffLatticeMigrationRules/3d"));
 
         // Set up the grid
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(1000*1.e-6*unit::metres, 1000*1.e-6*unit::metres, 200*1.e-6*unit::metres, DimensionalChastePoint<3>());
 
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         QLength spacing(40.0*unit::microns); //um
         p_grid->SetSpacing(spacing);
 
@@ -147,9 +147,9 @@ public:
         p_grid->SetDimensions(dimensions);
 
         // Prescribe a linearly increasing vegf field using a function map
-        boost::shared_ptr<FunctionMap<3> > p_funciton_map = FunctionMap<3>::Create();
+        std::shared_ptr<FunctionMap<3> > p_funciton_map = FunctionMap<3>::Create();
         p_funciton_map->SetGrid(p_grid);
-        std::vector<units::quantity<unit::concentration> > vegf_field = std::vector<units::quantity<unit::concentration> >(dimensions[0] * dimensions[1] * dimensions[2], 0.0*unit::mole_per_metre_cubed);
+        std::vector<QConcentration > vegf_field = std::vector<QConcentration >(dimensions[0] * dimensions[1] * dimensions[2], 0.0*unit::mole_per_metre_cubed);
         for (unsigned idx = 0; idx < dimensions[0] * dimensions[1] * dimensions[2]; idx++)
         {
             vegf_field[idx] = 0.3*p_grid->GetPoint(idx).GetLocation(spacing)[0] / (double(dimensions[0]))*1.e-9*unit::mole_per_metre_cubed;
@@ -166,15 +166,15 @@ public:
         QLength length = spacing * double(dimensions[1] - 3); // full domain in y direction
         unsigned divisions = dimensions[1] - 2; // divide the vessel to coincide with grid
         unsigned alignment_axis = 1; // pointing y direction
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(length,
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(length,
                                                                                         DimensionalChastePoint<3>(2.0, 2.0, 0.5, spacing),
                                                                                             divisions, alignment_axis);
 
-        boost::shared_ptr<OffLatticeMigrationRule<3> > p_migration_rule = OffLatticeMigrationRule<3>::Create();
+        std::shared_ptr<OffLatticeMigrationRule<3> > p_migration_rule = OffLatticeMigrationRule<3>::Create();
         p_migration_rule->SetDiscreteContinuumSolver(p_funciton_map);
         p_migration_rule->SetNetwork(p_network);
 
-        boost::shared_ptr<OffLatticeSproutingRule<3> > p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
+        std::shared_ptr<OffLatticeSproutingRule<3> > p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
         p_sprouting_rule->SetDiscreteContinuumSolver(p_funciton_map);
         p_sprouting_rule->SetVesselNetwork(p_network);
         p_sprouting_rule->SetSproutingProbability(5.e-03 /(60.0*unit::seconds));

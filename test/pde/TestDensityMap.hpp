@@ -65,13 +65,13 @@ public:
         BaseUnits::Instance()->SetReferenceLengthScale(1.0 * unit::metres);
         QLength vessel_length = 0.15 * unit::metres;
         VesselNetworkGenerator<2> generator;
-        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(
+        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(
                 vessel_length, DimensionalChastePoint<2>(0.25, 0.05, 0.0, 1.0*unit::metres));
 
         // Set up the grid
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(2.0 * unit::metres, 2.0 * unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 1.0 * unit::metres);
 
         // Get the map
@@ -94,13 +94,13 @@ public:
         BaseUnits::Instance()->SetReferenceLengthScale(1.0 * unit::metres);
         QLength vessel_length = 0.5 * unit::metres;
         VesselNetworkGenerator<2> generator;
-        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(
+        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(
                 vessel_length, DimensionalChastePoint<2>(0.25, 0.25, 0.0, 1.0*unit::metres));
 
         // Set up the grid
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(2.0 * unit::metres, 2.0 * unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 1.0 * unit::metres);
 
         // Get the map
@@ -124,13 +124,13 @@ public:
         BaseUnits::Instance()->SetReferenceLengthScale(1.0 * unit::metres);
         QLength vessel_length = 0.15 * unit::metres;
         VesselNetworkGenerator<3> generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(
                 vessel_length, DimensionalChastePoint<3>(0.25, 0.05, 0.05, 1.0*unit::metres));
 
         // Set up the grid
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(2.0 * unit::metres, 2.0 * unit::metres, 2.0 * unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 1.0 * unit::metres);
 
         // Get the map
@@ -156,13 +156,13 @@ public:
         BaseUnits::Instance()->SetReferenceLengthScale(1.0 * unit::metres);
         QLength vessel_length = 0.5 * unit::metres;
         VesselNetworkGenerator<3> generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(
                 vessel_length, DimensionalChastePoint<3>(0.25, 0.25, 0.0, 1.0*unit::metres), 1, 1);
 
         // Set up the grid
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(2.0 * unit::metres, 2.0 * unit::metres, 2.0 * unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 1.0 * unit::metres);
 
         // Get the map
@@ -190,17 +190,17 @@ public:
         // Set up the vessel network
         QLength vessel_length = 100 * 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateBifurcationUnit(vessel_length,
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateBifurcationUnit(vessel_length,
                                                                                            DimensionalChastePoint<3>(0.0, vessel_length/(1.e-6*unit::metres), 0.0));
         p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"/network.vtp");
 
         // Set up the tissue domain
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(4.0 * vessel_length,
                             2.0 * vessel_length,
                             2.0 * vessel_length,
                             DimensionalChastePoint<3>(0.0, 0.0, 0.0));
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 20.0e-6 * unit::metres);
 
         // Get the map
@@ -225,16 +225,16 @@ public:
         // Set up the vessel network
         QLength vessel_length = 100 * 1.e-6 * unit::metres;
         VesselNetworkGenerator<2> generator;
-        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateBifurcationUnit(vessel_length,
+        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateBifurcationUnit(vessel_length,
                                                                                            DimensionalChastePoint<2>(0.0, 0.0, 0.0));
         p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"/network.vtp");
 
         // Set up the tissue domain
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(4.0 * vessel_length,
                             2.0 * vessel_length,
                             DimensionalChastePoint<2>(0.0, 0.0, 0.0));
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 20.0e-6 * unit::metres);
 
         // Get the map
@@ -255,11 +255,11 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDensityMap/TestConservationOverBoxSize", false));
         QLength vessel_length = 100 * 1.e-6 * unit::metres;
         VesselNetworkGenerator<2> generator;
-        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateBifurcationUnit(vessel_length,
+        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateBifurcationUnit(vessel_length,
                                                                                            DimensionalChastePoint<2>(0.0, 0.0, 0.0));
 
         p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"/network.vtp");
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(4.0 * vessel_length, 2.0 * vessel_length, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
 
         std::vector<double> densities;
@@ -267,7 +267,7 @@ public:
         for(unsigned idx=0; idx<5; idx++)
         {
             // Set up the tissue domain
-            boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+            std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
             p_grid->GenerateFromPart(p_domain, grid_size*1.e-6* unit::metres);
 
             // Get the map

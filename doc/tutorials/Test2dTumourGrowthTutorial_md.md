@@ -61,12 +61,12 @@ class Test2dVascularTumourGrowth : public AbstractCellBasedWithTimingsTestSuite
 //    {
 //        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
 //
-//        units::quantity<unit::diffusivity> oxygen_diffusivity(8700000.0/400.0 * unit::metre_squared_per_second);
+//        QDiffusivity oxygen_diffusivity(8700000.0/400.0 * unit::metre_squared_per_second);
 //        p_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity); // assume cell width is 20 microns
 //
 //        // Add a cell state specific discrete source for cells consuming oxygen
 //        boost::shared_ptr<CellStateDependentDiscreteSource<2> > p_cell_sink = CellStateDependentDiscreteSource<2>::Create();
-//        std::map<unsigned, units::quantity<unit::molar_flow_rate> > state_specific_rates;
+//        std::map<unsigned, QMolarFlowRate > state_specific_rates;
 //        MAKE_PTR(WildTypeCellMutationState, p_normal_cell_state);
 //        MAKE_PTR(CancerCellMutationState, p_cancer_state);
 //        MAKE_PTR(QuiescentCancerCellMutationState, p_quiescent_cancer_state);
@@ -84,7 +84,7 @@ class Test2dVascularTumourGrowth : public AbstractCellBasedWithTimingsTestSuite
 //
 //        // todo this needs to be updated so that source strength is proportional to haematocrit level
 //        boost::shared_ptr<CellStateDependentDiscreteSource<2> > p_cell_source = CellStateDependentDiscreteSource<2>::Create();
-//        std::map<unsigned, units::quantity<unit::molar_flow_rate> > state_specific_rates2;
+//        std::map<unsigned, QMolarFlowRate > state_specific_rates2;
 //        double segment_radius = 0.5;
 //        double segment_length = 1.0;
 //        double segment_surface_area = 2 * M_PI * segment_radius * segment_length;
@@ -101,7 +101,7 @@ class Test2dVascularTumourGrowth : public AbstractCellBasedWithTimingsTestSuite
 //    boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > GetVegfPde()
 //    {
 //        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
-//        units::quantity<unit::diffusivity> vegf_diffusivity(60000.0 / 400.0 * unit::metre_squared_per_second);
+//        QDiffusivity vegf_diffusivity(60000.0 / 400.0 * unit::metre_squared_per_second);
 //        p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity); // assume cell width is 20 microns
 //        p_pde->SetContinuumLinearInUTerm(-0.8*unit::per_second); //Vegf decay
 //
@@ -111,8 +111,8 @@ class Test2dVascularTumourGrowth : public AbstractCellBasedWithTimingsTestSuite
 //        boost::shared_ptr<CellStateDependentDiscreteSource<2> > p_normal_and_quiescent_cell_source = CellStateDependentDiscreteSource<2>::Create();
 //
 //        // Set mutation specific source strengths and thresholds
-//        std::map<unsigned, units::quantity<unit::molar_flow_rate> > normal_and_quiescent_cell_rates;
-//        std::map<unsigned, units::quantity<unit::concentration> > normal_and_quiescent_cell_rate_thresholds;
+//        std::map<unsigned, QMolarFlowRate > normal_and_quiescent_cell_rates;
+//        std::map<unsigned, QConcentration > normal_and_quiescent_cell_rate_thresholds;
 //        MAKE_PTR(QuiescentCancerCellMutationState, p_quiescent_cancer_state);
 //        MAKE_PTR(WildTypeCellMutationState, p_normal_cell_state);
 //        normal_and_quiescent_cell_rates[p_normal_cell_state->GetColour()] = 0.6*unit::mole_per_second;
@@ -128,7 +128,7 @@ class Test2dVascularTumourGrowth : public AbstractCellBasedWithTimingsTestSuite
 //        // VEGF release for cancer cells and tip cells, now there is no threshold so we use a different source
 //        boost::shared_ptr<CellStateDependentDiscreteSource<2> > p_other_cell_sinks = CellStateDependentDiscreteSource<2>::Create();
 //
-//        std::map<unsigned, units::quantity<unit::molar_flow_rate> > other_cell_rates;
+//        std::map<unsigned, QMolarFlowRate > other_cell_rates;
 //        double segment_radius = 0.5;
 //        double segment_length = 1.0;
 //        double permeability = 15;
@@ -226,12 +226,12 @@ class Test2dVascularTumourGrowth : public AbstractCellBasedWithTimingsTestSuite
 //    {
 //        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
 //
-//        units::quantity<unit::diffusivity> oxygen_diffusivity(8700000.0/400.0 * unit::metre_squared_per_second);
+//        QDiffusivity oxygen_diffusivity(8700000.0/400.0 * unit::metre_squared_per_second);
 //        p_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity); // assume cell width is 20 microns
 //
 //        // Add a cell state specific discrete source for cells consuming oxygen
 //        boost::shared_ptr<CellStateDependentDiscreteSource<2> > p_cell_sink = CellStateDependentDiscreteSource<2>::Create();
-//        std::map<unsigned, units::quantity<unit::molar_flow_rate> > state_specific_rates;
+//        std::map<unsigned, QMolarFlowRate > state_specific_rates;
 //        MAKE_PTR(WildTypeCellMutationState, p_normal_cell_state);
 //        MAKE_PTR(CancerCellMutationState, p_cancer_state);
 //        MAKE_PTR(QuiescentCancerCellMutationState, p_quiescent_cancer_state);
@@ -249,7 +249,7 @@ class Test2dVascularTumourGrowth : public AbstractCellBasedWithTimingsTestSuite
 //
 //        // todo this needs to be updated so that source strength is proportional to haematocrit level
 //        boost::shared_ptr<CellStateDependentDiscreteSource<2> > p_cell_source = CellStateDependentDiscreteSource<2>::Create();
-//        std::map<unsigned, units::quantity<unit::molar_flow_rate> > state_specific_rates2;
+//        std::map<unsigned, QMolarFlowRate > state_specific_rates2;
 //        double segment_radius = 0.5;
 //        double segment_length = 1.0;
 //        double segment_surface_area = 2 * M_PI * segment_radius * segment_length;
@@ -266,7 +266,7 @@ class Test2dVascularTumourGrowth : public AbstractCellBasedWithTimingsTestSuite
 //    boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > GetVegfPde()
 //    {
 //        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
-//        units::quantity<unit::diffusivity> vegf_diffusivity(60000.0 / 400.0 * unit::metre_squared_per_second);
+//        QDiffusivity vegf_diffusivity(60000.0 / 400.0 * unit::metre_squared_per_second);
 //        p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity); // assume cell width is 20 microns
 //        p_pde->SetContinuumLinearInUTerm(-0.8*unit::per_second); //Vegf decay
 //
@@ -276,8 +276,8 @@ class Test2dVascularTumourGrowth : public AbstractCellBasedWithTimingsTestSuite
 //        boost::shared_ptr<CellStateDependentDiscreteSource<2> > p_normal_and_quiescent_cell_source = CellStateDependentDiscreteSource<2>::Create();
 //
 //        // Set mutation specific source strengths and thresholds
-//        std::map<unsigned, units::quantity<unit::molar_flow_rate> > normal_and_quiescent_cell_rates;
-//        std::map<unsigned, units::quantity<unit::concentration> > normal_and_quiescent_cell_rate_thresholds;
+//        std::map<unsigned, QMolarFlowRate > normal_and_quiescent_cell_rates;
+//        std::map<unsigned, QConcentration > normal_and_quiescent_cell_rate_thresholds;
 //        MAKE_PTR(QuiescentCancerCellMutationState, p_quiescent_cancer_state);
 //        MAKE_PTR(WildTypeCellMutationState, p_normal_cell_state);
 //        normal_and_quiescent_cell_rates[p_normal_cell_state->GetColour()] = 0.6*unit::mole_per_second;
@@ -293,7 +293,7 @@ class Test2dVascularTumourGrowth : public AbstractCellBasedWithTimingsTestSuite
 //        // VEGF release for cancer cells and tip cells, now there is no threshold so we use a different source
 //        boost::shared_ptr<CellStateDependentDiscreteSource<2> > p_other_cell_sinks = CellStateDependentDiscreteSource<2>::Create();
 //
-//        std::map<unsigned, units::quantity<unit::molar_flow_rate> > other_cell_rates;
+//        std::map<unsigned, QMolarFlowRate > other_cell_rates;
 //        double segment_radius = 0.5;
 //        double segment_length = 1.0;
 //        double permeability = 15;

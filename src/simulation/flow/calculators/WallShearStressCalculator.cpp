@@ -63,11 +63,11 @@ void WallShearStressCalculator<DIM>::Calculate()
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
     for (unsigned segment_index = 0; segment_index < segments.size(); segment_index++)
     {
-        units::quantity<unit::flow_rate> flow_rate =
-                units::fabs(segments[segment_index]->GetFlowProperties()->GetFlowRate());
-        units::quantity<unit::dynamic_viscosity> viscosity =
+        QFlowRate flow_rate =
+                Qabs(segments[segment_index]->GetFlowProperties()->GetFlowRate());
+        QDynamicViscosity viscosity =
                 segments[segment_index]->GetFlowProperties()->GetViscosity();
-        units::quantity<unit::pressure> wall_shear_stress = 8.0 * viscosity * flow_rate / (M_PI * units::pow<3>(segments[segment_index]->GetRadius()));
+        QPressure wall_shear_stress = 8.0 * viscosity * flow_rate / (M_PI * Qpow3(segments[segment_index]->GetRadius()));
         segments[segment_index]->GetFlowProperties()->SetWallShearStress(wall_shear_stress);
     }
 }

@@ -58,12 +58,12 @@ protected:
     /**
      * The half maximum vegf
      */
-    units::quantity<unit::concentration> mHalfMaxVegf;
+    QConcentration mHalfMaxVegf;
 
     /**
      * The vegf field sampled at the vessel lattice sites
      */
-    std::vector<units::quantity<unit::concentration> > mVegfField;
+    std::vector<QConcentration > mVegfField;
 
 public:
 
@@ -94,7 +94,7 @@ public:
      * Set the half max vegf
      * @param halfMaxVegf the half max vegf
      */
-    void SetHalfMaxVegf(units::quantity<unit::concentration> halfMaxVegf);
+    void SetHalfMaxVegf(QConcentration halfMaxVegf);
 };
 
 #endif /* OWEN2011SPROUTINGRULE_HPP_ */

@@ -96,31 +96,31 @@ public:
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed);
         BaseUnits::Instance()->SetReferenceTimeScale(1.0*unit::seconds);
 
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(1.0*unit::metres,
                                1.0*unit::metres,
                                DimensionalChastePoint<2>(0.0, 0.0, 0.0));
 
         DiscreteContinuumMeshGenerator<2> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-        mesh_generator.SetMaxElementArea(0.01*(units::pow<3>(1.0*unit::metres)));
+        mesh_generator.SetMaxElementArea(0.01*(Qpow3(1.0*unit::metres)));
         mesh_generator.Update();
-        boost::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
+        std::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
 
         // Choose the PDE
-        boost::shared_ptr<MichaelisMentenSteadyStateDiffusionReactionPde<2> > p_pde =
+        std::shared_ptr<MichaelisMentenSteadyStateDiffusionReactionPde<2> > p_pde =
                 MichaelisMentenSteadyStateDiffusionReactionPde<2>::Create();
-        units::quantity<unit::diffusivity> diffusivity(1.0* unit::metre_squared_per_second);
-        units::quantity<unit::concentration_flow_rate> consumption_rate(-0.5 * unit::mole_per_metre_cubed_per_second);
+        QDiffusivity diffusivity(1.0* unit::metre_squared_per_second);
+        QConcentrationFlowRate consumption_rate(-0.5 * unit::mole_per_metre_cubed_per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
         p_pde->SetRateConstant(consumption_rate);
 
-        units::quantity<unit::concentration> half_max_concentration(0.1 * unit::mole_per_metre_cubed);
+        QConcentration half_max_concentration(0.1 * unit::mole_per_metre_cubed);
         p_pde->SetMichaelisMentenThreshold(half_max_concentration);
 
         // Prescribe a value on the domain's left boundary
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition = DiscreteContinuumBoundaryCondition<2>::Create();
-        units::quantity<unit::concentration> boundary_concentration(1.0* unit::mole_per_metre_cubed);
+        std::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition = DiscreteContinuumBoundaryCondition<2>::Create();
+        QConcentration boundary_concentration(1.0* unit::mole_per_metre_cubed);
         p_boundary_condition->SetValue(boundary_concentration);
         p_boundary_condition->SetType(BoundaryConditionType::POINT);
         vtkSmartPointer<vtkPoints> p_boundary_points = vtkSmartPointer<vtkPoints>::New();
@@ -155,7 +155,7 @@ public:
             p_sample_points->InsertNextPoint(double(idx)*0.1, 0.5, 0.0);
         }
 
-        std::vector<units::quantity<unit::concentration> > solution = solver.GetConcentrations(p_sample_points);
+        std::vector<QConcentration > solution = solver.GetConcentrations(p_sample_points);
         for(unsigned idx=0; idx<11; idx++)
         {
             QLength x = double(idx)*0.1*unit::metres;
@@ -171,24 +171,24 @@ public:
     void TestBox() throw(Exception)
     {
         // Set up the mesh
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(100.0e-6*unit::metres, 100.0e-6*unit::metres, 100.0e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3, 3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3, 3>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<3, 3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3, 3>::Create();
         p_mesh_generator->SetDomain(p_domain);
-        p_mesh_generator->SetMaxElementArea(2000.0*units::pow<3>(1.e-6*unit::metres));
+        p_mesh_generator->SetMaxElementArea(2000.0*Qpow3(1.e-6*unit::metres));
         p_mesh_generator->Update();
 
         // Choose the PDE
-        boost::shared_ptr<MichaelisMentenSteadyStateDiffusionReactionPde<3> > p_non_linear_pde =
+        std::shared_ptr<MichaelisMentenSteadyStateDiffusionReactionPde<3> > p_non_linear_pde =
                 MichaelisMentenSteadyStateDiffusionReactionPde<3>::Create();
-        units::quantity<unit::diffusivity> diffusivity(1.0* unit::metre_squared_per_second);
-        units::quantity<unit::concentration_flow_rate> consumption_rate(-0.0005 * unit::mole_per_metre_cubed_per_second);
+        QDiffusivity diffusivity(1.0* unit::metre_squared_per_second);
+        QConcentrationFlowRate consumption_rate(-0.0005 * unit::mole_per_metre_cubed_per_second);
         p_non_linear_pde->SetIsotropicDiffusionConstant(diffusivity);
         p_non_linear_pde->SetRateConstant(consumption_rate);
 
         // Choose the Boundary conditions
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_outer_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
-        units::quantity<unit::concentration> boundary_concentration(1.0 * unit::mole_per_metre_cubed);
+        std::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_outer_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
+        QConcentration boundary_concentration(1.0 * unit::mole_per_metre_cubed);
         p_outer_boundary_condition->SetValue(boundary_concentration);
 
         SimpleNonLinearEllipticFiniteElementSolver<3> solver;

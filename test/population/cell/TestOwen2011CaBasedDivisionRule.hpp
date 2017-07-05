@@ -69,13 +69,13 @@ public:
     {
         Owen11CaBasedDivisionRule<3> division_rule;
 
-        boost::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
-        std::vector<boost::shared_ptr<VesselNode<3> > > bottom_nodes;
+        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        std::vector<std::shared_ptr<VesselNode<3> > > bottom_nodes;
         for(unsigned idx=0; idx<81; idx++)
         {
             bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10.0, 50.0, 100.0, 1.e-6*unit::metres));
         }
-        boost::shared_ptr<Vessel<3> > p_vessel_1 = Vessel<3>::Create(bottom_nodes);
+        std::shared_ptr<Vessel<3> > p_vessel_1 = Vessel<3>::Create(bottom_nodes);
         p_network->AddVessel(p_vessel_1);
         division_rule.SetVesselNetwork(p_network);
 

@@ -85,19 +85,19 @@ public:
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed);
         BaseUnits::Instance()->SetReferenceTimeScale(1.0*unit::seconds);
 
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(1.0*unit::metres, 1.0*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
 
         DiscreteContinuumMeshGenerator<2> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-        mesh_generator.SetMaxElementArea(0.005*(units::pow<3>(1.0*unit::metres)));
+        mesh_generator.SetMaxElementArea(0.005*(Qpow3(1.0*unit::metres)));
         mesh_generator.Update();
-        boost::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
+        std::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
 
-        boost::shared_ptr<ParabolicDiffusionReactionPde<2> > p_pde =
+        std::shared_ptr<ParabolicDiffusionReactionPde<2> > p_pde =
                 ParabolicDiffusionReactionPde<2>::Create();
-        units::quantity<unit::diffusivity> diffusivity(1.0 * unit::metre_squared_per_second);
-        units::quantity<unit::rate> decay_rate(-0.5 * unit::per_second);
+        QDiffusivity diffusivity(1.0 * unit::metre_squared_per_second);
+        QRate decay_rate(-0.5 * unit::per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
         //p_pde->SetContinuumLinearInUTerm(decay_rate);
 
@@ -115,14 +115,14 @@ public:
             }
             surf_iter++;
         }
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition =
+        std::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition =
                 DiscreteContinuumBoundaryCondition<2>::Create();
-        units::quantity<unit::concentration> boundary_concentration(1.0* unit::mole_per_metre_cubed);
+        QConcentration boundary_concentration(1.0* unit::mole_per_metre_cubed);
         p_boundary_condition->SetValue(boundary_concentration);
         p_boundary_condition->SetType(BoundaryConditionType::POINT);
         p_boundary_condition->SetPoints(p_boundary_points);
 
-        boost::shared_ptr<SimpleParabolicFiniteElementSolver<2> > p_solver =
+        std::shared_ptr<SimpleParabolicFiniteElementSolver<2> > p_solver =
                 SimpleParabolicFiniteElementSolver<2>::Create();
         p_solver->SetGrid(p_mesh);
         p_solver->SetPde(p_pde);
@@ -150,7 +150,7 @@ public:
         {
             double time = intermediate_solutions[idx].second;
             p_solver->UpdateSolution(intermediate_solutions[idx].first);
-            std::vector<units::quantity<unit::concentration> > solution = p_solver->GetConcentrations(p_sample_points);
+            std::vector<QConcentration > solution = p_solver->GetConcentrations(p_sample_points);
             for(unsigned jdx=0; jdx<11; jdx++)
             {
                 QLength x = double(jdx)*0.1*unit::metres;
@@ -173,27 +173,27 @@ public:
         QLength vessel_length = 100.0 * micron_length_scale;
         VesselNetworkGenerator<3> generator;
         DimensionalChastePoint<3> centre(vessel_length/(2.0*micron_length_scale), vessel_length/(2.0*micron_length_scale), 0.0, micron_length_scale);
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre);
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre);
 
         // Set up the mesh
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(vessel_length, vessel_length, vessel_length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         p_domain->AddVesselNetwork(p_network, true);
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3, 3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3, 3>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<3, 3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3, 3>::Create();
         p_mesh_generator->SetDomain(p_domain);
-        p_mesh_generator->SetMaxElementArea(500.0*units::pow<3>(micron_length_scale));
+        p_mesh_generator->SetMaxElementArea(500.0*Qpow3(micron_length_scale));
         p_mesh_generator->Update();
 
         // Choose the PDE
-        boost::shared_ptr<ParabolicDiffusionReactionPde<3> > p_pde = ParabolicDiffusionReactionPde<3>::Create();
-        units::quantity<unit::diffusivity> diffusivity(Owen11Parameters::mpVegfDiffusivity->GetValue());
-        units::quantity<unit::rate> consumption_rate(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
+        std::shared_ptr<ParabolicDiffusionReactionPde<3> > p_pde = ParabolicDiffusionReactionPde<3>::Create();
+        QDiffusivity diffusivity(Owen11Parameters::mpVegfDiffusivity->GetValue());
+        QRate consumption_rate(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
         p_pde->SetContinuumLinearInUTerm(consumption_rate);
 
         // Choose the Boundary conditions
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_vessel_ox_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
-        units::quantity<unit::concentration> boundary_concentration(300.e-9*unit::mole_per_metre_cubed);
+        std::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_vessel_ox_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
+        QConcentration boundary_concentration(300.e-9*unit::mole_per_metre_cubed);
         p_vessel_ox_boundary_condition->SetValue(boundary_concentration);
         p_vessel_ox_boundary_condition->SetType(BoundaryConditionType::VESSEL_VOLUME);
         p_vessel_ox_boundary_condition->SetSource(BoundaryConditionSource::PRESCRIBED);

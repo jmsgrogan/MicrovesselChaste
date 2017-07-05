@@ -60,17 +60,17 @@ protected:
     /**
      * Cell motility for random walks
      */
-    units::quantity<unit::diffusivity> mCellMotility;
+    QDiffusivity mCellMotility;
 
     /**
      * Cell chemotactic sensitivity
      */
-    units::quantity<unit::diffusivity_per_concentration> mCellChemotacticParameter;
+    QDiffusivityPerConcentration mCellChemotacticParameter;
 
     /**
      * Vegf field sampled on the vessel lattice
      */
-    std::vector<units::quantity<unit::concentration> > mVegfField;
+    std::vector<QConcentration > mVegfField;
 
 public:
 
@@ -102,13 +102,13 @@ public:
      * Set the cell chemotactic parameter
      * @param cellChemotacticParameter the cell chemotactic parameter
      */
-    void SetCellChemotacticParameter(units::quantity<unit::diffusivity_per_concentration> cellChemotacticParameter);
+    void SetCellChemotacticParameter(QDiffusivityPerConcentration cellChemotacticParameter);
 
     /**
      * Set the cell motility parameter
      * @param cellMotility the cell motility parameter
      */
-    void SetCellMotilityParameter(units::quantity<unit::diffusivity> cellMotility);
+    void SetCellMotilityParameter(QDiffusivity cellMotility);
 
 private:
 

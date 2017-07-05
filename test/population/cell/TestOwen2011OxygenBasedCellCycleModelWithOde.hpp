@@ -71,18 +71,18 @@ public:
         // Set up SimulationTime
         BaseUnits::Instance()->SetReferenceTimeScale(60.0*unit::seconds);
         SimulationTime* p_simulation_time = SimulationTime::Instance();
-        units::quantity<unit::time> total_time(15000.0*unit::minutes);
+        QTime total_time(15000.0*unit::minutes);
         unsigned num_increments = 500; // 30 min per step
-        units::quantity<unit::time> dt = total_time/double(num_increments);
+        QTime dt = total_time/double(num_increments);
         p_simulation_time->SetEndTimeAndNumberOfTimeSteps(total_time/BaseUnits::Instance()->GetReferenceTimeScale(), num_increments);
 
         // Set up oxygen_concentration
         BaseUnits::SharedInstance()->SetReferenceConcentrationScale(1.e-3*unit::mole_per_metre_cubed);
-        units::quantity<unit::pressure> oxygen_partial_pressure(1.0*unit::mmHg);
-        units::quantity<unit::solubility> oxygen_solubility = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("Test") *
+        QPressure oxygen_partial_pressure(1.0*unit::mmHg);
+        QSolubility oxygen_solubility = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("Test") *
                 GenericParameters::mpGasConcentrationAtStp->GetValue("Test");
 
-        units::quantity<unit::concentration> oxygen_concentration = oxygen_partial_pressure*oxygen_solubility;
+        QConcentration oxygen_concentration = oxygen_partial_pressure*oxygen_solubility;
 
         // Create cell-cycle models
         Owen2011OxygenBasedCellCycleModel* p_model_1d = new Owen2011OxygenBasedCellCycleModel();
@@ -117,7 +117,7 @@ public:
         p_cell_3d->InitialiseCellCycleModel();
 
         // For coverage, we create another cell-cycle model that is identical to p_model_2d except for the ODE solver
-        boost::shared_ptr<CellCycleModelOdeSolver<Owen2011OxygenBasedCellCycleModel, CvodeAdaptor> >
+        std::shared_ptr<CellCycleModelOdeSolver<Owen2011OxygenBasedCellCycleModel, CvodeAdaptor> >
         p_solver(CellCycleModelOdeSolver<Owen2011OxygenBasedCellCycleModel, CvodeAdaptor>::Instance());
         p_solver->Initialise();
 
@@ -171,9 +171,9 @@ public:
         p_cell_3d_2->GetCellData()->SetItem("oxygen", oxygen_concentration/BaseUnits::Instance()->GetReferenceConcentrationScale());
         p_cell_3d_2->SetCellProliferativeType(p_stem_type);
 
-        units::quantity<unit::pressure> c_phi = Owen11Parameters::mpOxygenPartialPressureAtHalfMaxCycleRateNormal->GetValue("Test");
-        units::quantity<unit::time> Tmin = Owen11Parameters::mpMinimumCellCyclePeriodNormal->GetValue("Test");
-        units::quantity<unit::rate> dphi_dt = oxygen_concentration/(Tmin*(c_phi*oxygen_solubility + oxygen_concentration));
+        QPressure c_phi = Owen11Parameters::mpOxygenPartialPressureAtHalfMaxCycleRateNormal->GetValue("Test");
+        QTime Tmin = Owen11Parameters::mpMinimumCellCyclePeriodNormal->GetValue("Test");
+        QRate dphi_dt = oxygen_concentration/(Tmin*(c_phi*oxygen_solubility + oxygen_concentration));
         std::cout << "expected_rate:" << dphi_dt << std::endl;
 
         unsigned expected_division_increment = unsigned(1.0 / (dphi_dt * dt));
@@ -280,18 +280,18 @@ public:
         // Set up SimulationTime
         BaseUnits::Instance()->SetReferenceTimeScale(60.0*unit::seconds);
         SimulationTime* p_simulation_time = SimulationTime::Instance();
-        units::quantity<unit::time> total_time(12000.0*unit::minutes); // 8 days
+        QTime total_time(12000.0*unit::minutes); // 8 days
         unsigned num_increments = 400; // 30 min per step
-        units::quantity<unit::time> dt = total_time/double(num_increments);
+        QTime dt = total_time/double(num_increments);
         p_simulation_time->SetEndTimeAndNumberOfTimeSteps(total_time/BaseUnits::Instance()->GetReferenceTimeScale(), num_increments);
 
         // Set up oxygen_concentration
         BaseUnits::SharedInstance()->SetReferenceConcentrationScale(1.e-3*unit::mole_per_metre_cubed);
-        units::quantity<unit::pressure> oxygen_partial_pressure(10.0*unit::mmHg);
-        units::quantity<unit::solubility> oxygen_solubility = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("Test") *
+        QPressure oxygen_partial_pressure(10.0*unit::mmHg);
+        QSolubility oxygen_solubility = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("Test") *
                 GenericParameters::mpGasConcentrationAtStp->GetValue("Test");
 
-        units::quantity<unit::concentration> oxygen_concentration = oxygen_partial_pressure*oxygen_solubility;
+        QConcentration oxygen_concentration = oxygen_partial_pressure*oxygen_solubility;
 
         // Create cell-cycle models
         Owen2011OxygenBasedCellCycleModel* p_model_1d = new Owen2011OxygenBasedCellCycleModel();
@@ -329,7 +329,7 @@ public:
         TS_ASSERT_EQUALS(p_state->IsType<CancerCellMutationState>(), true);
 
         // For coverage, we create another cell-cycle model that is identical to p_model_2d except for the ODE solver
-        boost::shared_ptr<CellCycleModelOdeSolver<Owen2011OxygenBasedCellCycleModel, CvodeAdaptor> >
+        std::shared_ptr<CellCycleModelOdeSolver<Owen2011OxygenBasedCellCycleModel, CvodeAdaptor> >
         p_solver(CellCycleModelOdeSolver<Owen2011OxygenBasedCellCycleModel, CvodeAdaptor>::Instance());
         p_solver->Initialise();
 
@@ -366,9 +366,9 @@ public:
         p_cell_3d_2->SetCellProliferativeType(p_stem_type);
 
 
-        units::quantity<unit::pressure> c_phi = Owen11Parameters::mpOxygenPartialPressureAtHalfMaxCycleRateCancer->GetValue("Test");
-        units::quantity<unit::time> Tmin = Owen11Parameters::mpMinimumCellCyclePeriodCancer->GetValue("Test");
-        units::quantity<unit::rate> dphi_dt = oxygen_concentration/(Tmin*(c_phi*oxygen_solubility + oxygen_concentration));
+        QPressure c_phi = Owen11Parameters::mpOxygenPartialPressureAtHalfMaxCycleRateCancer->GetValue("Test");
+        QTime Tmin = Owen11Parameters::mpMinimumCellCyclePeriodCancer->GetValue("Test");
+        QRate dphi_dt = oxygen_concentration/(Tmin*(c_phi*oxygen_solubility + oxygen_concentration));
         unsigned expected_division_increment = unsigned(1.0 / (dphi_dt * dt));
 
         for (unsigned i=0; i<expected_division_increment; i++)
@@ -420,19 +420,19 @@ public:
         // Set up SimulationTime
         BaseUnits::Instance()->SetReferenceTimeScale(60.0*unit::seconds);
         SimulationTime* p_simulation_time = SimulationTime::Instance();
-        units::quantity<unit::time> total_time(12000.0*unit::minutes); // 8 days
+        QTime total_time(12000.0*unit::minutes); // 8 days
         unsigned num_increments = 400; // 30 min per step
         p_simulation_time->SetEndTimeAndNumberOfTimeSteps(total_time/BaseUnits::Instance()->GetReferenceTimeScale(), num_increments);
 
         // Set up oxygen_concentration
         BaseUnits::SharedInstance()->SetReferenceConcentrationScale(1.e-3*unit::mole_per_metre_cubed);
-        units::quantity<unit::pressure> low_oxygen_partial_pressure(1.0*unit::mmHg);
-        units::quantity<unit::pressure> hi_oxygen_partial_pressure(10.0*unit::mmHg);
-        units::quantity<unit::solubility> oxygen_solubility = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("Test") *
+        QPressure low_oxygen_partial_pressure(1.0*unit::mmHg);
+        QPressure hi_oxygen_partial_pressure(10.0*unit::mmHg);
+        QSolubility oxygen_solubility = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("Test") *
                 GenericParameters::mpGasConcentrationAtStp->GetValue("Test");
 
-        units::quantity<unit::concentration> low_oxygen_concentration = low_oxygen_partial_pressure*oxygen_solubility;
-        units::quantity<unit::concentration> hi_oxygen_concentration = hi_oxygen_partial_pressure*oxygen_solubility;
+        QConcentration low_oxygen_concentration = low_oxygen_partial_pressure*oxygen_solubility;
+        QConcentration hi_oxygen_concentration = hi_oxygen_partial_pressure*oxygen_solubility;
 
         Owen2011OxygenBasedCellCycleModel* p_model1 = new Owen2011OxygenBasedCellCycleModel();
         p_model1->SetDimension(2);

@@ -56,7 +56,7 @@ public:
         FileFinder finder = FileFinder("projects/MicrovesselChaste/test/data/median.tif", RelativeTo::ChasteSourceRoot);
 
         // Read the file in tif format
-        boost::shared_ptr<ImageReader> p_image_reader = ImageReader::Create();
+        std::shared_ptr<ImageReader> p_image_reader = ImageReader::Create();
         p_image_reader->SetImageResizeFactors(0.2, 0.2, 1.0);
 
         TS_ASSERT_THROWS_THIS(p_image_reader->GetImage(), "No image data has been set.");

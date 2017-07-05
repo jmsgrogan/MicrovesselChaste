@@ -351,7 +351,7 @@ const std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > >& GridCalc
 template<unsigned DIM>
 void GridCalculator<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
         QLength cellPopulationReferenceLength,
-        units::quantity<unit::concentration> cellPopulationReferenceConcentration)
+        QConcentration cellPopulationReferenceConcentration)
 {
     mpCellPopulation = &rCellPopulation;
     mCellPopulationReferenceLength = cellPopulationReferenceLength;

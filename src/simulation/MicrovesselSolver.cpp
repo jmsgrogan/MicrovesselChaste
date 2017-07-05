@@ -249,7 +249,7 @@ void MicrovesselSolver<DIM>::SetOutputFrequency(unsigned frequency)
 template<unsigned DIM>
 void MicrovesselSolver<DIM>::SetupFromModifier(AbstractCellPopulation<DIM,DIM>& rCellPopulation,
                                                QLength cellReferenceLength,
-                                               units::quantity<unit::concentration> cellReferenceConcentration,
+                                               QConcentration cellReferenceConcentration,
                                                const std::string& rDirectory)
 {
     // Set up an output file handler

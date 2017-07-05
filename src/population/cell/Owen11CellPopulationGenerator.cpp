@@ -267,10 +267,10 @@ std::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM>:
     }
 
     // Set up the cell cycle model . Note that Cell Based Chaste does not use dimensional analysis so we need to be careful with units.
-    units::quantity<unit::pressure> initial_oxygen_tension(30.0*unit::mmHg);
-    units::quantity<unit::solubility>  solubility = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("Owen11CellPopulationGenerator") *
+    QPressure initial_oxygen_tension(30.0*unit::mmHg);
+    QSolubility  solubility = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("Owen11CellPopulationGenerator") *
             GenericParameters::mpGasConcentrationAtStp->GetValue("Owen11CellPopulationGenerator");
-    units::quantity<unit::concentration>  initial_oxygen_concentration = initial_oxygen_tension*solubility;
+    QConcentration  initial_oxygen_concentration = initial_oxygen_tension*solubility;
 
     std::list<CellPtr> cells_updated = p_cell_population->rGetCells();
     std::list<CellPtr>::iterator it;

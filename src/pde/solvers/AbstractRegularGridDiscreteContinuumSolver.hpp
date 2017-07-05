@@ -97,7 +97,7 @@ public:
      * Update the solution using concentration data
      * @param rData the data
      */
-    virtual void UpdateSolution(std::vector<units::quantity<unit::concentration> >& rData);
+    virtual void UpdateSolution(std::vector<QConcentration >& rData);
 
     /**
      * Overridden Update method.

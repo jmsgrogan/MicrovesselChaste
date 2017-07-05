@@ -65,24 +65,24 @@ double DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeConsta
         {
             EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
         }
-        units::quantity<unit::concentration_flow_rate> scaling_factor = this->mReferenceConcentration/this->mReferenceTimeScale;
+        QConcentrationFlowRate scaling_factor = this->mReferenceConcentration/this->mReferenceTimeScale;
         return (this->mConstantInUTerm + this->mDiscreteConstantSourceStrengths[pElement->GetIndex()]) / scaling_factor;
     }
     else
     {
-        units::quantity<unit::concentration_flow_rate> scaling_factor = this->mReferenceConcentration/this->mReferenceTimeScale;
+        QConcentrationFlowRate scaling_factor = this->mReferenceConcentration/this->mReferenceTimeScale;
         return this->mConstantInUTerm/scaling_factor;
     }
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::concentration_flow_rate> DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeConstantInUSourceTerm(unsigned gridIndex)
+QConcentrationFlowRate DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeConstantInUSourceTerm(unsigned gridIndex)
 {
     return this->mConstantInUTerm;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::concentration_flow_rate> DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiscreteConstantInUSourceTerm(unsigned gridIndex)
+QConcentrationFlowRate DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiscreteConstantInUSourceTerm(unsigned gridIndex)
 {
     if(this->mDiscreteConstantSourceStrengths.size()>0)
     {
@@ -108,24 +108,24 @@ double DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinear
         {
             EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
         }
-        units::quantity<unit::rate> scaling_factor = (1.0/this->mReferenceTimeScale);
+        QRate scaling_factor = (1.0/this->mReferenceTimeScale);
         return (this->mLinearInUTerm + this->mDiscreteLinearSourceStrengths[pElement->GetIndex()])/scaling_factor;
     }
     else
     {
-        units::quantity<unit::rate> scaling_factor = (1.0/this->mReferenceTimeScale);
+        QRate scaling_factor = (1.0/this->mReferenceTimeScale);
         return this->mLinearInUTerm/scaling_factor;
     }
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::rate> DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex)
+QRate DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex)
 {
     return this->mLinearInUTerm;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::rate> DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiscreteLinearInUCoeffInSourceTerm(unsigned gridIndex)
+QRate DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiscreteLinearInUCoeffInSourceTerm(unsigned gridIndex)
 {
     if(this->mDiscreteLinearSourceStrengths.size()>0)
     {

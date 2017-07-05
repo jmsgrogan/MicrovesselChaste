@@ -53,17 +53,17 @@ private:
     /**
      * Reference flow rate
      */
-    units::quantity<unit::flow_rate> mQRef;
+    QFlowRate mQRef;
 
     /**
      * Metabolic Stimulus Constant
      */
-    units::quantity<unit::rate> mKm;
+    QRate mKm;
 
     /**
      * Maximum stimulus
      */
-    units::quantity<unit::rate> mMaxStimulus;
+    QRate mMaxStimulus;
 
 public:
 
@@ -87,37 +87,37 @@ public:
      * Get the reference flow rate
      * @return reference flow rate
      */
-    units::quantity<unit::flow_rate> GetQRef();
+    QFlowRate GetQRef();
 
     /**
      * Get the stimulus constant
      * @return the stimulus constant
      */
-    units::quantity<unit::rate> GetKm();
+    QRate GetKm();
 
     /**
      * Get the maximum stimulus
      * @return the maximum stimulus
      */
-    units::quantity<unit::rate> GetMaxStimulus();
+    QRate GetMaxStimulus();
 
     /**
      * set the reference flow rate
      * @param qRef reference flow rate
      */
-    void SetQRef(units::quantity<unit::flow_rate> qRef);
+    void SetQRef(QFlowRate qRef);
 
     /**
      * set the stimulus constant
      * @param km stimulus constant
      */
-    void SetKm(units::quantity<unit::rate> km);
+    void SetKm(QRate km);
 
     /**
      * set the maximum stimulus
      * @param maxStimulus the maximum stimulus
      */
-    void SetMaxStimulus(units::quantity<unit::rate> maxStimulus);
+    void SetMaxStimulus(QRate maxStimulus);
 
     /**
      * Do the calculation

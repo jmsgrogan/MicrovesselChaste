@@ -97,7 +97,7 @@ void LacunarityCalculator<DIM>::Solve()
     {
         double box_size = (double(extents_x - 1) / double(width_factors[width_index]));
         QLength q1 = 0.0* unit::metres;
-        units::quantity<unit::area> q2 = 0.0* unit::metres*unit::metres;
+        QArea q2 = 0.0* unit::metres*unit::metres;
 
         unsigned z_extent = width_factors[width_index];
         z_extent = 1;
@@ -116,13 +116,12 @@ void LacunarityCalculator<DIM>::Solve()
                     QLength vessel_length = 0.0 * unit::metres;
                     for (unsigned seg_index = 0; seg_index < segments.size(); seg_index++)
                     {
-                        vessel_length += LengthOfLineInBox<DIM>(segments[seg_index]->GetNode(0)->rGetLocation(),
+                        vessel_length = vessel_length + LengthOfLineInBox<DIM>(segments[seg_index]->GetNode(0)->rGetLocation(),
                                                                 segments[seg_index]->GetNode(1)->rGetLocation(),
                                                                 DimensionalChastePoint<DIM>(box_location, length_scale), box_size*length_scale);
                     }
-                    q1 += vessel_length;
-                    q2 += vessel_length * vessel_length;
-
+                    q1 = q1 + vessel_length;
+                    q2 = q2 + vessel_length * vessel_length;
                 }
             }
         }

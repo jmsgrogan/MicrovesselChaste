@@ -62,7 +62,7 @@ void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::AddDiscreteSource(std
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::diffusivity> AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::ComputeIsotropicDiffusionTerm()
+QDiffusivity AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::ComputeIsotropicDiffusionTerm()
 {
     return mDiffusivity;
 }
@@ -74,13 +74,13 @@ std::vector<std::shared_ptr<DiscreteSource<SPACE_DIM> > > AbstractDiscreteContin
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetIsotropicDiffusionConstant(units::quantity<unit::diffusivity> diffusivity)
+void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetIsotropicDiffusionConstant(QDiffusivity diffusivity)
 {
     mDiffusivity = diffusivity;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetReferenceConcentration(units::quantity<unit::concentration> referenceConcentration)
+void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetReferenceConcentration(QConcentration referenceConcentration)
 {
     mReferenceConcentration = referenceConcentration;
 }
@@ -92,7 +92,7 @@ void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetReferenceLength(QL
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetReferenceTime(units::quantity<unit::time> referenceTime)
+void AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::SetReferenceTime(QTime referenceTime)
 {
     mReferenceTimeScale = referenceTime;
 }

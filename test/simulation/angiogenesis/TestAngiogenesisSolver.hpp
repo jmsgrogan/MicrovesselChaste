@@ -61,7 +61,7 @@ public:
         RandomNumberGenerator::Instance()->Reseed(123456);
 
         // Set the grid to move on
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         double spacing = 20.0; //um
         p_grid->SetSpacing(spacing * 1.e-6 * unit::metres);
         c_vector<unsigned, 3> dimensions;
@@ -71,15 +71,15 @@ public:
         p_grid->SetDimensions(dimensions);
 
         // Make a vessel
-        boost::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 2.0*spacing);
-        boost::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(spacing, 2.0*spacing);
+        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 2.0*spacing);
+        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(spacing, 2.0*spacing);
         p_node2->SetIsMigrating(true);
-        boost::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(p_node1, p_node2);
-        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        std::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(p_node1, p_node2);
+        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel);
 
         // Set up the migration rule
-        boost::shared_ptr<LatticeBasedMigrationRule<2> > p_migration_rule = LatticeBasedMigrationRule<2>::Create();
+        std::shared_ptr<LatticeBasedMigrationRule<2> > p_migration_rule = LatticeBasedMigrationRule<2>::Create();
         p_migration_rule->SetMovementProbability(0.1);
         p_migration_rule->SetNetwork(p_network);
 
@@ -88,7 +88,7 @@ public:
         AngiogenesisSolver<2> angiogenesis_solver;
         angiogenesis_solver.SetVesselNetwork(p_network);
         angiogenesis_solver.SetMigrationRule(p_migration_rule);
-        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
 
         angiogenesis_solver.SetVesselGridCalculator(p_grid_calc);

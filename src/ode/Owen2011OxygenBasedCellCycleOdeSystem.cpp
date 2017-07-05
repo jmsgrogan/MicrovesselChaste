@@ -45,7 +45,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "GenericParameters.hpp"
 #include "BaseUnits.hpp"
 
-Owen2011OxygenBasedCellCycleOdeSystem::Owen2011OxygenBasedCellCycleOdeSystem(units::quantity<unit::concentration> oxygenConcentration,
+Owen2011OxygenBasedCellCycleOdeSystem::Owen2011OxygenBasedCellCycleOdeSystem(QConcentration oxygenConcentration,
         boost::shared_ptr<AbstractCellMutationState> mutation_state,
         std::vector<double> stateVariables)
 : AbstractOdeSystem(4),
@@ -121,9 +121,9 @@ void Owen2011OxygenBasedCellCycleOdeSystem::EvaluateYDerivatives(double time,
     double VEGF = rY[2];
     mOxygenConcentration = rY[3]*mReferenceConcentrationScale;
 
-    units::quantity<unit::rate> dphi = 0.0* (1.0/ unit::seconds);
-    units::quantity<unit::rate> dp53 = 0.0* (1.0/ unit::seconds);
-    units::quantity<unit::rate> dVEGF = 0.0* (1.0/ unit::seconds);
+    QRate dphi = 0.0* (1.0/ unit::seconds);
+    QRate dp53 = 0.0* (1.0/ unit::seconds);
+    QRate dVEGF = 0.0* (1.0/ unit::seconds);
     if (pmMutationState->IsType<CancerCellMutationState>() || pmMutationState->IsType<WildTypeCellMutationState>())
     {
         dphi = mOxygenConcentration/(mTmin*(mCphi*mReferenceSolubility + mOxygenConcentration));
@@ -148,7 +148,7 @@ boost::shared_ptr<AbstractCellMutationState> Owen2011OxygenBasedCellCycleOdeSyst
     return pmMutationState;
 }
 
-units::quantity<unit::concentration> Owen2011OxygenBasedCellCycleOdeSystem::GetOxygenConcentration() const
+QConcentration Owen2011OxygenBasedCellCycleOdeSystem::GetOxygenConcentration() const
 {
     return mOxygenConcentration;
 }

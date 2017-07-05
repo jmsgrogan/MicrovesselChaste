@@ -76,7 +76,7 @@ std::vector<std::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::Ge
         EXCEPTION("A vessel network is required for this type of sprouting rule.");
     }
 
-    std::vector<units::quantity<unit::concentration> > probed_solutions(rNodes.size(), 0.0*unit::mole_per_metre_cubed);
+    std::vector<QConcentration > probed_solutions(rNodes.size(), 0.0*unit::mole_per_metre_cubed);
     vtkSmartPointer<vtkPoints> p_probe_locations = vtkSmartPointer<vtkPoints>::New();
     QLength reference_length = this->mpSolver->GetReferenceLength();
 
@@ -158,7 +158,7 @@ std::vector<std::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::Ge
                 continue;
             }
         }
-        units::quantity<unit::concentration> vegf_conc = 0.0*unit::mole_per_metre_cubed;
+        QConcentration vegf_conc = 0.0*unit::mole_per_metre_cubed;
         if(this->mpSolver)
         {
             vegf_conc = probed_solutions[idx];

@@ -56,17 +56,17 @@ private:
     /**
      * Cells of different 'color' (i.e. mutation state label) can have different sink rates.
      */
-    std::map<unsigned, units::quantity<unit::concentration_flow_rate> > mStateRateMap;
+    std::map<unsigned, QConcentrationFlowRate > mStateRateMap;
 
     /**
      * Cells of different 'color' (i.e. mutation state label) can have different sink rate thresholds.
      */
-    std::map<unsigned, units::quantity<unit::concentration> > mStateRateThresholdMap;
+    std::map<unsigned, QConcentration > mStateRateThresholdMap;
 
     /**
      * The consumption rate per unit species concentration
      */
-    units::quantity<unit::flow_rate> mConsumptionRatePerUnitConcentration;
+    QFlowRate mConsumptionRatePerUnitConcentration;
 
 public:
 
@@ -90,13 +90,13 @@ public:
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInUValues();
+    std::vector<QConcentrationFlowRate > GetConstantInUValues();
 
     /**
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    std::vector<units::quantity<unit::rate> > GetLinearInUValues();
+    std::vector<QRate > GetLinearInUValues();
 
     /**
      * Set cell 'color' specific consumption rates. 'Color' is a property of the cell mutation state set in its constructor.
@@ -106,7 +106,7 @@ public:
      *
      * @param stateRateMap the label for the source strength value
      */
-    void SetStateRateMap(std::map<unsigned, units::quantity<unit::concentration_flow_rate> > stateRateMap);
+    void SetStateRateMap(std::map<unsigned, QConcentrationFlowRate > stateRateMap);
 
     /**
      * Set cell 'color' specific consumption rate thresholds.
@@ -115,7 +115,7 @@ public:
      *
      * @param stateThresholdMap the label for the source strength value
      */
-    void SetStateRateThresholdMap(std::map<unsigned, units::quantity<unit::concentration> > stateThresholdMap);
+    void SetStateRateThresholdMap(std::map<unsigned, QConcentration > stateThresholdMap);
 };
 
 #endif /* CELLSTATEDEPENDENTDISCRETESOURCE_HPP_ */

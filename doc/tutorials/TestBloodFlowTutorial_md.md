@@ -126,7 +126,7 @@ the network is simple, we can figure out which node is which just from their ind
 we need to use spatial locators and `NearestNode` type methods.
 
 ```cpp
-        units::quantity<unit::pressure> inlet_pressure(50.0 * unit::mmHg);
+        QPressure inlet_pressure(50.0 * unit::mmHg);
         p_network->GetNode(0)->GetFlowProperties()->SetIsInputNode(true);
         p_network->GetNode(0)->GetFlowProperties()->SetPressure(inlet_pressure);
 ```
@@ -145,7 +145,7 @@ Now set the segment radii and viscosity values.
 ```cpp
         QLength vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
         p_network->SetSegmentRadii(vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         p_network->SetSegmentViscosity(viscosity);
 ```
 
@@ -161,7 +161,7 @@ updates the value of the impedance in the vessel.
 Check that the impedance is as expected in one of the vessels
 
 ```cpp
-        units::quantity<unit::flow_impedance> expected_impedance = 8.0 * viscosity* vessel_length/(M_PI*units::pow<4>(vessel_radius));
+        QFlowImpedance expected_impedance = 8.0 * viscosity* vessel_length/(M_PI*Qpow4(vessel_radius));
         TS_ASSERT_DELTA(p_network->GetVessel(0)->GetSegment(0)->GetFlowProperties()->GetImpedance().value(), expected_impedance.value(), 1.e-6);
 ```
 
@@ -177,7 +177,7 @@ updates the value of pressures and flow rates in each vessel and node in the net
 Check the pressure, it is expected to drop linearly so should be the average of the input and output half way along the network.
 
 ```cpp
-        units::quantity<unit::pressure> expected_pressure = (inlet_pressure + Owen11Parameters::mpOutletPressure->GetValue())/2.0;
+        QPressure expected_pressure = (inlet_pressure + Owen11Parameters::mpOutletPressure->GetValue())/2.0;
         TS_ASSERT_DELTA(p_network->GetNode(7)->GetFlowProperties()->GetPressure().value(), expected_pressure.value(), 1.e-6);
 ```
 
@@ -244,7 +244,7 @@ Now set the segment radii and viscosity values.
 ```cpp
         QLength vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
         p_network->SetSegmentRadii(vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         p_network->SetSegmentViscosity(viscosity);
 ```
 
@@ -348,7 +348,7 @@ Set the radius and viscosity and write the initial network to file.
 ```cpp
         QLength vessel_radius(40.0*unit::microns);
         p_network->SetSegmentRadii(vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         p_network->SetSegmentViscosity(viscosity);
         p_network->Write(p_handler->GetOutputDirectoryFullPath()+"initial_network.vtp");
 ```
@@ -425,7 +425,7 @@ Set up the problem as before.
         p_outlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue());
         QLength vessel_radius(40.0*unit::microns);
         p_network->SetSegmentRadii(vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         p_network->SetSegmentViscosity(viscosity);
         p_network->Write(p_handler->GetOutputDirectoryFullPath()+"initial_network.vtp");
 
@@ -529,24 +529,24 @@ public:
         num_units_per_direction.push_back(2);
         num_units_per_direction.push_back(0);
         network_generator.PatternUnitByTranslation(p_network, num_units_per_direction);
-        units::quantity<unit::pressure> inlet_pressure(50.0 * unit::mmHg);
+        QPressure inlet_pressure(50.0 * unit::mmHg);
         p_network->GetNode(0)->GetFlowProperties()->SetIsInputNode(true);
         p_network->GetNode(0)->GetFlowProperties()->SetPressure(inlet_pressure);
         p_network->GetNode(p_network->GetNumberOfNodes()-1)->GetFlowProperties()->SetIsOutputNode(true);
         p_network->GetNode(p_network->GetNumberOfNodes()-1)->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue());
         QLength vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
         p_network->SetSegmentRadii(vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         p_network->SetSegmentViscosity(viscosity);
         VesselImpedanceCalculator<2> impedance_calculator = VesselImpedanceCalculator<2>();
         impedance_calculator.SetVesselNetwork(p_network);
         impedance_calculator.Calculate();
-        units::quantity<unit::flow_impedance> expected_impedance = 8.0 * viscosity* vessel_length/(M_PI*units::pow<4>(vessel_radius));
+        QFlowImpedance expected_impedance = 8.0 * viscosity* vessel_length/(M_PI*Qpow4(vessel_radius));
         TS_ASSERT_DELTA(p_network->GetVessel(0)->GetSegment(0)->GetFlowProperties()->GetImpedance().value(), expected_impedance.value(), 1.e-6);
         FlowSolver<2> flow_solver = FlowSolver<2>();
         flow_solver.SetVesselNetwork(p_network);
         flow_solver.Solve();
-        units::quantity<unit::pressure> expected_pressure = (inlet_pressure + Owen11Parameters::mpOutletPressure->GetValue())/2.0;
+        QPressure expected_pressure = (inlet_pressure + Owen11Parameters::mpOutletPressure->GetValue())/2.0;
         TS_ASSERT_DELTA(p_network->GetNode(7)->GetFlowProperties()->GetPressure().value(), expected_pressure.value(), 1.e-6);
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestBloodFlowLiteratePaper/TestSimpleFlowProblem"));
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "bifurcating_network_results.vtp");
@@ -577,7 +577,7 @@ public:
 
         QLength vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
         p_network->SetSegmentRadii(vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         p_network->SetSegmentViscosity(viscosity);
         QLength sphere_radius = 400.0 * cell_width;
         QLength sphere_thickess = 1.0 * cell_width;
@@ -621,7 +621,7 @@ public:
         p_outlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue());
         QLength vessel_radius(40.0*unit::microns);
         p_network->SetSegmentRadii(vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         p_network->SetSegmentViscosity(viscosity);
         p_network->Write(p_handler->GetOutputDirectoryFullPath()+"initial_network.vtp");
         BaseUnits::Instance()->SetReferenceTimeScale(60.0*unit::seconds);
@@ -668,7 +668,7 @@ public:
         p_outlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue());
         QLength vessel_radius(40.0*unit::microns);
         p_network->SetSegmentRadii(vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         p_network->SetSegmentViscosity(viscosity);
         p_network->Write(p_handler->GetOutputDirectoryFullPath()+"initial_network.vtp");
 

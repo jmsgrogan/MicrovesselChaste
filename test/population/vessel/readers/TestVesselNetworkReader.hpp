@@ -56,9 +56,9 @@ public:
         TS_ASSERT(fileFinder.IsFile());
 
         // Generate the network
-        boost::shared_ptr<VesselNetworkReader<3> > p_network_reader = VesselNetworkReader<3>::Create();
+        std::shared_ptr<VesselNetworkReader<3> > p_network_reader = VesselNetworkReader<3>::Create();
         p_network_reader->SetFileName(fileFinder.GetAbsolutePath());
-        boost::shared_ptr<VesselNetwork<3> > p_network = p_network_reader->Read();
+        std::shared_ptr<VesselNetwork<3> > p_network = p_network_reader->Read();
 
         // Write the network to file
         OutputFileHandler output_file_handler("TestVesselNetworkReaders", false);
@@ -75,10 +75,10 @@ public:
         TS_ASSERT(fileFinder.IsFile());
 
         // Generate the network
-        boost::shared_ptr<VesselNetworkReader<3> > p_network_reader = VesselNetworkReader<3>::Create();
+        std::shared_ptr<VesselNetworkReader<3> > p_network_reader = VesselNetworkReader<3>::Create();
         p_network_reader->SetFileName(fileFinder.GetAbsolutePath());
         p_network_reader->SetRadiusArrayName("Distance");
-        boost::shared_ptr<VesselNetwork<3> > p_network = p_network_reader->Read();
+        std::shared_ptr<VesselNetwork<3> > p_network = p_network_reader->Read();
 
         // Write the network to file
         OutputFileHandler output_file_handler("TestVesselNetworkReaders", false);

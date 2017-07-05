@@ -131,8 +131,8 @@ results. For our purposes microns for length and hours for time are suitable bas
 
 ```cpp
         QLength reference_length(1.0 * unit::microns);
-        units::quantity<unit::time> reference_time(1.0* unit::hours);
-        units::quantity<unit::concentration> reference_concentration(1.e-6* unit::mole_per_metre_cubed);
+        QTime reference_time(1.0* unit::hours);
+        QConcentration reference_concentration(1.e-6* unit::mole_per_metre_cubed);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         BaseUnits::Instance()->SetReferenceConcentrationScale(reference_concentration);
@@ -299,9 +299,9 @@ Vessels release oxygen depending on their haematocrit levels
 
 ```cpp
         boost::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_oxygen_source = VesselBasedDiscreteSource<3>::Create();
-        units::quantity<unit::solubility> oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
+        QSolubility oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
                 GenericParameters::mpGasConcentrationAtStp->GetValue("User");
-        units::quantity<unit::concentration> vessel_oxygen_concentration = oxygen_solubility_at_stp *
+        QConcentration vessel_oxygen_concentration = oxygen_solubility_at_stp *
                 Owen11Parameters::mpReferencePartialPressure->GetValue("User");
         p_vessel_oxygen_source->SetReferenceConcentration(vessel_oxygen_concentration);
         p_vessel_oxygen_source->SetVesselPermeability(Owen11Parameters::mpVesselOxygenPermeability->GetValue("User"));
@@ -333,8 +333,8 @@ there is no release.
 ```cpp
         boost::shared_ptr<CellStateDependentDiscreteSource<3> > p_normal_and_quiescent_cell_source =
         		CellStateDependentDiscreteSource<3>::Create();
-        std::map<unsigned, units::quantity<unit::concentration_flow_rate> > normal_and_quiescent_cell_rates;
-        std::map<unsigned, units::quantity<unit::concentration> > normal_and_quiescent_cell_rate_thresholds;
+        std::map<unsigned, QConcentrationFlowRate > normal_and_quiescent_cell_rates;
+        std::map<unsigned, QConcentration > normal_and_quiescent_cell_rate_thresholds;
         MAKE_PTR(QuiescentCancerCellMutationState, p_quiescent_cancer_state);
         MAKE_PTR(WildTypeCellMutationState, p_normal_cell_state);
         normal_and_quiescent_cell_rates[p_normal_cell_state->GetColour()] = Owen11Parameters::mpCellVegfSecretionRate->GetValue("User");
@@ -372,7 +372,7 @@ flow related stimuli.
 ```cpp
         QLength large_vessel_radius(25.0 * unit::microns);
         p_network->SetSegmentRadii(large_vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
         p_network->SetSegmentViscosity(viscosity);
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "flow_boundary_labelled_network_flow.vtp");
 ```
@@ -422,7 +422,7 @@ Set up an angiogenesis solver and add sprouting and migration rules.
         p_migration_rule->SetChemotacticStrength(0.1);
         p_migration_rule->SetAttractionStrength(0.5);
 
-        units::quantity<unit::velocity> sprout_velocity(40.0*unit::microns/unit::hours);
+        QVelocity sprout_velocity(40.0*unit::microns/unit::hours);
         p_migration_rule->SetSproutingVelocity(sprout_velocity);
         p_angiogenesis_solver->SetMigrationRule(p_migration_rule);
         p_angiogenesis_solver->SetSproutingRule(p_sprouting_rule);
@@ -588,8 +588,8 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestBiologicalNetworkLiteratePaper"));
         RandomNumberGenerator::Instance()->Reseed(12345);
         QLength reference_length(1.0 * unit::microns);
-        units::quantity<unit::time> reference_time(1.0* unit::hours);
-        units::quantity<unit::concentration> reference_concentration(1.e-6* unit::mole_per_metre_cubed);
+        QTime reference_time(1.0* unit::hours);
+        QConcentration reference_concentration(1.e-6* unit::mole_per_metre_cubed);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         BaseUnits::Instance()->SetReferenceConcentrationScale(reference_concentration);
@@ -679,9 +679,9 @@ public:
         p_cell_oxygen_sink->SetLinearInUConsumptionRatePerCell(Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
         p_oxygen_pde->AddDiscreteSource(p_cell_oxygen_sink);
         boost::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_oxygen_source = VesselBasedDiscreteSource<3>::Create();
-        units::quantity<unit::solubility> oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
+        QSolubility oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
                 GenericParameters::mpGasConcentrationAtStp->GetValue("User");
-        units::quantity<unit::concentration> vessel_oxygen_concentration = oxygen_solubility_at_stp *
+        QConcentration vessel_oxygen_concentration = oxygen_solubility_at_stp *
                 Owen11Parameters::mpReferencePartialPressure->GetValue("User");
         p_vessel_oxygen_source->SetReferenceConcentration(vessel_oxygen_concentration);
         p_vessel_oxygen_source->SetVesselPermeability(Owen11Parameters::mpVesselOxygenPermeability->GetValue("User"));
@@ -696,8 +696,8 @@ public:
         p_vegf_pde->SetContinuumLinearInUTerm(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
         boost::shared_ptr<CellStateDependentDiscreteSource<3> > p_normal_and_quiescent_cell_source =
         		CellStateDependentDiscreteSource<3>::Create();
-        std::map<unsigned, units::quantity<unit::concentration_flow_rate> > normal_and_quiescent_cell_rates;
-        std::map<unsigned, units::quantity<unit::concentration> > normal_and_quiescent_cell_rate_thresholds;
+        std::map<unsigned, QConcentrationFlowRate > normal_and_quiescent_cell_rates;
+        std::map<unsigned, QConcentration > normal_and_quiescent_cell_rate_thresholds;
         MAKE_PTR(QuiescentCancerCellMutationState, p_quiescent_cancer_state);
         MAKE_PTR(WildTypeCellMutationState, p_normal_cell_state);
         normal_and_quiescent_cell_rates[p_normal_cell_state->GetColour()] = Owen11Parameters::mpCellVegfSecretionRate->GetValue("User");
@@ -718,7 +718,7 @@ public:
         p_vegf_solver->SetGrid(p_grid);
         QLength large_vessel_radius(25.0 * unit::microns);
         p_network->SetSegmentRadii(large_vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
         p_network->SetSegmentViscosity(viscosity);
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "flow_boundary_labelled_network_flow.vtp");
         boost::shared_ptr<VesselImpedanceCalculator<3> > p_impedance_calculator = VesselImpedanceCalculator<3>::Create();
@@ -748,7 +748,7 @@ public:
         p_migration_rule->SetChemotacticStrength(0.1);
         p_migration_rule->SetAttractionStrength(0.5);
 
-        units::quantity<unit::velocity> sprout_velocity(40.0*unit::microns/unit::hours);
+        QVelocity sprout_velocity(40.0*unit::microns/unit::hours);
         p_migration_rule->SetSproutingVelocity(sprout_velocity);
         p_angiogenesis_solver->SetMigrationRule(p_migration_rule);
         p_angiogenesis_solver->SetSproutingRule(p_sprouting_rule);

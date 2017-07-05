@@ -83,25 +83,25 @@ public:
         CellsGenerator<SimpleOxygenBasedCellCycleModel, 2> cells_generator;
         cells_generator.GenerateBasic(cells, location_indices.size());
 
-        units::quantity<unit::concentration> reference_concentration = 1.e-3*unit::mole_per_metre_cubed;
-        units::quantity<unit::time> reference_time = 3600.0*unit::seconds;
+        QConcentration reference_concentration = 1.e-3*unit::mole_per_metre_cubed;
+        QTime reference_time = 3600.0*unit::seconds;
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         BaseUnits::Instance()->SetReferenceConcentrationScale(reference_concentration);
-        units::quantity<unit::solubility> oxygen_solubility_at_stp =
+        QSolubility oxygen_solubility_at_stp =
                 Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
                 GenericParameters::mpGasConcentrationAtStp->GetValue("User");
-        units::quantity<unit::concentration> oxygen_concentration = 40.0*unit::pascals*oxygen_solubility_at_stp;
+        QConcentration oxygen_concentration = 40.0*unit::pascals*oxygen_solubility_at_stp;
         for(unsigned idx=0;idx<cells.size(); idx++)
         {
             cells[idx]->GetCellData()->SetItem("oxygen", oxygen_concentration/reference_concentration);
         }
 
         // Create cell population
-        boost::shared_ptr<CaBasedCellPopulation<2> > p_cell_population =
-                boost::shared_ptr<CaBasedCellPopulation<2> >(new CaBasedCellPopulation<2>(*p_mesh, cells, location_indices));
+        std::shared_ptr<CaBasedCellPopulation<2> > p_cell_population =
+                std::shared_ptr<CaBasedCellPopulation<2> >(new CaBasedCellPopulation<2>(*p_mesh, cells, location_indices));
 
-        boost::shared_ptr<LQRadiotherapyCellKiller<2> > p_rt_killer =
-                boost::shared_ptr<LQRadiotherapyCellKiller<2> >(new LQRadiotherapyCellKiller<2> (p_cell_population.get()));
+        std::shared_ptr<LQRadiotherapyCellKiller<2> > p_rt_killer =
+                std::shared_ptr<LQRadiotherapyCellKiller<2> >(new LQRadiotherapyCellKiller<2> (p_cell_population.get()));
         p_rt_killer->SetAlphaMax(0.3*unit::per_gray);
         p_rt_killer->SetBetaMax(0.03*unit::per_gray_squared);
         p_rt_killer->SetDoseInjected(2.0*unit::gray);
@@ -117,7 +117,7 @@ public:
         p_rt_killer->UseOer(true);
 
         // Set Up the Radiation Times
-        std::vector<units::quantity<unit::time> > rt_times;
+        std::vector<QTime > rt_times;
         rt_times.push_back(3600.0*24.0*unit::seconds);
         rt_times.push_back(3600.0*48.0*unit::seconds);
         rt_times.push_back(3600.0*72.0*unit::seconds);
@@ -128,7 +128,7 @@ public:
         /*
          * Add a killer for RT and to remove apoptotic cells
          */
-        boost::shared_ptr<ApoptoticCellKiller<2> > p_apoptotic_cell_killer(new ApoptoticCellKiller<2>(p_cell_population.get()));
+        std::shared_ptr<ApoptoticCellKiller<2> > p_apoptotic_cell_killer(new ApoptoticCellKiller<2>(p_cell_population.get()));
         simulator.AddCellKiller(p_apoptotic_cell_killer);
         simulator.AddCellKiller(p_rt_killer);
         simulator.SetOutputDirectory("TestLQRadiotherapyCellKiller/WithOer");
@@ -154,25 +154,25 @@ public:
         CellsGenerator<SimpleOxygenBasedCellCycleModel, 2> cells_generator;
         cells_generator.GenerateBasic(cells, location_indices.size());
 
-        units::quantity<unit::concentration> reference_concentration = 1.e-3*unit::mole_per_metre_cubed;
-        units::quantity<unit::time> reference_time = 3600.0*unit::seconds;
+        QConcentration reference_concentration = 1.e-3*unit::mole_per_metre_cubed;
+        QTime reference_time = 3600.0*unit::seconds;
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         BaseUnits::Instance()->SetReferenceConcentrationScale(reference_concentration);
-        units::quantity<unit::solubility> oxygen_solubility_at_stp =
+        QSolubility oxygen_solubility_at_stp =
                 Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
                 GenericParameters::mpGasConcentrationAtStp->GetValue("User");
-        units::quantity<unit::concentration> oxygen_concentration = 40.0*unit::pascals*oxygen_solubility_at_stp;
+        QConcentration oxygen_concentration = 40.0*unit::pascals*oxygen_solubility_at_stp;
         for(unsigned idx=0;idx<cells.size(); idx++)
         {
             cells[idx]->GetCellData()->SetItem("oxygen", oxygen_concentration/reference_concentration);
         }
 
         // Create cell population
-        boost::shared_ptr<CaBasedCellPopulation<2> > p_cell_population =
-                boost::shared_ptr<CaBasedCellPopulation<2> >(new CaBasedCellPopulation<2>(*p_mesh, cells, location_indices));
+        std::shared_ptr<CaBasedCellPopulation<2> > p_cell_population =
+                std::shared_ptr<CaBasedCellPopulation<2> >(new CaBasedCellPopulation<2>(*p_mesh, cells, location_indices));
 
-        boost::shared_ptr<LQRadiotherapyCellKiller<2> > p_rt_killer =
-                boost::shared_ptr<LQRadiotherapyCellKiller<2> >(new LQRadiotherapyCellKiller<2> (p_cell_population.get()));
+        std::shared_ptr<LQRadiotherapyCellKiller<2> > p_rt_killer =
+                std::shared_ptr<LQRadiotherapyCellKiller<2> >(new LQRadiotherapyCellKiller<2> (p_cell_population.get()));
         p_rt_killer->SetAlphaMax(0.3*unit::per_gray);
         p_rt_killer->SetBetaMax(0.03*unit::per_gray_squared);
         p_rt_killer->SetDoseInjected(2.0*unit::gray);
@@ -188,7 +188,7 @@ public:
         p_rt_killer->UseOer(false);
 
         // Set Up the Radiation Times
-        std::vector<units::quantity<unit::time> > rt_times;
+        std::vector<QTime > rt_times;
         rt_times.push_back(3600.0*24.0*unit::seconds);
         rt_times.push_back(3600.0*48.0*unit::seconds);
         rt_times.push_back(3600.0*72.0*unit::seconds);
@@ -199,7 +199,7 @@ public:
         /*
          * Add a killer for RT and to remove apoptotic cells
          */
-        boost::shared_ptr<ApoptoticCellKiller<2> > p_apoptotic_cell_killer(new ApoptoticCellKiller<2>(p_cell_population.get()));
+        std::shared_ptr<ApoptoticCellKiller<2> > p_apoptotic_cell_killer(new ApoptoticCellKiller<2>(p_cell_population.get()));
         simulator.AddCellKiller(p_apoptotic_cell_killer);
         simulator.AddCellKiller(p_rt_killer);
         simulator.SetOutputDirectory("TestLQRadiotherapyCellKiller/WithoutOer");

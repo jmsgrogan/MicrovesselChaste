@@ -117,14 +117,14 @@ Set up a PDE, we will model oxygen diffusion.
 
 ```cpp
         boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
-        units::quantity<unit::diffusivity> oxygen_diffusivity(1.e-6*unit::metre_squared_per_second);
+        QDiffusivity oxygen_diffusivity(1.e-6*unit::metre_squared_per_second);
         p_oxygen_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity);
 ```
 
 Add continuum sink term for cells
 
 ```cpp
-        units::quantity<unit::rate> oxygen_consumption_rate(1.e-6*unit::per_second);
+        QRate oxygen_consumption_rate(1.e-6*unit::per_second);
         p_oxygen_pde->SetContinuumLinearInUTerm(-oxygen_consumption_rate);
 ```
 
@@ -208,9 +208,9 @@ public:
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 10.0*reference_length);
         boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
-        units::quantity<unit::diffusivity> oxygen_diffusivity(1.e-6*unit::metre_squared_per_second);
+        QDiffusivity oxygen_diffusivity(1.e-6*unit::metre_squared_per_second);
         p_oxygen_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity);
-        units::quantity<unit::rate> oxygen_consumption_rate(1.e-6*unit::per_second);
+        QRate oxygen_consumption_rate(1.e-6*unit::per_second);
         p_oxygen_pde->SetContinuumLinearInUTerm(-oxygen_consumption_rate);
         p_domain->GetFacet(DimensionalChastePoint<3>(0.0,
                                                      domain_height/(2.0*reference_length),

@@ -79,11 +79,11 @@ public:
         TS_ASSERT_EQUALS(point4.GetIndex(), 10u);
 
         // Check factory constructors
-        boost::shared_ptr<DimensionalChastePoint<2> > p_point7 = DimensionalChastePoint<2>::Create(1.0, 2.0, 0.0, reference_scale2);
+        std::shared_ptr<DimensionalChastePoint<2> > p_point7 = DimensionalChastePoint<2>::Create(1.0, 2.0, 0.0, reference_scale2);
         c_vector<double, 2> point8_location;
         point8_location[0] = 2.0;
         point8_location[1] = 3.0;
-        boost::shared_ptr<DimensionalChastePoint<2> > p_point8 = DimensionalChastePoint<2>::Create(point8_location, reference_scale2);
+        std::shared_ptr<DimensionalChastePoint<2> > p_point8 = DimensionalChastePoint<2>::Create(point8_location, reference_scale2);
         TS_ASSERT_DELTA(p_point7->GetLocation(reference_scale2)[0], 1.0, 1.e-6);
         TS_ASSERT_DELTA(p_point7->GetLocation(reference_scale2)[1], 2.0, 1.e-6);
         TS_ASSERT_DELTA(p_point8->GetLocation(reference_scale2)[0], 2.0, 1.e-6);
@@ -178,7 +178,7 @@ public:
         // Save archive
         {
 
-            boost::shared_ptr<DimensionalChastePoint<3> > p_point = DimensionalChastePoint<3>::Create(1.0, 2.0, 3.0, reference_length);
+            std::shared_ptr<DimensionalChastePoint<3> > p_point = DimensionalChastePoint<3>::Create(1.0, 2.0, 3.0, reference_length);
             TS_ASSERT_DELTA(p_point->GetLocation(reference_length)[0], 1.0, 1.e-6);
             TS_ASSERT_DELTA(p_point->GetLocation(reference_length)[1], 2.0, 1.e-6);
             TS_ASSERT_DELTA(p_point->GetLocation(reference_length)[2], 3.0, 1.e-6);
@@ -191,7 +191,7 @@ public:
 
         // Load archive
         {
-            boost::shared_ptr<DimensionalChastePoint<3> > p_point_from_archive;
+            std::shared_ptr<DimensionalChastePoint<3> > p_point_from_archive;
 
             // Read from this input file
             std::ifstream ifs(archive_filename.c_str(), std::ios::binary);

@@ -53,7 +53,7 @@ class TumourInsertionModifier : public AbstractCellBasedSimulationModifier<DIM,D
     /**
      * The insertion time
      */
-    units::quantity<unit::time> mInsertionTime;
+    QTime mInsertionTime;
 
     /**
      * The insertion radius
@@ -79,7 +79,7 @@ public:
      */
     virtual ~TumourInsertionModifier();
 
-    void SetInsertionTime(units::quantity<unit::time> insertionTime);
+    void SetInsertionTime(QTime insertionTime);
 
     void SetInsertionOrigin(DimensionalChastePoint<DIM> insertionOrigin);
 

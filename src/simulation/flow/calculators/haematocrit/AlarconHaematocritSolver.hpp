@@ -53,17 +53,17 @@ private:
     /**
      * The threshold velocity ratio at which all haematocrit goes into the faster vessel
      */
-    units::quantity<unit::dimensionless> mTHR;
+    QDimensionless mTHR;
 
     /**
      * The partition coefficient for haematocrit
      */
-    units::quantity<unit::dimensionless> mAlpha;
+    QDimensionless mAlpha;
 
     /**
      * The arterial haematocrit level
      */
-    units::quantity<unit::dimensionless> mHaematocrit;
+    QDimensionless mHaematocrit;
 
 public:
 
@@ -92,19 +92,19 @@ public:
      * Set the threshold velocity ratio
      * @param thr the threshold velocity ratio
      */
-    void SetTHR(units::quantity<unit::dimensionless> thr);
+    void SetTHR(QDimensionless thr);
 
     /**
      * Set the partition coefficient for haematocrit
      * @param alpha the partition coefficient for haematocrit
      */
-    void SetAlpha(units::quantity<unit::dimensionless> alpha);
+    void SetAlpha(QDimensionless alpha);
 
     /**
      * Set the artial haematocrit
      * @param haematocrit the arterial haematocrit
      */
-    void SetHaematocrit(units::quantity<unit::dimensionless> haematocrit);
+    void SetHaematocrit(QDimensionless haematocrit);
 
 };
 

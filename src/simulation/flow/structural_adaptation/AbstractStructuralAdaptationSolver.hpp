@@ -63,12 +63,12 @@ protected:
      *  Length of time which the algorithm is incremented on each occasion that the Iterate
      *  function is called.
      */
-    units::quantity<unit::time> mTimeIncrement;
+    QTime mTimeIncrement;
 
     /**
      * The reference time scale
      */
-    units::quantity<unit::time> mReferenceTimeScale;
+    QTime mReferenceTimeScale;
 
     /**
      * Whether to output the progress of the structural adaptation algorithm to a file.
@@ -127,7 +127,7 @@ public:
      *  Returns the timeStep (in seconds).
      *  @return the time step
      */
-    units::quantity<unit::time> GetTimeIncrement() const;
+    QTime GetTimeIncrement() const;
 
     /**
      *  This method should contain all of the operations used within a single iteration of a structural
@@ -145,7 +145,7 @@ public:
      *  Setter for timeStep parameter.
      *  @param timeIncrement the time increment
      */
-    void SetTimeIncrement(units::quantity<unit::time> timeIncrement);
+    void SetTimeIncrement(QTime timeIncrement);
 
     /**
      *  Setter for maximum number of iterations.

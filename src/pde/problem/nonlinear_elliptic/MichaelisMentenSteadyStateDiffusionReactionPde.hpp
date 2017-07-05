@@ -51,12 +51,12 @@ class MichaelisMentenSteadyStateDiffusionReactionPde : public AbstractDiscreteCo
     /**
      * The rate constant
      */
-    units::quantity<unit::concentration_flow_rate> mRateConstant;
+    QConcentrationFlowRate mRateConstant;
 
     /**
      * The concentration value a half maximum reaction rate in the michaelis menten model.
      */
-    units::quantity<unit::concentration> mMichaelisMentenThreshold;
+    QConcentration mMichaelisMentenThreshold;
 
 public:
 
@@ -99,7 +99,7 @@ public:
      * @param u the solution value
      * @return source strength
      */
-    units::quantity<unit::concentration_flow_rate> ComputeNonlinearSourceTerm(unsigned gridIndex, units::quantity<unit::concentration> u);
+    QConcentrationFlowRate ComputeNonlinearSourceTerm(unsigned gridIndex, QConcentration u);
 
     /**
      * Over-ridden method to return the nonlinear in U contribution prime to the Chaste FE solver
@@ -115,25 +115,25 @@ public:
      * @param u the solution value
      * @return source strength
      */
-    units::quantity<unit::rate> ComputeNonlinearSourceTermPrime(unsigned gridIndex, units::quantity<unit::concentration> u);
+    QRate ComputeNonlinearSourceTermPrime(unsigned gridIndex, QConcentration u);
 
     /**
      * Set the rate constant
      * @param rateConstant the rate constant
      */
-    void SetRateConstant(units::quantity<unit::concentration_flow_rate> rateConstant);
+    void SetRateConstant(QConcentrationFlowRate rateConstant);
 
     /**
      * Get the concentration at half max consumption in the michaelis menten model
      * @return threshold the concentration at half max consumption in the michaelis menten model
      */
-    units::quantity<unit::concentration> GetMichaelisMentenThreshold();
+    QConcentration GetMichaelisMentenThreshold();
 
     /**
      * Set the concentration at half max consumption in the michaelis menten model
      * @param threshold the concentration at half max consumption in the michaelis menten model
      */
-    void SetMichaelisMentenThreshold(units::quantity<unit::concentration> threshold);
+    void SetMichaelisMentenThreshold(QConcentration threshold);
 };
 
 #endif /*MICHAELISMENTENSTEADYSTATEDIFFUSIONREACTIONPDE_HPP_*/

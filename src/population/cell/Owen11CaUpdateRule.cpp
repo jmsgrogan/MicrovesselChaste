@@ -89,9 +89,9 @@ double Owen11CaUpdateRule<DIM>::EvaluateProbability(unsigned currentNodeIndex,
        QLength grid_distance = norm_2(rCellPopulation.rGetMesh().GetVectorFromAtoB(node_index_location,
                                                                                                          node_neighbour_location))*mReferenceLengthScale;
 
-       units::quantity<unit::time> time_increment = dt*BaseUnits::Instance()->GetReferenceTimeScale();
+       QTime time_increment = dt*BaseUnits::Instance()->GetReferenceTimeScale();
        double carrying_capacity_factor = (double(mCancerCellCarryingCapacity)-double(num_cells_at_site))/double(mCancerCellCarryingCapacity);
-       return mDiffusionParameter*time_increment*carrying_capacity_factor/(2.0* units::pow<2>(grid_distance));
+       return mDiffusionParameter*time_increment*carrying_capacity_factor/(2.0* Qpow2(grid_distance));
    }
    else
    {
@@ -139,13 +139,13 @@ void Owen11CaUpdateRule<DIM>::SetGridCalculator(std::shared_ptr<GridCalculator<D
 }
 
 template<unsigned DIM>
-units::quantity<unit::diffusivity> Owen11CaUpdateRule<DIM>::GetDiffusionParameter()
+QDiffusivity Owen11CaUpdateRule<DIM>::GetDiffusionParameter()
 {
     return mDiffusionParameter;
 }
 
 template<unsigned DIM>
-void Owen11CaUpdateRule<DIM>::SetDiffusionParameter(units::quantity<unit::diffusivity> diffusionParameter)
+void Owen11CaUpdateRule<DIM>::SetDiffusionParameter(QDiffusivity diffusionParameter)
 {
     mDiffusionParameter = diffusionParameter;
 }

@@ -149,13 +149,13 @@ public:
      * Return the total volume of the network
      * @return the total volume of the network
      */
-    static units::quantity<unit::volume> GetTotalVolume(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    static QVolume GetTotalVolume(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Return the total surface area of the network
      * @return the total surface area of the network
      */
-    static units::quantity<unit::area> GetTotalSurfaceArea(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    static QArea GetTotalSurfaceArea(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
     /**
      * Return the average distance between segments

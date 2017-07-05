@@ -199,9 +199,9 @@ def generate_hpp_file(args):
     hpp_file.write("typedef boost::filesystem::path boost_filesystem_path;\n")
     
     
-    hpp_file.write("typedef std::map<unsigned, units::quantity<unit::concentration_flow_rate> > MapUnsigned_ConcentrationFlowRate;\n")
-    hpp_file.write("typedef std::map<unsigned, units::quantity<unit::concentration> > MapUnsigned_Concentration;\n")
-    hpp_file.write("typedef std::map<std::string, std::vector<units::quantity<unit::concentration> > > MapString_VectorConcentration;\n")
+    hpp_file.write("typedef std::map<unsigned, QConcentrationFlowRate > MapUnsigned_ConcentrationFlowRate;\n")
+    hpp_file.write("typedef std::map<unsigned, QConcentration > MapUnsigned_Concentration;\n")
+    hpp_file.write("typedef std::map<std::string, std::vector<QConcentration > > MapString_VectorConcentration;\n")
     hpp_file.write("\n inline int Instantiation()\n{\nreturn sizeof(Mat) + sizeof(Vec)\n")
     for eachUnit in classes_to_be_wrapped.units.keys():
         base_name = ""

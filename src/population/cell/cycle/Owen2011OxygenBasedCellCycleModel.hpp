@@ -84,84 +84,84 @@ protected:
     /**
      * ODE integration time-step
      */
-    units::quantity<unit::time> mOdeIntegrationTimeStep;
+    QTime mOdeIntegrationTimeStep;
 
     /**
      * Cell cycle fraction at which S phase begins
      */
-    units::quantity<unit::dimensionless> sOnset;
+    QDimensionless sOnset;
 
     /**
      * Cell cycle fraction at which G2 phase begins
      */
-    units::quantity<unit::dimensionless> g2Onset;
+    QDimensionless g2Onset;
 
     /**
      * Cell cycle fraction at which M phase begins
      */
-    units::quantity<unit::dimensionless> mOnset;
+    QDimensionless mOnset;
 
     /**
      * The reference time scale
      */
-    units::quantity<unit::time> mReferenceTimeScale;
+    QTime mReferenceTimeScale;
 
     /**
      * The reference concentration scale
      */
-    units::quantity<unit::concentration> mReferenceConcentrationScale;
+    QConcentration mReferenceConcentrationScale;
 
     /**
      * The reference solubility
      */
-    units::quantity<unit::solubility> mReferenceSolubility;
+    QSolubility mReferenceSolubility;
 
     /**
      * Maximum initial value allocated to phi.
      */
-    units::quantity<unit::dimensionless> mMaxRandInitialPhase;
+    QDimensionless mMaxRandInitialPhase;
 
     /**
      * How long the current period of quiescence has lasted.
      */
-    units::quantity<unit::time> mCurrentQuiescentDuration;
+    QTime mCurrentQuiescentDuration;
 
     /**
      * The time when the current period of quiescence began.
      */
-    units::quantity<unit::time> mCurrentQuiescenceOnsetTime;
+    QTime mCurrentQuiescenceOnsetTime;
 
     /**
      * Oxygen concentration below which cancerous cells enter quiescence.
      * A prolonged period of quiescence causes the cell to become apoptotic.
      */
-    units::quantity<unit::pressure> mEnterQuiescenceOxygenConcentration;
+    QPressure mEnterQuiescenceOxygenConcentration;
 
     /**
      * Oxygen concentration above which cancerous cells leave their state of being quiescent
      */
-    units::quantity<unit::pressure> mLeaveQuiescenceOxygenConcentration;
+    QPressure mLeaveQuiescenceOxygenConcentration;
 
     /**
      * Critical quiescent duration.
      */
-    units::quantity<unit::time> mCriticalQuiescentDuration;
+    QTime mCriticalQuiescentDuration;
 
     /**
      * p53 threshold above which normal cells become apoptotic in a healthy environment.
      */
-    units::quantity<unit::dimensionless> mp53ThresholdForApoptosisOfNormalCellsInHealthyMicroenvironment;
+    QDimensionless mp53ThresholdForApoptosisOfNormalCellsInHealthyMicroenvironment;
 
     /**
      * p53 threshold above which normal cells become apoptotic in a tumour environment.
      */
-    units::quantity<unit::dimensionless> mp53ThresholdForApoptosisOfNormalCellsInTumourMicroenvironment;
+    QDimensionless mp53ThresholdForApoptosisOfNormalCellsInTumourMicroenvironment;
 
     /**
      * Threshold which defines the proportion of neighbours which must be normal in order for
      * a cell's micro-environment to be considered normal.
      */
-    units::quantity<unit::dimensionless> mthresholdFractionOfNormalCellNeighbours;
+    QDimensionless mthresholdFractionOfNormalCellNeighbours;
 
 public:
 
@@ -188,22 +188,22 @@ public:
     /**
      * @return mCurrentQuiescentDuration
      */
-    units::quantity<unit::time> GetCurrentQuiescentDuration();
+    QTime GetCurrentQuiescentDuration();
 
     /**
      * @return mCurrentQuiescenceOnsetTime
      */
-    units::quantity<unit::time> GetCurrentQuiescenceOnsetTime();
+    QTime GetCurrentQuiescenceOnsetTime();
 
     /**
      * @return mEnterQuiescenceOxygenConcentration
      */
-    units::quantity<unit::pressure> GetEnterQuiescenceOxygenConcentration();
+    QPressure GetEnterQuiescenceOxygenConcentration();
 
     /**
      * @return mCriticalQuiescentDuration
      */
-    units::quantity<unit::time> GetCriticalQuiescentDuration();
+    QTime GetCriticalQuiescentDuration();
 
     /**
      * Get the duration of the cell's S phase.
@@ -244,7 +244,7 @@ public:
     /**
      * @return mLeaveQuiescenceOxygenConcentration
      */
-    units::quantity<unit::pressure> GetLeaveQuiescenceOxygenConcentration();
+    QPressure GetLeaveQuiescenceOxygenConcentration();
 
     /**
      * Initialise the cell-cycle model at the start of a simulation.
@@ -295,77 +295,77 @@ public:
      * Set maximum phase of cell upon initialisation.
      * @param rand_max_phase the maximum phase value at initialization
      */
-    void SetMaxRandInitialPhase(units::quantity<unit::dimensionless> rand_max_phase);
+    void SetMaxRandInitialPhase(QDimensionless rand_max_phase);
 
     /**
      * Set method for mEnterQuiescenceOxygenConcentration.
      *
      * @param enterQuiescenceOxygenConcentration the new value of mEnterQuiescenceOxygenConcentration
      */
-    void SetEnterQuiescenceOxygenConcentration(units::quantity<unit::pressure> enterQuiescenceOxygenConcentration);
+    void SetEnterQuiescenceOxygenConcentration(QPressure enterQuiescenceOxygenConcentration);
 
     /**
      * Set method for mLeaveQuiescenceOxygenConcentration.
      *
      * @param leaveQuiescenceOxygenConcentration the new value of mLeaveQuiescenceOxygenConcentration
      */
-    void SetLeaveQuiescenceOxygenConcentration(units::quantity<unit::pressure> leaveQuiescenceOxygenConcentration);
+    void SetLeaveQuiescenceOxygenConcentration(QPressure leaveQuiescenceOxygenConcentration);
 
     /**
      * Set method for mCriticalQuiescentDuration.
      *
      * @param criticalQuiescentDuration the new value of mCriticalQuiescentDuration
      */
-    void SetCriticalQuiescentDuration(units::quantity<unit::time> criticalQuiescentDuration);
+    void SetCriticalQuiescentDuration(QTime criticalQuiescentDuration);
 
     /**
      * Set method for mCurrentQuiescenceOnsetTime.
      *
      * @param currentQuiescenceOnsetTime the new value of mCurrentQuiescenceOnsetTime
      */
-    void SetCurrentQuiescenceOnsetTime(units::quantity<unit::time> currentQuiescenceOnsetTime);
+    void SetCurrentQuiescenceOnsetTime(QTime currentQuiescenceOnsetTime);
 
     /**
      * Set the G2 onset time
      *
      * @param value the G2 onset time
      */
-    void SetG2Onset(units::quantity<unit::dimensionless> value);
+    void SetG2Onset(QDimensionless value);
 
     /**
      * Set the S2 onset time
      *
      * @param value the S2 onset time
      */
-    void SetSOnset(units::quantity<unit::dimensionless> value);
+    void SetSOnset(QDimensionless value);
 
     /**
      * Set the M onset time
      *
      * @param value the M onset time
      */
-    void SetMOnset(units::quantity<unit::dimensionless> value);
+    void SetMOnset(QDimensionless value);
 
     /**
      * Set the ODE solver time step
      *
      * @param timeStep the ODE solver time step
      */
-    void SetOdeSolverTimeStep(units::quantity<unit::time> timeStep);
+    void SetOdeSolverTimeStep(QTime timeStep);
 
     /**
      * Set the reference timescale
      *
      * @param referenceTimeScale the reference timescale
      */
-    void SetReferenceTimeScale(units::quantity<unit::time> referenceTimeScale);
+    void SetReferenceTimeScale(QTime referenceTimeScale);
 
     /**
      * Set the reference concentration scale
      *
      * @param referenceConcentrationScale the reference concentration scale
      */
-    void SetReferenceConcentrationScale(units::quantity<unit::concentration> referenceConcentrationScale);
+    void SetReferenceConcentrationScale(QConcentration referenceConcentrationScale);
 
     /**
      * Set method for mthresholdFractionOfNormalCellNeighbours.

@@ -87,15 +87,15 @@ void GenericAntiAngiogenicTherapy<DIM>::SetupSolve(std::string outputDirectory)
 template<unsigned DIM>
 void GenericAntiAngiogenicTherapy<DIM>::UpdateAtEndOfTimeStep()
 {
-    units::quantity<unit::time> current_time = SimulationTime::Instance()->GetTime()*BaseUnits::Instance()->GetReferenceTimeScale();
+    QTime current_time = SimulationTime::Instance()->GetTime()*BaseUnits::Instance()->GetReferenceTimeScale();
     for(unsigned idx=0; idx<this->mAdministrationTimes.size();idx++)
     {
-        if(units::abs(current_time-this->mAdministrationTimes[idx])<30.0*60.0*unit::seconds)
+        if(Qabs(current_time-this->mAdministrationTimes[idx])<30.0*60.0*unit::seconds)
         {
-            mCurrentConcentration +=this->mAdministrationDose;
+            mCurrentConcentration = mCurrentConcentration + this->mAdministrationDose;
         }
     }
-    mCurrentConcentration -= mCurrentConcentration*mRemovalRate*(current_time-mPreviousTime);
+    mCurrentConcentration = mCurrentConcentration - mCurrentConcentration*mRemovalRate*(current_time-mPreviousTime);
     if(mCurrentConcentration<0.0*unit::mole_per_metre_cubed)
     {
         mCurrentConcentration = 0.0*unit::mole_per_metre_cubed;

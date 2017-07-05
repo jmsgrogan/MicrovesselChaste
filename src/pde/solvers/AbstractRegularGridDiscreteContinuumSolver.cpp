@@ -90,7 +90,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector
     {
         this->mSolution[i] = data[i];
     }
-    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*this->mReferenceConcentration);
+    this->mConcentrations = std::vector<QConcentration >(data.size(), 0.0*this->mReferenceConcentration);
     for (unsigned i = 0; i < data.size(); i++)
     {
         this->mConcentrations[i] = data[i]*this->mReferenceConcentration;
@@ -98,7 +98,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector
 }
 
 template<unsigned DIM>
-void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector<units::quantity<unit::concentration> >& data)
+void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector<QConcentration >& data)
 {
     if(this->mSolution.size()==0)
     {
@@ -113,7 +113,7 @@ void AbstractRegularGridDiscreteContinuumSolver<DIM>::UpdateSolution(std::vector
     }
     this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(this->mSolution, this->GetLabel());
 
-    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*this->mReferenceConcentration);
+    this->mConcentrations = std::vector<QConcentration >(data.size(), 0.0*this->mReferenceConcentration);
     for (unsigned i = 0; i < data.size(); i++)
     {
         this->mConcentrations[i] = data[i];

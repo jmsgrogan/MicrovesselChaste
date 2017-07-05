@@ -81,7 +81,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToMatrix()
     this->mpLinearSystem->SwitchWriteModeLhsMatrix();
     c_vector<unsigned, 6> extents = this->mpRegularGrid->GetExtents();
     c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
-    units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
+    QTime reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     for (unsigned i = extents[4]; i <= extents[5]; i++) // Z
     {
         for (unsigned j = extents[2]; j <= extents[3]; j++) // Y
@@ -108,7 +108,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToRhs()
     }
 
     c_vector<unsigned, 6> extents = this->mpRegularGrid->GetExtents();
-    units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
+    QTime reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     for (unsigned i = extents[4]; i <= extents[5]; i++) // Z
     {
         for (unsigned j = extents[2]; j <= extents[3]; j++) // Y
@@ -138,7 +138,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
 
     c_vector<unsigned, 6> extents = this->mpRegularGrid->GetExtents();
     c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
-    units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
+    QTime reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     QLength spacing = this->mpRegularGrid->GetSpacing();
     double diffusion_term = (p_linear_pde->ComputeIsotropicDiffusionTerm() / (spacing * spacing))*reference_time;
 
@@ -273,7 +273,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleVector()
     this->mpLinearSystem->ZeroRhsVector();
     c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
     c_vector<unsigned, 6> extents = this->mpRegularGrid->GetExtents();
-    units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
+    QTime reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
 
     for (unsigned i = extents[4]; i <= extents[5]; i++) // Z
     {
@@ -374,7 +374,7 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Solve()
     // Populate the solution vector
     c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
     unsigned number_of_points = dimensions[0]*dimensions[1]*dimensions[2];
-    std::vector<units::quantity<unit::concentration> > concs = std::vector<units::quantity<unit::concentration> >(number_of_points,
+    std::vector<QConcentration > concs = std::vector<QConcentration >(number_of_points,
                                                                                                                   0.0*this->mReferenceConcentration);
     for (unsigned row = 0; row < number_of_points; row++)
     {

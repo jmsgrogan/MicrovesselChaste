@@ -73,7 +73,7 @@ std::shared_ptr<DiscreteContinuumBoundaryCondition<DIM> > DiscreteContinuumBound
 }
 
 template<unsigned DIM>
-units::quantity<unit::concentration> DiscreteContinuumBoundaryCondition<DIM>::GetValue()
+QConcentration DiscreteContinuumBoundaryCondition<DIM>::GetValue()
 {
     return mValue;
 }
@@ -163,7 +163,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shar
                  while (iter != p_mesh->GetNodeIteratorEnd())
                  {
                      DimensionalChastePoint<DIM> probe_location((*iter).GetPoint().rGetLocation(), length_scale);
-                     std::pair<bool,units::quantity<unit::concentration> > result = GetValue(probe_location, node_distance_tolerance);
+                     std::pair<bool,QConcentration > result = GetValue(probe_location, node_distance_tolerance);
                      if(result.first)
                      {
                          ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result.second/mReferenceConcentration);
@@ -181,7 +181,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shar
                 while (iter < p_mesh->GetBoundaryNodeIteratorEnd())
                 {
                     DimensionalChastePoint<DIM> probe_location((*iter)->GetPoint().rGetLocation(), length_scale);
-                    std::pair<bool,units::quantity<unit::concentration> > result = GetValue(probe_location, node_distance_tolerance);
+                    std::pair<bool,QConcentration > result = GetValue(probe_location, node_distance_tolerance);
                     ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result.second/mReferenceConcentration);
                     if(result.first)
                     {
@@ -209,10 +209,10 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shar
 }
 
 template<unsigned DIM>
-std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundaryCondition<DIM>::GetValue(DimensionalChastePoint<DIM> location, double tolerance)
+std::pair<bool, QConcentration > DiscreteContinuumBoundaryCondition<DIM>::GetValue(DimensionalChastePoint<DIM> location, double tolerance)
 {
     QLength length_scale = location.GetReferenceLengthScale();
-    std::pair<bool, units::quantity<unit::concentration> > result(false, 0.0*unit::mole_per_metre_cubed);
+    std::pair<bool, QConcentration > result(false, 0.0*unit::mole_per_metre_cubed);
     if(mType == BoundaryConditionType::POINT)
     {
         if(!mpPoints)
@@ -236,7 +236,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
                 }
                 if(GetDistance<DIM>(location, loc) < tolerance*length_scale)
                 {
-                    return std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+                    return std::pair<bool, QConcentration >(true, mValue);
                 }
             }
         }
@@ -254,7 +254,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
             {
                 if(polygons[jdx]->ContainsPoint(location) && (polygons[jdx]->HasAttribute(mLabel)))
                 {
-                    return std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+                    return std::pair<bool, QConcentration >(true, mValue);
                 }
             }
         }
@@ -269,7 +269,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
         {
             if(mpDomain->EdgeHasAttribute(location, mLabel))
             {
-                return std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+                return std::pair<bool, QConcentration >(true, mValue);
             }
         }
     }
@@ -289,7 +289,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
                 {
                     if(BoundaryConditionSource::PRESCRIBED)
                     {
-                        return std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+                        return std::pair<bool, QConcentration >(true, mValue);
                     }
                 }
             }
@@ -311,7 +311,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
                 {
                     if(BoundaryConditionSource::PRESCRIBED)
                     {
-                        return std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+                        return std::pair<bool, QConcentration >(true, mValue);
                     }
                 }
             }
@@ -334,11 +334,11 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
             {
                 if(BoundaryConditionSource::PRESCRIBED)
                 {
-                    return  std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+                    return  std::pair<bool, QConcentration >(true, mValue);
                 }
                 else
                 {
-                    return  std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+                    return  std::pair<bool, QConcentration >(true, mValue);
                 }
             }
         }
@@ -347,7 +347,7 @@ std::pair<bool, units::quantity<unit::concentration> > DiscreteContinuumBoundary
 }
 
 template<unsigned DIM>
-void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > >pBoundaryConditions)
+void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shared_ptr<std::vector<std::pair<bool, QConcentration > > >pBoundaryConditions)
 {
     if(! mpGridCalculator)
     {
@@ -368,7 +368,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shar
     {
         for(unsigned idx=0; idx<p_regular_grid->GetNumberOfPoints(); idx++)
         {
-            (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> > (p_regular_grid->IsOnBoundary(idx), mValue);
+            (*pBoundaryConditions)[idx] = std::pair<bool, QConcentration > (p_regular_grid->IsOnBoundary(idx), mValue);
         }
     }
     else if(mType == BoundaryConditionType::POINT)
@@ -384,7 +384,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shar
             {
                 if(point_point_map[idx].size()>0)
                 {
-                    (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+                    (*pBoundaryConditions)[idx] = std::pair<bool, QConcentration >(true, mValue);
                 }
             }
         }
@@ -404,7 +404,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shar
                 {
                     if(polygons[jdx]->ContainsPoint(p_regular_grid->GetPoint(idx)) && polygons[jdx]->HasAttribute(mLabel))
                     {
-                        (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+                        (*pBoundaryConditions)[idx] = std::pair<bool, QConcentration >(true, mValue);
                         break;
                     }
                 }
@@ -423,7 +423,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shar
             {
                 if(mpDomain->EdgeHasAttribute(p_regular_grid->GetPoint(idx), mLabel))
                 {
-                    (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+                    (*pBoundaryConditions)[idx] = std::pair<bool, QConcentration >(true, mValue);
                 }
             }
         }
@@ -437,7 +437,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shar
             {
                 if(BoundaryConditionSource::PRESCRIBED)
                 {
-                    (*pBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+                    (*pBoundaryConditions)[idx] = std::pair<bool, QConcentration >(true, mValue);
                 }
             }
         }
@@ -454,7 +454,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shar
             {
                 if(mpDomain->IsPointInPart(p_regular_grid->GetPoint(idx)))
                 {
-                    (*pBoundaryConditions)[idx] =  std::pair<bool, units::quantity<unit::concentration> >(true, mValue);
+                    (*pBoundaryConditions)[idx] =  std::pair<bool, QConcentration >(true, mValue);
                     break;
                 }
             }
@@ -524,7 +524,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::SetNetwork(std::shared_ptr<VesselN
 
 
 template<unsigned DIM>
-void DiscreteContinuumBoundaryCondition<DIM>::SetValue(units::quantity<unit::concentration> value)
+void DiscreteContinuumBoundaryCondition<DIM>::SetValue(QConcentration value)
 {
     mValue = value;
 }

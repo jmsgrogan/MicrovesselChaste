@@ -77,7 +77,7 @@ class VolumeOutputModifier : public AbstractCellBasedSimulationModifier<DIM,DIM>
     /**
      * Only start output after this time
      */
-    units::quantity<unit::time> mStartTimeOffset;
+    QTime mStartTimeOffset;
 
 public:
 
@@ -91,7 +91,7 @@ public:
      */
     virtual ~VolumeOutputModifier();
 
-    void SetStartTimeOffset(units::quantity<unit::time> startTimeOffset);
+    void SetStartTimeOffset(QTime startTimeOffset);
 
     void SetCellLengthScale(double cellLengthScale);
 

@@ -62,39 +62,39 @@ std::shared_ptr<MetabolicStimulusCalculator<DIM> > MetabolicStimulusCalculator<D
 
 
 template<unsigned DIM>
-units::quantity<unit::flow_rate> MetabolicStimulusCalculator<DIM>::GetQRef()
+QFlowRate MetabolicStimulusCalculator<DIM>::GetQRef()
 {
     return mQRef;
 }
 
 template<unsigned DIM>
-units::quantity<unit::rate> MetabolicStimulusCalculator<DIM>::GetKm()
+QRate MetabolicStimulusCalculator<DIM>::GetKm()
 {
     return mKm;
 }
 
 template<unsigned DIM>
-units::quantity<unit::rate> MetabolicStimulusCalculator<DIM>::GetMaxStimulus()
+QRate MetabolicStimulusCalculator<DIM>::GetMaxStimulus()
 {
     return mMaxStimulus;
 }
 
 template<unsigned DIM>
-void MetabolicStimulusCalculator<DIM>::SetQRef(units::quantity<unit::flow_rate> qRef)
+void MetabolicStimulusCalculator<DIM>::SetQRef(QFlowRate qRef)
 {
-    mQRef = units::fabs(qRef);
+    mQRef = Qabs(qRef);
 }
 
 template<unsigned DIM>
-void MetabolicStimulusCalculator<DIM>::SetKm(units::quantity<unit::rate> km)
+void MetabolicStimulusCalculator<DIM>::SetKm(QRate km)
 {
-    mKm = units::fabs(km);
+    mKm = Qabs(km);
 }
 
 template<unsigned DIM>
-void MetabolicStimulusCalculator<DIM>::SetMaxStimulus(units::quantity<unit::rate> maxStimulus)
+void MetabolicStimulusCalculator<DIM>::SetMaxStimulus(QRate maxStimulus)
 {
-    mMaxStimulus = units::fabs(maxStimulus);
+    mMaxStimulus = Qabs(maxStimulus);
 }
 
 template<unsigned DIM>
@@ -103,9 +103,9 @@ void MetabolicStimulusCalculator<DIM>::Calculate()
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
     for (unsigned idx = 0; idx < segments.size(); idx++)
     {
-        units::quantity<unit::rate> metabolic_stimulus;
-        units::quantity<unit::dimensionless> haematocrit = segments[idx]->GetFlowProperties()->GetHaematocrit();
-        units::quantity<unit::flow_rate> flow_rate = units::fabs(segments[idx]->GetFlowProperties()->GetFlowRate());
+        QRate metabolic_stimulus;
+        QDimensionless haematocrit = segments[idx]->GetFlowProperties()->GetHaematocrit();
+        QFlowRate flow_rate = Qabs(segments[idx]->GetFlowProperties()->GetFlowRate());
 
         if (flow_rate > 0.0 * unit::metre_cubed_per_second)
         {

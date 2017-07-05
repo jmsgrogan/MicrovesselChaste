@@ -111,7 +111,7 @@ protected:
     /**
      * The prescribed value of the boundary condition.
      */
-    units::quantity<unit::concentration> mValue;
+    QConcentration mValue;
 
     /**
      * The grid calculator
@@ -126,7 +126,7 @@ protected:
     /**
      * The reference concentration
      */
-    units::quantity<unit::concentration> mReferenceConcentration;
+    QConcentration mReferenceConcentration;
 
     /**
      * Is this a Neumann type boundary conditions
@@ -165,7 +165,7 @@ public:
      * Return the default value of the boundary condition
      * @return the default value of the boundary condition
      */
-    units::quantity<unit::concentration> GetValue();
+    QConcentration GetValue();
 
     /**
      * Return the value of the boundary condition evaluated at a point and whether the point is on a boundary
@@ -173,7 +173,7 @@ public:
      * @param tolerance the tolerance for evaluating if a point is on a boundary
      * @return a bool specifying if the point is on a boundary and the value of the point on the boundary
      */
-    std::pair<bool, units::quantity<unit::concentration> > GetValue(DimensionalChastePoint<DIM> location, double tolerance);
+    std::pair<bool, QConcentration > GetValue(DimensionalChastePoint<DIM> location, double tolerance);
 
     /**
      * Update the boundary conditions container for use with the finite element solver
@@ -186,7 +186,7 @@ public:
      * @param pBoundaryConditions the boundary condition container
      * @param tolerance the tolerance for evaluating if a point is on a boundary
      */
-    void UpdateBoundaryConditions(std::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > pBoundaryConditions);
+    void UpdateBoundaryConditions(std::shared_ptr<std::vector<std::pair<bool, QConcentration > > > pBoundaryConditions);
 
     /**
      * Set a domain for use in the calculation of FACET type boundary conditions
@@ -252,7 +252,7 @@ public:
      * Set the default value of the boundary condition for any points on the boundary
      * @param value the default value of the boundary condition for any points on the boundary
      */
-    void SetValue(units::quantity<unit::concentration> value);
+    void SetValue(QConcentration value);
 };
 
 #endif /* DISCRETECONTINUUMBOUNDARYCONDITION_HPP_ */

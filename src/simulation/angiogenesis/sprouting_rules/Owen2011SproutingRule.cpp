@@ -69,7 +69,7 @@ Owen2011SproutingRule<DIM>::~Owen2011SproutingRule()
 }
 
 template<unsigned DIM>
-void Owen2011SproutingRule<DIM>::SetHalfMaxVegf(units::quantity<unit::concentration> halfMaxVegf)
+void Owen2011SproutingRule<DIM>::SetHalfMaxVegf(QConcentration halfMaxVegf)
 {
     mHalfMaxVegf = halfMaxVegf;
 }
@@ -135,7 +135,7 @@ std::vector<std::shared_ptr<VesselNode<DIM> > > Owen2011SproutingRule<DIM>::GetS
         // Get the grid index of the node
         unsigned grid_index = this->mpGridCalculator->GetGrid()->GetNearestCellIndex(rNodes[idx]->rGetLocation());
         MARK;
-        units::quantity<unit::concentration> vegf_conc = this->mVegfField[grid_index];
+        QConcentration vegf_conc = this->mVegfField[grid_index];
         double vegf_fraction = vegf_conc/(vegf_conc + mHalfMaxVegf);
         double max_prob_per_time_step = this->mSproutingProbability*SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
         double prob_tip_selection = max_prob_per_time_step*vegf_fraction;

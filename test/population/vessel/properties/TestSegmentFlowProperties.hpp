@@ -81,10 +81,10 @@ public:
 
         // Save archive
         {
-            boost::shared_ptr<AbstractVesselNetworkComponentProperties<3> > p_properties =
-                    boost::shared_ptr<AbstractVesselNetworkComponentProperties<3> >(new SegmentFlowProperties<3>());
+            std::shared_ptr<AbstractVesselNetworkComponentProperties<3> > p_properties =
+                    std::shared_ptr<AbstractVesselNetworkComponentProperties<3> >(new SegmentFlowProperties<3>());
 
-            boost::shared_ptr<SegmentFlowProperties<3> > p_cast_properties =
+            std::shared_ptr<SegmentFlowProperties<3> > p_cast_properties =
                     boost::dynamic_pointer_cast<SegmentFlowProperties<3> >(p_properties);
 
             p_cast_properties->SetHaematocrit(10.0);
@@ -101,7 +101,7 @@ public:
 
         // Load archive
         {
-            boost::shared_ptr<AbstractVesselNetworkComponentProperties<3> > p_properties_from_archive;
+            std::shared_ptr<AbstractVesselNetworkComponentProperties<3> > p_properties_from_archive;
 
             // Read from this input file
             std::ifstream ifs(archive_filename.c_str(), std::ios::binary);
@@ -109,7 +109,7 @@ public:
 
             // restore from the archive
             input_arch >> p_properties_from_archive;
-            boost::shared_ptr<SegmentFlowProperties<3> > p_cast_properties =
+            std::shared_ptr<SegmentFlowProperties<3> > p_cast_properties =
                     boost::dynamic_pointer_cast<SegmentFlowProperties<3> >(p_properties_from_archive);
 
             TS_ASSERT_DELTA(p_cast_properties->GetHaematocrit().value(), 10.0, 1.e-6);

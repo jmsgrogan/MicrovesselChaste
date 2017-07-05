@@ -41,9 +41,9 @@ std::string SECOMBO4_BIB_INFO = "@article{Secomb04, \n author = {Secomb, Timothy
         "\n title = {{Green’s function methods for analysis of oxygen delivery to tissue by microvascular networks.}},"
         "\n volume = {32}, \n year = {2004}}";
 
-units::quantity<unit::pressure> SECOMB04_MMHG(1.0*unit::mmHg);
-const std::shared_ptr<ParameterInstance<unit::volumetric_solubility> > Secomb04Parameters::mpOxygenVolumetricSolubility =
-        std::shared_ptr<ParameterInstance<unit::volumetric_solubility> >(new ParameterInstance<unit::volumetric_solubility> (3.1e-5/SECOMB04_MMHG,
+QPressure SECOMB04_MMHG(1.0*unit::mmHg);
+const std::shared_ptr<ParameterInstance<QVolumetricSolubility> > Secomb04Parameters::mpOxygenVolumetricSolubility =
+        std::shared_ptr<ParameterInstance<QVolumetricSolubility> >(new ParameterInstance<QVolumetricSolubility> (3.1e-5/SECOMB04_MMHG,
                                                                                    "Secomb04_OxygenVolumetricSolubility",
                                                                                    "Oxygen solubility",
                                                                                    "\\alpha_{eff}",

@@ -121,7 +121,7 @@ public:
         QLength vessel_length(100.0*unit::microns);
         DimensionalChastePoint<2> start_point(0.0, 0.0);
         VesselNetworkGenerator<2> network_generator;
-        boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateBifurcationUnit(vessel_length, start_point);
+        std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateBifurcationUnit(vessel_length, start_point);
         /*
          * Next, pattern it to make a larger network
          */
@@ -136,7 +136,7 @@ public:
          * the network is simple, we can figure out which node is which just from their index. For more complicated networks
          * we need to use spatial locators and `NearestNode` type methods.
          */
-        units::quantity<unit::pressure> inlet_pressure(50.0 * unit::mmHg);
+        QPressure inlet_pressure(50.0 * unit::mmHg);
         p_network->GetNode(0)->GetFlowProperties()->SetIsInputNode(true);
         p_network->GetNode(0)->GetFlowProperties()->SetPressure(inlet_pressure);
         /*
@@ -151,7 +151,7 @@ public:
          */
         QLength vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
         VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         VesselNetworkPropertyManager<2>::SetSegmentViscosity(p_network, viscosity);
         /*
          * We use a calculator to work out the impedance of each vessel based on assumptions of Poiseuille flow and cylindrical vessels. This
@@ -163,7 +163,7 @@ public:
         /*
          * Check that the impedance is as expected in one of the vessels
          */
-        units::quantity<unit::flow_impedance> expected_impedance = 8.0 * viscosity* vessel_length/(M_PI*units::pow<4>(vessel_radius));
+        QFlowImpedance expected_impedance = 8.0 * viscosity* vessel_length/(M_PI*Qpow4(vessel_radius));
         TS_ASSERT_DELTA(p_network->GetVessel(0)->GetSegment(0)->GetFlowProperties()->GetImpedance().value(), expected_impedance.value(), 1.e-6);
         /*
          * Now we can solve for the flow rates in each vessel based on the inlet and outlet pressures and impedances. The solver
@@ -175,7 +175,7 @@ public:
         /*
          * Check the pressure, it is expected to drop linearly so should be the average of the input and output half way along the network.
          */
-        units::quantity<unit::pressure> expected_pressure = (inlet_pressure + Owen11Parameters::mpOutletPressure->GetValue())/2.0;
+        QPressure expected_pressure = (inlet_pressure + Owen11Parameters::mpOutletPressure->GetValue())/2.0;
         TS_ASSERT_DELTA(p_network->GetNode(7)->GetFlowProperties()->GetPressure().value(), expected_pressure.value(), 1.e-6);
         /*
          * Next we write out the network, including updated flow data, to file.
@@ -211,7 +211,7 @@ public:
         QLength target_height = 30.0 * cell_width;
         QLength vessel_length = 4.0 * cell_width;
         VesselNetworkGenerator<3> network_generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
+        std::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
                                                                                                     target_height,
                                                                                                     vessel_length);
         /*
@@ -219,8 +219,8 @@ public:
         */
         DimensionalChastePoint<3> inlet_locator(0.0, 0.0, 0.0, cell_width);
         DimensionalChastePoint<3> outlet_locator(target_width/cell_width, target_height/cell_width, 0.0, cell_width);
-        boost::shared_ptr<VesselNode<3> > p_inlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, inlet_locator);
-        boost::shared_ptr<VesselNode<3> > p_outlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, outlet_locator);
+        std::shared_ptr<VesselNode<3> > p_inlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, inlet_locator);
+        std::shared_ptr<VesselNode<3> > p_outlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, outlet_locator);
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
         p_inlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue());
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
@@ -231,7 +231,7 @@ public:
          */
         QLength vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
         VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         VesselNetworkPropertyManager<3>::SetSegmentViscosity(p_network, viscosity);
         /*
          * Next some simple extra functionality is demonstrated by mapping the network onto a hemisphere
@@ -294,7 +294,7 @@ public:
         QLength target_height(2000*unit::microns);
         QLength vessel_length(300.0*unit::microns);
         VesselNetworkGenerator<3> network_generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
+        std::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
                                                                                                     target_height,
                                                                                                     vessel_length);
         /*
@@ -302,8 +302,8 @@ public:
         */
         DimensionalChastePoint<3> inlet_locator(0.0, 0.0, 0.0, reference_length);
         DimensionalChastePoint<3> outlet_locator(target_width/reference_length, target_height/reference_length, 0.0, reference_length);
-        boost::shared_ptr<VesselNode<3> > p_inlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, inlet_locator);
-        boost::shared_ptr<VesselNode<3> > p_outlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, outlet_locator);
+        std::shared_ptr<VesselNode<3> > p_inlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, inlet_locator);
+        std::shared_ptr<VesselNode<3> > p_outlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, outlet_locator);
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
         p_inlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue());
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
@@ -313,7 +313,7 @@ public:
          */
         QLength vessel_radius(40.0*unit::microns);
         VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         VesselNetworkPropertyManager<3>::SetSegmentViscosity(p_network, viscosity);
         p_network->Write(p_handler->GetOutputDirectoryFullPath()+"initial_network.vtp");
         /*
@@ -323,11 +323,11 @@ public:
          */
         BaseUnits::Instance()->SetReferenceTimeScale(60.0*unit::seconds);
         SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(30, 1);
-        boost::shared_ptr<VesselImpedanceCalculator<3> > p_impedance_calculator = VesselImpedanceCalculator<3>::Create();
-        boost::shared_ptr<ConstantHaematocritSolver<3> > p_haematocrit_calculator = ConstantHaematocritSolver<3>::Create();
+        std::shared_ptr<VesselImpedanceCalculator<3> > p_impedance_calculator = VesselImpedanceCalculator<3>::Create();
+        std::shared_ptr<ConstantHaematocritSolver<3> > p_haematocrit_calculator = ConstantHaematocritSolver<3>::Create();
         p_haematocrit_calculator->SetHaematocrit(0.45);
-        boost::shared_ptr<WallShearStressCalculator<3> > p_wss_calculator = WallShearStressCalculator<3>::Create();
-        boost::shared_ptr<MechanicalStimulusCalculator<3> > p_mech_stimulus_calculator = MechanicalStimulusCalculator<3>::Create();
+        std::shared_ptr<WallShearStressCalculator<3> > p_wss_calculator = WallShearStressCalculator<3>::Create();
+        std::shared_ptr<MechanicalStimulusCalculator<3> > p_mech_stimulus_calculator = MechanicalStimulusCalculator<3>::Create();
         /*
          * Set up the structural adaptation solver, which manages iterations over a flow solve and executes each calculator in the order it has been added.
          */
@@ -366,33 +366,33 @@ public:
         QLength target_height(2000*unit::microns);
         QLength vessel_length(300.0*unit::microns);
         VesselNetworkGenerator<3> network_generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
+        std::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
                                                                                                     target_height,
                                                                                                     vessel_length);
 
         DimensionalChastePoint<3> inlet_locator(0.0, 0.0, 0.0, reference_length);
         DimensionalChastePoint<3> outlet_locator(target_width/reference_length, target_height/reference_length, 0.0, reference_length);
-        boost::shared_ptr<VesselNode<3> > p_inlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, inlet_locator);
-        boost::shared_ptr<VesselNode<3> > p_outlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, outlet_locator);
+        std::shared_ptr<VesselNode<3> > p_inlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, inlet_locator);
+        std::shared_ptr<VesselNode<3> > p_outlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, outlet_locator);
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
         p_inlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue());
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
         p_outlet_node->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue());
         QLength vessel_radius(40.0*unit::microns);
         VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
         VesselNetworkPropertyManager<3>::SetSegmentViscosity(p_network, viscosity);
         p_network->Write(p_handler->GetOutputDirectoryFullPath()+"initial_network.vtp");
 
         BaseUnits::Instance()->SetReferenceTimeScale(60.0*unit::seconds);
         SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(30, 1);
-        boost::shared_ptr<VesselImpedanceCalculator<3> > p_impedance_calculator = VesselImpedanceCalculator<3>::Create();
-        boost::shared_ptr<ConstantHaematocritSolver<3> > p_haematocrit_calculator = ConstantHaematocritSolver<3>::Create();
+        std::shared_ptr<VesselImpedanceCalculator<3> > p_impedance_calculator = VesselImpedanceCalculator<3>::Create();
+        std::shared_ptr<ConstantHaematocritSolver<3> > p_haematocrit_calculator = ConstantHaematocritSolver<3>::Create();
         p_haematocrit_calculator->SetHaematocrit(0.45);
-        boost::shared_ptr<WallShearStressCalculator<3> > p_wss_calculator = WallShearStressCalculator<3>::Create();
-        boost::shared_ptr<MechanicalStimulusCalculator<3> > p_mech_stimulus_calculator = MechanicalStimulusCalculator<3>::Create();
+        std::shared_ptr<WallShearStressCalculator<3> > p_wss_calculator = WallShearStressCalculator<3>::Create();
+        std::shared_ptr<MechanicalStimulusCalculator<3> > p_mech_stimulus_calculator = MechanicalStimulusCalculator<3>::Create();
 
-        boost::shared_ptr<StructuralAdaptationSolver<3> > p_structural_adaptation_solver = StructuralAdaptationSolver<3>::Create();
+        std::shared_ptr<StructuralAdaptationSolver<3> > p_structural_adaptation_solver = StructuralAdaptationSolver<3>::Create();
         p_structural_adaptation_solver->SetVesselNetwork(p_network);
         p_structural_adaptation_solver->SetWriteOutput(true);
         p_structural_adaptation_solver->SetOutputFileName(p_handler->GetOutputDirectoryFullPath()+"adaptation_data.dat");
@@ -406,7 +406,7 @@ public:
         /*
          * Set up a regression solver
          */
-        boost::shared_ptr<WallShearStressBasedRegressionSolver<3> > p_regression_solver = WallShearStressBasedRegressionSolver<3>::Create();
+        std::shared_ptr<WallShearStressBasedRegressionSolver<3> > p_regression_solver = WallShearStressBasedRegressionSolver<3>::Create();
         p_regression_solver->SetMaximumTimeWithLowWallShearStress(2.0*3600.0*unit::seconds);
         p_regression_solver->SetLowWallShearStressThreshold(1.e-06*unit::pascals);
         p_regression_solver->SetVesselNetwork(p_network);

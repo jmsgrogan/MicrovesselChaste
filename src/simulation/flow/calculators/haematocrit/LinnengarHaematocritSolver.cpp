@@ -79,13 +79,13 @@ void LinnengarHaematocritSolver<DIM>::SetUseRandomSplittingModel(bool useRandomS
 }
 
 template<unsigned DIM>
-void LinnengarHaematocritSolver<DIM>::SetTHR(units::quantity<unit::dimensionless> THR)
+void LinnengarHaematocritSolver<DIM>::SetTHR(QDimensionless THR)
 {
     mTHR = THR;
 }
 
 template<unsigned DIM>
-void LinnengarHaematocritSolver<DIM>::SetAlpha(units::quantity<unit::dimensionless> Alpha)
+void LinnengarHaematocritSolver<DIM>::SetAlpha(QDimensionless Alpha)
 {
     mAlpha = Alpha;
 }
@@ -103,7 +103,7 @@ void LinnengarHaematocritSolver<DIM>::SetTurnOffFungModel(bool turnOffFungModel)
 }
 
 template<unsigned DIM>
-void LinnengarHaematocritSolver<DIM>::SetHaematocrit(units::quantity<unit::dimensionless> haematocrit)
+void LinnengarHaematocritSolver<DIM>::SetHaematocrit(QDimensionless haematocrit)
 {
     mHaematocrit = haematocrit;
 }
@@ -163,8 +163,8 @@ void LinnengarHaematocritSolver<DIM>::Calculate()
         {
             // Identify inflow node
             std::shared_ptr<VesselNode<DIM> > p_inflow_node;
-            units::quantity<unit::flow_rate> flow_rate= vessels[idx]->GetFlowProperties()->GetFlowRate();
-            if(flow_rate >0 * unit::metre_cubed_per_second)
+            QFlowRate flow_rate= vessels[idx]->GetFlowProperties()->GetFlowRate();
+            if(flow_rate >(0.0 * unit::metre_cubed_per_second))
             {
                 p_inflow_node = vessels[idx]->GetStartNode();
             }
@@ -183,7 +183,7 @@ void LinnengarHaematocritSolver<DIM>::Calculate()
                     // if not this vessel
                     if(p_inflow_node->GetSegment(jdx)->GetVessel()!=vessels[idx])
                     {
-                        units::quantity<unit::flow_rate> inflow_rate = p_inflow_node->GetSegment(jdx)->GetVessel()->GetFlowProperties()->GetFlowRate();
+                        QFlowRate inflow_rate = p_inflow_node->GetSegment(jdx)->GetVessel()->GetFlowProperties()->GetFlowRate();
                         if(p_inflow_node->GetSegment(jdx)->GetVessel()->GetEndNode()==p_inflow_node)
                         {
                             if(inflow_rate>0.0 * unit::metre_cubed_per_second)
@@ -210,11 +210,11 @@ void LinnengarHaematocritSolver<DIM>::Calculate()
                 }
 
                 // If there are no competitor vessels the haematocrit is just the sum of the parent values
-                if(competitor_vessels.size()==0 or units::fabs(competitor_vessels[0]->GetFlowProperties()->GetFlowRate()) == 0.0 * unit::metre_cubed_per_second)
+                if(competitor_vessels.size()==0 or Qabs(competitor_vessels[0]->GetFlowProperties()->GetFlowRate()) == 0.0 * unit::metre_cubed_per_second)
                 {
                     for(unsigned jdx=0; jdx<parent_vessels.size();jdx++)
                     {
-                        linearSystem.SetMatrixElement(idx, parent_vessels[jdx]->GetId(), -fabs(parent_vessels[jdx]->GetFlowProperties()->GetFlowRate()/flow_rate));
+                        linearSystem.SetMatrixElement(idx, parent_vessels[jdx]->GetId(), -Qabs(parent_vessels[jdx]->GetFlowProperties()->GetFlowRate()/flow_rate));
                     }
                 }
                 else
@@ -259,13 +259,13 @@ void LinnengarHaematocritSolver<DIM>::Calculate()
                         }
                         else
                         {
-                            units::quantity<unit::flow_rate> outflow_rate = 0.0*unit::metre_cubed_per_second;
+                            QFlowRate outflow_rate = 0.0*unit::metre_cubed_per_second;
                             for(unsigned comp_index=0; comp_index<competitor_vessels.size(); comp_index++)
                             {
                                 local_update_indics.push_back(-1*competitor_vessels[comp_index]->GetId());
-                                outflow_rate+= units::fabs(competitor_vessels[comp_index]->GetFlowProperties()->GetFlowRate());
+                                outflow_rate = outflow_rate + Qabs(competitor_vessels[comp_index]->GetFlowProperties()->GetFlowRate());
                             }
-                            double fraction = units::fabs(flow_rate)/(units::fabs(flow_rate)+outflow_rate);
+                            double fraction = Qabs(flow_rate)/(Qabs(flow_rate)+outflow_rate);
                             for(unsigned parent_index=0; parent_index<parent_vessels.size(); parent_index++)
                             {
                                 local_update_indics.push_back(parent_vessels[parent_index]->GetId());
@@ -276,30 +276,30 @@ void LinnengarHaematocritSolver<DIM>::Calculate()
                     }
                     else
                     {
-                        units::quantity<unit::flow_rate> competitor0_flow_rate = competitor_vessels[0]->GetFlowProperties()->GetFlowRate();
-                        units::quantity<unit::flow_rate> parent0_flow_rate = parent_vessels[0]->GetFlowProperties()->GetFlowRate();
+                        QFlowRate competitor0_flow_rate = competitor_vessels[0]->GetFlowProperties()->GetFlowRate();
+                        QFlowRate parent0_flow_rate = parent_vessels[0]->GetFlowProperties()->GetFlowRate();
 
                         // There is a bifurcation, apply a haematocrit splitting rule
                         QLength my_radius = vessels[idx]->GetRadius();
                         QLength competitor_radius = competitor_vessels[0]->GetRadius();
-                        units::quantity<unit::velocity> my_velocity = units::fabs(flow_rate)/(M_PI * my_radius * my_radius);
-                        units::quantity<unit::velocity> competitor_velocity = fabs(competitor0_flow_rate)/(M_PI * competitor_radius * competitor_radius);
+                        QVelocity my_velocity = Qabs(flow_rate)/(M_PI * my_radius * my_radius);
+                        QVelocity competitor_velocity = Qabs(competitor0_flow_rate)/(M_PI * competitor_radius * competitor_radius);
 
-                        units::quantity<unit::dimensionless> alpha = 1.0 - parent_vessels[0]->GetFlowProperties()->GetHaematocrit();
-                        units::quantity<unit::dimensionless> flow_ratio_pm = fabs(parent0_flow_rate)/fabs(flow_rate);
-                        units::quantity<unit::dimensionless> flow_ratio_cm = fabs(competitor0_flow_rate)/fabs(flow_rate);
+                        QDimensionless alpha = 1.0 - parent_vessels[0]->GetFlowProperties()->GetHaematocrit();
+                        QDimensionless flow_ratio_pm = Qabs(parent0_flow_rate)/Qabs(flow_rate);
+                        QDimensionless flow_ratio_cm = Qabs(competitor0_flow_rate)/Qabs(flow_rate);
                         double numer = flow_ratio_pm;
 
                         // Apply fungs rule to faster vessel
                         if(my_velocity >= competitor_velocity)
                         {
-                            units::quantity<unit::dimensionless> term = alpha * (my_velocity/competitor_velocity-1.0);
+                            QDimensionless term = alpha * (my_velocity/competitor_velocity-1.0);
                             double denom = 1.0+flow_ratio_cm*(1.0/(1.0+term));
                             linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -numer/denom);
                         }
                         else
                         {
-                            units::quantity<unit::dimensionless> term = alpha * (competitor_velocity/my_velocity-1.0);
+                            QDimensionless term = alpha * (competitor_velocity/my_velocity-1.0);
                             double denom = 1.0+flow_ratio_cm*(1.0+term);
                             linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -numer/denom);
                         }
@@ -363,16 +363,16 @@ void LinnengarHaematocritSolver<DIM>::Calculate()
                      }
                     else
                     {
-                        units::quantity<unit::flow_rate> self_flow_rate = vessels[update_indices[idx][0]]->GetFlowProperties()->GetFlowRate();
-                        units::quantity<unit::flow_rate> outflow_rate = 0.0*unit::metre_cubed_per_second;
+                        QFlowRate self_flow_rate = vessels[update_indices[idx][0]]->GetFlowProperties()->GetFlowRate();
+                        QFlowRate outflow_rate = 0.0*unit::metre_cubed_per_second;
                         for(unsigned local_update_index=1;local_update_index<update_indices[idx].size();local_update_index++)
                         {
                             if(update_indices[idx][local_update_index]<0)
                             {
-                                outflow_rate+= units::fabs(vessels[abs(update_indices[idx][local_update_index])]->GetFlowProperties()->GetFlowRate());
+                                outflow_rate = outflow_rate + Qabs(vessels[abs(update_indices[idx][local_update_index])]->GetFlowProperties()->GetFlowRate());
                             }
                         }
-                        double fraction = units::fabs(self_flow_rate)/(units::fabs(self_flow_rate)+outflow_rate);
+                        double fraction = Qabs(self_flow_rate)/(Qabs(self_flow_rate)+outflow_rate);
                         for(unsigned local_update_index=1;local_update_index<update_indices[idx].size();local_update_index++)
                         {
                             if(update_indices[idx][local_update_index]>=0)
@@ -384,18 +384,18 @@ void LinnengarHaematocritSolver<DIM>::Calculate()
                 }
                 else
                 {
-                    units::quantity<unit::flow_rate> self_flow_rate = vessels[update_indices[idx][0]]->GetFlowProperties()->GetFlowRate();
-                    units::quantity<unit::flow_rate> competitor0_flow_rate = vessels[update_indices[idx][2]]->GetFlowProperties()->GetFlowRate();
-                    units::quantity<unit::flow_rate> parent0_flow_rate = vessels[update_indices[idx][1]]->GetFlowProperties()->GetFlowRate();
+                    QFlowRate self_flow_rate = vessels[update_indices[idx][0]]->GetFlowProperties()->GetFlowRate();
+                    QFlowRate competitor0_flow_rate = vessels[update_indices[idx][2]]->GetFlowProperties()->GetFlowRate();
+                    QFlowRate parent0_flow_rate = vessels[update_indices[idx][1]]->GetFlowProperties()->GetFlowRate();
 
                     QLength my_radius = vessels[update_indices[idx][0]]->GetRadius();
                     QLength competitor_radius = vessels[update_indices[idx][2]]->GetRadius();
-                    units::quantity<unit::velocity> my_velocity = fabs(self_flow_rate)/(M_PI * my_radius * my_radius);
-                    units::quantity<unit::velocity> competitor_velocity = fabs(competitor0_flow_rate)/(M_PI * competitor_radius * competitor_radius);
-                    units::quantity<unit::dimensionless> alpha = 1.0 - vessels[update_indices[idx][1]]->GetFlowProperties()->GetHaematocrit();
+                    QVelocity my_velocity = Qabs(self_flow_rate)/(M_PI * my_radius * my_radius);
+                    QVelocity competitor_velocity = Qabs(competitor0_flow_rate)/(M_PI * competitor_radius * competitor_radius);
+                    QDimensionless alpha = 1.0 - vessels[update_indices[idx][1]]->GetFlowProperties()->GetHaematocrit();
 
-                    double flow_ratio_pm = fabs(parent0_flow_rate/self_flow_rate);
-                    double flow_ratio_cm = fabs(competitor0_flow_rate/self_flow_rate);
+                    double flow_ratio_pm = Qabs(parent0_flow_rate/self_flow_rate);
+                    double flow_ratio_cm = Qabs(competitor0_flow_rate/self_flow_rate);
                     double numer = flow_ratio_pm;
 
                     // Apply fungs rule to faster vessel
@@ -424,9 +424,9 @@ void LinnengarHaematocritSolver<DIM>::Calculate()
         residual = 0.0;
         for (unsigned i = 0; i < vessels.size(); i++)
         {
-            if(fabs(vessels[i]->GetFlowProperties()->GetHaematocrit() - a[i]) > residual)
+            if(std::abs(vessels[i]->GetFlowProperties()->GetHaematocrit() - a[i]) > residual)
             {
-                residual = fabs(vessels[i]->GetFlowProperties()->GetHaematocrit() - a[i]);
+                residual = std::abs(vessels[i]->GetFlowProperties()->GetHaematocrit() - a[i]);
             }
         }
 

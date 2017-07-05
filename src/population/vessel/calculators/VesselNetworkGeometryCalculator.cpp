@@ -73,7 +73,7 @@ std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > VesselNetwo
             x_max = location[0]*length_scale;
             if(useRadii)
             {
-                x_max += (*it)->GetRadius();
+                x_max = x_max + (*it)->GetRadius();
             }
         }
         if(location[1]*length_scale > y_max)
@@ -81,7 +81,7 @@ std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > VesselNetwo
             y_max = location[1]*length_scale;
             if(useRadii)
             {
-                y_max += (*it)->GetRadius();
+                y_max = y_max + (*it)->GetRadius();
             }
         }
         if(DIM > 2)
@@ -91,7 +91,7 @@ std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > VesselNetwo
                 z_max = location[2]*length_scale;
                 if(useRadii)
                 {
-                    z_max += (*it)->GetRadius();
+                    z_max = z_max + (*it)->GetRadius();
                 }
             }
         }
@@ -109,7 +109,7 @@ std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > VesselNetwo
             x_min = location[0]*length_scale;
             if(useRadii)
             {
-                x_min -= (*it)->GetRadius();
+                x_min = x_min - (*it)->GetRadius();
             }
         }
         if(location[1]*length_scale < y_min)
@@ -117,7 +117,7 @@ std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > VesselNetwo
             y_min = location[1]*length_scale;
             if(useRadii)
             {
-                y_min -= (*it)->GetRadius();
+                y_min = y_min - (*it)->GetRadius();
             }
         }
         if(DIM > 2)
@@ -127,7 +127,7 @@ std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > VesselNetwo
                 z_min = location[2]*length_scale;
                 if(useRadii)
                 {
-                    z_min -= (*it)->GetRadius();
+                    z_min = z_min - (*it)->GetRadius();
                 }
             }
         }
@@ -516,31 +516,31 @@ QLength VesselNetworkGeometryCalculator<DIM>::GetTotalLength(std::shared_ptr<Ves
     QLength  length = 0.0* unit::metres;
     for(unsigned idx=0; idx<vessels.size(); idx++)
     {
-        length += vessels[idx]->GetLength();
+        length = length + vessels[idx]->GetLength();
     }
     return length;
 }
 
 template <unsigned DIM>
-units::quantity<unit::volume> VesselNetworkGeometryCalculator<DIM>::GetTotalVolume(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
+QVolume VesselNetworkGeometryCalculator<DIM>::GetTotalVolume(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
-    units::quantity<unit::volume> volume = 0.0*units::pow<3>(unit::metres);
+    QVolume volume = 0.0*Qpow3(unit::metres);
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
     for(unsigned idx=0; idx< segments.size(); idx++)
     {
-        volume += segments[idx]->GetLength() * segments[idx]->GetRadius() * segments[idx]->GetRadius() * M_PI;
+        volume = volume + segments[idx]->GetLength() * segments[idx]->GetRadius() * segments[idx]->GetRadius() * M_PI;
     }
     return volume;
 }
 
 template <unsigned DIM>
-units::quantity<unit::area> VesselNetworkGeometryCalculator<DIM>::GetTotalSurfaceArea(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
+QArea VesselNetworkGeometryCalculator<DIM>::GetTotalSurfaceArea(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
 {
-    units::quantity<unit::area> area = 0.0*units::pow<2>(unit::metres);
+    QArea area = 0.0*Qpow2(unit::metres);
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
     for(unsigned idx=0; idx< segments.size(); idx++)
     {
-        area += segments[idx]->GetLength() * 2.0 * segments[idx]->GetRadius() * M_PI;
+        area = area + segments[idx]->GetLength() * 2.0 * segments[idx]->GetRadius() * M_PI;
     }
     return area;
 }
@@ -573,7 +573,7 @@ QLength  VesselNetworkGeometryCalculator<DIM>::GetAverageInterSegmentDistance(st
                 }
             }
         }
-        av_dist += min_dist;
+        av_dist = av_dist + min_dist;
     }
     return av_dist / double(segments.size());
 }

@@ -58,7 +58,7 @@ std::shared_ptr<ConstantHaematocritSolver<DIM> > ConstantHaematocritSolver<DIM>:
 }
 
 template<unsigned DIM>
-void ConstantHaematocritSolver<DIM>::SetHaematocrit(units::quantity<unit::dimensionless> haematocrit)
+void ConstantHaematocritSolver<DIM>::SetHaematocrit(QDimensionless haematocrit)
 {
     mHaematocrit = haematocrit;
 }

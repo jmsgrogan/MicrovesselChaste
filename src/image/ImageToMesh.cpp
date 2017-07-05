@@ -107,7 +107,7 @@ void ImageToMesh<DIM>::SetTissueDomain(std::shared_ptr<Part<DIM> > pTissueDomain
 }
 
 template<unsigned DIM>
-void ImageToMesh<DIM>::SetElementSize(units::quantity<unit::volume> elementSize)
+void ImageToMesh<DIM>::SetElementSize(QVolume elementSize)
 {
     mElementSize = elementSize;
 }

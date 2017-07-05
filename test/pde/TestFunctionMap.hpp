@@ -71,10 +71,10 @@ public:
         QLength length(100.0*unit::microns);
 
         // Set up the grid
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(length, length, DimensionalChastePoint<2>());
 
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         QLength grid_spacing(5.0*unit::microns);
         p_grid->GenerateFromPart(p_domain, grid_spacing);
 
@@ -103,12 +103,12 @@ public:
         QLength length(100.0*unit::microns);
 
         // Set up the grid
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(length, length, DimensionalChastePoint<2>());
 
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator = DiscreteContinuumMeshGenerator<2>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator = DiscreteContinuumMeshGenerator<2>::Create();
         p_mesh_generator->SetDomain(p_domain);
-        p_mesh_generator->SetMaxElementArea(units::pow<3>(0.01*length));
+        p_mesh_generator->SetMaxElementArea(Qpow3(0.01*length));
         p_mesh_generator->Update();
 
         // Set up a function map

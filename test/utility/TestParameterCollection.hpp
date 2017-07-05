@@ -57,17 +57,17 @@ public:
 
     void TestMixedParameterCollection()
     {
-        boost::shared_ptr<BaseParameterInstance> my_parameter = BaseParameterInstance::Create();
+        std::shared_ptr<BaseParameterInstance> my_parameter = BaseParameterInstance::Create();
         my_parameter->SetShortDescription("My Description");
         my_parameter->SetName("Base");
 
-        boost::shared_ptr<ParameterInstance<unit::time> > my_time_parameter = ParameterInstance<unit::time>:: Create();
-        units::quantity<unit::time> few_seconds = 5.0*unit::seconds;
+        std::shared_ptr<ParameterInstance<QTime> > my_time_parameter = ParameterInstance<QTime>:: Create();
+        QTime few_seconds = 5.0*unit::seconds;
         my_time_parameter->SetShortDescription("My Description For Time Parameter");
         my_time_parameter->SetValue(few_seconds);
         my_time_parameter->SetName("Derived");
 
-        boost::shared_ptr<ParameterCollection> my_params = ParameterCollection::SharedInstance();
+        std::shared_ptr<ParameterCollection> my_params = ParameterCollection::SharedInstance();
         OutputFileHandler file_handler("TestMixedParameterCollection", true);
         my_params->AddParameter(my_parameter, "Test");
         my_params->AddParameter(my_time_parameter, "Test");
@@ -86,12 +86,12 @@ public:
 
         // Save archive
         {
-            boost::shared_ptr<BaseParameterInstance> my_parameter = BaseParameterInstance::Create();
+            std::shared_ptr<BaseParameterInstance> my_parameter = BaseParameterInstance::Create();
             my_parameter->SetShortDescription("My Description");
             my_parameter->SetName("Base");
 
-            boost::shared_ptr<ParameterInstance<unit::time> > my_time_parameter = ParameterInstance<unit::time>:: Create();
-            units::quantity<unit::time> few_seconds = 5.0*unit::seconds;
+            std::shared_ptr<ParameterInstance<QTime> > my_time_parameter = ParameterInstance<QTime>:: Create();
+            QTime few_seconds = 5.0*unit::seconds;
             my_time_parameter->SetShortDescription("My Description For Time Parameter");
             my_time_parameter->SetValue(few_seconds);
             my_time_parameter->SetName("Derived");
@@ -112,7 +112,7 @@ public:
 
         // Load archive
         {
-            boost::shared_ptr<ParameterCollection> p_my_params_from_archive;
+            std::shared_ptr<ParameterCollection> p_my_params_from_archive;
 
             // Read from this input file
             std::ifstream ifs(archive_filename.c_str(), std::ios::binary);
@@ -124,8 +124,8 @@ public:
 
             TS_ASSERT_EQUALS("My Description", ParameterCollection::Instance()->GetParameter("Base")->GetShortDescription());
 
-            boost::shared_ptr<ParameterInstance<unit::time> > p_derived =
-                    boost::dynamic_pointer_cast<ParameterInstance<unit::time> >(ParameterCollection::Instance()->GetParameter("Derived"));
+            std::shared_ptr<ParameterInstance<QTime> > p_derived =
+                    boost::dynamic_pointer_cast<ParameterInstance<QTime> >(ParameterCollection::Instance()->GetParameter("Derived"));
             TS_ASSERT_EQUALS("My Description For Time Parameter", p_derived->GetShortDescription());
             TS_ASSERT_DELTA(5.0, p_derived->GetValue().value(), 1.e-6);
         }

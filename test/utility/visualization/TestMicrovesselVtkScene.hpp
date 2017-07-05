@@ -59,7 +59,7 @@ public:
         OutputFileHandler file_handler1 = OutputFileHandler("TestMicrovesselVtkScene/TestGrid2d");
 
         // Generate a grid
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         c_vector<unsigned,3> dimensions;
         dimensions[0] = 20;
         dimensions[1] = 20;
@@ -95,7 +95,7 @@ public:
         OutputFileHandler file_handler1 = OutputFileHandler("TestMicrovesselVtkScene/TestGrid3d/");
 
         // Generate a grid
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         c_vector<unsigned,3> dimensions;
         dimensions[0] = 20;
         dimensions[1] = 20;
@@ -134,7 +134,7 @@ public:
 
         // Generate the network
         VesselNetworkGenerator<3> vascular_network_generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = vascular_network_generator.GenerateHexagonalUnit(vessel_length);
+        std::shared_ptr<VesselNetwork<3> > p_network = vascular_network_generator.GenerateHexagonalUnit(vessel_length);
         p_network->UpdateVesselIds();
 
         MicrovesselVtkScene<3> scene1;
@@ -158,7 +158,7 @@ public:
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestMicrovesselVtkScene/TestPart");
-        boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_part = Part<3>::Create();
         p_part->AddCuboid(100.e-6*unit::metres, 100.e-6*unit::metres, 100.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1.e-6*unit::metres));
 
         MicrovesselVtkScene<3> scene1;

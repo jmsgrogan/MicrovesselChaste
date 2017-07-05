@@ -51,12 +51,12 @@ class ParabolicDiffusionReactionPde : public AbstractDiscreteContinuumParabolicP
     /**
      * The non-linear source strengths for each point on the grid or mesh
      */
-    std::vector<units::quantity<unit::concentration_flow_rate> > mDiscreteNonLinearSourceStrengths;
+    std::vector<QConcentrationFlowRate > mDiscreteNonLinearSourceStrengths;
 
     /**
      * The continuum linear in U term, discrete terms are added to this.
      */
-    units::quantity<unit::rate> mLinearInUTerm;
+    QRate mLinearInUTerm;
 
 public:
 
@@ -93,8 +93,8 @@ public:
      * @param u the concentration
      * @return source strength
      */
-    virtual units::quantity<unit::concentration_flow_rate> ComputeSourceTerm(unsigned gridIndex,
-            units::quantity<unit::concentration> u);
+    virtual QConcentrationFlowRate ComputeSourceTerm(unsigned gridIndex,
+            QConcentration u);
 
     /**
      * Abstract method to return the non linear prime contribution to the regular grid solvers
@@ -102,14 +102,14 @@ public:
      * @param u the concentration
      * @return source strength
      */
-    virtual units::quantity<unit::rate> ComputeSourceTermPrime(unsigned gridIndex,
-            units::quantity<unit::concentration> u);
+    virtual QRate ComputeSourceTermPrime(unsigned gridIndex,
+            QConcentration u);
 
     /**
      * Set the linear constant in U term
      * @param linearInUTerm the linear constant in U term
      */
-    void SetContinuumLinearInUTerm(units::quantity<unit::rate> linearInUTerm);
+    void SetContinuumLinearInUTerm(QRate linearInUTerm);
 
     /**
      * Update the discrete source strengths

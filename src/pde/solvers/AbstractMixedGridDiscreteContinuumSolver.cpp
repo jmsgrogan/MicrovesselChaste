@@ -62,7 +62,7 @@ AbstractMixedGridDiscreteContinuumSolver<DIM>::~AbstractMixedGridDiscreteContinu
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration> > AbstractMixedGridDiscreteContinuumSolver<DIM>::GetConcentrationsAtCentroids()
+std::vector<QConcentration > AbstractMixedGridDiscreteContinuumSolver<DIM>::GetConcentrationsAtCentroids()
 {
     return this->GetConcentrations(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetCellLocations());
 }
@@ -111,7 +111,7 @@ void AbstractMixedGridDiscreteContinuumSolver<DIM>::UpdateSolution(const std::ve
     {
         this->mSolution[i] = data[i];
     }
-    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*this->mReferenceConcentration);
+    this->mConcentrations = std::vector<QConcentration >(data.size(), 0.0*this->mReferenceConcentration);
     for (unsigned i = 0; i < data.size(); i++)
     {
         this->mConcentrations[i] = data[i]*this->mReferenceConcentration;
@@ -129,7 +129,7 @@ void AbstractMixedGridDiscreteContinuumSolver<DIM>::UpdateElementSolution(const 
 }
 
 template<unsigned DIM>
-void AbstractMixedGridDiscreteContinuumSolver<DIM>::UpdateSolution(const std::vector<units::quantity<unit::concentration> >& data)
+void AbstractMixedGridDiscreteContinuumSolver<DIM>::UpdateSolution(const std::vector<QConcentration >& data)
 {
     if(this->mSolution.size()==0)
     {
@@ -146,7 +146,7 @@ void AbstractMixedGridDiscreteContinuumSolver<DIM>::UpdateSolution(const std::ve
     this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(this->mSolution, this->GetLabel());
 
     // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
-    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*this->mReferenceConcentration);
+    this->mConcentrations = std::vector<QConcentration >(data.size(), 0.0*this->mReferenceConcentration);
     for (unsigned i = 0; i < data.size(); i++)
     {
         this->mConcentrations[i] = data[i];

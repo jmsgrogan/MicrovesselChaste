@@ -33,18 +33,19 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+#include <sstream>
 #include "ParameterInstance.hpp"
 
-template<class UNIT>
-ParameterInstance<UNIT>::ParameterInstance()
+template<class QUANTITY>
+ParameterInstance<QUANTITY>::ParameterInstance()
     : BaseParameterInstance(),
       mValue()
 {
 
 }
 
-template<class UNIT>
-ParameterInstance<UNIT>::ParameterInstance(units::quantity<UNIT> value,
+template<class QUANTITY>
+ParameterInstance<QUANTITY>::ParameterInstance(QUANTITY value,
                                                      const std::string& rName,
                                                      const std::string& rShortDescription,
                                                      const std::string& rSymbol,
@@ -55,30 +56,30 @@ ParameterInstance<UNIT>::ParameterInstance(units::quantity<UNIT> value,
 
 }
 
-template<class UNIT>
-ParameterInstance<UNIT>::~ParameterInstance()
+template<class QUANTITY>
+ParameterInstance<QUANTITY>::~ParameterInstance()
 {
 
 }
 
-template<class UNIT>
-std::shared_ptr<ParameterInstance<UNIT> > ParameterInstance<UNIT>::Create()
+template<class QUANTITY>
+std::shared_ptr<ParameterInstance<QUANTITY> > ParameterInstance<QUANTITY>::Create()
 {
-    return std::make_shared<ParameterInstance<UNIT> >();
+    return std::make_shared<ParameterInstance<QUANTITY> >();
 }
 
-template<class UNIT>
-std::shared_ptr<ParameterInstance<UNIT> > ParameterInstance<UNIT>::Create(units::quantity<UNIT> value,
+template<class QUANTITY>
+std::shared_ptr<ParameterInstance<QUANTITY> > ParameterInstance<QUANTITY>::Create(QUANTITY value,
                                                                             const std::string& rName,
                                                                             const std::string& rShortDescription,
                                                                             const std::string& rSymbol,
                                                                             const std::string& rBibliographicInfromation)
 {
-    return std::make_shared<ParameterInstance<UNIT> >(value,rName,rShortDescription,rSymbol, rBibliographicInfromation);
+    return std::make_shared<ParameterInstance<QUANTITY> >(value,rName,rShortDescription,rSymbol, rBibliographicInfromation);
 }
 
-template<class UNIT>
-units::quantity<UNIT> ParameterInstance<UNIT>::GetValue(const std::string& rCallingClass, bool addToCollection)
+template<class QUANTITY>
+QUANTITY ParameterInstance<QUANTITY>::GetValue(const std::string& rCallingClass, bool addToCollection)
 {
     if(addToCollection)
     {
@@ -89,80 +90,79 @@ units::quantity<UNIT> ParameterInstance<UNIT>::GetValue(const std::string& rCall
     return mValue;
 }
 
-template<class UNIT>
-std::string ParameterInstance<UNIT>::GetValueAsString()
+template<class QUANTITY>
+std::string ParameterInstance<QUANTITY>::GetValueAsString()
 {
     std::stringstream ss;
     ss << mValue;
     return ss.str();
 }
 
-template<class UNIT>
-void ParameterInstance<UNIT>::SetValue(units::quantity<UNIT> value)
+template<class QUANTITY>
+void ParameterInstance<QUANTITY>::SetValue(QUANTITY value)
 {
     mValue = value;
 }
 
 // Explicit Instantiation
-template class ParameterInstance<unit::dimensionless>;
-template class ParameterInstance<unit::time>;
-template class ParameterInstance<unit::rate>;
-template class ParameterInstance<unit::length>;
-template class ParameterInstance<unit::per_length>;
-template class ParameterInstance<unit::area>;
-template class ParameterInstance<unit::volume>;
-template class ParameterInstance<unit::mass>;
-template class ParameterInstance<unit::mass_flux>;
-template class ParameterInstance<unit::mass_flow_rate>;
-template class ParameterInstance<unit::amount>;
-template class ParameterInstance<unit::molar_flux>;
-template class ParameterInstance<unit::molar_flow_rate>;
-template class ParameterInstance<unit::molar_mass>;
-template class ParameterInstance<unit::number_density>;
-template class ParameterInstance<unit::rate_per_concentration>;
-template class ParameterInstance<unit::concentration>;
-template class ParameterInstance<unit::concentration_gradient>;
-template class ParameterInstance<unit::flow_rate>;
-template class ParameterInstance<unit::flow_impedance>;
-template class ParameterInstance<unit::pressure>;
-template class ParameterInstance<unit::dynamic_viscosity>;
-template class ParameterInstance<unit::diffusivity>;
-template class ParameterInstance<unit::solubility>;
-template class ParameterInstance<unit::membrane_permeability>;
-template class ParameterInstance<unit::diffusivity_per_concentration>;
-template class ParameterInstance<unit::volumetric_solubility>;
-template class ParameterInstance<unit::concentration_flow_rate>;
-template class ParameterInstance<unit::concentration_flux>;
-template class ParameterInstance<unit::per_area>;
-template class ParameterInstance<unit::force>;
+template class ParameterInstance<QDimensionless>;
+template class ParameterInstance<QTime>;
+template class ParameterInstance<QRate>;
+template class ParameterInstance<QLength> ;
+template class ParameterInstance<QPerLength>;
+template class ParameterInstance<QArea>;
+template class ParameterInstance<QVolume>;
+template class ParameterInstance<QMass>;
+template class ParameterInstance<QMassFlux>;
+template class ParameterInstance<QMassFlowRate>;
+template class ParameterInstance<QAmount>;
+template class ParameterInstance<QMolarFlux>;
+template class ParameterInstance<QMolarFlowRate>;
+template class ParameterInstance<QMolarMass>;
+template class ParameterInstance<QNumberDensity>;
+template class ParameterInstance<QRatePerConcentration>;
+template class ParameterInstance<QConcentration>;
+template class ParameterInstance<QConcentrationGradient>;
+template class ParameterInstance<QFlowRate>;
+template class ParameterInstance<QFlowImpedance>;
+template class ParameterInstance<QPressure>;
+template class ParameterInstance<QDynamicViscosity>;
+template class ParameterInstance<QDiffusivity>;
+template class ParameterInstance<QSolubility>;
+template class ParameterInstance<QMembranePermeability>;
+template class ParameterInstance<QDiffusivityPerConcentration>;
+template class ParameterInstance<QVolumetricSolubility>;
+template class ParameterInstance<QConcentrationFlowRate>;
+template class ParameterInstance<QConcentrationFlux>;
+template class ParameterInstance<QPerArea>;
+template class ParameterInstance<QForce>;
 
 #include "SerializationExportWrapperForCpp.hpp"
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::dimensionless)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::time)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::rate)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::length)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::per_length)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::area)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::volume)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::mass)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::mass_flux)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::mass_flow_rate)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::amount)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::molar_flux)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::molar_flow_rate)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::molar_mass)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::number_density)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::rate_per_concentration)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::concentration)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::concentration_gradient)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::flow_rate)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::flow_impedance)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::pressure)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::dynamic_viscosity)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::diffusivity)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::solubility)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::membrane_permeability)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::diffusivity_per_concentration)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::volumetric_solubility)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::concentration_flow_rate)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::concentration_flux)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QDimensionless)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QTime)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QRate)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QLength)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QPerLength)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QArea)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QVolume)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QMass)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QMassFlux)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QMassFlowRate)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QAmount)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QMolarFlux)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QMolarFlowRate)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QMolarMass)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QNumberDensity)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QRatePerConcentration)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QConcentration)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QConcentrationFlowRate)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QConcentrationGradient)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QFlowRate)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QFlowImpedance)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QPressure)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QDynamicViscosity)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QDiffusivity)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QSolubility)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QMembranePermeability)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QDiffusivityPerConcentration)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QVolumetricSolubility)

@@ -68,18 +68,18 @@ public:
         // Set up the network
         double length = 100.0;
         double radius = 20.0;
-        boost::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, length/2.0, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(length, length/2.0, 0.0);
+        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, length/2.0, 0.0);
+        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(length, length/2.0, 0.0);
         p_node1->GetFlowProperties()->SetIsInputNode(true);
         p_node2->GetFlowProperties()->SetIsOutputNode(true);
-        boost::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(p_node1, p_node2);
-        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        std::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(p_node1, p_node2);
+        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel);
         VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, radius* 1.e-6 * unit::metres);
         VesselNetworkPropertyManager<2>::SetNodeRadiiFromSegments(p_network);
 
         // Convert it to a surface
-        boost::shared_ptr<NetworkToSurface<2> > p_converter = NetworkToSurface<2>::Create();
+        std::shared_ptr<NetworkToSurface<2> > p_converter = NetworkToSurface<2>::Create();
         p_converter->SetVesselNetwork(p_network);
         p_converter->SetResamplingSplineSize(10.0 * 1.e-6 * unit::metres);
         p_converter->GetNetworkToImageTool()->SetGridSpacing(2.0 * 1.e-6 * unit::metres);
@@ -99,18 +99,18 @@ public:
         // Set up the network
         double length = 100.0;
         double radius = 20.0;
-        boost::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0, length/2.0, 0.0);
-        boost::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(length, length/2.0, 0.0);
+        std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0, length/2.0, 0.0);
+        std::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(length, length/2.0, 0.0);
         p_node1->GetFlowProperties()->SetIsInputNode(true);
         p_node2->GetFlowProperties()->SetIsOutputNode(true);
-        boost::shared_ptr<Vessel<3> > p_vessel = Vessel<3>::Create(p_node1, p_node2);
-        boost::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        std::shared_ptr<Vessel<3> > p_vessel = Vessel<3>::Create(p_node1, p_node2);
+        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_vessel);
         VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, radius* 1.e-6 * unit::metres);
         VesselNetworkPropertyManager<3>::SetNodeRadiiFromSegments(p_network);
 
         // Convert it to a surface
-        boost::shared_ptr<NetworkToSurface<3> > p_converter = NetworkToSurface<3>::Create();
+        std::shared_ptr<NetworkToSurface<3> > p_converter = NetworkToSurface<3>::Create();
         p_converter->SetVesselNetwork(p_network);
         p_converter->GetNetworkToImageTool()->SetGridSpacing(2.0 * 1.e-6 * unit::metres);
         p_converter->GetNetworkToImageTool()->SetPaddingFactors(0.1, 0.1, 0.1);
@@ -135,19 +135,19 @@ public:
         double length = 100.0;
         double radius = 20.0;
 
-        boost::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, length, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(length, length, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(2.0 * length, 2.0*length, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_node4 = VesselNode<2>::Create(2.0 * length, 0.0, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_node5 = VesselNode<2>::Create(3.0 * length, length, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_node6 = VesselNode<2>::Create(4.0 * length, length, 0.0);
-        boost::shared_ptr<Vessel<2> > p_vessel1 = Vessel<2>::Create(p_node1, p_node2);
-        boost::shared_ptr<Vessel<2> > p_vessel2 = Vessel<2>::Create(p_node2, p_node3);
-        boost::shared_ptr<Vessel<2> > p_vessel3 = Vessel<2>::Create(p_node2, p_node4);
-        boost::shared_ptr<Vessel<2> > p_vessel4 = Vessel<2>::Create(p_node3, p_node5);
-        boost::shared_ptr<Vessel<2> > p_vessel5 = Vessel<2>::Create(p_node4, p_node5);
-        boost::shared_ptr<Vessel<2> > p_vessel6 = Vessel<2>::Create(p_node5, p_node6);
-        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, length, 0.0);
+        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(length, length, 0.0);
+        std::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(2.0 * length, 2.0*length, 0.0);
+        std::shared_ptr<VesselNode<2> > p_node4 = VesselNode<2>::Create(2.0 * length, 0.0, 0.0);
+        std::shared_ptr<VesselNode<2> > p_node5 = VesselNode<2>::Create(3.0 * length, length, 0.0);
+        std::shared_ptr<VesselNode<2> > p_node6 = VesselNode<2>::Create(4.0 * length, length, 0.0);
+        std::shared_ptr<Vessel<2> > p_vessel1 = Vessel<2>::Create(p_node1, p_node2);
+        std::shared_ptr<Vessel<2> > p_vessel2 = Vessel<2>::Create(p_node2, p_node3);
+        std::shared_ptr<Vessel<2> > p_vessel3 = Vessel<2>::Create(p_node2, p_node4);
+        std::shared_ptr<Vessel<2> > p_vessel4 = Vessel<2>::Create(p_node3, p_node5);
+        std::shared_ptr<Vessel<2> > p_vessel5 = Vessel<2>::Create(p_node4, p_node5);
+        std::shared_ptr<Vessel<2> > p_vessel6 = Vessel<2>::Create(p_node5, p_node6);
+        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel1);
         p_network->AddVessel(p_vessel2);
         p_network->AddVessel(p_vessel3);
@@ -181,19 +181,19 @@ public:
         double length = 100.0;
         double radius = 20.0;
 
-        boost::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0, length, 0.0);
-        boost::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(length, length, 0.0);
-        boost::shared_ptr<VesselNode<3> > p_node3 = VesselNode<3>::Create(2.0 * length, 2.0*length, 0.0);
-        boost::shared_ptr<VesselNode<3> > p_node4 = VesselNode<3>::Create(2.0 * length, 0.0, 0.0);
-        boost::shared_ptr<VesselNode<3> > p_node5 = VesselNode<3>::Create(3.0 * length, length, 0.0);
-        boost::shared_ptr<VesselNode<3> > p_node6 = VesselNode<3>::Create(4.0 * length, length, 0.0);
-        boost::shared_ptr<Vessel<3> > p_vessel1 = Vessel<3>::Create(p_node1, p_node2);
-        boost::shared_ptr<Vessel<3> > p_vessel2 = Vessel<3>::Create(p_node2, p_node3);
-        boost::shared_ptr<Vessel<3> > p_vessel3 = Vessel<3>::Create(p_node2, p_node4);
-        boost::shared_ptr<Vessel<3> > p_vessel4 = Vessel<3>::Create(p_node3, p_node5);
-        boost::shared_ptr<Vessel<3> > p_vessel5 = Vessel<3>::Create(p_node4, p_node5);
-        boost::shared_ptr<Vessel<3> > p_vessel6 = Vessel<3>::Create(p_node5, p_node6);
-        boost::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0, length, 0.0);
+        std::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(length, length, 0.0);
+        std::shared_ptr<VesselNode<3> > p_node3 = VesselNode<3>::Create(2.0 * length, 2.0*length, 0.0);
+        std::shared_ptr<VesselNode<3> > p_node4 = VesselNode<3>::Create(2.0 * length, 0.0, 0.0);
+        std::shared_ptr<VesselNode<3> > p_node5 = VesselNode<3>::Create(3.0 * length, length, 0.0);
+        std::shared_ptr<VesselNode<3> > p_node6 = VesselNode<3>::Create(4.0 * length, length, 0.0);
+        std::shared_ptr<Vessel<3> > p_vessel1 = Vessel<3>::Create(p_node1, p_node2);
+        std::shared_ptr<Vessel<3> > p_vessel2 = Vessel<3>::Create(p_node2, p_node3);
+        std::shared_ptr<Vessel<3> > p_vessel3 = Vessel<3>::Create(p_node2, p_node4);
+        std::shared_ptr<Vessel<3> > p_vessel4 = Vessel<3>::Create(p_node3, p_node5);
+        std::shared_ptr<Vessel<3> > p_vessel5 = Vessel<3>::Create(p_node4, p_node5);
+        std::shared_ptr<Vessel<3> > p_vessel6 = Vessel<3>::Create(p_node5, p_node6);
+        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_vessel1);
         p_network->AddVessel(p_vessel2);
         p_network->AddVessel(p_vessel3);
@@ -228,12 +228,12 @@ public:
     void TestHexNetworkVessel2d() throw(Exception)
     {
         VesselNetworkGenerator<2> network_generator = VesselNetworkGenerator<2>();
-        boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(500*1e-6*unit::metres,
+        std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(500*1e-6*unit::metres,
                 500*1e-6*unit::metres, 100*1e-6*unit::metres, true);
 
-        boost::shared_ptr<VesselNode<2> > p_bottom_left_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(
+        std::shared_ptr<VesselNode<2> > p_bottom_left_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(
                 p_network, DimensionalChastePoint<2>(0.0, 0.0, 0.0, 1e-6*unit::metres));
-        boost::shared_ptr<VesselNode<2> > p_top_right_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(
+        std::shared_ptr<VesselNode<2> > p_top_right_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(
                 p_network, DimensionalChastePoint<2>(600, 600, 0.0, 1e-6*unit::metres));
         p_bottom_left_node->GetFlowProperties()->SetIsInputNode(true);
         p_top_right_node->GetFlowProperties()->SetIsOutputNode(true);
@@ -263,12 +263,12 @@ public:
     void TestHexNetworkVessel3d() throw(Exception)
     {
         VesselNetworkGenerator<3> network_generator = VesselNetworkGenerator<3>();
-        boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(100*1e-6*unit::metres,
+        std::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(100*1e-6*unit::metres,
                 100*1e-6*unit::metres, 30*1e-6*unit::metres, true);
 
-        boost::shared_ptr<VesselNode<3> > p_bottom_left_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(
+        std::shared_ptr<VesselNode<3> > p_bottom_left_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(
                 p_network, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1e-6*unit::metres));
-        boost::shared_ptr<VesselNode<3> > p_top_right_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(
+        std::shared_ptr<VesselNode<3> > p_top_right_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(
                 p_network, DimensionalChastePoint<3>(600, 600, 0.0, 1e-6*unit::metres));
         p_bottom_left_node->GetFlowProperties()->SetIsInputNode(true);
         p_top_right_node->GetFlowProperties()->SetIsOutputNode(true);

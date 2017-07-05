@@ -77,34 +77,36 @@ void SimpleLinearEllipticGreensFunctionSolver<DIM>::Solve()
     }
 
     unsigned number_of_sinks = this->mSinkCoordinates.size();
-    units::quantity<unit::concentration_flow_rate> sink_rate = p_elliptic_pde->ComputeConstantInUSourceTerm();
-    units::quantity<unit::volume> sink_volume = units::pow<3>(this->mpRegularGrid->GetSpacing());
-    this->mSinkRates = std::vector<units::quantity<unit::molar_flow_rate> >(number_of_sinks, sink_rate * sink_volume);
-    units::quantity<unit::molar_flow_rate> total_sink_rate = std::accumulate(this->mSinkRates.begin(), this->mSinkRates.end(), 0.0*unit::mole_per_second);
+    QConcentrationFlowRate sink_rate = p_elliptic_pde->ComputeConstantInUSourceTerm();
+
+    QLength spacing = this->mpRegularGrid->GetSpacing();
+    QVolume sink_volume = spacing*spacing*spacing;
+    this->mSinkRates = std::vector<QMolarFlowRate >(number_of_sinks, sink_rate * sink_volume);
+    QMolarFlowRate total_sink_rate = std::accumulate(this->mSinkRates.begin(), this->mSinkRates.end(), 0.0*unit::mole_per_second);
 
     // Get the sink substance demand on each vessel subsegment
     unsigned number_of_subsegments = this->mSubSegmentCoordinates.size();
-    units::quantity<unit::diffusivity> diffusivity = p_elliptic_pde->ComputeIsotropicDiffusionTerm();
-    std::vector<units::quantity<unit::concentration> > sink_demand_per_subsegment(number_of_subsegments, 0.0*this->mReferenceConcentration);
+    QDiffusivity diffusivity = p_elliptic_pde->ComputeIsotropicDiffusionTerm();
+    std::vector<QConcentration > sink_demand_per_subsegment(number_of_subsegments, 0.0*this->mReferenceConcentration);
     for (unsigned idx = 0; idx < number_of_subsegments; idx++)
     {
         for (unsigned jdx = 0; jdx < number_of_sinks; jdx++)
         {
-            sink_demand_per_subsegment[idx] += ((*this->mGvt)[idx][jdx] / diffusivity) * this->mSinkRates[jdx];
+            sink_demand_per_subsegment[idx] = sink_demand_per_subsegment[idx] + ((*this->mGvt)[idx][jdx] / diffusivity) * this->mSinkRates[jdx];
         }
     }
 
-    this->mSegmentConcentration = std::vector<units::quantity<unit::concentration> >(number_of_subsegments, 1.0*this->mReferenceConcentration);
-    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(number_of_sinks, 0.0*this->mReferenceConcentration);
+    this->mSegmentConcentration = std::vector<QConcentration >(number_of_subsegments, 1.0*this->mReferenceConcentration);
+    this->mConcentrations = std::vector<QConcentration >(number_of_sinks, 0.0*this->mReferenceConcentration);
 
     // Solve for the subsegment source rates required to meet the sink substance demand
     double tolerance = 1.e-10;
-    units::quantity<unit::concentration> g0 = 0.0 * this->mReferenceConcentration;
-    this->mSourceRates = std::vector<units::quantity<unit::molar_flow_rate> >(number_of_subsegments, 0.0*unit::mole_per_second);
+    QConcentration g0 = 0.0 * this->mReferenceConcentration;
+    this->mSourceRates = std::vector<QMolarFlowRate >(number_of_subsegments, 0.0*unit::mole_per_second);
 
-    units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
-    units::quantity<unit::concentration> reference_concentration = this->mReferenceConcentration;
-    units::quantity<unit::amount> reference_amount(1.0*unit::moles);
+    QTime reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
+    QConcentration reference_concentration = this->mReferenceConcentration;
+    QAmount reference_amount(1.0*unit::moles);
     LinearSystem linear_system(number_of_subsegments + 1, number_of_subsegments + 1);
     linear_system.SetKspType("bcgs");
 
@@ -135,7 +137,7 @@ void SimpleLinearEllipticGreensFunctionSolver<DIM>::Solve()
         ReplicatableVector soln_repl(linear_system.Solve());
 
         // Populate the solution vector
-        std::vector<units::quantity<unit::molar_flow_rate> > solution_vector(number_of_subsegments + 1);
+        std::vector<QMolarFlowRate > solution_vector(number_of_subsegments + 1);
         for (unsigned row = 0; row < number_of_subsegments + 1; row++)
         {
             (solution_vector)[row] = soln_repl[row]*(reference_amount/reference_time);
@@ -145,7 +147,7 @@ void SimpleLinearEllipticGreensFunctionSolver<DIM>::Solve()
         bool all_in_tolerance = true;
         for (unsigned i = 0; i < number_of_subsegments; i++)
         {
-            units::quantity<unit::molar_flow_rate> diff = units::abs(this->mSourceRates[i] - solution_vector[i]);
+            QMolarFlowRate diff = Qabs(this->mSourceRates[i] - solution_vector[i]);
             if (diff > tolerance*unit::mole_per_second)
             {
                 all_in_tolerance = false;
@@ -178,17 +180,17 @@ void SimpleLinearEllipticGreensFunctionSolver<DIM>::Solve()
         this->mConcentrations[i] = 0.0 * this->mReferenceConcentration;
         for (unsigned j = 0; j < number_of_sinks; j++)
         {
-            this->mConcentrations[i] += (*this->mGtt)[i][j] * this->mSinkRates[j] / diffusivity;
+            this->mConcentrations[i] = this->mConcentrations[i] + (*this->mGtt)[i][j] * this->mSinkRates[j] / diffusivity;
         }
 
         for (unsigned j = 0; j < number_of_subsegments; j++)
         {
-            this->mConcentrations[i] += (*this->mGtv)[i][j] * this->mSourceRates[j] / diffusivity;
+            this->mConcentrations[i] = this->mConcentrations[i] +(*this->mGtv)[i][j] * this->mSourceRates[j] / diffusivity;
         }
-        this->mConcentrations[i] += g0;
+        this->mConcentrations[i] = this->mConcentrations[i] + g0;
     }
 
-    std::map<std::string, std::vector<units::quantity<unit::concentration> > > segmentPointData;
+    std::map<std::string, std::vector<QConcentration > > segmentPointData;
     segmentPointData[this->mLabel] = this->mSegmentConcentration;
 
     this->UpdateSolution(this->mConcentrations);

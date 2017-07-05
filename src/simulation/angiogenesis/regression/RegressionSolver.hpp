@@ -74,7 +74,7 @@ protected:
     /**
      * The reference time-scale
      */
-    units::quantity<unit::time> mReferenceTime;
+    QTime mReferenceTime;
 
 public:
 

@@ -640,7 +640,7 @@ QLength Vessel<DIM>::GetLength() const
     QLength length = 0.0 * unit::metres;
     for (unsigned i = 0; i < mSegments.size(); i++)
     {
-        length += mSegments[i]->GetLength();
+        length = length + mSegments[i]->GetLength();
     }
     return length;
 }
@@ -651,7 +651,7 @@ QLength Vessel<DIM>::GetRadius() const
     QLength radius = 0.0 * unit::metres;
     for (unsigned i = 0; i < mSegments.size(); i++)
     {
-        radius += mSegments[i]->GetRadius();
+        radius = radius + mSegments[i]->GetRadius();
     }
     return radius / (double(mSegments.size()));
 }
@@ -662,7 +662,7 @@ double Vessel<DIM>::GetMaturity() const
     double maturity = 0.0;
     for (unsigned i = 0; i < mSegments.size(); i++)
     {
-        maturity += mSegments[i]->GetMaturity();
+        maturity = maturity + mSegments[i]->GetMaturity();
     }
     return maturity / (double(mSegments.size()));
 }

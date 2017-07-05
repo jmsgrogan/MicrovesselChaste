@@ -78,7 +78,7 @@ private:
     /**
      * When the vessel will be removed
      */
-    units::quantity<unit::time> mRegressionTime;
+    QTime mRegressionTime;
 
 public:
 
@@ -101,48 +101,48 @@ public:
      * Return the anti-angiogenic drug concentration
      * @return the vessel anti-angiogenic drug concentration
      */
-    units::quantity<unit::concentration> GetAntiAngiogenicDrugConcentration() const;
+    QConcentration GetAntiAngiogenicDrugConcentration() const;
 
     /**
      * Return the 'dimensional' haematocrit
      * @return the segment haematocrit
      */
-    units::quantity<unit::dimensionless> GetHaematocrit() const;
+    QDimensionless GetHaematocrit() const;
 
     /**
      * Return the impedance
      *
      * @return the segment impedance
      */
-    units::quantity<unit::flow_impedance> GetImpedance() const;
+    QFlowImpedance GetImpedance() const;
 
     /**
      * Return the flow rate
      *
      * @return the segment flow rate
      */
-    units::quantity<unit::flow_rate> GetFlowRate() const;
+    QFlowRate GetFlowRate() const;
 
     /**
      * Return the segment viscosity
      *
      * @return the segment viscosity
      */
-    units::quantity<unit::dynamic_viscosity> GetViscosity() const;
+    QDynamicViscosity GetViscosity() const;
 
     /**
      * Return the segment wall shear stress of this vessel segment
      *
      * @return the segment wall shear stress
      */
-    units::quantity<unit::pressure> GetWallShearStress() const;
+    QPressure GetWallShearStress() const;
 
     /**
      * Return the growth stimulus of this vessel segment
      *
      * @return the segment growth stimulus
      */
-    units::quantity<unit::rate> GetGrowthStimulus() const;
+    QRate GetGrowthStimulus() const;
 
     /**
      * Return a map of segment data for use by the vtk writer
@@ -156,7 +156,7 @@ public:
      *
      * @return the regression time
      */
-    units::quantity<unit::time> GetRegressionTime() const;
+    QTime GetRegressionTime() const;
 
     /**
      * @return whether regression timer has started.
@@ -167,7 +167,7 @@ public:
      * @param simulationReferenceTime the reference time for the simulation
      * @return whether the vessel should regress (be removed).
      */
-    bool HasVesselRegressed(units::quantity<unit::time> simulationReferenceTime);
+    bool HasVesselRegressed(QTime simulationReferenceTime);
 
     /**
      * Rescue vessel from regression.
@@ -179,55 +179,55 @@ public:
      *
      * @param haematocrit the haematocrit in the segment
      */
-    void SetHaematocrit(units::quantity<unit::dimensionless> haematocrit);
+    void SetHaematocrit(QDimensionless haematocrit);
 
     /**
      * Set the flow rate
      *
      * @param flowRate the flow rate in the segment
      */
-    void SetFlowRate(units::quantity<unit::flow_rate> flowRate);
+    void SetFlowRate(QFlowRate flowRate);
 
     /**
      * Set the impedance
      *
      * @param impedance the impedance in the segment
      */
-    void SetImpedance(units::quantity<unit::flow_impedance> impedance);
+    void SetImpedance(QFlowImpedance impedance);
 
     /**
      * Set the viscosity
      *
      * @param viscosity the viscosity in the segment
      */
-    void SetViscosity(units::quantity<unit::dynamic_viscosity> viscosity);
+    void SetViscosity(QDynamicViscosity viscosity);
 
     /**
      * Set the wall shear stress of this vessel segment
      *
      * @param wallShear the wall shear stress in the segment
      */
-    void SetWallShearStress(units::quantity<unit::pressure> wallShear);
+    void SetWallShearStress(QPressure wallShear);
 
     /**
      * Set the growth stimulus of this vessel segment
      *
      * @param stimulus the growth stimulus in the segment
      */
-    void SetGrowthStimulus(units::quantity<unit::rate> stimulus);
+    void SetGrowthStimulus(QRate stimulus);
 
     /**
      * Set dimensional amount of time until removal of vessel from network.
      * @param simulationReferenceTime the simulation reference time
      * @param time the amount of time until vessel removal
      */
-    void SetTimeUntilRegression(units::quantity<unit::time> time, units::quantity<unit::time> simulationReferenceTime);
+    void SetTimeUntilRegression(QTime time, QTime simulationReferenceTime);
 
     /**
      * Set dimensional time at removal of vessel from network.
      * @param time the time at vessel removal
      */
-    void SetRegressionTime(units::quantity<unit::time> time);
+    void SetRegressionTime(QTime time);
 
     /**
      * Update the vessel segments

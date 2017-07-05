@@ -103,7 +103,7 @@ void Owen2011OxygenBasedCellCycleModel::CheckAndLabelCell()
     assert(mpCell->GetMutationState()->IsType<CancerCellMutationState>() || mpCell->GetMutationState()->IsType<WildTypeCellMutationState>());
 
     // Get cell's oxygen concentration
-    units::quantity<unit::concentration> oxygen_concentration = mpCell->GetCellData()->GetItem("oxygen")*mReferenceConcentrationScale;
+    QConcentration oxygen_concentration = mpCell->GetCellData()->GetItem("oxygen")*mReferenceConcentrationScale;
     if (mpCell->GetMutationState()->IsType<CancerCellMutationState>())
     {
         if(oxygen_concentration/mReferenceSolubility <= mEnterQuiescenceOxygenConcentration)
@@ -219,27 +219,27 @@ double Owen2011OxygenBasedCellCycleModel::GetP53()
     return p53;
 }
 
-units::quantity<unit::time> Owen2011OxygenBasedCellCycleModel::GetCurrentQuiescentDuration()
+QTime Owen2011OxygenBasedCellCycleModel::GetCurrentQuiescentDuration()
 {
     return mCurrentQuiescentDuration;
 }
 
-units::quantity<unit::time> Owen2011OxygenBasedCellCycleModel::GetCurrentQuiescenceOnsetTime()
+QTime Owen2011OxygenBasedCellCycleModel::GetCurrentQuiescenceOnsetTime()
 {
     return mCurrentQuiescenceOnsetTime;
 }
 
-units::quantity<unit::pressure> Owen2011OxygenBasedCellCycleModel::GetEnterQuiescenceOxygenConcentration()
+QPressure Owen2011OxygenBasedCellCycleModel::GetEnterQuiescenceOxygenConcentration()
 {
     return mEnterQuiescenceOxygenConcentration;
 }
 
-units::quantity<unit::pressure> Owen2011OxygenBasedCellCycleModel::GetLeaveQuiescenceOxygenConcentration()
+QPressure Owen2011OxygenBasedCellCycleModel::GetLeaveQuiescenceOxygenConcentration()
 {
     return mLeaveQuiescenceOxygenConcentration;
 }
 
-units::quantity<unit::time> Owen2011OxygenBasedCellCycleModel::GetCriticalQuiescentDuration()
+QTime Owen2011OxygenBasedCellCycleModel::GetCriticalQuiescentDuration()
 {
     return mCriticalQuiescentDuration;
 }
@@ -322,62 +322,62 @@ bool Owen2011OxygenBasedCellCycleModel::ReadyToDivide()
     return mReadyToDivide;
 }
 
-void Owen2011OxygenBasedCellCycleModel::SetSOnset(units::quantity<unit::dimensionless> value)
+void Owen2011OxygenBasedCellCycleModel::SetSOnset(QDimensionless value)
 {
     sOnset = value;
 }
 
-void Owen2011OxygenBasedCellCycleModel::SetG2Onset(units::quantity<unit::dimensionless> value)
+void Owen2011OxygenBasedCellCycleModel::SetG2Onset(QDimensionless value)
 {
     g2Onset = value;
 }
 
-void Owen2011OxygenBasedCellCycleModel::SetMOnset(units::quantity<unit::dimensionless> value)
+void Owen2011OxygenBasedCellCycleModel::SetMOnset(QDimensionless value)
 {
     mOnset = value;
 }
 
-void Owen2011OxygenBasedCellCycleModel::SetOdeSolverTimeStep(units::quantity<unit::time> timeStep)
+void Owen2011OxygenBasedCellCycleModel::SetOdeSolverTimeStep(QTime timeStep)
 {
     mOdeIntegrationTimeStep = timeStep;
     SetDt(mOdeIntegrationTimeStep/mReferenceTimeScale);
 }
 
-void Owen2011OxygenBasedCellCycleModel::SetReferenceTimeScale(units::quantity<unit::time> referenceTimeScale)
+void Owen2011OxygenBasedCellCycleModel::SetReferenceTimeScale(QTime referenceTimeScale)
 {
     mReferenceTimeScale = referenceTimeScale;
 }
 
-void Owen2011OxygenBasedCellCycleModel::SetReferenceConcentrationScale(units::quantity<unit::concentration> referenceConcentrationScale)
+void Owen2011OxygenBasedCellCycleModel::SetReferenceConcentrationScale(QConcentration referenceConcentrationScale)
 {
     mReferenceConcentrationScale = referenceConcentrationScale;
 }
 
-void Owen2011OxygenBasedCellCycleModel::SetMaxRandInitialPhase(units::quantity<unit::dimensionless> rand_max_phase)
+void Owen2011OxygenBasedCellCycleModel::SetMaxRandInitialPhase(QDimensionless rand_max_phase)
 {
     assert(rand_max_phase >= 0.0);
     mMaxRandInitialPhase = rand_max_phase;
 }
 
-void Owen2011OxygenBasedCellCycleModel::SetEnterQuiescenceOxygenConcentration(units::quantity<unit::pressure> enterQuiescenceOxygenConcentration)
+void Owen2011OxygenBasedCellCycleModel::SetEnterQuiescenceOxygenConcentration(QPressure enterQuiescenceOxygenConcentration)
 {
     assert(enterQuiescenceOxygenConcentration>=0.0*unit::pascals);
     mEnterQuiescenceOxygenConcentration = enterQuiescenceOxygenConcentration;
 }
 
-void Owen2011OxygenBasedCellCycleModel::SetLeaveQuiescenceOxygenConcentration(units::quantity<unit::pressure> leaveQuiescenceOxygenConcentration)
+void Owen2011OxygenBasedCellCycleModel::SetLeaveQuiescenceOxygenConcentration(QPressure leaveQuiescenceOxygenConcentration)
 {
     assert(leaveQuiescenceOxygenConcentration >= 0.0*unit::pascals);
     mLeaveQuiescenceOxygenConcentration = leaveQuiescenceOxygenConcentration;
 }
 
-void Owen2011OxygenBasedCellCycleModel::SetCriticalQuiescentDuration(units::quantity<unit::time> criticalQuiescentDuration)
+void Owen2011OxygenBasedCellCycleModel::SetCriticalQuiescentDuration(QTime criticalQuiescentDuration)
 {
     assert(criticalQuiescentDuration >= 0.0*unit::seconds);
     mCriticalQuiescentDuration = criticalQuiescentDuration;
 }
 
-void Owen2011OxygenBasedCellCycleModel::SetCurrentQuiescenceOnsetTime(units::quantity<unit::time> currentQuiescenceOnsetTime)
+void Owen2011OxygenBasedCellCycleModel::SetCurrentQuiescenceOnsetTime(QTime currentQuiescenceOnsetTime)
 {
     assert(currentQuiescenceOnsetTime >= 0.0*unit::seconds);
     mCurrentQuiescenceOnsetTime = currentQuiescenceOnsetTime;
@@ -467,7 +467,7 @@ void Owen2011OxygenBasedCellCycleModel::UpdateQuiescentDuration()
     assert(!mpCell->HasApoptosisBegun());
 
     // Get cell's oxygen concentration
-    units::quantity<unit::concentration> oxygen_concentration = mpCell->GetCellData()->GetItem("oxygen")*mReferenceConcentrationScale;
+    QConcentration oxygen_concentration = mpCell->GetCellData()->GetItem("oxygen")*mReferenceConcentrationScale;
     if (oxygen_concentration/mReferenceSolubility <= mLeaveQuiescenceOxygenConcentration)
     {
         // Update the duration of the current period of hypoxia

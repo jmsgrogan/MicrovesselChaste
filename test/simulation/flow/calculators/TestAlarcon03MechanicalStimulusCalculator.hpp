@@ -54,20 +54,20 @@ public:
     void TestSingleVessel()
     {
         // Make a network
-        std::vector<boost::shared_ptr<VesselNode<3> > > nodes;
+        std::vector<std::shared_ptr<VesselNode<3> > > nodes;
         nodes.push_back(VesselNode<3>::Create(0));
         nodes.push_back(VesselNode<3>::Create(100));
         double pressure = 3933.0;
         nodes[0]->GetFlowProperties()->SetPressure(pressure*unit::pascals);
         nodes[1]->GetFlowProperties()->SetPressure(pressure*unit::pascals);
 
-        boost::shared_ptr<Vessel<3> > p_vessel(Vessel<3>::Create(VesselSegment<3>::Create(nodes[0], nodes[1])));
-        boost::shared_ptr<VesselNetwork<3> > p_vascular_network = VesselNetwork<3>::Create();
+        std::shared_ptr<Vessel<3> > p_vessel(Vessel<3>::Create(VesselSegment<3>::Create(nodes[0], nodes[1])));
+        std::shared_ptr<VesselNetwork<3> > p_vascular_network = VesselNetwork<3>::Create();
         p_vascular_network->AddVessel(p_vessel);
         double wall_shear_stress = 25.0;
         p_vessel->GetSegments()[0]->GetFlowProperties()->SetWallShearStress(wall_shear_stress*unit::pascals);
 
-        boost::shared_ptr<MechanicalStimulusCalculator<3> > calculator(new MechanicalStimulusCalculator<3>());
+        std::shared_ptr<MechanicalStimulusCalculator<3> > calculator(new MechanicalStimulusCalculator<3>());
         calculator->SetVesselNetwork(p_vascular_network);
         calculator->Calculate();
 
@@ -81,20 +81,20 @@ public:
     void TestMechanicalStimulusVsPressure()
     {
         // Make a network
-        std::vector<boost::shared_ptr<VesselNode<3> > > nodes;
+        std::vector<std::shared_ptr<VesselNode<3> > > nodes;
         nodes.push_back(VesselNode<3>::Create(0));
         nodes.push_back(VesselNode<3>::Create(100));
         double pressure = 3933.0;
         nodes[0]->GetFlowProperties()->SetPressure(pressure*unit::pascals);
         nodes[1]->GetFlowProperties()->SetPressure(pressure*unit::pascals);
 
-        boost::shared_ptr<Vessel<3> > p_vessel(Vessel<3>::Create(VesselSegment<3>::Create(nodes[0], nodes[1])));
-        boost::shared_ptr<VesselNetwork<3> > p_vascular_network = VesselNetwork<3>::Create();
+        std::shared_ptr<Vessel<3> > p_vessel(Vessel<3>::Create(VesselSegment<3>::Create(nodes[0], nodes[1])));
+        std::shared_ptr<VesselNetwork<3> > p_vascular_network = VesselNetwork<3>::Create();
         p_vascular_network->AddVessel(p_vessel);
         double wall_shear_stress = 25.0;
         p_vessel->GetSegments()[0]->GetFlowProperties()->SetWallShearStress(wall_shear_stress*unit::pascals);
 
-        boost::shared_ptr<MechanicalStimulusCalculator<3> > calculator(new MechanicalStimulusCalculator<3>());
+        std::shared_ptr<MechanicalStimulusCalculator<3> > calculator(new MechanicalStimulusCalculator<3>());
         calculator->SetVesselNetwork(p_vascular_network);
 
         OutputFileHandler output_file(

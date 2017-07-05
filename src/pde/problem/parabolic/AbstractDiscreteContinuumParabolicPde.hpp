@@ -63,7 +63,7 @@ protected:
     /**
      * The discrete source terms
      */
-    std::vector<units::quantity<unit::concentration_flow_rate> > mDiscreteSourceStrengths;
+    std::vector<QConcentrationFlowRate > mDiscreteSourceStrengths;
 
 public:
 
@@ -100,7 +100,7 @@ public:
      * @param u the concentration
      * @return source strength
      */
-    virtual units::quantity<unit::concentration_flow_rate> ComputeSourceTerm(unsigned gridIndex, units::quantity<unit::concentration> u)=0;
+    virtual QConcentrationFlowRate ComputeSourceTerm(unsigned gridIndex, QConcentration u)=0;
 
     /**
      * Abstract method to return the non linear prime contribution to the regular grid solvers
@@ -108,7 +108,7 @@ public:
      * @param u the concentration
      * @return source strength
      */
-    virtual units::quantity<unit::rate> ComputeSourceTermPrime(unsigned gridIndex, units::quantity<unit::concentration> u)=0;
+    virtual QRate ComputeSourceTermPrime(unsigned gridIndex, QConcentration u)=0;
 
     /**
      * Update the discrete source strengths

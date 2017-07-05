@@ -79,7 +79,7 @@ class GridCalculator
     /**
      * The reference concentration scale for the cellpopulation.
      */
-    units::quantity<unit::concentration> mCellPopulationReferenceConcentration;
+    QConcentration mCellPopulationReferenceConcentration;
 
     /**
      * A map of cells corresponding to points or elements
@@ -212,7 +212,7 @@ public:
      */
     void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
                            QLength cellPopulationReferenceLength,
-                           units::quantity<unit::concentration> cellPopulationReferenceConcentration);
+                           QConcentration cellPopulationReferenceConcentration);
 
     /**
      * Set the values of a field at all locations on the grid

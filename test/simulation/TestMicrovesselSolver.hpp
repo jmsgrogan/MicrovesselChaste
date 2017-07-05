@@ -64,17 +64,17 @@ public:
     void TestSingleVesselGrowth() throw(Exception)
     {
         // Make a network
-        boost::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0, 0.0, 0.0);
-        boost::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(100.0, 0.0, 0.0);
+        std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0, 0.0, 0.0);
+        std::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(100.0, 0.0, 0.0);
         p_node2->SetIsMigrating(true);
-        boost::shared_ptr<Vessel<3> > p_vessel1 = Vessel<3>::Create(VesselSegment<3>::Create(p_node1, p_node2));
-        boost::shared_ptr<VesselNetwork<3> > p_network = boost::shared_ptr<VesselNetwork<3> >(new VesselNetwork<3>());
+        std::shared_ptr<Vessel<3> > p_vessel1 = Vessel<3>::Create(VesselSegment<3>::Create(p_node1, p_node2));
+        std::shared_ptr<VesselNetwork<3> > p_network = std::shared_ptr<VesselNetwork<3> >(new VesselNetwork<3>());
         p_network->AddVessel(p_vessel1);
         p_network->GetVessels()[0]->GetEndNode()->SetIsMigrating(true);
 
         // Set up an angiogenesis solver
-        boost::shared_ptr<LatticeBasedMigrationRule<3> > p_migration_rule = LatticeBasedMigrationRule<3>::Create();
-        boost::shared_ptr<AngiogenesisSolver<3> > p_angiogenesis_solver = AngiogenesisSolver<3>::Create();
+        std::shared_ptr<LatticeBasedMigrationRule<3> > p_migration_rule = LatticeBasedMigrationRule<3>::Create();
+        std::shared_ptr<AngiogenesisSolver<3> > p_angiogenesis_solver = AngiogenesisSolver<3>::Create();
         p_angiogenesis_solver->SetVesselNetwork(p_network);
         p_angiogenesis_solver->SetMigrationRule(p_migration_rule);
 

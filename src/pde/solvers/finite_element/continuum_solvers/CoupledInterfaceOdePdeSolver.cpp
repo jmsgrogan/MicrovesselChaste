@@ -131,7 +131,7 @@ void CoupledInterfaceOdePdeSolver<DIM>::SetupLinearSystem(Vec currentSolution, b
         RobinConditionsSurfaceTermAssembler<DIM,DIM,1> surface_integral_assembler(this->mpMesh, mpBoundaryConditions);
         surface_integral_assembler.SetVectorToAssemble(this->mpLinearSystem->rGetRhsVector(), true);
         surface_integral_assembler.SetPermeability(mPermeability);
-        units::quantity<unit::dimensionless> binding_constant = p_coupled_pde->GetPelletBindingConstant();
+        QDimensionless binding_constant = p_coupled_pde->GetPelletBindingConstant();
         surface_integral_assembler.SetMultiplier(double(mCurrentLumpedSolution/binding_constant));
         surface_integral_assembler.AssembleVector();
         this->mpLinearSystem->FinaliseRhsVector(); // (Petsc communication)
@@ -152,16 +152,16 @@ void CoupledInterfaceOdePdeSolver<DIM>::SetupLinearSystem(Vec currentSolution, b
             {
                 depth=p_coupled_pde->GetPelletDepth();
             }
-            units::quantity<unit::area> surface_area = surf_calc.CalculateSurfaceIntegral(false)*mReferenceLengthScale*depth;
-            units::quantity<unit::area> surface_concentration_integral = surf_calc.CalculateSurfaceIntegral()*mReferenceLengthScale*depth;
+            QArea surface_area = surf_calc.CalculateSurfaceIntegral(false)*mReferenceLengthScale*depth;
+            QArea surface_concentration_integral = surf_calc.CalculateSurfaceIntegral()*mReferenceLengthScale*depth;
 
             // Update the vegf in the pellet
-            units::quantity<unit::volume> volume = p_coupled_pde->GetPelletVolume();
-            units::quantity<unit::membrane_permeability> permeability = p_coupled_pde->GetCorneaPelletPermeability();
-            units::quantity<unit::dimensionless> binding_constant = p_coupled_pde->GetPelletBindingConstant();
-            units::quantity<unit::rate> decay_rate = p_coupled_pde->GetPelletFreeDecayRate();
-            units::quantity<unit::rate> pellet_update_term1 = (permeability/volume)*((surface_area*mCurrentLumpedSolution/binding_constant) -surface_concentration_integral);
-            units::quantity<unit::rate> dVegf_dt = -(decay_rate/binding_constant)*mCurrentLumpedSolution - pellet_update_term1;
+            QVolume volume = p_coupled_pde->GetPelletVolume();
+            QMembranePermeability permeability = p_coupled_pde->GetCorneaPelletPermeability();
+            QDimensionless binding_constant = p_coupled_pde->GetPelletBindingConstant();
+            QRate decay_rate = p_coupled_pde->GetPelletFreeDecayRate();
+            QRate pellet_update_term1 = (permeability/volume)*((surface_area*mCurrentLumpedSolution/binding_constant) -surface_concentration_integral);
+            QRate dVegf_dt = -(decay_rate/binding_constant)*mCurrentLumpedSolution - pellet_update_term1;
             mCurrentLumpedSolution += dVegf_dt*PdeSimulationTime::GetPdeTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
         }
     }

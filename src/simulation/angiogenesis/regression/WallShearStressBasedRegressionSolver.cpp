@@ -62,25 +62,25 @@ std::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > WallShearStressBased
 }
 
 template<unsigned DIM>
-units::quantity<unit::pressure> WallShearStressBasedRegressionSolver<DIM>::GetLowWallShearStressThreshold()
+QPressure WallShearStressBasedRegressionSolver<DIM>::GetLowWallShearStressThreshold()
 {
     return mThresholdWss;
 }
 
 template<unsigned DIM>
-units::quantity<unit::time> WallShearStressBasedRegressionSolver<DIM>::GetMaximumTimeWithLowWallShearStress()
+QTime WallShearStressBasedRegressionSolver<DIM>::GetMaximumTimeWithLowWallShearStress()
 {
     return mMaxTimeWithLowWss;
 }
 
 template<unsigned DIM>
-void WallShearStressBasedRegressionSolver<DIM>::SetMaximumTimeWithLowWallShearStress(units::quantity<unit::time> time)
+void WallShearStressBasedRegressionSolver<DIM>::SetMaximumTimeWithLowWallShearStress(QTime time)
 {
     mMaxTimeWithLowWss = time;
 }
 
 template<unsigned DIM>
-void WallShearStressBasedRegressionSolver<DIM>::SetLowWallShearStressThreshold(units::quantity<unit::pressure> threshold)
+void WallShearStressBasedRegressionSolver<DIM>::SetLowWallShearStressThreshold(QPressure threshold)
 {
     mThresholdWss = threshold;
 }

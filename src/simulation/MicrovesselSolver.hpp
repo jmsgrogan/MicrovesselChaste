@@ -199,7 +199,7 @@ public:
      */
     void SetupFromModifier(AbstractCellPopulation<DIM,DIM>& rCellPopulation,
                            QLength cellReferenceLength,
-                           units::quantity<unit::concentration> cellReferenceConcentration,
+                           QConcentration cellReferenceConcentration,
                            const std::string& rDirectory);
 
     /**

@@ -33,14 +33,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef ABSTRACTVESSELNETWORKCOMPONENTFLOWPROPERTIES_HPP_
 #define ABSTRACTVESSELNETWORKCOMPONENTFLOWPROPERTIES_HPP_
 
+#include <memory>
 #include <string>
 #include <map>
-#include <boost/enable_shared_from_this.hpp>
+#include <boost/serialization/base_object.hpp>
 #include "ChasteSerialization.hpp"
 #include "UnitCollection.hpp"
 #include "ClassIsAbstract.hpp"
@@ -50,7 +49,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * This class contains common functionality for flow property containers for all vessel network components.
  */
 template<unsigned DIM>
-class AbstractVesselNetworkComponentFlowProperties: public boost::enable_shared_from_this<AbstractVesselNetworkComponentFlowProperties<DIM> >,
+class AbstractVesselNetworkComponentFlowProperties: public std::enable_shared_from_this<AbstractVesselNetworkComponentFlowProperties<DIM> >,
     public AbstractVesselNetworkComponentProperties<DIM>
 {
 private:
@@ -77,7 +76,7 @@ protected:
     /**
      * Dimensionless pressure in the component
      */
-    units::quantity<unit::pressure> mPressure;
+    QPressure mPressure;
 
 public:
 
@@ -96,14 +95,14 @@ public:
      *
      * @return the pressure in the component
      */
-    units::quantity<unit::pressure> GetPressure() const;
+    QPressure GetPressure() const;
 
     /**
      * Set the pressure in the component
      *
      * @param pressure the component pressure
      */
-    virtual void SetPressure(units::quantity<unit::pressure> pressure);
+    virtual void SetPressure(QPressure pressure);
 
 };
 

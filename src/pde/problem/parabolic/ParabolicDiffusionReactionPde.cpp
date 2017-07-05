@@ -68,35 +68,35 @@ double ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeSourceTerm(
 //        {
 //            EXCEPTION("Requested out of bound grid index in discrete sources. Maybe you forgot to update the source strengths.");
 //        }
-//        units::quantity<unit::rate> scaling_factor = (1.0/BaseUnits::Instance()->GetReferenceTimeScale());
+//        QRate scaling_factor = (1.0/BaseUnits::Instance()->GetReferenceTimeScale());
 //        return (this->mLinearInUTerm + this->mDiscreteLinearSourceStrengths[pElement->GetIndex()])/scaling_factor;
 //    }
 //    else
 //    {
-        units::quantity<unit::rate> scaling_factor = (1.0/this->mReferenceTimeScale);
+        QRate scaling_factor = (1.0/this->mReferenceTimeScale);
         return this->mLinearInUTerm/scaling_factor;
 //    }
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::concentration_flow_rate> ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeSourceTerm(unsigned gridIndex,
-                                                                                                                                                  units::quantity<unit::concentration> u)
+QConcentrationFlowRate ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeSourceTerm(unsigned gridIndex,
+                                                                                                                                                  QConcentration u)
 {
-    units::quantity<unit::concentration_flow_rate> rate = this->mLinearInUTerm*u ;//+
+    QConcentrationFlowRate rate = this->mLinearInUTerm*u ;//+
             //this->mDiscreteConstantSourceStrengths[gridIndex] + this->mDiscreteLinearSourceStrengths[gridIndex]*u;
     return rate;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::rate> ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeSourceTermPrime(unsigned gridIndex,
-                                                                                                                                    units::quantity<unit::concentration> u)
+QRate ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::ComputeSourceTermPrime(unsigned gridIndex,
+                                                                                                                                    QConcentration u)
 {
-    units::quantity<unit::rate> rate = this->mLinearInUTerm ;//+ this->mDiscreteLinearSourceStrengths[gridIndex];
+    QRate rate = this->mLinearInUTerm ;//+ this->mDiscreteLinearSourceStrengths[gridIndex];
     return rate;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetContinuumLinearInUTerm(units::quantity<unit::rate> linearInUTerm)
+void ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::SetContinuumLinearInUTerm(QRate linearInUTerm)
 {
     mLinearInUTerm = linearInUTerm;
 }
@@ -108,13 +108,13 @@ void ParabolicDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscreteSource
     if(this->mDiscreteSources.size()>0)
     {
         unsigned num_locations = this->mDiscreteSources[0]->GetDensityMap()->GetGridCalculator()->GetGrid()->GetNumberOfPoints();
-        mDiscreteNonLinearSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(num_locations,
+        mDiscreteNonLinearSourceStrengths = std::vector<QConcentrationFlowRate >(num_locations,
                 0.0*unit::mole_per_metre_cubed_per_second);
         for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
         {
-            std::vector<units::quantity<unit::concentration_flow_rate> > result = this->mDiscreteSources[idx]->GetNonlinearTermValues();
+            std::vector<QConcentrationFlowRate > result = this->mDiscreteSources[idx]->GetNonlinearTermValues();
             std::transform(mDiscreteNonLinearSourceStrengths.begin( ), mDiscreteNonLinearSourceStrengths.end( ),
-                           result.begin( ), mDiscreteNonLinearSourceStrengths.begin( ),std::plus<units::quantity<unit::concentration_flow_rate> >( ));
+                           result.begin( ), mDiscreteNonLinearSourceStrengths.begin( ),std::plus<QConcentrationFlowRate >( ));
         }
     }
 }

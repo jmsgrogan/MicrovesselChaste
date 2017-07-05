@@ -82,7 +82,7 @@ public:
      * Return the value of the field at the mesh centroids
      * @return the value of the field ordered according to element order
      */
-    virtual std::vector<units::quantity<unit::concentration> > GetConcentrationsAtCentroids();
+    virtual std::vector<QConcentration > GetConcentrationsAtCentroids();
 
     /**
      * Overridden Setup method.
@@ -105,7 +105,7 @@ public:
      * Update the solution using concentration data
      * @param rData the data
      */
-    virtual void UpdateSolution(const std::vector<units::quantity<unit::concentration> >& rData);
+    virtual void UpdateSolution(const std::vector<QConcentration >& rData);
 
     /**
      * Update the cell data as passed in

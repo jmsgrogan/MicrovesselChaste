@@ -69,17 +69,17 @@ class OffLatticeMigrationRule : public AbstractMigrationRule<DIM>
     /**
      * Mean angle between current and new directions about global axes
      */
-    std::vector<units::quantity<unit::plane_angle> > mMeanAngles;
+    std::vector<QAngle > mMeanAngles;
 
     /**
      * Deviation in angle between current and new directions about global axes
      */
-    std::vector<units::quantity<unit::plane_angle> > mSdvAngles;
+    std::vector<QAngle > mSdvAngles;
 
     /**
      * Tip cell velocity
      */
-    units::quantity<unit::velocity> mVelocity;
+    QVelocity mVelocity;
 
     /**
      * Chemotactic strength
@@ -164,7 +164,7 @@ public:
      * Set the sprout velocity
      * @param velocity the sprout velocity
      */
-    void SetSproutingVelocity(units::quantity<unit::velocity> velocity);
+    void SetSproutingVelocity(QVelocity velocity);
 
     /**
      * Set the chemotactic strength

@@ -49,23 +49,23 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 class GenericAntiAngiogenicTherapy : public AbstractTherapy<DIM>
 {
-    units::quantity<unit::concentration> mCurrentConcentration;
+    QConcentration mCurrentConcentration;
 
-    units::quantity<unit::concentration> mConcentrationAtMaxEffect;
+    QConcentration mConcentrationAtMaxEffect;
 
-    units::quantity<unit::rate> mRemovalRate;
+    QRate mRemovalRate;
 
     std::shared_ptr<WallShearStressBasedRegressionSolver<DIM> > mpRegressionSolver;
 
     std::shared_ptr<AbstractSproutingRule<DIM> > mpSproutingRule;
 
-    units::quantity<unit::time> mPreviousTime;
+    QTime mPreviousTime;
 
-    units::quantity<unit::pressure> mInitialWSS;
+    QPressure mInitialWSS;
 
-    units::quantity<unit::time> mInitialRegressionTime;
+    QTime mInitialRegressionTime;
 
-    units::quantity<unit::rate> mInitialSproutingProbability;
+    QRate mInitialSproutingProbability;
 
 public:
 

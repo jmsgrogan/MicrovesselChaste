@@ -84,7 +84,7 @@ QLength GetDistanceToLineSegment(const DimensionalChastePoint<DIM>& rStartLocati
  * @return the dot product of the vectors between each point and the origin
  */
 template<unsigned DIM>
-units::quantity<unit::area> GetDotProduct(const DimensionalChastePoint<DIM>& rLocation1,
+QArea GetDotProduct(const DimensionalChastePoint<DIM>& rLocation1,
                                                  const DimensionalChastePoint<DIM>& rLocation2);
 
 /**
@@ -139,7 +139,7 @@ vtkSmartPointer<vtkPoints> GetProbeLocationsInternalPoint(DimensionalChastePoint
                                                                          DimensionalChastePoint<DIM> rCentralPoint,
                                                                          DimensionalChastePoint<DIM> rRotationAxis,
                                                                          QLength probeLength,
-                                                                         units::quantity<unit::plane_angle> angle);
+                                                                         QAngle angle);
 
 /**
  * Is the point inside the cone defined by apex, aperture and  base centre
@@ -252,7 +252,7 @@ DimensionalChastePoint<DIM> OffsetAlongVector(const c_vector<double, DIM>& rVect
  */
 template<unsigned DIM>
 DimensionalChastePoint<DIM> RotateAboutAxis(const DimensionalChastePoint<DIM>& rDirection,
-                                      const DimensionalChastePoint<3>& rAxis, units::quantity<unit::plane_angle> angle);
+                                      const DimensionalChastePoint<3>& rAxis, QAngle angle);
 
 /**
  * Rotate the supplied vector about the axis by the specified angle.
@@ -263,7 +263,7 @@ DimensionalChastePoint<DIM> RotateAboutAxis(const DimensionalChastePoint<DIM>& r
  */
 template<unsigned DIM>
 c_vector<double, DIM> RotateAboutAxis(const c_vector<double, DIM>& rDirection,
-                                      const c_vector<double, 3>& rAxis, units::quantity<unit::plane_angle> angle);
+                                      const c_vector<double, 3>& rAxis, QAngle angle);
 
 #include "GeometryToolsImpl.hpp"
 #endif /*GEOMETRYTOOLS_HPP_*/

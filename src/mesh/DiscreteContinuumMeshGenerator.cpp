@@ -107,7 +107,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::SetDomain(const std
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::SetMaxElementArea(units::quantity<unit::volume> maxElementArea)
+void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::SetMaxElementArea(QVolume maxElementArea)
 {
     mMaxElementArea = maxElementArea;
 }
@@ -142,7 +142,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Update()
             if(mpDomain)
             {
                 std::vector<QLength > bounding_box = mpDomain->GetBoundingBox();
-                if (units::abs(bounding_box[4]) < 1.e-12*unit::metres && units::abs(bounding_box[5]) < 1.e-12*unit::metres)
+                if (Qabs(bounding_box[4]) < 1.e-12*unit::metres && Qabs(bounding_box[5]) < 1.e-12*unit::metres)
                 {
                    Mesh2d();
                    this->mpMesh->SetAttributesKeys(mpDomain->GetAttributesKeysForMesh(false));
@@ -168,7 +168,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Update()
         if(mpDomain)
         {
             std::vector<QLength > bounding_box = mpDomain->GetBoundingBox();
-            if (units::abs(bounding_box[4]) < 1.e-12*unit::metres && units::abs(bounding_box[5]) < 1.e-12*unit::metres)
+            if (Qabs(bounding_box[4]) < 1.e-12*unit::metres && Qabs(bounding_box[5]) < 1.e-12*unit::metres)
             {
                 EXCEPTION("The part is two-dimensional, use the 2D meshing functionality.");
             }
@@ -331,7 +331,9 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
                     mesher_input.regionlist[4 * idx + jdx] = region_location[jdx];
                 }
                 mesher_input.regionlist[4 * idx + 2] = 1.0;
-                mesher_input.regionlist[4 * idx + 3] = mMaxElementArea/units::pow<3>(mReferenceLength);
+
+                QVolume ref_volume = mReferenceLength*mReferenceLength*mReferenceLength;
+                mesher_input.regionlist[4 * idx + 3] = mMaxElementArea/ref_volume;
             }
             for (unsigned idx = 0; idx < region_locations.size(); idx++)
             {
@@ -341,7 +343,8 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
                     mesher_input.regionlist[4 * idx + jdx] = region_location[jdx];
                 }
                 mesher_input.regionlist[4 * idx + 2] = region_locations[idx].second;
-                mesher_input.regionlist[4 * idx + 3] = mMaxElementArea/units::pow<3>(mReferenceLength);
+                QVolume ref_volume = mReferenceLength*mReferenceLength*mReferenceLength;
+                mesher_input.regionlist[4 * idx + 3] = mMaxElementArea/ref_volume;
             }
         }
     }
@@ -349,7 +352,8 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
     std::string mesher_command = "pqQze";
     if (mMaxElementArea > 0.0*unit::metres*unit::metres*unit::metres)
     {
-        double mesh_size = mMaxElementArea/units::pow<3>(mReferenceLength);
+        QVolume ref_volume = mReferenceLength*mReferenceLength*mReferenceLength;
+        double mesh_size = mMaxElementArea/ref_volume;
         mesher_command += "a" + boost::lexical_cast<std::string>(mesh_size);
     }
 
@@ -422,7 +426,8 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
                 mesher_input.regionlist[5 * idx + jdx] = region_location[jdx];
             }
             mesher_input.regionlist[5 * idx + 3] = double(region_locations[idx].second);
-            mesher_input.regionlist[5 * idx + 4] = double(mMaxElementArea/units::pow<3>(mReferenceLength));
+            QVolume ref_volume = mReferenceLength*mReferenceLength*mReferenceLength;
+            mesher_input.regionlist[5 * idx + 4] = double(mMaxElementArea/ref_volume);
         }
 
         mesher_input.holelist = new double[(num_holes) * 3];
@@ -508,7 +513,8 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
         std::string mesher_command = "pqQz";
         if (mMaxElementArea > 0.0*unit::metres*unit::metres*unit::metres)
         {
-            double mesh_size = mMaxElementArea/units::pow<3>(mReferenceLength);
+            QVolume ref_volume = mReferenceLength*mReferenceLength*mReferenceLength;
+            double mesh_size = mMaxElementArea/ref_volume;
             mesher_command += "a" + boost::lexical_cast<std::string>(mesh_size);
         }
         if(num_regions>0)
@@ -641,7 +647,8 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::MeshStl3d()
     std::string mesher_command = "pqQz";
     if (mMaxElementArea >  0.0*unit::metres*unit::metres*unit::metres)
     {
-        double mesh_size = mMaxElementArea/units::pow<3>(mReferenceLength);
+        QVolume ref_volume = mReferenceLength*mReferenceLength*mReferenceLength;
+        double mesh_size = mMaxElementArea/ref_volume;
         mesher_command += "a" + boost::lexical_cast<std::string>(mesh_size);
     }
 

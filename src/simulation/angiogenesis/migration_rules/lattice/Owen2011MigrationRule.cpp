@@ -65,13 +65,13 @@ Owen2011MigrationRule<DIM>::~Owen2011MigrationRule()
 }
 
 template<unsigned DIM>
-void Owen2011MigrationRule<DIM>::SetCellChemotacticParameter(units::quantity<unit::diffusivity_per_concentration> cellChemotacticParameter)
+void Owen2011MigrationRule<DIM>::SetCellChemotacticParameter(QDiffusivityPerConcentration cellChemotacticParameter)
 {
     mCellChemotacticParameter = cellChemotacticParameter;
 }
 
 template<unsigned DIM>
-void Owen2011MigrationRule<DIM>::SetCellMotilityParameter(units::quantity<unit::diffusivity> cellMotility)
+void Owen2011MigrationRule<DIM>::SetCellMotilityParameter(QDiffusivity cellMotility)
 {
     mCellMotility = cellMotility;
 }
@@ -119,8 +119,8 @@ std::vector<double> Owen2011MigrationRule<DIM>::GetNeighbourMovementProbabilitie
 
         if (!vessel_crosses_line_segment && !sprout_already_attached_to_vessel_at_location)
         {
-            units::quantity<unit::concentration> VEGF_diff = mVegfField[neighbourIndices[jdx]] - mVegfField[gridIndex];
-            units::quantity<unit::time> dt = SimulationTime::Instance()->GetTimeStep() * BaseUnits::Instance()->GetReferenceTimeScale();
+            QConcentration VEGF_diff = mVegfField[neighbourIndices[jdx]] - mVegfField[gridIndex];
+            QTime dt = SimulationTime::Instance()->GetTimeStep() * BaseUnits::Instance()->GetReferenceTimeScale();
             QLength dij = pNode->rGetLocation().GetDistance(neighbour_location);
             probability_of_moving[jdx] = ((mCellMotility * dt)/(2.0*dij*dij))*(1.0 + mCellChemotacticParameter*VEGF_diff/(2.0*mCellMotility));
             if (probability_of_moving[jdx] < 0.0)

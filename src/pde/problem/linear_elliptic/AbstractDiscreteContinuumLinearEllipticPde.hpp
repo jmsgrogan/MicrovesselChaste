@@ -69,22 +69,22 @@ protected:
     /**
      * The continuum constant in U term, discrete terms are added to this.
      */
-    units::quantity<unit::concentration_flow_rate> mConstantInUTerm;
+    QConcentrationFlowRate mConstantInUTerm;
 
     /**
      * The continuum linear in U term, discrete terms are added to this.
      */
-    units::quantity<unit::rate> mLinearInUTerm;
+    QRate mLinearInUTerm;
 
     /**
      * The constant in U term source strengths for each point on the grid or element in the mesh
      */
-    std::vector<units::quantity<unit::concentration_flow_rate> > mDiscreteConstantSourceStrengths;
+    std::vector<QConcentrationFlowRate > mDiscreteConstantSourceStrengths;
 
     /**
      * The linear in U term source strengths for each point on the grid or mesh
      */
-    std::vector<units::quantity<unit::rate> > mDiscreteLinearSourceStrengths;
+    std::vector<QRate > mDiscreteLinearSourceStrengths;
 
 public:
 
@@ -109,40 +109,40 @@ public:
      * @param gridIndex grid index
      * @return source strength
      */
-    virtual units::quantity<unit::concentration_flow_rate> ComputeConstantInUSourceTerm(unsigned gridIndex=0) = 0;
+    virtual QConcentrationFlowRate ComputeConstantInUSourceTerm(unsigned gridIndex=0) = 0;
 
     /**
      * Virtual method to return the constant in U contribution to the regular grid solvers
      * @param gridIndex grid index
      * @return source strength
      */
-    virtual units::quantity<unit::concentration_flow_rate> ComputeDiscreteConstantInUSourceTerm(unsigned gridIndex=0);
+    virtual QConcentrationFlowRate ComputeDiscreteConstantInUSourceTerm(unsigned gridIndex=0);
 
     /**
      * Overwritten method to return the linear in U contribution to the regular grid solvers
      * @param gridIndex grid index
      * @return source strength
      */
-    virtual units::quantity<unit::rate> ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex=0) = 0;
+    virtual QRate ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex=0) = 0;
 
     /**
      * Overwritten method to return the linear in U contribution to the regular grid solvers
      * @param gridIndex grid index
      * @return source strength
      */
-    virtual units::quantity<unit::rate> ComputeDiscreteLinearInUCoeffInSourceTerm(unsigned gridIndex=0);
+    virtual QRate ComputeDiscreteLinearInUCoeffInSourceTerm(unsigned gridIndex=0);
 
     /**
      * Set the continuum constant in U term
      * @param constantInUTerm the continuum constant in U term
      */
-    void SetContinuumConstantInUTerm(units::quantity<unit::concentration_flow_rate> constantInUTerm);
+    void SetContinuumConstantInUTerm(QConcentrationFlowRate constantInUTerm);
 
     /**
      * Set the linear constant in U term
      * @param linearInUTerm the linear constant in U term
      */
-    void SetContinuumLinearInUTerm(units::quantity<unit::rate> linearInUTerm);
+    void SetContinuumLinearInUTerm(QRate linearInUTerm);
 
     /**
      * Update the discrete source strengths

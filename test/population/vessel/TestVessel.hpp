@@ -51,14 +51,14 @@ public:
 
     void TestConstructor() throw (Exception)
     {
-        std::vector<boost::shared_ptr<VesselNode<2> > > nodes;
+        std::vector<std::shared_ptr<VesselNode<2> > > nodes;
         for (unsigned idx = 0; idx < 6; idx++)
         {
             nodes.push_back(VesselNode<2>::Create(double(idx), double(idx) + 1.0));
         }
 
         // Make some segments
-        std::vector<boost::shared_ptr<VesselSegment<2> > > segments;
+        std::vector<std::shared_ptr<VesselSegment<2> > > segments;
         for (unsigned idx = 0; idx < 3; idx++)
         {
             segments.push_back(VesselSegment<2>::Create(nodes[idx], nodes[idx+1]));
@@ -66,18 +66,18 @@ public:
         segments.push_back(VesselSegment<2>::Create(nodes[4], nodes[5]));
 
         // Make some vessels
-        boost::shared_ptr<Vessel<2> > pVessel1 = Vessel<2>::Create(segments[0]);
+        std::shared_ptr<Vessel<2> > pVessel1 = Vessel<2>::Create(segments[0]);
 
-        std::vector<boost::shared_ptr<VesselSegment<2> > > good_segments;
+        std::vector<std::shared_ptr<VesselSegment<2> > > good_segments;
         good_segments.push_back(segments[1]);
         good_segments.push_back(segments[2]);
 
-        boost::shared_ptr<Vessel<2> > pVessel2 = Vessel<2>::Create(good_segments);
+        std::shared_ptr<Vessel<2> > pVessel2 = Vessel<2>::Create(good_segments);
 
-        std::vector<boost::shared_ptr<VesselSegment<2> > > bad_segments = good_segments;
+        std::vector<std::shared_ptr<VesselSegment<2> > > bad_segments = good_segments;
         bad_segments.push_back(segments[3]);
         TS_ASSERT_THROWS_THIS(Vessel<2>::Create(bad_segments), "Input vessel segments are not attached in the correct order.");
-        boost::shared_ptr<Vessel<2> > pVessel3 = Vessel<2>::Create(nodes);
+        std::shared_ptr<Vessel<2> > pVessel3 = Vessel<2>::Create(nodes);
 
         // Check that locations are correct
         TS_ASSERT(pVessel1->GetStartNode()->IsCoincident(nodes[0]->rGetLocation()));
@@ -104,14 +104,14 @@ public:
     void TestAddingAndRemovingSegments() throw (Exception)
     {
         // Make some nodes
-        std::vector<boost::shared_ptr<VesselNode<2> > > nodes;
+        std::vector<std::shared_ptr<VesselNode<2> > > nodes;
         for (unsigned idx = 0; idx < 6; idx++)
         {
             nodes.push_back(VesselNode<2>::Create(double(idx), double(idx) + 1.0));
         }
 
         // Make some segments
-        std::vector<boost::shared_ptr<VesselSegment<2> > > segments;
+        std::vector<std::shared_ptr<VesselSegment<2> > > segments;
         for (unsigned idx = 0; idx < 3; idx++)
         {
             segments.push_back(VesselSegment<2>::Create(nodes[idx], nodes[idx+1]));
@@ -119,7 +119,7 @@ public:
         segments.push_back(VesselSegment<2>::Create(nodes[4], nodes[5]));
 
         // Make a vessel
-        boost::shared_ptr<Vessel<2> > pVessel1 = Vessel<2>::Create(segments[1]);
+        std::shared_ptr<Vessel<2> > pVessel1 = Vessel<2>::Create(segments[1]);
 
         // Try adding a segment to the start and end
         pVessel1->AddSegment(segments[0]);
@@ -136,17 +136,17 @@ public:
         TS_ASSERT_EQUALS(pVessel1->GetNumberOfSegments(), 1u);
 
         // Vector version of adding segments
-        std::vector<boost::shared_ptr<VesselSegment<2> > > good_segments;
+        std::vector<std::shared_ptr<VesselSegment<2> > > good_segments;
         good_segments.push_back(segments[1]);
         good_segments.push_back(segments[2]);
 
-        std::vector<boost::shared_ptr<VesselSegment<2> > > bad_segments = good_segments;
+        std::vector<std::shared_ptr<VesselSegment<2> > > bad_segments = good_segments;
         bad_segments.push_back(segments[3]);
-        boost::shared_ptr<Vessel<2> > pVessel2 = Vessel<2>::Create(segments[0]);
+        std::shared_ptr<Vessel<2> > pVessel2 = Vessel<2>::Create(segments[0]);
         pVessel2->AddSegments(good_segments);
         TS_ASSERT_EQUALS(pVessel2->GetNumberOfSegments(), 3u);
 
-        boost::shared_ptr<Vessel<2> > pVessel3 = Vessel<2>::Create(segments[0]);
+        std::shared_ptr<Vessel<2> > pVessel3 = Vessel<2>::Create(segments[0]);
         TS_ASSERT_THROWS_THIS(pVessel3->AddSegments(bad_segments),
                               "Input vessel segments are not attached in the correct order.");
     }
@@ -154,12 +154,12 @@ public:
     void TestRemoveMethod() throw (Exception)
     {
         // Make a segment
-        boost::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0);
-        boost::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(1.0);
-        boost::shared_ptr<VesselSegment<3> > pSegment1 = VesselSegment<3>::Create(p_node1, p_node2);
+        std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0);
+        std::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(1.0);
+        std::shared_ptr<VesselSegment<3> > pSegment1 = VesselSegment<3>::Create(p_node1, p_node2);
 
         // Make a vessel
-        boost::shared_ptr<Vessel<3> > pVessel1 = Vessel<3>::Create(pSegment1);
+        std::shared_ptr<Vessel<3> > pVessel1 = Vessel<3>::Create(pSegment1);
 
         // Delete the vessel
         pVessel1->Remove();

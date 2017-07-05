@@ -60,14 +60,14 @@ std::shared_ptr<CellStateDependentDiscreteSource<DIM> > CellStateDependentDiscre
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > CellStateDependentDiscreteSource<DIM>::GetConstantInUValues()
+std::vector<QConcentrationFlowRate > CellStateDependentDiscreteSource<DIM>::GetConstantInUValues()
 {
     if(!this->mpDensityMap->GetGridCalculator())
     {
         EXCEPTION("A regular grid is required for this type of source");
     }
 
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
+    std::vector<QConcentrationFlowRate > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::mole_per_metre_cubed_per_second);
 
     std::shared_ptr<ApoptoticCellProperty> apoptotic_property(new ApoptoticCellProperty);
@@ -82,14 +82,14 @@ std::vector<units::quantity<unit::concentration_flow_rate> > CellStateDependentD
             // If a mutation specific consumption rate has been specified
             if(mStateRateMap.size()>0)
             {
-                std::map<unsigned, units::quantity<unit::concentration_flow_rate> >::iterator it;
+                std::map<unsigned, QConcentrationFlowRate >::iterator it;
                 // If the cell is apoptotic
                 if (point_cell_map[idx][jdx]->template HasCellProperty<ApoptoticCellProperty>())
                 {
                     it = mStateRateMap.find(apoptotic_label);
                     if (it != mStateRateMap.end())
                     {
-                        values[idx] += it->second;
+                        values[idx] = values[idx] + it->second;
                     }
                 }
                 else
@@ -101,40 +101,40 @@ std::vector<units::quantity<unit::concentration_flow_rate> > CellStateDependentD
                         {
                             // Get a threshold value if it has been set, use the label to determine the field from which the label
                             // value is obtained.
-                            units::quantity<unit::concentration> threshold = 0.0 * unit::mole_per_metre_cubed;
+                            QConcentration threshold = 0.0 * unit::mole_per_metre_cubed;
                             if(mStateRateThresholdMap.size()>0)
                             {
-                                std::map<unsigned, units::quantity<unit::concentration> >::iterator it_threshold;
+                                std::map<unsigned, QConcentration >::iterator it_threshold;
                                 it_threshold = mStateRateThresholdMap.find(point_cell_map[idx][jdx]->GetMutationState()->GetColour());
                                 if (it_threshold != mStateRateThresholdMap.end())
                                 {
                                     threshold = it_threshold->second;
                                 }
                             }
-//                            units::quantity<unit::concentration_flow_rate> conversion_factor = mConsumptionRatePerUnitConcentration*unit::mole_per_metre_cubed/grid_volume;
+//                            QConcentrationFlowRate conversion_factor = mConsumptionRatePerUnitConcentration*unit::mole_per_metre_cubed/grid_volume;
 
                             if(threshold>0.0* unit::mole_per_metre_cubed)
                             {
-                                if(point_cell_map[idx][jdx]->GetCellData()->GetItem(this->mLabel)>threshold.value())
+                                if(point_cell_map[idx][jdx]->GetCellData()->GetItem(this->mLabel)>threshold.getValue())
                                 {
-                                    values[idx] += it->second;
+                                    values[idx] = values[idx] + it->second;
                                 }
                             }
                             else
                             {
-                                values[idx] += it->second;
+                                values[idx] = values[idx] + it->second;
                             }
                         }
                         else
                         {
-                            values[idx] += it->second;
+                            values[idx] = values[idx] + it->second;
                         }
                     }
                 }
             }
             else
             {
-                values[idx] += this->mConstantInUValue;
+                values[idx] = values[idx] + this->mConstantInUValue;
             }
         }
     }
@@ -142,19 +142,19 @@ std::vector<units::quantity<unit::concentration_flow_rate> > CellStateDependentD
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::rate> > CellStateDependentDiscreteSource<DIM>::GetLinearInUValues()
+std::vector<QRate > CellStateDependentDiscreteSource<DIM>::GetLinearInUValues()
 {
-    return std::vector<units::quantity<unit::rate> >(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(), 0.0*unit::per_second);
+    return std::vector<QRate >(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(), 0.0*unit::per_second);
 }
 
 template<unsigned DIM>
-void CellStateDependentDiscreteSource<DIM>::SetStateRateMap(std::map<unsigned, units::quantity<unit::concentration_flow_rate> > stateRateMap)
+void CellStateDependentDiscreteSource<DIM>::SetStateRateMap(std::map<unsigned, QConcentrationFlowRate > stateRateMap)
 {
     mStateRateMap = stateRateMap;
 }
 
 template<unsigned DIM>
-void CellStateDependentDiscreteSource<DIM>::SetStateRateThresholdMap(std::map<unsigned, units::quantity<unit::concentration> > stateThresholdMap)
+void CellStateDependentDiscreteSource<DIM>::SetStateRateThresholdMap(std::map<unsigned, QConcentration > stateThresholdMap)
 {
     mStateRateThresholdMap = stateThresholdMap;
 }

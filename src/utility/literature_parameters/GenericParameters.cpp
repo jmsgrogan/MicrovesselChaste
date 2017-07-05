@@ -37,15 +37,15 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "GenericParameters.hpp"
 
 QLength radius(5.0*unit::microns);
-const std::shared_ptr<ParameterInstance<unit::length> > GenericParameters::mpCapillaryRadius =
-        std::shared_ptr<ParameterInstance<unit::length> >(new ParameterInstance<unit::length> (radius,
+const std::shared_ptr<ParameterInstance<QLength>  > GenericParameters::mpCapillaryRadius =
+        std::shared_ptr<ParameterInstance<QLength>  >(new ParameterInstance<QLength>  (radius,
                                                                                    "Generic_CapillaryRadius",
                                                                                    "Rough Capillary Radius",
                                                                                    "R",
                                                                                    "-"));
 
-const std::shared_ptr<ParameterInstance<unit::concentration> > GenericParameters::mpGasConcentrationAtStp =
-        std::shared_ptr<ParameterInstance<unit::concentration> >(new ParameterInstance<unit::concentration> ((1.0*unit::moles)/(22.4e-3*(units::pow<3>(1.0*unit::metres))),
+const std::shared_ptr<ParameterInstance<QConcentration> > GenericParameters::mpGasConcentrationAtStp =
+        std::shared_ptr<ParameterInstance<QConcentration> >(new ParameterInstance<QConcentration> ((1.0*unit::moles)/(22.4e-3*(Qpow3(1.0*unit::metres))),
                                                                                    "Generic_GasConcentrationAtStp",
                                                                                    "Gas concentration at STP",
                                                                                    "C_{stp}",

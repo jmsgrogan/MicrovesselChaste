@@ -66,34 +66,34 @@ public:
         QLength vessel_length(100.0*unit::microns);
         QLength reference_length(1.0*unit::microns);
         VesselNetworkGenerator<3> generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<3>());
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<3>());
 
         // Set up the grid
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(vessel_length, vessel_length, vessel_length, DimensionalChastePoint<3>());
         DimensionalChastePoint<3> translation_vector(-vessel_length/(2.0*reference_length),
                                                      -vessel_length/(2.0*reference_length), 0.0, reference_length);
         p_domain->Translate(translation_vector);
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         QLength spacing(10.0*unit::microns);
         p_grid->GenerateFromPart(p_domain, spacing);
 
         // Choose the PDE
-        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
-        units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
-        units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e-7 * unit::mole_per_metre_cubed_per_second);
+        std::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
+        QDiffusivity diffusivity(0.0033 * unit::metre_squared_per_second);
+        QConcentrationFlowRate consumption_rate(-2.e-7 * unit::mole_per_metre_cubed_per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
         p_pde->SetContinuumConstantInUTerm(consumption_rate);
 
         // Set up the discrete source
-        boost::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_source_lin = VesselBasedDiscreteSource<3>::Create();
+        std::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_source_lin = VesselBasedDiscreteSource<3>::Create();
         p_vessel_source_lin->SetLinearInUValue(-1.e3*unit::per_second);
-        boost::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_source_const = VesselBasedDiscreteSource<3>::Create();
+        std::shared_ptr<VesselBasedDiscreteSource<3> > p_vessel_source_const = VesselBasedDiscreteSource<3>::Create();
         p_vessel_source_const->SetConstantInUValue(40.e-7* unit::mole_per_metre_cubed_per_second);
         p_pde->AddDiscreteSource(p_vessel_source_lin);
         p_pde->AddDiscreteSource(p_vessel_source_const);
 
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
+        std::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
         p_boundary->SetValue(1.0*unit::mole_per_metre_cubed);
 
         // Set up and run the solver
@@ -115,30 +115,30 @@ public:
         QLength vessel_length(100.0*unit::microns);
         QLength reference_length(1.0*unit::microns);
         VesselNetworkGenerator<3> generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<3>());
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<3>());
 
         // Set up the grid
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(vessel_length, vessel_length, vessel_length, DimensionalChastePoint<3>());
         DimensionalChastePoint<3> translation_vector(-vessel_length/(2.0*reference_length),
                                                      -vessel_length/(2.0*reference_length), 0.0, reference_length);
         p_domain->Translate(translation_vector);
 
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_domain);
         QLength spacing(10.0*unit::microns);
         p_mesh_generator->SetMaxElementArea(spacing*spacing*spacing);
         p_mesh_generator->Update();
 
         // Choose the PDE
-        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
-        units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
-        units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e-7 * unit::mole_per_metre_cubed_per_second);
+        std::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
+        QDiffusivity diffusivity(0.0033 * unit::metre_squared_per_second);
+        QConcentrationFlowRate consumption_rate(-2.e-7 * unit::mole_per_metre_cubed_per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
         p_pde->SetContinuumConstantInUTerm(consumption_rate);
 
         // Set up the discrete source
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
+        std::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
         p_boundary->SetValue(1.0*unit::mole_per_metre_cubed);
 
         // Set up and run the solver

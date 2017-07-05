@@ -69,12 +69,12 @@ protected:
     /**
      * The prescribed value of the source strength. Used for PRESCRIBED source strengths.
      */
-    units::quantity<unit::concentration_flow_rate> mConstantInUValue;
+    QConcentrationFlowRate mConstantInUValue;
 
     /**
      * The prescribed value of the source strength. Used for PRESCRIBED source strengths.
      */
-    units::quantity<unit::rate> mLinearInUValue;
+    QRate mLinearInUValue;
 
     /**
      * The density map
@@ -109,19 +109,19 @@ public:
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    virtual std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInUValues();
+    virtual std::vector<QConcentrationFlowRate > GetConstantInUValues();
 
     /**
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    virtual std::vector<units::quantity<unit::rate> > GetLinearInUValues();
+    virtual std::vector<QRate > GetLinearInUValues();
 
     /**
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    virtual std::vector<units::quantity<unit::concentration_flow_rate> > GetNonlinearTermValues();
+    virtual std::vector<QConcentrationFlowRate > GetNonlinearTermValues();
 
     /**
      * Set the name of the label used in LABEL type sources
@@ -146,13 +146,13 @@ public:
      * Set the value of the source for PRESCRIBED type sources
      * @param value the value of the source
      */
-    void SetConstantInUValue(units::quantity<unit::concentration_flow_rate> value);
+    void SetConstantInUValue(QConcentrationFlowRate value);
 
     /**
      * Set the value of the source for PRESCRIBED type sources
      * @param value the value of the source
      */
-    void SetLinearInUValue(units::quantity<unit::rate> value);
+    void SetLinearInUValue(QRate value);
 
     /**
      * Set the density map for the calculator

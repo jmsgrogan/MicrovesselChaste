@@ -52,7 +52,7 @@ public:
 
     void TestBaseInstance()
     {
-        boost::shared_ptr<BaseParameterInstance> p_my_parameter = BaseParameterInstance::Create();
+        std::shared_ptr<BaseParameterInstance> p_my_parameter = BaseParameterInstance::Create();
         p_my_parameter->SetShortDescription("Base Parameter");
         p_my_parameter->SetName("Base");
         p_my_parameter->SetBibliographicInformation("J. Smith et al., (2003).");
@@ -75,7 +75,7 @@ public:
 
         // Load archive
         {
-            boost::shared_ptr<BaseParameterInstance> p_my_parameter_from_archive;
+            std::shared_ptr<BaseParameterInstance> p_my_parameter_from_archive;
 
             // Read from this input file
             std::ifstream ifs(archive_filename.c_str(), std::ios::binary);

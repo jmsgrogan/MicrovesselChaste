@@ -68,13 +68,13 @@ std::shared_ptr<VesselBasedDiscreteSource<DIM> > VesselBasedDiscreteSource<DIM>:
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscreteSource<DIM>::GetConstantInUValues()
+std::vector<QConcentrationFlowRate > VesselBasedDiscreteSource<DIM>::GetConstantInUValues()
 {
     if(!this->mpDensityMap)
     {
         EXCEPTION("A density map is required for this type of source");
     }
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
+    std::vector<QConcentrationFlowRate > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::mole_per_metre_cubed_per_second);
 
     QLength reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
@@ -89,78 +89,79 @@ std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscrete
         {
             haematocrit_ratio = segment_map[idx][0]->GetVessel()->GetFlowProperties()->GetHaematocrit()/mReferenceHaematocrit;
         }
-        values[idx] += vessel_densities[idx]*mVesselPermeability * (1.0/reference_length) * mReferenceConcentration * haematocrit_ratio;
+        values[idx] = values[idx] + vessel_densities[idx]*mVesselPermeability * (1.0/reference_length) * mReferenceConcentration * haematocrit_ratio;
     }
     return values;
 }
 
 template<unsigned DIM>
-void VesselBasedDiscreteSource<DIM>::SetUptakeRatePerCell(units::quantity<unit::molar_flow_rate> ratePerCell)
+void VesselBasedDiscreteSource<DIM>::SetUptakeRatePerCell(QMolarFlowRate ratePerCell)
 {
     mUptakeRatePerCell = ratePerCell;
 }
 
 template<unsigned DIM>
-void VesselBasedDiscreteSource<DIM>::SetHalfMaxUptakeConcentration(units::quantity<unit::concentration> value)
+void VesselBasedDiscreteSource<DIM>::SetHalfMaxUptakeConcentration(QConcentration value)
 {
 
 }
 
 template<unsigned DIM>
-void VesselBasedDiscreteSource<DIM>::SetNumberOfCellsPerLength(units::quantity<unit::per_length> cellsPerLength)
+void VesselBasedDiscreteSource<DIM>::SetNumberOfCellsPerLength(QPerLength cellsPerLength)
 {
     mCellsPerMetre = cellsPerLength;
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > VesselBasedDiscreteSource<DIM>::GetNonlinearTermValues()
+std::vector<QConcentrationFlowRate > VesselBasedDiscreteSource<DIM>::GetNonlinearTermValues()
 {
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
+    std::vector<QConcentrationFlowRate > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::mole_per_metre_cubed_per_second);
 
     QLength reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
     std::vector<double> vessel_densities = this->mpDensityMap->rGetVesselLineDensity(true);
+    QVolume ref_volume = reference_length*reference_length*reference_length;
     for(unsigned idx=0;idx<vessel_densities.size();idx++)
     {
-        values[idx] += vessel_densities[idx]*mCellsPerMetre*reference_length*mUptakeRatePerCell*(1.0/units::pow<3>(reference_length));
+        values[idx] = values[idx] + vessel_densities[idx]*mCellsPerMetre*reference_length*mUptakeRatePerCell*(1.0/ref_volume);
     }
 
     return values;
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::rate> > VesselBasedDiscreteSource<DIM>::GetLinearInUValues()
+std::vector<QRate > VesselBasedDiscreteSource<DIM>::GetLinearInUValues()
 {
     if(!this->mpDensityMap->GetGridCalculator())
     {
         EXCEPTION("A regular grid is required for this type of source");
     }
 
-    std::vector<units::quantity<unit::rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
+    std::vector<QRate > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::per_second);
     QLength reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
     std::vector<double> vessel_densities = this->mpDensityMap->rGetPerfusedVesselSurfaceAreaDensity(true);
     for(unsigned idx=0;idx<vessel_densities.size();idx++)
     {
-        values[idx] -= vessel_densities[idx]*mVesselPermeability * (1.0/reference_length);
+        values[idx] = values[idx] - vessel_densities[idx]*mVesselPermeability * (1.0/reference_length);
     }
     return values;
 }
 
 template<unsigned DIM>
-void VesselBasedDiscreteSource<DIM>::SetVesselPermeability(units::quantity<unit::membrane_permeability> value)
+void VesselBasedDiscreteSource<DIM>::SetVesselPermeability(QMembranePermeability value)
 {
     mVesselPermeability = value;
 }
 
 template<unsigned DIM>
-void VesselBasedDiscreteSource<DIM>::SetReferenceConcentration(units::quantity<unit::concentration> value)
+void VesselBasedDiscreteSource<DIM>::SetReferenceConcentration(QConcentration value)
 {
     mReferenceConcentration = value;
 }
 
 template<unsigned DIM>
-void VesselBasedDiscreteSource<DIM>::SetReferenceHaematocrit(units::quantity<unit::dimensionless> value)
+void VesselBasedDiscreteSource<DIM>::SetReferenceHaematocrit(QDimensionless value)
 {
     mReferenceHaematocrit = value;
 }

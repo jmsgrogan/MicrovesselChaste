@@ -48,112 +48,112 @@ struct Connor17Parameters
     /**
      * Number of endothelial cells per vessel length \nu
      */
-    static const std::shared_ptr<ParameterInstance<unit::per_length> > mpEcsPerLength;
+    static const std::shared_ptr<ParameterInstance<QPerLength>  > mpEcsPerLength;
 
     /**
      * Motility coefficient for tips \mu
      */
-    static const std::shared_ptr<ParameterInstance<unit::diffusivity> > mpMotilityCoefficient;
+    static const std::shared_ptr<ParameterInstance<QDiffusivity>  > mpMotilityCoefficient;
 
     /**
      * Average vessel radius R
      */
-    static const std::shared_ptr<ParameterInstance<unit::length> > mpVesselRadius;
+    static const std::shared_ptr<ParameterInstance<QLength>  > mpVesselRadius;
 
     /**
      * Pellet volume \Omega_p
      */
-    static const std::shared_ptr<ParameterInstance<unit::volume> > mpPelletVolume;
+    static const std::shared_ptr<ParameterInstance<QVolume>  > mpPelletVolume;
 
     /**
      * Pellet surface area \sigma_p
      */
-    static const std::shared_ptr<ParameterInstance<unit::area> > mpPelletSurfaceArea;
+    static const std::shared_ptr<ParameterInstance<QArea>  > mpPelletSurfaceArea;
 
     /**
      * Chemotactic coefficient \chi
      */
-    static const std::shared_ptr<ParameterInstance<unit::diffusivity_per_concentration> > mpChemotacticCoefficient;
+    static const std::shared_ptr<ParameterInstance<QDiffusivityPerConcentration>  > mpChemotacticCoefficient;
 
     /**
      * VEGF diffusion constant \D_v
      */
-    static const std::shared_ptr<ParameterInstance<unit::diffusivity> > mpVegfDiffusionConstant;
+    static const std::shared_ptr<ParameterInstance<QDiffusivity>  > mpVegfDiffusionConstant;
 
     /**
      * Rate of vegf decay \lambda_v
      */
-    static const std::shared_ptr<ParameterInstance<unit::rate> > mpVegfDecayConstant;
+    static const std::shared_ptr<ParameterInstance<QRate>  > mpVegfDecayConstant;
 
     /**
      * Rate of reduction in VEGF concentration per endothelial cell K^v_{EC}
      */
-    static const std::shared_ptr<ParameterInstance<unit::molar_flow_rate> > mpReductionInVegfPerCell;
+    static const std::shared_ptr<ParameterInstance<QMolarFlowRate>  > mpReductionInVegfPerCell;
 
     /**
      * VEGF at half receptor occupancy v_{50}
      */
-    static const std::shared_ptr<ParameterInstance<unit::concentration> > mpVegfAtHalfReceptorOccupancy;
+    static const std::shared_ptr<ParameterInstance<QConcentration> > mpVegfAtHalfReceptorOccupancy;
 
     /**
      * Permability of corneal vasculature to VEGF P_v
      */
-    static const std::shared_ptr<ParameterInstance<unit::membrane_permeability> > mpVesselVegfPermeability;
+    static const std::shared_ptr<ParameterInstance<QMembranePermeability> > mpVesselVegfPermeability;
 
     /**
      * Concentration of VEGF in the blood v_b
      */
-    static const std::shared_ptr<ParameterInstance<unit::concentration> > mpVegfBloodConcentration;
+    static const std::shared_ptr<ParameterInstance<QConcentration> > mpVegfBloodConcentration;
 
     /**
      * VEGF binding constant \theta_v
      */
-    static const std::shared_ptr<ParameterInstance<unit::dimensionless> > mpVegfBindingConstant;
+    static const std::shared_ptr<ParameterInstance<QDimensionless> > mpVegfBindingConstant;
 
     /**
      * Cornea pellet vegf permeability k^v_p
      */
-    static const std::shared_ptr<ParameterInstance<unit::membrane_permeability> > mpCorneaVegfPermeability;
+    static const std::shared_ptr<ParameterInstance<QMembranePermeability> > mpCorneaVegfPermeability;
 
     /**
      * VEGF decay rate in pellet \lambda^v_p
      */
-    static const std::shared_ptr<ParameterInstance<unit::rate> > mpVegfDecayRateInPellet;
+    static const std::shared_ptr<ParameterInstance<QRate>  > mpVegfDecayRateInPellet;
 
     /**
      * Initial VEGF concentration in pellet
      */
-    static const std::shared_ptr<ParameterInstance<unit::concentration> > mpInitialVegfConcentrationInPellet;
+    static const std::shared_ptr<ParameterInstance<QConcentration> > mpInitialVegfConcentrationInPellet;
 
     /**
      * Time step \Delta T
      */
-    static const std::shared_ptr<ParameterInstance<unit::time> > mpTimeStep;
+    static const std::shared_ptr<ParameterInstance<QTime> > mpTimeStep;
 
     /**
      * Lattice spacing \Delta X
      */
-    static const std::shared_ptr<ParameterInstance<unit::length> > mpLatticeSpacing;
+    static const std::shared_ptr<ParameterInstance<QLength>  > mpLatticeSpacing;
 
     /**
      * Filopodia probe distance r_f
      */
-    static const std::shared_ptr<ParameterInstance<unit::length> > mpFilopodiaProbeDistance;
+    static const std::shared_ptr<ParameterInstance<QLength>  > mpFilopodiaProbeDistance;
 
     /**
      * Filopodia sensing angle \theta_f
      */
-    static const std::shared_ptr<ParameterInstance<unit::dimensionless> > mpFilopodiaSensingAngle;
+    static const std::shared_ptr<ParameterInstance<QDimensionless> > mpFilopodiaSensingAngle;
 
     /**
      * Tip vessel interaction strength K_{\rho}
      */
-    static const std::shared_ptr<ParameterInstance<unit::velocity> > mpTipVesselAttractionStrength;
+    static const std::shared_ptr<ParameterInstance<QVelocity> > mpTipVesselAttractionStrength;
 
     /**
      * Tip tip interaction strength K_T
      */
-    static const std::shared_ptr<ParameterInstance<unit::velocity> > mpTipTipAttractionStrength;
+    static const std::shared_ptr<ParameterInstance<QVelocity> > mpTipTipAttractionStrength;
 
 };
 

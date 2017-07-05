@@ -73,7 +73,7 @@ public:
         p_writer1->Write();
 
         // Extract the surface
-        boost::shared_ptr<ImageToSurface> p_surface_extract = ImageToSurface::Create();
+        std::shared_ptr<ImageToSurface> p_surface_extract = ImageToSurface::Create();
 
         TS_ASSERT_THROWS_THIS(p_surface_extract->GetOutput(), "No output set. Did you run 'Update()' ?");
         p_surface_extract->SetInput(reader.GetImage());
@@ -81,14 +81,14 @@ public:
         p_surface_extract->Update();
 
         // Write the surface to file
-        boost::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
+        std::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"surface.vtp").c_str());
         p_writer->AddInput(p_surface_extract->GetOutput());
         p_writer->Write();
         p_writer->ClearInputs();
 
         // Clean the surface
-        boost::shared_ptr<SurfaceCleaner> p_cleaner = SurfaceCleaner::Create();
+        std::shared_ptr<SurfaceCleaner> p_cleaner = SurfaceCleaner::Create();
         p_cleaner->SetInput(p_surface_extract->GetOutput());
         p_cleaner->SetDecimateTargetReduction(0.995);
         p_cleaner->SetLinearSubdivisionNumber(1);

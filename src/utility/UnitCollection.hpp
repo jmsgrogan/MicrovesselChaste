@@ -36,7 +36,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef UNITCOLLECTIONS_HPP
 #define UNITCOLLECTIONS_HPP
 
+#include <cmath>
 #include <ratio>
+#include "ChasteSerialization.hpp"
 
 /**
 * Simple Unit Library based on a sample by Benjamin Jurke
@@ -46,50 +48,70 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<typename MassDim, typename LengthDim, typename TimeDim, typename AmountDim, typename AngleDim>
 class RQuantity
 {
-private:
+    /**
+     * Archiving
+     */
+    friend class boost::serialization::access;
 
-    double value;
+    /**
+     * Do the serialize
+     * @param ar the archive
+     * @param version the archive version number
+     */
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & mValue;
+    }
+
+    double mValue;
 
 public:
 
     constexpr RQuantity() :
-        value(1.0)
+    mValue(1.0)
     {
 
     }
     constexpr RQuantity(double val) :
-            value(val)
+        mValue(val)
     {
 
     }
     constexpr RQuantity(long double val) :
-            value(static_cast<double>(val))
+        mValue(static_cast<double>(val))
     {
 
     }
 
-    // The intrinsic operations for a quantity with a unit is addition and subtraction
-    constexpr RQuantity const& operator+=(const RQuantity& rhs)
-    {
-        value += rhs.value;
-        return *this;
-    }
-    constexpr RQuantity const& operator-=(const RQuantity& rhs)
-    {
-        value -= rhs.value;
-        return *this;
-    }
+//    C++14 Only
+//    // The intrinsic operations for a quantity with a unit is addition and subtraction
+//    constexpr RQuantity const& operator+=(const RQuantity& rhs)
+//    {
+//        mValue += rhs.mValue;
+//        return *this;
+//    }
+//    constexpr RQuantity const& operator-=(const RQuantity& rhs)
+//    {
+//        mValue -= rhs.mValue;
+//        return *this;
+//    }
 
     // Returns the value of the quantity in multiples of the specified unit
     constexpr double Convert(const RQuantity& rhs) const
     {
-        return value / rhs.value;
+        return mValue / rhs.mValue;
     }
 
     // returns the raw value of the quantity (should not be used)
     constexpr double getValue() const
     {
-        return value;
+        return mValue;
+    }
+
+    constexpr operator double() const
+    {
+        return mValue;
     }
 };
 
@@ -146,17 +168,16 @@ QUANTITY_TYPE(0, 3, -1, 0, 0, QFlowRate);
 QUANTITY_TYPE(1, -4, -1, 0, 0, QFlowImpedance);
 
 // Diffusivity, Solubility, Permeability
-QUANTITY_TYPE(0, 2, -1, 0, 0, QDiffusivity);
+QUANTITY_TYPE(0, 2, -1, 0, 0, QDiffusivity );
 QUANTITY_TYPE(0, 5, -1, -1, 0, QDiffusivityPerConcentration);
 QUANTITY_TYPE(-1, -2, 2, 1, 0, QSolubility);
 QUANTITY_TYPE(-1, 1, 2, 0, 0, QVolumetricSolubility);
-QUANTITY_TYPE(1, -1, 0, 0, 0, QMembrancePermeability);
+QUANTITY_TYPE(0, 1, -1, 0, 0, QMembranePermeability);
 
 // Radiation
 QUANTITY_TYPE(0, 2, -2, 0, 0, QAbsorbedDose);
 QUANTITY_TYPE(0, -2, 2, 0, 0, QPerAbsorbedDose);
 QUANTITY_TYPE(0, -4, 4, 0, 0, QPerAbsorbedDoseSquared);
-
 
 
 // Standard arithmetic operators:
@@ -255,6 +276,11 @@ constexpr bool operator> (const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<
 }
 
 
+constexpr long double operator"" _pi(long double x)
+    { return static_cast<double>(x) * 3.1415926535897932384626433832795; }
+constexpr long double operator"" _pi(unsigned long long int x)
+    { return static_cast<double>(x) * 3.1415926535897932384626433832795; }
+
 // Predefined units:
 // -----------------
 namespace unit{
@@ -263,23 +289,23 @@ namespace unit{
 constexpr QDimensionless dimensionless(1.0);
 
 // Angle
-constexpr QAngle radian(1.0);
-constexpr QAngle degree = static_cast<double>(2_pi / 360.0) * radian;
+constexpr QAngle radians(1.0);
+constexpr QAngle degrees = static_cast<double>(2_pi / 360.0) * radians;
 
 // Time
-constexpr QTime second(1.0);
-constexpr QTime minute = 60.0 * second;
-constexpr QTime hour = 60.0 * minute;
-constexpr QTime day = 24.0 * hour;
+constexpr QTime seconds(1.0);
+constexpr QTime minutes = 60.0 * seconds;
+constexpr QTime hours = 60.0 * minutes;
+constexpr QTime days = 24.0 * hours;
 constexpr QRate per_second(1.0);
 constexpr QRate per_minute = (1.0/60.0)*per_second;
 constexpr QRate per_hour = (1.0/60.0)*per_minute;
 
 // Length
 constexpr QLength  metres(1.0);
-constexpr QLength  micron = metres / 1.e6;
-constexpr QArea meters_squared = metres*metres;
-constexpr QVolume meters_cubed = metres*meters_squared;
+constexpr QLength  microns = metres / 1.e6;
+constexpr QArea metres_squared = metres*metres;
+constexpr QVolume metres_cubed = metres*metres_squared;
 
 constexpr QPerLength per_metre(1.0);
 constexpr QPerArea per_metre_squared = per_metre*per_metre;
@@ -321,7 +347,7 @@ constexpr QDiffusivity metre_squared_per_second(1.0);
 constexpr QDiffusivityPerConcentration metre_pow5_per_second_per_mole(1.0);
 constexpr QSolubility mole_per_metre_cubed_per_pascal(1.0);
 constexpr QVolumetricSolubility per_pascal(1.0);
-constexpr QMembrancePermeability metre_per_second(1.0);
+constexpr QMembranePermeability metre_per_second(1.0);
 
 // Radiation
 constexpr QAbsorbedDose gray(1.0);
@@ -334,19 +360,19 @@ constexpr QPerAbsorbedDoseSquared per_gray_squared(1.0);
 
 // literals for time units
 constexpr QTime operator"" _s(long double x) { return QTime(x); };
-constexpr QTime operator"" _min(long double x) { return static_cast<double>(x)*unit::minute; };
-constexpr QTime operator"" _h(long double x) { return static_cast<double>(x)*unit::hour; };
-constexpr QTime operator"" _day(long double x) { return static_cast<double>(x)*unit::day; };
+constexpr QTime operator"" _min(long double x) { return static_cast<double>(x)*unit::minutes; };
+constexpr QTime operator"" _h(long double x) { return static_cast<double>(x)*unit::hours; };
+constexpr QTime operator"" _day(long double x) { return static_cast<double>(x)*unit::days; };
 constexpr QTime operator"" _s(unsigned long long int x) { return QTime(static_cast<double>(x)); };
-constexpr QTime operator"" _min(unsigned long long int x) { return static_cast<double>(x)*unit::minute; };
-constexpr QTime operator"" _h(unsigned long long int x) { return static_cast<double>(x)*unit::hour; };
-constexpr QTime operator"" _day(unsigned long long int x) { return static_cast<double>(x)*unit::day; };
+constexpr QTime operator"" _min(unsigned long long int x) { return static_cast<double>(x)*unit::minutes; };
+constexpr QTime operator"" _h(unsigned long long int x) { return static_cast<double>(x)*unit::hours; };
+constexpr QTime operator"" _day(unsigned long long int x) { return static_cast<double>(x)*unit::days; };
 
 // literals for length units
 constexpr QLength  operator"" _m(long double x) { return static_cast<double>(x)*unit::metres; }
 constexpr QLength  operator"" _m(unsigned long long int  x) { return static_cast<double>(x)*unit::metres; }
-constexpr QLength  operator"" _um(long double x) { return static_cast<double>(x)*unit::micron; }
-constexpr QLength  operator"" _um(unsigned long long int  x) { return static_cast<double>(x)*unit::micron; }
+constexpr QLength  operator"" _um(long double x) { return static_cast<double>(x)*unit::microns; }
+constexpr QLength  operator"" _um(unsigned long long int  x) { return static_cast<double>(x)*unit::microns; }
 
 // literals for mass units
 constexpr QMass operator"" _kg(long double x) { return QMass(x); };
@@ -370,16 +396,12 @@ constexpr QPressure operator"" _Pa(unsigned long long int x)
 
 // Angular unit literals:
 // ----------------------
-constexpr long double operator"" _pi(long double x)
-    { return static_cast<double>(x) * 3.1415926535897932384626433832795; }
-constexpr long double operator"" _pi(unsigned long long int x)
-    { return static_cast<double>(x) * 3.1415926535897932384626433832795; }
 
 // literals for angle units
 constexpr QAngle operator"" _rad(long double x) { return QAngle(x); };
 constexpr QAngle operator"" _rad(unsigned long long int x) { return QAngle(static_cast<double>(x)); };
-constexpr QAngle operator"" _deg(long double x) { return static_cast<double>(x)*unit::degree; };
-constexpr QAngle operator"" _deg(unsigned long long int x) { return static_cast<double>(x)*unit::degree; };
+constexpr QAngle operator"" _deg(long double x) { return static_cast<double>(x)*unit::degrees; };
+constexpr QAngle operator"" _deg(unsigned long long int x) { return static_cast<double>(x)*unit::degrees; };
 
 // Conversion macro, which utilizes the string literals
 #define ConvertTo(_x, _y) (_x).Convert(1.0_##_y)
@@ -400,18 +422,74 @@ constexpr RQuantity<std::ratio_divide<M, std::ratio<2>>, std::ratio_divide<L, st
                     (sqrt(num.getValue()));
 }
 
+template <typename M, typename L, typename T, typename Am, typename A>
+constexpr RQuantity<std::ratio_multiply<M, std::ratio<2>>, std::ratio_multiply<L, std::ratio<2>>,
+                    std::ratio_multiply<T, std::ratio<2>>, std::ratio_multiply<Am, std::ratio<2>>,
+                    std::ratio_multiply<A, std::ratio<2>>>
+    Qpow2(const RQuantity<M, L, T, Am, A>& num)
+{
+    return RQuantity<std::ratio_multiply<M, std::ratio<2>>, std::ratio_multiply<L, std::ratio<2>>,
+                     std::ratio_multiply<T, std::ratio<2>>, std::ratio_multiply<Am, std::ratio<2>>,
+                     std::ratio_multiply<A, std::ratio<2>>>
+                    (std::pow(num.getValue() ,2));
+}
+
+template <typename M, typename L, typename T, typename Am, typename A>
+constexpr RQuantity<std::ratio_multiply<M, std::ratio<3>>, std::ratio_multiply<L, std::ratio<3>>,
+                    std::ratio_multiply<T, std::ratio<3>>, std::ratio_multiply<Am, std::ratio<3>>,
+                    std::ratio_multiply<A, std::ratio<3>>>
+    Qpow3(const RQuantity<M, L, T, Am, A>& num)
+{
+    return RQuantity<std::ratio_multiply<M, std::ratio<3>>, std::ratio_multiply<L, std::ratio<3>>,
+                     std::ratio_multiply<T, std::ratio<3>>, std::ratio_multiply<Am, std::ratio<3>>,
+                     std::ratio_multiply<A, std::ratio<3>>>
+                    (std::pow(num.getValue() ,3));
+}
+
+template <typename M, typename L, typename T, typename Am, typename A>
+constexpr RQuantity<std::ratio_multiply<M, std::ratio<4>>, std::ratio_multiply<L, std::ratio<4>>,
+                    std::ratio_multiply<T, std::ratio<4>>, std::ratio_multiply<Am, std::ratio<4>>,
+                    std::ratio_multiply<A, std::ratio<4>>>
+    Qpow4(const RQuantity<M, L, T, Am, A>& num)
+{
+    return RQuantity<std::ratio_multiply<M, std::ratio<4>>, std::ratio_multiply<L, std::ratio<4>>,
+                     std::ratio_multiply<T, std::ratio<4>>, std::ratio_multiply<Am, std::ratio<4>>,
+                     std::ratio_multiply<A, std::ratio<4>>>
+                    (std::pow(num.getValue() ,4));
+}
+
+
+template <typename M, typename L, typename T, typename Am, typename A>
+constexpr RQuantity<std::ratio_divide<M, std::ratio<3>>, std::ratio_divide<L, std::ratio<3>>,
+                    std::ratio_divide<T, std::ratio<3>>, std::ratio_divide<Am, std::ratio<3>>,
+                    std::ratio_divide<A, std::ratio<3>>>
+    Qcbrt(const RQuantity<M, L, T, Am, A>& num)
+{
+    return RQuantity<std::ratio_divide<M, std::ratio<3>>, std::ratio_divide<L, std::ratio<3>>,
+                     std::ratio_divide<T, std::ratio<3>>, std::ratio_divide<Am, std::ratio<3>>,
+                     std::ratio_divide<A, std::ratio<3>>>
+                    (std::cbrt(num.getValue()));
+}
+
+template <typename M, typename L, typename T, typename Am, typename A>
+constexpr RQuantity<M, L, T, Am, A>
+    Qabs(const RQuantity<M, L, T, Am, A>& num)
+{
+    return RQuantity<M, L, T, Am, A>(std::abs(num.getValue()));
+}
+
 // Typesafe trigonometric operations
-inline double sin(const QAngle &num)
+inline double Qsin(const QAngle &num)
 {
-    return sin(num.getValue());
+    return std::sin(num.getValue());
 }
-inline double cos(const QAngle &num)
+inline double Qcos(const QAngle &num)
 {
-    return cos(num.getValue());
+    return std::cos(num.getValue());
 }
-inline double tan(const QAngle &num)
+inline double Qtan(const QAngle &num)
 {
-    return tan(num.getValue());
+    return std::tan(num.getValue());
 }
 
 #endif /* UNITCOLLECTIONS_HPP */

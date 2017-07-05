@@ -60,7 +60,7 @@ public:
         std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("SimpleGrid.vti");
 
         // Set up a 3d grid
-        boost::shared_ptr<RegularGrid<3> > p_grid_3d = RegularGrid<3>::Create();
+        std::shared_ptr<RegularGrid<3> > p_grid_3d = RegularGrid<3>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 5;
         dimensions[1] = 7;
@@ -71,7 +71,7 @@ public:
         TS_ASSERT_EQUALS(p_grid_3d->GetGlobalGridIndex(3,1,2), 78u)
         TS_ASSERT_EQUALS(p_grid_3d->GetGlobalGridIndex(0,3,3), 120u)
 
-        boost::shared_ptr<RegularGridWriter> p_writer = RegularGridWriter::Create();
+        std::shared_ptr<RegularGridWriter> p_writer = RegularGridWriter::Create();
         TS_ASSERT_THROWS_THIS(p_writer->Write(), "Output file not specified for image writer.");
         p_writer->SetFilename(output_filename);
         p_writer->SetImage(vtkImageData::SafeDownCast(p_grid_3d->GetGlobalVtkGrid()));

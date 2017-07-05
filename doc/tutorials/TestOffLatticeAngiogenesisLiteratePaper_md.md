@@ -124,7 +124,7 @@ results. For our purposes microns for length and hours for time are suitable bas
 
 ```cpp
         QLength reference_length(1.0 * unit::microns);
-        units::quantity<unit::time> reference_time(1.0* unit::hours);
+        QTime reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
@@ -203,7 +203,7 @@ Now make a finite element mesh on the cornea.
 ```cpp
         DiscreteContinuumMeshGenerator<3> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-//        mesh_generator.SetMaxElementArea(100000.0*(units::pow<3>(1.e-6*unit::metres)));
+//        mesh_generator.SetMaxElementArea(100000.0*(Qpow3(1.e-6*unit::metres)));
         mesh_generator.Update();
         boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = mesh_generator.GetMesh();
         p_scene->GetPartActorGenerator()->SetVolumeOpacity(0.0);
@@ -253,7 +253,7 @@ Set up an angiogenesis solver and add sprouting and migration rules.
         p_migration_rule->SetChemotacticStrength(0.1);
         p_migration_rule->SetAttractionStrength(0.5);
 
-        units::quantity<unit::velocity> sprout_velocity(50.0*unit::microns/(24.0*unit::hours)); //Secomb13
+        QVelocity sprout_velocity(50.0*unit::microns/(24.0*unit::hours)); //Secomb13
         p_migration_rule->SetSproutingVelocity(sprout_velocity);
 
         p_angiogenesis_solver->SetMigrationRule(p_migration_rule);
@@ -355,7 +355,7 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestOffLatticeAngiogenesisLiteratePaper"));
         RandomNumberGenerator::Instance()->Reseed(12345);
         QLength reference_length(1.0 * unit::microns);
-        units::quantity<unit::time> reference_time(1.0* unit::hours);
+        QTime reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
@@ -413,7 +413,7 @@ public:
         p_vegf_domain->Write(p_handler->GetOutputDirectoryFullPath()+"initial_vegf_domain.vtp");
         DiscreteContinuumMeshGenerator<3> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-//        mesh_generator.SetMaxElementArea(100000.0*(units::pow<3>(1.e-6*unit::metres)));
+//        mesh_generator.SetMaxElementArea(100000.0*(Qpow3(1.e-6*unit::metres)));
         mesh_generator.Update();
         boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = mesh_generator.GetMesh();
         p_scene->GetPartActorGenerator()->SetVolumeOpacity(0.0);
@@ -442,7 +442,7 @@ public:
         p_migration_rule->SetChemotacticStrength(0.1);
         p_migration_rule->SetAttractionStrength(0.5);
 
-        units::quantity<unit::velocity> sprout_velocity(50.0*unit::microns/(24.0*unit::hours)); //Secomb13
+        QVelocity sprout_velocity(50.0*unit::microns/(24.0*unit::hours)); //Secomb13
         p_migration_rule->SetSproutingVelocity(sprout_velocity);
 
         p_angiogenesis_solver->SetMigrationRule(p_migration_rule);

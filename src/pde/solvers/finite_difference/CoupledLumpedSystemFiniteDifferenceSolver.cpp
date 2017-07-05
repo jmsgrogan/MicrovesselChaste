@@ -154,7 +154,7 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
 {
     c_vector<unsigned, 6> extents = this->mpRegularGrid->GetExtents();
     c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
-    units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
+    QTime reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     QLength spacing = this->mpRegularGrid->GetSpacing();
 
     std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_pde =
@@ -179,10 +179,10 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
             {
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
                 double current_solution = soln_guess_repl[grid_index];
-                units::quantity<unit::concentration>  current_dimensional_solution =
+                QConcentration  current_dimensional_solution =
                         current_solution*this->GetReferenceConcentration();
 
-                units::quantity<unit::rate> sink_terms =
+                QRate sink_terms =
                         p_coupled_pde->ComputeSourceTermPrime(grid_index, current_dimensional_solution);
                 double nondim_sink_terms = sink_terms*reference_time;
                 PetscMatTools::AddToElement(this->mMatrixToAssemble, grid_index, grid_index, nondim_sink_terms);
@@ -265,12 +265,12 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
         }
     }
 
-    units::quantity<unit::area> surface_area = p_coupled_pde->GetPelletSurfaceArea();
-    units::quantity<unit::volume> volume = p_coupled_pde->GetPelletVolume();
-    units::quantity<unit::membrane_permeability> permeability = p_coupled_pde->GetCorneaPelletPermeability();
-    units::quantity<unit::dimensionless> binding_constant = p_coupled_pde->GetPelletBindingConstant();
-    units::quantity<unit::rate> decay_rate = p_coupled_pde->GetPelletFreeDecayRate();
-    units::quantity<unit::rate> jacEntry = -(decay_rate/binding_constant) - (surface_area*permeability)/(volume*binding_constant);
+    QArea surface_area = p_coupled_pde->GetPelletSurfaceArea();
+    QVolume volume = p_coupled_pde->GetPelletVolume();
+    QMembranePermeability permeability = p_coupled_pde->GetCorneaPelletPermeability();
+    QDimensionless binding_constant = p_coupled_pde->GetPelletBindingConstant();
+    QRate decay_rate = p_coupled_pde->GetPelletFreeDecayRate();
+    QRate jacEntry = -(decay_rate/binding_constant) - (surface_area*permeability)/(volume*binding_constant);
 
     if(mUseCoupling)
     {
@@ -282,7 +282,8 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleMatrix()
             for (unsigned j = 0; j < dimensions[2]; j++)
             {
                 unsigned J_index = i + dimensions[0]*(dimensions[1]-1) + num_points_xy*j;
-                units::quantity<unit::rate> jacEntry = surface_area*permeability/(volume*double(dimensions[0]*dimensions[2]));
+                QPerLength term1 = (surface_area/volume)*(1.0/double(dimensions[0]*dimensions[2]));
+                QRate jacEntry = term1*permeability;
                 PetscMatTools::AddToElement(this->mMatrixToAssemble, num_points, J_index, jacEntry*reference_time);
             }
         }
@@ -299,7 +300,7 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleVector()
 {
     c_vector<unsigned, 6> extents = this->mpRegularGrid->GetExtents();
     c_vector<unsigned, 3> dimensions = this->mpRegularGrid->GetDimensions();
-    units::quantity<unit::time> reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
+    QTime reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     QLength spacing = this->mpRegularGrid->GetSpacing();
 
     std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM> > p_coupled_pde =
@@ -324,9 +325,9 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleVector()
                 unsigned grid_index = this->mpRegularGrid->GetGlobalGridIndex(k, j, i);
                 double current_solution = soln_guess_repl[grid_index];
 
-                units::quantity<unit::concentration>  current_dimensional_solution =
+                QConcentration  current_dimensional_solution =
                         current_solution*this->GetReferenceConcentration();
-                units::quantity<unit::concentration_flow_rate> sink_terms =
+                QConcentrationFlowRate sink_terms =
                         p_coupled_pde->ComputeSourceTerm(grid_index, current_dimensional_solution);
                 double nondim_sink_terms = sink_terms*(reference_time/this->GetReferenceConcentration());
                 PetscVecTools::AddToElement(this->mVectorToAssemble, grid_index, nondim_sink_terms);
@@ -425,15 +426,15 @@ void CoupledLumpedSystemFiniteDifferenceSolver<DIM>::AssembleVector()
     }
 
     vegf_boundary_average /= double(dimensions[0]*dimensions[2]);
-    units::quantity<unit::area> surface_area = p_coupled_pde->GetPelletSurfaceArea();
-    units::quantity<unit::volume> volume = p_coupled_pde->GetPelletVolume();
-    units::quantity<unit::membrane_permeability> permeability = p_coupled_pde->GetCorneaPelletPermeability();
-    units::quantity<unit::dimensionless> binding_constant = p_coupled_pde->GetPelletBindingConstant();
-    units::quantity<unit::rate> decay_rate = p_coupled_pde->GetPelletFreeDecayRate();
+    QArea surface_area = p_coupled_pde->GetPelletSurfaceArea();
+    QVolume volume = p_coupled_pde->GetPelletVolume();
+    QMembranePermeability permeability = p_coupled_pde->GetCorneaPelletPermeability();
+    QDimensionless binding_constant = p_coupled_pde->GetPelletBindingConstant();
+    QRate decay_rate = p_coupled_pde->GetPelletFreeDecayRate();
     double pellet_solution = soln_guess_repl[num_points];
-    units::quantity<unit::rate> pellet_update_term1 = ((surface_area*permeability)/volume)*((pellet_solution/binding_constant) -
+    QRate pellet_update_term1 = ((surface_area*permeability)/volume)*((pellet_solution/binding_constant) -
             vegf_boundary_average);
-    units::quantity<unit::rate> dVegf_dt = -(decay_rate/binding_constant)*pellet_solution - pellet_update_term1;
+    QRate dVegf_dt = -(decay_rate/binding_constant)*pellet_solution - pellet_update_term1;
     if(mUseCoupling)
     {
         PetscVecTools::AddToElement(this->mVectorToAssemble, num_points, dVegf_dt*reference_time);

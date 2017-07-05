@@ -111,9 +111,9 @@ public:
      */
     static void SetNodeRadiiFromSegments(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
 
-    static void SetInflowPressures(std::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::pressure> pressure);
+    static void SetInflowPressures(std::shared_ptr<VesselNetwork<DIM> > pNetwork, QPressure pressure);
 
-    static void SetOutflowPressures(std::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::pressure> pressure);
+    static void SetOutflowPressures(std::shared_ptr<VesselNetwork<DIM> > pNetwork, QPressure pressure);
 
     /**
      * Set the properties of the segments in the network based on those of the prototype
@@ -131,7 +131,7 @@ public:
      * Set the segment viscosity to the same value
      * @param viscosity the segment viscosity
      */
-    static void SetSegmentViscosity(std::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::dynamic_viscosity> viscosity);
+    static void SetSegmentViscosity(std::shared_ptr<VesselNetwork<DIM> > pNetwork, QDynamicViscosity viscosity);
 
 };
 

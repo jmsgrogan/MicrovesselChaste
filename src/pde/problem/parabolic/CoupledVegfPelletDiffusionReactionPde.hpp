@@ -52,42 +52,42 @@ class CoupledVegfPelletDiffusionReactionPde : public AbstractDiscreteContinuumPa
     /**
      * The linear in u source term
      */
-    units::quantity<unit::rate> mLinearInUTerm;
+    QRate mLinearInUTerm;
 
     /**
      * The non-linear source strengths for each point on the grid or mesh
      */
-    std::vector<units::quantity<unit::concentration_flow_rate> > mDiscreteNonLinearSourceStrengths;
+    std::vector<QConcentrationFlowRate > mDiscreteNonLinearSourceStrengths;
 
     /**
      * The decay rate of free VEGF in the pellet
      */
-    units::quantity<unit::rate> mPelletFreeDecayRate;
+    QRate mPelletFreeDecayRate;
 
     /**
      * The binding constant for VEGF in the pellet
      */
-    units::quantity<unit::dimensionless> mPelletVegfBindingConstant;
+    QDimensionless mPelletVegfBindingConstant;
 
     /**
      * The initial VEGF in the pellet
      */
-    units::quantity<unit::concentration> mInitialVegfInPellet;
+    QConcentration mInitialVegfInPellet;
 
     /**
      * The current VEGF in the pellet
      */
-    units::quantity<unit::concentration> mCurrentVegfInPellet;
+    QConcentration mCurrentVegfInPellet;
 
     /**
      * The permeability of the cornea-pellet boundary
      */
-    units::quantity<unit::membrane_permeability> mCorneaPelletPermeability;
+    QMembranePermeability mCorneaPelletPermeability;
 
     /**
      * The pellet surface area
      */
-    units::quantity<unit::area> mPelletSurfaceArea;
+    QArea mPelletSurfaceArea;
 
     /**
      * The pellet surface depth (for 2D problems)
@@ -97,12 +97,12 @@ class CoupledVegfPelletDiffusionReactionPde : public AbstractDiscreteContinuumPa
     /**
      * The pellet volume
      */
-    units::quantity<unit::volume> mPelletVolume;
+    QVolume mPelletVolume;
 
     /**
      * Vegf concentration at half max receptor occupation
      */
-    units::quantity<unit::concentration> mHalfMaxVegf;
+    QConcentration mHalfMaxVegf;
 
 public:
 
@@ -139,7 +139,7 @@ public:
      * @param u the concentration
      * @return source strength
      */
-    virtual units::quantity<unit::concentration_flow_rate> ComputeSourceTerm(unsigned gridIndex, units::quantity<unit::concentration> u);
+    virtual QConcentrationFlowRate ComputeSourceTerm(unsigned gridIndex, QConcentration u);
 
     /**
      * Abstract method to return the non linear prime contribution to the regular grid solvers
@@ -147,7 +147,7 @@ public:
      * @param u the concentration
      * @return source strength
      */
-    virtual units::quantity<unit::rate> ComputeSourceTermPrime(unsigned gridIndex, units::quantity<unit::concentration> u);
+    virtual QRate ComputeSourceTermPrime(unsigned gridIndex, QConcentration u);
 
     /**
      * Update the discrete source strengths
@@ -162,32 +162,32 @@ public:
     /**
      * @return the free vegf decay rate
      */
-    units::quantity<unit::rate>  GetPelletFreeDecayRate();
+    QRate  GetPelletFreeDecayRate();
 
     /**
      * @return the pellet binding constant
      */
-    units::quantity<unit::dimensionless>  GetPelletBindingConstant();
+    QDimensionless  GetPelletBindingConstant();
 
     /**
      * @return the initial vegf in the pellet
      */
-    units::quantity<unit::concentration> GetInitialVegfInPellet();
+    QConcentration GetInitialVegfInPellet();
 
     /**
      * @return the current vegf in the pellet
      */
-    units::quantity<unit::concentration> GetCurrentVegfInPellet();
+    QConcentration GetCurrentVegfInPellet();
 
     /**
      * @return the cornea pellet permeability
      */
-    units::quantity<unit::membrane_permeability> GetCorneaPelletPermeability();
+    QMembranePermeability GetCorneaPelletPermeability();
 
     /**
      * @return the pellet surface area
      */
-    units::quantity<unit::area> GetPelletSurfaceArea();
+    QArea GetPelletSurfaceArea();
 
     /**
      * @return the pellet depth
@@ -197,43 +197,43 @@ public:
     /**
      * @return the pellet volume
      */
-    units::quantity<unit::volume> GetPelletVolume();
+    QVolume GetPelletVolume();
 
     /**
      * Set the vegf decay rate
      * @param rate the vegf decay rate
      */
-    void SetPelletFreeDecayRate(units::quantity<unit::rate> rate);
+    void SetPelletFreeDecayRate(QRate rate);
 
     /**
      * Set the vegf binding constant
      * @param bindingConstant the vegf binding constant
      */
-    void SetPelletBindingConstant(units::quantity<unit::dimensionless> bindingConstant);
+    void SetPelletBindingConstant(QDimensionless bindingConstant);
 
     /**
      * Set the initial vegf
      * @param initialVegf the initial vegf
      */
-    void SetInitialVegfInPellet(units::quantity<unit::concentration> initialVegf);
+    void SetInitialVegfInPellet(QConcentration initialVegf);
 
     /**
      * Set the current vegf
      * @param currentVegf the current vegf
      */
-    void SetCurrentVegfInPellet(units::quantity<unit::concentration> currentVegf);
+    void SetCurrentVegfInPellet(QConcentration currentVegf);
 
     /**
      * Set cornea pellet permeability
      * @param permeability the cornea pellet permeability
      */
-    void SetCorneaPelletPermeability(units::quantity<unit::membrane_permeability> permeability);
+    void SetCorneaPelletPermeability(QMembranePermeability permeability);
 
     /**
      * Set the pellet surface area
      * @param surfaceArea the pellet surface area
      */
-    void SetPelletSurfaceArea(units::quantity<unit::area> surfaceArea);
+    void SetPelletSurfaceArea(QArea surfaceArea);
 
     /**
      * Set the pellet depth
@@ -245,19 +245,19 @@ public:
      * Set the pellet volume
      * @param volume the pellet volume
      */
-    void SetPelletVolume(units::quantity<unit::volume> volume);
+    void SetPelletVolume(QVolume volume);
 
     /**
      * Set the half max vegf concentration
      * @param halfMax the half max vegf concentration
      */
-    void SetHalfMaxVegfConcentration(units::quantity<unit::concentration> halfMax);
+    void SetHalfMaxVegfConcentration(QConcentration halfMax);
 
     /**
      * Set the linear constant in U term
      * @param linearInUTerm the linear constant in U term
      */
-    void SetContinuumLinearInUTerm(units::quantity<unit::rate> linearInUTerm);
+    void SetContinuumLinearInUTerm(QRate linearInUTerm);
 
 };
 

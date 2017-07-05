@@ -78,7 +78,7 @@ public:
 
 
         // Set up the vessel grid
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 20;
         dimensions[1] = 20;
@@ -88,7 +88,7 @@ public:
 
         // Create the vessel network: single vessel in middle of domain
         VesselNetworkGenerator<2> network_generator;
-        boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(10*1.e-6*unit::metres, DimensionalChastePoint<2>(10.0, 0.0));
+        std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(10*1.e-6*unit::metres, DimensionalChastePoint<2>(10.0, 0.0));
 
         // Write the initial network to file
         std::string output_filename = p_file_handler->GetOutputDirectoryFullPath().append("InitialVesselNetwork.vtp");
@@ -134,7 +134,7 @@ public:
         angiogenesis_solver.SetVesselNetwork(p_network);
         angiogenesis_solver.SetOutputFileHandler(p_file_handler);
 
-        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
 
         angiogenesis_solver.SetVesselGridCalculator(p_grid_calc);

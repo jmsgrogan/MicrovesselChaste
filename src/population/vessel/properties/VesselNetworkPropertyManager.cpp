@@ -89,7 +89,7 @@ void VesselNetworkPropertyManager<DIM>::AssignOutflows(std::shared_ptr<VesselNet
 
 template <unsigned DIM>
 void VesselNetworkPropertyManager<DIM>::SetInflowPressures(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-        units::quantity<unit::pressure> pressure)
+        QPressure pressure)
 {
     std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
     for(unsigned idx=0; idx<nodes.size(); idx++)
@@ -102,7 +102,7 @@ void VesselNetworkPropertyManager<DIM>::SetInflowPressures(std::shared_ptr<Vesse
 }
 
 template <unsigned DIM>
-void VesselNetworkPropertyManager<DIM>::SetOutflowPressures(std::shared_ptr<VesselNetwork<DIM> > pNetwork, units::quantity<unit::pressure> pressure)
+void VesselNetworkPropertyManager<DIM>::SetOutflowPressures(std::shared_ptr<VesselNetwork<DIM> > pNetwork, QPressure pressure)
 {
     std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pNetwork->GetNodes();
     for(unsigned idx=0; idx<nodes.size(); idx++)
@@ -136,9 +136,9 @@ void VesselNetworkPropertyManager<DIM>::SetNodeRadiiFromSegments(std::shared_ptr
         QLength av_radius = 0.0 * unit::metres;
         for(unsigned jdx=0; jdx<nodes[idx]->GetNumberOfSegments(); jdx++)
         {
-            av_radius += nodes[idx]->GetSegment(jdx)->GetRadius();
+            av_radius = av_radius + nodes[idx]->GetSegment(jdx)->GetRadius();
         }
-        av_radius /= double(nodes[idx]->GetNumberOfSegments());
+        av_radius = av_radius / double(nodes[idx]->GetNumberOfSegments());
         nodes[idx]->SetRadius(av_radius);
     }
     pNetwork->Modified(false, false, false);
@@ -216,7 +216,7 @@ void VesselNetworkPropertyManager<DIM>::SetSegmentRadii(std::shared_ptr<VesselNe
 
 template <unsigned DIM>
 void VesselNetworkPropertyManager<DIM>::SetSegmentViscosity(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-        units::quantity<unit::dynamic_viscosity> viscosity)
+        QDynamicViscosity viscosity)
 {
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = pNetwork->GetVesselSegments();
     for(unsigned idx=0; idx<segments.size(); idx++)

@@ -69,8 +69,8 @@ public:
         location1[2] = 0.0;
 
         // Pointer Factory Constructors
-        boost::shared_ptr<VesselNode<3> > p_node_1 = VesselNode<3>::Create(2.0, 3.0, 4.0);
-        boost::shared_ptr<VesselNode<3> > p_node_3 = VesselNode<3>::Create(DimensionalChastePoint<3>(location1, 1.e-6*unit::metres));
+        std::shared_ptr<VesselNode<3> > p_node_1 = VesselNode<3>::Create(2.0, 3.0, 4.0);
+        std::shared_ptr<VesselNode<3> > p_node_3 = VesselNode<3>::Create(DimensionalChastePoint<3>(location1, 1.e-6*unit::metres));
 
         // Test the location methods
         TS_ASSERT_DELTA(p_node_1->rGetLocation().GetLocation(1.e-6*unit::metres)[0], 2.0, 1.e-6);
@@ -81,7 +81,7 @@ public:
     void TestSimpleGetAndSetMethods() throw (Exception)
     {
         // Make a node
-        boost::shared_ptr<VesselNode<3> > p_node = VesselNode<3>::Create();
+        std::shared_ptr<VesselNode<3> > p_node = VesselNode<3>::Create();
 
         // Test simple Getters and Setters
         p_node->SetId(5u);
@@ -105,9 +105,9 @@ public:
     void TestDistanceAndConincidentMethods() throw (Exception)
     {
         // Set up some points nodes
-        boost::shared_ptr<VesselNode<3> > p_node_1 = VesselNode<3>::Create(1.0, 2.0, 3.0);
-        boost::shared_ptr<VesselNode<3> > p_node_2 = VesselNode<3>::Create(1.0, 2.0, 3.0);
-        boost::shared_ptr<VesselNode<3> > p_node_3 = VesselNode<3>::Create(4.0, 5.0, 6.0);
+        std::shared_ptr<VesselNode<3> > p_node_1 = VesselNode<3>::Create(1.0, 2.0, 3.0);
+        std::shared_ptr<VesselNode<3> > p_node_2 = VesselNode<3>::Create(1.0, 2.0, 3.0);
+        std::shared_ptr<VesselNode<3> > p_node_3 = VesselNode<3>::Create(4.0, 5.0, 6.0);
 
         c_vector<double, 3> location1;
         location1[0] = 1.0;
@@ -125,13 +125,13 @@ public:
     void TestAddingAndRemovingVesselSegments() throw (Exception)
     {
         // Make some nodes
-        boost::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0);
-        boost::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(1);
-        boost::shared_ptr<VesselNode<2> > p_node_3 = VesselNode<2>::Create(2);
+        std::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0);
+        std::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(1);
+        std::shared_ptr<VesselNode<2> > p_node_3 = VesselNode<2>::Create(2);
 
         // Make some vessel segments
-        boost::shared_ptr<VesselSegment<2> > p_segment1 = VesselSegment<2>::Create(p_node_1, p_node_2);
-        boost::shared_ptr<VesselSegment<2> > p_segment2 = VesselSegment<2>::Create(p_node_2, p_node_3);
+        std::shared_ptr<VesselSegment<2> > p_segment1 = VesselSegment<2>::Create(p_node_1, p_node_2);
+        std::shared_ptr<VesselSegment<2> > p_segment2 = VesselSegment<2>::Create(p_node_2, p_node_3);
 
         // Check that the vessel segments have been suitably added to the nodes.
         TS_ASSERT(p_node_1->IsAttachedTo(p_segment1));
@@ -162,9 +162,9 @@ public:
 
         // Save archive
         {
-            boost::shared_ptr<VesselNode<3> > p_node = boost::shared_ptr<VesselNode<3> >(new VesselNode<3>(1.0, 2.0, 3.0, 5.0*unit::metres));
+            std::shared_ptr<VesselNode<3> > p_node = std::shared_ptr<VesselNode<3> >(new VesselNode<3>(1.0, 2.0, 3.0, 5.0*unit::metres));
 
-            boost::shared_ptr<AbstractVesselNetworkComponent<3> > p_cast_node = boost::static_pointer_cast<AbstractVesselNetworkComponent<3> >(p_node);
+            std::shared_ptr<AbstractVesselNetworkComponent<3> > p_cast_node = boost::static_pointer_cast<AbstractVesselNetworkComponent<3> >(p_node);
             TS_ASSERT_DELTA(p_node->rGetLocation().GetLocation(5.0*unit::metres)[0], 1.0, 1.e-6);
             TS_ASSERT_DELTA(p_node->rGetLocation().GetLocation(5.0*unit::metres)[1], 2.0, 1.e-6);
             TS_ASSERT_DELTA(p_node->rGetLocation().GetLocation(5.0*unit::metres)[2], 3.0, 1.e-6);
@@ -176,7 +176,7 @@ public:
 
         // Load archive
         {
-            boost::shared_ptr<AbstractVesselNetworkComponent<3> > p_node_from_archive;
+            std::shared_ptr<AbstractVesselNetworkComponent<3> > p_node_from_archive;
 
             // Read from this input file
             std::ifstream ifs(archive_filename.c_str(), std::ios::binary);
@@ -184,7 +184,7 @@ public:
 
             // restore from the archive
             input_arch >> p_node_from_archive;
-            boost::shared_ptr<VesselNode<3> > p_cast_node = boost::static_pointer_cast<VesselNode<3> >(p_node_from_archive);
+            std::shared_ptr<VesselNode<3> > p_cast_node = boost::static_pointer_cast<VesselNode<3> >(p_node_from_archive);
             TS_ASSERT_DELTA(p_cast_node->rGetLocation().GetLocation(5.0*unit::metres)[0], 1.0, 1.e-6);
             TS_ASSERT_DELTA(p_cast_node->rGetLocation().GetLocation(5.0*unit::metres)[1], 2.0, 1.e-6);
             TS_ASSERT_DELTA(p_cast_node->rGetLocation().GetLocation(5.0*unit::metres)[2], 3.0, 1.e-6);

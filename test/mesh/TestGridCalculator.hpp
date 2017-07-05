@@ -78,7 +78,7 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestGridCalculator/TestPointSegmentMapGenerationRegularGrid"));
 
         // Set up a grid
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 11;
         dimensions[1] = 11;
@@ -90,13 +90,13 @@ public:
         // Set up vessel network
         VesselNetworkGenerator<2> network_generator;
         QLength length(92.0*unit::microns);
-        boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
+        std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
                                                                                                 DimensionalChastePoint<2>(50.0, 4.0));
         // Get a point-segment map
-        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
         p_grid_calc->SetVesselNetwork(p_network);
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<2> > > > map = p_grid_calc->rGetSegmentMap();
+        std::vector<std::vector<std::shared_ptr<VesselSegment<2> > > > map = p_grid_calc->rGetSegmentMap();
 
         std::vector<std::pair<unsigned, unsigned> > global_index_value_pairs;
         global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(4, 0));
@@ -130,7 +130,7 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestGridCalculator/TestPointSegmentMapGenerationRegularGridWithJiggle"));
 
         // Set up a grid
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 11;
         dimensions[1] = 11;
@@ -142,13 +142,13 @@ public:
         // Set up vessel network
         VesselNetworkGenerator<2> network_generator;
         QLength length(92.0*unit::microns);
-        boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
+        std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
                                                                                                 DimensionalChastePoint<2>(45.0, 4.0));
         // Get a point-segment map
-        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
         p_grid_calc->SetVesselNetwork(p_network);
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<2> > > > map = p_grid_calc->rGetSegmentMap();
+        std::vector<std::vector<std::shared_ptr<VesselSegment<2> > > > map = p_grid_calc->rGetSegmentMap();
         std::vector<std::pair<unsigned, unsigned> > global_index_value_pairs;
         global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(3, 0));
         global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(4, 1));
@@ -180,7 +180,7 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestGridCalculator/TestPointSegmentMapGenerationRegularGridWithSurface"));
 
         // Set up a grid
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 11;
         dimensions[1] = 11;
@@ -192,16 +192,16 @@ public:
         // Set up vessel network
         VesselNetworkGenerator<2> network_generator;
         QLength length(100.0*unit::microns);
-        boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
+        std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
                                                                                                 DimensionalChastePoint<2>(45.0, -0.1));
         QLength radius(11.0*unit::microns);
         VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, radius);
 
         // Get a point-segment map
-        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
         p_grid_calc->SetVesselNetwork(p_network);
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<2> > > > map = p_grid_calc->rGetSegmentMap(true, true);
+        std::vector<std::vector<std::shared_ptr<VesselSegment<2> > > > map = p_grid_calc->rGetSegmentMap(true, true);
 
         std::vector<std::pair<unsigned, unsigned> > global_index_value_pairs;
         global_index_value_pairs.push_back(std::pair<unsigned, unsigned>(3, 0));
@@ -236,7 +236,7 @@ public:
 
         // Set up a grid
         Timer::Reset();
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 100;
         dimensions[1] = 100;
@@ -249,13 +249,13 @@ public:
         VesselNetworkGenerator<2> network_generator;
         QLength length(1000.0*unit::microns);
         QLength vessel_length(40.0*unit::microns);
-        boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(length, length, vessel_length);
+        std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(length, length, vessel_length);
 
         // Get a point-segment map
-        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
         p_grid_calc->SetVesselNetwork(p_network);
-        std::vector<std::vector<boost::shared_ptr<VesselSegment<2> > > > map = p_grid_calc->rGetSegmentMap();
+        std::vector<std::vector<std::shared_ptr<VesselSegment<2> > > > map = p_grid_calc->rGetSegmentMap();
 
         // Write out the map
         std::vector<double> map_values;
@@ -273,7 +273,7 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestGridCalculator/TestPointPointMapGeneration"));
 
         // Set up a grid
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 10;
         dimensions[1] = 10;
@@ -288,7 +288,7 @@ public:
         points.push_back(DimensionalChastePoint<2>(5.0, 5.0));
         points.push_back(DimensionalChastePoint<2>(0.0, 5.0));
         // Get a point-point map
-        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
         std::vector<std::vector<unsigned> > map = p_grid_calc->GetPointMap(points);
 
@@ -322,7 +322,7 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestGridCalculator/TestPointCellMapGeneration"));
 
         // Set up a grid
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 10;
         dimensions[1] = 10;
@@ -353,7 +353,7 @@ public:
         NodeBasedCellPopulation<3> cell_population(mesh, cells);
 
         // Get a point-cell map
-        boost::shared_ptr<GridCalculator<3> > p_grid_calc = GridCalculator<3>::Create();
+        std::shared_ptr<GridCalculator<3> > p_grid_calc = GridCalculator<3>::Create();
         p_grid_calc->SetGrid(p_grid);
         p_grid_calc->SetCellPopulation(cell_population, 1.e-6 * unit::metres, BaseUnits::Instance()->GetReferenceConcentrationScale());
         std::vector<std::vector<CellPtr> > map = p_grid_calc->rGetCellMap();

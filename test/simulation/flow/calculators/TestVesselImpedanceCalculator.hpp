@@ -48,12 +48,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 class TestVesselImpedanceCalculator : public CxxTest::TestSuite
 {
 
-    typedef boost::shared_ptr<VesselNode<2> > NodePtr2;
-    typedef boost::shared_ptr<VesselNode<3> > NodePtr3;
-    typedef boost::shared_ptr<VesselSegment<2> > SegmentPtr2;
-    typedef boost::shared_ptr<VesselSegment<3> > SegmentPtr3;
-    typedef boost::shared_ptr<Vessel<2> > VesselPtr2;
-    typedef boost::shared_ptr<Vessel<3> > VesselPtr3;
+    typedef std::shared_ptr<VesselNode<2> > NodePtr2;
+    typedef std::shared_ptr<VesselNode<3> > NodePtr3;
+    typedef std::shared_ptr<VesselSegment<2> > SegmentPtr2;
+    typedef std::shared_ptr<VesselSegment<3> > SegmentPtr3;
+    typedef std::shared_ptr<Vessel<2> > VesselPtr2;
+    typedef std::shared_ptr<Vessel<3> > VesselPtr3;
 
 public:
 
@@ -73,10 +73,10 @@ public:
         VesselPtr3 p_vessel(Vessel<3>::Create(p_segment));
 
         // Generate the network
-        boost::shared_ptr<VesselNetwork<3> > p_vascular_network(new VesselNetwork<3>());
+        std::shared_ptr<VesselNetwork<3> > p_vascular_network(new VesselNetwork<3>());
 
         p_vascular_network->AddVessel(p_vessel);
-        units::quantity<unit::dynamic_viscosity> viscosity = 2e-3 * unit::poiseuille;
+        QDynamicViscosity viscosity = 2e-3 * unit::poiseuille;
         QLength radius = 5e-6 * unit::metres;
 
         p_segment->SetRadius(radius);
@@ -88,7 +88,7 @@ public:
         calculator.SetVesselNetwork(p_vascular_network);
         calculator.Calculate();
 
-        units::quantity<unit::flow_impedance> expected_impedance = 8.0 * viscosity * 5.0 * nodes[0]->GetReferenceLengthScale() / (M_PI * boost::units::pow<4>(radius));
+        QFlowImpedance expected_impedance = 8.0 * viscosity * 5.0 * nodes[0]->GetReferenceLengthScale() / (M_PI * boost::Qpow4(radius));
 
         TS_ASSERT_DELTA(p_vessel->GetFlowProperties()->GetImpedance()/expected_impedance, 1.0, 1e-6);
         TS_ASSERT_DELTA(p_segment->GetFlowProperties()->GetImpedance()/expected_impedance, 1.0, 1e-6);

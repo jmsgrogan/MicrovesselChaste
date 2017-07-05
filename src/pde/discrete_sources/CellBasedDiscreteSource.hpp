@@ -53,12 +53,12 @@ protected:
     /**
      * The linear in U rate of consumption per cell
      */
-    units::quantity<unit::molar_flow_rate> mCellConstantInUValue;
+    QMolarFlowRate mCellConstantInUValue;
 
     /**
      * The constant in U rate of consumption per cell
      */
-    units::quantity<unit::rate> mCellLinearInUValue;
+    QRate mCellLinearInUValue;
 
 public:
 
@@ -82,25 +82,25 @@ public:
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInUValues();
+    std::vector<QConcentrationFlowRate > GetConstantInUValues();
 
     /**
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    std::vector<units::quantity<unit::rate> > GetLinearInUValues();
+    std::vector<QRate > GetLinearInUValues();
 
     /**
      * Set the value of the source for PRESCRIBED type sources
      * @param value the value of the source
      */
-    void SetConstantInUConsumptionRatePerCell(units::quantity<unit::molar_flow_rate> value);
+    void SetConstantInUConsumptionRatePerCell(QMolarFlowRate value);
 
     /**
      * Set the value of the source for PRESCRIBED type sources
      * @param value the value of the source
      */
-    void SetLinearInUConsumptionRatePerCell(units::quantity<unit::rate> value);
+    void SetLinearInUConsumptionRatePerCell(QRate value);
 
     /**
      * Update the required entries in the density map, if needed

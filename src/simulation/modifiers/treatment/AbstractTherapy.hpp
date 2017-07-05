@@ -53,12 +53,12 @@ protected:
     /**
      * Amount of supplied therapy
      */
-    units::quantity<unit::concentration> mAdministrationDose;
+    QConcentration mAdministrationDose;
 
     /**
      * Times at which therapy is used
      */
-    std::vector<units::quantity<unit::time> > mAdministrationTimes;
+    std::vector<QTime > mAdministrationTimes;
 
 public:
 
@@ -71,19 +71,19 @@ public:
      * Add an administration time to the collection
      * @param time an administration time
      */
-    void AddAdministrationTime(units::quantity<unit::time> time);
+    void AddAdministrationTime(QTime time);
 
     /**
      * Sets doseInjected, the radiation dose injected
      * @param d dose delivered
      */
-    void SetDoseInjected(units::quantity<unit::concentration> d);
+    void SetDoseInjected(QConcentration d);
 
     /**
      * Sets the times of administration
      * @param t the times of administration
      */
-    void SetAdministrationTimes(std::vector<units::quantity<unit::time> > t);
+    void SetAdministrationTimes(std::vector<QTime > t);
 
 };
 

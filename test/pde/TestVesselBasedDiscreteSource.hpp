@@ -74,32 +74,32 @@ public:
         QLength vessel_length(100.0*unit::microns);
         QLength reference_length(1.0*unit::microns);
         VesselNetworkGenerator<2> generator;
-        boost::shared_ptr<VesselNetwork<2> > p_network =
+        std::shared_ptr<VesselNetwork<2> > p_network =
                 generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>());
         p_network->GetVessels()[0]->GetFlowProperties()->SetHaematocrit(0.4);
 
         // Set up the grid
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(vessel_length, vessel_length, DimensionalChastePoint<2>());
         DimensionalChastePoint<2> translation_vector(-vessel_length/(2.0*reference_length),
                                                      0.0, 0.0, reference_length);
         p_domain->Translate(translation_vector);
 
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         QLength spacing(10.0*unit::microns);
         p_grid->GenerateFromPart(p_domain, spacing);
 
         // Set up a density map
-        boost::shared_ptr<DensityMap<2> > p_density_map = DensityMap<2>::Create();
+        std::shared_ptr<DensityMap<2> > p_density_map = DensityMap<2>::Create();
         p_density_map->SetVesselNetwork(p_network);
         p_density_map->SetGrid(p_grid);
 
         // Set up the discrete source
-        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_source_lin = VesselBasedDiscreteSource<2>::Create();
+        std::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_source_lin = VesselBasedDiscreteSource<2>::Create();
         p_vessel_source_lin->SetLinearInUValue(1.0*unit::per_second);
         p_vessel_source_lin->SetDensityMap(p_density_map);
 
-        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_source_const = VesselBasedDiscreteSource<2>::Create();
+        std::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_source_const = VesselBasedDiscreteSource<2>::Create();
         p_vessel_source_const->SetConstantInUValue(2.0* unit::mole_per_metre_cubed_per_second);
         p_vessel_source_const->SetDensityMap(p_density_map);
 
@@ -108,8 +108,8 @@ public:
         solver.SetGrid(p_grid);
 
         // Get the source values at each point on the grid
-        std::vector<units::quantity<unit::rate> > point_rates = p_vessel_source_lin->GetLinearInUValues();
-        std::vector<units::quantity<unit::concentration_flow_rate> > point_conc_rates = p_vessel_source_const->GetConstantInUValues();
+        std::vector<QRate > point_rates = p_vessel_source_lin->GetLinearInUValues();
+        std::vector<QConcentrationFlowRate > point_conc_rates = p_vessel_source_const->GetConstantInUValues();
         std::vector<double> solution;
         for(unsigned idx=0; idx<p_density_map->GetGridCalculator()->GetGrid()->GetNumberOfPoints(); idx++)
         {
@@ -130,34 +130,34 @@ public:
         QLength vessel_length(100.0*unit::microns);
         QLength reference_length(1.0*unit::microns);
         VesselNetworkGenerator<2> generator;
-        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>());
+        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>());
         p_network->GetVessels()[0]->GetFlowProperties()->SetHaematocrit(0.4);
 
         // Set up the grid
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(vessel_length, vessel_length, DimensionalChastePoint<2>());
         DimensionalChastePoint<2> translation_vector(-vessel_length/(2.0*reference_length),
                                                      0.0, 0.0, reference_length);
         p_domain->Translate(translation_vector);
 
         // Set up the grid
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator = DiscreteContinuumMeshGenerator<2>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator = DiscreteContinuumMeshGenerator<2>::Create();
         p_mesh_generator->SetDomain(p_domain);
-        p_mesh_generator->SetMaxElementArea(units::pow<3>(0.02*vessel_length));
+        p_mesh_generator->SetMaxElementArea(Qpow3(0.02*vessel_length));
         p_mesh_generator->Update();
 
         // Set up a density map
-        boost::shared_ptr<DensityMap<2> > p_density_map = DensityMap<2>::Create();
+        std::shared_ptr<DensityMap<2> > p_density_map = DensityMap<2>::Create();
         p_density_map->SetVesselNetwork(p_network);
         p_density_map->SetGrid(p_mesh_generator->GetMesh());
 
         // Set up the discrete source
-        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_linear_point_source = VesselBasedDiscreteSource<2>::Create();
+        std::shared_ptr<VesselBasedDiscreteSource<2> > p_linear_point_source = VesselBasedDiscreteSource<2>::Create();
         p_linear_point_source->SetLinearInUValue(1.0 * unit::per_second);
         p_linear_point_source->SetDensityMap(p_density_map);
 
-        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_const_point_source = VesselBasedDiscreteSource<2>::Create();
-        units::quantity<unit::concentration_flow_rate> consumption_rate(2.0 * unit::mole_per_metre_cubed_per_second);
+        std::shared_ptr<VesselBasedDiscreteSource<2> > p_const_point_source = VesselBasedDiscreteSource<2>::Create();
+        QConcentrationFlowRate consumption_rate(2.0 * unit::mole_per_metre_cubed_per_second);
         p_const_point_source->SetConstantInUValue(consumption_rate);
         p_const_point_source->SetDensityMap(p_density_map);
 
@@ -166,8 +166,8 @@ public:
         solver.SetGrid(p_mesh_generator->GetMesh());
 
         // Get the source values at each point on the grid
-        std::vector<units::quantity<unit::rate> > point_rates = p_linear_point_source->GetLinearInUValues();
-        std::vector<units::quantity<unit::concentration_flow_rate> > point_conc_rates = p_const_point_source->GetConstantInUValues();
+        std::vector<QRate > point_rates = p_linear_point_source->GetLinearInUValues();
+        std::vector<QConcentrationFlowRate > point_conc_rates = p_const_point_source->GetConstantInUValues();
         std::vector<double> solution;
         for(unsigned idx=0; idx<point_conc_rates.size(); idx++)
         {
@@ -189,33 +189,33 @@ public:
         QLength vessel_length(100.0*unit::microns);
         QLength reference_length(1.0*unit::microns);
         VesselNetworkGenerator<2> generator;
-        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length,
+        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length,
                 DimensionalChastePoint<2>());
 
         p_network->GetVessels()[0]->GetFlowProperties()->SetHaematocrit(0.45);
 
         // Set up the grid
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(vessel_length, vessel_length, DimensionalChastePoint<2>());
         DimensionalChastePoint<2> translation_vector(-vessel_length/(2.0*reference_length),
                                                      0.0, 0.0, reference_length);
         p_domain->Translate(translation_vector);
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         QLength spacing(10.0*unit::microns);
         p_grid->GenerateFromPart(p_domain, spacing);
 
         // Choose the PDE
-        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
-        units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
-        units::quantity<unit::concentration_flow_rate> consumption_rate(-2.e0 * unit::mole_per_metre_cubed_per_second);
+        std::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
+        QDiffusivity diffusivity(0.0033 * unit::metre_squared_per_second);
+        QConcentrationFlowRate consumption_rate(-2.e0 * unit::mole_per_metre_cubed_per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
         p_pde->SetContinuumConstantInUTerm(consumption_rate);
 
         // Set up the discrete source
-        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_source = VesselBasedDiscreteSource<2>::Create();
-        units::quantity<unit::solubility> oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
+        std::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_source = VesselBasedDiscreteSource<2>::Create();
+        QSolubility oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
                 GenericParameters::mpGasConcentrationAtStp->GetValue("User");
-        units::quantity<unit::concentration> vessel_oxygen_concentration = oxygen_solubility_at_stp *
+        QConcentration vessel_oxygen_concentration = oxygen_solubility_at_stp *
                 Owen11Parameters::mpReferencePartialPressure->GetValue("User");
         p_vessel_source->SetReferenceConcentration(vessel_oxygen_concentration);
         p_pde->AddDiscreteSource(p_vessel_source);
@@ -242,38 +242,38 @@ public:
         QLength vessel_length(100.0*unit::microns);
         QLength reference_length(1.0*unit::microns);
         VesselNetworkGenerator<2> generator;
-        boost::shared_ptr<VesselNetwork<2> > p_network =
+        std::shared_ptr<VesselNetwork<2> > p_network =
                 generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>());
         p_network->GetVessels()[0]->GetFlowProperties()->SetHaematocrit(0.45);
 
         // Set up the grid
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(vessel_length, vessel_length, DimensionalChastePoint<2>());
         DimensionalChastePoint<2> translation_vector(-vessel_length/(2.0*reference_length),
                                                      0.0, 0.0, reference_length);
         p_domain->Translate(translation_vector);
 
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator =
+        std::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator =
                 DiscreteContinuumMeshGenerator<2>::Create();
         p_mesh_generator->SetDomain(p_domain);
         QLength spacing(10.0*unit::microns);
-        p_mesh_generator->SetMaxElementArea(units::pow<3>(0.02*vessel_length));
+        p_mesh_generator->SetMaxElementArea(Qpow3(0.02*vessel_length));
         p_mesh_generator->Update();
 
         // Choose the PDE
-        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde =
+        std::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde =
                 DiscreteContinuumLinearEllipticPde<2>::Create();
-        units::quantity<unit::diffusivity> diffusivity(0.0033 * unit::metre_squared_per_second);
-        units::quantity<unit::concentration_flow_rate> consumption_rate(-2.0 * unit::mole_per_metre_cubed_per_second);
+        QDiffusivity diffusivity(0.0033 * unit::metre_squared_per_second);
+        QConcentrationFlowRate consumption_rate(-2.0 * unit::mole_per_metre_cubed_per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
         p_pde->SetContinuumConstantInUTerm(consumption_rate);
 
         // Set up the discrete source
         // Set up the discrete source
-        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_source = VesselBasedDiscreteSource<2>::Create();
-        units::quantity<unit::solubility> oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
+        std::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_source = VesselBasedDiscreteSource<2>::Create();
+        QSolubility oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
                 GenericParameters::mpGasConcentrationAtStp->GetValue("User");
-        units::quantity<unit::concentration> vessel_oxygen_concentration = oxygen_solubility_at_stp *
+        QConcentration vessel_oxygen_concentration = oxygen_solubility_at_stp *
                 Owen11Parameters::mpReferencePartialPressure->GetValue("User");
         p_vessel_source->SetReferenceConcentration(vessel_oxygen_concentration);
         p_pde->AddDiscreteSource(p_vessel_source);

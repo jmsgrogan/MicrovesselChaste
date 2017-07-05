@@ -49,13 +49,13 @@ AbstractVesselNetworkComponentFlowProperties<DIM>::~AbstractVesselNetworkCompone
 }
 
 template<unsigned DIM>
-units::quantity<unit::pressure> AbstractVesselNetworkComponentFlowProperties<DIM>::GetPressure() const
+QPressure AbstractVesselNetworkComponentFlowProperties<DIM>::GetPressure() const
 {
     return mPressure;
 }
 
 template<unsigned DIM>
-void AbstractVesselNetworkComponentFlowProperties<DIM>::SetPressure(units::quantity<unit::pressure> pressure)
+void AbstractVesselNetworkComponentFlowProperties<DIM>::SetPressure(QPressure pressure)
 {
     mPressure = pressure;
 }

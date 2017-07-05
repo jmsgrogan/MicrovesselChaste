@@ -59,92 +59,92 @@ void VesselFlowProperties<DIM>::CheckSegments() const
 }
 
 template<unsigned DIM>
-units::quantity<unit::concentration> VesselFlowProperties<DIM>::GetAntiAngiogenicDrugConcentration() const
+QConcentration VesselFlowProperties<DIM>::GetAntiAngiogenicDrugConcentration() const
 {
     this->CheckSegments();
 
-    units::quantity<unit::concentration> value = 0.0*unit::mole_per_metre_cubed;
+    QConcentration value = 0.0*unit::mole_per_metre_cubed;
     for (unsigned i = 0; i < mSegments.size(); i++)
     {
-        value += mSegments[i]->GetFlowProperties()->GetAntiAngiogenicDrugConcentration() / double(mSegments.size());
+        value = value +  mSegments[i]->GetFlowProperties()->GetAntiAngiogenicDrugConcentration() / double(mSegments.size());
     }
     return value;
 }
 
 template<unsigned DIM>
-units::quantity<unit::dimensionless> VesselFlowProperties<DIM>::GetHaematocrit() const
+QDimensionless VesselFlowProperties<DIM>::GetHaematocrit() const
 {
     this->CheckSegments();
 
-    units::quantity<unit::dimensionless> value = 0.0;
+    QDimensionless value = 0.0;
     for (unsigned i = 0; i < mSegments.size(); i++)
     {
-        value += mSegments[i]->GetFlowProperties()->GetHaematocrit() / double(mSegments.size());
+        value = value +  mSegments[i]->GetFlowProperties()->GetHaematocrit() / double(mSegments.size());
     }
     return value;
 }
 
 template<unsigned DIM>
-units::quantity<unit::flow_rate> VesselFlowProperties<DIM>::GetFlowRate() const
+QFlowRate VesselFlowProperties<DIM>::GetFlowRate() const
 {
     this->CheckSegments();
 
-    units::quantity<unit::flow_rate> value = 0.0 * unit::metre_cubed_per_second;
+    QFlowRate value = 0.0 * unit::metre_cubed_per_second;
     for (unsigned i = 0; i < mSegments.size(); i++)
     {
-        value += mSegments[i]->GetFlowProperties()->GetFlowRate() / double(mSegments.size());
+        value = value +  mSegments[i]->GetFlowProperties()->GetFlowRate() / double(mSegments.size());
     }
     return value;
 }
 
 template<unsigned DIM>
-units::quantity<unit::flow_impedance> VesselFlowProperties<DIM>::GetImpedance() const
+QFlowImpedance VesselFlowProperties<DIM>::GetImpedance() const
 {
     this->CheckSegments();
 
-    units::quantity<unit::flow_impedance> value = 0.0 * unit::pascal_second_per_metre_cubed;
+    QFlowImpedance value = 0.0 * unit::pascal_second_per_metre_cubed;
     for (unsigned i = 0; i < mSegments.size(); i++)
     {
-        value += mSegments[i]->GetFlowProperties()->GetImpedance();
+        value = value +  mSegments[i]->GetFlowProperties()->GetImpedance();
     }
     return value;
 }
 
 template<unsigned DIM>
-units::quantity<unit::dynamic_viscosity> VesselFlowProperties<DIM>::GetViscosity() const
+QDynamicViscosity VesselFlowProperties<DIM>::GetViscosity() const
 {
     this->CheckSegments();
 
-    units::quantity<unit::dynamic_viscosity> value = 0.0 * unit::poiseuille;
+    QDynamicViscosity value = 0.0 * unit::poiseuille;
     for (unsigned i = 0; i < mSegments.size(); i++)
     {
-        value += mSegments[i]->GetFlowProperties()->GetViscosity()/ double(mSegments.size());
+        value = value +  mSegments[i]->GetFlowProperties()->GetViscosity()/ double(mSegments.size());
     }
     return value;
 }
 
 template<unsigned DIM>
-units::quantity<unit::pressure> VesselFlowProperties<DIM>::GetWallShearStress() const
+QPressure VesselFlowProperties<DIM>::GetWallShearStress() const
 {
     this->CheckSegments();
 
-    units::quantity<unit::pressure> value = 0.0 * unit::pascals;
+    QPressure value = 0.0 * unit::pascals;
     for (unsigned i = 0; i < mSegments.size(); i++)
     {
-        value += mSegments[i]->GetFlowProperties()->GetWallShearStress()/ double(mSegments.size());
+        value = value +  mSegments[i]->GetFlowProperties()->GetWallShearStress()/ double(mSegments.size());
     }
     return value;
 }
 
 template<unsigned DIM>
-units::quantity<unit::rate> VesselFlowProperties<DIM>::GetGrowthStimulus() const
+QRate VesselFlowProperties<DIM>::GetGrowthStimulus() const
 {
     this->CheckSegments();
 
-    units::quantity<unit::rate> value = 0.0 * unit::per_second;
+    QRate value = 0.0 * unit::per_second;
     for (unsigned i = 0; i < mSegments.size(); i++)
     {
-        value += mSegments[i]->GetFlowProperties()->GetGrowthStimulus()/ double(mSegments.size());
+        value = value + mSegments[i]->GetFlowProperties()->GetGrowthStimulus()/ double(mSegments.size());
     }
     return value;
 }
@@ -165,13 +165,13 @@ std::map<std::string, double> VesselFlowProperties<DIM>::GetOutputData() const
 }
 
 template<unsigned DIM>
-units::quantity<unit::time> VesselFlowProperties<DIM>::GetRegressionTime() const
+QTime VesselFlowProperties<DIM>::GetRegressionTime() const
 {
     return mRegressionTime;
 }
 
 template<unsigned DIM>
-bool VesselFlowProperties<DIM>::HasVesselRegressed(units::quantity<unit::time> simulationReferenceTime)
+bool VesselFlowProperties<DIM>::HasVesselRegressed(QTime simulationReferenceTime)
 {
     if (SimulationTime::Instance()->GetTime()*simulationReferenceTime >= this->mRegressionTime)
     {
@@ -187,7 +187,7 @@ bool VesselFlowProperties<DIM>::HasVesselRegressed(units::quantity<unit::time> s
 }
 
 template<unsigned DIM>
-void VesselFlowProperties<DIM>::SetHaematocrit(units::quantity<unit::dimensionless> haematocrit)
+void VesselFlowProperties<DIM>::SetHaematocrit(QDimensionless haematocrit)
 {
     this->CheckSegments();
 
@@ -198,7 +198,7 @@ void VesselFlowProperties<DIM>::SetHaematocrit(units::quantity<unit::dimensionle
 }
 
 template<unsigned DIM>
-void VesselFlowProperties<DIM>::SetFlowRate(units::quantity<unit::flow_rate> haematocrit)
+void VesselFlowProperties<DIM>::SetFlowRate(QFlowRate haematocrit)
 {
     this->CheckSegments();
 
@@ -210,7 +210,7 @@ void VesselFlowProperties<DIM>::SetFlowRate(units::quantity<unit::flow_rate> hae
 
 
 template<unsigned DIM>
-void VesselFlowProperties<DIM>::SetImpedance(units::quantity<unit::flow_impedance> value)
+void VesselFlowProperties<DIM>::SetImpedance(QFlowImpedance value)
 {
     this->CheckSegments();
 
@@ -221,7 +221,7 @@ void VesselFlowProperties<DIM>::SetImpedance(units::quantity<unit::flow_impedanc
 }
 
 template<unsigned DIM>
-void VesselFlowProperties<DIM>::SetViscosity(units::quantity<unit::dynamic_viscosity> value)
+void VesselFlowProperties<DIM>::SetViscosity(QDynamicViscosity value)
 {
     this->CheckSegments();
 
@@ -232,7 +232,7 @@ void VesselFlowProperties<DIM>::SetViscosity(units::quantity<unit::dynamic_visco
 }
 
 template<unsigned DIM>
-void VesselFlowProperties<DIM>::SetWallShearStress(units::quantity<unit::pressure> value)
+void VesselFlowProperties<DIM>::SetWallShearStress(QPressure value)
 {
     this->CheckSegments();
 
@@ -243,7 +243,7 @@ void VesselFlowProperties<DIM>::SetWallShearStress(units::quantity<unit::pressur
 }
 
 template<unsigned DIM>
-void VesselFlowProperties<DIM>::SetGrowthStimulus(units::quantity<unit::rate> value)
+void VesselFlowProperties<DIM>::SetGrowthStimulus(QRate value)
 {
     this->CheckSegments();
 
@@ -254,7 +254,7 @@ void VesselFlowProperties<DIM>::SetGrowthStimulus(units::quantity<unit::rate> va
 }
 
 template<unsigned DIM>
-void VesselFlowProperties<DIM>::SetTimeUntilRegression(units::quantity<unit::time> time, units::quantity<unit::time> simulationReferenceTime)
+void VesselFlowProperties<DIM>::SetTimeUntilRegression(QTime time, QTime simulationReferenceTime)
 {
     assert(!mRemoveViaRegression);
 
@@ -268,7 +268,7 @@ void VesselFlowProperties<DIM>::SetTimeUntilRegression(units::quantity<unit::tim
 }
 
 template<unsigned DIM>
-void VesselFlowProperties<DIM>::SetRegressionTime(units::quantity<unit::time> time)
+void VesselFlowProperties<DIM>::SetRegressionTime(QTime time)
 {
     this->mRegressionTime = time;
     if(time<DBL_MAX*unit::seconds)

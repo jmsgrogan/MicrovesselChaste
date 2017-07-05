@@ -59,7 +59,7 @@ std::shared_ptr<SolutionDependentDiscreteSource<DIM> > SolutionDependentDiscrete
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > SolutionDependentDiscreteSource<DIM>::GetConstantInUValues()
+std::vector<QConcentrationFlowRate > SolutionDependentDiscreteSource<DIM>::GetConstantInUValues()
 {
     if(!this->mpDensityMap->GetGridCalculator())
     {
@@ -67,7 +67,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > SolutionDependentDi
     }
 
     unsigned num_points = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells();
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(num_points, 0.0*unit::mole_per_metre_cubed_per_second);
+    std::vector<QConcentrationFlowRate > values(num_points, 0.0*unit::mole_per_metre_cubed_per_second);
     if(mpSolution.size() != num_points)
     {
         EXCEPTION("A solution sampled on the grid is required for this type of source");
@@ -81,7 +81,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > SolutionDependentDi
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::rate> > SolutionDependentDiscreteSource<DIM>::GetLinearInUValues()
+std::vector<QRate > SolutionDependentDiscreteSource<DIM>::GetLinearInUValues()
 {
     if(!this->mpDensityMap->GetGridCalculator())
     {
@@ -89,7 +89,7 @@ std::vector<units::quantity<unit::rate> > SolutionDependentDiscreteSource<DIM>::
     }
 
     unsigned num_points = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells();
-    std::vector<units::quantity<unit::rate> > values(num_points, 0.0*unit::per_second);
+    std::vector<QRate > values(num_points, 0.0*unit::per_second);
     if(mpSolution.size() != num_points)
     {
         EXCEPTION("A solution sampled on the grid is required for this type of source");
@@ -103,19 +103,19 @@ std::vector<units::quantity<unit::rate> > SolutionDependentDiscreteSource<DIM>::
 }
 
 template<unsigned DIM>
-void SolutionDependentDiscreteSource<DIM>::SetSolution(std::vector<units::quantity<unit::concentration> > solution)
+void SolutionDependentDiscreteSource<DIM>::SetSolution(std::vector<QConcentration > solution)
 {
     mpSolution = solution;
 }
 
 template<unsigned DIM>
-void SolutionDependentDiscreteSource<DIM>::SetConstantInUSinkRatePerSolutionQuantity(units::quantity<unit::rate> value)
+void SolutionDependentDiscreteSource<DIM>::SetConstantInUSinkRatePerSolutionQuantity(QRate value)
 {
     mConstantInUSinkRatePerSolutionQuantity = value;
 }
 
 template<unsigned DIM>
-void SolutionDependentDiscreteSource<DIM>::SetLinearInUSinkRatePerSolutionQuantity(units::quantity<unit::rate_per_concentration> value)
+void SolutionDependentDiscreteSource<DIM>::SetLinearInUSinkRatePerSolutionQuantity(QRatePerConcentration value)
 {
     mLinearInUSinkRatePerSolutionQuantity = value;
 }

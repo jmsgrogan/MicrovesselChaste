@@ -39,6 +39,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <map>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/serialization/base_object.hpp>
 #include "ChasteSerialization.hpp"
 #include "UnitCollection.hpp"
 #include "AbstractVesselNetworkComponentFlowProperties.hpp"
@@ -50,7 +51,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * an instance of the class.
  */
 template<unsigned DIM>
-class SegmentFlowProperties : public boost::enable_shared_from_this<SegmentFlowProperties<DIM> >, public AbstractVesselNetworkComponentFlowProperties<DIM>
+class SegmentFlowProperties : public std::enable_shared_from_this<SegmentFlowProperties<DIM> >, public AbstractVesselNetworkComponentFlowProperties<DIM>
 {
 
 private:
@@ -80,37 +81,37 @@ private:
     /**
      * Anti-angiogenic drug concentration in the vessel at this segment
      */
-    units::quantity<unit::concentration> mAntiAngiogenicDrugConcentration;
+    QConcentration mAntiAngiogenicDrugConcentration;
 
     /**
      * Haematocrit in the vessel at this segment
      */
-    units::quantity<unit::dimensionless> mHaematocrit;
+    QDimensionless mHaematocrit;
 
     /**
      * Blood flow rate in the vessel at this segment
      */
-    units::quantity<unit::flow_rate> mFlowRate;
+    QFlowRate mFlowRate;
 
     /**
      * Impedance of this vessel segment
      */
-    units::quantity<unit::flow_impedance> mImpedance;
+    QFlowImpedance mImpedance;
 
     /**
      * Viscosity of this vessel segment
      */
-    units::quantity<unit::dynamic_viscosity> mViscosity;
+    QDynamicViscosity mViscosity;
 
     /**
      * Wall shear stress of this vessel segment
      */
-    units::quantity<unit::pressure> mWallShearStress;
+    QPressure mWallShearStress;
 
     /**
      * Growth stimulus of this vessel segment
      */
-    units::quantity<unit::rate> mStimulus;
+    QRate mStimulus;
 
 public:
 
@@ -128,43 +129,43 @@ public:
      * Return the anti-angiogenic drug concentration
      * @return the segment anti-angiogenic drug concentration
      */
-    units::quantity<unit::concentration> GetAntiAngiogenicDrugConcentration() const;
+    QConcentration GetAntiAngiogenicDrugConcentration() const;
 
     /**
      * Return the  haematocrit
      * @return the segment haematocrit
      */
-    units::quantity<unit::dimensionless> GetHaematocrit() const;
+    QDimensionless GetHaematocrit() const;
 
     /**
      * Return the impedance
      * @return the segment impedance
      */
-    units::quantity<unit::flow_impedance> GetImpedance() const;
+    QFlowImpedance GetImpedance() const;
 
     /**
      * Return the flow rate
      * @return the segment flow rate
      */
-    units::quantity<unit::flow_rate> GetFlowRate() const;
+    QFlowRate GetFlowRate() const;
 
     /**
      * Return the segment viscosity
      * @return the segment viscosity
      */
-    units::quantity<unit::dynamic_viscosity> GetViscosity() const;
+    QDynamicViscosity GetViscosity() const;
 
     /**
      * Return the segment wall shear stress
      * @return the segment wall shear stress
      */
-    units::quantity<unit::pressure> GetWallShearStress() const;
+    QPressure GetWallShearStress() const;
 
     /**
      * Return the growth stimulus of this vessel segment
      * @return the segment growth stimulus
      */
-    units::quantity<unit::rate> GetGrowthStimulus() const;
+    QRate GetGrowthStimulus() const;
 
     /**
      * Return a map of segment data for use by the vtk writer
@@ -178,42 +179,42 @@ public:
      *
      * @param haematocrit the haematocrit in the segment
      */
-    void SetHaematocrit(units::quantity<unit::dimensionless> haematocrit);
+    void SetHaematocrit(QDimensionless haematocrit);
 
     /**
      * Set the flow rate
      *
      * @param flowRate the flow rate in the segment
      */
-    void SetFlowRate(units::quantity<unit::flow_rate> flowRate);
+    void SetFlowRate(QFlowRate flowRate);
 
     /**
      * Set the impedance
      *
      * @param impedance the impedance in the segment
      */
-    void SetImpedance(units::quantity<unit::flow_impedance> impedance);
+    void SetImpedance(QFlowImpedance impedance);
 
     /**
      * Set the viscosity
      *
      * @param viscosity the viscosity in the segment
      */
-    void SetViscosity(units::quantity<unit::dynamic_viscosity> viscosity);
+    void SetViscosity(QDynamicViscosity viscosity);
 
     /**
      * Set the wall shear stress of this vessel segment
      *
      * @param wallShear the wall shear stress in the segment
      */
-    void SetWallShearStress(units::quantity<unit::pressure> wallShear);
+    void SetWallShearStress(QPressure wallShear);
 
     /**
      * Set the growth stimulus of this vessel segment
      *
      * @param stimulus the growth stimulus in the segment
      */
-    void SetGrowthStimulus(units::quantity<unit::rate> stimulus);
+    void SetGrowthStimulus(QRate stimulus);
 
 };
 

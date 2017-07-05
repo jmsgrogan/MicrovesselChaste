@@ -153,12 +153,12 @@ void FlowSolver<DIM>::Update(bool runSetup)
     mpLinearSystem->ZeroRhsVector();
 
     // Get the impedances, scale them by the maximum impedance to remove small values from the system matrix
-    std::vector<units::quantity<unit::flow_impedance> > scaled_impedances;
-    units::quantity<unit::flow_impedance> max_impedance = 0.0 * unit::pascal_second_per_metre_cubed;
-    units::quantity<unit::flow_impedance> min_impedance = DBL_MAX * unit::pascal_second_per_metre_cubed;
+    std::vector<QFlowImpedance > scaled_impedances;
+    QFlowImpedance max_impedance = 0.0 * unit::pascal_second_per_metre_cubed;
+    QFlowImpedance min_impedance = DBL_MAX * unit::pascal_second_per_metre_cubed;
     for (unsigned vessel_index = 0; vessel_index < mVessels.size(); vessel_index++)
     {
-        units::quantity<unit::flow_impedance> impedance = mVessels[vessel_index]->GetFlowProperties()->GetImpedance();
+        QFlowImpedance impedance = mVessels[vessel_index]->GetFlowProperties()->GetImpedance();
         if (impedance <= 0.0 * unit::pascal_second_per_metre_cubed)
         {
             EXCEPTION("Impedance should be a positive number.");
@@ -173,7 +173,7 @@ void FlowSolver<DIM>::Update(bool runSetup)
         }
         scaled_impedances.push_back(impedance);
     }
-    units::quantity<unit::flow_impedance> multiplier = (max_impedance + min_impedance) / 2.0; //scale impedances to avoid floating point problems in PETSC solvers.
+    QFlowImpedance multiplier = (max_impedance + min_impedance) / 2.0; //scale impedances to avoid floating point problems in PETSC solvers.
 
     // Set up the system matrix
     for (unsigned node_index = 0; node_index < mNodes.size(); node_index++)
@@ -197,7 +197,7 @@ void FlowSolver<DIM>::Update(bool runSetup)
         {
             for (unsigned vessel_index = 0; vessel_index < mNodeVesselConnectivity[node_index].size(); vessel_index++)
             {
-                units::quantity<unit::flow_impedance> impedance = scaled_impedances[mNodeVesselConnectivity[node_index][vessel_index]];
+                QFlowImpedance impedance = scaled_impedances[mNodeVesselConnectivity[node_index][vessel_index]];
                 // Add the inverse impedances to the linear system
 
                 mpLinearSystem->AddToMatrixElement(node_index, node_index, -multiplier / impedance); // Aii
@@ -220,8 +220,8 @@ void FlowSolver<DIM>::Update(bool runSetup)
         if(mNodes[mBoundaryConditionNodeIndices[bc_index]]->GetFlowProperties()->UseVelocityBoundaryCondition())
         {
             std::shared_ptr<Vessel<DIM> > p_vessel = mNodes[mBoundaryConditionNodeIndices[bc_index]]->GetSegment(0)->GetVessel();
-            units::quantity<unit::flow_rate> flow_rate = boost::units::fabs(p_vessel->GetFlowProperties()->GetFlowRate());
-            units::quantity<unit::flow_impedance> impedance = p_vessel->GetFlowProperties()->GetImpedance();
+            QFlowRate flow_rate = Qabs(p_vessel->GetFlowProperties()->GetFlowRate());
+            QFlowImpedance impedance = p_vessel->GetFlowProperties()->GetImpedance();
             double pressure_drop = flow_rate * impedance/ unit::pascals;
             mpLinearSystem->SetRhsVectorElement(mBoundaryConditionNodeIndices[bc_index], pressure_drop);
         }
@@ -258,9 +258,9 @@ void FlowSolver<DIM>::Solve()
     // Set the segment flow rates and nodal pressures
     for (unsigned vessel_index = 0; vessel_index < mVessels.size(); vessel_index++)
     {
-        units::quantity<unit::pressure> start_node_pressure = mVessels[vessel_index]->GetStartNode()->GetFlowProperties()->GetPressure();
-        units::quantity<unit::pressure> end_node_pressure = mVessels[vessel_index]->GetEndNode()->GetFlowProperties()->GetPressure();
-        units::quantity<unit::flow_rate> flow_rate = (start_node_pressure - end_node_pressure) / mVessels[vessel_index]->GetFlowProperties()->GetImpedance();
+        QPressure start_node_pressure = mVessels[vessel_index]->GetStartNode()->GetFlowProperties()->GetPressure();
+        QPressure end_node_pressure = mVessels[vessel_index]->GetEndNode()->GetFlowProperties()->GetPressure();
+        QFlowRate flow_rate = (start_node_pressure - end_node_pressure) / mVessels[vessel_index]->GetFlowProperties()->GetImpedance();
 
         // Clean up small values as some structural adaptation calculators are sensitive to them.
         if (fabs(flow_rate) < pow(10, -20)*unit::metre_cubed_per_second)
@@ -269,10 +269,10 @@ void FlowSolver<DIM>::Solve()
         }
 
         std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = mVessels[vessel_index]->GetSegments();
-        units::quantity<unit::pressure> pressure = start_node_pressure;
+        QPressure pressure = start_node_pressure;
         for (unsigned segment_index = 0; segment_index < segments.size() - 1; segment_index++)
         {
-            pressure -= segments[segment_index]->GetFlowProperties()->GetImpedance() * flow_rate;
+            pressure = pressure - segments[segment_index]->GetFlowProperties()->GetImpedance() * flow_rate;
             segments[segment_index]->GetNode(1)->GetFlowProperties()->SetPressure(pressure);
             segments[segment_index]->GetFlowProperties()->SetFlowRate(flow_rate);
         }

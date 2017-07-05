@@ -97,7 +97,7 @@ public:
      * @return a shared pointer to the vessel network
      */
     std::shared_ptr<VesselNetwork<DIM> > GenerateParrallelNetwork(std::shared_ptr<Part<DIM> > domain,
-                                                                        units::quantity<unit::per_area> targetDensity,
+                                                                        QArea targetDensity,
                                                                         VesselDistribution::Value distrbutionType,
                                                                         QLength exclusionDistance = 0.0*unit::metres,
                                                                         bool useBbox = false,

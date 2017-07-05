@@ -53,10 +53,10 @@ public:
     void TestAllUnits()
     {
         // Time
-        units::quantity<unit::time> s1(3.0*unit::seconds);
-        units::quantity<unit::time> m1(3.0*unit::minutes);
-        units::quantity<unit::time> h1(3.0*unit::hours);
-        units::quantity<unit::time> d1(3.0*unit::days);
+        QTime s1(3.0*unit::seconds);
+        QTime m1(3.0*unit::minutes);
+        QTime h1(3.0*unit::hours);
+        QTime d1(3.0*unit::days);
         std::stringstream s1s;
         s1s << s1;
         std::stringstream m1s;
@@ -71,9 +71,9 @@ public:
         TS_ASSERT_EQUALS(d1s.str(), "259200 s");
 //
 //        // Rates
-//        units::quantity<unit::rate> rs1 = 3.0*unit::per_second;
-//        units::quantity<unit::rate> rm1(3.0*unit::per_minute);
-//        units::quantity<unit::rate> rh1(3.0*unit::per_hour);
+//        QRate rs1 = 3.0*unit::per_second;
+//        QRate rm1(3.0*unit::per_minute);
+//        QRate rh1(3.0*unit::per_hour);
 //        std::cout << rs1 << std::endl;
 //        std::cout << rm1 << std::endl;
 //        std::cout << rh1 << std::endl;
@@ -83,12 +83,12 @@ public:
 //        std::cout << lm1 << std::endl;
 //
 //        // Force
-//        units::quantity<unit::force> f1(3.0*unit::newtons);
+//        QForce f1(3.0*unit::newtons);
 //        std::cout << f1 << std::endl;
 //
 //        // Pressure
-//        units::quantity<unit::pressure> p1(3.0*unit::pascals);
-//        units::quantity<unit::pressure> ph1(3.0*unit::mmHg);
+//        QPressure p1(3.0*unit::pascals);
+//        QPressure ph1(3.0*unit::mmHg);
 //        std::cout << p1 << std::endl;
 //        std::cout << ph1 << std::endl;
     }

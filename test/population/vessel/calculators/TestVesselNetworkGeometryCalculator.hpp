@@ -58,27 +58,27 @@ public:
     void TestSimpleNetwork() throw(Exception)
     {
         // Make some nodes
-        std::vector<boost::shared_ptr<VesselNode<3> > > nodes;
+        std::vector<std::shared_ptr<VesselNode<3> > > nodes;
         nodes.push_back(VesselNode<3>::Create(1.0, 2.0, 6.0));
         nodes.push_back(VesselNode<3>::Create(3.0, 4.0, 7.0));
         nodes.push_back(VesselNode<3>::Create(3.0, 4.0, 8.0));
         nodes.push_back(VesselNode<3>::Create(3.0, 4.0, 9.0));
 
         // Make some vessels
-        boost::shared_ptr<Vessel<3> > pVessel1(Vessel<3>::Create(nodes[0], nodes[1]));
-        boost::shared_ptr<Vessel<3> > pVessel2(Vessel<3>::Create(nodes[1], nodes[2]));
-        boost::shared_ptr<Vessel<3> > pVessel3(Vessel<3>::Create(nodes[2], nodes[3]));
+        std::shared_ptr<Vessel<3> > pVessel1(Vessel<3>::Create(nodes[0], nodes[1]));
+        std::shared_ptr<Vessel<3> > pVessel2(Vessel<3>::Create(nodes[1], nodes[2]));
+        std::shared_ptr<Vessel<3> > pVessel3(Vessel<3>::Create(nodes[2], nodes[3]));
 
-        std::vector<boost::shared_ptr<Vessel<3> > > vessels;
+        std::vector<std::shared_ptr<Vessel<3> > > vessels;
         vessels.push_back(pVessel1);
         vessels.push_back(pVessel2);
         vessels.push_back(pVessel3);
 
         // Make a network
-        boost::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
         p_network->AddVessels(vessels);
 
-        boost::shared_ptr<VesselNetworkGeometryCalculator<3> > p_calculator = VesselNetworkGeometryCalculator<3>::Create();
+        std::shared_ptr<VesselNetworkGeometryCalculator<3> > p_calculator = VesselNetworkGeometryCalculator<3>::Create();
         TS_ASSERT_DELTA(p_calculator->GetAverageInterSegmentDistance(p_network).value(), 1.24402e-06, 1.e-3);
         TS_ASSERT_DELTA(p_calculator->GetAverageVesselLength(p_network).value(), 1.66667e-06, 1.e-8);
         TS_ASSERT_DELTA(p_calculator->GetTotalLength(p_network).value(), 5.e-6, 1.e-8);

@@ -51,8 +51,8 @@ OffLatticeMigrationRule<DIM>::OffLatticeMigrationRule()
       mGlobalX(unit_vector<double>(3,0)),
       mGlobalY(unit_vector<double>(3,1)),
       mGlobalZ(unit_vector<double>(3,2)),
-      mMeanAngles(std::vector<units::quantity<unit::plane_angle> >(3, 0.0*unit::radians)),
-      mSdvAngles(std::vector<units::quantity<unit::plane_angle> >(3, M_PI/6.0*unit::radians)), //formerly pi/18
+      mMeanAngles(std::vector<QAngle >(3, 0.0*unit::radians)),
+      mSdvAngles(std::vector<QAngle >(3, M_PI/6.0*unit::radians)), //formerly pi/18
       mVelocity(20.0 *(1.e-6/3600.0) * unit::metre_per_second),
       mChemotacticStrength(0.6),
       mAttractionStrength(0.0), // was 1.0
@@ -140,7 +140,7 @@ void OffLatticeMigrationRule<DIM>::CalculateDomainDistanceMap(std::shared_ptr<Ab
 }
 
 template<unsigned DIM>
-void OffLatticeMigrationRule<DIM>::SetSproutingVelocity(units::quantity<unit::velocity> velocity)
+void OffLatticeMigrationRule<DIM>::SetSproutingVelocity(QVelocity velocity)
 {
     mVelocity = velocity;
 }
@@ -160,7 +160,7 @@ void OffLatticeMigrationRule<DIM>::SetAttractionStrength(double strength)
 template<unsigned DIM>
 void OffLatticeMigrationRule<DIM>::SetPersistenceAngleSdv(double angle)
 {
-    mSdvAngles = std::vector<units::quantity<unit::plane_angle> >(3, angle*unit::radians);
+    mSdvAngles = std::vector<QAngle >(3, angle*unit::radians);
 }
 
 template<unsigned DIM>
@@ -273,7 +273,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
 
         for(unsigned idx=0; idx<rNodes.size(); idx++)
         {
-            units::quantity<unit::time> time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
+            QTime time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
             currentDirection = rNodes[idx]->rGetLocation()-rNodes[idx]->GetSegments()[0]->GetOppositeNode(rNodes[idx])->rGetLocation();
             current_dir = currentDirection.GetUnitVector();
 
@@ -284,24 +284,24 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             c_vector<double, DIM> attraction_direction = zero_vector<double>(DIM);
 
             // Persistent random walk
-            units::quantity<unit::rate> rate_of_angular_change = 1.0/(0.5*3600.0*unit::seconds);
+            QRate rate_of_angular_change = 1.0/(0.5*3600.0*unit::seconds);
             double angle_fraction = rate_of_angular_change*time_increment;
 
-            units::quantity<unit::plane_angle> angle_x = mMeanAngles[0];
+            QAngle angle_x = mMeanAngles[0];
             if(mSdvAngles[0]>0.0*unit::radians)
             {
                 angle_x =RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0]/unit::radians,
                         mSdvAngles[0]/unit::radians)*unit::radians*angle_fraction;
 
             }
-            units::quantity<unit::plane_angle> angle_y = mMeanAngles[1];
+            QAngle angle_y = mMeanAngles[1];
             if(mSdvAngles[1]>0.0*unit::radians)
             {
                 angle_y = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[1]/unit::radians,
                         mSdvAngles[1]/unit::radians)*unit::radians*angle_fraction;
 
             }
-            units::quantity<unit::plane_angle> angle_z = mMeanAngles[2];
+            QAngle angle_z = mMeanAngles[2];
             if(mSdvAngles[2]>0.0*unit::radians)
             {
                 angle_z = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[2]/unit::radians,
@@ -470,7 +470,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
     QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
 
     // Collect the probe locations for each node
-    std::vector<units::quantity<unit::concentration> > probed_solutions(rNodes.size());
+    std::vector<QConcentration > probed_solutions(rNodes.size());
     std::vector<c_vector<double, 3> > solution_gradients(rNodes.size(), zero_vector<double>(3));
     vtkSmartPointer<vtkPoints> p_probe_locations = vtkSmartPointer<vtkPoints>::New();
 
@@ -607,7 +607,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             }
         }
         new_direction/=norm_2(new_direction);
-        units::quantity<unit::time> time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
+        QTime time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
         QLength increment_length = time_increment* mVelocity;
         movement_vectors.push_back(OffsetAlongVector<DIM>(new_direction, increment_length, reference_length));
     }

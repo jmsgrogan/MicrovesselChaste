@@ -92,14 +92,14 @@ public:
      * @param gridIndex grid index
      * @return source strength
      */
-    units::quantity<unit::concentration_flow_rate> ComputeConstantInUSourceTerm(unsigned gridIndex=0);
+    QConcentrationFlowRate ComputeConstantInUSourceTerm(unsigned gridIndex=0);
 
     /**
      * Overwritten method to return the constant in U contribution to the regular grid solvers
      * @param gridIndex grid index
      * @return source strength
      */
-    units::quantity<unit::concentration_flow_rate> ComputeDiscreteConstantInUSourceTerm(unsigned gridIndex=0);
+    QConcentrationFlowRate ComputeDiscreteConstantInUSourceTerm(unsigned gridIndex=0);
 
     /**
      * Overwritten method to return the linear in U contribution to the Chaste FE solver
@@ -114,14 +114,14 @@ public:
      * @param gridIndex grid index
      * @return source strength
      */
-    units::quantity<unit::rate> ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex=0);
+    QRate ComputeLinearInUCoeffInSourceTerm(unsigned gridIndex=0);
 
     /**
      * Overwritten method to return the linear in U contribution to the regular grid solvers
      * @param gridIndex grid index
      * @return source strength
      */
-    units::quantity<unit::rate> ComputeDiscreteLinearInUCoeffInSourceTerm(unsigned gridIndex=0);
+    QRate ComputeDiscreteLinearInUCoeffInSourceTerm(unsigned gridIndex=0);
 
 };
 

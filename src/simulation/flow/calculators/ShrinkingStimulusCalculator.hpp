@@ -50,7 +50,7 @@ class ShrinkingStimulusCalculator : public AbstractVesselNetworkCalculator<DIM>
     /**
      * The default value of the shrinking stimulus
      */
-    units::quantity<unit::rate> mDefaultStimulus;
+    QRate mDefaultStimulus;
 
 public:
     
@@ -74,13 +74,13 @@ public:
      * Get the default value of the shrinking stimulus
      * @return stimulus the value of the stimulus
      */
-    units::quantity<unit::rate> GetStimulus();
+    QRate GetStimulus();
 
     /**
      * Set the default value of the shrinking stimulus
      * @param stimulus the stimulus
      */
-    void SetStimulus(units::quantity<unit::rate> stimulus);
+    void SetStimulus(QRate stimulus);
 
     /**
      * Do the solve

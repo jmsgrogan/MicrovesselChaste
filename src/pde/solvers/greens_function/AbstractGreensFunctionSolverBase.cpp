@@ -168,13 +168,13 @@ void AbstractGreensFunctionSolverBase<DIM>::UpdateGreensFunctionMatrices(bool up
 }
 
 template<unsigned DIM>
-std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > AbstractGreensFunctionSolverBase<DIM>::GetVesselVesselInteractionMatrix()
+std::shared_ptr<boost::multi_array<QPerLength, 2> > AbstractGreensFunctionSolverBase<DIM>::GetVesselVesselInteractionMatrix()
 {
-    typedef boost::multi_array<units::quantity<unit::per_length>, 2>::index index;
+    typedef boost::multi_array<QPerLength, 2>::index index;
     unsigned num_sub_segments = mSubSegmentCoordinates.size();
     double coefficient = 1.0 / (4.0 * M_PI);
 
-    std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > p_interaction_matrix(new boost::multi_array<units::quantity<unit::per_length>, 2>(boost::extents[num_sub_segments][num_sub_segments]));
+    std::shared_ptr<boost::multi_array<QPerLength, 2> > p_interaction_matrix(new boost::multi_array<QPerLength, 2>(boost::extents[num_sub_segments][num_sub_segments]));
     for (index iter = 0; iter < num_sub_segments; iter++)
     {
         for (index iter2 = 0; iter2 < num_sub_segments; iter2++)
@@ -182,7 +182,7 @@ std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Abstr
             if (iter <= iter2)
             {
                 QLength distance = mSubSegmentCoordinates[iter2].GetDistance(mSubSegmentCoordinates[iter]);
-                units::quantity<unit::per_length> term;
+                QPerLength term;
                 if (distance < mSegmentPointMap[iter]->GetRadius())
                 {
                     QLength radius = mSegmentPointMap[iter]->GetRadius();
@@ -207,14 +207,16 @@ std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Abstr
 }
 
 template<unsigned DIM>
-std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > AbstractGreensFunctionSolverBase<DIM>::GetTissueTissueInteractionMatrix()
+std::shared_ptr<boost::multi_array<QPerLength, 2> > AbstractGreensFunctionSolverBase<DIM>::GetTissueTissueInteractionMatrix()
 {
-    typedef boost::multi_array<units::quantity<unit::per_length>, 2>::index index;
+    typedef boost::multi_array<QPerLength, 2>::index index;
     unsigned num_points = mSinkCoordinates.size();
     double coefficient = 1.0 / (4.0 * M_PI);
-    units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpRegularGrid->GetSpacing());
-    QLength equivalent_tissue_point_radius = units::root<3>(tissue_point_volume * 0.75 / M_PI);
-    std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2 > > p_interaction_matrix(new boost::multi_array<units::quantity<unit::per_length>, 2>(boost::extents[num_points][num_points]));
+    QLength spacing = this->mpRegularGrid->GetSpacing();
+    QVolume tissue_point_volume = spacing*spacing*spacing;
+    QVolume tissue_point_scaled = tissue_point_volume * 0.75 / M_PI;
+    QLength equivalent_tissue_point_radius = Qcbrt(tissue_point_scaled);
+    std::shared_ptr<boost::multi_array<QPerLength, 2 > > p_interaction_matrix(new boost::multi_array<QPerLength, 2>(boost::extents[num_points][num_points]));
     for (index iter = 0; iter < num_points; iter++)
     {
         for (index iter2 = 0; iter2 < num_points; iter2++)
@@ -235,23 +237,25 @@ std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Abstr
 }
 
 template<unsigned DIM>
-std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > AbstractGreensFunctionSolverBase<DIM>::GetTissueVesselInteractionMatrix()
+std::shared_ptr<boost::multi_array<QPerLength, 2> > AbstractGreensFunctionSolverBase<DIM>::GetTissueVesselInteractionMatrix()
 {
-    typedef boost::multi_array<units::quantity<unit::per_length>, 2>::index index;
+    typedef boost::multi_array<QPerLength, 2>::index index;
     unsigned num_sinks = mSinkCoordinates.size();
     unsigned num_subsegments = mSubSegmentCoordinates.size();
 
-    units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpRegularGrid->GetSpacing());
-    QLength equivalent_tissue_point_radius = units::root<3>(tissue_point_volume * 0.75 / M_PI);
+    QLength spacing = this->mpRegularGrid->GetSpacing();
+    QVolume tissue_point_volume = spacing*spacing*spacing;
+    QVolume tissue_point_volume_scaled = tissue_point_volume * 0.75 / M_PI;
+    QLength equivalent_tissue_point_radius = Qcbrt(tissue_point_volume_scaled);
     double coefficient = 1.0 / (4.0 * M_PI);
 
-    std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > p_interaction_matrix(new boost::multi_array<units::quantity<unit::per_length>, 2>(boost::extents[num_sinks][num_subsegments]));
+    std::shared_ptr<boost::multi_array<QPerLength, 2> > p_interaction_matrix(new boost::multi_array<QPerLength, 2>(boost::extents[num_sinks][num_subsegments]));
     for (index iter = 0; iter < num_sinks; iter++)
     {
         for (index iter2 = 0; iter2 < num_subsegments; iter2++)
         {
             QLength distance = mSinkCoordinates[iter2].GetDistance(mSinkCoordinates[iter]);
-            units::quantity<unit::per_length> term;
+            QPerLength term;
             if (distance <= equivalent_tissue_point_radius)
             {
                 term = coefficient * (1.5 - 0.5 * (pow(distance / equivalent_tissue_point_radius, 2))) / equivalent_tissue_point_radius;
@@ -267,23 +271,25 @@ std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Abstr
 }
 
 template<unsigned DIM>
-std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > AbstractGreensFunctionSolverBase<DIM>::GetVesselTissueInteractionMatrix()
+std::shared_ptr<boost::multi_array<QPerLength, 2> > AbstractGreensFunctionSolverBase<DIM>::GetVesselTissueInteractionMatrix()
 {
-    typedef boost::multi_array<units::quantity<unit::per_length>, 2>::index index;
+    typedef boost::multi_array<QPerLength, 2>::index index;
     unsigned num_subsegments = mSubSegmentCoordinates.size();
     unsigned num_sinks = mSinkCoordinates.size();
     double coefficient = 1.0 / (4.0 * M_PI);
 
-    units::quantity<unit::volume> tissue_point_volume = units::pow<3>(this->mpRegularGrid->GetSpacing());
-    QLength equivalent_tissue_point_radius = units::root<3>(tissue_point_volume * 0.75 / M_PI);
+    QLength spacing = this->mpRegularGrid->GetSpacing();
+    QVolume tissue_point_volume = spacing*spacing*spacing;
+    QVolume tissue_point_volume_scaled = tissue_point_volume * 0.75 / M_PI;
+    QLength equivalent_tissue_point_radius = Qcbrt(tissue_point_volume_scaled);
 
-    std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > p_interaction_matrix(new boost::multi_array<units::quantity<unit::per_length>, 2>(boost::extents[num_subsegments][num_sinks]));
+    std::shared_ptr<boost::multi_array<QPerLength, 2> > p_interaction_matrix(new boost::multi_array<QPerLength, 2>(boost::extents[num_subsegments][num_sinks]));
     for (index iter = 0; iter < num_subsegments; iter++)
     {
         for (index iter2 = 0; iter2 < num_sinks; iter2++)
         {
             QLength distance = mSinkCoordinates[iter2].GetDistance(mSinkCoordinates[iter]);
-            units::quantity<unit::per_length> term;
+            QPerLength term;
             if (distance <= equivalent_tissue_point_radius)
             {
                 term = coefficient * (1.5 - 0.5 * (pow(distance / equivalent_tissue_point_radius, 2)))/ equivalent_tissue_point_radius;
@@ -299,7 +305,7 @@ std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > Abstr
 }
 
 template<unsigned DIM>
-void AbstractGreensFunctionSolverBase<DIM>::WriteSolution(std::map<std::string, std::vector<units::quantity<unit::concentration> > >& segmentPointData)
+void AbstractGreensFunctionSolverBase<DIM>::WriteSolution(std::map<std::string, std::vector<QConcentration > >& segmentPointData)
 {
     // Write the tissue point data
     RegularGridWriter writer;
@@ -320,7 +326,7 @@ void AbstractGreensFunctionSolverBase<DIM>::WriteSolution(std::map<std::string, 
     pPolyData->SetPoints(pPoints);
 
     // Add the segment point data
-    std::map<std::string, std::vector<units::quantity<unit::concentration> > >::iterator segment_iter;
+    std::map<std::string, std::vector<QConcentration > >::iterator segment_iter;
     for (segment_iter = segmentPointData.begin(); segment_iter != segmentPointData.end(); ++segment_iter)
     {
         vtkSmartPointer<vtkDoubleArray> pInfo = vtkSmartPointer<vtkDoubleArray>::New();

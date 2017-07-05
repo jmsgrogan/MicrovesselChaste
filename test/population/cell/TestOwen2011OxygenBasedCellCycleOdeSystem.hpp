@@ -72,17 +72,17 @@ public:
     {
         BaseUnits::SharedInstance()->SetReferenceConcentrationScale(1.e-3*unit::mole_per_metre_cubed);
         BaseUnits::SharedInstance()->SetReferenceTimeScale(1.0*unit::seconds);
-        units::quantity<unit::pressure> low_oxygen_partial_pressure(0.1*unit::mmHg);
-        units::quantity<unit::pressure> hi_oxygen_partial_pressure(1.0*unit::mmHg);
-        units::quantity<unit::solubility> oxygen_solubility = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("Test") *
+        QPressure low_oxygen_partial_pressure(0.1*unit::mmHg);
+        QPressure hi_oxygen_partial_pressure(1.0*unit::mmHg);
+        QSolubility oxygen_solubility = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("Test") *
                 GenericParameters::mpGasConcentrationAtStp->GetValue("Test");
 
-        units::quantity<unit::concentration> low_oxygen_concentration = low_oxygen_partial_pressure*oxygen_solubility;
-        units::quantity<unit::concentration> hi_oxygen_concentration = hi_oxygen_partial_pressure*oxygen_solubility;
+        QConcentration low_oxygen_concentration = low_oxygen_partial_pressure*oxygen_solubility;
+        QConcentration hi_oxygen_concentration = hi_oxygen_partial_pressure*oxygen_solubility;
 
         // Set up
         double time = 0.0;
-        boost::shared_ptr<WildTypeCellMutationState> mutation_state(new WildTypeCellMutationState);
+        std::shared_ptr<WildTypeCellMutationState> mutation_state(new WildTypeCellMutationState);
         Owen2011OxygenBasedCellCycleOdeSystem normal_system(hi_oxygen_concentration, mutation_state);
 
         std::vector<double> initial_conditions = normal_system.GetInitialConditions();
@@ -128,9 +128,9 @@ public:
     {
         // Set up
         double time = 0.0;
-        units::quantity<unit::concentration> oxygen_concentration = 1.0 * unit::mole_per_metre_cubed;
+        QConcentration oxygen_concentration = 1.0 * unit::mole_per_metre_cubed;
 
-        boost::shared_ptr<CancerCellMutationState> mutation_state(new CancerCellMutationState);
+        std::shared_ptr<CancerCellMutationState> mutation_state(new CancerCellMutationState);
         Owen2011OxygenBasedCellCycleOdeSystem cancer_system(oxygen_concentration, mutation_state);
         std::vector<double> initial_conditions = cancer_system.GetInitialConditions();
         std::vector<double> cancer_derivs(initial_conditions.size());

@@ -54,8 +54,8 @@ public:
 
     void TestInstance()
     {
-        boost::shared_ptr<ParameterInstance<unit::time> > p_my_parameter = ParameterInstance<unit::time>::Create();
-        units::quantity<unit::time> few_seconds = 5.0*unit::seconds;
+        std::shared_ptr<ParameterInstance<QTime> > p_my_parameter = ParameterInstance<QTime>::Create();
+        QTime few_seconds = 5.0*unit::seconds;
         p_my_parameter->SetShortDescription("My Description For Time Parameter");
         p_my_parameter->SetValue(few_seconds);
         p_my_parameter->SetName("Derived");
@@ -73,12 +73,12 @@ public:
 
         // Save archive
         {
-            boost::shared_ptr<BaseParameterInstance> p_my_parameter_for_archive = boost::shared_ptr<BaseParameterInstance>(new ParameterInstance<unit::time>);
-            units::quantity<unit::time> few_seconds = 5.0*unit::seconds;
+            std::shared_ptr<BaseParameterInstance> p_my_parameter_for_archive = std::shared_ptr<BaseParameterInstance>(new ParameterInstance<QTime>);
+            QTime few_seconds = 5.0*unit::seconds;
             p_my_parameter_for_archive->SetShortDescription("My Description For Time Parameter");
             p_my_parameter_for_archive->SetName("Derived");
 
-            boost::shared_ptr<ParameterInstance<unit::time> > p_my_cast_parameter_for_archive = boost::static_pointer_cast<ParameterInstance<unit::time> >(p_my_parameter_for_archive);
+            std::shared_ptr<ParameterInstance<QTime> > p_my_cast_parameter_for_archive = boost::static_pointer_cast<ParameterInstance<QTime> >(p_my_parameter_for_archive);
             p_my_cast_parameter_for_archive->SetValue(few_seconds);
 
             std::ofstream ofs(archive_filename.c_str());
@@ -88,7 +88,7 @@ public:
 
         // Load archive
         {
-            boost::shared_ptr<BaseParameterInstance> p_my_parameter_from_archive;
+            std::shared_ptr<BaseParameterInstance> p_my_parameter_from_archive;
 
             // Read from this input file
             std::ifstream ifs(archive_filename.c_str(), std::ios::binary);
@@ -99,15 +99,15 @@ public:
             TS_ASSERT_EQUALS("My Description For Time Parameter", p_my_parameter_from_archive->GetShortDescription());
             TS_ASSERT_EQUALS("Derived", p_my_parameter_from_archive->GetName());
 
-            boost::shared_ptr<ParameterInstance<unit::time> > p_my_cast_parameter_from_archive = boost::dynamic_pointer_cast<ParameterInstance<unit::time> >(p_my_parameter_from_archive);
+            std::shared_ptr<ParameterInstance<QTime> > p_my_cast_parameter_from_archive = boost::dynamic_pointer_cast<ParameterInstance<QTime> >(p_my_parameter_from_archive);
             TS_ASSERT_DELTA(p_my_cast_parameter_from_archive->GetValue()/unit::seconds, 5.0, 1.e-6);
         }
     }
 
     void TestAlternateConstructor()
     {
-        units::quantity<unit::time> few_seconds = 5.0*unit::seconds;
-        boost::shared_ptr<ParameterInstance<unit::time> > p_my_parameter = ParameterInstance<unit::time>::Create(few_seconds,
+        QTime few_seconds = 5.0*unit::seconds;
+        std::shared_ptr<ParameterInstance<QTime> > p_my_parameter = ParameterInstance<QTime>::Create(few_seconds,
                                                                                      "Derived",
                                                                                      "My Description For Time Parameter",
                                                                                      "P",

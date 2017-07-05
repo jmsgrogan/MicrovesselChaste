@@ -60,25 +60,25 @@ std::shared_ptr<MechanicalStimulusCalculator<DIM> > MechanicalStimulusCalculator
 }
 
 template<unsigned DIM>
-units::quantity<unit::pressure> MechanicalStimulusCalculator<DIM>::GetTauP()
+QPressure MechanicalStimulusCalculator<DIM>::GetTauP()
 {
     return mTauP;
 }
 
 template<unsigned DIM>
-units::quantity<unit::pressure> MechanicalStimulusCalculator<DIM>::GetTauReference()
+QPressure MechanicalStimulusCalculator<DIM>::GetTauReference()
 {
     return mTauRef;
 }
 
 template<unsigned DIM>
-void MechanicalStimulusCalculator<DIM>::SetTauRef(units::quantity<unit::pressure> TauRef)
+void MechanicalStimulusCalculator<DIM>::SetTauRef(QPressure TauRef)
 {
     mTauRef = TauRef;
 }
 
 template<unsigned DIM>
-void MechanicalStimulusCalculator<DIM>::SetTauP(units::quantity<unit::pressure> TauP)
+void MechanicalStimulusCalculator<DIM>::SetTauP(QPressure TauP)
 {
     mTauP = TauP;
 }
@@ -89,17 +89,17 @@ void MechanicalStimulusCalculator<DIM>::Calculate()
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
 
     QLength cm(0.01*unit::metres);
-    units::quantity<unit::mass> g(1.e-3*unit::kg);
-    units::quantity<unit::force> dyne(g*cm/(unit::seconds*unit::seconds));
-    units::quantity<unit::pressure> dyne_per_centi_metre_squared(dyne/(cm*cm));
+    QMass g(1.e-3*unit::kg);
+    QForce dyne(g*cm/(unit::seconds*unit::seconds));
+    QPressure dyne_per_centi_metre_squared(dyne/(cm*cm));
     for (unsigned idx = 0; idx < segments.size(); idx++)
     {
         // Get average pressure in a segment
-        units::quantity<unit::pressure> node0_pressure = segments[idx]->GetNode(0)->GetFlowProperties()->GetPressure();
-        units::quantity<unit::pressure> node1_pressure = segments[idx]->GetNode(1)->GetFlowProperties()->GetPressure();
+        QPressure node0_pressure = segments[idx]->GetNode(0)->GetFlowProperties()->GetPressure();
+        QPressure node1_pressure = segments[idx]->GetNode(1)->GetFlowProperties()->GetPressure();
 
         // Empirical Equation. Pressure in mmHg, WSS in dyne/cm2.
-        units::quantity<unit::pressure> conversion_pressure(1.0*unit::mmHg);
+        QPressure conversion_pressure(1.0*unit::mmHg);
         double average_pressure_in_mmHg = (node0_pressure + node1_pressure)/(2.0*conversion_pressure);
 
         // The calculation does not work for low pressures, so we need to specify a cut-off value.
@@ -117,7 +117,7 @@ void MechanicalStimulusCalculator<DIM>::Calculate()
         double log_term_1 = log10((segments[idx]->GetFlowProperties()->GetWallShearStress()/dyne_per_centi_metre_squared + mTauRef/dyne_per_centi_metre_squared));
         double log_term_2 = log10(mTauP/dyne_per_centi_metre_squared);
 
-        units::quantity<unit::rate> mechanical_stimulus = (log_term_1 - 0.5*log_term_2) * unit::per_second;
+        QRate mechanical_stimulus = (log_term_1 - 0.5*log_term_2) * unit::per_second;
         segments[idx]->GetFlowProperties()->SetGrowthStimulus(segments[idx]->GetFlowProperties()->GetGrowthStimulus() + mechanical_stimulus);
     }
 }

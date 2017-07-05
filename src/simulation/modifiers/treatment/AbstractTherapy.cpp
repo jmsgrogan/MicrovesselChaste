@@ -46,19 +46,19 @@ AbstractTherapy<DIM>::AbstractTherapy() :
 }
 
 template<unsigned DIM>
-void AbstractTherapy<DIM>::AddAdministrationTime(units::quantity<unit::time> time)
+void AbstractTherapy<DIM>::AddAdministrationTime(QTime time)
 {
     mAdministrationTimes.push_back(time);
 }
 
 template<unsigned DIM>
-void AbstractTherapy<DIM>::SetDoseInjected(units::quantity<unit::concentration> d)
+void AbstractTherapy<DIM>::SetDoseInjected(QConcentration d)
 {
     mAdministrationDose = d;
 }
 
 template<unsigned DIM>
-void AbstractTherapy<DIM>::SetAdministrationTimes(std::vector<units::quantity<unit::time> > t)
+void AbstractTherapy<DIM>::SetAdministrationTimes(std::vector<QTime > t)
 {
     mAdministrationTimes = t;
 }

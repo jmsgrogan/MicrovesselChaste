@@ -62,25 +62,25 @@ c_matrix<double, SPACE_DIM, SPACE_DIM> AbstractDiscreteContinuumLinearEllipticPd
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::concentration_flow_rate> AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiscreteConstantInUSourceTerm(unsigned gridIndex)
+QConcentrationFlowRate AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiscreteConstantInUSourceTerm(unsigned gridIndex)
 {
     return 0.0*unit::mole_per_metre_cubed_per_second;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-units::quantity<unit::rate> AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiscreteLinearInUCoeffInSourceTerm(unsigned gridIndex)
+QRate AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::ComputeDiscreteLinearInUCoeffInSourceTerm(unsigned gridIndex)
 {
     return 0.0 * unit::per_second;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetContinuumConstantInUTerm(units::quantity<unit::concentration_flow_rate> constantInUTerm)
+void AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetContinuumConstantInUTerm(QConcentrationFlowRate constantInUTerm)
 {
     mConstantInUTerm = constantInUTerm;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetContinuumLinearInUTerm(units::quantity<unit::rate> linearInUTerm)
+void AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::SetContinuumLinearInUTerm(QRate linearInUTerm)
 {
     mLinearInUTerm = linearInUTerm;
 }
@@ -92,18 +92,18 @@ void AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::UpdateD
     {
         unsigned num_locations = this->mDiscreteSources[0]->GetNumberOfPoints();
 
-        mDiscreteConstantSourceStrengths = std::vector<units::quantity<unit::concentration_flow_rate> >(num_locations,
+        mDiscreteConstantSourceStrengths = std::vector<QConcentrationFlowRate >(num_locations,
                 0.0*unit::mole_per_metre_cubed_per_second);
-        mDiscreteLinearSourceStrengths = std::vector<units::quantity<unit::rate> >(num_locations, 0.0*unit::per_second);
+        mDiscreteLinearSourceStrengths = std::vector<QRate >(num_locations, 0.0*unit::per_second);
         for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
         {
-            std::vector<units::quantity<unit::rate> > result = this->mDiscreteSources[idx]->GetLinearInUValues();
+            std::vector<QRate > result = this->mDiscreteSources[idx]->GetLinearInUValues();
             std::transform(mDiscreteLinearSourceStrengths.begin( ), mDiscreteLinearSourceStrengths.end( ),
-                           result.begin( ), mDiscreteLinearSourceStrengths.begin( ),std::plus<units::quantity<unit::rate> >( ));
+                           result.begin( ), mDiscreteLinearSourceStrengths.begin( ),std::plus<QRate >( ));
 
-            std::vector<units::quantity<unit::concentration_flow_rate> > result2 = this->mDiscreteSources[idx]->GetConstantInUValues();
+            std::vector<QConcentrationFlowRate > result2 = this->mDiscreteSources[idx]->GetConstantInUValues();
             std::transform(mDiscreteConstantSourceStrengths.begin( ), mDiscreteConstantSourceStrengths.end( ),
-                           result2.begin( ), mDiscreteConstantSourceStrengths.begin( ),std::plus<units::quantity<unit::concentration_flow_rate> >( ));
+                           result2.begin( ), mDiscreteConstantSourceStrengths.begin( ),std::plus<QConcentrationFlowRate >( ));
         }
     }
 }

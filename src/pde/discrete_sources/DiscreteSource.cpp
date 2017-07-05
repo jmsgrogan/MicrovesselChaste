@@ -61,7 +61,7 @@ std::shared_ptr<DiscreteSource<DIM> > DiscreteSource<DIM>::Create()
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>::GetConstantInUValues()
+std::vector<QConcentrationFlowRate > DiscreteSource<DIM>::GetConstantInUValues()
 {
     if(!mpDensityMap)
     {
@@ -74,18 +74,18 @@ std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>
     }
 
     // Loop through all points
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(GetNumberOfPoints(),
+    std::vector<QConcentrationFlowRate > values(GetNumberOfPoints(),
             0.0*unit::mole_per_metre_cubed_per_second);
     std::vector<std::vector<unsigned> > point_point_map = mpDensityMap->GetGridCalculator()->GetPointMap(mPoints);
     for(unsigned idx=0; idx<point_point_map.size(); idx++)
     {
-        values[idx] += mConstantInUValue * double(point_point_map[idx].size());
+        values[idx] = values[idx] + mConstantInUValue * double(point_point_map[idx].size());
     }
     return values;
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::rate> > DiscreteSource<DIM>::GetLinearInUValues()
+std::vector<QRate > DiscreteSource<DIM>::GetLinearInUValues()
 {
     if(!mpDensityMap)
     {
@@ -98,17 +98,17 @@ std::vector<units::quantity<unit::rate> > DiscreteSource<DIM>::GetLinearInUValue
     }
 
     // Loop through all points
-    std::vector<units::quantity<unit::rate> > values(GetNumberOfPoints(), 0.0*unit::per_second);
+    std::vector<QRate > values(GetNumberOfPoints(), 0.0*unit::per_second);
     std::vector<std::vector<unsigned> > point_point_map = mpDensityMap->GetGridCalculator()->GetPointMap(mPoints);
     for(unsigned idx=0; idx<point_point_map.size(); idx++)
     {
-        values[idx] += mLinearInUValue * double(point_point_map[idx].size());
+        values[idx] = values[idx] + mLinearInUValue * double(point_point_map[idx].size());
     }
     return values;
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>::GetNonlinearTermValues()
+std::vector<QConcentrationFlowRate > DiscreteSource<DIM>::GetNonlinearTermValues()
 {
     if(!mpDensityMap)
     {
@@ -116,7 +116,7 @@ std::vector<units::quantity<unit::concentration_flow_rate> > DiscreteSource<DIM>
     }
 
     // Return an empty vector
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(GetNumberOfPoints(),
+    std::vector<QConcentrationFlowRate > values(GetNumberOfPoints(),
             0.0*unit::mole_per_metre_cubed_per_second);
     return values;
 }
@@ -150,13 +150,13 @@ std::shared_ptr<DensityMap<DIM> > DiscreteSource<DIM>::GetDensityMap()
 }
 
 template<unsigned DIM>
-void DiscreteSource<DIM>::SetConstantInUValue(units::quantity<unit::concentration_flow_rate> value)
+void DiscreteSource<DIM>::SetConstantInUValue(QConcentrationFlowRate value)
 {
     mConstantInUValue = value;
 }
 
 template<unsigned DIM>
-void DiscreteSource<DIM>::SetLinearInUValue(units::quantity<unit::rate> value)
+void DiscreteSource<DIM>::SetLinearInUValue(QRate value)
 {
     mLinearInUValue = value;
 }

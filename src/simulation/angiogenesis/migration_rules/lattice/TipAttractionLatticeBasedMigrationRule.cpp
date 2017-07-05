@@ -72,13 +72,13 @@ TipAttractionLatticeBasedMigrationRule<DIM>::~TipAttractionLatticeBasedMigration
 }
 
 template<unsigned DIM>
-void TipAttractionLatticeBasedMigrationRule<DIM>::SetCellChemotacticParameter(units::quantity<unit::diffusivity_per_concentration> cellChemotacticParameter)
+void TipAttractionLatticeBasedMigrationRule<DIM>::SetCellChemotacticParameter(QDiffusivityPerConcentration cellChemotacticParameter)
 {
     mCellChemotacticParameter = cellChemotacticParameter;
 }
 
 template<unsigned DIM>
-void TipAttractionLatticeBasedMigrationRule<DIM>::SetCellMotilityParameter(units::quantity<unit::diffusivity> cellMotility)
+void TipAttractionLatticeBasedMigrationRule<DIM>::SetCellMotilityParameter(QDiffusivity cellMotility)
 {
     mCellMotility = cellMotility;
 }
@@ -115,8 +115,8 @@ std::vector<double> TipAttractionLatticeBasedMigrationRule<DIM>::GetNeighbourMov
     bool sprout_found = false;
     DimensionalChastePoint<DIM> tip_point;
     DimensionalChastePoint<DIM> sprout_point;
-    units::quantity<unit::velocity> tip_attraction_strength = 0.0*unit::metres_per_second;
-    units::quantity<unit::velocity> sprout_attraction_strength = 0.0*unit::metres_per_second;
+    QVelocity tip_attraction_strength = 0.0*unit::metres_per_second;
+    QVelocity sprout_attraction_strength = 0.0*unit::metres_per_second;
     QLength closest_tip_distance = 1e6*unit::metres;
     QLength closest_sprout_distance = 1e6*unit::metres;
     QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
@@ -194,7 +194,7 @@ std::vector<double> TipAttractionLatticeBasedMigrationRule<DIM>::GetNeighbourMov
 
         if (!vessel_crosses_line_segment && !sprout_already_attached_to_vessel_at_location)
         {
-            units::quantity<unit::concentration> VEGF_diff = mVegfField[neighbourIndices[jdx]] - mVegfField[gridIndex];
+            QConcentration VEGF_diff = mVegfField[neighbourIndices[jdx]] - mVegfField[gridIndex];
             if(VEGF_diff<0.0*unit::mole_per_metre_cubed)
             {
                 VEGF_diff = 0.0* unit::mole_per_metre_cubed;
@@ -208,15 +208,15 @@ std::vector<double> TipAttractionLatticeBasedMigrationRule<DIM>::GetNeighbourMov
             {
                 k = 26.0/6.0;
             }
-            units::quantity<unit::time> dt = SimulationTime::Instance()->GetTimeStep() * BaseUnits::Instance()->GetReferenceTimeScale();
+            QTime dt = SimulationTime::Instance()->GetTimeStep() * BaseUnits::Instance()->GetReferenceTimeScale();
             QLength dij = pNode->rGetLocation().GetDistance(neighbour_location);
             probability_of_moving[jdx] = (dt/(k*dij*dij))*(mCellMotility + mCellChemotacticParameter*VEGF_diff);
 
             if(!this->mIsSprouting and mUseTipAttraction)
             {
                 // Add tip contribution
-                units::quantity<unit::velocity> nbr_tip_attraction_strength = 0.0*unit::metres_per_second;
-                units::quantity<unit::velocity> nbr_sprout_attraction_strength = 0.0*unit::metres_per_second;
+                QVelocity nbr_tip_attraction_strength = 0.0*unit::metres_per_second;
+                QVelocity nbr_sprout_attraction_strength = 0.0*unit::metres_per_second;
 
                 double grid_angle = 45.0*M_PI/180.0;
                 if(this->mUseMooreNeighbourhood)

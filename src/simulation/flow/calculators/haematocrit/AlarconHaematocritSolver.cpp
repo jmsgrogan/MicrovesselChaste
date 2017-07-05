@@ -114,7 +114,7 @@ void AlarconHaematocritSolver<DIM>::Calculate()
         {
             // Identify the inflow node for this vessel
             std::shared_ptr<VesselNode<DIM> > p_inflow_node;
-            units::quantity<unit::flow_rate> flow_rate = vessels[idx]->GetFlowProperties()->GetFlowRate();
+            QFlowRate flow_rate = vessels[idx]->GetFlowProperties()->GetFlowRate();
             if(flow_rate >0.0 * unit::metre_cubed_per_second)
             {
                 p_inflow_node = vessels[idx]->GetStartNode();
@@ -135,7 +135,7 @@ void AlarconHaematocritSolver<DIM>::Calculate()
                     // if not this vessel
                     if(p_inflow_node->GetSegment(jdx)->GetVessel()!=vessels[idx])
                     {
-                        units::quantity<unit::flow_rate> inflow_rate = p_inflow_node->GetSegment(jdx)->GetVessel()->GetFlowProperties()->GetFlowRate();
+                        QFlowRate inflow_rate = p_inflow_node->GetSegment(jdx)->GetVessel()->GetFlowProperties()->GetFlowRate();
                         if(p_inflow_node->GetSegment(jdx)->GetVessel()->GetEndNode()==p_inflow_node)
                         {
                             if(inflow_rate>0.0 * unit::metre_cubed_per_second)
@@ -180,8 +180,8 @@ void AlarconHaematocritSolver<DIM>::Calculate()
                     // There is a bifurcation, apply a haematocrit splitting rule
                     QLength my_radius = vessels[idx]->GetRadius();
                     QLength competitor_radius = competitor_vessels[0]->GetRadius();
-                    units::quantity<unit::velocity> my_velocity = units::fabs(flow_rate)/(M_PI * my_radius * my_radius);
-                    units::quantity<unit::velocity> competitor_velocity = units::fabs(competitor_vessels[0]->GetFlowProperties()->GetFlowRate())/(M_PI * competitor_radius * competitor_radius);
+                    QVelocity my_velocity = Qabs(flow_rate)/(M_PI * my_radius * my_radius);
+                    QVelocity competitor_velocity = Qabs(competitor_vessels[0]->GetFlowProperties()->GetFlowRate())/(M_PI * competitor_radius * competitor_radius);
 
                     if(my_velocity>mTHR*competitor_velocity)
                     {
@@ -237,14 +237,14 @@ void AlarconHaematocritSolver<DIM>::Calculate()
 }
 
 template<unsigned DIM>
-void AlarconHaematocritSolver<DIM>::SetTHR(units::quantity<unit::dimensionless> THR)
+void AlarconHaematocritSolver<DIM>::SetTHR(QDimensionless THR)
 {
     mTHR = THR;
     assert(mTHR > 1);
 }
 
 template<unsigned DIM>
-void AlarconHaematocritSolver<DIM>::SetAlpha(units::quantity<unit::dimensionless> Alpha)
+void AlarconHaematocritSolver<DIM>::SetAlpha(QDimensionless Alpha)
 {
     mAlpha = Alpha;
     assert(mAlpha < 1);
@@ -252,7 +252,7 @@ void AlarconHaematocritSolver<DIM>::SetAlpha(units::quantity<unit::dimensionless
 }
 
 template<unsigned DIM>
-void AlarconHaematocritSolver<DIM>::SetHaematocrit(units::quantity<unit::dimensionless> haematocrit)
+void AlarconHaematocritSolver<DIM>::SetHaematocrit(QDimensionless haematocrit)
 {
     mHaematocrit = haematocrit;
 }

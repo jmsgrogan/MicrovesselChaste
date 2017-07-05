@@ -294,7 +294,7 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselSurfaceAreaDensity(bool up
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
                         idx, point1_in_cell, point2_in_cell);
                 QLength length_in_cell = dimless_length_in_cell*length_scale;
-                units::quantity<unit::area> surface_area = 2.0*M_PI*segment_map[idx][jdx]->GetRadius()*length_in_cell;
+                QArea surface_area = 2.0*M_PI*segment_map[idx][jdx]->GetRadius()*length_in_cell;
                 mVesselSurfaceAreaDensity[idx] += ((surface_area/(length_scale*length_scale))/grid_volumes[idx]);
             }
         }
@@ -432,10 +432,10 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselSurfaceAreaDensity
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
                         idx, point1_in_cell, point2_in_cell);
                 QLength length_in_cell = dimless_length_in_cell*length_scale;
-                units::quantity<unit::area> surface_area = 2.0*M_PI*segment_map[idx][jdx]->GetRadius()*length_in_cell;
+                QArea surface_area = 2.0*M_PI*segment_map[idx][jdx]->GetRadius()*length_in_cell;
                 if(segment_map[idx][jdx]->GetVessel()->GetFlowProperties()->GetHaematocrit()==0.0)
                 {
-                    surface_area*= 0.0;
+                    surface_area = 0.0*unit::metres_squared;
                 }
                 mPerfusedVesselSurfaceAreaDensity[idx] += ((surface_area/(length_scale*length_scale))/grid_volumes[idx]);
             }
@@ -507,7 +507,7 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselLineDensity(bool u
                 QLength length_in_cell = dimless_length_in_cell*length_scale;
                 if(segment_map[idx][jdx]->GetVessel()->GetFlowProperties()->GetHaematocrit()==0.0)
                 {
-                    length_in_cell*= 0.0;
+                    length_in_cell = 0.0*unit::metres;
                 }
                 mPerfusedVesselLineDensity[idx] += (length_in_cell/length_scale)/grid_volumes[idx];
             }
@@ -636,7 +636,7 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselQuantityDensity(const std:
                 double amount = segment_map[idx][jdx]->GetFlowProperties()->GetOutputData()[rQuantity];
                 if(segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit()==0.0)
                 {
-                    length_in_cell*= 0.0;
+                    length_in_cell = 0.0*unit::metres;
                 }
                 mVesselQuantityDensity[idx] += (amount*length_in_cell/length_scale)/grid_volumes[idx];
             }
@@ -701,7 +701,7 @@ const std::vector<double>& DensityMap<DIM>::rGetCellDensity(boost::shared_ptr<Ab
 template<unsigned DIM>
 void DensityMap<DIM>::SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
                                                              QLength cellPopulationReferenceLength,
-                                                             units::quantity<unit::concentration> cellPopulationReferenceConcentration)
+                                                             QConcentration cellPopulationReferenceConcentration)
 {
     mpGridCalculator->SetCellPopulation(rCellPopulation, cellPopulationReferenceLength, cellPopulationReferenceConcentration);
 }

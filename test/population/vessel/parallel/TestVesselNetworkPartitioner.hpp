@@ -63,14 +63,14 @@ public:
             output_directory += "Parallel";
         }
         OutputFileHandler output_file_handler(output_directory);
-        std::vector<boost::shared_ptr<VesselNode<2> > > nodes;
+        std::vector<std::shared_ptr<VesselNode<2> > > nodes;
         nodes.push_back(VesselNode<2>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
         nodes.push_back(VesselNode<2>::Create(50.0, 0.0, 0.0, 1.e-6*unit::metres));
         nodes.push_back(VesselNode<2>::Create(150.0, 0.0, 0.0, 1.e-6*unit::metres));
         nodes.push_back(VesselNode<2>::Create(220.0, 0.0, 0.0, 1.e-6*unit::metres));
 
-        boost::shared_ptr<Vessel<2> > pVessel1 = Vessel<2>::Create(nodes);
-        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        std::shared_ptr<Vessel<2> > pVessel1 = Vessel<2>::Create(nodes);
+        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(pVessel1);
 
         VesselNetworkPartitioner<2> partitioner;
@@ -92,7 +92,7 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         VesselNetworkGenerator<2> generator;
-        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateHexagonalNetwork(500.0*1.e-6*unit::metres,
+        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateHexagonalNetwork(500.0*1.e-6*unit::metres,
                 500.0*1.e-6*unit::metres, 100.0*1.e-6*unit::metres);
 
         VesselNetworkPartitioner<2> partitioner;
@@ -118,7 +118,7 @@ public:
         QLength domain_size = 500.0*1.e-6*unit::metres;
         QLength vessel_length = 100.0*1.e-6*unit::metres;
         QLength reference_length = 1.e-6*unit::metres;
-        boost::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateHexagonalNetwork(domain_size,
+        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateHexagonalNetwork(domain_size,
                 domain_size, vessel_length);
 
         VesselNetworkPartitioner<2> partitioner;

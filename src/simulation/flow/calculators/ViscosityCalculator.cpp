@@ -60,7 +60,7 @@ std::shared_ptr<ViscosityCalculator<DIM> > ViscosityCalculator<DIM>::Create()
 }
 
 template<unsigned DIM>
-void ViscosityCalculator<DIM>::SetPlasmaViscosity(units::quantity<unit::dynamic_viscosity> visocity)
+void ViscosityCalculator<DIM>::SetPlasmaViscosity(QDynamicViscosity visocity)
 {
     mPlasmaViscosity = visocity;
 }
@@ -72,7 +72,7 @@ void ViscosityCalculator<DIM>::Calculate()
     for (unsigned segment_index = 0; segment_index < segments.size(); segment_index++)
     {
         QLength radius = segments[segment_index]->GetRadius();
-        units::quantity<unit::dimensionless> haematocrit = segments[segment_index]->GetFlowProperties()->GetHaematocrit();
+        QDimensionless haematocrit = segments[segment_index]->GetFlowProperties()->GetHaematocrit();
 
         // This equation assumes the radius is in micron so manually converted. No dimensional checking is done here, it may not
         // even be possible for this equation.

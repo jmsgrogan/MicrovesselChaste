@@ -63,57 +63,57 @@ private:
     /**
      * Partial pressure at half max rate
      */
-    units::quantity<unit::pressure> mCphi;
+    QPressure mCphi;
 
     /**
      * Minimum cycle time
      */
-    units::quantity<unit::time> mTmin;
+    QTime mTmin;
 
     /**
      * p53 production rate constant
      */
-    units::quantity<unit::rate> mk7;
+    QRate mk7;
 
     /**
      * p53 production rate constant
      */
-    units::quantity<unit::rate> mk7dash;
+    QRate mk7dash;
 
     /**
      * Oxygen partial pressure for half-max p53 degradation
      */
-    units::quantity<unit::pressure> mCp53;
+    QPressure mCp53;
 
     /**
      * Parameter with units of min^-1
      */
-    units::quantity<unit::rate> mk8;
+    QRate mk8;
 
     /**
      * Parameter with units of min^-1
      */
-    units::quantity<unit::rate> mk8doubledash;
+    QRate mk8doubledash;
 
     /**
      * Parameter with units of ----
      */
-    units::quantity<unit::dimensionless> mJ5;
+    QDimensionless mJ5;
 
     /**
      * Parameter with units of min^-1
      */
-    units::quantity<unit::rate> mk8dash;
+    QRate mk8dash;
 
     /**
      * Parameter with units of mmHg
      */
-    units::quantity<unit::pressure> mCVEGF;
+    QPressure mCVEGF;
 
     /**
      * The oxygen concentration (this affects the ODE system).
      */
-    units::quantity<unit::concentration> mOxygenConcentration;
+    QConcentration mOxygenConcentration;
 
     /**
      * Mutation state.
@@ -123,17 +123,17 @@ private:
     /**
      * The reference time scale
      */
-    units::quantity<unit::time> mReferenceTimeScale;
+    QTime mReferenceTimeScale;
 
     /**
      * The reference concentration scale
      */
-    units::quantity<unit::concentration> mReferenceConcentrationScale;
+    QConcentration mReferenceConcentrationScale;
 
     /**
      * The reference solubility
      */
-    units::quantity<unit::solubility> mReferenceSolubility;
+    QSolubility mReferenceSolubility;
 
 
     friend class boost::serialization::access;
@@ -158,7 +158,7 @@ public:
      * @param mutation_state the cell mutation state
      * @param stateVariables optional initial conditions for state variables (only used in archiving)
      */
-    Owen2011OxygenBasedCellCycleOdeSystem(units::quantity<unit::concentration> oxygenConcentration,
+    Owen2011OxygenBasedCellCycleOdeSystem(QConcentration oxygenConcentration,
             boost::shared_ptr<AbstractCellMutationState> mutation_state,
                                              std::vector<double> stateVariables=std::vector<double>());
 
@@ -193,7 +193,7 @@ public:
      * Return the oxygen concentration
      * @return #mOxygenConcentration.
      */
-    units::quantity<unit::concentration> GetOxygenConcentration() const;
+    QConcentration GetOxygenConcentration() const;
 
     /**
      * Get the cell's mutation state.
@@ -226,7 +226,7 @@ inline void save_construct_data(
     Archive & ar, const Owen2011OxygenBasedCellCycleOdeSystem * t, const unsigned int file_version)
 {
     // Save data required to construct instance
-    const units::quantity<unit::concentration> oxygen_concentration = t->GetOxygenConcentration();
+    const QConcentration oxygen_concentration = t->GetOxygenConcentration();
     ar & oxygen_concentration;
 
     const boost::shared_ptr<AbstractCellMutationState> mutation_state = t->GetMutationState();
@@ -244,7 +244,7 @@ inline void load_construct_data(
     Archive & ar, Owen2011OxygenBasedCellCycleOdeSystem * t, const unsigned int file_version)
 {
     // Retrieve data from archive required to construct new instance
-    units::quantity<unit::concentration> oxygen_concentration;
+    QConcentration oxygen_concentration;
     ar & oxygen_concentration;
 
     boost::shared_ptr<AbstractCellMutationState> mutation_state;

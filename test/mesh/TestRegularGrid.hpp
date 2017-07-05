@@ -56,7 +56,7 @@ public:
     void TestIndexing() throw(Exception)
     {
         // Set up a 2d grid
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 5;
         dimensions[1] = 7;
@@ -68,7 +68,7 @@ public:
         TS_ASSERT_EQUALS(p_grid->GetGlobalGridIndex(0,3,0), 15u)
 
         // Set up a 3d grid
-        boost::shared_ptr<RegularGrid<3> > p_grid_3d = RegularGrid<3>::Create();
+        std::shared_ptr<RegularGrid<3> > p_grid_3d = RegularGrid<3>::Create();
         c_vector<unsigned, 3> dimensions3d;
         dimensions3d[0] = 5;
         dimensions3d[1] = 7;
@@ -83,7 +83,7 @@ public:
     void TestNeighbourCalculation()
     {
         // Set up a grid
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 5;
         dimensions[1] = 7;
@@ -113,7 +113,7 @@ public:
         }
 
         // Set up a 3d grid
-         boost::shared_ptr<RegularGrid<3> > p_grid_3d = RegularGrid<3>::Create();
+         std::shared_ptr<RegularGrid<3> > p_grid_3d = RegularGrid<3>::Create();
          c_vector<unsigned, 3> dimensions3d;
          dimensions3d[0] = 5;
          dimensions3d[1] = 7;
@@ -149,7 +149,7 @@ public:
     void TestMooreNeighbourCalculation()
     {
         // Set up a grid
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 5;
         dimensions[1] = 7;
@@ -183,7 +183,7 @@ public:
     void TestGetPointBoundingBox2d()
     {
         BaseUnits::Instance()->SetReferenceLengthScale(1.0 * unit::metres);
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 11;
         dimensions[1] = 11;
@@ -214,7 +214,7 @@ public:
     void TestGetPointBoundingBox3d()
     {
         BaseUnits::Instance()->SetReferenceLengthScale(1.0 * unit::metres);
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 11;
         dimensions[1] = 11;
@@ -250,15 +250,15 @@ public:
 
     void TestWriteGrid2d()
     {
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 10;
         dimensions[1] = 6;
         dimensions[2] = 1;
         p_grid->SetDimensions(dimensions);
 
-        boost::shared_ptr<OutputFileHandler> p_file_handler =
-                boost::shared_ptr<OutputFileHandler>(new OutputFileHandler("TestRegularGrid/TestWrite2d"));
+        std::shared_ptr<OutputFileHandler> p_file_handler =
+                std::shared_ptr<OutputFileHandler>(new OutputFileHandler("TestRegularGrid/TestWrite2d"));
 
         // Check point data writing
         std::vector<double> local_index;
@@ -272,15 +272,15 @@ public:
 
     void TestWriteGrid3d()
     {
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 10;
         dimensions[1] = 10;
         dimensions[2] = 6;
         p_grid->SetDimensions(dimensions);
 
-        boost::shared_ptr<OutputFileHandler> p_file_handler =
-                boost::shared_ptr<OutputFileHandler>(new OutputFileHandler("TestRegularGrid/TestWrite3d"));
+        std::shared_ptr<OutputFileHandler> p_file_handler =
+                std::shared_ptr<OutputFileHandler>(new OutputFileHandler("TestRegularGrid/TestWrite3d"));
 
         // Check point data writing
         std::vector<double> local_index;
@@ -294,15 +294,15 @@ public:
 
     void TestBoundingDomain2d()
     {
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 10;
         dimensions[1] = 6;
         dimensions[2] = 1;
         p_grid->SetDimensions(dimensions);
 
-        boost::shared_ptr<OutputFileHandler> p_file_handler =
-                boost::shared_ptr<OutputFileHandler>(new OutputFileHandler("TestRegularGrid/TestBoundingDomain"));
+        std::shared_ptr<OutputFileHandler> p_file_handler =
+                std::shared_ptr<OutputFileHandler>(new OutputFileHandler("TestRegularGrid/TestBoundingDomain"));
         GeometryWriter writer;
         writer.SetFileName(p_file_handler->GetOutputDirectoryFullPath()+
                 "domain_bounds"+boost::lexical_cast<std::string>(PetscTools::GetMyRank())+".vtp");
@@ -312,9 +312,9 @@ public:
 
     void TestBoundingDomain3d()
     {
-        boost::shared_ptr<OutputFileHandler> p_file_handler =
-                boost::shared_ptr<OutputFileHandler>(new OutputFileHandler("TestRegularGrid/TestBoundingDomain", false));
-        boost::shared_ptr<RegularGrid<3> > p_grid3d = RegularGrid<3>::Create();
+        std::shared_ptr<OutputFileHandler> p_file_handler =
+                std::shared_ptr<OutputFileHandler>(new OutputFileHandler("TestRegularGrid/TestBoundingDomain", false));
+        std::shared_ptr<RegularGrid<3> > p_grid3d = RegularGrid<3>::Create();
         c_vector<unsigned, 3> dimensions3d;
         dimensions3d[0] = 10;
         dimensions3d[1] = 10;

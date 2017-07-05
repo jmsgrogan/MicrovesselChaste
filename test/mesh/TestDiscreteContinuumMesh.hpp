@@ -64,14 +64,14 @@ class TestDiscreteContinuumMesh : public CxxTest::TestSuite
 {
 private:
 
-    boost::shared_ptr<VesselNetwork<3> > SetUpNetwork()
+    std::shared_ptr<VesselNetwork<3> > SetUpNetwork()
     {
         double vessel_length = 100;
         double radius = 10.0;
         double spacing = 3.0 * radius;
         unsigned num_vessels_per_row = 5;
-        std::vector<boost::shared_ptr<VesselNode<3> > > start_nodes;
-        std::vector<boost::shared_ptr<VesselNode<3> > > end_nodes;
+        std::vector<std::shared_ptr<VesselNode<3> > > start_nodes;
+        std::vector<std::shared_ptr<VesselNode<3> > > end_nodes;
 
         for(unsigned idx =0; idx<num_vessels_per_row; idx++)
         {
@@ -84,7 +84,7 @@ private:
             }
         }
 
-        std::vector<boost::shared_ptr<Vessel<3> > > vessels;
+        std::vector<std::shared_ptr<Vessel<3> > > vessels;
         for(unsigned idx = 0; idx<start_nodes.size(); idx++)
         {
             start_nodes[idx]->SetRadius(radius * 1.e-6 * unit::metres);
@@ -93,7 +93,7 @@ private:
             vessels[idx]->GetSegments()[0]->SetRadius(10.0 * 1.e-6 * unit::metres);
         }
 
-        boost::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
         p_network->AddVessels(vessels);
         return p_network;
     }
@@ -103,20 +103,20 @@ public:
     void TestMeshCircleInCirle() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/Circle");
-        boost::shared_ptr<Part<2> > p_part = Part<2>::Create();
-        boost::shared_ptr<Polygon<2> > p_circle = p_part->AddCircle(0.33e-6*unit::metres,
+        std::shared_ptr<Part<2> > p_part = Part<2>::Create();
+        std::shared_ptr<Polygon<2> > p_circle = p_part->AddCircle(0.33e-6*unit::metres,
                 DimensionalChastePoint<2>(0.5, 0.5));
         p_circle->AddAttributeToAllEdges("Outer Boundary", 1.0);
 
-        boost::shared_ptr<Polygon<2> > p_circle2 = p_part->AddCircle(0.1e-6*unit::metres,
+        std::shared_ptr<Polygon<2> > p_circle2 = p_part->AddCircle(0.1e-6*unit::metres,
                 DimensionalChastePoint<2>(0.5, 0.5));
         p_part->AddRegionMarker(DimensionalChastePoint<2>(0.5, 0.5), 1.0);
         p_part->GetVtk(true);
         p_part->Write(file_handler.GetOutputDirectoryFullPath()+"part.vtp", GeometryFormat::VTP, true);
 
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator = DiscreteContinuumMeshGenerator<2>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator = DiscreteContinuumMeshGenerator<2>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(5.0*units::pow<3>(1.e-6 * unit::metres));
+        p_mesh_generator->SetMaxElementArea(5.0*Qpow3(1.e-6 * unit::metres));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<2> mesh_writer;
@@ -138,15 +138,15 @@ public:
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/Cylinder");
 
-        boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        boost::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
+        std::shared_ptr<Part<3> > p_part = Part<3>::Create();
+        std::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
         p_part->Extrude(p_circle, 1.e-6 * unit::metres);
         p_part->AddRegionMarker(DimensionalChastePoint<3>(0.5, 0.5, 1.0, 1.e-6*unit::metres), 2.0);
         p_part->Write(file_handler.GetOutputDirectoryFullPath()+"part.vtp");
 
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(20.0*units::pow<3>(1.e-6 * unit::metres));
+        p_mesh_generator->SetMaxElementArea(20.0*Qpow3(1.e-6 * unit::metres));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -167,20 +167,20 @@ public:
 
         QLength vessel_length = 100.0* 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
                                                                                         DimensionalChastePoint<3>(0.0, 0.0));
         p_network->GetVessels()[0]->GetStartNode()->SetRadius(5.0 * 1.e-6 * unit::metres);
         p_network->GetVessels()[0]->GetEndNode()->SetRadius(5.0 * 1.e-6 * unit::metres);
 
-        boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        boost::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(100.0* 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
+        std::shared_ptr<Part<3> > p_part = Part<3>::Create();
+        std::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(100.0* 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
         p_part->Extrude(p_circle, 100.0*1.e-6*unit::metres);
         p_part->AddVesselNetwork(p_network, true);
         p_part->Write(file_handler.GetOutputDirectoryFullPath()+"part.vtp");
 
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(100.0*units::pow<3>(1.e-6 * unit::metres));
+        p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1.e-6 * unit::metres));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -195,20 +195,20 @@ public:
 
         QLength vessel_length = 100.0* 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
                                                                                         DimensionalChastePoint<3>(0.0, 0.0));
         p_network->GetVessels()[0]->GetStartNode()->SetRadius(5.0 * 1.e-6 * unit::metres);
         p_network->GetVessels()[0]->GetEndNode()->SetRadius(5.0 * 1.e-6 * unit::metres);
 
-        boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        boost::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(100.0* 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
+        std::shared_ptr<Part<3> > p_part = Part<3>::Create();
+        std::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(100.0* 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
         p_part->Extrude(p_circle, 100.0*1.e-6*unit::metres);
         p_part->AddVesselNetwork(p_network, true, false);
         p_part->Write(file_handler.GetOutputDirectoryFullPath()+"part.vtp");
 
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(100.0*units::pow<3>(1.e-6 * unit::metres));
+        p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1.e-6 * unit::metres));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -224,19 +224,19 @@ public:
         QLength vessel_length = 100.0* 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
         DimensionalChastePoint<3> centre(vessel_length/(2.0* 1.e-6 * unit::metres), vessel_length/(2.0* 1.e-6 * unit::metres));
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre);
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre);
 
         p_network->GetVessels()[0]->GetStartNode()->SetRadius(10.0 * 1.e-6 * unit::metres);
         p_network->GetVessels()[0]->GetEndNode()->SetRadius(10.0 * 1.e-6 * unit::metres);
 
-        boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_part = Part<3>::Create();
         p_part->AddCuboid(2.0 * vessel_length, 2.0 * vessel_length, vessel_length, DimensionalChastePoint<3>(0.0, 0.0));
         p_part->AddVesselNetwork(p_network, true);
         p_part->Write(file_handler.GetOutputDirectoryFullPath()+"part.vtp");
 
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(100.0*units::pow<3>(1.e-6 * unit::metres));
+        p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1.e-6 * unit::metres));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -252,19 +252,19 @@ public:
         QLength vessel_length = 100.0* 1.e-6 * unit::metres;
         VesselNetworkGenerator<3> generator;
         DimensionalChastePoint<3> centre(vessel_length/(2.0* 1.e-6 * unit::metres), vessel_length/(2.0* 1.e-6 * unit::metres));
-        boost::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre);
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre);
         p_network->GetVessels()[0]->GetStartNode()->SetRadius(10.0 * 1.e-6 * unit::metres);
         p_network->GetVessels()[0]->GetEndNode()->SetRadius(10.0 * 1.e-6 * unit::metres);
 
         DimensionalChastePoint<3> translate(0.0, 0.0, -vessel_length/(2.0* 1.e-6 * unit::metres), 1.e-6 * unit::metres);
-        boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_part = Part<3>::Create();
         p_part->AddCuboid(vessel_length, vessel_length, 2.0*vessel_length, DimensionalChastePoint<3>(0.0, 0.0));
         p_part->Translate(translate);
         p_part->AddVesselNetwork(p_network, true);
 
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(100.0*units::pow<3>(1.e-6 * unit::metres));
+        p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1.e-6 * unit::metres));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -284,13 +284,13 @@ public:
 
         double domain_width = num_vessels_per_row * (spacing + 2.0* radius);
         double domain_height = num_vessels_per_row * (spacing + 2.0* radius);
-        boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_part = Part<3>::Create();
         p_part->AddCuboid(domain_width* 1.e-6 * unit::metres, domain_height* 1.e-6 * unit::metres, vessel_length, DimensionalChastePoint<3>(0.0, 0.0));
         p_part->AddVesselNetwork(SetUpNetwork(), true);
 
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(100.0*units::pow<3>(1.e-6 * unit::metres));
+        p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1.e-6 * unit::metres));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -309,23 +309,23 @@ public:
         QLength pellet_depth = 10.0e-6*unit::metres;
         QLength reference_length = 1.0e-6*unit::metres;
 
-        boost::shared_ptr<Part<3> > p_part = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_part = Part<3>::Create();
         p_part->AddCuboid(domain_width, domain_width, domain_depth, DimensionalChastePoint<3>(0.0, 0.0));
 
         double left_coord = (domain_width-pellet_width)/(2.0*reference_length);
         double right_coord = (domain_width+pellet_width)/(2.0*reference_length);
         double gap = (domain_depth-pellet_depth)/(2.0*reference_length);
 
-        std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > points;
+        std::vector<std::shared_ptr<DimensionalChastePoint<3> > > points;
         points.push_back(DimensionalChastePoint<3>::Create(left_coord, domain_width/reference_length, gap, reference_length));
         points.push_back(DimensionalChastePoint<3>::Create(right_coord, domain_width/reference_length, gap, reference_length));
         points.push_back(DimensionalChastePoint<3>::Create(right_coord, domain_width/reference_length, domain_depth/reference_length-gap, reference_length));
         points.push_back(DimensionalChastePoint<3>::Create(left_coord, domain_width/reference_length, domain_depth/reference_length-gap, reference_length));
 
-        boost::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(points);
+        std::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(points);
         p_polygon->AddAttribute("Pellet Interface", 1.0);
 
-        std::vector<boost::shared_ptr<Facet<3> > > facets = p_part->GetFacets();
+        std::vector<std::shared_ptr<Facet<3> > > facets = p_part->GetFacets();
         DimensionalChastePoint<3> probe = p_polygon->GetCentroid();
         c_vector<double, 3> prob_norm = probe.GetLocation(reference_length);
 
@@ -344,9 +344,9 @@ public:
         }
         p_part->Write(file_handler.GetOutputDirectoryFullPath()+"patch.vtp", GeometryFormat::VTP, true);
 
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(100.0*units::pow<3>(1.e-6 * unit::metres));
+        p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1.e-6 * unit::metres));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -371,13 +371,13 @@ public:
         QLength pellet_radius = 200*1.e-6*unit::metres;
         QLength pellet_thickness = 50*1.e-6*unit::metres;
         QLength reference_length = 1.e-6*unit::metres;
-        boost::shared_ptr<Part<3> > p_domain = generator.GenerateHemisphere(cornea_radius,
+        std::shared_ptr<Part<3> > p_domain = generator.GenerateHemisphere(cornea_radius,
                 cornea_thickness, num_divisions_x, num_divisions_y, azimuth_angle, polar_angle);
 
         double gap = (cornea_thickness - pellet_thickness)/(2.0*reference_length)/4.0;
         double base = cornea_radius/reference_length + gap - cornea_thickness/reference_length;
 
-        boost::shared_ptr<Part<3> > p_pellet = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_pellet = Part<3>::Create();
         p_pellet->AddCylinder(pellet_radius,pellet_thickness,
                               DimensionalChastePoint<3>(0.0, 0.0, base, reference_length));
 
@@ -395,7 +395,7 @@ public:
         p_domain->AppendPart(p_pellet);
         p_domain->AddHoleMarker(DimensionalChastePoint<3>(centre));
 
-        std::vector<boost::shared_ptr<Polygon<3> > > polygons = p_pellet->GetPolygons();
+        std::vector<std::shared_ptr<Polygon<3> > > polygons = p_pellet->GetPolygons();
         for(unsigned idx=0;idx<polygons.size();idx++)
         {
             polygons[idx]->AddAttribute("Pellet Interface", 1.0);
@@ -403,9 +403,9 @@ public:
 
         p_domain->Write(file_handler.GetOutputDirectoryFullPath()+"domain.vtp", GeometryFormat::VTP, true);
 
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_domain);
-        //p_mesh_generator->SetMaxElementArea(1e4*units::pow<3>(1.e-18 * unit::metres));
+        //p_mesh_generator->SetMaxElementArea(1e4*Qpow3(1.e-18 * unit::metres));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -430,13 +430,13 @@ public:
         QLength pellet_radius = 200*1.e-6*unit::metres;
         QLength pellet_thickness = 50*1.e-6*unit::metres;
         QLength reference_length = 1.e-6*unit::metres;
-        boost::shared_ptr<Part<3> > p_domain = generator.GenerateHemisphere(cornea_radius,
+        std::shared_ptr<Part<3> > p_domain = generator.GenerateHemisphere(cornea_radius,
                 cornea_thickness, num_divisions_x, num_divisions_y, azimuth_angle, polar_angle);
 
         double gap = (cornea_thickness - pellet_thickness)/(2.0*reference_length)/4.0;
         double base = cornea_radius/reference_length + gap - cornea_thickness/reference_length;
 
-        boost::shared_ptr<Part<3> > p_pellet = Part<3>::Create();
+        std::shared_ptr<Part<3> > p_pellet = Part<3>::Create();
         p_pellet->AddCylinder(pellet_radius,pellet_thickness,
                               DimensionalChastePoint<3>(0.0, 0.0, base, reference_length));
 
@@ -454,7 +454,7 @@ public:
         p_domain->AppendPart(p_pellet);
         p_domain->AddHoleMarker(DimensionalChastePoint<3>(centre));
 
-        std::vector<boost::shared_ptr<Polygon<3> > > polygons = p_pellet->GetPolygons();
+        std::vector<std::shared_ptr<Polygon<3> > > polygons = p_pellet->GetPolygons();
         for(unsigned idx=0;idx<polygons.size();idx++)
         {
             polygons[idx]->AddAttribute("Pellet Interface", 1.0);
@@ -462,9 +462,9 @@ public:
 
         p_domain->Write(file_handler.GetOutputDirectoryFullPath()+"domain.vtp", GeometryFormat::VTP, true);
 
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_domain);
-        p_mesh_generator->SetMaxElementArea(1e4*units::pow<3>(1.e-6 * unit::metres));
+        p_mesh_generator->SetMaxElementArea(1e4*Qpow3(1.e-6 * unit::metres));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -484,20 +484,20 @@ public:
     void TestDistanceMap2D() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/DistanceMap2D");
-        boost::shared_ptr<Part<2> > p_part = Part<2>::Create();
-        boost::shared_ptr<Polygon<2> > p_circle = p_part->AddCircle(0.33e-6*unit::metres,
+        std::shared_ptr<Part<2> > p_part = Part<2>::Create();
+        std::shared_ptr<Polygon<2> > p_circle = p_part->AddCircle(0.33e-6*unit::metres,
                 DimensionalChastePoint<2>(0.5, 0.5));
         p_circle->AddAttributeToAllEdges("Outer Boundary", 1.0);
 
-        boost::shared_ptr<Polygon<2> > p_circle2 = p_part->AddCircle(0.1e-6*unit::metres,
+        std::shared_ptr<Polygon<2> > p_circle2 = p_part->AddCircle(0.1e-6*unit::metres,
                 DimensionalChastePoint<2>(0.5, 0.5));
         p_part->AddRegionMarker(DimensionalChastePoint<2>(0.5, 0.5), 1.0);
         p_part->GetVtk(true);
         p_part->Write(file_handler.GetOutputDirectoryFullPath()+"part.vtp", GeometryFormat::VTP, true);
 
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator = DiscreteContinuumMeshGenerator<2>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator = DiscreteContinuumMeshGenerator<2>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(1.e-3*units::pow<3>(1.e-6 * unit::metres));
+        p_mesh_generator->SetMaxElementArea(1.e-3*Qpow3(1.e-6 * unit::metres));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<2> mesh_writer;
@@ -509,7 +509,7 @@ public:
         std::vector<DimensionalChastePoint<2> > holes;
         holes.push_back(DimensionalChastePoint<2>(0.5, 0.5));
         p_mesh_generator->SetHoles(holes);
-        p_mesh_generator->SetMaxElementArea(1.e-3*units::pow<3>(1.e-6 * unit::metres));
+        p_mesh_generator->SetMaxElementArea(1.e-3*Qpow3(1.e-6 * unit::metres));
         p_mesh_generator->Update();
 
         mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"circle_hole");

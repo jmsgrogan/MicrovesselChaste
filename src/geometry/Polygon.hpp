@@ -54,12 +54,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 /**
- * Convenience typedef
- */
-template<unsigned DIM>
-using PolygonPtr = std::shared_ptr<Polygon<DIM> >;
-
-/**
  * A collection of planar vertices, joined in the order they are added.
  */
 template<unsigned DIM>
@@ -308,6 +302,12 @@ public:
      */
     void Translate(DimensionalChastePoint<DIM> translationVector);
 };
+
+/**
+ * Convenience typedef
+ */
+template<unsigned DIM>
+using PolygonPtr = std::shared_ptr<Polygon<DIM> >;
 
 #include "SerializationExportWrapper.hpp"
 EXPORT_TEMPLATE_CLASS1(Polygon, 2)

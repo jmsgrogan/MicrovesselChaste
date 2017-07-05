@@ -145,7 +145,7 @@ public:
          * results. For our purposes microns for length and hours for time are suitable base units.
          */
         QLength reference_length(1.0 * unit::microns);
-        units::quantity<unit::time> reference_time(1.0* unit::hours);
+        QTime reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         /*
@@ -155,7 +155,7 @@ public:
          * `Owen11Parameters::mpLatticeSpacing->GetValue("User")` a record is kept that this parameter has been used in the simulation.
          * A record of all parameters used in a simulation can be dumped to file on completion, as will be shown below.
          */
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         QLength grid_spacing = Owen11Parameters::mpLatticeSpacing->GetValue("User");
         p_grid->SetSpacing(grid_spacing);
 
@@ -169,7 +169,7 @@ public:
          * using standard Paraview operations, not detailed here.
          */
         p_grid->Write(p_handler);
-        boost::shared_ptr<MicrovesselVtkScene<2> > p_scene = boost::shared_ptr<MicrovesselVtkScene<2> >(new MicrovesselVtkScene<2> );
+        std::shared_ptr<MicrovesselVtkScene<2> > p_scene = std::shared_ptr<MicrovesselVtkScene<2> >(new MicrovesselVtkScene<2> );
         p_scene->SetRegularGrid(p_grid);
         p_scene->GetRegularGridActorGenerator()->SetVolumeOpacity(0.1);
         p_scene->SetIsInteractive(true);
@@ -178,21 +178,21 @@ public:
          * Next, set up the vessel network, this will initially consist of two, large counter-flowing vessels. Also set the inlet
          * and outlet pressures and flags.
          */
-        boost::shared_ptr<VesselNode<2> > p_node11 = VesselNode<2>::Create(0.0, 400.0, 0.0, reference_length);
-        boost::shared_ptr<VesselNode<2> > p_node12 = VesselNode<2>::Create(2000.0, 400.0, 0.0, reference_length);
+        std::shared_ptr<VesselNode<2> > p_node11 = VesselNode<2>::Create(0.0, 400.0, 0.0, reference_length);
+        std::shared_ptr<VesselNode<2> > p_node12 = VesselNode<2>::Create(2000.0, 400.0, 0.0, reference_length);
         p_node11->GetFlowProperties()->SetIsInputNode(true);
         p_node11->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue("User"));
         p_node12->GetFlowProperties()->SetIsOutputNode(true);
         p_node12->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue("User"));
-        boost::shared_ptr<VesselNode<2> > p_node13 = VesselNode<2>::Create(2000.0, 1600.0, 0.0, reference_length);
-        boost::shared_ptr<VesselNode<2> > p_node14 = VesselNode<2>::Create(0.0, 1600.0, 0.0, reference_length);
+        std::shared_ptr<VesselNode<2> > p_node13 = VesselNode<2>::Create(2000.0, 1600.0, 0.0, reference_length);
+        std::shared_ptr<VesselNode<2> > p_node14 = VesselNode<2>::Create(0.0, 1600.0, 0.0, reference_length);
         p_node13->GetFlowProperties()->SetIsInputNode(true);
         p_node13->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue("User"));
         p_node14->GetFlowProperties()->SetIsOutputNode(true);
         p_node14->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue("User"));
-        boost::shared_ptr<Vessel<2> > p_vessel1 = Vessel<2>::Create(p_node11, p_node12);
-        boost::shared_ptr<Vessel<2> > p_vessel2 = Vessel<2>::Create(p_node13, p_node14);
-        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        std::shared_ptr<Vessel<2> > p_vessel1 = Vessel<2>::Create(p_node11, p_node12);
+        std::shared_ptr<Vessel<2> > p_vessel2 = Vessel<2>::Create(p_node13, p_node14);
+        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel1);
         p_network->AddVessel(p_vessel2);
         /*
@@ -207,14 +207,14 @@ public:
          * filled with normal cells and a tumour spheroid in the middle. We can use a generator for this purpose. The generator simply sets up
          * the population using conventional Cell Based Chaste methods.
          */
-        boost::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
-        boost::shared_ptr<Owen11CellPopulationGenerator<2> > p_cell_population_genenerator = Owen11CellPopulationGenerator<2>::Create();
+        std::shared_ptr<Owen11CellPopulationGenerator<2> > p_cell_population_genenerator = Owen11CellPopulationGenerator<2>::Create();
         p_cell_population_genenerator->SetGridCalculator(p_grid_calc);
         p_cell_population_genenerator->SetVesselNetwork(p_network);
         QLength tumour_radius(300.0 * unit::microns);
         p_cell_population_genenerator->SetTumourRadius(tumour_radius);
-        boost::shared_ptr<CaBasedCellPopulation<2> > p_cell_population = p_cell_population_genenerator->Update();
+        std::shared_ptr<CaBasedCellPopulation<2> > p_cell_population = p_cell_population_genenerator->Update();
 
         p_scene->GetRegularGridActorGenerator()->SetShowEdges(false);
         p_scene->GetRegularGridActorGenerator()->SetVolumeOpacity(0.0);
@@ -227,18 +227,18 @@ public:
         /*
          * Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources.
          */
-        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
+        std::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
         p_oxygen_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpOxygenDiffusivity->GetValue("User"));
-        boost::shared_ptr<CellBasedDiscreteSource<2> > p_cell_oxygen_sink = CellBasedDiscreteSource<2>::Create();
+        std::shared_ptr<CellBasedDiscreteSource<2> > p_cell_oxygen_sink = CellBasedDiscreteSource<2>::Create();
         p_cell_oxygen_sink->SetLinearInUConsumptionRatePerCell(Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
         p_oxygen_pde->AddDiscreteSource(p_cell_oxygen_sink);
         /*
         * Vessels release oxygen depending on their haematocrit levels
         */
-        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_oxygen_source = VesselBasedDiscreteSource<2>::Create();
-        units::quantity<unit::solubility> oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
+        std::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_oxygen_source = VesselBasedDiscreteSource<2>::Create();
+        QSolubility oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
                 GenericParameters::mpGasConcentrationAtStp->GetValue("User");
-        units::quantity<unit::concentration> vessel_oxygen_concentration = oxygen_solubility_at_stp *
+        QConcentration vessel_oxygen_concentration = oxygen_solubility_at_stp *
                 Owen11Parameters::mpReferencePartialPressure->GetValue("User");
         p_vessel_oxygen_source->SetReferenceConcentration(vessel_oxygen_concentration);
         p_vessel_oxygen_source->SetVesselPermeability(Owen11Parameters::mpVesselOxygenPermeability->GetValue("User"));
@@ -247,7 +247,7 @@ public:
         /*
         * Set up a finite difference solver and pass it the pde and grid.
         */
-        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<2> > p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
+        std::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<2> > p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
         p_oxygen_solver->SetPde(p_oxygen_pde);
         p_oxygen_solver->SetLabel("oxygen");
         p_oxygen_solver->SetGrid(p_grid);
@@ -255,16 +255,16 @@ public:
         * The rate of VEGF release depends on the cell type and intracellular VEGF levels, so we need a more detailed
         * type of discrete source.
         */
-        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_vegf_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
+        std::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_vegf_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
         p_vegf_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpVegfDiffusivity->GetValue("User"));
         p_vegf_pde->SetContinuumLinearInUTerm(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
         /*
         * Set up a map for different release rates depending on cell type. Also include a threshold intracellular VEGF below which
         * there is no release.
         */
-        boost::shared_ptr<CellStateDependentDiscreteSource<2> > p_normal_and_quiescent_cell_source = CellStateDependentDiscreteSource<2>::Create();
-        std::map<unsigned, units::quantity<unit::concentration_flow_rate> > normal_and_quiescent_cell_rates;
-        std::map<unsigned, units::quantity<unit::concentration> > normal_and_quiescent_cell_rate_thresholds;
+        std::shared_ptr<CellStateDependentDiscreteSource<2> > p_normal_and_quiescent_cell_source = CellStateDependentDiscreteSource<2>::Create();
+        std::map<unsigned, QConcentrationFlowRate > normal_and_quiescent_cell_rates;
+        std::map<unsigned, QConcentration > normal_and_quiescent_cell_rate_thresholds;
         MAKE_PTR(QuiescentCancerCellMutationState, p_quiescent_cancer_state);
         MAKE_PTR(WildTypeCellMutationState, p_normal_cell_state);
         normal_and_quiescent_cell_rates[p_normal_cell_state->GetColour()] = Owen11Parameters::mpCellVegfSecretionRate->GetValue("User");
@@ -278,14 +278,14 @@ public:
         /*
         * Add a vessel related VEGF sink
         */
-        boost::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_vegf_sink = VesselBasedDiscreteSource<2>::Create();
+        std::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_vegf_sink = VesselBasedDiscreteSource<2>::Create();
         p_vessel_vegf_sink->SetReferenceConcentration(0.0*unit::mole_per_metre_cubed);
         p_vessel_vegf_sink->SetVesselPermeability(Owen11Parameters::mpVesselVegfPermeability->GetValue("User"));
         p_vegf_pde->AddDiscreteSource(p_vessel_vegf_sink);
         /*
         * Set up a finite difference solver as before.
         */
-        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<2> > p_vegf_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
+        std::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<2> > p_vegf_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
         p_vegf_solver->SetPde(p_vegf_pde);
         p_vegf_solver->SetLabel("VEGF_Extracellular");
         p_vegf_solver->SetGrid(p_grid);
@@ -296,23 +296,23 @@ public:
          */
         QLength large_vessel_radius(25.0 * unit::microns);
         VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, large_vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
         VesselNetworkPropertyManager<2>::SetSegmentViscosity(p_network, viscosity);
         /*
         * Set up the pre- and post flow calculators.
         */
-        boost::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
-        boost::shared_ptr<ConstantHaematocritSolver<2> > p_haematocrit_calculator = ConstantHaematocritSolver<2>::Create();
+        std::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+        std::shared_ptr<ConstantHaematocritSolver<2> > p_haematocrit_calculator = ConstantHaematocritSolver<2>::Create();
         p_haematocrit_calculator->SetHaematocrit(Owen11Parameters::mpInflowHaematocrit->GetValue("User"));
-        boost::shared_ptr<WallShearStressCalculator<2> > p_wss_calculator = WallShearStressCalculator<2>::Create();
-        boost::shared_ptr<MechanicalStimulusCalculator<2> > p_mech_stimulus_calculator = MechanicalStimulusCalculator<2>::Create();
-        boost::shared_ptr<MetabolicStimulusCalculator<2> > p_metabolic_stim_calculator = MetabolicStimulusCalculator<2>::Create();
-        boost::shared_ptr<ShrinkingStimulusCalculator<2> > p_shrinking_stimulus_calculator = ShrinkingStimulusCalculator<2>::Create();
-        boost::shared_ptr<ViscosityCalculator<2> > p_viscosity_calculator = ViscosityCalculator<2>::Create();
+        std::shared_ptr<WallShearStressCalculator<2> > p_wss_calculator = WallShearStressCalculator<2>::Create();
+        std::shared_ptr<MechanicalStimulusCalculator<2> > p_mech_stimulus_calculator = MechanicalStimulusCalculator<2>::Create();
+        std::shared_ptr<MetabolicStimulusCalculator<2> > p_metabolic_stim_calculator = MetabolicStimulusCalculator<2>::Create();
+        std::shared_ptr<ShrinkingStimulusCalculator<2> > p_shrinking_stimulus_calculator = ShrinkingStimulusCalculator<2>::Create();
+        std::shared_ptr<ViscosityCalculator<2> > p_viscosity_calculator = ViscosityCalculator<2>::Create();
         /*
         * Set up and configure the structural adaptation solver.
         */
-        boost::shared_ptr<StructuralAdaptationSolver<2> > p_structural_adaptation_solver = StructuralAdaptationSolver<2>::Create();
+        std::shared_ptr<StructuralAdaptationSolver<2> > p_structural_adaptation_solver = StructuralAdaptationSolver<2>::Create();
         p_structural_adaptation_solver->SetTolerance(0.0001);
         p_structural_adaptation_solver->SetMaxIterations(100);
         p_structural_adaptation_solver->SetTimeIncrement(Owen11Parameters::mpVesselRadiusUpdateTimestep->GetValue("User"));
@@ -325,14 +325,14 @@ public:
         /*
          * Set up a regression solver.
          */
-        boost::shared_ptr<WallShearStressBasedRegressionSolver<2> > p_regression_solver =
+        std::shared_ptr<WallShearStressBasedRegressionSolver<2> > p_regression_solver =
                 WallShearStressBasedRegressionSolver<2>::Create();
         /*
          * Set up an angiogenesis solver and add sprouting and migration rules.
          */
-        boost::shared_ptr<AngiogenesisSolver<2> > p_angiogenesis_solver = AngiogenesisSolver<2>::Create();
-        boost::shared_ptr<Owen2011SproutingRule<2> > p_sprouting_rule = Owen2011SproutingRule<2>::Create();
-        boost::shared_ptr<Owen2011MigrationRule<2> > p_migration_rule = Owen2011MigrationRule<2>::Create();
+        std::shared_ptr<AngiogenesisSolver<2> > p_angiogenesis_solver = AngiogenesisSolver<2>::Create();
+        std::shared_ptr<Owen2011SproutingRule<2> > p_sprouting_rule = Owen2011SproutingRule<2>::Create();
+        std::shared_ptr<Owen2011MigrationRule<2> > p_migration_rule = Owen2011MigrationRule<2>::Create();
         p_angiogenesis_solver->SetMigrationRule(p_migration_rule);
         p_angiogenesis_solver->SetSproutingRule(p_sprouting_rule);
         p_sprouting_rule->SetDiscreteContinuumSolver(p_vegf_solver);
@@ -342,7 +342,7 @@ public:
          /*
          * The microvessel solver will manage all aspects of the vessel solve.
          */
-        boost::shared_ptr<MicrovesselSolver<2> > p_microvessel_solver = MicrovesselSolver<2>::Create();
+        std::shared_ptr<MicrovesselSolver<2> > p_microvessel_solver = MicrovesselSolver<2>::Create();
         p_microvessel_solver->SetVesselNetwork(p_network);
         p_microvessel_solver->SetOutputFrequency(5);
         p_microvessel_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
@@ -355,8 +355,8 @@ public:
         */
         //p_scene->GetCellPopulationActorGenerator()->SetColorByCellData(true);
         //p_scene->GetCellPopulationActorGenerator()->SetDataLabel("oxygen");
-        boost::shared_ptr<VtkSceneMicrovesselModifier<2> > p_scene_modifier =
-                boost::shared_ptr<VtkSceneMicrovesselModifier<2> >(new VtkSceneMicrovesselModifier<2>);
+        std::shared_ptr<VtkSceneMicrovesselModifier<2> > p_scene_modifier =
+                std::shared_ptr<VtkSceneMicrovesselModifier<2> >(new VtkSceneMicrovesselModifier<2>);
         p_scene_modifier->SetVtkScene(p_scene);
         p_scene_modifier->SetUpdateFrequency(2);
 
@@ -365,7 +365,7 @@ public:
          * The microvessel solution modifier will link the vessel and cell solvers. We need to explicitly tell is
          * which extracellular fields to update based on PDE solutions.
          */
-        boost::shared_ptr<MicrovesselSimulationModifier<2> > p_microvessel_modifier = MicrovesselSimulationModifier<2>::Create();
+        std::shared_ptr<MicrovesselSimulationModifier<2> > p_microvessel_modifier = MicrovesselSimulationModifier<2>::Create();
         p_microvessel_modifier->SetMicrovesselSolver(p_microvessel_solver);
         std::vector<std::string> update_labels;
         update_labels.push_back("oxygen");
@@ -379,12 +379,12 @@ public:
         /*
          * Add a killer to remove apoptotic cells
          */
-        boost::shared_ptr<ApoptoticCellKiller<2> > p_apoptotic_cell_killer(new ApoptoticCellKiller<2>(p_cell_population.get()));
+        std::shared_ptr<ApoptoticCellKiller<2> > p_apoptotic_cell_killer(new ApoptoticCellKiller<2>(p_cell_population.get()));
         simulator.AddCellKiller(p_apoptotic_cell_killer);
         /*
          * Add another modifier for updating cell cycle quantities.
          */
-        boost::shared_ptr<Owen2011TrackingModifier<2> > p_owen11_tracking_modifier(new Owen2011TrackingModifier<2>);
+        std::shared_ptr<Owen2011TrackingModifier<2> > p_owen11_tracking_modifier(new Owen2011TrackingModifier<2>);
         simulator.AddSimulationModifier(p_owen11_tracking_modifier);
         /*
          * Set up the remainder of the simulation

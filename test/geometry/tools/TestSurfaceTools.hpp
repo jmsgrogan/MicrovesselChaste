@@ -63,12 +63,12 @@ public:
         p_reader->SetFileName(finder.GetAbsolutePath().c_str());
         p_reader->Update();
 
-        boost::shared_ptr<BoundaryExtractor> p_extractor = BoundaryExtractor::Create();
+        std::shared_ptr<BoundaryExtractor> p_extractor = BoundaryExtractor::Create();
         p_extractor->SetInput(p_reader->GetOutput());
         p_extractor->SetDoSmoothing(false);
         p_extractor->Update();
 
-        boost::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
+        std::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"boundary.vtp").c_str());
         p_writer->AddInput(p_extractor->GetOutput());
         p_writer->Write();

@@ -60,7 +60,7 @@ AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::~AbstractUnstructuredGridD
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration> > AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetConcentrationsAtCentroids()
+std::vector<QConcentration > AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::GetConcentrationsAtCentroids()
 {
     return this->GetConcentrations(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetCellLocations());
 }
@@ -99,7 +99,7 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateSolution(const 
     {
         this->mSolution[i] = data[i];
     }
-    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*this->mReferenceConcentration);
+    this->mConcentrations = std::vector<QConcentration >(data.size(), 0.0*this->mReferenceConcentration);
     for (unsigned i = 0; i < data.size(); i++)
     {
         this->mConcentrations[i] = data[i]*this->mReferenceConcentration;
@@ -117,7 +117,7 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateElementSolution
 }
 
 template<unsigned DIM>
-void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateSolution(const std::vector<units::quantity<unit::concentration> >& data)
+void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateSolution(const std::vector<QConcentration >& data)
 {
     if(this->mSolution.size()==0)
     {
@@ -134,7 +134,7 @@ void AbstractUnstructuredGridDiscreteContinuumSolver<DIM>::UpdateSolution(const 
     this->mpDensityMap->GetGridCalculator()->GetGrid()->AddPointData(this->mSolution, this->GetLabel());
 
     // Note, if the data vector being passed in is mPointSolution, then it will be overwritten with zeros.
-    this->mConcentrations = std::vector<units::quantity<unit::concentration> >(data.size(), 0.0*this->mReferenceConcentration);
+    this->mConcentrations = std::vector<QConcentration >(data.size(), 0.0*this->mReferenceConcentration);
     for (unsigned i = 0; i < data.size(); i++)
     {
         this->mConcentrations[i] = data[i];

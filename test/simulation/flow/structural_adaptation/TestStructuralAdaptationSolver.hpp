@@ -59,7 +59,7 @@ public:
 
     void TestMultiVesselNetwork() throw(Exception)
     {
-        std::vector<boost::shared_ptr<VesselNode<2> > > nodes;
+        std::vector<std::shared_ptr<VesselNode<2> > > nodes;
         for(unsigned idx=0; idx<8; idx++)
         {
             nodes.push_back(VesselNode<2>::Create(double(idx*10.0), 0.0));
@@ -71,7 +71,7 @@ public:
         nodes[7]->GetFlowProperties()->SetPressure(1993 * unit::pascals);
 
         double haematocrit = 0.45;
-        std::vector<boost::shared_ptr<VesselSegment<2> > > segments;
+        std::vector<std::shared_ptr<VesselSegment<2> > > segments;
         for(unsigned idx=0; idx<7; idx++)
         {
             segments.push_back(VesselSegment<2>::Create(nodes[idx], nodes[idx+1]));
@@ -80,13 +80,13 @@ public:
             segments[idx]->SetRadius(10.0 * 1.e-6*unit::metres);
         }
 
-        std::vector<boost::shared_ptr<Vessel<2> > > vessels;
+        std::vector<std::shared_ptr<Vessel<2> > > vessels;
         for(unsigned idx=0; idx<7; idx++)
         {
             vessels.push_back(Vessel<2>::Create(segments[idx]));
         }
 
-        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessels(vessels);
 
         SimulationTime::Instance()->SetStartTime(0.0);
@@ -97,7 +97,7 @@ public:
         std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("MultiVesselNetwork.vtp");
         std::string progress_output_filename = output_file_handler.GetOutputDirectoryFullPath().append("MultiVesselNetwork_SAAProgress.dat");
 
-        boost::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+        std::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
 
         StructuralAdaptationSolver<2> solver;
         solver.SetVesselNetwork(p_network);
@@ -113,26 +113,26 @@ public:
         p_network->Write(output_filename);
 
         TS_ASSERT_DELTA((nodes[3]->GetFlowProperties()->GetPressure() + nodes[4]->GetFlowProperties()->GetPressure())/(2.0*unit::pascals),((3322.0 + 1993.0) / 2.0), 1e-6);
-        TS_ASSERT_DELTA(boost::units::fabs(segments[0]->GetFlowProperties()->GetFlowRate())/unit::metre_cubed_per_second,
-                        boost::units::fabs(segments[1]->GetFlowProperties()->GetFlowRate())/unit::metre_cubed_per_second, 1e-6);
+        TS_ASSERT_DELTA(Qabs(segments[0]->GetFlowProperties()->GetFlowRate())/unit::metre_cubed_per_second,
+                        Qabs(segments[1]->GetFlowProperties()->GetFlowRate())/unit::metre_cubed_per_second, 1e-6);
 
         SimulationTime::Destroy();
     }
 
     void TestOneVesselNetwork() throw(Exception)
     {
-        boost::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80.0e-6, 0.0);
-        boost::shared_ptr<VesselSegment<2> > p_segment1(VesselSegment<2>::Create(p_node1, p_node2));
+        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 0.0);
+        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80.0e-6, 0.0);
+        std::shared_ptr<VesselSegment<2> > p_segment1(VesselSegment<2>::Create(p_node1, p_node2));
 
         p_node1->GetFlowProperties()->SetIsInputNode(true);
         p_node1->GetFlowProperties()->SetPressure(3322 * unit::pascals);
         p_node2->GetFlowProperties()->SetIsOutputNode(true);
         p_node2->GetFlowProperties()->SetPressure(1993 * unit::pascals);
 
-        boost::shared_ptr<Vessel<2> > p_vessel1(Vessel<2>::Create(p_segment1));
+        std::shared_ptr<Vessel<2> > p_vessel1(Vessel<2>::Create(p_segment1));
 
-        boost::shared_ptr<VesselNetwork<2> > p_network = boost::shared_ptr<VesselNetwork<2> >(new VesselNetwork<2>);
+        std::shared_ptr<VesselNetwork<2> > p_network = std::shared_ptr<VesselNetwork<2> >(new VesselNetwork<2>);
         p_network->AddVessel(p_vessel1);
 
         double radius = 10.0e-6;
@@ -150,7 +150,7 @@ public:
         std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("OneVesselNetwork.vtp");
         std::string progress_output_filename = output_file_handler.GetOutputDirectoryFullPath().append("OneVesselNetwork_SAAProgress.dat");
 
-        boost::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+        std::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
 
         StructuralAdaptationSolver<2> solver;
         solver.SetVesselNetwork(p_network);
@@ -174,7 +174,7 @@ public:
 
         // Generate the network
         VesselNetworkGenerator<2> vascular_network_generator;
-        boost::shared_ptr<VesselNetwork<2> > vascular_network = vascular_network_generator.GenerateHexagonalNetwork(800.0* 1.e-6 * unit::metres,
+        std::shared_ptr<VesselNetwork<2> > vascular_network = vascular_network_generator.GenerateHexagonalNetwork(800.0* 1.e-6 * unit::metres,
                                                                                                                         1000.0* 1.e-6 * unit::metres,
                                                                                                                         vessel_length);
 
@@ -182,13 +182,13 @@ public:
         points.push_back(DimensionalChastePoint<2>(0, 0, 0.0, 1.e-6 * unit::metres));
         points.push_back(DimensionalChastePoint<2>(5, 0, 0.0, 1.e-6 * unit::metres));
 
-        std::vector<boost::shared_ptr<VesselNode<2> > > nodes;
+        std::vector<std::shared_ptr<VesselNode<2> > > nodes;
         for(unsigned i=0; i < points.size(); i++)
         {
-            nodes.push_back(boost::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(points[i])));
+            nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(points[i])));
         }
 
-        boost::shared_ptr<VesselSegment<2> > p_segment(VesselSegment<2>::Create(nodes[0], nodes[1]));
+        std::shared_ptr<VesselSegment<2> > p_segment(VesselSegment<2>::Create(nodes[0], nodes[1]));
 
         double radius = 10.0;
         p_segment->SetRadius(radius*1.e-6*unit::metres);
@@ -201,9 +201,9 @@ public:
         double y_middle = (network_extents.first.GetLocation(1.e-6*unit::metres)[1] + network_extents.second.GetLocation(1.e-6*unit::metres)[1]) / 2.0;
         double x_middle = (network_extents.first.GetLocation(1.e-6*unit::metres)[0] + network_extents.second.GetLocation(1.e-6*unit::metres)[0]) / 2.0;
 
-        std::vector<boost::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
+        std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
 
-        std::vector<boost::shared_ptr<Vessel<2> > > vessels = vascular_network->GetVessels();
+        std::vector<std::shared_ptr<Vessel<2> > > vessels = vascular_network->GetVessels();
 
         for (vessel_iterator = vessels.begin(); vessel_iterator != vessels.end(); vessel_iterator++)
         {
@@ -262,7 +262,7 @@ public:
         std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("HexagonalVesselNetwork.vtp");
         std::string progress_output_filename = output_file_handler.GetOutputDirectoryFullPath().append("HexagonalVesselNetwork_SAAProgress.dat");
 
-        boost::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+        std::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
 
         StructuralAdaptationSolver<2> solver;
         solver.SetVesselNetwork(vascular_network);

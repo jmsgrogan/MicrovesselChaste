@@ -49,7 +49,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * also be supplied with a descriptive name for where it is being called from, e.g. by "User" or
  * with a class name.
  */
-template<class UNIT>
+template<class QUANTITY>
 class ParameterInstance : public BaseParameterInstance
 {
     /**
@@ -72,7 +72,7 @@ class ParameterInstance : public BaseParameterInstance
     /**
      * The value of the parameter
      */
-    units::quantity<UNIT> mValue;
+    QUANTITY mValue;
 
 public:
 
@@ -89,7 +89,7 @@ public:
      * @param rSymbol a symbol, as it may appear in the literature
      * @param rBibliographicInfromation a Bibtex formatted literature source.
      */
-    ParameterInstance(units::quantity<UNIT> value,
+    ParameterInstance(QUANTITY value,
                               const std::string& rName,
                               const std::string& rShortDescription,
                               const std::string& rSymbol,
@@ -104,7 +104,7 @@ public:
      * Factory constructor method
      * @return a shared pointer to a new instance
      */
-    static std::shared_ptr<ParameterInstance<UNIT> > Create();
+    static std::shared_ptr<ParameterInstance<QUANTITY> > Create();
 
     /**
      * Factory constructor method
@@ -115,7 +115,7 @@ public:
      * @param rBibliographicInfromation a Bibtex formatted literature source.
      * @return a shared pointer to a new instance
      */
-    static std::shared_ptr<ParameterInstance<UNIT> > Create(units::quantity<UNIT> value,
+    static std::shared_ptr<ParameterInstance<QUANTITY> > Create(QUANTITY value,
                                                               const std::string& rName,
                                                               const std::string& rShortDescription,
                                                               const std::string& rSymbol,
@@ -137,44 +137,44 @@ public:
      * @param addToCollection whether to add self to the parameter collection.
      * @return the value of the parameter
      */
-    units::quantity<UNIT> GetValue(const std::string& rCallingClass = "User", bool addToCollection = true);
+    QUANTITY GetValue(const std::string& rCallingClass = "User", bool addToCollection = true);
 
     /**
      * Set the value of the parameter
      * @param value the value of the parameter
      */
-    void SetValue(units::quantity<UNIT> value);
+    void SetValue(QUANTITY value);
 
 };
 
 #include "SerializationExportWrapper.hpp"
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::dimensionless)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::time)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::rate)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::length)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::per_length)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::area)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::volume)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::mass)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::mass_flux)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::mass_flow_rate)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::amount)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::molar_flux)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::molar_flow_rate)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::molar_mass)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::number_density)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::rate_per_concentration)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::concentration)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::concentration_flow_rate)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::concentration_gradient)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::flow_rate)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::flow_impedance)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::pressure)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::dynamic_viscosity)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::diffusivity)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::solubility)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::membrane_permeability)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::diffusivity_per_concentration)
-EXPORT_TEMPLATE_CLASS1(ParameterInstance, unit::volumetric_solubility)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QDimensionless)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QTime)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QRate)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QLength)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QPerLength)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QArea)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QVolume)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QMass)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QMassFlux)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QMassFlowRate)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QAmount)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QMolarFlux)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QMolarFlowRate)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QMolarMass)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QNumberDensity)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QRatePerConcentration)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QConcentration)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QConcentrationFlowRate)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QConcentrationGradient)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QFlowRate)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QFlowImpedance)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QPressure)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QDynamicViscosity)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QDiffusivity)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QSolubility)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QMembranePermeability)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QDiffusivityPerConcentration)
+EXPORT_TEMPLATE_CLASS1(ParameterInstance, QVolumetricSolubility)
 
 #endif /*PARAMETERINSTANCE_HPP_*/

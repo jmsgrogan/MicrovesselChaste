@@ -65,7 +65,7 @@ protected:
     /**
      * The diffusion constant for isotropic diffusion
      */
-    units::quantity<unit::diffusivity> mDiffusivity;
+    QDiffusivity mDiffusivity;
 
     /**
      * The collection of discrete sources for addition to the continuum terms
@@ -77,7 +77,7 @@ protected:
      * Since those functions don't use Boost Units. It should not affect the solution, but can be judiciously chosen
      * to avoid precision problems.
      */
-    units::quantity<unit::concentration> mReferenceConcentration;
+    QConcentration mReferenceConcentration;
 
     /**
      * The reference length scale, used to scale diffusivity to the mesh size
@@ -87,7 +87,7 @@ protected:
     /**
      * The reference time scale, used to scale diffusivity
      */
-    units::quantity<unit::time> mReferenceTimeScale;
+    QTime mReferenceTimeScale;
 
 public:
 
@@ -111,7 +111,7 @@ public:
      * Return the diffusion constant for isotropic diffusion
      * @return the diffusion constant
      */
-    units::quantity<unit::diffusivity> ComputeIsotropicDiffusionTerm();
+    QDiffusivity ComputeIsotropicDiffusionTerm();
 
     /**
      * Return the collection of discrete sources
@@ -123,13 +123,13 @@ public:
      * Set the isotropic diffusion constant
      * @param diffusivity the isotropic diffusion constant
      */
-    void SetIsotropicDiffusionConstant(units::quantity<unit::diffusivity> diffusivity);
+    void SetIsotropicDiffusionConstant(QDiffusivity diffusivity);
 
     /**
      * Set the reference concentration
      * @param referenceConcentration the reference concentration
      */
-    void SetReferenceConcentration(units::quantity<unit::concentration> referenceConcentration);
+    void SetReferenceConcentration(QConcentration referenceConcentration);
 
     /**
      * Set the reference length
@@ -141,7 +141,7 @@ public:
      * Set the reference time
      * @param referenceTime the reference time
      */
-    void SetReferenceTime(units::quantity<unit::time> referenceTime);
+    void SetReferenceTime(QTime referenceTime);
 
     /**
      * Update the discrete source strengths

@@ -69,16 +69,16 @@ public:
 
         // Make one with and without end caps
         MappableGridGenerator<3> generator;
-        boost::shared_ptr<Part<3> > p_part = generator.GeneratePlane(10, 10);
+        std::shared_ptr<Part<3> > p_part = generator.GeneratePlane(10, 10);
         TS_ASSERT_EQUALS(p_part->GetVertices().size(), 200u);
         TS_ASSERT_EQUALS(p_part->GetPolygons().size(), 198u);
 
-        boost::shared_ptr<Part<3> > p_part_no_caps = generator.GeneratePlane(10, 10, false, false);
+        std::shared_ptr<Part<3> > p_part_no_caps = generator.GeneratePlane(10, 10, false, false);
         TS_ASSERT_EQUALS(p_part_no_caps->GetVertices().size(), 200u);
         TS_ASSERT_EQUALS(p_part_no_caps->GetPolygons().size(), 180u);
 
         // Make sure the resulting part can be meshed
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
         p_mesh_generator->Update();
 
@@ -103,12 +103,12 @@ public:
         QLength thickness = 0.1*unit::metres;
         QLength height = 5.0*unit::metres;
 
-        boost::shared_ptr<Part<3> > p_part = generator.GenerateCylinder(radius, thickness, height, 10, 10);
-        boost::shared_ptr<Part<3> > p_part_open = generator.GenerateCylinder(radius, thickness, height, 10, 10, M_PI);
+        std::shared_ptr<Part<3> > p_part = generator.GenerateCylinder(radius, thickness, height, 10, 10);
+        std::shared_ptr<Part<3> > p_part_open = generator.GenerateCylinder(radius, thickness, height, 10, 10, M_PI);
         TS_ASSERT_THROWS_ANYTHING(generator.GenerateCylinder(radius, thickness, height, 10, 10, 2.1*M_PI));
 
         // Make sure the vertices are in the expected locations
-        std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices = p_part->GetVertices();
+        std::vector<std::shared_ptr<DimensionalChastePoint<3> > > vertices = p_part->GetVertices();
         for(unsigned idx=0; idx<vertices.size(); idx++)
         {
             double loc_x = vertices[idx]->GetLocation(1.0*unit::metres)[0];
@@ -119,7 +119,7 @@ public:
         }
 
         // Make sure the part can be meshed
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
         p_mesh_generator->Update();
         MultiFormatMeshWriter<3> mesh_writer;
@@ -142,7 +142,7 @@ public:
         QLength radius = 1.5*unit::metres;
         QLength thickness = 0.0*unit::metres;
         QLength height = 5.0*unit::metres;
-        boost::shared_ptr<Part<3> > p_part = generator.GenerateCylinder(radius, thickness, height, 10, 10);
+        std::shared_ptr<Part<3> > p_part = generator.GenerateCylinder(radius, thickness, height, 10, 10);
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath()+"cylinder_shell.vtp");
     }
 
@@ -160,12 +160,12 @@ public:
         QLength radius = 1.5*unit::metres;
         QLength thickness = 0.1*unit::metres;
 
-        boost::shared_ptr<Part<3> > p_part = generator.GenerateHemisphere(radius, thickness, 10, 10, M_PI, 0.5*M_PI);
+        std::shared_ptr<Part<3> > p_part = generator.GenerateHemisphere(radius, thickness, 10, 10, M_PI, 0.5*M_PI);
         TS_ASSERT_THROWS_ANYTHING(generator.GenerateHemisphere(radius, thickness, 10, 10, 2.0*M_PI, 0.5*M_PI));
         TS_ASSERT_THROWS_ANYTHING(generator.GenerateHemisphere(radius, thickness, 10, 10, M_PI, 1.0*M_PI));
 
         // Make sure the vertices are in the expected locations
-        std::vector<boost::shared_ptr<DimensionalChastePoint<3> > > vertices = p_part->GetVertices();
+        std::vector<std::shared_ptr<DimensionalChastePoint<3> > > vertices = p_part->GetVertices();
         for(unsigned idx=0; idx<vertices.size(); idx++)
         {
             bool is_inside = (vertices[idx]->GetNorm2()/(1.0*unit::metres) < 1.5  + 1.e-6) &&
@@ -174,7 +174,7 @@ public:
         }
 
         // Make sure the part can be meshed
-        boost::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
         p_mesh_generator->Update();
 
@@ -198,7 +198,7 @@ public:
         QLength radius = 1.5*unit::metres;
         QLength thickness = 0.0*unit::metres;
 
-        boost::shared_ptr<Part<3> > p_part = generator.GenerateHemisphere(radius, thickness, 10, 10, M_PI, 0.5*M_PI);
+        std::shared_ptr<Part<3> > p_part = generator.GenerateHemisphere(radius, thickness, 10, 10, M_PI, 0.5*M_PI);
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath()+"hemisphere_shell.vtp");
     }
 
@@ -213,7 +213,7 @@ public:
 
         // Save archive
         {
-            boost::shared_ptr<MappableGridGenerator<3> > p_generator = MappableGridGenerator<3>::Create();
+            std::shared_ptr<MappableGridGenerator<3> > p_generator = MappableGridGenerator<3>::Create();
             std::ofstream ofs(archive_filename.c_str());
             boost::archive::text_oarchive output_arch(ofs);
             output_arch << p_generator;
@@ -221,7 +221,7 @@ public:
 
         // Load archive
         {
-            boost::shared_ptr<MappableGridGenerator<3> > p_generator_from_archive;
+            std::shared_ptr<MappableGridGenerator<3> > p_generator_from_archive;
 
             // Read from this input file
             std::ifstream ifs(archive_filename.c_str(), std::ios::binary);

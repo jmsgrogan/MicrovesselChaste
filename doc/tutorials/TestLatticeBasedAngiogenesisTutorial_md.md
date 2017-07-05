@@ -137,7 +137,7 @@ results. For our purposes microns for length and hours for time are suitable bas
 
 ```cpp
         QLength reference_length(1.0 * unit::microns);
-        units::quantity<unit::time> reference_time(1.0* unit::hours);
+        QTime reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
 ```
@@ -238,9 +238,9 @@ Vessels release oxygen depending on their haematocrit levels
 
 ```cpp
         boost::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_oxygen_source = VesselBasedDiscreteSource<2>::Create();
-        units::quantity<unit::solubility> oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
+        QSolubility oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
                 GenericParameters::mpGasConcentrationAtStp->GetValue("User");
-        units::quantity<unit::concentration> vessel_oxygen_concentration = oxygen_solubility_at_stp *
+        QConcentration vessel_oxygen_concentration = oxygen_solubility_at_stp *
                 Owen11Parameters::mpReferencePartialPressure->GetValue("User");
         p_vessel_oxygen_source->SetReferenceConcentration(vessel_oxygen_concentration);
         p_vessel_oxygen_source->SetVesselPermeability(Owen11Parameters::mpVesselOxygenPermeability->GetValue("User"));
@@ -271,8 +271,8 @@ there is no release.
 
 ```cpp
         boost::shared_ptr<CellStateDependentDiscreteSource<2> > p_normal_and_quiescent_cell_source = CellStateDependentDiscreteSource<2>::Create();
-        std::map<unsigned, units::quantity<unit::concentration_flow_rate> > normal_and_quiescent_cell_rates;
-        std::map<unsigned, units::quantity<unit::concentration> > normal_and_quiescent_cell_rate_thresholds;
+        std::map<unsigned, QConcentrationFlowRate > normal_and_quiescent_cell_rates;
+        std::map<unsigned, QConcentration > normal_and_quiescent_cell_rate_thresholds;
         MAKE_PTR(QuiescentCancerCellMutationState, p_quiescent_cancer_state);
         MAKE_PTR(WildTypeCellMutationState, p_normal_cell_state);
         normal_and_quiescent_cell_rates[p_normal_cell_state->GetColour()] = Owen11Parameters::mpCellVegfSecretionRate->GetValue("User");
@@ -310,7 +310,7 @@ flow related stimuli.
 ```cpp
         QLength large_vessel_radius(25.0 * unit::microns);
         p_network->SetSegmentRadii(large_vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
         p_network->SetSegmentViscosity(viscosity);
 ```
 
@@ -517,7 +517,7 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestLatticeBasedAngiogenesisTutorial"));
         RandomNumberGenerator::Instance()->Reseed(12345);
         QLength reference_length(1.0 * unit::microns);
-        units::quantity<unit::time> reference_time(1.0* unit::hours);
+        QTime reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
@@ -575,9 +575,9 @@ public:
         p_cell_oxygen_sink->SetLinearInUConsumptionRatePerCell(Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
         p_oxygen_pde->AddDiscreteSource(p_cell_oxygen_sink);
         boost::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_oxygen_source = VesselBasedDiscreteSource<2>::Create();
-        units::quantity<unit::solubility> oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
+        QSolubility oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
                 GenericParameters::mpGasConcentrationAtStp->GetValue("User");
-        units::quantity<unit::concentration> vessel_oxygen_concentration = oxygen_solubility_at_stp *
+        QConcentration vessel_oxygen_concentration = oxygen_solubility_at_stp *
                 Owen11Parameters::mpReferencePartialPressure->GetValue("User");
         p_vessel_oxygen_source->SetReferenceConcentration(vessel_oxygen_concentration);
         p_vessel_oxygen_source->SetVesselPermeability(Owen11Parameters::mpVesselOxygenPermeability->GetValue("User"));
@@ -591,8 +591,8 @@ public:
         p_vegf_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpVegfDiffusivity->GetValue("User"));
         p_vegf_pde->SetContinuumLinearInUTerm(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
         boost::shared_ptr<CellStateDependentDiscreteSource<2> > p_normal_and_quiescent_cell_source = CellStateDependentDiscreteSource<2>::Create();
-        std::map<unsigned, units::quantity<unit::concentration_flow_rate> > normal_and_quiescent_cell_rates;
-        std::map<unsigned, units::quantity<unit::concentration> > normal_and_quiescent_cell_rate_thresholds;
+        std::map<unsigned, QConcentrationFlowRate > normal_and_quiescent_cell_rates;
+        std::map<unsigned, QConcentration > normal_and_quiescent_cell_rate_thresholds;
         MAKE_PTR(QuiescentCancerCellMutationState, p_quiescent_cancer_state);
         MAKE_PTR(WildTypeCellMutationState, p_normal_cell_state);
         normal_and_quiescent_cell_rates[p_normal_cell_state->GetColour()] = Owen11Parameters::mpCellVegfSecretionRate->GetValue("User");
@@ -613,7 +613,7 @@ public:
         p_vegf_solver->SetGrid(p_grid);
         QLength large_vessel_radius(25.0 * unit::microns);
         p_network->SetSegmentRadii(large_vessel_radius);
-        units::quantity<unit::dynamic_viscosity> viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue("User");
         p_network->SetSegmentViscosity(viscosity);
         boost::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
         boost::shared_ptr<ConstantHaematocritSolver<2> > p_haematocrit_calculator = ConstantHaematocritSolver<2>::Create();

@@ -113,12 +113,12 @@ class CornealMicropocketSimulation
     /**
      * The element area (2D)
      */
-    units::quantity<unit::volume> mElementArea2d;
+    QVolume mElementArea2d;
 
     /**
      * The element area (3D)
      */
-    units::quantity<unit::volume> mElementArea3d;
+    QVolume mElementArea3d;
 
     /**
      * The node spacing
@@ -158,7 +158,7 @@ class CornealMicropocketSimulation
     /**
      * The sprouting probability
      */
-    units::quantity<unit::rate> mSproutingProbability;
+    QRate mSproutingProbability;
 
     /**
      * The attraction strength
@@ -188,17 +188,17 @@ class CornealMicropocketSimulation
     /**
      * The pellet concentration
      */
-    units::quantity<unit::concentration> mPelletConcentration;
+    QConcentration mPelletConcentration;
 
     /**
      * The vegf diffusivity
      */
-    units::quantity<unit::diffusivity> mVegfDiffusivity;
+    QDiffusivity mVegfDiffusivity;
 
     /**
      * The vegf decay rate
      */
-    units::quantity<unit::rate> mVegfDecayRate;
+    QRate mVegfDecayRate;
 
     /**
      * The binding constant
@@ -208,17 +208,17 @@ class CornealMicropocketSimulation
     /**
      * The vegf blood concentration
      */
-    units::quantity<unit::concentration> mVegfBloodConcentration;
+    QConcentration mVegfBloodConcentration;
 
     /**
      * The vegf permeability
      */
-    units::quantity<unit::membrane_permeability> mVegfPermeability;
+    QMembranePermeability mVegfPermeability;
 
     /**
      * The uptake rate per cell
      */
-    units::quantity<unit::molar_flow_rate> mUptakeRatePerCell;
+    QMolarFlowRate mUptakeRatePerCell;
 
     /**
      * The pde time increment
@@ -243,12 +243,12 @@ class CornealMicropocketSimulation
     /**
      * The total time
      */
-    units::quantity<unit::time> mTotalTime;
+    QTime mTotalTime;
 
     /**
      * The time step size
      */
-    units::quantity<unit::time> mTimeStepSize;
+    QTime mTimeStepSize;
 
     /**
      * The run number
@@ -285,7 +285,7 @@ class CornealMicropocketSimulation
 
     std::vector<double> mStoredSample;
 
-    units::quantity<unit::velocity> mSproutVelocity;
+    QVelocity mSproutVelocity;
 
 public:
 
@@ -305,7 +305,7 @@ public:
      */
     static std::shared_ptr<CornealMicropocketSimulation> Create();
 
-    void SetTipVelocity(units::quantity<unit::velocity> velocity);
+    void SetTipVelocity(QVelocity velocity);
 
     void SetOnlyPerfusedSprout(bool onlyPerfused);
 
@@ -379,9 +379,9 @@ public:
 
     void SetDoAnastamosis(bool doAnastamosis);
 
-    void SetElementArea2d(units::quantity<unit::volume> elementArea2d);
+    void SetElementArea2d(QVolume elementArea2d);
 
-    void SetElementArea3d(units::quantity<unit::volume> elementArea3d);
+    void SetElementArea3d(QVolume elementArea3d);
 
     void SetFinitePelletWidth(bool finitePelletWidth);
 
@@ -393,7 +393,7 @@ public:
 
     void SetPdeTimeIncrement(double pdeTimeIncrement);
 
-    void SetPelletConcentration(units::quantity<unit::concentration> pelletConcentration);
+    void SetPelletConcentration(QConcentration pelletConcentration);
 
     void SetPersistenceAngle(double persistenceAngle);
 
@@ -407,15 +407,15 @@ public:
 
     void SetSampleSpacingZ(QLength sampleSpacingZ);
 
-    void SetSproutingProbability(units::quantity<unit::rate> sproutingProbability);
+    void SetSproutingProbability(QRate sproutingProbability);
 
-    void SetTimeStepSize(units::quantity<unit::time> timeStepSize);
+    void SetTimeStepSize(QTime timeStepSize);
 
     void SetTipExclusionRadius(QLength tipExclusionRadius);
 
-    void SetTotalTime(units::quantity<unit::time> totalTime);
+    void SetTotalTime(QTime totalTime);
 
-    void SetUptakeRatePerCell(units::quantity<unit::molar_flow_rate> uptakeRatePerCell);
+    void SetUptakeRatePerCell(QMolarFlowRate uptakeRatePerCell);
 
     void SetUseFixedGradient(bool useFixedGradient);
 
@@ -425,13 +425,13 @@ public:
 
     void SetVegfBindingConstant(double vegfBindingConstant);
 
-    void SetVegfBloodConcentration(units::quantity<unit::concentration> vegfBloodConcentration);
+    void SetVegfBloodConcentration(QConcentration vegfBloodConcentration);
 
-    void SetVegfDecayRate(const units::quantity<unit::rate> vegfDecayRate);
+    void SetVegfDecayRate(const QRate vegfDecayRate);
 
-    void SetVegfDiffusivity(units::quantity<unit::diffusivity> vegfDiffusivity);
+    void SetVegfDiffusivity(QDiffusivity vegfDiffusivity);
 
-    void SetVegfPermeability(units::quantity<unit::membrane_permeability> vegfPermeability);
+    void SetVegfPermeability(QMembranePermeability vegfPermeability);
 
     void Run();
 

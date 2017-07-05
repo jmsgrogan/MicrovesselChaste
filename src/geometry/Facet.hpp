@@ -43,7 +43,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkPoints.h>
 #include <vtkPlane.h>
 #include <boost/serialization/vector.hpp>
-#include <boost/units/quantity.hpp>
 #include "ChasteSerialization.hpp"
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"

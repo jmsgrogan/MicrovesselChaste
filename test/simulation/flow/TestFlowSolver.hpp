@@ -53,26 +53,26 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 class TestFlowSolver : public CxxTest::TestSuite
 {
-    typedef boost::shared_ptr<VesselNode<2> > NodePtr2;
-    typedef boost::shared_ptr<VesselNode<3> > NodePtr3;
-    typedef boost::shared_ptr<VesselSegment<2> > SegmentPtr2;
-    typedef boost::shared_ptr<VesselSegment<3> > SegmentPtr3;
-    typedef boost::shared_ptr<Vessel<2> > VesselPtr2;
-    typedef boost::shared_ptr<Vessel<3> > VesselPtr3;
+    typedef std::shared_ptr<VesselNode<2> > NodePtr2;
+    typedef std::shared_ptr<VesselNode<3> > NodePtr3;
+    typedef std::shared_ptr<VesselSegment<2> > SegmentPtr2;
+    typedef std::shared_ptr<VesselSegment<3> > SegmentPtr3;
+    typedef std::shared_ptr<Vessel<2> > VesselPtr2;
+    typedef std::shared_ptr<Vessel<3> > VesselPtr3;
 
 public:
 
     void TestFlowThroughSingleSegment() throw (Exception)
     {
         // Make some nodes
-        boost::shared_ptr<VesselNode<3> > pn1 = VesselNode<3>::Create(0, 0, 0);
-        boost::shared_ptr<VesselNode<3> > pn2 = VesselNode<3>::Create(5, 0, 0);
+        std::shared_ptr<VesselNode<3> > pn1 = VesselNode<3>::Create(0, 0, 0);
+        std::shared_ptr<VesselNode<3> > pn2 = VesselNode<3>::Create(5, 0, 0);
 
         SegmentPtr3 p_segment(VesselSegment<3>::Create(pn1, pn2));
         VesselPtr3 p_vessel(Vessel<3>::Create(p_segment));
 
         // Generate the network
-        boost::shared_ptr<VesselNetwork<3> > p_vascular_network = VesselNetwork<3>::Create();
+        std::shared_ptr<VesselNetwork<3> > p_vascular_network = VesselNetwork<3>::Create();
         p_vascular_network->AddVessel(p_vessel);
 
         double impedance = 1.e12;
@@ -102,14 +102,14 @@ public:
 
     void TestFlowThroughSingleSegmentVelocityBc() throw (Exception)
     {
-        boost::shared_ptr<VesselNode<3> > pn1 = VesselNode<3>::Create(0, 0, 0);
-        boost::shared_ptr<VesselNode<3> > pn2 = VesselNode<3>::Create(5, 0, 0);
+        std::shared_ptr<VesselNode<3> > pn1 = VesselNode<3>::Create(0, 0, 0);
+        std::shared_ptr<VesselNode<3> > pn2 = VesselNode<3>::Create(5, 0, 0);
 
         SegmentPtr3 p_segment(VesselSegment<3>::Create(pn1, pn2));
         VesselPtr3 p_vessel(Vessel<3>::Create(p_segment));
 
         // Generate the network
-        boost::shared_ptr<VesselNetwork<3> > p_vascular_network = VesselNetwork<3>::Create();
+        std::shared_ptr<VesselNetwork<3> > p_vascular_network = VesselNetwork<3>::Create();
         p_vascular_network->AddVessel(p_vessel);
 
         double impedance = 1.e12;
@@ -135,10 +135,10 @@ public:
 
     void TestFlowThroughBifurcationVelocityBc() throw (Exception)
     {
-        boost::shared_ptr<VesselNode<3> > pn1 = VesselNode<3>::Create(0, 0, 0);
-        boost::shared_ptr<VesselNode<3> > pn2 = VesselNode<3>::Create(5, 0, 0);
-        boost::shared_ptr<VesselNode<3> > pn3 = VesselNode<3>::Create(10, 5, 0);
-        boost::shared_ptr<VesselNode<3> > pn4 = VesselNode<3>::Create(10, -5, 0);
+        std::shared_ptr<VesselNode<3> > pn1 = VesselNode<3>::Create(0, 0, 0);
+        std::shared_ptr<VesselNode<3> > pn2 = VesselNode<3>::Create(5, 0, 0);
+        std::shared_ptr<VesselNode<3> > pn3 = VesselNode<3>::Create(10, 5, 0);
+        std::shared_ptr<VesselNode<3> > pn4 = VesselNode<3>::Create(10, -5, 0);
         SegmentPtr3 p_segment1(VesselSegment<3>::Create(pn1, pn2));
         SegmentPtr3 p_segment2(VesselSegment<3>::Create(pn2, pn3));
         SegmentPtr3 p_segment3(VesselSegment<3>::Create(pn2, pn4));
@@ -147,7 +147,7 @@ public:
         VesselPtr3 p_vessel3(Vessel<3>::Create(p_segment3));
 
         // Generate the network
-        boost::shared_ptr<VesselNetwork<3> > p_vascular_network = VesselNetwork<3>::Create();
+        std::shared_ptr<VesselNetwork<3> > p_vascular_network = VesselNetwork<3>::Create();
         p_vascular_network->AddVessel(p_vessel1);
         p_vascular_network->AddVessel(p_vessel2);
         p_vascular_network->AddVessel(p_vessel3);
@@ -199,7 +199,7 @@ public:
         VesselPtr3 p_vessel(Vessel<3>::Create(segments));
 
         // Generate the network
-        boost::shared_ptr<VesselNetwork<3> > p_vascular_network(new VesselNetwork<3>());
+        std::shared_ptr<VesselNetwork<3> > p_vascular_network(new VesselNetwork<3>());
         p_vascular_network->AddVessel(p_vessel);
         double impedance = 1.e14;
         p_segment1->GetFlowProperties()->SetImpedance(1.e14*unit::pascal_second_per_metre_cubed);
@@ -250,7 +250,7 @@ public:
         VesselPtr3 p_vessel2(Vessel<3>::Create(p_segment2));
 
         // Generate the network
-        boost::shared_ptr<VesselNetwork<3> > p_vascular_network(new VesselNetwork<3>());
+        std::shared_ptr<VesselNetwork<3> > p_vascular_network(new VesselNetwork<3>());
 
         p_vascular_network->AddVessel(p_vessel1);
         p_vascular_network->AddVessel(p_vessel2);
@@ -314,7 +314,7 @@ public:
         vessels.push_back(p_vessel6);
 
         // Generate the network
-        boost::shared_ptr<VesselNetwork<3> > p_vascular_network(new VesselNetwork<3>());
+        std::shared_ptr<VesselNetwork<3> > p_vascular_network(new VesselNetwork<3>());
 
         p_vascular_network->AddVessels(vessels);
 
@@ -380,7 +380,7 @@ public:
         vessels.push_back(p_vessel3); // output vessel
 
         // Generate the network
-        boost::shared_ptr<VesselNetwork<3> > p_vascular_network(new VesselNetwork<3>());
+        std::shared_ptr<VesselNetwork<3> > p_vascular_network(new VesselNetwork<3>());
 
         p_vascular_network->AddVessels(vessels);
 
@@ -435,7 +435,7 @@ public:
 
         // Generate the network
         VesselNetworkGenerator<2> vascular_network_generator;
-        boost::shared_ptr<VesselNetwork<2> > vascular_network = vascular_network_generator.GenerateHexagonalNetwork(
+        std::shared_ptr<VesselNetwork<2> > vascular_network = vascular_network_generator.GenerateHexagonalNetwork(
                 1000*1.e-6*unit::metres, 1000*1.e-6*unit::metres, vessel_length);
 
         // Make some nodes
@@ -451,8 +451,8 @@ public:
         std::pair<DimensionalChastePoint<2>, DimensionalChastePoint<2> > network_extents = VesselNetworkGeometryCalculator<2>::GetExtents(vascular_network);
         double y_middle = (network_extents.first.GetLocation(1.e-6*unit::metres)[1] + network_extents.second.GetLocation(1.e-6*unit::metres)[1]) / 2.0;
 
-        std::vector<boost::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
-        std::vector<boost::shared_ptr<Vessel<2> > > vessels = vascular_network->GetVessels();
+        std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
+        std::vector<std::shared_ptr<Vessel<2> > > vessels = vascular_network->GetVessels();
         for (vessel_iterator = vessels.begin(); vessel_iterator != vessels.end(); vessel_iterator++)
         {
             if ((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
@@ -508,10 +508,10 @@ public:
         TS_ASSERT(fileFinder.Exists());
         TS_ASSERT(fileFinder.IsFile());
 
-        boost::shared_ptr<VesselNetworkReader<3> > p_network_reader = VesselNetworkReader<3>::Create();
+        std::shared_ptr<VesselNetworkReader<3> > p_network_reader = VesselNetworkReader<3>::Create();
         p_network_reader->SetFileName(fileFinder.GetAbsolutePath());
         p_network_reader->SetRadiusArrayName("Distance");
-        boost::shared_ptr<VesselNetwork<3> > p_network = p_network_reader->Read();
+        std::shared_ptr<VesselNetwork<3> > p_network = p_network_reader->Read();
 
         p_network->GetVessel(0)->GetSegment(0)->GetFlowProperties()->SetViscosity(1.e-3 * unit::poiseuille);
         VesselNetworkPropertyManager<3>::SetSegmentProperties(p_network, p_network->GetVessel(0)->GetSegment(0));
@@ -550,7 +550,7 @@ public:
         EXIT_IF_PARALLEL;    // Need a larger network to run in parallel
 
         // Make a network
-        std::vector<boost::shared_ptr<VesselNode<3> > > bottom_nodes;
+        std::vector<std::shared_ptr<VesselNode<3> > > bottom_nodes;
         for(unsigned idx=0; idx<5; idx++)
         {
             bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10, 10.0, 0.0));
@@ -560,21 +560,21 @@ public:
         bottom_nodes[4]->GetFlowProperties()->SetIsOutputNode(true);
         bottom_nodes[4]->GetFlowProperties()->SetPressure(1000*unit::pascals);
 
-        std::vector<boost::shared_ptr<VesselNode<3> > > top_nodes;
+        std::vector<std::shared_ptr<VesselNode<3> > > top_nodes;
         for(unsigned idx=1; idx<3; idx+=1)
         {
             top_nodes.push_back(VesselNode<3>::Create(double(idx)*10, 20.0, 0.0));
         }
 
-        boost::shared_ptr<Vessel<3> > p_vessel1 = Vessel<3>::Create(bottom_nodes[0], bottom_nodes[1]);
-        boost::shared_ptr<Vessel<3> > p_vessel2 = Vessel<3>::Create(bottom_nodes[1], bottom_nodes[2]);
-        boost::shared_ptr<Vessel<3> > p_vessel3 = Vessel<3>::Create(bottom_nodes[2], bottom_nodes[3]);
-        boost::shared_ptr<Vessel<3> > p_vessel7 = Vessel<3>::Create(bottom_nodes[3], bottom_nodes[4]);
-        boost::shared_ptr<Vessel<3> > p_vessel4 = Vessel<3>::Create(bottom_nodes[1], top_nodes[0]);
-        boost::shared_ptr<Vessel<3> > p_vessel5 = Vessel<3>::Create(bottom_nodes[2], top_nodes[1]);
-        boost::shared_ptr<Vessel<3> > p_vessel6 = Vessel<3>::Create(top_nodes[0], top_nodes[1]);
+        std::shared_ptr<Vessel<3> > p_vessel1 = Vessel<3>::Create(bottom_nodes[0], bottom_nodes[1]);
+        std::shared_ptr<Vessel<3> > p_vessel2 = Vessel<3>::Create(bottom_nodes[1], bottom_nodes[2]);
+        std::shared_ptr<Vessel<3> > p_vessel3 = Vessel<3>::Create(bottom_nodes[2], bottom_nodes[3]);
+        std::shared_ptr<Vessel<3> > p_vessel7 = Vessel<3>::Create(bottom_nodes[3], bottom_nodes[4]);
+        std::shared_ptr<Vessel<3> > p_vessel4 = Vessel<3>::Create(bottom_nodes[1], top_nodes[0]);
+        std::shared_ptr<Vessel<3> > p_vessel5 = Vessel<3>::Create(bottom_nodes[2], top_nodes[1]);
+        std::shared_ptr<Vessel<3> > p_vessel6 = Vessel<3>::Create(top_nodes[0], top_nodes[1]);
 
-        boost::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_vessel1);
         p_network->AddVessel(p_vessel2);
         p_network->AddVessel(p_vessel3);
@@ -583,7 +583,7 @@ public:
         p_network->AddVessel(p_vessel6);
         p_network->AddVessel(p_vessel7);
         VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, 10.0 * 1.e-6 * unit::metres);
-        std::vector<boost::shared_ptr<VesselSegment<3> > > segments = p_network->GetVesselSegments();
+        std::vector<std::shared_ptr<VesselSegment<3> > > segments = p_network->GetVesselSegments();
         for(unsigned idx=0; idx<segments.size(); idx++)
         {
             segments[idx]->GetFlowProperties()->SetViscosity(1.e-3*unit::poiseuille);
@@ -609,7 +609,7 @@ public:
         EXIT_IF_PARALLEL;    // Need a larger network to run in parallel
 
         // Make a network
-        std::vector<boost::shared_ptr<VesselNode<3> > > bottom_nodes;
+        std::vector<std::shared_ptr<VesselNode<3> > > bottom_nodes;
         for(unsigned idx=0; idx<6; idx++)
         {
             bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10, 10.0, 0.0));
@@ -619,8 +619,8 @@ public:
         bottom_nodes[5]->GetFlowProperties()->SetIsOutputNode(true);
         bottom_nodes[5]->GetFlowProperties()->SetPressure(1000 * unit::pascals);
 
-        boost::shared_ptr<Vessel<3> > p_vessel1 = Vessel<3>::Create(bottom_nodes);
-        boost::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        std::shared_ptr<Vessel<3> > p_vessel1 = Vessel<3>::Create(bottom_nodes);
+        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_vessel1);
         VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, 10.0 * 1.e-6 * unit::metres);
 
@@ -638,7 +638,7 @@ public:
         p_network->UpdateSegments();
         p_network->UpdateNodes();
         p_network->UpdateVesselNodes();
-        std::vector<boost::shared_ptr<VesselSegment<3> > > segments = p_network->GetVesselSegments();
+        std::vector<std::shared_ptr<VesselSegment<3> > > segments = p_network->GetVesselSegments();
         for(unsigned idx=0; idx<segments.size(); idx++)
         {
             segments[idx]->GetFlowProperties()->SetViscosity(1.e-3 * unit::poiseuille);

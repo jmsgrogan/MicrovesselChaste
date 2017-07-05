@@ -58,17 +58,17 @@ protected:
     /**
      * An amount field sampled on the regular grid points or mesh nodes
      */
-    std::vector<units::quantity<unit::concentration> > mpSolution;
+    std::vector<QConcentration > mpSolution;
 
     /**
      * The prescribed value of the source strength. Used for PRESCRIBED source strengths.
      */
-    units::quantity<unit::rate> mConstantInUSinkRatePerSolutionQuantity;
+    QRate mConstantInUSinkRatePerSolutionQuantity;
 
     /**
      * The prescribed value of the source strength. Used for PRESCRIBED source strengths.
      */
-    units::quantity<unit::rate_per_concentration> mLinearInUSinkRatePerSolutionQuantity;
+    QRatePerConcentration mLinearInUSinkRatePerSolutionQuantity;
 
 public:
 
@@ -92,31 +92,31 @@ public:
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    virtual std::vector<units::quantity<unit::concentration_flow_rate> > GetConstantInUValues();
+    virtual std::vector<QConcentrationFlowRate > GetConstantInUValues();
 
     /**
      * Return the values of the source strengths sampled on the regular grid
      * @return a vector of source strengths
      */
-    virtual std::vector<units::quantity<unit::rate> > GetLinearInUValues();
+    virtual std::vector<QRate > GetLinearInUValues();
 
     /**
      * Set the sampled field from which to obtain a solution for SOLUTION type sources
      * @param solution the field from which to use solution values
      */
-    void SetSolution(std::vector<units::quantity<unit::concentration> > solution);
+    void SetSolution(std::vector<QConcentration > solution);
 
     /**
      * Set the value of the source for PRESCRIBED type sources
      * @param value the value of the source
      */
-    void SetConstantInUSinkRatePerSolutionQuantity(units::quantity<unit::rate> value);
+    void SetConstantInUSinkRatePerSolutionQuantity(QRate value);
 
     /**
      * Set the value of the source for PRESCRIBED type sources
      * @param value the value of the source
      */
-    void SetLinearInUSinkRatePerSolutionQuantity(units::quantity<unit::rate_per_concentration> value);
+    void SetLinearInUSinkRatePerSolutionQuantity(QRatePerConcentration value);
 };
 
 #endif /* SolutionDependentDiscreteSource_HPP_ */

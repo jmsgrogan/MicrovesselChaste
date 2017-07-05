@@ -62,7 +62,7 @@ class ImageToMesh
     /**
      *  The target element size
      */
-    units::quantity<unit::volume> mElementSize;
+    QVolume mElementSize;
 
     /**
      *  The mesh holes
@@ -112,7 +112,7 @@ public:
      * Set the element size
      * @param elementSize the element volume
      */
-    void SetElementSize(units::quantity<unit::volume> elementSize);
+    void SetElementSize(QVolume elementSize);
 
     /**
      * Get the boundary of the mesh

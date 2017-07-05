@@ -108,7 +108,7 @@ protected:
      * Since those functions don't use Boost Units. It should not affect the solution, but can be judiciously chosen
      * to avoid precision problems.
      */
-    units::quantity<unit::concentration> mReferenceConcentration;
+    QConcentration mReferenceConcentration;
 
     /**
      * A solution field. Ordering is decided in child classes.
@@ -118,7 +118,7 @@ protected:
     /**
      * A solution field. Ordering is decided in child classes.
      */
-    std::vector<units::quantity<unit::concentration> > mConcentrations;
+    std::vector<QConcentration > mConcentrations;
 
     /**
      * A density map
@@ -147,21 +147,21 @@ public:
      * Return the value of the field with ordering determined by child classes
      * @return the value of the field with ordering determined by child classes
      */
-    virtual std::vector<units::quantity<unit::concentration> > GetConcentrations();
+    virtual std::vector<QConcentration > GetConcentrations();
 
     /**
      * Return the value of the field at all points on the supplied grid
      * @param pGrid the sampling grid
      * @return the value of the field ordered according to grid order
      */
-    virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
+    virtual std::vector<QConcentration > GetConcentrations(std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > pGrid);
 
     /**
      * Return the value of the field at the requested points
      * @param pSamplePoints vtk sample points
      * @return the value of the field ordered according to input point order
      */
-    virtual std::vector<units::quantity<unit::concentration> > GetConcentrations(vtkSmartPointer<vtkPoints> pSamplePoints);
+    virtual std::vector<QConcentration > GetConcentrations(vtkSmartPointer<vtkPoints> pSamplePoints);
 
     /**
      * Return the density map
@@ -191,7 +191,7 @@ public:
      * Return the reference concentration value.
      * @return the reference concentration value
      */
-    units::quantity<unit::concentration> GetReferenceConcentration();
+    QConcentration GetReferenceConcentration();
 
     /**
      * Return the value of the field with ordering determined by child classes
@@ -266,7 +266,7 @@ public:
      * Set the reference concentration
      * @param referenceConcentration the reference concentration
      */
-    void SetReferenceConcentration(units::quantity<unit::concentration> referenceConcentration);
+    void SetReferenceConcentration(QConcentration referenceConcentration);
 
     /**
      * Set whether to write the solution to file on next solve
@@ -300,7 +300,7 @@ public:
      */
     void SetCellPopulation(AbstractCellPopulation<DIM>& rCellPopulation,
                            QLength cellPopulationReferenceLength,
-                           units::quantity<unit::concentration> cellPopulationReferenceConcentration);
+                           QConcentration cellPopulationReferenceConcentration);
 
     /**
      * Do the solve
@@ -327,7 +327,7 @@ public:
      * Update the solution manually
      * @param rData solution data map
      */
-    virtual void UpdateSolution(const std::vector<units::quantity<unit::concentration> >& rData);
+    virtual void UpdateSolution(const std::vector<QConcentration >& rData);
 
     /**
      * Write the solution to file

@@ -52,7 +52,7 @@ private:
     /**
      * The haematocrit to be assigned to each vessel.
      */
-    units::quantity<unit::dimensionless> mHaematocrit;
+    QDimensionless mHaematocrit;
 
 public:
 
@@ -81,7 +81,7 @@ public:
      * Set the haematocrit to be assigned to each vessel
      * @param haematocrit the haematocrit
      */
-    void SetHaematocrit(units::quantity<unit::dimensionless> haematocrit);
+    void SetHaematocrit(QDimensionless haematocrit);
 };
 
 #endif

@@ -66,7 +66,7 @@ VolumeOutputModifier<DIM>::~VolumeOutputModifier()
 }
 
 template<unsigned DIM>
-void VolumeOutputModifier<DIM>::SetStartTimeOffset(units::quantity<unit::time> startTimeOffset)
+void VolumeOutputModifier<DIM>::SetStartTimeOffset(QTime startTimeOffset)
 {
     mStartTimeOffset = startTimeOffset;
 }
@@ -193,9 +193,9 @@ void VolumeOutputModifier<DIM>::UpdateCellData(AbstractCellPopulation<DIM,DIM>& 
             }
             if(mOutputFileStream->is_open())
             {
-                units::quantity<unit::time> dimensional_time =
+                QTime dimensional_time =
                         SimulationTime::Instance()->GetTime()*BaseUnits::Instance()->GetReferenceTimeScale();
-                units::quantity<unit::time> offset_time = dimensional_time - mStartTimeOffset;
+                QTime offset_time = dimensional_time - mStartTimeOffset;
                 if(offset_time>=0.0*unit::seconds)
                 {
                     double current_time = offset_time / BaseUnits::Instance()->GetReferenceTimeScale();

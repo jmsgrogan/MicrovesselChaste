@@ -70,7 +70,7 @@ public:
 
         OutputFileHandler output_file_handler("TestGeometryWriter/TestWriteCuboid");
 
-        boost::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
+        std::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
         TS_ASSERT_THROWS_THIS(p_writer->Write(), "An input geometry is not set.");
 
         p_writer->AddInput(part.GetVtk());

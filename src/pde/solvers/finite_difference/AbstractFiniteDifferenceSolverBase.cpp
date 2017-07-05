@@ -72,7 +72,7 @@ void AbstractFiniteDifferenceSolverBase<DIM>::AddDiscreteTermsToRhs()
 }
 
 template<unsigned DIM>
-std::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > AbstractFiniteDifferenceSolverBase<DIM>::GetRGBoundaryConditions()
+std::shared_ptr<std::vector<std::pair<bool, QConcentration > > > AbstractFiniteDifferenceSolverBase<DIM>::GetRGBoundaryConditions()
 {
     return mpBoundaryConditions;
 }
@@ -124,10 +124,10 @@ void AbstractFiniteDifferenceSolverBase<DIM>::Setup()
 
     // Set up the boundary conditions. Use a different description from normal DiscreteContinuum BCs for efficiency.
     unsigned num_points = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfPoints();
-    mpBoundaryConditions = std::shared_ptr<std::vector<std::pair<bool, units::quantity<unit::concentration> > > > (new std::vector<std::pair<bool, units::quantity<unit::concentration> > >(num_points));
+    mpBoundaryConditions = std::shared_ptr<std::vector<std::pair<bool, QConcentration > > > (new std::vector<std::pair<bool, QConcentration > >(num_points));
     for(unsigned idx=0; idx<num_points; idx++)
     {
-        (*mpBoundaryConditions)[idx] = std::pair<bool, units::quantity<unit::concentration> >(false, 0.0*this->mReferenceConcentration);
+        (*mpBoundaryConditions)[idx] = std::pair<bool, QConcentration >(false, 0.0*this->mReferenceConcentration);
     }
     for(unsigned bound_index=0; bound_index<this->mBoundaryConditions.size(); bound_index++)
     {

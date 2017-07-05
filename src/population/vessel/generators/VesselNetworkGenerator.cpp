@@ -142,7 +142,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateOvalNe
 
 template<unsigned DIM>
 std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParrallelNetwork(std::shared_ptr<Part<DIM> > domain,
-                                                                                             units::quantity<unit::per_area> targetDensity,
+                                                                                             QArea targetDensity,
                                                                     VesselDistribution::Value distributionType,
                                                                     QLength exclusionDistance,
                                                                     bool useBbox,
@@ -162,8 +162,8 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParral
         EXCEPTION("The domain must be at least two-dimensional.");
     }
 
-    unsigned num_x = unsigned(units::sqrt(targetDensity) * delta_x);
-    unsigned num_y = unsigned(units::sqrt(targetDensity) * delta_y);
+    unsigned num_x = unsigned(Qsqrt(targetDensity) * delta_x);
+    unsigned num_y = unsigned(Qsqrt(targetDensity) * delta_y);
     if(num_x == 0 || num_y == 0)
     {
         EXCEPTION("The domain is not large enough to contain any vessels at the requested density.");
@@ -275,8 +275,8 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParral
             QLength location_x = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, deviation/mReferenceLength)*mReferenceLength;
             QLength location_y = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, deviation/mReferenceLength)*mReferenceLength;
             unsigned kernel_index = RandomNumberGenerator::Instance()->randMod(num_kernels);
-            location_x += kernel_locations[kernel_index][0];
-            location_y += kernel_locations[kernel_index][1];
+            location_x = location_x + kernel_locations[kernel_index][0];
+            location_y = location_y + kernel_locations[kernel_index][1];
 
             // Get the distance to existing vessels and the boundaries
             bool free_space = true;

@@ -83,18 +83,18 @@ public:
         BaseUnits::Instance()->SetReferenceTimeScale(1.0*unit::seconds);
 
         // Set up the mesh
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(10.0*unit::metres, 100.0*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
 
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 5.0*unit::metres);
 
         // Choose the PDE
-        boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
-        units::quantity<unit::diffusivity> vegf_diffusivity(1.0 * unit::metre_squared_per_second);
+        std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
+        QDiffusivity vegf_diffusivity(1.0 * unit::metre_squared_per_second);
         p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
 
-        units::quantity<unit::concentration> initial_vegf_concentration(1.0*unit::mole_per_metre_cubed);
+        QConcentration initial_vegf_concentration(1.0*unit::mole_per_metre_cubed);
         p_pde->SetCurrentVegfInPellet(initial_vegf_concentration);
         p_pde->SetCorneaPelletPermeability(1.0*unit::metre_per_second);
         p_pde->SetPelletFreeDecayRate(0.0*unit::per_second);
@@ -130,7 +130,7 @@ public:
             if(time>10.0)
             {
                 solver.UpdateSolution(intermediate_solutions[idx].first);
-                std::vector<units::quantity<unit::concentration> > solution = solver.GetConcentrations(p_sample_points);
+                std::vector<QConcentration > solution = solver.GetConcentrations(p_sample_points);
                 for(unsigned jdx=0; jdx<11; jdx++)
                 {
                     QLength x = double(jdx)*10.0*unit::metres;
@@ -149,21 +149,21 @@ public:
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
         BaseUnits::Instance()->SetReferenceTimeScale(3600.0*unit::seconds);
 
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(2000e-6*unit::metres, 1000e-6*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
         p_domain->AddAttributeToEdgeIfFound(DimensionalChastePoint<2>(1000.0, 1000.0, 0, 1e-6*unit::metres), "Top Boundary", 1.0);
         TS_ASSERT(p_domain->EdgeHasAttribute(DimensionalChastePoint<2>(1000.0, 1000.0, 0, 1e-6*unit::metres), "Top Boundary"));
 
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 50.0e-6*unit::metres);
 
         // Choose the PDE
-        boost::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
-        units::quantity<unit::diffusivity> vegf_diffusivity(6.94e-11 * unit::metre_squared_per_second);
-        units::quantity<unit::rate> vegf_decay_rate((-0.8/3600.0) * unit::per_second);
+        std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
+        QDiffusivity vegf_diffusivity(6.94e-11 * unit::metre_squared_per_second);
+        QRate vegf_decay_rate((-0.8/3600.0) * unit::per_second);
         p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
         p_pde->SetContinuumLinearInUTerm(vegf_decay_rate);
-        units::quantity<unit::concentration> initial_vegf_concentration(3.93e-1*unit::mole_per_metre_cubed);
+        QConcentration initial_vegf_concentration(3.93e-1*unit::mole_per_metre_cubed);
         p_pde->SetCurrentVegfInPellet(initial_vegf_concentration);
         p_pde->SetPelletBindingConstant(100.0);
         p_pde->SetPelletSurfaceArea(2000e-6*unit::metres*1e-6*unit::metres);
@@ -189,14 +189,14 @@ public:
         // Solve the finite element problem
         DiscreteContinuumMeshGenerator<2> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-        mesh_generator.SetMaxElementArea(2e3*(units::pow<3>(1.e-6*unit::metres)));
+        mesh_generator.SetMaxElementArea(2e3*(Qpow3(1.e-6*unit::metres)));
         mesh_generator.Update();
-        boost::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
+        std::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
 
         // Set up robin BC on top plane
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition =
+        std::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition =
                 DiscreteContinuumBoundaryCondition<2>::Create();
-        units::quantity<unit::concentration> boundary_concentration(1.0* unit::mole_per_metre_cubed);
+        QConcentration boundary_concentration(1.0* unit::mole_per_metre_cubed);
         p_boundary_condition->SetValue(boundary_concentration);
         p_boundary_condition->SetType(BoundaryConditionType::EDGE);
         p_boundary_condition->SetIsRobin(true);

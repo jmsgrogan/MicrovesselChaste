@@ -128,7 +128,7 @@ std::shared_ptr<CornealMicropocketSimulation<DIM> > CornealMicropocketSimulation
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetTipVelocity(units::quantity<unit::velocity> velocity)
+void CornealMicropocketSimulation<DIM>::SetTipVelocity(QVelocity velocity)
 {
     mSproutVelocity = velocity;
 }
@@ -553,7 +553,7 @@ template<unsigned DIM>
 void CornealMicropocketSimulation<DIM>::SetUpSolver()
 {
     QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
-    units::quantity<unit::concentration> reference_concentration =
+    QConcentration reference_concentration =
             BaseUnits::Instance()->GetReferenceConcentrationScale();
     std::shared_ptr<OutputFileHandler> file_handler =
             std::shared_ptr<OutputFileHandler>(new OutputFileHandler(mWorkDirectory, false));
@@ -568,8 +568,8 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
         p_pde->SetPelletBindingConstant(mVegfBindingConstant);
         p_pde->SetPelletDepth(mPelletThickness);
 
-        units::quantity<unit::area> surface_area = 2.0*M_PI*mPelletRadius*mPelletThickness;
-        surface_area += 2.0*M_PI*mPelletRadius*mPelletRadius;
+        QArea surface_area = 2.0*M_PI*mPelletRadius*mPelletThickness;
+        surface_area = surface_area + 2.0*M_PI*mPelletRadius*mPelletRadius;
         p_pde->SetPelletSurfaceArea(surface_area);
         p_pde->SetCorneaPelletPermeability(0.002*p_pde->GetCorneaPelletPermeability());
 
@@ -896,13 +896,13 @@ void CornealMicropocketSimulation<DIM>::SetDoAnastamosis(bool doAnastamosis)
 
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetElementArea2d(units::quantity<unit::volume> elementArea2d)
+void CornealMicropocketSimulation<DIM>::SetElementArea2d(QVolume elementArea2d)
 {
     mElementArea2d = elementArea2d;
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetElementArea3d(units::quantity<unit::volume> elementArea3d)
+void CornealMicropocketSimulation<DIM>::SetElementArea3d(QVolume elementArea3d)
 {
     mElementArea3d = elementArea3d;
 }
@@ -938,7 +938,7 @@ void CornealMicropocketSimulation<DIM>::SetPdeTimeIncrement(double pdeTimeIncrem
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetPelletConcentration(units::quantity<unit::concentration> pelletConcentration)
+void CornealMicropocketSimulation<DIM>::SetPelletConcentration(QConcentration pelletConcentration)
 {
     mPelletConcentration = pelletConcentration;
 }
@@ -981,13 +981,13 @@ void CornealMicropocketSimulation<DIM>::SetSampleSpacingZ(QLength sampleSpacingZ
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetSproutingProbability(units::quantity<unit::rate> sproutingProbability)
+void CornealMicropocketSimulation<DIM>::SetSproutingProbability(QRate sproutingProbability)
 {
     mSproutingProbability = sproutingProbability;
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetTimeStepSize(units::quantity<unit::time> timeStepSize)
+void CornealMicropocketSimulation<DIM>::SetTimeStepSize(QTime timeStepSize)
 {
     mTimeStepSize = timeStepSize;
 }
@@ -999,13 +999,13 @@ void CornealMicropocketSimulation<DIM>::SetTipExclusionRadius(QLength tipExclusi
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetTotalTime(units::quantity<unit::time> totalTime)
+void CornealMicropocketSimulation<DIM>::SetTotalTime(QTime totalTime)
 {
     mTotalTime = totalTime;
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetUptakeRatePerCell(units::quantity<unit::molar_flow_rate> uptakeRatePerCell)
+void CornealMicropocketSimulation<DIM>::SetUptakeRatePerCell(QMolarFlowRate uptakeRatePerCell)
 {
     mUptakeRatePerCell = uptakeRatePerCell;
 }
@@ -1035,7 +1035,7 @@ void CornealMicropocketSimulation<DIM>::SetVegfBindingConstant(double vegfBindin
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetVegfBloodConcentration(units::quantity<unit::concentration> vegfBloodConcentration)
+void CornealMicropocketSimulation<DIM>::SetVegfBloodConcentration(QConcentration vegfBloodConcentration)
 {
     mVegfBloodConcentration = vegfBloodConcentration;
 }
@@ -1047,7 +1047,7 @@ void CornealMicropocketSimulation<DIM>::SetDomainType(DomainType::Value domainTy
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetVegfDecayRate(units::quantity<unit::rate> vegfDecayRate)
+void CornealMicropocketSimulation<DIM>::SetVegfDecayRate(QRate vegfDecayRate)
 {
     mVegfDecayRate = vegfDecayRate;
 }
@@ -1059,13 +1059,13 @@ void CornealMicropocketSimulation<DIM>::SetWorkDir(std::string workDir)
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetVegfDiffusivity(units::quantity<unit::diffusivity> vegfDiffusivity)
+void CornealMicropocketSimulation<DIM>::SetVegfDiffusivity(QDiffusivity vegfDiffusivity)
 {
     mVegfDiffusivity = vegfDiffusivity;
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetVegfPermeability(units::quantity<unit::membrane_permeability> vegfPermeability)
+void CornealMicropocketSimulation<DIM>::SetVegfPermeability(QMembranePermeability vegfPermeability)
 {
     mVegfPermeability = vegfPermeability;
 }
@@ -1124,8 +1124,8 @@ void CornealMicropocketSimulation<DIM>::Run()
 
     // Initialize length scales
     QLength reference_length = 1.e-6*unit::metres;
-    units::quantity<unit::time> reference_time = 3600.0*unit::seconds;
-    units::quantity<unit::concentration> reference_concentration = 1.e-6*unit::mole_per_metre_cubed;
+    QTime reference_time = 3600.0*unit::seconds;
+    QConcentration reference_concentration = 1.e-6*unit::mole_per_metre_cubed;
     BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
     BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
     BaseUnits::Instance()->SetReferenceConcentrationScale(reference_concentration);

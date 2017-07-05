@@ -69,12 +69,12 @@ BaseUnits::BaseUnits()
     assert(bool(mpInstance) == false);
 }
 
-units::quantity<unit::time> BaseUnits::GetReferenceTimeScale()
+QTime BaseUnits::GetReferenceTimeScale()
 {
     return mTime;
 }
 
-void BaseUnits::SetReferenceTimeScale(units::quantity<unit::time> referenceTimeScale)
+void BaseUnits::SetReferenceTimeScale(QTime referenceTimeScale)
 {
     mTime = referenceTimeScale;
 }
@@ -89,12 +89,12 @@ void BaseUnits::SetReferenceLengthScale(QLength referenceLengthScale)
     mLength = referenceLengthScale;
 }
 
-units::quantity<unit::concentration> BaseUnits::GetReferenceConcentrationScale()
+QConcentration BaseUnits::GetReferenceConcentrationScale()
 {
     return mConcentration;
 }
 
-void BaseUnits::SetReferenceConcentrationScale(units::quantity<unit::concentration> referenceConcentrationScale)
+void BaseUnits::SetReferenceConcentrationScale(QConcentration referenceConcentrationScale)
 {
     mConcentration = referenceConcentrationScale;
 }

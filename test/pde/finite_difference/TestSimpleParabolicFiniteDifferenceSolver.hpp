@@ -81,22 +81,22 @@ public:
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed);
         BaseUnits::Instance()->SetReferenceTimeScale(1.0*unit::seconds);
 
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(1.0*unit::metres,
                                1.0*unit::metres,
                                DimensionalChastePoint<2>(0.0, 0.0, 0.0));
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 0.1*unit::metres);
 
         // Choose the PDE
-        boost::shared_ptr<ParabolicDiffusionReactionPde<2> > p_pde =
+        std::shared_ptr<ParabolicDiffusionReactionPde<2> > p_pde =
                 ParabolicDiffusionReactionPde<2>::Create();
-        units::quantity<unit::diffusivity> diffusivity(1.0* unit::metre_squared_per_second);
+        QDiffusivity diffusivity(1.0* unit::metre_squared_per_second);
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
 
         // Prescribe a value on the domain's left and right boundary
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition = DiscreteContinuumBoundaryCondition<2>::Create();
-        units::quantity<unit::concentration> boundary_concentration(1.0* unit::mole_per_metre_cubed);
+        std::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition = DiscreteContinuumBoundaryCondition<2>::Create();
+        QConcentration boundary_concentration(1.0* unit::mole_per_metre_cubed);
         p_boundary_condition->SetValue(boundary_concentration);
         p_boundary_condition->SetType(BoundaryConditionType::POINT);
         vtkSmartPointer<vtkPoints> p_boundary_points = vtkSmartPointer<vtkPoints>::New();
@@ -138,7 +138,7 @@ public:
             if(time>0.1) // Analytical solution won't capture sharp initial condition.
             {
                 solver.UpdateSolution(intermediate_solutions[idx].first);
-                std::vector<units::quantity<unit::concentration> > solution = solver.GetConcentrations();
+                std::vector<QConcentration > solution = solver.GetConcentrations();
                 for(unsigned jdx=0; jdx<11; jdx++)
                 {
                     QLength x = double(jdx)*0.1*unit::metres;
@@ -157,20 +157,20 @@ public:
         BaseUnits::Instance()->SetReferenceTimeScale(3600.0*unit::seconds);
 
         // Set up the mesh
-        boost::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(1000e-6*unit::metres, 1000e-6*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
 
-        boost::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 100.0e-6*unit::metres);
 
         // Choose the PDE
-        boost::shared_ptr<ParabolicDiffusionReactionPde<2> > p_pde = ParabolicDiffusionReactionPde<2>::Create();
-        units::quantity<unit::diffusivity> vegf_diffusivity(6.94e-11 * unit::metre_squared_per_second);
-        units::quantity<unit::rate> vegf_decay_rate((-0.8/3600.0) * unit::per_second);
+        std::shared_ptr<ParabolicDiffusionReactionPde<2> > p_pde = ParabolicDiffusionReactionPde<2>::Create();
+        QDiffusivity vegf_diffusivity(6.94e-11 * unit::metre_squared_per_second);
+        QRate vegf_decay_rate((-0.8/3600.0) * unit::per_second);
         p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
         p_pde->SetContinuumLinearInUTerm(vegf_decay_rate);
 
-        units::quantity<unit::concentration> initial_vegf_concentration(3.93e-4*unit::mole_per_metre_cubed);
+        QConcentration initial_vegf_concentration(3.93e-4*unit::mole_per_metre_cubed);
         std::vector<double> initial_condition(p_grid->GetNumberOfPoints(), double(initial_vegf_concentration/(1.e-6*unit::mole_per_metre_cubed)));
 
         SimpleParabolicFiniteDifferenceSolver<2> solver;

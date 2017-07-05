@@ -94,17 +94,17 @@ protected:
     /**
      * Sink rate ordered by point index
      */
-    std::vector<units::quantity<unit::molar_flow_rate> > mSinkRates;
+    std::vector<QMolarFlowRate > mSinkRates;
 
     /**
      * Source rate ordered by point index
      */
-    std::vector<units::quantity<unit::molar_flow_rate> > mSourceRates;
+    std::vector<QMolarFlowRate > mSourceRates;
 
     /**
      * Species concentration in vessels
      */
-    std::vector<units::quantity<unit::concentration> > mSegmentConcentration;
+    std::vector<QConcentration > mSegmentConcentration;
 
     /**
      * Map between vessel segments and point locations
@@ -114,22 +114,22 @@ protected:
     /**
      * Greens function matrix for tissue-tissue case
      */
-    std::shared_ptr<boost::multi_array<units::quantity<unit::per_length> , 2> > mGtt;
+    std::shared_ptr<boost::multi_array<QPerLength , 2> > mGtt;
 
     /**
      * Greens function matrix for vessel-vessel case
      */
-    std::shared_ptr<boost::multi_array<units::quantity<unit::per_length> , 2> > mGvv;
+    std::shared_ptr<boost::multi_array<QPerLength , 2> > mGvv;
 
     /**
      * Greens function matrix for vessel-tissue case
      */
-    std::shared_ptr<boost::multi_array<units::quantity<unit::per_length> , 2> > mGvt;
+    std::shared_ptr<boost::multi_array<QPerLength , 2> > mGvt;
 
     /**
      * Greens function matrix for tissue-vessel case
      */
-    std::shared_ptr<boost::multi_array<units::quantity<unit::per_length> , 2> > mGtv;
+    std::shared_ptr<boost::multi_array<QPerLength , 2> > mGtv;
 
     /**
      * Minimum subsegment length
@@ -162,25 +162,25 @@ public:
      * Update Gvv
      * @return Gvv
      */
-    virtual std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetVesselVesselInteractionMatrix();
+    virtual std::shared_ptr<boost::multi_array<QPerLength, 2> > GetVesselVesselInteractionMatrix();
 
     /**
      * Update Gtt
      * @return Gtt
      */
-    virtual std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetTissueTissueInteractionMatrix();
+    virtual std::shared_ptr<boost::multi_array<QPerLength, 2> > GetTissueTissueInteractionMatrix();
 
     /**
      * Update Gtv
      * @return Gtv
      */
-    virtual std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetTissueVesselInteractionMatrix();
+    virtual std::shared_ptr<boost::multi_array<QPerLength, 2> > GetTissueVesselInteractionMatrix();
 
     /**
      * Update Gvt
      * @return Gvt
      */
-    virtual std::shared_ptr<boost::multi_array<units::quantity<unit::per_length>, 2> > GetVesselTissueInteractionMatrix();
+    virtual std::shared_ptr<boost::multi_array<QPerLength, 2> > GetVesselTissueInteractionMatrix();
 
     /**
      * Set the minimum subsegment length
@@ -206,7 +206,7 @@ public:
      * Over-ridden method for writing solution to file
      * @param segmentPointData the concentrations in each segment
      */
-    void WriteSolution(std::map<std::string, std::vector<units::quantity<unit::concentration> > >& segmentPointData);
+    void WriteSolution(std::map<std::string, std::vector<QConcentration > >& segmentPointData);
 };
 
 #endif /* ABSTRACTGREENSFUNCTIONSOLVERBASE_HPP_ */

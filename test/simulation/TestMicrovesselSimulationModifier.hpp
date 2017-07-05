@@ -84,31 +84,31 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
 {
 
-    boost::shared_ptr<Part<3> > GetSimulationDomain()
+    std::shared_ptr<Part<3> > GetSimulationDomain()
     {
         QLength domain_x(800.0*unit::microns);
         QLength domain_y(800.0*unit::microns);
         QLength domain_z(200.0*unit::microns);
-        boost::shared_ptr<Part<3> > p_domain = Part<3> ::Create();
+        std::shared_ptr<Part<3> > p_domain = Part<3> ::Create();
         p_domain->AddCuboid(domain_x, domain_y, domain_z, DimensionalChastePoint<3>());
         return p_domain;
     }
 
-    boost::shared_ptr<VesselNetwork<3> > GetVesselNetwork()
+    std::shared_ptr<VesselNetwork<3> > GetVesselNetwork()
     {
-        boost::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
-        std::vector<boost::shared_ptr<VesselNode<3> > > bottom_nodes;
+        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        std::vector<std::shared_ptr<VesselNode<3> > > bottom_nodes;
         for(unsigned idx=0; idx<81; idx++)
         {
             bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10.0, 50.0, 100.0, 1.e-6*unit::metres));
         }
-        boost::shared_ptr<Vessel<3> > p_vessel_1 = Vessel<3>::Create(bottom_nodes);
-        std::vector<boost::shared_ptr<VesselNode<3> > > top_nodes;
+        std::shared_ptr<Vessel<3> > p_vessel_1 = Vessel<3>::Create(bottom_nodes);
+        std::vector<std::shared_ptr<VesselNode<3> > > top_nodes;
         for(unsigned idx=0; idx<81; idx++)
         {
             top_nodes.push_back(VesselNode<3>::Create(double(idx)*10.0, 750.0, 100.0, 1.e-6*unit::metres));
         }
-        boost::shared_ptr<Vessel<3> > p_vessel_2 = Vessel<3>::Create(top_nodes);
+        std::shared_ptr<Vessel<3> > p_vessel_2 = Vessel<3>::Create(top_nodes);
 
         // Set up flow properties
         p_network->AddVessel(p_vessel_1);
@@ -125,7 +125,7 @@ class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
 
         p_network->UpdateSegments();
         VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, 10.0 * 1.e-6 * unit::metres);
-        std::vector<boost::shared_ptr<VesselSegment<3> > > segments = p_network->GetVesselSegments();
+        std::vector<std::shared_ptr<VesselSegment<3> > > segments = p_network->GetVesselSegments();
         for(unsigned idx=0; idx<segments.size(); idx++)
         {
             segments[idx]->GetFlowProperties()->SetViscosity(1.e-3 * unit::poiseuille);
@@ -133,34 +133,34 @@ class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
         return p_network;
     }
 
-    boost::shared_ptr<Part<3> > GetInitialTumourCellRegion()
+    std::shared_ptr<Part<3> > GetInitialTumourCellRegion()
     {
         QLength radius(100.0*unit::microns);
         QLength depth(200.0*unit::microns);
-        boost::shared_ptr<Part<3> > p_domain = Part<3> ::Create();
-        boost::shared_ptr<Polygon<3> > circle = p_domain->AddCircle(radius, DimensionalChastePoint<3>(400.0, 400.0, 0.0, 1.e-6*unit::metres));
+        std::shared_ptr<Part<3> > p_domain = Part<3> ::Create();
+        std::shared_ptr<Polygon<3> > circle = p_domain->AddCircle(radius, DimensionalChastePoint<3>(400.0, 400.0, 0.0, 1.e-6*unit::metres));
         p_domain->Extrude(circle, depth);
         return p_domain;
     }
 
-    boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > GetOxygenSolver(boost::shared_ptr<Part<3> > p_domain,
-                                                                  boost::shared_ptr<VesselNetwork<3> > p_network)
+    std::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > GetOxygenSolver(std::shared_ptr<Part<3> > p_domain,
+                                                                  std::shared_ptr<VesselNetwork<3> > p_network)
     {
-        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
-        units::quantity<unit::diffusivity> oxygen_diffusivity(0.0033 * unit::metre_squared_per_second);
+        std::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
+        QDiffusivity oxygen_diffusivity(0.0033 * unit::metre_squared_per_second);
         p_oxygen_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity);
 
-        boost::shared_ptr<CellBasedDiscreteSource<3> > p_cell_oxygen_sink = CellBasedDiscreteSource<3>::Create();
+        std::shared_ptr<CellBasedDiscreteSource<3> > p_cell_oxygen_sink = CellBasedDiscreteSource<3>::Create();
         p_cell_oxygen_sink->SetConstantInUConsumptionRatePerCell(-1.e-9 * unit::mole_per_second);
         p_oxygen_pde->AddDiscreteSource(p_cell_oxygen_sink);
 
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_vessel_ox_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
+        std::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_vessel_ox_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
         p_vessel_ox_boundary_condition->SetValue(40.0e-6 * unit::mole_per_metre_cubed);
 
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 50.0 * 1.e-6 * unit::metres);
 
-        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<3>::Create();
+        std::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<3>::Create();
         p_oxygen_solver->SetGrid(p_grid);
         p_oxygen_solver->SetPde(p_oxygen_pde);
         p_oxygen_solver->AddBoundaryCondition(p_vessel_ox_boundary_condition);
@@ -168,26 +168,26 @@ class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
         return p_oxygen_solver;
     }
 
-    boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > GetVegfSolver(boost::shared_ptr<Part<3> > p_domain,
-                                                                  boost::shared_ptr<VesselNetwork<3> > p_network)
+    std::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > GetVegfSolver(std::shared_ptr<Part<3> > p_domain,
+                                                                  std::shared_ptr<VesselNetwork<3> > p_network)
     {
-        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_vegf_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
-        units::quantity<unit::diffusivity> vegf_diffusivity(0.0033 * unit::metre_squared_per_second);
+        std::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_vegf_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
+        QDiffusivity vegf_diffusivity(0.0033 * unit::metre_squared_per_second);
 
         p_vegf_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
         p_vegf_pde->SetContinuumLinearInUTerm(-1.e-7*unit::per_second);
 
-        boost::shared_ptr<CellBasedDiscreteSource<3> > p_cell_vegf_source = CellBasedDiscreteSource<3>::Create();
+        std::shared_ptr<CellBasedDiscreteSource<3> > p_cell_vegf_source = CellBasedDiscreteSource<3>::Create();
         p_cell_vegf_source->SetConstantInUConsumptionRatePerCell(1.e-6 * unit::mole_per_second);
         p_vegf_pde->AddDiscreteSource(p_cell_vegf_source);
 
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_vessel_vegf_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
+        std::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_vessel_vegf_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
         p_vessel_vegf_boundary_condition->SetValue(3.e-9 * unit::mole_per_metre_cubed);
 
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 50.0 * 1.e-6 * unit::metres);
 
-        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_vegf_solver = SimpleLinearEllipticFiniteDifferenceSolver<3>::Create();
+        std::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_vegf_solver = SimpleLinearEllipticFiniteDifferenceSolver<3>::Create();
         p_vegf_solver->SetGrid(p_grid);
         p_vegf_solver->SetPde(p_vegf_pde);
         p_vegf_solver->AddBoundaryCondition(p_vessel_vegf_boundary_condition);
@@ -200,7 +200,7 @@ public:
     void TestCaBasedSpheroid() throw (Exception)
     {
         // Create the simulation domain
-        boost::shared_ptr<Part<3> > p_domain = GetSimulationDomain();
+        std::shared_ptr<Part<3> > p_domain = GetSimulationDomain();
 
         // Create a lattice for the cell population
         QLength spacing(40.0*unit::microns);
@@ -213,7 +213,7 @@ public:
         p_mesh->Scale(spacing/cell_lenth_scale, spacing/cell_lenth_scale, spacing/cell_lenth_scale);
 
         // Create a tumour cells in a cylinder in the middle of the domain
-        boost::shared_ptr<Part<3> > p_tumour_cell_region = GetInitialTumourCellRegion();
+        std::shared_ptr<Part<3> > p_tumour_cell_region = GetInitialTumourCellRegion();
         std::vector<unsigned> location_indices = p_tumour_cell_region->GetContainingGridIndices(num_x, num_y, num_z, spacing);
 
         std::vector<CellPtr> cells;
@@ -225,23 +225,23 @@ public:
         cell_population.AddCellWriter<CellLabelWriter>();
 
         // Create the vessel network
-        boost::shared_ptr<VesselNetwork<3> > p_network = GetVesselNetwork();
+        std::shared_ptr<VesselNetwork<3> > p_network = GetVesselNetwork();
 
         // Create the oxygen pde solver
-        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_oxygen_solver = GetOxygenSolver(p_domain, p_network);
+        std::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_oxygen_solver = GetOxygenSolver(p_domain, p_network);
         p_oxygen_solver->Setup();
 
         // Create the vegf pde solver
-        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_vegf_solver = GetVegfSolver(p_domain, p_network);
+        std::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_vegf_solver = GetVegfSolver(p_domain, p_network);
         p_vegf_solver->Setup();
 
         // Create the angiogenesis solver
-        boost::shared_ptr<MicrovesselSolver<3> > p_vascular_tumour_solver = MicrovesselSolver<3>::Create();
+        std::shared_ptr<MicrovesselSolver<3> > p_vascular_tumour_solver = MicrovesselSolver<3>::Create();
         p_vascular_tumour_solver->SetVesselNetwork(p_network);
         p_vascular_tumour_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
         p_vascular_tumour_solver->AddDiscreteContinuumSolver(p_vegf_solver);
 
-        boost::shared_ptr<MicrovesselSimulationModifier<3> > p_simulation_modifier = boost::shared_ptr<MicrovesselSimulationModifier<3> >(new MicrovesselSimulationModifier<3>);
+        std::shared_ptr<MicrovesselSimulationModifier<3> > p_simulation_modifier = std::shared_ptr<MicrovesselSimulationModifier<3> >(new MicrovesselSimulationModifier<3>);
         p_simulation_modifier->SetMicrovesselSolver(p_vascular_tumour_solver);
 
         std::vector<std::string> update_labels = std::vector<std::string>();
@@ -259,7 +259,7 @@ public:
     void TestNodeBasedSpheroid() throw (Exception)
     {
         // Create the domain
-        boost::shared_ptr<Part<3> > p_domain = GetSimulationDomain();
+        std::shared_ptr<Part<3> > p_domain = GetSimulationDomain();
 
         // Create nodes corresponding to cell positions
         QLength spacing(40.0*unit::microns);
@@ -269,9 +269,9 @@ public:
         unsigned num_z = unsigned(p_domain->GetBoundingBox()[5]/spacing) + 1;
 
         // Create a tumour cells in a cylinder in the middle of the domain
-        boost::shared_ptr<Part<3> > p_tumour_cell_region = GetInitialTumourCellRegion();
+        std::shared_ptr<Part<3> > p_tumour_cell_region = GetInitialTumourCellRegion();
         std::vector<unsigned> location_indices = p_tumour_cell_region->GetContainingGridIndices(num_x, num_y, num_z, spacing);
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
 
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 1.5*num_x;
@@ -297,23 +297,23 @@ public:
         cell_population.AddCellWriter<CellLabelWriter>();
 
         // Create the vessel network
-        boost::shared_ptr<VesselNetwork<3> > p_network = GetVesselNetwork();
+        std::shared_ptr<VesselNetwork<3> > p_network = GetVesselNetwork();
 
         // Create the oxygen pde solver
-        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_oxygen_solver = GetOxygenSolver(p_domain, p_network);
+        std::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_oxygen_solver = GetOxygenSolver(p_domain, p_network);
         p_oxygen_solver->Setup();
 
         // Create the vegf pde solver
-        boost::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_vegf_solver = GetVegfSolver(p_domain, p_network);
+        std::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_vegf_solver = GetVegfSolver(p_domain, p_network);
         p_vegf_solver->Setup();
 
         // Create the angiogenesis solver
-        boost::shared_ptr<MicrovesselSolver<3> > p_vascular_tumour_solver = MicrovesselSolver<3>::Create();
+        std::shared_ptr<MicrovesselSolver<3> > p_vascular_tumour_solver = MicrovesselSolver<3>::Create();
         p_vascular_tumour_solver->SetVesselNetwork(p_network);
         p_vascular_tumour_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
         p_vascular_tumour_solver->AddDiscreteContinuumSolver(p_vegf_solver);
 
-        boost::shared_ptr<MicrovesselSimulationModifier<3> > p_simulation_modifier = boost::shared_ptr<MicrovesselSimulationModifier<3> >(new MicrovesselSimulationModifier<3>);
+        std::shared_ptr<MicrovesselSimulationModifier<3> > p_simulation_modifier = std::shared_ptr<MicrovesselSimulationModifier<3> >(new MicrovesselSimulationModifier<3>);
         p_simulation_modifier->SetMicrovesselSolver(p_vascular_tumour_solver);
 
         std::vector<std::string> update_labels = std::vector<std::string>();

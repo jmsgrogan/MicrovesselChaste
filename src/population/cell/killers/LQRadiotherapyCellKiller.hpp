@@ -55,32 +55,32 @@ class LQRadiotherapyCellKiller : public AbstractCellKiller<DIM>
     /**
      * Linear component of radiosensitivity of a cancerous cell.
      */
-    units::quantity<unit::per_absorbed_dose> cancerousLinearRadiosensitivity;
+    QPerAbsorbedDose cancerousLinearRadiosensitivity;
 
     /**
      * Quadratic component of radiosensitivity of a cancerous cell.
      */
-    units::quantity<unit::per_absorbed_dose_squared> cancerousQuadraticRadiosensitivity;
+    QPerAbsorbedDoseSquared cancerousQuadraticRadiosensitivity;
 
     /**
      * Linear component of radiosensitivity of a normal cell.
      */
-    units::quantity<unit::per_absorbed_dose> normalLinearRadiosensitivity;
+    QPerAbsorbedDose normalLinearRadiosensitivity;
 
     /**
      * Quadratic component of radiosensitivity of a normal cell.
      */
-    units::quantity<unit::per_absorbed_dose_squared> normalQuadraticRadiosensitivity;
+    QPerAbsorbedDoseSquared normalQuadraticRadiosensitivity;
 
     /**
      * Dose of Radiation injected
      */
-    units::quantity<unit::absorbed_dose> mDose;
+    QAbsorbedDose mDose;
 
     /**
      * Times at which radiotherapy is used
      */
-    std::vector<units::quantity<unit::time> > mRadiationTimes;
+    std::vector<QTime > mRadiationTimes;
 
     /**
      * alpha_max OER term
@@ -105,17 +105,17 @@ class LQRadiotherapyCellKiller : public AbstractCellKiller<DIM>
     /**
      * Oer constant K term: as a concentration rather than mmHg
      */
-    units::quantity<unit::concentration> mKOer;
+    QConcentration mKOer;
 
     /**
      * Radiotherapy alpha_max term
      */
-    units::quantity<unit::per_absorbed_dose> mAlphaMax;
+    QPerAbsorbedDose mAlphaMax;
 
     /**
      * Radiotherapy beta_max term
      */
-    units::quantity<unit::per_absorbed_dose_squared> mBetaMax;
+    QPerAbsorbedDoseSquared mBetaMax;
 
     /**
      * Whether to use an oxygen enhancement ratio
@@ -155,7 +155,7 @@ public:
      * Add a radiation time to the collection
      * @param time a radiation time
      */
-    void AddTimeOfRadiation(units::quantity<unit::time> time);
+    void AddTimeOfRadiation(QTime time);
 
     /**
      * Overridden method to test a given cell for apoptosis.
@@ -181,13 +181,13 @@ public:
      * Sets doseInjected, the radiation dose injected
      * @param d dose delivered
      */
-    void SetDoseInjected(units::quantity<unit::absorbed_dose> d);
+    void SetDoseInjected(QAbsorbedDose d);
 
     /**
      * Sets timeOfRadiation, the time at which radiation occurs
      * @param t the radiation times
      */
-    void SetTimeOfRadiation(std::vector<units::quantity<unit::time> > t);
+    void SetTimeOfRadiation(std::vector<QTime > t);
 
     /**
      * Sets cancerousLinearRadiosensitivity and cancerousQuadraticRadiosensitivity to specified concentration.
@@ -195,7 +195,7 @@ public:
      * @param alpha linear radiosensitivity for cancer cells
      * @param beta quadratic radiosensitivity for cancer cells
      */
-    void SetCancerousRadiosensitivity(units::quantity<unit::per_absorbed_dose> alpha, units::quantity<unit::per_absorbed_dose_squared> beta);
+    void SetCancerousRadiosensitivity(QPerAbsorbedDose alpha, QPerAbsorbedDoseSquared beta);
 
     /**
      * Sets normalLinearRadiosensitivity and normalQuadraticRadiosensitivity to specified concentration.
@@ -203,7 +203,7 @@ public:
      * @param alpha linear radiosensitivity for normal cells
      * @param beta quadratic radiosensitivity for normal cells
      */
-    void SetNormalRadiosensitivity(units::quantity<unit::per_absorbed_dose> alpha, units::quantity<unit::per_absorbed_dose_squared> beta);
+    void SetNormalRadiosensitivity(QPerAbsorbedDose alpha, QPerAbsorbedDoseSquared beta);
 
     /**
      * Sets alpha_max OER value
@@ -233,19 +233,19 @@ public:
      * Sets K OER value
      * @param value K OER value
      */
-    void SetOerConstant(units::quantity<unit::concentration> value);
+    void SetOerConstant(QConcentration value);
 
     /**
      * Sets alpha_max radiotherapy value
      * @param value alpha_max radiotherapy value
      */
-    void SetAlphaMax(units::quantity<unit::per_absorbed_dose> value);
+    void SetAlphaMax(QPerAbsorbedDose value);
 
     /**
      * Sets beta_max radiotherapy value
      * @param value beta_max radiotherapy value
      */
-    void SetBetaMax(units::quantity<unit::per_absorbed_dose_squared> value);
+    void SetBetaMax(QPerAbsorbedDoseSquared value);
 
     /**
      * Whether to use OER

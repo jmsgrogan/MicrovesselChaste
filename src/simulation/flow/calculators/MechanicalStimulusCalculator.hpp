@@ -56,19 +56,19 @@ private:
 	/**
 	 * A small constant included to avoid singular behavior at low wall shear stress.
 	 */
-    units::quantity<unit::pressure> mTauRef;
+    QPressure mTauRef;
 
     /**
      * The level of wall shear stress expected from the actual intravascular pressure, according
      * to a parametric description of experimental data obtained in the rat mesentry (exhibiting a
      * sigmoidal increase of wall shear stress with increasing pressure).
      */
-    units::quantity<unit::pressure> mTauP;
+    QPressure mTauP;
     
     /**
      * Correction factor for TauP
      */
-    units::quantity<unit::rate> mkp;
+    QRate mkp;
 
 public:
     
@@ -92,25 +92,25 @@ public:
      * Return the set point shear stress as a function of pressure
      * @return the set point shear stress as a function of pressure
      */
-    units::quantity<unit::pressure> GetTauP();
+    QPressure GetTauP();
 
     /**
      * Return the shear stress for very low flow rates
      * @return the shear stress for very low flow rates
      */
-    units::quantity<unit::pressure> GetTauReference();
+    QPressure GetTauReference();
 
     /**
      * Set the wall shear stress reference value, a lower bound for the stimulus calculation
      * @param tauRef the lower bound wall shear stress
      */
-    void SetTauRef(units::quantity<unit::pressure> tauRef);
+    void SetTauRef(QPressure tauRef);
 
     /**
      * Set the wall shear stress set point pressure value
      * @param tauP wall shear stress set point pressure value
      */
-    void SetTauP(units::quantity<unit::pressure> tauP);
+    void SetTauP(QPressure tauP);
 
     /**
      * Do the calculation

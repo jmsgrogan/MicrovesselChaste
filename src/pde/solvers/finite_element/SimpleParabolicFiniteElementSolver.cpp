@@ -144,7 +144,7 @@ void SimpleParabolicFiniteElementSolver<DIM>::Solve()
         ReplicatableVector solution_repl(result);
 
         this->mSolution = std::vector<double>(solution_repl.GetSize());
-        this->mConcentrations = std::vector<units::quantity<unit::concentration> >(solution_repl.GetSize());
+        this->mConcentrations = std::vector<QConcentration >(solution_repl.GetSize());
         for(unsigned idx = 0; idx < solution_repl.GetSize(); idx++)
         {
             this->mSolution[idx] = solution_repl[idx];

@@ -68,7 +68,7 @@ void TumourInsertionModifier<DIM>::SetInsertionOrigin(DimensionalChastePoint<DIM
 }
 
 template<unsigned DIM>
-void TumourInsertionModifier<DIM>::SetInsertionTime(units::quantity<unit::time> insertionTime)
+void TumourInsertionModifier<DIM>::SetInsertionTime(QTime insertionTime)
 {
     mInsertionTime = insertionTime;
 }

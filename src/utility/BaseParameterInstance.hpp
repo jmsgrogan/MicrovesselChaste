@@ -91,7 +91,7 @@ class BaseParameterInstance : public std::enable_shared_from_this<BaseParameterI
     /**
      * A dimensionless parameter value.
      */
-    units::quantity<unit::dimensionless> mBaseValue;
+    QDimensionless mBaseValue;
 
 public:
 

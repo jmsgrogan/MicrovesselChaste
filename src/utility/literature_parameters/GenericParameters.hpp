@@ -48,12 +48,12 @@ struct GenericParameters
     /**
      * Capillary Radius: R
      */
-    static const std::shared_ptr<ParameterInstance<unit::length> > mpCapillaryRadius;
+    static const std::shared_ptr<ParameterInstance<QLength>  > mpCapillaryRadius;
 
     /**
      * Gas concentration at STP
      */
-    static const std::shared_ptr<ParameterInstance<unit::concentration> > mpGasConcentrationAtStp;
+    static const std::shared_ptr<ParameterInstance<QConcentration> > mpGasConcentrationAtStp;
 };
 
 #endif /*GENERICPARAMETERS_HPP_*/

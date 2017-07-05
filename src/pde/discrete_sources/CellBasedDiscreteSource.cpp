@@ -58,7 +58,7 @@ std::shared_ptr<CellBasedDiscreteSource<DIM> > CellBasedDiscreteSource<DIM>::Cre
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::concentration_flow_rate> > CellBasedDiscreteSource<DIM>::GetConstantInUValues()
+std::vector<QConcentrationFlowRate > CellBasedDiscreteSource<DIM>::GetConstantInUValues()
 {
     if(!this->mpDensityMap->GetGridCalculator())
     {
@@ -66,43 +66,44 @@ std::vector<units::quantity<unit::concentration_flow_rate> > CellBasedDiscreteSo
     }
 
     // Get the cell density map
-    std::vector<units::quantity<unit::concentration_flow_rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
+    std::vector<QConcentrationFlowRate > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::mole_per_metre_cubed_per_second);
     std::vector<double> cell_densities = this->mpDensityMap->rGetCellDensity(true);
     QLength reference_length = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetReferenceLengthScale();
+    QVolume ref_volume = reference_length*reference_length*reference_length;
     for(unsigned idx=0;idx<cell_densities.size();idx++)
     {
-        values[idx] += mCellConstantInUValue*cell_densities[idx]/units::pow<3>(reference_length);
+        values[idx] = values[idx] +  mCellConstantInUValue*cell_densities[idx]/ref_volume;
     }
     return values;
 }
 
 template<unsigned DIM>
-std::vector<units::quantity<unit::rate> > CellBasedDiscreteSource<DIM>::GetLinearInUValues()
+std::vector<QRate > CellBasedDiscreteSource<DIM>::GetLinearInUValues()
 {
     if(!this->mpDensityMap->GetGridCalculator())
     {
         EXCEPTION("A regular grid is required for this type of source");
     }
 
-    std::vector<units::quantity<unit::rate> > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
+    std::vector<QRate > values(this->mpDensityMap->GetGridCalculator()->GetGrid()->GetNumberOfCells(),
             0.0*unit::per_second);
     std::vector<double> cell_densities = this->mpDensityMap->rGetCellDensity(true);
     for(unsigned idx=0; idx<cell_densities.size(); idx++)
     {
-        values[idx] += mCellLinearInUValue * cell_densities[idx];
+        values[idx] = values[idx] + mCellLinearInUValue * cell_densities[idx];
     }
     return values;
 }
 
 template<unsigned DIM>
-void CellBasedDiscreteSource<DIM>::SetConstantInUConsumptionRatePerCell(units::quantity<unit::molar_flow_rate> value)
+void CellBasedDiscreteSource<DIM>::SetConstantInUConsumptionRatePerCell(QMolarFlowRate value)
 {
     mCellConstantInUValue = -value;
 }
 
 template<unsigned DIM>
-void CellBasedDiscreteSource<DIM>::SetLinearInUConsumptionRatePerCell(units::quantity<unit::rate> value)
+void CellBasedDiscreteSource<DIM>::SetLinearInUConsumptionRatePerCell(QRate value)
 {
     mCellLinearInUValue = -value;
 }

@@ -50,7 +50,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * This class contains common functionality for chemical property containers for all vessel network components.
  */
 template<unsigned DIM>
-class AbstractVesselNetworkComponentChemicalProperties: public boost::enable_shared_from_this<AbstractVesselNetworkComponentChemicalProperties<DIM> >,
+class AbstractVesselNetworkComponentChemicalProperties: public std::enable_shared_from_this<AbstractVesselNetworkComponentChemicalProperties<DIM> >,
     public AbstractVesselNetworkComponentProperties<DIM>
 {
 
@@ -59,7 +59,7 @@ protected:
     /**
      * Dimensionless pressure in the component
      */
-    units::quantity<unit::membrane_permeability> mPermeability;
+    QMembranePermeability mPermeability;
 
 public:
 
@@ -78,14 +78,14 @@ public:
      *
      * @return the permeability in the component
      */
-    units::quantity<unit::membrane_permeability> GetPermeability() const;
+    QMembranePermeability GetPermeability() const;
 
     /**
      * Set the permeability in the component
      *
      * @param permeability the component permeability
      */
-    virtual void SetPermeability(units::quantity<unit::membrane_permeability> permeability);
+    virtual void SetPermeability(QMembranePermeability permeability);
 
 };
 
