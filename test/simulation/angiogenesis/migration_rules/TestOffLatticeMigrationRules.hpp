@@ -65,18 +65,17 @@ public:
     void Test2dMigration() throw(Exception)
     {
         BaseUnits::Instance()->SetReferenceLengthScale(1_um);
-        BaseUnits::Instance()->SetReferenceTimeScale(3600.0*unit::seconds);
+        BaseUnits::Instance()->SetReferenceTimeScale(3600.0_s);
 
         auto p_handler =
-        		std::make_shared<OutputFileHandler>("TestOffLatticeMigrationRules/2d");
-
+                std::make_shared<OutputFileHandler>("TestOffLatticeMigrationRules/2d");
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(1000*1_um, DimensionalChastePoint<2>());
+        p_domain->AddRectangle(1000.0_um, 1000.0_um, DimensionalChastePoint<2>());
 
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        QLength spacing(40.0*unit::microns); //um
+        QLength spacing(40.0_um);
         p_grid->SetSpacing(spacing);
 
         c_vector<double, 3> dimensions;
@@ -133,14 +132,14 @@ public:
     void Test3dMigration() throw(Exception)
     {
         auto p_handler =
-        		std::make_shared<OutputFileHandler>("TestOffLatticeMigrationRules/3d");
+                std::make_shared<OutputFileHandler>("TestOffLatticeMigrationRules/3d");
 
         // Set up the grid
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(1000*1_um, DimensionalChastePoint<3>());
+        p_domain->AddCuboid(1000.0_um, 1000.0_um, 100.0_um, DimensionalChastePoint<3>());
 
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        QLength spacing(40.0*unit::microns); //um
+        QLength spacing(40.0_um);
         p_grid->SetSpacing(spacing);
 
         c_vector<double, 3> dimensions;

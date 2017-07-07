@@ -62,10 +62,11 @@ public:
         {
             output_path += "Parallel";
         }
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, (output_path));
+        auto p_output_file_handler =
+                std::make_shared<OutputFileHandler>(output_path);
 
         // Set up the vessel network
-        QLength vessel_length = 100 * 1_um;
+        QLength vessel_length = 100.0_um;
         VesselNetworkGenerator<2> generator;
         std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length,
                 DimensionalChastePoint<2>(40.0, 0.0, 0.0, 1_um));
@@ -77,7 +78,7 @@ public:
                             1.0 * vessel_length,
                             DimensionalChastePoint<2>(0.0, 0.0, 0.0));
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        p_grid->GenerateFromPart(p_domain, 10.0e-6 * unit::metres);
+        p_grid->GenerateFromPart(p_domain, 10.0_um);
 
         // Get the map
         DistanceMap<2> solver;
@@ -95,10 +96,11 @@ public:
         {
             output_path += "Parallel";
         }
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, (output_path, false));
+        auto p_output_file_handler =
+                std::make_shared<OutputFileHandler>(output_path);
 
         // Set up the vessel network
-        QLength vessel_length = 100 * 1_um;
+        QLength vessel_length = 100.0_um;
         VesselNetworkGenerator<3> generator;
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateBifurcationUnit(vessel_length,
                                                                                            DimensionalChastePoint<3>(0.0,
@@ -113,7 +115,7 @@ public:
                             2.0 * vessel_length,
                             DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        p_grid->GenerateFromPart(p_domain, 5.0e-6 * unit::metres);
+        p_grid->GenerateFromPart(p_domain, 5.0_um);
 
         // Set up and run the simulation
         DistanceMap<3> solver;

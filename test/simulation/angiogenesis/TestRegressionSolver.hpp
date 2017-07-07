@@ -114,9 +114,9 @@ public:
         std::shared_ptr<VesselNode<2> > p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, DimensionalChastePoint<2>(742, 912));
         std::shared_ptr<VesselNode<2> > p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, DimensionalChastePoint<2>(0, 0));
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
-        p_inlet_node->GetFlowProperties()->SetPressure(3393*unit::pascals);
+        p_inlet_node->GetFlowProperties()->SetPressure(3393.0*unit::pascals);
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
-        p_outlet_node->GetFlowProperties()->SetPressure(1993*unit::pascals);
+        p_outlet_node->GetFlowProperties()->SetPressure(1993.0*unit::pascals);
 
         // Set up a structural adaptation solver
         std::shared_ptr<StructuralAdaptationSolver<2> > p_adaptation_solver = StructuralAdaptationSolver<2>::Create();
@@ -131,7 +131,9 @@ public:
         p_regression_solver->SetMaximumTimeWithLowWallShearStress(3000.0*unit::seconds);
 
         // Set up a vascular tumour solver
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestRegressionSolver/TestMultiVesselRegression"));
+
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestRegressionSolver/TestMultiVesselRegression");
         SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(10, 10);
 
         MicrovesselSolver<2> vt_solver = MicrovesselSolver<2>();

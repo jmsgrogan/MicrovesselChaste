@@ -81,7 +81,7 @@ class Part
     void serialize(Archive & ar, const unsigned int version)
     {
         #if BOOST_VERSION < 105600
-            EXCEPTION("Serialization not supported for Boost < 1.56")
+            EXCEPTION("Serialization not supported for Boost < 1.56");
         #else
             ar & mFacets;
             ar & mHoleMarkers;

@@ -40,6 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include "SmartPointers.hpp"
 #include <vtkXMLPolyDataReader.h>
+#include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
 #include "BoundaryExtractor.hpp"
 #include "GeometryWriter.hpp"

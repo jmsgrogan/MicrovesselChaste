@@ -111,11 +111,13 @@ public:
         std::vector<double> solution;
         for(unsigned idx=0; idx<p_density_map->GetGridCalculator()->GetGrid()->GetNumberOfPoints(); idx++)
         {
-            solution.push_back(double(point_rates[idx].value() + point_conc_rates[idx].value()));
+            solution.push_back(double(point_rates[idx].getValue() + point_conc_rates[idx].getValue()));
         }
 
         solver.UpdateSolution(solution);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteSource/TestGridFunction", true));
+        auto p_output_file_handler =
+                std::make_shared<OutputFileHandler>("TestDiscreteSource/TestGridFunction");
+
         solver.SetFileHandler(p_output_file_handler);
         solver.Write();
     }
@@ -168,7 +170,8 @@ public:
             solution.push_back(double(point_rates[idx].value() + point_conc_rates[idx].value()));
         }
         solver.UpdateElementSolution(solution);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteSource/TestMeshFunction", false));
+        auto p_output_file_handler =
+                std::make_shared<OutputFileHandler>("TestDiscreteSource/TestMeshFunction");
         solver.SetFileHandler(p_output_file_handler);
         solver.Write();
     }
@@ -220,7 +223,8 @@ public:
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_boundary2);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteSource/TestLinearGridPde", false));
+        auto p_output_file_handler =
+                std::make_shared<OutputFileHandler>("TestDiscreteSource/TestLinearGridPde");
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();
@@ -272,7 +276,8 @@ public:
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_boundary2);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteSource/TestNonLinearGridPde", false));
+        auto p_output_file_handler =
+                std::make_shared<OutputFileHandler>("TestDiscreteSource/TestNonlinearGridPde");
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();

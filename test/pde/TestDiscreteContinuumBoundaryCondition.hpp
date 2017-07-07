@@ -103,7 +103,9 @@ public:
         solver.SetVesselNetwork(p_network);
         solver.AddBoundaryCondition(p_boundary);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteContinuumBoundaryCondition/FiniteDifference"));
+        auto p_output_file_handler =
+                std::make_shared<OutputFileHandler>("TestDiscreteContinuumBoundaryCondition/FiniteDifference");
+
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();
@@ -147,7 +149,9 @@ public:
         solver.SetPde(p_pde);
         solver.SetVesselNetwork(p_network);
         solver.AddBoundaryCondition(p_boundary);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDiscreteContinuumBoundaryCondition/FiniteElement"));
+        auto p_output_file_handler =
+                std::make_shared<OutputFileHandler>("TestDiscreteContinuumBoundaryCondition/FiniteElement");
+
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();

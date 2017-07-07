@@ -137,7 +137,9 @@ public:
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_boundary_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleNonLinearEllipticFiniteDifferenceSolver/RectangleDomain", true));
+        auto p_output_file_handler =
+                std::make_shared<OutputFileHandler>("TestSimpleNonLinearEllipticFiniteDifferenceSolver/RectangleDomain");
+
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();
@@ -188,7 +190,8 @@ public:
         solver.SetPde(p_non_linear_pde);
         solver.AddBoundaryCondition(p_outer_boundary_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleNonLinearEllipticFiniteDifferenceSolver/Box", false));
+        auto p_output_file_handler =
+                std::make_shared<OutputFileHandler>("TestSimpleNonLinearEllipticFiniteDifferenceSolver/Box");
         solver.SetFileHandler(p_output_file_handler);
         solver.SetFileName("output_nl_fd.vti");
         solver.SetWriteSolution(true);

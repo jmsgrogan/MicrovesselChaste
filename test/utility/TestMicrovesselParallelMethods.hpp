@@ -52,7 +52,7 @@ public:
     void TestSendReceiveParameterInstance()
     {
         // Send and receive a parameter instance
-        std::shared_ptr<BaseParameterInstance> p_my_parameter = std::shared_ptr<BaseParameterInstance>(new BaseParameterInstance);
+        boost::shared_ptr<BaseParameterInstance> p_my_parameter = boost::shared_ptr<BaseParameterInstance>(new BaseParameterInstance);
         p_my_parameter->SetShortDescription("Base Parameter");
         p_my_parameter->SetName("Base_" + boost::lexical_cast<std::string>(PetscTools::GetMyRank()));
         p_my_parameter->SetBibliographicInformation("J. Smith et al., (2003).");
@@ -62,7 +62,7 @@ public:
             MPI_Status status;
             ObjectCommunicator<BaseParameterInstance> communicator;
             unsigned com_tag = 456;
-            std::shared_ptr<BaseParameterInstance> p_neighour_parameter;
+            boost::shared_ptr<BaseParameterInstance> p_neighour_parameter;
 
             if (!PetscTools::AmTopMost())
             {

@@ -68,8 +68,8 @@ public:
     void TestGridFunction() throw(Exception)
     {
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler,
-                ("TestVesselBasedDiscreteSource/TestGridFunction", true));
+        auto p_output_file_handler =
+                std::make_shared<OutputFileHandler>("TestVesselBasedDiscreteSource/TestGridFunction");
 
         QLength vessel_length(100.0*unit::microns);
         QLength reference_length(1.0*unit::microns);
@@ -125,7 +125,8 @@ public:
 
     void TestMeshFunction() throw(Exception)
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestVesselBasedDiscreteSource/TestMeshFunction"));
+        auto p_output_file_handler =
+                std::make_shared<OutputFileHandler>("TestVesselBasedDiscreteSource/TestMeshFunction");
 
         QLength vessel_length(100.0*unit::microns);
         QLength reference_length(1.0*unit::microns);
@@ -182,8 +183,8 @@ public:
 
     void TestSimpleLinearEllipticFiniteDifferenceSolver() throw(Exception)
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler,
-                ("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteDifferenceSolver"));
+        auto p_output_file_handler =
+                std::make_shared<OutputFileHandler>("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteDifferenceSolver");
 
         // Set up the vessel network
         QLength vessel_length(100.0*unit::microns);
@@ -234,9 +235,8 @@ public:
 
     void TestSimpleLinearEllipticFiniteElementSolver() throw(Exception)
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler,
-                ("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteElementSolver"));
-
+        auto p_output_file_handler =
+                std::make_shared<OutputFileHandler>("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteElementSolver");
 
         // Set up the vessel network
         QLength vessel_length(100.0*unit::microns);

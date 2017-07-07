@@ -72,19 +72,19 @@ public:
 
     void TestPlaneSlowRelease() throw(Exception)
     {
-        BaseUnits::Instance()->SetReferenceLengthScale(1.0*unit::metres);
+        BaseUnits::Instance()->SetReferenceLengthScale(1.0_m);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed);
-        BaseUnits::Instance()->SetReferenceTimeScale(1.0*unit::seconds);
+        BaseUnits::Instance()->SetReferenceTimeScale(1.0_s);
 
         // Set up the mesh
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(10.0*unit::metres, 100.0*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
-        p_domain->AddAttributeToEdgeIfFound(DimensionalChastePoint<2>(5.0, 100.0, 0, 1.0*unit::metres), "Top Boundary", 1.0);
-        TS_ASSERT(p_domain->EdgeHasAttribute(DimensionalChastePoint<2>(5.0, 100.0, 0, 1.0*unit::metres), "Top Boundary"));
+        p_domain->AddRectangle(10.0_m, 100.0_m, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        p_domain->AddAttributeToEdgeIfFound(DimensionalChastePoint<2>(5.0, 100.0, 0, 1_m), "Top Boundary", 1.0);
+        TS_ASSERT(p_domain->EdgeHasAttribute(DimensionalChastePoint<2>(5.0, 100.0, 0, 1_m), "Top Boundary"));
 
         DiscreteContinuumMeshGenerator<2> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-        mesh_generator.SetMaxElementArea(4.0*(Qpow3(1.0*unit::metres)));
+        mesh_generator.SetMaxElementArea(4.0*(Qpow3(1.0_m)));
         mesh_generator.Update();
         std::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
 
@@ -97,7 +97,8 @@ public:
         p_pde->SetCorneaPelletPermeability(1.0*unit::metre_per_second);
         p_pde->SetPelletFreeDecayRate(0.0*unit::per_second);
         p_pde->SetPelletBindingConstant(1.0);
-        p_pde->SetPelletVolume(1.0*unit::metres*1.0*unit::metres*1.0*unit::metres);
+        QVolume pellet_volume = Qpow3(1_m);
+        p_pde->SetPelletVolume(pellet_volume);
 
         // Set up robin BC on top plane
         vtkSmartPointer<vtkPoints> p_boundary_points = vtkSmartPointer<vtkPoints>::New();
@@ -113,8 +114,7 @@ public:
             }
             surf_iter++;
         }
-        std::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition =
-                DiscreteContinuumBoundaryCondition<2>::Create();
+        auto p_boundary_condition = DiscreteContinuumBoundaryCondition<2>::Create();
         QConcentration boundary_concentration(1.0* unit::mole_per_metre_cubed);
         p_boundary_condition->SetValue(boundary_concentration);
         p_boundary_condition->SetType(BoundaryConditionType::EDGE);
@@ -122,14 +122,13 @@ public:
         p_boundary_condition->SetLabel("Top Boundary");
         p_boundary_condition->SetDomain(p_domain);
 
-        std::shared_ptr<CoupledLumpedSystemFiniteElementSolver<2> > p_solver =
-                CoupledLumpedSystemFiniteElementSolver<2>::Create();
+        auto p_solver = CoupledLumpedSystemFiniteElementSolver<2>::Create();
         p_solver->SetGrid(p_mesh);
         p_solver->SetPde(p_pde);
         p_solver->AddBoundaryCondition(p_boundary_condition);
 
         auto p_output_file_handler =
-        		std::make_shared<OutputFileHandler>("TestCoupledLumpedSystemFiniteElementSolver/PlaneSlowRelease");
+                std::make_shared<OutputFileHandler>("TestCoupledLumpedSystemFiniteElementSolver/PlaneSlowRelease");
 
         p_solver->SetFileHandler(p_output_file_handler);
         p_solver->SetWriteSolution(true);
@@ -149,9 +148,9 @@ public:
 
         std::vector<std::pair<std::vector<double>, double> > intermediate_solutions =
                 p_solver->rGetIntermediateSolutions();
-        double diff_nondim = vegf_diffusivity*(1.0*unit::seconds)/(1.0*unit::metres*1.0*unit::metres);
+        double diff_nondim = vegf_diffusivity*(1.0_s)/(1.0*unit::metres_squared);
         double conc_nondim = initial_vegf_concentration/(1.0*unit::mole_per_metre_cubed);
-        double perm_nondim = p_pde->GetCorneaPelletPermeability()*(1.0*unit::seconds)/(1.0*unit::metres);
+        double perm_nondim = p_pde->GetCorneaPelletPermeability()*(1.0_s/1.0_m);
 
         for(unsigned idx=0; idx<intermediate_solutions.size();idx++)
         {
@@ -162,8 +161,8 @@ public:
                 std::vector<QConcentration > solution = p_solver->GetConcentrations(p_sample_points);
                 for(unsigned jdx=0; jdx<11; jdx++)
                 {
-                    QLength x = double(jdx)*10.0*unit::metres;
-                    double x_nondim = x/(1.0*unit::metres);
+                    QLength x = double(jdx)*10.0_m;
+                    double x_nondim = x/(1.0_m);
                     double c_analytical_nondim = SolveRobinBoundary(x_nondim, time, diff_nondim, perm_nondim, conc_nondim);
                     double c_numerical_nondim = solution[jdx]/(1.0*unit::mole_per_metre_cubed);
                     TS_ASSERT_DELTA(c_analytical_nondim, c_numerical_nondim, 2.e-2)
@@ -177,15 +176,15 @@ public:
         auto p_handler =
         		std::make_shared<OutputFileHandler>("TestCoupledLumpedSystemFiniteElementSolver/Circle");
 
-        QLength reference_length(1.0 * unit::microns);
+        QLength reference_length(1.0_um);
         QTime reference_time(1.0* unit::hours);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
 
-        QLength radius(1300.0 * unit::microns);
-        QLength cylinder_radius(300.0*unit::microns);
-        QLength pellet_spacing(700.0 * unit::microns);
+        QLength radius(1300.0_um);
+        QLength cylinder_radius(300.0_um);
+        QLength pellet_spacing(700.0_um);
         QLength delta = pellet_spacing-radius+cylinder_radius;
 
         std::shared_ptr<Part<2> > p_domain = Part<2> ::Create();
