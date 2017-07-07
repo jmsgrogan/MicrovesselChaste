@@ -71,7 +71,7 @@ script:
     else
       cmake "${TRAVIS_BUILD_DIR}"/../chaste-source -DCASTXML_EXE_LOC="${TRAVIS_BUILD_DIR}"/../castxml/bin/castxml
     fi
-    cmake . %% chaste_cell_based -j 2
+    cmake . && make chaste_cell_based -j 2
 #    cmake . && make project_MicrovesselChaste -j 2 && ctest -L MicrovesselChaste -j 2
 
 # # following: https://github.com/NLeSC/root-roofit-dev/blob/travis_make-optimize_deps/.travis.yml

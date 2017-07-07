@@ -100,8 +100,13 @@ void OffLatticeMigrationRule<DIM>::CalculateDomainDistanceMap()
     p_image->SetDimensions(num_x, num_y, num_z);
 
     vtkSmartPointer<vtkImageEuclideanDistance> p_distance = vtkSmartPointer<vtkImageEuclideanDistance>::New();
+	#if VTK_MAJOR_VERSION <= 5
+    p_distance->SetInput( 0, this->mpBoundingDomain->GetVtk());
+    p_distance->SetInput( 1, p_image);
+	#else
     p_distance->SetInputData( 0, this->mpBoundingDomain->GetVtk());
     p_distance->SetInputData( 1, p_image);
+	#endif
     p_distance->Update();
     mpDomainDistanceMap = p_distance->GetOutput();
 

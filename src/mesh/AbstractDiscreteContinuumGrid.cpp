@@ -214,14 +214,22 @@ vtkSmartPointer<vtkDataSet> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM
     if(SPACE_DIM==2)
     {
         vtkSmartPointer<vtkFeatureEdges> p_edges = vtkSmartPointer<vtkFeatureEdges>::New();
-        p_edges->SetInputData(pSamplePart->GetVtk());
+		#if VTK_MAJOR_VERSION <= 5
+        	p_edges->SetInput(pSamplePart->GetVtk());
+		#else
+	        p_edges->SetInputData(pSamplePart->GetVtk());
+		#endif
         p_edges->Update();
         p_bounds = p_edges->GetOutput();
     }
     else
     {
         vtkSmartPointer<vtkDataSetSurfaceFilter> p_surf = vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
-        p_surf->SetInputData(pSamplePart->GetVtk());
+		#if VTK_MAJOR_VERSION <= 5
+        	p_surf->SetInput(pSamplePart->GetVtk());;
+		#else
+	        p_surf->SetInputData(pSamplePart->GetVtk());
+		#endif
         p_surf->Update();
         p_bounds = p_surf->GetOutput();
     }
