@@ -83,10 +83,14 @@ private:
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
-        ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
-        ar & mSegments;
-        ar & mNodes;
-        ar & mpFlowProperties;
+        #if BOOST_VERSION < 105600
+            EXCEPTION("Serialization not supported for Boost < 1.56")
+        #else
+            ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
+            ar & mSegments;
+            ar & mNodes;
+            ar & mpFlowProperties;
+        #endif
     }
 
     /**

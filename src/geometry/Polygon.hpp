@@ -77,10 +77,14 @@ class Polygon
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
-        ar & mVertices;
-        ar & mReferenceLength;
-        ar & mEdgeAttributes;
-        ar & mAttributes;
+        #if BOOST_VERSION < 105600
+            EXCEPTION("Serialization not supported for Boost < 1.56")
+        #else
+            ar & mVertices;
+            ar & mReferenceLength;
+            ar & mEdgeAttributes;
+            ar & mAttributes;
+        #endif
     }
 
     /**

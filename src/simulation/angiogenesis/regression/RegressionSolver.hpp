@@ -36,6 +36,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef REGRESSIONSOLVER_HPP_
 #define REGRESSIONSOLVER_HPP_
 
+#include <boost/version.hpp>
+#include "Exception.hpp"
 #include "ChasteSerialization.hpp"
 #include "SmartPointers.hpp"
 #include "VesselNetwork.hpp"
@@ -60,7 +62,11 @@ private:
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
-        ar & mpNetwork;
+        #if BOOST_VERSION < 105600
+            EXCEPTION("Serialization not supported for Boost < 1.56")
+        #else
+            ar & mpNetwork;
+        #endif
         ar & mReferenceTime;
     }
 

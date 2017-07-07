@@ -80,12 +80,16 @@ class Part
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
-        ar & mFacets;
-        ar & mHoleMarkers;
-        ar & mRegionMarkers;
-        ar & mReferenceLength;
-        ar & mAttributes;
-        ar & mAttributeKeys;
+        #if BOOST_VERSION < 105600
+            EXCEPTION("Serialization not supported for Boost < 1.56")
+        #else
+            ar & mFacets;
+            ar & mHoleMarkers;
+            ar & mRegionMarkers;
+            ar & mReferenceLength;
+            ar & mAttributes;
+            ar & mAttributeKeys;
+        #endif
     }
 
     /**
