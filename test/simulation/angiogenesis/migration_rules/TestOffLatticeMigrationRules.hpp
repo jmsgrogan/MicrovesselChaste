@@ -64,14 +64,16 @@ public:
 
     void Test2dMigration() throw(Exception)
     {
-        BaseUnits::Instance()->SetReferenceLengthScale(1.e-6*unit::metres);
+        BaseUnits::Instance()->SetReferenceLengthScale(1_um);
         BaseUnits::Instance()->SetReferenceTimeScale(3600.0*unit::seconds);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestOffLatticeMigrationRules/2d"));
+        auto p_handler =
+        		std::make_shared<OutputFileHandler>("TestOffLatticeMigrationRules/2d");
+
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(1000*1.e-6*unit::metres, 1000*1.e-6*unit::metres, DimensionalChastePoint<2>());
+        p_domain->AddRectangle(1000*1_um, DimensionalChastePoint<2>());
 
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         QLength spacing(40.0*unit::microns); //um
@@ -130,11 +132,12 @@ public:
 
     void Test3dMigration() throw(Exception)
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestOffLatticeMigrationRules/3d"));
+        auto p_handler =
+        		std::make_shared<OutputFileHandler>("TestOffLatticeMigrationRules/3d");
 
         // Set up the grid
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(1000*1.e-6*unit::metres, 1000*1.e-6*unit::metres, 200*1.e-6*unit::metres, DimensionalChastePoint<3>());
+        p_domain->AddCuboid(1000*1_um, DimensionalChastePoint<3>());
 
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         QLength spacing(40.0*unit::microns); //um

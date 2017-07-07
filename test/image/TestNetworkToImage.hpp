@@ -72,13 +72,13 @@ public:
         std::shared_ptr<Vessel<3> > p_vessel = Vessel<3>::Create(p_node1, p_node2);
         std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_vessel);
-        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, radius* 1.e-6 * unit::metres);
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, radius* 1_um);
         VesselNetworkPropertyManager<3>::SetNodeRadiiFromSegments(p_network);
 
         // Convert it to an image
         std::shared_ptr<NetworkToImage<3> > p_converter = NetworkToImage<3>::Create();
         p_converter->SetNetwork(p_network);
-        p_converter->SetGridSpacing(2.0* 1.e-6 * unit::metres);
+        p_converter->SetGridSpacing(2.0* 1_um);
         p_converter->SetPaddingFactors(0.0, 0.1, 0.0);
         p_converter->Update();
 
@@ -121,13 +121,13 @@ public:
         p_network->AddVessel(p_vessel4);
         p_network->AddVessel(p_vessel5);
         p_network->AddVessel(p_vessel6);
-        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, radius* 1.e-6 * unit::metres);
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, radius* 1_um);
         VesselNetworkPropertyManager<3>::SetNodeRadiiFromSegments(p_network);
 
         // Convert it to an image
         NetworkToImage<3> converter;
         converter.SetNetwork(p_network);
-        converter.SetGridSpacing(2.0* 1.e-6 * unit::metres);
+        converter.SetGridSpacing(2.0* 1_um);
         converter.SetPaddingFactors(0.0, 0.1, 0.0);
         converter.Update();
 

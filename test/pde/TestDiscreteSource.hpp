@@ -83,7 +83,7 @@ public:
 
         // Set up the discrete source
         std::vector<DimensionalChastePoint<2> > linear_consumption_points;
-        linear_consumption_points.push_back(DimensionalChastePoint<2>(50.0, 50.0, 0.0, 1.e-6 * unit::metres));
+        linear_consumption_points.push_back(DimensionalChastePoint<2>(50.0, 50.0, 0.0, 1_um));
         std::shared_ptr<DiscreteSource<2> > p_linear_point_source = DiscreteSource<2>::Create();
 
         p_linear_point_source->SetLinearInUValue(1.0 * unit::per_second);
@@ -94,10 +94,10 @@ public:
         QConcentrationFlowRate consumption_rate(2.0 * unit::mole_per_metre_cubed_per_second);
         p_const_point_source->SetConstantInUValue(consumption_rate);
         std::vector<DimensionalChastePoint<2> > constant_consumption_points;
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 25.0, 0.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 25.0, 0.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 75.0, 0.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 75.0, 0.0, 1.e-6 * unit::metres));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 25.0, 0.0, 1_um));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 25.0, 0.0, 1_um));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 75.0, 0.0, 1_um));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 75.0, 0.0, 1_um));
         p_const_point_source->SetPoints(constant_consumption_points);
         p_const_point_source->SetDensityMap(p_density_map);
 
@@ -138,7 +138,7 @@ public:
 
         // Set up the discrete source
         std::vector<DimensionalChastePoint<2> > linear_consumption_points;
-        linear_consumption_points.push_back(DimensionalChastePoint<2>(50.0, 50.0, 0.0, 1.e-6 * unit::metres));
+        linear_consumption_points.push_back(DimensionalChastePoint<2>(50.0, 50.0, 0.0, 1_um));
         std::shared_ptr<DiscreteSource<2> > p_linear_point_source = DiscreteSource<2>::Create();
         p_linear_point_source->SetLinearInUValue(1.0 * unit::per_second);
         p_linear_point_source->SetPoints(linear_consumption_points);
@@ -148,10 +148,10 @@ public:
         QConcentrationFlowRate consumption_rate(2.0 * unit::mole_per_metre_cubed_per_second);
         p_const_point_source->SetConstantInUValue(consumption_rate);
         std::vector<DimensionalChastePoint<2> > constant_consumption_points;
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 25.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 25.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 75.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 75.0, 25.0, 1.e-6 * unit::metres));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 25.0, 25.0, 1_um));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 25.0, 25.0, 1_um));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 75.0, 25.0, 1_um));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 75.0, 25.0, 1_um));
         p_const_point_source->SetPoints(constant_consumption_points);
         p_const_point_source->SetDensityMap(p_density_map);
 
@@ -247,7 +247,7 @@ public:
 
         // Set up the discrete source
         std::vector<DimensionalChastePoint<2> > linear_consumption_points;
-        linear_consumption_points.push_back(DimensionalChastePoint<2>(50.0, 50.0, 50.0, 1.e-6 * unit::metres));
+        linear_consumption_points.push_back(DimensionalChastePoint<2>(50.0, 50.0, 50.0, 1_um));
         std::shared_ptr<DiscreteSource<2> > p_linear_point_source = DiscreteSource<2>::Create();
         p_linear_point_source->SetLinearInUValue(-1.0 * unit::per_second);
         p_linear_point_source->SetPoints(linear_consumption_points);
@@ -256,10 +256,10 @@ public:
         QConcentrationFlowRate consumption_rate(2.e-4 * unit::mole_per_metre_cubed_per_second);
         p_const_point_source->SetConstantInUValue(consumption_rate);
         std::vector<DimensionalChastePoint<2> > constant_consumption_points;
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 25.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 25.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 75.0, 25.0, 1.e-6 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 75.0, 25.0, 1.e-6 * unit::metres));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 25.0, 25.0, 1_um));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 25.0, 25.0, 1_um));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 75.0, 25.0, 1_um));
+        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 75.0, 25.0, 1_um));
         p_const_point_source->SetPoints(constant_consumption_points);
 
         std::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary2 = DiscreteContinuumBoundaryCondition<2>::Create();

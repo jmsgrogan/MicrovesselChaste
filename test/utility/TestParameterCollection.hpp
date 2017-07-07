@@ -125,9 +125,9 @@ public:
             TS_ASSERT_EQUALS("My Description", ParameterCollection::Instance()->GetParameter("Base")->GetShortDescription());
 
             std::shared_ptr<ParameterInstance<QTime> > p_derived =
-                    boost::dynamic_pointer_cast<ParameterInstance<QTime> >(ParameterCollection::Instance()->GetParameter("Derived"));
+                    std::dynamic_pointer_cast<ParameterInstance<QTime> >(ParameterCollection::Instance()->GetParameter("Derived"));
             TS_ASSERT_EQUALS("My Description For Time Parameter", p_derived->GetShortDescription());
-            TS_ASSERT_DELTA(5.0, p_derived->GetValue().value(), 1.e-6);
+            TS_ASSERT_DELTA(5.0, p_derived->GetValue()/1_s, 1.e-6);
         }
     }
 

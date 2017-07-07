@@ -380,7 +380,7 @@ public:
         std::shared_ptr<VesselSegment<2> > p_nearest_segment;
         QLength distance = VesselNetworkGeometryCalculator<2>::GetNearestSegment(p_vessel_network, nodes[3], p_nearest_segment, false);
         TS_ASSERT(p_nearest_segment);
-        TS_ASSERT_DELTA(double(distance/(1.e-6*unit::metres)), 5.0, 1.e-6);
+        TS_ASSERT_DELTA(double(distance/(1_um)), 5.0, 1.e-6);
     }
 };
 

@@ -77,16 +77,16 @@ public:
     void TestRectangleDomain() throw(Exception)
     {
         // Set up the grid
-        BaseUnits::Instance()->SetReferenceLengthScale(1.0*unit::metres);
+        BaseUnits::Instance()->SetReferenceLengthScale(1.0_m);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed);
-        BaseUnits::Instance()->SetReferenceTimeScale(1.0*unit::seconds);
+        BaseUnits::Instance()->SetReferenceTimeScale(1.0_s);
 
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(1.0*unit::metres,
-                               1.0*unit::metres,
+        p_domain->AddRectangle(1.0_m,
+                               1.0_m,
                                DimensionalChastePoint<2>(0.0, 0.0, 0.0));
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        p_grid->GenerateFromPart(p_domain, 0.1*unit::metres);
+        p_grid->GenerateFromPart(p_domain, 0.1_m);
 
         // Choose the PDE
         std::shared_ptr<ParabolicDiffusionReactionPde<2> > p_pde =
@@ -119,7 +119,8 @@ public:
         solver.AddBoundaryCondition(p_boundary_condition);
         solver.UpdateSolution(initial_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleParabolicFiniteDifferenceSolver/RectangleDomain"));
+        auto p_output_file_handler =
+        		std::make_shared<OutputFileHandler>("TestSimpleParabolicFiniteDifferenceSolver/RectangleDomain");
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.SetTargetTimeIncrement(0.0005);
@@ -177,7 +178,9 @@ public:
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.UpdateSolution(initial_condition);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleParabolicFiniteDifferenceSolver/Box"));
+
+        auto p_output_file_handler =
+        		std::make_shared<OutputFileHandler>("TestSimpleParabolicFiniteDifferenceSolver/Box");
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.SetTargetTimeIncrement(0.01);

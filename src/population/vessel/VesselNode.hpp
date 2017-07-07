@@ -408,7 +408,7 @@ public:
      * @param z the z location
      * @param referenceLength the reference length scale
      */
-    void SetLocation(double x, double y, double z=0.0, QLength referenceLength = 1.e-6*unit::metres);
+    void SetLocation(double x, double y, double z=0.0, QLength referenceLength = 1_um);
 
     /**
      * Set the length scale used to dimensionalize the node location as stored in mLocation.

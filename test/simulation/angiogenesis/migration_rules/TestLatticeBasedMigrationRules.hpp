@@ -70,7 +70,7 @@ public:
         // Set the grid to move on
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         double spacing = 100.0;
-        p_grid->SetSpacing(spacing * 1.e-6*unit::metres);
+        p_grid->SetSpacing(spacing * 1_um);
         c_vector<double, 3> dimensions;
         dimensions[0] = 7; // num x
         dimensions[1] = 5; // num_y
@@ -121,7 +121,7 @@ public:
         // Set the grid to move on
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         double spacing = 100.0; //um
-        p_grid->SetSpacing(spacing* 1.e-6*unit::metres);
+        p_grid->SetSpacing(spacing* 1_um);
         c_vector<double, 3> dimensions;
         dimensions[0] = 7; // num x
         dimensions[1] = 5; // num_y
@@ -149,7 +149,7 @@ public:
         QConcentration max_vegf(0.2e-9*unit::mole_per_metre_cubed);
         for(unsigned idx=0; idx<p_grid_calc->GetGrid()->GetNumberOfPoints(); idx++)
         {
-            vegf_field[idx] = max_vegf * p_grid->GetPoint(idx).GetLocation(1.e-6*unit::metres)[0] / (float(dimensions[0]) * spacing);
+            vegf_field[idx] = max_vegf * p_grid->GetPoint(idx).GetLocation(1_um)[0] / (float(dimensions[0]) * spacing);
         }
         p_funciton_map->UpdateSolution(vegf_field);
 
@@ -196,7 +196,7 @@ public:
         // Set the grid to move on
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         double spacing = 100.0; //um
-        p_grid->SetSpacing(spacing* 1.e-6*unit::metres);
+        p_grid->SetSpacing(spacing* 1_um);
         c_vector<double, 3> dimensions;
         dimensions[0] = 7; // num x
         dimensions[1] = 5; // num_y
@@ -225,11 +225,11 @@ public:
         p_grid_calc->SetVesselNetwork(p_network);
 
         p_node1->GetFlowProperties()->SetIsInputNode(true);
-        p_node1->GetFlowProperties()->SetPressure(3000*unit::pascals);
+        p_node1->GetFlowProperties()->SetPressure(3000.0_Pa);
         p_node5->GetFlowProperties()->SetIsOutputNode(true);
-        p_node5->GetFlowProperties()->SetPressure(1000*unit::pascals);
+        p_node5->GetFlowProperties()->SetPressure(1000.0_Pa);
 
-        VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, 10.0*1.e-6*unit::metres);
+        VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, 10.0_um);
         std::vector<std::shared_ptr<VesselSegment<2> > > segments = p_network->GetVesselSegments();
         for(unsigned idx=0; idx<segments.size(); idx++)
         {
@@ -257,7 +257,8 @@ public:
         angiogenesis_solver.SetMigrationRule(p_migration_rule);
         angiogenesis_solver.SetVesselGridCalculator(p_grid_calc);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestLatticeBasedMigrationRulesWithFlow"));
+        auto p_handler =
+        		std::make_shared<OutputFileHandler>("TestLatticeBasedMigrationRulesWithFlow");
         angiogenesis_solver.SetOutputFileHandler(p_handler);
         angiogenesis_solver.Run(true);
 

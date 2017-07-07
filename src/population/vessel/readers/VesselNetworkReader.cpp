@@ -55,7 +55,7 @@ VesselNetworkReader<DIM>::VesselNetworkReader()
       mRadiusConversionFactor(1.0),
       mMergeCoincidentPoints(false),
       mTargetSegmentLength(0.0*unit::metres),
-      mReferenceLength(1.e-6 * unit::metres)
+      mReferenceLength(1_um)
 {
 
 }

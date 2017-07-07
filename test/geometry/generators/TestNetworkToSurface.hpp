@@ -75,14 +75,14 @@ public:
         std::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(p_node1, p_node2);
         std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel);
-        VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, radius* 1.e-6 * unit::metres);
+        VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, radius* 1_um);
         VesselNetworkPropertyManager<2>::SetNodeRadiiFromSegments(p_network);
 
         // Convert it to a surface
         std::shared_ptr<NetworkToSurface<2> > p_converter = NetworkToSurface<2>::Create();
         p_converter->SetVesselNetwork(p_network);
-        p_converter->SetResamplingSplineSize(10.0 * 1.e-6 * unit::metres);
-        p_converter->GetNetworkToImageTool()->SetGridSpacing(2.0 * 1.e-6 * unit::metres);
+        p_converter->SetResamplingSplineSize(10.0 * 1_um);
+        p_converter->GetNetworkToImageTool()->SetGridSpacing(2.0 * 1_um);
         p_converter->SetRemeshingTargetEdgeLength(1.0);
         p_converter->Update();
 
@@ -106,13 +106,13 @@ public:
         std::shared_ptr<Vessel<3> > p_vessel = Vessel<3>::Create(p_node1, p_node2);
         std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_vessel);
-        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, radius* 1.e-6 * unit::metres);
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, radius* 1_um);
         VesselNetworkPropertyManager<3>::SetNodeRadiiFromSegments(p_network);
 
         // Convert it to a surface
         std::shared_ptr<NetworkToSurface<3> > p_converter = NetworkToSurface<3>::Create();
         p_converter->SetVesselNetwork(p_network);
-        p_converter->GetNetworkToImageTool()->SetGridSpacing(2.0 * 1.e-6 * unit::metres);
+        p_converter->GetNetworkToImageTool()->SetGridSpacing(2.0 * 1_um);
         p_converter->GetNetworkToImageTool()->SetPaddingFactors(0.1, 0.1, 0.1);
         p_converter->SetDoSmoothing(true);
         p_converter->SetNumSmoothingIterations(30);
@@ -154,7 +154,7 @@ public:
         p_network->AddVessel(p_vessel4);
         p_network->AddVessel(p_vessel5);
         p_network->AddVessel(p_vessel6);
-        VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, radius* 1.e-6 * unit::metres);
+        VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, radius* 1_um);
         VesselNetworkPropertyManager<2>::SetNodeRadiiFromSegments(p_network);
         p_node1->GetFlowProperties()->SetIsInputNode(true);
         p_node6->GetFlowProperties()->SetIsOutputNode(true);
@@ -162,7 +162,7 @@ public:
         // Convert it to a surface
         NetworkToSurface<2> converter;
         converter.SetVesselNetwork(p_network);
-        converter.GetNetworkToImageTool()->SetGridSpacing(2.0 * 1.e-6 * unit::metres);
+        converter.GetNetworkToImageTool()->SetGridSpacing(2.0 * 1_um);
         converter.GetNetworkToImageTool()->SetPaddingFactors(0.1, 0.1, 0.0);
         converter.SetDoSmoothing(true);
         converter.Update();
@@ -200,7 +200,7 @@ public:
         p_network->AddVessel(p_vessel4);
         p_network->AddVessel(p_vessel5);
         p_network->AddVessel(p_vessel6);
-        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, radius* 1.e-6 * unit::metres);
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, radius* 1_um);
         VesselNetworkPropertyManager<3>::SetNodeRadiiFromSegments(p_network);
         p_node1->GetFlowProperties()->SetIsInputNode(true);
         p_node6->GetFlowProperties()->SetIsOutputNode(true);
@@ -208,7 +208,7 @@ public:
         // Convert it to a surface
         NetworkToSurface<3> converter;
         converter.SetVesselNetwork(p_network);
-        converter.GetNetworkToImageTool()->SetGridSpacing(2.0 * 1.e-6 * unit::metres);
+        converter.GetNetworkToImageTool()->SetGridSpacing(2.0 * 1_um);
         converter.GetNetworkToImageTool()->SetPaddingFactors(0.1, 0.1, 0.1);
         converter.SetDoSmoothing(true);
         converter.SetNumSmoothingIterations(30);
@@ -240,14 +240,14 @@ public:
         for(unsigned idx=0;idx<p_network->GetVesselSegments().size();idx++)
         {
             double rand = RandomNumberGenerator::Instance()->ranf();
-            p_network->GetVesselSegments()[idx]->SetRadius((10.0+20.0*rand)*1.e-6*unit::metres);
+            p_network->GetVesselSegments()[idx]->SetRadius((10.0+20.0*rand)*1_um);
         }
         VesselNetworkPropertyManager<2>::SetNodeRadiiFromSegments(p_network);
 
         // Convert it to a surface
         NetworkToSurface<2> converter;
         converter.SetVesselNetwork(p_network);
-        converter.GetNetworkToImageTool()->SetGridSpacing(2.0 * 1.e-6 * unit::metres);
+        converter.GetNetworkToImageTool()->SetGridSpacing(2.0 * 1_um);
         converter.GetNetworkToImageTool()->SetPaddingFactors(0.1, 0.1, 0.0);
         converter.SetDoSmoothing(true);
         converter.Update();
@@ -275,14 +275,14 @@ public:
         for(unsigned idx=0;idx<p_network->GetVesselSegments().size();idx++)
         {
             double rand = RandomNumberGenerator::Instance()->ranf();
-            p_network->GetVesselSegments()[idx]->SetRadius((10.0+20.0*rand)*1.e-6*unit::metres);
+            p_network->GetVesselSegments()[idx]->SetRadius((10.0+20.0*rand)*1_um);
         }
         VesselNetworkPropertyManager<3>::SetNodeRadiiFromSegments(p_network);
 
         // Convert it to a surface
         NetworkToSurface<3> converter;
         converter.SetVesselNetwork(p_network);
-        converter.GetNetworkToImageTool()->SetGridSpacing(2.0 * 1.e-6 * unit::metres);
+        converter.GetNetworkToImageTool()->SetGridSpacing(2.0 * 1_um);
         converter.GetNetworkToImageTool()->SetPaddingFactors(0.1, 0.1, 0.1);
         converter.SetDoSmoothing(true);
         converter.SetNumSmoothingIterations(30);

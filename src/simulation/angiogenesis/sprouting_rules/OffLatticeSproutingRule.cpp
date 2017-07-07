@@ -44,7 +44,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 OffLatticeSproutingRule<DIM>::OffLatticeSproutingRule()
     : AbstractSproutingRule<DIM>(),
-      mTipExclusionRadius(80.0 * 1.e-6 * unit::metres),
+      mTipExclusionRadius(80.0 * 1_um),
       mHalfMaxVegf(Owen11Parameters::mpVegfConventrationAtHalfMaxProbSprouting->GetValue("Owen2011SproutingRule")),
       mVegfField()
 {
@@ -52,7 +52,7 @@ OffLatticeSproutingRule<DIM>::OffLatticeSproutingRule()
     // have a similar magnitude multiply this value by a typical vessel surface area = 2*pi*R*L
     // = 2*pi*15*40
     this->mSproutingProbability = Owen11Parameters::mpMaximumSproutingRate->GetValue("Owen2011SproutingRule")*2.0*M_PI*15.0*40.0;
-    this->mTipExclusionRadius = 80.0*1.e-6*unit::metres;
+    this->mTipExclusionRadius = 80.0*1_um;
 }
 
 template<unsigned DIM>

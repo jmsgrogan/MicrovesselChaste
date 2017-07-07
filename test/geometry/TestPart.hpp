@@ -74,19 +74,19 @@ public:
         OutputFileHandler output_file_handler(output_directory);
 
         Part<3> part = Part<3>();
-        part.AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1.e-6*unit::metres));
+        part.AddRectangle(1_um));
 
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[0]->GetLocation(1.e-6*unit::metres)[0], 0.0, 1.e-6);
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[0]->GetLocation(1.e-6*unit::metres)[1], 0.0, 1.e-6);
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[1]->GetLocation(1.e-6*unit::metres)[0], 1.0, 1.e-6);
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[1]->GetLocation(1.e-6*unit::metres)[1], 0.0, 1.e-6);
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[2]->GetLocation(1.e-6*unit::metres)[0], 1.0, 1.e-6);
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[2]->GetLocation(1.e-6*unit::metres)[1], 1.0, 1.e-6);
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[3]->GetLocation(1.e-6*unit::metres)[0], 0.0, 1.e-6);
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[3]->GetLocation(1.e-6*unit::metres)[1], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[0]->GetLocation(1_um)[0], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[0]->GetLocation(1_um)[1], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[1]->GetLocation(1_um)[0], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[1]->GetLocation(1_um)[1], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[2]->GetLocation(1_um)[0], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[2]->GetLocation(1_um)[1], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[3]->GetLocation(1_um)[0], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[3]->GetLocation(1_um)[1], 1.0, 1.e-6);
 
         TS_ASSERT_DELTA(part.GetReferenceLengthScale().value(), 1.e-6, 1.e-8);
-        TS_ASSERT_THROWS_THIS(part.GetFacet(DimensionalChastePoint<3>(4.0, 0.0, 0.0, 1.e-6*unit::metres)), "No facet found at input location");
+        TS_ASSERT_THROWS_THIS(part.GetFacet(DimensionalChastePoint<3>(4.0, 0.0, 0.0, 1_um)), "No facet found at input location");
         part.SetReferenceLengthScale(10.e-6*unit::metres);
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Rectangle.vtp"));
     }
@@ -101,7 +101,7 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         Part<3> part = Part<3>();
-        part.AddCuboid(1.e-6*unit::metres, 1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1.e-6*unit::metres));
+        part.AddCuboid(1_um));
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Cuboid.vtp"));
     }
 
@@ -115,7 +115,7 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         Part<3> part = Part<3>();
-        part.AddCylinder(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1.e-6*unit::metres), 24);
+        part.AddCylinder(1_um), 24);
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Cylinder.vtp"));
     }
 
@@ -129,19 +129,19 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         std::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        p_part->AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
+        p_part->AddRectangle(1_um, DimensionalChastePoint<3>(0.0, 0.0));
         p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
 
         std::shared_ptr<Part<3> > p_part2 = Part<3>::Create();
-        p_part2->AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
+        p_part2->AddRectangle(1_um, DimensionalChastePoint<3>(0.0, 0.0));
         p_part2->AddPolygon(p_part->GetPolygons()[1], true);
 
         std::shared_ptr<Part<3> > p_part3 = Part<3>::Create();
-        p_part3->AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
+        p_part3->AddRectangle(1_um, DimensionalChastePoint<3>(0.0, 0.0));
         p_part3->AddPolygon(p_part->GetPolygons()[1], false);
 
         std::shared_ptr<Part<3> > p_part4 = Part<3>::Create();
-        p_part4->AddRectangle(1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0));
+        p_part4->AddRectangle(1_um, DimensionalChastePoint<3>(0.0, 0.0));
         p_part4->AddPolygon(p_part->GetPolygons()[1], false, p_part4->GetFacets()[0]);
 
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath().append("Composite2DPart.vtp"));
@@ -158,12 +158,12 @@ public:
 
         std::shared_ptr<Part<3> > p_part = Part<3>::Create();
         std::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
-        p_part->Extrude(p_circle, 1.e-6*unit::metres);
+        p_part->Extrude(p_circle, 1_um);
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath().append("ExtrudePart.vtp"));
 
         std::shared_ptr<Part<2> > p_part2 = Part<2>::Create();
         std::shared_ptr<Polygon<2> > p_circle2 = p_part2->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<2>(0.5, 0.5));
-        TS_ASSERT_THROWS_THIS(p_part2->Extrude(p_circle2, 1.e-6*unit::metres), "Only parts in 3D space can be extruded.");
+        TS_ASSERT_THROWS_THIS(p_part2->Extrude(p_circle2, 1_um), "Only parts in 3D space can be extruded.");
     }
 
     void TestAddParrallelVesselsLines2d() throw(Exception)
@@ -186,8 +186,8 @@ public:
         p_network->AddVessel(p_bottom_vessel);
 
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(100.0*1.e-6*unit::metres,
-                            100.0*1.e-6*unit::metres,
+        p_domain->AddRectangle(100.0*1_um,
+                            100.0*1_um,
                             DimensionalChastePoint<2>(0.0, 0.0, 0.0));
         p_domain->AddVesselNetwork(p_network);
 
@@ -217,9 +217,9 @@ public:
         p_network->AddVessel(p_bottom_vessel);
 
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(100.0*1.e-6*unit::metres,
-                            100.0*1.e-6*unit::metres,
-                            100.0*1.e-6*unit::metres,
+        p_domain->AddCuboid(100.0*1_um,
+                            100.0*1_um,
+                            100.0*1_um,
                             DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         p_domain->AddVesselNetwork(p_network);
 
@@ -241,16 +241,16 @@ public:
         std::shared_ptr<VesselNode<2> > p_end_bottom = VesselNode<2>::Create(90.0, 20.0, 0.0);
         std::shared_ptr<Vessel<2> > p_top_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_top, p_end_top));
         std::shared_ptr<Vessel<2> > p_bottom_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_bottom, p_end_bottom));
-        p_top_vessel->GetSegment(0)->SetRadius(10.0*1.e-6*unit::metres);
-        p_bottom_vessel->GetSegment(0)->SetRadius(10.0*1.e-6*unit::metres);
+        p_top_vessel->GetSegment(0)->SetRadius(10.0*1_um);
+        p_bottom_vessel->GetSegment(0)->SetRadius(10.0*1_um);
 
         std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_top_vessel);
         p_network->AddVessel(p_bottom_vessel);
 
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(100.0*1.e-6*unit::metres,
-                            100.0*1.e-6*unit::metres,
+        p_domain->AddRectangle(100.0*1_um,
+                            100.0*1_um,
                             DimensionalChastePoint<2>(0.0, 0.0, 0.0));
 
         TS_ASSERT_THROWS_THIS(p_domain->AddVesselNetwork(p_network, true), "The surface generator currently only works in 3D");
@@ -271,16 +271,16 @@ public:
         std::shared_ptr<VesselNode<3> > p_end_bottom = VesselNode<3>::Create(90.0, 20.0, 50.0);
         std::shared_ptr<Vessel<3> > p_top_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_top, p_end_top));
         std::shared_ptr<Vessel<3> > p_bottom_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_bottom, p_end_bottom));
-        p_top_vessel->GetSegment(0)->SetRadius(10.0*1.e-6*unit::metres);
-        p_bottom_vessel->GetSegment(0)->SetRadius(10.0*1.e-6*unit::metres);
+        p_top_vessel->GetSegment(0)->SetRadius(10.0*1_um);
+        p_bottom_vessel->GetSegment(0)->SetRadius(10.0*1_um);
         std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_top_vessel);
         p_network->AddVessel(p_bottom_vessel);
 
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(100.0*1.e-6*unit::metres,
-                            100.0*1.e-6*unit::metres,
-                            100.0*1.e-6*unit::metres,
+        p_domain->AddCuboid(100.0*1_um,
+                            100.0*1_um,
+                            100.0*1_um,
                             DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         p_domain->AddVesselNetwork(p_network, true);
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselSurface3d.vtp"));
@@ -295,7 +295,7 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        QLength vessel_length = 100.0 * 1.e-6 * unit::metres;
+        QLength vessel_length = 100.0 * 1_um;
         VesselNetworkGenerator<3> generator;
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
                 DimensionalChastePoint<3>(0.0, 0.0, 0.0));
@@ -323,8 +323,8 @@ public:
         p_network->AddVessel(p_bottom_vessel);
 
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(50.0*1.e-6*unit::metres,
-                            50.0*1.e-6*unit::metres,
+        p_domain->AddRectangle(50.0*1_um,
+                            50.0*1_um,
                             DimensionalChastePoint<2>(0.0, 0.0, 0.0));
         p_domain->BooleanWithNetwork(p_network);
 

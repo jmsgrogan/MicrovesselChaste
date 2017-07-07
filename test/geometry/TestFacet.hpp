@@ -55,9 +55,9 @@ public:
     void TestConstructor()
     {
         std::vector<std::shared_ptr<DimensionalChastePoint<3> > > vertices;
-        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 1.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 1.0, 0.0, 1_um));
 
         std::vector<std::shared_ptr<Polygon<3> > > polygons;
         for(unsigned idx=0; idx<3; idx++)
@@ -75,9 +75,9 @@ public:
     void TestFactoryConstructor()
     {
         std::vector<std::shared_ptr<DimensionalChastePoint<3> > > vertices;
-        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 1.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 1.0, 0.0, 1_um));
 
         std::vector<std::shared_ptr<Polygon<3> > > polygons;
         for(unsigned idx=0; idx<3; idx++)
@@ -95,9 +95,9 @@ public:
     void TestAddingPolygons()
     {
         std::vector<std::shared_ptr<DimensionalChastePoint<3> > > vertices;
-        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 1.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 1.0, 0.0, 1_um));
 
         std::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(vertices[0]);
 
@@ -120,17 +120,17 @@ public:
     void TestVtkMethods()
     {
         std::vector<std::shared_ptr<DimensionalChastePoint<3> > > vertices;
-        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 1.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 1.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 1.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 1.0, 0.0, 1_um));
         std::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(vertices);
         std::shared_ptr<Facet<3> > p_facet = Facet<3>::Create(p_polygon);
 
         DimensionalChastePoint<3> centroid = p_facet->GetCentroid();
-        TS_ASSERT_DELTA(centroid.GetLocation(1.e-6*unit::metres)[0], 0.5, 1.e-6);
-        TS_ASSERT_DELTA(centroid.GetLocation(1.e-6*unit::metres)[1], 0.5, 1.e-6);
-        TS_ASSERT_DELTA(centroid.GetLocation(1.e-6*unit::metres)[2], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(centroid.GetLocation(1_um)[0], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(centroid.GetLocation(1_um)[1], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(centroid.GetLocation(1_um)[2], 0.0, 1.e-6);
 
         c_vector<double, 3> normal = p_facet->GetNormal();
         TS_ASSERT_DELTA(normal[0], 0.0, 1.e-6);
@@ -148,16 +148,16 @@ public:
     void TestVtkMethods2d()
     {
         std::vector<std::shared_ptr<DimensionalChastePoint<2> > > vertices;
-        vertices.push_back(DimensionalChastePoint<2>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<2>::Create(1.0, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<2>::Create(1.0, 1.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<2>::Create(0.0, 1.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<2>::Create(0.0, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<2>::Create(1.0, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<2>::Create(1.0, 1.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<2>::Create(0.0, 1.0, 0.0, 1_um));
         std::shared_ptr<Polygon<2> > p_polygon = Polygon<2>::Create(vertices);
         std::shared_ptr<Facet<2> > p_facet = Facet<2>::Create(p_polygon);
 
         DimensionalChastePoint<2> centroid = p_facet->GetCentroid();
-        TS_ASSERT_DELTA(centroid.GetLocation(1.e-6*unit::metres)[0], 0.5, 1.e-6);
-        TS_ASSERT_DELTA(centroid.GetLocation(1.e-6*unit::metres)[1], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(centroid.GetLocation(1_um)[0], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(centroid.GetLocation(1_um)[1], 0.5, 1.e-6);
 
         c_vector<double, 2> normal = p_facet->GetNormal();
         TS_ASSERT_DELTA(normal[0], 0.0, 1.e-6);
@@ -171,10 +171,10 @@ public:
     void TestTransforms()
     {
         std::vector<std::shared_ptr<DimensionalChastePoint<3> > > vertices;
-        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 1.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 1.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 1.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 1.0, 0.0, 1_um));
         std::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(vertices);
         std::shared_ptr<Facet<3> > p_facet = Facet<3>::Create(p_polygon);
 
@@ -189,30 +189,30 @@ public:
     void TestGeometryAndLabelMethods()
     {
         std::vector<std::shared_ptr<DimensionalChastePoint<3> > > vertices;
-        vertices.push_back(DimensionalChastePoint<3>::Create(-0.5, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 1.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(-0.5, 1.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<3>::Create(-0.5, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 1.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(-0.5, 1.0, 0.0, 1_um));
         std::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(vertices);
         std::shared_ptr<Facet<3> > p_facet = Facet<3>::Create(p_polygon);
 
         std::vector<QLength > bbox = p_facet->GetBoundingBox();
-        TS_ASSERT_DELTA(bbox[0].value(), -0.5e-6, 1.e-8);
-        TS_ASSERT_DELTA(bbox[1].value(), 1.e-6, 1.e-8);
-        TS_ASSERT_DELTA(bbox[2].value(), 0.0, 1.e-6);
-        TS_ASSERT_DELTA(bbox[3].value(), 1.e-6, 1.e-8);
-        TS_ASSERT_DELTA(bbox[4].value(), 0.0, 1.e-6);
-        TS_ASSERT_DELTA(bbox[5].value(), 0.0, 1.e-6);
+        TS_ASSERT_DELTA(double(bbox[0]/1_um), -0.5, 1.e-6);
+        TS_ASSERT_DELTA(double(bbox[1]/1_um), 1.0, 1.e-6);
+        TS_ASSERT_DELTA(double(bbox[2]/1_um), 0.0, 1.e-6);
+        TS_ASSERT_DELTA(double(bbox[3]/1_um), 1.0, 1.e-6);
+        TS_ASSERT_DELTA(double(bbox[4]/1_um), 0.0, 1.e-6);
+        TS_ASSERT_DELTA(double(bbox[5]/1_um), 0.0, 1.e-6);
 
-        TS_ASSERT_DELTA(p_facet->GetDistance(DimensionalChastePoint<3>(0.5, 0.5, 0.5,1.e-6*unit::metres )).value(), 0.5e-6, 1.e-8);
+        TS_ASSERT_DELTA(double(p_facet->GetDistance(DimensionalChastePoint<3>(0.5, 0.5, 0.5,1_um ))/1_um), 0.5, 1.e-6);
 
         TS_ASSERT_DELTA(p_facet->GetPlane()->GetNormal()[0], 0.0, 1.e-6);
         TS_ASSERT_DELTA(p_facet->GetPlane()->GetNormal()[1], 0.0, 1.e-6);
         TS_ASSERT_DELTA(abs(p_facet->GetPlane()->GetNormal()[2]), 1.0, 1.e-6);
 
         std::vector<std::shared_ptr<DimensionalChastePoint<3> > > short_vertices;
-        short_vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
-        short_vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1.e-6*unit::metres));
+        short_vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1_um));
+        short_vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1_um));
         std::shared_ptr<Polygon<3> > p_short_polygon = Polygon<3>::Create(short_vertices);
         std::shared_ptr<Facet<3> > p_short_facet = Facet<3>::Create(p_short_polygon);
         TS_ASSERT_THROWS_THIS(p_short_facet->GetNormal(), "At least 3 vertices are required to generate a normal.");
@@ -221,20 +221,20 @@ public:
     void Test2DMethods()
     {
         std::vector<std::shared_ptr<DimensionalChastePoint<2> > > vertices;
-        vertices.push_back(DimensionalChastePoint<2>::Create(-0.5, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<2>::Create(1.0, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<2>::Create(1.0, 1.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<2>::Create(-0.5, 1.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<2>::Create(-0.5, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<2>::Create(1.0, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<2>::Create(1.0, 1.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<2>::Create(-0.5, 1.0, 0.0, 1_um));
         std::shared_ptr<Polygon<2> > p_polygon = Polygon<2>::Create(vertices);
         std::shared_ptr<Facet<2> > p_facet = Facet<2>::Create(p_polygon);
 
         std::vector<QLength > bbox = p_facet->GetBoundingBox();
-        TS_ASSERT_DELTA(bbox[0].value(), -0.5e-6, 1.e-8);
-        TS_ASSERT_DELTA(bbox[1].value(), 1.e-6, 1.e-8);
-        TS_ASSERT_DELTA(bbox[2].value(), 0.0, 1.e-6);
-        TS_ASSERT_DELTA(bbox[3].value(), 1.e-6, 1.e-8);
+        TS_ASSERT_DELTA(double(bbox[0]/1_um), -0.5, 1.e-6);
+        TS_ASSERT_DELTA(double(bbox[1]/1_um), 1.0, 1.e-6);
+        TS_ASSERT_DELTA(double(bbox[2]/1_um), 0.0, 1.e-6);
+        TS_ASSERT_DELTA(double(bbox[3]/1_um), 1.0, 1.e-6);
 
-        TS_ASSERT_DELTA(p_facet->GetDistance(DimensionalChastePoint<2>(1.5, 0.5, 0.0,1.e-6*unit::metres )).value(), 0.0e-6, 1.e-8);
+        TS_ASSERT_DELTA(double(p_facet->GetDistance(DimensionalChastePoint<2>(1.5, 0.5, 0.0, 1_um))/1_um), 0.0, 1.e-6);
     }
 
     void TestArchiving() throw (Exception)
@@ -245,9 +245,9 @@ public:
         std::string archive_filename = ArchiveLocationInfo::GetProcessUniqueFilePath("Facet.arch");
 
         std::vector<std::shared_ptr<DimensionalChastePoint<3> > > vertices;
-        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1.e-6*unit::metres));
-        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 1.0, 0.0, 1.e-6*unit::metres));
+        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(1.0, 0.0, 0.0, 1_um));
+        vertices.push_back(DimensionalChastePoint<3>::Create(0.0, 1.0, 0.0, 1_um));
         std::shared_ptr<Facet<3> > p_facet1 = Facet<3>::Create(Polygon<3>::Create(vertices));
 
         // Save archive

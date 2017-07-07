@@ -431,12 +431,12 @@ public:
     void TestFlowThroughHexagonalNetwork() throw (Exception)
     {
         // Specify the network dimensions
-        QLength vessel_length = 80.0*1.e-6*unit::metres;
+        QLength vessel_length = 80.0*1_um;
 
         // Generate the network
         VesselNetworkGenerator<2> vascular_network_generator;
         std::shared_ptr<VesselNetwork<2> > vascular_network = vascular_network_generator.GenerateHexagonalNetwork(
-                1000*1.e-6*unit::metres, 1000*1.e-6*unit::metres, vessel_length);
+                1000*1_um, vessel_length);
 
         // Make some nodes
         std::vector<NodePtr2> nodes;
@@ -449,7 +449,7 @@ public:
         VesselNetworkPropertyManager<2>::SetSegmentProperties(vascular_network, p_segment1);
 
         std::pair<DimensionalChastePoint<2>, DimensionalChastePoint<2> > network_extents = VesselNetworkGeometryCalculator<2>::GetExtents(vascular_network);
-        double y_middle = (network_extents.first.GetLocation(1.e-6*unit::metres)[1] + network_extents.second.GetLocation(1.e-6*unit::metres)[1]) / 2.0;
+        double y_middle = (network_extents.first.GetLocation(1_um)[1]) / 2.0;
 
         std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
         std::vector<std::shared_ptr<Vessel<2> > > vessels = vascular_network->GetVessels();
@@ -457,7 +457,7 @@ public:
         {
             if ((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
             {
-                if ((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1.e-6*unit::metres)[1] > y_middle)
+                if ((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1_um)[1] > y_middle)
                 {
                     (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
                     (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(3393 * unit::pascals);
@@ -465,7 +465,7 @@ public:
             }
             if ((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
             {
-                if ((*vessel_iterator)->GetEndNode()->rGetLocation().GetLocation(1.e-6*unit::metres)[1] > y_middle)
+                if ((*vessel_iterator)->GetEndNode()->rGetLocation().GetLocation(1_um)[1] > y_middle)
                 {
                     (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
                     (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3393 * unit::pascals);
@@ -473,7 +473,7 @@ public:
             }
             if ((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
             {
-                if ((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1.e-6*unit::metres)[1] <= y_middle)
+                if ((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1_um)[1] <= y_middle)
                 {
                     (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsOutputNode(true);
                     (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(1993 * unit::pascals);
@@ -481,7 +481,7 @@ public:
             }
             if ((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
             {
-                if ((*vessel_iterator)->GetEndNode()->rGetLocation().GetLocation(1.e-6*unit::metres)[1] <= y_middle)
+                if ((*vessel_iterator)->GetEndNode()->rGetLocation().GetLocation(1_um)[1] <= y_middle)
                 {
                     (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
                     (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(1993 * unit::pascals);
@@ -522,12 +522,12 @@ public:
 
         for(unsigned idx=0; idx<p_network->GetNodes().size(); idx++)
         {
-            if(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1.e-6*unit::metres)[1]<1.e-6 && p_network->GetNodes()[idx]->GetNumberOfSegments()==1)
+            if(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1_um)[1]<1.e-6 && p_network->GetNodes()[idx]->GetNumberOfSegments()==1)
             {
                 p_network->GetNodes()[idx]->GetFlowProperties()->SetIsInputNode(true);
                 p_network->GetNodes()[idx]->GetFlowProperties()->SetPressure(5000.0 * unit::pascals);
             }
-            else if(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1.e-6*unit::metres)[1]>1850.0  && p_network->GetNodes()[idx]->GetNumberOfSegments()==1)
+            else if(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1_um)[1]>1850.0  && p_network->GetNodes()[idx]->GetNumberOfSegments()==1)
             {
                 p_network->GetNodes()[idx]->GetFlowProperties()->SetIsOutputNode(true);
                 p_network->GetNodes()[idx]->GetFlowProperties()->SetPressure(3000.0 * unit::pascals);
@@ -582,7 +582,7 @@ public:
         p_network->AddVessel(p_vessel5);
         p_network->AddVessel(p_vessel6);
         p_network->AddVessel(p_vessel7);
-        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, 10.0 * 1.e-6 * unit::metres);
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, 10.0 * 1_um);
         std::vector<std::shared_ptr<VesselSegment<3> > > segments = p_network->GetVesselSegments();
         for(unsigned idx=0; idx<segments.size(); idx++)
         {
@@ -622,17 +622,17 @@ public:
         std::shared_ptr<Vessel<3> > p_vessel1 = Vessel<3>::Create(bottom_nodes);
         std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_vessel1);
-        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, 10.0 * 1.e-6 * unit::metres);
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, 10.0 * 1_um);
 
         for(unsigned idx=1; idx<4; idx+=1)
         {
-            DimensionalChastePoint<3> loc1 = DimensionalChastePoint<3>(double(idx)*10, 10.0, 0.0, 1.e-6 * unit::metres);
-            DimensionalChastePoint<3> loc2 = DimensionalChastePoint<3>(double(idx)*10, 20.0, 0.0, 1.e-6 * unit::metres);
+            DimensionalChastePoint<3> loc1 = DimensionalChastePoint<3>(double(idx)*10, 10.0, 0.0, 1_um);
+            DimensionalChastePoint<3> loc2 = DimensionalChastePoint<3>(double(idx)*10, 20.0, 0.0, 1_um);
             p_network->FormSprout(VesselNode<3>::Create(loc1), loc2);
         }
 
-        DimensionalChastePoint<3> loc1 = DimensionalChastePoint<3>(10, 20.0, 0.0, 1.e-6 * unit::metres);
-        DimensionalChastePoint<3> loc2 = DimensionalChastePoint<3>(20, 20.0, 0.0, 1.e-6 * unit::metres);
+        DimensionalChastePoint<3> loc1 = DimensionalChastePoint<3>(10, 20.0, 0.0, 1_um);
+        DimensionalChastePoint<3> loc2 = DimensionalChastePoint<3>(20, 20.0, 0.0, 1_um);
         p_network->FormSprout(VesselNode<3>::Create(loc1), loc2);
         p_network->MergeCoincidentNodes();
         p_network->UpdateSegments();

@@ -1,0 +1,5 @@
+#ifndef DiscreteContinuumMeshActorGenerator2_hpp__pyplusplus_wrapper
+#define DiscreteContinuumMeshActorGenerator2_hpp__pyplusplus_wrapper
+namespace py = pybind11;
+void register_DiscreteContinuumMeshActorGenerator2_class(py::module &m);
+#endif // DiscreteContinuumMeshActorGenerator2_hpp__pyplusplus_wrapper

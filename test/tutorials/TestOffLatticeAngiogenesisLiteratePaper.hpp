@@ -121,7 +121,8 @@ public:
         /*
          * Set up output file management.
          */
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestOffLatticeAngiogenesisLiteratePaper"));
+        auto p_handler =
+        		std::make_shared<OutputFileHandler>("TestOffLatticeAngiogenesisLiteratePaper");
         RandomNumberGenerator::Instance()->Reseed(12345);
         /*
          * This component uses explicit dimensions for all quantities, but interfaces with solvers which take
@@ -201,7 +202,7 @@ public:
          */
         DiscreteContinuumMeshGenerator<3> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-//        mesh_generator.SetMaxElementArea(100000.0*(Qpow3(1.e-6*unit::metres)));
+//        mesh_generator.SetMaxElementArea(100000.0*(Qpow3(1_um)));
         mesh_generator.Update();
         std::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = mesh_generator.GetMesh();
         p_scene->GetPartActorGenerator()->SetVolumeOpacity(0.0);

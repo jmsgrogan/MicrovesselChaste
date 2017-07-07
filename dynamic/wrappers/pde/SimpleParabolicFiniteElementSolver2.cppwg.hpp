@@ -1,0 +1,5 @@
+#ifndef SimpleParabolicFiniteElementSolver2_hpp__pyplusplus_wrapper
+#define SimpleParabolicFiniteElementSolver2_hpp__pyplusplus_wrapper
+namespace py = pybind11;
+void register_SimpleParabolicFiniteElementSolver2_class(py::module &m);
+#endif // SimpleParabolicFiniteElementSolver2_hpp__pyplusplus_wrapper

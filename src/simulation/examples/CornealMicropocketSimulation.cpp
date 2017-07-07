@@ -1123,7 +1123,7 @@ void CornealMicropocketSimulation<DIM>::Run()
     Timer::PrintAndReset("Starting Simulation");
 
     // Initialize length scales
-    QLength reference_length = 1.e-6*unit::metres;
+    QLength reference_length = 1_um;
     QTime reference_time = 3600.0*unit::seconds;
     QConcentration reference_concentration = 1.e-6*unit::mole_per_metre_cubed;
     BaseUnits::Instance()->SetReferenceLengthScale(reference_length);

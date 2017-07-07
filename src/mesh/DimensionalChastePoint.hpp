@@ -106,7 +106,7 @@ public:
      * @param z z position of vertex
      * @param referenceLength the reference length
      */
-    DimensionalChastePoint(double x= 0.0, double y = 0.0, double z = 0.0, QLength referenceLength = 1.e-6*unit::metres);
+    DimensionalChastePoint(double x= 0.0, double y = 0.0, double z = 0.0, QLength referenceLength = 1_um);
 
     /**
      * Constructor

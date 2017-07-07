@@ -65,10 +65,10 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, (output_path));
 
         // Set up the vessel network
-        QLength vessel_length = 100 * 1.e-6 * unit::metres;
+        QLength vessel_length = 100 * 1_um;
         VesselNetworkGenerator<2> generator;
         std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length,
-                DimensionalChastePoint<2>(40.0, 0.0, 0.0, 1.e-6 * unit::metres));
+                DimensionalChastePoint<2>(40.0, 0.0, 0.0, 1_um));
         p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"/network.vtp");
 
         // Set up the grid
@@ -98,12 +98,12 @@ public:
         MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, (output_path, false));
 
         // Set up the vessel network
-        QLength vessel_length = 100 * 1.e-6 * unit::metres;
+        QLength vessel_length = 100 * 1_um;
         VesselNetworkGenerator<3> generator;
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateBifurcationUnit(vessel_length,
                                                                                            DimensionalChastePoint<3>(0.0,
-                                                                                                   vessel_length/(1.e-6*unit::metres),
-                                                                                                   vessel_length/(1.e-6*unit::metres)));
+                                                                                                   vessel_length/(1_um),
+                                                                                                   vessel_length/(1_um)));
         p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"/network.vtp");
 
         // Set up the tissue domain

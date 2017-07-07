@@ -166,7 +166,7 @@ public:
                             DimensionalChastePoint<3>(0.0, 0.0, 0.0));
 
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        p_grid->GenerateFromPart(p_domain, 0.5*1.e-6*unit::metres);
+        p_grid->GenerateFromPart(p_domain, 0.5*1_um);
 
         // Choose the PDE
         std::shared_ptr<MichaelisMentenSteadyStateDiffusionReactionPde<3> > p_non_linear_pde = MichaelisMentenSteadyStateDiffusionReactionPde<3>::Create();

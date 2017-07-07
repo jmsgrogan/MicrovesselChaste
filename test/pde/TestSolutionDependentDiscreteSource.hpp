@@ -63,10 +63,10 @@ public:
     {
         // Solve two problems on the same grid
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        QLength domain_length(100.0*unit::microns);
+        QLength domain_length(100.0_um);
         p_domain->AddCuboid(domain_length, domain_length, domain_length, DimensionalChastePoint<3>());
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        QLength spacing(10.0*unit::microns);
+        QLength spacing(10.0_um);
         p_grid->GenerateFromPart(p_domain, spacing);
 
         // Choose the PDE
@@ -84,7 +84,9 @@ public:
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde1);
         solver.AddBoundaryCondition(p_boundary);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSolutionDependentDiscreteSource/TestSimpleLinearEllipticFiniteDifferenceSolver"));
+
+        auto p_output_file_handler =
+        		std::make_shared<OutputFileHandler>("TestSolutionDependentDiscreteSource/TestSimpleLinearEllipticFiniteDifferenceSolver");
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();

@@ -48,7 +48,7 @@ public:
 
     void TestAllParameters()
     {
-        TS_ASSERT_DELTA(GenericParameters::mpCapillaryRadius->GetValue("TEST").value(), 5e-06, 1.e-8);
+        TS_ASSERT_DELTA(GenericParameters::mpCapillaryRadius->GetValue("TEST")/1_um, 5.0, 1.e-8);
     }
 };
 

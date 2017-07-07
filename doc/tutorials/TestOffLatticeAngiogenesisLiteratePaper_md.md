@@ -203,7 +203,7 @@ Now make a finite element mesh on the cornea.
 ```cpp
         DiscreteContinuumMeshGenerator<3> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-//        mesh_generator.SetMaxElementArea(100000.0*(Qpow3(1.e-6*unit::metres)));
+//        mesh_generator.SetMaxElementArea(100000.0*(Qpow3(1_um)));
         mesh_generator.Update();
         boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = mesh_generator.GetMesh();
         p_scene->GetPartActorGenerator()->SetVolumeOpacity(0.0);
@@ -413,7 +413,7 @@ public:
         p_vegf_domain->Write(p_handler->GetOutputDirectoryFullPath()+"initial_vegf_domain.vtp");
         DiscreteContinuumMeshGenerator<3> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-//        mesh_generator.SetMaxElementArea(100000.0*(Qpow3(1.e-6*unit::metres)));
+//        mesh_generator.SetMaxElementArea(100000.0*(Qpow3(1_um)));
         mesh_generator.Update();
         boost::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = mesh_generator.GetMesh();
         p_scene->GetPartActorGenerator()->SetVolumeOpacity(0.0);

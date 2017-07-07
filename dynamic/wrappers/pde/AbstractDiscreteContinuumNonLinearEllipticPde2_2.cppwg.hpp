@@ -1,0 +1,5 @@
+#ifndef AbstractDiscreteContinuumNonLinearEllipticPde2_2_hpp__pyplusplus_wrapper
+#define AbstractDiscreteContinuumNonLinearEllipticPde2_2_hpp__pyplusplus_wrapper
+namespace py = pybind11;
+void register_AbstractDiscreteContinuumNonLinearEllipticPde2_2_class(py::module &m);
+#endif // AbstractDiscreteContinuumNonLinearEllipticPde2_2_hpp__pyplusplus_wrapper

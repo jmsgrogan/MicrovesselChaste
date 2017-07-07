@@ -62,7 +62,7 @@ BaseUnits* BaseUnits::Instance()
 
 BaseUnits::BaseUnits()
     : mTime(60.0 * unit::seconds),
-      mLength(1.e-6 * unit::metres),
+      mLength(1_um),
       mConcentration(1.e-6 * unit::mole_per_metre_cubed)
 {
     // Make sure there's only one instance - enforces correct serialization

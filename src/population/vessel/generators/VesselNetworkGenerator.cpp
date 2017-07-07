@@ -45,7 +45,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 template<unsigned DIM>
 VesselNetworkGenerator<DIM>::VesselNetworkGenerator() :
-    mReferenceLength(1.e-6 * unit::metres)
+    mReferenceLength(1_um)
 {
 }
 
@@ -271,7 +271,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParral
         // Pick locations randomly from the kernels
         for(unsigned jdx=0;jdx<1.e9;jdx++)
         {
-            QLength deviation = 100.0* 1.e-6*unit::metres;
+            QLength deviation = 100.0* 1_um;
             QLength location_x = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, deviation/mReferenceLength)*mReferenceLength;
             QLength location_y = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, deviation/mReferenceLength)*mReferenceLength;
             unsigned kernel_index = RandomNumberGenerator::Instance()->randMod(num_kernels);

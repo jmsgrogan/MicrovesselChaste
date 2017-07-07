@@ -74,7 +74,7 @@ public:
         std::shared_ptr<ImageToMesh<2> > p_image_mesher = ImageToMesh<2>::Create();
         TS_ASSERT_THROWS_THIS(p_image_mesher->GetMesh(), "No mesh set. Did you run 'Update()' ?");
         p_image_mesher->SetInput(reader.GetImage());
-        p_image_mesher->SetElementSize(5.e6*Qpow3(1.e-6*unit::metres));
+        p_image_mesher->SetElementSize(5.e6*Qpow3(1_um));
         p_image_mesher->Update();
 
         VtkMeshWriter<2, 2> mesh_writer("TestImageToMesh", "Image2d", false);

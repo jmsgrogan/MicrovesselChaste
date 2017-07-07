@@ -59,13 +59,13 @@ public:
         DimensionalChastePoint<3> centre(0.5, 0.5, 0.0);
 
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre, 14.0);
-        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, 0.05*1.e-6*unit::metres);
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, 0.05*1_um);
 
         // Set up the grid
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(1.0e-6*unit::metres, 1.0e-6*unit::metres, 2.0e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        p_grid->GenerateFromPart(p_domain, 0.1*1.e-6*unit::metres);
+        p_grid->GenerateFromPart(p_domain, 0.1*1_um);
 
         // Choose the PDE
         std::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
@@ -79,7 +79,8 @@ public:
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleLinearEllipticGreensFunctionSolver/TestSingleVessel3d", false));
+        auto p_output_file_handler =
+        		std::make_shared<OutputFileHandler>("TestSimpleLinearEllipticGreensFunctionSolver/TestSingleVessel3d");
         solver.SetFileHandler(p_output_file_handler);
         solver.Setup();
         solver.SetWriteSolution(true);

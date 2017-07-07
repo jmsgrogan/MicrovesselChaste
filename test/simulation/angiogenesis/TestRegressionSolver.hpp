@@ -100,9 +100,9 @@ public:
 
         // Generate the network
         VesselNetworkGenerator<2> p_network_generator;
-        std::shared_ptr<VesselNetwork<2> > p_network = p_network_generator.GenerateHexagonalNetwork(1000*1.e-6*unit::metres,
-                                                                                                      1000*1.e-6*unit::metres,
-                                                                                                      vessel_length*1.e-6*unit::metres);
+        std::shared_ptr<VesselNetwork<2> > p_network = p_network_generator.GenerateHexagonalNetwork(1000*1_um,
+                                                                                                      1000*1_um,
+                                                                                                      vessel_length*1_um);
 
         // Make a dummy segment to set properties on
         std::shared_ptr<VesselSegment<2> > p_segment1 = VesselSegment<2>::Create(VesselNode<2>::Create(0.0, 0.0),

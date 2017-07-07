@@ -1,0 +1,5 @@
+#ifndef CoupledVegfPelletDiffusionReactionPde3_3_hpp__pyplusplus_wrapper
+#define CoupledVegfPelletDiffusionReactionPde3_3_hpp__pyplusplus_wrapper
+namespace py = pybind11;
+void register_CoupledVegfPelletDiffusionReactionPde3_3_class(py::module &m);
+#endif // CoupledVegfPelletDiffusionReactionPde3_3_hpp__pyplusplus_wrapper

@@ -40,6 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <map>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
+#include <vtkPlane.h>
 #include <boost/serialization/vector.hpp>
 #include "ChasteSerialization.hpp"
 #include "SmartPointers.hpp"
@@ -52,7 +53,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * Forward declare VTK members
  */
 class vtkPoints;
-class vtkPlane;
 
 /**
  * A collection of planar polygons

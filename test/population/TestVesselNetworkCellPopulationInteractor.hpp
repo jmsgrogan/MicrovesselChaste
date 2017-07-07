@@ -77,7 +77,7 @@ public:
 
         // Create the vessel network: single vessel in middle of domain
         VesselNetworkGenerator<3> network_generator;
-        std::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateSingleVessel(20*1.e-6*unit::metres,
+        std::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateSingleVessel(20.0*1_um,
                                                                                                 DimensionalChastePoint<3>(10.0, 10.0, 0.0));
 
         // Write the initial network to file
@@ -106,8 +106,8 @@ public:
 
         VesselNetworkCellPopulationInteractor<3> interactor = VesselNetworkCellPopulationInteractor<3>();
         interactor.SetVesselNetwork(p_network);
-        interactor.PartitionNetworkOverCells(cell_population, 1.e-6*unit::metres);
-        interactor.LabelVesselsInCellPopulation(cell_population, 1.e-6*unit::metres, p_EC_state, p_EC_state);
+        interactor.PartitionNetworkOverCells(cell_population, 1_um);
+        interactor.LabelVesselsInCellPopulation(cell_population, 1_um, p_EC_state, p_EC_state);
 
         TS_ASSERT_EQUALS(p_network->GetNumberOfNodes(), 21u);
         TS_ASSERT_EQUALS(p_network->GetNumberOfVessels(), 1u);

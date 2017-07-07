@@ -75,7 +75,7 @@ public:
         double converted_pressure = pressure * (760.0 / (101325.0));
         double Tau_P = (100.0 - 86.0 * exp(-5000.0*pow(log10(log10(converted_pressure)), 5.4)));
         double expected_mechanical_stimulus = log10(10.0*wall_shear_stress + 1.e-5) - 0.5 * log10(Tau_P);
-        TS_ASSERT_DELTA(p_vessel->GetSegments()[0]->GetFlowProperties()->GetGrowthStimulus().value(), expected_mechanical_stimulus, 1e-3);
+        TS_ASSERT_DELTA(p_vessel->GetSegments()[0]->GetFlowProperties()->GetGrowthStimulus()*1_s, expected_mechanical_stimulus, 1e-3);
     }
 
     void TestMechanicalStimulusVsPressure()

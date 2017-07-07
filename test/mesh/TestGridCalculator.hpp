@@ -328,7 +328,7 @@ public:
         dimensions[1] = 10;
         dimensions[2] = 10;
         p_grid->SetDimensions(dimensions);
-        p_grid->SetSpacing(1.0 * 1.e-6 * unit::metres);
+        p_grid->SetSpacing(1.0 * 1_um);
 
         // Set up cells
         std::vector<Node<3>*> nodes;
@@ -355,7 +355,7 @@ public:
         // Get a point-cell map
         std::shared_ptr<GridCalculator<3> > p_grid_calc = GridCalculator<3>::Create();
         p_grid_calc->SetGrid(p_grid);
-        p_grid_calc->SetCellPopulation(cell_population, 1.e-6 * unit::metres, BaseUnits::Instance()->GetReferenceConcentrationScale());
+        p_grid_calc->SetCellPopulation(cell_population, 1_um, BaseUnits::Instance()->GetReferenceConcentrationScale());
         std::vector<std::vector<CellPtr> > map = p_grid_calc->rGetCellMap();
 
         // Make sure all the cells are accounted for

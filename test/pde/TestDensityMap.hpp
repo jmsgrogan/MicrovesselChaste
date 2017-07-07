@@ -95,7 +95,7 @@ public:
         QLength vessel_length = 0.5 * unit::metres;
         VesselNetworkGenerator<2> generator;
         std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(
-                vessel_length, DimensionalChastePoint<2>(0.25, 0.25, 0.0, 1.0*unit::metres));
+                vessel_length, DimensionalChastePoint<2>(0.25, 0.25, 0.0, 1.0_m));
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
@@ -185,13 +185,14 @@ public:
         {
             output_path += "Parallel";
         }
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, (output_path, true));
+        auto p_output_file_handler =
+        		std::make_shared<OutputFileHandler>(output_path);
 
         // Set up the vessel network
-        QLength vessel_length = 100 * 1.e-6 * unit::metres;
+        QLength vessel_length = 100.0 * 1_um;
         VesselNetworkGenerator<3> generator;
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateBifurcationUnit(vessel_length,
-                                                                                           DimensionalChastePoint<3>(0.0, vessel_length/(1.e-6*unit::metres), 0.0));
+                                                                                           DimensionalChastePoint<3>(0.0, vessel_length/(1_um), 0.0));
         p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"/network.vtp");
 
         // Set up the tissue domain
@@ -214,16 +215,17 @@ public:
 
     void TestBifurcationNetwork2d() throw(Exception)
     {
-        BaseUnits::Instance()->SetReferenceLengthScale(1.e-6 * unit::metres);
+        BaseUnits::Instance()->SetReferenceLengthScale(1_um);
         std::string output_path = "TestDensityMap/Bifurcation2d";
         if(PetscTools::IsParallel())
         {
             output_path += "Parallel";
         }
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, (output_path, true));
+        auto p_output_file_handler =
+        		std::make_shared<OutputFileHandler>(output_path);
 
         // Set up the vessel network
-        QLength vessel_length = 100 * 1.e-6 * unit::metres;
+        QLength vessel_length = 100.0 * 1_um;
         VesselNetworkGenerator<2> generator;
         std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateBifurcationUnit(vessel_length,
                                                                                            DimensionalChastePoint<2>(0.0, 0.0, 0.0));
@@ -250,10 +252,13 @@ public:
     void TestConservationOverBoxSize() throw(Exception)
     {
         EXIT_IF_PARALLEL;
-        BaseUnits::Instance()->SetReferenceLengthScale(1.e-6 * unit::metres);
+        BaseUnits::Instance()->SetReferenceLengthScale(1_um);
         // Set up the vessel network
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestDensityMap/TestConservationOverBoxSize", false));
-        QLength vessel_length = 100 * 1.e-6 * unit::metres;
+
+        auto p_output_file_handler =
+        		std::make_shared<OutputFileHandler>("TestDensityMap/TestConservationOverBoxSize", false);
+
+        QLength vessel_length = 100.0 * 1_um;
         VesselNetworkGenerator<2> generator;
         std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateBifurcationUnit(vessel_length,
                                                                                            DimensionalChastePoint<2>(0.0, 0.0, 0.0));
@@ -268,7 +273,7 @@ public:
         {
             // Set up the tissue domain
             std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-            p_grid->GenerateFromPart(p_domain, grid_size*1.e-6* unit::metres);
+            p_grid->GenerateFromPart(p_domain, grid_size*1_um);
 
             // Get the map
             DensityMap<2> calculator;

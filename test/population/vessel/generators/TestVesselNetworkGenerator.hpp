@@ -71,7 +71,7 @@ public:
     void TestGenerateAndWriteHexagonalNetwork() throw (Exception)
     {
         // Specify the network dimensions
-        QLength vessel_length = 5.0* 1.e-6 * unit::metres;
+        QLength vessel_length = 5.0* 1_um;
 
         // Generate the network
         VesselNetworkGenerator<2> vascular_network_generator;
@@ -90,7 +90,7 @@ public:
     void TestGenerate3dHexagonalNetwork() throw (Exception)
     {
         // Specify the network dimensions
-        QLength vessel_length = 40.0* 1.e-6 * unit::metres;
+        QLength vessel_length = 40.0* 1_um;
 
         // Generate the network
         VesselNetworkGenerator<3> vascular_network_generator;
@@ -109,12 +109,12 @@ public:
     void TestParallelNetworks() throw (Exception)
     {
         std::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        QArea target_density(1.e-4/(1.e-6 * unit::metres*1.e-6 * unit::metres));
+        QArea target_density(1.e-4/(1_um));
         QLength exclusion_distance(20.0*unit::microns);
 
-        p_part->AddCuboid(1000.0* 1.e-6 * unit::metres,
-                          1000.0* 1.e-6 * unit::metres,
-                          50.0* 1.e-6 * unit::metres,
+        p_part->AddCuboid(1000.0* 1_um,
+                          1000.0* 1_um,
+                          50.0* 1_um,
                           DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         VesselNetworkGenerator<3> network_generator;
         std::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateParrallelNetwork(p_part,

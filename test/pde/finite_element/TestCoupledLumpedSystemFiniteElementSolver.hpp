@@ -128,7 +128,9 @@ public:
         p_solver->SetPde(p_pde);
         p_solver->AddBoundaryCondition(p_boundary_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestCoupledLumpedSystemFiniteElementSolver/PlaneSlowRelease"));
+        auto p_output_file_handler =
+        		std::make_shared<OutputFileHandler>("TestCoupledLumpedSystemFiniteElementSolver/PlaneSlowRelease");
+
         p_solver->SetFileHandler(p_output_file_handler);
         p_solver->SetWriteSolution(true);
         p_solver->SetTargetTimeIncrement(0.1);
@@ -172,7 +174,8 @@ public:
 
     void TestSolveOnCircle()
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestCoupledLumpedSystemFiniteElementSolver/Circle"));
+        auto p_handler =
+        		std::make_shared<OutputFileHandler>("TestCoupledLumpedSystemFiniteElementSolver/Circle");
 
         QLength reference_length(1.0 * unit::microns);
         QTime reference_time(1.0* unit::hours);
@@ -195,7 +198,7 @@ public:
 
         DiscreteContinuumMeshGenerator<2> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-        mesh_generator.SetMaxElementArea(1e4*(Qpow3(1.e-6*unit::metres))); // 1e4 for 'good' mesh
+        mesh_generator.SetMaxElementArea(1e4*(Qpow3(1_um))); // 1e4 for 'good' mesh
         std::vector<DimensionalChastePoint<2> > holes;
         holes.push_back(DimensionalChastePoint<2>(0.0, -delta/reference_length, 0.0, reference_length));
         mesh_generator.SetHoles(holes);
@@ -257,7 +260,8 @@ public:
 
     void TestSolveOnSphere()
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestCoupledLumpedSystemFiniteElementSolver/Sphere"));
+        auto p_handler =
+        		std::make_shared<OutputFileHandler>("TestCoupledLumpedSystemFiniteElementSolver/Sphere");
 
         QLength reference_length(1.0 * unit::microns);
         QTime reference_time(1.0* unit::hours);
@@ -306,7 +310,7 @@ public:
 
         DiscreteContinuumMeshGenerator<3> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-        mesh_generator.SetMaxElementArea(1e6*(Qpow3(1.e-6*unit::metres))); // 1e4 for 'good' mesh
+        mesh_generator.SetMaxElementArea(1e6*(Qpow3(1_um))); // 1e4 for 'good' mesh
         mesh_generator.Update();
 
         std::shared_ptr<DiscreteContinuumMesh<3> > p_mesh = mesh_generator.GetMesh();

@@ -286,7 +286,7 @@ Solve the haematocrit problem
 Next we write out the network, including updated flow data, to file.
 
 ```cpp
-        BaseUnits::Instance()->SetReferenceLengthScale(1.e-6*unit::metres);
+        BaseUnits::Instance()->SetReferenceLengthScale(1_um);
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "network_haematocrit.vtp");
 ```
 
@@ -594,7 +594,7 @@ public:
         haematocrit_solver.SetVesselNetwork(p_network);
         haematocrit_solver.SetHaematocrit(0.45);
         haematocrit_solver.Calculate();
-        BaseUnits::Instance()->SetReferenceLengthScale(1.e-6*unit::metres);
+        BaseUnits::Instance()->SetReferenceLengthScale(1_um);
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "network_haematocrit.vtp");
         ParameterCollection::Instance()->DumpToFile(p_handler->GetOutputDirectoryFullPath() + "parameter_collection.xml");
         ParameterCollection::Instance()->Destroy();

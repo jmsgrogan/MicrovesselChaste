@@ -96,7 +96,7 @@ public:
         TS_ASSERT_EQUALS(pSegment->GetId(), 5u);
 
         pSegment->SetRadius(5.0e-6 * unit::metres);
-        TS_ASSERT_DELTA(pSegment->GetRadius()/(1.e-6*unit::metres), 5.0, 1.e-6);
+        TS_ASSERT_DELTA(pSegment->GetRadius()/(1_um), 5.0, 1.e-6);
 
         pSegment->GetFlowProperties()->SetHaematocrit(10.0);
         pSegment->GetFlowProperties()->SetFlowRate(15.0 * unit::metre_cubed_per_second);

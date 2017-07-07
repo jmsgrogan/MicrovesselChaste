@@ -1,0 +1,5 @@
+#ifndef SimpleNonLinearEllipticFiniteElementSolver2_hpp__pyplusplus_wrapper
+#define SimpleNonLinearEllipticFiniteElementSolver2_hpp__pyplusplus_wrapper
+namespace py = pybind11;
+void register_SimpleNonLinearEllipticFiniteElementSolver2_class(py::module &m);
+#endif // SimpleNonLinearEllipticFiniteElementSolver2_hpp__pyplusplus_wrapper

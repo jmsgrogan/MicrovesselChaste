@@ -63,7 +63,7 @@ public:
         // Set the grid to move on
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         double spacing = 20.0; //um
-        p_grid->SetSpacing(spacing * 1.e-6 * unit::metres);
+        p_grid->SetSpacing(spacing * 1_um);
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 7; // num x
         dimensions[1] = 5; // num_y

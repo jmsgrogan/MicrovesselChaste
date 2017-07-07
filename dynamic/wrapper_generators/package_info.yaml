@@ -10,7 +10,6 @@ global_includes:
 global_calldef_excludes:
   - ::Vec
   - ::Mat
-smart_ptr_type: boost::shared_ptr
 common_include_file: OFF
 global_template_substitutions:
   - signature: <unsigned ELEMENT_DIM, unsigned SPACE_DIM>

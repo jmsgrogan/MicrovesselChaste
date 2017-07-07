@@ -67,7 +67,7 @@ public:
 
     void TestGridFunction() throw(Exception)
     {
-        BaseUnits::Instance()->SetReferenceLengthScale(1.e-6*unit::metres);
+        BaseUnits::Instance()->SetReferenceLengthScale(1_um);
         QLength length(100.0*unit::microns);
 
         // Set up the grid
@@ -86,7 +86,7 @@ public:
         std::vector<double> solution;
         for(unsigned idx=0; idx<p_grid->GetNumberOfPoints(); idx++)
         {
-            double x_loc = p_grid->GetPoint(idx).GetLocation(1.e-6*unit::metres)[0];
+            double x_loc = p_grid->GetPoint(idx).GetLocation(1_um)[0];
             double value = (100.0-x_loc)*(100.0-x_loc)/(100.0*100.0);
             solution.push_back(value);
         }
@@ -99,7 +99,7 @@ public:
 
     void TestMeshFunction() throw(Exception)
     {
-        BaseUnits::Instance()->SetReferenceLengthScale(1.e-6*unit::metres);
+        BaseUnits::Instance()->SetReferenceLengthScale(1_um);
         QLength length(100.0*unit::microns);
 
         // Set up the grid
@@ -119,7 +119,7 @@ public:
         std::vector<double> solution;
         for(unsigned idx=0; idx<p_mesh_generator->GetMesh()->GetNumberOfCells(); idx++)
         {
-            double x_loc = p_mesh_generator->GetMesh()->GetCellLocation(idx).GetLocation(1.e-6*unit::metres)[0];
+            double x_loc = p_mesh_generator->GetMesh()->GetCellLocation(idx).GetLocation(1_um)[0];
             double value = (100.0-x_loc)*(100.0-x_loc)/(100.0*100.0);
             solution.push_back(value);
         }

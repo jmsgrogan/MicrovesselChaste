@@ -64,10 +64,10 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory);
         std::vector<std::shared_ptr<VesselNode<2> > > nodes;
-        nodes.push_back(VesselNode<2>::Create(0.0, 0.0, 0.0, 1.e-6*unit::metres));
-        nodes.push_back(VesselNode<2>::Create(50.0, 0.0, 0.0, 1.e-6*unit::metres));
-        nodes.push_back(VesselNode<2>::Create(150.0, 0.0, 0.0, 1.e-6*unit::metres));
-        nodes.push_back(VesselNode<2>::Create(220.0, 0.0, 0.0, 1.e-6*unit::metres));
+        nodes.push_back(VesselNode<2>::Create(0.0, 0.0, 0.0, 1_um));
+        nodes.push_back(VesselNode<2>::Create(50.0, 0.0, 0.0, 1_um));
+        nodes.push_back(VesselNode<2>::Create(150.0, 0.0, 0.0, 1_um));
+        nodes.push_back(VesselNode<2>::Create(220.0, 0.0, 0.0, 1_um));
 
         std::shared_ptr<Vessel<2> > pVessel1 = Vessel<2>::Create(nodes);
         std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
@@ -92,8 +92,7 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         VesselNetworkGenerator<2> generator;
-        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateHexagonalNetwork(500.0*1.e-6*unit::metres,
-                500.0*1.e-6*unit::metres, 100.0*1.e-6*unit::metres);
+        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateHexagonalNetwork(500.0_um, 500.0_um, 50.0_um);
 
         VesselNetworkPartitioner<2> partitioner;
         partitioner.SetVesselNetwork(p_network);
@@ -115,9 +114,9 @@ public:
 
         VesselNetworkGenerator<2> generator;
 
-        QLength domain_size = 500.0*1.e-6*unit::metres;
-        QLength vessel_length = 100.0*1.e-6*unit::metres;
-        QLength reference_length = 1.e-6*unit::metres;
+        QLength domain_size = 500.0*1_um;
+        QLength vessel_length = 100.0*1_um;
+        QLength reference_length = 1_um;
         std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateHexagonalNetwork(domain_size,
                 domain_size, vessel_length);
 
@@ -136,7 +135,7 @@ public:
                 DimensionalChastePoint<2>(0.0, 0.0, 0.0, reference_length), vessel_length/5.0);
         VesselNetworkPropertyManager<2>::AssignOutflows(p_network,
                 DimensionalChastePoint<2>(domain_size/reference_length, domain_size/reference_length, 0.0, reference_length), vessel_length/5.0);
-        VesselNetworkPropertyManager<2>::SetInflowPressures(p_network, 3393*unit::pascals);
+        VesselNetworkPropertyManager<2>::SetInflowPressures(p_network, 3393.0*unit::pascals);
         VesselNetworkPropertyManager<2>::SetOutflowPressures(p_network, 1000.5*unit::pascals);
 
         FlowSolver<2> solver;

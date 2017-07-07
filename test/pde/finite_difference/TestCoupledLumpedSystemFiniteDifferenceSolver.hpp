@@ -100,12 +100,14 @@ public:
         p_pde->SetPelletFreeDecayRate(0.0*unit::per_second);
         p_pde->SetPelletBindingConstant(1.0);
         p_pde->SetPelletSurfaceArea(1.0*unit::metres_squared);
-        p_pde->SetPelletVolume(1.0*unit::metres*1.0*unit::metres*1.0*unit::metres);
+        QVolume pellet_volume = Qpow3(1.0_m);
+        p_pde->SetPelletVolume(pellet_volume);
 
         CoupledLumpedSystemFiniteDifferenceSolver<2> solver;
         solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestCoupledLumpedSystemFiniteDifferenceSolver/PlaneSlowRelease"));
+        auto p_output_file_handler =
+        		std::make_shared<OutputFileHandler>("TestCoupledLumpedSystemFiniteDifferenceSolver/PlaneSlowRelease");
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.SetTargetTimeIncrement(0.1);
@@ -145,7 +147,7 @@ public:
 
     void TestPlane() throw(Exception)
     {
-        BaseUnits::Instance()->SetReferenceLengthScale(1.e-6*unit::metres);
+        BaseUnits::Instance()->SetReferenceLengthScale(1_um);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
         BaseUnits::Instance()->SetReferenceTimeScale(3600.0*unit::seconds);
 
@@ -166,7 +168,8 @@ public:
         QConcentration initial_vegf_concentration(3.93e-1*unit::mole_per_metre_cubed);
         p_pde->SetCurrentVegfInPellet(initial_vegf_concentration);
         p_pde->SetPelletBindingConstant(100.0);
-        p_pde->SetPelletSurfaceArea(2000e-6*unit::metres*1e-6*unit::metres);
+        QArea surface_area = 2000.0_um * 1.0_um;
+        p_pde->SetPelletSurfaceArea(surface_area);
         p_pde->SetCorneaPelletPermeability(0.002*p_pde->GetCorneaPelletPermeability());
 
         double target_time = 0.01;
@@ -176,7 +179,7 @@ public:
         CoupledLumpedSystemFiniteDifferenceSolver<2> fd_solver;
         fd_solver.SetGrid(p_grid);
         fd_solver.SetPde(p_pde);
-        MAKE_PTR_ARGS(OutputFileHandler, p_fd_output_file_handler, ("TestCoupledLumpedSystemFiniteDifferenceSolver/Plane"));
+        auto p_fd_output_file_handler = std::make_shared<OutputFileHandler>("TestCoupledLumpedSystemFiniteDifferenceSolver/Plane");
         fd_solver.SetFileHandler(p_fd_output_file_handler);
         fd_solver.SetWriteSolution(true);
         fd_solver.SetTargetTimeIncrement(target_time);
@@ -189,7 +192,7 @@ public:
         // Solve the finite element problem
         DiscreteContinuumMeshGenerator<2> mesh_generator;
         mesh_generator.SetDomain(p_domain);
-        mesh_generator.SetMaxElementArea(2e3*(Qpow3(1.e-6*unit::metres)));
+        mesh_generator.SetMaxElementArea(2e3*(Qpow3(1_um)));
         mesh_generator.Update();
         std::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
 
@@ -209,7 +212,7 @@ public:
         CoupledLumpedSystemFiniteElementSolver<2> solver;
         solver.SetGrid(p_mesh);
         solver.SetPde(p_pde);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestCoupledLumpedSystemFiniteElementSolver/Plane"));
+        auto p_output_file_handler = std::make_shared<OutputFileHandler>("TestCoupledLumpedSystemFiniteElementSolver/Plane");
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.AddBoundaryCondition(p_boundary_condition);

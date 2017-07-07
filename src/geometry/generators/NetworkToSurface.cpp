@@ -66,7 +66,7 @@ template<unsigned DIM>
 NetworkToSurface<DIM>::NetworkToSurface() :
     mpNetworkToImage(NetworkToImage<DIM>::Create()),
     mpNetwork(),
-    mSplineResamplingLength(10.0 * 1.e-6 * unit::metres),
+    mSplineResamplingLength(10.0 * 1_um),
     mpSurface(),
     mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
     mDoSmoothing(true),

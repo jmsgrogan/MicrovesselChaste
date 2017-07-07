@@ -117,7 +117,7 @@ const std::shared_ptr<ParameterInstance<QPressure> > Owen11Parameters::mpOxygenP
                                                                                    "C^{leave}_{quiesc}",
                                                                                    bib_info));
 
-QArea micron_sq(1.e-6*unit::metres*1.e-6*unit::metres);
+QArea micron_sq(1_um);
 QConcentration nano_molar(1.e-9 *unit::mole_per_metre_cubed);
 QDiffusivityPerConcentration chemotactic_sensitivty(2.e4*micron_sq/(min*nano_molar));
 const std::shared_ptr<ParameterInstance<QDiffusivityPerConcentration> > Owen11Parameters::mpChemotacticSensitivity =
@@ -183,7 +183,7 @@ const std::shared_ptr<ParameterInstance<QConcentration> > Owen11Parameters::mpVe
                                                                                    "V_{sprout}",
                                                                                    bib_info));
 
-QLength um(1.e-6*unit::metres);
+QLength um(1_um);
 const std::shared_ptr<ParameterInstance<QLength>  > Owen11Parameters::mpSproutingExclusionRadius =
         std::shared_ptr<ParameterInstance<QLength>  >(new ParameterInstance<QLength>  (80.0 * um,
                                                                                    "Owen11_SproutingExclusionRadius",
@@ -327,7 +327,7 @@ const std::shared_ptr<ParameterInstance<QConcentrationFlowRate> > Owen11Paramete
                                                                                    bib_info));
 
 const std::shared_ptr<ParameterInstance<QLength>  > Owen11Parameters::mpMinimumRadius =
-        std::shared_ptr<ParameterInstance<QLength>  >(new ParameterInstance<QLength>  (1.e-6*unit::metres,
+        std::shared_ptr<ParameterInstance<QLength>  >(new ParameterInstance<QLength>  (1_um,
                                                                                    "Owen11_MinimumRadius",
                                                                                    "Minimum possible radius",
                                                                                    "R_{MIN}",

@@ -73,20 +73,20 @@ public:
         QRate k_m = calculator->GetKm();
         calculator->Calculate();
         QRate expected_metabolic_stimulus = k_m * log10(Q_ref / (flow_rate * haematocrit_level) + 1.0);
-        TS_ASSERT_DELTA(p_vessel->GetSegments()[0]->GetFlowProperties()->GetGrowthStimulus().value(), expected_metabolic_stimulus.value(), 1e-3);
+        TS_ASSERT_DELTA(p_vessel->GetSegments()[0]->GetFlowProperties()->GetGrowthStimulus()*1_s, expected_metabolic_stimulus.value(), 1e-3);
 
         p_vessel->GetSegments()[0]->GetFlowProperties()->SetGrowthStimulus(0.0*unit::per_second);
         p_vessel->GetSegments()[0]->GetFlowProperties()->SetFlowRate(0.0 * unit::metre_cubed_per_second);
         expected_metabolic_stimulus = 0.0*unit::per_second;
         calculator->Calculate();
-        TS_ASSERT_DELTA(p_vessel->GetSegments()[0]->GetFlowProperties()->GetGrowthStimulus().value(), expected_metabolic_stimulus.value(), 1e-3);
+        TS_ASSERT_DELTA(p_vessel->GetSegments()[0]->GetFlowProperties()->GetGrowthStimulus()*1_s, expected_metabolic_stimulus.value(), 1e-3);
 
         p_vessel->GetSegments()[0]->GetFlowProperties()->SetGrowthStimulus(0.0*unit::per_second);
         p_vessel->GetSegments()[0]->GetFlowProperties()->SetFlowRate(flow_rate);
         p_vessel->GetSegments()[0]->GetFlowProperties()->SetHaematocrit(0.0);
         calculator->Calculate();
         expected_metabolic_stimulus = k_m;
-        TS_ASSERT_DELTA(p_vessel->GetSegments()[0]->GetFlowProperties()->GetGrowthStimulus().value(), expected_metabolic_stimulus.value(), 1e-3);
+        TS_ASSERT_DELTA(p_vessel->GetSegments()[0]->GetFlowProperties()->GetGrowthStimulus()*1_s, expected_metabolic_stimulus.value(), 1e-3);
     }
 };
 

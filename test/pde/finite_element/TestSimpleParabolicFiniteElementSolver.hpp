@@ -127,7 +127,9 @@ public:
         p_solver->SetGrid(p_mesh);
         p_solver->SetPde(p_pde);
         p_solver->AddBoundaryCondition(p_boundary_condition);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleParabolicFiniteElementSolver/Plane"));
+        auto p_output_file_handler =
+               		std::make_shared<OutputFileHandler>("TestSimpleParabolicFiniteElementSolver/Plane");
+
         p_solver->SetFileHandler(p_output_file_handler);
         p_solver->SetWriteSolution(true);
         p_solver->SetTargetTimeIncrement(0.0005);
@@ -165,7 +167,7 @@ public:
     void Test3dKroghCylinderNetworkSurface() throw(Exception)
     {
         // Set up the vessel network
-        QLength micron_length_scale = 1.e-6*unit::metres;
+        QLength micron_length_scale = 1_um;
         BaseUnits::Instance()->SetReferenceLengthScale(micron_length_scale);
         BaseUnits::Instance()->SetReferenceTimeScale(3600.0*unit::seconds);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
@@ -205,7 +207,8 @@ public:
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_vessel_ox_boundary_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleParabolicFiniteElementSolver/KroghCylinder3dSurface", false));
+        auto p_output_file_handler =
+               		std::make_shared<OutputFileHandler>("TestSimpleParabolicFiniteElementSolver/Krogh");
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.SetTargetTimeIncrement(0.001);

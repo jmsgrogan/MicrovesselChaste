@@ -55,7 +55,7 @@ VesselNetworkWriter<DIM>::VesselNetworkWriter() :
     mpVtkVesselNetwork(vtkSmartPointer<vtkPolyData>::New()),
     mIsVtkNetworkUpToDate(false),
     mFilename(),
-    mReferenceLength(1.e-6 * unit::metres)
+    mReferenceLength(1_um)
 {
 
 }

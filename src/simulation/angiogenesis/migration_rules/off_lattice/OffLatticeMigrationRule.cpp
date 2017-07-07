@@ -56,8 +56,8 @@ OffLatticeMigrationRule<DIM>::OffLatticeMigrationRule()
       mVelocity(20.0 *(1.e-6/3600.0) * unit::metre_per_second),
       mChemotacticStrength(0.6),
       mAttractionStrength(0.0), // was 1.0
-      mProbeLength(5.0 * 1.e-6 * unit::metres),
-      mCriticalMutualAttractionLength(100.0 * 1.e-6 *unit::metres),
+      mProbeLength(5.0 * 1_um),
+      mCriticalMutualAttractionLength(100.0 * 1_um),
       mSurfaceRepulsion(true),
       mNumGradientEvaluationDivisions(8),
       mpDomainDistanceMap()

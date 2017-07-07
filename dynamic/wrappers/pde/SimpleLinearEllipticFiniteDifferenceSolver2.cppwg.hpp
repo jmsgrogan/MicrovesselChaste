@@ -1,0 +1,5 @@
+#ifndef SimpleLinearEllipticFiniteDifferenceSolver2_hpp__pyplusplus_wrapper
+#define SimpleLinearEllipticFiniteDifferenceSolver2_hpp__pyplusplus_wrapper
+namespace py = pybind11;
+void register_SimpleLinearEllipticFiniteDifferenceSolver2_class(py::module &m);
+#endif // SimpleLinearEllipticFiniteDifferenceSolver2_hpp__pyplusplus_wrapper

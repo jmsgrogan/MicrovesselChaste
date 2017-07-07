@@ -78,7 +78,7 @@ public:
             p_my_parameter_for_archive->SetShortDescription("My Description For Time Parameter");
             p_my_parameter_for_archive->SetName("Derived");
 
-            std::shared_ptr<ParameterInstance<QTime> > p_my_cast_parameter_for_archive = boost::static_pointer_cast<ParameterInstance<QTime> >(p_my_parameter_for_archive);
+            std::shared_ptr<ParameterInstance<QTime> > p_my_cast_parameter_for_archive = std::static_pointer_cast<ParameterInstance<QTime> >(p_my_parameter_for_archive);
             p_my_cast_parameter_for_archive->SetValue(few_seconds);
 
             std::ofstream ofs(archive_filename.c_str());
@@ -99,7 +99,7 @@ public:
             TS_ASSERT_EQUALS("My Description For Time Parameter", p_my_parameter_from_archive->GetShortDescription());
             TS_ASSERT_EQUALS("Derived", p_my_parameter_from_archive->GetName());
 
-            std::shared_ptr<ParameterInstance<QTime> > p_my_cast_parameter_from_archive = boost::dynamic_pointer_cast<ParameterInstance<QTime> >(p_my_parameter_from_archive);
+            std::shared_ptr<ParameterInstance<QTime> > p_my_cast_parameter_from_archive = std::dynamic_pointer_cast<ParameterInstance<QTime> >(p_my_parameter_from_archive);
             TS_ASSERT_DELTA(p_my_cast_parameter_from_archive->GetValue()/unit::seconds, 5.0, 1.e-6);
         }
     }
@@ -115,7 +115,7 @@ public:
 
         TS_ASSERT_EQUALS("Derived", p_my_parameter->GetName());
         TS_ASSERT_EQUALS("My Description For Time Parameter", p_my_parameter->GetShortDescription());
-        TS_ASSERT_DELTA(p_my_parameter->GetValue().value(), 5.0, 1.e-6);
+        TS_ASSERT_DELTA(p_my_parameter->GetValue()/1_s, 5.0, 1.e-6);
         TS_ASSERT_EQUALS("J. Smith et al., (2003).", p_my_parameter->GetBibliographicInformation());
     }
 

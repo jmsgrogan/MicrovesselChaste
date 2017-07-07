@@ -178,7 +178,7 @@ public:
 //         * we sample a small region. We can use some geometry tools to help.
 //         */
 //        std::shared_ptr<Part<3> > p_cylinder = Part<3>::Create();
-//        DimensionalChastePoint<3> centre(2300.0, 2300.0, -5.0, 1.e-6*unit::metres);
+//        DimensionalChastePoint<3> centre(2300.0, 2300.0, -5.0, 1_um);
 //        QLength radius = 600.0e-6*unit::metres;
 //        QLength depth = 205.e-6*unit::metres;
 //        p_cylinder->AddCylinder(radius, depth, centre, 24);
@@ -190,8 +190,8 @@ public:
 //         * this purpose. We size and position the lattice according to the bounds of the vessel network.
 //         */
 //        std::vector<DimensionalChastePoint<3> > bbox;
-//        bbox.push_back(DimensionalChastePoint<3>(1500.0, 1600.0, -10.0, 1.e-6*unit::metres));
-//        bbox.push_back(DimensionalChastePoint<3>(3100.0, 3000.0, 300.0, 1.e-6*unit::metres));
+//        bbox.push_back(DimensionalChastePoint<3>(1500.0, 1600.0, -10.0, 1_um));
+//        bbox.push_back(DimensionalChastePoint<3>(3100.0, 3000.0, 300.0, 1_um));
 //        /*
 //         * Set up the lattice (grid), we will use the same dimensions as [Owen et al. 2011](http://www.ncbi.nlm.nih.gov/pubmed/21363914).
 //         * Note that we are using hard-coded parameters from that paper. You can see the values by inspecting `Owen11Parameters.cpp`.
@@ -214,7 +214,7 @@ public:
 //            grid_extents.push_back(std::floor(extents[idx])+1);
 //        }
 //        p_grid->SetExtents(grid_extents);
-//        p_network->Translate(DimensionalChastePoint<3>(-1500.0, -1600.0, +10.0, 1.e-6*unit::metres));
+//        p_network->Translate(DimensionalChastePoint<3>(-1500.0, -1600.0, +10.0, 1_um));
 //        /*
 //         * We can write the lattice to file for quick visualization with Paraview. Rendering of this and subsequent images is performed
 //         * using standard Paraview operations, not detailed here.
@@ -231,14 +231,14 @@ public:
 //        {
 //            if(p_network->GetNodes()[idx]->GetNumberOfSegments() == 1)
 //            {
-//                if(std::abs(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1.e-6*unit::metres)[2] -
-//                        bbox[1].GetLocation(1.e-6*unit::metres)[2]) < 80.0)
+//                if(std::abs(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1_um)[2] -
+//                        bbox[1].GetLocation(1_um)[2]) < 80.0)
 //                {
 //                    p_network->GetNodes()[idx]->GetFlowProperties()->SetIsInputNode(true);
 //                    p_network->GetNodes()[idx]->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue("User"));
 //                }
-//                else if(std::abs(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1.e-6*unit::metres)[2] -
-//                        bbox[0].GetLocation(1.e-6*unit::metres)[2]) < 80.0)
+//                else if(std::abs(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1_um)[2] -
+//                        bbox[0].GetLocation(1_um)[2]) < 80.0)
 //                {
 //                    p_network->GetNodes()[idx]->GetFlowProperties()->SetIsOutputNode(true);
 //                    p_network->GetNodes()[idx]->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue("User"));

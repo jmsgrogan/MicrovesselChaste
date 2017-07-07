@@ -76,9 +76,9 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
     // Iterate over vessel lengths
     std::vector<double> lengths;
     std::vector<double> average_oxygen_concentration;
-    QLength length_increment = 20.0 * 1.e-6 * unit::metres;
-    QLength domain_side_length = 2000.0 * 1.e-6 * unit::metres;
-    QLength reference_length = 1.e-6 * unit::metres;
+    QLength length_increment = 20.0 * 1_um;
+    QLength domain_side_length = 2000.0 * 1_um;
+    QLength reference_length = 1_um;
     QLength vessel_radius = 10.e-6*unit::metres;
     QDynamicViscosity visocity = 1.e-3*unit::poiseuille;
     std::shared_ptr<OutputFileHandler> p_file_handler =
@@ -121,9 +121,9 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
                 DimensionalChastePoint<2>(domain_side_length/reference_length,
                 domain_side_length/reference_length, 0.0, reference_length));
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
-        p_inlet_node->GetFlowProperties()->SetPressure(8000*unit::pascals);
+        p_inlet_node->GetFlowProperties()->SetPressure(8000.0*unit::pascals);
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
-        p_outlet_node->GetFlowProperties()->SetPressure(2000*unit::pascals);
+        p_outlet_node->GetFlowProperties()->SetPressure(2000.0*unit::pascals);
 
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         QLength grid_spacing = 5.0e-6*unit::metres;

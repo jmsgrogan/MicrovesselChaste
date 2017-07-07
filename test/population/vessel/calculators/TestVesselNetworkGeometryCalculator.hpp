@@ -79,11 +79,11 @@ public:
         p_network->AddVessels(vessels);
 
         std::shared_ptr<VesselNetworkGeometryCalculator<3> > p_calculator = VesselNetworkGeometryCalculator<3>::Create();
-        TS_ASSERT_DELTA(p_calculator->GetAverageInterSegmentDistance(p_network).value(), 1.24402e-06, 1.e-3);
-        TS_ASSERT_DELTA(p_calculator->GetAverageVesselLength(p_network).value(), 1.66667e-06, 1.e-8);
-        TS_ASSERT_DELTA(p_calculator->GetTotalLength(p_network).value(), 5.e-6, 1.e-8);
-        TS_ASSERT_DELTA(p_calculator->GetTotalSurfaceArea(p_network).value(), 3.14159e-10, 1.e-12);
-        TS_ASSERT_DELTA(p_calculator->GetTotalVolume(p_network).value(), 1.5708e-15, 1.e-16);
+        TS_ASSERT_DELTA(p_calculator->GetAverageInterSegmentDistance(p_network)/1_m, 1.24402e-06, 1.e-3);
+        TS_ASSERT_DELTA(p_calculator->GetAverageVesselLength(p_network)/1_m, 1.66667e-06, 1.e-8);
+        TS_ASSERT_DELTA(p_calculator->GetTotalLength(p_network)/1_m, 5.e-6, 1.e-8);
+        TS_ASSERT_DELTA(p_calculator->GetTotalSurfaceArea(p_network)/(1.0*unit::metres_squared), 3.14159e-10, 1.e-12);
+        TS_ASSERT_DELTA(p_calculator->GetTotalVolume(p_network)/(1.0*unit::metres_cubed), 1.5708e-15, 1.e-16);
     }
 };
 

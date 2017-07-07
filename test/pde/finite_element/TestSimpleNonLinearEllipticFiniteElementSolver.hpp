@@ -144,7 +144,9 @@ public:
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_boundary_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleNonLinearEllipticFiniteElementSolver/RectangleDomain", true));
+        auto p_output_file_handler =
+        		std::make_shared<OutputFileHandler>("TestSimpleNonLinearEllipticFiniteElementSolver/RectangleDomain");
+
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();
@@ -175,7 +177,7 @@ public:
         p_domain->AddCuboid(100.0e-6*unit::metres, 100.0e-6*unit::metres, 100.0e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         std::shared_ptr<DiscreteContinuumMeshGenerator<3, 3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3, 3>::Create();
         p_mesh_generator->SetDomain(p_domain);
-        p_mesh_generator->SetMaxElementArea(2000.0*Qpow3(1.e-6*unit::metres));
+        p_mesh_generator->SetMaxElementArea(2000.0*Qpow3(1_um));
         p_mesh_generator->Update();
 
         // Choose the PDE
@@ -196,7 +198,8 @@ public:
         solver.SetPde(p_non_linear_pde);
         solver.AddBoundaryCondition(p_outer_boundary_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleNonLinearEllipticFiniteElementSolver/Box", false));
+        auto p_output_file_handler =
+        		std::make_shared<OutputFileHandler>("TestSimpleNonLinearEllipticFiniteElementSolver/Box");
         solver.SetFileHandler(p_output_file_handler);
         solver.SetFileName("output_nl_t");
         solver.SetWriteSolution(true);

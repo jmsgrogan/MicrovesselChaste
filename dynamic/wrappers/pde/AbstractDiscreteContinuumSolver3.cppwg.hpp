@@ -1,0 +1,5 @@
+#ifndef AbstractDiscreteContinuumSolver3_hpp__pyplusplus_wrapper
+#define AbstractDiscreteContinuumSolver3_hpp__pyplusplus_wrapper
+namespace py = pybind11;
+void register_AbstractDiscreteContinuumSolver3_class(py::module &m);
+#endif // AbstractDiscreteContinuumSolver3_hpp__pyplusplus_wrapper

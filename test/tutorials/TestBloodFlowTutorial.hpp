@@ -263,7 +263,7 @@ public:
         /*
          * Next we write out the network, including updated flow data, to file.
          */
-        BaseUnits::Instance()->SetReferenceLengthScale(1.e-6*unit::metres);
+        BaseUnits::Instance()->SetReferenceLengthScale(1_um);
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "network_haematocrit.vtp");
         /*
          * Now we can visualize the results in Paraview. To view the network import the file

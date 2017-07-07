@@ -54,7 +54,7 @@ public:
     void TestWriteCuboid() throw(Exception)
     {
         Part<3> part = Part<3>();
-        part.AddCuboid(1.e-6*unit::metres, 1.e-6*unit::metres, 1.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        part.AddCuboid(1_um, 1_um, 1_um, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         part.GetPolygons()[0]->AddAttribute("Polygon Number", 1.0);
         part.GetPolygons()[1]->AddAttribute("Polygon Number", 2.0);
         part.GetPolygons()[2]->AddAttribute("Polygon Number", 3.0);

@@ -62,12 +62,12 @@ public:
         properties.SetWallShearStress(50.0*unit::pascals);
         properties.SetGrowthStimulus(60.0*unit::per_second);
 
-        TS_ASSERT_DELTA(properties.GetHaematocrit().value(), 10.0, 1.e-6);
-        TS_ASSERT_DELTA(properties.GetImpedance().value(), 30.0, 1.e-6);
-        TS_ASSERT_DELTA(properties.GetFlowRate().value(), 20.0, 1.e-6);
-        TS_ASSERT_DELTA(properties.GetViscosity().value(), 40.0, 1.e-6);
-        TS_ASSERT_DELTA(properties.GetWallShearStress().value(), 50.0, 1.e-6);
-        TS_ASSERT_DELTA(properties.GetGrowthStimulus().value(), 60.0, 1.e-6);
+        TS_ASSERT_DELTA(double(properties.GetHaematocrit()), 10.0, 1.e-6);
+        TS_ASSERT_DELTA(properties.GetImpedance()/(1.0*unit::pascal_second_per_metre_cubed), 30.0, 1.e-6);
+        TS_ASSERT_DELTA(properties.GetFlowRate()/(1.0*unit::metre_cubed_per_second), 20.0, 1.e-6);
+        TS_ASSERT_DELTA(properties.GetViscosity()/(1.0*unit::poiseuille), 40.0, 1.e-6);
+        TS_ASSERT_DELTA(properties.GetWallShearStress()/1_Pa, 50.0, 1.e-6);
+        TS_ASSERT_DELTA(properties.GetGrowthStimulus()/(1.0*unit::per_second), 60.0, 1.e-6);
 
         TS_ASSERT_DELTA(properties.GetOutputData()["Segment Flow Rate m^3/s"], 20.0, 1.e-6);
     }
@@ -85,7 +85,7 @@ public:
                     std::shared_ptr<AbstractVesselNetworkComponentProperties<3> >(new SegmentFlowProperties<3>());
 
             std::shared_ptr<SegmentFlowProperties<3> > p_cast_properties =
-                    boost::dynamic_pointer_cast<SegmentFlowProperties<3> >(p_properties);
+                    std::dynamic_pointer_cast<SegmentFlowProperties<3> >(p_properties);
 
             p_cast_properties->SetHaematocrit(10.0);
             p_cast_properties->SetFlowRate(20.0*unit::metre_cubed_per_second);
@@ -110,14 +110,14 @@ public:
             // restore from the archive
             input_arch >> p_properties_from_archive;
             std::shared_ptr<SegmentFlowProperties<3> > p_cast_properties =
-                    boost::dynamic_pointer_cast<SegmentFlowProperties<3> >(p_properties_from_archive);
+                    std::dynamic_pointer_cast<SegmentFlowProperties<3> >(p_properties_from_archive);
 
-            TS_ASSERT_DELTA(p_cast_properties->GetHaematocrit().value(), 10.0, 1.e-6);
-            TS_ASSERT_DELTA(p_cast_properties->GetImpedance().value(), 30.0, 1.e-6);
-            TS_ASSERT_DELTA(p_cast_properties->GetFlowRate().value(), 20.0, 1.e-6);
-            TS_ASSERT_DELTA(p_cast_properties->GetViscosity().value(), 40.0, 1.e-6);
-            TS_ASSERT_DELTA(p_cast_properties->GetWallShearStress().value(), 50.0, 1.e-6);
-            TS_ASSERT_DELTA(p_cast_properties->GetGrowthStimulus().value(), 60.0, 1.e-6);
+            TS_ASSERT_DELTA(double(p_cast_properties->GetHaematocrit()), 10.0, 1.e-6);
+            TS_ASSERT_DELTA(p_cast_properties->GetImpedance()/(1.0*unit::pascal_second_per_metre_cubed), 30.0, 1.e-6);
+            TS_ASSERT_DELTA(p_cast_properties->GetFlowRate()/(1.0*unit::metre_cubed_per_second), 20.0, 1.e-6);
+            TS_ASSERT_DELTA(p_cast_properties->GetViscosity()/(1.0*unit::poiseuille), 40.0, 1.e-6);
+            TS_ASSERT_DELTA(p_cast_properties->GetWallShearStress()/1_Pa, 50.0, 1.e-6);
+            TS_ASSERT_DELTA(p_cast_properties->GetGrowthStimulus()/(1.0*unit::per_second), 60.0, 1.e-6);
 
             TS_ASSERT_DELTA(p_cast_properties->GetOutputData()["Segment Flow Rate m^3/s"], 20.0, 1.e-6);
         }

@@ -63,7 +63,7 @@ public:
         TS_ASSERT(properties.IsInputNode());
         TS_ASSERT(!properties.IsOutputNode());
         TS_ASSERT(!properties.UseVelocityBoundaryCondition());
-        TS_ASSERT_DELTA(properties.GetPressure().value(), 20.0, 1.e-6);
+        TS_ASSERT_DELTA(properties.GetPressure()/1_Pa, 20.0, 1.e-6);
         TS_ASSERT_DELTA(properties.GetOutputData()["Node Pressure Pa"], 20.0, 1.e-6);
     }
 
@@ -80,7 +80,7 @@ public:
                     std::shared_ptr<AbstractVesselNetworkComponentProperties<3> >(new NodeFlowProperties<3>());
 
             std::shared_ptr<NodeFlowProperties<3> > p_cast_properties =
-                    boost::dynamic_pointer_cast<NodeFlowProperties<3> >(p_properties);
+                    std::dynamic_pointer_cast<NodeFlowProperties<3> >(p_properties);
 
             p_cast_properties->SetIsInputNode(true);
             p_cast_properties->SetIsOutputNode(false);
@@ -103,12 +103,12 @@ public:
             // restore from the archive
             input_arch >> p_properties_from_archive;
             std::shared_ptr<NodeFlowProperties<3> > p_cast_properties =
-                    boost::dynamic_pointer_cast<NodeFlowProperties<3> >(p_properties_from_archive);
+                    std::dynamic_pointer_cast<NodeFlowProperties<3> >(p_properties_from_archive);
 
             TS_ASSERT(p_cast_properties->IsInputNode());
             TS_ASSERT(!p_cast_properties->IsOutputNode());
             TS_ASSERT(!p_cast_properties->UseVelocityBoundaryCondition());
-            TS_ASSERT_DELTA(p_cast_properties->GetPressure().value(), 20.0, 1.e-6);
+            TS_ASSERT_DELTA(p_cast_properties->GetPressure()/1_Pa, 20.0, 1.e-6);
             TS_ASSERT_DELTA(p_cast_properties->GetOutputData()["Node Pressure Pa"], 20.0, 1.e-6);
         }
     }

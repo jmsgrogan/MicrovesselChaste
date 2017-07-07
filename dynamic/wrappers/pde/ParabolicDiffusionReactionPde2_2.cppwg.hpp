@@ -1,0 +1,5 @@
+#ifndef ParabolicDiffusionReactionPde2_2_hpp__pyplusplus_wrapper
+#define ParabolicDiffusionReactionPde2_2_hpp__pyplusplus_wrapper
+namespace py = pybind11;
+void register_ParabolicDiffusionReactionPde2_2_class(py::module &m);
+#endif // ParabolicDiffusionReactionPde2_2_hpp__pyplusplus_wrapper

@@ -93,10 +93,10 @@ public:
         pVessel1->SetId(5u);
         TS_ASSERT_EQUALS(pVessel1->GetId(), 5u);
 
-        pVessel1->SetRadius(5.0 * 1.e-6 * unit::metres);
+        pVessel1->SetRadius(5.0 * 1_um);
         pVessel1->GetFlowProperties()->SetHaematocrit(10.0);
         pVessel1->GetFlowProperties()->SetFlowRate(15.0 * unit::metre_cubed_per_second);
-        TS_ASSERT_DELTA(pVessel1->GetRadius()/ (1.e-6 * unit::metres), 5.0, 1.e-6);
+        TS_ASSERT_DELTA(pVessel1->GetRadius()/ (1_um), 5.0, 1.e-6);
         TS_ASSERT_DELTA(pVessel1->GetFlowProperties()->GetHaematocrit(), 10.0, 1.e-6);
         TS_ASSERT_DELTA(pVessel1->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 15.0, 1.e-6);
     }

@@ -77,7 +77,7 @@ public:
 
         p_vascular_network->AddVessel(p_vessel);
         QDynamicViscosity viscosity = 2e-3 * unit::poiseuille;
-        QLength radius = 5e-6 * unit::metres;
+        QLength radius = 5.0_um;
 
         p_segment->SetRadius(radius);
         p_segment->GetFlowProperties()->SetViscosity(viscosity);
@@ -88,8 +88,8 @@ public:
         calculator.SetVesselNetwork(p_vascular_network);
         calculator.Calculate();
 
-        QFlowImpedance expected_impedance = 8.0 * viscosity * 5.0 * nodes[0]->GetReferenceLengthScale() / (M_PI * boost::Qpow4(radius));
-
+        QVolume term = M_PI * Qpow4(radius)/nodes[0]->GetReferenceLengthScale();
+        QFlowImpedance expected_impedance = 8.0 * 5.0 * (viscosity/term);
         TS_ASSERT_DELTA(p_vessel->GetFlowProperties()->GetImpedance()/expected_impedance, 1.0, 1e-6);
         TS_ASSERT_DELTA(p_segment->GetFlowProperties()->GetImpedance()/expected_impedance, 1.0, 1e-6);
     }

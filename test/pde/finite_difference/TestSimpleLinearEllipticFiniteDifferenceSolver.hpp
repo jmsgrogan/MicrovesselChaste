@@ -102,7 +102,9 @@ public:
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_boundary_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleLinearEllipticFiniteDifferenceSolver/RectangleDomain", true));
+        auto p_output_file_handler =
+        		std::make_shared<OutputFileHandler>("TestSimpleLinearEllipticFiniteDifferenceSolver/RectangleDomain");
+
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();
@@ -126,12 +128,12 @@ public:
     {
         // Set up the grid
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(200.0*1.e-6*unit::metres,
-                            10.0*1.e-6*unit::metres,
-                            10.0*1.e-6*unit::metres,
+        p_domain->AddCuboid(200.0*1_um,
+                            10.0*1_um,
+                            10.0*1_um,
                             DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        p_grid->GenerateFromPart(p_domain, 10.0*1.e-6*unit::metres);
+        p_grid->GenerateFromPart(p_domain, 10.0*1_um);
 
         // Choose the PDE
         std::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
@@ -162,7 +164,8 @@ public:
         solver.SetPde(p_pde);
         solver.AddBoundaryCondition(p_boundary_condition);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleLinearEllipticFiniteDifferenceSolver/CuboidalDomain", true));
+        auto p_output_file_handler =
+        		std::make_shared<OutputFileHandler>("TestSimpleLinearEllipticFiniteDifferenceSolver/CuboidalDomain");
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();
@@ -185,7 +188,7 @@ public:
     void TestWithVesselBoundaryConditions() throw(Exception)
     {
         // Set up the vessel network
-        QLength vessel_length = 100.0 * 1.e-6 * unit::metres;
+        QLength vessel_length = 100.0 * 1_um;
         VesselNetworkGenerator<3> generator;
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
                                                                                         DimensionalChastePoint<3>(0.0, 0.0, 0.0));
@@ -194,7 +197,7 @@ public:
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         p_domain->AddCuboid(vessel_length, vessel_length, vessel_length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        p_grid->GenerateFromPart(p_domain, 10.0*1.e-6*unit::metres);
+        p_grid->GenerateFromPart(p_domain, 10.0*1_um);
 
         // Choose the PDE
         std::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
@@ -217,7 +220,8 @@ public:
         solver.AddBoundaryCondition(p_vessel_boundary_condition);
         solver.SetVesselNetwork(p_network);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestSimpleLinearEllipticFiniteDifferenceSolver/WithVessels", true));
+        auto p_output_file_handler =
+        		std::make_shared<OutputFileHandler>("TestSimpleLinearEllipticFiniteDifferenceSolver/WithVessels", true);
         solver.SetFileHandler(p_output_file_handler);
         solver.SetWriteSolution(true);
         solver.Solve();

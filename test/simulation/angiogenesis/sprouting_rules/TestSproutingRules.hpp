@@ -92,7 +92,7 @@ public:
         // Set up the grid
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         double spacing = 40.0; //um
-        p_grid->SetSpacing(spacing * 1.e-6 * unit::metres);
+        p_grid->SetSpacing(spacing * 1_um);
         c_vector<double, 3> dimensions;
         dimensions[0] = 101; // num x
         dimensions[1] = 11; // num_y
