@@ -443,9 +443,15 @@ private:
 
 };
 
+/**
+ * Convenience typedef
+ */
+template<unsigned DIM>
+using VesselSegmentPtr = std::shared_ptr<VesselSegment<DIM> >;
+
+
 #include "SerializationExportWrapper.hpp"
 EXPORT_TEMPLATE_CLASS1(VesselSegment, 2)
 EXPORT_TEMPLATE_CLASS1(VesselSegment, 3)
-
 
 #endif /* VESSELSEGMENT_HPP_ */

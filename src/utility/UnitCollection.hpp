@@ -65,22 +65,39 @@ class RQuantity
         ar & mValue;
     }
 
+    /**
+     * Allow vector versions to see value
+     */
+    //friend class RVectorQuantity;
+
     double mValue;
+
+    const char* mSymbol;
 
 public:
 
     constexpr RQuantity() :
-    mValue(1.0)
+    mValue(1.0),
+    mSymbol("")
     {
 
     }
     constexpr RQuantity(double val) :
-        mValue(val)
+        mValue(val),
+        mSymbol("")
     {
 
     }
     constexpr RQuantity(long double val) :
-        mValue(static_cast<double>(val))
+        mValue(static_cast<double>(val)),
+        mSymbol("")
+    {
+
+    }
+
+    constexpr RQuantity(long double val, const char* rSymbol) :
+        mValue(static_cast<double>(val)),
+        mSymbol(rSymbol)
     {
 
     }
@@ -294,7 +311,7 @@ constexpr QAngle radians(1.0);
 constexpr QAngle degrees = static_cast<double>(2_pi / 360.0) * radians;
 
 // Time
-constexpr QTime seconds(1.0);
+constexpr QTime seconds(1.0, "s");
 constexpr QTime minutes = 60.0 * seconds;
 constexpr QTime hours = 60.0 * minutes;
 constexpr QTime days = 24.0 * hours;
@@ -303,8 +320,9 @@ constexpr QRate per_minute = (1.0/60.0)*per_second;
 constexpr QRate per_hour = (1.0/60.0)*per_minute;
 
 // Length
-constexpr QLength  metres(1.0);
-constexpr QLength  microns = metres / 1.e6;
+constexpr QLength metres(1.0, "m");
+constexpr QLength millimetres = metres / 1.e3;
+constexpr QLength microns = metres / 1.e6;
 constexpr QArea metres_squared = metres*metres;
 constexpr QVolume metres_cubed = metres*metres_squared;
 
@@ -372,6 +390,8 @@ constexpr QTime operator"" _day(unsigned long long int x) { return static_cast<d
 // literals for length units
 constexpr QLength  operator"" _m(long double x) { return static_cast<double>(x)*unit::metres; }
 constexpr QLength  operator"" _m(unsigned long long int  x) { return static_cast<double>(x)*unit::metres; }
+constexpr QLength  operator"" _mm(long double x) { return static_cast<double>(x)*unit::millimetres; }
+constexpr QLength  operator"" _mm(unsigned long long int  x) { return static_cast<double>(x)*unit::millimetres; }
 constexpr QLength  operator"" _um(long double x) { return static_cast<double>(x)*unit::microns; }
 constexpr QLength  operator"" _um(unsigned long long int  x) { return static_cast<double>(x)*unit::microns; }
 

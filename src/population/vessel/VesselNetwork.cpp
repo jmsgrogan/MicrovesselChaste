@@ -269,11 +269,11 @@ void VesselNetwork<DIM>::ExtendVessel(std::shared_ptr<Vessel<DIM> > pVessel, std
 }
 
 template <unsigned DIM>
-std::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::FormSprout(std::shared_ptr<VesselNode<DIM> > pSproutBase,
+std::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::FormSprout(VesselNodePtr<DIM> pSproutBase,
                                                                  const DimensionalChastePoint<DIM>& sproutTipLocation)
 {
     // divide vessel at location of sprout base
-    std::shared_ptr<VesselNode<DIM> > p_new_node = DivideVessel(pSproutBase->GetSegment(0)->GetVessel(),
+    VesselNodePtr<DIM> p_new_node = DivideVessel(pSproutBase->GetSegment(0)->GetVessel(),
             pSproutBase->rGetLocation());
 
     // create new vessel

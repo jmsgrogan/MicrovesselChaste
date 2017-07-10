@@ -54,11 +54,10 @@ public:
     {
         // Generate the network
         VesselNetworkGenerator<2> network_generator;
-        QLength length(10000.0_um);
-        QLength vessel_length(40.0_um);
+        QLength length(10_mm);
+        QLength vessel_length(40_um);
         Timer::Reset();
-        std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(length,
-                length, vessel_length);
+        VesselNetworkPtr<2> p_network = network_generator.GenerateHexagonalNetwork(length, length, vessel_length);
 
         Timer::PrintAndReset("Network set up");
 
@@ -70,79 +69,73 @@ public:
     void TestGenerateAndWriteHexagonalNetwork() throw (Exception)
     {
         // Specify the network dimensions
-        QLength vessel_length = 5.0_um;
+        QLength vessel_length = 5_um;
 
         // Generate the network
-        VesselNetworkGenerator<2> vascular_network_generator;
-        std::shared_ptr<VesselNetwork<2> > vascular_network = vascular_network_generator.GenerateHexagonalUnit(vessel_length);
+        VesselNetworkGenerator<2> network_generator;
+        VesselNetworkPtr<2> p_network = network_generator.GenerateHexagonalUnit(vessel_length);
 
         // Pattern the unit
         std::vector<unsigned> num_units(2, 3);
-        vascular_network_generator.PatternUnitByTranslation(vascular_network, num_units);
+        network_generator.PatternUnitByTranslation(p_network, num_units);
 
         // Write the network to file
         OutputFileHandler output_file_handler("TestVesselNetworkGenerator", false);
-        vascular_network->Write(output_file_handler.GetOutputDirectoryFullPath().append("HexagonalVesselNetwork.vtp"));
+        p_network->Write(output_file_handler.GetOutputDirectoryFullPath().append("HexagonalVesselNetwork.vtp"));
     }
 
     void TestGenerate3dHexagonalNetwork() throw (Exception)
     {
         // Specify the network dimensions
-        QLength vessel_length = 40.0_um;
+        QLength vessel_length = 40_um;
 
         // Generate the network
-        VesselNetworkGenerator<3> vascular_network_generator;
-        std::shared_ptr<VesselNetwork<3> > vascular_network = vascular_network_generator.GenerateHexagonalUnit(vessel_length);
+        VesselNetworkGenerator<3> network_generator;
+        VesselNetworkPtr<3> p_network = network_generator.GenerateHexagonalUnit(vessel_length);
 
         // Pattern the unit
         std::vector<unsigned> num_units(3, 3);
-        vascular_network_generator.PatternUnitByTranslation(vascular_network, num_units);
+        network_generator.PatternUnitByTranslation(p_network, num_units);
 
         // Write the network to file
         OutputFileHandler output_file_handler("TestVesselNetworkGenerator", false);
-        vascular_network->Write(output_file_handler.GetOutputDirectoryFullPath().append("HexagonalVesselNetwork3d.vtp"));
+        p_network->Write(output_file_handler.GetOutputDirectoryFullPath().append("HexagonalVesselNetwork3d.vtp"));
     }
 
     void TestParallelNetworks() throw (Exception)
     {
-        std::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        QArea target_density(10_um*1_um);
-        QLength exclusion_distance(20.0_um);
+        auto p_part = Part<3>::Create();
+        p_part->AddCuboid(1_mm, 1_mm, 50_um, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        QPerArea target_density = 1.0/(200_um*200_um);
+        QLength exclusion_distance(20_um);
 
-        p_part->AddCuboid(1000.0_um,
-                          1000.0_um,
-                          50.0_um,
-                          DimensionalChastePoint<3>(0.0, 0.0, 0.0));
         VesselNetworkGenerator<3> network_generator;
-        std::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateParallelNetwork(p_part, target_density,
+        VesselNetworkPtr<3> p_network = network_generator.GenerateParallelNetwork(p_part, target_density,
                                                                                                         VesselDistribution::REGULAR);
         OutputFileHandler output_file_handler("TestVesselNetworkGenerator/Parallel", false);
         std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("RegularNetwork.vtp");
         p_network->Write(output_filename);
 
-        std::shared_ptr<VesselNetwork<3> > p_network2 = network_generator.GenerateParallelNetwork(p_part, target_density,
+        VesselNetworkPtr<3> p_network2 = network_generator.GenerateParallelNetwork(p_part, target_density,
                                                                                                         VesselDistribution::UNIFORM);
 
         std::string output_filename2 = output_file_handler.GetOutputDirectoryFullPath().append("UniformNetwork.vtp");
         p_network2->Write(output_filename2);
 
-        std::shared_ptr<VesselNetwork<3> > p_network3 = network_generator.GenerateParallelNetwork(p_part,
-                                                                                                     target_density,
+        VesselNetworkPtr<3> p_network3 = network_generator.GenerateParallelNetwork(p_part, target_density,
                                                                                                         VesselDistribution::UNIFORM,
                                                                                                         exclusion_distance);
 
         std::string output_filename3 = output_file_handler.GetOutputDirectoryFullPath().append("UniformExclusionNetwork.vtp");
         p_network3->Write(output_filename3);
 
-        std::shared_ptr<VesselNetwork<3> > p_network4 = network_generator.GenerateParallelNetwork(p_part,
-                                                                                                     target_density,
+        VesselNetworkPtr<3> p_network4 = network_generator.GenerateParallelNetwork(p_part, target_density,
                                                                                                         VesselDistribution::TWO_LAYER);
 
         std::string output_filename4 = output_file_handler.GetOutputDirectoryFullPath().append("TwoLayerNetwork.vtp");
         p_network3->Write(output_filename4);
 
-        std::shared_ptr<VesselNetwork<3> > p_network5 = network_generator.GenerateParallelNetwork(p_part,
-                                                                                                     target_density,
+        VesselNetworkPtr<3> p_network5 = network_generator.GenerateParallelNetwork(p_part, target_density,
                                                                                                         VesselDistribution::TWO_LAYER,
                                                                                                         exclusion_distance);
 

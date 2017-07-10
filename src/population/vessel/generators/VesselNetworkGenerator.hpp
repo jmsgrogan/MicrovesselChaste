@@ -96,13 +96,11 @@ public:
      * @param seeds User provided seed locations for the vessel locations, used with CUSTOM distribution type
      * @return a shared pointer to the vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > GenerateParallelNetwork(PartPtr<DIM> domain,
-                                                                        QArea targetDensity,
-                                                                        VesselDistribution::Value distrbutionType,
-                                                                        QLength exclusionDistance = 0.0*unit::metres,
-                                                                        bool useBbox = false,
-                                                                        std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > seeds =
-                                                                                std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > >());
+    VesselNetworkPtr<DIM> GenerateParallelNetwork(PartPtr<DIM> domain,
+            QPerArea targetDensity, VesselDistribution::Value distrbutionType,
+            QLength exclusionDistance = 0_m, bool useBbox = false,
+            std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > seeds =
+                    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > >());
     /**
      * Creates a hexagonal network corresponding to that of Alarcon et al. (2006)
      * @param width the widht
@@ -110,16 +108,15 @@ public:
      * @param vesselLength the vessel length
      * @return a shared pointer to the vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > GenerateHexagonalNetwork(QLength width,
-                                                                    QLength height,
-                                                                    QLength vesselLength,
-                                                                    bool fillDomain=false);
+    VesselNetworkPtr<DIM> GenerateHexagonalNetwork(QLength width, QLength height, QLength vesselLength,
+            bool fillDomain=false);
+
     /**
      * Creates a hexagonal repeating unit
      * @param vesselLength the vessel length
      * @return a shared pointer to the vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > GenerateHexagonalUnit(QLength vesselLength);
+    VesselNetworkPtr<DIM> GenerateHexagonalUnit(QLength vesselLength);
 
     /**
      * Creates a bifurcation repeating unit
@@ -127,20 +124,19 @@ public:
      * @param startPosition the start position of the unit
      * @return a shared pointer to the vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > GenerateBifurcationUnit(QLength vesselLength,
-                                                                   DimensionalChastePoint<DIM> startPosition);
+    VesselNetworkPtr<DIM> GenerateBifurcationUnit(QLength vesselLength,
+            VecQLength<DIM> startPosition = VecQLength<DIM>(0.0));
 
     /**
-     * Creates a single vessel
+     * Creates a single vesselW
      * @param vesselLength the vessel length
      * @param startPosition the start position for the vessel
      * @param divisions the number of divisions
      * @param axis the alignment axis
      * @return a shared pointer to the vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > GenerateSingleVessel(QLength vesselLength,
-                                                                DimensionalChastePoint<DIM> startPosition,
-                                                                    unsigned divisions = 0, unsigned axis = 2);
+    VesselNetworkPtr<DIM> GenerateSingleVessel(QLength vesselLength,
+            VecQLength<DIM> startPosition = VecQLength<DIM>(0.0), unsigned divisions = 0, unsigned axis = 2);
 
     /**
      * Creates an oval shaped network with one inlet and one outlet
@@ -150,23 +146,21 @@ public:
      * @param a_param a length parameter
      * @return a shared pointer to the vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > GenerateOvalNetwork(QLength scaleFactor,
-                                                                     unsigned num_increments = 40,
-                                                                     double a_param = 0.5,
-                                                                     double b_param = 1.0);
+    VesselNetworkPtr<DIM> GenerateOvalNetwork(QLength scaleFactor,
+            unsigned num_increments = 40, double a_param = 0.5, double b_param = 1.0);
     /**
      * Generate a network on the edges of a Part
      * @param pPart the input part
      * @return a shared pointer to the vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > GenerateFromPart(PartPtr<DIM> pPart);
+    VesselNetworkPtr<DIM> GenerateFromPart(PartPtr<DIM> pPart);
 
     /**
      * Pattern Unit. Coincident nodes are automatically merged in this method.
      * @param pInputUnit the input unit
      * @param numberOfUnits the number of units in each direction
      */
-    void PatternUnitByTranslation(std::shared_ptr<VesselNetwork<DIM> > pInputUnit, std::vector<unsigned> numberOfUnits);
+    void PatternUnitByTranslation(VesselNetworkPtr<DIM> pInputUnit, std::array<unsigned, DIM> numberOfUnits);
 
     /**
      * Map the network onto a sphere
@@ -176,11 +170,8 @@ public:
      * @param azimuthExtent the azimuth extents
      * @param polarExtent the polar extents
      */
-    void MapToSphere(std::shared_ptr<VesselNetwork<DIM> > pInputUnit,
-                     QLength radius,
-                     QLength thickess,
-                     double azimuthExtent,
-                     double polarExtent);
+    void MapToSphere(VesselNetworkPtr<DIM> pInputUnit, QLength radius, QLength thickess,
+                     double azimuthExtent, double polarExtent);
 
     /**
      * Set the reference length scale

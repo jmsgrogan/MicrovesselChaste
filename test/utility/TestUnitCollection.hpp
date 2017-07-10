@@ -39,6 +39,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cxxtest/TestSuite.h>
 #include <SmartPointers.hpp>
 #include "UnitCollection.hpp"
+#include "VectorUnitCollection.hpp"
 
 #include "PetscSetupAndFinalize.hpp"
 
@@ -69,6 +70,16 @@ public:
         TS_ASSERT_EQUALS(m1s.str(), "180");
         TS_ASSERT_EQUALS(h1s.str(), "10800");
         TS_ASSERT_EQUALS(d1s.str(), "259200");
+    }
+
+    void TestVectorUnits()
+    {
+        VecQLength<2> loc(1.0);
+        std::cout << loc.Convert(1_um)[0] << std::endl;
+        std::cout << loc[0] << std::endl;
+
+        VecQLength<2> origin = QOrigin2;
+        std::cout << origin.Convert(1_m)[0] << std::endl;
     }
 
 };

@@ -485,6 +485,12 @@ private:
     std::shared_ptr<Vessel<DIM> > Shared();
 };
 
+/**
+ * Convenience typedef
+ */
+template<unsigned DIM>
+using VesselPtr = std::shared_ptr<Vessel<DIM> >;
+
 #include "SerializationExportWrapper.hpp"
 EXPORT_TEMPLATE_CLASS1(Vessel, 2)
 EXPORT_TEMPLATE_CLASS1(Vessel, 3)

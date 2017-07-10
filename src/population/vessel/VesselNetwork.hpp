@@ -216,7 +216,7 @@ public:
      * @param sproutTipLocation the sprout tip
      * @return the new sprout
      */
-    virtual std::shared_ptr<Vessel<DIM> > FormSprout(std::shared_ptr<VesselNode<DIM> > pSproutBase,
+    virtual VesselPtr<DIM> FormSprout(VesselNodePtr<DIM> pSproutBase,
                                                const DimensionalChastePoint<DIM>& sproutTipLocation);
 
     /**
@@ -439,6 +439,12 @@ public:
     void Write(const std::string& rFileName, bool masterOnly=true);
 
 };
+
+/**
+ * Convenience typedef
+ */
+template<unsigned DIM>
+using VesselNetworkPtr = std::shared_ptr<VesselNetwork<DIM> >;
 
 #include "SerializationExportWrapper.hpp"
 EXPORT_TEMPLATE_CLASS1(VesselNetwork, 2)

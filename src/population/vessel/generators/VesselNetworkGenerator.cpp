@@ -61,15 +61,15 @@ void VesselNetworkGenerator<DIM>::SetReferenceLengthScale(QLength rReferenceLeng
 }
 
 template<unsigned DIM>
-std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateOvalNetwork(QLength scale_factor,
-                                                                                      unsigned num_increments,
-                                                                                      double a_param,
-                                                                                      double b_param)
+VesselNetworkPtr<DIM> VesselNetworkGenerator<DIM>::GenerateOvalNetwork(QLength scale_factor,
+                                                                       unsigned num_increments,
+                                                                       double a_param,
+                                                                       double b_param)
 {
     // It is 'melon' shaped with one input and output vessel
     double increment_size = (2.0 * M_PI) / double(num_increments);
 
-    std::vector<std::shared_ptr<VesselNode<DIM> > > v1_nodes;
+    std::vector<VesselNodePtr<DIM> > v1_nodes;
     v1_nodes.push_back(VesselNode<DIM>::Create(0.0, 0.0, 0.0, mReferenceLength));
     v1_nodes.push_back(VesselNode<DIM>::Create(increment_size * scale_factor/mReferenceLength, 0.0, 0.0, mReferenceLength));
     std::shared_ptr<Vessel<DIM> > p_vessel_1 = Vessel<DIM>::Create(v1_nodes);
@@ -81,7 +81,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateOvalNe
     bounds[4] = 0.0;
     bounds[5] = 2.0;
 
-    std::vector<std::shared_ptr<VesselNode<DIM> > > v2_nodes;
+    std::vector<VesselNodePtr<DIM> > v2_nodes;
     double y_max = 0.0;
     for(unsigned idx=0; idx<= num_increments/2; idx++)
     {
@@ -97,7 +97,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateOvalNe
         v2_nodes.push_back(VesselNode<DIM>::Create(x * scale_factor/mReferenceLength, y * scale_factor/mReferenceLength, 0.0, mReferenceLength));
     }
 
-    std::vector<std::shared_ptr<VesselNode<DIM> > > v3_nodes;
+    std::vector<VesselNodePtr<DIM> > v3_nodes;
     for(unsigned idx=num_increments/2; idx<= num_increments; idx++)
     {
         double t = double(idx) * increment_size;
@@ -118,7 +118,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateOvalNe
     p_vessel_2->SetId(2);
     p_vessel_3->SetId(3);
 
-    std::vector<std::shared_ptr<VesselNode<DIM> > > v4_nodes;
+    std::vector<VesselNodePtr<DIM> > v4_nodes;
     v4_nodes.push_back(VesselNode<DIM>::Create((std::sqrt(a_param*a_param + b_param*b_param) + x_offset) * scale_factor/mReferenceLength, 0.0, 0.0, mReferenceLength));
     v4_nodes.push_back(VesselNode<DIM>::Create((std::sqrt(a_param*a_param + b_param*b_param) + increment_size + x_offset) * scale_factor/mReferenceLength, 0.0, 0.0, mReferenceLength));
     bounds[1] = (std::sqrt(a_param*a_param + b_param*b_param) + increment_size + x_offset) * scale_factor/mReferenceLength;
@@ -142,28 +142,25 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateOvalNe
 
 template<unsigned DIM>
 std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParallelNetwork(PartPtr<DIM> domain,
-                                                                                             QArea targetDensity,
-                                                                    VesselDistribution::Value distributionType,
-                                                                    QLength exclusionDistance,
-                                                                    bool useBbox,
-                                                                    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > seeds)
+        QPerArea targetDensity, VesselDistribution::Value distributionType, QLength exclusionDistance,
+        bool useBbox, std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > seeds)
 {
     // Get the bounding box of the domain and the volume of the bbox
-    std::vector<QLength > bbox = domain->GetBoundingBox();
+    std::vector<QLength> bbox = domain->GetBoundingBox();
     QLength delta_x = bbox[1] - bbox[0];
     QLength delta_y = bbox[3] - bbox[2];
-    QLength delta_z = 0.0*unit::metres;
+    QLength delta_z = 0_m;
     if(DIM==3)
     {
         delta_z = bbox[5] - bbox[4];
     }
-    if(delta_x == 0.0*unit::metres || delta_y == 0.0*unit::metres)
+    if(delta_x == 0_m || delta_y == 0_m)
     {
         EXCEPTION("The domain must be at least two-dimensional.");
     }
 
-    unsigned num_x = unsigned(Qsqrt(targetDensity) * delta_x);
-    unsigned num_y = unsigned(Qsqrt(targetDensity) * delta_y);
+    unsigned num_x = unsigned(delta_x*Qsqrt(targetDensity));
+    unsigned num_y = unsigned(delta_y*Qsqrt(targetDensity));
     if(num_x == 0 || num_y == 0)
     {
         EXCEPTION("The domain is not large enough to contain any vessels at the requested density.");
@@ -172,8 +169,8 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParall
     QLength spacing_y = delta_y / double(num_y);
 
     // Generate the start and end nodes
-    std::vector<std::shared_ptr<VesselNode<DIM> > > start_nodes;
-    std::vector<std::shared_ptr<VesselNode<DIM> > > end_nodes;
+    std::vector<VesselNodePtr<DIM> > start_nodes;
+    std::vector<VesselNodePtr<DIM> > end_nodes;
     if(distributionType == VesselDistribution::REGULAR)
     {
         for(unsigned idx=0; idx<num_y; idx++)
@@ -400,7 +397,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateHexago
 {
     // Generate the nodes
     double dimensionless_vessel_length = vesselLength/mReferenceLength;
-    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes;
+    std::vector<VesselNodePtr<DIM> > nodes;
     nodes.push_back(VesselNode<DIM>::Create(0.0, 0.0, 0.0, mReferenceLength)); //0
     nodes.push_back(VesselNode<DIM>::Create(dimensionless_vessel_length, dimensionless_vessel_length, 0.0, mReferenceLength)); //1
     nodes.push_back(VesselNode<DIM>::Create(0.0, 2.0 * dimensionless_vessel_length, 0.0, mReferenceLength)); //2
@@ -446,7 +443,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateBifurc
 {
     // Generate the nodes
     double dimensionless_vessel_length = vesselLength/mReferenceLength;
-    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes;
+    std::vector<VesselNodePtr<DIM> > nodes;
     nodes.push_back(VesselNode<DIM>::Create(0.0, dimensionless_vessel_length, 0.0, mReferenceLength)); //0
     nodes.push_back(VesselNode<DIM>::Create(dimensionless_vessel_length, dimensionless_vessel_length, 0.0, mReferenceLength)); //1
     nodes.push_back(VesselNode<DIM>::Create(2.0 * dimensionless_vessel_length, 2.0 * dimensionless_vessel_length, 0.0, mReferenceLength)); //2
@@ -477,7 +474,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateSingle
                                                                                        unsigned divisions, unsigned axis)
 {
     double dimensionless_vessel_length = vesselLength/mReferenceLength;
-    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes;
+    std::vector<VesselNodePtr<DIM> > nodes;
     nodes.push_back(VesselNode<DIM>::Create(startPosition)); //0
     double interval = dimensionless_vessel_length/double(divisions + 1);
 
@@ -551,10 +548,10 @@ void VesselNetworkGenerator<DIM>::MapToSphere(std::shared_ptr<VesselNetwork<DIM>
                                               double azimuthExtent, double polarExtent)
 {
     std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = VesselNetworkGeometryCalculator<DIM>::GetExtents(pInputUnit);
-    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = pInputUnit->GetNodes();
-    for(unsigned idx =0; idx<nodes.size(); idx++)
+    std::vector<VesselNodePtr<DIM> > nodes = pInputUnit->GetNodes();
+    for (auto& node : nodes)
     {
-        c_vector<double, DIM> node_loc = nodes[idx]->rGetLocation().GetLocation(mReferenceLength);
+        c_vector<double, DIM> node_loc = node->rGetLocation().GetLocation(mReferenceLength);
         c_vector<double, DIM> offset = (extents.second - extents.first).GetLocation(mReferenceLength);
 
         double x_frac = node_loc[0] / offset[0];
@@ -573,7 +570,7 @@ void VesselNetworkGenerator<DIM>::MapToSphere(std::shared_ptr<VesselNetwork<DIM>
                                               dimless_radius * std::cos(polar_angle),
                                               dimless_radius * std::sin(azimuth_angle) * std::sin(polar_angle),
                                               mReferenceLength);
-        nodes[idx]->SetLocation(new_position);
+        node->SetLocation(new_position);
     }
 }
 

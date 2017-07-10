@@ -483,6 +483,12 @@ private:
     void RemoveSegment(std::shared_ptr<VesselSegment<DIM> > pVesselSegment);
 };
 
+/**
+ * Convenience typedef
+ */
+template<unsigned DIM>
+using VesselNodePtr = std::shared_ptr<VesselNode<DIM> >;
+
 #include "SerializationExportWrapper.hpp"
 EXPORT_TEMPLATE_CLASS1(VesselNode, 2)
 EXPORT_TEMPLATE_CLASS1(VesselNode, 3)

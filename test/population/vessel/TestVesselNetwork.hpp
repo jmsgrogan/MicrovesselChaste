@@ -65,7 +65,7 @@ public:
     void TestAddingVessels() throw(Exception)
     {
         // Make some nodes
-        std::vector<std::shared_ptr<VesselNode<3> > > nodes;
+        std::vector<VesselNodePtr<3> > nodes;
         for(unsigned idx=0; idx < 4; idx++)
         {
             nodes.push_back(VesselNode<3>::Create(double(idx), 0.0, 0.0));
@@ -89,7 +89,7 @@ public:
     void TestSettingNetworkData() throw(Exception)
     {
         // Make some nodes
-        std::vector<std::shared_ptr<VesselNode<3> > > nodes;
+        std::vector<VesselNodePtr<3> > nodes;
         for(unsigned idx=0; idx < 4; idx++)
         {
             nodes.push_back(VesselNode<3>::Create(double(idx), 0.0, 0.0));
@@ -112,7 +112,7 @@ public:
     void TestCopyingAndMovingNetwork() throw(Exception)
     {
         // Make some nodes
-        std::vector<std::shared_ptr<VesselNode<3> > > nodes;
+        std::vector<VesselNodePtr<3> > nodes;
         for(unsigned idx=0; idx < 4; idx++)
         {
             nodes.push_back(VesselNode<3>::Create(double(idx), 0.0, 0.0));
@@ -156,7 +156,7 @@ public:
     void TestRemoveVessel() throw(Exception)
     {
         // Make some nodes
-        std::vector<std::shared_ptr<VesselNode<3> > > nodes;
+        std::vector<VesselNodePtr<3> > nodes;
         nodes.push_back(VesselNode<3>::Create(0.0, 0.0, 0.0));
         nodes.push_back(VesselNode<3>::Create(20.0, 0.0, 0.0));
         nodes.push_back(VesselNode<3>::Create(30.0, 0.0, 0.0));
@@ -179,7 +179,7 @@ public:
     void TestDivideVessel() throw(Exception)
     {
          // Make some nodes
-         std::vector<std::shared_ptr<VesselNode<3> > > nodes;
+         std::vector<VesselNodePtr<3> > nodes;
          for(unsigned idx=0; idx < 2; idx++)
          {
              nodes.push_back(VesselNode<3>::Create(2.0 * double(idx)));
@@ -207,7 +207,7 @@ public:
     void TestDivideMultiSegmentVessel() throw(Exception)
     {
         // Make some nodes
-        std::vector<std::shared_ptr<VesselNode<3> > > nodes;
+        std::vector<VesselNodePtr<3> > nodes;
         for(unsigned idx=1; idx < 6; idx++)
         {
             nodes.push_back(VesselNode<3>::Create(double(idx), 0.0, 0.0));
@@ -256,20 +256,17 @@ public:
 
     void TestSprouting()
     {
-        std::shared_ptr<VesselNetwork<2> > p_vessel_network = VesselNetwork<2>::Create();
-        std::vector<std::shared_ptr<VesselNode<2> > > nodes1;
-        nodes1.push_back(VesselNode<2>::Create(0));
-        nodes1.push_back(VesselNode<2>::Create(1));
-        nodes1.push_back(VesselNode<2>::Create(2));
-        std::shared_ptr<Vessel<2> > p_vessel1 = Vessel<2>::Create(nodes1);
-
-        p_vessel_network->AddVessel(p_vessel1);
+        auto p_vessel_network = VesselNetwork<2>::Create();
+        std::vector<VesselNodePtr<2> > nodes;
+        nodes.push_back(VesselNode<2>::Create(0));
+        nodes.push_back(VesselNode<2>::Create(1));
+        nodes.push_back(VesselNode<2>::Create(2));
+        auto p_vessel = Vessel<2>::Create(nodes);
+        p_vessel_network->AddVessel(p_vessel);
 
         // form sprout
-        QLength reference_length(1.0*unit::microns);
-        std::shared_ptr<VesselNode<2> >  sproutBaseLocation = VesselNode<2>::Create(1.0, 0.0, 0.0, reference_length);
-        DimensionalChastePoint<2> sproutTipLocation(0.0, 1.0, 0.0, reference_length);
-        std::shared_ptr<Vessel<2> > newSprout = p_vessel_network->FormSprout(sproutBaseLocation, sproutTipLocation);
+        DimensionalChastePoint<2> sprout_tip(0.0, 1.0, 0.0, 1.0_um);
+        VesselPtr<2> p_new_sprout = p_vessel_network->FormSprout(nodes[1], sprout_tip);
 
         p_vessel_network->UpdateAll(true);
         // test number of vessels and nodes in network
@@ -280,7 +277,7 @@ public:
     void TestRemoveAndDeleteVessel() throw(Exception)
     {
         // Make some nodes
-        std::vector<std::shared_ptr<VesselNode<3> > > nodes;
+        std::vector<VesselNodePtr<3> > nodes;
         nodes.push_back(VesselNode<3>::Create(0.0));
         nodes.push_back(VesselNode<3>::Create(20.0));
         nodes.push_back(VesselNode<3>::Create(30.0));
@@ -306,7 +303,7 @@ public:
     void TestMergeVessel() throw(Exception)
     {
         // Make some nodes
-        std::vector<std::shared_ptr<VesselNode<3> > > nodes;
+        std::vector<VesselNodePtr<3> > nodes;
         nodes.push_back(VesselNode<3>::Create(0.0));
         nodes.push_back(VesselNode<3>::Create(20.0));
         nodes.push_back(VesselNode<3>::Create(30.0));
@@ -331,31 +328,29 @@ public:
     void TestMultipleSprouts() throw(Exception)
     {
         // Make a network
-        std::vector<std::shared_ptr<VesselNode<3> > > bottom_nodes;
+        std::vector<VesselNodePtr<3> > bottom_nodes;
         for(unsigned idx=0; idx<3; idx++)
         {
             bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10, 0.0, 0.0));
         }
 
-        std::shared_ptr<Vessel<3> > p_vessel1 = Vessel<3>::Create(bottom_nodes);
-        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
-        p_network->AddVessel(p_vessel1);
+        auto p_vessel = Vessel<3>::Create(bottom_nodes);
+        auto p_network = VesselNetwork<3>::Create();
+        p_network->AddVessel(p_vessel);
 
         // Add some sprouts
         for(unsigned idx=1; idx<2; idx++)
         {
-            QLength reference_length(1.0*unit::microns);
-            std::shared_ptr<VesselNode<3> > base_location = VesselNode<3>::Create(double(idx)*10.0, 0.0, 0.0, reference_length);
-            DimensionalChastePoint<3> tip_location(double(idx)*10.0, 10.0, 0.0, reference_length);
-            p_network->FormSprout(base_location, tip_location);
+            DimensionalChastePoint<3> tip_location(double(idx)*10.0, 10.0, 0.0, 1.0_um);
+            p_network->FormSprout(bottom_nodes[idx], tip_location);
         }
 
         // make sure vessels are correctly divided
-        std::vector<std::shared_ptr<Vessel<3> > > vessels = p_network->GetVessels();
+        std::vector<VesselPtr<3> > vessels = p_network->GetVessels();
         TS_ASSERT_EQUALS(vessels.size(), 3u);
         for(unsigned idx=0; idx<vessels.size(); idx++)
         {
-            TS_ASSERT_DELTA(vessels[idx]->GetLength()/vessels[idx]->GetStartNode()->GetReferenceLengthScale(), 10.0, 1.e-6);
+            TS_ASSERT_DELTA(vessels[idx]->GetLength()/1_um, 10.0, 1.e-6);
         }
         OutputFileHandler output_file_handler("TestVesselNetwork",false);
         p_network->Write(output_file_handler.GetOutputDirectoryFullPath() + "/multisprout.vtp");
@@ -363,7 +358,7 @@ public:
 
     void TestFindNearestSegment()
     {
-        std::vector<std::shared_ptr<VesselNode<2> > > nodes;
+        std::vector<VesselNodePtr<2> > nodes;
         nodes.push_back(VesselNode<2>::Create(0.0, 0.0));
         nodes.push_back(VesselNode<2>::Create(10.0, 0.0));
         nodes.push_back(VesselNode<2>::Create(20.0, 0.0));
@@ -377,8 +372,9 @@ public:
         std::shared_ptr<VesselNetwork<2> > p_vessel_network = VesselNetwork<2>::Create();
         p_vessel_network->AddVessels(vessels);
 
-        std::shared_ptr<VesselSegment<2> > p_nearest_segment;
-        QLength distance = VesselNetworkGeometryCalculator<2>::GetNearestSegment(p_vessel_network, nodes[3], p_nearest_segment, false);
+        VesselSegmentPtr<2> p_nearest_segment;
+        QLength distance = VesselNetworkGeometryCalculator<2>::GetNearestSegment(p_vessel_network, nodes[3],
+                p_nearest_segment, false);
         TS_ASSERT(p_nearest_segment);
         TS_ASSERT_DELTA(double(distance/(1_um)), 5.0, 1.e-6);
     }
