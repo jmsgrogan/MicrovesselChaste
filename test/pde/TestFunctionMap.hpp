@@ -92,7 +92,8 @@ public:
         }
 
         solver.UpdateSolution(solution);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestFunctionMap/TestGridFunction", true));
+        auto p_output_file_handler =
+                std::make_shared<OutputFileHandler>("TestFunctionMap/TestGridFunction");
         solver.SetFileHandler(p_output_file_handler);
         solver.Write();
     }
@@ -124,7 +125,8 @@ public:
             solution.push_back(value);
         }
         solver.UpdateElementSolution(solution);
-        MAKE_PTR_ARGS(OutputFileHandler, p_output_file_handler, ("TestFunctionMap/TestMeshFunction", false));
+        auto p_output_file_handler =
+                std::make_shared<OutputFileHandler>("TestFunctionMap/TestMeshFunction");
         solver.SetFileHandler(p_output_file_handler);
         solver.Write();
     }

@@ -82,7 +82,7 @@ public:
 
         // Set up
         double time = 0.0;
-        std::shared_ptr<WildTypeCellMutationState> mutation_state(new WildTypeCellMutationState);
+        boost::shared_ptr<WildTypeCellMutationState> mutation_state(new WildTypeCellMutationState);
         Owen2011OxygenBasedCellCycleOdeSystem normal_system(hi_oxygen_concentration, mutation_state);
 
         std::vector<double> initial_conditions = normal_system.GetInitialConditions();
@@ -130,7 +130,7 @@ public:
         double time = 0.0;
         QConcentration oxygen_concentration = 1.0 * unit::mole_per_metre_cubed;
 
-        std::shared_ptr<CancerCellMutationState> mutation_state(new CancerCellMutationState);
+        boost::shared_ptr<CancerCellMutationState> mutation_state(new CancerCellMutationState);
         Owen2011OxygenBasedCellCycleOdeSystem cancer_system(oxygen_concentration, mutation_state);
         std::vector<double> initial_conditions = cancer_system.GetInitialConditions();
         std::vector<double> cancer_derivs(initial_conditions.size());

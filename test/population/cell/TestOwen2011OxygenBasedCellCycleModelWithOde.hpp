@@ -87,15 +87,15 @@ public:
         // Create cell-cycle models
         Owen2011OxygenBasedCellCycleModel* p_model_1d = new Owen2011OxygenBasedCellCycleModel();
         p_model_1d->SetDimension(1);
-        p_model_1d->SetMaxRandInitialPhase(0);
+        p_model_1d->SetMaxRandInitialPhase(0.0);
 
         Owen2011OxygenBasedCellCycleModel* p_model_2d = new Owen2011OxygenBasedCellCycleModel();
         p_model_2d->SetDimension(2);
-        p_model_2d->SetMaxRandInitialPhase(0);
+        p_model_2d->SetMaxRandInitialPhase(0.0);
 
         Owen2011OxygenBasedCellCycleModel* p_model_3d = new Owen2011OxygenBasedCellCycleModel();
         p_model_3d->SetDimension(3);
-        p_model_3d->SetMaxRandInitialPhase(0);
+        p_model_3d->SetMaxRandInitialPhase(0.0);
 
         // Create cells
         MAKE_PTR(WildTypeCellMutationState, p_state);
@@ -117,13 +117,13 @@ public:
         p_cell_3d->InitialiseCellCycleModel();
 
         // For coverage, we create another cell-cycle model that is identical to p_model_2d except for the ODE solver
-        std::shared_ptr<CellCycleModelOdeSolver<Owen2011OxygenBasedCellCycleModel, CvodeAdaptor> >
+        boost::shared_ptr<CellCycleModelOdeSolver<Owen2011OxygenBasedCellCycleModel, CvodeAdaptor> >
         p_solver(CellCycleModelOdeSolver<Owen2011OxygenBasedCellCycleModel, CvodeAdaptor>::Instance());
         p_solver->Initialise();
 
         Owen2011OxygenBasedCellCycleModel* p_other_model_2d = new Owen2011OxygenBasedCellCycleModel(p_solver);
         p_other_model_2d->SetDimension(2);
-        p_other_model_2d->SetMaxRandInitialPhase(0);
+        p_other_model_2d->SetMaxRandInitialPhase(0.0);
 
         CellPtr p_other_cell_2d(new Cell(p_state, p_other_model_2d));
         p_other_cell_2d->GetCellData()->SetItem("oxygen", oxygen_concentration/BaseUnits::Instance()->GetReferenceConcentrationScale());
@@ -243,7 +243,7 @@ public:
         // For coverage, create a 1D model
         Owen2011OxygenBasedCellCycleModel* p_cell_model3 = new Owen2011OxygenBasedCellCycleModel();
         p_cell_model3->SetDimension(1);
-        p_cell_model3->SetMaxRandInitialPhase(0);
+        p_cell_model3->SetMaxRandInitialPhase(0.0);
 
         CellPtr p_cell3(new Cell(p_state, p_cell_model3));
         p_cell3->GetCellData()->SetItem("oxygen", oxygen_concentration/BaseUnits::Instance()->GetReferenceConcentrationScale());
@@ -296,15 +296,15 @@ public:
         // Create cell-cycle models
         Owen2011OxygenBasedCellCycleModel* p_model_1d = new Owen2011OxygenBasedCellCycleModel();
         p_model_1d->SetDimension(1);
-        p_model_1d->SetMaxRandInitialPhase(0);
+        p_model_1d->SetMaxRandInitialPhase(0.0);
 
         Owen2011OxygenBasedCellCycleModel* p_model_2d = new Owen2011OxygenBasedCellCycleModel();
         p_model_2d->SetDimension(2);
-        p_model_2d->SetMaxRandInitialPhase(0);
+        p_model_2d->SetMaxRandInitialPhase(0.0);
 
         Owen2011OxygenBasedCellCycleModel* p_model_3d = new Owen2011OxygenBasedCellCycleModel();
         p_model_3d->SetDimension(3);
-        p_model_3d->SetMaxRandInitialPhase(0);
+        p_model_3d->SetMaxRandInitialPhase(0.0);
 
         // Create cells
         MAKE_PTR(CancerCellMutationState, p_state);
@@ -329,13 +329,13 @@ public:
         TS_ASSERT_EQUALS(p_state->IsType<CancerCellMutationState>(), true);
 
         // For coverage, we create another cell-cycle model that is identical to p_model_2d except for the ODE solver
-        std::shared_ptr<CellCycleModelOdeSolver<Owen2011OxygenBasedCellCycleModel, CvodeAdaptor> >
+        boost::shared_ptr<CellCycleModelOdeSolver<Owen2011OxygenBasedCellCycleModel, CvodeAdaptor> >
         p_solver(CellCycleModelOdeSolver<Owen2011OxygenBasedCellCycleModel, CvodeAdaptor>::Instance());
         p_solver->Initialise();
 
         Owen2011OxygenBasedCellCycleModel* p_other_model_2d = new Owen2011OxygenBasedCellCycleModel(p_solver);
         p_other_model_2d->SetDimension(2);
-        p_other_model_2d->SetMaxRandInitialPhase(0);
+        p_other_model_2d->SetMaxRandInitialPhase(0.0);
 
         CellPtr p_other_cell_2d(new Cell(p_state, p_other_model_2d));
         p_other_cell_2d->GetCellData()->SetItem("oxygen", oxygen_concentration/BaseUnits::Instance()->GetReferenceConcentrationScale());
@@ -401,7 +401,7 @@ public:
         // For coverage, create a 1D model
         Owen2011OxygenBasedCellCycleModel* p_cell_model3 = new Owen2011OxygenBasedCellCycleModel();
         p_cell_model3->SetDimension(1);
-        p_cell_model3->SetMaxRandInitialPhase(0);
+        p_cell_model3->SetMaxRandInitialPhase(0.0);
 
         CellPtr p_cell3(new Cell(p_state, p_cell_model3));
         p_cell3->GetCellData()->SetItem("oxygen", oxygen_concentration/BaseUnits::Instance()->GetReferenceConcentrationScale());
@@ -436,7 +436,7 @@ public:
 
         Owen2011OxygenBasedCellCycleModel* p_model1 = new Owen2011OxygenBasedCellCycleModel();
         p_model1->SetDimension(2);
-        p_model1->SetMaxRandInitialPhase(0);
+        p_model1->SetMaxRandInitialPhase(0.0);
 
         MAKE_PTR(CancerCellMutationState, p_state);
         MAKE_PTR(StemCellProliferativeType, p_stem_type);
@@ -447,24 +447,24 @@ public:
         p_cell1->InitialiseCellCycleModel();
 
         p_model1->ReadyToDivide();
-        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration().value(), 0.0, 1e-12);
-        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime().value(), 0.0, 1e-12);
+        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration()/1_s, 0.0, 1e-12);
+        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime()/1_s, 0.0, 1e-12);
 
         p_simulation_time->IncrementTimeOneStep(); // t=30.0
         p_model1->ReadyToDivide();
         TS_ASSERT_DELTA(double(p_model1->GetCurrentQuiescentDuration()/BaseUnits::Instance()->GetReferenceTimeScale()), 30.0, 1e-12);
-        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime().value(), 0.0, 1e-12);
+        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime()/1_s, 0.0, 1e-12);
 
         p_cell1->GetCellData()->SetItem("oxygen", hi_oxygen_concentration/BaseUnits::Instance()->GetReferenceConcentrationScale());
         p_simulation_time->IncrementTimeOneStep(); // t=60.0
         p_model1->ReadyToDivide();
-        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration().value(), 0.0, 1e-12);
-        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime().value(), 0.0, 1e-12);
+        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration()/1_s, 0.0, 1e-12);
+        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescenceOnsetTime()/1_s, 0.0, 1e-12);
 
         p_cell1->GetCellData()->SetItem("oxygen", low_oxygen_concentration/BaseUnits::Instance()->GetReferenceConcentrationScale());
         p_simulation_time->IncrementTimeOneStep(); // t=90.0
         p_model1->ReadyToDivide();
-        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration().value(), 0.0, 1e-12);
+        TS_ASSERT_DELTA(p_model1->GetCurrentQuiescentDuration()/1_s, 0.0, 1e-12);
         TS_ASSERT_DELTA(double(p_model1->GetCurrentQuiescenceOnsetTime()/BaseUnits::Instance()->GetReferenceTimeScale()), 90.0, 1e-12);
 
         // Set up SimulationTime
@@ -476,7 +476,7 @@ public:
         // Create cell-cycle models and cells
         Owen2011OxygenBasedCellCycleModel* p_model = new Owen2011OxygenBasedCellCycleModel();
         p_model->SetDimension(2);
-        p_model->SetMaxRandInitialPhase(0);
+        p_model->SetMaxRandInitialPhase(0.0);
         p_model->SetBirthTime(0.0);
 
         CellPtr p_cell(new Cell(p_state, p_model));
@@ -503,7 +503,7 @@ public:
         CellPtr p_cell2 = p_cell->Divide();
         TS_ASSERT_EQUALS(p_model->GetCurrentCellCyclePhase(), G_ONE_PHASE);
         Owen2011OxygenBasedCellCycleModel* p_model2 = static_cast <Owen2011OxygenBasedCellCycleModel*>(p_cell2->GetCellCycleModel());
-        p_model2->SetMaxRandInitialPhase(0);
+        p_model2->SetMaxRandInitialPhase(0.0);
 
         TS_ASSERT_EQUALS(p_model2->GetCurrentCellCyclePhase(), G_ONE_PHASE);
         TS_ASSERT_EQUALS(p_model2->ReadyToDivide(), false);
@@ -539,7 +539,7 @@ public:
         TS_ASSERT_EQUALS(p_cell->ReadyToDivide(), true);
         CellPtr p_cell3 = p_cell->Divide();
         Owen2011OxygenBasedCellCycleModel* p_model3 = static_cast <Owen2011OxygenBasedCellCycleModel*>(p_cell3->GetCellCycleModel());
-        p_model3->SetMaxRandInitialPhase(0);
+        p_model3->SetMaxRandInitialPhase(0.0);
 
         TS_ASSERT_EQUALS(p_model3->ReadyToDivide(), false);
         TS_ASSERT_EQUALS(p_model3->GetCurrentCellCyclePhase(), G_ONE_PHASE);
@@ -547,7 +547,7 @@ public:
         // For coverage, create a 1D model
         Owen2011OxygenBasedCellCycleModel* p_cell_model1d = new Owen2011OxygenBasedCellCycleModel();
         p_cell_model1d->SetDimension(1);
-        p_cell_model1d->SetMaxRandInitialPhase(0);
+        p_cell_model1d->SetMaxRandInitialPhase(0.0);
 
         CellPtr p_cell1d(new Cell(p_state, p_cell_model1d));
         p_cell1d->GetCellData()->SetItem("oxygen", hi_oxygen_concentration/BaseUnits::Instance()->GetReferenceConcentrationScale());
@@ -559,7 +559,7 @@ public:
         // For coverage, create a 3D model
         Owen2011OxygenBasedCellCycleModel* p_cell_model3d = new Owen2011OxygenBasedCellCycleModel();
         p_cell_model3d->SetDimension(3);
-        p_cell_model3d->SetMaxRandInitialPhase(0);
+        p_cell_model3d->SetMaxRandInitialPhase(0.0);
 
         CellPtr p_cell3d(new Cell(p_state, p_cell_model3d));
         p_cell3d->GetCellData()->SetItem("oxygen", hi_oxygen_concentration/BaseUnits::Instance()->GetReferenceConcentrationScale());

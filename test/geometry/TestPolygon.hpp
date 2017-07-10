@@ -192,11 +192,11 @@ public:
         DimensionalChastePoint<3> new_position = *vertices[1] + translation_vector;
 
         p_polygon->Translate(translation_vector);
-        TS_ASSERT_DELTA(p_polygon->GetVertices()[1]->GetLocation(1_um)[0], 1.e-6);
+        TS_ASSERT_DELTA(p_polygon->GetVertices()[1]->GetLocation(1_um)[0], 3.0, 1.e-6);
 
         c_vector<double, 3> rotation_axis = unit_vector<double>(3, 2);
         p_polygon->RotateAboutAxis(rotation_axis, M_PI/2.0);
-        TS_ASSERT_DELTA(p_polygon->GetVertices()[1]->GetLocation(1_um)[1], 1.e-6);
+        TS_ASSERT_DELTA(p_polygon->GetVertices()[1]->GetLocation(1_um)[1], 3.0, 1.e-6);
     }
 
     void TestGeometryOperations() throw(Exception)
@@ -209,19 +209,19 @@ public:
         std::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(vertices);
 
         std::vector<QLength > bbox = p_polygon->GetBoundingBox();
-        TS_ASSERT_DELTA(bbox[0].value(), 0.0, 1.e-6);
-        TS_ASSERT_DELTA(bbox[1].value(), 1.e-6, 1.e-8);
-        TS_ASSERT_DELTA(bbox[2].value(), 0.0, 1.e-6);
-        TS_ASSERT_DELTA(bbox[3].value(), 1.e-6, 1.e-8);
-        TS_ASSERT_DELTA(bbox[4].value(), 0.0, 1.e-6);
-        TS_ASSERT_DELTA(bbox[5].value(), 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[0]/1_um, 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[1]/1_um, 1.e-6, 1.e-8);
+        TS_ASSERT_DELTA(bbox[2]/1_um, 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[3]/1_um, 1.e-6, 1.e-8);
+        TS_ASSERT_DELTA(bbox[4]/1_um, 0.0, 1.e-6);
+        TS_ASSERT_DELTA(bbox[5]/1_um, 0.0, 1.e-6);
 
-        TS_ASSERT_DELTA(p_polygon->GetDistance(DimensionalChastePoint<3>(0.5, 0.5, 0.5, 1_um)).value(), 0.5e-6, 1.e-8);
+        TS_ASSERT_DELTA(p_polygon->GetDistance(DimensionalChastePoint<3>(0.5, 0.5, 0.5, 1_um))/1_um, 0.5e-6, 1.e-8);
         TS_ASSERT_DELTA(p_polygon->GetPlane()->GetNormal()[0], 0.0, 1.e-6);
         TS_ASSERT_DELTA(p_polygon->GetPlane()->GetNormal()[1], 0.0, 1.e-6);
         TS_ASSERT_DELTA(std::abs(p_polygon->GetPlane()->GetNormal()[2]), 1.0, 1.e-6);
 
-        TS_ASSERT_DELTA(p_polygon->GetDistanceToEdges(DimensionalChastePoint<3>(1.5, 0.5, 0.0, 1_um)).value(), 0.5e-6, 1.e-8);
+        TS_ASSERT_DELTA(p_polygon->GetDistanceToEdges(DimensionalChastePoint<3>(1.5, 0.5, 0.0, 1_um))/1_um, 0.5e-6, 1.e-8);
     }
 
     void TestLabelling() throw(Exception)

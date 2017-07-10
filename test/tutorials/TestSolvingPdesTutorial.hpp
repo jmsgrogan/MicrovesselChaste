@@ -101,7 +101,8 @@ public:
      */
     void TestLinearReactionDiffusionPdeWithFiniteDifferences() throw(Exception)
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestSolvingPdesLiteratePaper/TestLinearReactionDiffusionPdeWithFiniteDifferences"));
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestSolvingPdesLiteratePaper/TestLinearReactionDiffusionPdeWithFiniteDifferences");
         /*
          * We will work in microns
          */

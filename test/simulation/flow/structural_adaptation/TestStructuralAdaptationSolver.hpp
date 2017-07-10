@@ -66,9 +66,9 @@ public:
         }
 
         nodes[0]->GetFlowProperties()->SetIsInputNode(true);
-        nodes[0]->GetFlowProperties()->SetPressure(3322 * unit::pascals);
+        nodes[0]->GetFlowProperties()->SetPressure(3322.0 * unit::pascals);
         nodes[7]->GetFlowProperties()->SetIsOutputNode(true);
-        nodes[7]->GetFlowProperties()->SetPressure(1993 * unit::pascals);
+        nodes[7]->GetFlowProperties()->SetPressure(1993.0 * unit::pascals);
 
         double haematocrit = 0.45;
         std::vector<std::shared_ptr<VesselSegment<2> > > segments;
@@ -126,9 +126,9 @@ public:
         std::shared_ptr<VesselSegment<2> > p_segment1(VesselSegment<2>::Create(p_node1, p_node2));
 
         p_node1->GetFlowProperties()->SetIsInputNode(true);
-        p_node1->GetFlowProperties()->SetPressure(3322 * unit::pascals);
+        p_node1->GetFlowProperties()->SetPressure(3322.0 * unit::pascals);
         p_node2->GetFlowProperties()->SetIsOutputNode(true);
-        p_node2->GetFlowProperties()->SetPressure(1993 * unit::pascals);
+        p_node2->GetFlowProperties()->SetPressure(1993.0 * unit::pascals);
 
         std::shared_ptr<Vessel<2> > p_vessel1(Vessel<2>::Create(p_segment1));
 
@@ -214,7 +214,7 @@ public:
                     if((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1_um)[0] >  x_middle)
                     {
                         (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
-                        (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(3320*unit::pascals);
+                        (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(3320.0*unit::pascals);
                     }
                 }
             }
@@ -225,7 +225,7 @@ public:
                     if((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1_um)[0] >  x_middle)
                     {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
-                        (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3320*unit::pascals);
+                        (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3320.0*unit::pascals);
                     }
                 }
             }
@@ -236,7 +236,7 @@ public:
                     if((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1_um)[0] <  x_middle)
                     {
                         (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsOutputNode(true);
-                        (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(2090*unit::pascals);
+                        (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
                     }
                 }
             }
@@ -247,7 +247,7 @@ public:
                     if((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1_um)[0] <  x_middle)
                     {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
-                        (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090*unit::pascals);
+                        (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
                     }
                 }
             }

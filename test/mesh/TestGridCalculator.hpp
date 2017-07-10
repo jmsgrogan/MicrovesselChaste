@@ -75,7 +75,8 @@ public:
 
     void TestPointSegmentMapGenerationRegularGrid()
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestGridCalculator/TestPointSegmentMapGenerationRegularGrid"));
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestGridCalculator/TestPointSegmentMapGenerationRegularGrid");
 
         // Set up a grid
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
@@ -127,7 +128,8 @@ public:
 
     void TestPointSegmentMapGenerationRegularGridWithJiggle()
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestGridCalculator/TestPointSegmentMapGenerationRegularGridWithJiggle"));
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestGridCalculator/TestPointSegmentMapGenerationRegularGridWithJiggle");
 
         // Set up a grid
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
@@ -177,7 +179,8 @@ public:
 
     void TestPointSegmentMapGenerationRegularGridWithSurface()
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestGridCalculator/TestPointSegmentMapGenerationRegularGridWithSurface"));
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestGridCalculator/TestPointSegmentMapGenerationRegularGridWithSurface");
 
         // Set up a grid
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
@@ -232,7 +235,8 @@ public:
 
     void TestPointSegmentMapGenerationRegularGridHex()
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestGridCalculator/TestPointSegmentMapGenerationRegularGridHex"));
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestGridCalculator/TestPointSegmentMapGenerationRegularGridHex");
 
         // Set up a grid
         Timer::Reset();
@@ -270,7 +274,8 @@ public:
 
     void TestPointPointMapGeneration()
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestGridCalculator/TestPointPointMapGeneration"));
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestGridCalculator/TestPointPointMapGeneration");
 
         // Set up a grid
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
@@ -319,7 +324,8 @@ public:
 
     void TestPointCellMapGeneration()
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestGridCalculator/TestPointCellMapGeneration"));
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestGridCalculator/TestPointCellMapGeneration");
 
         // Set up a grid
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();

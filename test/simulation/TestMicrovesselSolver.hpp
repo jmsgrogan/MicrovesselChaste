@@ -83,7 +83,8 @@ public:
         vascular_tumour_solver.SetVesselNetwork(p_network);
 
         SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(5.0, 5);
-        MAKE_PTR_ARGS(OutputFileHandler, p_file_handler, ("TestMicrovesselSolver/SingleVesselGrowth/"));
+        auto p_file_handler =
+                std::make_shared<OutputFileHandler>("TestMicrovesselSolver/SingleVesselGrowth/");
         vascular_tumour_solver.SetOutputFileHandler(p_file_handler);
         vascular_tumour_solver.Run();
     }

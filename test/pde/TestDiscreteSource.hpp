@@ -67,14 +67,14 @@ public:
 
     void TestGridFunction() throw(Exception)
     {
-        QLength length(100.0*unit::microns);
+        QLength length(100.0_um);
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(length, length, DimensionalChastePoint<2>());
 
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        QLength grid_spacing(5.0*unit::microns);
+        QLength grid_spacing(5.0_um);
         p_grid->GenerateFromPart(p_domain, grid_spacing);
 
         // Set up a density map
@@ -167,7 +167,7 @@ public:
         std::vector<double> solution;
         for(unsigned idx=0; idx<point_conc_rates.size(); idx++)
         {
-            solution.push_back(double(point_rates[idx].value() + point_conc_rates[idx].value()));
+            solution.push_back(double(point_rates[idx].getValue() + point_conc_rates[idx].getValue()));
         }
         solver.UpdateElementSolution(solution);
         auto p_output_file_handler =

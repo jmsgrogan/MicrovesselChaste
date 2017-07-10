@@ -93,7 +93,8 @@ public:
 
         angiogenesis_solver.SetVesselGridCalculator(p_grid_calc);
 
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestAngiogenesisSolver/Lattice/SingleVessel"));
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestAngiogenesisSolver/Lattice/SingleVessel");
         angiogenesis_solver.SetOutputFileHandler(p_handler);
         angiogenesis_solver.Run(true);
     }

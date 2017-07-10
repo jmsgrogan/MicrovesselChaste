@@ -110,10 +110,10 @@ public:
         QLength reference_scale(1.0 * unit::metres);
         DimensionalChastePoint<2> point1 = DimensionalChastePoint<2>(1.0, 2.0, 0.0, reference_scale);
         DimensionalChastePoint<2> point2 = DimensionalChastePoint<2>(2.0, 3.0, 0.0, reference_scale);
-        TS_ASSERT_DELTA(point1.GetDistance(point2).value(), std::sqrt(2.0), 1.e-6);
+        TS_ASSERT_DELTA(point1.GetDistance(point2)/1_m, std::sqrt(2.0), 1.e-6);
         TS_ASSERT_DELTA(point1.GetMidPoint(point2).GetLocation(reference_scale)[0], 1.5, 1.e-6);
         TS_ASSERT_DELTA(point1.GetMidPoint(point2).GetLocation(reference_scale)[1], 2.5, 1.e-6);
-        TS_ASSERT_DELTA(point1.GetNorm2().value(), std::sqrt(5.0), 1.e-6);
+        TS_ASSERT_DELTA(point1.GetNorm2()/1_m, std::sqrt(5.0), 1.e-6);
 
         QLength reference_scale2(5.0 * unit::metres);
         c_vector<double, 2> scaled_location = point1.GetLocation(reference_scale2);
@@ -199,7 +199,7 @@ public:
 
             // restore from the archive
             input_arch >> p_point_from_archive;
-            TS_ASSERT_DELTA(p_point_from_archive->GetReferenceLengthScale().value(), 10.e-6, 1.e-8);
+            TS_ASSERT_DELTA(p_point_from_archive->GetReferenceLengthScale()/1_m, 10.e-6, 1.e-8);
             TS_ASSERT_DELTA(p_point_from_archive->GetLocation(reference_length)[0], 1.0, 1.e-6);
             TS_ASSERT_DELTA(p_point_from_archive->GetLocation(reference_length)[1], 2.0, 1.e-6);
             TS_ASSERT_DELTA(p_point_from_archive->GetLocation(reference_length)[2], 3.0, 1.e-6);

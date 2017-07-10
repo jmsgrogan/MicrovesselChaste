@@ -164,7 +164,7 @@ public:
          * Check that the impedance is as expected in one of the vessels
          */
         QFlowImpedance expected_impedance = 8.0 * viscosity* vessel_length/(M_PI*Qpow4(vessel_radius));
-        TS_ASSERT_DELTA(p_network->GetVessel(0)->GetSegment(0)->GetFlowProperties()->GetImpedance().value(), expected_impedance.value(), 1.e-6);
+        TS_ASSERT_DELTA(p_network->GetVessel(0)->GetSegment(0)->GetFlowProperties()->GetImpedance().getValue(), expected_impedance.getValue(), 1.e-6);
         /*
          * Now we can solve for the flow rates in each vessel based on the inlet and outlet pressures and impedances. The solver
          * updates the value of pressures and flow rates in each vessel and node in the network.
@@ -176,11 +176,12 @@ public:
          * Check the pressure, it is expected to drop linearly so should be the average of the input and output half way along the network.
          */
         QPressure expected_pressure = (inlet_pressure + Owen11Parameters::mpOutletPressure->GetValue())/2.0;
-        TS_ASSERT_DELTA(p_network->GetNode(7)->GetFlowProperties()->GetPressure().value(), expected_pressure.value(), 1.e-6);
+        TS_ASSERT_DELTA(p_network->GetNode(7)->GetFlowProperties()->GetPressure()/1_Pa, expected_pressure/1_Pa, 1.e-6);
         /*
          * Next we write out the network, including updated flow data, to file.
          */
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestBloodFlowLiteratePaper/TestSimpleFlowProblem"));
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestBloodFlowLiteratePaper/TestSimpleFlowProblem");
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "bifurcating_network_results.vtp");
         /*
          * Now we can visualize the results in Paraview. To view the network import the file
@@ -200,7 +201,8 @@ public:
      */
     void TestFlowProblemWithHaematocrit() throw (Exception)
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestBloodFlowLiteratePaper/TestFlowProblemWithHaematocrit", false));
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestBloodFlowLiteratePaper/TestFlowProblemWithHaematocrit", false);
         /*
          * This time we solve a flow problem and then use the solution to calculate the haematocrit distribution,
          * assuming it has no effect on the flow. Set up the network as before
@@ -281,7 +283,8 @@ public:
      */
     void TestFlowProblemStucturalAdaptation() throw (Exception)
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestBloodFlowLiteratePaper/TestFlowProblemStucturalAdaptation", false));
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestBloodFlowLiteratePaper/TestFlowProblemStucturalAdaptation", false);
         /*
          * We will work in microns
          */
@@ -290,8 +293,8 @@ public:
         /*
          * Set up a hexagonal vessel network
          */
-        QLength target_width(8000*unit::microns);
-        QLength target_height(2000*unit::microns);
+        QLength target_width(8000.0*unit::microns);
+        QLength target_height(2000.0*unit::microns);
         QLength vessel_length(300.0*unit::microns);
         VesselNetworkGenerator<3> network_generator;
         std::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
@@ -356,14 +359,15 @@ public:
      */
     void TestFlowProblemStucturalAdaptationWithRegression() throw (Exception)
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestBloodFlowLiteratePaper/TestFlowProblemStucturalAdaptationWithRegression", false));
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestBloodFlowLiteratePaper/TestFlowProblemStucturalAdaptationWithRegression", false);
         /*
          * Set up the problem as before.
          */
         QLength reference_length(1.0 * unit::microns);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
-        QLength target_width(8000*unit::microns);
-        QLength target_height(2000*unit::microns);
+        QLength target_width(8000.0*unit::microns);
+        QLength target_height(2000.0*unit::microns);
         QLength vessel_length(300.0*unit::microns);
         VesselNetworkGenerator<3> network_generator;
         std::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,

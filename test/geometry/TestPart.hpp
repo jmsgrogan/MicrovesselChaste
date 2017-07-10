@@ -74,7 +74,7 @@ public:
         OutputFileHandler output_file_handler(output_directory);
 
         Part<3> part = Part<3>();
-        part.AddRectangle(1_um));
+        part.AddRectangle(1_um, 1_um, DimensionalChastePoint<3>());
 
         TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[0]->GetLocation(1_um)[0], 0.0, 1.e-6);
         TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[0]->GetLocation(1_um)[1], 0.0, 1.e-6);
@@ -85,7 +85,7 @@ public:
         TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[3]->GetLocation(1_um)[0], 0.0, 1.e-6);
         TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[3]->GetLocation(1_um)[1], 1.0, 1.e-6);
 
-        TS_ASSERT_DELTA(part.GetReferenceLengthScale().value(), 1.e-6, 1.e-8);
+        TS_ASSERT_DELTA(part.GetReferenceLengthScale()/1_m, 1.e-6, 1.e-8);
         TS_ASSERT_THROWS_THIS(part.GetFacet(DimensionalChastePoint<3>(4.0, 0.0, 0.0, 1_um)), "No facet found at input location");
         part.SetReferenceLengthScale(10.e-6*unit::metres);
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Rectangle.vtp"));
@@ -101,7 +101,7 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         Part<3> part = Part<3>();
-        part.AddCuboid(1_um));
+        part.AddCuboid(1_um, 1_um, 1_um, DimensionalChastePoint<3>());
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Cuboid.vtp"));
     }
 
@@ -115,7 +115,7 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         Part<3> part = Part<3>();
-        part.AddCylinder(1_um), 24);
+        part.AddCylinder(1_um, 1_um, DimensionalChastePoint<3>(), 24);
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Cylinder.vtp"));
     }
 
@@ -129,19 +129,19 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         std::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        p_part->AddRectangle(1_um, DimensionalChastePoint<3>(0.0, 0.0));
+        p_part->AddRectangle(1_um, 1_um,DimensionalChastePoint<3>(0.0, 0.0));
         p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
 
         std::shared_ptr<Part<3> > p_part2 = Part<3>::Create();
-        p_part2->AddRectangle(1_um, DimensionalChastePoint<3>(0.0, 0.0));
+        p_part2->AddRectangle(1_um, 1_um, DimensionalChastePoint<3>(0.0, 0.0));
         p_part2->AddPolygon(p_part->GetPolygons()[1], true);
 
         std::shared_ptr<Part<3> > p_part3 = Part<3>::Create();
-        p_part3->AddRectangle(1_um, DimensionalChastePoint<3>(0.0, 0.0));
+        p_part3->AddRectangle(1_um, 1_um, DimensionalChastePoint<3>(0.0, 0.0));
         p_part3->AddPolygon(p_part->GetPolygons()[1], false);
 
         std::shared_ptr<Part<3> > p_part4 = Part<3>::Create();
-        p_part4->AddRectangle(1_um, DimensionalChastePoint<3>(0.0, 0.0));
+        p_part4->AddRectangle(1_um, 1_um, DimensionalChastePoint<3>(0.0, 0.0));
         p_part4->AddPolygon(p_part->GetPolygons()[1], false, p_part4->GetFacets()[0]);
 
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath().append("Composite2DPart.vtp"));
@@ -497,14 +497,14 @@ public:
         ObjectCommunicator<Part<2> > part_comm;
         if(PetscTools::GetMyRank() == 0)
         {
-            std::shared_ptr<Part<2> > p_domain = Part<2> ::Create();
+            boost::shared_ptr<Part<2> > p_domain = boost::shared_ptr<Part<2> >(new Part<2> ());
             p_domain->AddCircle(1.0*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
             part_comm.SendObject(p_domain, 1, 6789);
         }
         else if(PetscTools::GetMyRank() == 1)
         {
             MPI_Status status;
-            std::shared_ptr<Part<2> > p_recv_domain = part_comm.RecvObject(0, 6789, status);
+            boost::shared_ptr<Part<2> > p_recv_domain = part_comm.RecvObject(0, 6789, status);
 
             GeometryWriter writer;
             writer.AddInput(p_recv_domain->GetVtk());

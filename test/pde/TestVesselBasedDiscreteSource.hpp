@@ -67,12 +67,11 @@ public:
 
     void TestGridFunction() throw(Exception)
     {
-
         auto p_output_file_handler =
                 std::make_shared<OutputFileHandler>("TestVesselBasedDiscreteSource/TestGridFunction");
 
-        QLength vessel_length(100.0*unit::microns);
-        QLength reference_length(1.0*unit::microns);
+        QLength vessel_length(100.0_um);
+        QLength reference_length(1.0_um);
         VesselNetworkGenerator<2> generator;
         std::shared_ptr<VesselNetwork<2> > p_network =
                 generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>());
@@ -86,7 +85,7 @@ public:
         p_domain->Translate(translation_vector);
 
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        QLength spacing(10.0*unit::microns);
+        QLength spacing(10.0_um);
         p_grid->GenerateFromPart(p_domain, spacing);
 
         // Set up a density map
@@ -113,7 +112,7 @@ public:
         std::vector<double> solution;
         for(unsigned idx=0; idx<p_density_map->GetGridCalculator()->GetGrid()->GetNumberOfPoints(); idx++)
         {
-            solution.push_back(double(point_rates[idx].value() + point_conc_rates[idx].value()));
+            solution.push_back(double(point_rates[idx]/(1.0 * unit::per_second) + point_conc_rates[idx]/(2.0 * unit::mole_per_metre_cubed_per_second)));
         }
 
         solver.UpdateSolution(solution);
@@ -128,8 +127,8 @@ public:
         auto p_output_file_handler =
                 std::make_shared<OutputFileHandler>("TestVesselBasedDiscreteSource/TestMeshFunction");
 
-        QLength vessel_length(100.0*unit::microns);
-        QLength reference_length(1.0*unit::microns);
+        QLength vessel_length(100.0_um);
+        QLength reference_length(1.0_um);
         VesselNetworkGenerator<2> generator;
         std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>());
         p_network->GetVessels()[0]->GetFlowProperties()->SetHaematocrit(0.4);
@@ -172,7 +171,7 @@ public:
         std::vector<double> solution;
         for(unsigned idx=0; idx<point_conc_rates.size(); idx++)
         {
-            solution.push_back(double(point_rates[idx].value() + point_conc_rates[idx].value()));
+            solution.push_back(double(point_rates[idx]/(1.0 * unit::per_second) + point_conc_rates[idx]/(2.0 * unit::mole_per_metre_cubed_per_second)));
         }
         solver.UpdateElementSolution(solution);
         solver.SetFileHandler(p_output_file_handler);
@@ -187,8 +186,8 @@ public:
                 std::make_shared<OutputFileHandler>("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteDifferenceSolver");
 
         // Set up the vessel network
-        QLength vessel_length(100.0*unit::microns);
-        QLength reference_length(1.0*unit::microns);
+        QLength vessel_length(100.0_um);
+        QLength reference_length(1.0_um);
         VesselNetworkGenerator<2> generator;
         std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length,
                 DimensionalChastePoint<2>());
@@ -239,8 +238,8 @@ public:
                 std::make_shared<OutputFileHandler>("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteElementSolver");
 
         // Set up the vessel network
-        QLength vessel_length(100.0*unit::microns);
-        QLength reference_length(1.0*unit::microns);
+        QLength vessel_length(100.0_um);
+        QLength reference_length(1.0_um);
         VesselNetworkGenerator<2> generator;
         std::shared_ptr<VesselNetwork<2> > p_network =
                 generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>());

@@ -64,7 +64,7 @@ public:
     {
         // Make a vessel
         std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 0.0);
-        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(0.0,100.0);
+        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(0.0, 100.0);
         std::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(p_node1, p_node2);
         std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel);
@@ -78,7 +78,7 @@ public:
         WallShearStressBasedRegressionSolver<2> regression_solver = WallShearStressBasedRegressionSolver<2>();
         regression_solver.SetVesselNetwork(p_network);
         regression_solver.SetLowWallShearStressThreshold(wss_threshold*unit::pascals);
-        regression_solver.SetMaximumTimeWithLowWallShearStress(3*unit::seconds);
+        regression_solver.SetMaximumTimeWithLowWallShearStress(3_s);
 
         // Run the solver for six 'increments'
         SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(10, 10);
@@ -88,7 +88,7 @@ public:
             TS_ASSERT(p_vessel->GetFlowProperties()->HasRegressionTimerStarted());
             SimulationTime::Instance()->IncrementTimeOneStep();
         }
-        TS_ASSERT(p_vessel->GetFlowProperties()->HasVesselRegressed(60.0*unit::seconds));
+        TS_ASSERT(p_vessel->GetFlowProperties()->HasVesselRegressed(60.0_s));
         TS_ASSERT_EQUALS(p_network->GetNumberOfVessels(), 0u);
     }
 
@@ -100,8 +100,8 @@ public:
 
         // Generate the network
         VesselNetworkGenerator<2> p_network_generator;
-        std::shared_ptr<VesselNetwork<2> > p_network = p_network_generator.GenerateHexagonalNetwork(1000*1_um,
-                                                                                                      1000*1_um,
+        std::shared_ptr<VesselNetwork<2> > p_network = p_network_generator.GenerateHexagonalNetwork(1000_um,
+                                                                                                      1000_um,
                                                                                                       vessel_length*1_um);
 
         // Make a dummy segment to set properties on
@@ -114,21 +114,21 @@ public:
         std::shared_ptr<VesselNode<2> > p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, DimensionalChastePoint<2>(742, 912));
         std::shared_ptr<VesselNode<2> > p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, DimensionalChastePoint<2>(0, 0));
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
-        p_inlet_node->GetFlowProperties()->SetPressure(3393.0*unit::pascals);
+        p_inlet_node->GetFlowProperties()->SetPressure(3393.0_Pa);
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
-        p_outlet_node->GetFlowProperties()->SetPressure(1993.0*unit::pascals);
+        p_outlet_node->GetFlowProperties()->SetPressure(1993.0_Pa);
 
         // Set up a structural adaptation solver
         std::shared_ptr<StructuralAdaptationSolver<2> > p_adaptation_solver = StructuralAdaptationSolver<2>::Create();
         p_adaptation_solver->SetTolerance(0.0001);
-        p_adaptation_solver->SetTimeIncrement(0.001*unit::seconds);
+        p_adaptation_solver->SetTimeIncrement(0.001_s);
         p_adaptation_solver->SetMaxIterations(10000);
 
         // Set up a regression solver
         double wss_threshold = 8.0;
         std::shared_ptr<WallShearStressBasedRegressionSolver<2> > p_regression_solver = WallShearStressBasedRegressionSolver<2>::Create();
         p_regression_solver->SetLowWallShearStressThreshold(wss_threshold*unit::pascals);
-        p_regression_solver->SetMaximumTimeWithLowWallShearStress(3000.0*unit::seconds);
+        p_regression_solver->SetMaximumTimeWithLowWallShearStress(3000.0_s);
 
         // Set up a vascular tumour solver
 

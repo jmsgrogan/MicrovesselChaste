@@ -80,7 +80,7 @@ public:
         VesselNetworkPropertyManager<3>::SetSegmentProperties(p_vascular_network, p_segment);
 
         p_vessel->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
-        p_vessel->GetStartNode()->GetFlowProperties()->SetPressure(3393*unit::pascals);
+        p_vessel->GetStartNode()->GetFlowProperties()->SetPressure(3393.0*unit::pascals);
 
         p_vessel->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
         p_vessel->GetEndNode()->GetFlowProperties()->SetPressure(1000.5*unit::pascals);
@@ -206,7 +206,7 @@ public:
         VesselNetworkPropertyManager<3>::SetSegmentProperties(p_vascular_network, p_segment1);
 
         p_vessel->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
-        p_vessel->GetStartNode()->GetFlowProperties()->SetPressure(3393*unit::pascals);
+        p_vessel->GetStartNode()->GetFlowProperties()->SetPressure(3393.0*unit::pascals);
 
         p_vessel->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
         p_vessel->GetEndNode()->GetFlowProperties()->SetPressure(1000.5* unit::pascals);
@@ -260,7 +260,7 @@ public:
         VesselNetworkPropertyManager<3>::SetSegmentProperties(p_vascular_network, p_segment1);
 
         nodes[0]->GetFlowProperties()->SetIsInputNode(true);
-        nodes[0]->GetFlowProperties()->SetPressure(3393*unit::pascals);
+        nodes[0]->GetFlowProperties()->SetPressure(3393.0*unit::pascals);
         nodes[2]->GetFlowProperties()->SetIsOutputNode(true);
         nodes[2]->GetFlowProperties()->SetPressure(1000.5*unit::pascals);
 
@@ -323,10 +323,10 @@ public:
         VesselNetworkPropertyManager<3>::SetSegmentProperties(p_vascular_network, p_segment1);
 
         nodes[0]->GetFlowProperties()->SetIsInputNode(true);
-        nodes[0]->GetFlowProperties()->SetPressure(3393*unit::pascals);
+        nodes[0]->GetFlowProperties()->SetPressure(3393.0*unit::pascals);
 
         nodes[1]->GetFlowProperties()->SetIsInputNode(true);
-        nodes[1]->GetFlowProperties()->SetPressure(3393*unit::pascals);
+        nodes[1]->GetFlowProperties()->SetPressure(3393.0*unit::pascals);
 
         nodes[6]->GetFlowProperties()->SetIsOutputNode(true);
         nodes[6]->GetFlowProperties()->SetPressure(1000.5*unit::pascals);
@@ -389,10 +389,10 @@ public:
         VesselNetworkPropertyManager<3>::SetSegmentProperties(p_vascular_network, p_segment1);
 
         nodes[0]->GetFlowProperties()->SetIsInputNode(true);
-        nodes[0]->GetFlowProperties()->SetPressure(3393*unit::pascals);
+        nodes[0]->GetFlowProperties()->SetPressure(3393.0*unit::pascals);
 
         nodes[1]->GetFlowProperties()->SetIsInputNode(true);
-        nodes[1]->GetFlowProperties()->SetPressure(3393*unit::pascals);
+        nodes[1]->GetFlowProperties()->SetPressure(3393.0*unit::pascals);
 
         nodes[3]->GetFlowProperties()->SetIsOutputNode(true);
         nodes[3]->GetFlowProperties()->SetPressure(1000.5*unit::pascals);
@@ -436,7 +436,7 @@ public:
         // Generate the network
         VesselNetworkGenerator<2> vascular_network_generator;
         std::shared_ptr<VesselNetwork<2> > vascular_network = vascular_network_generator.GenerateHexagonalNetwork(
-                1000*1_um, vessel_length);
+                1000_um, 1000_um, vessel_length);
 
         // Make some nodes
         std::vector<NodePtr2> nodes;
@@ -460,7 +460,7 @@ public:
                 if ((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1_um)[1] > y_middle)
                 {
                     (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
-                    (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(3393 * unit::pascals);
+                    (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(3393.0 * unit::pascals);
                 }
             }
             if ((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
@@ -468,7 +468,7 @@ public:
                 if ((*vessel_iterator)->GetEndNode()->rGetLocation().GetLocation(1_um)[1] > y_middle)
                 {
                     (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
-                    (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3393 * unit::pascals);
+                    (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3393.0 * unit::pascals);
                 }
             }
             if ((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
@@ -476,7 +476,7 @@ public:
                 if ((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1_um)[1] <= y_middle)
                 {
                     (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsOutputNode(true);
-                    (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(1993 * unit::pascals);
+                    (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(1993.0 * unit::pascals);
                 }
             }
             if ((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
@@ -484,7 +484,7 @@ public:
                 if ((*vessel_iterator)->GetEndNode()->rGetLocation().GetLocation(1_um)[1] <= y_middle)
                 {
                     (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
-                    (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(1993 * unit::pascals);
+                    (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(1993.0 * unit::pascals);
                 }
             }
         }
@@ -556,9 +556,9 @@ public:
             bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10, 10.0, 0.0));
         }
         bottom_nodes[0]->GetFlowProperties()->SetIsInputNode(true);
-        bottom_nodes[0]->GetFlowProperties()->SetPressure(3000*unit::pascals);
+        bottom_nodes[0]->GetFlowProperties()->SetPressure(3000.0*unit::pascals);
         bottom_nodes[4]->GetFlowProperties()->SetIsOutputNode(true);
-        bottom_nodes[4]->GetFlowProperties()->SetPressure(1000*unit::pascals);
+        bottom_nodes[4]->GetFlowProperties()->SetPressure(1000.0*unit::pascals);
 
         std::vector<std::shared_ptr<VesselNode<3> > > top_nodes;
         for(unsigned idx=1; idx<3; idx+=1)
@@ -615,9 +615,9 @@ public:
             bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10, 10.0, 0.0));
         }
         bottom_nodes[0]->GetFlowProperties()->SetIsInputNode(true);
-        bottom_nodes[0]->GetFlowProperties()->SetPressure(3000 * unit::pascals);
+        bottom_nodes[0]->GetFlowProperties()->SetPressure(3000.0 * unit::pascals);
         bottom_nodes[5]->GetFlowProperties()->SetIsOutputNode(true);
-        bottom_nodes[5]->GetFlowProperties()->SetPressure(1000 * unit::pascals);
+        bottom_nodes[5]->GetFlowProperties()->SetPressure(1000.0 * unit::pascals);
 
         std::shared_ptr<Vessel<3> > p_vessel1 = Vessel<3>::Create(bottom_nodes);
         std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();

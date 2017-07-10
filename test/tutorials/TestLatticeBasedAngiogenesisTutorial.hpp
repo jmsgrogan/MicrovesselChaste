@@ -136,7 +136,8 @@ public:
         /*
          * Set up output file management and seed the random number generator.
          */
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestLatticeBasedAngiogenesisTutorial"));
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestLatticeBasedAngiogenesisTutorial");
         RandomNumberGenerator::Instance()->Reseed(12345);
         /*
          * This component uses explicit dimensions for all quantities, but interfaces with solvers which take
@@ -365,7 +366,8 @@ public:
          * The microvessel solution modifier will link the vessel and cell solvers. We need to explicitly tell is
          * which extracellular fields to update based on PDE solutions.
          */
-        std::shared_ptr<MicrovesselSimulationModifier<2> > p_microvessel_modifier = MicrovesselSimulationModifier<2>::Create();
+        boost::shared_ptr<MicrovesselSimulationModifier<2> > p_microvessel_modifier =
+                boost::shared_ptr<MicrovesselSimulationModifier<2> >(new MicrovesselSimulationModifier<2> ());
         p_microvessel_modifier->SetMicrovesselSolver(p_microvessel_solver);
         std::vector<std::string> update_labels;
         update_labels.push_back("oxygen");
@@ -379,12 +381,12 @@ public:
         /*
          * Add a killer to remove apoptotic cells
          */
-        std::shared_ptr<ApoptoticCellKiller<2> > p_apoptotic_cell_killer(new ApoptoticCellKiller<2>(p_cell_population.get()));
+        boost::shared_ptr<ApoptoticCellKiller<2> > p_apoptotic_cell_killer(new ApoptoticCellKiller<2>(p_cell_population.get()));
         simulator.AddCellKiller(p_apoptotic_cell_killer);
         /*
          * Add another modifier for updating cell cycle quantities.
          */
-        std::shared_ptr<Owen2011TrackingModifier<2> > p_owen11_tracking_modifier(new Owen2011TrackingModifier<2>);
+        boost::shared_ptr<Owen2011TrackingModifier<2> > p_owen11_tracking_modifier(new Owen2011TrackingModifier<2>);
         simulator.AddSimulationModifier(p_owen11_tracking_modifier);
         /*
          * Set up the remainder of the simulation
