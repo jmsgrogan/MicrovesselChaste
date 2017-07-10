@@ -51,21 +51,21 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<typename RQuantity, unsigned DIM>
 class RVectorQuantity
 {
-//    /**
-//     * Archiving
-//     */
-//    friend class boost::serialization::access;
-//
-//    /**
-//     * Do the serialize
-//     * @param ar the archive
-//     * @param version the archive version number
-//     */
-//    template<class Archive>
-//    void serialize(Archive & ar, const unsigned int version)
-//    {
-//        ar & mValue;
-//    }
+    /**
+     * Archiving
+     */
+    friend class boost::serialization::access;
+
+    /**
+     * Do the serialize
+     * @param ar the archive
+     * @param version the archive version number
+     */
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & mValue;
+    }
 
     c_vector<double, DIM> mValue;
 
@@ -83,10 +83,34 @@ public:
 
     }
 
+    constexpr RVectorQuantity(c_vector<double, DIM> val, RQuantity ref) :
+        mValue(val*ref.Convert(RQuantity(1.0)))
+    {
+
+    }
+
     constexpr RVectorQuantity(double val) :
         mValue(scalar_vector<double>(DIM, val))
     {
 
+    }
+
+    RVectorQuantity(RQuantity val1, RQuantity val2 = RQuantity(0.0), RQuantity val3 = RQuantity(0.0)) :
+        mValue()
+    {
+        RQuantity ref(1.0);
+        if (DIM > 0)
+        {
+            mValue[0] = val1/ref;
+        }
+        if (DIM > 1)
+        {
+            mValue[1] = val2/ref;
+        }
+        if (DIM > 2)
+        {
+            mValue[2] = val3/ref;
+        }
     }
 
     // Returns the value of the quantity in multiples of the specified unit

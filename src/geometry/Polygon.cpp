@@ -60,7 +60,7 @@ Polygon<DIM>::Polygon() :
 }
 
 template<unsigned DIM>
-Polygon<DIM>::Polygon(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices) :
+Polygon<DIM>::Polygon(const std::vector<VertexPtr<DIM> >& vertices) :
         mVertices(vertices),
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
         mEdgeAttributes(),
@@ -72,7 +72,7 @@ Polygon<DIM>::Polygon(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > 
 }
 
 template<unsigned DIM>
-Polygon<DIM>::Polygon(std::shared_ptr<DimensionalChastePoint<DIM> > pVertex) :
+Polygon<DIM>::Polygon(VertexPtr<DIM> pVertex) :
         mVertices(),
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
         mEdgeAttributes(),
@@ -84,13 +84,12 @@ Polygon<DIM>::Polygon(std::shared_ptr<DimensionalChastePoint<DIM> > pVertex) :
 }
 
 template<unsigned DIM>
-PolygonPtr<DIM> Polygon<DIM>::Create(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices)
+PolygonPtr<DIM> Polygon<DIM>::Create(const std::vector<VertexPtr<DIM> >& vertices)
 {
     return std::make_shared<Polygon<DIM> >(vertices);
 }
 
 template<unsigned DIM>
-PolygonPtr<DIM> Polygon<DIM>::Create(std::shared_ptr<DimensionalChastePoint<DIM> > pVertex)
 {
     return std::make_shared<Polygon<DIM> >(pVertex);
 }
@@ -107,8 +106,7 @@ void Polygon<DIM>::AddAttribute(const std::string& rLabel, double value)
 }
 
 template<unsigned DIM>
-bool Polygon<DIM>::AddAttributeToEdgeIfFound(DimensionalChastePoint<DIM> loc,
-        const std::string& rLabel, double value)
+bool Polygon<DIM>::AddAttributeToEdgeIfFound(const VecQLength<DIM>& loc, const std::string& rLabel, double value)
 {
     // Cycle through the edges, check if it contains point, label if found
     vtkSmartPointer<vtkPolygon> p_polygon = GetVtkPolygon();
@@ -121,10 +119,8 @@ bool Polygon<DIM>::AddAttributeToEdgeIfFound(DimensionalChastePoint<DIM> loc,
         p_line->GetPoint(0, &start_point[0]);
         c_vector<double, 3> end_point;
         p_line->GetPoint(1, &end_point[0]);
-        DimensionalChastePoint<DIM> start_loc = DimensionalChastePoint<DIM>(start_point[0], start_point[1],
-                start_point[2], mReferenceLength);
-        DimensionalChastePoint<DIM> end_loc = DimensionalChastePoint<DIM>(end_point[0], end_point[1],
-                end_point[2], mReferenceLength);
+        VecQLength<DIM> start_loc(start_point, mReferenceLength);
+        VecQLength<DIM> end_loc(end_point, mReferenceLength);
         if(GetDistanceToLineSegment(start_loc, end_loc, loc)/mReferenceLength<1.e-3)
         {
             mEdgeAttributes[idx][rLabel]=value;
@@ -138,14 +134,14 @@ template<unsigned DIM>
 void Polygon<DIM>::AddAttributeToAllEdges(const std::string& rLabel, double value)
 {
     GetVtkPolygon();
-    for(unsigned idx=0;idx<mEdgeAttributes.size();idx++)
+    for(auto& attribute:mEdgeAttributes)
     {
-        mEdgeAttributes[idx][rLabel] = value;
+        mEdgeAttributes[rLabel] = value;
     }
 }
 
 template<unsigned DIM>
-void Polygon<DIM>::AddVertices(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices)
+void Polygon<DIM>::AddVertices(const std::vector<VertexPtr<DIM> >& vertices)
 {
     // Add the new vertices
     mVertices.insert(mVertices.end(), vertices.begin(), vertices.end());
@@ -153,27 +149,27 @@ void Polygon<DIM>::AddVertices(std::vector<std::shared_ptr<DimensionalChastePoin
 }
 
 template<unsigned DIM>
-void Polygon<DIM>::AddVertex(std::shared_ptr<DimensionalChastePoint<DIM> > pVertex)
+void Polygon<DIM>::AddVertex(VertexPtr<DIM> pVertex)
 {
     mVertices.push_back(pVertex);
     mVtkRepresentationUpToDate = false;
 }
 
 template<unsigned DIM>
-std::vector<std::map<std::string, double> > Polygon<DIM>::GetEdgeAttributes()
+const std::vector<std::map<std::string, double> >& Polygon<DIM>::rGetEdgeAttributes()
 {
     GetVtkPolygon();
     return mEdgeAttributes;
 }
 
 template<unsigned DIM>
-std::map<std::string, double> Polygon<DIM>::GetAttributes()
+const std::map<std::string, double>& Polygon<DIM>::rGetAttributes()
 {
     return mAttributes;
 }
 
 template<unsigned DIM>
-std::shared_ptr<DimensionalChastePoint<DIM> > Polygon<DIM>::GetVertex(unsigned idx)
+VertexPtr<DIM> Polygon<DIM>::GetVertex(unsigned idx)
 {
     if(idx >= mVertices.size())
     {
@@ -186,7 +182,7 @@ std::shared_ptr<DimensionalChastePoint<DIM> > Polygon<DIM>::GetVertex(unsigned i
 }
 
 template<unsigned DIM>
-std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > Polygon<DIM>::GetVertices()
+const std::vector<VertexPtr<DIM> >& Polygon<DIM>::rGetVertices() const
 {
     return mVertices;
 }
@@ -200,14 +196,14 @@ std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > Polygon<
     p_vertexIds->SetNumberOfTuples(mVertices.size());
     for (vtkIdType idx = 0; idx < vtkIdType(mVertices.size()); idx++)
     {
-        c_vector<double, DIM> vertex_location = mVertices[idx]->GetLocation(mReferenceLength);
         if(DIM==3)
         {
-            p_vertices->SetPoint(idx, vertex_location[0], vertex_location[1], vertex_location[2]);
+            p_vertices->SetPoint(idx, *mVertices[idx][0]/mReferenceLength,
+                    *mVertices[idx][1]/mReferenceLength, *mVertices[idx][2]/mReferenceLength);
         }
         else
         {
-            p_vertices->SetPoint(idx, vertex_location[0], vertex_location[1], 0.0);
+            p_vertices->SetPoint(idx, *mVertices[idx][0]/mReferenceLength, *mVertices[idx][1]/mReferenceLength, 0.0);
         }
         p_vertexIds->SetValue(idx, idx);
     }
@@ -237,7 +233,7 @@ vtkSmartPointer<vtkPolygon> Polygon<DIM>::GetVtkPolygon()
 }
 
 template<unsigned DIM>
-bool Polygon<DIM>::EdgeHasAttribute(DimensionalChastePoint<DIM> loc, const std::string& rLabel)
+bool Polygon<DIM>::EdgeHasAttribute(const VecQLength<DIM>& loc, const std::string& rLabel) const
 {
     // Cycle through the edges, check if it contains point, label if found
     bool edge_found = false;
@@ -252,10 +248,8 @@ bool Polygon<DIM>::EdgeHasAttribute(DimensionalChastePoint<DIM> loc, const std::
             p_line->GetPoint(0, &start_point[0]);
             c_vector<double, 3> end_point;
             p_line->GetPoint(1, &end_point[0]);
-            DimensionalChastePoint<DIM> start_loc = DimensionalChastePoint<DIM>(start_point[0], start_point[1],
-                    start_point[2], mReferenceLength);
-            DimensionalChastePoint<DIM> end_loc = DimensionalChastePoint<DIM>(end_point[0], end_point[1],
-                    end_point[2], mReferenceLength);
+            VecQLength<DIM> start_loc(start_point, mReferenceLength);
+            VecQLength<DIM> end_loc(end_point, mReferenceLength);
             if(GetDistanceToLineSegment(start_loc, end_loc, loc)/mReferenceLength<1.e-3)
             {
                 return true;
@@ -266,34 +260,34 @@ bool Polygon<DIM>::EdgeHasAttribute(DimensionalChastePoint<DIM> loc, const std::
 }
 
 template<unsigned DIM>
-bool Polygon<DIM>::HasAttribute(const std::string& rLabel)
+bool Polygon<DIM>::HasAttribute(const std::string& rLabel) const
 {
     return(mAttributes.count(rLabel)>0);
 }
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM> Polygon<DIM>::GetCentroid()
+VecQLength<DIM> Polygon<DIM>::GetCentroid()
 {
     std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > verts = GetVtkVertices();
     c_vector<double, 3> centroid;
     vtkPolygon::ComputeCentroid(verts.second, verts.first, &centroid[0]);
     if(DIM==3)
     {
-        return DimensionalChastePoint<DIM>(centroid, mReferenceLength);
+        return VecQLength<DIM>(centroid, mReferenceLength);
     }
     else
     {
-        return DimensionalChastePoint<DIM>(centroid[0], centroid[1], 0.0, mReferenceLength);
+        return VecQLength<DIM>(centroid[0], centroid[1], 0.0, mReferenceLength);
     }
 }
 
 template<unsigned DIM>
-std::vector<QLength > Polygon<DIM>::GetBoundingBox()
+std::array<QLength, 6> Polygon<DIM>::GetBoundingBox()
 {
     c_vector<double, 6> box;
     GetVtkPolygon()->GetPoints()->GetBounds(&box[0]);
 
-    std::vector<QLength > box_vector(6);
+    std::array<QLength, 6> box_vector;
     for(unsigned idx=0; idx<6; idx++)
     {
         box_vector[idx] = box[idx] * mReferenceLength;
@@ -302,12 +296,12 @@ std::vector<QLength > Polygon<DIM>::GetBoundingBox()
 }
 
 template<unsigned DIM>
-QLength Polygon<DIM>::GetDistance(const DimensionalChastePoint<DIM>& location)
+QLength Polygon<DIM>::GetDistance(const VecQLength<DIM>& location)
 {
     double point[3];
     for (unsigned idx = 0; idx < DIM; idx++)
     {
-        point[idx] = location.GetLocation(mReferenceLength)[idx];
+        point[idx] = location[idx]/mReferenceLength;
     }
     if(DIM==2)
     {
@@ -320,12 +314,12 @@ QLength Polygon<DIM>::GetDistance(const DimensionalChastePoint<DIM>& location)
 }
 
 template<unsigned DIM>
-QLength Polygon<DIM>::GetDistanceToEdges(const DimensionalChastePoint<DIM>& location)
+QLength Polygon<DIM>::GetDistanceToEdges(const VecQLength<DIM>& location)
 {
     double point[3];
     for (unsigned idx = 0; idx < DIM; idx++)
     {
-        point[idx] = location.GetLocation(mReferenceLength)[idx];
+        point[idx] = location[idx]/mReferenceLength;
     }
     if(DIM==2)
     {
@@ -346,7 +340,7 @@ template<unsigned DIM>
 vtkSmartPointer<vtkPlane> Polygon<DIM>::GetPlane()
 {
     vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
-    c_vector<double, DIM> centroid = GetCentroid().GetLocation(mReferenceLength);
+    c_vector<double, DIM> centroid = GetCentroid().Convert(mReferenceLength);
     c_vector<double, DIM> normal = GetNormal();
     if(DIM==3)
     {
@@ -392,12 +386,12 @@ c_vector<double, DIM> Polygon<DIM>::GetNormal()
 }
 
 template<unsigned DIM>
-bool Polygon<DIM>::ContainsPoint(const DimensionalChastePoint<DIM>& location, double localTolerance)
+bool Polygon<DIM>::ContainsPoint(const VecQLength<DIM>& location, double localTolerance)
 {
     bool contains_point = false;
     if (mVertices.size() >= 3)
     {
-        c_vector<double, DIM> vertex_location = location.GetLocation(mReferenceLength);
+        c_vector<double, DIM> vertex_location = location.Convert(mReferenceLength);
         double point[3];
         for (unsigned idx = 0; idx < DIM; idx++)
         {
@@ -447,7 +441,7 @@ bool Polygon<DIM>::ContainsPoint(const DimensionalChastePoint<DIM>& location, do
 }
 
 template<unsigned DIM>
-void Polygon<DIM>::ReplaceVertex(unsigned idx, std::shared_ptr<DimensionalChastePoint<DIM> > pVertex)
+void Polygon<DIM>::ReplaceVertex(unsigned idx, VertexPtr<DIM> pVertex)
 {
     if(idx >= mVertices.size())
     {
@@ -471,7 +465,7 @@ void Polygon<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 }
 
 template<unsigned DIM>
-void Polygon<DIM>::Translate(DimensionalChastePoint<DIM> translationVector)
+void Polygon<DIM>::Translate(const VecQLength<DIM>& translationVector)
 {
     for(unsigned idx=0; idx<mVertices.size(); idx++)
     {

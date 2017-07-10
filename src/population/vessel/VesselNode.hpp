@@ -46,6 +46,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "NodeFlowProperties.hpp"
 #include "UblasVectorInclude.hpp"
 #include "UnitCollection.hpp"
+#include "VectorUnitCollection.hpp"
 #include "VesselSegment.hpp"
 #include "Exception.hpp"
 
@@ -99,7 +100,7 @@ private:
     /**
      * Location of a node in space.
      */
-    DimensionalChastePoint<DIM> mLocation;
+    VecQLength<DIM> mLocation;
 
     /**
      * Collection of pointers to Vessel Segments connected to this node.
@@ -168,17 +169,7 @@ public:
      * @param v3  the node's z-coordinate
      * @param referenceLength the reference length scale, defaults to micron
      */
-    VesselNode(double v1, double v2, double v3, QLength referenceLength);
-
-    /**
-     * Constructor.
-     * Create a node using xyz coordinates
-     *
-     * @param v1  the node's x-coordinate (defaults to 0)
-     * @param v2  the node's y-coordinate (defaults to 0)
-     * @param v3  the node's z-coordinate (defaults to 0)
-     */
-    VesselNode(double v1 = 0.0, double v2 = 0.0, double v3 = 0.0);
+    VesselNode(QLength v1, QLength v2 = 0_m, QLength v3 = 0_m);
 
     /**
      * Constructor.
@@ -186,7 +177,7 @@ public:
      *
      * @param location the node's location (defaults to 0.0)
      */
-    VesselNode(const DimensionalChastePoint<DIM>& location);
+    VesselNode(const VecQLength<DIM>& rLocation);
 
     /**
      * Copy constructor.
@@ -207,18 +198,7 @@ public:
      * @param v3  the node's z-coordinate (defaults to 0 micron)
      * @return a pointer to the newly created node
      */
-    static std::shared_ptr<VesselNode<DIM> > Create(double v1 = 0.0, double v2 = 0.0, double v3 = 0.0);
-
-    /**
-     * Construct a new instance of the class and return a shared pointer to it.
-     *
-     * @param v1  the node's x-coordinate (defaults to 0 micron)
-     * @param v2  the node's y-coordinate (defaults to 0 micron)
-     * @param v3  the node's z-coordinate (defaults to 0 micron)
-     * @param referenceLength the reference length scale
-     * @return a pointer to the newly created node
-     */
-    static std::shared_ptr<VesselNode<DIM> > Create(double v1, double v2, double v3, QLength referenceLength);
+    static std::shared_ptr<VesselNode<DIM> > Create(QLength v1, QLength v2 = 0_m, QLength v3 = 0_m);
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
@@ -226,7 +206,7 @@ public:
      * @param location the node's location (defaults to 0.0  micron)
      * @return a pointer to the newly created node
      */
-    static std::shared_ptr<VesselNode<DIM> > Create(const DimensionalChastePoint<DIM>& location);
+    static std::shared_ptr<VesselNode<DIM> > Create(const VecQLength<DIM>& location);
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
@@ -256,7 +236,7 @@ public:
      * @param rLocation the location to calculate the distance to
      * @return the distance to the location
      */
-    QLength GetDistance(const DimensionalChastePoint<DIM>& rLocation) const;
+    QLength GetDistance(const VecQLength<DIM>& rLocation) const;
 
     /**
      * Return the flow properties of the component
@@ -266,11 +246,11 @@ public:
     std::shared_ptr<NodeFlowProperties<DIM> > GetFlowProperties() const;
 
     /**
-     * Return a reference to the location of the node, default is micron
+     * Return a reference to the location of the node
      *
-     * @return a ublas c_vector at the location of the node
+     * @return a vector at the location of the node
      */
-    const DimensionalChastePoint<DIM>& rGetLocation() const;
+    const VecQLength<DIM>& rGetLocation() const;
 
     /**
      * Return the number of attached segments
@@ -363,7 +343,7 @@ public:
      * @param rLocation the query location
      * @return whether then node is coincident with the input location
      */
-    bool IsCoincident(const DimensionalChastePoint<DIM>& rLocation) const;
+    bool IsCoincident(const VecQLength<DIM>& rLocation) const;
 
     /**
      * Has the node been designated as migrating. This is useful for keeping track of
@@ -402,7 +382,7 @@ public:
      *
      * @param rLocation a ublas c_vector specifying the location
      */
-    void SetLocation(const DimensionalChastePoint<DIM>& rLocation);
+    void SetLocation(const VecQLength<DIM>& rLocation);
 
     /**
      * Set the location of the node. It is assumed that this location is consistent
@@ -413,7 +393,7 @@ public:
      * @param z the z location
      * @param referenceLength the reference length scale
      */
-    void SetLocation(double x, double y, double z=0.0, QLength referenceLength = 1_um);
+    void SetLocation(QLength v1, QLength v2 = 0_m, QLength v3 = 0_m);
 
     /**
      * Set the length scale used to dimensionalize the node location as stored in mLocation.

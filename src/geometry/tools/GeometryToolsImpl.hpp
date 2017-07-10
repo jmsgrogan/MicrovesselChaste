@@ -83,42 +83,39 @@ c_vector<double, DIM> GetArbitaryUnitNormal(c_vector<double, DIM> direction)
 }
 
 template<unsigned DIM>
-QLength GetDistance(const DimensionalChastePoint<DIM>& rLocation1,
-                                                                       const DimensionalChastePoint<DIM>& rLocation2)
+QLength GetDistance(const VecQLength<DIM>& rLocation1, const VecQLength<DIM>& rLocation2)
 {
-    QLength reference_length = rLocation1.GetReferenceLengthScale();
-    return norm_2(rLocation2.GetLocation(reference_length) - rLocation1.GetLocation(reference_length))*reference_length;
+    return Qnorm_2(rLocation2 - rLocation1);
 }
 
 template<unsigned DIM>
-QArea GetDotProduct(const DimensionalChastePoint<DIM>& rLocation1,
-                                          const DimensionalChastePoint<DIM>& rLocation2)
+QArea GetDotProduct(const VecQLength<DIM>& rLocation1, const VecQLength<DIM>& rLocation2)
 {
-    QLength reference_length = rLocation1.GetReferenceLengthScale();
-    return inner_prod(rLocation2.GetLocation(reference_length), rLocation1.GetLocation(reference_length))*reference_length*reference_length;
+    QLength reference_length = 1_m;
+    return inner_prod(rLocation2.Convert(reference_length), rLocation1.Convert(reference_length))*reference_length*reference_length;
 }
 
 template<unsigned DIM>
-QLength GetDotProduct(const DimensionalChastePoint<DIM>& rLocation1,
+QLength GetDotProduct(const VecQLength<DIM>& rLocation1,
                                           const c_vector<double, DIM>& rLocation2)
 {
-    QLength reference_length_1 = rLocation1.GetReferenceLengthScale();
-    return inner_prod(rLocation2 , rLocation1.GetLocation(reference_length_1))*reference_length_1;
+    QLength reference_length_1 = 1_m;
+    return inner_prod(rLocation2 , rLocation1.Convert(reference_length_1))*reference_length_1;
 }
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM> GetPointProjectionOnLineSegment(const DimensionalChastePoint<DIM>& rStartLocation,
-                                                      const DimensionalChastePoint<DIM>& rEndLocation,
-                                                      const DimensionalChastePoint<DIM>& rProbeLocation,
+VecQLength<DIM> GetPointProjectionOnLineSegment(const VecQLength<DIM>& rStartLocation,
+                                                      const VecQLength<DIM>& rEndLocation,
+                                                      const VecQLength<DIM>& rProbeLocation,
                                                       bool projectToEnds,
                                                       bool checkDimensions)
 {
-    DimensionalChastePoint<DIM> segment_vector = rEndLocation - rStartLocation;
-    DimensionalChastePoint<DIM> point_vector = rProbeLocation - rStartLocation;
+    VecQLength<DIM> segment_vector = rEndLocation - rStartLocation;
+    VecQLength<DIM> point_vector = rProbeLocation - rStartLocation;
     QArea dp_segment_point = GetDotProduct(segment_vector, point_vector);
     QArea dp_segment_segment = GetDotProduct(segment_vector, segment_vector);
 
-    if (dp_segment_point <= 0.0*unit::metres*unit::metres || dp_segment_segment <= dp_segment_point)
+    if (dp_segment_point <= 0.0*unit::metres_squared || dp_segment_segment <= dp_segment_point)
     {
         if(!projectToEnds)
         {
@@ -126,8 +123,8 @@ DimensionalChastePoint<DIM> GetPointProjectionOnLineSegment(const DimensionalCha
         }
         else
         {
-            QLength dist1 = (rStartLocation - rEndLocation).GetNorm2();
-            QLength dist2 = (rEndLocation - rProbeLocation).GetNorm2();
+            QLength dist1 = QNorm2(rStartLocation - rEndLocation);
+            QLength dist2 = QNorm2(rEndLocation - rProbeLocation);
             if(dist1 <= dist2)
             {
                 return rStartLocation;
@@ -143,14 +140,13 @@ DimensionalChastePoint<DIM> GetPointProjectionOnLineSegment(const DimensionalCha
 }
 
 template<unsigned DIM>
-QLength GetDistanceToLineSegment(const DimensionalChastePoint<DIM>& rStartLocation,
-                                                 const DimensionalChastePoint<DIM>& rEndLocation,
-                                                 const DimensionalChastePoint<DIM>& rProbeLocation)
+QLength GetDistanceToLineSegment(const VecQLength<DIM>& rStartLocation, const VecQLength<DIM>& rEndLocation,
+                                                 const VecQLength<DIM>& rProbeLocation)
 {
-    DimensionalChastePoint<DIM> segment_vector = rEndLocation - rStartLocation;
+    VecQLength<DIM> segment_vector = rEndLocation - rStartLocation;
     QArea dp_segment_point = GetDotProduct(segment_vector, rProbeLocation - rStartLocation);
     // Point projection is outside segment, return node0 distance
-    if (dp_segment_point <= 0.0*unit::metres*unit::metres)
+    if (dp_segment_point <= 0.0*unit::metres_squared)
     {
         return rStartLocation.GetDistance(rProbeLocation);
     }
@@ -164,20 +160,19 @@ QLength GetDistanceToLineSegment(const DimensionalChastePoint<DIM>& rStartLocati
 
     // Point projection is inside segment, get distance to point projection
     double projection_ratio = dp_segment_point / dp_segment_segment;
-    DimensionalChastePoint<DIM> projected_location = rStartLocation + segment_vector*projection_ratio - rProbeLocation;
-    return projected_location.GetNorm2();
+    VecQLength<DIM> projected_location = rStartLocation + segment_vector*projection_ratio - rProbeLocation;
+    return Qnorm2(projected_location);
 }
 
 template<unsigned DIM>
-vtkSmartPointer<vtkPoints> GetProbeLocationsExternalPoint(DimensionalChastePoint<DIM> rCentrePoint,
-        DimensionalChastePoint<DIM> currentDirection, QLength probeLength,
-        unsigned numDivisions)
+vtkSmartPointer<vtkPoints> GetProbeLocationsExternalPoint(VecQLength<DIM> rCentrePoint,
+        VecQLength<DIM> currentDirection, QLength probeLength,
+        unsigned numDivisions, QLength lengthScale)
 {
-    QLength length_scale = rCentrePoint.GetReferenceLengthScale();
-    c_vector<double, DIM> central_point = rCentrePoint.GetLocation(length_scale);
+    c_vector<double, DIM> central_point = rCentrePoint.Convert(lengthScale);
     c_vector<double, DIM> current_direction = currentDirection.GetUnitVector();
 
-    double normalized_probe_length = probeLength/length_scale;
+    double normalized_probe_length = probeLength/lengthScale;
     vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
     if(DIM==2)
     {
@@ -219,17 +214,13 @@ vtkSmartPointer<vtkPoints> GetProbeLocationsExternalPoint(DimensionalChastePoint
 }
 
 template<unsigned DIM>
-vtkSmartPointer<vtkPoints> GetProbeLocationsInternalPoint(DimensionalChastePoint<DIM> rInitialDirection,
-                                                                         DimensionalChastePoint<DIM> rCentralPoint,
-                                                                         DimensionalChastePoint<DIM> rRotationAxis,
-                                                                         QLength probeLength,
-                                                                         QAngle angle)
+vtkSmartPointer<vtkPoints> GetProbeLocationsInternalPoint(VecQLength<DIM> rInitialDirection,
+        VecQLength<DIM> rCentralPoint, VecQLength<DIM> rRotationAxis, QLength probeLength, QLength lengthScale)
 {
-    QLength length_scale = rCentralPoint.GetReferenceLengthScale();
-    c_vector<double, DIM> central_point = rCentralPoint.GetLocation(length_scale);
-    c_vector<double, DIM> initial_direction = rInitialDirection.GetLocation(length_scale);
-    c_vector<double, DIM> rotation_axis = rRotationAxis.GetLocation(length_scale);
-    double normalized_probe_length = probeLength/length_scale;
+    c_vector<double, DIM> central_point = rCentralPoint.Convert(lengthScale);
+    c_vector<double, DIM> initial_direction = rInitialDirection.Convert(lengthScale);
+    c_vector<double, DIM> rotation_axis = rRotationAxis.Convert(lengthScale);
+    double normalized_probe_length = probeLength/lengthScale;
 
     vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
     if(DIM==3)
@@ -269,16 +260,16 @@ vtkSmartPointer<vtkPoints> GetProbeLocationsInternalPoint(DimensionalChastePoint
 }
 
 template<unsigned DIM>
-bool IsPointInCone(const DimensionalChastePoint<DIM>& rPoint,
-                   const DimensionalChastePoint<DIM>& rApex,
-                   const DimensionalChastePoint<DIM>& rBase,
+bool IsPointInCone(const VecQLength<DIM>& rPoint,
+                   const VecQLength<DIM>& rApex,
+                   const VecQLength<DIM>& rBase,
                    double aperture)
 {
-    DimensionalChastePoint<DIM> apex_to_point = rApex - rPoint;
-    DimensionalChastePoint<DIM> apex_to_base = rApex - rBase;
-    QLength dist_apex_base = apex_to_base.GetNorm2();
+    VecQLength<DIM> apex_to_point = rApex - rPoint;
+    VecQLength<DIM> apex_to_base = rApex - rBase;
+    QLength dist_apex_base = Qnorm2(apex_to_base);
     QArea dp_point_base = GetDotProduct(apex_to_point, apex_to_base);
-    bool in_infinite_cone = dp_point_base / (apex_to_point.GetNorm2() * dist_apex_base) > std::cos(aperture/2.0);
+    bool in_infinite_cone = dp_point_base / (Qnorm2(apex_to_point) * dist_apex_base) > std::cos(aperture/2.0);
     if(!in_infinite_cone)
     {
         return false;
@@ -287,11 +278,10 @@ bool IsPointInCone(const DimensionalChastePoint<DIM>& rPoint,
 }
 
 template<unsigned DIM>
-bool IsPointInBox(const DimensionalChastePoint<DIM>& rPoint,
-        const c_vector<double, 6>& rBoundingBox, QLength lengthScale)
+bool IsPointInBox(const VecQLength<DIM>& rPoint, const c_vector<double, 6>& rBoundingBox, QLength lengthScale)
 {
     bool point_in_box = false;
-    c_vector<double, DIM> dimensionless_point = rPoint.GetLocation(lengthScale);
+    c_vector<double, DIM> dimensionless_point = rPoint.Convert(lengthScale);
 
     bool inside_left = dimensionless_point[0] >= rBoundingBox[0];
     bool inside_right = dimensionless_point[0] <= rBoundingBox[1];
@@ -313,14 +303,13 @@ bool IsPointInBox(const DimensionalChastePoint<DIM>& rPoint,
 }
 
 template<unsigned DIM>
-bool IsPointInBox(const DimensionalChastePoint<DIM>& rPoint,
-                  const DimensionalChastePoint<DIM>& rLocation, QLength spacing)
+bool IsPointInBox(const VecQLength<DIM>& rPoint,
+                  const VecQLength<DIM>& rLocation, QLength spacing, QLength lengthScale)
 {
     bool point_in_box = false;
-    QLength point_length_scale = rPoint.GetReferenceLengthScale();
-    c_vector<double, DIM> location_in_point_scale = rLocation.GetLocation(point_length_scale);
-    c_vector<double, DIM> dimensionless_point = rPoint.GetLocation(point_length_scale);
-    double dimensionless_spacing = spacing/point_length_scale;
+    c_vector<double, DIM> location_in_point_scale = rLocation.GetLocation(lengthScale);
+    c_vector<double, DIM> dimensionless_point = rPoint.GetLocation(lengthScale);
+    double dimensionless_spacing = spacing/lengthScale;
 
     bool inside_left = dimensionless_point[0] >= location_in_point_scale[0] -dimensionless_spacing/2.0;
     bool inside_right = dimensionless_point[0] <= location_in_point_scale[0] + dimensionless_spacing/2.0;
@@ -347,14 +336,13 @@ bool IsPointInBox(const DimensionalChastePoint<DIM>& rPoint,
 }
 
 template<unsigned DIM>
-bool IsPointInTetra(const DimensionalChastePoint<DIM>& rPoint, const std::vector<DimensionalChastePoint<DIM> >& locations)
+bool IsPointInTetra(const VecQLength<DIM>& rPoint, const std::vector<VecQLength<DIM> >& locations, QLength lengthScale)
 {
-    QLength scale_factor = rPoint.GetReferenceLengthScale();
     vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints> :: New();
-    c_vector<double, DIM> loc0 = locations[0].GetLocation(scale_factor);
-    c_vector<double, DIM> loc1 = locations[1].GetLocation(scale_factor);
-    c_vector<double, DIM> loc2 = locations[2].GetLocation(scale_factor);
-    c_vector<double, DIM> loc3 = locations[3].GetLocation(scale_factor);
+    c_vector<double, DIM> loc0 = locations[0].Convert(lengthScale);
+    c_vector<double, DIM> loc1 = locations[1].Convert(lengthScale);
+    c_vector<double, DIM> loc2 = locations[2].Convert(lengthScale);
+    c_vector<double, DIM> loc3 = locations[3].Convert(lengthScale);
     if(DIM==3)
     {
         points->InsertNextPoint(&loc0[0]);
@@ -375,7 +363,7 @@ bool IsPointInTetra(const DimensionalChastePoint<DIM>& rPoint, const std::vector
     vtkSmartPointer<vtkCellLocator> p_locator = vtkSmartPointer<vtkCellLocator>::New();
     p_locator->SetDataSet(p_grid);
     p_locator->Update();
-    c_vector<double, DIM> probe_location = rPoint.GetLocation(scale_factor);
+    c_vector<double, DIM> probe_location = rPoint.Convert(lengthScale);
     int in_tetra = p_locator->FindCell(&probe_location[0]);
     if(in_tetra == -1)
     {
@@ -388,8 +376,8 @@ bool IsPointInTetra(const DimensionalChastePoint<DIM>& rPoint, const std::vector
 }
 
 template<unsigned DIM>
-QLength LengthOfLineInBox(const DimensionalChastePoint<DIM>& rStartPoint,
-                         const DimensionalChastePoint<DIM>& rEndPoint,
+QLength LengthOfLineInBox(const VecQLength<DIM>& rStartPoint,
+                         const VecQLength<DIM>& rEndPoint,
                          const c_vector<double, 6>& rBoundingBox,
                          QLength lengthScale)
 {
@@ -404,22 +392,22 @@ QLength LengthOfLineInBox(const DimensionalChastePoint<DIM>& rStartPoint,
     c_vector<double,3> intercept_1;
     c_vector<double,3> intercept_2;
     c_vector<double,3> dimensionless_start;
-    dimensionless_start[0] = rStartPoint.GetLocation(lengthScale)[0];
-    dimensionless_start[1] = rStartPoint.GetLocation(lengthScale)[1];
+    dimensionless_start[0] = rStartPoint.Convert(lengthScale)[0];
+    dimensionless_start[1] = rStartPoint.Convert(lengthScale)[1];
     if(DIM==3)
     {
-        dimensionless_start[2] = rStartPoint.GetLocation(lengthScale)[2];
+        dimensionless_start[2] = rStartPoint.Convert(lengthScale)[2];
     }
     else
     {
         dimensionless_start[2] = 0.0;
     }
     c_vector<double,3> dimensionless_end;
-    dimensionless_end[0] = rEndPoint.GetLocation(lengthScale)[0];
-    dimensionless_end[1] = rEndPoint.GetLocation(lengthScale)[1];
+    dimensionless_end[0] = rEndPoint.Convert(lengthScale)[0];
+    dimensionless_end[1] = rEndPoint.Convert(lengthScale)[1];
     if(DIM==3)
     {
-        dimensionless_end[2] = rEndPoint.GetLocation(lengthScale)[2];
+        dimensionless_end[2] = rEndPoint.Convert(lengthScale)[2];
     }
     else
     {
@@ -440,21 +428,18 @@ QLength LengthOfLineInBox(const DimensionalChastePoint<DIM>& rStartPoint,
 }
 
 template<unsigned DIM>
-QLength LengthOfLineInBox(const DimensionalChastePoint<DIM>& rStartPoint,
-                         const DimensionalChastePoint<DIM>& rEndPoint,
-                         const DimensionalChastePoint<DIM>& rLocation,
-                         QLength spacing)
+QLength LengthOfLineInBox(const VecQLength<DIM>& rStartPoint,
+                         const VecQLength<DIM>& rEndPoint,
+                         const VecQLength<DIM>& rLocation,
+                         QLength spacing, QLength lengthScale)
 {
-
-    QLength scale_factor = rLocation.GetReferenceLengthScale();
-
-    double dimensionless_spacing = spacing/scale_factor;
+    double dimensionless_spacing = spacing/lengthScale;
     c_vector<double, 3> dimensionless_location;
-    dimensionless_location[0] = rLocation.GetLocation(scale_factor)[0];
-    dimensionless_location[1] = rLocation.GetLocation(scale_factor)[1];
+    dimensionless_location[0] = rLocation.Convert(lengthScale)[0];
+    dimensionless_location[1] = rLocation.Convert(lengthScale)[1];
     if(DIM==3)
     {
-        dimensionless_location[2] = rLocation.GetLocation(scale_factor)[2];
+        dimensionless_location[2] = rLocation.Convert(lengthScale)[2];
     }
     else
     {
@@ -477,13 +462,14 @@ QLength LengthOfLineInBox(const DimensionalChastePoint<DIM>& rStartPoint,
         dimensionless_bounds[5] = 1.0;
     }
 
-    return LengthOfLineInBox(rStartPoint,rEndPoint,dimensionless_bounds, scale_factor);
+    return LengthOfLineInBox(rStartPoint,rEndPoint,dimensionless_bounds, lengthScale);
 }
 
 template<unsigned DIM>
-QLength LengthOfLineInTetra(const DimensionalChastePoint<DIM>& rStartPoint,
-                           const DimensionalChastePoint<DIM>& rEndPoint,
-                           const std::vector<DimensionalChastePoint<DIM> >& locations)
+QLength LengthOfLineInTetra(const VecQLength<DIM>& rStartPoint,
+                           const VecQLength<DIM>& rEndPoint,
+                           const std::vector<VecQLength<DIM> >& locations,
+                           QLength lengthScale)
 {
     if (DIM==2)
     {
@@ -499,12 +485,10 @@ QLength LengthOfLineInTetra(const DimensionalChastePoint<DIM>& rStartPoint,
     else
     {
         int line_crosses;
-
-        QLength scale_factor = rStartPoint.GetReferenceLengthScale();
-        c_vector<double, DIM> loc0 = locations[0].GetLocation(scale_factor);
-        c_vector<double, DIM> loc1 = locations[1].GetLocation(scale_factor);
-        c_vector<double, DIM> loc2 = locations[2].GetLocation(scale_factor);
-        c_vector<double, DIM> loc3 = locations[3].GetLocation(scale_factor);
+        c_vector<double, DIM> loc0 = locations[0].Convert(lengthScale);
+        c_vector<double, DIM> loc1 = locations[1].Convert(lengthScale);
+        c_vector<double, DIM> loc2 = locations[2].Convert(lengthScale);
+        c_vector<double, DIM> loc3 = locations[3].Convert(lengthScale);
 
         vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints> :: New();
         points->InsertNextPoint(&loc0[0]);
@@ -523,19 +507,19 @@ QLength LengthOfLineInTetra(const DimensionalChastePoint<DIM>& rStartPoint,
         c_vector<double,DIM> parametric_intersection;
         int subId;
 
-        c_vector<double,3> dimensionless_start = rStartPoint.GetLocation(scale_factor);
-        c_vector<double,3> dimensionless_end = rEndPoint.GetLocation(scale_factor);
+        c_vector<double,3> dimensionless_start = rStartPoint.Convert(lengthScale);
+        c_vector<double,3> dimensionless_end = rEndPoint.Convert(lengthScale);
 
         if(point1_in_tetra)
         {
             p_grid->GetCell(0)->IntersectWithLine(&dimensionless_start[0], &dimensionless_end[0], 1.e-6, t, &intersection[0], &parametric_intersection[0], subId);
-            return norm_2(intersection - dimensionless_start)*scale_factor;
+            return norm_2(intersection - dimensionless_start)*lengthScale;
         }
 
         if(point2_in_tetra)
         {
             p_grid->GetCell(0)->IntersectWithLine(&dimensionless_end[0], &dimensionless_start[0], 1.e-6, t, &intersection[0], &parametric_intersection[0], subId);
-            return norm_2(intersection - dimensionless_end)*scale_factor;
+            return norm_2(intersection - dimensionless_end)*lengthScale;
         }
 
         line_crosses = p_grid->GetCell(0)->IntersectWithLine(&dimensionless_start[0], &dimensionless_end[0], 1.e-6, t, &intersection[0], &parametric_intersection[0], subId);
@@ -543,40 +527,41 @@ QLength LengthOfLineInTetra(const DimensionalChastePoint<DIM>& rStartPoint,
         {
             c_vector<double,DIM> intersection2;
             p_grid->GetCell(0)->IntersectWithLine(&dimensionless_end[0], &dimensionless_start[0], 1.e-6, t, &intersection2[0], &parametric_intersection[0], subId);
-            return norm_2(intersection - intersection2)*scale_factor;
+            return norm_2(intersection - intersection2)*lengthScale;
         }
         else
         {
-            return 0.0*scale_factor;
+            return 0.0*lengthScale;
         }
     }
 }
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM> OffsetAlongVector(const DimensionalChastePoint<DIM>& rVector, QLength offset)
+VecQLength<DIM> OffsetAlongVector(const VecQLength<DIM>& rVector, QLength offset)
 {
-    return DimensionalChastePoint<DIM>(rVector.GetUnitVector() * double(offset/rVector.GetReferenceLengthScale()), rVector.GetReferenceLengthScale());
+    c_vector<double, DIM> dir = rVector.Convert(offset);
+    dir/=norm2(dir);
+    return rVector + VecQLength<DIM>(dir, offset);
 }
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM> OffsetAlongVector(const c_vector<double, DIM>& rVector, QLength offset,
+VecQLength<DIM> OffsetAlongVector(const c_vector<double, DIM>& rVector, QLength offset,
                                               QLength referenceLength)
 {
-    return DimensionalChastePoint<DIM>(rVector * double(offset/referenceLength), referenceLength);
+    return VecQLength<DIM>(rVector * double(offset/referenceLength), referenceLength);
 }
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM> RotateAboutAxis(const DimensionalChastePoint<DIM>& rDirection,
-                                      const DimensionalChastePoint<3>& rAxis, QAngle angle)
+VecQLength<DIM> RotateAboutAxis(const VecQLength<DIM>& rDirection, const c_vector<double, 3>& axis, QAngle angle)
 {
     double sin_a = Qsin(angle);
     double cos_a = Qcos(angle);
     c_vector<double, DIM> new_direction;
-    QLength length_scale = rDirection.GetReferenceLengthScale();
-    c_vector<double, DIM> dimensionless_direction = rDirection.GetLocation(length_scale);
+    QLength length_scale = 1_m;
+    c_vector<double, DIM> dimensionless_direction = rDirection.Convert(length_scale);
     if(DIM==3)
     {
-        c_vector<double, 3> unit_axis = rAxis.GetUnitVector();
+        c_vector<double, DIM> unit_axis = axis/norm2(axis);
         QLength dot_product = GetDotProduct(rDirection, unit_axis);
         double dimensionless_dot_product = dot_product/length_scale;
         new_direction[0] = (unit_axis[0] * dimensionless_dot_product * (1.0 - cos_a) + dimensionless_direction[0] * cos_a
@@ -591,7 +576,7 @@ DimensionalChastePoint<DIM> RotateAboutAxis(const DimensionalChastePoint<DIM>& r
         new_direction[0] = dimensionless_direction[0] * cos_a - dimensionless_direction[1]*sin_a;
         new_direction[1] = dimensionless_direction[0] * sin_a + dimensionless_direction[1]*cos_a;
     }
-    return DimensionalChastePoint<DIM>(new_direction, length_scale);
+    return VecQLength<DIM>(new_direction, length_scale);
 }
 
 template<unsigned DIM>

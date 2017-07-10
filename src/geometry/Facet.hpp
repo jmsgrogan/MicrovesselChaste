@@ -47,6 +47,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UblasIncludes.hpp"
 #include "Polygon.hpp"
 #include "UnitCollection.hpp"
+#include "VectorUnitCollection.hpp"
 #include "Exception.hpp"
 #include "DimensionalChastePoint.hpp"
 
@@ -92,7 +93,7 @@ class Facet
      * Unique vertices in the facet. This is not always up-to-date.
      * Use GetVertices() to ensure up-to-date vertices are used.
      */
-    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > mVertices;
+    std::vector<VertexPtr<DIM> > mVertices;
 
     /**
      * Whether mVertices is up-to-date. This should be set false when new
@@ -160,26 +161,26 @@ public:
      * @param location the location to be tested
      * @return true if the location is in the facet
      */
-    bool ContainsPoint(const DimensionalChastePoint<DIM>& location);
+    bool ContainsPoint(const VecQLength<DIM>& location);
 
     /**
      * Return the bounding box of the facet
      * @return the bounding box (xmin, xmax, ymin, ymax, zmin, zmax)
      */
-    std::vector<QLength> GetBoundingBox();
+    std::array<QLength, 6> GetBoundingBox();
 
     /**
      * Return the centroid of the facet
      * @return the centroid of the facet
      */
-    DimensionalChastePoint<DIM> GetCentroid();
+    VecQLength<DIM> GetCentroid();
 
     /**
      * Return the distance to the facet
      * @param rLocation reference to the location of the point for distance calculation
      * @return the distance to the facet
      */
-    QLength GetDistance(const DimensionalChastePoint<DIM>& rLocation);
+    QLength GetDistance(const VecQLength<DIM>& rLocation);
 
     /**
      * Return the facet's plane
@@ -203,7 +204,7 @@ public:
      * Return the vertices
      * @return the unique vertices in the facet
      */
-    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > GetVertices();
+    const std::vector<VertexPtr<DIM> >& rGetVertices();
 
     /**
      * Return the facet vertices as a set of VtkPoints.
@@ -222,7 +223,7 @@ public:
      * Move the facet along the translation vector
      * @param translationVector the new location is the original + the translationVector
      */
-    void Translate(DimensionalChastePoint<DIM> translationVector);
+    void Translate(const VecQLength<DIM>& rTranslationVector);
 
     /**
      * Update the mVertices member

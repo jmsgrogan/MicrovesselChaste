@@ -50,6 +50,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UblasVectorInclude.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "UnitCollection.hpp"
+#include "VectorUnitCollection.hpp"
 
 /**
  * Forward declare VTK members
@@ -58,6 +59,12 @@ class vtkPolygon;
 class vtkPoints;
 class vtkPlane;
 class vtkIdTypeArray;
+
+/**
+ * Define a simple vertex type
+ */
+template <unsigned DIM>
+using VertexPtr = std::shared_ptr<VecQLength<DIM> >;
 
 /**
  * A collection of planar vertices, joined in the order they are added.
@@ -92,7 +99,7 @@ class Polygon
      * The vertices of the polygon. They should be co-planar.
      * Vertices should be unique, this is not ensured in the class.
      */
-    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > mVertices;
+    std::vector<VertexPtr<DIM> > mVertices;
 
     /**
      * The reference length scale
@@ -132,27 +139,27 @@ public:
      * Constructor
      * @param vertices a vector of planar vertices, to be joined in the order they are added.
      */
-    Polygon(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices);
+    Polygon(const std::vector<VertexPtr<DIM> >& vertices);
 
     /**
      * Constructor
      * @param pVertex a vertex
      */
-    Polygon(std::shared_ptr<DimensionalChastePoint<DIM> > pVertex);
+    Polygon(VertexPtr<DIM> pVertex);
 
     /**
      * Factory constructor method
      * @param vertices a vector of planar vertices, to be joined in the order they are added.
      * @return a shared pointer to a new polygon
      */
-    static std::shared_ptr<Polygon> Create(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices);
+    static std::shared_ptr<Polygon> Create(const std::vector<VertexPtr<DIM> >& vertices);
 
     /**
      * Factory constructor method
      * @param pVertex a vertex
      * @return a shared pointer to a new polygon
      */
-    static std::shared_ptr<Polygon> Create(std::shared_ptr<DimensionalChastePoint<DIM> > pVertex);
+    static std::shared_ptr<Polygon> Create(VertexPtr<DIM> pVertex);
 
     /**
      * Desctructor
@@ -173,7 +180,7 @@ public:
      * @param value the attribute value
      * @return true if an edge is found
      */
-    bool AddAttributeToEdgeIfFound(DimensionalChastePoint<DIM> loc, const std::string& rLabel, double value);
+    bool AddAttributeToEdgeIfFound(const VecQLength<DIM>& loc, const std::string& rLabel, double value);
 
     /**
      * Apply the label to all edges
@@ -186,13 +193,13 @@ public:
      * Add vertices
      * @param vertices a vector of planar vertices, to be joined in the order they are added.
      */
-    void AddVertices(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices);
+    void AddVertices(const std::vector<VertexPtr<DIM> >& vertices);
 
     /**
      * Add vertex
      * @param pVertex a vertex to be added. It is best to add multiple vertices at once.
      */
-    void AddVertex(std::shared_ptr<DimensionalChastePoint<DIM> > pVertex);
+    void AddVertex(VertexPtr<DIM> vertex);
 
     /**
      * Return true if the specified location is in the polygon, uses vtk point in polygon.
@@ -200,33 +207,33 @@ public:
      * @param tolerance if non-zero this is the distance to the polygon where points are still accepted
      * @return true if the location is in the polygon
      */
-    bool ContainsPoint(const DimensionalChastePoint<DIM>& rLocation, double tolerance = 0.0);
+    bool ContainsPoint(const VecQLength<DIM>& rLocation, double tolerance = 0.0) const;
 
     /**
      * Return the bounding box of the polygon
      * @return the bounding box (xmin, xmax, ymin, ymax, zmin, zmax)
      */
-    std::vector<QLength > GetBoundingBox();
+    std::array<QLength, 6> GetBoundingBox();
 
     /**
      * Return the centroid of the polygon
      * @return the centroid of the polygon
      */
-    DimensionalChastePoint<DIM> GetCentroid();
+    VecQLength<DIM> GetCentroid() const;
 
     /**
      * Return the distance to the polygon's plane
      * @param rLocation the location of the point to get the distance from
      * @return the distance to the plane containing the polygon
      */
-    QLength GetDistance(const DimensionalChastePoint<DIM>& rLocation);
+    QLength GetDistance(const VecQLength<DIM>& rLocation);
 
     /**
      * Return the shortest distance to the polygon's edges
      * @param rLocation the location of the point to get the distance from
      * @return the shortest distance to the polygon edges
      */
-    QLength GetDistanceToEdges(const DimensionalChastePoint<DIM>& rLocation);
+    QLength GetDistanceToEdges(const VecQLength<DIM>& rLocation);
 
     /**
      * Return the polygon's plane
@@ -245,13 +252,13 @@ public:
      * @param idx index of the vertex to return
      * @return pointer to the indexed vertex
      */
-    std::shared_ptr<DimensionalChastePoint<DIM> > GetVertex(unsigned idx);
+    VertexPtr<DIM> GetVertex(unsigned idx);
 
     /**
      * Return the vertices
      * @return the polygon's vertices
      */
-    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > GetVertices();
+    const std::vector<VertexPtr<DIM> >& rGetVertices() const;
 
     /**
      * Return a pointer to a VtkPolygon representation.
@@ -263,13 +270,13 @@ public:
      * Return the edge attributes
      * @return the edge attributes
      */
-    std::vector<std::map<std::string, double> > GetEdgeAttributes();
+    const std::vector<std::map<std::string, double> >& rGetEdgeAttributes();
 
     /**
      * Return the polygon attributes
      * @return the polygon attributes
      */
-    std::map<std::string, double> GetAttributes();
+    const std::map<std::string, double>& rGetAttributes();
 
     /**
      * Return the polygon vertices as a set of VtkPoints.
@@ -283,21 +290,21 @@ public:
      * @param rLabel the label
      * @return true if an edge is found
      */
-    bool EdgeHasAttribute(DimensionalChastePoint<DIM> loc, const std::string& rLabel);
+    bool EdgeHasAttribute(const VecQLength<DIM>& loc, const std::string& rLabel) const;
 
     /**
      * Return true if the polygon has the supplied attribute label
      * @param rLabel the label
      * @return true if an attribute is found
      */
-    bool HasAttribute(const std::string& rLabel);
+    bool HasAttribute(const std::string& rLabel) const;
 
     /**
      * Replace an exiting vertex with the passed in one.
      * @param idx the index of the vertex to be replaced
      * @param pVertex the new vertex
      */
-    void ReplaceVertex(unsigned idx, std::shared_ptr<DimensionalChastePoint<DIM> > pVertex);
+    void ReplaceVertex(unsigned idx, VertexPtr<DIM> Vertex);
 
     /**
      * Rotate about the specified axis by the specified angle
@@ -310,7 +317,7 @@ public:
      * Move the polygon along the translation vector
      * @param translationVector the new location is the original + the translationVector
      */
-    void Translate(DimensionalChastePoint<DIM> translationVector);
+    void Translate(const VecQLength<DIM>& translationVector);
 };
 
 /**

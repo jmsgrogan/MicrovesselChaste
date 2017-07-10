@@ -106,7 +106,7 @@ void Facet<DIM>::AddPolygon(PolygonPtr<DIM> pPolygon)
 }
 
 template<unsigned DIM>
-bool Facet<DIM>::ContainsPoint(const DimensionalChastePoint<DIM>& location)
+bool Facet<DIM>::ContainsPoint(const VecQLength<DIM>& location)
 {
     bool contains_point = false;
     for (unsigned idx = 0; idx < mPolygons.size(); idx++)
@@ -121,46 +121,38 @@ bool Facet<DIM>::ContainsPoint(const DimensionalChastePoint<DIM>& location)
 }
 
 template<unsigned DIM>
-std::vector<QLength > Facet<DIM>::GetBoundingBox()
+std::array<QLength, 6> Facet<DIM>::GetBoundingBox()
 {
-    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
-    c_vector<double, 6> box;
+    std::vector<VertexPtr<DIM> > vertices = rGetVertices();
+    std::array<QLength, 6> box_vector;
 
     for (unsigned idx = 0; idx < vertices.size(); idx++)
     {
-        c_vector<double, DIM> vertex_location = vertices[idx]->GetLocation(mReferenceLength);
         for (unsigned jdx = 0; jdx < DIM; jdx++)
         {
             if (idx == 0)
             {
-                box[2 * jdx] = vertex_location[jdx];
-                box[2 * jdx + 1] = vertex_location[jdx];
+                box_vector[2 * jdx] = (*vertices[idx])[jdx];
+                box_vector[2 * jdx + 1] = (*vertices[idx])[jdx];
             }
             else
             {
-                if (vertex_location[jdx] < box[2 * jdx])
+                if ((*vertices[idx])[jdx] < box_vector[2 * jdx])
                 {
-                    box[2 * jdx] = vertex_location[jdx];
+                    box_vector[2 * jdx] = (*vertices[idx])[jdx];
                 }
-                if (vertex_location[jdx] > box[2 * jdx + 1])
+                if ((*vertices[idx])[jdx] > box_vector[2 * jdx + 1])
                 {
-                    box[2 * jdx + 1] = vertex_location[jdx];
+                    box_vector[2 * jdx + 1] = (*vertices[idx])[jdx];
                 }
             }
         }
     }
-
-    std::vector<QLength > box_vector(6);
-    for(unsigned idx=0; idx<6; idx++)
-    {
-        box_vector[idx] = box[idx] * mReferenceLength;
-    }
-
     return box_vector;
 }
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM> Facet<DIM>::GetCentroid()
+VecQLength<DIM> Facet<DIM>::GetCentroid()
 {
     double centroid[3];
     std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > vertex_data = GetVtkVertices();
@@ -172,21 +164,21 @@ DimensionalChastePoint<DIM> Facet<DIM>::GetCentroid()
     }
     if(DIM==3)
     {
-        return DimensionalChastePoint<DIM>(return_centroid, mReferenceLength);
+        return VecQLength<DIM>(return_centroid, mReferenceLength);
     }
     else
     {
-        return DimensionalChastePoint<DIM>(return_centroid[0], return_centroid[1], 0.0, mReferenceLength);
+        return VecQLength<DIM>(return_centroid[0]*mReferenceLength, return_centroid[1]*mReferenceLength, 0_m);
     }
 }
 
 template<unsigned DIM>
-QLength Facet<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation)
+QLength Facet<DIM>::GetDistance(const VecQLength<DIM>& rLocation)
 {
     double location_array[3];
     for(unsigned idx=0; idx<DIM;idx++)
     {
-        location_array[idx] = rLocation.GetLocation(mReferenceLength)[idx];
+        location_array[idx] = rLocation[idx]/mReferenceLength;
     }
     if(DIM==2)
     {
@@ -201,7 +193,7 @@ QLength Facet<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation)
 template<unsigned DIM>
 c_vector<double, DIM> Facet<DIM>::GetNormal()
 {
-    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
+    std::vector<VertexPtr<DIM> > vertices = rGetVertices();
     if (vertices.size() < 3)
     {
         EXCEPTION("At least 3 vertices are required to generate a normal.");
@@ -233,7 +225,7 @@ template<unsigned DIM>
 vtkSmartPointer<vtkPlane> Facet<DIM>::GetPlane()
 {
     vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
-    c_vector<double, DIM> centroid = GetCentroid().GetLocation(mReferenceLength);
+    c_vector<double, DIM> centroid = GetCentroid().Convert(mReferenceLength);
     c_vector<double, DIM> normal = GetNormal();
     if(DIM==3)
     {
@@ -255,7 +247,7 @@ std::vector<PolygonPtr<DIM> > Facet<DIM>::GetPolygons()
 }
 
 template<unsigned DIM>
-std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > Facet<DIM>::GetVertices()
+const std::vector<VertexPtr<DIM> >& Facet<DIM>::rGetVertices()
 {
     if (!mVerticesUpToDate)
     {
@@ -269,12 +261,12 @@ std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > Facet<DI
 {
     vtkSmartPointer<vtkIdTypeArray> p_vertexIds = vtkSmartPointer<vtkIdTypeArray>::New();
     vtkSmartPointer<vtkPoints> p_vertices = vtkSmartPointer<vtkPoints>::New();
-    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
+    std::vector<VertexPtr<DIM> > vertices = rGetVertices();
 
     p_vertices->SetNumberOfPoints(vertices.size());
     for (vtkIdType idx = 0; idx < vtkIdType(vertices.size()); idx++)
     {
-        c_vector<double, DIM> vertex_location = vertices[idx]->GetLocation(mReferenceLength);
+        c_vector<double, DIM> vertex_location = vertices[idx]->Convert(mReferenceLength);
         if(DIM==3)
         {
             p_vertices->SetPoint(idx, vertex_location[0], vertex_location[1], vertex_location[2]);
@@ -291,36 +283,41 @@ std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > Facet<DI
 template<unsigned DIM>
 void Facet<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 {
-    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
-    for(unsigned idx=0; idx<vertices.size(); idx++)
+    if (!mVerticesUpToDate)
     {
-        vertices[idx]->RotateAboutAxis(axis, angle);
+        UpdateVertices();
+    }
+    for(auto& vertex:mVertices)
+    {
+        vertex->RotateAboutAxis(axis, angle);
     }
 }
 
 template<unsigned DIM>
-void Facet<DIM>::Translate(DimensionalChastePoint<DIM> translationVector)
+void Facet<DIM>::Translate(const VecQLength<DIM>& rTranslationVector)
 {
-    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
-    for(unsigned idx=0; idx<vertices.size(); idx++)
+    if (!mVerticesUpToDate)
     {
-        vertices[idx]->Translate(translationVector);
+        UpdateVertices();
+    }
+    for(auto& vertex:mVertices)
+    {
+        vertex->Translate(rTranslationVector);
     }
 }
 
 template<unsigned DIM>
 void Facet<DIM>::UpdateVertices()
 {
-    std::set<std::shared_ptr<DimensionalChastePoint<DIM> > > unique_vertices;
+    std::set<VertexPtr<DIM> > unique_vertices;
     for (unsigned idx = 0; idx < mPolygons.size(); idx++)
     {
-        std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > polygon_vertices = mPolygons[idx]->GetVertices();
+        std::vector<VertexPtr<DIM> > polygon_vertices = mPolygons[idx]->rGetVertices();
         std::copy(polygon_vertices.begin(), polygon_vertices.end(),
                   std::inserter(unique_vertices, unique_vertices.end()));
     }
-    mVertices = std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > >();
+    mVertices = std::vector<VertexPtr<DIM> >();
     mVertices.insert(mVertices.end(), unique_vertices.begin(), unique_vertices.end());
-
     for (unsigned idx = 0; idx < mVertices.size(); idx++)
     {
         mVertices[idx]->SetIndex(idx);

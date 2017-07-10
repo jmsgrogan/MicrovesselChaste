@@ -37,8 +37,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNode.hpp"
 
 template<unsigned DIM>
-VesselNode<DIM>::VesselNode(double v1, double v2, double v3, QLength referenceLength) : AbstractVesselNetworkComponent<DIM>(),
-        mLocation(DimensionalChastePoint<DIM>(v1 ,v2, v3, referenceLength)),
+VesselNode<DIM>::VesselNode(QLength v1, QLength v2, QLength v3) : AbstractVesselNetworkComponent<DIM>(),
+        mLocation(VecQLength<DIM>(v1 ,v2, v3)),
         mSegments(std::vector<std::weak_ptr<VesselSegment<DIM> > >()),
         mIsMigrating(false),
         mpFlowProperties(std::shared_ptr<NodeFlowProperties<DIM> >(new NodeFlowProperties<DIM>())),
@@ -55,25 +55,7 @@ VesselNode<DIM>::VesselNode(double v1, double v2, double v3, QLength referenceLe
 }
 
 template<unsigned DIM>
-VesselNode<DIM>::VesselNode(double v1, double v2, double v3) : AbstractVesselNetworkComponent<DIM>(),
-        mLocation(DimensionalChastePoint<DIM>(v1 ,v2, v3)),
-        mSegments(std::vector<std::weak_ptr<VesselSegment<DIM> > >()),
-        mIsMigrating(false),
-        mpFlowProperties(std::shared_ptr<NodeFlowProperties<DIM> >(new NodeFlowProperties<DIM>())),
-        mPtrComparisonId(0),
-        mGlobalIndex(0),
-        mLocalIndex(0),
-        mOwnerRank(0),
-        mIsHalo(false),
-        mHasHalo(false),
-        mOtherProcessorRank(0),
-        mOtherProcessorLocalIndex(0)
-{
-    this->mpFlowProperties = std::shared_ptr<NodeFlowProperties<DIM> >(new NodeFlowProperties<DIM>());
-}
-
-template<unsigned DIM>
-VesselNode<DIM>::VesselNode(const DimensionalChastePoint<DIM>& location) : AbstractVesselNetworkComponent<DIM>(),
+VesselNode<DIM>::VesselNode(const VecQLength<DIM>& location) : AbstractVesselNetworkComponent<DIM>(),
         mLocation(location),
         mSegments(std::vector<std::weak_ptr<VesselSegment<DIM> > >()),
         mIsMigrating(false),
@@ -117,19 +99,13 @@ VesselNode<DIM>::~VesselNode()
 }
 
 template<unsigned DIM>
-std::shared_ptr<VesselNode<DIM> > VesselNode<DIM>::Create(double v1, double v2, double v3, QLength referenceLength)
-{
-    return std::make_shared<VesselNode<DIM> >(v1, v2, v3, referenceLength);
-}
-
-template<unsigned DIM>
-std::shared_ptr<VesselNode<DIM> > VesselNode<DIM>::Create(double v1, double v2, double v3)
+std::shared_ptr<VesselNode<DIM> > VesselNode<DIM>::Create(QLength v1, QLength v2, QLength v3)
 {
     return std::make_shared<VesselNode<DIM> >(v1, v2, v3);
 }
 
 template<unsigned DIM>
-std::shared_ptr<VesselNode<DIM> > VesselNode<DIM>::Create(const DimensionalChastePoint<DIM>& location)
+std::shared_ptr<VesselNode<DIM> > VesselNode<DIM>::Create(const VecQLength<DIM>& location)
 {
     return std::make_shared<VesselNode<DIM> >(location);
 }
@@ -155,9 +131,9 @@ void VesselNode<DIM>::AddSegment(std::shared_ptr<VesselSegment<DIM> > pVesselSeg
 {
     // Vessel segments can only be attached to a node once. Note use of lock to get shared_ptr from
     // weak_ptr.
-    for (unsigned idx = 0; idx < mSegments.size(); idx++)
+    for(auto& segment:mSegments)
     {
-        if (mSegments[idx].lock() == pVesselSegment)
+        if (segment.lock() == pVesselSegment)
         {
             EXCEPTION("This segment is already attached to this node.");
         }
@@ -172,7 +148,7 @@ unsigned VesselNode<DIM>::GetComparisonId()
 }
 
 template<unsigned DIM>
-QLength VesselNode<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation) const
+QLength VesselNode<DIM>::GetDistance(const VecQLength<DIM>& rLocation) const
 {
     return mLocation.GetDistance(rLocation);
 }
@@ -184,7 +160,7 @@ std::shared_ptr<NodeFlowProperties<DIM> > VesselNode<DIM>::GetFlowProperties() c
 }
 
 template<unsigned DIM>
-const DimensionalChastePoint<DIM>& VesselNode<DIM>::rGetLocation() const
+const VecQLength<DIM>& VesselNode<DIM>::rGetLocation() const
 {
     return mLocation;
 }
@@ -292,7 +268,7 @@ bool VesselNode<DIM>::IsAttachedTo(const std::shared_ptr<VesselSegment<DIM> > pS
 }
 
 template<unsigned DIM>
-bool VesselNode<DIM>::IsCoincident(const DimensionalChastePoint<DIM>& rLocation) const
+bool VesselNode<DIM>::IsCoincident(const VecQLength<DIM>& rLocation) const
 {
     return this->mLocation.IsCoincident(rLocation);
 }
@@ -330,15 +306,15 @@ void VesselNode<DIM>::SetFlowProperties(const NodeFlowProperties<DIM>& rFlowProp
 }
 
 template<unsigned DIM>
-void VesselNode<DIM>::SetLocation(const DimensionalChastePoint<DIM>& location)
+void VesselNode<DIM>::SetLocation(const VecQLength<DIM>& location)
 {
-    this->mLocation = DimensionalChastePoint<DIM>(location);
+    this->mLocation = VecQLength<DIM>(location);
 }
 
 template<unsigned DIM>
-void VesselNode<DIM>::SetLocation(double x, double y, double z, QLength referenceLength)
+void VesselNode<DIM>::SetLocation(QLength x, QLength y, QLength z)
 {
-    this->mLocation = DimensionalChastePoint<DIM>(x,y,z,referenceLength);
+    this->mLocation = VecQLength<DIM>(x,y,z);
 }
 
 template<unsigned DIM>

@@ -106,12 +106,12 @@ class Part
     /**
      * The locations of hole markers (see PLC definition)
      */
-    std::vector<DimensionalChastePoint<DIM> > mHoleMarkers;
+    std::vector<VecQLength<DIM> > mHoleMarkers;
 
     /**
      * The locations of region markers (see PLC definition)
      */
-    std::vector<std::pair<DimensionalChastePoint<DIM>, unsigned> > mRegionMarkers;
+    std::vector<std::pair<VecQLength<DIM>, unsigned> > mRegionMarkers;
 
     /**
      * The reference length scale
@@ -169,7 +169,7 @@ public:
      * @param rLabel the label
      * @return true if an edge is found
      */
-    void AddAttributeToEdgeIfFound(DimensionalChastePoint<DIM> loc, const std::string& rLabel, double value);
+    void AddAttributeToEdgeIfFound(const VecQLength<DIM>& loc, const std::string& rLabel, double value);
 
     /**
      * Label all polygons
@@ -185,7 +185,7 @@ public:
      * @param rLabel the label
      * @return true if an edge is found
      */
-    void AddAttributeToPolygonIfFound(DimensionalChastePoint<DIM> loc, const std::string& rLabel, double value);
+    void AddAttributeToPolygonIfFound(const VecQLength<DIM>& loc, const std::string& rLabel, double value);
 
     /**
      * Add a circle to the part. If a target facet is not specified the default position is normal to the z-axis.
@@ -195,7 +195,7 @@ public:
      * @return polygon corresponding to the circle, useful for further operations, such as extrusion.
      */
     PolygonPtr<DIM> AddCircle(QLength radius,
-                                         DimensionalChastePoint<DIM> centre, unsigned numSegments = 24);
+            VecQLength<DIM> centre = VecQLength<DIM>(0.0), unsigned numSegments = 24);
 
     /**
      * Add a cylinder to the part.
@@ -205,7 +205,7 @@ public:
      * @param numSegments the number of line segments the base is described with
      */
     void AddCylinder(QLength radius, QLength depth,
-            DimensionalChastePoint<DIM> centre, unsigned numSegments = 24);
+            VecQLength<DIM> centre = VecQLength<DIM>(0.0), unsigned numSegments = 24);
 
     /**
      * Add a cuboid to the part.
@@ -214,23 +214,21 @@ public:
      * @param sizeZ the dimension in z
      * @param origin the bottom, left, front corner
      */
-    void AddCuboid(QLength sizeX,
-                   QLength sizeY,
-                   QLength sizeZ,
-                   DimensionalChastePoint<DIM> origin);
+    void AddCuboid(QLength sizeX, QLength sizeY, QLength sizeZ,
+            VecQLength<DIM> origin = VecQLength<DIM>(0.0));
 
     /**
      * Add a hole marker to the part
      * @param location the location of the hole
      */
-    void AddHoleMarker(DimensionalChastePoint<DIM> location);
+    void AddHoleMarker(VecQLength<DIM> location);
 
     /**
      * Add a region marker to the part
      * @param location the location of the region
      * @param value the region value
      */
-    void AddRegionMarker(DimensionalChastePoint<DIM> location, unsigned value);
+    void AddRegionMarker(VecQLength<DIM> location, unsigned value);
 
     /**
      * Add a polygon described by a vector or vertices. The vertices should be planar. This is not
@@ -240,9 +238,8 @@ public:
      * @param pFacet an optional facet that the circle can be generated on
      * @return the new polygon, useful for further operations, such as extrusion.
      */
-    PolygonPtr<DIM> AddPolygon(std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices,
-                                          bool newFacet = false,
-                                          FacetPtr<DIM> pFacet = FacetPtr<DIM>());
+    PolygonPtr<DIM> AddPolygon(const std::vector<VecQLength<DIM> >& vertices,
+                                          bool newFacet = false, FacetPtr<DIM> pFacet = FacetPtr<DIM>());
 
     /**
      * Add a polygon
@@ -251,8 +248,7 @@ public:
      * @param pFacet an optional facet that the polygon can be generated on
      * @return the new polygon, useful for further operations, such as extrusion.
      */
-    PolygonPtr<DIM> AddPolygon(PolygonPtr<DIM> pPolygon,
-                                          bool newFacet = false,
+    PolygonPtr<DIM> AddPolygon(PolygonPtr<DIM> pPolygon, bool newFacet = false,
                                           FacetPtr<DIM> pFacet = FacetPtr<DIM>());
 
     /**
@@ -262,9 +258,7 @@ public:
      * @param origin the bottom left corner
      * @return the new polygon, useful for further operations, such as extrusion.
      */
-    PolygonPtr<DIM> AddRectangle(QLength sizeX,
-                                            QLength sizeY,
-                                            DimensionalChastePoint<DIM> origin);
+    PolygonPtr<DIM> AddRectangle(QLength sizeX, QLength sizeY, VecQLength<DIM> origin = VecQLength<DIM>(0.0));
 
     /**
      * Add a vessel network to the part.
@@ -272,7 +266,7 @@ public:
      * @param surface true if a surface representation of the network is required
      * @param removeVesselRegion remove vessel region from meshes
      */
-    void AddVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork,
+    void AddVesselNetwork(VesselNetworkPtr<DIM> pVesselNetwork,
             bool surface = false, bool removeVesselRegion = true);
 
     /**
@@ -286,7 +280,7 @@ public:
      * Remove vessels outside the part
      * @param pVesselNetwork the vessel network to be pruned
      */
-    void BooleanWithNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
+    void BooleanWithNetwork(VesselNetworkPtr<DIM>  pVesselNetwork);
 
     /**
      * Extrude the part along the z-axis, inserting planar faces in place of edges.
@@ -299,7 +293,7 @@ public:
      * Return the bounding box
      * @return the bounding box of the part (xmin, xmax, ymin, ymax, zmin, zmax)
      */
-    std::vector<QLength > GetBoundingBox();
+    std::array<QLength, 6> GetBoundingBox();
 
     /**
      * Return the indices of the grid that are inside the part
@@ -316,13 +310,13 @@ public:
      * Return the hole marker locations
      * @return the hole marker locations
      */
-    std::vector<DimensionalChastePoint<DIM> > GetHoleMarkers();
+    std::vector<VecQLength<DIM> > GetHoleMarkers();
 
     /**
      * Return the region marker locations
      * @return the region marker locations
      */
-    std::vector<std::pair<DimensionalChastePoint<DIM>, unsigned> > GetRegionMarkers();
+    std::vector<std::pair<VecQLength<DIM>, unsigned> > GetRegionMarkers();
 
     /**
      * Return the part attributes
@@ -347,7 +341,7 @@ public:
      * @param rLocation the probe point
      * @return the FIRST found facet on the point.
      */
-    FacetPtr<DIM> GetFacet(const DimensionalChastePoint<DIM>& rLocation);
+    FacetPtr<DIM> GetFacet(const VecQLength<DIM>& rLocation);
 
     /**
      * Return the polygons
@@ -371,13 +365,13 @@ public:
      * Return the unique vertices
      * @return the unique vertices
      */
-    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > GetVertices();
+    std::vector<VecQLength<DIM> > GetVertices();
 
     /**
      * Return the vertex locations
      * @return the vertex locations
      */
-    std::vector<DimensionalChastePoint<DIM> > GetVertexLocations();
+    std::vector<VecQLength<DIM> > GetVertexLocations();
 
     /**
      * Return the a vtk polydata representation of the part
@@ -399,14 +393,14 @@ public:
      * @param rLabel the label
      * @return true if an edge is found
      */
-    bool EdgeHasAttribute(DimensionalChastePoint<DIM> loc, const std::string& rLabel);
+    bool EdgeHasAttribute(const VecQLength<DIM>& loc, const std::string& rLabel);
 
     /**
      * Is the point inside the part
      * @param location the location of the point
      * @return bool true if the point is inside the part
      */
-    bool IsPointInPart(DimensionalChastePoint<DIM> location);
+    bool IsPointInPart(const VecQLength<DIM>& loc);
 
     /**
      * Is the point inside the part
@@ -437,7 +431,7 @@ public:
      * Move the part along the translation vector
      * @param vector the vector to move the part along
      */
-    void Translate(DimensionalChastePoint<DIM> vector);
+    void Translate(const VecQLength<DIM>& vector);
 
     /**
      * Write the part to file in vtk format
