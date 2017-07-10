@@ -41,6 +41,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "AbstractCellBasedSimulationModifier.hpp"
 #include "MicrovesselSolver.hpp"
 #include "GridCalculator.hpp"
+#include "Exception.hpp"
 
 /**
  * A modifier class which at each simulation time step in a cell based simulation increments

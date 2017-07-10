@@ -46,6 +46,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UnitCollection.hpp"
 #include "AbstractVesselNetworkComponent.hpp"
 #include "DimensionalChastePoint.hpp"
+#include "Exception.hpp"
 
  // Forward declaration to allow vessels to manage adding and removing themselves from segments and segment management by vessels.
 template<unsigned DIM>

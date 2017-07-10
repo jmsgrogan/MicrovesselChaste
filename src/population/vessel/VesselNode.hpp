@@ -47,6 +47,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UblasVectorInclude.hpp"
 #include "UnitCollection.hpp"
 #include "VesselSegment.hpp"
+#include "Exception.hpp"
 
 /**
  * Forward declaration to allow segments to manage adding and removing themselves from nodes.

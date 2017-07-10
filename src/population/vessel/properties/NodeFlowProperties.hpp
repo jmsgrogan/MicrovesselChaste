@@ -39,6 +39,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //#include <string>
 //#include <map>
 #include "ChasteSerialization.hpp" // NOLINT
+#include "Exception.hpp"
 #include "AbstractVesselNetworkComponentFlowProperties.hpp"
 
 /**

@@ -44,6 +44,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UblasVectorInclude.hpp"
 #include "UnitCollection.hpp"
 #include "BaseUnits.hpp"
+#include "Exception.hpp"
 
 /**
  * This class is used in place of ChastePoint when units are important. It is needed to

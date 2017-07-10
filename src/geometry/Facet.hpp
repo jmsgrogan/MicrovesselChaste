@@ -47,6 +47,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UblasIncludes.hpp"
 #include "Polygon.hpp"
 #include "UnitCollection.hpp"
+#include "Exception.hpp"
 #include "DimensionalChastePoint.hpp"
 
 /**

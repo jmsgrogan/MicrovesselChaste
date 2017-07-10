@@ -40,6 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <ostream>
 #include "ChasteSerialization.hpp"
 #include "UnitCollection.hpp"
+#include "Exception.hpp"
 
 /**
  * This is a class for storing often used parameters and their metadata, such as a short textual description, bib information

@@ -141,7 +141,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateOvalNe
 }
 
 template<unsigned DIM>
-std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParrallelNetwork(PartPtr<DIM> domain,
+std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateParallelNetwork(PartPtr<DIM> domain,
                                                                                              QArea targetDensity,
                                                                     VesselDistribution::Value distributionType,
                                                                     QLength exclusionDistance,

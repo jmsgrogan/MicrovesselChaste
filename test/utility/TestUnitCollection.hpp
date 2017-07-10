@@ -65,32 +65,10 @@ public:
         h1s << h1;
         std::stringstream d1s;
         d1s << d1;
-        TS_ASSERT_EQUALS(s1s.str(), "3 s");
-        TS_ASSERT_EQUALS(m1s.str(), "180 s");
-        TS_ASSERT_EQUALS(h1s.str(), "10800 s");
-        TS_ASSERT_EQUALS(d1s.str(), "259200 s");
-//
-//        // Rates
-//        QRate rs1 = 3.0*unit::per_second;
-//        QRate rm1(3.0*unit::per_minute);
-//        QRate rh1(3.0*unit::per_hour);
-//        std::cout << rs1 << std::endl;
-//        std::cout << rm1 << std::endl;
-//        std::cout << rh1 << std::endl;
-//
-//        // Length
-//        QLength lm1(3.0*unit::metres);
-//        std::cout << lm1 << std::endl;
-//
-//        // Force
-//        QForce f1(3.0*unit::newtons);
-//        std::cout << f1 << std::endl;
-//
-//        // Pressure
-//        QPressure p1(3.0*unit::pascals);
-//        QPressure ph1(3.0*unit::mmHg);
-//        std::cout << p1 << std::endl;
-//        std::cout << ph1 << std::endl;
+        TS_ASSERT_EQUALS(s1s.str(), "3");
+        TS_ASSERT_EQUALS(m1s.str(), "180");
+        TS_ASSERT_EQUALS(h1s.str(), "10800");
+        TS_ASSERT_EQUALS(d1s.str(), "259200");
     }
 
 };

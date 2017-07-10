@@ -116,7 +116,7 @@ public:
 
         std::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator = DiscreteContinuumMeshGenerator<2>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(5.0*Qpow3(1_um));
+        //p_mesh_generator->SetMaxElementArea(5.0*Qpow3(1_um));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<2> mesh_writer;
@@ -146,7 +146,7 @@ public:
 
         std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(20.0*Qpow3(1_um));
+        //p_mesh_generator->SetMaxElementArea(20.0*Qpow3(1_um));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -180,7 +180,7 @@ public:
 
         std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
+        //p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -208,7 +208,7 @@ public:
 
         std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
+        //p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -236,7 +236,7 @@ public:
 
         std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
+        //p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -264,7 +264,7 @@ public:
 
         std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
+        //p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -290,7 +290,7 @@ public:
 
         std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
+        //p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -346,7 +346,7 @@ public:
 
         std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
-        p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
+        //p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -464,7 +464,7 @@ public:
 
         std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_domain);
-        p_mesh_generator->SetMaxElementArea(1e4*Qpow3(1_um));
+        //p_mesh_generator->SetMaxElementArea(1e4*Qpow3(1_um));
         p_mesh_generator->Update();
 
         MultiFormatMeshWriter<3> mesh_writer;
@@ -514,7 +514,7 @@ public:
         std::vector<DimensionalChastePoint<2> > holes;
         holes.push_back(DimensionalChastePoint<2>(0.5, 0.5));
         p_mesh_generator->SetHoles(holes);
-        p_mesh_generator->SetMaxElementArea(1.e-3*Qpow3(1_um));
+        //p_mesh_generator->SetMaxElementArea(1.e-3*Qpow3(1_um));
         p_mesh_generator->Update();
 
         mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"circle_hole");

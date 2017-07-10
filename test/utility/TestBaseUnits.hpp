@@ -57,10 +57,10 @@ public:
 
     void TestSetupAndDestroy()
     {
-        BaseUnits::Instance()->SetReferenceLengthScale(10.0*unit::metres);
+        BaseUnits::Instance()->SetReferenceLengthScale(10.0_m);
         BaseUnits::Instance()->SetReferenceConcentrationScale(15.0*unit::mole_per_metre_cubed);
-        BaseUnits::Instance()->SetReferenceTimeScale(20.0*unit::seconds);
-        TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceLengthScale()/1_um, 10.0, 1.e-6);
+        BaseUnits::Instance()->SetReferenceTimeScale(20.0_s);
+        TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceLengthScale()/1_m, 10.0, 1.e-6);
         TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceConcentrationScale()/(unit::mole_per_metre_cubed), 15.0, 1.e-6);
         TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceTimeScale()/1_s, 20.0, 1.e-6);
 

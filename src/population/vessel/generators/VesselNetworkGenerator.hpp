@@ -96,7 +96,7 @@ public:
      * @param seeds User provided seed locations for the vessel locations, used with CUSTOM distribution type
      * @return a shared pointer to the vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > GenerateParrallelNetwork(PartPtr<DIM> domain,
+    std::shared_ptr<VesselNetwork<DIM> > GenerateParallelNetwork(PartPtr<DIM> domain,
                                                                         QArea targetDensity,
                                                                         VesselDistribution::Value distrbutionType,
                                                                         QLength exclusionDistance = 0.0*unit::metres,

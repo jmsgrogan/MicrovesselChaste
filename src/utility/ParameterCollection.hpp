@@ -45,6 +45,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UnitCollection.hpp"
 #include "BaseParameterInstance.hpp"
 #include "ParameterInstance.hpp"
+#include "Exception.hpp"
 
 /**
  * This singleton holds parameter values used in a simulation. It allows the value of parameters

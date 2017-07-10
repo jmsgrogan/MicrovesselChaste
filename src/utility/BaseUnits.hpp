@@ -42,6 +42,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "SerializableSingleton.hpp"
 #include "UnitCollection.hpp"
 #include "SimulationTime.hpp"
+#include "Exception.hpp"
 
 /**
  * This singleton manages base units of time and length. Its use needs some care.

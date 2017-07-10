@@ -44,6 +44,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <boost/serialization/map.hpp>
 #include "ChasteSerialization.hpp"
 #include "ChastePoint.hpp"
+#include "Exception.hpp"
 #include "UblasIncludes.hpp"
 #include "DimensionalChastePoint.hpp"
 #include "UnitCollection.hpp"

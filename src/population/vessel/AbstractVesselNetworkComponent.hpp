@@ -45,6 +45,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UblasVectorInclude.hpp"
 #include "UnitCollection.hpp"
 #include "SmartPointers.hpp"
+#include "Exception.hpp"
 #include "AbstractVesselNetworkComponentProperties.hpp"
 
 /**

@@ -41,6 +41,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <boost/serialization/base_object.hpp>
 #include "UnitCollection.hpp"
 #include "BaseParameterInstance.hpp"
+#include "Exception.hpp"
 
 /**
  * This is a concrete class for storing parameters. It inherits from BaseParameterInstance

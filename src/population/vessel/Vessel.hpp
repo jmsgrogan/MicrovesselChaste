@@ -48,6 +48,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "DimensionalChastePoint.hpp"
 #include "UnitCollection.hpp"
 #include "VesselFlowProperties.hpp"
+#include "Exception.hpp"
 
 /**
  * Struct to denote segment locations on the vessel

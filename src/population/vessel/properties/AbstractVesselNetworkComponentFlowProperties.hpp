@@ -43,6 +43,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ChasteSerialization.hpp"
 #include "UnitCollection.hpp"
 #include "ClassIsAbstract.hpp"
+#include "Exception.hpp"
 #include "AbstractVesselNetworkComponentProperties.hpp"
 
 /**
