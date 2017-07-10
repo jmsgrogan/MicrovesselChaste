@@ -67,12 +67,15 @@ class RVectorQuantity
         ar & mValue;
     }
 
+    /**
+     * The adopted value
+     */
     c_vector<double, DIM> mValue;
 
 public:
 
     constexpr RVectorQuantity() :
-    mValue(scalar_vector<double>(DIM, 1.0))
+    	mValue(zero_vector<double>(DIM))
     {
 
     }
@@ -95,32 +98,14 @@ public:
 
     }
 
-    RVectorQuantity(RQuantity val1, RQuantity val2 = RQuantity(0.0), RQuantity val3 = RQuantity(0.0)) :
-        mValue()
-    {
-        RQuantity ref(1.0);
-        if (DIM > 0)
-        {
-            mValue[0] = val1/ref;
-        }
-        if (DIM > 1)
-        {
-            mValue[1] = val2/ref;
-        }
-        if (DIM > 2)
-        {
-            mValue[2] = val3/ref;
-        }
-    }
-
     // Returns the value of the quantity in multiples of the specified unit
     constexpr c_vector<double, DIM> Convert(const RQuantity& rhs) const
     {
-        return mValue / rhs.getValue();
+        return mValue / rhs.GetValue();
     }
 
     // returns the raw value of the quantity (should not be used)
-    constexpr c_vector<double, DIM> getValue() const
+    constexpr c_vector<double, DIM> GetValue() const
     {
         return mValue;
     }
@@ -161,27 +146,27 @@ template <typename Quantity, unsigned DIM>
 constexpr RVectorQuantity<Quantity, DIM>
     operator+(const RVectorQuantity<Quantity, DIM>& lhs, const RVectorQuantity<Quantity, DIM>& rhs)
 {
-    return RVectorQuantity<Quantity, DIM>(lhs.getValue() + rhs.getValue());
+    return RVectorQuantity<Quantity, DIM>(lhs.GetValue() + rhs.GetValue());
 }
 template <typename Quantity, unsigned DIM>
 constexpr RVectorQuantity<Quantity, DIM>
     operator-(const RVectorQuantity<Quantity, DIM>& lhs, const RVectorQuantity<Quantity, DIM>& rhs)
 {
-    return RVectorQuantity<Quantity, DIM>(lhs.getValue() - rhs.getValue());
+    return RVectorQuantity<Quantity, DIM>(lhs.GetValue() - rhs.GetValue());
 }
 
 template <typename Quantity, unsigned DIM>
 constexpr RVectorQuantity<Quantity, DIM>
     operator*(const double& lhs, const RVectorQuantity<Quantity, DIM>& rhs)
 {
-    return RVectorQuantity<Quantity, DIM>(lhs*rhs.getValue());
+    return RVectorQuantity<Quantity, DIM>(lhs*rhs.GetValue());
 }
 
 template <typename Quantity, unsigned DIM>
 constexpr RVectorQuantity<Quantity, DIM>
     operator/(const RVectorQuantity<Quantity, DIM>& rhs, double x)
 {
-    return RVectorQuantity<Quantity, DIM>(rhs.getValue() / x);
+    return RVectorQuantity<Quantity, DIM>(rhs.GetValue() / x);
 }
 
 
@@ -190,12 +175,12 @@ constexpr RVectorQuantity<Quantity, DIM>
 template <typename Quantity, unsigned DIM>
 constexpr bool operator==(const RVectorQuantity<Quantity, DIM>& lhs, const RVectorQuantity<Quantity, DIM>& rhs)
 {
-    return (lhs.getValue() == rhs.getValue());
+    return (lhs.GetValue() == rhs.GetValue());
 }
 template <typename Quantity, unsigned DIM>
 constexpr bool operator!=(const RVectorQuantity<Quantity, DIM>& lhs, RVectorQuantity<Quantity, DIM>& rhs)
 {
-    return (lhs.getValue() != rhs.getValue());
+    return (lhs.GetValue() != rhs.GetValue());
 }
 
 // Typesafe mathematical operations:
@@ -204,7 +189,7 @@ template <typename Quantity, unsigned DIM>
 constexpr Quantity
     Qnorm2(const RVectorQuantity<Quantity, DIM>& num)
 {
-    return norm2(num.getValue());
+    return norm2(num.GetValue());
 }
 
 #endif /* VECTORUNITCOLLECTIONS_HPP */

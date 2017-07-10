@@ -45,7 +45,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * Simple Unit Library based on a sample by Benjamin Jurke
 * https://benjaminjurke.com/content/articles/2015/compile-time-numerical-unit-dimension-checking/#fn:3
 */
-
 template<typename MassDim, typename LengthDim, typename TimeDim, typename AmountDim, typename AngleDim>
 class RQuantity
 {
@@ -65,29 +64,43 @@ class RQuantity
         ar & mValue;
     }
 
-    /**
-     * Allow vector versions to see value
-     */
-    //friend class RVectorQuantity;
+protected:
 
+    /**
+     * The value of the quantity
+     */
     double mValue;
 
+    /**
+     * The symbol of the quantity
+     */
     const char* mSymbol;
 
 public:
 
+    /**
+     * Default value for a quantity
+     */
     constexpr RQuantity() :
-    mValue(1.0),
-    mSymbol("")
+    	mValue(0.0),
+		mSymbol("")
     {
 
     }
+
+    /**
+     * Set the quantity with a value
+     */
     constexpr RQuantity(double val) :
         mValue(val),
         mSymbol("")
     {
 
     }
+
+    /**
+     * Set the quantity with a long double value
+     */
     constexpr RQuantity(long double val) :
         mValue(static_cast<double>(val)),
         mSymbol("")
@@ -95,6 +108,9 @@ public:
 
     }
 
+    /**
+     * Set with a value and symbol
+     */
     constexpr RQuantity(long double val, const char* rSymbol) :
         mValue(static_cast<double>(val)),
         mSymbol(rSymbol)
@@ -102,31 +118,25 @@ public:
 
     }
 
-//    C++14 Only
-//    // The intrinsic operations for a quantity with a unit is addition and subtraction
-//    constexpr RQuantity const& operator+=(const RQuantity& rhs)
-//    {
-//        mValue += rhs.mValue;
-//        return *this;
-//    }
-//    constexpr RQuantity const& operator-=(const RQuantity& rhs)
-//    {
-//        mValue -= rhs.mValue;
-//        return *this;
-//    }
-
-    // Returns the value of the quantity in multiples of the specified unit
+    /**
+     * Convert to the supplied unit type
+     */
     constexpr double Convert(const RQuantity& rhs) const
     {
         return mValue / rhs.mValue;
     }
 
-    // returns the raw value of the quantity (should not be used)
-    constexpr double getValue() const
+    /**
+     * Get the raw unit value (should not use)
+     */
+    constexpr double GetValue() const
     {
         return mValue;
     }
 
+    /**
+     * Double conversion type
+     */
     constexpr operator double() const
     {
         return mValue;
@@ -204,13 +214,13 @@ template <typename M, typename L, typename T, typename Am, typename A>
 constexpr RQuantity<M, L, T, Am, A>
     operator+(const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<M, L, T, Am, A>& rhs)
 {
-    return RQuantity<M, L, T, Am, A>(lhs.getValue() + rhs.getValue());
+    return RQuantity<M, L, T, Am, A>(lhs.GetValue() + rhs.GetValue());
 }
 template <typename M, typename L, typename T, typename Am, typename A>
 constexpr RQuantity<M, L, T, Am, A>
     operator-(const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<M, L, T, Am, A>& rhs)
 {
-    return RQuantity<M, L, T, Am, A>(lhs.getValue() - rhs.getValue());
+    return RQuantity<M, L, T, Am, A>(lhs.GetValue() - rhs.GetValue());
 }
 template <typename M1, typename L1, typename T1, typename Am1, typename A1,
           typename M2, typename L2, typename T2, typename Am2, typename A2>
@@ -221,13 +231,13 @@ constexpr RQuantity<std::ratio_add<M1, M2>, std::ratio_add<L1, L2>,
 {
     return RQuantity<std::ratio_add<M1, M2>, std::ratio_add<L1, L2>,
                      std::ratio_add<T1, T2>, std::ratio_add<Am1, Am2>, std::ratio_add<A1, A2>>
-                    (lhs.getValue()*rhs.getValue());
+                    (lhs.GetValue()*rhs.GetValue());
 }
 template <typename M, typename L, typename T,  typename Am, typename A>
 constexpr RQuantity<M, L, T, Am, A>
     operator*(const double& lhs, const RQuantity<M, L, T, Am, A>& rhs)
 {
-    return RQuantity<M, L, T, Am, A>(lhs*rhs.getValue());
+    return RQuantity<M, L, T, Am, A>(lhs*rhs.GetValue());
 }
 template <typename M1, typename L1, typename T1, typename Am1, typename A1,
           typename M2, typename L2, typename T2, typename Am2, typename A2>
@@ -239,7 +249,7 @@ constexpr RQuantity<std::ratio_subtract<M1, M2>, std::ratio_subtract<L1, L2>,
     return RQuantity<std::ratio_subtract<M1, M2>, std::ratio_subtract<L1, L2>,
                      std::ratio_subtract<T1, T2>,  std::ratio_subtract<Am1, Am2>,
                      std::ratio_subtract<A1, A2>>
-                    (lhs.getValue() / rhs.getValue());
+                    (lhs.GetValue() / rhs.GetValue());
 }
 template <typename M, typename L, typename T,  typename Am,  typename A>
 constexpr RQuantity<std::ratio_subtract<std::ratio<0>, M>, std::ratio_subtract<std::ratio<0>, L>,
@@ -250,13 +260,13 @@ constexpr RQuantity<std::ratio_subtract<std::ratio<0>, M>, std::ratio_subtract<s
     return RQuantity<std::ratio_subtract<std::ratio<0>, M>, std::ratio_subtract<std::ratio<0>, L>,
                      std::ratio_subtract<std::ratio<0>, T>, std::ratio_subtract<std::ratio<0>, Am>,
                      std::ratio_subtract<std::ratio<0>, A>>
-                    (x / rhs.getValue());
+                    (x / rhs.GetValue());
 }
 template <typename M, typename L, typename T,  typename Am,  typename A>
 constexpr RQuantity<M, L, T, Am, A>
     operator/(const RQuantity<M, L, T, Am, A>& rhs, double x)
 {
-    return RQuantity<M, L, T, Am, A>(rhs.getValue() / x);
+    return RQuantity<M, L, T, Am, A>(rhs.GetValue() / x);
 }
 
 
@@ -265,32 +275,32 @@ constexpr RQuantity<M, L, T, Am, A>
 template <typename M, typename L, typename T,  typename Am,  typename A>
 constexpr bool operator==(const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<M, L, T, Am, A>& rhs)
 {
-    return (lhs.getValue() == rhs.getValue());
+    return (lhs.GetValue() == rhs.GetValue());
 }
 template <typename M, typename L, typename T,  typename Am,  typename A>
 constexpr bool operator!=(const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<M, L, T, Am, A>& rhs)
 {
-    return (lhs.getValue() != rhs.getValue());
+    return (lhs.GetValue() != rhs.GetValue());
 }
 template <typename M, typename L, typename T,  typename Am,  typename A>
 constexpr bool operator<=(const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<M, L, T, Am, A>& rhs)
 {
-    return (lhs.getValue() <= rhs.getValue());
+    return (lhs.GetValue() <= rhs.GetValue());
 }
 template <typename M, typename L, typename T,  typename Am,  typename A>
 constexpr bool operator>=(const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<M, L, T, Am, A>& rhs)
 {
-    return (lhs.getValue() >= rhs.getValue());
+    return (lhs.GetValue() >= rhs.GetValue());
 }
 template <typename M, typename L, typename T,  typename Am,  typename A>
 constexpr bool operator< (const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<M, L, T, Am, A>& rhs)
 {
-    return (lhs.getValue()<rhs.getValue());
+    return (lhs.GetValue()<rhs.GetValue());
 }
 template <typename M, typename L, typename T,  typename Am,  typename A>
 constexpr bool operator> (const RQuantity<M, L, T, Am, A>& lhs, const RQuantity<M, L, T, Am, A>& rhs)
 {
-    return (lhs.getValue()>rhs.getValue());
+    return (lhs.GetValue()>rhs.GetValue());
 }
 
 
@@ -440,7 +450,7 @@ constexpr RQuantity<std::ratio_divide<M, std::ratio<2>>, std::ratio_divide<L, st
     return RQuantity<std::ratio_divide<M, std::ratio<2>>, std::ratio_divide<L, std::ratio<2>>,
                      std::ratio_divide<T, std::ratio<2>>, std::ratio_divide<Am, std::ratio<2>>,
                      std::ratio_divide<A, std::ratio<2>>>
-                    (sqrt(num.getValue()));
+                    (sqrt(num.GetValue()));
 }
 
 template <typename M, typename L, typename T, typename Am, typename A>
@@ -452,7 +462,7 @@ constexpr RQuantity<std::ratio_multiply<M, std::ratio<2>>, std::ratio_multiply<L
     return RQuantity<std::ratio_multiply<M, std::ratio<2>>, std::ratio_multiply<L, std::ratio<2>>,
                      std::ratio_multiply<T, std::ratio<2>>, std::ratio_multiply<Am, std::ratio<2>>,
                      std::ratio_multiply<A, std::ratio<2>>>
-                    (std::pow(num.getValue() ,2));
+                    (std::pow(num.GetValue() ,2));
 }
 
 template <typename M, typename L, typename T, typename Am, typename A>
@@ -464,7 +474,7 @@ constexpr RQuantity<std::ratio_multiply<M, std::ratio<3>>, std::ratio_multiply<L
     return RQuantity<std::ratio_multiply<M, std::ratio<3>>, std::ratio_multiply<L, std::ratio<3>>,
                      std::ratio_multiply<T, std::ratio<3>>, std::ratio_multiply<Am, std::ratio<3>>,
                      std::ratio_multiply<A, std::ratio<3>>>
-                    (std::pow(num.getValue() ,3));
+                    (std::pow(num.GetValue() ,3));
 }
 
 template <typename M, typename L, typename T, typename Am, typename A>
@@ -476,7 +486,7 @@ constexpr RQuantity<std::ratio_multiply<M, std::ratio<4>>, std::ratio_multiply<L
     return RQuantity<std::ratio_multiply<M, std::ratio<4>>, std::ratio_multiply<L, std::ratio<4>>,
                      std::ratio_multiply<T, std::ratio<4>>, std::ratio_multiply<Am, std::ratio<4>>,
                      std::ratio_multiply<A, std::ratio<4>>>
-                    (std::pow(num.getValue() ,4));
+                    (std::pow(num.GetValue() ,4));
 }
 
 
@@ -489,28 +499,28 @@ constexpr RQuantity<std::ratio_divide<M, std::ratio<3>>, std::ratio_divide<L, st
     return RQuantity<std::ratio_divide<M, std::ratio<3>>, std::ratio_divide<L, std::ratio<3>>,
                      std::ratio_divide<T, std::ratio<3>>, std::ratio_divide<Am, std::ratio<3>>,
                      std::ratio_divide<A, std::ratio<3>>>
-                    (std::cbrt(num.getValue()));
+                    (std::cbrt(num.GetValue()));
 }
 
 template <typename M, typename L, typename T, typename Am, typename A>
 constexpr RQuantity<M, L, T, Am, A>
     Qabs(const RQuantity<M, L, T, Am, A>& num)
 {
-    return RQuantity<M, L, T, Am, A>(std::abs(num.getValue()));
+    return RQuantity<M, L, T, Am, A>(std::abs(num.GetValue()));
 }
 
 // Typesafe trigonometric operations
 inline double Qsin(const QAngle &num)
 {
-    return std::sin(num.getValue());
+    return std::sin(num.GetValue());
 }
 inline double Qcos(const QAngle &num)
 {
-    return std::cos(num.getValue());
+    return std::cos(num.GetValue());
 }
 inline double Qtan(const QAngle &num)
 {
-    return std::tan(num.getValue());
+    return std::tan(num.GetValue());
 }
 
 #endif /* UNITCOLLECTIONS_HPP */

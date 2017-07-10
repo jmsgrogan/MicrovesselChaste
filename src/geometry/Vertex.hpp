@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef DIMENSIONALCHASTEPOINT_HPP_
-#define DIMENSIONALCHASTEPOINT_HPP_
+#ifndef Vertex_HPP_
+#define Vertex_HPP_
 
 #include <vector>
 #include <map>
@@ -43,15 +43,16 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ChasteSerialization.hpp"
 #include "UblasVectorInclude.hpp"
 #include "UnitCollection.hpp"
+#include "VectorUnitCollection.hpp"
 #include "BaseUnits.hpp"
 #include "Exception.hpp"
 
 /**
  * This class is used in place of ChastePoint when units are important. It is needed to
- * interface Boost Units with c_vectors. It is a fundamental geometric feature for storing locations.
+ * interface Boost Units with c_vectors and the VecQLength types.
  */
 template<unsigned DIM>
-class DimensionalChastePoint
+class Vertex
 {
     /**
      * Archiving
@@ -66,7 +67,6 @@ class DimensionalChastePoint
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
-        ar & mReferenceLength;
         ar & mLocation;
         ar & mIndex;
         ar & mAttributes;
@@ -75,15 +75,12 @@ class DimensionalChastePoint
 protected:
 
     /**
-     * The location of the Point.
+     * The location of the Point relative to the origin.
      */
-    c_vector<double, DIM> mLocation;
+    VecQLength<DIM> mLocation;
 
     /**
-     * The reference length scale for the point, default in microns. This is needed as units can't be combined
-     * with c_vectors, which hold the point's location. If the length scale is changed the
-     * values in mLocation will be changed accordingly. i.e. if the reference length scale is changed
-     * from 1 micron to 40 micron, the value in mLocation will be divided by 40.
+     * The reference length scale for the point.
      */
     QLength mReferenceLength;
 
@@ -100,31 +97,41 @@ protected:
 public:
 
     /**
-     * Constructor. Be careful with the units of the default constructor. It should only be used for pre-allocating
-     * vectors.
+     * Constructor.
      * @param x x position of vertex
      * @param y y position of vertex
      * @param z z position of vertex
-     * @param referenceLength the reference length
      */
-    DimensionalChastePoint(double x= 0.0, double y = 0.0, double z = 0.0, QLength referenceLength = 1_um);
+    Vertex(QLength x= 0_m, QLength y = 0_m, QLength z = 0_m);
 
     /**
      * Constructor
      * @param coords a vector of x, y, z coordinates
      * @param referenceLength the reference length
      */
-    DimensionalChastePoint(c_vector<double, DIM> coords, QLength referenceLength);
+    Vertex(const c_vector<double, DIM>& rCoords, QLength referenceLength);
+
+    /**
+     * Constructor
+     * @param loc a vector of x, y, z coordinates
+     */
+    Vertex(VecQLength<DIM> loc);
+
+    /**
+     * Constructor
+     * @param coords a vector of x, y, z coordinates
+     * @param referenceLength the reference length
+     */
+    Vertex(const double& rCoords, QLength referenceLength);
 
     /**
      * Factory Constructor
      * @param x x position of vertex
      * @param y y position of vertex
      * @param z z position of vertex
-     * @param referenceLength the reference length
      * @return a pointer to the point
      */
-    static std::shared_ptr<DimensionalChastePoint<DIM> > Create(double x, double y, double z, QLength referenceLength);
+    static std::shared_ptr<Vertex<DIM> > Create(QLength x= 0_m, QLength y = 0_m, QLength z = 0_m);
 
     /**
      * Factory Constructor
@@ -132,12 +139,28 @@ public:
      * @param referenceLength the reference length
      * @return a pointer to the point
      */
-    static std::shared_ptr<DimensionalChastePoint<DIM> > Create(c_vector<double, DIM> coords, QLength referenceLength);
+    static std::shared_ptr<Vertex<DIM> > Create(const c_vector<double, DIM>& rCoords, QLength referenceLength);
+
+    /**
+     * Factory Constructor
+     * @param coords a vector of x, y, z coordinates
+     * @param referenceLength the reference length
+     * @return a pointer to the point
+     */
+    static std::shared_ptr<Vertex<DIM> > Create(VecQLength<DIM> loc);
+
+    /**
+     * Factory Constructor
+     * @param coords a vector of x, y, z coordinates
+     * @param referenceLength the reference length
+     * @return a pointer to the point
+     */
+    static std::shared_ptr<Vertex<DIM> > Create(const double& loc, QLength referenceLength);
 
     /**
      * Destructor
      */
-    virtual ~DimensionalChastePoint();
+    virtual ~Vertex();
 
     /**
      * Add an attribute
@@ -151,7 +174,14 @@ public:
      * @param rLocation the input point
      * @return the distance between this point and the input point
      */
-    QLength GetDistance(const DimensionalChastePoint<DIM>& rLocation) const;
+    QLength GetDistance(const VecQLength<DIM>& rLocation) const;
+
+    /**
+     * Get the distance between this point and the input point
+     * @param rLocation the input point
+     * @return the distance between this point and the input point
+     */
+    QLength GetDistance(const Vertex<DIM>& rLocation) const;
 
     /**
      * Return the index
@@ -170,7 +200,7 @@ public:
      * @param rLocation the input point
      * @return a point midway between this point and the input point
      */
-    DimensionalChastePoint<DIM> GetMidPoint(const DimensionalChastePoint<DIM>& rLocation) const;
+    Vertex<DIM> GetMidPoint(const Vertex<DIM>& rLocation) const;
 
     /**
      * Return the length of the vector between this point and the origin
@@ -179,24 +209,18 @@ public:
     QLength GetNorm2();
 
     /**
-     * Return the reference length scale for the point, default is micron
-     * @return the reference length scale
-     */
-    QLength GetReferenceLengthScale() const;
-
-    /**
      * Return a non-dimensional location, normalized by the supplied length scale
      * @param scale the length scale for the point
      * @return the location of the Point.
      */
-    c_vector<double, DIM> GetLocation(QLength scale);
+    VecQLength<DIM>& rGetLocation();
 
     /**
      * Return a non-dimensional location, normalized by the supplied length scale
      * @param scale the length scale for the point
      * @return the location of the Point.  Constant non-liberal variety.
      */
-    const c_vector<double, DIM> GetLocation(QLength scale) const;
+    const VecQLength<DIM>& rGetLocation() const;
 
     /**
      * Return a point one unit from the origin in the direction along the vector between this point and the origin
@@ -209,42 +233,42 @@ public:
      * @param rLocation the input point
      * @return the unit tangent to the segment formed by this point and the input point
      */
-    c_vector<double, DIM> GetUnitTangent(const DimensionalChastePoint<DIM>& rLocation) const;
+    c_vector<double, DIM> GetUnitTangent(const Vertex<DIM>& rLocation) const;
 
     /**
      * Return true if the input point is coincident with this point
      * @param rLocation the input point
      * @return true if the input point is coincident with this point
      */
-    bool IsCoincident(const DimensionalChastePoint<DIM>& rLocation) const;
+    bool IsCoincident(const Vertex<DIM>& rLocation) const;
 
     /**
      * Overload division from self
      * @return the resultant point
      * @param factor the vector to be added to
      */
-    DimensionalChastePoint<DIM>& operator/=(double factor);
+    Vertex<DIM>& operator/=(double factor);
 
     /**
      * Overload multiplication with self
      * @return the resultant point
      * @param factor the scalar to be multiplied
      */
-    DimensionalChastePoint<DIM>& operator*=(double factor);
+    Vertex<DIM>& operator*=(double factor);
 
     /**
      * Overload addition to SELF
      * @return the resultant point
      * @param rLocation the vector to add
      */
-    DimensionalChastePoint<DIM>& operator+=(const DimensionalChastePoint<DIM>& rLocation);
+    Vertex<DIM>& operator+=(const Vertex<DIM>& rLocation);
 
     /**
      * Overload subraction from self
      * @return the resultant point
      * @param rLocation the vector to subtract
      */
-    DimensionalChastePoint<DIM>& operator-=(const DimensionalChastePoint<DIM>& rLocation);
+    Vertex<DIM>& operator-=(const Vertex<DIM>& rLocation);
 
     /**
      * Rotate about the axis by the supplied angle
@@ -253,14 +277,6 @@ public:
      * @param angle the rotation ange
      */
     void RotateAboutAxis(c_vector<double, 3> axis, double angle);
-
-    /**
-     * Set the length scale used to dimensionalize the point location as stored in mLocation. The point
-     * location values are changed accordingly when this value is changed.
-     *
-     * @param lenthScale the reference length scale for point locations
-     */
-    void SetReferenceLengthScale(QLength lenthScale);
 
     /**
      * Set the index
@@ -272,13 +288,13 @@ public:
      * Translate the point along the supplied vector
      * @param rVector the translation vector
      */
-    void Translate(DimensionalChastePoint<DIM> rVector);
+    void Translate(const VecQLength<DIM>& rVector);
 
     /**
      * Translate the point to the new point
      * @param rPoint the new point
      */
-    void TranslateTo(DimensionalChastePoint<DIM> rPoint);
+    void TranslateTo(const VecQLength<DIM>& rPoint);
 
 };
 
@@ -290,7 +306,7 @@ public:
  * @return return the division result
  */
 template<unsigned DIM>
-inline DimensionalChastePoint<DIM> operator/(DimensionalChastePoint<DIM> lhs, double factor)
+inline Vertex<DIM> operator/(Vertex<DIM> lhs, double factor)
 {
     lhs /= factor;
     return lhs;
@@ -304,7 +320,7 @@ inline DimensionalChastePoint<DIM> operator/(DimensionalChastePoint<DIM> lhs, do
  * @return return the multiplication result
  */
 template<unsigned DIM>
-inline DimensionalChastePoint<DIM> operator*(DimensionalChastePoint<DIM> lhs, double factor)
+inline Vertex<DIM> operator*(Vertex<DIM> lhs, double factor)
 {
     lhs *= factor;
     return lhs;
@@ -318,7 +334,7 @@ inline DimensionalChastePoint<DIM> operator*(DimensionalChastePoint<DIM> lhs, do
  * @return return the addition result
  */
 template<unsigned DIM>
-inline DimensionalChastePoint<DIM> operator+(DimensionalChastePoint<DIM> lhs, const DimensionalChastePoint<DIM>& rLocation)
+inline Vertex<DIM> operator+(Vertex<DIM> lhs, const Vertex<DIM>& rLocation)
 {
     lhs += rLocation;
     return lhs;
@@ -332,10 +348,10 @@ inline DimensionalChastePoint<DIM> operator+(DimensionalChastePoint<DIM> lhs, co
  * @return return the subtraction result
  */
 template<unsigned DIM>
-inline DimensionalChastePoint<DIM> operator-(DimensionalChastePoint<DIM> lhs, const DimensionalChastePoint<DIM>& rLocation)
+inline Vertex<DIM> operator-(Vertex<DIM> lhs, const Vertex<DIM>& rLocation)
 {
     lhs -= rLocation;
     return lhs;
 }
 
-#endif /*DIMENSIONALCHASTEPOINT_HPP_*/
+#endif /*Vertex_HPP_*/
