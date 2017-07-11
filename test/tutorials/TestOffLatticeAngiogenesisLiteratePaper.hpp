@@ -130,8 +130,8 @@ public:
          * allow non-dimensionalisation when sending quantities to external solvers and re-dimensionalisation of
          * results. For our purposes microns for length and hours for time are suitable base units.
          */
-        QLength reference_length(1.0 * unit::microns);
-        QTime reference_time(1.0* unit::hours);
+        QLength reference_length(1_um);
+        QTime reference_time(1_h);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
@@ -140,8 +140,8 @@ public:
          * reduce computational expense.
          */
         MappableGridGenerator<3> hemisphere_generator;
-        QLength radius(1400.0 * unit::microns);
-        QLength thickness(100.0 * unit::microns);
+        QLength radius(1.4_mm);
+        QLength thickness(100.0_um);
         unsigned num_divisions_x = 10;
         unsigned num_divisions_y = 10;
         double azimuth_angle = 1.0 * M_PI;
@@ -153,7 +153,7 @@ public:
                                                                                          azimuth_angle,
                                                                                          polar_angle);
 
-        std::shared_ptr<MicrovesselVtkScene<3> > p_scene = std::shared_ptr<MicrovesselVtkScene<3> >(new MicrovesselVtkScene<3>);
+        auto p_scene = std::make_shared<MicrovesselVtkScene<3> >();
         p_scene->SetPart(p_domain);
         p_scene->GetPartActorGenerator()->SetVolumeOpacity(0.7);
         p_scene->SetIsInteractive(true);
@@ -163,9 +163,9 @@ public:
          */
         VesselNetworkGenerator<3> network_generator;
         QLength vessel_length = M_PI * radius;
-        QLength cell_length(40.0 * unit::microns);
+        QLength cell_length(40_um);
         std::shared_ptr<VesselNetwork<3> > p_network  = network_generator.GenerateSingleVessel(vessel_length,
-                                                                                                 Vertex<3>(0.0, 4000.0, 0.0),
+                                                                                                 Vertex<3>(0.0_um, 4000.0_um, 0.0_um),
                                                                                                  unsigned(vessel_length/cell_length) + 1, 0);
 
         p_network->GetNode(0)->GetFlowProperties()->SetIsInputNode(true);
@@ -175,13 +175,12 @@ public:
         std::vector<std::shared_ptr<VesselNode<3> > > nodes = p_network->GetNodes();
         for(unsigned idx =0; idx<nodes.size(); idx++)
         {
-            double node_azimuth_angle = azimuth_angle * nodes[idx]->rGetLocation().GetLocation(reference_length)[0]*reference_length/vessel_length;
-            double node_polar_angle = polar_angle*nodes[idx]->rGetLocation().GetLocation(reference_length)[1]*reference_length/vessel_length;
-            double dimless_radius = (radius-0.5*thickness)/reference_length;
-            Vertex<3>new_position(dimless_radius * std::cos(node_azimuth_angle) * std::sin(node_polar_angle),
-                                                  dimless_radius * std::cos(node_polar_angle),
-                                                  dimless_radius * std::sin(node_azimuth_angle) * std::sin(node_polar_angle),
-                                                  reference_length);
+            double node_azimuth_angle = azimuth_angle * nodes[idx]->rGetLocation().Convert(reference_length)[0]*reference_length/vessel_length;
+            double node_polar_angle = polar_angle*nodes[idx]->rGetLocation().Convert(reference_length)[1]*reference_length/vessel_length;
+            radius = radius-0.5*thickness;
+            Vertex<3>new_position(radius * std::cos(node_azimuth_angle) * std::sin(node_polar_angle),
+                    radius * std::cos(node_polar_angle),
+                    radius * std::sin(node_azimuth_angle) * std::sin(node_polar_angle));
             nodes[idx]->SetLocation(new_position);
         }
         p_scene->SetVesselNetwork(p_network);
@@ -191,11 +190,9 @@ public:
         /* In the experimental assay a pellet containing VEGF is implanted near the top of the cornea. We model this
          * as a fixed concentration of VEGF in a cuboidal region. First set up the vegf sub domain.
          */
-        std::shared_ptr<Part<3> > p_vegf_domain = Part<3> ::Create();
+        auto p_vegf_domain = Part<3> ::Create();
         QLength pellet_side_length(300.0*unit::microns);
-        p_vegf_domain->AddCuboid(pellet_side_length, pellet_side_length, 5.0*pellet_side_length, Vertex<3>(-150.0,
-                                                                                                                           900.0,
-                                                                                                                           0.0));
+        p_vegf_domain->AddCuboid(pellet_side_length, pellet_side_length, 5.0*pellet_side_length, Vertex<3>(-150.0_um, 900.0_um));
         p_vegf_domain->Write(p_handler->GetOutputDirectoryFullPath()+"initial_vegf_domain.vtp");
         /*
          * Now make a finite element mesh on the cornea.
@@ -211,14 +208,14 @@ public:
         /*
          * Set up the vegf pde
          */
-        std::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_vegf_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
+        auto p_vegf_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         p_vegf_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpVegfDiffusivity->GetValue("User"));
         p_vegf_pde->SetContinuumLinearInUTerm(-Owen11Parameters::mpVegfDecayRate->GetValue("User"));
         p_vegf_pde->SetReferenceConcentration(1.e-9*unit::mole_per_metre_cubed);
         /*
         * Add a boundary condition to fix the VEGF concentration in the vegf subdomain.
         */
-        std::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_vegf_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
+        auto p_vegf_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
         p_vegf_boundary->SetType(BoundaryConditionType::IN_PART);
         p_vegf_boundary->SetSource(BoundaryConditionSource::PRESCRIBED);
         p_vegf_boundary->SetValue(3.e-9*unit::mole_per_metre_cubed);
@@ -227,7 +224,7 @@ public:
          * Set up the PDE solvers for the vegf problem. Note the scaling of the concentration to nM to avoid numerical
          * precision problems.
          */
-        std::shared_ptr<SimpleLinearEllipticFiniteElementSolver<3> > p_vegf_solver = SimpleLinearEllipticFiniteElementSolver<3>::Create();
+        auto p_vegf_solver = SimpleLinearEllipticFiniteElementSolver<3>::Create();
         p_vegf_solver->SetPde(p_vegf_pde);
         p_vegf_solver->SetLabel("vegf");
         p_vegf_solver->SetGrid(p_mesh);
@@ -235,10 +232,10 @@ public:
         /*
          * Set up an angiogenesis solver and add sprouting and migration rules.
          */
-        std::shared_ptr<AngiogenesisSolver<3> > p_angiogenesis_solver = AngiogenesisSolver<3>::Create();
-        std::shared_ptr<OffLatticeSproutingRule<3> > p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
+        auto p_angiogenesis_solver = AngiogenesisSolver<3>::Create();
+        auto p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
         p_sprouting_rule->SetSproutingProbability(1.e6* unit::per_second);
-        std::shared_ptr<OffLatticeMigrationRule<3> > p_migration_rule = OffLatticeMigrationRule<3>::Create();
+        auto p_migration_rule = OffLatticeMigrationRule<3>::Create();
         p_migration_rule->SetChemotacticStrength(0.1);
         p_migration_rule->SetAttractionStrength(0.5);
 
@@ -255,7 +252,7 @@ public:
          * Set up the `MicrovesselSolver` which coordinates all solves. Note that for sequentially
          * coupled PDE solves, the solution propagates in the order that the PDE solvers are added to the `MicrovesselSolver`.
          */
-        std::shared_ptr<MicrovesselSolver<3> > p_microvessel_solver = MicrovesselSolver<3>::Create();
+        auto p_microvessel_solver = MicrovesselSolver<3>::Create();
         p_microvessel_solver->SetVesselNetwork(p_network);
         p_microvessel_solver->AddDiscreteContinuumSolver(p_vegf_solver);
         p_microvessel_solver->SetOutputFileHandler(p_handler);

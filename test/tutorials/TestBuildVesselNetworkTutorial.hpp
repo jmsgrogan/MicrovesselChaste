@@ -114,20 +114,13 @@ public:
          * to a different reference length, a cell width. Note that the syntax `reference_length(1.0 * unit::microns)` rather than
          * `reference_length = 1.0 * unit::microns` is used when instantiating quantities.
          */
-        QLength reference_length(1.0 * unit::microns);
-        Vertex<2> my_point(25.0, 50.0, 0.0, reference_length);
+        QLength reference_length(1_um);
+        Vertex<2> my_point(25.0_um, 50.0_um);
         /*
          * We can use the unit test framework to check our coordinate values are assigned as expected.
          */
-        TS_ASSERT_DELTA(my_point.GetLocation(reference_length)[0], 25.0, 1.e-6);
-        TS_ASSERT_DELTA(my_point.GetLocation(reference_length)[1], 50.0, 1.e-6);
-        /*
-         * If we want our coordinates in terms of a fictitious cell width unit we just have to rescale the reference length.
-         */
-        QLength cell_width(25.0 * unit::microns);
-        my_point.SetReferenceLengthScale(cell_width);
-        TS_ASSERT_DELTA(my_point.GetLocation(cell_width)[0], 1.0, 1.e-6);
-        TS_ASSERT_DELTA(my_point.GetLocation(cell_width)[1], 2.0, 1.e-6);
+        TS_ASSERT_DELTA(my_point.Convert(reference_length)[0], 25.0, 1.e-6);
+        TS_ASSERT_DELTA(my_point.Convert(reference_length)[1], 50.0, 1.e-6);
         /*
          * It is tedious to keep supplying a reference length, mass, time when setting up simulations. To avoid this a `BaseUnits` singleton is
          * used to set these values. Any geometrical features, readers, writers, solvers etc. created after a base unit has been set will take
@@ -135,7 +128,7 @@ public:
          * if needed.
          */
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
-        BaseUnits::Instance()->SetReferenceTimeScale(60.0 * unit::seconds);
+        BaseUnits::Instance()->SetReferenceTimeScale(60.0_s);
         /*
          * All geometric features, `VesselNodes`, `Parts`, `RegularGrids` use the `Vertex` as their base representation of spatial
          * location, meaning that it is straight-forward to change or even mix length scales in a simulation.
@@ -144,9 +137,9 @@ public:
          * a `Vertex`, but use a convenience `Create` factory method to get a shared pointer. We will create a 2D Y shaped network.
          * Again, we will avoid the tedium of manual network creation in later examples.
          */
-        double vessel_length = 100.0;
-        std::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0.0, 0.0);
-        std::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(vessel_length, 0.0, 0.0, reference_length);
+        QLength vessel_length = 100_um;
+        std::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0.0_m);
+        std::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(vessel_length);
         std::shared_ptr<VesselNode<2> > p_node_3 = VesselNode<2>::Create(2.0*vessel_length, vessel_length);
         std::shared_ptr<VesselNode<2> > p_node_4 = VesselNode<2>::Create(2.0*vessel_length, -vessel_length);
         /*

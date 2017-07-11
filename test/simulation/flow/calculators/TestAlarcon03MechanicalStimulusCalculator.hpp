@@ -55,8 +55,8 @@ public:
     {
         // Make a network
         std::vector<std::shared_ptr<VesselNode<3> > > nodes;
-        nodes.push_back(VesselNode<3>::Create(0));
-        nodes.push_back(VesselNode<3>::Create(100));
+        nodes.push_back(VesselNode<3>::Create(0_um));
+        nodes.push_back(VesselNode<3>::Create(100_um));
         double pressure = 3933.0;
         nodes[0]->GetFlowProperties()->SetPressure(pressure*unit::pascals);
         nodes[1]->GetFlowProperties()->SetPressure(pressure*unit::pascals);
@@ -82,8 +82,8 @@ public:
     {
         // Make a network
         std::vector<std::shared_ptr<VesselNode<3> > > nodes;
-        nodes.push_back(VesselNode<3>::Create(0));
-        nodes.push_back(VesselNode<3>::Create(100));
+        nodes.push_back(VesselNode<3>::Create(0_um));
+        nodes.push_back(VesselNode<3>::Create(100_um));
         double pressure = 3933.0;
         nodes[0]->GetFlowProperties()->SetPressure(pressure*unit::pascals);
         nodes[1]->GetFlowProperties()->SetPressure(pressure*unit::pascals);

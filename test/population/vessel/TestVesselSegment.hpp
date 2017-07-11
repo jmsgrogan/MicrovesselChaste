@@ -55,8 +55,8 @@ public:
     {
         // Make some nodes
         std::vector<std::shared_ptr<VesselNode<2> > > nodes;
-        nodes.push_back(VesselNode<2>::Create(1.0, 2.0));
-        nodes.push_back(VesselNode<2>::Create(3.0, 4.0));
+        nodes.push_back(VesselNode<2>::Create(1.0_um, 2.0_um));
+        nodes.push_back(VesselNode<2>::Create(3.0_um, 4.0_um));
 
         // Check for an exception if the segment is defined with the same nodes
         TS_ASSERT_THROWS_THIS(VesselSegment<2>::Create(nodes[0], nodes[0]),
@@ -75,8 +75,8 @@ public:
 
         // Test replacing a node
         std::vector<std::shared_ptr<VesselNode<2> > > nodes2;
-        nodes2.push_back(VesselNode<2>::Create(6.0, 7.0));
-        nodes2.push_back(VesselNode<2>::Create(8.0, 9.0));
+        nodes2.push_back(VesselNode<2>::Create(6.0_um, 7.0_um));
+        nodes2.push_back(VesselNode<2>::Create(8.0_um, 9.0_um));
 
         p_segment->ReplaceNode(0, nodes2[0]);
         p_segment->ReplaceNode(1, nodes2[1]);
@@ -88,8 +88,8 @@ public:
 
     void TestSimpleGetAndSetMethods() throw (Exception)
     {
-        std::shared_ptr<VesselSegment<3> > pSegment = VesselSegment<3>::Create(VesselNode<3>::Create(),
-                                                                                      VesselNode<3>::Create(1.0));
+        std::shared_ptr<VesselSegment<3> > pSegment = VesselSegment<3>::Create(VesselNode<3>::Create(0.0_um),
+                                                                                      VesselNode<3>::Create(1.0_um));
 
         // Test simple Getters and Setters
         pSegment->SetId(5u);
@@ -108,21 +108,21 @@ public:
     {
         //Check the returned length
         std::vector<std::shared_ptr<VesselNode<2> > > nodes;
-        nodes.push_back(VesselNode<2>::Create(6.0, 7.0));
-        nodes.push_back(VesselNode<2>::Create(8.0, 9.0));
+        nodes.push_back(VesselNode<2>::Create(6.0_um, 7.0_um));
+        nodes.push_back(VesselNode<2>::Create(8.0_um, 9.0_um));
 
         std::vector<std::shared_ptr<VesselNode<3> > > nodes_3d;
-        nodes_3d.push_back(VesselNode<3>::Create(3.0, 4.0, 5.0));
-        nodes_3d.push_back(VesselNode<3>::Create(6.0, 7.0, 8.0));
+        nodes_3d.push_back(VesselNode<3>::Create(3.0_um, 4.0_um, 5.0_um));
+        nodes_3d.push_back(VesselNode<3>::Create(6.0_um, 7.0_um, 8.0_um));
 
         std::shared_ptr<VesselSegment<2> > p_segment1 = VesselSegment<2>::Create(nodes[0], nodes[1]);
         std::shared_ptr<VesselSegment<3> > p_segment2 = VesselSegment<3>::Create(nodes_3d[0], nodes_3d[1]);
 
-        TS_ASSERT_DELTA(p_segment1->GetLength()/p_segment1->GetNode(0)->GetReferenceLengthScale(), std::sqrt(8.0), 1.e-6);
-        TS_ASSERT_DELTA(p_segment2->GetLength()/p_segment2->GetNode(0)->GetReferenceLengthScale(), std::sqrt(27.0), 1.e-6);
+        TS_ASSERT_DELTA(p_segment1->GetLength()/1_um, std::sqrt(8.0), 1.e-6);
+        TS_ASSERT_DELTA(p_segment2->GetLength()/1_um, std::sqrt(27.0), 1.e-6);
 
         // Test point distance calculation
-        TS_ASSERT_DELTA(p_segment1->GetDistance(nodes[0]->rGetLocation())/p_segment1->GetNode(0)->GetReferenceLengthScale(), 0, 1.e-6);
+        TS_ASSERT_DELTA(p_segment1->GetDistance(nodes[0]->rGetLocation())/1_um, 0, 1.e-6);
 
         // Test Unit tangent and point projection
         ChastePoint<2> tangent(1.0 / std::sqrt(2.0), 1.0 / std::sqrt(2.0));
@@ -133,9 +133,9 @@ public:
     {
         // Make some nodes
         std::vector<std::shared_ptr<VesselNode<2> > > nodes;
-        nodes.push_back(VesselNode<2>::Create(4.0, 3.0));
-        nodes.push_back(VesselNode<2>::Create(4.0, 5.0));
-        nodes.push_back(VesselNode<2>::Create(5.0, 6.0));
+        nodes.push_back(VesselNode<2>::Create(4.0_um, 3.0_um));
+        nodes.push_back(VesselNode<2>::Create(4.0_um, 5.0_um));
+        nodes.push_back(VesselNode<2>::Create(5.0_um, 6.0_um));
 
         // Make some vessel segments1
         std::shared_ptr<VesselSegment<2> > pSegment = VesselSegment<2>::Create(nodes[0], nodes[1]);
@@ -163,8 +163,8 @@ public:
     void TestRemoveMethod() throw (Exception)
     {
         // Make a segment
-        std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0);
-        std::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(1.0);
+        std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0_um);
+        std::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(1.0_um);
         std::shared_ptr<VesselSegment<3> > pSegment1 = VesselSegment<3>::Create(p_node1, p_node2);
 
         // Delete the segment

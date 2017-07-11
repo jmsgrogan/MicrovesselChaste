@@ -145,8 +145,8 @@ public:
          * allow non-dimensionalisation when sending quantities to external solvers and re-dimensionalisation of
          * results. For our purposes microns for length and hours for time are suitable base units.
          */
-        QLength reference_length(1.0 * unit::microns);
-        QTime reference_time(1.0* unit::hours);
+        QLength reference_length(1.0_um);
+        QTime reference_time(1.0_h);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
         /*
@@ -179,14 +179,14 @@ public:
          * Next, set up the vessel network, this will initially consist of two, large counter-flowing vessels. Also set the inlet
          * and outlet pressures and flags.
          */
-        std::shared_ptr<VesselNode<2> > p_node11 = VesselNode<2>::Create(0.0, 400.0, 0.0, reference_length);
-        std::shared_ptr<VesselNode<2> > p_node12 = VesselNode<2>::Create(2000.0, 400.0, 0.0, reference_length);
+        std::shared_ptr<VesselNode<2> > p_node11 = VesselNode<2>::Create(0.0_um, 400.0_um);
+        std::shared_ptr<VesselNode<2> > p_node12 = VesselNode<2>::Create(2000.0_um, 400.0_um);
         p_node11->GetFlowProperties()->SetIsInputNode(true);
         p_node11->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue("User"));
         p_node12->GetFlowProperties()->SetIsOutputNode(true);
         p_node12->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue("User"));
-        std::shared_ptr<VesselNode<2> > p_node13 = VesselNode<2>::Create(2000.0, 1600.0, 0.0, reference_length);
-        std::shared_ptr<VesselNode<2> > p_node14 = VesselNode<2>::Create(0.0, 1600.0, 0.0, reference_length);
+        std::shared_ptr<VesselNode<2> > p_node13 = VesselNode<2>::Create(2000.0_um, 1600.0_um);
+        std::shared_ptr<VesselNode<2> > p_node14 = VesselNode<2>::Create(0.0_um, 1600.0_um);
         p_node13->GetFlowProperties()->SetIsInputNode(true);
         p_node13->GetFlowProperties()->SetPressure(Owen11Parameters::mpInletPressure->GetValue("User"));
         p_node14->GetFlowProperties()->SetIsOutputNode(true);

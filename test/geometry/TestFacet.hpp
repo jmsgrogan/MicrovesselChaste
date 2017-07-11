@@ -54,10 +54,10 @@ public:
 
     void TestConstructor()
     {
-        std::vector<std::shared_ptr<Vertex<3> > > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(1.0, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(1.0, 1.0, 0.0, 1_um));
+        std::vector<VertexPtr<3> > vertices;
+        vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
+        vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
+        vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
 
         std::vector<std::shared_ptr<Polygon<3> > > polygons;
         for(unsigned idx=0; idx<3; idx++)
@@ -74,10 +74,10 @@ public:
 
     void TestFactoryConstructor()
     {
-        std::vector<std::shared_ptr<Vertex<3> > > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(1.0, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(1.0, 1.0, 0.0, 1_um));
+        std::vector<VertexPtr<3> > vertices;
+        vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
+        vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
+        vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
 
         std::vector<std::shared_ptr<Polygon<3> > > polygons;
         for(unsigned idx=0; idx<3; idx++)
@@ -94,10 +94,10 @@ public:
 
     void TestAddingPolygons()
     {
-        std::vector<std::shared_ptr<Vertex<3> > > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(1.0, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(0.0, 1.0, 0.0, 1_um));
+        std::vector<VertexPtr<3> > vertices;
+        vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
+        vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
+        vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
 
         std::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(vertices[0]);
 
@@ -119,18 +119,18 @@ public:
 
     void TestVtkMethods()
     {
-        std::vector<std::shared_ptr<Vertex<3> > > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(1.0, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(1.0, 1.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(0.0, 1.0, 0.0, 1_um));
+        std::vector<VertexPtr<3> > vertices;
+        vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
+        vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
+        vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
+        vertices.push_back(Vertex<3>::Create(0.0_um, 1.0_um));
         std::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(vertices);
         std::shared_ptr<Facet<3> > p_facet = Facet<3>::Create(p_polygon);
 
         Vertex<3> centroid = p_facet->GetCentroid();
-        TS_ASSERT_DELTA(centroid.GetLocation(1_um)[0], 0.5, 1.e-6);
-        TS_ASSERT_DELTA(centroid.GetLocation(1_um)[1], 0.5, 1.e-6);
-        TS_ASSERT_DELTA(centroid.GetLocation(1_um)[2], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(centroid.Convert(1_um)[0], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(centroid.Convert(1_um)[1], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(centroid.Convert(1_um)[2], 0.0, 1.e-6);
 
         c_vector<double, 3> normal = p_facet->GetNormal();
         TS_ASSERT_DELTA(normal[0], 0.0, 1.e-6);
@@ -148,16 +148,16 @@ public:
     void TestVtkMethods2d()
     {
         std::vector<std::shared_ptr<Vertex<2> > > vertices;
-        vertices.push_back(Vertex<2>::Create(0.0, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<2>::Create(1.0, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<2>::Create(1.0, 1.0, 0.0, 1_um));
-        vertices.push_back(Vertex<2>::Create(0.0, 1.0, 0.0, 1_um));
+        vertices.push_back(Vertex<2>::Create(0.0_um, 0.0_um));
+        vertices.push_back(Vertex<2>::Create(1.0_um, 0.0_um));
+        vertices.push_back(Vertex<2>::Create(1.0_um, 1.0_um));
+        vertices.push_back(Vertex<2>::Create(0.0_um, 1.0_um));
         std::shared_ptr<Polygon<2> > p_polygon = Polygon<2>::Create(vertices);
         std::shared_ptr<Facet<2> > p_facet = Facet<2>::Create(p_polygon);
 
         Vertex<2> centroid = p_facet->GetCentroid();
-        TS_ASSERT_DELTA(centroid.GetLocation(1_um)[0], 0.5, 1.e-6);
-        TS_ASSERT_DELTA(centroid.GetLocation(1_um)[1], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(centroid.Convert(1_um)[0], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(centroid.Convert(1_um)[1], 0.5, 1.e-6);
 
         c_vector<double, 2> normal = p_facet->GetNormal();
         TS_ASSERT_DELTA(normal[0], 0.0, 1.e-6);
@@ -170,13 +170,13 @@ public:
 
     void TestTransforms()
     {
-        std::vector<std::shared_ptr<Vertex<3> > > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(1.0, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(1.0, 1.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(0.0, 1.0, 0.0, 1_um));
-        std::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(vertices);
-        std::shared_ptr<Facet<3> > p_facet = Facet<3>::Create(p_polygon);
+        std::vector<VertexPtr<3> > vertices;
+        vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
+        vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
+        vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
+        vertices.push_back(Vertex<3>::Create(0.0_um, 1.0_um));
+        auto p_polygon = Polygon<3>::Create(vertices);
+        auto p_facet = Facet<3>::Create(p_polygon);
 
         Vertex<3> translation_vector(2.0, 2.0, 0.0);
         Vertex<3> new_position = *vertices[1] + translation_vector;
@@ -188,15 +188,15 @@ public:
 
     void TestGeometryAndLabelMethods()
     {
-        std::vector<std::shared_ptr<Vertex<3> > > vertices;
-        vertices.push_back(Vertex<3>::Create(-0.5, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(1.0, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(1.0, 1.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(-0.5, 1.0, 0.0, 1_um));
-        std::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(vertices);
-        std::shared_ptr<Facet<3> > p_facet = Facet<3>::Create(p_polygon);
+        std::vector<VertexPtr<3> > vertices;
+        vertices.push_back(Vertex<3>::Create(-0.5_um, 0.0_um));
+        vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
+        vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
+        vertices.push_back(Vertex<3>::Create(-0.5_um, 1.0_um));
+        auto p_polygon = Polygon<3>::Create(vertices);
+        auto p_facet = Facet<3>::Create(p_polygon);
 
-        std::vector<QLength > bbox = p_facet->GetBoundingBox();
+        std::array<QLength,6> bbox = p_facet->GetBoundingBox();
         TS_ASSERT_DELTA(double(bbox[0]/1_um), -0.5, 1.e-6);
         TS_ASSERT_DELTA(double(bbox[1]/1_um), 1.0, 1.e-6);
         TS_ASSERT_DELTA(double(bbox[2]/1_um), 0.0, 1.e-6);
@@ -204,37 +204,37 @@ public:
         TS_ASSERT_DELTA(double(bbox[4]/1_um), 0.0, 1.e-6);
         TS_ASSERT_DELTA(double(bbox[5]/1_um), 0.0, 1.e-6);
 
-        TS_ASSERT_DELTA(double(p_facet->GetDistance(Vertex<3>(0.5, 0.5, 0.5,1_um ))/1_um), 0.5, 1.e-6);
+        TS_ASSERT_DELTA(double(p_facet->GetDistance(Vertex<3>(0.5_um, 0.5_um, 0.5_um))/1_um), 0.5, 1.e-6);
 
         TS_ASSERT_DELTA(p_facet->GetPlane()->GetNormal()[0], 0.0, 1.e-6);
         TS_ASSERT_DELTA(p_facet->GetPlane()->GetNormal()[1], 0.0, 1.e-6);
         TS_ASSERT_DELTA(abs(p_facet->GetPlane()->GetNormal()[2]), 1.0, 1.e-6);
 
-        std::vector<std::shared_ptr<Vertex<3> > > short_vertices;
-        short_vertices.push_back(Vertex<3>::Create(0.0, 0.0, 0.0, 1_um));
-        short_vertices.push_back(Vertex<3>::Create(1.0, 0.0, 0.0, 1_um));
-        std::shared_ptr<Polygon<3> > p_short_polygon = Polygon<3>::Create(short_vertices);
-        std::shared_ptr<Facet<3> > p_short_facet = Facet<3>::Create(p_short_polygon);
+        std::vector<VertexPtr<3> > short_vertices;
+        short_vertices.push_back(Vertex<3>::Create(0.0_um));
+        short_vertices.push_back(Vertex<3>::Create(1.0_um));
+        auto p_short_polygon = Polygon<3>::Create(short_vertices);
+        auto p_short_facet = Facet<3>::Create(p_short_polygon);
         TS_ASSERT_THROWS_THIS(p_short_facet->GetNormal(), "At least 3 vertices are required to generate a normal.");
     }
 
     void Test2DMethods()
     {
         std::vector<std::shared_ptr<Vertex<2> > > vertices;
-        vertices.push_back(Vertex<2>::Create(-0.5, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<2>::Create(1.0, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<2>::Create(1.0, 1.0, 0.0, 1_um));
-        vertices.push_back(Vertex<2>::Create(-0.5, 1.0, 0.0, 1_um));
+        vertices.push_back(Vertex<2>::Create(-0.5_um, 0.0_um));
+        vertices.push_back(Vertex<2>::Create(1.0_um, 0.0_um));
+        vertices.push_back(Vertex<2>::Create(1.0_um, 1.0_um));
+        vertices.push_back(Vertex<2>::Create(-0.5_um, 1.0_um));
         std::shared_ptr<Polygon<2> > p_polygon = Polygon<2>::Create(vertices);
         std::shared_ptr<Facet<2> > p_facet = Facet<2>::Create(p_polygon);
 
-        std::vector<QLength > bbox = p_facet->GetBoundingBox();
+        std::array<QLength,6> bbox = p_facet->GetBoundingBox();
         TS_ASSERT_DELTA(double(bbox[0]/1_um), -0.5, 1.e-6);
         TS_ASSERT_DELTA(double(bbox[1]/1_um), 1.0, 1.e-6);
         TS_ASSERT_DELTA(double(bbox[2]/1_um), 0.0, 1.e-6);
         TS_ASSERT_DELTA(double(bbox[3]/1_um), 1.0, 1.e-6);
 
-        TS_ASSERT_DELTA(double(p_facet->GetDistance(Vertex<2>(1.5, 0.5, 0.0, 1_um))/1_um), 0.0, 1.e-6);
+        TS_ASSERT_DELTA(double(p_facet->GetDistance(Vertex<2>(1.5_um, 0.5_um, 0.0_um))/1_um), 0.0, 1.e-6);
     }
 
     void TestArchiving() throw (Exception)
@@ -244,10 +244,10 @@ public:
         ArchiveLocationInfo::SetArchiveDirectory(handler.FindFile(""));
         std::string archive_filename = ArchiveLocationInfo::GetProcessUniqueFilePath("Facet.arch");
 
-        std::vector<std::shared_ptr<Vertex<3> > > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(1.0, 0.0, 0.0, 1_um));
-        vertices.push_back(Vertex<3>::Create(0.0, 1.0, 0.0, 1_um));
+        std::vector<VertexPtr<3> > vertices;
+        vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
+        vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
+        vertices.push_back(Vertex<3>::Create(0.0_um, 1.0_um));
         std::shared_ptr<Facet<3> > p_facet1 = Facet<3>::Create(Polygon<3>::Create(vertices));
 
         // Save archive
@@ -269,7 +269,7 @@ public:
             input_arch >> p_facet_from_archive;
 
             // Check that we remember the reference length
-            TS_ASSERT_EQUALS(p_facet_from_archive->GetPolygons()[0]->GetVertices().size(), 3u);
+            TS_ASSERT_EQUALS(p_facet_from_archive->GetPolygons()[0]->rGetVertices().size(), 3u);
         }
     }
 };

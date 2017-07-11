@@ -119,15 +119,13 @@ public:
          * First make the network using a generator. Start with a simple unit.
          */
         QLength vessel_length(100.0*unit::microns);
-        Vertex<2> start_point(0.0, 0.0);
+        Vertex<2> start_point(0.0_um, 0.0_um);
         VesselNetworkGenerator<2> network_generator;
         std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateBifurcationUnit(vessel_length, start_point);
         /*
          * Next, pattern it to make a larger network
          */
-        std::vector<unsigned> num_units_per_direction;
-        num_units_per_direction.push_back(2);
-        num_units_per_direction.push_back(0);
+        std::array<unsigned, 2> num_units_per_direction = {2, 0};
         network_generator.PatternUnitByTranslation(p_network, num_units_per_direction);
         /*
          * Specify which nodes will be the inlets and outlets of the network for the flow problem. This information, as well
@@ -164,7 +162,7 @@ public:
          * Check that the impedance is as expected in one of the vessels
          */
         QFlowImpedance expected_impedance = 8.0 * viscosity* vessel_length/(M_PI*Qpow4(vessel_radius));
-        TS_ASSERT_DELTA(p_network->GetVessel(0)->GetSegment(0)->GetFlowProperties()->GetImpedance().getValue(), expected_impedance.getValue(), 1.e-6);
+        TS_ASSERT_DELTA(p_network->GetVessel(0)->GetSegment(0)->GetFlowProperties()->GetImpedance().GetValue(), expected_impedance.GetValue(), 1.e-6);
         /*
          * Now we can solve for the flow rates in each vessel based on the inlet and outlet pressures and impedances. The solver
          * updates the value of pressures and flow rates in each vessel and node in the network.
@@ -219,8 +217,8 @@ public:
         /*
         * We will use a locator to mark the bottom left and top right nodes as respective inlets and outlets
         */
-        Vertex<3> inlet_locator(0.0, 0.0, 0.0, cell_width);
-        Vertex<3> outlet_locator(target_width/cell_width, target_height/cell_width, 0.0, cell_width);
+        Vertex<3> inlet_locator(0.0_um);
+        Vertex<3> outlet_locator(target_width, target_height);
         std::shared_ptr<VesselNode<3> > p_inlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, inlet_locator);
         std::shared_ptr<VesselNode<3> > p_outlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, outlet_locator);
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
@@ -303,8 +301,8 @@ public:
         /*
         * We will use a locator to mark the bottom left and top right nodes as respective inlets and outlets as before.
         */
-        Vertex<3> inlet_locator(0.0, 0.0, 0.0, reference_length);
-        Vertex<3> outlet_locator(target_width/reference_length, target_height/reference_length, 0.0, reference_length);
+        Vertex<3> inlet_locator(0.0_m);
+        Vertex<3> outlet_locator(target_width, target_height);
         std::shared_ptr<VesselNode<3> > p_inlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, inlet_locator);
         std::shared_ptr<VesselNode<3> > p_outlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, outlet_locator);
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
@@ -374,8 +372,8 @@ public:
                                                                                                     target_height,
                                                                                                     vessel_length);
 
-        Vertex<3> inlet_locator(0.0, 0.0, 0.0, reference_length);
-        Vertex<3> outlet_locator(target_width/reference_length, target_height/reference_length, 0.0, reference_length);
+        Vertex<3> inlet_locator(0_m);
+        Vertex<3> outlet_locator(target_width, target_height);
         std::shared_ptr<VesselNode<3> > p_inlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, inlet_locator);
         std::shared_ptr<VesselNode<3> > p_outlet_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(p_network, outlet_locator);
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);

@@ -66,11 +66,11 @@ public:
         QLength vessel_length = 0.15 * unit::metres;
         VesselNetworkGenerator<2> generator;
         std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(
-                vessel_length, Vertex<2>(0.25, 0.05, 0.0, 1.0*unit::metres));
+                vessel_length, Vertex<2>(0.25_m, 0.05_m, 0.0_m));
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(2.0 * unit::metres, 2.0 * unit::metres, Vertex<2>(0.0, 0.0, 0.0));
+        p_domain->AddRectangle(2.0 * unit::metres, 2.0 * unit::metres);
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 1.0 * unit::metres);
 
@@ -95,11 +95,11 @@ public:
         QLength vessel_length = 0.5 * unit::metres;
         VesselNetworkGenerator<2> generator;
         std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(
-                vessel_length, Vertex<2>(0.25, 0.25, 0.0, 1.0_m));
+                vessel_length, Vertex<2>(0.25_m, 0.25_m, 0.0_m));
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(2.0 * unit::metres, 2.0 * unit::metres, Vertex<2>(0.0, 0.0, 0.0));
+        p_domain->AddRectangle(2.0 * unit::metres, 2.0 * unit::metres);
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 1.0 * unit::metres);
 
@@ -125,11 +125,11 @@ public:
         QLength vessel_length = 0.15 * unit::metres;
         VesselNetworkGenerator<3> generator;
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(
-                vessel_length, Vertex<3>(0.25, 0.05, 0.05, 1.0*unit::metres));
+                vessel_length, Vertex<3>(0.25_m, 0.05_m, 0.05_m));
 
         // Set up the grid
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(2.0 * unit::metres, 2.0 * unit::metres, 2.0 * unit::metres, Vertex<3>(0.0, 0.0, 0.0));
+        p_domain->AddCuboid(2.0 * unit::metres, 2.0 * unit::metres, 2.0 * unit::metres);
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 1.0 * unit::metres);
 
@@ -157,11 +157,11 @@ public:
         QLength vessel_length = 0.5 * unit::metres;
         VesselNetworkGenerator<3> generator;
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(
-                vessel_length, Vertex<3>(0.25, 0.25, 0.0, 1.0*unit::metres), 1, 1);
+                vessel_length, Vertex<3>(0.25_m, 0.25_m, 0.0_m), 1, 1);
 
         // Set up the grid
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(2.0 * unit::metres, 2.0 * unit::metres, 2.0 * unit::metres, Vertex<3>(0.0, 0.0, 0.0));
+        p_domain->AddCuboid(2.0 * unit::metres, 2.0 * unit::metres, 2.0 * unit::metres);
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 1.0 * unit::metres);
 
@@ -192,15 +192,12 @@ public:
         QLength vessel_length = 100.0 * 1_um;
         VesselNetworkGenerator<3> generator;
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateBifurcationUnit(vessel_length,
-                                                                                           Vertex<3>(0.0, vessel_length/(1_um), 0.0));
+                                                                                           Vertex<3>(0.0_m, vessel_length));
         p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"/network.vtp");
 
         // Set up the tissue domain
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(4.0 * vessel_length,
-                            2.0 * vessel_length,
-                            2.0 * vessel_length,
-                            Vertex<3>(0.0, 0.0, 0.0));
+        p_domain->AddCuboid(4.0 * vessel_length, 2.0 * vessel_length, 2.0 * vessel_length);
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 20.0e-6 * unit::metres);
 
@@ -227,15 +224,12 @@ public:
         // Set up the vessel network
         QLength vessel_length = 100.0 * 1_um;
         VesselNetworkGenerator<2> generator;
-        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateBifurcationUnit(vessel_length,
-                                                                                           Vertex<2>(0.0, 0.0, 0.0));
+        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateBifurcationUnit(vessel_length);
         p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"/network.vtp");
 
         // Set up the tissue domain
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(4.0 * vessel_length,
-                            2.0 * vessel_length,
-                            Vertex<2>(0.0, 0.0, 0.0));
+        p_domain->AddRectangle(4.0 * vessel_length, 2.0 * vessel_length);
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 20.0e-6 * unit::metres);
 
@@ -260,12 +254,11 @@ public:
 
         QLength vessel_length = 100.0 * 1_um;
         VesselNetworkGenerator<2> generator;
-        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateBifurcationUnit(vessel_length,
-                                                                                           Vertex<2>(0.0, 0.0, 0.0));
+        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateBifurcationUnit(vessel_length);
 
         p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"/network.vtp");
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(4.0 * vessel_length, 2.0 * vessel_length, Vertex<2>(0.0, 0.0, 0.0));
+        p_domain->AddRectangle(4.0 * vessel_length, 2.0 * vessel_length);
 
         std::vector<double> densities;
         double grid_size = 5.0;

@@ -64,10 +64,10 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory);
         std::vector<std::shared_ptr<VesselNode<2> > > nodes;
-        nodes.push_back(VesselNode<2>::Create(0.0, 0.0, 0.0, 1_um));
-        nodes.push_back(VesselNode<2>::Create(50.0, 0.0, 0.0, 1_um));
-        nodes.push_back(VesselNode<2>::Create(150.0, 0.0, 0.0, 1_um));
-        nodes.push_back(VesselNode<2>::Create(220.0, 0.0, 0.0, 1_um));
+        nodes.push_back(VesselNode<2>::Create(0.0_um));
+        nodes.push_back(VesselNode<2>::Create(50.0_um));
+        nodes.push_back(VesselNode<2>::Create(150.0_um));
+        nodes.push_back(VesselNode<2>::Create(220.0_um));
 
         std::shared_ptr<Vessel<2> > pVessel1 = Vessel<2>::Create(nodes);
         std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
@@ -131,10 +131,8 @@ public:
         double impedance = 1.e12;
         p_network->GetVesselSegments()[0]->GetFlowProperties()->SetImpedance(impedance*unit::pascal_second_per_metre_cubed);
         VesselNetworkPropertyManager<2>::SetSegmentProperties(p_network, p_network->GetVesselSegments()[0]);
-        VesselNetworkPropertyManager<2>::AssignInflows(p_network,
-                Vertex<2>(0.0, 0.0, 0.0, reference_length), vessel_length/5.0);
-        VesselNetworkPropertyManager<2>::AssignOutflows(p_network,
-                Vertex<2>(domain_size/reference_length, domain_size/reference_length, 0.0, reference_length), vessel_length/5.0);
+        VesselNetworkPropertyManager<2>::AssignInflows(p_network, Vertex<2>(0.0_m), vessel_length/5.0);
+        VesselNetworkPropertyManager<2>::AssignOutflows(p_network, Vertex<2>(domain_size, domain_size), vessel_length/5.0);
         VesselNetworkPropertyManager<2>::SetInflowPressures(p_network, 3393.0*unit::pascals);
         VesselNetworkPropertyManager<2>::SetOutflowPressures(p_network, 1000.5*unit::pascals);
 

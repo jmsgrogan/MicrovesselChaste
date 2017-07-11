@@ -52,8 +52,8 @@ public:
     void TestShrinkingStimulusCalculator()
     {
         std::vector<std::shared_ptr<VesselNode<3> > > nodes;
-        nodes.push_back(VesselNode<3>::Create(0));
-        nodes.push_back(VesselNode<3>::Create(100));
+        nodes.push_back(VesselNode<3>::Create(0_um));
+        nodes.push_back(VesselNode<3>::Create(100_um));
         std::shared_ptr<Vessel<3> > p_vessel(Vessel<3>::Create(VesselSegment<3>::Create(nodes[0], nodes[1])));
         std::shared_ptr<VesselNetwork<3> > p_vascular_network = VesselNetwork<3>::Create();
         p_vascular_network->AddVessel(p_vessel);

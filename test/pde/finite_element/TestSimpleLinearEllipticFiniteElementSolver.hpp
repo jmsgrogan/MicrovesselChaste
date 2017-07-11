@@ -68,7 +68,7 @@ public:
         BaseUnits::Instance()->SetReferenceTimeScale(1.0*unit::seconds);
 
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(5.0*unit::metres, 5.0*unit::metres, Vertex<2>(0.0, 0.0, 0.0));
+        p_domain->AddRectangle(5.0*unit::metres, 5.0*unit::metres);
 
         DiscreteContinuumMeshGenerator<2> mesh_generator;
         mesh_generator.SetDomain(p_domain);
@@ -147,12 +147,12 @@ public:
 
         QLength vessel_length = 100.0 * micron_length_scale;
         VesselNetworkGenerator<3> generator;
-        Vertex<3> centre(vessel_length/(2.0*micron_length_scale), vessel_length/(2.0*micron_length_scale), 0.0, micron_length_scale);
+        Vertex<3> centre(vessel_length/2.0, vessel_length/2.0, 0.0);
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre);
 
         // Set up the mesh
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(vessel_length, vessel_length, vessel_length, Vertex<3>(0.0, 0.0, 0.0));
+        p_domain->AddCuboid(vessel_length, vessel_length, vessel_length);
         p_domain->AddVesselNetwork(p_network, true);
         std::shared_ptr<DiscreteContinuumMeshGenerator<3, 3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3, 3>::Create();
         p_mesh_generator->SetDomain(p_domain);

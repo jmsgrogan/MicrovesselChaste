@@ -58,9 +58,9 @@ public:
 
     void TestTwoVesselNetwork() throw(Exception)
     {
-        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 0.0);
-        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80, 0.0);
-        std::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(160, 0.0);
+        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
+        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80_um);
+        std::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(160_um);
         p_node1->GetFlowProperties()->SetIsInputNode(true);
 
         std::shared_ptr<VesselSegment<2> > p_segment1(VesselSegment<2>::Create(p_node1, p_node2));
@@ -85,10 +85,10 @@ public:
 
     void TestBifurcationInflowNetwork() throw(Exception)
     {
-        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 0.0);
-        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80, 0.0);
-        std::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(160, 0.0);
-        std::shared_ptr<VesselNode<2> > p_node4 = VesselNode<2>::Create(200, 0.0);
+        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
+        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80_um);
+        std::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(160_um);
+        std::shared_ptr<VesselNode<2> > p_node4 = VesselNode<2>::Create(200_um);
         p_node1->GetFlowProperties()->SetIsInputNode(true);
         p_node2->GetFlowProperties()->SetIsInputNode(true);
 
@@ -115,10 +115,10 @@ public:
 
     void TestBifurcationOutflowNetwork() throw(Exception)
     {
-        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 0.0);
-        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80.0e-6, 0.0);
-        std::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(160.0e-6, 0.0);
-        std::shared_ptr<VesselNode<2> > p_node4 = VesselNode<2>::Create(200.0e-6, 0.0);
+        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
+        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80_um);
+        std::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(160_um);
+        std::shared_ptr<VesselNode<2> > p_node4 = VesselNode<2>::Create(200_um);
         p_node4->GetFlowProperties()->SetIsInputNode(true);
 
         std::shared_ptr<VesselSegment<2> > p_segment1(VesselSegment<2>::Create(p_node1, p_node3));
@@ -148,10 +148,10 @@ public:
 
     void TestBifurcationOutflowNetworkBiasedFlow() throw(Exception)
     {
-        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 0.0);
-        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80.0e-6, 0.0);
-        std::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(160.0e-6, 0.0);
-        std::shared_ptr<VesselNode<2> > p_node4 = VesselNode<2>::Create(200.0e-6, 0.0);
+        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
+        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80_um);
+        std::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(160_um);
+        std::shared_ptr<VesselNode<2> > p_node4 = VesselNode<2>::Create(200_um);
         p_node4->GetFlowProperties()->SetIsInputNode(true);
 
         std::shared_ptr<VesselSegment<2> > p_segment1(VesselSegment<2>::Create(p_node1, p_node3));
@@ -190,8 +190,8 @@ public:
                                                                                                                         1000.0* 1_um,
                                                                                                                         vessel_length);
         std::vector<std::shared_ptr<VesselNode<2> > > nodes;
-        nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(0.0, 0.0)));
-        nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(5.0, 0.0)));
+        nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(0.0_um)));
+        nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(5.0_um)));
         std::shared_ptr<VesselSegment<2> > p_segment(VesselSegment<2>::Create(nodes[0], nodes[1]));
 
         double radius = 10.0;
@@ -201,8 +201,8 @@ public:
         VesselNetworkPropertyManager<2>::SetSegmentProperties(vascular_network, p_segment);
 
         std::pair<Vertex<2>, Vertex<2> > network_extents = VesselNetworkGeometryCalculator<2>::GetExtents(vascular_network);
-        double y_middle = (network_extents.first.GetLocation(1_um)[1]) / 2.0;
-        double x_middle = (network_extents.first.GetLocation(1_um)[0]) / 2.0;
+        double y_middle = (network_extents.first.Convert(1_um)[1]) / 2.0;
+        double x_middle = (network_extents.first.Convert(1_um)[0]) / 2.0;
 
         std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
 
@@ -212,9 +212,9 @@ public:
         {
             if((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
             {
-                if((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1_um)[1] >  y_middle)
+                if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[1] >  y_middle)
                 {
-                    if((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1_um)[0] >  x_middle)
+                    if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] >  x_middle)
                     {
                         (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
                         (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(3320.0*unit::pascals);
@@ -223,9 +223,9 @@ public:
             }
             if((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
             {
-                if((*vessel_iterator)->GetEndNode()->rGetLocation().GetLocation(1_um)[1] >  y_middle)
+                if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[1] >  y_middle)
                 {
-                    if((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1_um)[0] >  x_middle)
+                    if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] >  x_middle)
                     {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3320.0*unit::pascals);
@@ -234,9 +234,9 @@ public:
             }
             if((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
             {
-                if((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1_um)[1] <=  y_middle)
+                if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[1] <=  y_middle)
                 {
-                    if((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1_um)[0] <  x_middle)
+                    if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] <  x_middle)
                     {
                         (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsOutputNode(true);
                         (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
@@ -245,9 +245,9 @@ public:
             }
             if((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
             {
-                if((*vessel_iterator)->GetEndNode()->rGetLocation().GetLocation(1_um)[1] <=  y_middle)
+                if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[1] <=  y_middle)
                 {
-                    if((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1_um)[0] <  x_middle)
+                    if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] <  x_middle)
                     {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);

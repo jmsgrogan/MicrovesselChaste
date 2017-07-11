@@ -103,8 +103,8 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
 
         // Assign flow properties
         std::vector<std::shared_ptr<VesselNode<2> > > nodes;
-        nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(0,5)));
-        nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(5,0)));
+        nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(0_um,5_um)));
+        nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(5_um,0_um)));
         std::shared_ptr<VesselSegment<2> > p_segment(VesselSegment<2>::Create(nodes[0], nodes[1]));
         p_segment->SetRadius(vessel_radius);
         p_segment->GetFlowProperties()->SetHaematocrit(inlet_haematocrit);
@@ -116,10 +116,9 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
         }
 
         std::shared_ptr<VesselNode<2> > p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
-                Vertex<2>(0.0, 0.0, 0.0, reference_length));
+                Vertex<2>(0.0_um));
         std::shared_ptr<VesselNode<2> > p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
-                Vertex<2>(domain_side_length/reference_length,
-                domain_side_length/reference_length, 0.0, reference_length));
+                Vertex<2>(domain_side_length, domain_side_length));
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
         p_inlet_node->GetFlowProperties()->SetPressure(8000.0*unit::pascals);
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);

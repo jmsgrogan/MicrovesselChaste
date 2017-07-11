@@ -68,29 +68,29 @@ public:
     void TestSingleVessel() throw(Exception)
     {
         // Set the grid to move on
-        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        double spacing = 100.0;
-        p_grid->SetSpacing(spacing * 1_um);
+        auto p_grid = RegularGrid<2>::Create();
+        QLength spacing = 100_um;
+        p_grid->SetSpacing(spacing);
         c_vector<double, 3> dimensions;
         dimensions[0] = 7; // num x
         dimensions[1] = 5; // num_y
         dimensions[2] = 1; // num_z
         p_grid->SetDimensions(dimensions);
 
-        std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        auto p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
 
         // Make a vessel
-        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 2.0*spacing);
-        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(spacing, 2.0*spacing);
+        auto p_node1 = VesselNode<2>::Create(0.0_m, 2.0*spacing);
+        auto p_node2 = VesselNode<2>::Create(spacing, 2.0*spacing);
         p_node2->SetIsMigrating(true);
-        std::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(p_node1, p_node2);
-        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        auto p_vessel = Vessel<2>::Create(p_node1, p_node2);
+        auto p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel);
         p_grid_calc->SetVesselNetwork(p_network);
 
         // Set up the migration rule
-        std::shared_ptr<LatticeBasedMigrationRule<2> > p_migration_rule = LatticeBasedMigrationRule<2>::Create();
+        auto p_migration_rule = LatticeBasedMigrationRule<2>::Create();
         p_migration_rule->SetGridCalculator(p_grid_calc);
         p_migration_rule->SetMovementProbability(0.1);
         p_migration_rule->SetNetwork(p_network);
@@ -102,7 +102,7 @@ public:
         unsigned not_moved = 0;
         for(unsigned idx=0; idx<100; idx++)
         {
-            std::vector<int> indices = p_migration_rule->GetIndices(std::vector<std::shared_ptr<VesselNode<2> > > (1, p_node2));
+            std::vector<int> indices = p_migration_rule->GetIndices(std::vector<VesselNodePtr<2> > (1, p_node2));
             if (indices[0] == -1)
             {
                 not_moved++;
@@ -119,37 +119,37 @@ public:
     void TestOwen2011SingleVessel() throw(Exception)
     {
         // Set the grid to move on
-        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        double spacing = 100.0; //um
-        p_grid->SetSpacing(spacing* 1_um);
+        auto p_grid = RegularGrid<2>::Create();
+        QLength spacing = 100_um; //um
+        p_grid->SetSpacing(spacing);
         c_vector<double, 3> dimensions;
         dimensions[0] = 7; // num x
         dimensions[1] = 5; // num_y
         dimensions[2] = 1; // num_z
         p_grid->SetDimensions(dimensions);
 
-        std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        auto p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
 
         // Make a vessel
-        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 2.0*spacing);
-        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(spacing, 2.0*spacing);
+        auto p_node1 = VesselNode<2>::Create(0.0_m, 2.0*spacing);
+        auto p_node2 = VesselNode<2>::Create(spacing, 2.0*spacing);
         p_node2->SetIsMigrating(true);
-        std::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(p_node1, p_node2);
-        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        auto p_vessel = Vessel<2>::Create(p_node1, p_node2);
+        auto p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel);
         p_grid_calc->SetVesselNetwork(p_network);
 
         // Set up a vegf field
         std::shared_ptr<FunctionMap<2> > p_funciton_map = FunctionMap<2>::Create();
         p_funciton_map->SetGrid(p_grid);
-        std::vector<QConcentration > vegf_field =
+        std::vector<QConcentration> vegf_field =
                 std::vector<QConcentration >(dimensions[0]*dimensions[1], 0.0*unit::mole_per_metre_cubed);
 
         QConcentration max_vegf(0.2e-9*unit::mole_per_metre_cubed);
         for(unsigned idx=0; idx<p_grid_calc->GetGrid()->GetNumberOfPoints(); idx++)
         {
-            vegf_field[idx] = max_vegf * p_grid->GetPoint(idx).GetLocation(1_um)[0] / (float(dimensions[0]) * spacing);
+            vegf_field[idx] = double(p_grid->GetPoint(idx).Convert(1_um)[0] / (double(dimensions[0]) * spacing) )*max_vegf;
         }
         p_funciton_map->UpdateSolution(vegf_field);
 
@@ -194,9 +194,9 @@ public:
         // Make a network
 
         // Set the grid to move on
-        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        double spacing = 100.0; //um
-        p_grid->SetSpacing(spacing* 1_um);
+        auto p_grid = RegularGrid<2>::Create();
+        QLength spacing = 100.0_um; //um
+        p_grid->SetSpacing(spacing);
         c_vector<double, 3> dimensions;
         dimensions[0] = 7; // num x
         dimensions[1] = 5; // num_y
@@ -206,7 +206,7 @@ public:
         std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
 
-        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 2.0*spacing);
+        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_m, 2.0*spacing);
         std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(spacing, 2.0*spacing);
         std::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(2.0*spacing, 2.0*spacing);
         std::shared_ptr<VesselNode<2> > p_node4 = VesselNode<2>::Create(3.0*spacing, 2.0*spacing);

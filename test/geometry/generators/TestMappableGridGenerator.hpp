@@ -99,9 +99,9 @@ public:
 
         // Make one closed cylinder, one open cylinder and one with too large an angle.
         MappableGridGenerator<3> generator;
-        QLength radius = 1.5*unit::metres;
-        QLength thickness = 0.1*unit::metres;
-        QLength height = 5.0*unit::metres;
+        QLength radius = 1.5_m;
+        QLength thickness = 0.1_m;
+        QLength height = 5.0_m;
 
         std::shared_ptr<Part<3> > p_part = generator.GenerateCylinder(radius, thickness, height, 10, 10);
         std::shared_ptr<Part<3> > p_part_open = generator.GenerateCylinder(radius, thickness, height, 10, 10, M_PI);
@@ -111,8 +111,8 @@ public:
         std::vector<std::shared_ptr<Vertex<3> > > vertices = p_part->GetVertices();
         for(unsigned idx=0; idx<vertices.size(); idx++)
         {
-            double loc_x = vertices[idx]->GetLocation(1.0*unit::metres)[0];
-            double loc_z = vertices[idx]->GetLocation(1.0*unit::metres)[2];
+            double loc_x = vertices[idx]->Convert(1.0*unit::metres)[0];
+            double loc_z = vertices[idx]->Convert(1.0*unit::metres)[2];
             double distance = std::sqrt(loc_x*loc_x + loc_z*loc_z);
             bool is_inside = (distance < 1.5  + 1.e-6) && (distance > 1.4  - 1.e-6);
             TS_ASSERT(is_inside);

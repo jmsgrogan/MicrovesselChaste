@@ -73,7 +73,7 @@ public:
         std::vector<std::shared_ptr<VesselNode<3> > > bottom_nodes;
         for(unsigned idx=0; idx<81; idx++)
         {
-            bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10.0, 50.0, 100.0, 1_um));
+            bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10.0_um, 50.0_um, 100.0_um));
         }
         std::shared_ptr<Vessel<3> > p_vessel_1 = Vessel<3>::Create(bottom_nodes);
         p_network->AddVessel(p_vessel_1);

@@ -90,7 +90,7 @@ public:
         p_grid->GenerateFromPart(p_domain, 5.0*unit::metres);
 
         // Choose the PDE
-        std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
+        auto p_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
         QDiffusivity vegf_diffusivity(1.0 * unit::metre_squared_per_second);
         p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
 
@@ -152,15 +152,15 @@ public:
         BaseUnits::Instance()->SetReferenceTimeScale(3600.0*unit::seconds);
 
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(2000e-6*unit::metres, 1000e-6*unit::metres, Vertex<2>(0.0, 0.0, 0.0));
-        p_domain->AddAttributeToEdgeIfFound(Vertex<2>(1000.0, 1000.0, 0, 1e-6*unit::metres), "Top Boundary", 1.0);
-        TS_ASSERT(p_domain->EdgeHasAttribute(Vertex<2>(1000.0, 1000.0, 0, 1e-6*unit::metres), "Top Boundary"));
+        p_domain->AddRectangle(2000_um, 1000_um);
+        p_domain->AddAttributeToEdgeIfFound(Vertex<2>(1000_um, 1000_um, 0_um), "Top Boundary", 1.0);
+        TS_ASSERT(p_domain->EdgeHasAttribute(Vertex<2>(1000_um, 1000_um, 0_um), "Top Boundary"));
 
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 50.0e-6*unit::metres);
 
         // Choose the PDE
-        std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
+        auto p_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
         QDiffusivity vegf_diffusivity(6.94e-11 * unit::metre_squared_per_second);
         QRate vegf_decay_rate((-0.8/3600.0) * unit::per_second);
         p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
@@ -197,8 +197,7 @@ public:
         std::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
 
         // Set up robin BC on top plane
-        std::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition =
-                DiscreteContinuumBoundaryCondition<2>::Create();
+        auto p_boundary_condition = DiscreteContinuumBoundaryCondition<2>::Create();
         QConcentration boundary_concentration(1.0* unit::mole_per_metre_cubed);
         p_boundary_condition->SetValue(boundary_concentration);
         p_boundary_condition->SetType(BoundaryConditionType::EDGE);

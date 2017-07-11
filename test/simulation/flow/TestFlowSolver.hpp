@@ -65,14 +65,14 @@ public:
     void TestFlowThroughSingleSegment() throw (Exception)
     {
         // Make some nodes
-        std::shared_ptr<VesselNode<3> > pn1 = VesselNode<3>::Create(0, 0, 0);
-        std::shared_ptr<VesselNode<3> > pn2 = VesselNode<3>::Create(5, 0, 0);
+        std::shared_ptr<VesselNode<3> > pn1 = VesselNode<3>::Create(0_um);
+        std::shared_ptr<VesselNode<3> > pn2 = VesselNode<3>::Create(5_um);
 
         SegmentPtr3 p_segment(VesselSegment<3>::Create(pn1, pn2));
         VesselPtr3 p_vessel(Vessel<3>::Create(p_segment));
 
         // Generate the network
-        std::shared_ptr<VesselNetwork<3> > p_vascular_network = VesselNetwork<3>::Create();
+        auto p_vascular_network = VesselNetwork<3>::Create();
         p_vascular_network->AddVessel(p_vessel);
 
         double impedance = 1.e12;
@@ -102,8 +102,8 @@ public:
 
     void TestFlowThroughSingleSegmentVelocityBc() throw (Exception)
     {
-        std::shared_ptr<VesselNode<3> > pn1 = VesselNode<3>::Create(0, 0, 0);
-        std::shared_ptr<VesselNode<3> > pn2 = VesselNode<3>::Create(5, 0, 0);
+        std::shared_ptr<VesselNode<3> > pn1 = VesselNode<3>::Create(0_um);
+        std::shared_ptr<VesselNode<3> > pn2 = VesselNode<3>::Create(5_um);
 
         SegmentPtr3 p_segment(VesselSegment<3>::Create(pn1, pn2));
         VesselPtr3 p_vessel(Vessel<3>::Create(p_segment));
@@ -135,10 +135,10 @@ public:
 
     void TestFlowThroughBifurcationVelocityBc() throw (Exception)
     {
-        std::shared_ptr<VesselNode<3> > pn1 = VesselNode<3>::Create(0, 0, 0);
-        std::shared_ptr<VesselNode<3> > pn2 = VesselNode<3>::Create(5, 0, 0);
-        std::shared_ptr<VesselNode<3> > pn3 = VesselNode<3>::Create(10, 5, 0);
-        std::shared_ptr<VesselNode<3> > pn4 = VesselNode<3>::Create(10, -5, 0);
+        std::shared_ptr<VesselNode<3> > pn1 = VesselNode<3>::Create(0_um, 0_um);
+        std::shared_ptr<VesselNode<3> > pn2 = VesselNode<3>::Create(5_um, 0_um);
+        std::shared_ptr<VesselNode<3> > pn3 = VesselNode<3>::Create(10_um, 5_um);
+        std::shared_ptr<VesselNode<3> > pn4 = VesselNode<3>::Create(10_um, -5_um);
         SegmentPtr3 p_segment1(VesselSegment<3>::Create(pn1, pn2));
         SegmentPtr3 p_segment2(VesselSegment<3>::Create(pn2, pn3));
         SegmentPtr3 p_segment3(VesselSegment<3>::Create(pn2, pn4));
@@ -181,11 +181,11 @@ public:
     {
         // Make some nodes
         std::vector<NodePtr3> nodes;
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(1.0, 0, 0)));
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(2.0, 0, 0)));
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(3.0, 0, 0)));
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(4.0, 0, 0)));
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(5.0, 0, 0)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(1.0_um)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(2.0_um)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(3.0_um)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(4.0_um)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(5.0_um)));
         SegmentPtr3 p_segment1(VesselSegment<3>::Create(nodes[0], nodes[1]));
         SegmentPtr3 p_segment2(VesselSegment<3>::Create(nodes[1], nodes[2]));
         SegmentPtr3 p_segment3(VesselSegment<3>::Create(nodes[2], nodes[3]));
@@ -239,9 +239,9 @@ public:
     {
         // Make some nodes
         std::vector<NodePtr3> nodes;
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(1.0, 0, 0)));
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(2.0, 0, 0)));
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(3.0, 0, 0)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(1.0_um)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(2.0_um)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(3.0_um)));
 
         SegmentPtr3 p_segment1(VesselSegment<3>::Create(nodes[0], nodes[1]));
         SegmentPtr3 p_segment2(VesselSegment<3>::Create(nodes[1], nodes[2]));
@@ -283,13 +283,13 @@ public:
 
         // Make some nodes
         std::vector<NodePtr3> nodes;
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(0.0, 0, 0)));
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(0.0, 1, 0)));
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(1.0, 0.5, 0)));
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(1.0, 1, 0)));
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(2.0, 1, 0)));
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(3.0, 1, 0)));
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(4.0, 1, 0)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(0.0_um, 0_um)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(0.0_um, 1_um)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(1.0_um, 0.5_um)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(1.0_um, 1_um)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(2.0_um, 1_um)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(3.0_um, 1_um)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(4.0_um, 1_um)));
 
         SegmentPtr3 p_segment1(VesselSegment<3>::Create(nodes[0], nodes[2]));
         SegmentPtr3 p_segment2(VesselSegment<3>::Create(nodes[1], nodes[2]));
@@ -361,10 +361,10 @@ public:
         EXIT_IF_PARALLEL;    // Need a larger network to run in parallel
 
         std::vector<NodePtr3> nodes;
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(0.0, 0, 0)));
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(0.0, 1, 0)));
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(1.0, 0.5, 0)));
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(1.0, 1, 0)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(0.0_um)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(0.0_um, 1_um)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(1.0_um, 0.5_um)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(1.0_um, 1_um)));
 
         SegmentPtr3 p_segment1(VesselSegment<3>::Create(nodes[0], nodes[2]));
         SegmentPtr3 p_segment2(VesselSegment<3>::Create(nodes[1], nodes[2]));
@@ -440,8 +440,8 @@ public:
 
         // Make some nodes
         std::vector<NodePtr2> nodes;
-        nodes.push_back(NodePtr2(VesselNode<2>::Create(0.0, 0)));
-        nodes.push_back(NodePtr2(VesselNode<2>::Create(0.0, 1)));
+        nodes.push_back(NodePtr2(VesselNode<2>::Create(0.0_um, 0_um)));
+        nodes.push_back(NodePtr2(VesselNode<2>::Create(0.0_um, 1_um)));
         SegmentPtr2 p_segment1(VesselSegment<2>::Create(nodes[0], nodes[1]));
 
         double impedance = 0.001;
@@ -449,7 +449,7 @@ public:
         VesselNetworkPropertyManager<2>::SetSegmentProperties(vascular_network, p_segment1);
 
         std::pair<Vertex<2>, Vertex<2> > network_extents = VesselNetworkGeometryCalculator<2>::GetExtents(vascular_network);
-        double y_middle = (network_extents.first.GetLocation(1_um)[1]) / 2.0;
+        double y_middle = (network_extents.first.Convert(1_um)[1]) / 2.0;
 
         std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
         std::vector<std::shared_ptr<Vessel<2> > > vessels = vascular_network->GetVessels();
@@ -457,7 +457,7 @@ public:
         {
             if ((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
             {
-                if ((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1_um)[1] > y_middle)
+                if ((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[1] > y_middle)
                 {
                     (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
                     (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(3393.0 * unit::pascals);
@@ -465,7 +465,7 @@ public:
             }
             if ((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
             {
-                if ((*vessel_iterator)->GetEndNode()->rGetLocation().GetLocation(1_um)[1] > y_middle)
+                if ((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[1] > y_middle)
                 {
                     (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
                     (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3393.0 * unit::pascals);
@@ -473,7 +473,7 @@ public:
             }
             if ((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
             {
-                if ((*vessel_iterator)->GetStartNode()->rGetLocation().GetLocation(1_um)[1] <= y_middle)
+                if ((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[1] <= y_middle)
                 {
                     (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsOutputNode(true);
                     (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(1993.0 * unit::pascals);
@@ -481,7 +481,7 @@ public:
             }
             if ((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
             {
-                if ((*vessel_iterator)->GetEndNode()->rGetLocation().GetLocation(1_um)[1] <= y_middle)
+                if ((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[1] <= y_middle)
                 {
                     (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
                     (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(1993.0 * unit::pascals);
@@ -522,12 +522,12 @@ public:
 
         for(unsigned idx=0; idx<p_network->GetNodes().size(); idx++)
         {
-            if(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1_um)[1]<1.e-6 && p_network->GetNodes()[idx]->GetNumberOfSegments()==1)
+            if(p_network->GetNodes()[idx]->rGetLocation().Convert(1_um)[1]<1.e-6 && p_network->GetNodes()[idx]->GetNumberOfSegments()==1)
             {
                 p_network->GetNodes()[idx]->GetFlowProperties()->SetIsInputNode(true);
                 p_network->GetNodes()[idx]->GetFlowProperties()->SetPressure(5000.0 * unit::pascals);
             }
-            else if(p_network->GetNodes()[idx]->rGetLocation().GetLocation(1_um)[1]>1850.0  && p_network->GetNodes()[idx]->GetNumberOfSegments()==1)
+            else if(p_network->GetNodes()[idx]->rGetLocation().Convert(1_um)[1]>1850.0  && p_network->GetNodes()[idx]->GetNumberOfSegments()==1)
             {
                 p_network->GetNodes()[idx]->GetFlowProperties()->SetIsOutputNode(true);
                 p_network->GetNodes()[idx]->GetFlowProperties()->SetPressure(3000.0 * unit::pascals);
@@ -553,7 +553,7 @@ public:
         std::vector<std::shared_ptr<VesselNode<3> > > bottom_nodes;
         for(unsigned idx=0; idx<5; idx++)
         {
-            bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10, 10.0, 0.0));
+            bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10*1_um, 10_um));
         }
         bottom_nodes[0]->GetFlowProperties()->SetIsInputNode(true);
         bottom_nodes[0]->GetFlowProperties()->SetPressure(3000.0*unit::pascals);
@@ -612,7 +612,7 @@ public:
         std::vector<std::shared_ptr<VesselNode<3> > > bottom_nodes;
         for(unsigned idx=0; idx<6; idx++)
         {
-            bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10, 10.0, 0.0));
+            bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10*1_um, 10.0_um));
         }
         bottom_nodes[0]->GetFlowProperties()->SetIsInputNode(true);
         bottom_nodes[0]->GetFlowProperties()->SetPressure(3000.0 * unit::pascals);
@@ -626,13 +626,13 @@ public:
 
         for(unsigned idx=1; idx<4; idx+=1)
         {
-            Vertex<3> loc1 = Vertex<3>(double(idx)*10, 10.0, 0.0, 1_um);
-            Vertex<3> loc2 = Vertex<3>(double(idx)*10, 20.0, 0.0, 1_um);
+            Vertex<3> loc1 = Vertex<3>(double(idx)*10*1_um, 10.0_um);
+            Vertex<3> loc2 = Vertex<3>(double(idx)*10*1_um, 20.0_um);
             p_network->FormSprout(VesselNode<3>::Create(loc1), loc2);
         }
 
-        Vertex<3> loc1 = Vertex<3>(10, 20.0, 0.0, 1_um);
-        Vertex<3> loc2 = Vertex<3>(20, 20.0, 0.0, 1_um);
+        Vertex<3> loc1 = Vertex<3>(10_um, 20.0_um);
+        Vertex<3> loc2 = Vertex<3>(20_um, 20.0_um);
         p_network->FormSprout(VesselNode<3>::Create(loc1), loc2);
         p_network->MergeCoincidentNodes();
         p_network->UpdateSegments();

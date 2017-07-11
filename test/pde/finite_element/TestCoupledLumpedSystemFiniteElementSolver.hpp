@@ -78,9 +78,9 @@ public:
 
         // Set up the mesh
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(10.0_m, 100.0_m, Vertex<2>(0.0, 0.0, 0.0));
-        p_domain->AddAttributeToEdgeIfFound(Vertex<2>(5.0, 100.0, 0, 1_m), "Top Boundary", 1.0);
-        TS_ASSERT(p_domain->EdgeHasAttribute(Vertex<2>(5.0, 100.0, 0, 1_m), "Top Boundary"));
+        p_domain->AddRectangle(10.0_m, 100.0_m);
+        p_domain->AddAttributeToEdgeIfFound(Vertex<2>(5.0_m, 100.0_m), "Top Boundary", 1.0);
+        TS_ASSERT(p_domain->EdgeHasAttribute(Vertex<2>(5.0_m, 100.0_m), "Top Boundary"));
 
         DiscreteContinuumMeshGenerator<2> mesh_generator;
         mesh_generator.SetDomain(p_domain);
@@ -88,8 +88,7 @@ public:
         mesh_generator.Update();
         std::shared_ptr<DiscreteContinuumMesh<2> > p_mesh = mesh_generator.GetMesh();
 
-        std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_pde =
-                CoupledVegfPelletDiffusionReactionPde<2>::Create();
+        auto p_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
         QDiffusivity vegf_diffusivity(2.3* unit::metre_squared_per_second);
         p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
         QConcentration initial_vegf_concentration(1.0*unit::mole_per_metre_cubed);
@@ -189,17 +188,16 @@ public:
 
         std::shared_ptr<Part<2> > p_domain = Part<2> ::Create();
         p_domain->AddCircle(radius, Vertex<2>(0.0, 0.0, 0.0));
-        std::shared_ptr<Polygon<2> > p_polygon = p_domain->AddCircle(cylinder_radius,
-                Vertex<2>(0.0, -delta/reference_length, 0.0, reference_length));
+        std::shared_ptr<Polygon<2> > p_polygon = p_domain->AddCircle(cylinder_radius, Vertex<2>(0.0_m, -delta));
         p_polygon->AddAttributeToAllEdges("Inner Boundary", 1.0);
-        p_domain->AddHoleMarker(Vertex<2>(0.0, 0.0, 0.0, reference_length));
+        p_domain->AddHoleMarker(Vertex<2>(0.0_m));
         p_domain->Write(p_handler->GetOutputDirectoryFullPath()+"cornea.vtp", GeometryFormat::VTP);
 
         DiscreteContinuumMeshGenerator<2> mesh_generator;
         mesh_generator.SetDomain(p_domain);
         mesh_generator.SetMaxElementArea(1e4*(Qpow3(1_um))); // 1e4 for 'good' mesh
         std::vector<Vertex<2> > holes;
-        holes.push_back(Vertex<2>(0.0, -delta/reference_length, 0.0, reference_length));
+        holes.push_back(Vertex<2>(0_m, -delta));
         mesh_generator.SetHoles(holes);
         mesh_generator.Update();
 
@@ -211,9 +209,8 @@ public:
         mesh_writer.Write();
 
         // Set the BCs
-        std::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary_condition =
-                DiscreteContinuumBoundaryCondition<2>::Create();
-        QConcentration boundary_concentration(1.0* unit::mole_per_metre_cubed);
+        auto p_boundary_condition = DiscreteContinuumBoundaryCondition<2>::Create();
+        QConcentration boundary_concentration(1.0 * unit::mole_per_metre_cubed);
         p_boundary_condition->SetValue(boundary_concentration);
         p_boundary_condition->SetType(BoundaryConditionType::EDGE);
         p_boundary_condition->SetIsRobin(true);
@@ -221,7 +218,7 @@ public:
         p_boundary_condition->SetLabel("Inner Boundary");
 
         // Choose the PDE
-        std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<2> > p_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
+        auto p_pde = CoupledVegfPelletDiffusionReactionPde<2>::Create();
         QDiffusivity vegf_diffusivity(6.94e-11 * unit::metre_squared_per_second);
         QRate vegf_decay_rate((-0.8/3600.0) * unit::per_second);
         p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);
@@ -286,8 +283,8 @@ public:
         std::shared_ptr<Part<3> > p_vegf_domain = Part<3> ::Create();
         QLength cylinder_radius(300.0*unit::microns);
         QLength cylinder_height(40.0*unit::microns);
-        Vertex<3> pellet_base(0.0, 0.0, 1305.0);
-        Vertex<3> pellet_centre(0.0, 0.0, 1325.0);
+        Vertex<3> pellet_base(0.0_um, 0.0_um, 1305.0_um);
+        Vertex<3> pellet_centre(0.0_um, 0.0_um, 1325.0_um);
         p_vegf_domain->AddCylinder(cylinder_radius, cylinder_height, pellet_base);
 
         // Rotate the part
@@ -334,7 +331,7 @@ public:
         p_boundary_condition->SetLabel("Boundary");
 
         // Choose the PDE
-        std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<3> > p_pde = CoupledVegfPelletDiffusionReactionPde<3>::Create();
+        auto p_pde = CoupledVegfPelletDiffusionReactionPde<3>::Create();
         QDiffusivity vegf_diffusivity(6.94e-11 * unit::metre_squared_per_second);
         QRate vegf_decay_rate((-0.8/3600.0) * unit::per_second);
         p_pde->SetIsotropicDiffusionConstant(vegf_diffusivity);

@@ -69,19 +69,19 @@ public:
         location1[2] = 0.0;
 
         // Pointer Factory Constructors
-        std::shared_ptr<VesselNode<3> > p_node_1 = VesselNode<3>::Create(2.0, 3.0, 4.0);
-        std::shared_ptr<VesselNode<3> > p_node_3 = VesselNode<3>::Create(Vertex<3>(location1, 1_um));
+        auto p_node_1 = VesselNode<3>::Create(2_um, 3_um, 4_um);
+        auto p_node_3 = VesselNode<3>::Create(Vertex<3>(location1, 1_um));
 
         // Test the location methods
-        TS_ASSERT_DELTA(p_node_1->rGetLocation().GetLocation(1_um)[0], 2.0, 1.e-6);
-        TS_ASSERT_DELTA(p_node_1->rGetLocation().GetLocation(1_um)[1], 3.0, 1.e-6);
-        TS_ASSERT_DELTA(p_node_1->rGetLocation().GetLocation(1_um)[2], 4.0, 1.e-6);
+        TS_ASSERT_DELTA(p_node_1->rGetLocation().Convert(1_um)[0], 2.0, 1.e-6);
+        TS_ASSERT_DELTA(p_node_1->rGetLocation().Convert(1_um)[1], 3.0, 1.e-6);
+        TS_ASSERT_DELTA(p_node_1->rGetLocation().Convert(1_um)[2], 4.0, 1.e-6);
     }
 
     void TestSimpleGetAndSetMethods() throw (Exception)
     {
         // Make a node
-        std::shared_ptr<VesselNode<3> > p_node = VesselNode<3>::Create();
+        std::shared_ptr<VesselNode<3> > p_node = VesselNode<3>::Create(0_m);
 
         // Test simple Getters and Setters
         p_node->SetId(5u);
@@ -105,9 +105,9 @@ public:
     void TestDistanceAndConincidentMethods() throw (Exception)
     {
         // Set up some points nodes
-        std::shared_ptr<VesselNode<3> > p_node_1 = VesselNode<3>::Create(1.0, 2.0, 3.0);
-        std::shared_ptr<VesselNode<3> > p_node_2 = VesselNode<3>::Create(1.0, 2.0, 3.0);
-        std::shared_ptr<VesselNode<3> > p_node_3 = VesselNode<3>::Create(4.0, 5.0, 6.0);
+        auto p_node_1 = VesselNode<3>::Create(1.0_um, 2.0_um, 3.0_um);
+        auto p_node_2 = VesselNode<3>::Create(1.0_um, 2.0_um, 3.0_um);
+        auto p_node_3 = VesselNode<3>::Create(4.0_um, 5.0_um, 6.0_um);
 
         c_vector<double, 3> location1;
         location1[0] = 1.0;
@@ -119,19 +119,19 @@ public:
         TS_ASSERT(p_node_1->IsCoincident(Vertex<3>(location1, 1_um)));
 
         // Distance methods
-        TS_ASSERT_DELTA(p_node_1->GetDistance(p_node_3->rGetLocation())/p_node_1->GetReferenceLengthScale(), std::sqrt(27.0), 1.e-6);
+        TS_ASSERT_DELTA(p_node_1->GetDistance(p_node_3->rGetLocation())/1_um, std::sqrt(27.0), 1.e-6);
     }
 
     void TestAddingAndRemovingVesselSegments() throw (Exception)
     {
         // Make some nodes
-        std::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0);
-        std::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(1);
-        std::shared_ptr<VesselNode<2> > p_node_3 = VesselNode<2>::Create(2);
+        auto p_node_1 = VesselNode<2>::Create(0_um);
+        auto p_node_2 = VesselNode<2>::Create(1_um);
+        auto p_node_3 = VesselNode<2>::Create(2_um);
 
         // Make some vessel segments
-        std::shared_ptr<VesselSegment<2> > p_segment1 = VesselSegment<2>::Create(p_node_1, p_node_2);
-        std::shared_ptr<VesselSegment<2> > p_segment2 = VesselSegment<2>::Create(p_node_2, p_node_3);
+        auto p_segment1 = VesselSegment<2>::Create(p_node_1, p_node_2);
+        auto p_segment2 = VesselSegment<2>::Create(p_node_2, p_node_3);
 
         // Check that the vessel segments have been suitably added to the nodes.
         TS_ASSERT(p_node_1->IsAttachedTo(p_segment1));
@@ -162,12 +162,11 @@ public:
 
         // Save archive
         {
-            std::shared_ptr<VesselNode<3> > p_node = std::shared_ptr<VesselNode<3> >(new VesselNode<3>(1.0, 2.0, 3.0, 5.0*unit::metres));
-
-            std::shared_ptr<AbstractVesselNetworkComponent<3> > p_cast_node = std::static_pointer_cast<AbstractVesselNetworkComponent<3> >(p_node);
-            TS_ASSERT_DELTA(p_node->rGetLocation().GetLocation(5.0*unit::metres)[0], 1.0, 1.e-6);
-            TS_ASSERT_DELTA(p_node->rGetLocation().GetLocation(5.0*unit::metres)[1], 2.0, 1.e-6);
-            TS_ASSERT_DELTA(p_node->rGetLocation().GetLocation(5.0*unit::metres)[2], 3.0, 1.e-6);
+            std::shared_ptr<VesselNode<3> > p_node = std::shared_ptr<VesselNode<3> >(new VesselNode<3>(1_m, 2.0_m, 3.0_m));
+            auto p_cast_node = std::static_pointer_cast<AbstractVesselNetworkComponent<3> >(p_node);
+            TS_ASSERT_DELTA(p_node->rGetLocation().Convert(1.0*unit::metres)[0], 1.0, 1.e-6);
+            TS_ASSERT_DELTA(p_node->rGetLocation().Convert(1.0*unit::metres)[1], 2.0, 1.e-6);
+            TS_ASSERT_DELTA(p_node->rGetLocation().Convert(1.0*unit::metres)[2], 3.0, 1.e-6);
 
             std::ofstream ofs(archive_filename.c_str());
             boost::archive::text_oarchive output_arch(ofs);
@@ -184,10 +183,10 @@ public:
 
             // restore from the archive
             input_arch >> p_node_from_archive;
-            std::shared_ptr<VesselNode<3> > p_cast_node = std::static_pointer_cast<VesselNode<3> >(p_node_from_archive);
-            TS_ASSERT_DELTA(p_cast_node->rGetLocation().GetLocation(5.0*unit::metres)[0], 1.0, 1.e-6);
-            TS_ASSERT_DELTA(p_cast_node->rGetLocation().GetLocation(5.0*unit::metres)[1], 2.0, 1.e-6);
-            TS_ASSERT_DELTA(p_cast_node->rGetLocation().GetLocation(5.0*unit::metres)[2], 3.0, 1.e-6);
+            auto p_cast_node = std::static_pointer_cast<VesselNode<3> >(p_node_from_archive);
+            TS_ASSERT_DELTA(p_cast_node->rGetLocation().Convert(1.0*unit::metres)[0], 1.0, 1.e-6);
+            TS_ASSERT_DELTA(p_cast_node->rGetLocation().Convert(1.0*unit::metres)[1], 2.0, 1.e-6);
+            TS_ASSERT_DELTA(p_cast_node->rGetLocation().Convert(1.0*unit::metres)[2], 3.0, 1.e-6);
         }
     }
 };

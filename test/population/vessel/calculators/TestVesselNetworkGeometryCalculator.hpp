@@ -59,10 +59,10 @@ public:
     {
         // Make some nodes
         std::vector<std::shared_ptr<VesselNode<3> > > nodes;
-        nodes.push_back(VesselNode<3>::Create(1.0, 2.0, 6.0));
-        nodes.push_back(VesselNode<3>::Create(3.0, 4.0, 7.0));
-        nodes.push_back(VesselNode<3>::Create(3.0, 4.0, 8.0));
-        nodes.push_back(VesselNode<3>::Create(3.0, 4.0, 9.0));
+        nodes.push_back(VesselNode<3>::Create(1.0_um, 2.0_um, 6.0_um));
+        nodes.push_back(VesselNode<3>::Create(3.0_um, 4.0_um, 7.0_um));
+        nodes.push_back(VesselNode<3>::Create(3.0_um, 4.0_um, 8.0_um));
+        nodes.push_back(VesselNode<3>::Create(3.0_um, 4.0_um, 9.0_um));
 
         // Make some vessels
         std::shared_ptr<Vessel<3> > pVessel1(Vessel<3>::Create(nodes[0], nodes[1]));

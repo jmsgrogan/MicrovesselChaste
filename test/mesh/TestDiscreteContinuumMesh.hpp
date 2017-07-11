@@ -66,9 +66,9 @@ private:
 
     std::shared_ptr<VesselNetwork<3> > SetUpNetwork()
     {
-        double vessel_length = 100;
-        double radius = 10.0;
-        double spacing = 3.0 * radius;
+        QLength vessel_length = 100_um;
+        QLength radius = 10.0_um;
+        QLength spacing = 3.0 * radius;
         unsigned num_vessels_per_row = 5;
         std::vector<std::shared_ptr<VesselNode<3> > > start_nodes;
         std::vector<std::shared_ptr<VesselNode<3> > > end_nodes;
@@ -77,9 +77,9 @@ private:
         {
             for(unsigned jdx =0; jdx<num_vessels_per_row; jdx++)
             {
-                double x_position = (spacing+2.0*radius) * double(idx) + spacing/2.0 + radius;
-                double y_position = (spacing+2.0*radius) * double(jdx) + spacing/2.0 + radius;
-                start_nodes.push_back(VesselNode<3>::Create(x_position, y_position, 0.0));
+                QLength x_position = (spacing+2.0*radius) * double(idx) + spacing/2.0 + radius;
+                QLength y_position = (spacing+2.0*radius) * double(jdx) + spacing/2.0 + radius;
+                start_nodes.push_back(VesselNode<3>::Create(x_position, y_position));
                 end_nodes.push_back(VesselNode<3>::Create(x_position, y_position, vessel_length));
             }
         }
@@ -87,10 +87,10 @@ private:
         std::vector<std::shared_ptr<Vessel<3> > > vessels;
         for(unsigned idx = 0; idx<start_nodes.size(); idx++)
         {
-            start_nodes[idx]->SetRadius(radius * 1_um);
-            end_nodes[idx]->SetRadius(radius * 1_um);
+            start_nodes[idx]->SetRadius(radius);
+            end_nodes[idx]->SetRadius(radius);
             vessels.push_back(Vessel<3>::Create(VesselSegment<3>::Create(start_nodes[idx], end_nodes[idx])));
-            vessels[idx]->GetSegments()[0]->SetRadius(10.0 * 1_um);
+            vessels[idx]->GetSegments()[0]->SetRadius(10_um);
         }
 
         std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
@@ -104,13 +104,11 @@ public:
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/Circle");
         std::shared_ptr<Part<2> > p_part = Part<2>::Create();
-        std::shared_ptr<Polygon<2> > p_circle = p_part->AddCircle(0.33_um,
-                Vertex<2>(0.5, 0.5));
+        std::shared_ptr<Polygon<2> > p_circle = p_part->AddCircle(0.33_um, Vertex<2>(0.5_um, 0.5_um));
         p_circle->AddAttributeToAllEdges("Outer Boundary", 1.0);
 
-        std::shared_ptr<Polygon<2> > p_circle2 = p_part->AddCircle(0.1_um,
-                Vertex<2>(0.5, 0.5));
-        p_part->AddRegionMarker(Vertex<2>(0.5, 0.5), 1.0);
+        std::shared_ptr<Polygon<2> > p_circle2 = p_part->AddCircle(0.1_um, Vertex<2>(0.5_um, 0.5_um));
+        p_part->AddRegionMarker(Vertex<2>(0.5_um, 0.5_um), 1.0);
         p_part->GetVtk(true);
         p_part->Write(file_handler.GetOutputDirectoryFullPath()+"part.vtp", GeometryFormat::VTP, true);
 
@@ -126,7 +124,7 @@ public:
 
         // Add a hole
         std::vector<Vertex<2> > holes;
-        holes.push_back(Vertex<2>(0.5, 0.5));
+        holes.push_back(Vertex<2>(0.5_um, 0.5_um));
         p_mesh_generator->SetHoles(holes);
         p_mesh_generator->Update();
         mesh_writer.SetFileName(file_handler.GetOutputDirectoryFullPath()+"circle_hole");
@@ -139,9 +137,9 @@ public:
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/Cylinder");
 
         std::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        std::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(0.33_um, Vertex<3>(0.5, 0.5));
+        std::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(0.33_um, Vertex<3>(0.5_um, 0.5_um));
         p_part->Extrude(p_circle, 1_um);
-        p_part->AddRegionMarker(Vertex<3>(0.5, 0.5, 1.0, 1_um), 2.0);
+        p_part->AddRegionMarker(Vertex<3>(0.5_um, 0.5_um, 1.0_um), 2.0);
         p_part->Write(file_handler.GetOutputDirectoryFullPath()+"part.vtp");
 
         std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
@@ -165,20 +163,19 @@ public:
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CylinderWithVesselSurface");
 
-        QLength vessel_length = 100.0* 1_um;
+        QLength vessel_length = 100_um;
         VesselNetworkGenerator<3> generator;
-        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
-                                                                                        Vertex<3>(0.0, 0.0));
-        p_network->GetVessels()[0]->GetStartNode()->SetRadius(5.0 * 1_um);
-        p_network->GetVessels()[0]->GetEndNode()->SetRadius(5.0 * 1_um);
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length);
+        p_network->GetVessels()[0]->GetStartNode()->SetRadius(5_um);
+        p_network->GetVessels()[0]->GetEndNode()->SetRadius(5_um);
 
-        std::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        std::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(100.0* 1_um, Vertex<3>(0.0, 0.0));
-        p_part->Extrude(p_circle, 100.0*1_um);
+        auto p_part = Part<3>::Create();
+        std::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(100.0* 1_um);
+        p_part->Extrude(p_circle, 100_um);
         p_part->AddVesselNetwork(p_network, true);
         p_part->Write(file_handler.GetOutputDirectoryFullPath()+"part.vtp");
 
-        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        auto p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
         //p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
         p_mesh_generator->Update();
@@ -193,20 +190,19 @@ public:
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CylinderWithVesselSurfaceNoHole");
 
-        QLength vessel_length = 100.0* 1_um;
+        QLength vessel_length = 100_um;
         VesselNetworkGenerator<3> generator;
-        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
-                                                                                        Vertex<3>(0.0, 0.0));
-        p_network->GetVessels()[0]->GetStartNode()->SetRadius(5.0 * 1_um);
-        p_network->GetVessels()[0]->GetEndNode()->SetRadius(5.0 * 1_um);
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length);
+        p_network->GetVessels()[0]->GetStartNode()->SetRadius(5_um);
+        p_network->GetVessels()[0]->GetEndNode()->SetRadius(5_um);
 
         std::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        std::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(100.0* 1_um, Vertex<3>(0.0, 0.0));
-        p_part->Extrude(p_circle, 100.0*1_um);
+        std::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(100_um);
+        p_part->Extrude(p_circle, 100_um);
         p_part->AddVesselNetwork(p_network, true, false);
         p_part->Write(file_handler.GetOutputDirectoryFullPath()+"part.vtp");
 
-        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        auto p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
         //p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
         p_mesh_generator->Update();
@@ -221,20 +217,20 @@ public:
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CubeWithVesselSurface");
 
-        QLength vessel_length = 100.0_um;
+        QLength vessel_length = 100_um;
         VesselNetworkGenerator<3> generator;
-        Vertex<3> centre(vessel_length/2.0_um);
+        Vertex<3> centre(vessel_length/2.0);
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre);
 
-        p_network->GetVessels()[0]->GetStartNode()->SetRadius(10.0_um);
-        p_network->GetVessels()[0]->GetEndNode()->SetRadius(10.0_um);
+        p_network->GetVessels()[0]->GetStartNode()->SetRadius(10_um);
+        p_network->GetVessels()[0]->GetEndNode()->SetRadius(10_um);
 
         std::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        p_part->AddCuboid(2.0 * vessel_length, 2.0 * vessel_length, vessel_length, Vertex<3>(0.0, 0.0));
+        p_part->AddCuboid(2.0 * vessel_length, 2.0 * vessel_length, vessel_length);
         p_part->AddVesselNetwork(p_network, true);
         p_part->Write(file_handler.GetOutputDirectoryFullPath()+"part.vtp");
 
-        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        auto p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
         //p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
         p_mesh_generator->Update();
@@ -249,20 +245,20 @@ public:
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CubeWithVesselSurface", false);
 
-        QLength vessel_length = 100.0_um;
+        QLength vessel_length = 100_um;
         VesselNetworkGenerator<3> generator;
-        Vertex<3> centre(vessel_length/2.0_um);
+        Vertex<3> centre(vessel_length/2.0);
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, centre);
-        p_network->GetVessels()[0]->GetStartNode()->SetRadius(10.0 * 1_um);
-        p_network->GetVessels()[0]->GetEndNode()->SetRadius(10.0 * 1_um);
+        p_network->GetVessels()[0]->GetStartNode()->SetRadius(10_um);
+        p_network->GetVessels()[0]->GetEndNode()->SetRadius(10_um);
 
-        Vertex<3> translate(0.0, 0.0, -vessel_length/2.0_um);
+        Vertex<3> translate(0.0_um, 0.0_um, -vessel_length/2.0);
         std::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        p_part->AddCuboid(vessel_length, vessel_length, 2.0*vessel_length, Vertex<3>(0.0, 0.0));
+        p_part->AddCuboid(vessel_length, vessel_length, 2.0*vessel_length);
         p_part->Translate(translate);
         p_part->AddVesselNetwork(p_network, true);
 
-        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        auto p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
         //p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
         p_mesh_generator->Update();
@@ -285,10 +281,10 @@ public:
         double domain_width = num_vessels_per_row * (spacing + 2.0* radius);
         double domain_height = num_vessels_per_row * (spacing + 2.0* radius);
         std::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        p_part->AddCuboid(domain_width* 1_um, domain_height*1_um, vessel_length, Vertex<3>(0.0, 0.0));
+        p_part->AddCuboid(domain_width* 1_um, domain_height*1_um, vessel_length);
         p_part->AddVesselNetwork(SetUpNetwork(), true);
 
-        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        auto p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
         //p_mesh_generator->SetMaxElementArea(100.0*Qpow3(1_um));
         p_mesh_generator->Update();
@@ -312,29 +308,29 @@ public:
         std::shared_ptr<Part<3> > p_part = Part<3>::Create();
         p_part->AddCuboid(domain_width, domain_width, domain_depth, Vertex<3>(0.0, 0.0));
 
-        double left_coord = (domain_width-pellet_width)/(2.0*reference_length);
-        double right_coord = (domain_width+pellet_width)/(2.0*reference_length);
-        double gap = (domain_depth-pellet_depth)/(2.0*reference_length);
+        QLength left_coord = (domain_width-pellet_width)/2.0;
+        QLength right_coord = (domain_width+pellet_width)/2.0;
+        QLength gap = (domain_depth-pellet_depth)/2.0;
 
         std::vector<std::shared_ptr<Vertex<3> > > points;
-        points.push_back(Vertex<3>::Create(left_coord, domain_width/reference_length, gap, reference_length));
-        points.push_back(Vertex<3>::Create(right_coord, domain_width/reference_length, gap, reference_length));
-        points.push_back(Vertex<3>::Create(right_coord, domain_width/reference_length, domain_depth/reference_length-gap, reference_length));
-        points.push_back(Vertex<3>::Create(left_coord, domain_width/reference_length, domain_depth/reference_length-gap, reference_length));
+        points.push_back(Vertex<3>::Create(left_coord, domain_width, gap));
+        points.push_back(Vertex<3>::Create(right_coord, domain_width, gap));
+        points.push_back(Vertex<3>::Create(right_coord, domain_width, domain_depth-gap));
+        points.push_back(Vertex<3>::Create(left_coord, domain_width, domain_depth-gap));
 
-        std::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(points);
+        auto p_polygon = Polygon<3>::Create(points);
         p_polygon->AddAttribute("Pellet Interface", 1.0);
 
         std::vector<std::shared_ptr<Facet<3> > > facets = p_part->GetFacets();
         Vertex<3> probe = p_polygon->GetCentroid();
-        c_vector<double, 3> prob_norm = probe.GetLocation(reference_length);
+        c_vector<double, 3> prob_norm = probe.Convert(reference_length);
 
         std::cout << prob_norm[0] << "," << prob_norm[1] << "," << prob_norm[2] << std::endl;
 
         for(unsigned idx=0;idx<facets.size();idx++)
         {
             QLength distance = facets[idx]->GetCentroid().GetDistance(probe);
-            c_vector<double, 3> facet_loc = facets[idx]->GetCentroid().GetLocation(reference_length);
+            c_vector<double, 3> facet_loc = facets[idx]->GetCentroid().Convert(reference_length);
 
             std::cout << facet_loc[0] << "," << facet_loc[1] << "," << facet_loc[2] << std::endl;
             if(distance/reference_length <1.e-3)
@@ -370,16 +366,14 @@ public:
         QLength cornea_thickness = 100.0_um;
         QLength pellet_radius = 200.0_um;
         QLength pellet_thickness = 50.0_um;
-        QLength reference_length = 1_um;
         std::shared_ptr<Part<3> > p_domain = generator.GenerateHemisphere(cornea_radius,
                 cornea_thickness, num_divisions_x, num_divisions_y, azimuth_angle, polar_angle);
 
-        double gap = (cornea_thickness - pellet_thickness)/(2.0*reference_length)/4.0;
-        double base = cornea_radius/reference_length + gap - cornea_thickness/reference_length;
+        QLength gap = (cornea_thickness - pellet_thickness)/(2.0)/4.0;
+        QLength base = cornea_radius + gap - cornea_thickness;
 
         std::shared_ptr<Part<3> > p_pellet = Part<3>::Create();
-        p_pellet->AddCylinder(pellet_radius,pellet_thickness,
-                              Vertex<3>(0.0, 0.0, base, reference_length));
+        p_pellet->AddCylinder(pellet_radius,pellet_thickness, Vertex<3>(0.0_m, 0.0_m, base));
 
         // Rotate the pellet
         double rotation_angle = M_PI/8.0;
@@ -389,7 +383,7 @@ public:
         axis[2] = 0.0;
         p_pellet->RotateAboutAxis(axis, rotation_angle);
 
-        Vertex<3> centre(0.0, 0.0, base + pellet_thickness/(2.0*reference_length), reference_length);
+        Vertex<3> centre(0.0_m, 0.0_m, base + pellet_thickness/2.0);
         centre.RotateAboutAxis(axis, rotation_angle);
 
         p_domain->AppendPart(p_pellet);
@@ -403,7 +397,7 @@ public:
 
         p_domain->Write(file_handler.GetOutputDirectoryFullPath()+"domain.vtp", GeometryFormat::VTP, true);
 
-        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        auto p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_domain);
         //p_mesh_generator->SetMaxElementArea(1e4*Qpow3(1.e-18 * unit::metres));
         p_mesh_generator->Update();
@@ -429,16 +423,14 @@ public:
         QLength cornea_thickness = 100.0_um;
         QLength pellet_radius = 200.0_um;
         QLength pellet_thickness = 50.0_um;
-        QLength reference_length = 1.0_um;
         std::shared_ptr<Part<3> > p_domain = generator.GenerateHemisphere(cornea_radius,
                 cornea_thickness, num_divisions_x, num_divisions_y, azimuth_angle, polar_angle);
 
-        double gap = (cornea_thickness - pellet_thickness)/(2.0*reference_length)/4.0;
-        double base = cornea_radius/reference_length + gap - cornea_thickness/reference_length;
+        QLength gap = (cornea_thickness - pellet_thickness)/(2.0)/4.0;
+        QLength base = cornea_radius + gap - cornea_thickness;
 
         std::shared_ptr<Part<3> > p_pellet = Part<3>::Create();
-        p_pellet->AddCylinder(pellet_radius,pellet_thickness,
-                              Vertex<3>(0.0, 0.0, base, reference_length));
+        p_pellet->AddCylinder(pellet_radius,pellet_thickness, Vertex<3>(0.0_m, 0.0_m, base));
 
         // Rotate the pellet
         double rotation_angle = M_PI/8.0;
@@ -448,7 +440,7 @@ public:
         axis[2] = 0.0;
         p_pellet->RotateAboutAxis(axis, rotation_angle);
 
-        Vertex<3> centre(0.0, 0.0, base + pellet_thickness/(2.0*reference_length), reference_length);
+        Vertex<3> centre(0.0_m, 0.0_m, base + pellet_thickness/2.0);
         centre.RotateAboutAxis(axis, rotation_angle);
 
         p_domain->AppendPart(p_pellet);
@@ -490,13 +482,12 @@ public:
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/DistanceMap2D");
         std::shared_ptr<Part<2> > p_part = Part<2>::Create();
-        std::shared_ptr<Polygon<2> > p_circle = p_part->AddCircle(0.33_um,
-                Vertex<2>(0.5, 0.5));
+        std::shared_ptr<Polygon<2> > p_circle = p_part->AddCircle(0.33_um, Vertex<2>(0.5_um, 0.5_um));
         p_circle->AddAttributeToAllEdges("Outer Boundary", 1.0);
 
         std::shared_ptr<Polygon<2> > p_circle2 = p_part->AddCircle(0.1_um,
                 Vertex<2>(0.5, 0.5));
-        p_part->AddRegionMarker(Vertex<2>(0.5, 0.5), 1.0);
+        p_part->AddRegionMarker(Vertex<2>(0.5_um, 0.5_um), 1.0);
         p_part->GetVtk(true);
         p_part->Write(file_handler.GetOutputDirectoryFullPath()+"part.vtp", GeometryFormat::VTP, true);
 
@@ -512,7 +503,7 @@ public:
 
         // Add a hole
         std::vector<Vertex<2> > holes;
-        holes.push_back(Vertex<2>(0.5, 0.5));
+        holes.push_back(Vertex<2>(0.5_um, 0.5_um));
         p_mesh_generator->SetHoles(holes);
         //p_mesh_generator->SetMaxElementArea(1.e-3*Qpow3(1_um));
         p_mesh_generator->Update();

@@ -79,9 +79,8 @@ public:
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(vessel_length, vessel_length, Vertex<2>());
-        Vertex<2> translation_vector(-vessel_length/(2.0*reference_length),
-                                                     0.0, 0.0, reference_length);
+        p_domain->AddRectangle(vessel_length, vessel_length);
+        Vertex<2> translation_vector(-1.0*vessel_length/2.0);
         p_domain->Translate(translation_vector);
 
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
@@ -135,9 +134,8 @@ public:
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(vessel_length, vessel_length, Vertex<2>());
-        Vertex<2> translation_vector(-vessel_length/(2.0*reference_length),
-                                                     0.0, 0.0, reference_length);
+        p_domain->AddRectangle(vessel_length, vessel_length);
+        Vertex<2> translation_vector(-1.0*vessel_length/2.0);
         p_domain->Translate(translation_vector);
 
         // Set up the grid
@@ -196,9 +194,8 @@ public:
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(vessel_length, vessel_length, Vertex<2>());
-        Vertex<2> translation_vector(-vessel_length/(2.0*reference_length),
-                                                     0.0, 0.0, reference_length);
+        p_domain->AddRectangle(vessel_length, vessel_length);
+        Vertex<2> translation_vector(-1.0*vessel_length/2.0);
         p_domain->Translate(translation_vector);
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         QLength spacing(10.0*unit::microns);
@@ -242,14 +239,13 @@ public:
         QLength reference_length(1.0_um);
         VesselNetworkGenerator<2> generator;
         std::shared_ptr<VesselNetwork<2> > p_network =
-                generator.GenerateSingleVessel(vessel_length, Vertex<2>());
+                generator.GenerateSingleVessel(vessel_length);
         p_network->GetVessels()[0]->GetFlowProperties()->SetHaematocrit(0.45);
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(vessel_length, vessel_length, Vertex<2>());
-        Vertex<2> translation_vector(-vessel_length/(2.0*reference_length),
-                                                     0.0, 0.0, reference_length);
+        Vertex<2> translation_vector(-1.0*vessel_length/2.0);
         p_domain->Translate(translation_vector);
 
         std::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator =

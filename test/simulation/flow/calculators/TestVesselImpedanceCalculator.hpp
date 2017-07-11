@@ -66,8 +66,8 @@ public:
         points.push_back(ChastePoint<3>(5, 0, 0));
 
         std::vector<NodePtr3> nodes;
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(0,0)));
-        nodes.push_back(NodePtr3(VesselNode<3>::Create(5,0)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(0_um)));
+        nodes.push_back(NodePtr3(VesselNode<3>::Create(5_um)));
 
         SegmentPtr3 p_segment(VesselSegment<3>::Create(nodes[0], nodes[1]));
         VesselPtr3 p_vessel(Vessel<3>::Create(p_segment));
@@ -88,7 +88,7 @@ public:
         calculator.SetVesselNetwork(p_vascular_network);
         calculator.Calculate();
 
-        QVolume term = M_PI * Qpow4(radius)/nodes[0]->GetReferenceLengthScale();
+        QVolume term = M_PI * Qpow4(radius)/1_um;
         QFlowImpedance expected_impedance = 8.0 * 5.0 * (viscosity/term);
         TS_ASSERT_DELTA(p_vessel->GetFlowProperties()->GetImpedance()/expected_impedance, 1.0, 1e-6);
         TS_ASSERT_DELTA(p_segment->GetFlowProperties()->GetImpedance()/expected_impedance, 1.0, 1e-6);

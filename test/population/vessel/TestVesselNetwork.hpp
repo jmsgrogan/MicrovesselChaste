@@ -68,7 +68,7 @@ public:
         std::vector<VesselNodePtr<3> > nodes;
         for(unsigned idx=0; idx < 4; idx++)
         {
-            nodes.push_back(VesselNode<3>::Create(double(idx), 0.0, 0.0));
+            nodes.push_back(VesselNode<3>::Create(double(idx)*1_um));
         }
 
         // Make some vessels
@@ -92,7 +92,7 @@ public:
         std::vector<VesselNodePtr<3> > nodes;
         for(unsigned idx=0; idx < 4; idx++)
         {
-            nodes.push_back(VesselNode<3>::Create(double(idx), 0.0, 0.0));
+            nodes.push_back(VesselNode<3>::Create(double(idx)*1_um));
         }
 
         // Make some vessels
@@ -115,7 +115,7 @@ public:
         std::vector<VesselNodePtr<3> > nodes;
         for(unsigned idx=0; idx < 4; idx++)
         {
-            nodes.push_back(VesselNode<3>::Create(double(idx), 0.0, 0.0));
+            nodes.push_back(VesselNode<3>::Create(double(idx)*1_um));
         }
 
         // Make some vessels
@@ -131,36 +131,36 @@ public:
         vessel_network.MergeCoincidentNodes();
 
         // Move the network
-        QLength reference_length(1.0*unit::microns);
-        Vertex<3> translation_vector(0.0, 2.0, 0.0, reference_length);
+        QLength reference_length(1_um);
+        Vertex<3> translation_vector(0.0_um, 2.0_um, 0.0_um);
         vessel_network.Translate(translation_vector);
-        TS_ASSERT_DELTA(vessel_network.GetVessels()[0]->GetSegments()[0]->GetNode(0)->rGetLocation().GetLocation(reference_length)[0], 0.0, 1.e-6);
-        TS_ASSERT_DELTA(vessel_network.GetVessels()[0]->GetSegments()[0]->GetNode(0)->rGetLocation().GetLocation(reference_length)[1], 2.0, 1.e-6);
-        TS_ASSERT_DELTA(vessel_network.GetVessels()[0]->GetSegments()[0]->GetNode(1)->rGetLocation().GetLocation(reference_length)[0], 1.0, 1.e-6);
-        TS_ASSERT_DELTA(vessel_network.GetVessels()[0]->GetSegments()[0]->GetNode(1)->rGetLocation().GetLocation(reference_length)[1], 2.0, 1.e-6);
-        TS_ASSERT_DELTA(vessel_network.GetVessels()[1]->GetSegments()[0]->GetNode(1)->rGetLocation().GetLocation(reference_length)[0], 2.0, 1.e-6);
-        TS_ASSERT_DELTA(vessel_network.GetVessels()[1]->GetSegments()[0]->GetNode(1)->rGetLocation().GetLocation(reference_length)[1], 2.0, 1.e-6);
+        TS_ASSERT_DELTA(vessel_network.GetVessels()[0]->GetSegments()[0]->GetNode(0)->rGetLocation().Convert(reference_length)[0], 0.0, 1.e-6);
+        TS_ASSERT_DELTA(vessel_network.GetVessels()[0]->GetSegments()[0]->GetNode(0)->rGetLocation().Convert(reference_length)[1], 2.0, 1.e-6);
+        TS_ASSERT_DELTA(vessel_network.GetVessels()[0]->GetSegments()[0]->GetNode(1)->rGetLocation().Convert(reference_length)[0], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(vessel_network.GetVessels()[0]->GetSegments()[0]->GetNode(1)->rGetLocation().Convert(reference_length)[1], 2.0, 1.e-6);
+        TS_ASSERT_DELTA(vessel_network.GetVessels()[1]->GetSegments()[0]->GetNode(1)->rGetLocation().Convert(reference_length)[0], 2.0, 1.e-6);
+        TS_ASSERT_DELTA(vessel_network.GetVessels()[1]->GetSegments()[0]->GetNode(1)->rGetLocation().Convert(reference_length)[1], 2.0, 1.e-6);
 
         // Copy the network
         std::vector<std::shared_ptr<Vessel<3> > > copied_vessels = vessel_network.CopyVessels();
         TS_ASSERT_EQUALS(vessel_network.GetNumberOfVessels(), 6u);
 
         // Move the new vessels
-        Vertex<3> translation_vector2(0.0, 0.0, 3.0, reference_length);
+        Vertex<3> translation_vector2(0.0_um, 0.0_um, 3.0_um);
         vessel_network.Translate(translation_vector2);
-        TS_ASSERT_DELTA(vessel_network.GetVessels()[3]->GetSegments()[0]->GetNode(1)->rGetLocation().GetLocation(reference_length)[0], 1.0, 1.e-6);
-        TS_ASSERT_DELTA(vessel_network.GetVessels()[3]->GetSegments()[0]->GetNode(1)->rGetLocation().GetLocation(reference_length)[1], 2.0, 1.e-6);
-        TS_ASSERT_DELTA(vessel_network.GetVessels()[3]->GetSegments()[0]->GetNode(1)->rGetLocation().GetLocation(reference_length)[2], 3.0, 1.e-6);
+        TS_ASSERT_DELTA(vessel_network.GetVessels()[3]->GetSegments()[0]->GetNode(1)->rGetLocation().Convert(reference_length)[0], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(vessel_network.GetVessels()[3]->GetSegments()[0]->GetNode(1)->rGetLocation().Convert(reference_length)[1], 2.0, 1.e-6);
+        TS_ASSERT_DELTA(vessel_network.GetVessels()[3]->GetSegments()[0]->GetNode(1)->rGetLocation().Convert(reference_length)[2], 3.0, 1.e-6);
     }
 
     void TestRemoveVessel() throw(Exception)
     {
         // Make some nodes
         std::vector<VesselNodePtr<3> > nodes;
-        nodes.push_back(VesselNode<3>::Create(0.0, 0.0, 0.0));
-        nodes.push_back(VesselNode<3>::Create(20.0, 0.0, 0.0));
-        nodes.push_back(VesselNode<3>::Create(30.0, 0.0, 0.0));
-        nodes.push_back(VesselNode<3>::Create(50.0, 0.0, 0.0));
+        nodes.push_back(VesselNode<3>::Create(0.0_um));
+        nodes.push_back(VesselNode<3>::Create(20.0_um));
+        nodes.push_back(VesselNode<3>::Create(30.0_um));
+        nodes.push_back(VesselNode<3>::Create(50.0_um));
 
         // Make some vessels
         std::vector<std::shared_ptr<Vessel<3> > > vessels;
@@ -182,7 +182,7 @@ public:
          std::vector<VesselNodePtr<3> > nodes;
          for(unsigned idx=0; idx < 2; idx++)
          {
-             nodes.push_back(VesselNode<3>::Create(2.0 * double(idx)));
+             nodes.push_back(VesselNode<3>::Create(2.0 * double(idx)*1_um));
          }
 
          // Make a network
@@ -194,14 +194,14 @@ public:
 
          // Do the divide
          QLength reference_length(1.0*unit::microns);
-         Vertex<3> location(0.66, 0.0, 0.0, reference_length);
+         Vertex<3> location(0.66_um);
          vessel_network.DivideVessel(vessel_network.GetVessels()[0], location);
          TS_ASSERT_EQUALS(vessel_network.GetNumberOfVessels(), 2u);
          TS_ASSERT_EQUALS(vessel_network.GetNumberOfNodes(), 3u);
-         TS_ASSERT_DELTA(vessel_network.GetVessel(0)->GetSegment(0)->GetNode(0)->rGetLocation().GetLocation(reference_length)[0], 0.0, 1.e-6);
-         TS_ASSERT_DELTA(vessel_network.GetVessel(0)->GetSegment(0)->GetNode(1)->rGetLocation().GetLocation(reference_length)[0], 0.66, 1.e-6);
-         TS_ASSERT_DELTA(vessel_network.GetVessel(1)->GetSegment(0)->GetNode(0)->rGetLocation().GetLocation(reference_length)[0], 0.66, 1.e-6);
-         TS_ASSERT_DELTA(vessel_network.GetVessel(1)->GetSegment(0)->GetNode(1)->rGetLocation().GetLocation(reference_length)[0], 2.0, 1.e-6);
+         TS_ASSERT_DELTA(vessel_network.GetVessel(0)->GetSegment(0)->GetNode(0)->rGetLocation().Convert(reference_length)[0], 0.0, 1.e-6);
+         TS_ASSERT_DELTA(vessel_network.GetVessel(0)->GetSegment(0)->GetNode(1)->rGetLocation().Convert(reference_length)[0], 0.66, 1.e-6);
+         TS_ASSERT_DELTA(vessel_network.GetVessel(1)->GetSegment(0)->GetNode(0)->rGetLocation().Convert(reference_length)[0], 0.66, 1.e-6);
+         TS_ASSERT_DELTA(vessel_network.GetVessel(1)->GetSegment(0)->GetNode(1)->rGetLocation().Convert(reference_length)[0], 2.0, 1.e-6);
     }
 
     void TestDivideMultiSegmentVessel() throw(Exception)
@@ -222,50 +222,50 @@ public:
 
         // Do the divide
         QLength reference_length(1.0*unit::microns);
-        Vertex<3> location(3.0, 0.0, 0.0, reference_length);
+        Vertex<3> location(3.0_um);
         p_vascular_network.DivideVessel(p_vascular_network.GetVessels()[0], location);
         TS_ASSERT_EQUALS(p_vascular_network.GetNumberOfVessels(), 2u);
         TS_ASSERT_EQUALS(p_vascular_network.GetNumberOfNodes(), 5u);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(0)->GetSegment(0)->GetNode(0)->rGetLocation().GetLocation(reference_length)[0], 1.0, 1.e-6);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(0)->GetSegment(0)->GetNode(1)->rGetLocation().GetLocation(reference_length)[0], 2.0, 1.e-6);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(0)->GetSegment(1)->GetNode(0)->rGetLocation().GetLocation(reference_length)[0], 2.0, 1.e-6);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(0)->GetSegment(1)->GetNode(1)->rGetLocation().GetLocation(reference_length)[0], 3.0, 1.e-6);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(0)->GetNode(0)->rGetLocation().GetLocation(reference_length)[0], 3.0, 1.e-6);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(0)->GetNode(1)->rGetLocation().GetLocation(reference_length)[0], 4.0, 1.e-6);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(1)->GetNode(0)->rGetLocation().GetLocation(reference_length)[0], 4.0, 1.e-6);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(1)->GetNode(1)->rGetLocation().GetLocation(reference_length)[0], 5.0, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(0)->GetSegment(0)->GetNode(0)->rGetLocation().Convert(reference_length)[0], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(0)->GetSegment(0)->GetNode(1)->rGetLocation().Convert(reference_length)[0], 2.0, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(0)->GetSegment(1)->GetNode(0)->rGetLocation().Convert(reference_length)[0], 2.0, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(0)->GetSegment(1)->GetNode(1)->rGetLocation().Convert(reference_length)[0], 3.0, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(0)->GetNode(0)->rGetLocation().Convert(reference_length)[0], 3.0, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(0)->GetNode(1)->rGetLocation().Convert(reference_length)[0], 4.0, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(1)->GetNode(0)->rGetLocation().Convert(reference_length)[0], 4.0, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(1)->GetNode(1)->rGetLocation().Convert(reference_length)[0], 5.0, 1.e-6);
 
-        Vertex<3> location2(4.5, 0.0, 0.0, reference_length);
+        Vertex<3> location2(4.5_um);
         TS_ASSERT_THROWS_ANYTHING(p_vascular_network.DivideVessel(p_vascular_network.GetVessel(0), location2));
 
         // Do the divide
         p_vascular_network.DivideVessel(p_vascular_network.GetVessel(1), location2);
         TS_ASSERT_EQUALS(p_vascular_network.GetNumberOfVessels(), 3u);
         TS_ASSERT_EQUALS(p_vascular_network.GetNumberOfNodes(), 6u);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(0)->GetSegment(0)->GetNode(0)->rGetLocation().GetLocation(reference_length)[0], 1.0, 1.e-6);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(0)->GetSegment(0)->GetNode(1)->rGetLocation().GetLocation(reference_length)[0], 2.0, 1.e-6);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(0)->GetSegment(1)->GetNode(0)->rGetLocation().GetLocation(reference_length)[0], 2.0, 1.e-6);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(0)->GetSegment(1)->GetNode(1)->rGetLocation().GetLocation(reference_length)[0], 3.0, 1.e-6);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(0)->GetNode(0)->rGetLocation().GetLocation(reference_length)[0], 3.0, 1.e-6);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(0)->GetNode(1)->rGetLocation().GetLocation(reference_length)[0], 4.0, 1.e-6);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(1)->GetNode(0)->rGetLocation().GetLocation(reference_length)[0], 4.0, 1.e-6);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(1)->GetNode(1)->rGetLocation().GetLocation(reference_length)[0], 4.5, 1.e-6);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(2)->GetSegment(0)->GetNode(0)->rGetLocation().GetLocation(reference_length)[0], 4.5, 1.e-6);
-        TS_ASSERT_DELTA(p_vascular_network.GetVessel(2)->GetSegment(0)->GetNode(1)->rGetLocation().GetLocation(reference_length)[0], 5.0, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(0)->GetSegment(0)->GetNode(0)->rGetLocation().Convert(reference_length)[0], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(0)->GetSegment(0)->GetNode(1)->rGetLocation().Convert(reference_length)[0], 2.0, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(0)->GetSegment(1)->GetNode(0)->rGetLocation().Convert(reference_length)[0], 2.0, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(0)->GetSegment(1)->GetNode(1)->rGetLocation().Convert(reference_length)[0], 3.0, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(0)->GetNode(0)->rGetLocation().Convert(reference_length)[0], 3.0, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(0)->GetNode(1)->rGetLocation().Convert(reference_length)[0], 4.0, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(1)->GetNode(0)->rGetLocation().Convert(reference_length)[0], 4.0, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(1)->GetNode(1)->rGetLocation().Convert(reference_length)[0], 4.5, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(2)->GetSegment(0)->GetNode(0)->rGetLocation().Convert(reference_length)[0], 4.5, 1.e-6);
+        TS_ASSERT_DELTA(p_vascular_network.GetVessel(2)->GetSegment(0)->GetNode(1)->rGetLocation().Convert(reference_length)[0], 5.0, 1.e-6);
     }
 
     void TestSprouting()
     {
         auto p_vessel_network = VesselNetwork<2>::Create();
         std::vector<VesselNodePtr<2> > nodes;
-        nodes.push_back(VesselNode<2>::Create(0));
-        nodes.push_back(VesselNode<2>::Create(1));
-        nodes.push_back(VesselNode<2>::Create(2));
+        nodes.push_back(VesselNode<2>::Create(0_um));
+        nodes.push_back(VesselNode<2>::Create(1_um));
+        nodes.push_back(VesselNode<2>::Create(2_um));
         auto p_vessel = Vessel<2>::Create(nodes);
         p_vessel_network->AddVessel(p_vessel);
 
         // form sprout
-        Vertex<2> sprout_tip(0.0, 1.0, 0.0, 1.0_um);
+        Vertex<2> sprout_tip(0.0_um, 1.0_um, 0.0_um);
         VesselPtr<2> p_new_sprout = p_vessel_network->FormSprout(nodes[1], sprout_tip);
 
         p_vessel_network->UpdateAll(true);
@@ -278,10 +278,10 @@ public:
     {
         // Make some nodes
         std::vector<VesselNodePtr<3> > nodes;
-        nodes.push_back(VesselNode<3>::Create(0.0));
-        nodes.push_back(VesselNode<3>::Create(20.0));
-        nodes.push_back(VesselNode<3>::Create(30.0));
-        nodes.push_back(VesselNode<3>::Create(50.0));
+        nodes.push_back(VesselNode<3>::Create(0.0_um));
+        nodes.push_back(VesselNode<3>::Create(20.0_um));
+        nodes.push_back(VesselNode<3>::Create(30.0_um));
+        nodes.push_back(VesselNode<3>::Create(50.0_um));
 
         // Make some vessels
         std::vector<std::shared_ptr<Vessel<3> > > vessels;
@@ -304,10 +304,10 @@ public:
     {
         // Make some nodes
         std::vector<VesselNodePtr<3> > nodes;
-        nodes.push_back(VesselNode<3>::Create(0.0));
-        nodes.push_back(VesselNode<3>::Create(20.0));
-        nodes.push_back(VesselNode<3>::Create(30.0));
-        nodes.push_back(VesselNode<3>::Create(50.0));
+        nodes.push_back(VesselNode<3>::Create(0.0_um));
+        nodes.push_back(VesselNode<3>::Create(20.0_um));
+        nodes.push_back(VesselNode<3>::Create(30.0_um));
+        nodes.push_back(VesselNode<3>::Create(50.0_um));
 
         // Make some vessels
         std::vector<std::shared_ptr<Vessel<3> > > vessels;
@@ -321,8 +321,8 @@ public:
 
         vessel_network.MergeShortVessels(15.0e-6 * unit::metres);
         TS_ASSERT_EQUALS(vessel_network.GetNumberOfVessels(), 2u);
-        TS_ASSERT_DELTA(vessels[0]->GetEndNode()->rGetLocation().GetLocation(1e-6 * unit::metres)[0], 20.0, 1.e-6);
-        TS_ASSERT_DELTA(vessels[2]->GetStartNode()->rGetLocation().GetLocation(1e-6 * unit::metres)[0], 20.0, 1.e-6);
+        TS_ASSERT_DELTA(vessels[0]->GetEndNode()->rGetLocation().Convert(1e-6 * unit::metres)[0], 20.0, 1.e-6);
+        TS_ASSERT_DELTA(vessels[2]->GetStartNode()->rGetLocation().Convert(1e-6 * unit::metres)[0], 20.0, 1.e-6);
     }
 
     void TestMultipleSprouts() throw(Exception)
@@ -331,7 +331,7 @@ public:
         std::vector<VesselNodePtr<3> > bottom_nodes;
         for(unsigned idx=0; idx<3; idx++)
         {
-            bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10, 0.0, 0.0));
+            bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10.0*1_um));
         }
 
         auto p_vessel = Vessel<3>::Create(bottom_nodes);
@@ -341,7 +341,7 @@ public:
         // Add some sprouts
         for(unsigned idx=1; idx<2; idx++)
         {
-            Vertex<3> tip_location(double(idx)*10.0, 10.0, 0.0, 1.0_um);
+            Vertex<3> tip_location(double(idx)*10.0_um);
             p_network->FormSprout(bottom_nodes[idx], tip_location);
         }
 
@@ -359,10 +359,10 @@ public:
     void TestFindNearestSegment()
     {
         std::vector<VesselNodePtr<2> > nodes;
-        nodes.push_back(VesselNode<2>::Create(0.0, 0.0));
-        nodes.push_back(VesselNode<2>::Create(10.0, 0.0));
-        nodes.push_back(VesselNode<2>::Create(20.0, 0.0));
-        nodes.push_back(VesselNode<2>::Create(16.0, 5.0));
+        nodes.push_back(VesselNode<2>::Create(0.0_um));
+        nodes.push_back(VesselNode<2>::Create(10.0_um));
+        nodes.push_back(VesselNode<2>::Create(20.0_um));
+        nodes.push_back(VesselNode<2>::Create(16.0_um));
 
         // Make some vessels
         std::vector<std::shared_ptr<Vessel<2> > > vessels;

@@ -63,8 +63,8 @@ public:
     void TestSingleVesselRegression() throw(Exception)
     {
         // Make a vessel
-        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 0.0);
-        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(0.0, 100.0);
+        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
+        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(0.0_um, 100.0_um);
         std::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(p_node1, p_node2);
         std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel);
@@ -105,14 +105,14 @@ public:
                                                                                                       vessel_length*1_um);
 
         // Make a dummy segment to set properties on
-        std::shared_ptr<VesselSegment<2> > p_segment1 = VesselSegment<2>::Create(VesselNode<2>::Create(0.0, 0.0),
-                                                                                   VesselNode<2>::Create(1.0, 0.0));
+        std::shared_ptr<VesselSegment<2> > p_segment1 = VesselSegment<2>::Create(VesselNode<2>::Create(0.0_um, 0.0_um),
+                                                                                   VesselNode<2>::Create(1.0_um, 0.0_um));
         p_segment1->GetFlowProperties()->SetImpedance(0.0001*unit::pascal_second_per_metre_cubed);
         VesselNetworkPropertyManager<2>::SetSegmentProperties(p_network, p_segment1);
 
         // Get the nearest node to the inlet and outlet
-        std::shared_ptr<VesselNode<2> > p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, Vertex<2>(742, 912));
-        std::shared_ptr<VesselNode<2> > p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, Vertex<2>(0, 0));
+        std::shared_ptr<VesselNode<2> > p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, Vertex<2>(742_um, 912_um));
+        std::shared_ptr<VesselNode<2> > p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, Vertex<2>(0_um, 0_um));
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
         p_inlet_node->GetFlowProperties()->SetPressure(3393.0_Pa);
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);

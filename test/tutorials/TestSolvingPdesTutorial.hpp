@@ -106,25 +106,25 @@ public:
         /*
          * We will work in microns
          */
-        QLength reference_length(1.0 * unit::microns);
+        QLength reference_length(1_um);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         /*
          * Set up a simulation domain, which will be a cuboid.
          */
-        QLength domain_width(100.0 * 1.e-6 * unit::microns);
-        QLength domain_height(100.0 * 1.e-6 * unit::microns);
-        QLength domain_depth(20.0 * 1.e-6 * unit::microns);
-        std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(domain_width, domain_height, domain_depth, Vertex<3>(0.0, 0.0, 0.0));
+        QLength domain_width(100_um);
+        QLength domain_height(100_um);
+        QLength domain_depth(20_um);
+        auto p_domain = Part<3>::Create();
+        p_domain->AddCuboid(domain_width, domain_height, domain_depth);
         /*
          * Make a regular grid on the domain
          */
-        std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        auto p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 10.0*reference_length);
         /*
          * Set up a PDE, we will model oxygen diffusion.
          */
-        std::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
+        auto p_oxygen_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         QDiffusivity oxygen_diffusivity(1.e-6*unit::metre_squared_per_second);
         p_oxygen_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity);
         /*
@@ -135,19 +135,17 @@ public:
         /*
          * Add a Dirichlet boundary condition on the left face of the domain.
          */
-        p_domain->AddAttributeToPolygonIfFound(Vertex<3>(0.0,
-                                                     domain_height/(2.0*reference_length),
-                                                     domain_depth/(2.0*reference_length)), "boundary_1", 1.0);
+        p_domain->AddAttributeToPolygonIfFound(Vertex<3>(0.0_um, domain_height/2.0, domain_depth/2.0), "boundary_1", 1.0);
 
-        std::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_left_face_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
+        auto p_left_face_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
         p_left_face_boundary->SetType(BoundaryConditionType::POLYGON);
         p_left_face_boundary->SetDomain(p_domain);
-        p_left_face_boundary->SetValue(10.0*unit::mole_per_metre_cubed);
+        p_left_face_boundary->SetValue(10e-3_M);
         p_left_face_boundary->SetLabel("boundary_1");
         /*
          * Set up the PDE solvers for the oxygen problem
          */
-        std::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<3> > p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<3>::Create();
+        auto p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<3>::Create();
         p_oxygen_solver->SetPde(p_oxygen_pde);
         p_oxygen_solver->SetGrid(p_grid);
         p_oxygen_solver->AddBoundaryCondition(p_left_face_boundary);

@@ -76,7 +76,7 @@ public:
         VesselNetworkPtr<2> p_network = network_generator.GenerateHexagonalUnit(vessel_length);
 
         // Pattern the unit
-        std::vector<unsigned> num_units(2, 3);
+        std::array<unsigned, 2> num_units = {2, 2};
         network_generator.PatternUnitByTranslation(p_network, num_units);
 
         // Write the network to file
@@ -94,7 +94,7 @@ public:
         VesselNetworkPtr<3> p_network = network_generator.GenerateHexagonalUnit(vessel_length);
 
         // Pattern the unit
-        std::vector<unsigned> num_units(3, 3);
+        std::array<unsigned, 3> num_units = {3, 3, 3};
         network_generator.PatternUnitByTranslation(p_network, num_units);
 
         // Write the network to file

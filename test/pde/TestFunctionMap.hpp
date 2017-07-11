@@ -72,7 +72,7 @@ public:
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(length, length, Vertex<2>());
+        p_domain->AddRectangle(length, length);
 
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         QLength grid_spacing(5.0*unit::microns);
@@ -86,7 +86,7 @@ public:
         std::vector<double> solution;
         for(unsigned idx=0; idx<p_grid->GetNumberOfPoints(); idx++)
         {
-            double x_loc = p_grid->GetPoint(idx).GetLocation(1_um)[0];
+            double x_loc = p_grid->GetPoint(idx).Convert(1_um)[0];
             double value = (100.0-x_loc)*(100.0-x_loc)/(100.0*100.0);
             solution.push_back(value);
         }
@@ -105,7 +105,7 @@ public:
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(length, length, Vertex<2>());
+        p_domain->AddRectangle(length, length);
 
         std::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator = DiscreteContinuumMeshGenerator<2>::Create();
         p_mesh_generator->SetDomain(p_domain);
@@ -120,7 +120,7 @@ public:
         std::vector<double> solution;
         for(unsigned idx=0; idx<p_mesh_generator->GetMesh()->GetNumberOfCells(); idx++)
         {
-            double x_loc = p_mesh_generator->GetMesh()->GetCellLocation(idx).GetLocation(1_um)[0];
+            double x_loc = p_mesh_generator->GetMesh()->GetCellLocation(idx).Convert(1_um)[0];
             double value = (100.0-x_loc)*(100.0-x_loc)/(100.0*100.0);
             solution.push_back(value);
         }

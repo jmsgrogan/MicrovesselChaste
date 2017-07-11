@@ -65,7 +65,7 @@ public:
         dimensions[1] = 20;
         dimensions[2] = 1;
         p_grid->SetDimensions(dimensions);
-        p_grid->SetSpacing(20.e-6*unit::metres);
+        p_grid->SetSpacing(20_um);
         std::vector<double> grid_values;
         for(unsigned idx=0; idx < p_grid->GetNumberOfPoints(); idx++)
         {
@@ -101,7 +101,7 @@ public:
         dimensions[1] = 20;
         dimensions[2] = 5;
         p_grid->SetDimensions(dimensions);
-        p_grid->SetSpacing(20.e-6*unit::metres);
+        p_grid->SetSpacing(20_um);
 
         std::vector<double> grid_values;
         for(unsigned idx=0; idx < p_grid->GetNumberOfPoints(); idx++)
@@ -130,7 +130,7 @@ public:
         OutputFileHandler file_handler1 = OutputFileHandler("TestMicrovesselVtkScene/TestVesselNetwork");
 
         // Specify the network dimensions
-        QLength vessel_length = 40.0* 1_um;
+        QLength vessel_length = 40_um;
 
         // Generate the network
         VesselNetworkGenerator<3> vascular_network_generator;
@@ -159,7 +159,7 @@ public:
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestMicrovesselVtkScene/TestPart");
         std::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        p_part->AddCuboid(100.e-6*unit::metres, 100.e-6*unit::metres, 100.e-6*unit::metres, Vertex<3>(0.0, 0.0, 0.0, 1_um));
+        p_part->AddCuboid(100_um, 100_um, 100_um);
 
         MicrovesselVtkScene<3> scene1;
         c_vector<double, 3> red;
