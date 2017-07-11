@@ -69,14 +69,14 @@ public:
         QLength vessel_length = 100.0_um;
         VesselNetworkGenerator<2> generator;
         std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length,
-                DimensionalChastePoint<2>(40.0, 0.0, 0.0, 1_um));
+                Vertex<2>(40.0, 0.0, 0.0, 1_um));
         p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"/network.vtp");
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(1.0 * vessel_length,
                             1.0 * vessel_length,
-                            DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+                            Vertex<2>(0.0, 0.0, 0.0));
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 10.0_um);
 
@@ -103,7 +103,7 @@ public:
         QLength vessel_length = 100.0_um;
         VesselNetworkGenerator<3> generator;
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateBifurcationUnit(vessel_length,
-                                                                                           DimensionalChastePoint<3>(0.0,
+                                                                                           Vertex<3>(0.0,
                                                                                                    vessel_length/(1_um),
                                                                                                    vessel_length/(1_um)));
         p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"/network.vtp");
@@ -113,7 +113,7 @@ public:
         p_domain->AddCuboid(4.0 * vessel_length,
                             4.0 * vessel_length,
                             2.0 * vessel_length,
-                            DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+                            Vertex<3>(0.0, 0.0, 0.0));
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 5.0_um);
 

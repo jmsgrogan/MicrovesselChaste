@@ -65,7 +65,7 @@ private:
         #if BOOST_VERSION < 105600
             EXCEPTION("Serialization not supported for Boost < 1.56");
         #else
-            ar & mpNetwork;
+            //ar & mpNetwork;
         #endif
         ar & mReferenceTime;
     }

@@ -40,7 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "UnitCollection.hpp"
 #include "Part.hpp"
 
@@ -210,25 +210,25 @@ public:
      * Return the location of the supplied GLOBAL index
      * @return the location of the supplied GLOBAL index
      */
-    virtual DimensionalChastePoint<SPACE_DIM> GetGlobalPoint(unsigned index);
+    virtual Vertex<SPACE_DIM> GetGlobalPoint(unsigned index);
 
     /**
      * Return the location of the supplied LOCAL index
      * @return the location of the supplied LOCAL index
      */
-    virtual DimensionalChastePoint<SPACE_DIM> GetPoint(unsigned index);
+    virtual Vertex<SPACE_DIM> GetPoint(unsigned index);
 
     /**
      * Return the location of the supplied GLOBAL index
      * @return the location of the supplied GLOBAL index
      */
-    virtual DimensionalChastePoint<SPACE_DIM> GetGlobalCellLocation(unsigned index)=0;
+    virtual Vertex<SPACE_DIM> GetGlobalCellLocation(unsigned index)=0;
 
     /**
      * Return the location of the supplied LOCAL index
      * @return the location of the supplied LOCAL index
      */
-    virtual DimensionalChastePoint<SPACE_DIM> GetCellLocation(unsigned index);
+    virtual Vertex<SPACE_DIM> GetCellLocation(unsigned index);
 
     /**
      * Return the LOCAL point or element dimensionless volumes
@@ -298,7 +298,7 @@ public:
      * @param rLocation the point to get the nearest index to
      * @return the 1-d index of the nearest grid point
      */
-    unsigned GetNearestCellIndex(const DimensionalChastePoint<SPACE_DIM>& rLocation);
+    unsigned GetNearestCellIndex(const Vertex<SPACE_DIM>& rLocation);
 
     /**
      * Return the LOCAL number of grid points

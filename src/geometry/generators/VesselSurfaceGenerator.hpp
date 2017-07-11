@@ -57,7 +57,7 @@ class VesselSurfaceGenerator
     /**
      * The vessel network for which the surface will be generated.
      */
-    std::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
+    VesselNetworkPtr<DIM> mpVesselNetwork;
 
     /**
      * A VTK representation of the surface.
@@ -75,7 +75,7 @@ public:
      * Constructor
      * @param pVesselNetwork the vessel network to generate the surface on
      */
-    VesselSurfaceGenerator(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
+    VesselSurfaceGenerator(VesselNetworkPtr<DIM> pVesselNetwork);
 
     /**
      * Destructor
@@ -99,7 +99,7 @@ public:
      * 'inside' of vessel segments. They are useful for meshing.
      * @return the locations of PLC holes in the network
      */
-    std::vector<DimensionalChastePoint<DIM> > GetHoles();
+    std::vector<Vertex<DIM> > GetHoles();
 
     /**
      * Return the surface in the form of VTK polydata

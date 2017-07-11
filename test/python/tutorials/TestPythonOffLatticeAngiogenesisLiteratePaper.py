@@ -111,7 +111,7 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         network_generator = microvessel_chaste.population.vessel.VesselNetworkGenerator3()
         vessel_length = np.pi * radius
         cell_length = 40.0e-6 * metre()
-        origin = microvessel_chaste.mesh.DimensionalChastePoint3(0.0, 4000.0, 0.0)
+        origin = microvessel_chaste.mesh.Vertex3(0.0, 4000.0, 0.0)
         network  = network_generator.GenerateSingleVessel(vessel_length, origin, int(float(vessel_length/cell_length)) + 1, 0)
 
         network.GetNode(0).GetFlowProperties().SetIsInputNode(True);
@@ -125,7 +125,7 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
             node_azimuth_angle = float(azimuth_angle * eachNode.rGetLocation().GetLocation(reference_length)[0]*reference_length/vessel_length)
             node_polar_angle = float(polar_angle*eachNode.rGetLocation().GetLocation(reference_length)[1]*reference_length/vessel_length)
             dimless_radius = (float(radius/reference_length)+(-0.5*float(thickness/reference_length)))
-            new_position = microvessel_chaste.mesh.DimensionalChastePoint3(dimless_radius * np.cos(node_azimuth_angle) * np.sin(node_polar_angle), 
+            new_position = microvessel_chaste.mesh.Vertex3(dimless_radius * np.cos(node_azimuth_angle) * np.sin(node_polar_angle), 
                                                                            dimless_radius * np.cos(node_polar_angle), 
                                                                            dimless_radius * np.sin(node_azimuth_angle) * np.sin(node_polar_angle),
                                                                            reference_length)
@@ -142,7 +142,7 @@ class TestOffLatticeAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite):
         
         pellet = microvessel_chaste.geometry.Part3()
         pellet_side_length = 300.0e-6 * metre()
-        origin = microvessel_chaste.mesh.DimensionalChastePoint3(-150.0,900.0,0.0)
+        origin = microvessel_chaste.mesh.Vertex3(-150.0,900.0,0.0)
         pellet.AddCuboid(pellet_side_length, pellet_side_length, 5.0*pellet_side_length, origin)      
         pellet.Write(file_handler.GetOutputDirectoryFullPath()+"initial_vegf_pellet.vtp", 
                      microvessel_chaste.geometry.GeometryFormat.VTP, True)

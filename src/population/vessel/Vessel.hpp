@@ -45,7 +45,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ChasteSerialization.hpp"
 #include "VesselSegment.hpp"
 #include "VesselNode.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "UnitCollection.hpp"
 #include "VesselFlowProperties.hpp"
 #include "Exception.hpp"
@@ -89,7 +89,7 @@ private:
         #else
             ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
             ar & mSegments;
-            ar & mNodes;
+            //ar & mNodes;
             ar & mpFlowProperties;
         #endif
     }
@@ -242,22 +242,22 @@ public:
      * @param distanceTolerance how far from a segment should the probe point be
      * @return the node at the division
      */
-    std::shared_ptr<VesselNode<DIM> > DivideSegment(const DimensionalChastePoint<DIM>& rLocation,
-                                                      double distanceTolerance = 1.e-6);
+    std::shared_ptr<VesselNode<DIM> > DivideSegment(const Vertex<DIM>& rLocation,
+                                                      QLength distanceTolerance = 1.e-12_m);
 
     /**
      * Return the dimensionless distance to the vessel end node closest to the input location
      * @param rLocation the location to probe
      * @return the distance to the closest end node
      */
-    QLength GetClosestEndNodeDistance(const DimensionalChastePoint<DIM>& rLocation);
+    QLength GetClosestEndNodeDistance(const Vertex<DIM>& rLocation);
 
     /**
      * Return the distance from the vessel to the input location
      * @param rLocation the location to probe
      * @return the distance from the vessel to the input location
      */
-    QLength GetDistance(const DimensionalChastePoint<DIM>& rLocation) const;
+    QLength GetDistance(const Vertex<DIM>& rLocation) const;
 
     /**
      * @return vector of vessels connected to this one

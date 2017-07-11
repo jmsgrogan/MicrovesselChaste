@@ -34,7 +34,7 @@ smart pointer tools and output management.
 Dimensional analysis.
 
 ```cpp
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "UnitCollection.hpp"
 #include "Owen11Parameters.hpp"
 #include "GenericParameters.hpp"
@@ -103,7 +103,7 @@ Set up a simulation domain, which will be a cuboid.
         QLength domain_height(100.0 * 1.e-6 * unit::microns);
         QLength domain_depth(20.0 * 1.e-6 * unit::microns);
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(domain_width, domain_height, domain_depth, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        p_domain->AddCuboid(domain_width, domain_height, domain_depth, Vertex<3>(0.0, 0.0, 0.0));
 ```
 
 Make a regular grid on the domain
@@ -131,7 +131,7 @@ Add continuum sink term for cells
 Add a Dirichlet boundary condition on the left face of the domain.
 
 ```cpp
-        p_domain->GetFacet(DimensionalChastePoint<3>(0.0,
+        p_domain->GetFacet(Vertex<3>(0.0,
                                                      domain_height/(2.0*reference_length),
                                                      domain_depth/(2.0*reference_length)))->SetLabel("boundary_1");
         boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_left_face_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
@@ -172,7 +172,7 @@ The full code is given below
 #include "SmartPointers.hpp"
 #include "OutputFileHandler.hpp"
 #include "FileFinder.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "UnitCollection.hpp"
 #include "Owen11Parameters.hpp"
 #include "GenericParameters.hpp"
@@ -204,7 +204,7 @@ public:
         QLength domain_height(100.0 * 1.e-6 * unit::microns);
         QLength domain_depth(20.0 * 1.e-6 * unit::microns);
         boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(domain_width, domain_height, domain_depth, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        p_domain->AddCuboid(domain_width, domain_height, domain_depth, Vertex<3>(0.0, 0.0, 0.0));
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 10.0*reference_length);
         boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
@@ -212,7 +212,7 @@ public:
         p_oxygen_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity);
         QRate oxygen_consumption_rate(1.e-6*unit::per_second);
         p_oxygen_pde->SetContinuumLinearInUTerm(-oxygen_consumption_rate);
-        p_domain->GetFacet(DimensionalChastePoint<3>(0.0,
+        p_domain->GetFacet(Vertex<3>(0.0,
                                                      domain_height/(2.0*reference_length),
                                                      domain_depth/(2.0*reference_length)))->SetLabel("boundary_1");
         boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_left_face_boundary = DiscreteContinuumBoundaryCondition<3>::Create();

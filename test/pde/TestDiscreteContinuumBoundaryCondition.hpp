@@ -66,12 +66,12 @@ public:
         QLength vessel_length(100.0*unit::microns);
         QLength reference_length(1.0*unit::microns);
         VesselNetworkGenerator<3> generator;
-        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<3>());
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, Vertex<3>());
 
         // Set up the grid
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(vessel_length, vessel_length, vessel_length, DimensionalChastePoint<3>());
-        DimensionalChastePoint<3> translation_vector(-vessel_length/(2.0*reference_length),
+        p_domain->AddCuboid(vessel_length, vessel_length, vessel_length, Vertex<3>());
+        Vertex<3> translation_vector(-vessel_length/(2.0*reference_length),
                                                      -vessel_length/(2.0*reference_length), 0.0, reference_length);
         p_domain->Translate(translation_vector);
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
@@ -117,12 +117,12 @@ public:
         QLength vessel_length(100.0*unit::microns);
         QLength reference_length(1.0*unit::microns);
         VesselNetworkGenerator<3> generator;
-        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<3>());
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, Vertex<3>());
 
         // Set up the grid
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(vessel_length, vessel_length, vessel_length, DimensionalChastePoint<3>());
-        DimensionalChastePoint<3> translation_vector(-vessel_length/(2.0*reference_length),
+        p_domain->AddCuboid(vessel_length, vessel_length, vessel_length, Vertex<3>());
+        Vertex<3> translation_vector(-vessel_length/(2.0*reference_length),
                                                      -vessel_length/(2.0*reference_length), 0.0, reference_length);
         p_domain->Translate(translation_vector);
 

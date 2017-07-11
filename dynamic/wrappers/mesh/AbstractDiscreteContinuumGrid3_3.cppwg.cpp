@@ -16,10 +16,10 @@ typedef AbstractDiscreteContinuumGrid<3,3 > AbstractDiscreteContinuumGrid3_3;
 ;
 typedef ::vtkSmartPointer<vtkPolyData> _vtkSmartPointervtkPolyData;
 typedef unsigned int unsignedint;
-typedef ::DimensionalChastePoint<3> _DimensionalChastePoint3;
-typedef ::DimensionalChastePoint<3> _DimensionalChastePoint3;
-typedef ::DimensionalChastePoint<3> _DimensionalChastePoint3;
-typedef ::DimensionalChastePoint<3> _DimensionalChastePoint3;
+typedef ::Vertex<3> _Vertex3;
+typedef ::Vertex<3> _Vertex3;
+typedef ::Vertex<3> _Vertex3;
+typedef ::Vertex<3> _Vertex3;
 typedef ::std::vector<double, std::allocator<double> > const & _std_vectordouble_std_allocatordoubleRef;
 typedef ::vtkSmartPointer<vtkDataSet> _vtkSmartPointervtkDataSet;
 typedef ::vtkSmartPointer<vtkDataSet> _vtkSmartPointervtkDataSet;
@@ -66,30 +66,30 @@ rName);
             GetLocalIndex,
             globalIndex);
     }
-    ::DimensionalChastePoint<3> GetGlobalPoint(unsigned int index) override {
+    ::Vertex<3> GetGlobalPoint(unsigned int index) override {
         PYBIND11_OVERLOAD(
-            _DimensionalChastePoint3,
+            _Vertex3,
             AbstractDiscreteContinuumGrid3_3,
             GetGlobalPoint,
             index);
     }
-    ::DimensionalChastePoint<3> GetPoint(unsigned int index) override {
+    ::Vertex<3> GetPoint(unsigned int index) override {
         PYBIND11_OVERLOAD(
-            _DimensionalChastePoint3,
+            _Vertex3,
             AbstractDiscreteContinuumGrid3_3,
             GetPoint,
             index);
     }
-    ::DimensionalChastePoint<3> GetGlobalCellLocation(unsigned int index) override {
+    ::Vertex<3> GetGlobalCellLocation(unsigned int index) override {
         PYBIND11_OVERLOAD_PURE(
-            _DimensionalChastePoint3,
+            _Vertex3,
             AbstractDiscreteContinuumGrid3_3,
             GetGlobalCellLocation,
             index);
     }
-    ::DimensionalChastePoint<3> GetCellLocation(unsigned int index) override {
+    ::Vertex<3> GetCellLocation(unsigned int index) override {
         PYBIND11_OVERLOAD(
-            _DimensionalChastePoint3,
+            _Vertex3,
             AbstractDiscreteContinuumGrid3_3,
             GetCellLocation,
             index);
@@ -250,19 +250,19 @@ py::class_<AbstractDiscreteContinuumGrid3_3 , AbstractDiscreteContinuumGrid3_3_O
             " " , py::arg("pSamplePart") )
         .def(
             "GetGlobalPoint", 
-            (::DimensionalChastePoint<3>(AbstractDiscreteContinuumGrid3_3::*)(unsigned int)) &AbstractDiscreteContinuumGrid3_3::GetGlobalPoint, 
+            (::Vertex<3>(AbstractDiscreteContinuumGrid3_3::*)(unsigned int)) &AbstractDiscreteContinuumGrid3_3::GetGlobalPoint, 
             " " , py::arg("index") )
         .def(
             "GetPoint", 
-            (::DimensionalChastePoint<3>(AbstractDiscreteContinuumGrid3_3::*)(unsigned int)) &AbstractDiscreteContinuumGrid3_3::GetPoint, 
+            (::Vertex<3>(AbstractDiscreteContinuumGrid3_3::*)(unsigned int)) &AbstractDiscreteContinuumGrid3_3::GetPoint, 
             " " , py::arg("index") )
         .def(
             "GetGlobalCellLocation", 
-            (::DimensionalChastePoint<3>(AbstractDiscreteContinuumGrid3_3::*)(unsigned int)) &AbstractDiscreteContinuumGrid3_3::GetGlobalCellLocation, 
+            (::Vertex<3>(AbstractDiscreteContinuumGrid3_3::*)(unsigned int)) &AbstractDiscreteContinuumGrid3_3::GetGlobalCellLocation, 
             " " , py::arg("index") )
         .def(
             "GetCellLocation", 
-            (::DimensionalChastePoint<3>(AbstractDiscreteContinuumGrid3_3::*)(unsigned int)) &AbstractDiscreteContinuumGrid3_3::GetCellLocation, 
+            (::Vertex<3>(AbstractDiscreteContinuumGrid3_3::*)(unsigned int)) &AbstractDiscreteContinuumGrid3_3::GetCellLocation, 
             " " , py::arg("index") )
         .def(
             "rGetCellVolumes", 
@@ -310,7 +310,7 @@ py::class_<AbstractDiscreteContinuumGrid3_3 , AbstractDiscreteContinuumGrid3_3_O
             " "  )
         .def(
             "GetNearestCellIndex", 
-            (unsigned int(AbstractDiscreteContinuumGrid3_3::*)(::DimensionalChastePoint<3> const &)) &AbstractDiscreteContinuumGrid3_3::GetNearestCellIndex, 
+            (unsigned int(AbstractDiscreteContinuumGrid3_3::*)(::Vertex<3> const &)) &AbstractDiscreteContinuumGrid3_3::GetNearestCellIndex, 
             " " , py::arg("rLocation") )
         .def(
             "GetNumberOfPoints", 

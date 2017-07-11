@@ -47,7 +47,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "AbstractCellPopulation.hpp"
 #include "Part.hpp"
 #include "UnitCollection.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "RegularGrid.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "AbstractDiscreteContinuumGrid.hpp"
@@ -144,7 +144,7 @@ public:
      * @param rInputPoints a vector of point locations
      * @return the indices of input points in the bounding box of each grid location
      */
-    std::vector<std::vector<unsigned> > GetPointMap(const std::vector<DimensionalChastePoint<DIM> >& rInputPoints);
+    std::vector<std::vector<unsigned> > GetPointMap(const std::vector<Vertex<DIM> >& rInputPoints);
 
     /**
      * Return a vector of input point indices which in the bounding boxes of each grid location

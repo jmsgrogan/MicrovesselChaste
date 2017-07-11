@@ -123,8 +123,8 @@ VecQLength<DIM> GetPointProjectionOnLineSegment(const VecQLength<DIM>& rStartLoc
         }
         else
         {
-            QLength dist1 = QNorm2(rStartLocation - rEndLocation);
-            QLength dist2 = QNorm2(rEndLocation - rProbeLocation);
+            QLength dist1 = Qnorm_2(rStartLocation - rEndLocation);
+            QLength dist2 = Qnorm_2(rEndLocation - rProbeLocation);
             if(dist1 <= dist2)
             {
                 return rStartLocation;
@@ -136,15 +136,15 @@ VecQLength<DIM> GetPointProjectionOnLineSegment(const VecQLength<DIM>& rStartLoc
         }
     }
     // Point projection is inside segment, get distance to point projection
-    return rStartLocation + segment_vector*(dp_segment_point / dp_segment_segment);
+    return rStartLocation + (dp_segment_point / dp_segment_segment)*segment_vector;
 }
 
 template<unsigned DIM>
-QLength GetDistanceToLineSegment(const VecQLength<DIM>& rStartLocation, const VecQLength<DIM>& rEndLocation,
-                                                 const VecQLength<DIM>& rProbeLocation)
+QLength GetDistanceToLineSegment(const Vertex<DIM>& rStartLocation, const Vertex<DIM>& rEndLocation,
+                                                 const Vertex<DIM>& rProbeLocation)
 {
-    VecQLength<DIM> segment_vector = rEndLocation - rStartLocation;
-    QArea dp_segment_point = GetDotProduct(segment_vector, rProbeLocation - rStartLocation);
+    VecQLength<DIM> segment_vector = (rEndLocation - rStartLocation).rGetLocation();
+    QArea dp_segment_point = GetDotProduct(segment_vector, (rProbeLocation - rStartLocation).rGetLocation());
     // Point projection is outside segment, return node0 distance
     if (dp_segment_point <= 0.0*unit::metres_squared)
     {
@@ -160,116 +160,22 @@ QLength GetDistanceToLineSegment(const VecQLength<DIM>& rStartLocation, const Ve
 
     // Point projection is inside segment, get distance to point projection
     double projection_ratio = dp_segment_point / dp_segment_segment;
-    VecQLength<DIM> projected_location = rStartLocation + segment_vector*projection_ratio - rProbeLocation;
-    return Qnorm2(projected_location);
+    VecQLength<DIM> scaled_location = projection_ratio*segment_vector;
+    VecQLength<DIM> projected_location = rStartLocation.rGetLocation() + scaled_location - rProbeLocation.rGetLocation();
+    return Qnorm_2(projected_location);
 }
 
 template<unsigned DIM>
-vtkSmartPointer<vtkPoints> GetProbeLocationsExternalPoint(VecQLength<DIM> rCentrePoint,
-        VecQLength<DIM> currentDirection, QLength probeLength,
-        unsigned numDivisions, QLength lengthScale)
-{
-    c_vector<double, DIM> central_point = rCentrePoint.Convert(lengthScale);
-    c_vector<double, DIM> current_direction = currentDirection.GetUnitVector();
-
-    double normalized_probe_length = probeLength/lengthScale;
-    vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
-    if(DIM==2)
-    {
-        p_points->InsertNextPoint(central_point[0], central_point[1], 0.0);
-        c_vector<double, 3> rotation_axis;
-        rotation_axis[0] = 0.0;
-        rotation_axis[1] = 0.0;
-        rotation_axis[2] = 1.0;
-        QAngle angle_increment = (2.0*M_PI/double(numDivisions))*unit::radians;
-        for(unsigned idx=0;idx<numDivisions;idx++)
-        {
-            if(idx!=unsigned(numDivisions/2))
-            {
-                QAngle angle = angle_increment*double(idx);
-                c_vector<double, DIM> rotated_loc = RotateAboutAxis<DIM>(current_direction, rotation_axis, angle);
-                c_vector<double, DIM> loc = central_point+normalized_probe_length * rotated_loc;
-                p_points->InsertNextPoint(loc[0], loc[1], 0.0);
-            }
-        }
-    }
-    else if(DIM==3)
-    {
-        vtkSmartPointer<vtkSphereSource> p_sphere_source = vtkSmartPointer<vtkSphereSource>::New();
-        p_sphere_source->SetCenter(&central_point[0]);
-        p_sphere_source->SetRadius(normalized_probe_length);
-        p_sphere_source->SetThetaResolution(numDivisions);
-        p_sphere_source->SetPhiResolution(numDivisions);
-        p_sphere_source->Update();
-        vtkSmartPointer<vtkPolyData> p_sphere = p_sphere_source->GetOutput();
-        c_vector<double, DIM> exluded_point = central_point-normalized_probe_length * current_direction;
-        for(unsigned idx=0;idx<p_sphere->GetNumberOfPoints();idx++)
-        {
-            c_vector<double, DIM> point_loc;
-            p_sphere->GetPoint(idx, &point_loc[0]);
-            p_points->InsertNextPoint(&point_loc[0]);
-        }
-    }
-    return p_points;
-}
-
-template<unsigned DIM>
-vtkSmartPointer<vtkPoints> GetProbeLocationsInternalPoint(VecQLength<DIM> rInitialDirection,
-        VecQLength<DIM> rCentralPoint, VecQLength<DIM> rRotationAxis, QLength probeLength, QLength lengthScale)
-{
-    c_vector<double, DIM> central_point = rCentralPoint.Convert(lengthScale);
-    c_vector<double, DIM> initial_direction = rInitialDirection.Convert(lengthScale);
-    c_vector<double, DIM> rotation_axis = rRotationAxis.Convert(lengthScale);
-    double normalized_probe_length = probeLength/lengthScale;
-
-    vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
-    if(DIM==3)
-    {
-        p_points->InsertNextPoint(&central_point[0]);
-        c_vector<double, DIM> unit_axis = rotation_axis/norm_2(rotation_axis);
-        c_vector<double, DIM> new_direction = RotateAboutAxis<DIM>(initial_direction/norm_2(initial_direction), unit_axis, angle);
-        new_direction /= norm_2(new_direction);
-        c_vector<double, DIM> new_loc1 = central_point + normalized_probe_length*new_direction;
-        p_points->InsertNextPoint(&new_loc1[0]);
-
-        c_vector<double, DIM> new_direction_r1 = RotateAboutAxis<DIM>(new_direction, unit_axis, M_PI*unit::radians);
-        new_direction_r1 /= norm_2(new_direction_r1);
-        c_vector<double, DIM> new_loc2 = central_point + normalized_probe_length*new_direction_r1;
-        p_points->InsertNextPoint(&new_loc2[0]);
-
-        c_vector<double, DIM> new_direction_r2 = RotateAboutAxis<DIM>(new_direction, unit_axis, M_PI/2.0*unit::radians);
-        new_direction_r2 /= norm_2(new_direction_r2);
-        c_vector<double, DIM> new_loc3 = central_point + normalized_probe_length*new_direction_r2;
-        p_points->InsertNextPoint(&new_loc3[0]);
-
-        c_vector<double, DIM> new_direction_r3 = RotateAboutAxis<DIM>(new_direction, unit_axis, 3.0*M_PI/2.0*unit::radians);
-        new_direction_r3 /= norm_2(new_direction_r3);
-        c_vector<double, DIM> new_loc4 = central_point + normalized_probe_length*new_direction_r3;
-        p_points->InsertNextPoint(&new_loc4[0]);
-    }
-    else
-    {
-        p_points->InsertNextPoint(central_point[0], central_point[1], 0.0);
-        c_vector<double, DIM> new_direction = normalized_probe_length*(initial_direction/norm_2(initial_direction));
-        c_vector<double, DIM> new_loc1 = central_point + new_direction;
-        c_vector<double, DIM> new_loc2 = central_point - new_direction;
-        p_points->InsertNextPoint(new_loc1[0], new_loc1[1], 0.0);
-        p_points->InsertNextPoint(new_loc2[0], new_loc2[1], 0.0);
-    }
-    return p_points;
-}
-
-template<unsigned DIM>
-bool IsPointInCone(const VecQLength<DIM>& rPoint,
-                   const VecQLength<DIM>& rApex,
-                   const VecQLength<DIM>& rBase,
+bool IsPointInCone(const Vertex<DIM>& rPoint,
+                   const Vertex<DIM>& rApex,
+                   const Vertex<DIM>& rBase,
                    double aperture)
 {
-    VecQLength<DIM> apex_to_point = rApex - rPoint;
-    VecQLength<DIM> apex_to_base = rApex - rBase;
-    QLength dist_apex_base = Qnorm2(apex_to_base);
-    QArea dp_point_base = GetDotProduct(apex_to_point, apex_to_base);
-    bool in_infinite_cone = dp_point_base / (Qnorm2(apex_to_point) * dist_apex_base) > std::cos(aperture/2.0);
+    Vertex<DIM> apex_to_point = rApex - rPoint;
+    Vertex<DIM> apex_to_base = rApex - rBase;
+    QLength dist_apex_base = Qnorm_2(apex_to_base.rGetLocation());
+    QArea dp_point_base = GetDotProduct(apex_to_point.rGetLocation(), apex_to_base.rGetLocation());
+    bool in_infinite_cone = dp_point_base / (Qnorm_2(apex_to_point.rGetLocation()) * dist_apex_base) > std::cos(aperture/2.0);
     if(!in_infinite_cone)
     {
         return false;
@@ -540,7 +446,7 @@ template<unsigned DIM>
 VecQLength<DIM> OffsetAlongVector(const VecQLength<DIM>& rVector, QLength offset)
 {
     c_vector<double, DIM> dir = rVector.Convert(offset);
-    dir/=norm2(dir);
+    dir/=norm_2(dir);
     return rVector + VecQLength<DIM>(dir, offset);
 }
 
@@ -561,7 +467,7 @@ VecQLength<DIM> RotateAboutAxis(const VecQLength<DIM>& rDirection, const c_vecto
     c_vector<double, DIM> dimensionless_direction = rDirection.Convert(length_scale);
     if(DIM==3)
     {
-        c_vector<double, DIM> unit_axis = axis/norm2(axis);
+        c_vector<double, DIM> unit_axis = axis/norm_2(axis);
         QLength dot_product = GetDotProduct(rDirection, unit_axis);
         double dimensionless_dot_product = dot_product/length_scale;
         new_direction[0] = (unit_axis[0] * dimensionless_dot_product * (1.0 - cos_a) + dimensionless_direction[0] * cos_a

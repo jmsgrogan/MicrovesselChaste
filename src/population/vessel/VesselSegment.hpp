@@ -45,7 +45,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ChastePoint.hpp"
 #include "UnitCollection.hpp"
 #include "AbstractVesselNetworkComponent.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "Exception.hpp"
 
  // Forward declaration to allow vessels to manage adding and removing themselves from segments and segment management by vessels.
@@ -88,7 +88,7 @@ private:
         #else
             ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
             ar & mMaturity;
-            ar & mNodes;
+            //ar & mNodes;
             ar & mpFlowProperties;
         #endif
     }
@@ -218,7 +218,7 @@ public:
      * @param location the point the get the distance from
      * @return the distance to the segment
      */
-    QLength GetDistance(const DimensionalChastePoint<DIM>& location) const;
+    QLength GetDistance(const Vertex<DIM>& location) const;
 
     /**
      * Return the flow properties of the component
@@ -239,7 +239,7 @@ public:
      *
      * @return a point midway along the segment
      */
-    DimensionalChastePoint<DIM> GetMidPoint() const;
+    Vertex<DIM> GetMidPoint() const;
 
     /**
      * Return the maturiy
@@ -320,7 +320,7 @@ public:
      * @param projectToEnds use end projection
      * @return the location of the projected point
      */
-    DimensionalChastePoint<DIM> GetPointProjection(const DimensionalChastePoint<DIM>& location, bool projectToEnds = false) const;
+    Vertex<DIM> GetPointProjection(const Vertex<DIM>& location, bool projectToEnds = false) const;
 
     /**
      * Return a unit vector pointing along the segment. The orientation along the segment is from node0 to node 1.

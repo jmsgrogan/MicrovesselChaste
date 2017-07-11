@@ -159,7 +159,7 @@ public:
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestMicrovesselVtkScene/TestPart");
         std::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        p_part->AddCuboid(100.e-6*unit::metres, 100.e-6*unit::metres, 100.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1_um));
+        p_part->AddCuboid(100.e-6*unit::metres, 100.e-6*unit::metres, 100.e-6*unit::metres, Vertex<3>(0.0, 0.0, 0.0, 1_um));
 
         MicrovesselVtkScene<3> scene1;
         c_vector<double, 3> red;

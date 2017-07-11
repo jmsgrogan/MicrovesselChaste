@@ -90,6 +90,7 @@ PolygonPtr<DIM> Polygon<DIM>::Create(const std::vector<VertexPtr<DIM> >& vertice
 }
 
 template<unsigned DIM>
+PolygonPtr<DIM> Polygon<DIM>::Create(VertexPtr<DIM> pVertex)
 {
     return std::make_shared<Polygon<DIM> >(pVertex);
 }
@@ -106,7 +107,7 @@ void Polygon<DIM>::AddAttribute(const std::string& rLabel, double value)
 }
 
 template<unsigned DIM>
-bool Polygon<DIM>::AddAttributeToEdgeIfFound(const VecQLength<DIM>& loc, const std::string& rLabel, double value)
+bool Polygon<DIM>::AddAttributeToEdgeIfFound(const Vertex<DIM>& rLoc, const std::string& rLabel, double value)
 {
     // Cycle through the edges, check if it contains point, label if found
     vtkSmartPointer<vtkPolygon> p_polygon = GetVtkPolygon();
@@ -115,13 +116,13 @@ bool Polygon<DIM>::AddAttributeToEdgeIfFound(const VecQLength<DIM>& loc, const s
     for(unsigned idx=0; idx<num_edges;idx++)
     {
         vtkSmartPointer<vtkPoints> p_line = p_polygon->GetEdge(idx)->GetPoints();
-        c_vector<double, 3> start_point;
+        double start_point[3];
         p_line->GetPoint(0, &start_point[0]);
-        c_vector<double, 3> end_point;
+        double end_point[3];
         p_line->GetPoint(1, &end_point[0]);
-        VecQLength<DIM> start_loc(start_point, mReferenceLength);
-        VecQLength<DIM> end_loc(end_point, mReferenceLength);
-        if(GetDistanceToLineSegment(start_loc, end_loc, loc)/mReferenceLength<1.e-3)
+        Vertex<DIM> start_loc(start_point, mReferenceLength);
+        Vertex<DIM> end_loc(end_point, mReferenceLength);
+        if(GetDistanceToLineSegment(start_loc, end_loc, rLoc)/mReferenceLength<1.e-3)
         {
             mEdgeAttributes[idx][rLabel]=value;
             edge_found = true;
@@ -136,7 +137,7 @@ void Polygon<DIM>::AddAttributeToAllEdges(const std::string& rLabel, double valu
     GetVtkPolygon();
     for(auto& attribute:mEdgeAttributes)
     {
-        mEdgeAttributes[rLabel] = value;
+        attribute[rLabel] = value;
     }
 }
 
@@ -196,15 +197,9 @@ std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > Polygon<
     p_vertexIds->SetNumberOfTuples(mVertices.size());
     for (vtkIdType idx = 0; idx < vtkIdType(mVertices.size()); idx++)
     {
-        if(DIM==3)
-        {
-            p_vertices->SetPoint(idx, *mVertices[idx][0]/mReferenceLength,
-                    *mVertices[idx][1]/mReferenceLength, *mVertices[idx][2]/mReferenceLength);
-        }
-        else
-        {
-            p_vertices->SetPoint(idx, *mVertices[idx][0]/mReferenceLength, *mVertices[idx][1]/mReferenceLength, 0.0);
-        }
+        double loc[3];
+        mVertices[idx]->Convert(loc, mReferenceLength);
+        p_vertices->SetPoint(idx, &loc[0]);
         p_vertexIds->SetValue(idx, idx);
     }
     return std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> >(p_vertices, p_vertexIds);
@@ -233,7 +228,7 @@ vtkSmartPointer<vtkPolygon> Polygon<DIM>::GetVtkPolygon()
 }
 
 template<unsigned DIM>
-bool Polygon<DIM>::EdgeHasAttribute(const VecQLength<DIM>& loc, const std::string& rLabel) const
+bool Polygon<DIM>::EdgeHasAttribute(const Vertex<DIM>& rLoc, const std::string& rLabel)
 {
     // Cycle through the edges, check if it contains point, label if found
     bool edge_found = false;
@@ -244,13 +239,13 @@ bool Polygon<DIM>::EdgeHasAttribute(const VecQLength<DIM>& loc, const std::strin
         if(mEdgeAttributes[idx].count(rLabel))
         {
             vtkSmartPointer<vtkPoints> p_line = p_polygon->GetEdge(idx)->GetPoints();
-            c_vector<double, 3> start_point;
+            double start_point[3];
             p_line->GetPoint(0, &start_point[0]);
-            c_vector<double, 3> end_point;
+            double end_point[3];
             p_line->GetPoint(1, &end_point[0]);
-            VecQLength<DIM> start_loc(start_point, mReferenceLength);
-            VecQLength<DIM> end_loc(end_point, mReferenceLength);
-            if(GetDistanceToLineSegment(start_loc, end_loc, loc)/mReferenceLength<1.e-3)
+            Vertex<DIM> start_loc(start_point, mReferenceLength);
+            Vertex<DIM> end_loc(end_point, mReferenceLength);
+            if(GetDistanceToLineSegment(start_loc, end_loc, rLoc)/mReferenceLength<1.e-3)
             {
                 return true;
             }
@@ -266,19 +261,12 @@ bool Polygon<DIM>::HasAttribute(const std::string& rLabel) const
 }
 
 template<unsigned DIM>
-VecQLength<DIM> Polygon<DIM>::GetCentroid()
+Vertex<DIM> Polygon<DIM>::GetCentroid()
 {
     std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > verts = GetVtkVertices();
-    c_vector<double, 3> centroid;
-    vtkPolygon::ComputeCentroid(verts.second, verts.first, &centroid[0]);
-    if(DIM==3)
-    {
-        return VecQLength<DIM>(centroid, mReferenceLength);
-    }
-    else
-    {
-        return VecQLength<DIM>(centroid[0], centroid[1], 0.0, mReferenceLength);
-    }
+    double centroid[3];
+    vtkPolygon::ComputeCentroid(verts.second, verts.first, centroid);
+    return Vertex<DIM>(centroid, mReferenceLength);
 }
 
 template<unsigned DIM>
@@ -286,7 +274,6 @@ std::array<QLength, 6> Polygon<DIM>::GetBoundingBox()
 {
     c_vector<double, 6> box;
     GetVtkPolygon()->GetPoints()->GetBounds(&box[0]);
-
     std::array<QLength, 6> box_vector;
     for(unsigned idx=0; idx<6; idx++)
     {
@@ -296,35 +283,19 @@ std::array<QLength, 6> Polygon<DIM>::GetBoundingBox()
 }
 
 template<unsigned DIM>
-QLength Polygon<DIM>::GetDistance(const VecQLength<DIM>& location)
+QLength Polygon<DIM>::GetDistance(const Vertex<DIM>& rLocation)
 {
     double point[3];
-    for (unsigned idx = 0; idx < DIM; idx++)
-    {
-        point[idx] = location[idx]/mReferenceLength;
-    }
-    if(DIM==2)
-    {
-        point[2] = 0.0;
-    }
-
-    vtkSmartPointer<vtkPlane> p_plane = GetPlane();
-    double distance = p_plane->DistanceToPlane(&point[0]);
+    rLocation.Convert(point, mReferenceLength);
+    double distance = GetPlane()->DistanceToPlane(&point[0]);
     return distance * mReferenceLength;
 }
 
 template<unsigned DIM>
-QLength Polygon<DIM>::GetDistanceToEdges(const VecQLength<DIM>& location)
+QLength Polygon<DIM>::GetDistanceToEdges(const Vertex<DIM>& rLocation)
 {
     double point[3];
-    for (unsigned idx = 0; idx < DIM; idx++)
-    {
-        point[idx] = location[idx]/mReferenceLength;
-    }
-    if(DIM==2)
-    {
-        point[2] = 0.0;
-    }
+    rLocation.Convert(point, mReferenceLength);
 
     vtkSmartPointer<vtkPolygon> p_polygon = GetVtkPolygon();
     double bounds[6];
@@ -340,29 +311,16 @@ template<unsigned DIM>
 vtkSmartPointer<vtkPlane> Polygon<DIM>::GetPlane()
 {
     vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
-    c_vector<double, DIM> centroid = GetCentroid().Convert(mReferenceLength);
-    c_vector<double, DIM> normal = GetNormal();
-    if(DIM==3)
-    {
-        p_plane->SetOrigin(centroid[0], centroid[1], centroid[2]);
-        p_plane->SetNormal(normal[0], normal[1], normal[2]);
-    }
-    else
-    {
-        p_plane->SetOrigin(centroid[0], centroid[1], 0.0);
-        p_plane->SetNormal(normal[0], normal[1], 0.0);
-    }
+    c_vector<double, 3> centroid = GetCentroid().Convert3(mReferenceLength);
+    c_vector<double, 3> normal = GetNormal();
+    p_plane->SetOrigin(&centroid[0]);
+    p_plane->SetNormal(&normal[0]);
     return p_plane;
 }
 
 template<unsigned DIM>
-c_vector<double, DIM> Polygon<DIM>::GetNormal()
+c_vector<double, 3> Polygon<DIM>::GetNormal()
 {
-    if (mVertices.size() < 3)
-    {
-        EXCEPTION("At least 3 vertices are required to generate a normal.");
-    }
-
     std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > vertex_data = GetVtkVertices();
     double loc1[3];
     double loc2[3];
@@ -372,35 +330,16 @@ c_vector<double, DIM> Polygon<DIM>::GetNormal()
     vertex_data.first->GetPoint(2, loc3);
     c_vector<double, 3> in_normal;
     vtkTriangle::ComputeNormal(loc1, loc2, loc3, &in_normal[0]);
-    if(DIM==3)
-    {
-        return in_normal;
-    }
-    else
-    {
-        c_vector<double, 2> normal;
-        normal[0] = in_normal[0];
-        normal[1] = in_normal[1];
-        return normal;
-    }
+    return in_normal;
 }
 
 template<unsigned DIM>
-bool Polygon<DIM>::ContainsPoint(const VecQLength<DIM>& location, double localTolerance)
+bool Polygon<DIM>::ContainsPoint(const Vertex<DIM>& rLocation, double localTolerance)
 {
     bool contains_point = false;
     if (mVertices.size() >= 3)
     {
-        c_vector<double, DIM> vertex_location = location.Convert(mReferenceLength);
-        double point[3];
-        for (unsigned idx = 0; idx < DIM; idx++)
-        {
-            point[idx] = vertex_location[idx];
-        }
-        if(DIM==2)
-        {
-            point[2] = 0.0;
-        }
+        c_vector<double, 3> vertex_location = rLocation.Convert3(mReferenceLength);
 
         vtkSmartPointer<vtkPolygon> p_polygon = GetVtkPolygon();
         double n[3];
@@ -430,7 +369,7 @@ bool Polygon<DIM>::ContainsPoint(const VecQLength<DIM>& location, double localTo
         }
 
         int contains = p_polygon->PointInPolygon(
-                point, p_polygon->GetPoints()->GetNumberOfPoints(),
+                &vertex_location[0], p_polygon->GetPoints()->GetNumberOfPoints(),
                 static_cast<double*>(p_polygon->GetPoints()->GetData()->GetVoidPointer(0)), bounds, n);
         if (contains == 1)
         {
@@ -465,7 +404,7 @@ void Polygon<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 }
 
 template<unsigned DIM>
-void Polygon<DIM>::Translate(const VecQLength<DIM>& translationVector)
+void Polygon<DIM>::Translate(const Vertex<DIM>& translationVector)
 {
     for(unsigned idx=0; idx<mVertices.size(); idx++)
     {

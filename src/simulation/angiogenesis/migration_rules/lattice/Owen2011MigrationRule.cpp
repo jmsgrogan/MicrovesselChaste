@@ -99,7 +99,7 @@ std::vector<double> Owen2011MigrationRule<DIM>::GetNeighbourMovementProbabilitie
     {
         // make sure that tip cell does not try to move into a location already occupied by the vessel that it comes from
         // i.e. that it doesn't loop back around
-        DimensionalChastePoint<DIM> neighbour_location = this->mpGridCalculator->GetGrid()->GetGlobalCellLocation(neighbourIndices[jdx]);
+        Vertex<DIM> neighbour_location = this->mpGridCalculator->GetGrid()->GetGlobalCellLocation(neighbourIndices[jdx]);
 
         bool sprout_already_attached_to_vessel_at_location = false;
 

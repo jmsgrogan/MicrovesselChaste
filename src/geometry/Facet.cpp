@@ -106,12 +106,12 @@ void Facet<DIM>::AddPolygon(PolygonPtr<DIM> pPolygon)
 }
 
 template<unsigned DIM>
-bool Facet<DIM>::ContainsPoint(const VecQLength<DIM>& location)
+bool Facet<DIM>::ContainsPoint(const Vertex<DIM>& rLocation)
 {
     bool contains_point = false;
-    for (unsigned idx = 0; idx < mPolygons.size(); idx++)
+    for(auto& polygon:mPolygons)
     {
-        if (mPolygons[idx]->ContainsPoint(location))
+        if (polygon->ContainsPoint(rLocation))
         {
             contains_point = true;
             break;
@@ -123,82 +123,56 @@ bool Facet<DIM>::ContainsPoint(const VecQLength<DIM>& location)
 template<unsigned DIM>
 std::array<QLength, 6> Facet<DIM>::GetBoundingBox()
 {
-    std::vector<VertexPtr<DIM> > vertices = rGetVertices();
     std::array<QLength, 6> box_vector;
 
-    for (unsigned idx = 0; idx < vertices.size(); idx++)
+    unsigned counter = 0;
+    for(auto& vertex:rGetVertices())
     {
         for (unsigned jdx = 0; jdx < DIM; jdx++)
         {
-            if (idx == 0)
+            if (counter == 0)
             {
-                box_vector[2 * jdx] = (*vertices[idx])[jdx];
-                box_vector[2 * jdx + 1] = (*vertices[idx])[jdx];
+                box_vector[2 * jdx] = (*vertex)[jdx];
+                box_vector[2 * jdx + 1] = (*vertex)[jdx];
             }
             else
             {
-                if ((*vertices[idx])[jdx] < box_vector[2 * jdx])
+                if ((*vertex)[jdx] < box_vector[2 * jdx])
                 {
-                    box_vector[2 * jdx] = (*vertices[idx])[jdx];
+                    box_vector[2 * jdx] = (*vertex)[jdx];
                 }
-                if ((*vertices[idx])[jdx] > box_vector[2 * jdx + 1])
+                if ((*vertex)[jdx] > box_vector[2 * jdx + 1])
                 {
-                    box_vector[2 * jdx + 1] = (*vertices[idx])[jdx];
+                    box_vector[2 * jdx + 1] = (*vertex)[jdx];
                 }
             }
         }
+        counter++;
     }
     return box_vector;
 }
 
 template<unsigned DIM>
-VecQLength<DIM> Facet<DIM>::GetCentroid()
+Vertex<DIM> Facet<DIM>::GetCentroid()
 {
     double centroid[3];
     std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > vertex_data = GetVtkVertices();
     vtkPolygon::ComputeCentroid(vertex_data.second, vertex_data.first, centroid);
-    c_vector<double, DIM> return_centroid;
-    for (unsigned idx = 0; idx < DIM; idx++)
-    {
-        return_centroid[idx] = centroid[idx];
-    }
-    if(DIM==3)
-    {
-        return VecQLength<DIM>(return_centroid, mReferenceLength);
-    }
-    else
-    {
-        return VecQLength<DIM>(return_centroid[0]*mReferenceLength, return_centroid[1]*mReferenceLength, 0_m);
-    }
+    return Vertex<DIM>(centroid, mReferenceLength);
 }
 
 template<unsigned DIM>
-QLength Facet<DIM>::GetDistance(const VecQLength<DIM>& rLocation)
+QLength Facet<DIM>::GetDistance(const Vertex<DIM>& rLocation)
 {
     double location_array[3];
-    for(unsigned idx=0; idx<DIM;idx++)
-    {
-        location_array[idx] = rLocation[idx]/mReferenceLength;
-    }
-    if(DIM==2)
-    {
-        location_array[2] = 0.0;
-    }
-
-    vtkSmartPointer<vtkPlane> p_plane = GetPlane();
-    double distance = p_plane->DistanceToPlane(&location_array[0]);
+    rLocation.Convert(location_array, mReferenceLength);
+    double distance = GetPlane()->DistanceToPlane(&location_array[0]);
     return distance*mReferenceLength;
 }
 
 template<unsigned DIM>
-c_vector<double, DIM> Facet<DIM>::GetNormal()
+c_vector<double, 3> Facet<DIM>::GetNormal()
 {
-    std::vector<VertexPtr<DIM> > vertices = rGetVertices();
-    if (vertices.size() < 3)
-    {
-        EXCEPTION("At least 3 vertices are required to generate a normal.");
-    }
-
     std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > vertex_data = GetVtkVertices();
     double loc1[3];
     double loc2[3];
@@ -208,35 +182,17 @@ c_vector<double, DIM> Facet<DIM>::GetNormal()
     vertex_data.first->GetPoint(2, loc3);
     c_vector<double, 3> normal;
     vtkTriangle::ComputeNormal(loc1, loc2, loc3, &normal[0]);
-    if(DIM==3)
-    {
-        return normal;
-    }
-    else
-    {
-        c_vector<double, 2> normal_2d;
-        normal_2d[0] = normal[0];
-        normal_2d[1] = normal[1];
-        return normal_2d;
-    }
+    return normal;
 }
 
 template<unsigned DIM>
 vtkSmartPointer<vtkPlane> Facet<DIM>::GetPlane()
 {
     vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
-    c_vector<double, DIM> centroid = GetCentroid().Convert(mReferenceLength);
-    c_vector<double, DIM> normal = GetNormal();
-    if(DIM==3)
-    {
-        p_plane->SetOrigin(centroid[0], centroid[1], centroid[2]);
-        p_plane->SetNormal(normal[0], normal[1], normal[2]);
-    }
-    else
-    {
-        p_plane->SetOrigin(centroid[0], centroid[1], 0.0);
-        p_plane->SetNormal(normal[0], normal[1], 0.0);
-    }
+    c_vector<double, 3> centroid = GetCentroid().Convert3(mReferenceLength);
+    c_vector<double, 3> normal = GetNormal();
+    p_plane->SetOrigin(&centroid[0]);
+    p_plane->SetNormal(&normal[0]);
     return p_plane;
 }
 
@@ -262,19 +218,11 @@ std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > Facet<DI
     vtkSmartPointer<vtkIdTypeArray> p_vertexIds = vtkSmartPointer<vtkIdTypeArray>::New();
     vtkSmartPointer<vtkPoints> p_vertices = vtkSmartPointer<vtkPoints>::New();
     std::vector<VertexPtr<DIM> > vertices = rGetVertices();
-
     p_vertices->SetNumberOfPoints(vertices.size());
     for (vtkIdType idx = 0; idx < vtkIdType(vertices.size()); idx++)
     {
-        c_vector<double, DIM> vertex_location = vertices[idx]->Convert(mReferenceLength);
-        if(DIM==3)
-        {
-            p_vertices->SetPoint(idx, vertex_location[0], vertex_location[1], vertex_location[2]);
-        }
-        else
-        {
-            p_vertices->SetPoint(idx, vertex_location[0], vertex_location[1], 0.0);
-        }
+        c_vector<double, 3> vertex_location = vertices[idx]->Convert3(mReferenceLength);
+        p_vertices->SetPoint(idx, &vertex_location[0]);
         p_vertexIds->InsertNextValue(idx);
     }
     return std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> >(p_vertices, p_vertexIds);
@@ -294,7 +242,7 @@ void Facet<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 }
 
 template<unsigned DIM>
-void Facet<DIM>::Translate(const VecQLength<DIM>& rTranslationVector)
+void Facet<DIM>::Translate(const Vertex<DIM>& rTranslationVector)
 {
     if (!mVerticesUpToDate)
     {

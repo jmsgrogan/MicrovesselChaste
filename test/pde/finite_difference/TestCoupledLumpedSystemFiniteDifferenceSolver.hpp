@@ -84,7 +84,7 @@ public:
 
         // Set up the mesh
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(10.0*unit::metres, 100.0*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        p_domain->AddRectangle(10.0*unit::metres, 100.0*unit::metres, Vertex<2>(0.0, 0.0, 0.0));
 
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 5.0*unit::metres);
@@ -152,9 +152,9 @@ public:
         BaseUnits::Instance()->SetReferenceTimeScale(3600.0*unit::seconds);
 
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(2000e-6*unit::metres, 1000e-6*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
-        p_domain->AddAttributeToEdgeIfFound(DimensionalChastePoint<2>(1000.0, 1000.0, 0, 1e-6*unit::metres), "Top Boundary", 1.0);
-        TS_ASSERT(p_domain->EdgeHasAttribute(DimensionalChastePoint<2>(1000.0, 1000.0, 0, 1e-6*unit::metres), "Top Boundary"));
+        p_domain->AddRectangle(2000e-6*unit::metres, 1000e-6*unit::metres, Vertex<2>(0.0, 0.0, 0.0));
+        p_domain->AddAttributeToEdgeIfFound(Vertex<2>(1000.0, 1000.0, 0, 1e-6*unit::metres), "Top Boundary", 1.0);
+        TS_ASSERT(p_domain->EdgeHasAttribute(Vertex<2>(1000.0, 1000.0, 0, 1e-6*unit::metres), "Top Boundary"));
 
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 50.0e-6*unit::metres);

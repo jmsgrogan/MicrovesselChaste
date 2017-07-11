@@ -105,7 +105,7 @@ First make the network using a generator. Start with a simple unit.
 
 ```cpp
         QLength vessel_length(100.0*unit::microns);
-        DimensionalChastePoint<2> start_point(0.0, 0.0);
+        Vertex<2> start_point(0.0, 0.0);
         VesselNetworkGenerator<2> network_generator;
         boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateBifurcationUnit(vessel_length, start_point);
 ```
@@ -229,8 +229,8 @@ assuming it has no effect on the flow. Set up the network as before
 We will use a locator to mark the bottom left and top right nodes as respective inlets and outlets
 
 ```cpp
-        DimensionalChastePoint<3> inlet_locator(0.0, 0.0, 0.0, cell_width);
-        DimensionalChastePoint<3> outlet_locator(target_width/cell_width, target_height/cell_width, 0.0, cell_width);
+        Vertex<3> inlet_locator(0.0, 0.0, 0.0, cell_width);
+        Vertex<3> outlet_locator(target_width/cell_width, target_height/cell_width, 0.0, cell_width);
         boost::shared_ptr<VesselNode<3> > p_inlet_node = p_network->GetNearestNode(inlet_locator);
         boost::shared_ptr<VesselNode<3> > p_outlet_node = p_network->GetNearestNode(outlet_locator);
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
@@ -333,8 +333,8 @@ Set up a hexagonal vessel network
 We will use a locator to mark the bottom left and top right nodes as respective inlets and outlets as before.
 
 ```cpp
-        DimensionalChastePoint<3> inlet_locator(0.0, 0.0, 0.0, reference_length);
-        DimensionalChastePoint<3> outlet_locator(target_width/reference_length, target_height/reference_length, 0.0, reference_length);
+        Vertex<3> inlet_locator(0.0, 0.0, 0.0, reference_length);
+        Vertex<3> outlet_locator(target_width/reference_length, target_height/reference_length, 0.0, reference_length);
         boost::shared_ptr<VesselNode<3> > p_inlet_node = p_network->GetNearestNode(inlet_locator);
         boost::shared_ptr<VesselNode<3> > p_outlet_node = p_network->GetNearestNode(outlet_locator);
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
@@ -415,8 +415,8 @@ Set up the problem as before.
                                                                                                     target_height,
                                                                                                     vessel_length);
 
-        DimensionalChastePoint<3> inlet_locator(0.0, 0.0, 0.0, reference_length);
-        DimensionalChastePoint<3> outlet_locator(target_width/reference_length, target_height/reference_length, 0.0, reference_length);
+        Vertex<3> inlet_locator(0.0, 0.0, 0.0, reference_length);
+        Vertex<3> outlet_locator(target_width/reference_length, target_height/reference_length, 0.0, reference_length);
         boost::shared_ptr<VesselNode<3> > p_inlet_node = p_network->GetNearestNode(inlet_locator);
         boost::shared_ptr<VesselNode<3> > p_outlet_node = p_network->GetNearestNode(outlet_locator);
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
@@ -522,7 +522,7 @@ public:
         QLength reference_length(1.0 * unit::microns);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         QLength vessel_length(100.0*unit::microns);
-        DimensionalChastePoint<2> start_point(0.0, 0.0);
+        Vertex<2> start_point(0.0, 0.0);
         VesselNetworkGenerator<2> network_generator;
         boost::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateBifurcationUnit(vessel_length, start_point);
         std::vector<unsigned> num_units_per_direction;
@@ -566,8 +566,8 @@ public:
         boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
                                                                                                     target_height,
                                                                                                     vessel_length);
-        DimensionalChastePoint<3> inlet_locator(0.0, 0.0, 0.0, cell_width);
-        DimensionalChastePoint<3> outlet_locator(target_width/cell_width, target_height/cell_width, 0.0, cell_width);
+        Vertex<3> inlet_locator(0.0, 0.0, 0.0, cell_width);
+        Vertex<3> outlet_locator(target_width/cell_width, target_height/cell_width, 0.0, cell_width);
         boost::shared_ptr<VesselNode<3> > p_inlet_node = p_network->GetNearestNode(inlet_locator);
         boost::shared_ptr<VesselNode<3> > p_outlet_node = p_network->GetNearestNode(outlet_locator);
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
@@ -611,8 +611,8 @@ public:
         boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
                                                                                                     target_height,
                                                                                                     vessel_length);
-        DimensionalChastePoint<3> inlet_locator(0.0, 0.0, 0.0, reference_length);
-        DimensionalChastePoint<3> outlet_locator(target_width/reference_length, target_height/reference_length, 0.0, reference_length);
+        Vertex<3> inlet_locator(0.0, 0.0, 0.0, reference_length);
+        Vertex<3> outlet_locator(target_width/reference_length, target_height/reference_length, 0.0, reference_length);
         boost::shared_ptr<VesselNode<3> > p_inlet_node = p_network->GetNearestNode(inlet_locator);
         boost::shared_ptr<VesselNode<3> > p_outlet_node = p_network->GetNearestNode(outlet_locator);
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
@@ -658,8 +658,8 @@ public:
                                                                                                     target_height,
                                                                                                     vessel_length);
 
-        DimensionalChastePoint<3> inlet_locator(0.0, 0.0, 0.0, reference_length);
-        DimensionalChastePoint<3> outlet_locator(target_width/reference_length, target_height/reference_length, 0.0, reference_length);
+        Vertex<3> inlet_locator(0.0, 0.0, 0.0, reference_length);
+        Vertex<3> outlet_locator(target_width/reference_length, target_height/reference_length, 0.0, reference_length);
         boost::shared_ptr<VesselNode<3> > p_inlet_node = p_network->GetNearestNode(inlet_locator);
         boost::shared_ptr<VesselNode<3> > p_outlet_node = p_network->GetNearestNode(outlet_locator);
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);

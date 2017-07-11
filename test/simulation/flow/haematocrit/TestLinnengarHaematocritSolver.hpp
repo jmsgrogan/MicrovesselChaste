@@ -116,9 +116,9 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
         }
 
         std::shared_ptr<VesselNode<2> > p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
-                DimensionalChastePoint<2>(0.0, 0.0, 0.0, reference_length));
+                Vertex<2>(0.0, 0.0, 0.0, reference_length));
         std::shared_ptr<VesselNode<2> > p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
-                DimensionalChastePoint<2>(domain_side_length/reference_length,
+                Vertex<2>(domain_side_length/reference_length,
                 domain_side_length/reference_length, 0.0, reference_length));
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
         p_inlet_node->GetFlowProperties()->SetPressure(8000.0*unit::pascals);

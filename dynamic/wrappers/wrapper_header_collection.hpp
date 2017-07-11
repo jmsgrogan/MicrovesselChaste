@@ -16,7 +16,7 @@
 #include "AbstractOdeSystem.hpp"
 #include "TetrahedralMesh.hpp"
 #include "AbstractDiscreteContinuumGrid.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
 #include "GridCalculator.hpp"
@@ -162,8 +162,8 @@ template class TetrahedralMesh<2,2 >;
 template class TetrahedralMesh<3,3 >;
 template class AbstractDiscreteContinuumGrid<2,2 >;
 template class AbstractDiscreteContinuumGrid<3,3 >;
-template class DimensionalChastePoint<2 >;
-template class DimensionalChastePoint<3 >;
+template class Vertex<2 >;
+template class Vertex<3 >;
 template class DiscreteContinuumMesh<2,2 >;
 template class DiscreteContinuumMesh<3,3 >;
 template class DiscreteContinuumMeshGenerator<2,2 >;
@@ -397,8 +397,8 @@ typedef TetrahedralMesh<2,2 > TetrahedralMesh2_2;
 typedef TetrahedralMesh<3,3 > TetrahedralMesh3_3;
 typedef AbstractDiscreteContinuumGrid<2,2 > AbstractDiscreteContinuumGrid2_2;
 typedef AbstractDiscreteContinuumGrid<3,3 > AbstractDiscreteContinuumGrid3_3;
-typedef DimensionalChastePoint<2 > DimensionalChastePoint2;
-typedef DimensionalChastePoint<3 > DimensionalChastePoint3;
+typedef Vertex<2 > Vertex2;
+typedef Vertex<3 > Vertex3;
 typedef DiscreteContinuumMesh<2,2 > DiscreteContinuumMesh2_2;
 typedef DiscreteContinuumMesh<3,3 > DiscreteContinuumMesh3_3;
 typedef DiscreteContinuumMeshGenerator<2,2 > DiscreteContinuumMeshGenerator2_2;

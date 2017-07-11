@@ -113,12 +113,12 @@ std::vector<double> TipAttractionLatticeBasedMigrationRule<DIM>::GetNeighbourMov
     // Determine if there is tip-tip or tip-sprout attraction
     bool tip_found = false;
     bool sprout_found = false;
-    DimensionalChastePoint<DIM> tip_point;
-    DimensionalChastePoint<DIM> sprout_point;
+    Vertex<DIM> tip_point;
+    Vertex<DIM> sprout_point;
     QVelocity tip_attraction_strength = 0.0*unit::metres_per_second;
     QVelocity sprout_attraction_strength = 0.0*unit::metres_per_second;
-    QLength closest_tip_distance = 1e6*unit::metres;
-    QLength closest_sprout_distance = 1e6*unit::metres;
+    QLength closest_tip_distance = 1e6_m;
+    QLength closest_sprout_distance = 1e6_m;
     QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
 
     if(!this->mIsSprouting and mUseTipAttraction)
@@ -126,13 +126,13 @@ std::vector<double> TipAttractionLatticeBasedMigrationRule<DIM>::GetNeighbourMov
         std::vector<std::shared_ptr<VesselNode<DIM> > > nearby_nodes = VesselNetworkGeometryCalculator<DIM>::GetNodesInSphere(
                 this->mpVesselNetwork, pNode->rGetLocation(), mTipAttractionRadius);
         // get the current vector
-        c_vector<double, DIM> unit_vector = pNode->rGetLocation().GetLocation(reference_length) -
-                pNode->GetSegment(0)->GetOppositeNode(pNode)->rGetLocation().GetLocation(reference_length);
+        c_vector<double, DIM> unit_vector = pNode->rGetLocation().Convert(reference_length) -
+                pNode->GetSegment(0)->GetOppositeNode(pNode)->rGetLocation().Convert(reference_length);
         unit_vector /= norm_2(unit_vector);
         for(unsigned idx=0; idx<nearby_nodes.size(); idx++)
         {
-            c_vector<double, DIM> vector_node_nbr = nearby_nodes[idx]->rGetLocation().GetLocation(reference_length) -
-                    pNode->rGetLocation().GetLocation(reference_length);
+            c_vector<double, DIM> vector_node_nbr = nearby_nodes[idx]->rGetLocation().Convert(reference_length) -
+                    pNode->rGetLocation().Convert(reference_length);
             vector_node_nbr/=norm_2(vector_node_nbr);
             double angle = std::acos(inner_prod(vector_node_nbr, unit_vector));
 
@@ -172,7 +172,7 @@ std::vector<double> TipAttractionLatticeBasedMigrationRule<DIM>::GetNeighbourMov
     {
         // make sure that tip cell does not try to move into a location already occupied by the vessel that it comes from
         // i.e. that it doesn't loop back around
-        DimensionalChastePoint<DIM> neighbour_location = this->mpGridCalculator->GetGrid()->GetGlobalCellLocation(neighbourIndices[jdx]);
+        Vertex<DIM> neighbour_location = this->mpGridCalculator->GetGrid()->GetGlobalCellLocation(neighbourIndices[jdx]);
         bool sprout_already_attached_to_vessel_at_location = false;
 
         for (unsigned seg_index = 0; seg_index < pNode->GetNumberOfSegments(); seg_index++)
@@ -226,12 +226,12 @@ std::vector<double> TipAttractionLatticeBasedMigrationRule<DIM>::GetNeighbourMov
 
                 if(tip_found)
                 {
-                    c_vector<double, DIM> vector_node_nbr = neighbour_location.GetLocation(reference_length)
-                            - pNode->rGetLocation().GetLocation(reference_length);
+                    c_vector<double, DIM> vector_node_nbr = neighbour_location.Convert(reference_length)
+                            - pNode->rGetLocation().Convert(reference_length);
                     vector_node_nbr/=norm_2(vector_node_nbr);
 
-                    c_vector<double, DIM> vector_node_tip = tip_point.GetLocation(reference_length) -
-                            pNode->rGetLocation().GetLocation(reference_length);
+                    c_vector<double, DIM> vector_node_tip = tip_point.Convert(reference_length) -
+                            pNode->rGetLocation().Convert(reference_length);
                     vector_node_tip/=norm_2(vector_node_tip);
                     double angle = std::acos(inner_prod(vector_node_nbr, vector_node_tip));
                     if(std::abs(angle)>M_PI)
@@ -246,12 +246,12 @@ std::vector<double> TipAttractionLatticeBasedMigrationRule<DIM>::GetNeighbourMov
                 }
                 if(sprout_found)
                 {
-                    c_vector<double, DIM> vector_node_nbr = neighbour_location.GetLocation(reference_length) -
-                            pNode->rGetLocation().GetLocation(reference_length);
+                    c_vector<double, DIM> vector_node_nbr = neighbour_location.Convert(reference_length) -
+                            pNode->rGetLocation().Convert(reference_length);
                     vector_node_nbr/=norm_2(vector_node_nbr);
 
-                    c_vector<double, DIM> vector_node_sprout = sprout_point.GetLocation(reference_length) -
-                            pNode->rGetLocation().GetLocation(reference_length);
+                    c_vector<double, DIM> vector_node_sprout = sprout_point.Convert(reference_length) -
+                            pNode->rGetLocation().Convert(reference_length);
                     vector_node_sprout/=norm_2(vector_node_sprout);
                     double angle = std::acos(inner_prod(vector_node_nbr, vector_node_sprout));
                     if(std::abs(angle)>M_PI)

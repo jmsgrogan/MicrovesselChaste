@@ -151,14 +151,14 @@ public:
      * @param rNodes nodes to calculate indices
      * @return a vector of movement vectors
      */
-    std::vector<DimensionalChastePoint<DIM> > GetDirections(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
+    std::vector<Vertex<DIM> > GetDirections(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
 
     /**
      * Get the sprout directions
      * @param rNodes nodes to calculate directions
      * @return a vector of movement vectors
      */
-    std::vector<DimensionalChastePoint<DIM> > GetDirectionsForSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
+    std::vector<Vertex<DIM> > GetDirectionsForSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
 
     /**
      * Set the sprout velocity

@@ -20,8 +20,8 @@ py::class_<VesselNetworkGenerator3    >(m, "VesselNetworkGenerator3")
         .def(py::init< >())
         .def(
             "GenerateParrallelNetwork", 
-            (::std::shared_ptr<VesselNetwork<3> >(VesselNetworkGenerator3::*)(::std::shared_ptr<Part<3> >, ::QArea, ::VesselDistribution::Value, ::QLength, bool, ::std::vector<std::shared_ptr<DimensionalChastePoint<3> >, std::allocator<std::shared_ptr<DimensionalChastePoint<3> > > >)) &VesselNetworkGenerator3::GenerateParrallelNetwork, 
-            " " , py::arg("domain"), py::arg("targetDensity"), py::arg("distrbutionType"), py::arg("exclusionDistance") = 0. * unit::metres, py::arg("useBbox") = false, py::arg("seeds") = std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > >() )
+            (::std::shared_ptr<VesselNetwork<3> >(VesselNetworkGenerator3::*)(::std::shared_ptr<Part<3> >, ::QArea, ::VesselDistribution::Value, ::QLength, bool, ::std::vector<std::shared_ptr<Vertex<3> >, std::allocator<std::shared_ptr<Vertex<3> > > >)) &VesselNetworkGenerator3::GenerateParrallelNetwork, 
+            " " , py::arg("domain"), py::arg("targetDensity"), py::arg("distrbutionType"), py::arg("exclusionDistance") = 0. * unit::metres, py::arg("useBbox") = false, py::arg("seeds") = std::vector<std::shared_ptr<Vertex<DIM> > >() )
         .def(
             "GenerateHexagonalNetwork", 
             (::std::shared_ptr<VesselNetwork<3> >(VesselNetworkGenerator3::*)(::QLength, ::QLength, ::QLength, bool)) &VesselNetworkGenerator3::GenerateHexagonalNetwork, 
@@ -32,11 +32,11 @@ py::class_<VesselNetworkGenerator3    >(m, "VesselNetworkGenerator3")
             " " , py::arg("vesselLength") )
         .def(
             "GenerateBifurcationUnit", 
-            (::std::shared_ptr<VesselNetwork<3> >(VesselNetworkGenerator3::*)(::QLength, ::DimensionalChastePoint<3>)) &VesselNetworkGenerator3::GenerateBifurcationUnit, 
+            (::std::shared_ptr<VesselNetwork<3> >(VesselNetworkGenerator3::*)(::QLength, ::Vertex<3>)) &VesselNetworkGenerator3::GenerateBifurcationUnit, 
             " " , py::arg("vesselLength"), py::arg("startPosition") )
         .def(
             "GenerateSingleVessel", 
-            (::std::shared_ptr<VesselNetwork<3> >(VesselNetworkGenerator3::*)(::QLength, ::DimensionalChastePoint<3>, unsigned int, unsigned int)) &VesselNetworkGenerator3::GenerateSingleVessel, 
+            (::std::shared_ptr<VesselNetwork<3> >(VesselNetworkGenerator3::*)(::QLength, ::Vertex<3>, unsigned int, unsigned int)) &VesselNetworkGenerator3::GenerateSingleVessel, 
             " " , py::arg("vesselLength"), py::arg("startPosition"), py::arg("divisions") = 0, py::arg("axis") = 2 )
         .def(
             "GenerateOvalNetwork", 

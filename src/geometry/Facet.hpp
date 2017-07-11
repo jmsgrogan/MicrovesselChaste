@@ -49,7 +49,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UnitCollection.hpp"
 #include "VectorUnitCollection.hpp"
 #include "Exception.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 
 /**
  * Forward declare VTK members
@@ -161,7 +161,7 @@ public:
      * @param location the location to be tested
      * @return true if the location is in the facet
      */
-    bool ContainsPoint(const VecQLength<DIM>& location);
+    bool ContainsPoint(const Vertex<DIM>& rLocation);
 
     /**
      * Return the bounding box of the facet
@@ -173,14 +173,14 @@ public:
      * Return the centroid of the facet
      * @return the centroid of the facet
      */
-    VecQLength<DIM> GetCentroid();
+    Vertex<DIM> GetCentroid();
 
     /**
      * Return the distance to the facet
      * @param rLocation reference to the location of the point for distance calculation
      * @return the distance to the facet
      */
-    QLength GetDistance(const VecQLength<DIM>& rLocation);
+    QLength GetDistance(const Vertex<DIM>& rLocation);
 
     /**
      * Return the facet's plane
@@ -192,7 +192,7 @@ public:
      * Return the normal to the facet
      * @return the normal to the facet
      */
-    c_vector<double, DIM> GetNormal();
+    c_vector<double, 3> GetNormal();
 
     /**
      * Return the polygons
@@ -223,7 +223,7 @@ public:
      * Move the facet along the translation vector
      * @param translationVector the new location is the original + the translationVector
      */
-    void Translate(const VecQLength<DIM>& rTranslationVector);
+    void Translate(const Vertex<DIM>& rTranslationVector);
 
     /**
      * Update the mVertices member

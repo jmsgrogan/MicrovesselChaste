@@ -38,10 +38,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 template<unsigned DIM>
 VesselNode<DIM>::VesselNode(QLength v1, QLength v2, QLength v3) : AbstractVesselNetworkComponent<DIM>(),
-        mLocation(VecQLength<DIM>(v1 ,v2, v3)),
+        mLocation(Vertex<DIM>(v1 ,v2, v3)),
         mSegments(std::vector<std::weak_ptr<VesselSegment<DIM> > >()),
         mIsMigrating(false),
-        mpFlowProperties(std::shared_ptr<NodeFlowProperties<DIM> >(new NodeFlowProperties<DIM>())),
+        mpFlowProperties(std::make_shared<NodeFlowProperties<DIM> >()),
         mPtrComparisonId(0),
         mGlobalIndex(0),
         mLocalIndex(0),
@@ -51,15 +51,15 @@ VesselNode<DIM>::VesselNode(QLength v1, QLength v2, QLength v3) : AbstractVessel
         mOtherProcessorRank(0),
         mOtherProcessorLocalIndex(0)
 {
-    this->mpFlowProperties = std::shared_ptr<NodeFlowProperties<DIM> >(new NodeFlowProperties<DIM>());
+
 }
 
 template<unsigned DIM>
-VesselNode<DIM>::VesselNode(const VecQLength<DIM>& location) : AbstractVesselNetworkComponent<DIM>(),
+VesselNode<DIM>::VesselNode(const Vertex<DIM>& location) : AbstractVesselNetworkComponent<DIM>(),
         mLocation(location),
         mSegments(std::vector<std::weak_ptr<VesselSegment<DIM> > >()),
         mIsMigrating(false),
-        mpFlowProperties(std::shared_ptr<NodeFlowProperties<DIM> >(new NodeFlowProperties<DIM>())),
+        mpFlowProperties(std::make_shared<NodeFlowProperties<DIM> >()),
         mPtrComparisonId(0),
         mGlobalIndex(0),
         mLocalIndex(0),
@@ -69,7 +69,7 @@ VesselNode<DIM>::VesselNode(const VecQLength<DIM>& location) : AbstractVesselNet
         mOtherProcessorRank(0),
         mOtherProcessorLocalIndex(0)
 {
-    this->mpFlowProperties = std::shared_ptr<NodeFlowProperties<DIM> >(new NodeFlowProperties<DIM>());
+
 }
 
 template<unsigned DIM>
@@ -78,7 +78,7 @@ VesselNode<DIM>::VesselNode(const VesselNode<DIM>& rExistingNode) :
         mLocation(rExistingNode.rGetLocation()),
         mSegments(std::vector<std::weak_ptr<VesselSegment<DIM> > >()),
         mIsMigrating(false),
-        mpFlowProperties(std::shared_ptr<NodeFlowProperties<DIM> >(new NodeFlowProperties<DIM>())),
+        mpFlowProperties(std::make_shared<NodeFlowProperties<DIM> >()),
         mPtrComparisonId(0),
         mGlobalIndex(0),
         mLocalIndex(0),
@@ -105,7 +105,7 @@ std::shared_ptr<VesselNode<DIM> > VesselNode<DIM>::Create(QLength v1, QLength v2
 }
 
 template<unsigned DIM>
-std::shared_ptr<VesselNode<DIM> > VesselNode<DIM>::Create(const VecQLength<DIM>& location)
+std::shared_ptr<VesselNode<DIM> > VesselNode<DIM>::Create(const Vertex<DIM>& location)
 {
     return std::make_shared<VesselNode<DIM> >(location);
 }
@@ -148,7 +148,7 @@ unsigned VesselNode<DIM>::GetComparisonId()
 }
 
 template<unsigned DIM>
-QLength VesselNode<DIM>::GetDistance(const VecQLength<DIM>& rLocation) const
+QLength VesselNode<DIM>::GetDistance(const Vertex<DIM>& rLocation) const
 {
     return mLocation.GetDistance(rLocation);
 }
@@ -160,7 +160,7 @@ std::shared_ptr<NodeFlowProperties<DIM> > VesselNode<DIM>::GetFlowProperties() c
 }
 
 template<unsigned DIM>
-const VecQLength<DIM>& VesselNode<DIM>::rGetLocation() const
+const Vertex<DIM>& VesselNode<DIM>::rGetLocation() const
 {
     return mLocation;
 }
@@ -178,18 +178,12 @@ std::map<std::string, double> VesselNode<DIM>::GetOutputData()
     std::map<std::string, double> flow_data = this->mpFlowProperties->GetOutputData();
     this->mOutputData.insert(flow_data.begin(), flow_data.end());
     this->mOutputData["Node Id"] = double(this->GetId());
-    this->mOutputData["Node Radius m"] = this->GetRadius() / unit::metres;
+    this->mOutputData["Node Radius m"] = this->GetRadius() / 1_m;
     this->mOutputData["Node Is Migrating"] = double(this->IsMigrating());
     this->mOutputData["Node Owner Rank"] = this->GetOwnerRank();
     this->mOutputData["Node Is Halo"] = this->IsHalo();
     this->mOutputData["Node Has Halo"] = this->HasHalo();
     return this->mOutputData;
-}
-
-template<unsigned DIM>
-QLength VesselNode<DIM>::GetReferenceLengthScale() const
-{
-    return mLocation.GetReferenceLengthScale();
 }
 
 template<unsigned DIM>
@@ -268,7 +262,7 @@ bool VesselNode<DIM>::IsAttachedTo(const std::shared_ptr<VesselSegment<DIM> > pS
 }
 
 template<unsigned DIM>
-bool VesselNode<DIM>::IsCoincident(const VecQLength<DIM>& rLocation) const
+bool VesselNode<DIM>::IsCoincident(const Vertex<DIM>& rLocation) const
 {
     return this->mLocation.IsCoincident(rLocation);
 }
@@ -306,27 +300,21 @@ void VesselNode<DIM>::SetFlowProperties(const NodeFlowProperties<DIM>& rFlowProp
 }
 
 template<unsigned DIM>
-void VesselNode<DIM>::SetLocation(const VecQLength<DIM>& location)
+void VesselNode<DIM>::SetLocation(const Vertex<DIM>& location)
 {
-    this->mLocation = VecQLength<DIM>(location);
+    this->mLocation = Vertex<DIM>(location);
 }
 
 template<unsigned DIM>
 void VesselNode<DIM>::SetLocation(QLength x, QLength y, QLength z)
 {
-    this->mLocation = VecQLength<DIM>(x,y,z);
+    this->mLocation = Vertex<DIM>(x,y,z);
 }
 
 template<unsigned DIM>
 void VesselNode<DIM>::SetIsMigrating(bool isMigrating)
 {
     mIsMigrating = isMigrating;
-}
-
-template<unsigned DIM>
-void VesselNode<DIM>::SetReferenceLengthScale(QLength lengthScale)
-{
-    this->mLocation.SetReferenceLengthScale(lengthScale);
 }
 
 template<unsigned DIM>

@@ -24,7 +24,7 @@ smart pointer tools and output management,
 dimensional analysis,
 
 ```cpp
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "UnitCollection.hpp"
 #include "Owen11Parameters.hpp"
 #include "Secomb04Parameters.hpp"
@@ -180,7 +180,7 @@ we sample a small region. We can use some geometry tools to help.
 
 ```cpp
         boost::shared_ptr<Part<3> > p_cylinder = Part<3>::Create();
-        DimensionalChastePoint<3> centre(2300.0, 2300.0, -5.0, 1_um);
+        Vertex<3> centre(2300.0, 2300.0, -5.0, 1_um);
         QLength radius = 600.0e-6*unit::metres;
         QLength depth = 205.e-6*unit::metres;
         p_cylinder->AddCylinder(radius, depth, centre, 24);
@@ -193,9 +193,9 @@ We are ready to simulate tumour growth and angiogenesis. We will use a regular l
 this purpose. We size and position the lattice according to the bounds of the vessel network.
 
 ```cpp
-        std::vector<DimensionalChastePoint<3> > bbox;
-        bbox.push_back(DimensionalChastePoint<3>(1500.0, 1600.0, -10.0, 1_um));
-        bbox.push_back(DimensionalChastePoint<3>(3100.0, 3000.0, 300.0, 1_um));
+        std::vector<Vertex<3> > bbox;
+        bbox.push_back(Vertex<3>(1500.0, 1600.0, -10.0, 1_um));
+        bbox.push_back(Vertex<3>(3100.0, 3000.0, 300.0, 1_um));
 ```
 
 Set up the lattice (grid), we will use the same dimensions as [Owen et al. 2011](http://www.ncbi.nlm.nih.gov/pubmed/21363914).
@@ -222,7 +222,7 @@ We can use the built-in dimensional analysis functionality to get the network ex
             grid_extents.push_back(std::floor(extents[idx])+1);
         }
         p_grid->SetExtents(grid_extents);
-        p_network->Translate(DimensionalChastePoint<3>(-1500.0, -1600.0, +10.0, 1_um));
+        p_network->Translate(Vertex<3>(-1500.0, -1600.0, +10.0, 1_um));
 ```
 
 We can write the lattice to file for quick visualization with Paraview. Rendering of this and subsequent images is performed
@@ -534,7 +534,7 @@ The full code is given below
 #include "OutputFileHandler.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
 #include "RandomNumberGenerator.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "UnitCollection.hpp"
 #include "Owen11Parameters.hpp"
 #include "Secomb04Parameters.hpp"
@@ -615,16 +615,16 @@ public:
         p_scene->Start();
 
         boost::shared_ptr<Part<3> > p_cylinder = Part<3>::Create();
-        DimensionalChastePoint<3> centre(2300.0, 2300.0, -5.0, 1_um);
+        Vertex<3> centre(2300.0, 2300.0, -5.0, 1_um);
         QLength radius = 600.0e-6*unit::metres;
         QLength depth = 205.e-6*unit::metres;
         p_cylinder->AddCylinder(radius, depth, centre, 24);
         p_cylinder->BooleanWithNetwork(p_network);
         p_network->Write(p_handler->GetOutputDirectoryFullPath() + "cleaned_cut_network.vtp");
         p_scene->Start();
-        std::vector<DimensionalChastePoint<3> > bbox;
-        bbox.push_back(DimensionalChastePoint<3>(1500.0, 1600.0, -10.0, 1_um));
-        bbox.push_back(DimensionalChastePoint<3>(3100.0, 3000.0, 300.0, 1_um));
+        std::vector<Vertex<3> > bbox;
+        bbox.push_back(Vertex<3>(1500.0, 1600.0, -10.0, 1_um));
+        bbox.push_back(Vertex<3>(3100.0, 3000.0, 300.0, 1_um));
         boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         QLength grid_spacing = 40.0e-6*unit::metres;
         p_grid->SetSpacing(grid_spacing);
@@ -637,7 +637,7 @@ public:
             grid_extents.push_back(std::floor(extents[idx])+1);
         }
         p_grid->SetExtents(grid_extents);
-        p_network->Translate(DimensionalChastePoint<3>(-1500.0, -1600.0, +10.0, 1_um));
+        p_network->Translate(Vertex<3>(-1500.0, -1600.0, +10.0, 1_um));
         p_grid->Write(p_handler);
         p_scene->SetRegularGrid(p_grid);
         p_scene->Start();

@@ -66,7 +66,7 @@ std::vector<double> LatticeBasedMigrationRule<DIM>::GetNeighbourMovementProbabil
     for(unsigned idx=0; idx<neighbourIndices.size(); idx++)
     {
         // Make sure that tip cell does not try to move into a location already occupied by the vessel that it comes from
-        DimensionalChastePoint<DIM> neighbour_location = this->mpGridCalculator->GetGrid()->GetGlobalCellLocation(neighbourIndices[idx]);
+        Vertex<DIM> neighbour_location = this->mpGridCalculator->GetGrid()->GetGlobalCellLocation(neighbourIndices[idx]);
 
         bool already_attached = false;
         for (unsigned seg_index = 0; seg_index < pNode->GetNumberOfSegments(); seg_index++)

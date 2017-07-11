@@ -42,14 +42,14 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselSegment.hpp"
 #include "UblasCustomFunctions.hpp"
 #include "UblasIncludes.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "Part.hpp"
 #include "BaseUnits.hpp"
 
 #include "VesselSurfaceGenerator.hpp"
 
 template<unsigned DIM>
-VesselSurfaceGenerator<DIM>::VesselSurfaceGenerator(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork) :
+VesselSurfaceGenerator<DIM>::VesselSurfaceGenerator(VesselNetworkPtr<DIM> pVesselNetwork) :
         mpVesselNetwork(pVesselNetwork),
         mpSurface(vtkSmartPointer<vtkPolyData>::New()),
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale())
@@ -62,9 +62,9 @@ VesselSurfaceGenerator<DIM>::~VesselSurfaceGenerator()
 }
 
 template<unsigned DIM>
-std::vector<DimensionalChastePoint<DIM> > VesselSurfaceGenerator<DIM>::GetHoles()
+std::vector<Vertex<DIM> > VesselSurfaceGenerator<DIM>::GetHoles()
 {
-    std::vector<DimensionalChastePoint<DIM> > hole_locations;
+    std::vector<Vertex<DIM> > hole_locations;
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = mpVesselNetwork->GetVesselSegments();
     for (unsigned idx = 0; idx < segments.size(); idx++)
     {
@@ -86,12 +86,12 @@ std::vector<std::vector<PolygonPtr<DIM> > > VesselSurfaceGenerator<DIM>::GetSurf
 
     // Generate a surface for each segment
     std::vector<std::vector<PolygonPtr<DIM> > > segment_polygons;
-    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = mpVesselNetwork->GetVesselSegments();
+    std::vector<VesselSegmentPtr<DIM> > segments = mpVesselNetwork->GetVesselSegments();
 
     for (unsigned idx = 0; idx < segments.size(); idx++)
     {
-        std::shared_ptr<VesselNode<DIM> > p_start_node = segments[idx]->GetNode(0);
-        std::shared_ptr<VesselNode<DIM> > p_end_node = segments[idx]->GetNode(1);
+        VesselNodePtr<DIM> p_start_node = segments[idx]->GetNode(0);
+        VesselNodePtr<DIM> p_end_node = segments[idx]->GetNode(1);
         c_vector<double, DIM> segment_tangent = segments[idx]->GetUnitTangent();
 
         // Create the precursor points
@@ -114,16 +114,15 @@ std::vector<std::vector<PolygonPtr<DIM> > > VesselSurfaceGenerator<DIM>::GetSurf
 
         if (p_start_node->GetNumberOfSegments() == 1)
         {
-            c_vector<double, DIM> node_location = p_start_node->rGetLocation().GetLocation(mReferenceLength);
+            c_vector<double, 3> node_location = p_start_node->rGetLocation().Convert3(mReferenceLength);
             vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
+            p_plane->SetOrigin(&node_location[0]);
             if(DIM==3)
             {
-                p_plane->SetOrigin(node_location[0], node_location[1], node_location[2]);
                 p_plane->SetNormal(segment_tangent[0], segment_tangent[1], segment_tangent[2]);
             }
             else
             {
-                p_plane->SetOrigin(node_location[0], node_location[1], 0.0);
                 p_plane->SetNormal(segment_tangent[0], segment_tangent[1], 0.0);
             }
             start_planes.push_back(p_plane);
@@ -142,16 +141,9 @@ std::vector<std::vector<PolygonPtr<DIM> > > VesselSurfaceGenerator<DIM>::GetSurf
                     }
 
                     average_start_normal += VectorProduct(segment_tangent, other_segment_tangent);
-                    c_vector<double, DIM> node_location = p_start_node->rGetLocation().GetLocation(mReferenceLength);
+                    c_vector<double, 3> node_location = p_start_node->rGetLocation().Convert3(mReferenceLength);
                     vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
-                    if(DIM==2)
-                    {
-                        p_plane->SetOrigin(node_location[0], node_location[1], 0.0);
-                    }
-                    else
-                    {
-                        p_plane->SetOrigin(node_location[0], node_location[1], node_location[2]);
-                    }
+                    p_plane->SetOrigin(&node_location[0]);
 
                     c_vector<double, DIM> bisection_vector = segment_tangent + other_segment_tangent;
                     bisection_vector /= norm_2(bisection_vector);
@@ -170,9 +162,9 @@ std::vector<std::vector<PolygonPtr<DIM> > > VesselSurfaceGenerator<DIM>::GetSurf
 
         if (p_end_node->GetNumberOfSegments() == 1)
         {
-            c_vector<double, DIM> node_location = p_end_node->rGetLocation().GetLocation(mReferenceLength);
+            c_vector<double, 3> node_location = p_end_node->rGetLocation().Convert3(mReferenceLength);
             vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
-            p_plane->SetOrigin(node_location[0], node_location[1], node_location[2]);
+            p_plane->SetOrigin(&node_location[0]);
             p_plane->SetNormal(segment_tangent[0], segment_tangent[1], segment_tangent[2]);
             end_planes.push_back(p_plane);
         }
@@ -190,16 +182,9 @@ std::vector<std::vector<PolygonPtr<DIM> > > VesselSurfaceGenerator<DIM>::GetSurf
                     }
                     average_end_normal += VectorProduct(segment_tangent, other_segment_tangent);
 
-                    c_vector<double, DIM> node_location = p_end_node->rGetLocation().GetLocation(mReferenceLength);
+                    c_vector<double, 3> node_location = p_end_node->rGetLocation().Convert3(mReferenceLength);
                     vtkSmartPointer<vtkPlane> p_plane = vtkSmartPointer<vtkPlane>::New();
-                    if(DIM==2)
-                    {
-                        p_plane->SetOrigin(node_location[0], node_location[1], 0.0);
-                    }
-                    else
-                    {
-                        p_plane->SetOrigin(node_location[0], node_location[1], node_location[2]);
-                    }
+                    p_plane->SetOrigin(&node_location[0]);
 
                     c_vector<double, DIM> bisection_vector = segment_tangent + other_segment_tangent;
                     bisection_vector /= norm_2(bisection_vector);
@@ -217,8 +202,8 @@ std::vector<std::vector<PolygonPtr<DIM> > > VesselSurfaceGenerator<DIM>::GetSurf
         }
 
         // Project the precursor points onto the first plane they hit
-        Translate(start_points, segments[idx]->GetMidPoint().GetLocation(mReferenceLength));
-        Translate(end_points, segments[idx]->GetMidPoint().GetLocation(mReferenceLength));
+        Translate(start_points, segments[idx]->GetMidPoint().Convert(mReferenceLength));
+        Translate(end_points, segments[idx]->GetMidPoint().Convert(mReferenceLength));
 
         std::vector<c_vector<double, DIM> > projected_start_points = start_points;
         std::vector<c_vector<double, DIM> > projected_end_points = end_points;
@@ -266,16 +251,16 @@ std::vector<std::vector<PolygonPtr<DIM> > > VesselSurfaceGenerator<DIM>::GetSurf
         }
 
         // Create the vertices and polygons
-        std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > start_vertices;
-        std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > end_vertices;
+        std::vector<std::shared_ptr<Vertex<DIM> > > start_vertices;
+        std::vector<std::shared_ptr<Vertex<DIM> > > end_vertices;
 
         for (unsigned jdx = 0; jdx < projected_start_points.size(); jdx++)
         {
-            start_vertices.push_back(DimensionalChastePoint<DIM>::Create(projected_start_points[jdx], mReferenceLength));
+            start_vertices.push_back(Vertex<DIM>::Create(projected_start_points[jdx], mReferenceLength));
         }
         for (unsigned jdx = 0; jdx < projected_end_points.size(); jdx++)
         {
-            end_vertices.push_back(DimensionalChastePoint<DIM>::Create(projected_end_points[jdx], mReferenceLength));
+            end_vertices.push_back(Vertex<DIM>::Create(projected_end_points[jdx], mReferenceLength));
         }
 
         //
@@ -334,11 +319,11 @@ vtkSmartPointer<vtkPolyData> VesselSurfaceGenerator<DIM>::GetVtkSurface()
 
     // Add the polygons to a part
     Part<DIM> part;
-    for (unsigned idx = 0; idx < segment_polygons.size(); idx++)
+    for(auto& segment_poly:segment_polygons)
     {
-        for (unsigned jdx = 0; jdx < segment_polygons[idx].size(); jdx++)
+        for (unsigned jdx = 0; jdx < segment_poly.size(); jdx++)
         {
-            part.AddPolygon(segment_polygons[idx][jdx]->GetVertices(), true);
+            part.AddPolygon(segment_poly[jdx]->rGetVertices(), true);
         }
     }
 

@@ -200,7 +200,7 @@ public:
         p_segment->GetFlowProperties()->SetHaematocrit(haematocrit);
         VesselNetworkPropertyManager<2>::SetSegmentProperties(vascular_network, p_segment);
 
-        std::pair<DimensionalChastePoint<2>, DimensionalChastePoint<2> > network_extents = VesselNetworkGeometryCalculator<2>::GetExtents(vascular_network);
+        std::pair<Vertex<2>, Vertex<2> > network_extents = VesselNetworkGeometryCalculator<2>::GetExtents(vascular_network);
         double y_middle = (network_extents.first.GetLocation(1_um)[1]) / 2.0;
         double x_middle = (network_extents.first.GetLocation(1_um)[0]) / 2.0;
 

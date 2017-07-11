@@ -64,7 +64,7 @@ public:
         // Solve two problems on the same grid
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
         QLength domain_length(100.0_um);
-        p_domain->AddCuboid(domain_length, domain_length, domain_length, DimensionalChastePoint<3>());
+        p_domain->AddCuboid(domain_length, domain_length, domain_length, Vertex<3>());
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         QLength spacing(10.0_um);
         p_grid->GenerateFromPart(p_domain, spacing);

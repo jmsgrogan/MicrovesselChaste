@@ -58,7 +58,7 @@ protected:
     /**
      * Locations for POINT type sources
      */
-    std::vector<DimensionalChastePoint<DIM> > mPoints;
+    std::vector<Vertex<DIM> > mPoints;
 
     /**
      * A label specifying the array name from which to obtain the source strength. Used for LABEL
@@ -140,7 +140,7 @@ public:
      * Set the points for POINT type sources
      * @param points the point locations for POINT type sources
      */
-    void SetPoints(std::vector<DimensionalChastePoint<DIM> > points);
+    void SetPoints(std::vector<Vertex<DIM> > points);
 
     /**
      * Set the value of the source for PRESCRIBED type sources

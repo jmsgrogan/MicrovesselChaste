@@ -82,7 +82,7 @@ vtkSmartPointer<vtkPolyData> ImageToMesh<DIM>::GetMeshBoundary()
 }
 
 template<unsigned DIM>
-std::vector<DimensionalChastePoint<DIM> > ImageToMesh<DIM>::GetMeshHoles()
+std::vector<Vertex<DIM> > ImageToMesh<DIM>::GetMeshHoles()
 {
     return mHoles;
 }
@@ -188,7 +188,7 @@ void ImageToMesh<DIM>::Update()
         p_image_probe->Update();
 
         mHoles.clear();
-        std::vector<DimensionalChastePoint<DIM> > regions;
+        std::vector<Vertex<DIM> > regions;
         for(unsigned idx=0; idx<p_image_probe->GetOutput()->GetPointData()->GetScalars()->GetNumberOfTuples(); idx++)
         {
             if(p_image_probe->GetOutput()->GetPointData()->GetScalars()->GetTuple1(idx)>5)
@@ -198,13 +198,13 @@ void ImageToMesh<DIM>::Update()
                     c_vector<double, DIM> loc;
                     loc[0] = p_vtk_points->GetPoint(idx)[0];
                     loc[1] = p_vtk_points->GetPoint(idx)[1];
-                    if(mpDomain->GetPolygons()[0]->ContainsPoint(DimensionalChastePoint<DIM>(loc, reference_length)))
+                    if(mpDomain->GetPolygons()[0]->ContainsPoint(Vertex<DIM>(loc, reference_length)))
                     {
-                        regions.push_back(DimensionalChastePoint<DIM>(loc, reference_length));
+                        regions.push_back(Vertex<DIM>(loc, reference_length));
                     }
                     else
                     {
-                        mHoles.push_back(DimensionalChastePoint<DIM>(loc, reference_length));
+                        mHoles.push_back(Vertex<DIM>(loc, reference_length));
                     }
                 }
                 else
@@ -212,7 +212,7 @@ void ImageToMesh<DIM>::Update()
                     c_vector<double, DIM> loc;
                     loc[0] = p_vtk_points->GetPoint(idx)[0];
                     loc[1] = p_vtk_points->GetPoint(idx)[1];
-                    mHoles.push_back(DimensionalChastePoint<DIM>(loc, reference_length));
+                    mHoles.push_back(Vertex<DIM>(loc, reference_length));
                 }
             }
         }

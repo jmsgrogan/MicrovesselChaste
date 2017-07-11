@@ -115,7 +115,7 @@ std::vector<QConcentrationFlowRate > CellStateDependentDiscreteSource<DIM>::GetC
 
                             if(threshold>0.0* unit::mole_per_metre_cubed)
                             {
-                                if(point_cell_map[idx][jdx]->GetCellData()->GetItem(this->mLabel)>threshold.getValue())
+                                if(point_cell_map[idx][jdx]->GetCellData()->GetItem(this->mLabel)>threshold.GetValue())
                                 {
                                     values[idx] = values[idx] + it->second;
                                 }

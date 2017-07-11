@@ -41,7 +41,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <map>
 #include "ChasteSerialization.hpp"
 #include "SmartPointers.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "AbstractVesselNetworkComponent.hpp"
 #include "NodeFlowProperties.hpp"
 #include "UblasVectorInclude.hpp"
@@ -84,7 +84,7 @@ private:
         #if BOOST_VERSION < 105600
             EXCEPTION("Serialization not supported for Boost < 1.56");
         #else
-            ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
+            //ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
             ar & mLocation;
             ar & mIsMigrating;
             ar & mpFlowProperties;
@@ -100,7 +100,7 @@ private:
     /**
      * Location of a node in space.
      */
-    VecQLength<DIM> mLocation;
+    Vertex<DIM> mLocation;
 
     /**
      * Collection of pointers to Vessel Segments connected to this node.
@@ -169,7 +169,7 @@ public:
      * @param v3  the node's z-coordinate
      * @param referenceLength the reference length scale, defaults to micron
      */
-    VesselNode(QLength v1, QLength v2 = 0_m, QLength v3 = 0_m);
+    VesselNode(QLength v1 = 0_m, QLength v2 = 0_m, QLength v3 = 0_m);
 
     /**
      * Constructor.
@@ -177,7 +177,7 @@ public:
      *
      * @param location the node's location (defaults to 0.0)
      */
-    VesselNode(const VecQLength<DIM>& rLocation);
+    VesselNode(const Vertex<DIM>& rLocation);
 
     /**
      * Copy constructor.
@@ -206,7 +206,7 @@ public:
      * @param location the node's location (defaults to 0.0  micron)
      * @return a pointer to the newly created node
      */
-    static std::shared_ptr<VesselNode<DIM> > Create(const VecQLength<DIM>& location);
+    static std::shared_ptr<VesselNode<DIM> > Create(const Vertex<DIM>& location);
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
@@ -236,7 +236,7 @@ public:
      * @param rLocation the location to calculate the distance to
      * @return the distance to the location
      */
-    QLength GetDistance(const VecQLength<DIM>& rLocation) const;
+    QLength GetDistance(const Vertex<DIM>& rLocation) const;
 
     /**
      * Return the flow properties of the component
@@ -250,7 +250,7 @@ public:
      *
      * @return a vector at the location of the node
      */
-    const VecQLength<DIM>& rGetLocation() const;
+    const Vertex<DIM>& rGetLocation() const;
 
     /**
      * Return the number of attached segments
@@ -265,13 +265,6 @@ public:
      * @return a map of component data for use by the vtk writer
      */
     std::map<std::string, double> GetOutputData();
-
-    /**
-     * Return the reference length scale for the node, default is micron
-     *
-     * @return a ublas c_vector at the location of the node
-     */
-    QLength GetReferenceLengthScale() const;
 
     /**
      * Return a pointer to the indexed vessel segment
@@ -343,7 +336,7 @@ public:
      * @param rLocation the query location
      * @return whether then node is coincident with the input location
      */
-    bool IsCoincident(const VecQLength<DIM>& rLocation) const;
+    bool IsCoincident(const Vertex<DIM>& rLocation) const;
 
     /**
      * Has the node been designated as migrating. This is useful for keeping track of
@@ -382,7 +375,7 @@ public:
      *
      * @param rLocation a ublas c_vector specifying the location
      */
-    void SetLocation(const VecQLength<DIM>& rLocation);
+    void SetLocation(const Vertex<DIM>& rLocation);
 
     /**
      * Set the location of the node. It is assumed that this location is consistent
@@ -394,15 +387,6 @@ public:
      * @param referenceLength the reference length scale
      */
     void SetLocation(QLength v1, QLength v2 = 0_m, QLength v3 = 0_m);
-
-    /**
-     * Set the length scale used to dimensionalize the node location as stored in mLocation.
-     * If you want locations to be in metres, for example, set it to unit::metres. The node
-     * location values are changed accordingly when this value is changed.
-     *
-     * @param lenthScale the reference length scale for node locations
-     */
-    void SetReferenceLengthScale(QLength lenthScale);
 
     /**
      * Set the global index

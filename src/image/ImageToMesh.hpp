@@ -67,12 +67,12 @@ class ImageToMesh
     /**
      *  The mesh holes
      */
-    std::vector<DimensionalChastePoint<DIM> > mHoles;
+    std::vector<Vertex<DIM> > mHoles;
 
     /**
      *  The mesh regions
      */
-    std::vector<DimensionalChastePoint<DIM> > mRegions;
+    std::vector<Vertex<DIM> > mRegions;
 
     /**
      *  The mesh
@@ -124,7 +124,7 @@ public:
      * Get mesh holes
      * @return the mesh holes
      */
-    std::vector<DimensionalChastePoint<DIM> > GetMeshHoles();
+    std::vector<Vertex<DIM> > GetMeshHoles();
 
     /**
      * Set the image to be meshed

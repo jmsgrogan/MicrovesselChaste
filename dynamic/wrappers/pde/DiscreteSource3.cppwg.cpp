@@ -84,7 +84,7 @@ py::class_<DiscreteSource3 , DiscreteSource3_Overloads   >(m, "DiscreteSource3")
             " "  )
         .def(
             "SetPoints", 
-            (void(DiscreteSource3::*)(::std::vector<DimensionalChastePoint<3>, std::allocator<DimensionalChastePoint<3> > >)) &DiscreteSource3::SetPoints, 
+            (void(DiscreteSource3::*)(::std::vector<Vertex<3>, std::allocator<Vertex<3> > >)) &DiscreteSource3::SetPoints, 
             " " , py::arg("points") )
         .def(
             "SetConstantInUValue", 

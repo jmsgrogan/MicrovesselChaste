@@ -59,27 +59,27 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 CornealMicropocketSimulation<DIM>::CornealMicropocketSimulation() :
     mDomainType(DomainType::PLANAR_2D),
-    mCorneaRadius(1.3E-3*unit::metres),
-    mCorneaThickness(100.0e-6*unit::metres),
-    mPelletHeight(1.0e-3*unit::metres),
-    mPelletThickness(40.e-6*unit::metres),
-    mPelletRadius(200.e-6*unit::metres),
-    mLimbalOffset(100.0e-6*unit::metres),
-    mGridSpacing(40.0e-6*unit::metres),
+    mCorneaRadius(1.3_mm),
+    mCorneaThickness(100.0_um),
+    mPelletHeight(1.0_mm),
+    mPelletThickness(40_um),
+    mPelletRadius(200_um),
+    mLimbalOffset(100.0_um),
+    mGridSpacing(40.0_um),
     mElementArea2d(1e3*(1.e-18*unit::metres_cubed)),
     mElementArea3d(1e4*(1.e-18*unit::metres_cubed)),
-    mNodeSpacing(40.0e-6*unit::metres),
-    mDensityGridSpacing(40.0e-6*unit::metres),
-    mSampleSpacingX(60.0e-6*unit::metres),
-    mSampleSpacingY(60.0e-6*unit::metres),
-    mSampleSpacingZ(33.0e-6*unit::metres),
+    mNodeSpacing(40.0_um),
+    mDensityGridSpacing(40.0_um),
+    mSampleSpacingX(60_um),
+    mSampleSpacingY(60_um),
+    mSampleSpacingZ(33_um),
     mUsePellet(true),
     mFinitePelletWidth(false),
-    mSproutingProbability(0.5 /(3600.0*unit::seconds)),
+    mSproutingProbability(0.5 /(1_h)),
     mAttractionStrength(0.0),
     mChemotacticStrength(0.5),
     mPersistenceAngle(5.0),
-    mTipExclusionRadius(40.0e-6*unit::metres),
+    mTipExclusionRadius(40.0_um),
     mDoAnastamosis(true),
     mPelletConcentration(0.3*unit::mole_per_metre_cubed),
     mVegfDiffusivity(6.94e-11*unit::metre_squared_per_second),
@@ -92,8 +92,8 @@ CornealMicropocketSimulation<DIM>::CornealMicropocketSimulation() :
     mIncludeVesselSink(true),
     mUseFixedGradient(false),
     mUsePdeOnly(false),
-    mTotalTime(24.0*3600.0*unit::seconds),
-    mTimeStepSize(0.5*3600.0*unit::seconds),
+    mTotalTime(24_h),
+    mTimeStepSize(0.5_h),
     mRunNumber(0),
     mRandomSeed(0),
     mpDomain(),
@@ -188,48 +188,35 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
         QLength domain_height = mPelletHeight + mLimbalOffset;
         if(!mUsePellet)
         {
-            mpDomain->AddRectangle(domain_width,
-                                domain_height,
-                                DimensionalChastePoint<DIM>(0.0, 0.0, 0.0));
-
-            mpDomain->AddAttributeToEdgeIfFound(DimensionalChastePoint<DIM>(M_PI*mCorneaRadius/reference_length,
-                    mPelletHeight/reference_length, 0, reference_length), "Pellet Interface", 1.0);
+            mpDomain->AddRectangle(domain_width, domain_height);
+            mpDomain->AddAttributeToEdgeIfFound(Vertex<DIM>(M_PI*mCorneaRadius, mPelletHeight, 0_m), "Pellet Interface", 1.0);
         }
         else
         {
-            double norm_domain_height = domain_height/reference_length;
-            double norm_domain_width = domain_width/reference_length;
-            std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > points;
-            points.push_back(DimensionalChastePoint<DIM>::Create(0.0, 0.0, 0.0, reference_length));
-            points.push_back(DimensionalChastePoint<DIM>::Create(norm_domain_width, 0.0, 0.0, reference_length));
-            points.push_back(DimensionalChastePoint<DIM>::Create(norm_domain_width, norm_domain_height, 0.0, reference_length));
-            points.push_back(DimensionalChastePoint<DIM>::Create((norm_domain_width+norm_domain_height)/2.0,
-                    norm_domain_height, 0.0, reference_length));
-            points.push_back(DimensionalChastePoint<DIM>::Create((norm_domain_width-norm_domain_height)/2.0,
-                    norm_domain_height, 0.0, reference_length));
-            points.push_back(DimensionalChastePoint<DIM>::Create(0.0, norm_domain_height, 0.0, reference_length));
+            std::vector<VertexPtr<DIM> > points;
+            points.push_back(Vertex<DIM>::Create(0_m, 0_m, 0_m));
+            points.push_back(Vertex<DIM>::Create(domain_width, 0_m, 0_m));
+            points.push_back(Vertex<DIM>::Create(domain_width, domain_height, 0_m));
+            points.push_back(Vertex<DIM>::Create((domain_width+domain_height)/2.0, domain_height, 0_m));
+            points.push_back(Vertex<DIM>::Create((domain_width-domain_height)/2.0, domain_height, 0_m));
+            points.push_back(Vertex<DIM>::Create(0_m, domain_height, 0_m));
 
-            std::shared_ptr<Polygon<DIM > > p_polygon = Polygon<DIM>::Create(points);
+            PolygonPtr<DIM> p_polygon = Polygon<DIM>::Create(points);
             mpDomain->AddPolygon(p_polygon);
-            mpDomain->AddAttributeToEdgeIfFound(DimensionalChastePoint<DIM>(domain_width/(2.0*reference_length),
-                        domain_height/reference_length, 0, reference_length), "Pellet Interface", 1.0);
+            mpDomain->AddAttributeToEdgeIfFound(Vertex<DIM>(domain_width/2.0, domain_height, 0_m), "Pellet Interface", 1.0);
         }
     }
     else if(mDomainType == DomainType::PLANAR_3D)
     {
         QLength domain_width = 2.0 * M_PI * mCorneaRadius;
         QLength domain_height = mPelletHeight + mLimbalOffset;
-        double norm_domain_height = domain_height/reference_length;
-        double norm_domain_width = domain_width/reference_length;
         if(!mUsePellet)
         {
-            mpDomain->AddCuboid(domain_width, domain_height, mCorneaThickness,
-                                DimensionalChastePoint<DIM>(0.0, 0.0, 0.0));
-            std::vector<std::shared_ptr<Facet<DIM> > > facets = mpDomain->GetFacets();
+            mpDomain->AddCuboid(domain_width, domain_height, mCorneaThickness);
+            std::vector<FacetPtr<DIM>> facets = mpDomain->GetFacets();
             for(unsigned idx=0;idx<facets.size();idx++)
             {
-                DimensionalChastePoint<DIM> probe_loc(norm_domain_width/2.0,
-                        norm_domain_height, mCorneaThickness/(2.0*reference_length));
+                Vertex<DIM> probe_loc(domain_width/2.0, domain_height, mCorneaThickness/2.0);
                 QLength distance = facets[idx]->GetCentroid().GetDistance(probe_loc);
                 if (double(distance/reference_length) < 1e-3)
                 {
@@ -239,27 +226,23 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
         }
         else
         {
-            mpDomain->AddCuboid(domain_width, domain_height, mCorneaThickness,
-                                DimensionalChastePoint<DIM>(0.0, 0.0, 0.0));
-            double gap = (mCorneaThickness - mPelletThickness)/(2.0*reference_length);
-            std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > points;
-            double left_side = (domain_width-mPelletRadius)/(2.0*reference_length);
-            double right_side = (domain_width+mPelletRadius)/(2.0*reference_length);
+            mpDomain->AddCuboid(domain_width, domain_height, mCorneaThickness);
+            QLength gap = (mCorneaThickness - mPelletThickness)/2.0;
+            std::vector<VertexPtr<DIM> > points;
+            QLength left_side = (domain_width-mPelletRadius)/2.0;
+            QLength right_side = (domain_width+mPelletRadius)/2.0;
 
-            points.push_back(DimensionalChastePoint<DIM>::Create(left_side, norm_domain_height, gap, reference_length));
-            points.push_back(DimensionalChastePoint<DIM>::Create(right_side,norm_domain_height, gap, reference_length));
-            points.push_back(DimensionalChastePoint<DIM>::Create(right_side, norm_domain_height,
-                    mCorneaThickness/reference_length-gap,reference_length));
-            points.push_back(DimensionalChastePoint<DIM>::Create(left_side, norm_domain_height,
-                    mCorneaThickness/reference_length-gap,reference_length));
+            points.push_back(Vertex<DIM>::Create(left_side, domain_height, gap));
+            points.push_back(Vertex<DIM>::Create(right_side,domain_height, gap));
+            points.push_back(Vertex<DIM>::Create(right_side, domain_height, mCorneaThickness-gap));
+            points.push_back(Vertex<DIM>::Create(left_side, domain_height, mCorneaThickness-gap));
 
-            std::shared_ptr<Polygon<DIM > > p_polygon = Polygon<DIM>::Create(points);
+            PolygonPtr<DIM> p_polygon = Polygon<DIM>::Create(points);
             p_polygon->AddAttribute("Pellet Interface", 1.0);
-            std::vector<std::shared_ptr<Facet<DIM> > > facets = mpDomain->GetFacets();
+            std::vector<FacetPtr<DIM>> facets = mpDomain->GetFacets();
             for(unsigned idx=0;idx<facets.size();idx++)
             {
-                DimensionalChastePoint<DIM> probe_loc(norm_domain_width/2.0,
-                        norm_domain_height, mCorneaThickness/(2.0*reference_length));
+                Vertex<DIM> probe_loc(domain_width/2.0, domain_height, mCorneaThickness/2.0);
                 QLength distance = facets[idx]->GetCentroid().GetDistance(probe_loc);
                 if (double(distance/reference_length) < 1e-3)
                 {
@@ -271,42 +254,39 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
     else if(mDomainType == DomainType::CIRCLE_2D)
     {
         QLength delta = mPelletHeight + mLimbalOffset -mCorneaRadius + mPelletRadius;
-        mpDomain->AddCircle(mCorneaRadius, DimensionalChastePoint<DIM>(0.0, 0.0, 0.0), 24);
+        mpDomain->AddCircle(mCorneaRadius, Vertex<DIM>(), 24);
         if (mUsePellet)
         {
-            std::shared_ptr<Polygon<DIM > > p_polygon = mpDomain->AddCircle(mPelletRadius,
-                    DimensionalChastePoint<DIM>(0.0, -1.0*delta/reference_length, 0.0, reference_length), 24);
+            PolygonPtr<DIM> p_polygon = mpDomain->AddCircle(mPelletRadius, Vertex<DIM>(0_m, -1.0*delta, 0_m), 24);
             p_polygon->AddAttributeToAllEdges("Pellet Interface", 1.0);
-            mpDomain->AddHoleMarker(DimensionalChastePoint<DIM>(0.0, -1.0*delta/reference_length, 0.0, reference_length));
-            mHoles.push_back(DimensionalChastePoint<DIM>(0.0, -1.0*delta/reference_length, 0.0, reference_length));
+            mpDomain->AddHoleMarker(Vertex<DIM>(0_m, -1.0*delta, 0_m));
+            mHoles.push_back(Vertex<DIM>(0_m, -1.0*delta, 0_m));
         }
     }
     else if(mDomainType == DomainType::CIRCLE_3D)
     {
         QLength delta = mPelletHeight + mLimbalOffset -mCorneaRadius+mPelletRadius;
-        std::shared_ptr<Polygon<DIM > > p_circle = mpDomain->AddCircle(mCorneaRadius,
-                DimensionalChastePoint<DIM>(0.0, 0.0, 0.0), 24);
+        PolygonPtr<DIM> p_circle = mpDomain->AddCircle(mCorneaRadius, Vertex<DIM>(), 24);
         mpDomain->Extrude(p_circle, mCorneaThickness);
 
         if (mUsePellet)
         {
-            double gap = (mCorneaThickness - mPelletThickness)/(2.0*reference_length);
+            QLength gap = (mCorneaThickness - mPelletThickness)/2.0;
 
-             PartPtr<DIM> p_pellet = Part<DIM>::Create();
-             p_circle = p_pellet->AddCircle(mPelletRadius,
-                     DimensionalChastePoint<DIM>(0.0, -1.0*delta/reference_length, 0.0, reference_length), 24);
-             p_pellet->Extrude(p_circle, mPelletThickness);
-             p_pellet->Translate(DimensionalChastePoint<DIM>(0.0, 0.0, gap, reference_length));
-             std::vector<std::shared_ptr<Polygon<DIM > > >polygons = p_pellet->GetPolygons();
+            auto p_pellet = Part<DIM>::Create();
+            p_circle = p_pellet->AddCircle(mPelletRadius, Vertex<DIM>(0_m, -1.0*delta, 0_m), 24);
+            p_pellet->Extrude(p_circle, mPelletThickness);
+            p_pellet->Translate(Vertex<DIM>(0_m, 0_m, gap));
+            std::vector<PolygonPtr<DIM> >polygons = p_pellet->GetPolygons();
 
-             double half_height = mCorneaThickness/(2.0*reference_length);
-             mpDomain->AddHoleMarker(DimensionalChastePoint<DIM>(0.0, -1.0*delta/reference_length, half_height, reference_length));
-             mHoles.push_back(DimensionalChastePoint<DIM>(0.0, -1.0*delta/reference_length, half_height, reference_length));
-             mpDomain->AppendPart(p_pellet);
-             for(unsigned idx=0;idx<polygons.size();idx++)
-             {
-                 polygons[idx]->AddAttribute("Pellet Interface", 1.0);
-             }
+            QLength half_height = mCorneaThickness/2.0;
+            mpDomain->AddHoleMarker(Vertex<DIM>(0_m, -1.0*delta, half_height));
+            mHoles.push_back(Vertex<DIM>(0_m, -1.0*delta, half_height));
+            mpDomain->AppendPart(p_pellet);
+            for(unsigned idx=0;idx<polygons.size();idx++)
+            {
+                polygons[idx]->AddAttribute("Pellet Interface", 1.0);
+            }
         }
     }
     else if(mDomainType == DomainType::HEMISPHERE)
@@ -324,19 +304,16 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
         if(mUsePellet)
         {
             PartPtr<DIM> p_pellet_domain = Part<DIM>::Create();
-            double gap = (mCorneaThickness - mPelletThickness)/(2.0*reference_length)/4.0;
-            double base = mCorneaRadius/reference_length + gap - mCorneaThickness/reference_length;
+            QLength gap = (mCorneaThickness - mPelletThickness)/(2.0)/4.0;
+            QLength base = mCorneaRadius + gap - mCorneaThickness;
 
-            p_pellet_domain->AddCylinder(mPelletRadius,
-                    mPelletThickness, DimensionalChastePoint<DIM>(0.0, 0.0, base, reference_length));
-            std::vector<std::shared_ptr<Polygon<DIM > > > polygons = p_pellet_domain->GetPolygons();
+            p_pellet_domain->AddCylinder(mPelletRadius, mPelletThickness, Vertex<DIM>(0_m, 0_m, base));
+            std::vector<PolygonPtr<DIM> > polygons = p_pellet_domain->GetPolygons();
 
             double height_fraction = double((mPelletHeight+mPelletRadius+ mLimbalOffset)/mCorneaRadius);
             double rotation_angle = std::acos(std::ceil(height_fraction - 0.5));
 
-            DimensionalChastePoint<DIM> pellet_centre(
-                    0.0, 0.0, base + mPelletThickness/(2.0*reference_length), reference_length);
-
+            Vertex<DIM> pellet_centre(0_m, 0_m, base + mPelletThickness/2.0);
             c_vector<double, 3> axis;
             axis[0] = 0.0;
             axis[1] = 1.0;
@@ -366,15 +343,13 @@ std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulatio
             if(mSampling)
             {
                 mpSamplingGrid = RegularGrid<DIM>::Create();
-                std::shared_ptr<RegularGrid<DIM> > p_regular_grid =
-                            std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpSamplingGrid);
+                auto p_regular_grid = std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpSamplingGrid);
                 p_regular_grid->GenerateFromPart(mpDomain, mGridSpacing*3.0);
             }
             else
             {
                 mpGrid = RegularGrid<DIM>::Create();
-                std::shared_ptr<RegularGrid<DIM> > p_regular_grid =
-                            std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGrid);
+                auto p_regular_grid = std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGrid);
                 p_regular_grid->GenerateFromPart(mpDomain, mGridSpacing);
             }
         }
@@ -462,7 +437,6 @@ std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulatio
 template<unsigned DIM>
 std::shared_ptr<VesselNetwork<DIM> > CornealMicropocketSimulation<DIM>::SetUpVesselNetwork()
 {
-    QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
     mpNetwork = VesselNetwork<DIM>::Create();
 
     if(mDomainType == DomainType::PLANAR_2D or mDomainType == DomainType::PLANAR_3D)
@@ -471,20 +445,18 @@ std::shared_ptr<VesselNetwork<DIM> > CornealMicropocketSimulation<DIM>::SetUpVes
         QLength domain_length = 2.0*M_PI*mCorneaRadius;
         unsigned divisions = unsigned(float(domain_length/mNodeSpacing)) - 2;
         unsigned alignment_axis = 0;
-        double midpoint = 0.0;
+        QLength midpoint = 0_m;
         if(mDomainType == DomainType::PLANAR_3D)
         {
-            midpoint = mCorneaThickness/(2.0*reference_length);
+            midpoint = mCorneaThickness/2.0;
         }
         mpNetwork = generator.GenerateSingleVessel(domain_length,
-                                                 DimensionalChastePoint<DIM>(0.0,
-                                                                         double(mLimbalOffset/reference_length),
-                                                                         midpoint, reference_length),
+                                                 Vertex<DIM>(0_m, mLimbalOffset, midpoint).rGetLocation(),
                                                  divisions, alignment_axis);
         std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
         for(unsigned idx=0;idx<nodes.size();idx++)
         {
-            nodes[idx]->GetFlowProperties()->SetPressure(1.0*unit::pascals);
+            nodes[idx]->GetFlowProperties()->SetPressure(1_Pa);
         }
     }
     else if(mDomainType == DomainType::CIRCLE_2D or mDomainType == DomainType::CIRCLE_3D)
@@ -492,19 +464,18 @@ std::shared_ptr<VesselNetwork<DIM> > CornealMicropocketSimulation<DIM>::SetUpVes
         QLength sampling_radius = mCorneaRadius-mLimbalOffset;
         unsigned num_nodes = int(double((2.0*M_PI*sampling_radius)/mNodeSpacing)) + 1;
         double sweep_angle = 2.0*M_PI/double(num_nodes);
-        double midpoint = 0.0;
+        QLength midpoint = 0_m;
         if(mDomainType == DomainType::CIRCLE_3D)
         {
-            midpoint = mCorneaThickness/(2.0*reference_length);
+            midpoint = mCorneaThickness/2.0;
         }
         std::vector<std::shared_ptr<VesselNode<DIM> > > nodes;
         for(unsigned idx=0;idx<num_nodes;idx++)
         {
             double this_angle = double(idx)*sweep_angle+M_PI;
-            double x_coord = (sampling_radius/reference_length)*std::sin(this_angle);
-            double y_coord = (sampling_radius/reference_length)*std::cos(this_angle);
-            nodes.push_back(VesselNode<DIM>::Create(
-                DimensionalChastePoint<DIM>(x_coord, y_coord, midpoint, reference_length)));
+            QLength x_coord = sampling_radius*std::sin(this_angle);
+            QLength y_coord = sampling_radius*std::cos(this_angle);
+            nodes.push_back(VesselNode<DIM>::Create(Vertex<DIM>(x_coord, y_coord, midpoint)));
         }
         for(unsigned idx=1;idx<num_nodes;idx++)
         {
@@ -513,16 +484,14 @@ std::shared_ptr<VesselNetwork<DIM> > CornealMicropocketSimulation<DIM>::SetUpVes
         mpNetwork->AddVessel(Vessel<DIM>::Create(nodes[nodes.size()-1], nodes[0]));
         for(unsigned idx=0;idx<nodes.size();idx++)
         {
-            nodes[idx]->GetFlowProperties()->SetPressure(1.0*unit::pascals);
+            nodes[idx]->GetFlowProperties()->SetPressure(1_Pa);
         }
     }
 
     else if(mDomainType == DomainType::HEMISPHERE)
     {
-        double dimless_cornea_mid_radius = double((mCorneaRadius-mCorneaThickness/2.0)/reference_length);
-        double dimless_offset = double(mLimbalOffset/reference_length);
-        QLength sampling_radius = std::sqrt(dimless_cornea_mid_radius*dimless_cornea_mid_radius-
-                dimless_offset*dimless_offset)*reference_length;
+        QLength cornea_mid_radius = (mCorneaRadius-mCorneaThickness/2.0);
+        QLength sampling_radius = Qsqrt(cornea_mid_radius*cornea_mid_radius-mLimbalOffset*mLimbalOffset);
         unsigned num_nodes = int(double((2.0*M_PI*sampling_radius)/mNodeSpacing)) + 1;
         double sweep_angle = 2.0*M_PI/double(num_nodes);
 
@@ -530,11 +499,9 @@ std::shared_ptr<VesselNetwork<DIM> > CornealMicropocketSimulation<DIM>::SetUpVes
         for(unsigned idx=0;idx<num_nodes;idx++)
         {
             double this_angle = double(idx)*sweep_angle+M_PI;
-            double x_coord = (sampling_radius/reference_length)*std::sin(this_angle);
-            double y_coord = (sampling_radius/reference_length)*std::cos(this_angle);
-            double z_coord = dimless_offset;
-            nodes.push_back(VesselNode<DIM>::Create(
-                DimensionalChastePoint<DIM>(x_coord, y_coord, z_coord, reference_length)));
+            QLength x_coord = sampling_radius*std::sin(this_angle);
+            QLength y_coord = sampling_radius*std::cos(this_angle);
+            nodes.push_back(VesselNode<DIM>::Create(Vertex<DIM>(x_coord, y_coord, mLimbalOffset)));
         }
         for(unsigned idx=1;idx<num_nodes;idx++)
         {
@@ -543,7 +510,7 @@ std::shared_ptr<VesselNetwork<DIM> > CornealMicropocketSimulation<DIM>::SetUpVes
         mpNetwork->AddVessel(Vessel<DIM>::Create(nodes[nodes.size()-1], nodes[0]));
         for(unsigned idx=0;idx<nodes.size();idx++)
         {
-            nodes[idx]->GetFlowProperties()->SetPressure(1.0*unit::pascals);
+            nodes[idx]->GetFlowProperties()->SetPressure(1_Pa);
         }
     }
     return mpNetwork;
@@ -677,7 +644,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
             std::vector<double> vegf_field;
             for(unsigned idx=0;idx<mpGrid->GetNumberOfPoints();idx++)
             {
-                double y_loc = mpGrid->GetPoint(idx).GetLocation(reference_length)[1];
+                double y_loc = mpGrid->GetPoint(idx).Convert(reference_length)[1];
                 double dimless_pellet_height = (mPelletHeight/reference_length);
                 double normalized_distance = y_loc/dimless_pellet_height;
                 vegf_field.push_back(normalized_distance*(mPelletConcentration/reference_concentration));
@@ -693,8 +660,8 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
             std::vector<double> vegf_field;
             for(unsigned idx=0;idx<mpGrid->GetNumberOfPoints();idx++)
             {
-                double x_loc = mpGrid->GetPoint(idx).GetLocation(reference_length)[0];
-                double y_loc = mpGrid->GetPoint(idx).GetLocation(reference_length)[1];
+                double x_loc = mpGrid->GetPoint(idx).Convert(reference_length)[0];
+                double y_loc = mpGrid->GetPoint(idx).Convert(reference_length)[1];
                 double radius = std::sqrt(x_loc*x_loc + y_loc*y_loc);
                 double dimless_pellet_height = (mCorneaRadius/reference_length);
                 double normalized_distance = double(radius/dimless_pellet_height);
@@ -711,9 +678,9 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
             std::vector<double> vegf_field;
             for(unsigned idx=0;idx<mpGrid->GetNumberOfPoints();idx++)
             {
-                double x_loc = mpGrid->GetPoint(idx).GetLocation(reference_length)[0];
-                double y_loc = mpGrid->GetPoint(idx).GetLocation(reference_length)[1];
-                double z_loc = mpGrid->GetPoint(idx).GetLocation(reference_length)[2];
+                double x_loc = mpGrid->GetPoint(idx).Convert(reference_length)[0];
+                double y_loc = mpGrid->GetPoint(idx).Convert(reference_length)[1];
+                double z_loc = mpGrid->GetPoint(idx).Convert(reference_length)[2];
                 double radius = std::sqrt(x_loc*x_loc + y_loc*y_loc);
                 double angle = std::atan(z_loc/radius);
                 double frac = angle/(M_PI/2.0);

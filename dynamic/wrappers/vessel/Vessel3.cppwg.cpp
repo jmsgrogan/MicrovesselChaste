@@ -75,15 +75,15 @@ py::class_<Vessel3 , Vessel3_Overloads   >(m, "Vessel3")
             " " , py::arg("pTargetVessel") )
         .def(
             "DivideSegment", 
-            (::std::shared_ptr<VesselNode<3> >(Vessel3::*)(::DimensionalChastePoint<3> const &, double)) &Vessel3::DivideSegment, 
+            (::std::shared_ptr<VesselNode<3> >(Vessel3::*)(::Vertex<3> const &, double)) &Vessel3::DivideSegment, 
             " " , py::arg("rLocation"), py::arg("distanceTolerance") = 9.9999999999999995E-7 )
         .def(
             "GetClosestEndNodeDistance", 
-            (::QLength(Vessel3::*)(::DimensionalChastePoint<3> const &)) &Vessel3::GetClosestEndNodeDistance, 
+            (::QLength(Vessel3::*)(::Vertex<3> const &)) &Vessel3::GetClosestEndNodeDistance, 
             " " , py::arg("rLocation") )
         .def(
             "GetDistance", 
-            (::QLength(Vessel3::*)(::DimensionalChastePoint<3> const &) const ) &Vessel3::GetDistance, 
+            (::QLength(Vessel3::*)(::Vertex<3> const &) const ) &Vessel3::GetDistance, 
             " " , py::arg("rLocation") )
         .def(
             "GetConnectedVessels", 

@@ -35,7 +35,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "VesselSegment.hpp"
 #include "UnitCollection.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "DistanceMap.hpp"
 #include "PetscTools.hpp"
 #include "PetscVecTools.hpp"
@@ -82,14 +82,14 @@ void DistanceMap<DIM>::Solve()
 
     for(unsigned idx=0;idx<num_points; idx++)
     {
-        DimensionalChastePoint<DIM> location = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetPoint(idx);
+        Vertex<DIM> location = this->mpDensityMap->GetGridCalculator()->GetGrid()->GetPoint(idx);
         QLength min_distance = DBL_MAX * unit::metres;
         for (unsigned jdx = 0; jdx <  segments.size(); jdx++)
         {
             QLength seg_dist = segments[jdx]->GetDistance(location);
             if(this->mUseSegmentRadii && seg_dist<=segments[jdx]->GetRadius())
             {
-                seg_dist = 0.0 * unit::metres;
+                seg_dist = 0_m;
             }
             if(seg_dist < min_distance)
             {

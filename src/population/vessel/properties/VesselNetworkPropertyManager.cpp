@@ -59,7 +59,7 @@ std::shared_ptr<VesselNetworkPropertyManager<DIM> > VesselNetworkPropertyManager
 
 template <unsigned DIM>
 void VesselNetworkPropertyManager<DIM>::AssignInflows(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-        DimensionalChastePoint<DIM> location, QLength searchRadius)
+        Vertex<DIM> location, QLength searchRadius)
 {
     if(pNetwork->GetNodes().size()>0)
     {
@@ -74,7 +74,7 @@ void VesselNetworkPropertyManager<DIM>::AssignInflows(std::shared_ptr<VesselNetw
 
 template <unsigned DIM>
 void VesselNetworkPropertyManager<DIM>::AssignOutflows(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-        DimensionalChastePoint<DIM> location, QLength searchRadius)
+        Vertex<DIM> location, QLength searchRadius)
 {
     if(pNetwork->GetNodes().size()>0)
     {

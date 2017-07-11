@@ -44,7 +44,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 OffLatticeSproutingRule<DIM>::OffLatticeSproutingRule()
     : AbstractSproutingRule<DIM>(),
-      mTipExclusionRadius(80.0 * 1_um),
+      mTipExclusionRadius(80_um),
       mHalfMaxVegf(Owen11Parameters::mpVegfConventrationAtHalfMaxProbSprouting->GetValue("Owen2011SproutingRule")),
       mVegfField()
 {
@@ -52,7 +52,7 @@ OffLatticeSproutingRule<DIM>::OffLatticeSproutingRule()
     // have a similar magnitude multiply this value by a typical vessel surface area = 2*pi*R*L
     // = 2*pi*15*40
     this->mSproutingProbability = Owen11Parameters::mpMaximumSproutingRate->GetValue("Owen2011SproutingRule")*2.0*M_PI*15.0*40.0;
-    this->mTipExclusionRadius = 80.0*1_um;
+    this->mTipExclusionRadius = 80_um;
 }
 
 template<unsigned DIM>
@@ -84,15 +84,8 @@ std::vector<std::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::Ge
     {
         for(unsigned idx=0; idx<rNodes.size(); idx++)
         {
-            c_vector<double, DIM> loc = rNodes[idx]->rGetLocation().GetLocation(reference_length);
-            if(DIM==3)
-            {
-                p_probe_locations->InsertNextPoint(loc[0], loc[1], loc[2]);
-            }
-            else
-            {
-                p_probe_locations->InsertNextPoint(loc[0], loc[1], 0.0);
-            }
+            c_vector<double, 3> loc = rNodes[idx]->rGetLocation().Convert3(reference_length);
+            p_probe_locations->InsertNextPoint(&loc[0]);
         }
         if(p_probe_locations->GetNumberOfPoints()>0)
         {
@@ -101,14 +94,14 @@ std::vector<std::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::Ge
     }
 
     // Set up the output sprouts vector
-    std::vector<std::shared_ptr<VesselNode<DIM> > > sprouts;
+    std::vector<VesselNodePtr<DIM> > sprouts;
 
     // Loop over all nodes and randomly select sprouts
     for(unsigned idx = 0; idx < rNodes.size(); idx++)
     {
         if(this->mOnlySproutIfPerfused)
         {
-            if(rNodes[idx]->GetFlowProperties()->GetPressure()==0.0*unit::pascals)
+            if(rNodes[idx]->GetFlowProperties()->GetPressure()==0_Pa)
             {
                 continue;
             }
@@ -121,7 +114,7 @@ std::vector<std::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::Ge
         }
 
         // Apply a vessel end cutoff if there is one
-        if(this->mVesselEndCutoff > 0.0 * unit::metres)
+        if(this->mVesselEndCutoff > 0_m)
         {
             if(rNodes[idx]->GetSegment(0)->GetVessel()->GetClosestEndNodeDistance(rNodes[idx]->rGetLocation())< this->mVesselEndCutoff)
             {
@@ -134,7 +127,7 @@ std::vector<std::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::Ge
         }
 
         // Check we are not too close to an existing candidate
-        if(mTipExclusionRadius>0.0 * unit::metres)
+        if(mTipExclusionRadius>0_m)
         {
             bool too_close = false;
             for(unsigned jdx=0; jdx<sprouts.size(); jdx++)
@@ -164,9 +157,8 @@ std::vector<std::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::Ge
             vegf_conc = probed_solutions[idx];
         }
 
-        QLength reference_length_for_sprouting = 40.0e-6*unit::metres;
-        QLength node_length = (rNodes[idx]->GetSegment(0)->GetLength()+
-                rNodes[idx]->GetSegment(1)->GetLength())/2.0;
+        QLength reference_length_for_sprouting = 40_um;
+        QLength node_length = (rNodes[idx]->GetSegment(0)->GetLength()+ rNodes[idx]->GetSegment(1)->GetLength())/2.0;
         double length_factor = node_length/reference_length_for_sprouting;
 
         double vegf_fraction = vegf_conc/(vegf_conc + mHalfMaxVegf);

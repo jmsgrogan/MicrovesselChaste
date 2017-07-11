@@ -74,7 +74,7 @@ protected:
     /**
      * The positions of point sinks
      */
-    std::vector<DimensionalChastePoint<DIM> > mSinkCoordinates;
+    std::vector<Vertex<DIM> > mSinkCoordinates;
 
     /**
      * Map between point sinks and segments
@@ -84,7 +84,7 @@ protected:
     /**
      * Coorindates of subsegments
      */
-    std::vector<DimensionalChastePoint<DIM> > mSubSegmentCoordinates;
+    std::vector<Vertex<DIM> > mSubSegmentCoordinates;
 
     /**
      * Subsegment lengths

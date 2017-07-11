@@ -46,7 +46,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ChastePoint.hpp"
 #include "Exception.hpp"
 #include "UblasIncludes.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "UnitCollection.hpp"
 #include "GeometryWriter.hpp"
 #include "VesselNetwork.hpp"
@@ -106,12 +106,12 @@ class Part
     /**
      * The locations of hole markers (see PLC definition)
      */
-    std::vector<VecQLength<DIM> > mHoleMarkers;
+    std::vector<Vertex<DIM> > mHoleMarkers;
 
     /**
      * The locations of region markers (see PLC definition)
      */
-    std::vector<std::pair<VecQLength<DIM>, unsigned> > mRegionMarkers;
+    std::vector<std::pair<Vertex<DIM>, unsigned> > mRegionMarkers;
 
     /**
      * The reference length scale
@@ -169,7 +169,7 @@ public:
      * @param rLabel the label
      * @return true if an edge is found
      */
-    void AddAttributeToEdgeIfFound(const VecQLength<DIM>& loc, const std::string& rLabel, double value);
+    void AddAttributeToEdgeIfFound(const Vertex<DIM>& rLoc, const std::string& rLabel, double value);
 
     /**
      * Label all polygons
@@ -185,7 +185,7 @@ public:
      * @param rLabel the label
      * @return true if an edge is found
      */
-    void AddAttributeToPolygonIfFound(const VecQLength<DIM>& loc, const std::string& rLabel, double value);
+    void AddAttributeToPolygonIfFound(const Vertex<DIM>& rLoc, const std::string& rLabel, double value);
 
     /**
      * Add a circle to the part. If a target facet is not specified the default position is normal to the z-axis.
@@ -194,8 +194,7 @@ public:
      * @param numSegments the number of linear segments the circle is described with
      * @return polygon corresponding to the circle, useful for further operations, such as extrusion.
      */
-    PolygonPtr<DIM> AddCircle(QLength radius,
-            VecQLength<DIM> centre = VecQLength<DIM>(0.0), unsigned numSegments = 24);
+    PolygonPtr<DIM> AddCircle(QLength radius, Vertex<DIM> centre = Vertex<DIM>(), unsigned numSegments = 24);
 
     /**
      * Add a cylinder to the part.
@@ -204,8 +203,7 @@ public:
      * @param centre the centre of the base
      * @param numSegments the number of line segments the base is described with
      */
-    void AddCylinder(QLength radius, QLength depth,
-            VecQLength<DIM> centre = VecQLength<DIM>(0.0), unsigned numSegments = 24);
+    void AddCylinder(QLength radius, QLength depth, Vertex<DIM> centre = Vertex<DIM>(), unsigned numSegments = 24);
 
     /**
      * Add a cuboid to the part.
@@ -214,21 +212,20 @@ public:
      * @param sizeZ the dimension in z
      * @param origin the bottom, left, front corner
      */
-    void AddCuboid(QLength sizeX, QLength sizeY, QLength sizeZ,
-            VecQLength<DIM> origin = VecQLength<DIM>(0.0));
+    void AddCuboid(QLength sizeX, QLength sizeY, QLength sizeZ, Vertex<DIM> origin = Vertex<DIM>());
 
     /**
      * Add a hole marker to the part
      * @param location the location of the hole
      */
-    void AddHoleMarker(VecQLength<DIM> location);
+    void AddHoleMarker(Vertex<DIM> location);
 
     /**
      * Add a region marker to the part
      * @param location the location of the region
      * @param value the region value
      */
-    void AddRegionMarker(VecQLength<DIM> location, unsigned value);
+    void AddRegionMarker(Vertex<DIM> location, unsigned value);
 
     /**
      * Add a polygon described by a vector or vertices. The vertices should be planar. This is not
@@ -238,7 +235,7 @@ public:
      * @param pFacet an optional facet that the circle can be generated on
      * @return the new polygon, useful for further operations, such as extrusion.
      */
-    PolygonPtr<DIM> AddPolygon(const std::vector<VecQLength<DIM> >& vertices,
+    PolygonPtr<DIM> AddPolygon(const std::vector<VertexPtr<DIM> >& vertices,
                                           bool newFacet = false, FacetPtr<DIM> pFacet = FacetPtr<DIM>());
 
     /**
@@ -258,7 +255,7 @@ public:
      * @param origin the bottom left corner
      * @return the new polygon, useful for further operations, such as extrusion.
      */
-    PolygonPtr<DIM> AddRectangle(QLength sizeX, QLength sizeY, VecQLength<DIM> origin = VecQLength<DIM>(0.0));
+    PolygonPtr<DIM> AddRectangle(QLength sizeX, QLength sizeY, Vertex<DIM> origin = Vertex<DIM>());
 
     /**
      * Add a vessel network to the part.
@@ -266,8 +263,8 @@ public:
      * @param surface true if a surface representation of the network is required
      * @param removeVesselRegion remove vessel region from meshes
      */
-    void AddVesselNetwork(VesselNetworkPtr<DIM> pVesselNetwork,
-            bool surface = false, bool removeVesselRegion = true);
+    void AddVesselNetwork(VesselNetworkPtr<DIM> pVesselNetwork, bool surface = false,
+            bool removeVesselRegion = true);
 
     /**
      * Add a part to the existing one. This takes all the polygons from the incoming part and
@@ -280,7 +277,7 @@ public:
      * Remove vessels outside the part
      * @param pVesselNetwork the vessel network to be pruned
      */
-    void BooleanWithNetwork(VesselNetworkPtr<DIM>  pVesselNetwork);
+    void BooleanWithNetwork(VesselNetworkPtr<DIM> pVesselNetwork);
 
     /**
      * Extrude the part along the z-axis, inserting planar faces in place of edges.
@@ -303,20 +300,20 @@ public:
      * @param spacing the grid spacing
      * @return a vector of grid indices
      */
-    std::vector<unsigned> GetContainingGridIndices(unsigned num_x, unsigned num_y,
-            unsigned num_z, QLength spacing);
+    std::vector<unsigned> GetContainingGridIndices(unsigned num_x, unsigned num_y, unsigned num_z,
+            QLength spacing);
 
     /**
      * Return the hole marker locations
      * @return the hole marker locations
      */
-    std::vector<VecQLength<DIM> > GetHoleMarkers();
+    std::vector<Vertex<DIM> > GetHoleMarkers();
 
     /**
      * Return the region marker locations
      * @return the region marker locations
      */
-    std::vector<std::pair<VecQLength<DIM>, unsigned> > GetRegionMarkers();
+    std::vector<std::pair<Vertex<DIM>, unsigned> > GetRegionMarkers();
 
     /**
      * Return the part attributes
@@ -341,7 +338,7 @@ public:
      * @param rLocation the probe point
      * @return the FIRST found facet on the point.
      */
-    FacetPtr<DIM> GetFacet(const VecQLength<DIM>& rLocation);
+    FacetPtr<DIM> GetFacet(const Vertex<DIM>& rLocation);
 
     /**
      * Return the polygons
@@ -365,13 +362,7 @@ public:
      * Return the unique vertices
      * @return the unique vertices
      */
-    std::vector<VecQLength<DIM> > GetVertices();
-
-    /**
-     * Return the vertex locations
-     * @return the vertex locations
-     */
-    std::vector<VecQLength<DIM> > GetVertexLocations();
+    std::vector<VertexPtr<DIM> > GetVertices();
 
     /**
      * Return the a vtk polydata representation of the part
@@ -393,14 +384,14 @@ public:
      * @param rLabel the label
      * @return true if an edge is found
      */
-    bool EdgeHasAttribute(const VecQLength<DIM>& loc, const std::string& rLabel);
+    bool EdgeHasAttribute(const Vertex<DIM>& rLoc, const std::string& rLabel);
 
     /**
      * Is the point inside the part
      * @param location the location of the point
      * @return bool true if the point is inside the part
      */
-    bool IsPointInPart(const VecQLength<DIM>& loc);
+    bool IsPointInPart(const Vertex<DIM>& rLoc);
 
     /**
      * Is the point inside the part
@@ -431,7 +422,7 @@ public:
      * Move the part along the translation vector
      * @param vector the vector to move the part along
      */
-    void Translate(const VecQLength<DIM>& vector);
+    void Translate(const Vertex<DIM>& vector);
 
     /**
      * Write the part to file in vtk format

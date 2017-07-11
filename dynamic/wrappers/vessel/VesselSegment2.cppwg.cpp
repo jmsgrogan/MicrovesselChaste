@@ -49,7 +49,7 @@ py::class_<VesselSegment2 , VesselSegment2_Overloads   >(m, "VesselSegment2")
             " "  )
         .def(
             "GetDistance", 
-            (::QLength(VesselSegment2::*)(::DimensionalChastePoint<2> const &) const ) &VesselSegment2::GetDistance, 
+            (::QLength(VesselSegment2::*)(::Vertex<2> const &) const ) &VesselSegment2::GetDistance, 
             " " , py::arg("location") )
         .def(
             "GetFlowProperties", 
@@ -61,7 +61,7 @@ py::class_<VesselSegment2 , VesselSegment2_Overloads   >(m, "VesselSegment2")
             " "  )
         .def(
             "GetMidPoint", 
-            (::DimensionalChastePoint<2>(VesselSegment2::*)() const ) &VesselSegment2::GetMidPoint, 
+            (::Vertex<2>(VesselSegment2::*)() const ) &VesselSegment2::GetMidPoint, 
             " "  )
         .def(
             "GetMaturity", 
@@ -109,7 +109,7 @@ py::class_<VesselSegment2 , VesselSegment2_Overloads   >(m, "VesselSegment2")
             " "  )
         .def(
             "GetPointProjection", 
-            (::DimensionalChastePoint<2>(VesselSegment2::*)(::DimensionalChastePoint<2> const &, bool) const ) &VesselSegment2::GetPointProjection, 
+            (::Vertex<2>(VesselSegment2::*)(::Vertex<2> const &, bool) const ) &VesselSegment2::GetPointProjection, 
             " " , py::arg("location"), py::arg("projectToEnds") = false )
         .def(
             "GetUnitTangent", 

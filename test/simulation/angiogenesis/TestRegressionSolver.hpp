@@ -111,8 +111,8 @@ public:
         VesselNetworkPropertyManager<2>::SetSegmentProperties(p_network, p_segment1);
 
         // Get the nearest node to the inlet and outlet
-        std::shared_ptr<VesselNode<2> > p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, DimensionalChastePoint<2>(742, 912));
-        std::shared_ptr<VesselNode<2> > p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, DimensionalChastePoint<2>(0, 0));
+        std::shared_ptr<VesselNode<2> > p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, Vertex<2>(742, 912));
+        std::shared_ptr<VesselNode<2> > p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, Vertex<2>(0, 0));
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
         p_inlet_node->GetFlowProperties()->SetPressure(3393.0_Pa);
         p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);

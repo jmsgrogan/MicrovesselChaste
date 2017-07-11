@@ -46,7 +46,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "AbstractCellPopulation.hpp"
 #include "GridCalculator.hpp"
 #include "Part.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 
 /**
  * Abstract class for implementing a vessel tip cell migration rule. On and off-lattice specializations
@@ -116,7 +116,7 @@ public:
      * @param rNodes candidate sprout nodes
      * @return the sprout directions
      */
-    virtual std::vector<DimensionalChastePoint<DIM> > GetDirections(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
+    virtual std::vector<Vertex<DIM> > GetDirections(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
 
     /**
      * Get the sprout indices

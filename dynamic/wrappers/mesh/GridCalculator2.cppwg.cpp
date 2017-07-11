@@ -28,7 +28,7 @@ py::class_<GridCalculator2    >(m, "GridCalculator2")
             " "  )
         .def(
             "GetPointMap", 
-            (::std::vector<std::vector<unsigned int, std::allocator<unsigned int> >, std::allocator<std::vector<unsigned int, std::allocator<unsigned int> > > >(GridCalculator2::*)(::std::vector<DimensionalChastePoint<2>, std::allocator<DimensionalChastePoint<2> > > const &)) &GridCalculator2::GetPointMap, 
+            (::std::vector<std::vector<unsigned int, std::allocator<unsigned int> >, std::allocator<std::vector<unsigned int, std::allocator<unsigned int> > > >(GridCalculator2::*)(::std::vector<Vertex<2>, std::allocator<Vertex<2> > > const &)) &GridCalculator2::GetPointMap, 
             " " , py::arg("rInputPoints") )
         .def(
             "GetPointMap", 

@@ -44,7 +44,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "TetrahedralMesh.hpp"
 #include "Part.hpp"
 #include "Cell.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 
 /**
  * Forward declare VTK members
@@ -99,12 +99,12 @@ class DiscreteContinuumMeshGenerator
     /**
      * A collection of hole location markers
      */
-    std::vector<DimensionalChastePoint<SPACE_DIM> > mHoles;
+    std::vector<Vertex<SPACE_DIM> > mHoles;
 
     /**
      * A collection of region markers
      */
-    std::vector<DimensionalChastePoint<SPACE_DIM> > mRegions;
+    std::vector<Vertex<SPACE_DIM> > mRegions;
 
     /**
      * Store element-wise region markers
@@ -168,13 +168,13 @@ public:
     * Set the hole locations
     * @param holes hole locations
     */
-    void SetHoles(std::vector<DimensionalChastePoint<SPACE_DIM> > holes);
+    void SetHoles(std::vector<Vertex<SPACE_DIM> > holes);
 
     /**
     * Set the region marker locations
     * @param regionMarkers region marker locations
     */
-    void SetRegionMarkers(std::vector<DimensionalChastePoint<SPACE_DIM> > regionMarkers);
+    void SetRegionMarkers(std::vector<Vertex<SPACE_DIM> > regionMarkers);
 
     /**
      * Do the meshing

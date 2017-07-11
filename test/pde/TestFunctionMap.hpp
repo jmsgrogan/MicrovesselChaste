@@ -50,7 +50,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "OutputFileHandler.hpp"
 #include "RegularGrid.hpp"
 #include "DiscreteSource.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "FunctionMap.hpp"
@@ -72,7 +72,7 @@ public:
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(length, length, DimensionalChastePoint<2>());
+        p_domain->AddRectangle(length, length, Vertex<2>());
 
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         QLength grid_spacing(5.0*unit::microns);
@@ -105,7 +105,7 @@ public:
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(length, length, DimensionalChastePoint<2>());
+        p_domain->AddRectangle(length, length, Vertex<2>());
 
         std::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator = DiscreteContinuumMeshGenerator<2>::Create();
         p_mesh_generator->SetDomain(p_domain);

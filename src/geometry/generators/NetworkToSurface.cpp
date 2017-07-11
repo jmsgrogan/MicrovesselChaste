@@ -191,13 +191,13 @@ void NetworkToSurface<DIM>::Update()
                 p_box->SetBounds(-1.1*radius, 0.0, -1.1*radius, 1.1*radius, - 1.1*radius, 1.1*radius);
 
                 c_vector<double, 3> loc;
-                loc[0]= nodes[idx]->rGetLocation().GetLocation(mReferenceLength)[0];
-                loc[1]= nodes[idx]->rGetLocation().GetLocation(mReferenceLength)[1];
+                loc[0]= nodes[idx]->rGetLocation().Convert(mReferenceLength)[0];
+                loc[1]= nodes[idx]->rGetLocation().Convert(mReferenceLength)[1];
                 loc[2]=0.0;
 
                 c_vector<double, 3> tangent;
-                tangent[0]= nodes[idx]->GetSegment(0)->GetOppositeNode(nodes[idx])->rGetLocation().GetLocation(mReferenceLength)[0] - loc[0];
-                tangent[1]= nodes[idx]->GetSegment(0)->GetOppositeNode(nodes[idx])->rGetLocation().GetLocation(mReferenceLength)[1] - loc[1];
+                tangent[0]= nodes[idx]->GetSegment(0)->GetOppositeNode(nodes[idx])->rGetLocation().Convert(mReferenceLength)[0] - loc[0];
+                tangent[1]= nodes[idx]->GetSegment(0)->GetOppositeNode(nodes[idx])->rGetLocation().Convert(mReferenceLength)[1] - loc[1];
                 tangent[2] = 0.0;
                 tangent /=norm_2(tangent);
 
@@ -302,14 +302,14 @@ void NetworkToSurface<DIM>::Update()
         {
             if(nodes[idx]->GetFlowProperties()->IsInputNode() or nodes[idx]->GetFlowProperties()->IsOutputNode())
             {
-                double radius = nodes[idx]->GetRadius()/nodes[idx]->GetReferenceLengthScale();
+                double radius = nodes[idx]->GetRadius()/mReferenceLength;
                 vtkSmartPointer<vtkBox> p_box = vtkSmartPointer<vtkBox>::New();
 
                 p_box->SetBounds(-1.1*radius, 0.0, -1.1*radius, 1.1*radius, - 1.1*radius, 1.1*radius);
 
-                c_vector<double, 3> loc = nodes[idx]->rGetLocation().GetLocation(mReferenceLength);
+                c_vector<double, 3> loc = nodes[idx]->rGetLocation().Convert(mReferenceLength);
                 c_vector<double, 3> tangent;
-                tangent = nodes[idx]->GetSegment(0)->GetOppositeNode(nodes[idx])->rGetLocation().GetLocation(mReferenceLength) - loc;
+                tangent = nodes[idx]->GetSegment(0)->GetOppositeNode(nodes[idx])->rGetLocation().Convert(mReferenceLength) - loc;
                 tangent /=norm_2(tangent);
 
                 double rotation_angle = std::acos(inner_prod(box_axis, tangent))*(180.0/M_PI);

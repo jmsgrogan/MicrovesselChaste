@@ -132,9 +132,9 @@ public:
         p_network->GetVesselSegments()[0]->GetFlowProperties()->SetImpedance(impedance*unit::pascal_second_per_metre_cubed);
         VesselNetworkPropertyManager<2>::SetSegmentProperties(p_network, p_network->GetVesselSegments()[0]);
         VesselNetworkPropertyManager<2>::AssignInflows(p_network,
-                DimensionalChastePoint<2>(0.0, 0.0, 0.0, reference_length), vessel_length/5.0);
+                Vertex<2>(0.0, 0.0, 0.0, reference_length), vessel_length/5.0);
         VesselNetworkPropertyManager<2>::AssignOutflows(p_network,
-                DimensionalChastePoint<2>(domain_size/reference_length, domain_size/reference_length, 0.0, reference_length), vessel_length/5.0);
+                Vertex<2>(domain_size/reference_length, domain_size/reference_length, 0.0, reference_length), vessel_length/5.0);
         VesselNetworkPropertyManager<2>::SetInflowPressures(p_network, 3393.0*unit::pascals);
         VesselNetworkPropertyManager<2>::SetOutflowPressures(p_network, 1000.5*unit::pascals);
 

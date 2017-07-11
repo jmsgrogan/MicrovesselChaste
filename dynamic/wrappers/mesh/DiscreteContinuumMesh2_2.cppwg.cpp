@@ -14,15 +14,15 @@
 namespace py = pybind11;
 typedef DiscreteContinuumMesh<2,2 > DiscreteContinuumMesh2_2;
 ;
-typedef ::DimensionalChastePoint<2> _DimensionalChastePoint2;
+typedef ::Vertex<2> _Vertex2;
 typedef ::std::vector<double, std::allocator<double> > const & _std_vectordouble_std_allocatordoubleRef;
 
 class DiscreteContinuumMesh2_2_Overloads : public DiscreteContinuumMesh2_2{
     public:
     using DiscreteContinuumMesh2_2::DiscreteContinuumMesh;
-    ::DimensionalChastePoint<2> GetGlobalCellLocation(unsigned int index) override {
+    ::Vertex<2> GetGlobalCellLocation(unsigned int index) override {
         PYBIND11_OVERLOAD(
-            _DimensionalChastePoint2,
+            _Vertex2,
             DiscreteContinuumMesh2_2,
             GetGlobalCellLocation,
             index);
@@ -57,7 +57,7 @@ py::class_<DiscreteContinuumMesh2_2 , DiscreteContinuumMesh2_2_Overloads   >(m, 
             " "  )
         .def(
             "GetGlobalCellLocation", 
-            (::DimensionalChastePoint<2>(DiscreteContinuumMesh2_2::*)(unsigned int)) &DiscreteContinuumMesh2_2::GetGlobalCellLocation, 
+            (::Vertex<2>(DiscreteContinuumMesh2_2::*)(unsigned int)) &DiscreteContinuumMesh2_2::GetGlobalCellLocation, 
             " " , py::arg("index") )
         .def(
             "GetPointLocations", 

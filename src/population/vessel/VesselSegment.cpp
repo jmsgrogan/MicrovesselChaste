@@ -45,7 +45,7 @@ VesselSegment<DIM>::VesselSegment() :
         AbstractVesselNetworkComponent<DIM>(),
         mNodes(),
         mVessel(std::weak_ptr<Vessel<DIM> >()),
-        mpFlowProperties(std::shared_ptr<SegmentFlowProperties<DIM> >(new SegmentFlowProperties<DIM>())),
+        mpFlowProperties(std::make_shared<SegmentFlowProperties<DIM> >()),
         mMaturity(1.0),
         mGlobalIndex(0),
         mLocalIndex(0),
@@ -63,7 +63,7 @@ VesselSegment<DIM>::VesselSegment(std::shared_ptr<VesselNode<DIM> > pNode1, std:
         AbstractVesselNetworkComponent<DIM>(),
         mNodes(std::pair<std::shared_ptr<VesselNode<DIM> >, std::shared_ptr<VesselNode<DIM> > >(pNode1, pNode2)),
         mVessel(std::weak_ptr<Vessel<DIM> >()),
-        mpFlowProperties(std::shared_ptr<SegmentFlowProperties<DIM> >(new SegmentFlowProperties<DIM>())),
+        mpFlowProperties(std::make_shared<SegmentFlowProperties<DIM> >()),
         mMaturity(1.0),
         mGlobalIndex(0),
         mLocalIndex(0),
@@ -80,7 +80,7 @@ VesselSegment<DIM>::VesselSegment(const VesselSegment<DIM>& rSegment) :
     std::enable_shared_from_this<VesselSegment<DIM> >(), AbstractVesselNetworkComponent<DIM>(),
     mNodes(rSegment.GetNodes()),
     mVessel(std::weak_ptr<Vessel<DIM> >()),
-    mpFlowProperties(std::shared_ptr<SegmentFlowProperties<DIM> >(new SegmentFlowProperties<DIM>())),
+    mpFlowProperties(std::make_shared<SegmentFlowProperties<DIM> >()),
     mMaturity(1.0),
     mGlobalIndex(0),
     mLocalIndex(0),
@@ -94,7 +94,8 @@ VesselSegment<DIM>::VesselSegment(const VesselSegment<DIM>& rSegment) :
 }
 
 template<unsigned DIM>
-std::shared_ptr<VesselSegment<DIM> > VesselSegment<DIM>::Create(std::shared_ptr<VesselNode<DIM> > pNode1, std::shared_ptr<VesselNode<DIM> > pNode2)
+std::shared_ptr<VesselSegment<DIM> > VesselSegment<DIM>::Create(std::shared_ptr<VesselNode<DIM> > pNode1,
+        std::shared_ptr<VesselNode<DIM> > pNode2)
 {
     std::shared_ptr<VesselSegment<DIM> > pSelf(new VesselSegment<DIM>(pNode1, pNode2));
 
@@ -145,7 +146,7 @@ void VesselSegment<DIM>::CopyDataFromExistingSegment(const std::shared_ptr<Vesse
 }
 
 template<unsigned DIM>
-QLength VesselSegment<DIM>::GetDistance(const DimensionalChastePoint<DIM>& location) const
+QLength VesselSegment<DIM>::GetDistance(const Vertex<DIM>& location) const
 {
     return GetDistanceToLineSegment(mNodes.first->rGetLocation(), mNodes.second->rGetLocation(), location);
 }
@@ -217,13 +218,13 @@ std::map<std::string, double> VesselSegment<DIM>::GetOutputData()
     std::map<std::string, double> flow_data = this->mpFlowProperties->GetOutputData();
     this->mOutputData.insert(flow_data.begin(), flow_data.end());
     this->mOutputData["Segment Id"] = double(this->GetId());
-    this->mOutputData["Segment Radius m: "] = this->GetRadius() / unit::metres;
+    this->mOutputData["Segment Radius m: "] = this->GetRadius() / 1_m;
     this->mOutputData["Maturity"] = this->GetMaturity();
     return this->mOutputData;
 }
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM> VesselSegment<DIM>::GetMidPoint() const
+Vertex<DIM> VesselSegment<DIM>::GetMidPoint() const
 {
     return mNodes.first->rGetLocation().GetMidPoint(mNodes.second->rGetLocation());
 }
@@ -269,9 +270,11 @@ std::pair<std::shared_ptr<VesselNode<DIM> >, std::shared_ptr<VesselNode<DIM> > >
 }
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM> VesselSegment<DIM>::GetPointProjection(const  DimensionalChastePoint<DIM>& location, bool projectToEnds) const
+Vertex<DIM> VesselSegment<DIM>::GetPointProjection(const  Vertex<DIM>& location, bool projectToEnds) const
 {
-    return GetPointProjectionOnLineSegment(mNodes.first->rGetLocation(), mNodes.second->rGetLocation(), location, projectToEnds);
+    return GetPointProjectionOnLineSegment(mNodes.first->rGetLocation().rGetLocation(),
+            mNodes.second->rGetLocation().rGetLocation(),
+            location.rGetLocation(), projectToEnds);
 }
 
 template<unsigned DIM>

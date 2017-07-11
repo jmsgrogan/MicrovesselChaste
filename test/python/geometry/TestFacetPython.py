@@ -17,10 +17,10 @@ class TestFacet(unittest.TestCase):
         
         # Make some vertices
         length_scale = 1.e-6*metre()
-        vertex1 = microvessel_chaste.mesh.DimensionalChastePoint3((0.0, 0.0, 0.0), length_scale)
-        vertex2 = microvessel_chaste.mesh.DimensionalChastePoint3((1.0, 0.0, 0.0), length_scale)
-        vertex3 = microvessel_chaste.mesh.DimensionalChastePoint3((1.0, 1.0, 0.0), length_scale)
-        vertex4 = microvessel_chaste.mesh.DimensionalChastePoint3((0.0, 1.0, 0.0), length_scale)
+        vertex1 = microvessel_chaste.mesh.Vertex3((0.0, 0.0, 0.0), length_scale)
+        vertex2 = microvessel_chaste.mesh.Vertex3((1.0, 0.0, 0.0), length_scale)
+        vertex3 = microvessel_chaste.mesh.Vertex3((1.0, 1.0, 0.0), length_scale)
+        vertex4 = microvessel_chaste.mesh.Vertex3((0.0, 1.0, 0.0), length_scale)
         
         # Make a polygon with one vertex
         polygon1 = microvessel_chaste.geometry.Polygon3(vertex1)
@@ -39,7 +39,7 @@ class TestFacet(unittest.TestCase):
         normal = (0.0, 0.0, 1.0)
             
         # Check translating and rotating
-        translation_vector = microvessel_chaste.mesh.DimensionalChastePoint3(1.0, 2.0, 3.0, length_scale)
+        translation_vector = microvessel_chaste.mesh.Vertex3(1.0, 2.0, 3.0, length_scale)
         facet.Translate(translation_vector)
         rotation_axis = (0.0, 0.0, 1.0)
         facet.RotateAboutAxis(rotation_axis, math.pi)

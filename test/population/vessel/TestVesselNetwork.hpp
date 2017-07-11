@@ -132,7 +132,7 @@ public:
 
         // Move the network
         QLength reference_length(1.0*unit::microns);
-        DimensionalChastePoint<3> translation_vector(0.0, 2.0, 0.0, reference_length);
+        Vertex<3> translation_vector(0.0, 2.0, 0.0, reference_length);
         vessel_network.Translate(translation_vector);
         TS_ASSERT_DELTA(vessel_network.GetVessels()[0]->GetSegments()[0]->GetNode(0)->rGetLocation().GetLocation(reference_length)[0], 0.0, 1.e-6);
         TS_ASSERT_DELTA(vessel_network.GetVessels()[0]->GetSegments()[0]->GetNode(0)->rGetLocation().GetLocation(reference_length)[1], 2.0, 1.e-6);
@@ -146,7 +146,7 @@ public:
         TS_ASSERT_EQUALS(vessel_network.GetNumberOfVessels(), 6u);
 
         // Move the new vessels
-        DimensionalChastePoint<3> translation_vector2(0.0, 0.0, 3.0, reference_length);
+        Vertex<3> translation_vector2(0.0, 0.0, 3.0, reference_length);
         vessel_network.Translate(translation_vector2);
         TS_ASSERT_DELTA(vessel_network.GetVessels()[3]->GetSegments()[0]->GetNode(1)->rGetLocation().GetLocation(reference_length)[0], 1.0, 1.e-6);
         TS_ASSERT_DELTA(vessel_network.GetVessels()[3]->GetSegments()[0]->GetNode(1)->rGetLocation().GetLocation(reference_length)[1], 2.0, 1.e-6);
@@ -194,7 +194,7 @@ public:
 
          // Do the divide
          QLength reference_length(1.0*unit::microns);
-         DimensionalChastePoint<3> location(0.66, 0.0, 0.0, reference_length);
+         Vertex<3> location(0.66, 0.0, 0.0, reference_length);
          vessel_network.DivideVessel(vessel_network.GetVessels()[0], location);
          TS_ASSERT_EQUALS(vessel_network.GetNumberOfVessels(), 2u);
          TS_ASSERT_EQUALS(vessel_network.GetNumberOfNodes(), 3u);
@@ -222,7 +222,7 @@ public:
 
         // Do the divide
         QLength reference_length(1.0*unit::microns);
-        DimensionalChastePoint<3> location(3.0, 0.0, 0.0, reference_length);
+        Vertex<3> location(3.0, 0.0, 0.0, reference_length);
         p_vascular_network.DivideVessel(p_vascular_network.GetVessels()[0], location);
         TS_ASSERT_EQUALS(p_vascular_network.GetNumberOfVessels(), 2u);
         TS_ASSERT_EQUALS(p_vascular_network.GetNumberOfNodes(), 5u);
@@ -235,7 +235,7 @@ public:
         TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(1)->GetNode(0)->rGetLocation().GetLocation(reference_length)[0], 4.0, 1.e-6);
         TS_ASSERT_DELTA(p_vascular_network.GetVessel(1)->GetSegment(1)->GetNode(1)->rGetLocation().GetLocation(reference_length)[0], 5.0, 1.e-6);
 
-        DimensionalChastePoint<3> location2(4.5, 0.0, 0.0, reference_length);
+        Vertex<3> location2(4.5, 0.0, 0.0, reference_length);
         TS_ASSERT_THROWS_ANYTHING(p_vascular_network.DivideVessel(p_vascular_network.GetVessel(0), location2));
 
         // Do the divide
@@ -265,7 +265,7 @@ public:
         p_vessel_network->AddVessel(p_vessel);
 
         // form sprout
-        DimensionalChastePoint<2> sprout_tip(0.0, 1.0, 0.0, 1.0_um);
+        Vertex<2> sprout_tip(0.0, 1.0, 0.0, 1.0_um);
         VesselPtr<2> p_new_sprout = p_vessel_network->FormSprout(nodes[1], sprout_tip);
 
         p_vessel_network->UpdateAll(true);
@@ -341,7 +341,7 @@ public:
         // Add some sprouts
         for(unsigned idx=1; idx<2; idx++)
         {
-            DimensionalChastePoint<3> tip_location(double(idx)*10.0, 10.0, 0.0, 1.0_um);
+            Vertex<3> tip_location(double(idx)*10.0, 10.0, 0.0, 1.0_um);
             p_network->FormSprout(bottom_nodes[idx], tip_location);
         }
 

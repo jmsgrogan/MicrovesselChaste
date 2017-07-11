@@ -337,13 +337,13 @@ void Vessel<DIM>::CopyDataFromExistingVessel(std::shared_ptr<Vessel<DIM> > pTarg
 }
 
 template<unsigned DIM>
-std::shared_ptr<VesselNode<DIM> > Vessel<DIM>::DivideSegment(const DimensionalChastePoint<DIM>& location, double distanceTolerance)
+std::shared_ptr<VesselNode<DIM> > Vessel<DIM>::DivideSegment(const Vertex<DIM>& location, QLength distanceTolerance)
 {
     // Identify segment
     std::shared_ptr<VesselSegment<DIM> > pVesselSegment;
     for (unsigned i = 0; i < mSegments.size(); i++)
     {
-        if (mSegments[i]->GetDistance(location)/mSegments[i]->GetNode(0)->GetReferenceLengthScale() <= distanceTolerance)
+        if (mSegments[i]->GetDistance(location) <= distanceTolerance)
         {
             pVesselSegment = mSegments[i];
             if (pVesselSegment->GetNode(0)->IsCoincident(location))
@@ -545,7 +545,7 @@ std::map<std::string, double> Vessel<DIM>::GetOutputData()
 }
 
 template<unsigned DIM>
-QLength Vessel<DIM>::GetClosestEndNodeDistance(const DimensionalChastePoint<DIM>& rLocation)
+QLength Vessel<DIM>::GetClosestEndNodeDistance(const Vertex<DIM>& rLocation)
 {
     QLength distance_1 = this->GetStartNode()->GetDistance(rLocation);
     QLength distance_2 = this->GetEndNode()->GetDistance(rLocation);
@@ -560,7 +560,7 @@ QLength Vessel<DIM>::GetClosestEndNodeDistance(const DimensionalChastePoint<DIM>
 }
 
 template<unsigned DIM>
-QLength Vessel<DIM>::GetDistance(const DimensionalChastePoint<DIM>& rLocation) const
+QLength Vessel<DIM>::GetDistance(const Vertex<DIM>& rLocation) const
 {
     // Get the distance to the nearest segment in the vessel
     QLength nearest_distance = DBL_MAX * unit::metres;

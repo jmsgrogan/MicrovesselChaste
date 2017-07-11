@@ -61,7 +61,7 @@ public:
     {
         QLength vessel_length = 100.0 * 1_um;
         VesselNetworkGenerator<3> generator;
-        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length, Vertex<3>(0.0, 0.0, 0.0));
         p_network->GetVessels()[0]->GetStartNode()->SetRadius(10.0e-6 * unit::metres);
         p_network->GetVessels()[0]->GetEndNode()->SetRadius(10.0e-6 * unit::metres);
 
@@ -200,7 +200,7 @@ public:
     {
         QLength vessel_length = 100.0 * 1_um;
         VesselNetworkGenerator<2> generator;
-        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length, Vertex<2>(0.0, 0.0, 0.0));
         p_network->GetVessels()[0]->GetStartNode()->SetRadius(10.0e-6 * unit::metres);
         p_network->GetVessels()[0]->GetEndNode()->SetRadius(10.0e-6 * unit::metres);
 

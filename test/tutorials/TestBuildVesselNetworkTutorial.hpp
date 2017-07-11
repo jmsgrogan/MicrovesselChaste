@@ -74,7 +74,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /*
  * Dimensional analysis.
  */
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "UnitCollection.hpp"
 #include "BaseUnits.hpp"
 /*
@@ -108,14 +108,14 @@ public:
         /*
          * First, a note on units. In many simulations with vessel networks care is needed in managing units, as multiple computational grids and
          * physical phenomena are of interest. It is helpful to be explicit regarding assumed length, time and mass scales and to specify input parameters
-         * with accompanying units. In this component, the `DimensionalChastePoint` is a fundamental geometric feature which contains a location in `N`
-         * dimensional space, stored as a vector of dimensionless doubles, and an accompanying reference length. Thus, each `DimensionalChastePoint` is a
+         * with accompanying units. In this component, the `Vertex` is a fundamental geometric feature which contains a location in `N`
+         * dimensional space, stored as a vector of dimensionless doubles, and an accompanying reference length. Thus, each `Vertex` is a
          * location with units. To demonstrate, we will create a point, which has a reference length of 1 micron and then re-scale its location according
          * to a different reference length, a cell width. Note that the syntax `reference_length(1.0 * unit::microns)` rather than
          * `reference_length = 1.0 * unit::microns` is used when instantiating quantities.
          */
         QLength reference_length(1.0 * unit::microns);
-        DimensionalChastePoint<2> my_point(25.0, 50.0, 0.0, reference_length);
+        Vertex<2> my_point(25.0, 50.0, 0.0, reference_length);
         /*
          * We can use the unit test framework to check our coordinate values are assigned as expected.
          */
@@ -137,11 +137,11 @@ public:
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
         BaseUnits::Instance()->SetReferenceTimeScale(60.0 * unit::seconds);
         /*
-         * All geometric features, `VesselNodes`, `Parts`, `RegularGrids` use the `DimensionalChastePoint` as their base representation of spatial
+         * All geometric features, `VesselNodes`, `Parts`, `RegularGrids` use the `Vertex` as their base representation of spatial
          * location, meaning that it is straight-forward to change or even mix length scales in a simulation.
          *
          * Now we proceed to making some nodes, which are point features from which vessels can be constructed. They are initialized in the same way as
-         * a `DimensionalChastePoint`, but use a convenience `Create` factory method to get a shared pointer. We will create a 2D Y shaped network.
+         * a `Vertex`, but use a convenience `Create` factory method to get a shared pointer. We will create a 2D Y shaped network.
          * Again, we will avoid the tedium of manual network creation in later examples.
          */
         double vessel_length = 100.0;

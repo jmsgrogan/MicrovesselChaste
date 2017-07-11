@@ -78,9 +78,9 @@ public:
 
         // Set up the mesh
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(10.0_m, 100.0_m, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
-        p_domain->AddAttributeToEdgeIfFound(DimensionalChastePoint<2>(5.0, 100.0, 0, 1_m), "Top Boundary", 1.0);
-        TS_ASSERT(p_domain->EdgeHasAttribute(DimensionalChastePoint<2>(5.0, 100.0, 0, 1_m), "Top Boundary"));
+        p_domain->AddRectangle(10.0_m, 100.0_m, Vertex<2>(0.0, 0.0, 0.0));
+        p_domain->AddAttributeToEdgeIfFound(Vertex<2>(5.0, 100.0, 0, 1_m), "Top Boundary", 1.0);
+        TS_ASSERT(p_domain->EdgeHasAttribute(Vertex<2>(5.0, 100.0, 0, 1_m), "Top Boundary"));
 
         DiscreteContinuumMeshGenerator<2> mesh_generator;
         mesh_generator.SetDomain(p_domain);
@@ -188,18 +188,18 @@ public:
         QLength delta = pellet_spacing-radius+cylinder_radius;
 
         std::shared_ptr<Part<2> > p_domain = Part<2> ::Create();
-        p_domain->AddCircle(radius, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        p_domain->AddCircle(radius, Vertex<2>(0.0, 0.0, 0.0));
         std::shared_ptr<Polygon<2> > p_polygon = p_domain->AddCircle(cylinder_radius,
-                DimensionalChastePoint<2>(0.0, -delta/reference_length, 0.0, reference_length));
+                Vertex<2>(0.0, -delta/reference_length, 0.0, reference_length));
         p_polygon->AddAttributeToAllEdges("Inner Boundary", 1.0);
-        p_domain->AddHoleMarker(DimensionalChastePoint<2>(0.0, 0.0, 0.0, reference_length));
+        p_domain->AddHoleMarker(Vertex<2>(0.0, 0.0, 0.0, reference_length));
         p_domain->Write(p_handler->GetOutputDirectoryFullPath()+"cornea.vtp", GeometryFormat::VTP);
 
         DiscreteContinuumMeshGenerator<2> mesh_generator;
         mesh_generator.SetDomain(p_domain);
         mesh_generator.SetMaxElementArea(1e4*(Qpow3(1_um))); // 1e4 for 'good' mesh
-        std::vector<DimensionalChastePoint<2> > holes;
-        holes.push_back(DimensionalChastePoint<2>(0.0, -delta/reference_length, 0.0, reference_length));
+        std::vector<Vertex<2> > holes;
+        holes.push_back(Vertex<2>(0.0, -delta/reference_length, 0.0, reference_length));
         mesh_generator.SetHoles(holes);
         mesh_generator.Update();
 
@@ -286,8 +286,8 @@ public:
         std::shared_ptr<Part<3> > p_vegf_domain = Part<3> ::Create();
         QLength cylinder_radius(300.0*unit::microns);
         QLength cylinder_height(40.0*unit::microns);
-        DimensionalChastePoint<3> pellet_base(0.0, 0.0, 1305.0);
-        DimensionalChastePoint<3> pellet_centre(0.0, 0.0, 1325.0);
+        Vertex<3> pellet_base(0.0, 0.0, 1305.0);
+        Vertex<3> pellet_centre(0.0, 0.0, 1325.0);
         p_vegf_domain->AddCylinder(cylinder_radius, cylinder_height, pellet_base);
 
         // Rotate the part

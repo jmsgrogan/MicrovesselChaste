@@ -47,7 +47,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Part.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "PetscTools.hpp"
 #include "MultiFormatMeshWriter.hpp"
 
@@ -108,7 +108,7 @@ public:
         TS_ASSERT_THROWS_ANYTHING(generator.GenerateCylinder(radius, thickness, height, 10, 10, 2.1*M_PI));
 
         // Make sure the vertices are in the expected locations
-        std::vector<std::shared_ptr<DimensionalChastePoint<3> > > vertices = p_part->GetVertices();
+        std::vector<std::shared_ptr<Vertex<3> > > vertices = p_part->GetVertices();
         for(unsigned idx=0; idx<vertices.size(); idx++)
         {
             double loc_x = vertices[idx]->GetLocation(1.0*unit::metres)[0];
@@ -165,7 +165,7 @@ public:
         TS_ASSERT_THROWS_ANYTHING(generator.GenerateHemisphere(radius, thickness, 10, 10, M_PI, 1.0*M_PI));
 
         // Make sure the vertices are in the expected locations
-        std::vector<std::shared_ptr<DimensionalChastePoint<3> > > vertices = p_part->GetVertices();
+        std::vector<std::shared_ptr<Vertex<3> > > vertices = p_part->GetVertices();
         for(unsigned idx=0; idx<vertices.size(); idx++)
         {
             bool is_inside = (vertices[idx]->GetNorm2()/(1.0*unit::metres) < 1.5  + 1.e-6) &&

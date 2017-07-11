@@ -28,7 +28,7 @@ py::class_<Part3    >(m, "Part3")
             " " , py::arg("rLabel"), py::arg("value") )
         .def(
             "AddAttributeToEdgeIfFound", 
-            (void(Part3::*)(::DimensionalChastePoint<3>, ::std::string const &, double)) &Part3::AddAttributeToEdgeIfFound, 
+            (void(Part3::*)(::Vertex<3>, ::std::string const &, double)) &Part3::AddAttributeToEdgeIfFound, 
             " " , py::arg("loc"), py::arg("rLabel"), py::arg("value") )
         .def(
             "AddAttributeToPolygons", 
@@ -36,31 +36,31 @@ py::class_<Part3    >(m, "Part3")
             " " , py::arg("rLabel"), py::arg("value") )
         .def(
             "AddAttributeToPolygonIfFound", 
-            (void(Part3::*)(::DimensionalChastePoint<3>, ::std::string const &, double)) &Part3::AddAttributeToPolygonIfFound, 
+            (void(Part3::*)(::Vertex<3>, ::std::string const &, double)) &Part3::AddAttributeToPolygonIfFound, 
             " " , py::arg("loc"), py::arg("rLabel"), py::arg("value") )
         .def(
             "AddCircle", 
-            (::std::shared_ptr<Polygon<3> >(Part3::*)(::QLength, ::DimensionalChastePoint<3>, unsigned int)) &Part3::AddCircle, 
+            (::std::shared_ptr<Polygon<3> >(Part3::*)(::QLength, ::Vertex<3>, unsigned int)) &Part3::AddCircle, 
             " " , py::arg("radius"), py::arg("centre"), py::arg("numSegments") = 24 )
         .def(
             "AddCylinder", 
-            (void(Part3::*)(::QLength, ::QLength, ::DimensionalChastePoint<3>, unsigned int)) &Part3::AddCylinder, 
+            (void(Part3::*)(::QLength, ::QLength, ::Vertex<3>, unsigned int)) &Part3::AddCylinder, 
             " " , py::arg("radius"), py::arg("depth"), py::arg("centre"), py::arg("numSegments") = 24 )
         .def(
             "AddCuboid", 
-            (void(Part3::*)(::QLength, ::QLength, ::QLength, ::DimensionalChastePoint<3>)) &Part3::AddCuboid, 
+            (void(Part3::*)(::QLength, ::QLength, ::QLength, ::Vertex<3>)) &Part3::AddCuboid, 
             " " , py::arg("sizeX"), py::arg("sizeY"), py::arg("sizeZ"), py::arg("origin") )
         .def(
             "AddHoleMarker", 
-            (void(Part3::*)(::DimensionalChastePoint<3>)) &Part3::AddHoleMarker, 
+            (void(Part3::*)(::Vertex<3>)) &Part3::AddHoleMarker, 
             " " , py::arg("location") )
         .def(
             "AddRegionMarker", 
-            (void(Part3::*)(::DimensionalChastePoint<3>, unsigned int)) &Part3::AddRegionMarker, 
+            (void(Part3::*)(::Vertex<3>, unsigned int)) &Part3::AddRegionMarker, 
             " " , py::arg("location"), py::arg("value") )
         .def(
             "AddPolygon", 
-            (::std::shared_ptr<Polygon<3> >(Part3::*)(::std::vector<std::shared_ptr<DimensionalChastePoint<3> >, std::allocator<std::shared_ptr<DimensionalChastePoint<3> > > >, bool, ::std::shared_ptr<Facet<3> >)) &Part3::AddPolygon, 
+            (::std::shared_ptr<Polygon<3> >(Part3::*)(::std::vector<std::shared_ptr<Vertex<3> >, std::allocator<std::shared_ptr<Vertex<3> > > >, bool, ::std::shared_ptr<Facet<3> >)) &Part3::AddPolygon, 
             " " , py::arg("vertices"), py::arg("newFacet") = false, py::arg("pFacet") = FacetPtr<DIM>() )
         .def(
             "AddPolygon", 
@@ -68,7 +68,7 @@ py::class_<Part3    >(m, "Part3")
             " " , py::arg("pPolygon"), py::arg("newFacet") = false, py::arg("pFacet") = FacetPtr<DIM>() )
         .def(
             "AddRectangle", 
-            (::std::shared_ptr<Polygon<3> >(Part3::*)(::QLength, ::QLength, ::DimensionalChastePoint<3>)) &Part3::AddRectangle, 
+            (::std::shared_ptr<Polygon<3> >(Part3::*)(::QLength, ::QLength, ::Vertex<3>)) &Part3::AddRectangle, 
             " " , py::arg("sizeX"), py::arg("sizeY"), py::arg("origin") )
         .def(
             "AddVesselNetwork", 
@@ -96,11 +96,11 @@ py::class_<Part3    >(m, "Part3")
             " " , py::arg("num_x"), py::arg("num_y"), py::arg("num_z"), py::arg("spacing") )
         .def(
             "GetHoleMarkers", 
-            (::std::vector<DimensionalChastePoint<3>, std::allocator<DimensionalChastePoint<3> > >(Part3::*)()) &Part3::GetHoleMarkers, 
+            (::std::vector<Vertex<3>, std::allocator<Vertex<3> > >(Part3::*)()) &Part3::GetHoleMarkers, 
             " "  )
         .def(
             "GetRegionMarkers", 
-            (::std::vector<std::pair<DimensionalChastePoint<3>, unsigned int>, std::allocator<std::pair<DimensionalChastePoint<3>, unsigned int> > >(Part3::*)()) &Part3::GetRegionMarkers, 
+            (::std::vector<std::pair<Vertex<3>, unsigned int>, std::allocator<std::pair<Vertex<3>, unsigned int> > >(Part3::*)()) &Part3::GetRegionMarkers, 
             " "  )
         .def(
             "GetAttributes", 
@@ -116,7 +116,7 @@ py::class_<Part3    >(m, "Part3")
             " "  )
         .def(
             "GetFacet", 
-            (::std::shared_ptr<Facet<3> >(Part3::*)(::DimensionalChastePoint<3> const &)) &Part3::GetFacet, 
+            (::std::shared_ptr<Facet<3> >(Part3::*)(::Vertex<3> const &)) &Part3::GetFacet, 
             " " , py::arg("rLocation") )
         .def(
             "GetPolygons", 
@@ -132,11 +132,11 @@ py::class_<Part3    >(m, "Part3")
             " "  )
         .def(
             "GetVertices", 
-            (::std::vector<std::shared_ptr<DimensionalChastePoint<3> >, std::allocator<std::shared_ptr<DimensionalChastePoint<3> > > >(Part3::*)()) &Part3::GetVertices, 
+            (::std::vector<std::shared_ptr<Vertex<3> >, std::allocator<std::shared_ptr<Vertex<3> > > >(Part3::*)()) &Part3::GetVertices, 
             " "  )
         .def(
             "GetVertexLocations", 
-            (::std::vector<DimensionalChastePoint<3>, std::allocator<DimensionalChastePoint<3> > >(Part3::*)()) &Part3::GetVertexLocations, 
+            (::std::vector<Vertex<3>, std::allocator<Vertex<3> > >(Part3::*)()) &Part3::GetVertexLocations, 
             " "  )
         .def(
             "GetVtk", 
@@ -148,11 +148,11 @@ py::class_<Part3    >(m, "Part3")
             " " , py::arg("rAttributes") )
         .def(
             "EdgeHasAttribute", 
-            (bool(Part3::*)(::DimensionalChastePoint<3>, ::std::string const &)) &Part3::EdgeHasAttribute, 
+            (bool(Part3::*)(::Vertex<3>, ::std::string const &)) &Part3::EdgeHasAttribute, 
             " " , py::arg("loc"), py::arg("rLabel") )
         .def(
             "IsPointInPart", 
-            (bool(Part3::*)(::DimensionalChastePoint<3>)) &Part3::IsPointInPart, 
+            (bool(Part3::*)(::Vertex<3>)) &Part3::IsPointInPart, 
             " " , py::arg("location") )
         .def(
             "IsPointInPart", 
@@ -172,7 +172,7 @@ py::class_<Part3    >(m, "Part3")
             " " , py::arg("referenceLength") )
         .def(
             "Translate", 
-            (void(Part3::*)(::DimensionalChastePoint<3>)) &Part3::Translate, 
+            (void(Part3::*)(::Vertex<3>)) &Part3::Translate, 
             " " , py::arg("vector") )
         .def(
             "Write", 

@@ -68,7 +68,7 @@ Vertex<DIM>::Vertex(const c_vector<double, DIM>& coords, QLength referenceLength
 
 template<unsigned DIM>
 Vertex<DIM>::Vertex(VecQLength<DIM> loc) :
-		mLocation(loc),
+        mLocation(loc),
         mIndex(0),
         mAttributes()
 {
@@ -76,22 +76,22 @@ Vertex<DIM>::Vertex(VecQLength<DIM> loc) :
 }
 
 template<unsigned DIM>
-Vertex<DIM>::Vertex(const double& rLoc, QLength referenceLength) :
+Vertex<DIM>::Vertex(const double (&rCoords)[3], QLength referenceLength) :
         mIndex(0),
         mAttributes()
 {
 	c_vector<double, DIM> loc;
     if (DIM > 0)
     {
-    	loc[0] = rLoc[0];
+    	loc[0] = rCoords[0];
     }
     if (DIM > 1)
     {
-    	loc[1] = rLoc[1];
+    	loc[1] = rCoords[1];
     }
     if (DIM > 2)
     {
-    	loc[2] = rLoc[2];
+    	loc[2] = rCoords[2];
     }
     mLocation = VecQLength<DIM>(loc, referenceLength);
 }
@@ -115,9 +115,15 @@ std::shared_ptr<Vertex<DIM> > Vertex<DIM>::Create(VecQLength<DIM> loc)
 }
 
 template<unsigned DIM>
-std::shared_ptr<Vertex<DIM> > Vertex<DIM>::Create(const double& rCoords, QLength referenceLength)
+std::shared_ptr<Vertex<DIM> > Vertex<DIM>::Create(const double (&rCoords)[3], QLength referenceLength)
 {
     return std::make_shared<Vertex<DIM> >(rCoords, referenceLength);
+}
+
+template<unsigned DIM>
+std::shared_ptr<Vertex<DIM> > Vertex<DIM>::Create(const Vertex<DIM>& loc)
+{
+    return std::make_shared<Vertex<DIM> >(loc);
 }
 
 template<unsigned DIM>
@@ -139,6 +145,44 @@ std::map<std::string, double> Vertex<DIM>::GetAttributes()
 }
 
 template<unsigned DIM>
+c_vector<double, 3> Vertex<DIM>::Convert3(QLength referenceLength) const
+{
+    c_vector<double, 3> loc;
+    loc[0] = double(mLocation[0]/referenceLength);
+    loc[1] = double(mLocation[1]/referenceLength);
+    if(DIM==3)
+    {
+        loc[2] = double(mLocation[2]/referenceLength);
+    }
+    else
+    {
+        loc[2] = 0.0;
+    }
+    return loc;
+}
+
+template<unsigned DIM>
+c_vector<double, DIM> Vertex<DIM>::Convert(QLength referenceLength) const
+{
+    return mLocation.Convert(referenceLength);
+}
+
+template<unsigned DIM>
+void Vertex<DIM>::Convert(double (&rLoc)[3], QLength referenceLength) const
+{
+    rLoc[0] = double(mLocation[0]/referenceLength);
+    rLoc[1] = double(mLocation[1]/referenceLength);
+    if(DIM==3)
+    {
+        rLoc[2] = double(mLocation[2]/referenceLength);
+    }
+    else
+    {
+        rLoc[2] = 0.0;
+    }
+}
+
+template<unsigned DIM>
 VecQLength<DIM>& Vertex<DIM>::rGetLocation()
 {
     return mLocation;
@@ -153,13 +197,13 @@ const VecQLength<DIM>& Vertex<DIM>::rGetLocation() const
 template<unsigned DIM>
 QLength Vertex<DIM>::GetDistance(const Vertex<DIM>& rLocation) const
 {
-    return Qnorm2(rLocation.rGetLocation() - mLocation);
+    return Qnorm_2(rLocation.rGetLocation() - mLocation);
 }
 
 template<unsigned DIM>
 QLength Vertex<DIM>::GetNorm2()
 {
-    return Qnorm2(mLocation);
+    return Qnorm_2(mLocation);
 }
 
 template<unsigned DIM>
@@ -178,34 +222,34 @@ Vertex<DIM> Vertex<DIM>::GetMidPoint(const Vertex<DIM>& rLocation) const
 template<unsigned DIM>
 c_vector<double, DIM> Vertex<DIM>::GetUnitTangent(const Vertex<DIM>& rLocation) const
 {
-    return (rLocation.GetLocation()- mLocation).Convert(GetDistance(rLocation));
+    return (rLocation.rGetLocation()- mLocation).Convert(GetDistance(rLocation));
 }
 
 template<unsigned DIM>
 Vertex<DIM>& Vertex<DIM>::operator/=(double factor)
 {
-    mLocation /= factor;
+    mLocation = mLocation/factor;
     return *this;
 }
 
 template<unsigned DIM>
 Vertex<DIM>& Vertex<DIM>::operator*=(double factor)
 {
-    mLocation *= factor;
+    mLocation = factor * mLocation;
     return *this;
 }
 
 template<unsigned DIM>
 Vertex<DIM>& Vertex<DIM>::operator+=(const Vertex<DIM>& rLocation)
 {
-    mLocation += rLocation.rGetLocation();
+    mLocation = mLocation + rLocation.rGetLocation();
     return *this;
 }
 
 template<unsigned DIM>
 Vertex<DIM>& Vertex<DIM>::operator-=(const Vertex<DIM>& rLocation)
 {
-    mLocation -= rLocation.rGetLocation();
+    mLocation = mLocation - rLocation.rGetLocation();
     return *this;
 }
 
@@ -213,7 +257,7 @@ template<unsigned DIM>
 bool Vertex<DIM>::IsCoincident(const Vertex<DIM>& rLocation) const
 {
     bool returned_value = true;
-    VecQLength<DIM> comparison_loc = rLocation.GetLocation();
+    VecQLength<DIM> comparison_loc = rLocation.rGetLocation();
     for (unsigned dim=0; dim<DIM; dim++)
     {
         if (comparison_loc[dim] != mLocation[dim])
@@ -263,13 +307,13 @@ void Vertex<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 template<unsigned DIM>
 void Vertex<DIM>::Translate(const Vertex<DIM>& rVector)
 {
-    mLocation += rVector.GetLocation();
+    mLocation = mLocation + rVector.rGetLocation();
 }
 
 template<unsigned DIM>
 void Vertex<DIM>::TranslateTo(const Vertex<DIM>& rPoint)
 {
-    mLocation = rPoint.GetLocation();
+    mLocation = rPoint.rGetLocation();
 }
 
 template<unsigned DIM>

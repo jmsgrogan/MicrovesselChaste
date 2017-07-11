@@ -78,15 +78,8 @@ vtkSmartPointer<vtkPolyData> VesselNetworkVtkConverter<DIM>::GetVtkRepresentatio
         for(unsigned idx=0;idx<nodes.size();idx++)
         {
             nodes[idx]->SetComparisonId(idx);
-            c_vector<double, DIM> loc = nodes[idx]->rGetLocation().GetLocation(length_scale);
-            if(DIM==2)
-            {
-                p_node_points->InsertNextPoint(loc[0], loc[1], 0.0);
-            }
-            else
-            {
-                p_node_points->InsertNextPoint(&loc[0]);
-            }
+            c_vector<double, 3> loc = nodes[idx]->rGetLocation().Convert3(length_scale);
+            p_node_points->InsertNextPoint(&loc[0]);
         }
 
         for(unsigned idx=0;idx<segments.size();idx++)
@@ -119,15 +112,8 @@ vtkSmartPointer<vtkPolyData> VesselNetworkVtkConverter<DIM>::GetGlobalVtkReprese
         for(unsigned idx=0;idx<nodes.size();idx++)
         {
             nodes[idx]->SetComparisonId(idx);
-            c_vector<double, DIM> loc = nodes[idx]->rGetLocation().GetLocation(length_scale);
-            if(DIM==2)
-            {
-                p_node_points->InsertNextPoint(loc[0], loc[1], 0.0);
-            }
-            else
-            {
-                p_node_points->InsertNextPoint(&loc[0]);
-            }
+            c_vector<double, 3> loc = nodes[idx]->rGetLocation().Convert3(length_scale);
+            p_node_points->InsertNextPoint(&loc[0]);
         }
 
         for(unsigned idx=0;idx<segments.size();idx++)

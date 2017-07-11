@@ -31,7 +31,7 @@ smart pointer tools and output management,
 dimensional analysis,
 
 ```cpp
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "UnitCollection.hpp"
 #include "Owen11Parameters.hpp"
 #include "Secomb04Parameters.hpp"
@@ -464,7 +464,7 @@ The full code is given below
 #include "OutputFileHandler.hpp"
 #include "AbstractCellBasedWithTimingsTestSuite.hpp"
 #include "RandomNumberGenerator.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "UnitCollection.hpp"
 #include "Owen11Parameters.hpp"
 #include "Secomb04Parameters.hpp"

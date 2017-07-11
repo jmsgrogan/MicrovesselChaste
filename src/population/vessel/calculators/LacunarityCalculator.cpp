@@ -116,9 +116,10 @@ void LacunarityCalculator<DIM>::Solve()
                     QLength vessel_length = 0.0 * unit::metres;
                     for (unsigned seg_index = 0; seg_index < segments.size(); seg_index++)
                     {
-                        vessel_length = vessel_length + LengthOfLineInBox<DIM>(segments[seg_index]->GetNode(0)->rGetLocation(),
-                                                                segments[seg_index]->GetNode(1)->rGetLocation(),
-                                                                DimensionalChastePoint<DIM>(box_location, length_scale), box_size*length_scale);
+                        VecQLength<DIM> start = segments[seg_index]->GetNode(0)->rGetLocation().rGetLocation();
+                        VecQLength<DIM> end = segments[seg_index]->GetNode(1)->rGetLocation().rGetLocation();
+                        VecQLength<DIM> loc = Vertex<DIM>(box_location, length_scale).rGetLocation();
+                        //vessel_length = vessel_length + LengthOfLineInBox<DIM>(start, end, loc, box_size*length_scale);
                     }
                     q1 = q1 + vessel_length;
                     q2 = q2 + vessel_length * vessel_length;

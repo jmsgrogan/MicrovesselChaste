@@ -96,7 +96,6 @@ void AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::AddPointAttributes(c
     {
         p_point_data->SetTuple1(idx, rAttributes[idx]);
     }
-
     mpVtkGrid->GetPointData()->AddArray(p_point_data);
 }
 
@@ -226,7 +225,7 @@ vtkSmartPointer<vtkDataSet> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM
     {
         vtkSmartPointer<vtkDataSetSurfaceFilter> p_surf = vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
 		#if VTK_MAJOR_VERSION <= 5
-        	p_surf->SetInput(pSamplePart->GetVtk());;
+        	p_surf->SetInput(pSamplePart->GetVtk());
 		#else
 	        p_surf->SetInputData(pSamplePart->GetVtk());
 		#endif
@@ -254,7 +253,6 @@ vtkSmartPointer<vtkDataSet> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM
         p_distances->InsertNextTuple1(std::sqrt(closestPointDist2));
     }
     mpVtkGrid->GetPointData()->AddArray(p_distances);
-
     return mpVtkGrid;
 }
 
@@ -281,14 +279,15 @@ QLength AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetReferenceLengt
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-DimensionalChastePoint<SPACE_DIM> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetPoint(unsigned grid_index)
+Vertex<SPACE_DIM> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetPoint(unsigned grid_index)
 {
     if (!this->mVtkRepresentationUpToDate)
     {
         SetUpVtkGrid();
     }
-    double* loc = mpVtkGrid->GetPoint(grid_index);
-    return DimensionalChastePoint<SPACE_DIM>(loc[0], loc[1], loc[2], this->mReferenceLength);
+    double loc[3];
+    mpVtkGrid->GetPoint(grid_index, loc);
+    return Vertex<SPACE_DIM>(loc, this->mReferenceLength);
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -302,26 +301,27 @@ vtkSmartPointer<vtkPoints> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-DimensionalChastePoint<SPACE_DIM> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetGlobalPoint(unsigned grid_index)
+Vertex<SPACE_DIM> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetGlobalPoint(unsigned grid_index)
 {
     if (!this->mVtkRepresentationUpToDate)
     {
         SetUpVtkGrid();
     }
-    c_vector<double, 3> loc;
+    double loc[3];
     this->mpGlobalVtkGrid->GetPoint(grid_index, &loc[0]);
-    return DimensionalChastePoint<SPACE_DIM>(loc[0], loc[1], loc[2], this->mReferenceLength);
+    return Vertex<SPACE_DIM>(loc, this->mReferenceLength);
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-DimensionalChastePoint<SPACE_DIM> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetCellLocation(unsigned grid_index)
+Vertex<SPACE_DIM> AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetCellLocation(unsigned grid_index)
 {
     if (!this->mVtkRepresentationUpToDate)
     {
         SetUpVtkGrid();
     }
-    double* loc = this->mpCellLocations->GetPoint(grid_index);
-    return DimensionalChastePoint<SPACE_DIM>(loc[0], loc[1], loc[2], this->mReferenceLength);
+    double loc[3];
+    this->mpCellLocations->GetPoint(grid_index, loc);
+    return Vertex<SPACE_DIM>(loc, this->mReferenceLength);
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -499,23 +499,10 @@ void AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GatherAllCellData()
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-unsigned AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetNearestCellIndex(const DimensionalChastePoint<SPACE_DIM>& rLocation)
+unsigned AbstractDiscreteContinuumGrid<ELEMENT_DIM, SPACE_DIM>::GetNearestCellIndex(const Vertex<SPACE_DIM>& rLocation)
 {
-    c_vector<double, SPACE_DIM> loc = rLocation.GetLocation(mReferenceLength);
-    c_vector<double, 3> loc_3d;
-
-    if(SPACE_DIM==3)
-    {
-        loc_3d = loc;
-    }
-    else
-    {
-        loc_3d[0] = loc[0];
-        loc_3d[1] = loc[1];
-        loc_3d[2] = 0.0;
-    }
-
-    int cell_id = GetVtkCellLocator()->FindCell(&loc_3d[0]);
+    c_vector<double, 3> loc = rLocation.Convert3(mReferenceLength);
+    int cell_id = GetVtkCellLocator()->FindCell(&loc[0]);
     if(cell_id<0)
     {
         EXCEPTION("Provided location is outside the grid");

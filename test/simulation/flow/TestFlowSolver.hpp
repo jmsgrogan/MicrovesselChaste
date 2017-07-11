@@ -448,7 +448,7 @@ public:
         p_segment1->GetFlowProperties()->SetImpedance(impedance*unit::pascal_second_per_metre_cubed);
         VesselNetworkPropertyManager<2>::SetSegmentProperties(vascular_network, p_segment1);
 
-        std::pair<DimensionalChastePoint<2>, DimensionalChastePoint<2> > network_extents = VesselNetworkGeometryCalculator<2>::GetExtents(vascular_network);
+        std::pair<Vertex<2>, Vertex<2> > network_extents = VesselNetworkGeometryCalculator<2>::GetExtents(vascular_network);
         double y_middle = (network_extents.first.GetLocation(1_um)[1]) / 2.0;
 
         std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
@@ -626,13 +626,13 @@ public:
 
         for(unsigned idx=1; idx<4; idx+=1)
         {
-            DimensionalChastePoint<3> loc1 = DimensionalChastePoint<3>(double(idx)*10, 10.0, 0.0, 1_um);
-            DimensionalChastePoint<3> loc2 = DimensionalChastePoint<3>(double(idx)*10, 20.0, 0.0, 1_um);
+            Vertex<3> loc1 = Vertex<3>(double(idx)*10, 10.0, 0.0, 1_um);
+            Vertex<3> loc2 = Vertex<3>(double(idx)*10, 20.0, 0.0, 1_um);
             p_network->FormSprout(VesselNode<3>::Create(loc1), loc2);
         }
 
-        DimensionalChastePoint<3> loc1 = DimensionalChastePoint<3>(10, 20.0, 0.0, 1_um);
-        DimensionalChastePoint<3> loc2 = DimensionalChastePoint<3>(20, 20.0, 0.0, 1_um);
+        Vertex<3> loc1 = Vertex<3>(10, 20.0, 0.0, 1_um);
+        Vertex<3> loc2 = Vertex<3>(20, 20.0, 0.0, 1_um);
         p_network->FormSprout(VesselNode<3>::Create(loc1), loc2);
         p_network->MergeCoincidentNodes();
         p_network->UpdateSegments();

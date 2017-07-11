@@ -50,7 +50,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "OutputFileHandler.hpp"
 #include "RegularGrid.hpp"
 #include "DiscreteSource.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "FunctionMap.hpp"
@@ -71,7 +71,7 @@ public:
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(length, length, DimensionalChastePoint<2>());
+        p_domain->AddRectangle(length, length, Vertex<2>());
 
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         QLength grid_spacing(5.0_um);
@@ -82,8 +82,8 @@ public:
         p_density_map->SetGrid(p_grid);
 
         // Set up the discrete source
-        std::vector<DimensionalChastePoint<2> > linear_consumption_points;
-        linear_consumption_points.push_back(DimensionalChastePoint<2>(50.0, 50.0, 0.0, 1_um));
+        std::vector<Vertex<2> > linear_consumption_points;
+        linear_consumption_points.push_back(Vertex<2>(50.0, 50.0, 0.0, 1_um));
         std::shared_ptr<DiscreteSource<2> > p_linear_point_source = DiscreteSource<2>::Create();
 
         p_linear_point_source->SetLinearInUValue(1.0 * unit::per_second);
@@ -93,11 +93,11 @@ public:
         std::shared_ptr<DiscreteSource<2> > p_const_point_source = DiscreteSource<2>::Create();
         QConcentrationFlowRate consumption_rate(2.0 * unit::mole_per_metre_cubed_per_second);
         p_const_point_source->SetConstantInUValue(consumption_rate);
-        std::vector<DimensionalChastePoint<2> > constant_consumption_points;
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 25.0, 0.0, 1_um));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 25.0, 0.0, 1_um));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 75.0, 0.0, 1_um));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 75.0, 0.0, 1_um));
+        std::vector<Vertex<2> > constant_consumption_points;
+        constant_consumption_points.push_back(Vertex<2>(25.0, 25.0, 0.0, 1_um));
+        constant_consumption_points.push_back(Vertex<2>(75.0, 25.0, 0.0, 1_um));
+        constant_consumption_points.push_back(Vertex<2>(75.0, 75.0, 0.0, 1_um));
+        constant_consumption_points.push_back(Vertex<2>(25.0, 75.0, 0.0, 1_um));
         p_const_point_source->SetPoints(constant_consumption_points);
         p_const_point_source->SetDensityMap(p_density_map);
 
@@ -128,7 +128,7 @@ public:
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(length, length, DimensionalChastePoint<2>());
+        p_domain->AddRectangle(length, length, Vertex<2>());
 
         std::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator = DiscreteContinuumMeshGenerator<2>::Create();
         p_mesh_generator->SetDomain(p_domain);
@@ -139,8 +139,8 @@ public:
         p_density_map->SetGrid(p_mesh_generator->GetMesh());
 
         // Set up the discrete source
-        std::vector<DimensionalChastePoint<2> > linear_consumption_points;
-        linear_consumption_points.push_back(DimensionalChastePoint<2>(50.0, 50.0, 0.0, 1_um));
+        std::vector<Vertex<2> > linear_consumption_points;
+        linear_consumption_points.push_back(Vertex<2>(50.0, 50.0, 0.0, 1_um));
         std::shared_ptr<DiscreteSource<2> > p_linear_point_source = DiscreteSource<2>::Create();
         p_linear_point_source->SetLinearInUValue(1.0 * unit::per_second);
         p_linear_point_source->SetPoints(linear_consumption_points);
@@ -149,11 +149,11 @@ public:
         std::shared_ptr<DiscreteSource<2> > p_const_point_source = DiscreteSource<2>::Create();
         QConcentrationFlowRate consumption_rate(2.0 * unit::mole_per_metre_cubed_per_second);
         p_const_point_source->SetConstantInUValue(consumption_rate);
-        std::vector<DimensionalChastePoint<2> > constant_consumption_points;
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 25.0, 25.0, 1_um));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 25.0, 25.0, 1_um));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 75.0, 25.0, 1_um));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 75.0, 25.0, 1_um));
+        std::vector<Vertex<2> > constant_consumption_points;
+        constant_consumption_points.push_back(Vertex<2>(25.0, 25.0, 25.0, 1_um));
+        constant_consumption_points.push_back(Vertex<2>(75.0, 25.0, 25.0, 1_um));
+        constant_consumption_points.push_back(Vertex<2>(75.0, 75.0, 25.0, 1_um));
+        constant_consumption_points.push_back(Vertex<2>(25.0, 75.0, 25.0, 1_um));
         p_const_point_source->SetPoints(constant_consumption_points);
         p_const_point_source->SetDensityMap(p_density_map);
 
@@ -185,7 +185,7 @@ public:
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(length, length, DimensionalChastePoint<2>());
+        p_domain->AddRectangle(length, length, Vertex<2>());
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         QLength grid_spacing(5.0*unit::metres);
         p_grid->GenerateFromPart(p_domain, grid_spacing);
@@ -196,8 +196,8 @@ public:
         p_pde->SetIsotropicDiffusionConstant(diffusivity);
 
         // Set up the discrete source
-        std::vector<DimensionalChastePoint<2> > linear_consumption_points;
-        linear_consumption_points.push_back(DimensionalChastePoint<2>(50.0, 50.0, 0.0, 1.0 * unit::metres));
+        std::vector<Vertex<2> > linear_consumption_points;
+        linear_consumption_points.push_back(Vertex<2>(50.0, 50.0, 0.0, 1.0 * unit::metres));
         std::shared_ptr<DiscreteSource<2> > p_linear_point_source = DiscreteSource<2>::Create();
         p_linear_point_source->SetLinearInUValue(-1.0 * unit::per_second);
         p_linear_point_source->SetPoints(linear_consumption_points);
@@ -205,11 +205,11 @@ public:
         std::shared_ptr<DiscreteSource<2> > p_const_point_source = DiscreteSource<2>::Create();
         QConcentrationFlowRate consumption_rate(2.0 * unit::mole_per_metre_cubed_per_second);
         p_const_point_source->SetConstantInUValue(consumption_rate);
-        std::vector<DimensionalChastePoint<2> > constant_consumption_points;
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 25.0, 0.0, 1.0 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 25.0, 0.0, 1.0 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 75.0, 0.0, 1.0 * unit::metres));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 75.0, 0.0, 1.0 * unit::metres));
+        std::vector<Vertex<2> > constant_consumption_points;
+        constant_consumption_points.push_back(Vertex<2>(25.0, 25.0, 0.0, 1.0 * unit::metres));
+        constant_consumption_points.push_back(Vertex<2>(75.0, 25.0, 0.0, 1.0 * unit::metres));
+        constant_consumption_points.push_back(Vertex<2>(75.0, 75.0, 0.0, 1.0 * unit::metres));
+        constant_consumption_points.push_back(Vertex<2>(25.0, 75.0, 0.0, 1.0 * unit::metres));
         p_const_point_source->SetPoints(constant_consumption_points);
 
         p_pde->AddDiscreteSource(p_const_point_source);
@@ -236,7 +236,7 @@ public:
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(length, length, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        p_domain->AddRectangle(length, length, Vertex<2>(0.0, 0.0, 0.0));
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         QLength grid_spacing(5.0*unit::microns);
         p_grid->GenerateFromPart(p_domain, grid_spacing);
@@ -250,8 +250,8 @@ public:
         p_pde->SetMichaelisMentenThreshold(2.0 * unit::mole_per_metre_cubed);
 
         // Set up the discrete source
-        std::vector<DimensionalChastePoint<2> > linear_consumption_points;
-        linear_consumption_points.push_back(DimensionalChastePoint<2>(50.0, 50.0, 50.0, 1_um));
+        std::vector<Vertex<2> > linear_consumption_points;
+        linear_consumption_points.push_back(Vertex<2>(50.0, 50.0, 50.0, 1_um));
         std::shared_ptr<DiscreteSource<2> > p_linear_point_source = DiscreteSource<2>::Create();
         p_linear_point_source->SetLinearInUValue(-1.0 * unit::per_second);
         p_linear_point_source->SetPoints(linear_consumption_points);
@@ -259,11 +259,11 @@ public:
         std::shared_ptr<DiscreteSource<2> > p_const_point_source = DiscreteSource<2>::Create();
         QConcentrationFlowRate consumption_rate(2.e-4 * unit::mole_per_metre_cubed_per_second);
         p_const_point_source->SetConstantInUValue(consumption_rate);
-        std::vector<DimensionalChastePoint<2> > constant_consumption_points;
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 25.0, 25.0, 1_um));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 25.0, 25.0, 1_um));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(75.0, 75.0, 25.0, 1_um));
-        constant_consumption_points.push_back(DimensionalChastePoint<2>(25.0, 75.0, 25.0, 1_um));
+        std::vector<Vertex<2> > constant_consumption_points;
+        constant_consumption_points.push_back(Vertex<2>(25.0, 25.0, 25.0, 1_um));
+        constant_consumption_points.push_back(Vertex<2>(75.0, 25.0, 25.0, 1_um));
+        constant_consumption_points.push_back(Vertex<2>(75.0, 75.0, 25.0, 1_um));
+        constant_consumption_points.push_back(Vertex<2>(25.0, 75.0, 25.0, 1_um));
         p_const_point_source->SetPoints(constant_consumption_points);
 
         std::shared_ptr<DiscreteContinuumBoundaryCondition<2> > p_boundary2 = DiscreteContinuumBoundaryCondition<2>::Create();

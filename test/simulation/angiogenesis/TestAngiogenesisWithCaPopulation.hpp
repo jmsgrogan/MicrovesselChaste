@@ -88,12 +88,12 @@ public:
 
         // Create the vessel network: single vessel in middle of domain
         VesselNetworkGenerator<2> network_generator;
-        std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(10_um, DimensionalChastePoint<2>(10.0, 0.0));
+        std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(10_um, Vertex<2>(10.0, 0.0));
 
         // Write the initial network to file
         std::string output_filename = p_file_handler->GetOutputDirectoryFullPath().append("InitialVesselNetwork.vtp");
 
-        DimensionalChastePoint<2> tip_position(10.0, 10.0);
+        Vertex<2> tip_position(10.0, 10.0);
         VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, tip_position)->SetIsMigrating(true);
         p_network->Write(output_filename);
 

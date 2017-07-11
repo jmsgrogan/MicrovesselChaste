@@ -69,7 +69,7 @@ public:
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(5.0*unit::metres,
                                5.0*unit::metres,
-                               DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+                               Vertex<2>(0.0, 0.0, 0.0));
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 1.0*unit::metres);
 
@@ -131,7 +131,7 @@ public:
         p_domain->AddCuboid(200.0*1_um,
                             10.0*1_um,
                             10.0*1_um,
-                            DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+                            Vertex<3>(0.0, 0.0, 0.0));
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 10.0*1_um);
 
@@ -191,11 +191,11 @@ public:
         QLength vessel_length = 100.0 * 1_um;
         VesselNetworkGenerator<3> generator;
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
-                                                                                        DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+                                                                                        Vertex<3>(0.0, 0.0, 0.0));
 
         // Set up the grid
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(vessel_length, vessel_length, vessel_length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        p_domain->AddCuboid(vessel_length, vessel_length, vessel_length, Vertex<3>(0.0, 0.0, 0.0));
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 10.0*1_um);
 

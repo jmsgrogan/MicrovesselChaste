@@ -28,7 +28,7 @@ py::class_<VesselSurfaceGenerator2    >(m, "VesselSurfaceGenerator2")
             " "  )
         .def(
             "GetHoles", 
-            (::std::vector<DimensionalChastePoint<2>, std::allocator<DimensionalChastePoint<2> > >(VesselSurfaceGenerator2::*)()) &VesselSurfaceGenerator2::GetHoles, 
+            (::std::vector<Vertex<2>, std::allocator<Vertex<2> > >(VesselSurfaceGenerator2::*)()) &VesselSurfaceGenerator2::GetHoles, 
             " "  )
         .def(
             "GetVtkSurface", 

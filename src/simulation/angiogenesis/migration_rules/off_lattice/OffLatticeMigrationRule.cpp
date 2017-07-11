@@ -57,7 +57,7 @@ OffLatticeMigrationRule<DIM>::OffLatticeMigrationRule()
       mChemotacticStrength(0.6),
       mAttractionStrength(0.0), // was 1.0
       mProbeLength(5.0 * 1_um),
-      mCriticalMutualAttractionLength(100.0 * 1_um),
+      mCriticalMutualAttractionLength(100.0_um),
       mSurfaceRepulsion(true),
       mNumGradientEvaluationDivisions(8),
       mpDomainDistanceMap()
@@ -88,7 +88,7 @@ void OffLatticeMigrationRule<DIM>::CalculateDomainDistanceMap()
     }
 
     QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
-    std::vector<QLength > bbox = this->mpBoundingDomain->GetBoundingBox();
+    std::array<QLength, 6> bbox = this->mpBoundingDomain->GetBoundingBox();
     vtkSmartPointer<vtkImageData> p_image = vtkSmartPointer<vtkImageData>::New();
 
     double spacing = (bbox[1] - bbox[0])/(20.0*reference_length);
@@ -175,7 +175,7 @@ void OffLatticeMigrationRule<DIM>::SetNumGradientEvaluationDivisions(unsigned nu
 }
 
 template<unsigned DIM>
-std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
     if (this->mIsSprouting)
     {
@@ -196,7 +196,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
         }
 
         QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
-        std::vector<DimensionalChastePoint<DIM> > movement_vectors;
+        std::vector<Vertex<DIM> > movement_vectors;
 
         // We want to probe the PDE solution all at once first if needed, as this is an expensive operation if done node-by-node.
         // Every node has 4 probes in 2D and 6 in 3D.
@@ -205,10 +205,10 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
 
         c_vector<double, DIM> current_loc;
         c_vector<double, DIM> current_dir;
-        DimensionalChastePoint<DIM> currentDirection;
+        Vertex<DIM> currentDirection;
         for(unsigned idx=0; idx<rNodes.size(); idx++)
         {
-            current_loc = rNodes[idx]->rGetLocation().GetLocation(reference_length);
+            current_loc = rNodes[idx]->rGetLocation().Convert(reference_length);
             if(DIM==3)
             {
                 p_probe_locations->InsertNextPoint(&current_loc[0]);
@@ -357,14 +357,14 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
                 c_vector<double, DIM> min_direction = zero_vector<double>(DIM);
                 for(unsigned jdx=0; jdx<nodes.size(); jdx++)
                 {
-                    if(IsPointInCone<DIM>(nodes[jdx]->rGetLocation(), rNodes[idx]->rGetLocation(), rNodes[idx]->rGetLocation() +
-                                          DimensionalChastePoint<DIM>(currentDirection.GetLocation(reference_length) * double(mCriticalMutualAttractionLength/reference_length), reference_length), M_PI/3.0))
+                    Vertex<DIM> base(currentDirection.Convert(reference_length) * double(mCriticalMutualAttractionLength/reference_length), reference_length);
+                    if(IsPointInCone<DIM>(nodes[jdx]->rGetLocation(), rNodes[idx]->rGetLocation(), rNodes[idx]->rGetLocation() + base, M_PI/3.0))
                     {
                         QLength distance = rNodes[idx]->rGetLocation().GetDistance(nodes[jdx]->rGetLocation());
                         if(distance < min_distance)
                         {
                             min_distance = distance;
-                            DimensionalChastePoint<DIM> dim_min_direction = nodes[jdx]->rGetLocation() - rNodes[idx]->rGetLocation();
+                            Vertex<DIM> dim_min_direction = nodes[jdx]->rGetLocation() - rNodes[idx]->rGetLocation();
                             min_direction = dim_min_direction.GetUnitVector();
                         }
                     }
@@ -382,12 +382,12 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
             // Surface repulsion
             if(mSurfaceRepulsion)
             {
-                double critical_repulsion_distance = (25.0e-6*unit::metres)/reference_length;
+                double critical_repulsion_distance = (25_um)/reference_length;
                 double max_repulsion_strength = 5.0;
                 if(this->mpBoundingDomain or this->mpSolver)
                 {
                     double current_distance = distance_map_values[idx];
-                    current_loc = rNodes[idx]->rGetLocation().GetLocation(reference_length);
+                    current_loc = rNodes[idx]->rGetLocation().Convert(reference_length);
                     if(current_distance<critical_repulsion_distance)
                     {
                         if(current_distance>=0.0)
@@ -469,9 +469,9 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
 }
 
 template<unsigned DIM>
-std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
-    std::vector<DimensionalChastePoint<DIM> > movement_vectors;
+    std::vector<Vertex<DIM> > movement_vectors;
     QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
 
     // Collect the probe locations for each node
@@ -481,10 +481,10 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
 
     c_vector<double, DIM> current_loc;
     c_vector<double, DIM> current_dir;
-    DimensionalChastePoint<DIM> currentDirection;
+    Vertex<DIM> currentDirection;
     for(unsigned idx=0; idx<rNodes.size(); idx++)
     {
-        current_loc = rNodes[idx]->rGetLocation().GetLocation(reference_length);
+        current_loc = rNodes[idx]->rGetLocation().Convert(reference_length);
         if(DIM==3)
         {
             p_probe_locations->InsertNextPoint(&current_loc[0]);
@@ -514,7 +514,7 @@ std::vector<DimensionalChastePoint<DIM> > OffLatticeMigrationRule<DIM>::GetDirec
     // Decide on the sprout directions
     for(unsigned idx=0; idx<rNodes.size(); idx++)
     {
-        current_loc = rNodes[idx]->rGetLocation().GetLocation(reference_length);
+        current_loc = rNodes[idx]->rGetLocation().Convert(reference_length);
         c_vector<double, DIM> new_direction = zero_vector<double>(DIM);
 
         // Get the segment tangent

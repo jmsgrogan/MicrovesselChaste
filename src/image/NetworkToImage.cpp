@@ -117,9 +117,9 @@ void NetworkToImage<DIM>::Update()
         EXCEPTION("No input vessel network set.");
     }
 
-    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = VesselNetworkGeometryCalculator<DIM>::GetExtents(mpNetwork, true);
-    c_vector<double, DIM> range = ublas::element_prod(scalar_vector<double>(DIM, 1.0) + 2.0*mPaddingFactors, (extents.second - extents.first).GetLocation(mGridSpacing));
-    c_vector<double, DIM> origin = (extents.first.GetLocation(mGridSpacing) - ublas::element_prod((extents.second - extents.first).GetLocation(mGridSpacing), mPaddingFactors));
+    std::pair<Vertex<DIM>, Vertex<DIM> > extents = VesselNetworkGeometryCalculator<DIM>::GetExtents(mpNetwork, true);
+    c_vector<double, DIM> range = ublas::element_prod(scalar_vector<double>(DIM, 1.0) + 2.0*mPaddingFactors, (extents.second - extents.first).Convert(mGridSpacing));
+    c_vector<double, DIM> origin = (extents.first.Convert(mGridSpacing) - ublas::element_prod((extents.second - extents.first).Convert(mGridSpacing), mPaddingFactors));
 
     std::shared_ptr<RegularGrid<DIM> > p_grid = RegularGrid<DIM>::Create();
     p_grid->SetSpacing(mGridSpacing);
@@ -135,7 +135,7 @@ void NetworkToImage<DIM>::Update()
         dimensions[2] = 1;
     }
     p_grid->SetDimensions(dimensions);
-    p_grid->SetOrigin(DimensionalChastePoint<DIM>(origin, mGridSpacing));
+    p_grid->SetOrigin(Vertex<DIM>(origin, mGridSpacing));
 
     std::shared_ptr<DistanceMap<DIM> > p_distance_map = DistanceMap<DIM>::Create();
     p_distance_map->SetVesselNetwork(mpNetwork);

@@ -32,7 +32,7 @@ py::class_<DiscreteContinuumBoundaryCondition3    >(m, "DiscreteContinuumBoundar
             " "  )
         .def(
             "GetValue", 
-            (::std::pair<bool, RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > >(DiscreteContinuumBoundaryCondition3::*)(::DimensionalChastePoint<3>, double)) &DiscreteContinuumBoundaryCondition3::GetValue, 
+            (::std::pair<bool, RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > >(DiscreteContinuumBoundaryCondition3::*)(::Vertex<3>, double)) &DiscreteContinuumBoundaryCondition3::GetValue, 
             " " , py::arg("location"), py::arg("tolerance") )
         .def(
             "UpdateBoundaryConditions", 
@@ -60,7 +60,7 @@ py::class_<DiscreteContinuumBoundaryCondition3    >(m, "DiscreteContinuumBoundar
             " " , py::arg("label") )
         .def(
             "SetPoints", 
-            (void(DiscreteContinuumBoundaryCondition3::*)(::std::vector<DimensionalChastePoint<3>, std::allocator<DimensionalChastePoint<3> > >)) &DiscreteContinuumBoundaryCondition3::SetPoints, 
+            (void(DiscreteContinuumBoundaryCondition3::*)(::std::vector<Vertex<3>, std::allocator<Vertex<3> > >)) &DiscreteContinuumBoundaryCondition3::SetPoints, 
             " " , py::arg("points") )
         .def(
             "SetPoints", 

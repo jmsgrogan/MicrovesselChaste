@@ -138,7 +138,7 @@ void DiscreteSource<DIM>::SetLabelName(const std::string& label)
 }
 
 template<unsigned DIM>
-void DiscreteSource<DIM>::SetPoints(std::vector<DimensionalChastePoint<DIM> > points)
+void DiscreteSource<DIM>::SetPoints(std::vector<Vertex<DIM> > points)
 {
     mPoints = points;
 }

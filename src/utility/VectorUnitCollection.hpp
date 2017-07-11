@@ -187,9 +187,9 @@ constexpr bool operator!=(const RVectorQuantity<Quantity, DIM>& lhs, RVectorQuan
 // ---------------------------------
 template <typename Quantity, unsigned DIM>
 constexpr Quantity
-    Qnorm2(const RVectorQuantity<Quantity, DIM>& num)
+    Qnorm_2(const RVectorQuantity<Quantity, DIM>& num)
 {
-    return norm2(num.GetValue());
+    return norm_2(num.GetValue())*Quantity(1.0);
 }
 
 #endif /* VECTORUNITCOLLECTIONS_HPP */

@@ -90,7 +90,7 @@ class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
         QLength domain_y(800.0*unit::microns);
         QLength domain_z(200.0*unit::microns);
         std::shared_ptr<Part<3> > p_domain = Part<3> ::Create();
-        p_domain->AddCuboid(domain_x, domain_y, domain_z, DimensionalChastePoint<3>());
+        p_domain->AddCuboid(domain_x, domain_y, domain_z, Vertex<3>());
         return p_domain;
     }
 
@@ -138,7 +138,7 @@ class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
         QLength radius(100.0*unit::microns);
         QLength depth(200.0*unit::microns);
         std::shared_ptr<Part<3> > p_domain = Part<3> ::Create();
-        std::shared_ptr<Polygon<3> > circle = p_domain->AddCircle(radius, DimensionalChastePoint<3>(400.0, 400.0, 0.0, 1_um));
+        std::shared_ptr<Polygon<3> > circle = p_domain->AddCircle(radius, Vertex<3>(400.0, 400.0, 0.0, 1_um));
         p_domain->Extrude(circle, depth);
         return p_domain;
     }
@@ -283,7 +283,7 @@ public:
         std::vector<Node<3>*> nodes;
         for(unsigned idx=0; idx<location_indices.size(); idx++)
         {
-            DimensionalChastePoint<3> location = p_grid->GetPoint(location_indices[idx]);
+            Vertex<3> location = p_grid->GetPoint(location_indices[idx]);
             nodes.push_back(new Node<3>(idx, location.GetLocation(cell_lenth_scale), false));
         }
 

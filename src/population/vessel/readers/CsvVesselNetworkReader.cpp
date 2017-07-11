@@ -43,7 +43,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 CsvVesselNetworkReader<DIM>::CsvVesselNetworkReader()
     : mFileName(),
-      mRadiusLabel()
+      mRadiusLabel(),
+      mReferenceLength(1_um)
 {
 }
 
@@ -111,13 +112,12 @@ std::shared_ptr<VesselNetwork<DIM> > CsvVesselNetworkReader<DIM>::Read()
     }
 
     // Need to flip in 'y' direction for consistency with VTK tools
-    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = VesselNetworkGeometryCalculator<DIM>::GetExtents(p_network);
-    QLength length_scale = extents.second.GetReferenceLengthScale();
-    double y_max = extents.second.GetLocation(length_scale)[1];
+    std::pair<Vertex<DIM>, Vertex<DIM> > extents = VesselNetworkGeometryCalculator<DIM>::GetExtents(p_network);
+    double y_max = extents.second.Convert(mReferenceLength)[1];
 
     for(unsigned idx=0; idx<p_network->GetNumberOfNodes();idx++)
     {
-        c_vector<double, DIM> current_location = p_network->GetNode(idx)->rGetLocation().GetLocation(length_scale);
+        c_vector<double, DIM> current_location = p_network->GetNode(idx)->rGetLocation().Convert(mReferenceLength);
         c_vector<double, DIM> new_location;
         new_location[0] = current_location[0];
         new_location[1] = y_max - current_location[1];
@@ -125,7 +125,7 @@ std::shared_ptr<VesselNetwork<DIM> > CsvVesselNetworkReader<DIM>::Read()
         {
             new_location[2] = current_location[2];
         }
-        p_network->GetNode(idx)->SetLocation(DimensionalChastePoint<DIM>(new_location, length_scale));
+        p_network->GetNode(idx)->SetLocation(Vertex<DIM>(new_location, mReferenceLength));
     }
     return p_network;
 }

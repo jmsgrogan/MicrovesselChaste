@@ -40,7 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include "VesselNetwork.hpp"
 #include "UnitCollection.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 
 /**
  * Calculate geometric properties of vessel networks
@@ -74,7 +74,7 @@ public:
      * @return the distance to the node
      */
     static QLength GetDistanceToNearestNode(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-            const DimensionalChastePoint<DIM>& rLocation);
+            const Vertex<DIM>& rLocation);
 
     /**
      * Get the node nearest to the specified location
@@ -82,7 +82,7 @@ public:
      * @return the nearest node
      */
     static std::shared_ptr<VesselNode<DIM> > GetNearestNode(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-            const DimensionalChastePoint<DIM>& rLocation);
+            const Vertex<DIM>& rLocation);
 
     /**
      * Get the node nearest to the specified node
@@ -123,7 +123,7 @@ public:
      * @return the segment nearest to the specified segment and the distance to it
      */
     static std::pair<std::shared_ptr<VesselSegment<DIM> >, QLength > GetNearestSegment(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-            const DimensionalChastePoint<DIM>& rLocation);
+            const Vertex<DIM>& rLocation);
 
     /**
      * Get the vessel nearest to the specified location
@@ -131,7 +131,7 @@ public:
      * @return the vessel nearest to the specified segment and the distance to it
      */
     static std::shared_ptr<Vessel<DIM> > GetNearestVessel(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-            const DimensionalChastePoint<DIM>& rLocation);
+            const Vertex<DIM>& rLocation);
 
     /**
      * Get the intercapillary distance using a 2d measure
@@ -184,7 +184,7 @@ public:
      * @return the number of nodes
      */
     static unsigned GetNumberOfNodesNearLocation(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-            const DimensionalChastePoint<DIM>&  rLocation, double tolerance = 0.0);
+            const Vertex<DIM>&  rLocation, double tolerance = 0.0);
 
     /**
      * Return the nodes inside a sphere
@@ -193,14 +193,14 @@ public:
      * @return the nodes in the sphere
      */
     static std::vector<std::shared_ptr<VesselNode<DIM> > > GetNodesInSphere(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-            const DimensionalChastePoint<DIM>&  rCentre, QLength  radius);
+            const Vertex<DIM>&  rCentre, QLength  radius);
 
     /**
      * Return the extents of the vessel network in the form ((xmin, xmax), (ymin, ymax), (zmin, zmax))
      * @param useRadii use the vessel radii in calculations
      * @return the extents of the vessel network in the form ((xmin, xmax), (ymin, ymax), (zmin, zmax))
      */
-    static std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > GetExtents(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
+    static std::pair<Vertex<DIM>, Vertex<DIM> > GetExtents(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
             bool useRadii = false);
 
     /**
@@ -211,7 +211,7 @@ public:
      * @return whether a vessel crosses a line segment.
      */
     static bool VesselCrossesLineSegment(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-            const DimensionalChastePoint<DIM>& rCoord1, const DimensionalChastePoint<DIM>& rCoord2, double tolerance = 1e-6);
+            const Vertex<DIM>& rCoord1, const Vertex<DIM>& rCoord2, double tolerance = 1e-6);
 
 };
 

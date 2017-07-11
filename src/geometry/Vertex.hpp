@@ -122,7 +122,7 @@ public:
      * @param coords a vector of x, y, z coordinates
      * @param referenceLength the reference length
      */
-    Vertex(const double& rCoords, QLength referenceLength);
+    Vertex(const double (&rCoords)[3], QLength referenceLength);
 
     /**
      * Factory Constructor
@@ -155,7 +155,15 @@ public:
      * @param referenceLength the reference length
      * @return a pointer to the point
      */
-    static std::shared_ptr<Vertex<DIM> > Create(const double& loc, QLength referenceLength);
+    static std::shared_ptr<Vertex<DIM> > Create(const Vertex<DIM>& loc);
+
+    /**
+     * Factory Constructor
+     * @param coords a vector of x, y, z coordinates
+     * @param referenceLength the reference length
+     * @return a pointer to the point
+     */
+    static std::shared_ptr<Vertex<DIM> > Create(const double (&rCoords)[3], QLength referenceLength);
 
     /**
      * Destructor
@@ -213,6 +221,27 @@ public:
      * @param scale the length scale for the point
      * @return the location of the Point.
      */
+    c_vector<double, 3> Convert3(QLength referenceLength) const;
+
+    /**
+     * Return a non-dimensional location, normalized by the supplied length scale
+     * @param scale the length scale for the point
+     * @return the location of the Point.
+     */
+    c_vector<double, DIM> Convert(QLength referenceLength) const;
+
+    /**
+     * Return a non-dimensional location, normalized by the supplied length scale
+     * @param scale the length scale for the point
+     * @return the location of the Point.
+     */
+    void Convert(double (&rLoc)[3], QLength referenceLength) const;
+
+    /**
+     * Return a non-dimensional location, normalized by the supplied length scale
+     * @param scale the length scale for the point
+     * @return the location of the Point.
+     */
     VecQLength<DIM>& rGetLocation();
 
     /**
@@ -241,6 +270,15 @@ public:
      * @return true if the input point is coincident with this point
      */
     bool IsCoincident(const Vertex<DIM>& rLocation) const;
+
+    const QLength operator[] (unsigned i) const
+    {
+        if(i>=DIM)
+        {
+            EXCEPTION("Requested index out of bounds");
+        }
+        return mLocation[i];
+    }
 
     /**
      * Overload division from self
@@ -288,13 +326,13 @@ public:
      * Translate the point along the supplied vector
      * @param rVector the translation vector
      */
-    void Translate(const VecQLength<DIM>& rVector);
+    void Translate(const Vertex<DIM>& rVector);
 
     /**
      * Translate the point to the new point
      * @param rPoint the new point
      */
-    void TranslateTo(const VecQLength<DIM>& rPoint);
+    void TranslateTo(const Vertex<DIM>& rPoint);
 
 };
 
@@ -353,5 +391,11 @@ inline Vertex<DIM> operator-(Vertex<DIM> lhs, const Vertex<DIM>& rLocation)
     lhs -= rLocation;
     return lhs;
 }
+
+/**
+ * Define a simple vertex type
+ */
+template <unsigned DIM>
+using VertexPtr = std::shared_ptr<Vertex<DIM> >;
 
 #endif /*Vertex_HPP_*/

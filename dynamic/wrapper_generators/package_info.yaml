@@ -50,7 +50,7 @@ modules:
     - FreeTriangulateIo
     - InitialiseTriangulateIo
   - name: AbstractDiscreteContinuumGrid
-  - name: DimensionalChastePoint
+  - name: Vertex
   - name: DiscreteContinuumMesh
   - name: DiscreteContinuumMeshGenerator
   - name: GridCalculator

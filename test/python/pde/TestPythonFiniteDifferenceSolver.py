@@ -51,7 +51,7 @@ class TestFiniteDifferenceSolver(unittest.TestCase):
         
         domain = microvessel_chaste.geometry.Part3()
         length_scale = 1.e-6*metre()
-        origin = microvessel_chaste.mesh.DimensionalChastePoint3((0.0, 0.0, 0.0), length_scale)
+        origin = microvessel_chaste.mesh.Vertex3((0.0, 0.0, 0.0), length_scale)
         domain.AddCuboid(100.e-6*metre(), 100.e-6*metre(), 100.e-6*metre(), origin)
         
         grid = microvessel_chaste.mesh.RegularGrid3()
@@ -77,7 +77,7 @@ class TestFiniteDifferenceSolver(unittest.TestCase):
 #         
 #         domain = geometry.Part3()
 #         length_scale = 1.e-6*utility.metre()
-#         origin = microvessel.mesh.DimensionalChastePoint3((0.0, 0.0, 0.0), length_scale)
+#         origin = microvessel.mesh.Vertex3((0.0, 0.0, 0.0), length_scale)
 #         domain.AddCuboid(100.e-6*utility.metre(), 100.e-6*utility.metre(), 100.e-6*utility.metre(), origin)
 #         
 #         grid = chaste.projects.microvessel.mesh.RegularGrid3()
@@ -109,7 +109,7 @@ class TestFiniteDifferenceSolver(unittest.TestCase):
 #     def test_fixed_left_right_boundary(self):
 #         domain = geometry.Part3()
 #         length_scale = 1.e-6*utility.metre()
-#         origin = microvessel.mesh.DimensionalChastePoint3((0.0, 0.0, 0.0), length_scale)
+#         origin = microvessel.mesh.Vertex3((0.0, 0.0, 0.0), length_scale)
 #         domain.AddCuboid(100.e-6*utility.metre(), 100.e-6*utility.metre(), 10.e-6*utility.metre(), origin)
 #         
 #         grid = chaste.projects.microvessel.mesh.RegularGrid3()

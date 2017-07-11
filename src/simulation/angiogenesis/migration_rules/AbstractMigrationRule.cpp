@@ -70,9 +70,9 @@ void AbstractMigrationRule<DIM>::SetUseMooreNeighbourhood(bool useMooreNeighbour
 }
 
 template <unsigned DIM>
-std::vector<DimensionalChastePoint<DIM> > AbstractMigrationRule<DIM>::GetDirections(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<Vertex<DIM> > AbstractMigrationRule<DIM>::GetDirections(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
 {
-    return std::vector<DimensionalChastePoint<DIM> >();
+    return std::vector<Vertex<DIM> >();
 }
 
 template <unsigned DIM>

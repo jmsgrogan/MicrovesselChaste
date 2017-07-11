@@ -14,14 +14,14 @@
 namespace py = pybind11;
 typedef OffLatticeMigrationRule<3 > OffLatticeMigrationRule3;
 ;
-typedef ::std::vector<DimensionalChastePoint<3>, std::allocator<DimensionalChastePoint<3> > > _std_vectorDimensionalChastePoint3_std_allocatorDimensionalChastePoint3;
+typedef ::std::vector<Vertex<3>, std::allocator<Vertex<3> > > _std_vectorVertex3_std_allocatorVertex3;
 
 class OffLatticeMigrationRule3_Overloads : public OffLatticeMigrationRule3{
     public:
     using OffLatticeMigrationRule3::OffLatticeMigrationRule;
-    ::std::vector<DimensionalChastePoint<3>, std::allocator<DimensionalChastePoint<3> > > GetDirections(::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > const & rNodes) override {
+    ::std::vector<Vertex<3>, std::allocator<Vertex<3> > > GetDirections(::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > const & rNodes) override {
         PYBIND11_OVERLOAD(
-            _std_vectorDimensionalChastePoint3_std_allocatorDimensionalChastePoint3,
+            _std_vectorVertex3_std_allocatorVertex3,
             OffLatticeMigrationRule3,
             GetDirections,
             rNodes);
@@ -45,11 +45,11 @@ py::class_<OffLatticeMigrationRule3 , OffLatticeMigrationRule3_Overloads   >(m, 
             " "  )
         .def(
             "GetDirections", 
-            (::std::vector<DimensionalChastePoint<3>, std::allocator<DimensionalChastePoint<3> > >(OffLatticeMigrationRule3::*)(::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > const &)) &OffLatticeMigrationRule3::GetDirections, 
+            (::std::vector<Vertex<3>, std::allocator<Vertex<3> > >(OffLatticeMigrationRule3::*)(::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > const &)) &OffLatticeMigrationRule3::GetDirections, 
             " " , py::arg("rNodes") )
         .def(
             "GetDirectionsForSprouts", 
-            (::std::vector<DimensionalChastePoint<3>, std::allocator<DimensionalChastePoint<3> > >(OffLatticeMigrationRule3::*)(::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > const &)) &OffLatticeMigrationRule3::GetDirectionsForSprouts, 
+            (::std::vector<Vertex<3>, std::allocator<Vertex<3> > >(OffLatticeMigrationRule3::*)(::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > const &)) &OffLatticeMigrationRule3::GetDirectionsForSprouts, 
             " " , py::arg("rNodes") )
         .def(
             "SetSproutingVelocity", 

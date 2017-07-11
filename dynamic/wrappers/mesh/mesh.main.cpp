@@ -8,8 +8,8 @@
 #include "TetrahedralMesh3_3.cppwg.hpp"
 #include "AbstractDiscreteContinuumGrid2_2.cppwg.hpp"
 #include "AbstractDiscreteContinuumGrid3_3.cppwg.hpp"
-#include "DimensionalChastePoint2.cppwg.hpp"
-#include "DimensionalChastePoint3.cppwg.hpp"
+#include "Vertex2.cppwg.hpp"
+#include "Vertex3.cppwg.hpp"
 #include "DiscreteContinuumMesh2_2.cppwg.hpp"
 #include "DiscreteContinuumMesh3_3.cppwg.hpp"
 #include "DiscreteContinuumMeshGenerator2_2.cppwg.hpp"
@@ -37,8 +37,8 @@ PYBIND11_MODULE(_chaste_project_MicrovesselChaste_mesh, m)
     register_TetrahedralMesh3_3_class(m);
     register_AbstractDiscreteContinuumGrid2_2_class(m);
     register_AbstractDiscreteContinuumGrid3_3_class(m);
-    register_DimensionalChastePoint2_class(m);
-    register_DimensionalChastePoint3_class(m);
+    register_Vertex2_class(m);
+    register_Vertex3_class(m);
     register_DiscreteContinuumMesh2_2_class(m);
     register_DiscreteContinuumMesh3_3_class(m);
     register_DiscreteContinuumMeshGenerator2_2_class(m);

@@ -72,7 +72,7 @@ public:
 
         // Set up the grid
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(1000.0_um, 1000.0_um, DimensionalChastePoint<2>());
+        p_domain->AddRectangle(1000.0_um, 1000.0_um, Vertex<2>());
 
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         QLength spacing(40.0_um);
@@ -105,7 +105,7 @@ public:
         unsigned divisions = dimensions[1] - 2; // divide the vessel to coincide with grid
         unsigned alignment_axis = 1; // pointing y direction
         std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(length,
-                                                                                        DimensionalChastePoint<2>(2.0, 0.0, 0.0, spacing),
+                                                                                        Vertex<2>(2.0, 0.0, 0.0, spacing),
                                                                                             divisions, alignment_axis);
 
         std::shared_ptr<OffLatticeMigrationRule<2> > p_migration_rule = OffLatticeMigrationRule<2>::Create();
@@ -136,7 +136,7 @@ public:
 
         // Set up the grid
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(1000.0_um, 1000.0_um, 100.0_um, DimensionalChastePoint<3>());
+        p_domain->AddCuboid(1000.0_um, 1000.0_um, 100.0_um, Vertex<3>());
 
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         QLength spacing(40.0_um);
@@ -169,7 +169,7 @@ public:
         unsigned divisions = dimensions[1] - 2; // divide the vessel to coincide with grid
         unsigned alignment_axis = 1; // pointing y direction
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(length,
-                                                                                        DimensionalChastePoint<3>(2.0, 2.0, 0.5, spacing),
+                                                                                        Vertex<3>(2.0, 2.0, 0.5, spacing),
                                                                                             divisions, alignment_axis);
 
         std::shared_ptr<OffLatticeMigrationRule<3> > p_migration_rule = OffLatticeMigrationRule<3>::Create();

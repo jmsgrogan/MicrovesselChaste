@@ -84,7 +84,7 @@ public:
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(1.0_m,
                                1.0_m,
-                               DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+                               Vertex<2>(0.0, 0.0, 0.0));
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 0.1_m);
 
@@ -159,7 +159,7 @@ public:
 
         // Set up the mesh
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(1000e-6*unit::metres, 1000e-6*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        p_domain->AddRectangle(1000e-6*unit::metres, 1000e-6*unit::metres, Vertex<2>(0.0, 0.0, 0.0));
 
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 100.0e-6*unit::metres);

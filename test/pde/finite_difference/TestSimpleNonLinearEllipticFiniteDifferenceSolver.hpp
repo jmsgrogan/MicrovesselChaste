@@ -100,7 +100,7 @@ public:
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(1.0*unit::metres,
                                1.0*unit::metres,
-                               DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+                               Vertex<2>(0.0, 0.0, 0.0));
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
         p_grid->GenerateFromPart(p_domain, 0.1*unit::metres);
 
@@ -165,7 +165,7 @@ public:
         p_domain->AddCuboid(4.0e-6*unit::metres,
                             4.0e-6*unit::metres,
                             4.0e-6*unit::metres,
-                            DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+                            Vertex<3>(0.0, 0.0, 0.0));
 
         std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 0.5*1_um);

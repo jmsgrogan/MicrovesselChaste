@@ -54,7 +54,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::DiscreteContinuumMeshGenerator() :
-    mMaxElementArea(0.0 * unit::metres * unit::metres* unit::metres),
+    mMaxElementArea(0.0 * unit::metres_cubed),
     mpMesh(),
     mpDomain(),
     mpVtkDomain(),
@@ -114,13 +114,13 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::SetMaxElementArea(Q
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::SetHoles(std::vector<DimensionalChastePoint<SPACE_DIM> > holes)
+void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::SetHoles(std::vector<Vertex<SPACE_DIM> > holes)
 {
     mHoles = holes;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::SetRegionMarkers(std::vector<DimensionalChastePoint<SPACE_DIM> > regionMarkers)
+void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::SetRegionMarkers(std::vector<Vertex<SPACE_DIM> > regionMarkers)
 {
     mRegions = regionMarkers;
 }
@@ -129,7 +129,7 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Update()
 {
     // Create a mesh
-    mpMesh = std::shared_ptr<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> >(new DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>());
+    mpMesh = std::make_shared<DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM> >();
 
     // For 2D parts use triangle
     if (ELEMENT_DIM == 2)
@@ -142,8 +142,8 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Update()
         {
             if(mpDomain)
             {
-                std::vector<QLength > bounding_box = mpDomain->GetBoundingBox();
-                if (Qabs(bounding_box[4]) < 1.e-12*unit::metres && Qabs(bounding_box[5]) < 1.e-12*unit::metres)
+                std::array<QLength,6> bounding_box = mpDomain->GetBoundingBox();
+                if (Qabs(bounding_box[4]) < 1.e-12_m && Qabs(bounding_box[5]) < 1.e-12_m)
                 {
                    Mesh2d();
                    this->mpMesh->SetAttributesKeys(mpDomain->GetAttributesKeysForMesh(false));
@@ -168,8 +168,8 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Update()
     {
         if(mpDomain)
         {
-            std::vector<QLength > bounding_box = mpDomain->GetBoundingBox();
-            if (Qabs(bounding_box[4]) < 1.e-12*unit::metres && Qabs(bounding_box[5]) < 1.e-12*unit::metres)
+            std::array<QLength,6> bounding_box = mpDomain->GetBoundingBox();
+            if (Qabs(bounding_box[4]) < 1.e-12_m && Qabs(bounding_box[5]) < 1.e-12_m)
             {
                 EXCEPTION("The part is two-dimensional, use the 2D meshing functionality.");
             }
@@ -200,13 +200,13 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
     // Cases: have just domain, have just vtk domain, have vtk domain and domain
     if(mpDomain and !mpVtkDomain)
     {
-        std::vector<DimensionalChastePoint<SPACE_DIM> > vertex_locations = mpDomain->GetVertexLocations();
+        std::vector<VertexPtr<SPACE_DIM> > vertex_locations = mpDomain->GetVertices();
         unsigned num_vertices = vertex_locations.size();
         mesher_input.pointlist = (double *) malloc(num_vertices * 2 * sizeof(double));
         mesher_input.numberofpoints = int(num_vertices);
         for (unsigned idx = 0; idx < num_vertices; idx++)
         {
-            c_vector<double, SPACE_DIM> vertex_location = vertex_locations[idx].GetLocation(mReferenceLength);
+            c_vector<double, SPACE_DIM> vertex_location = vertex_locations[idx]->Convert(mReferenceLength);
             for (unsigned jdx = 0; jdx < 2; jdx++)
             {
                 mesher_input.pointlist[2 * idx + jdx] = vertex_location[jdx];
@@ -254,7 +254,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
     else if(mpDomain and mpVtkDomain)
     {
         unsigned num_points = mpVtkDomain->GetNumberOfPoints();
-        std::vector<DimensionalChastePoint<SPACE_DIM> > vertex_locations = mpDomain->GetVertexLocations();
+        std::vector<VertexPtr<SPACE_DIM> > vertex_locations = mpDomain->GetVertices();
         unsigned num_vertices = vertex_locations.size();
 
         mesher_input.pointlist = (double *) malloc((num_points+num_vertices) * 2 * sizeof(double));
@@ -268,7 +268,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
         }
         for (unsigned idx = 0; idx < num_vertices; idx++)
         {
-            c_vector<double, SPACE_DIM> vertex_location = vertex_locations[idx].GetLocation(mReferenceLength);
+            c_vector<double, SPACE_DIM> vertex_location = vertex_locations[idx]->Convert(mReferenceLength);
             for (unsigned jdx = 0; jdx < 2; jdx++)
             {
                 mesher_input.pointlist[2 * idx + jdx + 2*num_points] = vertex_location[jdx];
@@ -307,7 +307,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
         mesher_input.numberofholes = int(mHoles.size());
         for (unsigned idx = 0; idx < mHoles.size(); idx++)
         {
-            c_vector<double, SPACE_DIM> hole_location = mHoles[idx].GetLocation(mReferenceLength);
+            c_vector<double, SPACE_DIM> hole_location = mHoles[idx].Convert(mReferenceLength);
             for (unsigned jdx = 0; jdx < 2; jdx++)
             {
                 mesher_input.holelist[2 * idx + jdx] = hole_location[jdx];
@@ -315,7 +315,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
         }
     }
 
-    std::vector<std::pair<DimensionalChastePoint<SPACE_DIM>, unsigned> > region_locations;
+    std::vector<std::pair<Vertex<SPACE_DIM>, unsigned> > region_locations;
     if(mpDomain)
     {
         region_locations = mpDomain->GetRegionMarkers();
@@ -326,7 +326,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
             mesher_input.numberofregions = int(num_regions);
             for (unsigned idx = 0; idx < mRegions.size(); idx++)
             {
-                c_vector<double, SPACE_DIM> region_location = mRegions[idx].GetLocation(mReferenceLength);
+                c_vector<double, SPACE_DIM> region_location = mRegions[idx].Convert(mReferenceLength);
                 for (unsigned jdx = 0; jdx < 2; jdx++)
                 {
                     mesher_input.regionlist[4 * idx + jdx] = region_location[jdx];
@@ -338,7 +338,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh2d()
             }
             for (unsigned idx = 0; idx < region_locations.size(); idx++)
             {
-                c_vector<double, SPACE_DIM> region_location = region_locations[idx].first.GetLocation(mReferenceLength);
+                c_vector<double, SPACE_DIM> region_location = region_locations[idx].first.Convert(mReferenceLength);
                 for (unsigned jdx = 0; jdx < 2; jdx++)
                 {
                     mesher_input.regionlist[4 * idx + jdx] = region_location[jdx];
@@ -389,9 +389,9 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
     // Only do this on master as tetgen is serial
     if(PetscTools::AmMaster())
     {
-        std::vector<DimensionalChastePoint<SPACE_DIM> > vertex_locations = mpDomain->GetVertexLocations();
-        std::vector<DimensionalChastePoint<SPACE_DIM> > hole_locations = mpDomain->GetHoleMarkers();
-        std::vector<std::pair<DimensionalChastePoint<SPACE_DIM>, unsigned> > region_locations = mpDomain->GetRegionMarkers();
+        std::vector<VertexPtr<SPACE_DIM> > vertex_locations = mpDomain->GetVertices();
+        std::vector<Vertex<SPACE_DIM> > hole_locations = mpDomain->GetHoleMarkers();
+        std::vector<std::pair<Vertex<SPACE_DIM>, unsigned> > region_locations = mpDomain->GetRegionMarkers();
 
         unsigned num_vertices = vertex_locations.size();
         unsigned num_regions = region_locations.size();
@@ -409,7 +409,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
 
         for (unsigned idx = 0; idx < num_vertices; idx++)
         {
-            c_vector<double, SPACE_DIM> vertex_location = vertex_locations[idx].GetLocation(mReferenceLength);
+            c_vector<double, SPACE_DIM> vertex_location = vertex_locations[idx]->Convert(mReferenceLength);
             for (unsigned jdx = 0; jdx < 3; jdx++)
             {
                 mesher_input.pointlist[3 * idx + jdx] = vertex_location[jdx];
@@ -421,7 +421,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
         mesher_input.numberofregions = num_regions;
         for (unsigned idx = 0; idx < num_regions; idx++)
         {
-            c_vector<double, SPACE_DIM> region_location = region_locations[idx].first.GetLocation(mReferenceLength);
+            c_vector<double, SPACE_DIM> region_location = region_locations[idx].first.Convert(mReferenceLength);
             for (unsigned jdx = 0; jdx < 3; jdx++)
             {
                 mesher_input.regionlist[5 * idx + jdx] = region_location[jdx];
@@ -435,7 +435,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
         mesher_input.numberofholes = num_holes;
         for (unsigned idx = 0; idx < num_holes; idx++)
         {
-            c_vector<double, SPACE_DIM> hole_location = hole_locations[idx].GetLocation(mReferenceLength);
+            c_vector<double, SPACE_DIM> hole_location = hole_locations[idx].Convert(mReferenceLength);
             for (unsigned jdx = 0; jdx < 3; jdx++)
             {
                 mesher_input.holelist[3 * idx + jdx] = hole_location[jdx];
@@ -456,7 +456,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
             mesher_input.facetmarkerlist[idx] = 0;
             if(polygons.size()>0)
             {
-                std::map<std::string, double> attributes = polygons[0]->GetAttributes();
+                std::map<std::string, double> attributes = polygons[0]->rGetAttributes();
                 unsigned key=0;
 
                 // Are any attributes active, if so set their value in the marker list
@@ -487,11 +487,11 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
             for (unsigned jdx = 0; jdx < polygons.size(); jdx++)
             {
                 p = &f->polygonlist[jdx];
-                p->numberofvertices = polygons[jdx]->GetVertices().size();
+                p->numberofvertices = polygons[jdx]->rGetVertices().size();
                 p->vertexlist = new int[p->numberofvertices];
-                for (unsigned kdx = 0; kdx < polygons[jdx]->GetVertices().size(); kdx++)
+                for (unsigned kdx = 0; kdx < polygons[jdx]->rGetVertices().size(); kdx++)
                 {
-                    p->vertexlist[kdx] = int(polygons[jdx]->GetVertices()[kdx]->GetIndex());
+                    p->vertexlist[kdx] = int(polygons[jdx]->rGetVertices()[kdx]->GetIndex());
                 }
             }
         }
@@ -503,7 +503,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
             mesher_input.numberofholes = num_holes;
             for (unsigned idx = 0; idx < num_holes; idx++)
             {
-                c_vector<double, SPACE_DIM> hole_location = mHoles[idx].GetLocation(mReferenceLength);
+                c_vector<double, SPACE_DIM> hole_location = mHoles[idx].Convert(mReferenceLength);
                 for (unsigned jdx = 0; jdx < 3; jdx++)
                 {
                     mesher_input.holelist[3 * idx + jdx] = hole_location[jdx];
@@ -537,7 +537,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
             if(facets[idx]->GetPolygons().size()>1)
             {
                 // Get original label
-                std::map<std::string, double> attributes = facets[idx]->GetPolygons()[0]->GetAttributes();
+                std::map<std::string, double> attributes = facets[idx]->GetPolygons()[0]->rGetAttributes();
                 unsigned key=0;
 
                 // Are any attributes active, if so set their value in the marker list
@@ -566,11 +566,11 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::Mesh3d()
                         c_vector<double, SPACE_DIM> centroid = this->mpMesh->GetBoundaryElement(jdx)->CalculateCentroid();
                         for(unsigned kdx=1;kdx<facets[idx]->GetPolygons().size(); kdx++)
                         {
-                            c_vector<double, SPACE_DIM> cent = facets[idx]->GetPolygons()[kdx]->GetCentroid().GetLocation(mReferenceLength);
+                            c_vector<double, SPACE_DIM> cent = facets[idx]->GetPolygons()[kdx]->GetCentroid().Convert(mReferenceLength);
                             if(facets[idx]->GetPolygons()[kdx]->ContainsPoint(
-                                    DimensionalChastePoint<SPACE_DIM>(centroid, mReferenceLength), 1.e-3))
+                                    Vertex<SPACE_DIM>(centroid, mReferenceLength), 1.e-3))
                             {
-                                std::map<std::string, double> attributes = facets[idx]->GetPolygons()[kdx]->GetAttributes();
+                                std::map<std::string, double> attributes = facets[idx]->GetPolygons()[kdx]->rGetAttributes();
                                 unsigned key=0;
 
                                 // Are any attributes active, if so set their value in the marker list
@@ -637,7 +637,7 @@ void DiscreteContinuumMeshGenerator<ELEMENT_DIM, SPACE_DIM>::MeshStl3d()
         mesher_input.numberofholes = num_holes;
         for (unsigned idx = 0; idx < num_holes; idx++)
         {
-            c_vector<double, SPACE_DIM> hole_location = mHoles[idx].GetLocation(mReferenceLength);
+            c_vector<double, SPACE_DIM> hole_location = mHoles[idx].Convert(mReferenceLength);
             for (unsigned jdx = 0; jdx < 3; jdx++)
             {
                 mesher_input.holelist[3 * idx + jdx] = hole_location[jdx];

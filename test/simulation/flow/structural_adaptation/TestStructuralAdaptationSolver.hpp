@@ -178,9 +178,9 @@ public:
                                                                                                                         1000.0* 1_um,
                                                                                                                         vessel_length);
 
-        std::vector<DimensionalChastePoint<2> > points;
-        points.push_back(DimensionalChastePoint<2>(0, 0, 0.0, 1_um));
-        points.push_back(DimensionalChastePoint<2>(5, 0, 0.0, 1_um));
+        std::vector<Vertex<2> > points;
+        points.push_back(Vertex<2>(0, 0, 0.0, 1_um));
+        points.push_back(Vertex<2>(5, 0, 0.0, 1_um));
 
         std::vector<std::shared_ptr<VesselNode<2> > > nodes;
         for(unsigned i=0; i < points.size(); i++)
@@ -197,7 +197,7 @@ public:
         p_segment->GetFlowProperties()->SetViscosity(1.e-3 * unit::poiseuille);
         VesselNetworkPropertyManager<2>::SetSegmentProperties(vascular_network, p_segment);
 
-        std::pair<DimensionalChastePoint<2>, DimensionalChastePoint<2> > network_extents = VesselNetworkGeometryCalculator<2>::GetExtents(vascular_network);
+        std::pair<Vertex<2>, Vertex<2> > network_extents = VesselNetworkGeometryCalculator<2>::GetExtents(vascular_network);
         double y_middle = (network_extents.first.GetLocation(1_um)[1]) / 2.0;
         double x_middle = (network_extents.first.GetLocation(1_um)[0]) / 2.0;
 

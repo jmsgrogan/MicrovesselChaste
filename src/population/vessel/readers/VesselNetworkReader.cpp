@@ -54,7 +54,7 @@ VesselNetworkReader<DIM>::VesselNetworkReader()
       mRadiusLabel("Node Radius"),
       mRadiusConversionFactor(1.0),
       mMergeCoincidentPoints(false),
-      mTargetSegmentLength(0.0*unit::metres),
+      mTargetSegmentLength(0.0_m),
       mReferenceLength(1_um)
 {
 
@@ -126,7 +126,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkReader<DIM>::Read()
         p_polydata = p_cleaner->GetOutput();
     }
 
-    if (mTargetSegmentLength != 0.0 * unit::metres) {
+    if (mTargetSegmentLength != 0_m) {
         vtkSmartPointer<vtkSplineFilter> p_spline_filter = vtkSmartPointer<
                 vtkSplineFilter>::New();
 #if VTK_MAJOR_VERSION <= 5
@@ -147,14 +147,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkReader<DIM>::Read()
     {
         double point_coords[3];
         p_polydata->GetPoint(i, point_coords);
-        if (DIM < 3)
-        {
-            nodes.push_back(VesselNode<DIM>::Create(point_coords[0], point_coords[1], 0.0, mReferenceLength));
-        }
-        else
-        {
-            nodes.push_back(VesselNode<DIM>::Create(point_coords[0], point_coords[1], point_coords[2], mReferenceLength));
-        }
+        nodes.push_back(VesselNode<DIM>::Create(Vertex<DIM>(point_coords, mReferenceLength)));
     }
 
     // Extract radii corresponding to each node from the VTK Polydata and store them in a list.

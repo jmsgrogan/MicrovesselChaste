@@ -37,7 +37,7 @@ py::class_<Facet3    >(m, "Facet3")
             " " , py::arg("pPolygon") )
         .def(
             "ContainsPoint", 
-            (bool(Facet3::*)(::DimensionalChastePoint<3> const &)) &Facet3::ContainsPoint, 
+            (bool(Facet3::*)(::Vertex<3> const &)) &Facet3::ContainsPoint, 
             " " , py::arg("location") )
         .def(
             "GetBoundingBox", 
@@ -45,11 +45,11 @@ py::class_<Facet3    >(m, "Facet3")
             " "  )
         .def(
             "GetCentroid", 
-            (::DimensionalChastePoint<3>(Facet3::*)()) &Facet3::GetCentroid, 
+            (::Vertex<3>(Facet3::*)()) &Facet3::GetCentroid, 
             " "  )
         .def(
             "GetDistance", 
-            (::QLength(Facet3::*)(::DimensionalChastePoint<3> const &)) &Facet3::GetDistance, 
+            (::QLength(Facet3::*)(::Vertex<3> const &)) &Facet3::GetDistance, 
             " " , py::arg("rLocation") )
         .def(
             "GetPlane", 
@@ -65,7 +65,7 @@ py::class_<Facet3    >(m, "Facet3")
             " "  )
         .def(
             "GetVertices", 
-            (::std::vector<std::shared_ptr<DimensionalChastePoint<3> >, std::allocator<std::shared_ptr<DimensionalChastePoint<3> > > >(Facet3::*)()) &Facet3::GetVertices, 
+            (::std::vector<std::shared_ptr<Vertex<3> >, std::allocator<std::shared_ptr<Vertex<3> > > >(Facet3::*)()) &Facet3::GetVertices, 
             " "  )
         .def(
             "GetVtkVertices", 
@@ -77,7 +77,7 @@ py::class_<Facet3    >(m, "Facet3")
             " " , py::arg("axis"), py::arg("angle") )
         .def(
             "Translate", 
-            (void(Facet3::*)(::DimensionalChastePoint<3>)) &Facet3::Translate, 
+            (void(Facet3::*)(::Vertex<3>)) &Facet3::Translate, 
             " " , py::arg("translationVector") )
         .def(
             "UpdateVertices", 

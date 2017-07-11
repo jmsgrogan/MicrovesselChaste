@@ -91,20 +91,20 @@ void Part<DIM>::AddAttribute(const std::string& rLabel, double value)
 }
 
 template<unsigned DIM>
-void Part<DIM>::AddAttributeToEdgeIfFound(const VecQLength<DIM>& loc, const std::string& rLabel, double value)
+void Part<DIM>::AddAttributeToEdgeIfFound(const Vertex<DIM>& rLoc, const std::string& rLabel, double value)
 {
     for(auto& polygon:GetPolygons())
     {
-        polygon->AddAttributeToEdgeIfFound(loc, rLabel, value);
+        polygon->AddAttributeToEdgeIfFound(rLoc, rLabel, value);
     }
 }
 
 template<unsigned DIM>
-void Part<DIM>::AddAttributeToPolygonIfFound(const VecQLength<DIM>& loc, const std::string& rLabel, double value)
+void Part<DIM>::AddAttributeToPolygonIfFound(const Vertex<DIM>& rLoc, const std::string& rLabel, double value)
 {
     for(auto& polygon:GetPolygons())
     {
-        if(polygon->ContainsPoint(loc))
+        if(polygon->ContainsPoint(rLoc))
         {
             polygon->AddAttribute(rLabel, value);
         }
@@ -121,9 +121,9 @@ void Part<DIM>::AddAttributeToPolygons(const std::string& rLabel, double value)
 }
 
 template<unsigned DIM>
-PolygonPtr<DIM> Part<DIM>::AddCircle(QLength radius, VecQLength<DIM> centre, unsigned numSegments)
+PolygonPtr<DIM> Part<DIM>::AddCircle(QLength radius, Vertex<DIM> centre, unsigned numSegments)
 {
-    std::vector<std::shared_ptr<VecQLength<DIM> > > vertices;
+    std::vector<VertexPtr<DIM> > vertices;
     double seg_angle = 2.0 * M_PI / double(numSegments);
     for (unsigned idx = 0; idx < numSegments; idx++)
     {
@@ -132,11 +132,11 @@ PolygonPtr<DIM> Part<DIM>::AddCircle(QLength radius, VecQLength<DIM> centre, uns
         QLength y = (radius * std::sin(angle) + centre[1]);
         if(DIM==3)
         {
-            vertices.push_back(VecQLength<DIM>(x, y, centre[2]));
+            vertices.push_back(Vertex<DIM>::Create(x, y, centre[2]));
         }
         else
         {
-            vertices.push_back(VecQLength<DIM>(x, y, 0_m));
+            vertices.push_back(Vertex<DIM>::Create(x, y, 0_m));
         }
     }
     mVtkIsUpToDate = false;
@@ -144,8 +144,7 @@ PolygonPtr<DIM> Part<DIM>::AddCircle(QLength radius, VecQLength<DIM> centre, uns
 }
 
 template<unsigned DIM>
-void Part<DIM>::AddCylinder(QLength radius, QLength depth, VecQLength<DIM> centre,
-                            unsigned numSegments)
+void Part<DIM>::AddCylinder(QLength radius, QLength depth, Vertex<DIM> centre, unsigned numSegments)
 {
     PolygonPtr<DIM> p_circle = AddCircle(radius, centre, numSegments);
     Extrude(p_circle, depth);
@@ -153,7 +152,7 @@ void Part<DIM>::AddCylinder(QLength radius, QLength depth, VecQLength<DIM> centr
 }
 
 template<unsigned DIM>
-void Part<DIM>::AddCuboid(QLength sizeX, QLength sizeY, QLength sizeZ, VecQLength<DIM> origin)
+void Part<DIM>::AddCuboid(QLength sizeX, QLength sizeY, QLength sizeZ, Vertex<DIM> origin)
 {
     PolygonPtr<DIM> p_rectangle = AddRectangle(sizeX, sizeY, origin);
     Extrude(p_rectangle, sizeZ);
@@ -161,15 +160,15 @@ void Part<DIM>::AddCuboid(QLength sizeX, QLength sizeY, QLength sizeZ, VecQLengt
 }
 
 template<unsigned DIM>
-void Part<DIM>::AddHoleMarker(VecQLength<DIM> hole)
+void Part<DIM>::AddHoleMarker(Vertex<DIM> hole)
 {
     mHoleMarkers.push_back(hole);
 }
 
 template<unsigned DIM>
-void Part<DIM>::AddRegionMarker(VecQLength<DIM> region, unsigned value)
+void Part<DIM>::AddRegionMarker(Vertex<DIM> region, unsigned value)
 {
-    mRegionMarkers.push_back(std::pair<VecQLength<DIM>, unsigned>(region, value));
+    mRegionMarkers.push_back(std::pair<Vertex<DIM>, unsigned>(region, value));
 }
 
 template<unsigned DIM>
@@ -183,18 +182,16 @@ void Part<DIM>::AppendPart(PartPtr<DIM> pPart)
 }
 
 template<unsigned DIM>
-PolygonPtr<DIM> Part<DIM>::AddPolygon(const std::vector<VecQLength<DIM> >& vertices, bool newFacet,
-                                                                                   std::shared_ptr<Facet<DIM> > pFacet)
+PolygonPtr<DIM> Part<DIM>::AddPolygon(const std::vector<VertexPtr<DIM> >& vertices, bool newFacet, FacetPtr<DIM> pFacet)
 {
-    PolygonPtr<DIM> p_polygon = Polygon<DIM>::Create(vertices);
+    auto p_polygon = Polygon<DIM>::Create(vertices);
     AddPolygon(p_polygon, newFacet, pFacet);
     mVtkIsUpToDate = false;
     return p_polygon;
 }
 
 template<unsigned DIM>
-PolygonPtr<DIM> Part<DIM>::AddPolygon(PolygonPtr<DIM> pPolygon, bool newFacet,
-                                                 std::shared_ptr<Facet<DIM> > pFacet)
+PolygonPtr<DIM> Part<DIM>::AddPolygon(PolygonPtr<DIM> pPolygon, bool newFacet, FacetPtr<DIM> pFacet)
 {
     if (!pFacet)
     {
@@ -216,38 +213,37 @@ PolygonPtr<DIM> Part<DIM>::AddPolygon(PolygonPtr<DIM> pPolygon, bool newFacet,
 }
 
 template<unsigned DIM>
-PolygonPtr<DIM> Part<DIM>::AddRectangle(QLength sizeX, QLength sizeY, VecQLength<DIM> origin)
+PolygonPtr<DIM> Part<DIM>::AddRectangle(QLength sizeX, QLength sizeY, Vertex<DIM> origin)
 {
-    std::vector<DimensionalChastePoint<DIM> > vertices;
+    std::vector<VertexPtr<DIM> > vertices;
     if(DIM==3)
     {
-        vertices.push_back(VecQLength<DIM>(origin[0], origin[1], origin[2]));
-        vertices.push_back(VecQLength<DIM>(origin[0] + sizeX, origin[1], origin[2]));
-        vertices.push_back(VecQLength<DIM>(origin[0] + sizeX, origin[1] + sizeY, origin[2]));
-        vertices.push_back(VecQLength<DIM>(origin[0], origin[1] + sizeY, origin[2]));
+        vertices.push_back(Vertex<DIM>::Create(origin[0], origin[1], origin[2]));
+        vertices.push_back(Vertex<DIM>::Create(origin[0] + sizeX, origin[1], origin[2]));
+        vertices.push_back(Vertex<DIM>::Create(origin[0] + sizeX, origin[1] + sizeY, origin[2]));
+        vertices.push_back(Vertex<DIM>::Create(origin[0], origin[1] + sizeY, origin[2]));
     }
     else
     {
-        vertices.push_back(VecQLength<DIM>(origin[0], origin[1], 0.0_m));
-        vertices.push_back(VecQLength<DIM>(origin[0] + sizeX, origin[1], 0.0_m));
-        vertices.push_back(VecQLength<DIM>(origin[0] + sizeX, origin[1] + sizeY, 0.0_m));
-        vertices.push_back(VecQLength<DIM>(origin[0], origin[1] + sizeY, 0.0_m));
+        vertices.push_back(Vertex<DIM>::Create(origin[0], origin[1], 0.0_m));
+        vertices.push_back(Vertex<DIM>::Create(origin[0] + sizeX, origin[1], 0.0_m));
+        vertices.push_back(Vertex<DIM>::Create(origin[0] + sizeX, origin[1] + sizeY, 0.0_m));
+        vertices.push_back(Vertex<DIM>::Create(origin[0], origin[1] + sizeY, 0.0_m));
     }
     mVtkIsUpToDate = false;
     return AddPolygon(vertices);
 }
 
 template<unsigned DIM>
-void Part<DIM>::AddVesselNetwork(VesselNetworkPtr<DIM> pVesselNetwork, bool surface,
-        bool removeVesselRegion)
+void Part<DIM>::AddVesselNetwork(VesselNetworkPtr<DIM> pVesselNetwork, bool surface, bool removeVesselRegion)
 {
     if (!surface)
     {
-        std::vector<VecQLength<DIM> > vertices;
+        std::vector<VertexPtr<DIM> > vertices;
         std::vector<VesselNodePtr<DIM> > nodes = pVesselNetwork->GetNodes();
         for (unsigned idx = 0; idx < nodes.size(); idx++)
         {
-            vertices.push_back(VecQLength<DIM>(nodes[idx]->rGetLocation()));
+            vertices.push_back(Vertex<DIM>::Create(nodes[idx]->rGetLocation()));
         }
 
         // If vertices lie on any existing facets add the vertex to the facet
@@ -267,7 +263,7 @@ void Part<DIM>::AddVesselNetwork(VesselNetworkPtr<DIM> pVesselNetwork, bool surf
         for (unsigned idx = 0; idx < vessels.size(); idx++)
         {
             std::vector<VesselSegmentPtr<DIM> > segments = vessels[idx]->GetSegments();
-            std::vector<DimensionalChastePoint<DIM> > segment_vertices;
+            std::vector<VertexPtr<DIM> > segment_vertices;
             for (unsigned jdx = 0; jdx < segments.size(); jdx++)
             {
                 unsigned node0_index = pVesselNetwork->GetNodeIndex(segments[jdx]->GetNode(0));
@@ -292,7 +288,7 @@ void Part<DIM>::AddVesselNetwork(VesselNetworkPtr<DIM> pVesselNetwork, bool surf
         {
             polygons[idx]->AddAttribute("Vessel Wall", 1.0);
             bool on_facet = false;
-            VecQLength<DIM> poly_centroid = polygons[idx]->GetCentroid();
+            Vertex<DIM> poly_centroid = polygons[idx]->GetCentroid();
             for (unsigned jdx = 0; jdx < mFacets.size(); jdx++)
             {
                 if (mFacets[jdx]->ContainsPoint(poly_centroid))
@@ -315,7 +311,7 @@ void Part<DIM>::AddVesselNetwork(VesselNetworkPtr<DIM> pVesselNetwork, bool surf
 
         if(removeVesselRegion)
         {
-            std::vector<VecQLength<DIM> > hole_locations = generator.GetHoles();
+            std::vector<Vertex<DIM> > hole_locations = generator.GetHoles();
             for(unsigned idx=0; idx<hole_locations.size(); idx++)
             {
                 AddHoleMarker(hole_locations[idx]);
@@ -323,7 +319,7 @@ void Part<DIM>::AddVesselNetwork(VesselNetworkPtr<DIM> pVesselNetwork, bool surf
         }
         else
         {
-            std::vector<VecQLength<DIM> > region_locations = generator.GetHoles();
+            std::vector<Vertex<DIM> > region_locations = generator.GetHoles();
             for(unsigned idx=0; idx<region_locations.size(); idx++)
             {
                 AddRegionMarker(region_locations[idx], 2.0);
@@ -334,13 +330,13 @@ void Part<DIM>::AddVesselNetwork(VesselNetworkPtr<DIM> pVesselNetwork, bool surf
 }
 
 template<unsigned DIM>
-bool Part<DIM>::EdgeHasAttribute(const VecQLength<DIM>& loc, const std::string& rLabel)
+bool Part<DIM>::EdgeHasAttribute(const Vertex<DIM>& rLoc, const std::string& rLabel)
 {
     bool edge_has_label = false;
     std::vector<PolygonPtr<DIM> > polygons = GetPolygons();
     for(unsigned idx=0; idx<polygons.size(); idx++)
     {
-        if(polygons[idx]->EdgeHasAttribute(loc, rLabel))
+        if(polygons[idx]->EdgeHasAttribute(rLoc, rLabel))
         {
             return true;
         }
@@ -356,17 +352,17 @@ void Part<DIM>::Extrude(PolygonPtr<DIM> pPolygon, QLength depth)
         EXCEPTION("Only parts in 3D space can be extruded.");
     }
     // Loop through the vertices and create new ones at the offset depth
-    std::vector<VecQLength<DIM> > original_vertices = pPolygon->GetVertices();
-    std::vector<VecQLength<DIM> > new_vertices;
+    std::vector<VertexPtr<DIM> > original_vertices = pPolygon->rGetVertices();
+    std::vector<VertexPtr<DIM> > new_vertices;
     for (const auto& vertex:original_vertices)
     {
         if(DIM==2)
         {
-            new_vertices.push_back(VecQLength<DIM>(vertex[0], vertex[1], depth));
+            new_vertices.push_back(Vertex<DIM>::Create((*vertex)[0], (*vertex)[1], depth));
         }
         else
         {
-            new_vertices.push_back(VecQLength<DIM>(vertex[0], vertex[1], vertex[2] + depth));
+            new_vertices.push_back(Vertex<DIM>::Create((*vertex)[0], (*vertex)[1], (*vertex)[2] + depth));
         }
     }
 
@@ -417,13 +413,13 @@ std::map<std::string, double> Part<DIM>::GetAttributes()
 }
 
 template<unsigned DIM>
-std::vector<VecQLength<DIM> > Part<DIM>::GetHoleMarkers()
+std::vector<Vertex<DIM> > Part<DIM>::GetHoleMarkers()
 {
     return mHoleMarkers;
 }
 
 template<unsigned DIM>
-std::vector<std::pair<VecQLength<DIM>, unsigned> > Part<DIM>::GetRegionMarkers()
+std::vector<std::pair<Vertex<DIM>, unsigned> > Part<DIM>::GetRegionMarkers()
 {
     return mRegionMarkers;
 }
@@ -445,13 +441,13 @@ std::map<unsigned, std::string> Part<DIM>::GetAttributesKeysForMesh(bool update)
 
         for(unsigned idx=0; idx<polygons.size(); idx++)
         {
-            std::map<std::string, double> attribute_map = polygons[idx]->GetAttributes();
+            std::map<std::string, double> attribute_map = polygons[idx]->rGetAttributes();
             for(std::map<std::string, double>::iterator it = attribute_map.begin(); it != attribute_map.end(); ++it)
             {
                 attribute_labels.insert(it->first);
             }
 
-            std::vector<std::map<std::string, double> > edge_atts_per_polygon = polygons[idx]->GetEdgeAttributes();
+            std::vector<std::map<std::string, double> > edge_atts_per_polygon = polygons[idx]->rGetEdgeAttributes();
             for(unsigned jdx=0;jdx<edge_atts_per_polygon.size();jdx++)
             {
                 for(std::map<std::string, double>::iterator it = edge_atts_per_polygon[jdx].begin();
@@ -461,7 +457,7 @@ std::map<unsigned, std::string> Part<DIM>::GetAttributesKeysForMesh(bool update)
                 }
             }
         }
-        std::vector<VecQLength<DIM> > vertices = GetVertices();
+        std::vector<VertexPtr<DIM> > vertices = GetVertices();
         for(unsigned idx=0;idx<vertices.size(); idx++)
         {
             std::map<std::string, double> attribute_map = vertices[idx]->GetAttributes();
@@ -483,7 +479,7 @@ std::map<unsigned, std::string> Part<DIM>::GetAttributesKeysForMesh(bool update)
 }
 
 template<unsigned DIM>
-std::shared_ptr<Facet<DIM> > Part<DIM>::GetFacet(const VecQLength<DIM>& location)
+FacetPtr<DIM> Part<DIM>::GetFacet(const Vertex<DIM>& location)
 {
     for(unsigned idx=0; idx<mFacets.size(); idx++)
     {
@@ -496,18 +492,18 @@ std::shared_ptr<Facet<DIM> > Part<DIM>::GetFacet(const VecQLength<DIM>& location
 }
 
 template<unsigned DIM>
-std::vector<VecQLength<DIM> > Part<DIM>::GetVertices()
+std::vector<VertexPtr<DIM> > Part<DIM>::GetVertices()
 {
     std::vector<PolygonPtr<DIM> > polygons = GetPolygons();
-    std::set<VecQLength<DIM> > unique_vertices;
+    std::set<VertexPtr<DIM> > unique_vertices;
     for (unsigned idx = 0; idx < polygons.size(); idx++)
     {
-        std::vector<VecQLength<DIM> > polygon_vertices = polygons[idx]->GetVertices();
+        std::vector<VertexPtr<DIM> > polygon_vertices = polygons[idx]->rGetVertices();
         std::copy(polygon_vertices.begin(), polygon_vertices.end(),
                   std::inserter(unique_vertices, unique_vertices.end()));
     }
 
-    std::vector<VecQLength<DIM> > vertices;
+    std::vector<VertexPtr<DIM> > vertices;
     vertices.insert(vertices.end(), unique_vertices.begin(), unique_vertices.end());
     for (unsigned idx = 0; idx < vertices.size(); idx++)
     {
@@ -526,7 +522,7 @@ std::vector<unsigned> Part<DIM>::GetContainingGridIndices(unsigned num_x, unsign
         {
             for(unsigned idx=0; idx<num_x; idx++)
             {
-                VecQLength<DIM> location(double(idx) * spacing, double(jdx) * spacing, double(kdx) * spacing);
+                Vertex<DIM> location(double(idx) * spacing, double(jdx) * spacing, double(kdx) * spacing);
                 unsigned index = idx + num_x * jdx + num_x * num_y * kdx;
                 if(IsPointInPart(location))
                 {
@@ -536,12 +532,6 @@ std::vector<unsigned> Part<DIM>::GetContainingGridIndices(unsigned num_x, unsign
         }
     }
     return location_indices;
-}
-
-template<unsigned DIM>
-std::vector<VecQLength<DIM> > Part<DIM>::GetVertexLocations()
-{
-    return GetVertices();
 }
 
 template<unsigned DIM>
@@ -559,7 +549,7 @@ std::vector<PolygonPtr<DIM> > Part<DIM>::GetPolygons()
 template<unsigned DIM>
 std::array<QLength, 6> Part<DIM>::GetBoundingBox()
 {
-    std::vector<VecQLength<DIM> > vertices = GetVertices();
+    std::vector<VertexPtr<DIM> > vertices = GetVertices();
     std::array<QLength, 6> box_vector;
     unsigned counter = 0;
     for(const auto& vertex:vertices)
@@ -568,18 +558,18 @@ std::array<QLength, 6> Part<DIM>::GetBoundingBox()
         {
             if (counter == 0)
             {
-                box_vector[2 * jdx] = vertex[jdx];
-                box_vector[2 * jdx + 1] = vertex[jdx];
+                box_vector[2 * jdx] = (*vertex)[jdx];
+                box_vector[2 * jdx + 1] = (*vertex)[jdx];
             }
             else
             {
-                if (vertex[jdx] < box_vector[2 * jdx])
+                if ((*vertex)[jdx] < box_vector[2 * jdx])
                 {
-                    box_vector[2 * jdx] = vertex[jdx];
+                    box_vector[2 * jdx] = (*vertex)[jdx];
                 }
-                if (vertex[jdx] > box_vector[2 * jdx + 1])
+                if ((*vertex)[jdx] > box_vector[2 * jdx + 1])
                 {
-                    box_vector[2 * jdx + 1] = vertex[jdx];
+                    box_vector[2 * jdx + 1] = (*vertex)[jdx];
                 }
             }
         }
@@ -624,50 +614,52 @@ std::vector<std::pair<std::pair<unsigned, unsigned>, unsigned > > Part<DIM>::Get
 
     std::vector<std::pair<std::pair<unsigned, unsigned>, unsigned > > indexes;
     std::vector<PolygonPtr<DIM> > polygons = mFacets[0]->GetPolygons();
+
     std::map<unsigned, std::string> attribute_keys = this->GetAttributesKeysForMesh(true);
 
     for (unsigned idx = 0; idx < polygons.size(); idx++)
     {
+        std::vector<VertexPtr<DIM> > poly_verts = polygons[idx]->rGetVertices();
+
         bool use_attributes = false;
-        std::vector<std::map<std::string, double> > attributes = polygons[idx]->GetEdgeAttributes();
-        if((attributes.size() == polygons[idx]->GetVertices().size())and attribute_keys.size()>0)
+        std::vector<std::map<std::string, double> > attributes = polygons[idx]->rGetEdgeAttributes();
+        if((attributes.size() == poly_verts.size())and attribute_keys.size()>0)
         {
             use_attributes = true;
         }
 
-        if (polygons[idx]->GetVertices().size() == 2)
+        if (polygons[idx]->rGetVertices().size() == 2)
         {
             unsigned key = 2;
             if(use_attributes)
             {
                 key = GetKeyForAttributes(attributes[0]);
             }
-            std::pair<unsigned, unsigned> vertex_indices(polygons[idx]->GetVertices()[0]->GetIndex(),
-                    polygons[idx]->GetVertices()[1]->GetIndex());
+            std::pair<unsigned, unsigned> vertex_indices(poly_verts[0]->GetIndex(),
+                    poly_verts[1]->GetIndex());
 
             indexes.push_back(
                     std::pair<std::pair<unsigned, unsigned>, unsigned > (vertex_indices, key));
         }
-        else if (polygons[idx]->GetVertices().size() > 1)
+        else if (poly_verts.size() > 1)
         {
-            std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = polygons[idx]->GetVertices();
-            for (unsigned jdx = 0; jdx < vertices.size() - 1; jdx++)
+            for (unsigned jdx = 0; jdx < poly_verts.size() - 1; jdx++)
             {
                 unsigned key = 2;
                 if(use_attributes)
                 {
                     key = GetKeyForAttributes(attributes[jdx]);
                 }
-                std::pair<unsigned, unsigned> vertex_indices(vertices[jdx]->GetIndex(), vertices[jdx + 1]->GetIndex());
+                std::pair<unsigned, unsigned> vertex_indices(poly_verts[jdx]->GetIndex(), poly_verts[jdx + 1]->GetIndex());
                 indexes.push_back(
                         std::pair<std::pair<unsigned, unsigned>, unsigned >(vertex_indices, key));
             }
             unsigned key = 2;
             if(use_attributes)
             {
-                key = GetKeyForAttributes(attributes[vertices.size() - 1]);
+                key = GetKeyForAttributes(attributes[poly_verts.size() - 1]);
             }
-            std::pair<unsigned, unsigned> vertex_indices(vertices[vertices.size() - 1]->GetIndex(), vertices[0]->GetIndex());
+            std::pair<unsigned, unsigned> vertex_indices(poly_verts[poly_verts.size() - 1]->GetIndex(), poly_verts[0]->GetIndex());
             indexes.push_back(
                     std::pair<std::pair<unsigned, unsigned>, unsigned >(vertex_indices, key));
         }
@@ -691,7 +683,7 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
 
     for(unsigned idx=0; idx<polygons.size(); idx++)
     {
-        std::map<std::string, double> attribute_map = polygons[idx]->GetAttributes();
+        std::map<std::string, double> attribute_map = polygons[idx]->rGetAttributes();
         for(std::map<std::string, double>::iterator it = attribute_map.begin(); it != attribute_map.end(); ++it)
         {
             polygon_labels.insert(it->first);
@@ -699,7 +691,7 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
 
         if(includeEdges)
         {
-            std::vector<std::map<std::string, double> > edge_atts_per_polygon = polygons[idx]->GetEdgeAttributes();
+            std::vector<std::map<std::string, double> > edge_atts_per_polygon = polygons[idx]->rGetEdgeAttributes();
             for(unsigned jdx=0;jdx<edge_atts_per_polygon.size();jdx++)
             {
                 for(std::map<std::string, double>::iterator it = edge_atts_per_polygon[jdx].begin();
@@ -710,7 +702,7 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
             }
         }
     }
-    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = GetVertices();
+    std::vector<VertexPtr<DIM> > vertices = GetVertices();
     for(unsigned idx=0;idx<vertices.size(); idx++)
     {
         std::map<std::string, double> attribute_map = vertices[idx]->GetAttributes();
@@ -755,14 +747,9 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
     for(auto& vertex:vertices)
     {
         vertex->SetIndex(counter);
-        if(DIM==3)
-        {
-            p_vertices->InsertNextPoint(vertex[0]/mReferenceLength, vertex[1]/mReferenceLength, vertex[2]/mReferenceLength);
-        }
-        else
-        {
-            p_vertices->InsertNextPoint(vertex[0]/mReferenceLength, vertex[1]/mReferenceLength, 0.0);
-        }
+        double loc[3];
+        vertex->Convert(loc, mReferenceLength);
+        p_vertices->InsertNextPoint(&loc[0]);
 
         for(unsigned jdx=0;jdx<vtk_vertex_data.size();jdx++)
         {
@@ -790,8 +777,8 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
     {
         for (vtkIdType idx = 0; idx < vtkIdType(polygons.size()); idx++)
         {
-            std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > local_vertices = polygons[idx]->GetVertices();
-            std::vector<std::map<std::string, double> > edge_atts_per_polygon = polygons[idx]->GetEdgeAttributes();
+            std::vector<VertexPtr<DIM> > local_vertices = polygons[idx]->rGetVertices();
+            std::vector<std::map<std::string, double> > edge_atts_per_polygon = polygons[idx]->rGetEdgeAttributes();
             for (vtkIdType jdx = 0; jdx < vtkIdType(local_vertices.size()); jdx++)
             {
                 if(jdx>0)
@@ -853,7 +840,7 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
     // Add polygons
     for (vtkIdType idx = 0; idx < vtkIdType(polygons.size()); idx++)
     {
-        std::vector<VecQLength<DIM> > local_vertices = polygons[idx]->GetVertices();
+        std::vector<VertexPtr<DIM> > local_vertices = polygons[idx]->rGetVertices();
         vtkSmartPointer<vtkPolygon> p_polygon = vtkSmartPointer<vtkPolygon>::New();
         p_polygon->GetPointIds()->SetNumberOfIds(local_vertices.size());
         for (vtkIdType jdx = 0; jdx < vtkIdType(local_vertices.size()); jdx++)
@@ -865,7 +852,7 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
         for(unsigned jdx=0;jdx<vtk_cell_data.size();jdx++)
         {
             bool found_attribute = false;
-            std::map<std::string, double> attribute_map = polygons[idx]->GetAttributes();
+            std::map<std::string, double> attribute_map = polygons[idx]->rGetAttributes();
             for(std::map<std::string, double>::iterator it = attribute_map.begin(); it != attribute_map.end(); ++it)
             {
                 if(it->first == vtk_cell_data[jdx]->GetName())
@@ -930,19 +917,13 @@ vtkSmartPointer<vtkPolyData> Part<DIM>::GetVtk(bool includeEdges)
 }
 
 template<unsigned DIM>
-bool Part<DIM>::IsPointInPart(const VecQLength<DIM>& loc)
+bool Part<DIM>::IsPointInPart(const Vertex<DIM>& rLoc)
 {
     vtkSmartPointer<vtkPolyData> p_part = GetVtk();
     vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
-
-    if(DIM==3)
-    {
-        p_points->InsertNextPoint(loc[0]/mReferenceLength, loc[1]/mReferenceLength, loc[2]/mReferenceLength);
-    }
-    else
-    {
-        p_points->InsertNextPoint(loc[0]/mReferenceLength, loc[1]/mReferenceLength, 0.0);
-    }
+    double loc[3];
+    rLoc.Convert(loc, mReferenceLength);
+    p_points->InsertNextPoint(&loc[0]);
 
     vtkSmartPointer<vtkPolyData> p_point_data = vtkSmartPointer<vtkPolyData>::New();
     p_point_data->SetPoints(p_points);
@@ -1004,13 +985,13 @@ void Part<DIM>::MergeCoincidentVertices()
         {
             if(idx != jdx)
             {
-                std::vector<VecQLength<DIM> > p1_verts = polygons[idx]->GetVertices();
-                std::vector<VecQLength<DIM> > p2_verts = polygons[jdx]->GetVertices();
+                std::vector<VertexPtr<DIM> > p1_verts = polygons[idx]->rGetVertices();
+                std::vector<VertexPtr<DIM> > p2_verts = polygons[jdx]->rGetVertices();
                 for(unsigned mdx=0; mdx<p1_verts.size(); mdx++)
                 {
                     for(unsigned ndx=0; ndx<p2_verts.size(); ndx++)
                     {
-                        if(GetDistance(*(p2_verts[ndx]), *(p1_verts[mdx]))< 1.e-6*mReferenceLength)
+                        if(GetDistance((p2_verts[ndx])->rGetLocation(), (p1_verts[mdx])->rGetLocation())< 1.e-6*mReferenceLength)
                         {
                             polygons[jdx]->ReplaceVertex(ndx, polygons[idx]->GetVertex(mdx));
                         }
@@ -1030,7 +1011,7 @@ void Part<DIM>::MergeCoincidentVertices()
 template<unsigned DIM>
 void Part<DIM>::RotateAboutAxis(c_vector<double, 3> axis, double angle)
 {
-    std::vector<VecQLength<DIM> > vertices = GetVertices();
+    std::vector<VertexPtr<DIM> > vertices = GetVertices();
     {
         for (unsigned idx = 0; idx < vertices.size(); idx++)
         {
@@ -1048,9 +1029,9 @@ void Part<DIM>::SetReferenceLengthScale(QLength referenceLength)
 }
 
 template<unsigned DIM>
-void Part<DIM>::Translate(const VecQLength<DIM>& vector)
+void Part<DIM>::Translate(const Vertex<DIM>& vector)
 {
-    std::vector<VecQLength<DIM> > vertices = GetVertices();
+    std::vector<VertexPtr<DIM> > vertices = GetVertices();
     {
         for (unsigned idx = 0; idx < vertices.size(); idx++)
         {

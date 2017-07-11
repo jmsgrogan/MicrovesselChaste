@@ -53,6 +53,7 @@ DiscreteContinuumBoundaryCondition<DIM>::DiscreteContinuumBoundaryCondition()
         mpGridCalculator(),
         mpNetwork(),
         mReferenceConcentration(BaseUnits::Instance()->GetReferenceConcentrationScale()),
+        mReferenceLengthScale(BaseUnits::Instance()->GetReferenceLengthScale()),
         mIsNeumann(false),
         mIsRobin(false)
 {
@@ -162,7 +163,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shar
 
                  while (iter != p_mesh->GetNodeIteratorEnd())
                  {
-                     DimensionalChastePoint<DIM> probe_location((*iter).GetPoint().rGetLocation(), length_scale);
+                     Vertex<DIM> probe_location((*iter).GetPoint().rGetLocation(), length_scale);
                      std::pair<bool,QConcentration > result = GetValue(probe_location, node_distance_tolerance);
                      if(result.first)
                      {
@@ -180,7 +181,7 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shar
                 typename DiscreteContinuumMesh<DIM, DIM>::BoundaryNodeIterator iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 while (iter < p_mesh->GetBoundaryNodeIteratorEnd())
                 {
-                    DimensionalChastePoint<DIM> probe_location((*iter)->GetPoint().rGetLocation(), length_scale);
+                    Vertex<DIM> probe_location((*iter)->GetPoint().rGetLocation(), length_scale);
                     std::pair<bool,QConcentration > result = GetValue(probe_location, node_distance_tolerance);
                     ConstBoundaryCondition<DIM>* p_fixed_boundary_condition = new ConstBoundaryCondition<DIM>(result.second/mReferenceConcentration);
                     if(result.first)
@@ -209,9 +210,8 @@ void DiscreteContinuumBoundaryCondition<DIM>::UpdateBoundaryConditions(std::shar
 }
 
 template<unsigned DIM>
-std::pair<bool, QConcentration > DiscreteContinuumBoundaryCondition<DIM>::GetValue(DimensionalChastePoint<DIM> location, double tolerance)
+std::pair<bool, QConcentration > DiscreteContinuumBoundaryCondition<DIM>::GetValue(const Vertex<DIM>& rLocation, double tolerance)
 {
-    QLength length_scale = location.GetReferenceLengthScale();
     std::pair<bool, QConcentration > result(false, 0.0*unit::mole_per_metre_cubed);
     if(mType == BoundaryConditionType::POINT)
     {
@@ -223,18 +223,10 @@ std::pair<bool, QConcentration > DiscreteContinuumBoundaryCondition<DIM>::GetVal
         {
             for(unsigned jdx=0; jdx<mpPoints->GetNumberOfPoints(); jdx++)
             {
-                c_vector<double, 3> loc3d;
-                mpPoints->GetPoint(jdx, &loc3d[0]);
-                DimensionalChastePoint<DIM> loc;
-                if(DIM==3)
-                {
-                    loc = DimensionalChastePoint<DIM>(loc3d, length_scale);
-                }
-                else
-                {
-                    loc = DimensionalChastePoint<DIM>(loc3d[0], loc3d[1], 0.0, length_scale);
-                }
-                if(GetDistance<DIM>(location, loc) < tolerance*length_scale)
+                double loc[3];
+                mpPoints->GetPoint(jdx, &loc[0]);
+                Vertex<DIM> vert(loc, mReferenceLengthScale);
+                if(GetDistance<DIM>(rLocation.rGetLocation(), vert.rGetLocation()) < tolerance*mReferenceLengthScale)
                 {
                     return std::pair<bool, QConcentration >(true, mValue);
                 }
@@ -252,7 +244,7 @@ std::pair<bool, QConcentration > DiscreteContinuumBoundaryCondition<DIM>::GetVal
             std::vector<PolygonPtr<DIM> > polygons =  mpDomain->GetPolygons();
             for(unsigned jdx=0; jdx<polygons.size();jdx++)
             {
-                if(polygons[jdx]->ContainsPoint(location) && (polygons[jdx]->HasAttribute(mLabel)))
+                if(polygons[jdx]->ContainsPoint(rLocation) && (polygons[jdx]->HasAttribute(mLabel)))
                 {
                     return std::pair<bool, QConcentration >(true, mValue);
                 }
@@ -267,7 +259,7 @@ std::pair<bool, QConcentration > DiscreteContinuumBoundaryCondition<DIM>::GetVal
         }
         else
         {
-            if(mpDomain->EdgeHasAttribute(location, mLabel))
+            if(mpDomain->EdgeHasAttribute(rLocation, mLabel))
             {
                 return std::pair<bool, QConcentration >(true, mValue);
             }
@@ -285,7 +277,7 @@ std::pair<bool, QConcentration > DiscreteContinuumBoundaryCondition<DIM>::GetVal
             std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
             for (unsigned jdx = 0; jdx <  segments.size(); jdx++)
             {
-                if (segments[jdx]->GetDistance(location) <= tolerance*length_scale)
+                if (segments[jdx]->GetDistance(rLocation) <= tolerance*mReferenceLengthScale)
                 {
                     if(BoundaryConditionSource::PRESCRIBED)
                     {
@@ -307,7 +299,7 @@ std::pair<bool, QConcentration > DiscreteContinuumBoundaryCondition<DIM>::GetVal
             std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = this->mpNetwork->GetVesselSegments();
             for (unsigned jdx = 0; jdx <  segments.size(); jdx++)
             {
-                if (segments[jdx]->GetDistance(location) <= segments[jdx]->GetRadius() + tolerance*length_scale)
+                if (segments[jdx]->GetDistance(rLocation) <= segments[jdx]->GetRadius() + tolerance*mReferenceLengthScale)
                 {
                     if(BoundaryConditionSource::PRESCRIBED)
                     {
@@ -330,7 +322,7 @@ std::pair<bool, QConcentration > DiscreteContinuumBoundaryCondition<DIM>::GetVal
         }
         else
         {
-            if(mpDomain->IsPointInPart(location))
+            if(mpDomain->IsPointInPart(rLocation))
             {
                 if(BoundaryConditionSource::PRESCRIBED)
                 {
@@ -475,20 +467,13 @@ void DiscreteContinuumBoundaryCondition<DIM>::SetPoints(vtkSmartPointer<vtkPoint
 }
 
 template<unsigned DIM>
-void DiscreteContinuumBoundaryCondition<DIM>::SetPoints(std::vector<DimensionalChastePoint<DIM> > points)
+void DiscreteContinuumBoundaryCondition<DIM>::SetPoints(std::vector<Vertex<DIM> > points)
 {
     mpPoints = vtkSmartPointer<vtkPoints>::New();
-    for(unsigned idx=0; idx<points.size(); idx++)
+    for(auto& point:points)
     {
-        c_vector<double, DIM> loc = points[idx].GetLocation(mpGridCalculator->GetGrid()->GetReferenceLengthScale());
-        if(DIM==3)
-        {
-            mpPoints->InsertNextPoint(&loc[0]);
-        }
-        else
-        {
-            mpPoints->InsertNextPoint(loc[0], loc[1], 0.0);
-        }
+        c_vector<double, 3> loc = point.Convert(mpGridCalculator->GetGrid()->GetReferenceLengthScale());
+        mpPoints->InsertNextPoint(&loc[0]);
     }
 }
 

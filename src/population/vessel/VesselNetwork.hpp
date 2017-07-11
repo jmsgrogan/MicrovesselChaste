@@ -199,7 +199,7 @@ public:
      * @return the node at the division location
      */
     virtual std::shared_ptr<VesselNode<DIM> > DivideVessel(std::shared_ptr<Vessel<DIM> > pVessel,
-                                                     const DimensionalChastePoint<DIM>& rLocation);
+                                                     const Vertex<DIM>& rLocation);
 
     /**
      * Add a new node to the end of the vessel
@@ -217,7 +217,7 @@ public:
      * @return the new sprout
      */
     virtual VesselPtr<DIM> FormSprout(VesselNodePtr<DIM> pSproutBase,
-                                               const DimensionalChastePoint<DIM>& sproutTipLocation);
+                                               const Vertex<DIM>& sproutTipLocation);
 
     /**
      * Get index of the node
@@ -392,14 +392,14 @@ public:
      * Translate the network along the provided vector
      * @param rTranslationVector the translation vector
      */
-    void Translate(DimensionalChastePoint<DIM> rTranslationVector);
+    void Translate(Vertex<DIM> rTranslationVector);
 
     /**
      * Translate specific vessels along the provided vector
      * @param rTranslationVector the translation vector
      * @param vessels the vessels to translate
      */
-    void Translate(DimensionalChastePoint<DIM> rTranslationVector, std::vector<std::shared_ptr<Vessel<DIM> > > vessels);
+    void Translate(Vertex<DIM> rTranslationVector, std::vector<std::shared_ptr<Vessel<DIM> > > vessels);
 
     /**
      * Update the network node collection

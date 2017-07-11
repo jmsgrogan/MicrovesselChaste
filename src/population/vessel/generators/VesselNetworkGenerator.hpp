@@ -44,7 +44,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Part.hpp"
 #include "UblasVectorInclude.hpp"
 #include "UnitCollection.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 
 /**
  *  Struct to define random vessel distribution properties
@@ -99,8 +99,8 @@ public:
     VesselNetworkPtr<DIM> GenerateParallelNetwork(PartPtr<DIM> domain,
             QPerArea targetDensity, VesselDistribution::Value distrbutionType,
             QLength exclusionDistance = 0_m, bool useBbox = false,
-            std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > seeds =
-                    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > >());
+            std::vector<std::shared_ptr<Vertex<DIM> > > seeds =
+                    std::vector<std::shared_ptr<Vertex<DIM> > >());
     /**
      * Creates a hexagonal network corresponding to that of Alarcon et al. (2006)
      * @param width the widht
@@ -124,8 +124,7 @@ public:
      * @param startPosition the start position of the unit
      * @return a shared pointer to the vessel network
      */
-    VesselNetworkPtr<DIM> GenerateBifurcationUnit(QLength vesselLength,
-            VecQLength<DIM> startPosition = VecQLength<DIM>(0.0));
+    VesselNetworkPtr<DIM> GenerateBifurcationUnit(QLength vesselLength, Vertex<DIM> startPosition = Vertex<DIM>());
 
     /**
      * Creates a single vesselW
@@ -136,7 +135,7 @@ public:
      * @return a shared pointer to the vessel network
      */
     VesselNetworkPtr<DIM> GenerateSingleVessel(QLength vesselLength,
-            VecQLength<DIM> startPosition = VecQLength<DIM>(0.0), unsigned divisions = 0, unsigned axis = 2);
+            Vertex<DIM> startPosition = Vertex<DIM>(), unsigned divisions = 0, unsigned axis = 2);
 
     /**
      * Creates an oval shaped network with one inlet and one outlet
@@ -160,7 +159,8 @@ public:
      * @param pInputUnit the input unit
      * @param numberOfUnits the number of units in each direction
      */
-    void PatternUnitByTranslation(VesselNetworkPtr<DIM> pInputUnit, std::array<unsigned, DIM> numberOfUnits);
+    void PatternUnitByTranslation(VesselNetworkPtr<DIM> pInputUnit,
+            std::array<unsigned, DIM> numberOfUnits);
 
     /**
      * Map the network onto a sphere

@@ -57,7 +57,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /*
  * dimensional analysis,
  */
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "UnitCollection.hpp"
 #include "Owen11Parameters.hpp"
 #include "Secomb04Parameters.hpp"

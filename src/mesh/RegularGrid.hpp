@@ -44,7 +44,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "OutputFileHandler.hpp"
 #include "Part.hpp"
 #include "UnitCollection.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "DistributedVectorFactory.hpp"
 #include "AbstractDiscreteContinuumGrid.hpp"
 
@@ -85,7 +85,7 @@ protected:
     /**
      * The origin of the grid in x,y,z. Corresponds to location of front, bottom, left corner.
      */
-    DimensionalChastePoint<DIM> mOrigin;
+    Vertex<DIM> mOrigin;
 
     /**
      * A vector of GLOBAL neighbour indices
@@ -168,7 +168,7 @@ public:
      * Return the location of the supplied GLOBAL index
      * @return the location of the supplied GLOBAL index
      */
-    DimensionalChastePoint<DIM> GetGlobalCellLocation(unsigned index);
+    Vertex<DIM> GetGlobalCellLocation(unsigned index);
 
     /**
      * Calculate GLOBAL von Neumann neighbour indices for each LOCAL grid point
@@ -201,13 +201,13 @@ public:
      * @param zIndex the grid z index
      * @return the location of the point
      */
-    DimensionalChastePoint<DIM> GetPoint(unsigned xIndex, unsigned yIndex, unsigned zIndex);
+    Vertex<DIM> GetPoint(unsigned xIndex, unsigned yIndex, unsigned zIndex);
 
     /**
      * Return the origin in x, y, z
      * @return the grid origin
      */
-    DimensionalChastePoint<DIM> GetOrigin();
+    Vertex<DIM> GetOrigin();
 
     /**
      * Return the grid spacing
@@ -280,7 +280,7 @@ public:
      * @param origin the grid origin
      * @param updateVtk update the vtk representation at this point
      */
-    void SetOrigin(DimensionalChastePoint<DIM> origin);
+    void SetOrigin(Vertex<DIM> origin);
 
     /**
      * Set the grid spacing

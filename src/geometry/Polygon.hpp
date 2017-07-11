@@ -48,7 +48,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UblasIncludes.hpp"
 #include "Exception.hpp"
 #include "UblasVectorInclude.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "UnitCollection.hpp"
 #include "VectorUnitCollection.hpp"
 
@@ -59,12 +59,6 @@ class vtkPolygon;
 class vtkPoints;
 class vtkPlane;
 class vtkIdTypeArray;
-
-/**
- * Define a simple vertex type
- */
-template <unsigned DIM>
-using VertexPtr = std::shared_ptr<VecQLength<DIM> >;
 
 /**
  * A collection of planar vertices, joined in the order they are added.
@@ -180,7 +174,7 @@ public:
      * @param value the attribute value
      * @return true if an edge is found
      */
-    bool AddAttributeToEdgeIfFound(const VecQLength<DIM>& loc, const std::string& rLabel, double value);
+    bool AddAttributeToEdgeIfFound(const Vertex<DIM>& rLoc, const std::string& rLabel, double value);
 
     /**
      * Apply the label to all edges
@@ -207,7 +201,7 @@ public:
      * @param tolerance if non-zero this is the distance to the polygon where points are still accepted
      * @return true if the location is in the polygon
      */
-    bool ContainsPoint(const VecQLength<DIM>& rLocation, double tolerance = 0.0) const;
+    bool ContainsPoint(const Vertex<DIM>& rLocation, double tolerance = 0.0);
 
     /**
      * Return the bounding box of the polygon
@@ -219,21 +213,21 @@ public:
      * Return the centroid of the polygon
      * @return the centroid of the polygon
      */
-    VecQLength<DIM> GetCentroid() const;
+    Vertex<DIM> GetCentroid();
 
     /**
      * Return the distance to the polygon's plane
      * @param rLocation the location of the point to get the distance from
      * @return the distance to the plane containing the polygon
      */
-    QLength GetDistance(const VecQLength<DIM>& rLocation);
+    QLength GetDistance(const Vertex<DIM>& rLocation);
 
     /**
      * Return the shortest distance to the polygon's edges
      * @param rLocation the location of the point to get the distance from
      * @return the shortest distance to the polygon edges
      */
-    QLength GetDistanceToEdges(const VecQLength<DIM>& rLocation);
+    QLength GetDistanceToEdges(const Vertex<DIM>& rLocation);
 
     /**
      * Return the polygon's plane
@@ -245,7 +239,7 @@ public:
      * Return the normal to the polygon, must have 3 or more points
      * @return the normal to the polygon's plane
      */
-    c_vector<double, DIM> GetNormal();
+    c_vector<double, 3> GetNormal();
 
     /**
      * Return the vertices
@@ -290,7 +284,7 @@ public:
      * @param rLabel the label
      * @return true if an edge is found
      */
-    bool EdgeHasAttribute(const VecQLength<DIM>& loc, const std::string& rLabel) const;
+    bool EdgeHasAttribute(const Vertex<DIM>& rLoc, const std::string& rLabel);
 
     /**
      * Return true if the polygon has the supplied attribute label
@@ -304,7 +298,7 @@ public:
      * @param idx the index of the vertex to be replaced
      * @param pVertex the new vertex
      */
-    void ReplaceVertex(unsigned idx, VertexPtr<DIM> Vertex);
+    void ReplaceVertex(unsigned idx, VertexPtr<DIM> pVertex);
 
     /**
      * Rotate about the specified axis by the specified angle
@@ -317,7 +311,7 @@ public:
      * Move the polygon along the translation vector
      * @param translationVector the new location is the original + the translationVector
      */
-    void Translate(const VecQLength<DIM>& translationVector);
+    void Translate(const Vertex<DIM>& translationVector);
 };
 
 /**

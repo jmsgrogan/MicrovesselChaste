@@ -20,10 +20,10 @@ geometry_classes = [CppClass('Polygon', include_vec_ptr_self=True),
                     CppClass('GeometryFormat', component = "geometry", needs_include_file = False),
                     CppClass('GeometryWriter'),      
                     CppClass('std::vector', skip_wrapping=True, needs_include_file=False, needs_instantiation = False,
-                          template_args=[["std::pair<DimensionalChastePoint<2>, int>"],
-                                         ["std::pair<DimensionalChastePoint<3>, int>"],
-                                         ["std::pair<DimensionalChastePoint<3>, unsigned>"],
-                                         ["std::pair<DimensionalChastePoint<3>, unsigned>"],
+                          template_args=[["std::pair<Vertex<2>, int>"],
+                                         ["std::pair<Vertex<3>, int>"],
+                                         ["std::pair<Vertex<3>, unsigned>"],
+                                         ["std::pair<Vertex<3>, unsigned>"],
                                          ["std::pair<std::pair<int, int>, int>"],
                                          ["std::map<std::string, double>"]],)            
                     #CppClass('std::vector', skip_wrapping=True, needs_include_file=False, needs_instantiation = False,
@@ -38,7 +38,7 @@ mesh_classes = [
                 CppClass('AbstractTetrahedralMesh', component="mesh"),
                 CppClass('TetrahedralMesh', component="mesh", excluded_methods = ["FreeTriangulateIo", "InitialiseTriangulateIo"]),
                 CppClass('AbstractDiscreteContinuumGrid'),
-                CppClass('DimensionalChastePoint', include_vec_ptr_self=True),
+                CppClass('Vertex', include_vec_ptr_self=True),
                 CppClass('DiscreteContinuumMesh'),
                 CppClass('DiscreteContinuumMeshGenerator'),
                 CppClass('GridCalculator'), 
@@ -55,11 +55,11 @@ mesh_classes = [
                                          ["std::vector<boost::shared_ptr<VesselSegment<2> > >"],
                                          ["std::vector<boost::shared_ptr<VesselSegment<3> > >"],
                                          ["std::vector<boost::shared_ptr<Cell> >"],
-                                         ["DimensionalChastePoint2"], 
-                                         ["DimensionalChastePoint3"],]),
+                                         ["Vertex2"], 
+                                         ["Vertex3"],]),
                 CppClass('std::pair', skip_wrapping=True, needs_include_file=False, needs_instantiation = False,
-                          template_args=[["DimensionalChastePoint2, DimensionalChastePoint2"], 
-                                         ["DimensionalChastePoint3, DimensionalChastePoint3"],])]
+                          template_args=[["Vertex2, Vertex2"], 
+                                         ["Vertex3, Vertex3"],])]
 
 ################################## CELL ##########################################
 

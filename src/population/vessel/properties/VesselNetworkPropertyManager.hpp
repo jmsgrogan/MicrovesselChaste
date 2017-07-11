@@ -40,7 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <set>
 #include <map>
 #include "VesselNetwork.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 
 /**
  * A convenience class for assigning properties (flow, chemical, phenotypic etc) to vessel networks.
@@ -73,14 +73,14 @@ public:
      * @param searchRadius the search radius
      */
     static void AssignInflows(std::shared_ptr<VesselNetwork<DIM> > pNetwork,
-            DimensionalChastePoint<DIM> location, QLength searchRadius);
+            Vertex<DIM> location, QLength searchRadius);
 
     /**
      * Any nodes within the specified radius of the input location are assigned as outflows
      * @param location the search location
      * @param searchRadius the search radius
      */
-    static void AssignOutflows(std::shared_ptr<VesselNetwork<DIM> > pNetwork, DimensionalChastePoint<DIM> location, QLength searchRadius);
+    static void AssignOutflows(std::shared_ptr<VesselNetwork<DIM> > pNetwork, Vertex<DIM> location, QLength searchRadius);
 
     /**
      * Copy flow properties from the specified segment to all other vessel network segments

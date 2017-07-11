@@ -21,7 +21,7 @@ class TestPart(unittest.TestCase):
         # Make a composite Part, a circle in a square
         length_scale = 1.e-6*metre()
         part = microvessel_chaste.geometry.Part3()
-        centre = microvessel_chaste.mesh.DimensionalChastePoint3((0.0, 0.0, 0.0), length_scale)
+        centre = microvessel_chaste.mesh.Vertex3((0.0, 0.0, 0.0), length_scale)
         part.AddRectangle(1.0 * length_scale, 1.0 * length_scale, centre)
         part.AddCircle(0.33 * length_scale, centre, 24)
         

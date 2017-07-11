@@ -288,8 +288,8 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselSurfaceAreaDensity(bool up
         {
             for (unsigned jdx = 0; jdx < segment_map[idx].size(); jdx++)
             {
-                c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().GetLocation(length_scale);
-                c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().GetLocation(length_scale);
+                c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().Convert(length_scale);
+                c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().Convert(length_scale);
                 bool point1_in_cell = IsPointInCell(p_sampling_locator, point1_loc, idx);
                 bool point2_in_cell = IsPointInCell(p_sampling_locator, point2_loc, idx);
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
@@ -356,8 +356,8 @@ std::vector<double> DensityMap<DIM>::rGetVesselLineDensity(bool update)
         {
             for (unsigned jdx = 0; jdx < segment_map[idx].size(); jdx++)
             {
-                c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().GetLocation(length_scale);
-                c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().GetLocation(length_scale);
+                c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().Convert(length_scale);
+                c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().Convert(length_scale);
                 bool point1_in_cell = IsPointInCell(p_sampling_locator, point1_loc, idx);
                 bool point2_in_cell = IsPointInCell(p_sampling_locator, point2_loc, idx);
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
@@ -426,8 +426,8 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselSurfaceAreaDensity
         {
             for (unsigned jdx = 0; jdx < segment_map[idx].size(); jdx++)
             {
-                c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().GetLocation(length_scale);
-                c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().GetLocation(length_scale);
+                c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().Convert(length_scale);
+                c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().Convert(length_scale);
                 bool point1_in_cell = IsPointInCell(p_sampling_locator, point1_loc, idx);
                 bool point2_in_cell = IsPointInCell(p_sampling_locator, point2_loc, idx);
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
@@ -499,8 +499,8 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselLineDensity(bool u
         {
             for (unsigned jdx = 0; jdx < segment_map[idx].size(); jdx++)
             {
-                c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().GetLocation(length_scale);
-                c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().GetLocation(length_scale);
+                c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().Convert(length_scale);
+                c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().Convert(length_scale);
                 bool point1_in_cell = IsPointInCell(p_sampling_locator, point1_loc, idx);
                 bool point2_in_cell = IsPointInCell(p_sampling_locator, point2_loc, idx);
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
@@ -508,7 +508,7 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselLineDensity(bool u
                 QLength length_in_cell = dimless_length_in_cell*length_scale;
                 if(segment_map[idx][jdx]->GetVessel()->GetFlowProperties()->GetHaematocrit()==0.0)
                 {
-                    length_in_cell = 0.0*unit::metres;
+                    length_in_cell = 0_m;
                 }
                 mPerfusedVesselLineDensity[idx] += (length_in_cell/length_scale)/grid_volumes[idx];
             }
@@ -627,8 +627,8 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselQuantityDensity(const std:
         {
             for (unsigned jdx = 0; jdx < segment_map[idx].size(); jdx++)
             {
-                c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().GetLocation(length_scale);
-                c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().GetLocation(length_scale);
+                c_vector<double, DIM> point1_loc = segment_map[idx][jdx]->GetNode(0)->rGetLocation().Convert(length_scale);
+                c_vector<double, DIM> point2_loc = segment_map[idx][jdx]->GetNode(1)->rGetLocation().Convert(length_scale);
                 bool point1_in_cell = IsPointInCell(p_sampling_locator, point1_loc, idx);
                 bool point2_in_cell = IsPointInCell(p_sampling_locator, point2_loc, idx);
                 double dimless_length_in_cell = LengthOfLineInCell(p_sampling_grid, point1_loc, point2_loc,
@@ -637,7 +637,7 @@ const std::vector<double>& DensityMap<DIM>::rGetVesselQuantityDensity(const std:
                 double amount = segment_map[idx][jdx]->GetFlowProperties()->GetOutputData()[rQuantity];
                 if(segment_map[idx][jdx]->GetFlowProperties()->GetHaematocrit()==0.0)
                 {
-                    length_in_cell = 0.0*unit::metres;
+                    length_in_cell = 0_m;
                 }
                 mVesselQuantityDensity[idx] += (amount*length_in_cell/length_scale)/grid_volumes[idx];
             }

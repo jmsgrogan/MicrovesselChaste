@@ -366,9 +366,9 @@ void DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::SetUpVtkGrid()
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-DimensionalChastePoint<SPACE_DIM> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetGlobalCellLocation(unsigned index)
+Vertex<SPACE_DIM> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetGlobalCellLocation(unsigned index)
 {
-    return DimensionalChastePoint<SPACE_DIM>(this->GetElement(index)->CalculateCentroid(), this->GetReferenceLengthScale());
+    return Vertex<SPACE_DIM>(this->GetElement(index)->CalculateCentroid(), this->GetReferenceLengthScale());
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

@@ -105,7 +105,7 @@ public:
     void TestParallelNetworks() throw (Exception)
     {
         auto p_part = Part<3>::Create();
-        p_part->AddCuboid(1_mm, 1_mm, 50_um, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        p_part->AddCuboid(1_mm, 1_mm, 50_um, Vertex<3>(0.0, 0.0, 0.0));
         QPerArea target_density = 1.0/(200_um*200_um);
         QLength exclusion_distance(20_um);
 

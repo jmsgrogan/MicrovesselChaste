@@ -168,7 +168,7 @@ std::vector<unsigned> VesselNetwork<DIM>::GetNumberOfNodesPerProcess()
 
 template <unsigned DIM>
 std::shared_ptr<VesselNode<DIM> > VesselNetwork<DIM>::DivideVessel(std::shared_ptr<Vessel<DIM> > pVessel,
-                                                                     const DimensionalChastePoint<DIM>& location)
+                                                                     const Vertex<DIM>& location)
 {
     std::shared_ptr<VesselSegment<DIM> > p_segment;
 
@@ -270,7 +270,7 @@ void VesselNetwork<DIM>::ExtendVessel(std::shared_ptr<Vessel<DIM> > pVessel, std
 
 template <unsigned DIM>
 std::shared_ptr<Vessel<DIM> > VesselNetwork<DIM>::FormSprout(VesselNodePtr<DIM> pSproutBase,
-                                                                 const DimensionalChastePoint<DIM>& sproutTipLocation)
+                                                                 const Vertex<DIM>& sproutTipLocation)
 {
     // divide vessel at location of sprout base
     VesselNodePtr<DIM> p_new_node = DivideVessel(pSproutBase->GetSegment(0)->GetVessel(),
@@ -597,21 +597,9 @@ void VesselNetwork<DIM>::MergeCoincidentNodes(std::vector<std::shared_ptr<Vessel
     std::vector<int> unique_index_map= std::vector<int>(nodes.size(), -1);
     for(unsigned idx=0; idx<nodes.size(); idx++)
     {
-        c_vector<double, DIM> loc = nodes[idx]->rGetLocation().GetLocation(length_scale);
+        c_vector<double, 3> loc = nodes[idx]->rGetLocation().Convert3(length_scale);
         vtkIdType id;
-        int new_point;
-        if(DIM==3)
-        {
-            new_point = p_merge->InsertUniquePoint(&loc[0], id);
-        }
-        else
-        {
-            double loc2d[3];
-            loc2d[0] = loc[0];
-            loc2d[1] = loc[1];
-            loc2d[2] = 0.0;
-            new_point = p_merge->InsertUniquePoint(loc2d, id);
-        }
+        int new_point = p_merge->InsertUniquePoint(&loc[0], id);
         if(new_point)
         {
             unique_index_map[id] = int(idx);
@@ -642,13 +630,13 @@ void VesselNetwork<DIM>::MergeCoincidentNodes(std::vector<std::shared_ptr<Vessel
 }
 
 template <unsigned DIM>
-void VesselNetwork<DIM>::Translate(DimensionalChastePoint<DIM> rTranslationVector)
+void VesselNetwork<DIM>::Translate(Vertex<DIM> rTranslationVector)
 {
     Translate(rTranslationVector, mVessels);
 }
 
 template <unsigned DIM>
-void VesselNetwork<DIM>::Translate(DimensionalChastePoint<DIM> rTranslationVector, std::vector<std::shared_ptr<Vessel<DIM> > > vessels)
+void VesselNetwork<DIM>::Translate(Vertex<DIM> rTranslationVector, std::vector<std::shared_ptr<Vessel<DIM> > > vessels)
 {
     std::set<std::shared_ptr<VesselNode<DIM> > > nodes;
     for(unsigned idx = 0; idx <vessels.size(); idx++)
@@ -660,7 +648,7 @@ void VesselNetwork<DIM>::Translate(DimensionalChastePoint<DIM> rTranslationVecto
     typename std::set<std::shared_ptr<VesselNode<DIM> > >::iterator node_iter;
     for(node_iter = nodes.begin(); node_iter != nodes.end(); node_iter++)
     {
-        DimensionalChastePoint<DIM> old_loc = (*node_iter)->rGetLocation();
+        Vertex<DIM> old_loc = (*node_iter)->rGetLocation();
         old_loc.Translate(rTranslationVector);
         (*node_iter)->SetLocation(old_loc);
     }

@@ -70,7 +70,7 @@ public:
 
         // Pointer Factory Constructors
         std::shared_ptr<VesselNode<3> > p_node_1 = VesselNode<3>::Create(2.0, 3.0, 4.0);
-        std::shared_ptr<VesselNode<3> > p_node_3 = VesselNode<3>::Create(DimensionalChastePoint<3>(location1, 1_um));
+        std::shared_ptr<VesselNode<3> > p_node_3 = VesselNode<3>::Create(Vertex<3>(location1, 1_um));
 
         // Test the location methods
         TS_ASSERT_DELTA(p_node_1->rGetLocation().GetLocation(1_um)[0], 2.0, 1.e-6);
@@ -116,7 +116,7 @@ public:
 
         // Coincident methods
         TS_ASSERT(p_node_1->IsCoincident(p_node_2->rGetLocation()));
-        TS_ASSERT(p_node_1->IsCoincident(DimensionalChastePoint<3>(location1, 1_um)));
+        TS_ASSERT(p_node_1->IsCoincident(Vertex<3>(location1, 1_um)));
 
         // Distance methods
         TS_ASSERT_DELTA(p_node_1->GetDistance(p_node_3->rGetLocation())/p_node_1->GetReferenceLengthScale(), std::sqrt(27.0), 1.e-6);

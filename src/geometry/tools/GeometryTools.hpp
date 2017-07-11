@@ -45,7 +45,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UblasVectorInclude.hpp"
 #include "UnitCollection.hpp"
 #include "VectorUnitCollection.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 
 
 /**
@@ -73,8 +73,8 @@ QLength GetDistance(const VecQLength<DIM>& rLocation1, const VecQLength<DIM>& rL
  * @return the distance between the line and probe point
  */
 template<unsigned DIM>
-QLength GetDistanceToLineSegment(const VecQLength<DIM>& rStartLocation, const VecQLength<DIM>& rEndLocation,
-        const VecQLength<DIM>& rProbeLocation);
+QLength GetDistanceToLineSegment(const Vertex<DIM>& rStartLocation, const Vertex<DIM>& rEndLocation,
+        const Vertex<DIM>& rProbeLocation);
 
 /**
  * Get the dot product of the vectors between each point and the origin
@@ -111,33 +111,6 @@ VecQLength<DIM> GetPointProjectionOnLineSegment(const VecQLength<DIM>& rStartLoc
                                                       bool checkDimensions = true);
 
 /**
- * Return a vector of points projected at global normals to the central point a distance probeLength
- * @param rCentrePoint the probe centre
- * @param currentDirection the current direction, nor normalized
- * @param probeLength the probe length
- * @param numDivisions the number of division for gradient calculation
- * @return a vector of points projected at global normals to the central point
- */
-template<unsigned DIM>
-vtkSmartPointer<vtkPoints> GetProbeLocationsExternalPoint(VecQLength<DIM> rCentrePoint,
-        VecQLength<DIM> currentDirection, QLength probeLength,
-        unsigned numDivisions=8);
-
-/**
- * Return a vector of points projected at orthogonal directions to the rInitialDirection about the rRotationAxis
- * @param rInitialDirection the initial direction
- * @param rCentralPoint the central point
- * @param rRotationAxis the rotation axis
- * @param probeLength the probe length
- * @param initial rotation angel
- * @return a vector of points projected at global normals to the central point
- */
-template<unsigned DIM>
-vtkSmartPointer<vtkPoints> GetProbeLocationsInternalPoint(VecQLength<DIM> rInitialDirection,
-        VecQLength<DIM> rCentralPoint, VecQLength<DIM> rRotationAxis, QLength probeLength,
-                                                                         QAngle angle);
-
-/**
  * Is the point inside the cone defined by apex, aperture and  base centre
  * @param rPoint the point
  * @param rApex the cone apex
@@ -146,9 +119,9 @@ vtkSmartPointer<vtkPoints> GetProbeLocationsInternalPoint(VecQLength<DIM> rIniti
  * @return is the point inside the cone
  */
 template<unsigned DIM>
-bool IsPointInCone(const VecQLength<DIM>& rPoint,
-                   const VecQLength<DIM>& rApex,
-                   const VecQLength<DIM>& rBase, double aperture);
+bool IsPointInCone(const Vertex<DIM>& rPoint,
+                   const Vertex<DIM>& rApex,
+                   const Vertex<DIM>& rBase, double aperture);
 
 /**
  * Is the point inside the cube box defined by a centre location and box side length

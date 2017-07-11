@@ -36,10 +36,10 @@ Module contents
 .. autoclass:: microvessel_chaste.mesh.MultiFormatMeshWriter2
         :members:
 
-.. autoclass:: microvessel_chaste.mesh.DimensionalChastePoint3
+.. autoclass:: microvessel_chaste.mesh.Vertex3
         :members:
 
-.. autoclass:: microvessel_chaste.mesh.DimensionalChastePoint2
+.. autoclass:: microvessel_chaste.mesh.Vertex2
         :members:
 
 .. autoclass:: microvessel_chaste.mesh.MeshFormat

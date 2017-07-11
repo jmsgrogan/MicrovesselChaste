@@ -41,7 +41,7 @@ import microvessel_chaste.geometry
 import microvessel_chaste.mesh 
 from microvessel_chaste.utility import * # bring in all units for convenience
 
-class TestDimensionalChastePoint(unittest.TestCase):
+class TestVertex(unittest.TestCase):
     
     ''' Test Vertex Functionality'''
           
@@ -50,7 +50,7 @@ class TestDimensionalChastePoint(unittest.TestCase):
         # Make a point at the specified location
         length_scale = 1.e-6*metre()
         input_location = np.array((0.0, 1.0, 2.0))
-        point = microvessel_chaste.mesh.DimensionalChastePoint3(input_location, length_scale)
+        point = microvessel_chaste.mesh.Vertex3(input_location, length_scale)
         self.assertAlmostEqual(point.GetLocation(length_scale)[0], 0.0, 2)
         self.assertAlmostEqual(point.GetLocation(length_scale)[1], 1.0, 2)
         self.assertAlmostEqual(point.GetLocation(length_scale)[2], 2.0, 2)
@@ -60,7 +60,7 @@ class TestDimensionalChastePoint(unittest.TestCase):
         self.assertEqual(point.GetIndex(), 10)
          
         # Move the vertex and check the new location
-        translation_vector = microvessel_chaste.mesh.DimensionalChastePoint3(1.0, 2.0, 3.0, length_scale)
+        translation_vector = microvessel_chaste.mesh.Vertex3(1.0, 2.0, 3.0, length_scale)
         point.Translate(translation_vector)
         self.assertAlmostEqual(point.GetLocation(length_scale)[0], 1.0, 2)
         self.assertAlmostEqual(point.GetLocation(length_scale)[1], 3.0, 2)
@@ -74,7 +74,7 @@ class TestDimensionalChastePoint(unittest.TestCase):
         self.assertAlmostEqual(point.GetLocation(length_scale)[2], 5.0, 2)
         
         input_location = np.array((0.0, 1.0, 2.0))
-        point2d = microvessel_chaste.mesh.DimensionalChastePoint2(input_location, length_scale)
+        point2d = microvessel_chaste.mesh.Vertex2(input_location, length_scale)
         
 if __name__ == '__main__':
     unittest.main()

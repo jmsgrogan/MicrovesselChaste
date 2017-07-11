@@ -14,15 +14,15 @@
 namespace py = pybind11;
 typedef AbstractMigrationRule<3 > AbstractMigrationRule3;
 ;
-typedef ::std::vector<DimensionalChastePoint<3>, std::allocator<DimensionalChastePoint<3> > > _std_vectorDimensionalChastePoint3_std_allocatorDimensionalChastePoint3;
+typedef ::std::vector<Vertex<3>, std::allocator<Vertex<3> > > _std_vectorVertex3_std_allocatorVertex3;
 typedef ::std::vector<int, std::allocator<int> > _std_vectorint_std_allocatorint;
 
 class AbstractMigrationRule3_Overloads : public AbstractMigrationRule3{
     public:
     using AbstractMigrationRule3::AbstractMigrationRule;
-    ::std::vector<DimensionalChastePoint<3>, std::allocator<DimensionalChastePoint<3> > > GetDirections(::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > const & rNodes) override {
+    ::std::vector<Vertex<3>, std::allocator<Vertex<3> > > GetDirections(::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > const & rNodes) override {
         PYBIND11_OVERLOAD(
-            _std_vectorDimensionalChastePoint3_std_allocatorDimensionalChastePoint3,
+            _std_vectorVertex3_std_allocatorVertex3,
             AbstractMigrationRule3,
             GetDirections,
             rNodes);
@@ -45,7 +45,7 @@ py::class_<AbstractMigrationRule3 , AbstractMigrationRule3_Overloads   >(m, "Abs
             " "  )
         .def(
             "GetDirections", 
-            (::std::vector<DimensionalChastePoint<3>, std::allocator<DimensionalChastePoint<3> > >(AbstractMigrationRule3::*)(::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > const &)) &AbstractMigrationRule3::GetDirections, 
+            (::std::vector<Vertex<3>, std::allocator<Vertex<3> > >(AbstractMigrationRule3::*)(::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > const &)) &AbstractMigrationRule3::GetDirections, 
             " " , py::arg("rNodes") )
         .def(
             "GetIndices", 

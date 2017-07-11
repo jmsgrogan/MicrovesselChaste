@@ -74,7 +74,7 @@ public:
         OutputFileHandler output_file_handler(output_directory);
 
         Part<3> part = Part<3>();
-        part.AddRectangle(1_um, 1_um, DimensionalChastePoint<3>());
+        part.AddRectangle(1_um, 1_um, Vertex<3>());
 
         TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[0]->GetLocation(1_um)[0], 0.0, 1.e-6);
         TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[0]->GetLocation(1_um)[1], 0.0, 1.e-6);
@@ -86,7 +86,7 @@ public:
         TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[3]->GetLocation(1_um)[1], 1.0, 1.e-6);
 
         TS_ASSERT_DELTA(part.GetReferenceLengthScale()/1_m, 1.e-6, 1.e-8);
-        TS_ASSERT_THROWS_THIS(part.GetFacet(DimensionalChastePoint<3>(4.0, 0.0, 0.0, 1_um)), "No facet found at input location");
+        TS_ASSERT_THROWS_THIS(part.GetFacet(Vertex<3>(4.0, 0.0, 0.0, 1_um)), "No facet found at input location");
         part.SetReferenceLengthScale(10.e-6*unit::metres);
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Rectangle.vtp"));
     }
@@ -101,7 +101,7 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         Part<3> part = Part<3>();
-        part.AddCuboid(1_um, 1_um, 1_um, DimensionalChastePoint<3>());
+        part.AddCuboid(1_um, 1_um, 1_um, Vertex<3>());
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Cuboid.vtp"));
     }
 
@@ -115,7 +115,7 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         Part<3> part = Part<3>();
-        part.AddCylinder(1_um, 1_um, DimensionalChastePoint<3>(), 24);
+        part.AddCylinder(1_um, 1_um, Vertex<3>(), 24);
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Cylinder.vtp"));
     }
 
@@ -129,19 +129,19 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         std::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        p_part->AddRectangle(1_um, 1_um,DimensionalChastePoint<3>(0.0, 0.0));
-        p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
+        p_part->AddRectangle(1_um, 1_um,Vertex<3>(0.0, 0.0));
+        p_part->AddCircle(0.33e-6*unit::metres, Vertex<3>(0.5, 0.5));
 
         std::shared_ptr<Part<3> > p_part2 = Part<3>::Create();
-        p_part2->AddRectangle(1_um, 1_um, DimensionalChastePoint<3>(0.0, 0.0));
+        p_part2->AddRectangle(1_um, 1_um, Vertex<3>(0.0, 0.0));
         p_part2->AddPolygon(p_part->GetPolygons()[1], true);
 
         std::shared_ptr<Part<3> > p_part3 = Part<3>::Create();
-        p_part3->AddRectangle(1_um, 1_um, DimensionalChastePoint<3>(0.0, 0.0));
+        p_part3->AddRectangle(1_um, 1_um, Vertex<3>(0.0, 0.0));
         p_part3->AddPolygon(p_part->GetPolygons()[1], false);
 
         std::shared_ptr<Part<3> > p_part4 = Part<3>::Create();
-        p_part4->AddRectangle(1_um, 1_um, DimensionalChastePoint<3>(0.0, 0.0));
+        p_part4->AddRectangle(1_um, 1_um, Vertex<3>(0.0, 0.0));
         p_part4->AddPolygon(p_part->GetPolygons()[1], false, p_part4->GetFacets()[0]);
 
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath().append("Composite2DPart.vtp"));
@@ -157,12 +157,12 @@ public:
         OutputFileHandler output_file_handler(output_directory, false);
 
         std::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        std::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5));
+        std::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(0.33e-6*unit::metres, Vertex<3>(0.5, 0.5));
         p_part->Extrude(p_circle, 1_um);
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath().append("ExtrudePart.vtp"));
 
         std::shared_ptr<Part<2> > p_part2 = Part<2>::Create();
-        std::shared_ptr<Polygon<2> > p_circle2 = p_part2->AddCircle(0.33e-6*unit::metres, DimensionalChastePoint<2>(0.5, 0.5));
+        std::shared_ptr<Polygon<2> > p_circle2 = p_part2->AddCircle(0.33e-6*unit::metres, Vertex<2>(0.5, 0.5));
         TS_ASSERT_THROWS_THIS(p_part2->Extrude(p_circle2, 1_um), "Only parts in 3D space can be extruded.");
     }
 
@@ -188,7 +188,7 @@ public:
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(100.0*1_um,
                             100.0*1_um,
-                            DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+                            Vertex<2>(0.0, 0.0, 0.0));
         p_domain->AddVesselNetwork(p_network);
 
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselLines2d.vtp"));
@@ -220,7 +220,7 @@ public:
         p_domain->AddCuboid(100.0*1_um,
                             100.0*1_um,
                             100.0*1_um,
-                            DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+                            Vertex<3>(0.0, 0.0, 0.0));
         p_domain->AddVesselNetwork(p_network);
 
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselLines3d.vtp"));
@@ -251,7 +251,7 @@ public:
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(100.0*1_um,
                             100.0*1_um,
-                            DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+                            Vertex<2>(0.0, 0.0, 0.0));
 
         TS_ASSERT_THROWS_THIS(p_domain->AddVesselNetwork(p_network, true), "The surface generator currently only works in 3D");
     }
@@ -281,7 +281,7 @@ public:
         p_domain->AddCuboid(100.0*1_um,
                             100.0*1_um,
                             100.0*1_um,
-                            DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+                            Vertex<3>(0.0, 0.0, 0.0));
         p_domain->AddVesselNetwork(p_network, true);
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselSurface3d.vtp"));
     }
@@ -298,12 +298,12 @@ public:
         QLength vessel_length = 100.0 * 1_um;
         VesselNetworkGenerator<3> generator;
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length,
-                DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+                Vertex<3>(0.0, 0.0, 0.0));
         p_network->GetVessels()[0]->GetStartNode()->SetRadius(5.0e-6 * unit::metres);
         p_network->GetVessels()[0]->GetEndNode()->SetRadius(5.0e-6 * unit::metres);
 
         Part<3> part = Part<3>();
-        std::shared_ptr<Polygon<3> > p_circle = part.AddCircle(vessel_length, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        std::shared_ptr<Polygon<3> > p_circle = part.AddCircle(vessel_length, Vertex<3>(0.0, 0.0, 0.0));
         part.Extrude(p_circle, vessel_length);
         part.AddVesselNetwork(p_network, true);
 
@@ -325,7 +325,7 @@ public:
         std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
         p_domain->AddRectangle(50.0*1_um,
                             50.0*1_um,
-                            DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+                            Vertex<2>(0.0, 0.0, 0.0));
         p_domain->BooleanWithNetwork(p_network);
 
         TS_ASSERT_EQUALS(p_network->GetNumberOfVessels(), 1u);
@@ -334,7 +334,7 @@ public:
     void TestContainingGridIndices() throw(Exception)
     {
         Part<3> part = Part<3>();
-        part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres, DimensionalChastePoint<3>(0.5, 0.5, 0.5, 1.0e-6*unit::metres));
+        part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres, Vertex<3>(0.5, 0.5, 0.5, 1.0e-6*unit::metres));
 
         std::vector<unsigned> containing_indices = part.GetContainingGridIndices(20, 20, 20, 1.0e-6*unit::metres);
         TS_ASSERT_EQUALS(containing_indices.size(), 10u*10u*10u);
@@ -343,17 +343,17 @@ public:
     void TestGetSegmentIndices() throw(Exception)
     {
         Part<3> part = Part<3>();
-        part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres, Vertex<3>(0.0, 0.0, 0.0));
     }
 
     void TestPointInPart() throw(Exception)
     {
         Part<3> part = Part<3>();
-        part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
-        TS_ASSERT(part.IsPointInPart(DimensionalChastePoint<3>(0.5, 0.5, 0.5)));
+        part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres, Vertex<3>(0.0, 0.0, 0.0));
+        TS_ASSERT(part.IsPointInPart(Vertex<3>(0.5, 0.5, 0.5)));
 
         Part<2> part2 = Part<2>();
-        part2.AddRectangle(10.e-6*unit::metres, 10.e-6*unit::metres, DimensionalChastePoint<2>(0.0, 0.0));
+        part2.AddRectangle(10.e-6*unit::metres, 10.e-6*unit::metres, Vertex<2>(0.0, 0.0));
 
         vtkSmartPointer<vtkPoints> p_probes = vtkSmartPointer<vtkPoints>::New();
         p_probes->InsertNextPoint(0.5, 0.5, 0.0);
@@ -363,9 +363,9 @@ public:
     void TestTranslate() throw(Exception)
     {
         Part<3> part = Part<3>();
-        part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres, Vertex<3>(0.0, 0.0, 0.0));
 
-        DimensionalChastePoint<3> translation_vector(10.0, 10.0, 10.0, 1e-6*unit::metres);
+        Vertex<3> translation_vector(10.0, 10.0, 10.0, 1e-6*unit::metres);
         part.Translate(translation_vector);
 
         TS_ASSERT_DELTA(part.GetPolygons()[0]->GetVertices()[0]->GetLocation(1e-6*unit::metres)[0], 10.0, 1.e-6);
@@ -387,7 +387,7 @@ public:
 
         std::shared_ptr<Part<3> > p_part = Part<3>::Create();
         p_part->AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres,
-                DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+                Vertex<3>(0.0, 0.0, 0.0));
 
         // Save archive
         {
@@ -430,44 +430,44 @@ public:
         QLength pellet_radius = 150*1e-6*unit::metres;
         QLength delta = pellet_height-cornea_radius+pellet_radius;
         std::shared_ptr<Part<2> > p_domain = Part<2> ::Create();
-        p_domain->AddCircle(cornea_radius, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+        p_domain->AddCircle(cornea_radius, Vertex<2>(0.0, 0.0, 0.0));
 
         std::shared_ptr<Polygon<2> > p_polygon = p_domain->AddCircle(pellet_radius,
-                DimensionalChastePoint<2>(0.0, -delta/reference_length, 0.0, reference_length));
+                Vertex<2>(0.0, -delta/reference_length, 0.0, reference_length));
         p_polygon->AddAttribute("Pellet", 1.0);
         p_polygon->AddAttributeToAllEdges("Pellet Boundary", 1.0);
 
-        p_domain->AddHoleMarker(DimensionalChastePoint<2>(0.0, -delta/reference_length, 0.0, reference_length));
+        p_domain->AddHoleMarker(Vertex<2>(0.0, -delta/reference_length, 0.0, reference_length));
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath() + "labelled_circle_2d.vtp", GeometryFormat::VTP, true);
 
         // Circle 3D
         std::shared_ptr<Part<3> > p_circ_3d_domain = Part<3> ::Create();
-        std::shared_ptr<Polygon<3> > p_circle = p_circ_3d_domain->AddCircle(cornea_radius, DimensionalChastePoint<3>(0.0, 0.0, 0.0));
+        std::shared_ptr<Polygon<3> > p_circle = p_circ_3d_domain->AddCircle(cornea_radius, Vertex<3>(0.0, 0.0, 0.0));
         p_circ_3d_domain->Extrude(p_circle, cornea_thickness);
 
         std::shared_ptr<Part<3> > p_circ_3d_pellet = Part<3> ::Create();
         std::shared_ptr<Polygon<3> > p_pellet_circle = p_circ_3d_pellet->AddCircle(pellet_radius,
-                        DimensionalChastePoint<3>(0.0, -1.0*delta/reference_length, 0.0, reference_length));
+                        Vertex<3>(0.0, -1.0*delta/reference_length, 0.0, reference_length));
         p_circ_3d_pellet->Extrude(p_pellet_circle, pellet_thickness);
         p_circ_3d_pellet->AddAttributeToPolygons("Pellet Interface",  1.0);
         p_circ_3d_domain->AppendPart(p_circ_3d_pellet);
         p_circ_3d_domain->Write(output_file_handler.GetOutputDirectoryFullPath() + "labelled_circle_3d.vtp", GeometryFormat::VTP, true);
 
         // Plane 2D
-        std::vector<std::shared_ptr<DimensionalChastePoint<2> > > points;
-        points.push_back(DimensionalChastePoint<2>::Create(0.0, 0.0, 0.0, reference_length));
-        points.push_back(DimensionalChastePoint<2>::Create(2.0*M_PI*cornea_radius/reference_length, 0.0, 0.0, reference_length));
-        points.push_back(DimensionalChastePoint<2>::Create(2.0*M_PI*cornea_radius/reference_length, pellet_height/reference_length, 0.0,
+        std::vector<std::shared_ptr<Vertex<2> > > points;
+        points.push_back(Vertex<2>::Create(0.0, 0.0, 0.0, reference_length));
+        points.push_back(Vertex<2>::Create(2.0*M_PI*cornea_radius/reference_length, 0.0, 0.0, reference_length));
+        points.push_back(Vertex<2>::Create(2.0*M_PI*cornea_radius/reference_length, pellet_height/reference_length, 0.0,
                 reference_length));
-        points.push_back(DimensionalChastePoint<2>::Create(2.0*M_PI*cornea_radius/(2.0*reference_length) + 2.0*M_PI*pellet_radius/(2.0*reference_length), pellet_height/reference_length, 0.0,
+        points.push_back(Vertex<2>::Create(2.0*M_PI*cornea_radius/(2.0*reference_length) + 2.0*M_PI*pellet_radius/(2.0*reference_length), pellet_height/reference_length, 0.0,
                 reference_length));
-        points.push_back(DimensionalChastePoint<2>::Create(2.0*M_PI*cornea_radius/(2.0*reference_length) - 2.0*M_PI*pellet_radius/(2.0*reference_length), pellet_height/reference_length, 0.0,
+        points.push_back(Vertex<2>::Create(2.0*M_PI*cornea_radius/(2.0*reference_length) - 2.0*M_PI*pellet_radius/(2.0*reference_length), pellet_height/reference_length, 0.0,
                 reference_length));
-        points.push_back(DimensionalChastePoint<2>::Create(0.0, pellet_height/reference_length, 0.0, reference_length));
+        points.push_back(Vertex<2>::Create(0.0, pellet_height/reference_length, 0.0, reference_length));
         std::shared_ptr<Polygon<2> > p_temp_polygon = Polygon<2>::Create(points);
         std::shared_ptr<Part<2> > p_2d_planar_domain = Part<2>::Create();
         p_2d_planar_domain->AddPolygon(p_temp_polygon);
-        p_2d_planar_domain->AddAttributeToEdgeIfFound(DimensionalChastePoint<2>(2.0*M_PI*cornea_radius/(2.0*reference_length),
+        p_2d_planar_domain->AddAttributeToEdgeIfFound(Vertex<2>(2.0*M_PI*cornea_radius/(2.0*reference_length),
                 pellet_height/reference_length, 0, reference_length), "Pellet Interface", 1.0);
         p_2d_planar_domain->Write(output_file_handler.GetOutputDirectoryFullPath() + "labelled_plane_2d.vtp", GeometryFormat::VTP, true);
 
@@ -481,7 +481,7 @@ public:
         double base = cornea_radius/reference_length + gap - cornea_thickness/reference_length;
         p_hemi_pellet->AddCylinder(pellet_radius,
                                   pellet_thickness,
-                                  DimensionalChastePoint<3>(0.0, 0.0, base, reference_length));
+                                  Vertex<3>(0.0, 0.0, base, reference_length));
         p_hemi_pellet->AddAttributeToPolygons("Pellet Interface",  1.0);
         hemisphere->AppendPart(p_hemi_pellet);
         hemisphere->Write(output_file_handler.GetOutputDirectoryFullPath() + "hemisphere.vtp", GeometryFormat::VTP, true);
@@ -498,7 +498,7 @@ public:
         if(PetscTools::GetMyRank() == 0)
         {
             boost::shared_ptr<Part<2> > p_domain = boost::shared_ptr<Part<2> >(new Part<2> ());
-            p_domain->AddCircle(1.0*unit::metres, DimensionalChastePoint<2>(0.0, 0.0, 0.0));
+            p_domain->AddCircle(1.0*unit::metres, Vertex<2>(0.0, 0.0, 0.0));
             part_comm.SendObject(p_domain, 1, 6789);
         }
         else if(PetscTools::GetMyRank() == 1)

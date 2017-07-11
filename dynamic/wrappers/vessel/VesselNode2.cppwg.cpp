@@ -32,7 +32,7 @@ void register_VesselNode2_class(py::module &m){
 py::class_<VesselNode2 , VesselNode2_Overloads   >(m, "VesselNode2")
         .def(py::init<double, double, double, ::QLength >(), py::arg("v1"), py::arg("v2"), py::arg("v3"), py::arg("referenceLength"))
         .def(py::init<double, double, double >(), py::arg("v1") = 0., py::arg("v2") = 0., py::arg("v3") = 0.)
-        .def(py::init<::DimensionalChastePoint<2> const & >(), py::arg("location"))
+        .def(py::init<::Vertex<2> const & >(), py::arg("location"))
         .def(py::init<::VesselNode<2> const & >(), py::arg("rExistingNode"))
         .def_static(
             "Create", 
@@ -44,7 +44,7 @@ py::class_<VesselNode2 , VesselNode2_Overloads   >(m, "VesselNode2")
             " " , py::arg("v1"), py::arg("v2"), py::arg("v3"), py::arg("referenceLength") )
         .def_static(
             "Create", 
-            (::std::shared_ptr<VesselNode<2> >(*)(::DimensionalChastePoint<2> const &)) &VesselNode2::Create, 
+            (::std::shared_ptr<VesselNode<2> >(*)(::Vertex<2> const &)) &VesselNode2::Create, 
             " " , py::arg("location") )
         .def_static(
             "Create", 
@@ -60,7 +60,7 @@ py::class_<VesselNode2 , VesselNode2_Overloads   >(m, "VesselNode2")
             " "  )
         .def(
             "GetDistance", 
-            (::QLength(VesselNode2::*)(::DimensionalChastePoint<2> const &) const ) &VesselNode2::GetDistance, 
+            (::QLength(VesselNode2::*)(::Vertex<2> const &) const ) &VesselNode2::GetDistance, 
             " " , py::arg("rLocation") )
         .def(
             "GetFlowProperties", 
@@ -68,7 +68,7 @@ py::class_<VesselNode2 , VesselNode2_Overloads   >(m, "VesselNode2")
             " "  )
         .def(
             "rGetLocation", 
-            (::DimensionalChastePoint<2> const &(VesselNode2::*)() const ) &VesselNode2::rGetLocation, 
+            (::Vertex<2> const &(VesselNode2::*)() const ) &VesselNode2::rGetLocation, 
             " "  )
         .def(
             "GetNumberOfSegments", 
@@ -124,7 +124,7 @@ py::class_<VesselNode2 , VesselNode2_Overloads   >(m, "VesselNode2")
             " " , py::arg("pSegment") )
         .def(
             "IsCoincident", 
-            (bool(VesselNode2::*)(::DimensionalChastePoint<2> const &) const ) &VesselNode2::IsCoincident, 
+            (bool(VesselNode2::*)(::Vertex<2> const &) const ) &VesselNode2::IsCoincident, 
             " " , py::arg("rLocation") )
         .def(
             "IsMigrating", 
@@ -144,7 +144,7 @@ py::class_<VesselNode2 , VesselNode2_Overloads   >(m, "VesselNode2")
             " " , py::arg("isMigrating") )
         .def(
             "SetLocation", 
-            (void(VesselNode2::*)(::DimensionalChastePoint<2> const &)) &VesselNode2::SetLocation, 
+            (void(VesselNode2::*)(::Vertex<2> const &)) &VesselNode2::SetLocation, 
             " " , py::arg("rLocation") )
         .def(
             "SetLocation", 

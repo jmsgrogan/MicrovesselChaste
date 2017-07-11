@@ -92,7 +92,7 @@ public:
         VesselNetworkGenerator<2> network_generator;
         QLength length(92.0*unit::microns);
         std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
-                                                                                                DimensionalChastePoint<2>(50.0, 4.0));
+                                                                                                Vertex<2>(50.0, 4.0));
         // Get a point-segment map
         std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
@@ -145,7 +145,7 @@ public:
         VesselNetworkGenerator<2> network_generator;
         QLength length(92.0*unit::microns);
         std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
-                                                                                                DimensionalChastePoint<2>(45.0, 4.0));
+                                                                                                Vertex<2>(45.0, 4.0));
         // Get a point-segment map
         std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
@@ -196,7 +196,7 @@ public:
         VesselNetworkGenerator<2> network_generator;
         QLength length(100.0*unit::microns);
         std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
-                                                                                                DimensionalChastePoint<2>(45.0, -0.1));
+                                                                                                Vertex<2>(45.0, -0.1));
         QLength radius(11.0*unit::microns);
         VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, radius);
 
@@ -286,12 +286,12 @@ public:
         p_grid->SetDimensions(dimensions);
 
         // Set up points
-        std::vector<DimensionalChastePoint<2> > points;
-        points.push_back(DimensionalChastePoint<2>(5.0, 0.0));
-        points.push_back(DimensionalChastePoint<2>(5.3, 0.0));
-        points.push_back(DimensionalChastePoint<2>(5.3, 0.2));
-        points.push_back(DimensionalChastePoint<2>(5.0, 5.0));
-        points.push_back(DimensionalChastePoint<2>(0.0, 5.0));
+        std::vector<Vertex<2> > points;
+        points.push_back(Vertex<2>(5.0, 0.0));
+        points.push_back(Vertex<2>(5.3, 0.0));
+        points.push_back(Vertex<2>(5.3, 0.2));
+        points.push_back(Vertex<2>(5.0, 5.0));
+        points.push_back(Vertex<2>(0.0, 5.0));
         // Get a point-point map
         std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);

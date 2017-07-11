@@ -39,7 +39,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cxxtest/TestSuite.h>
 #include "SmartPointers.hpp"
 #include "GeometryTools.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "UnitCollection.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
@@ -52,9 +52,9 @@ public:
     void TestGeometryOperations()
     {
         QLength reference_length = 1.0_m;
-        DimensionalChastePoint<3> point1(1.0, 2.0, 0.5, reference_length);
-        DimensionalChastePoint<3> point2(2.0, 4.0, 0.5, reference_length);
-        DimensionalChastePoint<3> point3(1.5, 4.0, 0.5, reference_length);
+        Vertex<3> point1(1.0, 2.0, 0.5, reference_length);
+        Vertex<3> point2(2.0, 4.0, 0.5, reference_length);
+        Vertex<3> point3(1.5, 4.0, 0.5, reference_length);
 
         TS_ASSERT_DELTA(GetDistance(point1, point2)/1_m, std::sqrt(5.0), 1.e-6);
         TS_ASSERT_DELTA(GetDistanceToLineSegment(point1, point2, point3)/1_m, 0.4472, 1.e-4);
@@ -63,9 +63,9 @@ public:
     void TestLineInBoxBothOutside()
     {
         QLength spacing = 1.0 * unit::metres;
-        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5, spacing);
-        DimensionalChastePoint<3> point1(-1.5, 0.5, 0.5, spacing);
-        DimensionalChastePoint<3> point2(1.5, 0.5, 0.5, spacing);
+        Vertex<3> centre(0.5, 0.5, 0.5, spacing);
+        Vertex<3> point1(-1.5, 0.5, 0.5, spacing);
+        Vertex<3> point2(1.5, 0.5, 0.5, spacing);
         QLength length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
         TS_ASSERT_DELTA(length/1_m, 1.0, 1.e-6);
     }
@@ -73,9 +73,9 @@ public:
     void TestLineInBoxBothOutsideNotCrossing()
     {
         QLength spacing = 1.0 * unit::metres;
-        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5, spacing);
-        DimensionalChastePoint<3> point1(-1.5, 1.5, 0.5, spacing);
-        DimensionalChastePoint<3> point2(1.5, 1.5, 0.5, spacing);
+        Vertex<3> centre(0.5, 0.5, 0.5, spacing);
+        Vertex<3> point1(-1.5, 1.5, 0.5, spacing);
+        Vertex<3> point2(1.5, 1.5, 0.5, spacing);
         QLength length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
         TS_ASSERT_DELTA(length/1_m, 0.0, 1.e-6);
     }
@@ -83,9 +83,9 @@ public:
     void TestLineInBoxInside()
     {
         QLength spacing = 1.0 * unit::metres;
-        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5, spacing);
-        DimensionalChastePoint<3> point1(0.25, 0.5, 0.5, spacing);
-        DimensionalChastePoint<3> point2(0.75, 0.5, 0.5, spacing);
+        Vertex<3> centre(0.5, 0.5, 0.5, spacing);
+        Vertex<3> point1(0.25, 0.5, 0.5, spacing);
+        Vertex<3> point2(0.75, 0.5, 0.5, spacing);
         QLength length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
         TS_ASSERT_DELTA(length/1_m, 0.5, 1.e-6);
     }
@@ -93,9 +93,9 @@ public:
     void TestLineInBoxStartInside()
     {
         QLength spacing = 1.0 * unit::metres;
-        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5, spacing);
-        DimensionalChastePoint<3> point1(0.25, 0.5, 0.5, spacing);
-        DimensionalChastePoint<3> point2(1.5, 0.5, 0.5, spacing);
+        Vertex<3> centre(0.5, 0.5, 0.5, spacing);
+        Vertex<3> point1(0.25, 0.5, 0.5, spacing);
+        Vertex<3> point2(1.5, 0.5, 0.5, spacing);
         QLength length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
         TS_ASSERT_DELTA(length/1_m, 0.75, 1.e-6);
     }
@@ -103,9 +103,9 @@ public:
     void TestLineInBoxEndInside()
     {
         QLength spacing = 1.0 * unit::metres;
-        DimensionalChastePoint<3> centre(0.5, 0.5, 0.5, spacing);
-        DimensionalChastePoint<3> point1(-1.5, 0.5, 0.5, spacing);
-        DimensionalChastePoint<3> point2(0.75, 0.5, 0.5, spacing);
+        Vertex<3> centre(0.5, 0.5, 0.5, spacing);
+        Vertex<3> point1(-1.5, 0.5, 0.5, spacing);
+        Vertex<3> point2(0.75, 0.5, 0.5, spacing);
         QLength length = LengthOfLineInBox<3>(point1, point2, centre, spacing);
         TS_ASSERT_DELTA(length/1_m, 0.75, 1.e-6);
     }
@@ -113,9 +113,9 @@ public:
     void TestLineInBoxBothOutside2d()
     {
         QLength spacing = 1.0 * unit::metres;
-        DimensionalChastePoint<2> centre(0.5, 0.5, 0.0, spacing);
-        DimensionalChastePoint<2> point1(-1.5, 0.5, 0.0, spacing);
-        DimensionalChastePoint<2> point2(1.5, 0.5, 0.0, spacing);
+        Vertex<2> centre(0.5, 0.5, 0.0, spacing);
+        Vertex<2> point1(-1.5, 0.5, 0.0, spacing);
+        Vertex<2> point2(1.5, 0.5, 0.0, spacing);
         QLength length = LengthOfLineInBox<2>(point1, point2, centre, spacing);
         TS_ASSERT_DELTA(length/1_m, 1.0, 1.e-6);
     }
@@ -123,9 +123,9 @@ public:
     void TestLineInBoxBothOutsideNotCrossing2d()
     {
         QLength spacing = 1.0 * unit::metres;
-        DimensionalChastePoint<2> centre(0.5, 0.5, 0.0, spacing);
-        DimensionalChastePoint<2> point1(-1.5, 1.5, 0.0, spacing);
-        DimensionalChastePoint<2> point2(1.5, 1.5, 0.0, spacing);
+        Vertex<2> centre(0.5, 0.5, 0.0, spacing);
+        Vertex<2> point1(-1.5, 1.5, 0.0, spacing);
+        Vertex<2> point2(1.5, 1.5, 0.0, spacing);
         QLength length = LengthOfLineInBox<2>(point1, point2, centre, spacing);
         TS_ASSERT_DELTA(length/1_m, 0.0, 1.e-6);
     }
@@ -133,9 +133,9 @@ public:
     void TestLineInBoxInside2d()
     {
         QLength spacing = 1.0 * unit::metres;
-        DimensionalChastePoint<2> centre(0.5, 0.5, 0.5, spacing);
-        DimensionalChastePoint<2> point1(0.25, 0.5, 0.5, spacing);
-        DimensionalChastePoint<2> point2(0.75, 0.5, 0.5, spacing);
+        Vertex<2> centre(0.5, 0.5, 0.5, spacing);
+        Vertex<2> point1(0.25, 0.5, 0.5, spacing);
+        Vertex<2> point2(0.75, 0.5, 0.5, spacing);
         QLength length = LengthOfLineInBox<2>(point1, point2, centre, spacing);
         TS_ASSERT_DELTA(length/1_m, 0.5, 1.e-6);
     }
@@ -143,9 +143,9 @@ public:
     void TestLineInBoxStartInside2d()
     {
         QLength spacing = 1.0 * unit::metres;
-        DimensionalChastePoint<2> centre(0.5, 0.5, 0.5, spacing);
-        DimensionalChastePoint<2> point1(0.25, 0.5, 0.5, spacing);
-        DimensionalChastePoint<2> point2(1.5, 0.5, 0.5, spacing);
+        Vertex<2> centre(0.5, 0.5, 0.5, spacing);
+        Vertex<2> point1(0.25, 0.5, 0.5, spacing);
+        Vertex<2> point2(1.5, 0.5, 0.5, spacing);
         QLength length = LengthOfLineInBox<2>(point1, point2, centre, spacing);
         TS_ASSERT_DELTA(length/1_m, 0.75, 1.e-6);
     }
@@ -153,9 +153,9 @@ public:
     void TestLineInBoxEndInside2d()
     {
         QLength spacing = 1.0 * unit::metres;
-        DimensionalChastePoint<2> centre(0.5, 0.5, 0.5, spacing);
-        DimensionalChastePoint<2> point1(-1.5, 0.5, 0.5, spacing);
-        DimensionalChastePoint<2> point2(0.75, 0.5, 0.5, spacing);
+        Vertex<2> centre(0.5, 0.5, 0.5, spacing);
+        Vertex<2> point1(-1.5, 0.5, 0.5, spacing);
+        Vertex<2> point2(0.75, 0.5, 0.5, spacing);
         QLength length = LengthOfLineInBox<2>(point1, point2, centre, spacing);
         TS_ASSERT_DELTA(length/1_m, 0.75, 1.e-6);
     }
@@ -164,20 +164,20 @@ public:
     {
         QLength spacing = 1.0 * unit::metres;
 
-        std::vector<DimensionalChastePoint<3> > tetra_points;
-        DimensionalChastePoint<3> tetra1(0.0, 0.0, 0.0, spacing);
+        std::vector<Vertex<3> > tetra_points;
+        Vertex<3> tetra1(0.0, 0.0, 0.0, spacing);
         tetra_points.push_back(tetra1);
-        DimensionalChastePoint<3> tetra2(1.0, 0.0, 0.0, spacing);
+        Vertex<3> tetra2(1.0, 0.0, 0.0, spacing);
         tetra_points.push_back(tetra2);
-        DimensionalChastePoint<3> tetra3(0.5, 1.0, 0.0, spacing);
+        Vertex<3> tetra3(0.5, 1.0, 0.0, spacing);
         tetra_points.push_back(tetra3);
-        DimensionalChastePoint<3> tetra4(0.5, 0.5, 1.0, spacing);
+        Vertex<3> tetra4(0.5, 0.5, 1.0, spacing);
         tetra_points.push_back(tetra4);
 
-        DimensionalChastePoint<3> point1(-0.5, 0.5, 0.5, spacing);
-        DimensionalChastePoint<3> point2(1.5, 0.5, 0.5, spacing);
-        DimensionalChastePoint<3> point3(0.5, 0.5, 0.5, spacing);
-        DimensionalChastePoint<3> point4(0.5, 0.5, 0.6, spacing);
+        Vertex<3> point1(-0.5, 0.5, 0.5, spacing);
+        Vertex<3> point2(1.5, 0.5, 0.5, spacing);
+        Vertex<3> point3(0.5, 0.5, 0.5, spacing);
+        Vertex<3> point4(0.5, 0.5, 0.6, spacing);
 
         QLength length = LengthOfLineInTetra<3>(point1, point2, tetra_points);
         TS_ASSERT_DELTA(length/1_m, 0.25, 1.e-6);

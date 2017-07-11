@@ -38,7 +38,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Exception.hpp"
 #include "UblasIncludes.hpp"
 #include "Polygon.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "MappableGridGenerator.hpp"
 #include "BaseUnits.hpp"
 
@@ -71,12 +71,12 @@ PartPtr<DIM> MappableGridGenerator<DIM>::GeneratePlane(unsigned numX, unsigned n
 
     // Make a regular grid of polygons
     // Front vertices
-    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices;
+    std::vector<VertexPtr<DIM> > vertices;
     for(unsigned jdx=0; jdx< numY; jdx++)
     {
         for(unsigned idx=0; idx<numX; idx++)
         {
-            vertices.push_back(DimensionalChastePoint<DIM>::Create(double(idx), double(jdx), 0.0, mReferenceLength));
+            vertices.push_back(Vertex<DIM>::Create(double(idx)*mReferenceLength, double(jdx)*mReferenceLength, 0_m));
         }
     }
 
@@ -88,7 +88,7 @@ PartPtr<DIM> MappableGridGenerator<DIM>::GeneratePlane(unsigned numX, unsigned n
             for(unsigned idx=0; idx<numX; idx++)
             {
                 // Create the vertices
-                vertices.push_back(DimensionalChastePoint<DIM>::Create(double(idx), double(jdx), 1.0, mReferenceLength));
+                vertices.push_back(Vertex<DIM>::Create(double(idx)*mReferenceLength, double(jdx)*mReferenceLength, 1.0*mReferenceLength));
             }
         }
     }
@@ -105,7 +105,7 @@ PartPtr<DIM> MappableGridGenerator<DIM>::GeneratePlane(unsigned numX, unsigned n
             unsigned front_left_top_index = idx + numX * (jdx+1);
             unsigned front_right_top_index = idx + 1 + numX * (jdx+1);
 
-            std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > poly_vertices;
+            std::vector<VertexPtr<DIM> > poly_vertices;
             poly_vertices.push_back(vertices[front_left_index]);
             poly_vertices.push_back(vertices[front_right_index]);
             poly_vertices.push_back(vertices[front_right_top_index]);
@@ -126,7 +126,7 @@ PartPtr<DIM> MappableGridGenerator<DIM>::GeneratePlane(unsigned numX, unsigned n
                 unsigned front_left_top_index = idx + numX * (jdx+1) + numX*numY;
                 unsigned front_right_top_index = idx + 1 + numX * (jdx+1) + numX*numY;
 
-                std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > poly_vertices;
+                std::vector<VertexPtr<DIM> > poly_vertices;
                 poly_vertices.push_back(vertices[front_left_index]);
                 poly_vertices.push_back(vertices[front_right_index]);
                 poly_vertices.push_back(vertices[front_right_top_index]);
@@ -145,7 +145,7 @@ PartPtr<DIM> MappableGridGenerator<DIM>::GeneratePlane(unsigned numX, unsigned n
                 unsigned back_index = numX * jdx + numX*numY;
                 unsigned top_back_index = numX * (jdx+1) + numX*numY;
 
-                std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > poly_vertices;
+                std::vector<VertexPtr<DIM> > poly_vertices;
                 poly_vertices.push_back(vertices[front_index]);
                 poly_vertices.push_back(vertices[top_front_index]);
                 poly_vertices.push_back(vertices[top_back_index]);
@@ -161,7 +161,7 @@ PartPtr<DIM> MappableGridGenerator<DIM>::GeneratePlane(unsigned numX, unsigned n
                 unsigned back_index = numX * (jdx + 1) - 1 + numX*numY;
                 unsigned top_back_index = numX * (jdx+2) -1 + numX*numY;
 
-                std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > poly_vertices;
+                std::vector<VertexPtr<DIM> > poly_vertices;
                 poly_vertices.push_back(vertices[front_index]);
                 poly_vertices.push_back(vertices[top_front_index]);
                 poly_vertices.push_back(vertices[top_back_index]);
@@ -178,7 +178,7 @@ PartPtr<DIM> MappableGridGenerator<DIM>::GeneratePlane(unsigned numX, unsigned n
             unsigned back_index = idx + numX*numY;
             unsigned back_right_index = idx + 1 + numX*numY;
 
-            std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > poly_vertices;
+            std::vector<VertexPtr<DIM> > poly_vertices;
             poly_vertices.push_back(vertices[front_index]);
             poly_vertices.push_back(vertices[front_right_index]);
             poly_vertices.push_back(vertices[back_right_index]);
@@ -194,7 +194,7 @@ PartPtr<DIM> MappableGridGenerator<DIM>::GeneratePlane(unsigned numX, unsigned n
             unsigned back_index = idx + + numX*(numY-1) + numX*numY;
             unsigned back_right_index = idx + numX*(numY-1) + 1 + numX*numY;
 
-            std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > poly_vertices;
+            std::vector<VertexPtr<DIM> > poly_vertices;
             poly_vertices.push_back(vertices[front_index]);
             poly_vertices.push_back(vertices[front_right_index]);
             poly_vertices.push_back(vertices[back_right_index]);
@@ -232,13 +232,13 @@ PartPtr<DIM> MappableGridGenerator<DIM>::GenerateCylinder(
             !(cylinderAngle == 2.0 * M_PI));
 
     // Get the part extents
-    std::vector<QLength > bbox = p_part->GetBoundingBox();
+    std::array<QLength, 6> bbox = p_part->GetBoundingBox();
 
     // Get the vertices
-    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = p_part->GetVertices();
+    std::vector<VertexPtr<DIM> > vertices = p_part->GetVertices();
     for(unsigned idx =0; idx<vertices.size(); idx++)
     {
-        c_vector<double, DIM> vertex_location = vertices[idx]->GetLocation(mReferenceLength);
+        c_vector<double, DIM> vertex_location = vertices[idx]->Convert(mReferenceLength);
         double x_frac = vertex_location[0]*mReferenceLength / (bbox[1] - bbox[0]);
         double angle = x_frac * cylinderAngle;
 
@@ -261,7 +261,7 @@ PartPtr<DIM> MappableGridGenerator<DIM>::GenerateCylinder(
 
         // Get the new z
         new_position[2] = radius * std::sin(angle);
-        vertices[idx]->TranslateTo(DimensionalChastePoint<DIM>(new_position, mReferenceLength));
+        vertices[idx]->TranslateTo(Vertex<DIM>(new_position, mReferenceLength));
     }
 
     p_part->MergeCoincidentVertices();
@@ -288,16 +288,16 @@ PartPtr<DIM> MappableGridGenerator<DIM>::GenerateHemisphere(QLength sphereRadius
         EXCEPTION("The sphere radius must be greater than 0.0");
     }
 
-    PartPtr<DIM> p_part = GeneratePlane(numX, numY, sphereThickness == 0.0*unit::metres);
+    PartPtr<DIM> p_part = GeneratePlane(numX, numY, sphereThickness == 0_m);
 
     // The part extents
-    std::vector<QLength > bbox = p_part->GetBoundingBox();
+    std::array<QLength, 6> bbox = p_part->GetBoundingBox();
 
     // Get the vertices
-    std::vector<std::shared_ptr<DimensionalChastePoint<DIM> > > vertices = p_part->GetVertices();
+    std::vector<VertexPtr<DIM> > vertices = p_part->GetVertices();
     for(unsigned idx =0; idx<vertices.size(); idx++)
     {
-        c_vector<double, DIM> vertex_location = vertices[idx]->GetLocation(mReferenceLength);
+        c_vector<double, DIM> vertex_location = vertices[idx]->Convert(mReferenceLength);
         double x_frac = vertex_location[0]*mReferenceLength / (bbox[1] - bbox[0]);
         double azimuth_angle = x_frac * sphereAzimuthAngle;
 
@@ -322,7 +322,7 @@ PartPtr<DIM> MappableGridGenerator<DIM>::GenerateHemisphere(QLength sphereRadius
         // Get the new z
         new_position[2] = radius * std::sin(azimuth_angle) * std::sin(polar_angle);
 
-        vertices[idx]->TranslateTo(DimensionalChastePoint<DIM>(new_position, mReferenceLength));
+        vertices[idx]->TranslateTo(Vertex<DIM>(new_position, mReferenceLength));
     }
 
     p_part->MergeCoincidentVertices();

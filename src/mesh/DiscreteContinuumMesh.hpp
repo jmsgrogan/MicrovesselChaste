@@ -40,7 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
 #include "TetrahedralMesh.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
 #include "AbstractDiscreteContinuumGrid.hpp"
 #include "UnitCollection.hpp"
@@ -100,7 +100,7 @@ public:
      * Return the location of the supplied GLOBAL index
      * @return the location of the supplied GLOBAL index
      */
-    virtual DimensionalChastePoint<SPACE_DIM> GetGlobalCellLocation(unsigned index);
+    virtual Vertex<SPACE_DIM> GetGlobalCellLocation(unsigned index);
 
     /**
      * Return the node locations

@@ -45,7 +45,7 @@ TumourInsertionModifier<DIM>::TumourInsertionModifier()
     : AbstractCellBasedSimulationModifier<DIM>(),
       mInsertionTime(24.0*3600.0*unit::seconds),
       mInsertionRadius(200.0e-6*unit::metres),
-      mInsertionOrigin(DimensionalChastePoint<DIM>(0.0, 0.0, 0.0)),
+      mInsertionOrigin(Vertex<DIM>(0.0, 0.0, 0.0)),
       mTumourInserted(false)
 {
 }
@@ -62,7 +62,7 @@ void TumourInsertionModifier<DIM>::SetInsertionRadius(QLength insertionRadius)
 }
 
 template<unsigned DIM>
-void TumourInsertionModifier<DIM>::SetInsertionOrigin(DimensionalChastePoint<DIM> insertionOrigin)
+void TumourInsertionModifier<DIM>::SetInsertionOrigin(Vertex<DIM> insertionOrigin)
 {
     mInsertionOrigin = insertionOrigin;
 }
@@ -91,7 +91,7 @@ void TumourInsertionModifier<DIM>::UpdateAtEndOfTimeStep(AbstractCellPopulation<
             PolygonPtr<DIM> circle = p_sub_domain->AddCircle(mInsertionRadius, mInsertionOrigin);
             for (unsigned ind = 0; ind < rCellPopulation.rGetMesh().GetNumNodes(); ind++)
             {
-                if (p_sub_domain->IsPointInPart(DimensionalChastePoint<DIM>(rCellPopulation.rGetMesh().GetNode(ind)->rGetLocation(),
+                if (p_sub_domain->IsPointInPart(Vertex<DIM>(rCellPopulation.rGetMesh().GetNode(ind)->rGetLocation(),
                         reference_length)))
                 {
                     if(rCellPopulation.IsCellAttachedToLocationIndex(ind))

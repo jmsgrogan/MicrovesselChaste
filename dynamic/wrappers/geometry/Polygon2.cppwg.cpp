@@ -17,15 +17,15 @@ typedef Polygon<2 > Polygon2;
 
 void register_Polygon2_class(py::module &m){
 py::class_<Polygon2    >(m, "Polygon2")
-        .def(py::init<::std::vector<std::shared_ptr<DimensionalChastePoint<2> >, std::allocator<std::shared_ptr<DimensionalChastePoint<2> > > > >(), py::arg("vertices"))
-        .def(py::init<::std::shared_ptr<DimensionalChastePoint<2> > >(), py::arg("pVertex"))
+        .def(py::init<::std::vector<std::shared_ptr<Vertex<2> >, std::allocator<std::shared_ptr<Vertex<2> > > > >(), py::arg("vertices"))
+        .def(py::init<::std::shared_ptr<Vertex<2> > >(), py::arg("pVertex"))
         .def_static(
             "Create", 
-            (::std::shared_ptr<Polygon<2> >(*)(::std::vector<std::shared_ptr<DimensionalChastePoint<2> >, std::allocator<std::shared_ptr<DimensionalChastePoint<2> > > >)) &Polygon2::Create, 
+            (::std::shared_ptr<Polygon<2> >(*)(::std::vector<std::shared_ptr<Vertex<2> >, std::allocator<std::shared_ptr<Vertex<2> > > >)) &Polygon2::Create, 
             " " , py::arg("vertices") )
         .def_static(
             "Create", 
-            (::std::shared_ptr<Polygon<2> >(*)(::std::shared_ptr<DimensionalChastePoint<2> >)) &Polygon2::Create, 
+            (::std::shared_ptr<Polygon<2> >(*)(::std::shared_ptr<Vertex<2> >)) &Polygon2::Create, 
             " " , py::arg("pVertex") )
         .def(
             "AddAttribute", 
@@ -33,7 +33,7 @@ py::class_<Polygon2    >(m, "Polygon2")
             " " , py::arg("rLabel"), py::arg("value") )
         .def(
             "AddAttributeToEdgeIfFound", 
-            (bool(Polygon2::*)(::DimensionalChastePoint<2>, ::std::string const &, double)) &Polygon2::AddAttributeToEdgeIfFound, 
+            (bool(Polygon2::*)(::Vertex<2>, ::std::string const &, double)) &Polygon2::AddAttributeToEdgeIfFound, 
             " " , py::arg("loc"), py::arg("rLabel"), py::arg("value") )
         .def(
             "AddAttributeToAllEdges", 
@@ -41,15 +41,15 @@ py::class_<Polygon2    >(m, "Polygon2")
             " " , py::arg("rLabel"), py::arg("value") )
         .def(
             "AddVertices", 
-            (void(Polygon2::*)(::std::vector<std::shared_ptr<DimensionalChastePoint<2> >, std::allocator<std::shared_ptr<DimensionalChastePoint<2> > > >)) &Polygon2::AddVertices, 
+            (void(Polygon2::*)(::std::vector<std::shared_ptr<Vertex<2> >, std::allocator<std::shared_ptr<Vertex<2> > > >)) &Polygon2::AddVertices, 
             " " , py::arg("vertices") )
         .def(
             "AddVertex", 
-            (void(Polygon2::*)(::std::shared_ptr<DimensionalChastePoint<2> >)) &Polygon2::AddVertex, 
+            (void(Polygon2::*)(::std::shared_ptr<Vertex<2> >)) &Polygon2::AddVertex, 
             " " , py::arg("pVertex") )
         .def(
             "ContainsPoint", 
-            (bool(Polygon2::*)(::DimensionalChastePoint<2> const &, double)) &Polygon2::ContainsPoint, 
+            (bool(Polygon2::*)(::Vertex<2> const &, double)) &Polygon2::ContainsPoint, 
             " " , py::arg("rLocation"), py::arg("tolerance") = 0. )
         .def(
             "GetBoundingBox", 
@@ -57,15 +57,15 @@ py::class_<Polygon2    >(m, "Polygon2")
             " "  )
         .def(
             "GetCentroid", 
-            (::DimensionalChastePoint<2>(Polygon2::*)()) &Polygon2::GetCentroid, 
+            (::Vertex<2>(Polygon2::*)()) &Polygon2::GetCentroid, 
             " "  )
         .def(
             "GetDistance", 
-            (::QLength(Polygon2::*)(::DimensionalChastePoint<2> const &)) &Polygon2::GetDistance, 
+            (::QLength(Polygon2::*)(::Vertex<2> const &)) &Polygon2::GetDistance, 
             " " , py::arg("rLocation") )
         .def(
             "GetDistanceToEdges", 
-            (::QLength(Polygon2::*)(::DimensionalChastePoint<2> const &)) &Polygon2::GetDistanceToEdges, 
+            (::QLength(Polygon2::*)(::Vertex<2> const &)) &Polygon2::GetDistanceToEdges, 
             " " , py::arg("rLocation") )
         .def(
             "GetPlane", 
@@ -77,11 +77,11 @@ py::class_<Polygon2    >(m, "Polygon2")
             " "  )
         .def(
             "GetVertex", 
-            (::std::shared_ptr<DimensionalChastePoint<2> >(Polygon2::*)(unsigned int)) &Polygon2::GetVertex, 
+            (::std::shared_ptr<Vertex<2> >(Polygon2::*)(unsigned int)) &Polygon2::GetVertex, 
             " " , py::arg("idx") )
         .def(
             "GetVertices", 
-            (::std::vector<std::shared_ptr<DimensionalChastePoint<2> >, std::allocator<std::shared_ptr<DimensionalChastePoint<2> > > >(Polygon2::*)()) &Polygon2::GetVertices, 
+            (::std::vector<std::shared_ptr<Vertex<2> >, std::allocator<std::shared_ptr<Vertex<2> > > >(Polygon2::*)()) &Polygon2::GetVertices, 
             " "  )
         .def(
             "GetVtkPolygon", 
@@ -101,7 +101,7 @@ py::class_<Polygon2    >(m, "Polygon2")
             " "  )
         .def(
             "EdgeHasAttribute", 
-            (bool(Polygon2::*)(::DimensionalChastePoint<2>, ::std::string const &)) &Polygon2::EdgeHasAttribute, 
+            (bool(Polygon2::*)(::Vertex<2>, ::std::string const &)) &Polygon2::EdgeHasAttribute, 
             " " , py::arg("loc"), py::arg("rLabel") )
         .def(
             "HasAttribute", 
@@ -109,7 +109,7 @@ py::class_<Polygon2    >(m, "Polygon2")
             " " , py::arg("rLabel") )
         .def(
             "ReplaceVertex", 
-            (void(Polygon2::*)(unsigned int, ::std::shared_ptr<DimensionalChastePoint<2> >)) &Polygon2::ReplaceVertex, 
+            (void(Polygon2::*)(unsigned int, ::std::shared_ptr<Vertex<2> >)) &Polygon2::ReplaceVertex, 
             " " , py::arg("idx"), py::arg("pVertex") )
         .def(
             "RotateAboutAxis", 
@@ -117,7 +117,7 @@ py::class_<Polygon2    >(m, "Polygon2")
             " " , py::arg("axis"), py::arg("angle") )
         .def(
             "Translate", 
-            (void(Polygon2::*)(::DimensionalChastePoint<2>)) &Polygon2::Translate, 
+            (void(Polygon2::*)(::Vertex<2>)) &Polygon2::Translate, 
             " " , py::arg("translationVector") )
     ;
 }

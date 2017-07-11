@@ -232,14 +232,12 @@ std::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM>:
     {
         if(DIM==2)
         {
-            DimensionalChastePoint<DIM> origin(double(dimensions[0])*spacing/(2.0*mReferenceLength),
-                                             double(dimensions[1])*spacing/(2.0*mReferenceLength),
-                                             0.0, mReferenceLength);
+            Vertex<DIM> origin(double(dimensions[0])*spacing/2.0, double(dimensions[1])*spacing/2.0, 0.0_m);
             PartPtr<DIM> p_sub_domain = Part<DIM>::Create();
             PolygonPtr<DIM> circle = p_sub_domain->AddCircle(mTumourRadius, origin);
             for (unsigned ind = 0; ind < p_mesh->GetNumNodes(); ind++)
             {
-                if (p_sub_domain->IsPointInPart(DimensionalChastePoint<DIM>(p_mesh->GetNode(ind)->rGetLocation(), mCellPopulationReferenceLength)))
+                if (p_sub_domain->IsPointInPart(Vertex<DIM>(p_mesh->GetNode(ind)->rGetLocation(), mCellPopulationReferenceLength)))
                 {
                     p_cell_population->GetCellUsingLocationIndex(ind)->SetMutationState(mpCancerCellMutationState);
                 }
@@ -247,13 +245,10 @@ std::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM>:
         }
         else
         {
-            double dimensionless_spacing = spacing/mReferenceLength;
-            c_vector<double, DIM> dimensionless_origin = p_grid->GetOrigin().GetLocation(mReferenceLength);
-
-            DimensionalChastePoint<DIM> origin(double(dimensions[0])*dimensionless_spacing/2.0 + dimensionless_origin[0],
-                                             double(dimensions[1])*dimensionless_spacing/2.0 + dimensionless_origin[0],
-                                             double(dimensions[2])*dimensionless_spacing/2.0 + dimensionless_origin[0],
-                                             mReferenceLength);
+            Vertex<DIM> grid_origin = p_grid->GetOrigin();
+            Vertex<DIM> origin(double(dimensions[0])*spacing/2.0 + grid_origin[0],
+                    double(dimensions[1])*spacing/2.0 + grid_origin[0],
+                            double(dimensions[2])*spacing/2.0 + grid_origin[0]);
 
             for(unsigned idx=0; idx<p_grid->GetNumberOfPoints(); idx++)
             {

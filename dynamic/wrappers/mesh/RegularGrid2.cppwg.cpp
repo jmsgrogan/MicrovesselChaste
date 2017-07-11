@@ -14,7 +14,7 @@
 namespace py = pybind11;
 typedef RegularGrid<2 > RegularGrid2;
 ;
-typedef ::DimensionalChastePoint<2> _DimensionalChastePoint2;
+typedef ::Vertex<2> _Vertex2;
 typedef ::std::vector<double, std::allocator<double> > const & _std_vectordouble_std_allocatordoubleRef;
 
 class RegularGrid2_Overloads : public RegularGrid2{
@@ -27,9 +27,9 @@ class RegularGrid2_Overloads : public RegularGrid2{
             GetLocalIndex,
             globalIndex);
     }
-    ::DimensionalChastePoint<2> GetGlobalCellLocation(unsigned int index) override {
+    ::Vertex<2> GetGlobalCellLocation(unsigned int index) override {
         PYBIND11_OVERLOAD(
-            _DimensionalChastePoint2,
+            _Vertex2,
             RegularGrid2,
             GetGlobalCellLocation,
             index);
@@ -95,7 +95,7 @@ py::class_<RegularGrid2 , RegularGrid2_Overloads   >(m, "RegularGrid2")
             " " , py::arg("globalIndex") )
         .def(
             "GetGlobalCellLocation", 
-            (::DimensionalChastePoint<2>(RegularGrid2::*)(unsigned int)) &RegularGrid2::GetGlobalCellLocation, 
+            (::Vertex<2>(RegularGrid2::*)(unsigned int)) &RegularGrid2::GetGlobalCellLocation, 
             " " , py::arg("index") )
         .def(
             "rGetNeighbourData", 
@@ -115,11 +115,11 @@ py::class_<RegularGrid2 , RegularGrid2_Overloads   >(m, "RegularGrid2")
             " "  )
         .def(
             "GetPoint", 
-            (::DimensionalChastePoint<2>(RegularGrid2::*)(unsigned int, unsigned int, unsigned int)) &RegularGrid2::GetPoint, 
+            (::Vertex<2>(RegularGrid2::*)(unsigned int, unsigned int, unsigned int)) &RegularGrid2::GetPoint, 
             " " , py::arg("xIndex"), py::arg("yIndex"), py::arg("zIndex") )
         .def(
             "GetOrigin", 
-            (::DimensionalChastePoint<2>(RegularGrid2::*)()) &RegularGrid2::GetOrigin, 
+            (::Vertex<2>(RegularGrid2::*)()) &RegularGrid2::GetOrigin, 
             " "  )
         .def(
             "GetSpacing", 
@@ -155,7 +155,7 @@ py::class_<RegularGrid2 , RegularGrid2_Overloads   >(m, "RegularGrid2")
             " " , py::arg("x"), py::arg("y"), py::arg("z") = 1 )
         .def(
             "SetOrigin", 
-            (void(RegularGrid2::*)(::DimensionalChastePoint<2>)) &RegularGrid2::SetOrigin, 
+            (void(RegularGrid2::*)(::Vertex<2>)) &RegularGrid2::SetOrigin, 
             " " , py::arg("origin") )
         .def(
             "SetSpacing", 

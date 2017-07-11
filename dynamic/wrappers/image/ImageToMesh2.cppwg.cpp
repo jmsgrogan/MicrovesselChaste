@@ -36,7 +36,7 @@ py::class_<ImageToMesh2    >(m, "ImageToMesh2")
             " "  )
         .def(
             "GetMeshHoles", 
-            (::std::vector<DimensionalChastePoint<2>, std::allocator<DimensionalChastePoint<2> > >(ImageToMesh2::*)()) &ImageToMesh2::GetMeshHoles, 
+            (::std::vector<Vertex<2>, std::allocator<Vertex<2> > >(ImageToMesh2::*)()) &ImageToMesh2::GetMeshHoles, 
             " "  )
         .def(
             "SetInput", 

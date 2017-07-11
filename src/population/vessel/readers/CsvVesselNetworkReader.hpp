@@ -59,6 +59,8 @@ class CsvVesselNetworkReader
      */
     std::string mRadiusLabel;
 
+    QLength mReferenceLength;
+
 public:
 
     /**

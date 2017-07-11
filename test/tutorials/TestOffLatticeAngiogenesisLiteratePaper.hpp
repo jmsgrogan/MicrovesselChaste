@@ -55,7 +55,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /*
  * dimensional analysis,
  */
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 #include "UnitCollection.hpp"
 #include "Owen11Parameters.hpp"
 #include "GenericParameters.hpp"
@@ -165,7 +165,7 @@ public:
         QLength vessel_length = M_PI * radius;
         QLength cell_length(40.0 * unit::microns);
         std::shared_ptr<VesselNetwork<3> > p_network  = network_generator.GenerateSingleVessel(vessel_length,
-                                                                                                 DimensionalChastePoint<3>(0.0, 4000.0, 0.0),
+                                                                                                 Vertex<3>(0.0, 4000.0, 0.0),
                                                                                                  unsigned(vessel_length/cell_length) + 1, 0);
 
         p_network->GetNode(0)->GetFlowProperties()->SetIsInputNode(true);
@@ -178,7 +178,7 @@ public:
             double node_azimuth_angle = azimuth_angle * nodes[idx]->rGetLocation().GetLocation(reference_length)[0]*reference_length/vessel_length;
             double node_polar_angle = polar_angle*nodes[idx]->rGetLocation().GetLocation(reference_length)[1]*reference_length/vessel_length;
             double dimless_radius = (radius-0.5*thickness)/reference_length;
-            DimensionalChastePoint<3>new_position(dimless_radius * std::cos(node_azimuth_angle) * std::sin(node_polar_angle),
+            Vertex<3>new_position(dimless_radius * std::cos(node_azimuth_angle) * std::sin(node_polar_angle),
                                                   dimless_radius * std::cos(node_polar_angle),
                                                   dimless_radius * std::sin(node_azimuth_angle) * std::sin(node_polar_angle),
                                                   reference_length);
@@ -193,7 +193,7 @@ public:
          */
         std::shared_ptr<Part<3> > p_vegf_domain = Part<3> ::Create();
         QLength pellet_side_length(300.0*unit::microns);
-        p_vegf_domain->AddCuboid(pellet_side_length, pellet_side_length, 5.0*pellet_side_length, DimensionalChastePoint<3>(-150.0,
+        p_vegf_domain->AddCuboid(pellet_side_length, pellet_side_length, 5.0*pellet_side_length, Vertex<3>(-150.0,
                                                                                                                            900.0,
                                                                                                                            0.0));
         p_vegf_domain->Write(p_handler->GetOutputDirectoryFullPath()+"initial_vegf_domain.vtp");

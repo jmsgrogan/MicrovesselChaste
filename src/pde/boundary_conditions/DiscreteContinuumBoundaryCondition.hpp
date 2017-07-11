@@ -45,7 +45,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Part.hpp"
 #include "BoundaryConditionsContainer.hpp"
 #include "GridCalculator.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 
 /**
  * Helper struct for defining the type of boundary condition.
@@ -128,6 +128,8 @@ protected:
      */
     QConcentration mReferenceConcentration;
 
+    QLength mReferenceLengthScale;
+
     /**
      * Is this a Neumann type boundary conditions
      */
@@ -173,7 +175,7 @@ public:
      * @param tolerance the tolerance for evaluating if a point is on a boundary
      * @return a bool specifying if the point is on a boundary and the value of the point on the boundary
      */
-    std::pair<bool, QConcentration > GetValue(DimensionalChastePoint<DIM> location, double tolerance);
+    std::pair<bool, QConcentration > GetValue(const Vertex<DIM>& rLocation, double tolerance);
 
     /**
      * Update the boundary conditions container for use with the finite element solver
@@ -216,7 +218,7 @@ public:
      * Set the points for POINT type boundary conditions
      * @param points the point locations for POINT type boundary conditions
      */
-    void SetPoints(std::vector<DimensionalChastePoint<DIM> > points);
+    void SetPoints(std::vector<Vertex<DIM> > points);
 
     /**
      * Set the points for POINT type boundary conditions

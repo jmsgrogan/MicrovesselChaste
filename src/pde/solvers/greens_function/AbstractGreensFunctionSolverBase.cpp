@@ -66,7 +66,7 @@ AbstractGreensFunctionSolverBase<DIM>::AbstractGreensFunctionSolverBase()
       mGvv(),
       mGvt(),
       mGtv(),
-      mSubsegmentCutoff(1.0*unit::microns)
+      mSubsegmentCutoff(1_um)
 {
 
 }
@@ -113,13 +113,13 @@ void AbstractGreensFunctionSolverBase<DIM>::GenerateSubSegments()
             // Otherwise generate subsegment points along its length
             else
             {
-                DimensionalChastePoint<DIM> start_point = (*segment_iter)->GetNode(0)->rGetLocation();
-                DimensionalChastePoint<DIM> end_point = (*segment_iter)->GetNode(1)->rGetLocation();
+                Vertex<DIM> start_point = (*segment_iter)->GetNode(0)->rGetLocation();
+                Vertex<DIM> end_point = (*segment_iter)->GetNode(1)->rGetLocation();
 
                 double subsegment_length_factor = segment_length / max_subsegment_length;
                 unsigned num_subsegments = std::floor(subsegment_length_factor) + 1;
                 QLength subsegment_length = segment_length / double(num_subsegments);
-                DimensionalChastePoint<DIM> increment = (end_point - start_point);
+                Vertex<DIM> increment = (end_point - start_point);
                 for (unsigned i = 0; i < num_subsegments; i++)
                 {
                     mSubSegmentCoordinates.push_back(start_point +  (increment*(double(i) + 0.5)));
@@ -135,7 +135,7 @@ template<unsigned DIM>
 void AbstractGreensFunctionSolverBase<DIM>::GenerateTissuePoints()
 {
     unsigned num_points = this->mpRegularGrid->GetNumberOfPoints();
-    mSinkCoordinates = std::vector<DimensionalChastePoint<DIM> >(num_points);
+    mSinkCoordinates = std::vector<Vertex<DIM> >(num_points);
     mSinkPointMap = std::vector<unsigned>(num_points);
     for(unsigned idx=0; idx<num_points; idx++)
     {
@@ -320,8 +320,8 @@ void AbstractGreensFunctionSolverBase<DIM>::WriteSolution(std::map<std::string, 
 
     for (unsigned i = 0; i < mSubSegmentCoordinates.size(); i++)
     {
-        c_vector<double, DIM> location = mSubSegmentCoordinates[i].GetLocation(grid_length_scale);
-        pPoints->InsertNextPoint(location[0], location[1], location[2]);
+        c_vector<double, 3> location = mSubSegmentCoordinates[i].Convert3(grid_length_scale);
+        pPoints->InsertNextPoint(&location[0]);
     }
     pPolyData->SetPoints(pPoints);
 

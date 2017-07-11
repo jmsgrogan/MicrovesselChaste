@@ -24,11 +24,11 @@ py::class_<VesselNetworkPropertyManager2    >(m, "VesselNetworkPropertyManager2"
             " "  )
         .def_static(
             "AssignInflows", 
-            (void(*)(::std::shared_ptr<VesselNetwork<2> >, ::DimensionalChastePoint<2>, ::QLength)) &VesselNetworkPropertyManager2::AssignInflows, 
+            (void(*)(::std::shared_ptr<VesselNetwork<2> >, ::Vertex<2>, ::QLength)) &VesselNetworkPropertyManager2::AssignInflows, 
             " " , py::arg("pNetwork"), py::arg("location"), py::arg("searchRadius") )
         .def_static(
             "AssignOutflows", 
-            (void(*)(::std::shared_ptr<VesselNetwork<2> >, ::DimensionalChastePoint<2>, ::QLength)) &VesselNetworkPropertyManager2::AssignOutflows, 
+            (void(*)(::std::shared_ptr<VesselNetwork<2> >, ::Vertex<2>, ::QLength)) &VesselNetworkPropertyManager2::AssignOutflows, 
             " " , py::arg("pNetwork"), py::arg("location"), py::arg("searchRadius") )
         .def_static(
             "CopySegmentFlowProperties", 

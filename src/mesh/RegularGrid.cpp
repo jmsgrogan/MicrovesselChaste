@@ -59,7 +59,7 @@ RegularGrid<DIM>::RegularGrid() :
         mSpacing(BaseUnits::Instance()->GetReferenceLengthScale()),
         mDimensions(scalar_vector<unsigned>(3, 1)),
         mExtents(zero_vector<unsigned>(6)),
-        mOrigin(DimensionalChastePoint<DIM>(zero_vector<double>(DIM), BaseUnits::Instance()->GetReferenceLengthScale())),
+        mOrigin(Vertex<DIM>(zero_vector<double>(DIM), BaseUnits::Instance()->GetReferenceLengthScale())),
         mNeighbourData(),
         mpDistributedVectorFactory()
 {
@@ -259,14 +259,15 @@ int RegularGrid<DIM>::GetLocalIndex(unsigned globalIndex)
 }
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM> RegularGrid<DIM>::GetGlobalCellLocation(unsigned index)
+Vertex<DIM> RegularGrid<DIM>::GetGlobalCellLocation(unsigned index)
 {
     if (!this->mVtkRepresentationUpToDate)
     {
         SetUpVtkGrid();
     }
-    double* loc = this->mpGlobalVtkGrid->GetPoint(index);
-    return DimensionalChastePoint<DIM>(loc[0], loc[1], loc[2], this->mReferenceLength);
+    double loc[3];
+    this->mpGlobalVtkGrid->GetPoint(index, loc);
+    return Vertex<DIM>(loc, this->mReferenceLength);
 }
 
 template<unsigned DIM>
@@ -331,7 +332,7 @@ template<unsigned DIM>
 void RegularGrid<DIM>::GenerateFromPart(PartPtr<DIM> pPart, QLength gridSize)
 {
     mSpacing = gridSize;
-    std::vector<QLength > spatial_extents = pPart->GetBoundingBox();
+    std::array<QLength, 6> spatial_extents = pPart->GetBoundingBox();
     double norm_x = (spatial_extents[1] - spatial_extents[0]) / gridSize;
     double norm_y = (spatial_extents[3] - spatial_extents[2]) / gridSize;
     mDimensions[0] = unsigned(boost::math::iround(norm_x))+1;
@@ -340,22 +341,19 @@ void RegularGrid<DIM>::GenerateFromPart(PartPtr<DIM> pPart, QLength gridSize)
     {
         double norm_z = (spatial_extents[5] - spatial_extents[4]) / gridSize;
         mDimensions[2] = unsigned(boost::math::iround(norm_z))+1;
-        mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0]/this->mReferenceLength,
-                spatial_extents[2]/this->mReferenceLength,
-                spatial_extents[4]/this->mReferenceLength, this->mReferenceLength);
+        mOrigin = Vertex<DIM>(spatial_extents[0], spatial_extents[2], spatial_extents[4]);
     }
     else
     {
         mDimensions[2] = 1;
-        mOrigin = DimensionalChastePoint<DIM>(spatial_extents[0]/this->mReferenceLength,
-                spatial_extents[2]/this->mReferenceLength, 0.0, this->mReferenceLength);
+        mOrigin = Vertex<DIM>(spatial_extents[0], spatial_extents[2], 0_m);
     }
     UpdateExtents();
     SetUpVtkGrid();
 }
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM> RegularGrid<DIM>::GetPoint(unsigned x_index, unsigned y_index, unsigned z_index)
+Vertex<DIM> RegularGrid<DIM>::GetPoint(unsigned x_index, unsigned y_index, unsigned z_index)
 {
     if (!this->mVtkRepresentationUpToDate)
     {
@@ -365,13 +363,13 @@ DimensionalChastePoint<DIM> RegularGrid<DIM>::GetPoint(unsigned x_index, unsigne
     locs[0] = x_index;
     locs[1] = y_index;
     locs[2] = z_index;
-    c_vector<double, 3> loc;
+    double loc[3];
     this->mpGlobalVtkGrid->GetPoint(vtkImageData::SafeDownCast(this->mpGlobalVtkGrid)->ComputePointId(locs), &loc[0]);
-    return DimensionalChastePoint<DIM>(loc[0], loc[1], loc[2], this->mReferenceLength);
+    return Vertex<DIM>(loc, this->mReferenceLength);
 }
 
 template<unsigned DIM>
-DimensionalChastePoint<DIM> RegularGrid<DIM>::GetOrigin()
+Vertex<DIM> RegularGrid<DIM>::GetOrigin()
 {
     return mOrigin;
 }
@@ -458,22 +456,7 @@ c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsign
     double dimensionless_spacing = GetSpacing()/scale_factor;
     double jiggle_size = 1.e-3 * dimensionless_spacing;
 
-    c_vector<double, DIM> dimensionless_location = this->GetPoint(xIndex ,yIndex, zIndex).GetLocation(scale_factor);
-    c_vector<double, 3> loc;
-
-    if(DIM==2)
-    {
-        loc[0] = dimensionless_location[0];
-        loc[1] = dimensionless_location[1];
-        loc[2] = 0.0;
-    }
-    else
-    {
-        loc[0] = dimensionless_location[0];
-        loc[1] = dimensionless_location[1];
-        loc[2] = dimensionless_location[2];
-    }
-
+    c_vector<double, 3> loc = this->GetPoint(xIndex ,yIndex, zIndex).Convert3(scale_factor);
     double x_min_offset = dimensionless_spacing/2.0;
     double x_max_offset = dimensionless_spacing/2.0;
     if (jiggle)
@@ -538,12 +521,11 @@ c_vector<double,6> RegularGrid<DIM>::GetPointBoundingBox(unsigned xIndex, unsign
         dimensionless_bounds[4] = -1.0;
         dimensionless_bounds[5] = 1.0;
     }
-
     return dimensionless_bounds;
 }
 
 template<unsigned DIM>
-void RegularGrid<DIM>::SetOrigin(DimensionalChastePoint<DIM> origin)
+void RegularGrid<DIM>::SetOrigin(Vertex<DIM> origin)
 {
     mOrigin = origin;
     this->mVtkRepresentationUpToDate = false;
@@ -593,17 +575,11 @@ void RegularGrid<DIM>::SetUpVtkGrid()
     double dimensionless_spacing = mSpacing/this->mReferenceLength;
     p_global_grid->SetSpacing(dimensionless_spacing, dimensionless_spacing, dimensionless_spacing);
     p_local_grid->SetSpacing(dimensionless_spacing, dimensionless_spacing, dimensionless_spacing);
-    c_vector<double, DIM> dimless_origin = mOrigin.GetLocation(this->mReferenceLength);
-    if (DIM == 3)
-    {
-        p_global_grid->SetOrigin(&dimless_origin[0]);
-        p_local_grid->SetOrigin(&dimless_origin[0]);
-    }
-    else
-    {
-        p_global_grid->SetOrigin(dimless_origin[0], dimless_origin[1], 0.0);
-        p_local_grid->SetOrigin(dimless_origin[0], dimless_origin[1], 0.0);
-    }
+
+    c_vector<double, 3> dimless_origin = mOrigin.Convert3(this->mReferenceLength);
+    p_global_grid->SetOrigin(&dimless_origin[0]);
+    p_local_grid->SetOrigin(&dimless_origin[0]);
+
     this->mpGlobalVtkGrid = p_global_grid;
     this->mpVtkGrid = p_local_grid;
     // Label the grid partitioning

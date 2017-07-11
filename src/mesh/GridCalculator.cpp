@@ -116,21 +116,14 @@ std::vector<std::vector<unsigned> > GridCalculator<DIM>::GetPointMap(vtkSmartPoi
 }
 
 template<unsigned DIM>
-std::vector<std::vector<unsigned> > GridCalculator<DIM>::GetPointMap(const std::vector<DimensionalChastePoint<DIM> >& rInputPoints)
+std::vector<std::vector<unsigned> > GridCalculator<DIM>::GetPointMap(const std::vector<Vertex<DIM> >& rInputPoints)
 {
     QLength grid_length = mpGrid->GetReferenceLengthScale();
     vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
     for(unsigned idx=0; idx<rInputPoints.size(); idx++)
     {
-        c_vector<double, DIM> loc = rInputPoints[idx].GetLocation(grid_length);
-        if(DIM==3)
-        {
-            p_points->InsertNextPoint(&loc[0]);
-        }
-        else
-        {
-            p_points->InsertNextPoint(loc[0], loc[1], 0.0);
-        }
+        c_vector<double, 3> loc = rInputPoints[idx].Convert3(grid_length);
+        p_points->InsertNextPoint(&loc[0]);
     }
     return GetPointMap(p_points);
 }
@@ -155,20 +148,8 @@ const std::vector<std::vector<std::shared_ptr<VesselNode<DIM> > > >& GridCalcula
 
     for(unsigned idx=0;idx<nodes.size();idx++)
     {
-        double x_coords[3];
-        c_vector<double, DIM> loc = nodes[idx]->rGetLocation().GetLocation(grid_length);
-        x_coords[0] = loc[0];
-        x_coords[1] = loc[1];
-        if(DIM == 3)
-        {
-            x_coords[2] = loc[2];
-        }
-        else
-        {
-            x_coords[2] = 0.0;
-        }
-
-        int cell_id = mpGrid->GetVtkCellLocator()->FindCell(&x_coords[0]);
+        c_vector<double, 3> loc = nodes[idx]->rGetLocation().Convert3(grid_length);
+        int cell_id = mpGrid->GetVtkCellLocator()->FindCell(&loc[0]);
         if(cell_id>=0)
         {
             mVesselNodeMap[cell_id].push_back(nodes[idx]);
@@ -280,39 +261,16 @@ const std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > >& GridCalc
     std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = mpNetwork->GetVesselSegments();
     for (unsigned jdx = 0; jdx < segments.size(); jdx++)
     {
-        c_vector<double, DIM> loc1 = segments[jdx]->GetNode(0)->rGetLocation().GetLocation(grid_length);
-        c_vector<double, DIM> loc2 = segments[jdx]->GetNode(1)->rGetLocation().GetLocation(grid_length);
-        double x_coords1[3];
-        x_coords1[0] = loc1[0];
-        x_coords1[1] = loc1[1];
-        if(DIM == 3)
-        {
-            x_coords1[2] = loc1[2];
-        }
-        else
-        {
-            x_coords1[2] = 0.0;
-        }
-        double x_coords2[3];
-        x_coords2[0] = loc2[0];
-        x_coords2[1] = loc2[1];
-        if(DIM == 3)
-        {
-            x_coords2[2] = loc2[2];
-        }
-        else
-        {
-            x_coords2[2] = 0.0;
-        }
+        c_vector<double, 3> loc1 = segments[jdx]->GetNode(0)->rGetLocation().Convert3(grid_length);
+        c_vector<double, 3> loc2 = segments[jdx]->GetNode(1)->rGetLocation().Convert3(grid_length);
 
         vtkSmartPointer<vtkIdList> p_id_list = vtkSmartPointer<vtkIdList>::New();
-
         if(useVesselSurface)
         {
             double dimensionless_radius = segments[jdx]->GetRadius()/grid_length;
             vtkSmartPointer<vtkLineSource> p_line_source = vtkSmartPointer<vtkLineSource>::New();
-            p_line_source->SetPoint1(&x_coords1[0]);
-            p_line_source->SetPoint2(&x_coords2[0]);
+            p_line_source->SetPoint1(&loc1[0]);
+            p_line_source->SetPoint2(&loc2[0]);
             vtkSmartPointer<vtkTubeFilter> p_tube_filter = vtkSmartPointer<vtkTubeFilter>::New();
             p_tube_filter->SetInputConnection(p_line_source->GetOutputPort());
             p_tube_filter->SetRadius(dimensionless_radius);
@@ -339,7 +297,7 @@ const std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > >& GridCalc
         }
         else
         {
-            mpGrid->GetVtkCellLocator()->FindCellsAlongLine(&x_coords1[0], &x_coords2[0], 1.e-8, p_id_list);
+            mpGrid->GetVtkCellLocator()->FindCellsAlongLine(&loc1[0], &loc2[0], 1.e-8, p_id_list);
             unsigned num_intersections = p_id_list->GetNumberOfIds();
             for(unsigned idx=0; idx<num_intersections; idx++)
             {

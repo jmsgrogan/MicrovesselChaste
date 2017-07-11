@@ -44,11 +44,11 @@ py::class_<DiscreteContinuumMeshGenerator3_3    >(m, "DiscreteContinuumMeshGener
             " " , py::arg("maxElementArea") )
         .def(
             "SetHoles", 
-            (void(DiscreteContinuumMeshGenerator3_3::*)(::std::vector<DimensionalChastePoint<3>, std::allocator<DimensionalChastePoint<3> > >)) &DiscreteContinuumMeshGenerator3_3::SetHoles, 
+            (void(DiscreteContinuumMeshGenerator3_3::*)(::std::vector<Vertex<3>, std::allocator<Vertex<3> > >)) &DiscreteContinuumMeshGenerator3_3::SetHoles, 
             " " , py::arg("holes") )
         .def(
             "SetRegionMarkers", 
-            (void(DiscreteContinuumMeshGenerator3_3::*)(::std::vector<DimensionalChastePoint<3>, std::allocator<DimensionalChastePoint<3> > >)) &DiscreteContinuumMeshGenerator3_3::SetRegionMarkers, 
+            (void(DiscreteContinuumMeshGenerator3_3::*)(::std::vector<Vertex<3>, std::allocator<Vertex<3> > >)) &DiscreteContinuumMeshGenerator3_3::SetRegionMarkers, 
             " " , py::arg("regionMarkers") )
         .def(
             "Update", 

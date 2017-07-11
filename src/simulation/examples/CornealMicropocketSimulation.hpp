@@ -262,7 +262,7 @@ class CornealMicropocketSimulation
 
     PartPtr<DIM> mpDomain;
 
-    std::vector<DimensionalChastePoint<DIM> > mHoles;
+    std::vector<Vertex<DIM> > mHoles;
 
     std::string mWorkDirectory;
 

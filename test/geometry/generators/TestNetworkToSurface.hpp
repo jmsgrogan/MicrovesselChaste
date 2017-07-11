@@ -232,9 +232,9 @@ public:
                 500*1e-6*unit::metres, 100*1e-6*unit::metres, true);
 
         std::shared_ptr<VesselNode<2> > p_bottom_left_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(
-                p_network, DimensionalChastePoint<2>(0.0, 0.0, 0.0, 1e-6*unit::metres));
+                p_network, Vertex<2>(0.0, 0.0, 0.0, 1e-6*unit::metres));
         std::shared_ptr<VesselNode<2> > p_top_right_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(
-                p_network, DimensionalChastePoint<2>(600, 600, 0.0, 1e-6*unit::metres));
+                p_network, Vertex<2>(600, 600, 0.0, 1e-6*unit::metres));
         p_bottom_left_node->GetFlowProperties()->SetIsInputNode(true);
         p_top_right_node->GetFlowProperties()->SetIsOutputNode(true);
         for(unsigned idx=0;idx<p_network->GetVesselSegments().size();idx++)
@@ -267,9 +267,9 @@ public:
                 100*1e-6*unit::metres, 30*1e-6*unit::metres, true);
 
         std::shared_ptr<VesselNode<3> > p_bottom_left_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(
-                p_network, DimensionalChastePoint<3>(0.0, 0.0, 0.0, 1e-6*unit::metres));
+                p_network, Vertex<3>(0.0, 0.0, 0.0, 1e-6*unit::metres));
         std::shared_ptr<VesselNode<3> > p_top_right_node = VesselNetworkGeometryCalculator<3>::GetNearestNode(
-                p_network, DimensionalChastePoint<3>(600, 600, 0.0, 1e-6*unit::metres));
+                p_network, Vertex<3>(600, 600, 0.0, 1e-6*unit::metres));
         p_bottom_left_node->GetFlowProperties()->SetIsInputNode(true);
         p_top_right_node->GetFlowProperties()->SetIsOutputNode(true);
         for(unsigned idx=0;idx<p_network->GetVesselSegments().size();idx++)

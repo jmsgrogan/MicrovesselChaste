@@ -24,11 +24,11 @@ py::class_<VesselNetworkGeometryCalculator2    >(m, "VesselNetworkGeometryCalcul
             " "  )
         .def_static(
             "GetDistanceToNearestNode", 
-            (::QLength(*)(::std::shared_ptr<VesselNetwork<2> >, ::DimensionalChastePoint<2> const &)) &VesselNetworkGeometryCalculator2::GetDistanceToNearestNode, 
+            (::QLength(*)(::std::shared_ptr<VesselNetwork<2> >, ::Vertex<2> const &)) &VesselNetworkGeometryCalculator2::GetDistanceToNearestNode, 
             " " , py::arg("pNetwork"), py::arg("rLocation") )
         .def_static(
             "GetNearestNode", 
-            (::std::shared_ptr<VesselNode<2> >(*)(::std::shared_ptr<VesselNetwork<2> >, ::DimensionalChastePoint<2> const &)) &VesselNetworkGeometryCalculator2::GetNearestNode, 
+            (::std::shared_ptr<VesselNode<2> >(*)(::std::shared_ptr<VesselNetwork<2> >, ::Vertex<2> const &)) &VesselNetworkGeometryCalculator2::GetNearestNode, 
             " " , py::arg("pNetwork"), py::arg("rLocation") )
         .def_static(
             "GetNearestNode", 
@@ -48,11 +48,11 @@ py::class_<VesselNetworkGeometryCalculator2    >(m, "VesselNetworkGeometryCalcul
             " " , py::arg("pNetwork"), py::arg("pNode"), py::arg("pEmptySegment"), py::arg("sameVessel") = true )
         .def_static(
             "GetNearestSegment", 
-            (::std::pair<std::shared_ptr<VesselSegment<2> >, RQuantity<std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1>, std::ratio<0, 1>, std::ratio<0, 1> > >(*)(::std::shared_ptr<VesselNetwork<2> >, ::DimensionalChastePoint<2> const &)) &VesselNetworkGeometryCalculator2::GetNearestSegment, 
+            (::std::pair<std::shared_ptr<VesselSegment<2> >, RQuantity<std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1>, std::ratio<0, 1>, std::ratio<0, 1> > >(*)(::std::shared_ptr<VesselNetwork<2> >, ::Vertex<2> const &)) &VesselNetworkGeometryCalculator2::GetNearestSegment, 
             " " , py::arg("pNetwork"), py::arg("rLocation") )
         .def_static(
             "GetNearestVessel", 
-            (::std::shared_ptr<Vessel<2> >(*)(::std::shared_ptr<VesselNetwork<2> >, ::DimensionalChastePoint<2> const &)) &VesselNetworkGeometryCalculator2::GetNearestVessel, 
+            (::std::shared_ptr<Vessel<2> >(*)(::std::shared_ptr<VesselNetwork<2> >, ::Vertex<2> const &)) &VesselNetworkGeometryCalculator2::GetNearestVessel, 
             " " , py::arg("pNetwork"), py::arg("rLocation") )
         .def_static(
             "GetInterCapillaryDistances", 
@@ -84,19 +84,19 @@ py::class_<VesselNetworkGeometryCalculator2    >(m, "VesselNetworkGeometryCalcul
             " " , py::arg("pNetwork"), py::arg("binSpacing") = 10., py::arg("numberOfBins") = 10 )
         .def_static(
             "GetNumberOfNodesNearLocation", 
-            (unsigned int(*)(::std::shared_ptr<VesselNetwork<2> >, ::DimensionalChastePoint<2> const &, double)) &VesselNetworkGeometryCalculator2::GetNumberOfNodesNearLocation, 
+            (unsigned int(*)(::std::shared_ptr<VesselNetwork<2> >, ::Vertex<2> const &, double)) &VesselNetworkGeometryCalculator2::GetNumberOfNodesNearLocation, 
             " " , py::arg("pNetwork"), py::arg("rLocation"), py::arg("tolerance") = 0. )
         .def_static(
             "GetNodesInSphere", 
-            (::std::vector<std::shared_ptr<VesselNode<2> >, std::allocator<std::shared_ptr<VesselNode<2> > > >(*)(::std::shared_ptr<VesselNetwork<2> >, ::DimensionalChastePoint<2> const &, ::QLength)) &VesselNetworkGeometryCalculator2::GetNodesInSphere, 
+            (::std::vector<std::shared_ptr<VesselNode<2> >, std::allocator<std::shared_ptr<VesselNode<2> > > >(*)(::std::shared_ptr<VesselNetwork<2> >, ::Vertex<2> const &, ::QLength)) &VesselNetworkGeometryCalculator2::GetNodesInSphere, 
             " " , py::arg("pNetwork"), py::arg("rCentre"), py::arg("radius") )
         .def_static(
             "GetExtents", 
-            (::std::pair<DimensionalChastePoint<2>, DimensionalChastePoint<2> >(*)(::std::shared_ptr<VesselNetwork<2> >, bool)) &VesselNetworkGeometryCalculator2::GetExtents, 
+            (::std::pair<Vertex<2>, Vertex<2> >(*)(::std::shared_ptr<VesselNetwork<2> >, bool)) &VesselNetworkGeometryCalculator2::GetExtents, 
             " " , py::arg("pNetwork"), py::arg("useRadii") = false )
         .def_static(
             "VesselCrossesLineSegment", 
-            (bool(*)(::std::shared_ptr<VesselNetwork<2> >, ::DimensionalChastePoint<2> const &, ::DimensionalChastePoint<2> const &, double)) &VesselNetworkGeometryCalculator2::VesselCrossesLineSegment, 
+            (bool(*)(::std::shared_ptr<VesselNetwork<2> >, ::Vertex<2> const &, ::Vertex<2> const &, double)) &VesselNetworkGeometryCalculator2::VesselCrossesLineSegment, 
             " " , py::arg("pNetwork"), py::arg("rCoord1"), py::arg("rCoord2"), py::arg("tolerance") = 9.9999999999999995E-7 )
     ;
 }

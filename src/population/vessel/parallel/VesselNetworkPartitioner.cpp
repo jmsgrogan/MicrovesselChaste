@@ -87,16 +87,16 @@ void VesselNetworkPartitioner<DIM>::Update()
     unsigned rank = PetscTools::GetMyRank();
     unsigned num_procs = PetscTools::GetNumProcs();
 
-    std::pair<DimensionalChastePoint<DIM>, DimensionalChastePoint<DIM> > extents = VesselNetworkGeometryCalculator<DIM>::GetExtents(mpNetwork);
+    std::pair<Vertex<DIM>, Vertex<DIM> > extents = VesselNetworkGeometryCalculator<DIM>::GetExtents(mpNetwork);
     QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
     double domain_width = 0.0;
     double domain_start = 0.0;
-    double delta_x = extents.second.GetLocation(reference_length)[0] - extents.first.GetLocation(reference_length)[0];
-    double delta_y = extents.second.GetLocation(reference_length)[1] - extents.first.GetLocation(reference_length)[1];
+    double delta_x = extents.second.Convert(reference_length)[0] - extents.first.Convert(reference_length)[0];
+    double delta_y = extents.second.Convert(reference_length)[1] - extents.first.Convert(reference_length)[1];
     double delta_z = 0.0;
     if(DIM==3)
     {
-        delta_z = extents.second.GetLocation(reference_length)[2] - extents.first.GetLocation(reference_length)[2];
+        delta_z = extents.second.Convert(reference_length)[2] - extents.first.Convert(reference_length)[2];
     }
 
     if(mUseSimpleGeometricPartition)
@@ -117,7 +117,7 @@ void VesselNetworkPartitioner<DIM>::Update()
         {
             EXCEPTION("Can't partition across Z in 2D.");
         }
-        domain_start = extents.first.GetLocation(reference_length)[mParitionAxis];
+        domain_start = extents.first.Convert(reference_length)[mParitionAxis];
     }
 
     // Assign nodes, segments and vessels to processors
@@ -132,7 +132,7 @@ void VesselNetworkPartitioner<DIM>::Update()
         double loc = 0.0;
         if(mUseSimpleGeometricPartition)
         {
-            loc = nodes[idx]->rGetLocation().GetLocation(reference_length)[mParitionAxis];
+            loc = nodes[idx]->rGetLocation().Convert(reference_length)[mParitionAxis];
         }
         unsigned processor_loc = std::floor((loc-domain_start)/domain_width);
         if(processor_loc>=num_procs)

@@ -117,7 +117,7 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
 #         ## we sample a small region. We can use some geometry tools to help.
 #         
 #         cylinder = microvessel_chaste.geometry.Part3()
-#         centre = microvessel_chaste.mesh.DimensionalChastePoint3(2300.0, 2300.0, -5.0, 1.e-6*metre())
+#         centre = microvessel_chaste.mesh.Vertex3(2300.0, 2300.0, -5.0, 1.e-6*metre())
 #         radius = 600.0e-6*metre()
 #         depth = 205.e-6*metre()
 #         cylinder.AddCylinder(radius, depth, centre, 24)
@@ -131,8 +131,8 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
 #         ## We are ready to simulate tumour growth and angiogenesis. We will use a regular lattice for
 #         ## this purpose. We size and position the lattice according to the bounds of the vessel network.
 #         
-#         network_bounding_box = [microvessel_chaste.mesh.DimensionalChastePoint3(1500.0, 1600.0, -10.0, 1.e-6*metre()),
-#                                 microvessel_chaste.mesh.DimensionalChastePoint3(3100.0, 3000.0, 300.0, 1.e-6*metre())]
+#         network_bounding_box = [microvessel_chaste.mesh.Vertex3(1500.0, 1600.0, -10.0, 1.e-6*metre()),
+#                                 microvessel_chaste.mesh.Vertex3(3100.0, 3000.0, 300.0, 1.e-6*metre())]
 #         grid = microvessel_chaste.mesh.RegularGrid3()
 #         grid_spacing = 40.0e-6* metre()
 #         grid.SetSpacing(grid_spacing)
@@ -144,7 +144,7 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
 #         extents = top_back_right - botom_front_left
 #         extents = [int(x)+1 for x in extents] # snap to the nearest unit, overestimate size if needed
 #         grid.SetExtents(extents)
-#         network.Translate(microvessel_chaste.mesh.DimensionalChastePoint3(-1500.0, -1600.0, +10.0, 1.e-6*metre()))
+#         network.Translate(microvessel_chaste.mesh.Vertex3(-1500.0, -1600.0, +10.0, 1.e-6*metre()))
 #              
 #         ## Next we set the inflow and outflow boundary conditions for blood flow. Because the network connectivity
 #         ## is relatively low we assign all vessels near the top of the domain (z coord) as inflows and the bottom

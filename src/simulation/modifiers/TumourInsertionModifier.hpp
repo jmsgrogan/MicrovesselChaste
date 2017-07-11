@@ -40,7 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "SmartPointers.hpp"
 #include "UnitCollection.hpp"
 #include "AbstractCellBasedSimulationModifier.hpp"
-#include "DimensionalChastePoint.hpp"
+#include "Vertex.hpp"
 
 /**
  * This class inserts a tumour into a cell population at the
@@ -63,7 +63,7 @@ class TumourInsertionModifier : public AbstractCellBasedSimulationModifier<DIM,D
     /**
      * The insertion origin
      */
-    DimensionalChastePoint<DIM> mInsertionOrigin;
+    Vertex<DIM> mInsertionOrigin;
 
     bool mTumourInserted;
 
@@ -81,7 +81,7 @@ public:
 
     void SetInsertionTime(QTime insertionTime);
 
-    void SetInsertionOrigin(DimensionalChastePoint<DIM> insertionOrigin);
+    void SetInsertionOrigin(Vertex<DIM> insertionOrigin);
 
     void SetInsertionRadius(QLength insertionRadius);
 
