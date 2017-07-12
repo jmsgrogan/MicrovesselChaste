@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "Facet.hpp"
 
 #include "Facet2.cppwg.hpp"
@@ -38,10 +39,10 @@ py::class_<Facet2    >(m, "Facet2")
         .def(
             "ContainsPoint", 
             (bool(Facet2::*)(::Vertex<2> const &)) &Facet2::ContainsPoint, 
-            " " , py::arg("location") )
+            " " , py::arg("rLocation") )
         .def(
             "GetBoundingBox", 
-            (::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1>, std::ratio<0, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1>, std::ratio<0, 1>, std::ratio<0, 1> > > >(Facet2::*)()) &Facet2::GetBoundingBox, 
+            (::std::array<RQuantity<std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1>, std::ratio<0, 1>, std::ratio<0, 1> >, 6>(Facet2::*)()) &Facet2::GetBoundingBox, 
             " "  )
         .def(
             "GetCentroid", 
@@ -57,15 +58,15 @@ py::class_<Facet2    >(m, "Facet2")
             " "  )
         .def(
             "GetNormal", 
-            (::boost::numeric::ublas::c_vector<double, 2>(Facet2::*)()) &Facet2::GetNormal, 
+            (::boost::numeric::ublas::c_vector<double, 3>(Facet2::*)()) &Facet2::GetNormal, 
             " "  )
         .def(
             "GetPolygons", 
             (::std::vector<std::shared_ptr<Polygon<2> >, std::allocator<std::shared_ptr<Polygon<2> > > >(Facet2::*)()) &Facet2::GetPolygons, 
             " "  )
         .def(
-            "GetVertices", 
-            (::std::vector<std::shared_ptr<Vertex<2> >, std::allocator<std::shared_ptr<Vertex<2> > > >(Facet2::*)()) &Facet2::GetVertices, 
+            "rGetVertices", 
+            (::std::vector<std::shared_ptr<Vertex<2> >, std::allocator<std::shared_ptr<Vertex<2> > > > const &(Facet2::*)()) &Facet2::rGetVertices, 
             " "  )
         .def(
             "GetVtkVertices", 
@@ -77,8 +78,8 @@ py::class_<Facet2    >(m, "Facet2")
             " " , py::arg("axis"), py::arg("angle") )
         .def(
             "Translate", 
-            (void(Facet2::*)(::Vertex<2>)) &Facet2::Translate, 
-            " " , py::arg("translationVector") )
+            (void(Facet2::*)(::Vertex<2> const &)) &Facet2::Translate, 
+            " " , py::arg("rTranslationVector") )
         .def(
             "UpdateVertices", 
             (void(Facet2::*)()) &Facet2::UpdateVertices, 

@@ -7,13 +7,14 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "VesselNetworkActorGenerator.hpp"
 
 #include "VesselNetworkActorGenerator2.cppwg.hpp"
 
 namespace py = pybind11;
 typedef VesselNetworkActorGenerator<2 > VesselNetworkActorGenerator2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class VesselNetworkActorGenerator2_Overloads : public VesselNetworkActorGenerator2{
     public:
@@ -28,7 +29,7 @@ class VesselNetworkActorGenerator2_Overloads : public VesselNetworkActorGenerato
 
 };
 void register_VesselNetworkActorGenerator2_class(py::module &m){
-py::class_<VesselNetworkActorGenerator2 , VesselNetworkActorGenerator2_Overloads   >(m, "VesselNetworkActorGenerator2")
+py::class_<VesselNetworkActorGenerator2 , VesselNetworkActorGenerator2_Overloads , std::shared_ptr<VesselNetworkActorGenerator2 >   >(m, "VesselNetworkActorGenerator2")
         .def(py::init< >())
         .def(
             "AddActor", 

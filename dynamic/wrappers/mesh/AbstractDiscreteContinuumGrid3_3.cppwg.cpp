@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "AbstractDiscreteContinuumGrid.hpp"
 
 #include "AbstractDiscreteContinuumGrid3_3.cppwg.hpp"

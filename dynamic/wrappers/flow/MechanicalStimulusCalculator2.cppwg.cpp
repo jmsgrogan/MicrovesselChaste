@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "MechanicalStimulusCalculator.hpp"
 
 #include "MechanicalStimulusCalculator2.cppwg.hpp"

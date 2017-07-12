@@ -7,16 +7,17 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "ImageReader.hpp"
 
 #include "ImageReader.cppwg.hpp"
 
 namespace py = pybind11;
 typedef ImageReader ImageReader;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_ImageReader_class(py::module &m){
-py::class_<ImageReader    >(m, "ImageReader")
+py::class_<ImageReader  , std::shared_ptr<ImageReader >   >(m, "ImageReader")
         .def(py::init< >())
         .def_static(
             "Create", 

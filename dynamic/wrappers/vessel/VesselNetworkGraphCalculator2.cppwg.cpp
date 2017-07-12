@@ -7,16 +7,17 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "VesselNetworkGraphCalculator.hpp"
 
 #include "VesselNetworkGraphCalculator2.cppwg.hpp"
 
 namespace py = pybind11;
 typedef VesselNetworkGraphCalculator<2 > VesselNetworkGraphCalculator2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_VesselNetworkGraphCalculator2_class(py::module &m){
-py::class_<VesselNetworkGraphCalculator2    >(m, "VesselNetworkGraphCalculator2")
+py::class_<VesselNetworkGraphCalculator2  , std::shared_ptr<VesselNetworkGraphCalculator2 >   >(m, "VesselNetworkGraphCalculator2")
         .def(py::init< >())
         .def_static(
             "Create", 

@@ -7,16 +7,17 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "VesselNetworkPropertyManager.hpp"
 
 #include "VesselNetworkPropertyManager2.cppwg.hpp"
 
 namespace py = pybind11;
 typedef VesselNetworkPropertyManager<2 > VesselNetworkPropertyManager2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_VesselNetworkPropertyManager2_class(py::module &m){
-py::class_<VesselNetworkPropertyManager2    >(m, "VesselNetworkPropertyManager2")
+py::class_<VesselNetworkPropertyManager2  , std::shared_ptr<VesselNetworkPropertyManager2 >   >(m, "VesselNetworkPropertyManager2")
         .def(py::init< >())
         .def_static(
             "Create", 

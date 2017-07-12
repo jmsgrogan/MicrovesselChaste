@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "TetrahedralMesh.hpp"
 
 #include "TetrahedralMesh2_2.cppwg.hpp"

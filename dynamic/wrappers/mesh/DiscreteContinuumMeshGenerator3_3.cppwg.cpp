@@ -7,6 +7,8 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
+#include "DiscreteContinuumMesh.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
 
 #include "DiscreteContinuumMeshGenerator3_3.cppwg.hpp"

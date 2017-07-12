@@ -7,16 +7,17 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "VesselNetworkCellPopulationInteractor.hpp"
 
 #include "VesselNetworkCellPopulationInteractor2.cppwg.hpp"
 
 namespace py = pybind11;
 typedef VesselNetworkCellPopulationInteractor<2 > VesselNetworkCellPopulationInteractor2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_VesselNetworkCellPopulationInteractor2_class(py::module &m){
-py::class_<VesselNetworkCellPopulationInteractor2    >(m, "VesselNetworkCellPopulationInteractor2")
+py::class_<VesselNetworkCellPopulationInteractor2  , std::shared_ptr<VesselNetworkCellPopulationInteractor2 >   >(m, "VesselNetworkCellPopulationInteractor2")
         .def(py::init< >())
         .def(
             "LabelVesselsInCellPopulation", 

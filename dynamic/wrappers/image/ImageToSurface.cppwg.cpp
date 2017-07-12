@@ -7,16 +7,17 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "ImageToSurface.hpp"
 
 #include "ImageToSurface.cppwg.hpp"
 
 namespace py = pybind11;
 typedef ImageToSurface ImageToSurface;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_ImageToSurface_class(py::module &m){
-py::class_<ImageToSurface    >(m, "ImageToSurface")
+py::class_<ImageToSurface  , std::shared_ptr<ImageToSurface >   >(m, "ImageToSurface")
         .def(py::init< >())
         .def_static(
             "Create", 

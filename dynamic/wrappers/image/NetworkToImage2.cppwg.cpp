@@ -7,16 +7,17 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "NetworkToImage.hpp"
 
 #include "NetworkToImage2.cppwg.hpp"
 
 namespace py = pybind11;
 typedef NetworkToImage<2 > NetworkToImage2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_NetworkToImage2_class(py::module &m){
-py::class_<NetworkToImage2    >(m, "NetworkToImage2")
+py::class_<NetworkToImage2  , std::shared_ptr<NetworkToImage2 >   >(m, "NetworkToImage2")
         .def(py::init< >())
         .def_static(
             "Create", 

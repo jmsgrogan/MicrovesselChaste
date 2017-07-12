@@ -7,16 +7,17 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "BaseUnits.hpp"
 
 #include "BaseUnits.cppwg.hpp"
 
 namespace py = pybind11;
 typedef BaseUnits BaseUnits;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_BaseUnits_class(py::module &m){
-py::class_<BaseUnits    >(m, "BaseUnits")
+py::class_<BaseUnits  , std::shared_ptr<BaseUnits >   >(m, "BaseUnits")
         .def_static(
             "Instance", 
             (::BaseUnits *(*)()) &BaseUnits::Instance, 

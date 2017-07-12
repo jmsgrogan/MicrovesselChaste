@@ -7,13 +7,14 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "DistanceMap.hpp"
 
 #include "DistanceMap2.cppwg.hpp"
 
 namespace py = pybind11;
 typedef DistanceMap<2 > DistanceMap2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class DistanceMap2_Overloads : public DistanceMap2{
     public:
@@ -28,7 +29,7 @@ class DistanceMap2_Overloads : public DistanceMap2{
 
 };
 void register_DistanceMap2_class(py::module &m){
-py::class_<DistanceMap2 , DistanceMap2_Overloads   >(m, "DistanceMap2")
+py::class_<DistanceMap2 , DistanceMap2_Overloads , std::shared_ptr<DistanceMap2 >   >(m, "DistanceMap2")
         .def(py::init< >())
         .def_static(
             "Create", 

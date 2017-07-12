@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "Part.hpp"
 
 #include "Part2.cppwg.hpp"
@@ -28,28 +29,28 @@ py::class_<Part2    >(m, "Part2")
             " " , py::arg("rLabel"), py::arg("value") )
         .def(
             "AddAttributeToEdgeIfFound", 
-            (void(Part2::*)(::Vertex<2>, ::std::string const &, double)) &Part2::AddAttributeToEdgeIfFound, 
-            " " , py::arg("loc"), py::arg("rLabel"), py::arg("value") )
+            (void(Part2::*)(::Vertex<2> const &, ::std::string const &, double)) &Part2::AddAttributeToEdgeIfFound, 
+            " " , py::arg("rLoc"), py::arg("rLabel"), py::arg("value") )
         .def(
             "AddAttributeToPolygons", 
             (void(Part2::*)(::std::string const &, double)) &Part2::AddAttributeToPolygons, 
             " " , py::arg("rLabel"), py::arg("value") )
         .def(
             "AddAttributeToPolygonIfFound", 
-            (void(Part2::*)(::Vertex<2>, ::std::string const &, double)) &Part2::AddAttributeToPolygonIfFound, 
-            " " , py::arg("loc"), py::arg("rLabel"), py::arg("value") )
+            (void(Part2::*)(::Vertex<2> const &, ::std::string const &, double)) &Part2::AddAttributeToPolygonIfFound, 
+            " " , py::arg("rLoc"), py::arg("rLabel"), py::arg("value") )
         .def(
             "AddCircle", 
             (::std::shared_ptr<Polygon<2> >(Part2::*)(::QLength, ::Vertex<2>, unsigned int)) &Part2::AddCircle, 
-            " " , py::arg("radius"), py::arg("centre"), py::arg("numSegments") = 24 )
+            " " , py::arg("radius"), py::arg("centre") = Vertex<2>(), py::arg("numSegments") = 24 )
         .def(
             "AddCylinder", 
             (void(Part2::*)(::QLength, ::QLength, ::Vertex<2>, unsigned int)) &Part2::AddCylinder, 
-            " " , py::arg("radius"), py::arg("depth"), py::arg("centre"), py::arg("numSegments") = 24 )
+            " " , py::arg("radius"), py::arg("depth"), py::arg("centre") = Vertex<2>(), py::arg("numSegments") = 24 )
         .def(
             "AddCuboid", 
             (void(Part2::*)(::QLength, ::QLength, ::QLength, ::Vertex<2>)) &Part2::AddCuboid, 
-            " " , py::arg("sizeX"), py::arg("sizeY"), py::arg("sizeZ"), py::arg("origin") )
+            " " , py::arg("sizeX"), py::arg("sizeY"), py::arg("sizeZ"), py::arg("origin") = Vertex<2>() )
         .def(
             "AddHoleMarker", 
             (void(Part2::*)(::Vertex<2>)) &Part2::AddHoleMarker, 
@@ -60,16 +61,16 @@ py::class_<Part2    >(m, "Part2")
             " " , py::arg("location"), py::arg("value") )
         .def(
             "AddPolygon", 
-            (::std::shared_ptr<Polygon<2> >(Part2::*)(::std::vector<std::shared_ptr<Vertex<2> >, std::allocator<std::shared_ptr<Vertex<2> > > >, bool, ::std::shared_ptr<Facet<2> >)) &Part2::AddPolygon, 
-            " " , py::arg("vertices"), py::arg("newFacet") = false, py::arg("pFacet") = FacetPtr<DIM>() )
+            (::std::shared_ptr<Polygon<2> >(Part2::*)(::std::vector<std::shared_ptr<Vertex<2> >, std::allocator<std::shared_ptr<Vertex<2> > > > const &, bool, ::std::shared_ptr<Facet<2> >)) &Part2::AddPolygon, 
+            " " , py::arg("vertices"), py::arg("newFacet") = false, py::arg("pFacet") = FacetPtr<2>() )
         .def(
             "AddPolygon", 
             (::std::shared_ptr<Polygon<2> >(Part2::*)(::std::shared_ptr<Polygon<2> >, bool, ::std::shared_ptr<Facet<2> >)) &Part2::AddPolygon, 
-            " " , py::arg("pPolygon"), py::arg("newFacet") = false, py::arg("pFacet") = FacetPtr<DIM>() )
+            " " , py::arg("pPolygon"), py::arg("newFacet") = false, py::arg("pFacet") = FacetPtr<2>() )
         .def(
             "AddRectangle", 
             (::std::shared_ptr<Polygon<2> >(Part2::*)(::QLength, ::QLength, ::Vertex<2>)) &Part2::AddRectangle, 
-            " " , py::arg("sizeX"), py::arg("sizeY"), py::arg("origin") )
+            " " , py::arg("sizeX"), py::arg("sizeY"), py::arg("origin") = Vertex<2>() )
         .def(
             "AddVesselNetwork", 
             (void(Part2::*)(::std::shared_ptr<VesselNetwork<2> >, bool, bool)) &Part2::AddVesselNetwork, 
@@ -88,7 +89,7 @@ py::class_<Part2    >(m, "Part2")
             " " , py::arg("pPolygon"), py::arg("distance") )
         .def(
             "GetBoundingBox", 
-            (::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1>, std::ratio<0, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1>, std::ratio<0, 1>, std::ratio<0, 1> > > >(Part2::*)()) &Part2::GetBoundingBox, 
+            (::std::array<RQuantity<std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1>, std::ratio<0, 1>, std::ratio<0, 1> >, 6>(Part2::*)()) &Part2::GetBoundingBox, 
             " "  )
         .def(
             "GetContainingGridIndices", 
@@ -135,10 +136,6 @@ py::class_<Part2    >(m, "Part2")
             (::std::vector<std::shared_ptr<Vertex<2> >, std::allocator<std::shared_ptr<Vertex<2> > > >(Part2::*)()) &Part2::GetVertices, 
             " "  )
         .def(
-            "GetVertexLocations", 
-            (::std::vector<Vertex<2>, std::allocator<Vertex<2> > >(Part2::*)()) &Part2::GetVertexLocations, 
-            " "  )
-        .def(
             "GetVtk", 
             (::vtkSmartPointer<vtkPolyData>(Part2::*)(bool)) &Part2::GetVtk, 
             " " , py::arg("includeEdges") = false )
@@ -148,12 +145,12 @@ py::class_<Part2    >(m, "Part2")
             " " , py::arg("rAttributes") )
         .def(
             "EdgeHasAttribute", 
-            (bool(Part2::*)(::Vertex<2>, ::std::string const &)) &Part2::EdgeHasAttribute, 
-            " " , py::arg("loc"), py::arg("rLabel") )
+            (bool(Part2::*)(::Vertex<2> const &, ::std::string const &)) &Part2::EdgeHasAttribute, 
+            " " , py::arg("rLoc"), py::arg("rLabel") )
         .def(
             "IsPointInPart", 
-            (bool(Part2::*)(::Vertex<2>)) &Part2::IsPointInPart, 
-            " " , py::arg("location") )
+            (bool(Part2::*)(::Vertex<2> const &)) &Part2::IsPointInPart, 
+            " " , py::arg("rLoc") )
         .def(
             "IsPointInPart", 
             (::std::vector<bool, std::allocator<bool> >(Part2::*)(::vtkSmartPointer<vtkPoints>)) &Part2::IsPointInPart, 
@@ -172,7 +169,7 @@ py::class_<Part2    >(m, "Part2")
             " " , py::arg("referenceLength") )
         .def(
             "Translate", 
-            (void(Part2::*)(::Vertex<2>)) &Part2::Translate, 
+            (void(Part2::*)(::Vertex<2> const &)) &Part2::Translate, 
             " " , py::arg("vector") )
         .def(
             "Write", 

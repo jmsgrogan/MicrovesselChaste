@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "Owen11CaUpdateRule.hpp"
 
 #include "Owen11CaUpdateRule2.cppwg.hpp"

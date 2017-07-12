@@ -7,13 +7,14 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "SegmentFlowProperties.hpp"
 
 #include "SegmentFlowProperties2.cppwg.hpp"
 
 namespace py = pybind11;
 typedef SegmentFlowProperties<2 > SegmentFlowProperties2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double;
 
 class SegmentFlowProperties2_Overloads : public SegmentFlowProperties2{
@@ -29,7 +30,7 @@ class SegmentFlowProperties2_Overloads : public SegmentFlowProperties2{
 
 };
 void register_SegmentFlowProperties2_class(py::module &m){
-py::class_<SegmentFlowProperties2 , SegmentFlowProperties2_Overloads   >(m, "SegmentFlowProperties2")
+py::class_<SegmentFlowProperties2 , SegmentFlowProperties2_Overloads , std::shared_ptr<SegmentFlowProperties2 >   >(m, "SegmentFlowProperties2")
         .def(py::init< >())
         .def(
             "GetAntiAngiogenicDrugConcentration", 

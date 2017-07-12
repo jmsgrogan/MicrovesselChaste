@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "Owen2011OxygenBasedCellCycleModel.hpp"
 
 #include "Owen2011OxygenBasedCellCycleModel.cppwg.hpp"

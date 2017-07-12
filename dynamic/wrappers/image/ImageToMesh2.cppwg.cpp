@@ -7,16 +7,17 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "ImageToMesh.hpp"
 
 #include "ImageToMesh2.cppwg.hpp"
 
 namespace py = pybind11;
 typedef ImageToMesh<2 > ImageToMesh2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_ImageToMesh2_class(py::module &m){
-py::class_<ImageToMesh2    >(m, "ImageToMesh2")
+py::class_<ImageToMesh2  , std::shared_ptr<ImageToMesh2 >   >(m, "ImageToMesh2")
         .def(py::init< >())
         .def_static(
             "Create", 

@@ -7,16 +7,17 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "VesselNetworkVtkConverter.hpp"
 
 #include "VesselNetworkVtkConverter3.cppwg.hpp"
 
 namespace py = pybind11;
 typedef VesselNetworkVtkConverter<3 > VesselNetworkVtkConverter3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_VesselNetworkVtkConverter3_class(py::module &m){
-py::class_<VesselNetworkVtkConverter3    >(m, "VesselNetworkVtkConverter3")
+py::class_<VesselNetworkVtkConverter3  , std::shared_ptr<VesselNetworkVtkConverter3 >   >(m, "VesselNetworkVtkConverter3")
         .def(py::init< >())
         .def_static(
             "Create", 

@@ -7,13 +7,14 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "RegularGridActorGenerator.hpp"
 
 #include "RegularGridActorGenerator2.cppwg.hpp"
 
 namespace py = pybind11;
 typedef RegularGridActorGenerator<2 > RegularGridActorGenerator2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class RegularGridActorGenerator2_Overloads : public RegularGridActorGenerator2{
     public:
@@ -28,7 +29,7 @@ class RegularGridActorGenerator2_Overloads : public RegularGridActorGenerator2{
 
 };
 void register_RegularGridActorGenerator2_class(py::module &m){
-py::class_<RegularGridActorGenerator2 , RegularGridActorGenerator2_Overloads   >(m, "RegularGridActorGenerator2")
+py::class_<RegularGridActorGenerator2 , RegularGridActorGenerator2_Overloads , std::shared_ptr<RegularGridActorGenerator2 >   >(m, "RegularGridActorGenerator2")
         .def(py::init< >())
         .def(
             "AddActor", 

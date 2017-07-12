@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "AbstractFiniteDifferenceSolverBase.hpp"
 
 #include "AbstractFiniteDifferenceSolverBase3.cppwg.hpp"
@@ -86,10 +87,6 @@ py::class_<AbstractFiniteDifferenceSolverBase3 , AbstractFiniteDifferenceSolverB
         .def(
             "AssembleVector", 
             (void(AbstractFiniteDifferenceSolverBase3::*)()) &AbstractFiniteDifferenceSolverBase3::AssembleVector, 
-            " "  )
-        .def(
-            "GetRGBoundaryConditions", 
-            (::std::shared_ptr<std::vector<std::pair<bool, RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > >, std::allocator<std::pair<bool, RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > > >(AbstractFiniteDifferenceSolverBase3::*)()) &AbstractFiniteDifferenceSolverBase3::GetRGBoundaryConditions, 
             " "  )
         .def(
             "Solve", 

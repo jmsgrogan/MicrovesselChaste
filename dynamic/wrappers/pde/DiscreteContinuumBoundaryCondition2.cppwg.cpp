@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "DiscreteContinuumBoundaryCondition.hpp"
 
 #include "DiscreteContinuumBoundaryCondition2.cppwg.hpp"
@@ -26,22 +27,6 @@ py::class_<DiscreteContinuumBoundaryCondition2    >(m, "DiscreteContinuumBoundar
             "GetType", 
             (::BoundaryConditionType::Value(DiscreteContinuumBoundaryCondition2::*)()) &DiscreteContinuumBoundaryCondition2::GetType, 
             " "  )
-        .def(
-            "GetValue", 
-            (::QConcentration(DiscreteContinuumBoundaryCondition2::*)()) &DiscreteContinuumBoundaryCondition2::GetValue, 
-            " "  )
-        .def(
-            "GetValue", 
-            (::std::pair<bool, RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > >(DiscreteContinuumBoundaryCondition2::*)(::Vertex<2>, double)) &DiscreteContinuumBoundaryCondition2::GetValue, 
-            " " , py::arg("location"), py::arg("tolerance") )
-        .def(
-            "UpdateBoundaryConditions", 
-            (void(DiscreteContinuumBoundaryCondition2::*)(::std::shared_ptr<BoundaryConditionsContainer<2, 2, 1> >)) &DiscreteContinuumBoundaryCondition2::UpdateBoundaryConditions, 
-            " " , py::arg("pContainer") )
-        .def(
-            "UpdateBoundaryConditions", 
-            (void(DiscreteContinuumBoundaryCondition2::*)(::std::shared_ptr<std::vector<std::pair<bool, RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > >, std::allocator<std::pair<bool, RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > > >)) &DiscreteContinuumBoundaryCondition2::UpdateBoundaryConditions, 
-            " " , py::arg("pBoundaryConditions") )
         .def(
             "SetDomain", 
             (void(DiscreteContinuumBoundaryCondition2::*)(::std::shared_ptr<Part<2> >)) &DiscreteContinuumBoundaryCondition2::SetDomain, 

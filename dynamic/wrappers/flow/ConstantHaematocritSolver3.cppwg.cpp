@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "ConstantHaematocritSolver.hpp"
 
 #include "ConstantHaematocritSolver3.cppwg.hpp"

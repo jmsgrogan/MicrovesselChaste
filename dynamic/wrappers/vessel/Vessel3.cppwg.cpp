@@ -7,13 +7,14 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "Vessel.hpp"
 
 #include "Vessel3.cppwg.hpp"
 
 namespace py = pybind11;
 typedef Vessel<3 > Vessel3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::QLength _QLength;
 typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double;
 
@@ -44,7 +45,7 @@ class Vessel3_Overloads : public Vessel3{
 
 };
 void register_Vessel3_class(py::module &m){
-py::class_<Vessel3 , Vessel3_Overloads   >(m, "Vessel3")
+py::class_<Vessel3 , Vessel3_Overloads , std::shared_ptr<Vessel3 >   >(m, "Vessel3")
         .def_static(
             "Create", 
             (::std::shared_ptr<Vessel<3> >(*)(::std::shared_ptr<VesselSegment<3> >)) &Vessel3::Create, 
@@ -75,8 +76,8 @@ py::class_<Vessel3 , Vessel3_Overloads   >(m, "Vessel3")
             " " , py::arg("pTargetVessel") )
         .def(
             "DivideSegment", 
-            (::std::shared_ptr<VesselNode<3> >(Vessel3::*)(::Vertex<3> const &, double)) &Vessel3::DivideSegment, 
-            " " , py::arg("rLocation"), py::arg("distanceTolerance") = 9.9999999999999995E-7 )
+            (::std::shared_ptr<VesselNode<3> >(Vessel3::*)(::Vertex<3> const &, ::QLength)) &Vessel3::DivideSegment, 
+            " " , py::arg("rLocation"), py::arg("distanceTolerance") = 1.0E-12_m )
         .def(
             "GetClosestEndNodeDistance", 
             (::QLength(Vessel3::*)(::Vertex<3> const &)) &Vessel3::GetClosestEndNodeDistance, 

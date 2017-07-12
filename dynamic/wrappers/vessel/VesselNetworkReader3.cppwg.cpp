@@ -7,16 +7,17 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "VesselNetworkReader.hpp"
 
 #include "VesselNetworkReader3.cppwg.hpp"
 
 namespace py = pybind11;
 typedef VesselNetworkReader<3 > VesselNetworkReader3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_VesselNetworkReader3_class(py::module &m){
-py::class_<VesselNetworkReader3    >(m, "VesselNetworkReader3")
+py::class_<VesselNetworkReader3  , std::shared_ptr<VesselNetworkReader3 >   >(m, "VesselNetworkReader3")
         .def(py::init< >())
         .def_static(
             "Create", 

@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "OffLatticeMigrationRule.hpp"
 
 #include "OffLatticeMigrationRule2.cppwg.hpp"

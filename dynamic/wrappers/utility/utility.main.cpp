@@ -5,6 +5,7 @@
 #include "Connor17Parameters.cppwg.hpp"
 #include "Secomb04Parameters.cppwg.hpp"
 #include "GenericParameters.cppwg.hpp"
+#include "RQuantity<0, 0, 0, 0, 0>.cppwg.hpp"
 
 namespace py = pybind11;
 
@@ -16,4 +17,5 @@ PYBIND11_MODULE(_chaste_project_MicrovesselChaste_utility, m)
     register_Connor17Parameters_class(m);
     register_Secomb04Parameters_class(m);
     register_GenericParameters_class(m);
+    register_RQuantity<0, 0, 0, 0, 0>_class(m);
 }

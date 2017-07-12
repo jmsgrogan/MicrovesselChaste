@@ -7,13 +7,14 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "VesselNode.hpp"
 
 #include "VesselNode2.cppwg.hpp"
 
 namespace py = pybind11;
 typedef VesselNode<2 > VesselNode2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double;
 
 class VesselNode2_Overloads : public VesselNode2{
@@ -29,19 +30,13 @@ class VesselNode2_Overloads : public VesselNode2{
 
 };
 void register_VesselNode2_class(py::module &m){
-py::class_<VesselNode2 , VesselNode2_Overloads   >(m, "VesselNode2")
-        .def(py::init<double, double, double, ::QLength >(), py::arg("v1"), py::arg("v2"), py::arg("v3"), py::arg("referenceLength"))
-        .def(py::init<double, double, double >(), py::arg("v1") = 0., py::arg("v2") = 0., py::arg("v3") = 0.)
-        .def(py::init<::Vertex<2> const & >(), py::arg("location"))
-        .def(py::init<::VesselNode<2> const & >(), py::arg("rExistingNode"))
+py::class_<VesselNode2 , VesselNode2_Overloads , std::shared_ptr<VesselNode2 >   >(m, "VesselNode2")
+        .def(py::init<::QLength, ::QLength, ::QLength >(), py::arg("v1") = 0_m, py::arg("v2") = 0_m, py::arg("v3") = 0_m)
+        .def(py::init<::Vertex<2> const & >(), py::arg("rLocation"))
         .def_static(
             "Create", 
-            (::std::shared_ptr<VesselNode<2> >(*)(double, double, double)) &VesselNode2::Create, 
-            " " , py::arg("v1") = 0., py::arg("v2") = 0., py::arg("v3") = 0. )
-        .def_static(
-            "Create", 
-            (::std::shared_ptr<VesselNode<2> >(*)(double, double, double, ::QLength)) &VesselNode2::Create, 
-            " " , py::arg("v1"), py::arg("v2"), py::arg("v3"), py::arg("referenceLength") )
+            (::std::shared_ptr<VesselNode<2> >(*)(::QLength, ::QLength, ::QLength)) &VesselNode2::Create, 
+            " " , py::arg("v1"), py::arg("v2") = 0_m, py::arg("v3") = 0_m )
         .def_static(
             "Create", 
             (::std::shared_ptr<VesselNode<2> >(*)(::Vertex<2> const &)) &VesselNode2::Create, 
@@ -77,10 +72,6 @@ py::class_<VesselNode2 , VesselNode2_Overloads   >(m, "VesselNode2")
         .def(
             "GetOutputData", 
             (::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > >(VesselNode2::*)()) &VesselNode2::GetOutputData, 
-            " "  )
-        .def(
-            "GetReferenceLengthScale", 
-            (::QLength(VesselNode2::*)() const ) &VesselNode2::GetReferenceLengthScale, 
             " "  )
         .def(
             "GetSegment", 
@@ -148,12 +139,8 @@ py::class_<VesselNode2 , VesselNode2_Overloads   >(m, "VesselNode2")
             " " , py::arg("rLocation") )
         .def(
             "SetLocation", 
-            (void(VesselNode2::*)(double, double, double, ::QLength)) &VesselNode2::SetLocation, 
-            " " , py::arg("x"), py::arg("y"), py::arg("z") = 0., py::arg("referenceLength") = 9.9999999999999995E-7 * unit::metres )
-        .def(
-            "SetReferenceLengthScale", 
-            (void(VesselNode2::*)(::QLength)) &VesselNode2::SetReferenceLengthScale, 
-            " " , py::arg("lenthScale") )
+            (void(VesselNode2::*)(::QLength, ::QLength, ::QLength)) &VesselNode2::SetLocation, 
+            " " , py::arg("v1"), py::arg("v2") = 0_m, py::arg("v3") = 0_m )
         .def(
             "SetGlobalIndex", 
             (void(VesselNode2::*)(unsigned int)) &VesselNode2::SetGlobalIndex, 

@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "ParabolicDiffusionReactionPde.hpp"
 
 #include "ParabolicDiffusionReactionPde3_3.cppwg.hpp"

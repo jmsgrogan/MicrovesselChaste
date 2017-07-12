@@ -7,13 +7,14 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "PartActorGenerator.hpp"
 
 #include "PartActorGenerator3.cppwg.hpp"
 
 namespace py = pybind11;
 typedef PartActorGenerator<3 > PartActorGenerator3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class PartActorGenerator3_Overloads : public PartActorGenerator3{
     public:
@@ -28,7 +29,7 @@ class PartActorGenerator3_Overloads : public PartActorGenerator3{
 
 };
 void register_PartActorGenerator3_class(py::module &m){
-py::class_<PartActorGenerator3 , PartActorGenerator3_Overloads   >(m, "PartActorGenerator3")
+py::class_<PartActorGenerator3 , PartActorGenerator3_Overloads , std::shared_ptr<PartActorGenerator3 >   >(m, "PartActorGenerator3")
         .def(py::init< >())
         .def(
             "AddActor", 

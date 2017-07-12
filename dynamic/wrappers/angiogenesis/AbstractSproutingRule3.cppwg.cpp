@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "AbstractSproutingRule.hpp"
 
 #include "AbstractSproutingRule3.cppwg.hpp"

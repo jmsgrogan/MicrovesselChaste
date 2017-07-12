@@ -201,6 +201,12 @@ QLength Vertex<DIM>::GetDistance(const Vertex<DIM>& rLocation) const
 }
 
 template<unsigned DIM>
+QLength Vertex<DIM>::GetDistance(const VecQLength<DIM>& rLocation) const
+{
+    return Qnorm_2(rLocation - mLocation);
+}
+
+template<unsigned DIM>
 QLength Vertex<DIM>::GetNorm2()
 {
     return Qnorm_2(mLocation);

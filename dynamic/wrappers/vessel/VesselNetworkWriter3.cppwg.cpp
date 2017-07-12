@@ -7,16 +7,17 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "VesselNetworkWriter.hpp"
 
 #include "VesselNetworkWriter3.cppwg.hpp"
 
 namespace py = pybind11;
 typedef VesselNetworkWriter<3 > VesselNetworkWriter3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_VesselNetworkWriter3_class(py::module &m){
-py::class_<VesselNetworkWriter3    >(m, "VesselNetworkWriter3")
+py::class_<VesselNetworkWriter3  , std::shared_ptr<VesselNetworkWriter3 >   >(m, "VesselNetworkWriter3")
         .def(py::init< >())
         .def_static(
             "Create", 

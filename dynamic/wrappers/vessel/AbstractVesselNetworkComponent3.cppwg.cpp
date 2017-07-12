@@ -7,13 +7,14 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "AbstractVesselNetworkComponent.hpp"
 
 #include "AbstractVesselNetworkComponent3.cppwg.hpp"
 
 namespace py = pybind11;
 typedef AbstractVesselNetworkComponent<3 > AbstractVesselNetworkComponent3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef unsigned int unsignedint;
 typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double;
 typedef ::std::vector<std::basic_string<char>, std::allocator<std::basic_string<char> > > _std_vectorstd_basic_stringchar_std_allocatorstd_basic_stringchar;
@@ -82,7 +83,7 @@ value);
 
 };
 void register_AbstractVesselNetworkComponent3_class(py::module &m){
-py::class_<AbstractVesselNetworkComponent3 , AbstractVesselNetworkComponent3_Overloads   >(m, "AbstractVesselNetworkComponent3")
+py::class_<AbstractVesselNetworkComponent3 , AbstractVesselNetworkComponent3_Overloads , std::shared_ptr<AbstractVesselNetworkComponent3 >   >(m, "AbstractVesselNetworkComponent3")
         .def(
             "GetId", 
             (unsigned int(AbstractVesselNetworkComponent3::*)() const ) &AbstractVesselNetworkComponent3::GetId, 

@@ -7,13 +7,14 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "DiscreteContinuumMeshActorGenerator.hpp"
 
 #include "DiscreteContinuumMeshActorGenerator3.cppwg.hpp"
 
 namespace py = pybind11;
 typedef DiscreteContinuumMeshActorGenerator<3 > DiscreteContinuumMeshActorGenerator3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class DiscreteContinuumMeshActorGenerator3_Overloads : public DiscreteContinuumMeshActorGenerator3{
     public:
@@ -28,7 +29,7 @@ class DiscreteContinuumMeshActorGenerator3_Overloads : public DiscreteContinuumM
 
 };
 void register_DiscreteContinuumMeshActorGenerator3_class(py::module &m){
-py::class_<DiscreteContinuumMeshActorGenerator3 , DiscreteContinuumMeshActorGenerator3_Overloads   >(m, "DiscreteContinuumMeshActorGenerator3")
+py::class_<DiscreteContinuumMeshActorGenerator3 , DiscreteContinuumMeshActorGenerator3_Overloads , std::shared_ptr<DiscreteContinuumMeshActorGenerator3 >   >(m, "DiscreteContinuumMeshActorGenerator3")
         .def(py::init< >())
         .def(
             "AddActor", 

@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "Facet.hpp"
 
 #include "Facet3.cppwg.hpp"
@@ -38,10 +39,10 @@ py::class_<Facet3    >(m, "Facet3")
         .def(
             "ContainsPoint", 
             (bool(Facet3::*)(::Vertex<3> const &)) &Facet3::ContainsPoint, 
-            " " , py::arg("location") )
+            " " , py::arg("rLocation") )
         .def(
             "GetBoundingBox", 
-            (::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1>, std::ratio<0, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1>, std::ratio<0, 1>, std::ratio<0, 1> > > >(Facet3::*)()) &Facet3::GetBoundingBox, 
+            (::std::array<RQuantity<std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1>, std::ratio<0, 1>, std::ratio<0, 1> >, 6>(Facet3::*)()) &Facet3::GetBoundingBox, 
             " "  )
         .def(
             "GetCentroid", 
@@ -64,8 +65,8 @@ py::class_<Facet3    >(m, "Facet3")
             (::std::vector<std::shared_ptr<Polygon<3> >, std::allocator<std::shared_ptr<Polygon<3> > > >(Facet3::*)()) &Facet3::GetPolygons, 
             " "  )
         .def(
-            "GetVertices", 
-            (::std::vector<std::shared_ptr<Vertex<3> >, std::allocator<std::shared_ptr<Vertex<3> > > >(Facet3::*)()) &Facet3::GetVertices, 
+            "rGetVertices", 
+            (::std::vector<std::shared_ptr<Vertex<3> >, std::allocator<std::shared_ptr<Vertex<3> > > > const &(Facet3::*)()) &Facet3::rGetVertices, 
             " "  )
         .def(
             "GetVtkVertices", 
@@ -77,8 +78,8 @@ py::class_<Facet3    >(m, "Facet3")
             " " , py::arg("axis"), py::arg("angle") )
         .def(
             "Translate", 
-            (void(Facet3::*)(::Vertex<3>)) &Facet3::Translate, 
-            " " , py::arg("translationVector") )
+            (void(Facet3::*)(::Vertex<3> const &)) &Facet3::Translate, 
+            " " , py::arg("rTranslationVector") )
         .def(
             "UpdateVertices", 
             (void(Facet3::*)()) &Facet3::UpdateVertices, 

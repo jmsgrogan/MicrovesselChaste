@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "DiscreteContinuumLinearEllipticPde.hpp"
 
 #include "DiscreteContinuumLinearEllipticPde3_3.cppwg.hpp"

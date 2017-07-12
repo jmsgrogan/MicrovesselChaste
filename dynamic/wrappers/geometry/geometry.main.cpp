@@ -1,4 +1,6 @@
 #include <pybind11/pybind11.h>
+#include "Vertex2.cppwg.hpp"
+#include "Vertex3.cppwg.hpp"
 #include "Polygon2.cppwg.hpp"
 #include "Polygon3.cppwg.hpp"
 #include "Facet2.cppwg.hpp"
@@ -19,6 +21,8 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(_chaste_project_MicrovesselChaste_geometry, m)
 {
+    register_Vertex2_class(m);
+    register_Vertex3_class(m);
     register_Polygon2_class(m);
     register_Polygon3_class(m);
     register_Facet2_class(m);

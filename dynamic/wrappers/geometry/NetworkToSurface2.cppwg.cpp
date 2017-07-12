@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "NetworkToSurface.hpp"
 
 #include "NetworkToSurface2.cppwg.hpp"

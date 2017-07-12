@@ -7,13 +7,14 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "AbstractVesselNetworkComponentProperties.hpp"
 
 #include "AbstractVesselNetworkComponentProperties2.cppwg.hpp"
 
 namespace py = pybind11;
 typedef AbstractVesselNetworkComponentProperties<2 > AbstractVesselNetworkComponentProperties2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double;
 
 class AbstractVesselNetworkComponentProperties2_Overloads : public AbstractVesselNetworkComponentProperties2{
@@ -29,7 +30,7 @@ class AbstractVesselNetworkComponentProperties2_Overloads : public AbstractVesse
 
 };
 void register_AbstractVesselNetworkComponentProperties2_class(py::module &m){
-py::class_<AbstractVesselNetworkComponentProperties2 , AbstractVesselNetworkComponentProperties2_Overloads   >(m, "AbstractVesselNetworkComponentProperties2")
+py::class_<AbstractVesselNetworkComponentProperties2 , AbstractVesselNetworkComponentProperties2_Overloads , std::shared_ptr<AbstractVesselNetworkComponentProperties2 >   >(m, "AbstractVesselNetworkComponentProperties2")
         .def(
             "GetOutputData", 
             (::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > >(AbstractVesselNetworkComponentProperties2::*)() const ) &AbstractVesselNetworkComponentProperties2::GetOutputData, 

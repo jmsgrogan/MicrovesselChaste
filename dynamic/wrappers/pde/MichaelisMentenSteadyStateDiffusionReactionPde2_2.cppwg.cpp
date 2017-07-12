@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "MichaelisMentenSteadyStateDiffusionReactionPde.hpp"
 
 #include "MichaelisMentenSteadyStateDiffusionReactionPde2_2.cppwg.hpp"

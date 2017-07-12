@@ -7,16 +7,17 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "VesselNetworkPartitioner.hpp"
 
 #include "VesselNetworkPartitioner3.cppwg.hpp"
 
 namespace py = pybind11;
 typedef VesselNetworkPartitioner<3 > VesselNetworkPartitioner3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_VesselNetworkPartitioner3_class(py::module &m){
-py::class_<VesselNetworkPartitioner3    >(m, "VesselNetworkPartitioner3")
+py::class_<VesselNetworkPartitioner3  , std::shared_ptr<VesselNetworkPartitioner3 >   >(m, "VesselNetworkPartitioner3")
         .def(py::init< >())
         .def(
             "SetUseSimpleGeometricPartitioning", 

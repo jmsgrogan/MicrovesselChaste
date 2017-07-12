@@ -7,13 +7,16 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
+#include "VesselNode.hpp"
+#include "Vessel.hpp"
 #include "VesselSegment.hpp"
 
 #include "VesselSegment2.cppwg.hpp"
 
 namespace py = pybind11;
 typedef VesselSegment<2 > VesselSegment2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double;
 
 class VesselSegment2_Overloads : public VesselSegment2{
@@ -29,8 +32,7 @@ class VesselSegment2_Overloads : public VesselSegment2{
 
 };
 void register_VesselSegment2_class(py::module &m){
-py::class_<VesselSegment2 , VesselSegment2_Overloads   >(m, "VesselSegment2")
-        .def(py::init<::VesselSegment<2> const & >(), py::arg("rSegment"))
+py::class_<VesselSegment2 , VesselSegment2_Overloads , std::shared_ptr<VesselSegment2 >   >(m, "VesselSegment2")
         .def_static(
             "Create", 
             (::std::shared_ptr<VesselSegment<2> >(*)(::std::shared_ptr<VesselNode<2> >, ::std::shared_ptr<VesselNode<2> >)) &VesselSegment2::Create, 

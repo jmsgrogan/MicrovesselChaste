@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "Polygon.hpp"
 
 #include "Polygon3.cppwg.hpp"
@@ -17,11 +18,11 @@ typedef Polygon<3 > Polygon3;
 
 void register_Polygon3_class(py::module &m){
 py::class_<Polygon3    >(m, "Polygon3")
-        .def(py::init<::std::vector<std::shared_ptr<Vertex<3> >, std::allocator<std::shared_ptr<Vertex<3> > > > >(), py::arg("vertices"))
+        .def(py::init<::std::vector<std::shared_ptr<Vertex<3> >, std::allocator<std::shared_ptr<Vertex<3> > > > const & >(), py::arg("vertices"))
         .def(py::init<::std::shared_ptr<Vertex<3> > >(), py::arg("pVertex"))
         .def_static(
             "Create", 
-            (::std::shared_ptr<Polygon<3> >(*)(::std::vector<std::shared_ptr<Vertex<3> >, std::allocator<std::shared_ptr<Vertex<3> > > >)) &Polygon3::Create, 
+            (::std::shared_ptr<Polygon<3> >(*)(::std::vector<std::shared_ptr<Vertex<3> >, std::allocator<std::shared_ptr<Vertex<3> > > > const &)) &Polygon3::Create, 
             " " , py::arg("vertices") )
         .def_static(
             "Create", 
@@ -33,27 +34,27 @@ py::class_<Polygon3    >(m, "Polygon3")
             " " , py::arg("rLabel"), py::arg("value") )
         .def(
             "AddAttributeToEdgeIfFound", 
-            (bool(Polygon3::*)(::Vertex<3>, ::std::string const &, double)) &Polygon3::AddAttributeToEdgeIfFound, 
-            " " , py::arg("loc"), py::arg("rLabel"), py::arg("value") )
+            (bool(Polygon3::*)(::Vertex<3> const &, ::std::string const &, double)) &Polygon3::AddAttributeToEdgeIfFound, 
+            " " , py::arg("rLoc"), py::arg("rLabel"), py::arg("value") )
         .def(
             "AddAttributeToAllEdges", 
             (void(Polygon3::*)(::std::string const &, double)) &Polygon3::AddAttributeToAllEdges, 
             " " , py::arg("rLabel"), py::arg("value") )
         .def(
             "AddVertices", 
-            (void(Polygon3::*)(::std::vector<std::shared_ptr<Vertex<3> >, std::allocator<std::shared_ptr<Vertex<3> > > >)) &Polygon3::AddVertices, 
+            (void(Polygon3::*)(::std::vector<std::shared_ptr<Vertex<3> >, std::allocator<std::shared_ptr<Vertex<3> > > > const &)) &Polygon3::AddVertices, 
             " " , py::arg("vertices") )
         .def(
             "AddVertex", 
             (void(Polygon3::*)(::std::shared_ptr<Vertex<3> >)) &Polygon3::AddVertex, 
-            " " , py::arg("pVertex") )
+            " " , py::arg("vertex") )
         .def(
             "ContainsPoint", 
             (bool(Polygon3::*)(::Vertex<3> const &, double)) &Polygon3::ContainsPoint, 
             " " , py::arg("rLocation"), py::arg("tolerance") = 0. )
         .def(
             "GetBoundingBox", 
-            (::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1>, std::ratio<0, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1>, std::ratio<0, 1>, std::ratio<0, 1> > > >(Polygon3::*)()) &Polygon3::GetBoundingBox, 
+            (::std::array<RQuantity<std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1>, std::ratio<0, 1>, std::ratio<0, 1> >, 6>(Polygon3::*)()) &Polygon3::GetBoundingBox, 
             " "  )
         .def(
             "GetCentroid", 
@@ -80,20 +81,20 @@ py::class_<Polygon3    >(m, "Polygon3")
             (::std::shared_ptr<Vertex<3> >(Polygon3::*)(unsigned int)) &Polygon3::GetVertex, 
             " " , py::arg("idx") )
         .def(
-            "GetVertices", 
-            (::std::vector<std::shared_ptr<Vertex<3> >, std::allocator<std::shared_ptr<Vertex<3> > > >(Polygon3::*)()) &Polygon3::GetVertices, 
+            "rGetVertices", 
+            (::std::vector<std::shared_ptr<Vertex<3> >, std::allocator<std::shared_ptr<Vertex<3> > > > const &(Polygon3::*)() const ) &Polygon3::rGetVertices, 
             " "  )
         .def(
             "GetVtkPolygon", 
             (::vtkSmartPointer<vtkPolygon>(Polygon3::*)()) &Polygon3::GetVtkPolygon, 
             " "  )
         .def(
-            "GetEdgeAttributes", 
-            (::std::vector<std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > >, std::allocator<std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > > >(Polygon3::*)()) &Polygon3::GetEdgeAttributes, 
+            "rGetEdgeAttributes", 
+            (::std::vector<std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > >, std::allocator<std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > > > const &(Polygon3::*)()) &Polygon3::rGetEdgeAttributes, 
             " "  )
         .def(
-            "GetAttributes", 
-            (::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > >(Polygon3::*)()) &Polygon3::GetAttributes, 
+            "rGetAttributes", 
+            (::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > const &(Polygon3::*)()) &Polygon3::rGetAttributes, 
             " "  )
         .def(
             "GetVtkVertices", 
@@ -101,11 +102,11 @@ py::class_<Polygon3    >(m, "Polygon3")
             " "  )
         .def(
             "EdgeHasAttribute", 
-            (bool(Polygon3::*)(::Vertex<3>, ::std::string const &)) &Polygon3::EdgeHasAttribute, 
-            " " , py::arg("loc"), py::arg("rLabel") )
+            (bool(Polygon3::*)(::Vertex<3> const &, ::std::string const &)) &Polygon3::EdgeHasAttribute, 
+            " " , py::arg("rLoc"), py::arg("rLabel") )
         .def(
             "HasAttribute", 
-            (bool(Polygon3::*)(::std::string const &)) &Polygon3::HasAttribute, 
+            (bool(Polygon3::*)(::std::string const &) const ) &Polygon3::HasAttribute, 
             " " , py::arg("rLabel") )
         .def(
             "ReplaceVertex", 
@@ -117,7 +118,7 @@ py::class_<Polygon3    >(m, "Polygon3")
             " " , py::arg("axis"), py::arg("angle") )
         .def(
             "Translate", 
-            (void(Polygon3::*)(::Vertex<3>)) &Polygon3::Translate, 
+            (void(Polygon3::*)(::Vertex<3> const &)) &Polygon3::Translate, 
             " " , py::arg("translationVector") )
     ;
 }

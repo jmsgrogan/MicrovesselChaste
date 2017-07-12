@@ -7,13 +7,14 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "CellPopulationActorGenerator.hpp"
 
 #include "CellPopulationActorGenerator3.cppwg.hpp"
 
 namespace py = pybind11;
 typedef CellPopulationActorGenerator<3 > CellPopulationActorGenerator3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class CellPopulationActorGenerator3_Overloads : public CellPopulationActorGenerator3{
     public:
@@ -28,7 +29,7 @@ class CellPopulationActorGenerator3_Overloads : public CellPopulationActorGenera
 
 };
 void register_CellPopulationActorGenerator3_class(py::module &m){
-py::class_<CellPopulationActorGenerator3 , CellPopulationActorGenerator3_Overloads   >(m, "CellPopulationActorGenerator3")
+py::class_<CellPopulationActorGenerator3 , CellPopulationActorGenerator3_Overloads , std::shared_ptr<CellPopulationActorGenerator3 >   >(m, "CellPopulationActorGenerator3")
         .def(py::init< >())
         .def(
             "AddActor", 

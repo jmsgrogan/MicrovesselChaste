@@ -7,13 +7,14 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "AbstractActorGenerator.hpp"
 
 #include "AbstractActorGenerator2.cppwg.hpp"
 
 namespace py = pybind11;
 typedef AbstractActorGenerator<2 > AbstractActorGenerator2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class AbstractActorGenerator2_Overloads : public AbstractActorGenerator2{
     public:
@@ -28,7 +29,7 @@ class AbstractActorGenerator2_Overloads : public AbstractActorGenerator2{
 
 };
 void register_AbstractActorGenerator2_class(py::module &m){
-py::class_<AbstractActorGenerator2 , AbstractActorGenerator2_Overloads   >(m, "AbstractActorGenerator2")
+py::class_<AbstractActorGenerator2 , AbstractActorGenerator2_Overloads , std::shared_ptr<AbstractActorGenerator2 >   >(m, "AbstractActorGenerator2")
         .def(
             "AddActor", 
             (void(AbstractActorGenerator2::*)(::vtkSmartPointer<vtkRenderer>)) &AbstractActorGenerator2::AddActor, 

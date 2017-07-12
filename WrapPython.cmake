@@ -82,10 +82,10 @@ set (MicrovesselChaste_PYTHON_MODULES "")
 set (MicrovesselChaste_PYTHON_MODULE_LOCATIONS "")
 
 # Auto wrapper
-#list (APPEND MicrovesselChaste_AUTO_MODULES utility)
-#list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/utility)
-list (APPEND MicrovesselChaste_AUTO_MODULES geometry)
-list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/geometry)
+list (APPEND MicrovesselChaste_AUTO_MODULES utility)
+list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/utility)
+#list (APPEND MicrovesselChaste_AUTO_MODULES geometry)
+#list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/geometry)
 #list (APPEND MicrovesselChaste_AUTO_MODULES mesh)
 #list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/mesh)
 #list (APPEND MicrovesselChaste_AUTO_MODULES vessel)
@@ -106,8 +106,6 @@ list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DI
 #list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/image)
 
 list (APPEND MicrovesselChaste_PYTHON_MODULES ${MicrovesselChaste_AUTO_MODULES})
-#list (APPEND MicrovesselChaste_PYTHON_MODULES preload)
-#list (APPEND MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${CMAKE_CURRENT_BINARY_DIR}/python/microvessel_chaste/)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/python/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/python/ PATTERN "*.so" EXCLUDE)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/python/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/python/test/)
@@ -133,31 +131,29 @@ LIST(APPEND arguments ${Chaste_THIRD_PARTY_INCLUDE_DIRS})
 add_custom_command(TARGET project_MicrovesselChaste_Python_Bindings COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrapper_generators/generate.py ${arguments})
 
 # Build the modules
-#list(LENGTH MicrovesselChaste_PYTHON_MODULES len1)
-#math(EXPR len2 "${len1} - 1")
-#foreach(val RANGE ${len2})
-#
-#    list(GET MicrovesselChaste_PYTHON_MODULES ${val} python_module)
-#    list(GET MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${val} python_module_location)
-#    
-#    file(GLOB MODULE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrappers/${python_module}/*.cpp)
-#    
+list(LENGTH MicrovesselChaste_PYTHON_MODULES len1)
+math(EXPR len2 "${len1} - 1")
+foreach(val RANGE ${len2})
+    list(GET MicrovesselChaste_PYTHON_MODULES ${val} python_module)
+    list(GET MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${val} python_module_location)
+    
+    file(GLOB MODULE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrappers/${python_module}/*.cpp)
+    
     # each module is in the 'dynamic' directory. The library name must be the same as that defined in the cpp file. It is customary
     # to start the name with an underscore. The usual 'lib' prefix is disabled.
-#    add_library(_chaste_project_MicrovesselChaste_${python_module} SHARED ${MODULE_SOURCES})
-#    set_target_properties(_chaste_project_MicrovesselChaste_${python_module} PROPERTIES PREFIX ""  SUFFIX ".so"
-#    LIBRARY_OUTPUT_DIRECTORY ${python_module_location})
-#    target_compile_features(_chaste_project_MicrovesselChaste_${python_module} PRIVATE cxx_range_for)
-#
+    add_library(_chaste_project_MicrovesselChaste_${python_module} SHARED ${MODULE_SOURCES})
+    set_target_properties(_chaste_project_MicrovesselChaste_${python_module} PROPERTIES PREFIX ""  SUFFIX ".so"
+    LIBRARY_OUTPUT_DIRECTORY ${python_module_location})
+    target_compile_features(_chaste_project_MicrovesselChaste_${python_module} PRIVATE cxx_range_for)
+
     # order is important, boost python and python come first
-#    target_link_libraries(_chaste_project_MicrovesselChaste_${python_module} pybind11::module ${PYTHON_LIBRARIES} ${Chaste_THIRD_PARTY_LIBRARIES} ${Chaste_LIBRARIES} ${PROJECT_MicrovesselChaste_LIB})
-#    add_dependencies(_chaste_project_MicrovesselChaste_${python_module} chaste_project_MicrovesselChaste)
-#
-#endforeach()
+    target_link_libraries(_chaste_project_MicrovesselChaste_${python_module} pybind11::module ${PYTHON_LIBRARIES} ${Chaste_THIRD_PARTY_LIBRARIES} ${Chaste_LIBRARIES} ${PROJECT_MicrovesselChaste_LIB})
+    add_dependencies(_chaste_project_MicrovesselChaste_${python_module} chaste_project_MicrovesselChaste)
+endforeach()
 #
 # Add a target so all the libraries are built with a single command
-#add_custom_target(project_MicrovesselChaste_Python)
-#foreach(val RANGE ${len2})
-#    list(GET MicrovesselChaste_PYTHON_MODULES ${val} python_module)
-#    add_dependencies(project_MicrovesselChaste_Python _chaste_project_MicrovesselChaste_${python_module})
-#endforeach()
+add_custom_target(project_MicrovesselChaste_Python)
+foreach(val RANGE ${len2})
+    list(GET MicrovesselChaste_PYTHON_MODULES ${val} python_module)
+    add_dependencies(project_MicrovesselChaste_Python _chaste_project_MicrovesselChaste_${python_module})
+endforeach()

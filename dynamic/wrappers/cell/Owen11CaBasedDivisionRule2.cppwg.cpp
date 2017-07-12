@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "Owen11CaBasedDivisionRule.hpp"
 
 #include "Owen11CaBasedDivisionRule2.cppwg.hpp"

@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "Owen11CellPopulationGenerator.hpp"
 
 #include "Owen11CellPopulationGenerator2.cppwg.hpp"

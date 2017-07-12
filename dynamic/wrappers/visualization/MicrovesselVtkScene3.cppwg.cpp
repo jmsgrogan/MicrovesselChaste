@@ -7,16 +7,17 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "MicrovesselVtkScene.hpp"
 
 #include "MicrovesselVtkScene3.cppwg.hpp"
 
 namespace py = pybind11;
 typedef MicrovesselVtkScene<3 > MicrovesselVtkScene3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_MicrovesselVtkScene3_class(py::module &m){
-py::class_<MicrovesselVtkScene3    >(m, "MicrovesselVtkScene3")
+py::class_<MicrovesselVtkScene3  , std::shared_ptr<MicrovesselVtkScene3 >   >(m, "MicrovesselVtkScene3")
         .def(py::init< >())
         .def(
             "End", 

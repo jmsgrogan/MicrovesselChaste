@@ -7,21 +7,22 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "VesselNetworkGenerator.hpp"
 
 #include "VesselNetworkGenerator2.cppwg.hpp"
 
 namespace py = pybind11;
 typedef VesselNetworkGenerator<2 > VesselNetworkGenerator2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_VesselNetworkGenerator2_class(py::module &m){
-py::class_<VesselNetworkGenerator2    >(m, "VesselNetworkGenerator2")
+py::class_<VesselNetworkGenerator2  , std::shared_ptr<VesselNetworkGenerator2 >   >(m, "VesselNetworkGenerator2")
         .def(py::init< >())
         .def(
-            "GenerateParrallelNetwork", 
-            (::std::shared_ptr<VesselNetwork<2> >(VesselNetworkGenerator2::*)(::std::shared_ptr<Part<2> >, ::QArea, ::VesselDistribution::Value, ::QLength, bool, ::std::vector<std::shared_ptr<Vertex<2> >, std::allocator<std::shared_ptr<Vertex<2> > > >)) &VesselNetworkGenerator2::GenerateParrallelNetwork, 
-            " " , py::arg("domain"), py::arg("targetDensity"), py::arg("distrbutionType"), py::arg("exclusionDistance") = 0. * unit::metres, py::arg("useBbox") = false, py::arg("seeds") = std::vector<std::shared_ptr<Vertex<DIM> > >() )
+            "GenerateParallelNetwork", 
+            (::std::shared_ptr<VesselNetwork<2> >(VesselNetworkGenerator2::*)(::std::shared_ptr<Part<2> >, ::QPerArea, ::VesselDistribution::Value, ::QLength, bool, ::std::vector<std::shared_ptr<Vertex<2> >, std::allocator<std::shared_ptr<Vertex<2> > > >)) &VesselNetworkGenerator2::GenerateParallelNetwork, 
+            " " , py::arg("domain"), py::arg("targetDensity"), py::arg("distrbutionType"), py::arg("exclusionDistance") = 0_m, py::arg("useBbox") = false, py::arg("seeds") = std::vector<std::shared_ptr<Vertex<2> > >() )
         .def(
             "GenerateHexagonalNetwork", 
             (::std::shared_ptr<VesselNetwork<2> >(VesselNetworkGenerator2::*)(::QLength, ::QLength, ::QLength, bool)) &VesselNetworkGenerator2::GenerateHexagonalNetwork, 
@@ -33,11 +34,11 @@ py::class_<VesselNetworkGenerator2    >(m, "VesselNetworkGenerator2")
         .def(
             "GenerateBifurcationUnit", 
             (::std::shared_ptr<VesselNetwork<2> >(VesselNetworkGenerator2::*)(::QLength, ::Vertex<2>)) &VesselNetworkGenerator2::GenerateBifurcationUnit, 
-            " " , py::arg("vesselLength"), py::arg("startPosition") )
+            " " , py::arg("vesselLength"), py::arg("startPosition") = Vertex<2>() )
         .def(
             "GenerateSingleVessel", 
             (::std::shared_ptr<VesselNetwork<2> >(VesselNetworkGenerator2::*)(::QLength, ::Vertex<2>, unsigned int, unsigned int)) &VesselNetworkGenerator2::GenerateSingleVessel, 
-            " " , py::arg("vesselLength"), py::arg("startPosition"), py::arg("divisions") = 0, py::arg("axis") = 2 )
+            " " , py::arg("vesselLength"), py::arg("startPosition") = Vertex<2>(), py::arg("divisions") = 0, py::arg("axis") = 2 )
         .def(
             "GenerateOvalNetwork", 
             (::std::shared_ptr<VesselNetwork<2> >(VesselNetworkGenerator2::*)(::QLength, unsigned int, double, double)) &VesselNetworkGenerator2::GenerateOvalNetwork, 
@@ -48,7 +49,7 @@ py::class_<VesselNetworkGenerator2    >(m, "VesselNetworkGenerator2")
             " " , py::arg("pPart") )
         .def(
             "PatternUnitByTranslation", 
-            (void(VesselNetworkGenerator2::*)(::std::shared_ptr<VesselNetwork<2> >, ::std::vector<unsigned int, std::allocator<unsigned int> >)) &VesselNetworkGenerator2::PatternUnitByTranslation, 
+            (void(VesselNetworkGenerator2::*)(::std::shared_ptr<VesselNetwork<2> >, ::std::array<unsigned int, 2>)) &VesselNetworkGenerator2::PatternUnitByTranslation, 
             " " , py::arg("pInputUnit"), py::arg("numberOfUnits") )
         .def(
             "MapToSphere", 

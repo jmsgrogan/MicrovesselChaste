@@ -7,6 +7,7 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "CoupledVegfPelletDiffusionReactionPde.hpp"
 
 #include "CoupledVegfPelletDiffusionReactionPde3_3.cppwg.hpp"

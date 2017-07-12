@@ -7,13 +7,14 @@
 #include "SmartPointers.hpp"
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
+#include "vtkPolyData.h"
 #include "NodeFlowProperties.hpp"
 
 #include "NodeFlowProperties2.cppwg.hpp"
 
 namespace py = pybind11;
 typedef NodeFlowProperties<2 > NodeFlowProperties2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double;
 
 class NodeFlowProperties2_Overloads : public NodeFlowProperties2{
@@ -29,7 +30,7 @@ class NodeFlowProperties2_Overloads : public NodeFlowProperties2{
 
 };
 void register_NodeFlowProperties2_class(py::module &m){
-py::class_<NodeFlowProperties2 , NodeFlowProperties2_Overloads   >(m, "NodeFlowProperties2")
+py::class_<NodeFlowProperties2 , NodeFlowProperties2_Overloads , std::shared_ptr<NodeFlowProperties2 >   >(m, "NodeFlowProperties2")
         .def(py::init< >())
         .def(
             "GetOutputData", 
