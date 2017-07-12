@@ -116,7 +116,6 @@ public:
 
         QLength domain_size = 500.0*1_um;
         QLength vessel_length = 100.0*1_um;
-        QLength reference_length = 1_um;
         std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateHexagonalNetwork(domain_size,
                 domain_size, vessel_length);
 

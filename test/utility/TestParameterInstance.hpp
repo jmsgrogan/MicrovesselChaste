@@ -65,7 +65,7 @@ public:
         TS_ASSERT_EQUALS("My Description For Time Parameter", p_my_parameter->GetShortDescription());
         TS_ASSERT_DELTA(p_my_parameter->GetValue()/unit::seconds, 5.0, 1.e-6);
         TS_ASSERT_EQUALS("J. Smith et al., (2003).", p_my_parameter->GetBibliographicInformation());
-
+#if BOOST_VERSION >= 105600
         // Test Archiving
         OutputFileHandler handler("archive", false);
         ArchiveLocationInfo::SetArchiveDirectory(handler.FindFile(""));
@@ -102,6 +102,7 @@ public:
             std::shared_ptr<ParameterInstance<QTime> > p_my_cast_parameter_from_archive = std::dynamic_pointer_cast<ParameterInstance<QTime> >(p_my_parameter_from_archive);
             TS_ASSERT_DELTA(p_my_cast_parameter_from_archive->GetValue()/unit::seconds, 5.0, 1.e-6);
         }
+#endif
     }
 
     void TestAlternateConstructor()

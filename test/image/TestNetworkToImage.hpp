@@ -65,20 +65,20 @@ public:
         OutputFileHandler file_handler1 = OutputFileHandler(output_path);
 
         // Set up the network
-        double length = 100.0;
-        double radius = 20.0;
-        std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0, length/2.0, 0.0);
-        std::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(length, length/2.0, 0.0);
+        QLength length = 100.0_um;
+        QLength radius = 20.0_um;
+        std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0_m, length/2.0);
+        std::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(length, length/2.0);
         std::shared_ptr<Vessel<3> > p_vessel = Vessel<3>::Create(p_node1, p_node2);
-        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        auto p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_vessel);
-        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, radius* 1_um);
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, radius);
         VesselNetworkPropertyManager<3>::SetNodeRadiiFromSegments(p_network);
 
         // Convert it to an image
         std::shared_ptr<NetworkToImage<3> > p_converter = NetworkToImage<3>::Create();
         p_converter->SetNetwork(p_network);
-        p_converter->SetGridSpacing(2.0* 1_um);
+        p_converter->SetGridSpacing(5.0_um);
         p_converter->SetPaddingFactors(0.0, 0.1, 0.0);
         p_converter->Update();
 
@@ -99,15 +99,14 @@ public:
     void TestBifurcationVessel() throw(Exception)
     {
         // Set up the network
-        double length = 100.0;
-        double radius = 20.0;
-
-        std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0, length, 0.0);
-        std::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(length, length, 0.0);
-        std::shared_ptr<VesselNode<3> > p_node3 = VesselNode<3>::Create(2.0 * length, 2.0*length, 0.0);
-        std::shared_ptr<VesselNode<3> > p_node4 = VesselNode<3>::Create(2.0 * length, 0.0, 0.0);
-        std::shared_ptr<VesselNode<3> > p_node5 = VesselNode<3>::Create(3.0 * length, length, 0.0);
-        std::shared_ptr<VesselNode<3> > p_node6 = VesselNode<3>::Create(4.0 * length, length, 0.0);
+        QLength length = 100_um;
+        QLength radius = 20_um;
+        std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0_um, length);
+        std::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3>::Create(length, length);
+        std::shared_ptr<VesselNode<3> > p_node3 = VesselNode<3>::Create(2.0 * length, 2.0*length);
+        std::shared_ptr<VesselNode<3> > p_node4 = VesselNode<3>::Create(2.0 * length, 0.0);
+        std::shared_ptr<VesselNode<3> > p_node5 = VesselNode<3>::Create(3.0 * length, length);
+        std::shared_ptr<VesselNode<3> > p_node6 = VesselNode<3>::Create(4.0 * length, length);
         std::shared_ptr<Vessel<3> > p_vessel1 = Vessel<3>::Create(p_node1, p_node2);
         std::shared_ptr<Vessel<3> > p_vessel2 = Vessel<3>::Create(p_node2, p_node3);
         std::shared_ptr<Vessel<3> > p_vessel3 = Vessel<3>::Create(p_node2, p_node4);
@@ -121,13 +120,13 @@ public:
         p_network->AddVessel(p_vessel4);
         p_network->AddVessel(p_vessel5);
         p_network->AddVessel(p_vessel6);
-        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, radius* 1_um);
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, radius);
         VesselNetworkPropertyManager<3>::SetNodeRadiiFromSegments(p_network);
 
         // Convert it to an image
         NetworkToImage<3> converter;
         converter.SetNetwork(p_network);
-        converter.SetGridSpacing(2.0* 1_um);
+        converter.SetGridSpacing(5_um);
         converter.SetPaddingFactors(0.0, 0.1, 0.0);
         converter.Update();
 

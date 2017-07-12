@@ -71,11 +71,11 @@ public:
                 std::make_shared<OutputFileHandler>("TestOffLatticeMigrationRules/2d");
 
         // Set up the grid
-        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(1000.0_um, 1000.0_um);
+        auto p_domain = Part<2>::Create();
+        p_domain->AddRectangle(1000_um, 1000_um);
 
-        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        QLength spacing(40.0_um);
+        auto p_grid = RegularGrid<2>::Create();
+        QLength spacing(40_um);
         p_grid->SetSpacing(spacing);
 
         c_vector<double, 3> dimensions;
@@ -85,9 +85,9 @@ public:
         p_grid->SetDimensions(dimensions);
 
         // Prescribe a linearly increasing vegf field using a function map
-        std::shared_ptr<FunctionMap<2> > p_funciton_map = FunctionMap<2>::Create();
+        auto p_funciton_map = FunctionMap<2>::Create();
         p_funciton_map->SetGrid(p_grid);
-        std::vector<QConcentration > vegf_field = std::vector<QConcentration >(dimensions[0] * dimensions[1] * dimensions[2], 0.0*unit::mole_per_metre_cubed);
+        std::vector<QConcentration > vegf_field = std::vector<QConcentration >(dimensions[0] * dimensions[1] * dimensions[2], 0.0_M);
         for (unsigned idx = 0; idx < dimensions[0] * dimensions[1] * dimensions[2]; idx++)
         {
             vegf_field[idx] = 0.3*p_grid->GetPoint(idx).Convert(spacing)[0] / (double(dimensions[0]))*1.e-9*unit::mole_per_metre_cubed;
@@ -107,15 +107,14 @@ public:
         std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(length, Vertex<2>(2.0*spacing),
                                                                                             divisions, alignment_axis);
 
-        std::shared_ptr<OffLatticeMigrationRule<2> > p_migration_rule = OffLatticeMigrationRule<2>::Create();
+        auto p_migration_rule = OffLatticeMigrationRule<2>::Create();
         p_migration_rule->SetDiscreteContinuumSolver(p_funciton_map);
         p_migration_rule->SetNetwork(p_network);
 
-
-        std::shared_ptr<OffLatticeSproutingRule<2> > p_sprouting_rule = OffLatticeSproutingRule<2>::Create();
+        auto p_sprouting_rule = OffLatticeSproutingRule<2>::Create();
         p_sprouting_rule->SetDiscreteContinuumSolver(p_funciton_map);
         p_sprouting_rule->SetVesselNetwork(p_network);
-        p_sprouting_rule->SetSproutingProbability(5.e-03 /(60.0*unit::seconds));
+        p_sprouting_rule->SetSproutingProbability(5.e-03 /(60_s));
 
         AngiogenesisSolver<2> angiogenesis_solver;
         angiogenesis_solver.SetVesselNetwork(p_network);
@@ -134,11 +133,11 @@ public:
                 std::make_shared<OutputFileHandler>("TestOffLatticeMigrationRules/3d");
 
         // Set up the grid
-        std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(1000.0_um, 1000.0_um, 100.0_um);
+        auto p_domain = Part<3>::Create();
+        p_domain->AddCuboid(1000_um, 1000_um, 100_um);
 
-        std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
-        QLength spacing(40.0_um);
+        auto p_grid = RegularGrid<3>::Create();
+        QLength spacing(40_um);
         p_grid->SetSpacing(spacing);
 
         c_vector<double, 3> dimensions;
@@ -148,9 +147,9 @@ public:
         p_grid->SetDimensions(dimensions);
 
         // Prescribe a linearly increasing vegf field using a function map
-        std::shared_ptr<FunctionMap<3> > p_funciton_map = FunctionMap<3>::Create();
+        auto p_funciton_map = FunctionMap<3>::Create();
         p_funciton_map->SetGrid(p_grid);
-        std::vector<QConcentration > vegf_field = std::vector<QConcentration >(dimensions[0] * dimensions[1] * dimensions[2], 0.0*unit::mole_per_metre_cubed);
+        std::vector<QConcentration > vegf_field = std::vector<QConcentration >(dimensions[0] * dimensions[1] * dimensions[2], 0.0_M);
         for (unsigned idx = 0; idx < dimensions[0] * dimensions[1] * dimensions[2]; idx++)
         {
             vegf_field[idx] = 0.3*p_grid->GetPoint(idx).Convert(spacing)[0] / (double(dimensions[0]))*1.e-9*unit::mole_per_metre_cubed;
@@ -168,24 +167,26 @@ public:
         unsigned divisions = dimensions[1] - 2; // divide the vessel to coincide with grid
         unsigned alignment_axis = 1; // pointing y direction
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(length,
-                                                                                        Vertex<3>(2.0*spacing, 2.0*spacing, 0.5*spacing),
+                                                                                        Vertex<3>(2.0*spacing,
+                                                                                                2.0*spacing,
+                                                                                                0.5*spacing),
                                                                                             divisions, alignment_axis);
 
-        std::shared_ptr<OffLatticeMigrationRule<3> > p_migration_rule = OffLatticeMigrationRule<3>::Create();
+        auto p_migration_rule = OffLatticeMigrationRule<3>::Create();
         p_migration_rule->SetDiscreteContinuumSolver(p_funciton_map);
         p_migration_rule->SetNetwork(p_network);
 
-        std::shared_ptr<OffLatticeSproutingRule<3> > p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
+        auto p_sprouting_rule = OffLatticeSproutingRule<3>::Create();
         p_sprouting_rule->SetDiscreteContinuumSolver(p_funciton_map);
         p_sprouting_rule->SetVesselNetwork(p_network);
-        p_sprouting_rule->SetSproutingProbability(5.e-03 /(60.0*unit::seconds));
+        p_sprouting_rule->SetSproutingProbability(5.e-03 /(60_s));
 
         AngiogenesisSolver<3> angiogenesis_solver;
         angiogenesis_solver.SetVesselNetwork(p_network);
         angiogenesis_solver.SetMigrationRule(p_migration_rule);
         angiogenesis_solver.SetSproutingRule(p_sprouting_rule);
         angiogenesis_solver.SetOutputFileHandler(p_handler);
-        //angiogenesis_solver.SetBoundingDomain(p_domain);
+        angiogenesis_solver.SetBoundingDomain(p_domain);
 
         SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(12.0, 24.0);
         angiogenesis_solver.Run(true);

@@ -74,6 +74,7 @@ public:
 
     void TestArchiving() throw (Exception)
     {
+#if BOOST_VERSION >= 105600
         // Test Archiving
         OutputFileHandler handler("archive", false);
         ArchiveLocationInfo::SetArchiveDirectory(handler.FindFile(""));
@@ -121,6 +122,7 @@ public:
 
             TS_ASSERT_DELTA(p_cast_properties->GetOutputData()["Segment Flow Rate m^3/s"], 20.0, 1.e-6);
         }
+#endif
     }
 };
 

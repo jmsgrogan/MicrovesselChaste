@@ -144,9 +144,9 @@ public:
         std::shared_ptr<FunctionMap<2> > p_funciton_map = FunctionMap<2>::Create();
         p_funciton_map->SetGrid(p_grid);
         std::vector<QConcentration> vegf_field =
-                std::vector<QConcentration >(dimensions[0]*dimensions[1], 0.0*unit::mole_per_metre_cubed);
+                std::vector<QConcentration >(dimensions[0]*dimensions[1], 0_M);
 
-        QConcentration max_vegf(0.2e-9*unit::mole_per_metre_cubed);
+        QConcentration max_vegf(0.2e-3_nM);
         for(unsigned idx=0; idx<p_grid_calc->GetGrid()->GetNumberOfPoints(); idx++)
         {
             vegf_field[idx] = double(p_grid->GetPoint(idx).Convert(1_um)[0] / (double(dimensions[0]) * spacing) )*max_vegf;
@@ -154,22 +154,22 @@ public:
         p_funciton_map->UpdateSolution(vegf_field);
 
         // Set up the migration rule
-        std::shared_ptr<Owen2011MigrationRule<2> > p_migration_rule = Owen2011MigrationRule<2>::Create();
+        auto p_migration_rule = Owen2011MigrationRule<2>::Create();
         p_migration_rule->SetGridCalculator(p_grid_calc);
-        p_migration_rule->SetMovementProbability(1.0);
+        p_migration_rule->SetMovementProbability(0.001);
         p_migration_rule->SetNetwork(p_network);
         p_migration_rule->SetDiscreteContinuumSolver(p_funciton_map);
 
         // Test that we move into the correct locations and that sometimes, but not always, we don't move.
         // Also check that we mostly move in the direction of the vegf gradient, but not always
         RandomNumberGenerator::Instance()->Reseed(522525);
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(100.0, 1);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(1.e-3, 1);
 
         unsigned not_moved = 0;
         unsigned num_right = 0;
         for(unsigned idx=0; idx<100; idx++)
         {
-            std::vector<int> indices = p_migration_rule->GetIndices(std::vector<std::shared_ptr<VesselNode<2> > > (1, p_node2));
+            std::vector<int> indices = p_migration_rule->GetIndices(std::vector<VesselNodePtr<2> > (1, p_node2));
             if (indices[0] == -1)
             {
                 not_moved++;

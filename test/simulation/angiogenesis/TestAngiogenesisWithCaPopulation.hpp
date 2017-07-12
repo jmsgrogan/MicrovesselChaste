@@ -78,7 +78,7 @@ public:
                 std::make_shared<OutputFileHandler>(output_directory);
 
         // Set up the vessel grid
-        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        auto p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 20;
         dimensions[1] = 20;
@@ -88,7 +88,7 @@ public:
 
         // Create the vessel network: single vessel in middle of domain
         VesselNetworkGenerator<2> network_generator;
-        std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(10_um, Vertex<2>(10.0, 0.0));
+        std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(10_um, Vertex<2>(10.0_um));
 
         // Write the initial network to file
         std::string output_filename = p_file_handler->GetOutputDirectoryFullPath().append("InitialVesselNetwork.vtp");

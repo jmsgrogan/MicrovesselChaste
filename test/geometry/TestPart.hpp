@@ -337,11 +337,11 @@ public:
     void TestPointInPart() throw(Exception)
     {
         Part<3> part = Part<3>();
-        part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres);
-        TS_ASSERT(part.IsPointInPart(Vertex<3>(0.5, 0.5, 0.5)));
+        part.AddCuboid(10_um, 10_um, 10_um);
+        TS_ASSERT(part.IsPointInPart(Vertex<3>(0.5_um, 0.5_um, 0.5_um)));
 
         Part<2> part2 = Part<2>();
-        part2.AddRectangle(10.e-6*unit::metres, 10.e-6*unit::metres);
+        part2.AddRectangle(10_um, 10_um);
 
         vtkSmartPointer<vtkPoints> p_probes = vtkSmartPointer<vtkPoints>::New();
         p_probes->InsertNextPoint(0.5, 0.5, 0.0);
@@ -361,6 +361,7 @@ public:
 
     void TestArchiving() throw (Exception)
     {
+#if BOOST_VERSION >= 105600
         std::string output_directory = "TestPart";
         if(PetscTools::IsParallel())
         {
@@ -397,6 +398,7 @@ public:
             // Visual check
             p_part_from_archive->Write(output_file_handler.GetOutputDirectoryFullPath().append("PartFromArchive.vtp"));
         }
+#endif
     }
 
     void TestLabelling() throw (Exception)
@@ -470,6 +472,7 @@ public:
 
     void TestSendAndReceive() throw (Exception)
     {
+#if BOOST_VERSION >= 105600
         EXIT_IF_SEQUENTIAL;
 
         std::string output_directory = "TestPartParallel";
@@ -493,6 +496,7 @@ public:
             writer.Write(false);
         }
     }
+#endif
 };
 
 #endif /*TESTPART_HPP_*/

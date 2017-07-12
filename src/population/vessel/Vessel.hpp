@@ -89,7 +89,7 @@ private:
         #else
             ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
             ar & mSegments;
-            //ar & mNodes;
+            ar & mNodes;
             ar & mpFlowProperties;
         #endif
     }

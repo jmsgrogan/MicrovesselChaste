@@ -84,7 +84,7 @@ private:
         #if BOOST_VERSION < 105600
             EXCEPTION("Serialization not supported for Boost < 1.56");
         #else
-            //ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
+            ar & boost::serialization::base_object<AbstractVesselNetworkComponent<DIM> >(*this);
             ar & mLocation;
             ar & mIsMigrating;
             ar & mpFlowProperties;

@@ -62,8 +62,8 @@ public:
 
         // Set the grid to move on
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        double spacing = 20.0; //um
-        p_grid->SetSpacing(spacing * 1_um);
+        QLength spacing = 20.0_um; //um
+        p_grid->SetSpacing(spacing);
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 7; // num x
         dimensions[1] = 5; // num_y
@@ -71,15 +71,15 @@ public:
         p_grid->SetDimensions(dimensions);
 
         // Make a vessel
-        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0, 2.0*spacing);
-        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(spacing, 2.0*spacing);
+        auto p_node1 = VesselNode<2>::Create(0.0, 2.0*spacing);
+        auto p_node2 = VesselNode<2>::Create(spacing, 2.0*spacing);
         p_node2->SetIsMigrating(true);
-        std::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(p_node1, p_node2);
-        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        auto p_vessel = Vessel<2>::Create(p_node1, p_node2);
+        auto p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel);
 
         // Set up the migration rule
-        std::shared_ptr<LatticeBasedMigrationRule<2> > p_migration_rule = LatticeBasedMigrationRule<2>::Create();
+        auto p_migration_rule = LatticeBasedMigrationRule<2>::Create();
         p_migration_rule->SetMovementProbability(0.1);
         p_migration_rule->SetNetwork(p_network);
 

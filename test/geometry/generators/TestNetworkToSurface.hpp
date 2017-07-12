@@ -67,7 +67,7 @@ public:
 
         // Set up the network
         QLength length = 100_um;
-        QLength radius = 20.0;
+        QLength radius = 20_um;
         auto p_node1 = VesselNode<2>::Create(0.0_um, length/2.0);
         auto p_node2 = VesselNode<2>::Create(length, length/2.0);
         p_node1->GetFlowProperties()->SetIsInputNode(true);
@@ -82,7 +82,7 @@ public:
         auto p_converter = NetworkToSurface<2>::Create();
         p_converter->SetVesselNetwork(p_network);
         p_converter->SetResamplingSplineSize(10_um);
-        p_converter->GetNetworkToImageTool()->SetGridSpacing(2_um);
+        p_converter->GetNetworkToImageTool()->SetGridSpacing(5_um);
         p_converter->SetRemeshingTargetEdgeLength(1.0);
         p_converter->Update();
 
@@ -112,7 +112,7 @@ public:
         // Convert it to a surface
         auto p_converter = NetworkToSurface<3>::Create();
         p_converter->SetVesselNetwork(p_network);
-        p_converter->GetNetworkToImageTool()->SetGridSpacing(2_um);
+        p_converter->GetNetworkToImageTool()->SetGridSpacing(5_um);
         p_converter->GetNetworkToImageTool()->SetPaddingFactors(0.1, 0.1, 0.1);
         p_converter->SetDoSmoothing(true);
         p_converter->SetNumSmoothingIterations(30);
@@ -162,7 +162,7 @@ public:
         // Convert it to a surface
         NetworkToSurface<2> converter;
         converter.SetVesselNetwork(p_network);
-        converter.GetNetworkToImageTool()->SetGridSpacing(2_um);
+        converter.GetNetworkToImageTool()->SetGridSpacing(5_um);
         converter.GetNetworkToImageTool()->SetPaddingFactors(0.1, 0.1, 0.0);
         converter.SetDoSmoothing(true);
         converter.Update();
@@ -208,7 +208,7 @@ public:
         // Convert it to a surface
         NetworkToSurface<3> converter;
         converter.SetVesselNetwork(p_network);
-        converter.GetNetworkToImageTool()->SetGridSpacing(2_um);
+        converter.GetNetworkToImageTool()->SetGridSpacing(5_um);
         converter.GetNetworkToImageTool()->SetPaddingFactors(0.1, 0.1, 0.1);
         converter.SetDoSmoothing(true);
         converter.SetNumSmoothingIterations(30);
@@ -227,7 +227,7 @@ public:
 
     void TestHexNetworkVessel2d() throw(Exception)
     {
-        VesselNetworkGenerator<2> network_generator = VesselNetworkGenerator<2>();
+        VesselNetworkGenerator<2> network_generator;
         std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(500_um, 500_um, 100_um, true);
 
         auto p_bottom_left_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, Vertex<2>(0.0_um));
@@ -244,7 +244,7 @@ public:
         // Convert it to a surface
         NetworkToSurface<2> converter;
         converter.SetVesselNetwork(p_network);
-        converter.GetNetworkToImageTool()->SetGridSpacing(2_um);
+        converter.GetNetworkToImageTool()->SetGridSpacing(5_um);
         converter.GetNetworkToImageTool()->SetPaddingFactors(0.1, 0.1, 0.0);
         converter.SetDoSmoothing(true);
         converter.Update();
@@ -276,7 +276,7 @@ public:
         // Convert it to a surface
         NetworkToSurface<3> converter;
         converter.SetVesselNetwork(p_network);
-        converter.GetNetworkToImageTool()->SetGridSpacing(2_um);
+        converter.GetNetworkToImageTool()->SetGridSpacing(5_um);
         converter.GetNetworkToImageTool()->SetPaddingFactors(0.1, 0.1, 0.1);
         converter.SetDoSmoothing(true);
         converter.SetNumSmoothingIterations(30);

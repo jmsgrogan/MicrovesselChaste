@@ -66,7 +66,7 @@ public:
         simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
         simulation.SetUseFixedGradient(true);
         simulation.SetPelletConcentration(1.e-10*unit::mole_per_metre_cubed);
-        simulation.SetTotalTime(96.0*3600.0*unit::seconds);
+        simulation.SetTotalTime(12_h);
         simulation.SetPersistenceAngle(0.0);
         simulation.SetChemotacticStrength(0.0);
         simulation.SetOnlyPerfusedSprout(true);
@@ -83,7 +83,7 @@ public:
         simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
         simulation.SetUseFixedGradient(true);
         simulation.SetPelletConcentration(8.e-10*unit::mole_per_metre_cubed);
-        simulation.SetTotalTime(72.0*3600.0*unit::seconds);
+        simulation.SetTotalTime(12_h);
         simulation.SetPelletHeight(200.0e-6*unit::metres);
         simulation.SetPersistenceAngle(0.0);
         simulation.SetChemotacticStrength(0.0);
@@ -100,7 +100,7 @@ public:
         simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
         simulation.SetUseFixedGradient(true);
         simulation.SetPelletConcentration(1.e-10*unit::mole_per_metre_cubed);
-        simulation.SetTotalTime(96.0*3600.0*unit::seconds);
+        simulation.SetTotalTime(12_h);
         simulation.SetPersistenceAngle(0.0);
         simulation.SetChemotacticStrength(0.0);
         //simulation.SetOnlyPerfusedSprout(true);
@@ -117,7 +117,7 @@ public:
         simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
         simulation.SetUseFixedGradient(true);
         simulation.SetPelletConcentration(1.e-10*unit::mole_per_metre_cubed);
-        simulation.SetTotalTime(96.0*3600.0*unit::seconds);
+        simulation.SetTotalTime(12_h);
         simulation.SetPersistenceAngle(5.0);
         simulation.SetChemotacticStrength(0.5);
         simulation.SetPelletHeight(200.0e-6*unit::metres);
@@ -133,7 +133,7 @@ public:
         simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
         simulation.SetUseFixedGradient(true);
         simulation.SetPelletConcentration(1.e-10*unit::mole_per_metre_cubed);
-        simulation.SetTotalTime(96.0*3600.0*unit::seconds);
+        simulation.SetTotalTime(12_h);
         simulation.SetPersistenceAngle(0.0);
         simulation.SetChemotacticStrength(0.0);
         simulation.SetOnlyPerfusedSprout(true);

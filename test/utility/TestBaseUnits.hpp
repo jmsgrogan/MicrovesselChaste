@@ -72,6 +72,7 @@ public:
 
     void TestArchiving()
     {
+        #if BOOST_VERSION >= 105600
         OutputFileHandler handler("archive", false);
         std::string archive_filename = handler.GetOutputDirectoryFullPath() + "BaseUnits.arch";
 
@@ -105,6 +106,7 @@ public:
             TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceConcentrationScale()/(unit::mole_per_metre_cubed), 15.0, 1.e-6);
             TS_ASSERT_DELTA(BaseUnits::Instance()->GetReferenceTimeScale()/1_s, 20.0, 1.e-6);
         }
+        #endif
     }
 };
 

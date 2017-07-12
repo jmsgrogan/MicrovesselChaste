@@ -78,7 +78,7 @@ public:
 
     void TestArchiving()
     {
-
+#if BOOST_VERSION >= 105600
         // Test Archiving
         OutputFileHandler handler("archive", false);
         ArchiveLocationInfo::SetArchiveDirectory(handler.FindFile(""));
@@ -129,8 +129,8 @@ public:
             TS_ASSERT_EQUALS("My Description For Time Parameter", p_derived->GetShortDescription());
             TS_ASSERT_DELTA(5.0, p_derived->GetValue()/1_s, 1.e-6);
         }
+#endif
     }
-
 };
 
 #endif // TESTPARAMETERCOLLECTION_HPP

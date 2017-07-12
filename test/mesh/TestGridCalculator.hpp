@@ -79,20 +79,20 @@ public:
                 std::make_shared<OutputFileHandler>("TestGridCalculator/TestPointSegmentMapGenerationRegularGrid");
 
         // Set up a grid
-        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        auto p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 11;
         dimensions[1] = 11;
         dimensions[2] = 1;
         p_grid->SetDimensions(dimensions);
-        QLength spacing(10.0*unit::microns);
+        QLength spacing(10_um);
         p_grid->SetSpacing(spacing);
 
         // Set up vessel network
         VesselNetworkGenerator<2> network_generator;
-        QLength length(92.0*unit::microns);
+        QLength length(92_um);
         std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
-                                                                                                Vertex<2>(50.0, 4.0));
+                                                                                                Vertex<2>(50.0_um, 4.0_um));
         // Get a point-segment map
         std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
@@ -145,7 +145,7 @@ public:
         VesselNetworkGenerator<2> network_generator;
         QLength length(92.0*unit::microns);
         std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
-                                                                                                Vertex<2>(45.0, 4.0));
+                                                                                                Vertex<2>(45.0_um, 4.0_um));
         // Get a point-segment map
         std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
@@ -196,7 +196,7 @@ public:
         VesselNetworkGenerator<2> network_generator;
         QLength length(100.0*unit::microns);
         std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateSingleVessel(length,
-                                                                                                Vertex<2>(45.0, -0.1));
+                                                                                                Vertex<2>(45.0_um, -0.1_um));
         QLength radius(11.0*unit::microns);
         VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, radius);
 
@@ -278,7 +278,7 @@ public:
                 std::make_shared<OutputFileHandler>("TestGridCalculator/TestPointPointMapGeneration");
 
         // Set up a grid
-        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+        auto p_grid = RegularGrid<2>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 10;
         dimensions[1] = 10;
@@ -287,13 +287,13 @@ public:
 
         // Set up points
         std::vector<Vertex<2> > points;
-        points.push_back(Vertex<2>(5.0, 0.0));
-        points.push_back(Vertex<2>(5.3, 0.0));
-        points.push_back(Vertex<2>(5.3, 0.2));
-        points.push_back(Vertex<2>(5.0, 5.0));
-        points.push_back(Vertex<2>(0.0, 5.0));
+        points.push_back(Vertex<2>(5.0_um, 0.0_um));
+        points.push_back(Vertex<2>(5.3_um, 0.0_um));
+        points.push_back(Vertex<2>(5.3_um, 0.2_um));
+        points.push_back(Vertex<2>(5.0_um, 5.0_um));
+        points.push_back(Vertex<2>(0.0_um, 5.0_um));
         // Get a point-point map
-        std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        auto p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
         std::vector<std::vector<unsigned> > map = p_grid_calc->GetPointMap(points);
 

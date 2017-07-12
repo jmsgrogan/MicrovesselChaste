@@ -155,6 +155,7 @@ public:
 
     void TestArchiving() throw (Exception)
     {
+#if BOOST_VERSION >= 105600
         // Test Archiving
         OutputFileHandler handler("archive", false);
         ArchiveLocationInfo::SetArchiveDirectory(handler.FindFile(""));
@@ -188,6 +189,7 @@ public:
             TS_ASSERT_DELTA(p_cast_node->rGetLocation().Convert(1.0*unit::metres)[1], 2.0, 1.e-6);
             TS_ASSERT_DELTA(p_cast_node->rGetLocation().Convert(1.0*unit::metres)[2], 3.0, 1.e-6);
         }
+#endif
     }
 };
 

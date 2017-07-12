@@ -204,6 +204,7 @@ public:
 
     void TestArchiving() throw (Exception)
     {
+        #if BOOST_VERSION >= 105600
         // Test Archiving
         OutputFileHandler handler("archive", false);
         ArchiveLocationInfo::SetArchiveDirectory(handler.FindFile(""));
@@ -234,6 +235,7 @@ public:
             BaseUnits::Instance()->SetReferenceLengthScale(3.0*unit::metres);
             TS_ASSERT_DELTA(p_generator_from_archive->GetReferenceLengthScale()/(1.0*unit::metres), 2.0, 1.e-6);
         }
+        #endif
     }
 };
 

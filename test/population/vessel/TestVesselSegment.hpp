@@ -125,8 +125,8 @@ public:
         TS_ASSERT_DELTA(p_segment1->GetDistance(nodes[0]->rGetLocation())/1_um, 0, 1.e-6);
 
         // Test Unit tangent and point projection
-        ChastePoint<2> tangent(1.0 / std::sqrt(2.0), 1.0 / std::sqrt(2.0));
-        TS_ASSERT(ChastePoint<2>(p_segment1->GetUnitTangent()).IsSamePoint(tangent));
+        TS_ASSERT_DELTA(p_segment1->GetUnitTangent()[0], 1.0 / std::sqrt(2.0), 1.E-6);
+        TS_ASSERT_DELTA(p_segment1->GetUnitTangent()[1], 1.0 / std::sqrt(2.0), 1.E-6);
     }
 
     void TestAddingAndRemovingVessels() throw (Exception)

@@ -258,16 +258,13 @@ public:
     {
         auto p_handler =
         		std::make_shared<OutputFileHandler>("TestCoupledLumpedSystemFiniteElementSolver/Sphere");
-
-        QLength reference_length(1.0 * unit::microns);
-        QTime reference_time(1.0* unit::hours);
-        BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
-        BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
+        BaseUnits::Instance()->SetReferenceLengthScale(1_um);
+        BaseUnits::Instance()->SetReferenceTimeScale(1_h);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);
 
         MappableGridGenerator<3> hemisphere_generator;
-        QLength radius(1400.0 * unit::microns);
-        QLength thickness(100.0 * unit::microns);
+        QLength radius(1400_um);
+        QLength thickness(100_um);
         unsigned num_divisions_x = 20;
         unsigned num_divisions_y = 20;
         double azimuth_angle = 1.0 * M_PI;
@@ -280,9 +277,9 @@ public:
                                                                                          polar_angle);
         p_domain->Write(p_handler->GetOutputDirectoryFullPath()+"cornea.vtp", GeometryFormat::VTP);
 
-        std::shared_ptr<Part<3> > p_vegf_domain = Part<3> ::Create();
-        QLength cylinder_radius(300.0*unit::microns);
-        QLength cylinder_height(40.0*unit::microns);
+        auto p_vegf_domain = Part<3> ::Create();
+        QLength cylinder_radius(300_um);
+        QLength cylinder_height(40_um);
         Vertex<3> pellet_base(0.0_um, 0.0_um, 1305.0_um);
         Vertex<3> pellet_centre(0.0_um, 0.0_um, 1325.0_um);
         p_vegf_domain->AddCylinder(cylinder_radius, cylinder_height, pellet_base);
@@ -321,8 +318,7 @@ public:
         {
             p_vegf_domain->AddAttributeToPolygons("Boundary", 1.0);
         }
-        std::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_boundary_condition =
-                DiscreteContinuumBoundaryCondition<3>::Create();
+        auto p_boundary_condition = DiscreteContinuumBoundaryCondition<3>::Create();
         QConcentration boundary_concentration(1.0* unit::mole_per_metre_cubed);
         p_boundary_condition->SetValue(boundary_concentration);
         p_boundary_condition->SetType(BoundaryConditionType::POLYGON);
@@ -349,7 +345,7 @@ public:
         solver.AddBoundaryCondition(p_boundary_condition);
         solver.SetTargetTimeIncrement(0.1);
         solver.SetStartTime(0.0);
-        solver.SetEndTime(10.0);
+        solver.SetEndTime(1.0);
         solver.SetWriteIntermediateSolutions(true, 10.0);
         p_domain->Write(p_handler->GetOutputDirectoryFullPath()+"merged_cornea2.vtp", GeometryFormat::VTP);
         solver.Solve();

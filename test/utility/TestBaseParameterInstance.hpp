@@ -61,6 +61,7 @@ public:
         TS_ASSERT_EQUALS("Base", p_my_parameter->GetName());
         TS_ASSERT_EQUALS("J. Smith et al., (2003).", p_my_parameter->GetBibliographicInformation());
 
+#if BOOST_VERSION >= 105600
         // Test Archiving
         OutputFileHandler handler("archive", false);
         ArchiveLocationInfo::SetArchiveDirectory(handler.FindFile(""));
@@ -87,6 +88,7 @@ public:
             TS_ASSERT_EQUALS("Base", p_my_parameter_from_archive->GetName());
             TS_ASSERT_EQUALS("J. Smith et al., (2003).", p_my_parameter_from_archive->GetBibliographicInformation());
         }
+#endif
     }
 };
 

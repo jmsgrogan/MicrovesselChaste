@@ -612,28 +612,24 @@ public:
         std::vector<std::shared_ptr<VesselNode<3> > > bottom_nodes;
         for(unsigned idx=0; idx<6; idx++)
         {
-            bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10*1_um, 10.0_um));
+            bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*10_um, 10_um));
         }
         bottom_nodes[0]->GetFlowProperties()->SetIsInputNode(true);
-        bottom_nodes[0]->GetFlowProperties()->SetPressure(3000.0 * unit::pascals);
+        bottom_nodes[0]->GetFlowProperties()->SetPressure(3000_Pa);
         bottom_nodes[5]->GetFlowProperties()->SetIsOutputNode(true);
-        bottom_nodes[5]->GetFlowProperties()->SetPressure(1000.0 * unit::pascals);
+        bottom_nodes[5]->GetFlowProperties()->SetPressure(1000_Pa);
 
-        std::shared_ptr<Vessel<3> > p_vessel1 = Vessel<3>::Create(bottom_nodes);
-        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        auto p_vessel1 = Vessel<3>::Create(bottom_nodes);
+        auto p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_vessel1);
-        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, 10.0 * 1_um);
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, 10_um);
 
         for(unsigned idx=1; idx<4; idx+=1)
         {
-            Vertex<3> loc1 = Vertex<3>(double(idx)*10*1_um, 10.0_um);
-            Vertex<3> loc2 = Vertex<3>(double(idx)*10*1_um, 20.0_um);
-            p_network->FormSprout(VesselNode<3>::Create(loc1), loc2);
+            Vertex<3> loc2 = Vertex<3>(double(idx)*10_um, 20_um);
+            p_network->FormSprout(bottom_nodes[idx], loc2);
         }
 
-        Vertex<3> loc1 = Vertex<3>(10_um, 20.0_um);
-        Vertex<3> loc2 = Vertex<3>(20_um, 20.0_um);
-        p_network->FormSprout(VesselNode<3>::Create(loc1), loc2);
         p_network->MergeCoincidentNodes();
         p_network->UpdateSegments();
         p_network->UpdateNodes();

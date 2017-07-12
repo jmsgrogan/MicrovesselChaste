@@ -102,6 +102,7 @@ public:
 
     void TestArchiving()
     {
+#if BOOST_VERSION >= 105600
         OutputFileHandler handler("archive", false);
         std::string archive_filename = handler.GetOutputDirectoryFullPath() + "TestOwen2011CaBasedDivisionRule.arch";
         {
@@ -133,6 +134,7 @@ public:
             // Tidy up
             delete p_division_rule;
         }
+#endif
     }
 };
 

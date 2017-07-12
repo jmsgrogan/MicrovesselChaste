@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef TESTVertex_HPP_
-#define TESTVertex_HPP_
+#ifndef TESTVERTEX_HPP_
+#define TESTVERTEX_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include "CheckpointArchiveTypes.hpp"
@@ -83,8 +83,8 @@ public:
         point8_location[0] = 2.0;
         point8_location[1] = 3.0;
         auto p_point8 = Vertex<2>::Create(point8_location, reference_scale2);
-        TS_ASSERT_DELTA(p_point7->Convert(reference_scale2)[0], 1.0, 1.e-6);
-        TS_ASSERT_DELTA(p_point7->Convert(reference_scale2)[1], 2.0, 1.e-6);
+        TS_ASSERT_DELTA(p_point7->Convert(reference_scale2)[0], 0.1, 1.e-6);
+        TS_ASSERT_DELTA(p_point7->Convert(reference_scale2)[1], 0.2, 1.e-6);
         TS_ASSERT_DELTA(p_point8->Convert(reference_scale2)[0], 2.0, 1.e-6);
         TS_ASSERT_DELTA(p_point8->Convert(reference_scale2)[1], 3.0, 1.e-6);
     }
@@ -154,15 +154,16 @@ public:
 
     void TestArchiving() throw (Exception)
     {
+#if BOOST_VERSION >= 105600
         // Test Archiving
         OutputFileHandler handler("archive", false);
         ArchiveLocationInfo::SetArchiveDirectory(handler.FindFile(""));
         std::string archive_filename = ArchiveLocationInfo::GetProcessUniqueFilePath("Vertex.arch");
-        QLength reference_length(10.0*unit::microns);
+        QLength reference_length(10_m);
         // Save archive
         {
 
-            std::shared_ptr<Vertex<3> > p_point = Vertex<3>::Create(1.0_m, 2.0_m, 3.0_m);
+            std::shared_ptr<Vertex<3> > p_point = Vertex<3>::Create(10.0_m, 20.0_m, 30.0_m);
             TS_ASSERT_DELTA(p_point->Convert(reference_length)[0], 1.0, 1.e-6);
             TS_ASSERT_DELTA(p_point->Convert(reference_length)[1], 2.0, 1.e-6);
             TS_ASSERT_DELTA(p_point->Convert(reference_length)[2], 3.0, 1.e-6);
@@ -187,6 +188,7 @@ public:
             TS_ASSERT_DELTA(p_point_from_archive->Convert(reference_length)[1], 2.0, 1.e-6);
             TS_ASSERT_DELTA(p_point_from_archive->Convert(reference_length)[2], 3.0, 1.e-6);
         }
+#endif
     }
 };
 

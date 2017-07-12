@@ -174,7 +174,7 @@ void Part<DIM>::AddRegionMarker(Vertex<DIM> region, unsigned value)
 template<unsigned DIM>
 void Part<DIM>::AppendPart(PartPtr<DIM> pPart)
 {
-    for(auto& polygon:GetPolygons())
+    for(auto& polygon:pPart->GetPolygons())
     {
         this->AddPolygon(polygon, true);
     }

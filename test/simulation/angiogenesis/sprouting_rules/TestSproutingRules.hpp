@@ -56,26 +56,26 @@ public:
     void TestLatticeBasedSproutingRuleSimpleNetwork() throw(Exception)
     {
         // Make a network
-        std::vector<std::shared_ptr<VesselNode<3> > > bottom_nodes;
+        std::vector<VesselNodePtr<3>> bottom_nodes;
         unsigned num_nodes = 100;
         double spacing = 1.0;
         for(unsigned idx=0; idx<num_nodes-1; idx++)
         {
-            bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*spacing, 0.0, 0.0));
+            bottom_nodes.push_back(VesselNode<3>::Create(double(idx)*spacing));
         }
 
-        std::shared_ptr<Vessel<3> > p_vessel = Vessel<3>::Create(bottom_nodes);
-        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        auto p_vessel = Vessel<3>::Create(bottom_nodes);
+        auto p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_vessel);
 
         // Set up a sprouting rule
-        std::shared_ptr<LatticeBasedSproutingRule<3> > p_sprouting_rule = LatticeBasedSproutingRule<3>::Create();
+        auto p_sprouting_rule = LatticeBasedSproutingRule<3>::Create();
         p_sprouting_rule->SetSproutingProbability(0.2*(1.0/unit::seconds));
         p_sprouting_rule->SetVesselNetwork(p_network);
 
         // Test that we get some, but not all, sprouts
         RandomNumberGenerator::Instance()->Reseed(522525);
-        std::vector<std::shared_ptr<VesselNode<3> > > nodes = p_network->GetNodes();
+        std::vector<VesselNodePtr<3>> nodes = p_network->GetNodes();
         SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(1.0, 1);
 
         for(unsigned idx=0; idx<5; idx++)
@@ -90,16 +90,16 @@ public:
     void TestOwen2011SproutingRuleSimpleNetwork() throw(Exception)
     {
         // Set up the grid
-        std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        double spacing = 40.0; //um
-        p_grid->SetSpacing(spacing * 1_um);
+        auto p_grid = RegularGrid<2>::Create();
+        double spacing = 40_um;
+        p_grid->SetSpacing(spacing);
         c_vector<double, 3> dimensions;
         dimensions[0] = 101; // num x
         dimensions[1] = 11; // num_y
         dimensions[2] = 1; // num_z
         p_grid->SetDimensions(dimensions);
 
-        std::shared_ptr<GridCalculator<2> > p_grid_calc = GridCalculator<2>::Create();
+        auto p_grid_calc = GridCalculator<2>::Create();
         p_grid_calc->SetGrid(p_grid);
 
         // Make a network
@@ -110,8 +110,8 @@ public:
             bottom_nodes.push_back(VesselNode<2>::Create(double(idx)*spacing +spacing, 5.0 * spacing));
         }
 
-        std::shared_ptr<Vessel<2> > p_vessel = Vessel<2>::Create(bottom_nodes);
-        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        auto p_vessel = Vessel<2>::Create(bottom_nodes);
+        auto p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel);
         p_grid_calc->SetVesselNetwork(p_network);
 
@@ -123,7 +123,7 @@ public:
         p_funciton_map->UpdateSolution(vegf_field);
 
         // Set up a sprouting rule
-        std::shared_ptr<Owen2011SproutingRule<2> > p_sprouting_rule = Owen2011SproutingRule<2>::Create();
+        auto p_sprouting_rule = Owen2011SproutingRule<2>::Create();
         p_sprouting_rule->SetSproutingProbability(0.2*(1.0/unit::seconds));
         p_sprouting_rule->SetGridCalculator(p_grid_calc);
         p_sprouting_rule->SetVesselNetwork(p_network);

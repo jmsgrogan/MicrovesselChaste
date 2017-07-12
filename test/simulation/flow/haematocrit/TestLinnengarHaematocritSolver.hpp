@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef TESTLinnengarHAEMATOCRITSOLVER_HPP
-#define TESTLinnengarHAEMATOCRITSOLVER_HPP
+#ifndef TESTLINNENGARHAEMATOCRITSOLVER_HPP
+#define TESTLINNENGARHAEMATOCRITSOLVER_HPP
 
 #include <cxxtest/TestSuite.h>
 #include <boost/lexical_cast.hpp>
@@ -76,22 +76,22 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
     // Iterate over vessel lengths
     std::vector<double> lengths;
     std::vector<double> average_oxygen_concentration;
-    QLength length_increment = 20.0 * 1_um;
-    QLength domain_side_length = 2000.0 * 1_um;
+    QLength length_increment = 20_um;
+    QLength domain_side_length = 2000_um;
     QLength reference_length = 1_um;
-    QLength vessel_radius = 10.e-6*unit::metres;
+    QLength vessel_radius = 10_um;
     QDynamicViscosity visocity = 1.e-3*unit::poiseuille;
-    std::shared_ptr<OutputFileHandler> p_file_handler =
-                    std::shared_ptr<OutputFileHandler>(new OutputFileHandler("TestLinnengarHaematocritSolver_depl", true));
+    auto p_file_handler =
+                    std::make_shared<OutputFileHandler>("TestLinnengarHaematocritSolver_depl", true);
 
-    double inlet_haematocrit = 0.4;
+    double inlet_haematocrit = 0.8;
     unsigned num_samples = 1;
 
     for(unsigned idx=0; idx<num_samples; idx++)
     {
         std::string extension = boost::lexical_cast<std::string>(idx);
-        std::shared_ptr<OutputFileHandler> p_internal_file_handler =
-                        std::shared_ptr<OutputFileHandler>(new OutputFileHandler("TestLinnengarHaematocritSolver_depl/Length_"+extension, true));
+        auto p_internal_file_handler =
+                        std::make_shared<OutputFileHandler>("TestLinnengarHaematocritSolver_depl/Length_"+extension, true);
 
         // Specify the network dimensions
         QLength vessel_length = double(idx+1)*length_increment;
@@ -102,9 +102,9 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
                 domain_side_length, vessel_length);
 
         // Assign flow properties
-        std::vector<std::shared_ptr<VesselNode<2> > > nodes;
-        nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(0_um,5_um)));
-        nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(5_um,0_um)));
+        std::vector<VesselNodePtr<2> > nodes;
+        nodes.push_back(VesselNodePtr<2> (VesselNode<2>::Create(0_um,5_um)));
+        nodes.push_back(VesselNodePtr<2> (VesselNode<2>::Create(5_um,0_um)));
         std::shared_ptr<VesselSegment<2> > p_segment(VesselSegment<2>::Create(nodes[0], nodes[1]));
         p_segment->SetRadius(vessel_radius);
         p_segment->GetFlowProperties()->SetHaematocrit(inlet_haematocrit);
@@ -115,9 +115,9 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
             segments[jdx]->GetFlowProperties()->SetViscosity(visocity);
         }
 
-        std::shared_ptr<VesselNode<2> > p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
+        VesselNodePtr<2> p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
                 Vertex<2>(0.0_um));
-        std::shared_ptr<VesselNode<2> > p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
+        VesselNodePtr<2> p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
                 Vertex<2>(domain_side_length, domain_side_length));
         p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
         p_inlet_node->GetFlowProperties()->SetPressure(8000.0*unit::pascals);
@@ -125,7 +125,7 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
         p_outlet_node->GetFlowProperties()->SetPressure(2000.0*unit::pascals);
 
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
-        QLength grid_spacing = 5.0e-6*unit::metres;
+        QLength grid_spacing = 5_um;
         p_grid->SetSpacing(grid_spacing);
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = unsigned(domain_side_length/(grid_spacing)) + 1; // num x
@@ -133,17 +133,17 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
         dimensions[2] = 1;
         p_grid->SetDimensions(dimensions);
 
-        /*
+        /**
          * Next set up the PDEs for oxygen and VEGF. Cells will act as discrete oxygen sinks and discrete vegf sources.
          */
-        std::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
+        auto p_oxygen_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
         p_oxygen_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpOxygenDiffusivity->GetValue("User"));
         p_oxygen_pde->SetContinuumLinearInUTerm(-10.0*Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
 
-        /*
+        /**
         * Vessels release oxygen depending on their haematocrit levels
         */
-        std::shared_ptr<VesselBasedDiscreteSource<2> > p_vessel_oxygen_source = VesselBasedDiscreteSource<2>::Create();
+        auto p_vessel_oxygen_source = VesselBasedDiscreteSource<2>::Create();
         QSolubility oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
                 GenericParameters::mpGasConcentrationAtStp->GetValue("User");
         QConcentration vessel_oxygen_concentration = oxygen_solubility_at_stp *
@@ -156,17 +156,16 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
         /*
         * Set up a finite difference solver and pass it the pde and grid.
         */
-        std::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver<2> > p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
+        auto p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
         p_oxygen_solver->SetPde(p_oxygen_pde);
         p_oxygen_solver->SetLabel("oxygen");
         p_oxygen_solver->SetGrid(p_grid);
 
         //std::shared_ptr<LinnengarHaematocritSolver<2> > p_haematocrit_calculator = LinnengarHaematocritSolver<2>::Create();
 
-        std::shared_ptr<ConstantHaematocritSolver<2> > p_haematocrit_calculator = ConstantHaematocritSolver<2>::Create();
-        std::shared_ptr<VesselImpedanceCalculator<2> > p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
-
-        std::shared_ptr<StructuralAdaptationSolver<2> > p_structural_adaptation_solver = StructuralAdaptationSolver<2>::Create();
+        auto p_haematocrit_calculator = ConstantHaematocritSolver<2>::Create();
+        auto p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+        auto p_structural_adaptation_solver = StructuralAdaptationSolver<2>::Create();
         p_structural_adaptation_solver->SetTolerance(0.0001);
         p_structural_adaptation_solver->SetMaxIterations(1000);
         p_structural_adaptation_solver->SetTimeIncrement(Owen11Parameters::mpVesselRadiusUpdateTimestep->GetValue("User"));
@@ -180,7 +179,6 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
         p_microvessel_solver->SetOutputFileHandler(p_internal_file_handler);
         p_microvessel_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
         p_microvessel_solver->SetStructuralAdaptationSolver(p_structural_adaptation_solver);
-
         p_microvessel_solver->Run();
 
         std::vector<double> solution = p_oxygen_solver->GetSolution();
