@@ -495,8 +495,8 @@ public:
             writer.SetFileName(output_file_handler.GetOutputDirectoryFullPath() + "receveid_part.vtp");
             writer.Write(false);
         }
-    }
 #endif
+    }
 };
 
 #endif /*TESTPART_HPP_*/

@@ -85,7 +85,7 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
                     std::make_shared<OutputFileHandler>("TestLinnengarHaematocritSolver_depl", true);
 
     double inlet_haematocrit = 0.8;
-    unsigned num_samples = 1;
+    unsigned num_samples = 0;
 
     for(unsigned idx=0; idx<num_samples; idx++)
     {
@@ -194,15 +194,15 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
         SimulationTime::Instance()->Destroy();
     }
 
-    std::shared_ptr<std::ofstream> p_out_file = std::shared_ptr<std::ofstream>(new std::ofstream);
-    p_out_file->open((p_file_handler->GetOutputDirectoryFullPath() + "/av_oxygen.dat").c_str());
-    (*p_out_file) << "Length (micron), Av Oxygen (micro M)"<< std::endl;
-    for(unsigned idx=0;idx<average_oxygen_concentration.size();idx++)
-    {
-        (*p_out_file) << lengths[idx] << "," << average_oxygen_concentration[idx] << std::endl;
-    }
-
-    p_out_file->close();
+//    std::shared_ptr<std::ofstream> p_out_file = std::shared_ptr<std::ofstream>(new std::ofstream);
+//    p_out_file->open((p_file_handler->GetOutputDirectoryFullPath() + "/av_oxygen.dat").c_str());
+//    (*p_out_file) << "Length (micron), Av Oxygen (micro M)"<< std::endl;
+//    for(unsigned idx=0;idx<average_oxygen_concentration.size();idx++)
+//    {
+//        (*p_out_file) << lengths[idx] << "," << average_oxygen_concentration[idx] << std::endl;
+//    }
+//
+//    p_out_file->close();
 
 }
 };
