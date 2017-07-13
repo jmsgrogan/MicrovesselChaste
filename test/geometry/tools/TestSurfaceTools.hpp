@@ -54,6 +54,38 @@ class TestSurfaceTools : public CxxTest::TestSuite
 {
 public:
 
+    void TestExtractBoundaryWithRemove() throw(Exception)
+    {
+        // Read the image from file
+        OutputFileHandler file_handler1 = OutputFileHandler("TestSurfaceTools/");
+        FileFinder finder = FileFinder("projects/MicrovesselChaste/test/data/surface.vtp", RelativeTo::ChasteSourceRoot);
+
+        vtkSmartPointer<vtkXMLPolyDataReader> p_reader = vtkSmartPointer<vtkXMLPolyDataReader>::New();
+        p_reader->SetFileName(finder.GetAbsolutePath().c_str());
+        p_reader->Update();
+
+        auto p_extractor = BoundaryExtractor::Create();
+        TS_ASSERT_THROWS_THIS(p_extractor->GetOutput(), "No output set. Did you run 'Update()' ?")
+
+        p_extractor->SetInput(p_reader->GetOutput());
+        p_extractor->SetDoSmoothing(false);
+        p_extractor->Update();
+
+        auto p_writer = GeometryWriter::Create();
+        p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"boundary.vtp").c_str());
+        p_writer->AddInput(p_extractor->GetOutput());
+        p_writer->Write();
+        p_writer->ClearInputs();
+
+        p_extractor->SetDoSmoothing(true);
+        p_extractor->SetRemoveDisconnected(true);
+        p_extractor->SetSmoothingLength(10.0);
+        p_extractor->Update();
+        p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"boundary_smoothed_remove.vtp").c_str());
+        p_writer->AddInput(p_extractor->GetOutput());
+        p_writer->Write();
+    }
+
     void TestExtractBoundary() throw(Exception)
     {
         // Read the image from file
@@ -64,12 +96,13 @@ public:
         p_reader->SetFileName(finder.GetAbsolutePath().c_str());
         p_reader->Update();
 
-        std::shared_ptr<BoundaryExtractor> p_extractor = BoundaryExtractor::Create();
+        auto p_extractor = BoundaryExtractor::Create();
+        TS_ASSERT_THROWS_THIS(p_extractor->Update(), "No input set.")
         p_extractor->SetInput(p_reader->GetOutput());
         p_extractor->SetDoSmoothing(false);
         p_extractor->Update();
 
-        std::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
+        auto p_writer = GeometryWriter::Create();
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"boundary.vtp").c_str());
         p_writer->AddInput(p_extractor->GetOutput());
         p_writer->Write();

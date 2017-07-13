@@ -41,152 +41,139 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "CheckpointArchiveTypes.hpp"
 #include "ArchiveLocationInfo.hpp"
 #include "OutputFileHandler.hpp"
-#include "SmartPointers.hpp"
 #include "Vertex.hpp"
 #include "Polygon.hpp"
 #include "Facet.hpp"
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
+
+std::vector<PolygonPtr<3> > SetUpPolygons()
+{
+    std::vector<VertexPtr<3> > vertices;
+    vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
+    vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
+    vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
+    std::vector<PolygonPtr<3> > polygons;
+    for(unsigned idx=0; idx<3; idx++)
+    {
+        polygons.push_back(Polygon<3>::Create(vertices[idx]));
+    }
+    return polygons;
+}
+
+PolygonPtr<3> SetUpTriangle()
+{
+    std::vector<VertexPtr<3> > vertices;
+    vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
+    vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
+    vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
+    return Polygon<3>::Create(vertices[0]);
+}
+
+template<unsigned DIM>
+PolygonPtr<DIM> SetUpSquare()
+{
+    std::vector<VertexPtr<DIM> > vertices;
+    vertices.push_back(Vertex<DIM>::Create(0.0_um, 0.0_um));
+    vertices.push_back(Vertex<DIM>::Create(1.0_um, 0.0_um));
+    vertices.push_back(Vertex<DIM>::Create(1.0_um, 1.0_um));
+    vertices.push_back(Vertex<DIM>::Create(0.0_um, 1.0_um));
+    return Polygon<DIM>::Create(vertices);
+}
+
 class TestFacet : public CxxTest::TestSuite
 {
+
 public:
 
-    void TestConstructor()
+    void TestConstructor() throw (Exception)
     {
-        std::vector<VertexPtr<3> > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
-
-        std::vector<PolygonPtr<3> > polygons;
-        for(unsigned idx=0; idx<3; idx++)
-        {
-            polygons.push_back(Polygon<3>::Create(vertices[idx]));
-        }
-
-        Facet<3> facet1 = Facet<3>(polygons);
-        Facet<3> facet2 = Facet<3>(polygons[0]);
-
+        std::vector<PolygonPtr<3> > polygons = SetUpPolygons();
+        Facet<3> facet1(polygons);
+        Facet<3> facet2(polygons[0]);
         TS_ASSERT_EQUALS(facet1.GetPolygons().size(), 3u);
         TS_ASSERT_EQUALS(facet2.GetPolygons().size(), 1u);
     }
 
-    void TestFactoryConstructor()
+    void TestFactoryConstructor() throw (Exception)
     {
-        std::vector<VertexPtr<3> > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
-
-        std::vector<PolygonPtr<3> > polygons;
-        for(unsigned idx=0; idx<3; idx++)
-        {
-            polygons.push_back(Polygon<3>::Create(vertices[idx]));
-        }
-
-        FacetPtr<3> p_facet1 = Facet<3>::Create(polygons);
-        FacetPtr<3> p_facet2 = Facet<3>::Create(polygons[0]);
-
+        std::vector<PolygonPtr<3> > polygons = SetUpPolygons();
+        auto p_facet1 = Facet<3>::Create(polygons);
+        auto p_facet2 = Facet<3>::Create(polygons[0]);
         TS_ASSERT_EQUALS(p_facet1->GetPolygons().size(), 3u);
         TS_ASSERT_EQUALS(p_facet2->GetPolygons().size(), 1u);
     }
 
-    void TestAddingPolygons()
+    void TestAddingPolygons() throw (Exception)
     {
-        std::vector<VertexPtr<3> > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
-
-        PolygonPtr<3> p_polygon = Polygon<3>::Create(vertices[0]);
-
-        std::vector<PolygonPtr<3> > polygons;
-        for(unsigned idx=1; idx<3; idx++)
-        {
-            polygons.push_back(Polygon<3>::Create(vertices[idx]));
-        }
-
-        FacetPtr<3> p_facet1 = Facet<3>::Create(p_polygon);
-        FacetPtr<3> p_facet2 = Facet<3>::Create(p_polygon);
-
+        std::vector<PolygonPtr<3> > polygons = SetUpPolygons();
+        PolygonPtr<3> p_polygon = SetUpTriangle();
+        auto p_facet1 = Facet<3>::Create(p_polygon);
+        auto p_facet2 = Facet<3>::Create(p_polygon);
         p_facet1->AddPolygons(polygons);
         p_facet2->AddPolygon(polygons[0]);
-
-        TS_ASSERT_EQUALS(p_facet1->GetPolygons().size(), 3u);
+        TS_ASSERT_EQUALS(p_facet1->GetPolygons().size(), 4u);
         TS_ASSERT_EQUALS(p_facet2->GetPolygons().size(), 2u);
     }
 
-    void TestVtkMethods()
+    void TestVtkMethods() throw (Exception)
     {
-        std::vector<VertexPtr<3> > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
-        vertices.push_back(Vertex<3>::Create(0.0_um, 1.0_um));
-        PolygonPtr<3> p_polygon = Polygon<3>::Create(vertices);
-        FacetPtr<3> p_facet = Facet<3>::Create(p_polygon);
+        PolygonPtr<3> p_polygon = SetUpSquare<3>();
+        auto p_facet = Facet<3>::Create(p_polygon);
+
+        TS_ASSERT(p_facet->ContainsPoint(Vertex<3>(0.75_um, 0.75_um, 0.0_um)));
+        TS_ASSERT(!p_facet->ContainsPoint(Vertex<3>(1.25_um, 0.75_um, 0.0_um)));
+        TS_ASSERT(!p_facet->ContainsPoint(Vertex<3>(0.75_um, 0.75_um, 1.0_um)));
 
         Vertex<3> centroid = p_facet->GetCentroid();
-        TS_ASSERT_DELTA(centroid.Convert(1_um)[0], 0.5, 1.e-6);
-        TS_ASSERT_DELTA(centroid.Convert(1_um)[1], 0.5, 1.e-6);
-        TS_ASSERT_DELTA(centroid.Convert(1_um)[2], 0.0, 1.e-6);
+        c_vector<double, 3> loc = centroid.Convert(1_um);
+        TS_ASSERT_DELTA(loc[0], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(loc[1], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(loc[2], 0.0, 1.e-6);
 
         c_vector<double, 3> normal = p_facet->GetNormal();
         TS_ASSERT_DELTA(normal[0], 0.0, 1.e-6);
         TS_ASSERT_DELTA(normal[1], 0.0, 1.e-6);
         TS_ASSERT_DELTA(std::abs(normal[2]), 1.0, 1.e-6);
-        Vertex<3> test_point1(0.75_um, 0.75_um, 0.0_um);
-        Vertex<3> test_point2(1.25_um, 0.75_um, 0.0_um);
-        Vertex<3> test_point3(0.75_um, 0.75_um, 1.0_um);
-
-        TS_ASSERT(p_facet->ContainsPoint(test_point1));
-        TS_ASSERT(!p_facet->ContainsPoint(test_point2));
-        TS_ASSERT(!p_facet->ContainsPoint(test_point3));
     }
 
-    void TestVtkMethods2d()
+    void TestVtkMethods2d() throw (Exception)
     {
-        std::vector<std::shared_ptr<Vertex<2> > > vertices;
-        vertices.push_back(Vertex<2>::Create(0.0_um, 0.0_um));
-        vertices.push_back(Vertex<2>::Create(1.0_um, 0.0_um));
-        vertices.push_back(Vertex<2>::Create(1.0_um, 1.0_um));
-        vertices.push_back(Vertex<2>::Create(0.0_um, 1.0_um));
-        std::shared_ptr<Polygon<2> > p_polygon = Polygon<2>::Create(vertices);
-        std::shared_ptr<Facet<2> > p_facet = Facet<2>::Create(p_polygon);
+        PolygonPtr<2> p_polygon = SetUpSquare<2>();
+        auto p_facet = Facet<2>::Create(p_polygon);
+        TS_ASSERT(p_facet->ContainsPoint(Vertex<2>(0.75_um, 0.75_um, 0.0_um)));
+        TS_ASSERT(!p_facet->ContainsPoint(Vertex<2>(1.25_um, 0.75_um, 0.0_um)));
 
         Vertex<2> centroid = p_facet->GetCentroid();
-        TS_ASSERT_DELTA(centroid.Convert(1_um)[0], 0.5, 1.e-6);
-        TS_ASSERT_DELTA(centroid.Convert(1_um)[1], 0.5, 1.e-6);
+        c_vector<double, 2> loc = centroid.Convert(1_um);
+        TS_ASSERT_DELTA(loc[0], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(loc[1], 0.5, 1.e-6);
 
         c_vector<double, 3> normal = p_facet->GetNormal();
         TS_ASSERT_DELTA(normal[0], 0.0, 1.e-6);
         TS_ASSERT_DELTA(normal[1], 0.0, 1.e-6);
-        Vertex<2> test_point1(0.75_um, 0.75_um, 0.0_um);
-        Vertex<2> test_point2(1.25_um, 0.75_um, 0.0_um);
-        TS_ASSERT(p_facet->ContainsPoint(test_point1));
-        TS_ASSERT(!p_facet->ContainsPoint(test_point2));
     }
 
-    void TestTransforms()
+    void TestTransforms() throw (Exception)
     {
-        std::vector<VertexPtr<3> > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
-        vertices.push_back(Vertex<3>::Create(0.0_um, 1.0_um));
-        auto p_polygon = Polygon<3>::Create(vertices);
+        PolygonPtr<3> p_polygon = SetUpSquare<3>();
         auto p_facet = Facet<3>::Create(p_polygon);
 
         Vertex<3> translation_vector(2.0_um, 2.0_um, 0.0_um);
-        Vertex<3> new_position = *vertices[1] + translation_vector;
-
+        Vertex<3> new_position = *(p_polygon->rGetVertices()[1]) + translation_vector;
         p_facet->Translate(translation_vector);
+
         c_vector<double, 3> rotation_axis = unit_vector<double>(3, 2);
         p_facet->RotateAboutAxis(rotation_axis, M_PI/2.0);
+
+        // Check extra verts have been updated during rotation
+        auto p_extra_poly = Polygon<3>::Create(Vertex<3>::Create(0.5_um, 1.5_um));
+        p_facet->AddPolygon(p_extra_poly);
+        p_facet->RotateAboutAxis(rotation_axis, -M_PI/2.0);
     }
 
-    void TestGeometryAndLabelMethods()
+    void TestGeometryAndLabelMethods() throw (Exception)
     {
         std::vector<VertexPtr<3> > vertices;
         vertices.push_back(Vertex<3>::Create(-0.5_um, 0.0_um));
@@ -210,7 +197,7 @@ public:
         TS_ASSERT_DELTA(abs(p_facet->GetPlane()->GetNormal()[2]), 1.0, 1.e-6);
     }
 
-    void Test2DMethods()
+    void Test2DMethods() throw (Exception)
     {
         std::vector<std::shared_ptr<Vertex<2> > > vertices;
         vertices.push_back(Vertex<2>::Create(-0.5_um, 0.0_um));

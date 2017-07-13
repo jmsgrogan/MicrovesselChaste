@@ -53,8 +53,8 @@ public:
 
     void TestWriteCuboid() throw(Exception)
     {
-        Part<3> part = Part<3>();
-        part.AddCuboid(1_um, 1_um, 1_um, Vertex<3>(0.0, 0.0, 0.0));
+        Part<3> part;
+        part.AddCuboid(1_um, 1_um, 1_um);
         part.GetPolygons()[0]->AddAttribute("Polygon Number", 1.0);
         part.GetPolygons()[1]->AddAttribute("Polygon Number", 2.0);
         part.GetPolygons()[2]->AddAttribute("Polygon Number", 3.0);
@@ -70,7 +70,7 @@ public:
 
         OutputFileHandler output_file_handler("TestGeometryWriter/TestWriteCuboid");
 
-        std::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
+        auto p_writer = GeometryWriter::Create();
         TS_ASSERT_THROWS_THIS(p_writer->Write(), "An input geometry is not set.");
 
         p_writer->AddInput(part.GetVtk());
@@ -84,6 +84,27 @@ public:
         p_writer->Write();
 
         part.Write(output_file_handler.GetOutputDirectoryFullPath() + "cube_alone.vtp", GeometryFormat::VTP, false);
+    }
+
+    void TestWriteTwoParts() throw(Exception)
+    {
+        Part<3> part1;
+        part1.AddCuboid(1_um, 1_um, 1_um);
+
+        Part<3> part2;
+        part2.AddCuboid(3_um, 3_um, 3_um);
+
+        OutputFileHandler output_file_handler("TestGeometryWriter/TestWriteTwoPart");
+        auto p_writer = GeometryWriter::Create();
+        p_writer->AddInput(part1.GetVtk());
+        p_writer->AddInput(part2.GetVtk());
+        p_writer->SetFileName(output_file_handler.GetOutputDirectoryFullPath() + "cube.vtp");
+        p_writer->SetOutputFormat(GeometryFormat::VTP);
+        p_writer->Write();
+
+        p_writer->SetFileName(output_file_handler.GetOutputDirectoryFullPath() + "cube.stl");
+        p_writer->SetOutputFormat(GeometryFormat::STL);
+        p_writer->Write();
     }
 
 };

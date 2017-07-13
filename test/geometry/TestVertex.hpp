@@ -51,7 +51,7 @@ class TestVertex: public CxxTest::TestSuite
 {
 public:
 
-    void TestConstructorsAndScaling()
+    void TestConstructorsAndScaling() throw (Exception)
     {
         // Create points using constructors
         QLength reference_scale1(5_m);
@@ -87,19 +87,26 @@ public:
         TS_ASSERT_DELTA(p_point7->Convert(reference_scale2)[1], 0.2, 1.e-6);
         TS_ASSERT_DELTA(p_point8->Convert(reference_scale2)[0], 2.0, 1.e-6);
         TS_ASSERT_DELTA(p_point8->Convert(reference_scale2)[1], 3.0, 1.e-6);
+
+        double point9[3] = {1.0, 2.0, 3.0};
+        auto p_point9 = Vertex<3>::Create(point9, reference_scale2);
+        TS_ASSERT_DELTA(p_point9->Convert(reference_scale2)[0], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(p_point9->Convert(reference_scale2)[1], 2.0, 1.e-6);
+        TS_ASSERT_DELTA(p_point9->Convert(reference_scale2)[2], 3.0, 1.e-6);
+
+        TS_ASSERT_THROWS_THIS((*p_point8)[2], "Requested index out of bounds");
     }
 
-    void TestGeometryOperations()
+    void TestGeometryOperations() throw (Exception)
     {
-        QLength reference_scale(1.0_m);
-        Vertex<2> point1 = Vertex<2>(1.0_m, 2.0_m);
-        Vertex<2> point2 = Vertex<2>(2.0_m, 3.0_m);
+        Vertex<2> point1(1.0_m, 2.0_m);
+        Vertex<2> point2(2.0_m, 3.0_m);
         TS_ASSERT_DELTA(point1.GetDistance(point2)/1_m, std::sqrt(2.0), 1.e-6);
-        TS_ASSERT_DELTA(point1.GetMidPoint(point2).Convert(reference_scale)[0], 1.5, 1.e-6);
-        TS_ASSERT_DELTA(point1.GetMidPoint(point2).Convert(reference_scale)[1], 2.5, 1.e-6);
+        TS_ASSERT_DELTA(point1.GetMidPoint(point2).Convert(1_m)[0], 1.5, 1.e-6);
+        TS_ASSERT_DELTA(point1.GetMidPoint(point2).Convert(1_m)[1], 2.5, 1.e-6);
         TS_ASSERT_DELTA(point1.GetNorm2()/1_m, std::sqrt(5.0), 1.e-6);
 
-        QLength reference_scale2(5.0 * unit::metres);
+        QLength reference_scale2(5_m);
         c_vector<double, 2> scaled_location = point1.Convert(reference_scale2);
         TS_ASSERT_DELTA(scaled_location[0], 1.0/5.0, 1.e-6);
         TS_ASSERT_DELTA(scaled_location[1], 2.0/5.0, 1.e-6);
@@ -110,46 +117,58 @@ public:
         c_vector<double, 2> unit_tangent = point1.GetUnitTangent(point2);
         TS_ASSERT_DELTA(unit_tangent[0], std::sqrt(2.0)/2.0, 1.e-6);
         TS_ASSERT_DELTA(unit_tangent[1], std::sqrt(2.0)/2.0, 1.e-6);
-        Vertex<2> point3 = Vertex<2>(1.0_m, 2.0_m);
+        Vertex<2> point3(1.0_m, 2.0_m);
         TS_ASSERT(point1.IsCoincident(point3));
         TS_ASSERT(!point1.IsCoincident(point2));
 
-        Vertex<3> point4 = Vertex<3>(1.0_m, 2.0_m);
+        Vertex<3> point4(1.0_m, 2.0_m);
         c_vector<double, 3> rotation_axis;
         rotation_axis[0] = 0.0;
         rotation_axis[1] = 0.0;
         rotation_axis[2] = 1.0;
         point4.RotateAboutAxis(rotation_axis, M_PI);
-        TS_ASSERT_DELTA(point4.Convert(reference_scale)[0], -1.0, 1.e-6);
-        TS_ASSERT_DELTA(point4.Convert(reference_scale)[1], -2.0, 1.e-6);
+        TS_ASSERT_DELTA(point4.Convert(1_m)[0], -1.0, 1.e-6);
+        TS_ASSERT_DELTA(point4.Convert(1_m)[1], -2.0, 1.e-6);
 
-        Vertex<2> point5 = Vertex<2>(1.0_m, 2.0_m);
+        Vertex<2> point5(1.0_m, 2.0_m);
         point5.RotateAboutAxis(rotation_axis, M_PI);
-        TS_ASSERT_DELTA(point5.Convert(reference_scale)[0], -1.0, 1.e-6);
-        TS_ASSERT_DELTA(point5.Convert(reference_scale)[1], -2.0, 1.e-6);
+        TS_ASSERT_DELTA(point5.Convert(1_m)[0], -1.0, 1.e-6);
+        TS_ASSERT_DELTA(point5.Convert(1_m)[1], -2.0, 1.e-6);
+
+        c_vector<double, 3> rotation_axis2;
+        rotation_axis2[0] = 0.0;
+        rotation_axis2[1] = 1.0;
+        rotation_axis2[2] = 1.0;
+        TS_ASSERT_THROWS_THIS(point5.RotateAboutAxis(rotation_axis2, M_PI),
+                "2D rotation is about z axis only");
     }
 
-    void TestOverloadedOperators()
+    void TestOverloadedOperators() throw (Exception)
     {
-        QLength reference_scale(1.0 * unit::metres);
-        Vertex<2> point1 = Vertex<2>(1.0_m, 2.0_m);
-        Vertex<2> point2 = Vertex<2>(2.0_m, 3.0_m);
+        Vertex<2> point1(1.0_m, 2.0_m);
+        Vertex<2> point2(2.0_m, 3.0_m);
 
         Vertex<2> point3 = point1 + point2;
-        TS_ASSERT_DELTA(point3.Convert(reference_scale)[0], 3.0, 1.e-6);
-        TS_ASSERT_DELTA(point3.Convert(reference_scale)[1], 5.0, 1.e-6);
+        TS_ASSERT_DELTA(point3.Convert(1_m)[0], 3.0, 1.e-6);
+        TS_ASSERT_DELTA(point3.Convert(1_m)[1], 5.0, 1.e-6);
 
         Vertex<2> point4 = point1 *3.0;
-        TS_ASSERT_DELTA(point4.Convert(reference_scale)[0], 3.0, 1.e-6);
-        TS_ASSERT_DELTA(point4.Convert(reference_scale)[1], 6.0, 1.e-6);
+        TS_ASSERT_DELTA(point4.Convert(1_m)[0], 3.0, 1.e-6);
+        TS_ASSERT_DELTA(point4.Convert(1_m)[1], 6.0, 1.e-6);
 
         Vertex<2> point5 = point1 / 2.0;
-        TS_ASSERT_DELTA(point5.Convert(reference_scale)[0], 0.5, 1.e-6);
-        TS_ASSERT_DELTA(point5.Convert(reference_scale)[1], 1.0, 1.e-6);
+        TS_ASSERT_DELTA(point5.Convert(1_m)[0], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(point5.Convert(1_m)[1], 1.0, 1.e-6);
 
         Vertex<2> point6 = point1- point2;
-        TS_ASSERT_DELTA(point6.Convert(reference_scale)[0], -1.0, 1.e-6);
-        TS_ASSERT_DELTA(point6.Convert(reference_scale)[1], -1.0, 1.e-6);
+        TS_ASSERT_DELTA(point6.Convert(1_m)[0], -1.0, 1.e-6);
+        TS_ASSERT_DELTA(point6.Convert(1_m)[1], -1.0, 1.e-6);
+    }
+
+    void TestAttributes() throw (Exception)
+    {
+        Vertex<2> point1(1.0_m, 2.0_m);
+        point1.AddAttribute("BottomLeft", 1.0);
     }
 
     void TestArchiving() throw (Exception)

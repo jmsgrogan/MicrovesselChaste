@@ -59,11 +59,11 @@ public:
 
     void TestSingleSegmentVessel() throw(Exception)
     {
-        QLength vessel_length = 100.0 * 1_um;
+        QLength vessel_length = 100_um;
         VesselNetworkGenerator<3> generator;
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length);
-        p_network->GetVessels()[0]->GetStartNode()->SetRadius(10.0e-6 * unit::metres);
-        p_network->GetVessels()[0]->GetEndNode()->SetRadius(10.0e-6 * unit::metres);
+        p_network->GetVessels()[0]->GetStartNode()->SetRadius(10_um);
+        p_network->GetVessels()[0]->GetEndNode()->SetRadius(10_um);
 
         // Set up the surface generator
         VesselSurfaceGenerator<3> surface_generator(p_network);
@@ -79,26 +79,24 @@ public:
 
     void TestMultiSegmentVessel() throw(Exception)
     {
-        QLength vessel_length = 100.0_um;
-        std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3> ::Create(0.0_m);
-        std::shared_ptr<VesselNode<3> > p_node2 = VesselNode<3> ::Create(vessel_length);
-        std::shared_ptr<VesselNode<3> > p_node3 = VesselNode<3> ::Create(2.0*vessel_length, vessel_length);
-        std::shared_ptr<VesselNode<3> > p_node4 = VesselNode<3> ::Create(3.0*vessel_length, vessel_length, vessel_length);
+        QLength vessel_length = 100_um;
+        auto p_node1 = VesselNode<3> ::Create(0.0_m);
+        auto p_node2 = VesselNode<3> ::Create(vessel_length);
+        auto p_node3 = VesselNode<3> ::Create(2.0*vessel_length, vessel_length);
+        auto p_node4 = VesselNode<3> ::Create(3.0*vessel_length, vessel_length, vessel_length);
+        p_node1->SetRadius(10_um);
+        p_node2->SetRadius(10_um);
+        p_node3->SetRadius(10_um);
+        p_node4->SetRadius(10_um);
+        auto p_segment1 = VesselSegment<3>::Create(p_node1, p_node2);
+        auto p_segment2 = VesselSegment<3>::Create(p_node2, p_node3);
+        auto p_segment3 = VesselSegment<3>::Create(p_node3, p_node4);
 
-        p_node1->SetRadius(10.0e-6 * unit::metres);
-        p_node2->SetRadius(10.0e-6 * unit::metres);
-        p_node3->SetRadius(10.0e-6 * unit::metres);
-        p_node4->SetRadius(10.0e-6 * unit::metres);
-
-        std::shared_ptr<VesselSegment<3> > p_segment1 = VesselSegment<3>::Create(p_node1, p_node2);
-        std::shared_ptr<VesselSegment<3> > p_segment2 = VesselSegment<3>::Create(p_node2, p_node3);
-        std::shared_ptr<VesselSegment<3> > p_segment3 = VesselSegment<3>::Create(p_node3, p_node4);
-
-        std::shared_ptr<Vessel<3> > p_vessel1 = Vessel<3>::Create(p_segment1);
+        auto p_vessel1 = Vessel<3>::Create(p_segment1);
         p_vessel1->AddSegment(p_segment2);
         p_vessel1->AddSegment(p_segment3);
 
-        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
+        auto p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_vessel1);
 
         VesselSurfaceGenerator<3> surface_generator(p_network);
@@ -113,25 +111,26 @@ public:
 
     void TestSinusoidVessel() throw(Exception)
     {
-        QLength vessel_length = 400.0;
+        QLength vessel_length = 400_um;
         unsigned num_segments= 10;
         QLength segment_length = vessel_length / double(num_segments);
 
         std::vector<std::shared_ptr<VesselNode<3> > > nodes;
         nodes.push_back(VesselNode<3>::Create(vessel_length/10.0));
-        nodes[0]->SetRadius(10.0e-6 * unit::metres);
+        nodes[0]->SetRadius(10_um);
         for(unsigned idx=0; idx<num_segments+1; idx++)
         {
             QLength x_position = vessel_length/10.0 * std::cos(double(idx) * segment_length * (2.0 * M_PI/vessel_length));
             QLength z_position = double(idx) * segment_length + segment_length;
             nodes.push_back(VesselNode<3>::Create(x_position, 0.0_m, z_position));
-            nodes[idx+1]->SetRadius(10.0e-6 * unit::metres);
+            nodes[idx+1]->SetRadius(10_um);
         }
-        nodes.push_back(VesselNode<3>::Create(vessel_length/10.0, 0.0_m, (double(num_segments) + 1 ) * segment_length + segment_length));
-        nodes[nodes.size()-1]->SetRadius(10.0e-6 * unit::metres);
+        nodes.push_back(VesselNode<3>::Create(vessel_length/10.0, 0.0_m, (double(num_segments) + 1 ) * segment_length +
+                segment_length));
+        nodes[nodes.size()-1]->SetRadius(10_um);
 
-        std::shared_ptr<Vessel<3> > p_vessel1 = Vessel<3>::Create(nodes);
-        std::shared_ptr<VesselNetwork<3> > p_network = std::shared_ptr<VesselNetwork<3> >(new VesselNetwork<3>());
+        auto p_vessel1 = Vessel<3>::Create(nodes);
+        auto p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_vessel1);
 
         VesselSurfaceGenerator<3> surface_generator(p_network);
@@ -155,13 +154,13 @@ public:
         std::shared_ptr<VesselNode<3> > p_node6 = VesselNode<3> ::Create(0.0_m, 0.0_m, vessel_length);
         std::shared_ptr<VesselNode<3> > p_node7 = VesselNode<3> ::Create(0.0_m, 0.0_m, -vessel_length);
 
-        p_node1->SetRadius(10.0e-6 * unit::metres);
-        p_node2->SetRadius(10.0e-6 * unit::metres);
-        p_node3->SetRadius(10.0e-6 * unit::metres);
-        p_node4->SetRadius(10.0e-6 * unit::metres);
-        p_node5->SetRadius(10.0e-6 * unit::metres);
-        p_node6->SetRadius(10.0e-6 * unit::metres);
-        p_node7->SetRadius(10.0e-6 * unit::metres);
+        p_node1->SetRadius(10_um);
+        p_node2->SetRadius(10_um);
+        p_node3->SetRadius(10_um);
+        p_node4->SetRadius(10_um);
+        p_node5->SetRadius(10_um);
+        p_node6->SetRadius(10_um);
+        p_node7->SetRadius(10_um);
 
         std::shared_ptr<VesselSegment<3> > p_segment1 = VesselSegment<3>::Create(p_node2, p_node1);
         std::shared_ptr<VesselSegment<3> > p_segment2 = VesselSegment<3>::Create(p_node2, p_node3);
@@ -198,15 +197,14 @@ public:
 
     void Test2dFails() throw(Exception)
     {
-        QLength vessel_length = 100.0 * 1_um;
+        QLength vessel_length = 100_um;
         VesselNetworkGenerator<2> generator;
         std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length);
-        p_network->GetVessels()[0]->GetStartNode()->SetRadius(10.0e-6 * unit::metres);
-        p_network->GetVessels()[0]->GetEndNode()->SetRadius(10.0e-6 * unit::metres);
+        p_network->GetVessels()[0]->GetStartNode()->SetRadius(10_um);
+        p_network->GetVessels()[0]->GetEndNode()->SetRadius(10_um);
 
         // Set up the surface generator
         VesselSurfaceGenerator<2> surface_generator(p_network);
-
         TS_ASSERT_THROWS_THIS(surface_generator.GetSurface(), "The surface generator currently only works in 3D");
     }
 };

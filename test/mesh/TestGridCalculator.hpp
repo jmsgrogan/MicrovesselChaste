@@ -328,7 +328,7 @@ public:
                 std::make_shared<OutputFileHandler>("TestGridCalculator/TestPointCellMapGeneration");
 
         // Set up a grid
-        std::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        auto p_grid = RegularGrid<3>::Create();
         c_vector<unsigned, 3> dimensions;
         dimensions[0] = 10;
         dimensions[1] = 10;
@@ -362,6 +362,8 @@ public:
         std::shared_ptr<GridCalculator<3> > p_grid_calc = GridCalculator<3>::Create();
         p_grid_calc->SetGrid(p_grid);
         p_grid_calc->SetCellPopulation(cell_population, 1_um, BaseUnits::Instance()->GetReferenceConcentrationScale());
+
+        TS_ASSERT(p_grid_calc->CellPopulationIsSet());
         std::vector<std::vector<CellPtr> > map = p_grid_calc->rGetCellMap();
 
         // Make sure all the cells are accounted for

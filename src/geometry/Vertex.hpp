@@ -147,14 +147,6 @@ public:
      * @param referenceLength the reference length
      * @return a pointer to the point
      */
-    static std::shared_ptr<Vertex<DIM> > Create(VecQLength<DIM> loc);
-
-    /**
-     * Factory Constructor
-     * @param coords a vector of x, y, z coordinates
-     * @param referenceLength the reference length
-     * @return a pointer to the point
-     */
     static std::shared_ptr<Vertex<DIM> > Create(const Vertex<DIM>& loc);
 
     /**
@@ -176,13 +168,6 @@ public:
      * @param value the value
      */
     void AddAttribute(const std::string& rAttribute, double value);
-
-    /**
-     * Get the distance between this point and the input point
-     * @param rLocation the input point
-     * @return the distance between this point and the input point
-     */
-    QLength GetDistance(const VecQLength<DIM>& rLocation) const;
 
     /**
      * Get the distance between this point and the input point
@@ -271,14 +256,12 @@ public:
      */
     bool IsCoincident(const Vertex<DIM>& rLocation) const;
 
-    const QLength operator[] (unsigned i) const
-    {
-        if(i>=DIM)
-        {
-            EXCEPTION("Requested index out of bounds");
-        }
-        return mLocation[i];
-    }
+    /**
+     * Overload access operator with range checking, i.e. slow
+     * @return the indexed coordinate
+     * @param the index for the coordinate to be returned
+     */
+    const QLength operator[] (unsigned i) const;
 
     /**
      * Overload division from self

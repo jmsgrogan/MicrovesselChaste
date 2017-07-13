@@ -59,6 +59,23 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
+template<unsigned DIM>
+VesselNetworkPtr<DIM> GetVesselNetwork()
+{
+    auto p_start_top = VesselNode<DIM>::Create(10.0_um, 60.0_um, double(DIM-2)*50_um);
+    auto p_end_top = VesselNode<DIM>::Create(90.0_um, 60.0_um, double(DIM-2)*50_um);
+    auto p_start_bottom = VesselNode<DIM>::Create(10.0_um, 20.0_um, double(DIM-2)*50_um);
+    auto p_end_bottom = VesselNode<DIM>::Create(100.0_um, 20.0_um, double(DIM-2)*50_um);
+    auto p_top_vessel = Vessel<DIM>::Create(VesselSegment<DIM>::Create(p_start_top, p_end_top));
+    auto p_bottom_vessel = Vessel<DIM>::Create(VesselSegment<DIM>::Create(p_start_bottom, p_end_bottom));
+    auto p_network = VesselNetwork<DIM>::Create();
+    p_network->AddVessel(p_top_vessel);
+    p_network->AddVessel(p_bottom_vessel);
+    p_top_vessel->GetSegment(0)->SetRadius(10_um);
+    p_bottom_vessel->GetSegment(0)->SetRadius(10_um);
+    return p_network;
+}
+
 class TestPart : public CxxTest::TestSuite
 {
 
@@ -73,7 +90,7 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory);
 
-        Part<3> part = Part<3>();
+        Part<3> part;
         part.AddRectangle(1_um, 1_um);
 
         TS_ASSERT_DELTA(part.GetPolygons()[0]->rGetVertices()[0]->Convert(1_um)[0], 0.0, 1.e-6);
@@ -87,7 +104,7 @@ public:
 
         TS_ASSERT_DELTA(part.GetReferenceLengthScale()/1_m, 1.e-6, 1.e-8);
         TS_ASSERT_THROWS_THIS(part.GetFacet(Vertex<3>(4.0_um)), "No facet found at input location");
-        part.SetReferenceLengthScale(10.e-6*unit::metres);
+        part.SetReferenceLengthScale(10_um);
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Rectangle.vtp"));
     }
 
@@ -100,7 +117,7 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        Part<3> part = Part<3>();
+        Part<3> part;
         part.AddCuboid(1_um, 1_um, 1_um);
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Cuboid.vtp"));
     }
@@ -114,8 +131,8 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        Part<3> part = Part<3>();
-        part.AddCylinder(1_um, 1_um, Vertex<3>(0_m), 24);
+        Part<3> part;
+        part.AddCylinder(1_um, 1_um);
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Cylinder.vtp"));
     }
 
@@ -128,19 +145,19 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        std::shared_ptr<Part<3> > p_part = Part<3>::Create();
+        auto p_part = Part<3>::Create();
         p_part->AddRectangle(1_um, 1_um);
-        p_part->AddCircle(0.33e-6*unit::metres, Vertex<3>(0.5_um, 0.5_um));
+        p_part->AddCircle(0.33_um, Vertex<3>(0.5_um, 0.5_um));
 
-        std::shared_ptr<Part<3> > p_part2 = Part<3>::Create();
+        auto p_part2 = Part<3>::Create();
         p_part2->AddRectangle(1_um, 1_um);
         p_part2->AddPolygon(p_part->GetPolygons()[1], true);
 
-        std::shared_ptr<Part<3> > p_part3 = Part<3>::Create();
+        auto p_part3 = Part<3>::Create();
         p_part3->AddRectangle(1_um, 1_um);
         p_part3->AddPolygon(p_part->GetPolygons()[1], false);
 
-        std::shared_ptr<Part<3> > p_part4 = Part<3>::Create();
+        auto p_part4 = Part<3>::Create();
         p_part4->AddRectangle(1_um, 1_um);
         p_part4->AddPolygon(p_part->GetPolygons()[1], false, p_part4->GetFacets()[0]);
 
@@ -156,13 +173,13 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        std::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        std::shared_ptr<Polygon<3> > p_circle = p_part->AddCircle(0.33e-6*unit::metres, Vertex<3>(0.5_um, 0.5_um));
+        auto p_part = Part<3>::Create();
+        PolygonPtr<3> p_circle = p_part->AddCircle(0.33_um, Vertex<3>(0.5_um, 0.5_um));
         p_part->Extrude(p_circle, 1_um);
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath().append("ExtrudePart.vtp"));
 
-        std::shared_ptr<Part<2> > p_part2 = Part<2>::Create();
-        std::shared_ptr<Polygon<2> > p_circle2 = p_part2->AddCircle(0.33e-6*unit::metres, Vertex<2>(0.5_um, 0.5_um));
+        auto p_part2 = Part<2>::Create();
+        PolygonPtr<2> p_circle2 = p_part2->AddCircle(0.33_um, Vertex<2>(0.5_um, 0.5_um));
         TS_ASSERT_THROWS_THIS(p_part2->Extrude(p_circle2, 1_um), "Only parts in 3D space can be extruded.");
     }
 
@@ -175,22 +192,12 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        std::shared_ptr<VesselNode<2> > p_start_top = VesselNode<2>::Create(0.0_um, 60.0_um);
-        std::shared_ptr<VesselNode<2> > p_end_top = VesselNode<2>::Create(90.0_um, 60.0_um);
-        std::shared_ptr<VesselNode<2> > p_start_bottom = VesselNode<2>::Create(10.0_um, 20.0_um);
-        std::shared_ptr<VesselNode<2> > p_end_bottom = VesselNode<2>::Create(100.0_um, 20.0_um);
-        std::shared_ptr<Vessel<2> > p_top_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_top, p_end_top));
-        std::shared_ptr<Vessel<2> > p_bottom_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_bottom, p_end_bottom));
-        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
-        p_network->AddVessel(p_top_vessel);
-        p_network->AddVessel(p_bottom_vessel);
-
-        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(100.0*1_um, 100.0*1_um);
+        auto p_network = GetVesselNetwork<2>();
+        auto p_domain = Part<2>::Create();
+        p_domain->AddRectangle(100_um, 100_um);
         p_domain->AddVesselNetwork(p_network);
 
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselLines2d.vtp"));
-
         std::vector<std::pair<std::pair<unsigned, unsigned>, unsigned > > segment_indices = p_domain->GetSegmentIndices();
         TS_ASSERT_EQUALS(segment_indices.size(), 4u);
     }
@@ -204,20 +211,10 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        std::shared_ptr<VesselNode<3> > p_start_top = VesselNode<3>::Create(10.0_um, 60.0_um, 50.0_um);
-        std::shared_ptr<VesselNode<3> > p_end_top = VesselNode<3>::Create(90.0_um, 60.0_um, 50.0_um);
-        std::shared_ptr<VesselNode<3> > p_start_bottom = VesselNode<3>::Create(10.0_um, 20.0_um, 50.0_um);
-        std::shared_ptr<VesselNode<3> > p_end_bottom = VesselNode<3>::Create(90.0_um, 20.0_um, 50.0_um);
-        std::shared_ptr<Vessel<3> > p_top_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_top, p_end_top));
-        std::shared_ptr<Vessel<3> > p_bottom_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_bottom, p_end_bottom));
-        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
-        p_network->AddVessel(p_top_vessel);
-        p_network->AddVessel(p_bottom_vessel);
-
-        std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
+        auto p_network = GetVesselNetwork<3>();
+        auto p_domain = Part<3>::Create();
         p_domain->AddCuboid(100_um, 100_um, 100_um);
         p_domain->AddVesselNetwork(p_network);
-
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselLines3d.vtp"));
     }
 
@@ -230,21 +227,9 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        std::shared_ptr<VesselNode<2> > p_start_top = VesselNode<2>::Create(10.0_um, 60.0_um, 0.0_um);
-        std::shared_ptr<VesselNode<2> > p_end_top = VesselNode<2>::Create(90.0_um, 60.0_um, 0.0_um);
-        std::shared_ptr<VesselNode<2> > p_start_bottom = VesselNode<2>::Create(10.0_um, 20.0_um, 0.0_um);
-        std::shared_ptr<VesselNode<2> > p_end_bottom = VesselNode<2>::Create(90.0_um, 20.0_um, 0.0_um);
-        std::shared_ptr<Vessel<2> > p_top_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_top, p_end_top));
-        std::shared_ptr<Vessel<2> > p_bottom_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_bottom, p_end_bottom));
-        p_top_vessel->GetSegment(0)->SetRadius(10.0*1_um);
-        p_bottom_vessel->GetSegment(0)->SetRadius(10.0*1_um);
-
-        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
-        p_network->AddVessel(p_top_vessel);
-        p_network->AddVessel(p_bottom_vessel);
-
-        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(100.0*1_um, 100.0*1_um);
+        auto p_network = GetVesselNetwork<2>();
+        auto p_domain = Part<2>::Create();
+        p_domain->AddRectangle(100_um, 100_um);
         TS_ASSERT_THROWS_THIS(p_domain->AddVesselNetwork(p_network, true), "The surface generator currently only works in 3D");
     }
 
@@ -257,22 +242,9 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        std::shared_ptr<VesselNode<3> > p_start_top = VesselNode<3>::Create(10.0_um, 60.0_um, 50.0_um);
-        std::shared_ptr<VesselNode<3> > p_end_top = VesselNode<3>::Create(90.0_um, 60.0_um, 50.0_um);
-        std::shared_ptr<VesselNode<3> > p_start_bottom = VesselNode<3>::Create(10.0_um, 20.0_um, 50.0_um);
-        std::shared_ptr<VesselNode<3> > p_end_bottom = VesselNode<3>::Create(90.0_um, 20.0_um, 50.0_um);
-        std::shared_ptr<Vessel<3> > p_top_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_top, p_end_top));
-        std::shared_ptr<Vessel<3> > p_bottom_vessel = Vessel<3>::Create(VesselSegment<3>::Create(p_start_bottom, p_end_bottom));
-        p_top_vessel->GetSegment(0)->SetRadius(10.0*1_um);
-        p_bottom_vessel->GetSegment(0)->SetRadius(10.0*1_um);
-        std::shared_ptr<VesselNetwork<3> > p_network = VesselNetwork<3>::Create();
-        p_network->AddVessel(p_top_vessel);
-        p_network->AddVessel(p_bottom_vessel);
-
-        std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(100.0*1_um,
-                            100.0*1_um,
-                            100.0*1_um);
+        auto p_network = GetVesselNetwork<3>();
+        auto p_domain = Part<3>::Create();
+        p_domain->AddCuboid(100_um, 100_um, 100_um);
         p_domain->AddVesselNetwork(p_network, true);
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselSurface3d.vtp"));
     }
@@ -286,61 +258,58 @@ public:
         }
         OutputFileHandler output_file_handler(output_directory, false);
 
-        QLength vessel_length = 100.0 * 1_um;
+        QLength vessel_length = 100_um;
         VesselNetworkGenerator<3> generator;
         std::shared_ptr<VesselNetwork<3> > p_network = generator.GenerateSingleVessel(vessel_length);
-        p_network->GetVessels()[0]->GetStartNode()->SetRadius(5.0e-6 * unit::metres);
-        p_network->GetVessels()[0]->GetEndNode()->SetRadius(5.0e-6 * unit::metres);
+        p_network->GetVessels()[0]->GetStartNode()->SetRadius(5_um);
+        p_network->GetVessels()[0]->GetEndNode()->SetRadius(5_um);
 
-        Part<3> part = Part<3>();
-        std::shared_ptr<Polygon<3> > p_circle = part.AddCircle(vessel_length, Vertex<3>(0.0, 0.0, 0.0));
+        Part<3> part;
+        PolygonPtr<3> p_circle = part.AddCircle(vessel_length);
         part.Extrude(p_circle, vessel_length);
         part.AddVesselNetwork(p_network, true);
-
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Vessels3dCylinderSurface.vtp"));
+
+        Part<3> part2;
+        PolygonPtr<3> p_circle2 = part2.AddCircle(vessel_length);
+        part2.Extrude(p_circle2, vessel_length);
+        part2.AddVesselNetwork(p_network, true, true);
+        part2.Write(output_file_handler.GetOutputDirectoryFullPath().append("Vessels3dCylinderSurfaceFill.vtp"));
     }
 
     void TestBooleanWithNetwork() throw(Exception)
     {
-        std::shared_ptr<VesselNode<2> > p_start_top = VesselNode<2>::Create(10.0_um, 60.0_um);
-        std::shared_ptr<VesselNode<2> > p_end_top = VesselNode<2>::Create(90.0_um, 60.0_um);
-        std::shared_ptr<VesselNode<2> > p_start_bottom = VesselNode<2>::Create(10.0_um, 20.0_um);
-        std::shared_ptr<VesselNode<2> > p_end_bottom = VesselNode<2>::Create(90.0_um, 20.0_um);
-        std::shared_ptr<Vessel<2> > p_top_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_top, p_end_top));
-        std::shared_ptr<Vessel<2> > p_bottom_vessel = Vessel<2>::Create(VesselSegment<2>::Create(p_start_bottom, p_end_bottom));
-        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
-        p_network->AddVessel(p_top_vessel);
-        p_network->AddVessel(p_bottom_vessel);
-
-        std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-        p_domain->AddRectangle(50.0*1_um, 50.0*1_um);
+        auto p_network = GetVesselNetwork<2>();
+        auto p_domain = Part<2>::Create();
+        p_domain->AddRectangle(50_um, 50_um);
         p_domain->BooleanWithNetwork(p_network);
-
         TS_ASSERT_EQUALS(p_network->GetNumberOfVessels(), 1u);
     }
 
     void TestContainingGridIndices() throw(Exception)
     {
-        Part<3> part = Part<3>();
-        part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres, Vertex<3>(0.5_um, 0.5_um, 0.5_um));
+        Part<3> part;
+        part.AddCuboid(10_um, 10_um, 10_um, Vertex<3>(0.5_um, 0.5_um, 0.5_um));
 
-        std::vector<unsigned> containing_indices = part.GetContainingGridIndices(20, 20, 20, 1.0e-6*unit::metres);
+        std::vector<unsigned> containing_indices = part.GetContainingGridIndices(20, 20, 20, 1_um);
         TS_ASSERT_EQUALS(containing_indices.size(), 10u*10u*10u);
     }
 
     void TestGetSegmentIndices() throw(Exception)
     {
-        Part<3> part = Part<3>();
-        part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres);
+        Part<3> part;
+        part.AddCuboid(10_um, 10_um, 10_um);
     }
 
     void TestPointInPart() throw(Exception)
     {
-        Part<3> part = Part<3>();
+        Part<3> part;
         part.AddCuboid(10_um, 10_um, 10_um);
         TS_ASSERT(part.IsPointInPart(Vertex<3>(0.5_um, 0.5_um, 0.5_um)));
 
-        Part<2> part2 = Part<2>();
+        auto p_facet = part.GetFacet(Vertex<3>(0.5_um, 0.5_um, 0.0_um));
+
+        Part<2> part2;
         part2.AddRectangle(10_um, 10_um);
 
         vtkSmartPointer<vtkPoints> p_probes = vtkSmartPointer<vtkPoints>::New();
@@ -350,13 +319,89 @@ public:
 
     void TestTranslate() throw(Exception)
     {
-        Part<3> part = Part<3>();
-        part.AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres);
+        Part<3> part;
+        part.AddCuboid(10_um, 10_um, 10_um);
 
         Vertex<3> translation_vector(10.0_um, 10.0_um, 10.0_um);
         part.Translate(translation_vector);
+        TS_ASSERT_DELTA(part.GetPolygons()[0]->rGetVertices()[0]->Convert(1_um)[0], 10.0, 1.e-6);
+    }
 
-        TS_ASSERT_DELTA(part.GetPolygons()[0]->rGetVertices()[0]->Convert(1e-6*unit::metres)[0], 10.0, 1.e-6);
+    void TestLabelling() throw (Exception)
+    {
+        std::string output_directory = "TestPart";
+        if(PetscTools::IsParallel())
+        {
+            output_directory += "Parallel";
+        }
+        OutputFileHandler output_file_handler(output_directory, false);
+
+        // Circle 2D
+        QLength cornea_radius = 1300_um;
+        QLength cornea_thickness = 100_um;
+        QLength pellet_thickness = 80_um;
+        QLength pellet_height = 1000_um;
+        QLength pellet_radius = 150_um;
+        QLength delta = pellet_height-cornea_radius+pellet_radius;
+        auto p_domain = Part<2> ::Create();
+        p_domain->AddCircle(cornea_radius);
+
+        p_domain->AddAttribute("Circle", 1.0);
+        std::map<std::string, double> attributes = p_domain->GetAttributes();
+        TS_ASSERT_DELTA(attributes["Circle"], 1.0, 1.e-6);
+
+        PolygonPtr<2> p_polygon = p_domain->AddCircle(pellet_radius, Vertex<2>(0.0_m, -delta));
+        p_polygon->AddAttribute("Pellet", 1.0);
+        p_polygon->AddAttributeToAllEdges("Pellet Boundary", 1.0);
+        for(auto& vert:p_domain->GetVertices())
+        {
+            vert->AddAttribute("Vert", 1.0);
+        }
+
+        p_domain->AddHoleMarker(Vertex<2>(0.0_m, -delta));
+        p_domain->Write(output_file_handler.GetOutputDirectoryFullPath() + "labelled_circle_2d.vtp", GeometryFormat::VTP, true);
+
+        TS_ASSERT(!p_domain->EdgeHasAttribute(Vertex<2>(100.0_m, 100.0_m), "Nothing"));
+
+        // Circle 3D
+        auto p_circ_3d_domain = Part<3> ::Create();
+        PolygonPtr<3> p_circle = p_circ_3d_domain->AddCircle(cornea_radius);
+        p_circ_3d_domain->Extrude(p_circle, cornea_thickness);
+
+        auto p_circ_3d_pellet = Part<3> ::Create();
+        PolygonPtr<3> p_pellet_circle = p_circ_3d_pellet->AddCircle(pellet_radius, Vertex<3>(0.0_m, -1.0*delta));
+        p_circ_3d_pellet->Extrude(p_pellet_circle, pellet_thickness);
+        p_circ_3d_pellet->AddAttributeToPolygons("Pellet Interface",  1.0);
+        p_circ_3d_domain->AppendPart(p_circ_3d_pellet);
+        p_circ_3d_domain->Write(output_file_handler.GetOutputDirectoryFullPath() + "labelled_circle_3d.vtp",
+                GeometryFormat::VTP, true);
+
+        // Plane 2D
+        std::vector<std::shared_ptr<Vertex<2> > > points;
+        points.push_back(Vertex<2>::Create(0.0_m));
+        points.push_back(Vertex<2>::Create(2.0*M_PI*cornea_radius));
+        points.push_back(Vertex<2>::Create(2.0*M_PI*cornea_radius, pellet_height));
+        points.push_back(Vertex<2>::Create(2.0*M_PI*cornea_radius/2.0 + 2.0*M_PI*pellet_radius/2.0, pellet_height));
+        points.push_back(Vertex<2>::Create(2.0*M_PI*cornea_radius/2.0 - 2.0*M_PI*pellet_radius/2.0, pellet_height));
+        points.push_back(Vertex<2>::Create(0.0_m, pellet_height));
+        auto p_temp_polygon = Polygon<2>::Create(points);
+        auto p_2d_planar_domain = Part<2>::Create();
+        p_2d_planar_domain->AddPolygon(p_temp_polygon);
+        p_2d_planar_domain->AddAttributeToEdgeIfFound(Vertex<2>(2.0*M_PI*cornea_radius/2.0, pellet_height), "Pellet Interface", 1.0);
+        p_2d_planar_domain->Write(output_file_handler.GetOutputDirectoryFullPath() + "labelled_plane_2d.vtp", GeometryFormat::VTP, true);
+
+        // Hemisphere 3D
+        MappableGridGenerator<3> grid_generator;
+        std::shared_ptr<Part<3> > hemisphere = grid_generator.GenerateHemisphere(cornea_radius,
+                cornea_thickness, 20, 20, double(1.0*M_PI), double(0.999*M_PI));
+
+        auto p_hemi_pellet = Part<3> ::Create();
+        QLength gap = (cornea_thickness- pellet_thickness)/8.0;
+        QLength base = cornea_radius + gap - cornea_thickness;
+        p_hemi_pellet->AddCylinder(pellet_radius, pellet_thickness, Vertex<3>(0.0_m, 0.0_m, base));
+        p_hemi_pellet->AddAttributeToPolygons("Pellet Interface",  1.0);
+        hemisphere->AppendPart(p_hemi_pellet);
+        hemisphere->Write(output_file_handler.GetOutputDirectoryFullPath() + "hemisphere.vtp", GeometryFormat::VTP, true);
     }
 
     void TestArchiving() throw (Exception)
@@ -374,8 +419,8 @@ public:
         ArchiveLocationInfo::SetArchiveDirectory(handler.FindFile(""));
         std::string archive_filename = ArchiveLocationInfo::GetProcessUniqueFilePath("Part.arch");
 
-        std::shared_ptr<Part<3> > p_part = Part<3>::Create();
-        p_part->AddCuboid(10.e-6*unit::metres, 10.e-6*unit::metres, 10.e-6*unit::metres);
+        auto p_part = Part<3>::Create();
+        p_part->AddCuboid(10_um, 10_um, 10_um);
 
         // Save archive
         {
@@ -401,75 +446,6 @@ public:
 #endif
     }
 
-    void TestLabelling() throw (Exception)
-    {
-        std::string output_directory = "TestPart";
-        if(PetscTools::IsParallel())
-        {
-            output_directory += "Parallel";
-        }
-        OutputFileHandler output_file_handler(output_directory, false);
-
-        // Circle 2D
-        QLength cornea_radius = 1300*1e-6*unit::metres;
-        QLength cornea_thickness = 100*1e-6*unit::metres;
-        QLength pellet_thickness = 80*1e-6*unit::metres;
-        QLength pellet_height = 1000*1e-6*unit::metres;
-        QLength pellet_radius = 150*1e-6*unit::metres;
-        QLength delta = pellet_height-cornea_radius+pellet_radius;
-        std::shared_ptr<Part<2> > p_domain = Part<2> ::Create();
-        p_domain->AddCircle(cornea_radius, Vertex<2>(0.0, 0.0, 0.0));
-
-        std::shared_ptr<Polygon<2> > p_polygon = p_domain->AddCircle(pellet_radius, Vertex<2>(0.0_m, -delta));
-        p_polygon->AddAttribute("Pellet", 1.0);
-        p_polygon->AddAttributeToAllEdges("Pellet Boundary", 1.0);
-
-        p_domain->AddHoleMarker(Vertex<2>(0.0_m, -delta));
-        p_domain->Write(output_file_handler.GetOutputDirectoryFullPath() + "labelled_circle_2d.vtp", GeometryFormat::VTP, true);
-
-        // Circle 3D
-        std::shared_ptr<Part<3> > p_circ_3d_domain = Part<3> ::Create();
-        std::shared_ptr<Polygon<3> > p_circle = p_circ_3d_domain->AddCircle(cornea_radius);
-        p_circ_3d_domain->Extrude(p_circle, cornea_thickness);
-
-        std::shared_ptr<Part<3> > p_circ_3d_pellet = Part<3> ::Create();
-        std::shared_ptr<Polygon<3> > p_pellet_circle = p_circ_3d_pellet->AddCircle(pellet_radius,
-                        Vertex<3>(0.0_m, -1.0*delta));
-        p_circ_3d_pellet->Extrude(p_pellet_circle, pellet_thickness);
-        p_circ_3d_pellet->AddAttributeToPolygons("Pellet Interface",  1.0);
-        p_circ_3d_domain->AppendPart(p_circ_3d_pellet);
-        p_circ_3d_domain->Write(output_file_handler.GetOutputDirectoryFullPath() + "labelled_circle_3d.vtp", GeometryFormat::VTP, true);
-
-        // Plane 2D
-        std::vector<std::shared_ptr<Vertex<2> > > points;
-        points.push_back(Vertex<2>::Create(0.0_m));
-        points.push_back(Vertex<2>::Create(2.0*M_PI*cornea_radius));
-        points.push_back(Vertex<2>::Create(2.0*M_PI*cornea_radius, pellet_height));
-        points.push_back(Vertex<2>::Create(2.0*M_PI*cornea_radius/2.0 + 2.0*M_PI*pellet_radius/2.0, pellet_height));
-        points.push_back(Vertex<2>::Create(2.0*M_PI*cornea_radius/2.0 - 2.0*M_PI*pellet_radius/2.0, pellet_height));
-        points.push_back(Vertex<2>::Create(0.0_m, pellet_height));
-        std::shared_ptr<Polygon<2> > p_temp_polygon = Polygon<2>::Create(points);
-        std::shared_ptr<Part<2> > p_2d_planar_domain = Part<2>::Create();
-        p_2d_planar_domain->AddPolygon(p_temp_polygon);
-        p_2d_planar_domain->AddAttributeToEdgeIfFound(Vertex<2>(2.0*M_PI*cornea_radius/2.0, pellet_height), "Pellet Interface", 1.0);
-        p_2d_planar_domain->Write(output_file_handler.GetOutputDirectoryFullPath() + "labelled_plane_2d.vtp", GeometryFormat::VTP, true);
-
-        // Hemisphere 3D
-        MappableGridGenerator<3> grid_generator;
-        std::shared_ptr<Part<3> > hemisphere = grid_generator.GenerateHemisphere(cornea_radius,
-                cornea_thickness, 20, 20, double(1.0*M_PI), double(0.999*M_PI));
-
-        std::shared_ptr<Part<3> > p_hemi_pellet = Part<3> ::Create();
-        QLength gap = (cornea_thickness- pellet_thickness)/(2.0)/4.0;
-        QLength base = cornea_radius + gap - cornea_thickness;
-        p_hemi_pellet->AddCylinder(pellet_radius,
-                                  pellet_thickness,
-                                  Vertex<3>(0.0_m, 0.0_m, base));
-        p_hemi_pellet->AddAttributeToPolygons("Pellet Interface",  1.0);
-        hemisphere->AppendPart(p_hemi_pellet);
-        hemisphere->Write(output_file_handler.GetOutputDirectoryFullPath() + "hemisphere.vtp", GeometryFormat::VTP, true);
-    }
-
     void TestSendAndReceive() throw (Exception)
     {
 #if BOOST_VERSION >= 105600
@@ -481,8 +457,8 @@ public:
         ObjectCommunicator<Part<2> > part_comm;
         if(PetscTools::GetMyRank() == 0)
         {
-            boost::shared_ptr<Part<2> > p_domain = boost::shared_ptr<Part<2> >(new Part<2> ());
-            p_domain->AddCircle(1.0*unit::metres);
+            auto p_domain = boost::shared_ptr<Part<2> >(new Part<2> ());
+            p_domain->AddCircle(1_m);
             part_comm.SendObject(p_domain, 1, 6789);
         }
         else if(PetscTools::GetMyRank() == 1)

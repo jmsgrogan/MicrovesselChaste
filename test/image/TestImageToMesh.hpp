@@ -37,6 +37,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define TESTIMAGETOMESH_HPP_
 
 #include <cxxtest/TestSuite.h>
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
+#include <vtkPolyData.h>
 #include "SmartPointers.hpp"
 #include "ImageToMesh.hpp"
 #include "ImageReader.hpp"
@@ -71,13 +73,45 @@ public:
         writer.Write();
 
         // Do the meshing
-        std::shared_ptr<ImageToMesh<2> > p_image_mesher = ImageToMesh<2>::Create();
+        auto p_image_mesher = ImageToMesh<2>::Create();
         TS_ASSERT_THROWS_THIS(p_image_mesher->GetMesh(), "No mesh set. Did you run 'Update()' ?");
         p_image_mesher->SetInput(reader.GetImage());
         p_image_mesher->SetElementSize(5.e6*Qpow3(1_um));
         p_image_mesher->Update();
 
+        vtkSmartPointer<vtkPolyData> p_boundary = p_image_mesher->GetMeshBoundary();
+        std::vector<Vertex<2> > holes = p_image_mesher->GetMeshHoles();
+
         VtkMeshWriter<2, 2> mesh_writer("TestImageToMesh", "Image2d", false);
+        mesh_writer.WriteFilesUsingMesh(*(p_image_mesher->GetMesh()));
+    }
+
+    void Test2dMeshWithDomain() throw(Exception)
+    {
+        // Read the image from file
+        OutputFileHandler file_handler1 = OutputFileHandler("TestImageToMesh/", false);
+        FileFinder finder = FileFinder("projects/MicrovesselChaste/test/data/median.tif", RelativeTo::ChasteSourceRoot);
+
+        ImageReader reader = ImageReader();
+        reader.SetFilename(finder.GetAbsolutePath());
+        reader.SetImageResizeFactors(0.5, 0.5, 1.0);
+        reader.Read();
+
+        auto p_part = Part<2>::Create();
+        p_part->AddRectangle(1000_um, 1000_um);
+
+        // Do the meshing
+        auto p_image_mesher = ImageToMesh<2>::Create();
+        TS_ASSERT_THROWS_THIS(p_image_mesher->GetMesh(), "No mesh set. Did you run 'Update()' ?");
+        p_image_mesher->SetInput(reader.GetImage());
+        p_image_mesher->SetElementSize(5.e6*Qpow3(1_um));
+        p_image_mesher->SetTissueDomain(p_part);
+        p_image_mesher->Update();
+
+        vtkSmartPointer<vtkPolyData> p_boundary = p_image_mesher->GetMeshBoundary();
+        std::vector<Vertex<2> > holes = p_image_mesher->GetMeshHoles();
+
+        VtkMeshWriter<2, 2> mesh_writer("TestImageToMesh", "Image2dDomain", false);
         mesh_writer.WriteFilesUsingMesh(*(p_image_mesher->GetMesh()));
     }
 

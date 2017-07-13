@@ -641,7 +641,7 @@ std::vector<std::pair<std::pair<unsigned, unsigned>, unsigned > > Part<DIM>::Get
             indexes.push_back(
                     std::pair<std::pair<unsigned, unsigned>, unsigned > (vertex_indices, key));
         }
-        else if (poly_verts.size() > 1)
+        else if (poly_verts.size() > 2)
         {
             for (unsigned jdx = 0; jdx < poly_verts.size() - 1; jdx++)
             {

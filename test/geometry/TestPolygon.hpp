@@ -53,53 +53,62 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
+
+std::vector<VertexPtr<3> > SetUpTriangle()
+{
+    std::vector<VertexPtr<3> > vertices;
+    vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
+    vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
+    vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
+    return vertices;
+}
+
+template<unsigned DIM>
+std::vector<VertexPtr<DIM> > SetUpSquare()
+{
+    std::vector<VertexPtr<DIM> > vertices;
+    vertices.push_back(Vertex<DIM>::Create(0.0_um, 0.0_um));
+    vertices.push_back(Vertex<DIM>::Create(1.0_um, 0.0_um));
+    vertices.push_back(Vertex<DIM>::Create(1.0_um, 1.0_um));
+    vertices.push_back(Vertex<DIM>::Create(0.0_um, 1.0_um));
+    return vertices;
+}
+
 class TestPolygon : public CxxTest::TestSuite
 {
 public:
 
     void TestConstructor() throw(Exception)
     {
-        std::vector<VertexPtr<3> > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um));
-        vertices.push_back(Vertex<3>::Create(0.0_um, 1.0_um));
-
-        Polygon<3> polygon1 = Polygon<3>(vertices);
-        Polygon<3> polygon2 = Polygon<3>(vertices[0]);
+        std::vector<VertexPtr<3> > vertices = SetUpTriangle();
+        Polygon<3> polygon1(vertices);
+        Polygon<3> polygon2(vertices[0]);
         TS_ASSERT_EQUALS(polygon1.rGetVertices().size(), 3u);
         TS_ASSERT_EQUALS(polygon2.rGetVertices().size(), 1u);
     }
 
     void TestFactoryConstructor() throw(Exception)
     {
-        std::vector<VertexPtr<3> > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um));
-        vertices.push_back(Vertex<3>::Create(0.0_um, 1.0_um));
-
-        std::shared_ptr<Polygon<3> > p_polygon1 = Polygon<3>::Create(vertices);
-        std::shared_ptr<Polygon<3> > p_polygon2 = Polygon<3>::Create(vertices[0]);
-
+        std::vector<VertexPtr<3> > vertices = SetUpTriangle();
+        auto p_polygon1 = Polygon<3>::Create(vertices);
+        auto p_polygon2 = Polygon<3>::Create(vertices[0]);
         TS_ASSERT_EQUALS(p_polygon1->rGetVertices().size(), 3u);
         TS_ASSERT_EQUALS(p_polygon2->rGetVertices().size(), 1u);
     }
 
     void TestAddingVertices() throw(Exception)
     {
-        std::vector<VertexPtr<3> > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um));
-        vertices.push_back(Vertex<3>::Create(0.0_um, 1.0_um));
+        std::vector<VertexPtr<3> > vertices = SetUpTriangle();
 
         std::vector<VertexPtr<3> > new_vertices;
         new_vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
         new_vertices.push_back(Vertex<3>::Create(1.0_um, 2.0_um));
 
-        std::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(vertices);
+        auto p_polygon = Polygon<3>::Create(vertices);
         p_polygon->AddVertices(new_vertices);
         TS_ASSERT_EQUALS(p_polygon->rGetVertices().size(), 5u);
 
-        std::shared_ptr<Polygon<3> > p_polygon2 = Polygon<3>::Create(vertices);
+        auto p_polygon2 = Polygon<3>::Create(vertices);
         p_polygon2->AddVertex(new_vertices[0]);
         TS_ASSERT_EQUALS(p_polygon2->rGetVertices().size(), 4u);
 
@@ -109,30 +118,32 @@ public:
 
     void TestVtkMethods() throw(Exception)
     {
-        std::vector<VertexPtr<3> > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
-        vertices.push_back(Vertex<3>::Create(0.0_um, 1.0_um));
+        std::vector<VertexPtr<3> > vertices = SetUpSquare<3>();
         auto p_polygon = Polygon<3>::Create(vertices);
 
-        Vertex<3> centroid = p_polygon->GetCentroid();
-        TS_ASSERT_DELTA(centroid.Convert(1_um)[0], 0.5, 1.e-6);
-        TS_ASSERT_DELTA(centroid.Convert(1_um)[1], 0.5, 1.e-6);
-        TS_ASSERT_DELTA(centroid.Convert(1_um)[2], 0.0, 1.e-6);
+        c_vector<double, 3> centroid = p_polygon->GetCentroid().Convert(1_um);
+        TS_ASSERT_DELTA(centroid[0], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(centroid[1], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(centroid[2], 0.0, 1.e-6);
 
         c_vector<double, 3> normal = p_polygon->GetNormal();
         TS_ASSERT_DELTA(normal[0], 0.0, 1.e-6);
         TS_ASSERT_DELTA(normal[1], 0.0, 1.e-6);
         TS_ASSERT_DELTA(normal[2], 1.0, 1.e-6);
 
-        Vertex<3> test_point1(0.75_um, 0.75_um, 0.0_um);
-        Vertex<3> test_point2(1.25_um, 0.75_um, 0.0_um);
-        Vertex<3> test_point3(0.75_um, 0.75_um, 1.0_um);
+        TS_ASSERT(p_polygon->ContainsPoint(Vertex<3>(0.75_um, 0.75_um, 0.0_um)));
+        TS_ASSERT(!p_polygon->ContainsPoint(Vertex<3>(1.25_um, 0.75_um, 0.0_um)));
+        TS_ASSERT(!p_polygon->ContainsPoint(Vertex<3>(0.75_um, 0.75_um, 1.0_um)));
 
-        TS_ASSERT(p_polygon->ContainsPoint(test_point1));
-        TS_ASSERT(!p_polygon->ContainsPoint(test_point2));
-        TS_ASSERT(!p_polygon->ContainsPoint(test_point3));
+        // Cover all bounding box cases for point containment
+        c_vector<double, 3> rotation_axis = unit_vector<double>(3, 0);
+        p_polygon->RotateAboutAxis(rotation_axis, M_PI/2.0);
+        TS_ASSERT(!p_polygon->ContainsPoint(Vertex<3>(10_um, 10_um, 10_um)));
+        p_polygon->RotateAboutAxis(rotation_axis, -M_PI/2.0);
+
+        rotation_axis = unit_vector<double>(3, 1);
+        p_polygon->RotateAboutAxis(rotation_axis, M_PI/2.0);
+        TS_ASSERT(!p_polygon->ContainsPoint(Vertex<3>(10_um, 10_um, 10_um)));
 
         vtkSmartPointer<vtkPolygon> p_vtk_polygon =  p_polygon->GetVtkPolygon();
         std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > vertex_pair = p_polygon->GetVtkVertices();
@@ -140,27 +151,20 @@ public:
 
     void TestVtkMethods2d() throw(Exception)
     {
-        std::vector<std::shared_ptr<Vertex<2> > > vertices;
-        vertices.push_back(Vertex<2>::Create(0.0_um, 0.0_um));
-        vertices.push_back(Vertex<2>::Create(1.0_um, 0.0_um));
-        vertices.push_back(Vertex<2>::Create(1.0_um, 1.0_um));
-        vertices.push_back(Vertex<2>::Create(0.0_um, 1.0_um));
+        std::vector<VertexPtr<2> > vertices = SetUpSquare<2>();
 
         auto p_polygon = Polygon<2>::Create(vertices);
 
-        Vertex<2> centroid = p_polygon->GetCentroid();
-        TS_ASSERT_DELTA(centroid.Convert(1_um)[0], 0.5, 1.e-6);
-        TS_ASSERT_DELTA(centroid.Convert(1_um)[1], 0.5, 1.e-6);
+        c_vector<double, 2> centroid = p_polygon->GetCentroid().Convert(1_um);
+        TS_ASSERT_DELTA(centroid[0], 0.5, 1.e-6);
+        TS_ASSERT_DELTA(centroid[1], 0.5, 1.e-6);
 
         c_vector<double, 3> normal = p_polygon->GetNormal();
         TS_ASSERT_DELTA(normal[0], 0.0, 1.e-6);
         TS_ASSERT_DELTA(normal[1], 0.0, 1.e-6);
 
-        Vertex<2> test_point1(0.75_um, 0.75_um, 0.0_um);
-        Vertex<2> test_point2(1.25_um, 0.75_um, 0.0_um);
-
-        TS_ASSERT(p_polygon->ContainsPoint(test_point1));
-        TS_ASSERT(!p_polygon->ContainsPoint(test_point2));
+        TS_ASSERT(p_polygon->ContainsPoint(Vertex<2>(0.75_um, 0.75_um, 0.0_um)));
+        TS_ASSERT(!p_polygon->ContainsPoint(Vertex<2>(1.25_um, 0.75_um, 0.0_um)));
 
         vtkSmartPointer<vtkPolygon> p_vtk_polygon =  p_polygon->GetVtkPolygon();
         std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > vertex_pair = p_polygon->GetVtkVertices();
@@ -168,12 +172,8 @@ public:
 
     void TestTransforms() throw(Exception)
     {
-        std::vector<VertexPtr<3> > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
-        vertices.push_back(Vertex<3>::Create(0.0_um, 1.0_um));
-        std::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(vertices);
+        std::vector<VertexPtr<3> > vertices = SetUpSquare<3>();
+        auto p_polygon = Polygon<3>::Create(vertices);
 
         Vertex<3> translation_vector(2.0_um, 2.0_um, 0.0_um);
         Vertex<3> new_position = *vertices[1] + translation_vector;
@@ -188,11 +188,7 @@ public:
 
     void TestGeometryOperations() throw(Exception)
     {
-        std::vector<VertexPtr<3> > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
-        vertices.push_back(Vertex<3>::Create(0.0_um, 1.0_um));
+        std::vector<VertexPtr<3> > vertices = SetUpSquare<3>();
         auto p_polygon = Polygon<3>::Create(vertices);
 
         std::array<QLength, 6> bbox = p_polygon->GetBoundingBox();
@@ -213,12 +209,8 @@ public:
 
     void TestLabelling() throw(Exception)
     {
-        std::vector<VertexPtr<3> > vertices;
-        vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
-        vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
-        vertices.push_back(Vertex<3>::Create(0.0_um, 1.0_um));
-        std::shared_ptr<Polygon<3> > p_polygon = Polygon<3>::Create(vertices);
+        std::vector<VertexPtr<3> > vertices = SetUpSquare<3>();
+        auto p_polygon = Polygon<3>::Create(vertices);
 
         std::string test = "Test";
         bool edge_found = p_polygon->AddAttributeToEdgeIfFound(Vertex<3>(0.5_um), test, 2.0);
@@ -226,6 +218,7 @@ public:
         TS_ASSERT(edge_found);
         TS_ASSERT_DELTA(edge_attributes[0]["Test"], 2.0, 1.e-6);
         TS_ASSERT(p_polygon->EdgeHasAttribute(Vertex<3>(0.5_um), "Test"));
+        TS_ASSERT(!p_polygon->EdgeHasAttribute(Vertex<3>(20_um), "Test"));
 
         std::string poly_label = "TestPoly";
         p_polygon->AddAttribute(poly_label, 2.0);
@@ -243,7 +236,7 @@ public:
         vertices.push_back(Vertex<3>::Create(0.0_um, 0.0_um));
         vertices.push_back(Vertex<3>::Create(1.0_um, 0.0_um));
         vertices.push_back(Vertex<3>::Create(1.0_um, 1.0_um));
-        std::shared_ptr<Polygon<3> > p_polygon1 = Polygon<3>::Create(vertices);
+        auto p_polygon1 = Polygon<3>::Create(vertices);
 
         // Save archive
         {

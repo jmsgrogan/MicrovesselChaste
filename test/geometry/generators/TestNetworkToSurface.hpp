@@ -129,6 +129,42 @@ public:
         writer.Write();
     }
 
+    void TestSingleVesselNoSmoothing() throw(Exception)
+    {
+        // Set up the network
+        QLength length = 100_um;
+        QLength radius = 20_um;
+        auto p_node1 = VesselNode<3>::Create(0.0_um, length/2.0);
+        auto p_node2 = VesselNode<3>::Create(length, length/2.0);
+        p_node1->GetFlowProperties()->SetIsInputNode(true);
+        p_node2->GetFlowProperties()->SetIsOutputNode(true);
+        auto p_vessel = Vessel<3>::Create(p_node1, p_node2);
+        auto p_network = VesselNetwork<3>::Create();
+        p_network->AddVessel(p_vessel);
+        VesselNetworkPropertyManager<3>::SetSegmentRadii(p_network, radius);
+        VesselNetworkPropertyManager<3>::SetNodeRadiiFromSegments(p_network);
+
+        // Convert it to a surface
+        auto p_converter = NetworkToSurface<3>::Create();
+        p_converter->SetVesselNetwork(p_network);
+        p_converter->GetNetworkToImageTool()->SetGridSpacing(5_um);
+        p_converter->GetNetworkToImageTool()->SetPaddingFactors(0.1, 0.1, 0.1);
+        p_converter->SetDoSmoothing(false);
+        p_converter->SetNumSmoothingIterations(30);
+        p_converter->SetSmoothingFeatureAngle(180);
+        p_converter->SetBandPassFrequency(0.1);
+        p_converter->SetDoSurfaceRemeshing(false);
+        p_converter->SetRemeshingTargetEdgeLength(10.0);
+        p_converter->Update();
+
+        // Write out the image
+        OutputFileHandler file_handler1("TestNetworkToSurface/", false);
+        GeometryWriter writer;
+        writer.AddInput(p_converter->GetSurface());
+        writer.SetFileName(file_handler1.GetOutputDirectoryFullPath()+"single_vessel_no_smooth.vtp");
+        writer.Write();
+    }
+
     void TestBifurcationVessel2d() throw(Exception)
     {
         // Set up the network

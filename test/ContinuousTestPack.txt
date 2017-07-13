@@ -83,14 +83,3 @@ tutorials/TestLatticeBasedAngiogenesisTutorial.hpp
 tutorials/TestBuildVesselNetworkTutorial.hpp
 tutorials/TestBloodFlowTutorial.hpp
 tutorials/TestSolvingPdesTutorial.hpp
-python/population/TestVesselNodePython.py
-python/geometry/TestPolygonPython.py
-python/geometry/TestFacetPython.py
-python/geometry/TestPartPython.py
-python/mesh/TestVertexPython.py
-python/flow/TestFlowSolverPython.py
-python/flow/TestHaematocritCalculatorsPython.py
-python/pde/TestPythonFiniteDifferenceSolver.py
-python/tutorials/TestPythonBuildVesselNetworkTutorial.py
-python/tutorials/TestPythonBiologicalNetworkLiteratePaper.py
-python/tutorials/TestPythonOffLatticeAngiogenesisLiteratePaper.py

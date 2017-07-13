@@ -73,7 +73,7 @@ public:
         p_writer1->Write();
 
         // Extract the surface
-        std::shared_ptr<ImageToSurface> p_surface_extract = ImageToSurface::Create();
+        auto p_surface_extract = ImageToSurface::Create();
 
         TS_ASSERT_THROWS_THIS(p_surface_extract->GetOutput(), "No output set. Did you run 'Update()' ?");
         p_surface_extract->SetInput(reader.GetImage());
@@ -81,14 +81,72 @@ public:
         p_surface_extract->Update();
 
         // Write the surface to file
-        std::shared_ptr<GeometryWriter> p_writer = GeometryWriter::Create();
+        auto p_writer = GeometryWriter::Create();
         p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"surface.vtp").c_str());
         p_writer->AddInput(p_surface_extract->GetOutput());
         p_writer->Write();
         p_writer->ClearInputs();
 
         // Clean the surface
-        std::shared_ptr<SurfaceCleaner> p_cleaner = SurfaceCleaner::Create();
+        auto p_cleaner = SurfaceCleaner::Create();
+        p_cleaner->SetInput(p_surface_extract->GetOutput());
+        p_cleaner->SetDecimateTargetReduction(0.995);
+        p_cleaner->SetLinearSubdivisionNumber(1);
+        p_cleaner->Update();
+
+        p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"surface_cleaned.vtp").c_str());
+        p_writer->AddInput(p_cleaner->GetOutput());
+        p_writer->Write();
+
+        p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"surface_cleaned.stl").c_str());
+        p_writer->SetOutputFormat(GeometryFormat::STL);
+        p_writer->Write();
+        p_writer->ClearInputs();
+
+        // Use marching cubes
+        p_surface_extract->SetUseMarchingCubes(true);
+        p_surface_extract->Update();
+        p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"surface_marching_cubes.vtp").c_str());
+        p_writer->AddInput(p_surface_extract->GetOutput());
+        p_writer->Write();
+    }
+
+    void TestRemoveDisconnected() throw(Exception)
+    {
+        // Read the image from file
+        OutputFileHandler file_handler1 = OutputFileHandler("TestImageToSurface/RemDisconnected/");
+        FileFinder finder = FileFinder("projects/MicrovesselChaste/test/data/median.tif", RelativeTo::ChasteSourceRoot);
+
+        ImageReader reader = ImageReader();
+        reader.SetFilename(finder.GetAbsolutePath());
+        reader.SetImageResizeFactors(0.5, 0.5, 1.0);
+        reader.Read();
+
+        vtkSmartPointer<vtkXMLImageDataWriter> p_writer1 = vtkSmartPointer<vtkXMLImageDataWriter>::New();
+        p_writer1->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"image.vti").c_str());
+        #if VTK_MAJOR_VERSION <= 5
+            p_writer1->SetInput(reader.GetImage());
+        #else
+            p_writer1->SetInputData(reader.GetImage());
+        #endif
+        p_writer1->Write();
+
+        // Extract the surface
+        auto p_surface_extract = ImageToSurface::Create();
+        p_surface_extract->SetInput(reader.GetImage());
+        p_surface_extract->SetThreshold(1.0, false);
+        p_surface_extract->Update();
+        p_surface_extract->SetRemoveDisconnected(true);
+
+        // Write the surface to file
+        auto p_writer = GeometryWriter::Create();
+        p_writer->SetFileName((file_handler1.GetOutputDirectoryFullPath()+"surface.vtp").c_str());
+        p_writer->AddInput(p_surface_extract->GetOutput());
+        p_writer->Write();
+        p_writer->ClearInputs();
+
+        // Clean the surface
+        auto p_cleaner = SurfaceCleaner::Create();
         p_cleaner->SetInput(p_surface_extract->GetOutput());
         p_cleaner->SetDecimateTargetReduction(0.995);
         p_cleaner->SetLinearSubdivisionNumber(1);

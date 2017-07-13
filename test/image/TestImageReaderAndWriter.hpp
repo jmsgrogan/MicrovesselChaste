@@ -70,5 +70,27 @@ public:
         image_writer.SetImage(p_image_reader->GetImage());
         image_writer.Write();
     }
+
+    void TestReadPng() throw(Exception)
+    {
+        // Read the image from file
+        OutputFileHandler file_handler1 = OutputFileHandler("TestImageReaderAndWriter/");
+        FileFinder finder = FileFinder("projects/MicrovesselChaste/test/data/median.png", RelativeTo::ChasteSourceRoot);
+
+        // Read the file in png format
+        std::shared_ptr<ImageReader> p_image_reader = ImageReader::Create();
+        p_image_reader->SetImageResizeFactors(0.2, 0.2, 1.0);
+        p_image_reader->SetFilename(finder.GetAbsolutePath());
+        p_image_reader->Read();
+
+        // Write it out in VTI format
+        RegularGridWriter image_writer;
+        image_writer.SetFilename(file_handler1.GetOutputDirectoryFullPath()+"image_vtk_format.vti");
+        image_writer.SetImage(p_image_reader->GetImage());
+        image_writer.Write();
+
+        p_image_reader->SetImageResizeFactors(1.0, 1.0, 1.0);
+        p_image_reader->Read();
+    }
 };
 #endif

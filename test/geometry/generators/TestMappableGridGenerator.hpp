@@ -73,12 +73,14 @@ public:
         TS_ASSERT_EQUALS(p_part->GetVertices().size(), 200u);
         TS_ASSERT_EQUALS(p_part->GetPolygons().size(), 198u);
 
+        TS_ASSERT_THROWS_THIS(generator.GeneratePlane(0, 10), "The number of points in X and Y must be greater than 0.");
+
         std::shared_ptr<Part<3> > p_part_no_caps = generator.GeneratePlane(10, 10, false, false);
         TS_ASSERT_EQUALS(p_part_no_caps->GetVertices().size(), 200u);
         TS_ASSERT_EQUALS(p_part_no_caps->GetPolygons().size(), 180u);
 
         // Make sure the resulting part can be meshed
-        std::shared_ptr<DiscreteContinuumMeshGenerator<3> > p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
+        auto p_mesh_generator = DiscreteContinuumMeshGenerator<3>::Create();
         p_mesh_generator->SetDomain(p_part);
         p_mesh_generator->Update();
 
@@ -102,6 +104,9 @@ public:
         QLength radius = 1.5_m;
         QLength thickness = 0.1_m;
         QLength height = 5.0_m;
+
+        TS_ASSERT_THROWS_THIS(generator.GenerateCylinder(0_m, thickness, height, 10, 10),
+                "The cylinder radius and height must be greater than 0.0");
 
         std::shared_ptr<Part<3> > p_part = generator.GenerateCylinder(radius, thickness, height, 10, 10);
         std::shared_ptr<Part<3> > p_part_open = generator.GenerateCylinder(radius, thickness, height, 10, 10, M_PI);
@@ -159,6 +164,9 @@ public:
         MappableGridGenerator<3> generator;
         QLength radius = 1.5*unit::metres;
         QLength thickness = 0.1*unit::metres;
+
+        TS_ASSERT_THROWS_THIS(generator.GenerateHemisphere(0_m, thickness, 10, 10, M_PI, 0.5*M_PI),
+                "The sphere radius must be greater than 0.0");
 
         std::shared_ptr<Part<3> > p_part = generator.GenerateHemisphere(radius, thickness, 10, 10, M_PI, 0.5*M_PI);
         TS_ASSERT_THROWS_ANYTHING(generator.GenerateHemisphere(radius, thickness, 10, 10, 2.0*M_PI, 0.5*M_PI));

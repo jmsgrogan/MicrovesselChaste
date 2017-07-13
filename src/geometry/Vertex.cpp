@@ -109,12 +109,6 @@ std::shared_ptr<Vertex<DIM> > Vertex<DIM>::Create(const c_vector<double, DIM>& r
 }
 
 template<unsigned DIM>
-std::shared_ptr<Vertex<DIM> > Vertex<DIM>::Create(VecQLength<DIM> loc)
-{
-    return std::make_shared<Vertex<DIM> >(loc);
-}
-
-template<unsigned DIM>
 std::shared_ptr<Vertex<DIM> > Vertex<DIM>::Create(const double (&rCoords)[3], QLength referenceLength)
 {
     return std::make_shared<Vertex<DIM> >(rCoords, referenceLength);
@@ -201,12 +195,6 @@ QLength Vertex<DIM>::GetDistance(const Vertex<DIM>& rLocation) const
 }
 
 template<unsigned DIM>
-QLength Vertex<DIM>::GetDistance(const VecQLength<DIM>& rLocation) const
-{
-    return Qnorm_2(rLocation - mLocation);
-}
-
-template<unsigned DIM>
 QLength Vertex<DIM>::GetNorm2()
 {
     return Qnorm_2(mLocation);
@@ -229,6 +217,16 @@ template<unsigned DIM>
 c_vector<double, DIM> Vertex<DIM>::GetUnitTangent(const Vertex<DIM>& rLocation) const
 {
     return (rLocation.rGetLocation()- mLocation).Convert(GetDistance(rLocation));
+}
+
+template<unsigned DIM>
+const QLength Vertex<DIM>::operator[] (unsigned i) const
+{
+    if(i>=DIM)
+    {
+        EXCEPTION("Requested index out of bounds");
+    }
+    return mLocation[i];
 }
 
 template<unsigned DIM>
