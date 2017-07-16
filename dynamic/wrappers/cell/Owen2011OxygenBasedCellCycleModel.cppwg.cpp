@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef Owen2011OxygenBasedCellCycleModel Owen2011OxygenBasedCellCycleModel;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::AbstractCellCycleModel * _AbstractCellCycleModelPtr;
 
 class Owen2011OxygenBasedCellCycleModel_Overloads : public Owen2011OxygenBasedCellCycleModel{
@@ -93,12 +93,12 @@ class Owen2011OxygenBasedCellCycleModel_Overloads : public Owen2011OxygenBasedCe
 
 };
 void register_Owen2011OxygenBasedCellCycleModel_class(py::module &m){
-py::class_<Owen2011OxygenBasedCellCycleModel , Owen2011OxygenBasedCellCycleModel_Overloads   >(m, "Owen2011OxygenBasedCellCycleModel")
+py::class_<Owen2011OxygenBasedCellCycleModel , Owen2011OxygenBasedCellCycleModel_Overloads , std::shared_ptr<Owen2011OxygenBasedCellCycleModel >   >(m, "Owen2011OxygenBasedCellCycleModel")
         .def(py::init<::boost::shared_ptr<AbstractCellCycleModelOdeSolver> >(), py::arg("pOdeSolver") = boost::shared_ptr<AbstractCellCycleModelOdeSolver>())
         .def(
             "CreateCellCycleModel", 
             (::AbstractCellCycleModel *(Owen2011OxygenBasedCellCycleModel::*)()) &Owen2011OxygenBasedCellCycleModel::CreateCellCycleModel, 
-            " "  )
+            " "  , py::return_value_policy::reference)
         .def(
             "CheckAndLabelCell", 
             (void(Owen2011OxygenBasedCellCycleModel::*)()) &Owen2011OxygenBasedCellCycleModel::CheckAndLabelCell, 

@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef MacrophageMutationState MacrophageMutationState;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_MacrophageMutationState_class(py::module &m){
-py::class_<MacrophageMutationState   , AbstractCellMutationState  >(m, "MacrophageMutationState")
+py::class_<MacrophageMutationState  , std::shared_ptr<MacrophageMutationState >   >(m, "MacrophageMutationState")
         .def(py::init< >())
     ;
 }

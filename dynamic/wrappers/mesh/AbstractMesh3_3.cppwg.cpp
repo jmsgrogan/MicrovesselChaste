@@ -14,13 +14,13 @@
 
 namespace py = pybind11;
 typedef AbstractMesh<3,3 > AbstractMesh3_3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef unsigned int unsignedint;
 typedef unsigned int unsignedint;
-typedef ::Node<3> * _Node3Ptr;
+typedef ::Node<3> * _Node_lt_3_gt_Ptr;
 typedef ::DistributedVectorFactory * _DistributedVectorFactoryPtr;
-typedef ::boost::numeric::ublas::c_vector<double, 3> _boost_numeric_ublas_c_vectordouble_3;
-typedef ::ChasteCuboid<3> _ChasteCuboid3;
+typedef ::boost::numeric::ublas::c_vector<double, 3> _boost_numeric_ublas_c_vector_lt_double_3_gt_;
+typedef ::ChasteCuboid<3> _ChasteCuboid_lt_3_gt_;
 typedef unsigned int unsignedint;
 typedef unsigned int unsignedint;
 
@@ -43,7 +43,7 @@ class AbstractMesh3_3_Overloads : public AbstractMesh3_3{
     }
     ::Node<3> * GetNodeOrHaloNode(unsigned int index) const  override {
         PYBIND11_OVERLOAD(
-            _Node3Ptr,
+            _Node_lt_3_gt_Ptr,
             AbstractMesh3_3,
             GetNodeOrHaloNode,
             index);
@@ -78,7 +78,7 @@ class AbstractMesh3_3_Overloads : public AbstractMesh3_3{
     }
     ::boost::numeric::ublas::c_vector<double, 3> GetVectorFromAtoB(::boost::numeric::ublas::c_vector<double, 3> const & rLocationA, ::boost::numeric::ublas::c_vector<double, 3> const & rLocationB) override {
         PYBIND11_OVERLOAD(
-            _boost_numeric_ublas_c_vectordouble_3,
+            _boost_numeric_ublas_c_vector_lt_double_3_gt_,
             AbstractMesh3_3,
             GetVectorFromAtoB,
             rLocationA, 
@@ -93,7 +93,7 @@ rLocationB);
     }
     ::ChasteCuboid<3> CalculateBoundingBox() const  override {
         PYBIND11_OVERLOAD(
-            _ChasteCuboid3,
+            _ChasteCuboid_lt_3_gt_,
             AbstractMesh3_3,
             CalculateBoundingBox,
             );
@@ -145,7 +145,7 @@ zFactor);
 
 };
 void register_AbstractMesh3_3_class(py::module &m){
-py::class_<AbstractMesh3_3 , AbstractMesh3_3_Overloads   >(m, "AbstractMesh3_3")
+py::class_<AbstractMesh3_3 , AbstractMesh3_3_Overloads , std::shared_ptr<AbstractMesh3_3 >   >(m, "AbstractMesh3_3")
         .def(
             "GetNodeIteratorBegin", 
             (::AbstractMesh<3, 3>::NodeIterator(AbstractMesh3_3::*)(bool)) &AbstractMesh3_3::GetNodeIteratorBegin, 
@@ -173,15 +173,15 @@ py::class_<AbstractMesh3_3 , AbstractMesh3_3_Overloads   >(m, "AbstractMesh3_3")
         .def(
             "GetNode", 
             (::Node<3> *(AbstractMesh3_3::*)(unsigned int) const ) &AbstractMesh3_3::GetNode, 
-            " " , py::arg("index") )
+            " " , py::arg("index") , py::return_value_policy::reference)
         .def(
             "GetNodeOrHaloNode", 
             (::Node<3> *(AbstractMesh3_3::*)(unsigned int) const ) &AbstractMesh3_3::GetNodeOrHaloNode, 
-            " " , py::arg("index") )
+            " " , py::arg("index") , py::return_value_policy::reference)
         .def(
             "GetNodeFromPrePermutationIndex", 
             (::Node<3> *(AbstractMesh3_3::*)(unsigned int) const ) &AbstractMesh3_3::GetNodeFromPrePermutationIndex, 
-            " " , py::arg("index") )
+            " " , py::arg("index") , py::return_value_policy::reference)
         .def(
             "ReadNodesPerProcessorFile", 
             (void(AbstractMesh3_3::*)(::std::string const &)) &AbstractMesh3_3::ReadNodesPerProcessorFile, 
@@ -189,7 +189,7 @@ py::class_<AbstractMesh3_3 , AbstractMesh3_3_Overloads   >(m, "AbstractMesh3_3")
         .def(
             "GetDistributedVectorFactory", 
             (::DistributedVectorFactory *(AbstractMesh3_3::*)()) &AbstractMesh3_3::GetDistributedVectorFactory, 
-            " "  )
+            " "  , py::return_value_policy::reference)
         .def(
             "SetDistributedVectorFactory", 
             (void(AbstractMesh3_3::*)(::DistributedVectorFactory *)) &AbstractMesh3_3::SetDistributedVectorFactory, 
@@ -217,7 +217,7 @@ py::class_<AbstractMesh3_3 , AbstractMesh3_3_Overloads   >(m, "AbstractMesh3_3")
         .def(
             "rGetNodePermutation", 
             (::std::vector<unsigned int, std::allocator<unsigned int> > const &(AbstractMesh3_3::*)() const ) &AbstractMesh3_3::rGetNodePermutation, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "GetVectorFromAtoB", 
             (::boost::numeric::ublas::c_vector<double, 3>(AbstractMesh3_3::*)(::boost::numeric::ublas::c_vector<double, 3> const &, ::boost::numeric::ublas::c_vector<double, 3> const &)) &AbstractMesh3_3::GetVectorFromAtoB, 

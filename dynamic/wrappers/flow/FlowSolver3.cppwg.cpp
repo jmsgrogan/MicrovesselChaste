@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef FlowSolver<3 > FlowSolver3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_FlowSolver3_class(py::module &m){
-py::class_<FlowSolver3    >(m, "FlowSolver3")
+py::class_<FlowSolver3  , std::shared_ptr<FlowSolver3 >   >(m, "FlowSolver3")
         .def(py::init< >())
         .def_static(
             "Create", 

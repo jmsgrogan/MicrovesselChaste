@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef FunctionMap<3 > FunctionMap3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class FunctionMap3_Overloads : public FunctionMap3{
     public:
@@ -29,7 +29,7 @@ class FunctionMap3_Overloads : public FunctionMap3{
 
 };
 void register_FunctionMap3_class(py::module &m){
-py::class_<FunctionMap3 , FunctionMap3_Overloads   >(m, "FunctionMap3")
+py::class_<FunctionMap3 , FunctionMap3_Overloads , std::shared_ptr<FunctionMap3 >  , AbstractMixedGridDiscreteContinuumSolver<3>  >(m, "FunctionMap3")
         .def(py::init< >())
         .def_static(
             "Create", 

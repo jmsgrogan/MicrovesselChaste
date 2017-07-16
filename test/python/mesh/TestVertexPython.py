@@ -48,7 +48,7 @@ class TestVertex(unittest.TestCase):
     def test_all_methods(self):
         
         # Make a point at the specified location
-        length_scale = 1.e-6*metre()
+        length_scale = 1.e-6*metres
         input_location = np.array((0.0, 1.0, 2.0))
         point = microvessel_chaste.mesh.Vertex3(input_location, length_scale)
         self.assertAlmostEqual(point.GetLocation(length_scale)[0], 0.0, 2)

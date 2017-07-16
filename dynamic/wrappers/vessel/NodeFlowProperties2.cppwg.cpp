@@ -15,14 +15,14 @@
 namespace py = pybind11;
 typedef NodeFlowProperties<2 > NodeFlowProperties2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
-typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double;
+typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_map_lt_std_basic_string_lt_char_gt__double_std_less_lt_std_basic_string_lt_char_gt__gt__std_allocator_lt_std_pair_lt_conststd_basic_string_lt_char_gt__double_gt__gt__gt_;
 
 class NodeFlowProperties2_Overloads : public NodeFlowProperties2{
     public:
     using NodeFlowProperties2::NodeFlowProperties;
     ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > GetOutputData() const  override {
         PYBIND11_OVERLOAD(
-            _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double,
+            _std_map_lt_std_basic_string_lt_char_gt__double_std_less_lt_std_basic_string_lt_char_gt__gt__std_allocator_lt_std_pair_lt_conststd_basic_string_lt_char_gt__double_gt__gt__gt_,
             NodeFlowProperties2,
             GetOutputData,
             );
@@ -30,7 +30,7 @@ class NodeFlowProperties2_Overloads : public NodeFlowProperties2{
 
 };
 void register_NodeFlowProperties2_class(py::module &m){
-py::class_<NodeFlowProperties2 , NodeFlowProperties2_Overloads , std::shared_ptr<NodeFlowProperties2 >   >(m, "NodeFlowProperties2")
+py::class_<NodeFlowProperties2 , NodeFlowProperties2_Overloads , std::shared_ptr<NodeFlowProperties2 >  , AbstractVesselNetworkComponentFlowProperties<2>  >(m, "NodeFlowProperties2")
         .def(py::init< >())
         .def(
             "GetOutputData", 

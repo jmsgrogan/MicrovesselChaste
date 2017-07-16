@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef AbstractDiscreteContinuumPde<2,2 > AbstractDiscreteContinuumPde2_2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class AbstractDiscreteContinuumPde2_2_Overloads : public AbstractDiscreteContinuumPde2_2{
     public:
@@ -29,7 +29,7 @@ class AbstractDiscreteContinuumPde2_2_Overloads : public AbstractDiscreteContinu
 
 };
 void register_AbstractDiscreteContinuumPde2_2_class(py::module &m){
-py::class_<AbstractDiscreteContinuumPde2_2 , AbstractDiscreteContinuumPde2_2_Overloads   >(m, "AbstractDiscreteContinuumPde2_2")
+py::class_<AbstractDiscreteContinuumPde2_2 , AbstractDiscreteContinuumPde2_2_Overloads , std::shared_ptr<AbstractDiscreteContinuumPde2_2 >   >(m, "AbstractDiscreteContinuumPde2_2")
         .def(py::init< >())
         .def(
             "AddDiscreteSource", 

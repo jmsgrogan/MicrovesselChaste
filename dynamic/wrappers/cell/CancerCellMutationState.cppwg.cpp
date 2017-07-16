@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef CancerCellMutationState CancerCellMutationState;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_CancerCellMutationState_class(py::module &m){
-py::class_<CancerCellMutationState   , AbstractCellMutationState  >(m, "CancerCellMutationState")
+py::class_<CancerCellMutationState  , std::shared_ptr<CancerCellMutationState >   >(m, "CancerCellMutationState")
         .def(py::init< >())
     ;
 }

@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef AbstractVesselNetworkCalculator<3 > AbstractVesselNetworkCalculator3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class AbstractVesselNetworkCalculator3_Overloads : public AbstractVesselNetworkCalculator3{
     public:
@@ -29,7 +29,8 @@ class AbstractVesselNetworkCalculator3_Overloads : public AbstractVesselNetworkC
 
 };
 void register_AbstractVesselNetworkCalculator3_class(py::module &m){
-py::class_<AbstractVesselNetworkCalculator3 , AbstractVesselNetworkCalculator3_Overloads   >(m, "AbstractVesselNetworkCalculator3")
+py::class_<AbstractVesselNetworkCalculator3 , AbstractVesselNetworkCalculator3_Overloads , std::shared_ptr<AbstractVesselNetworkCalculator3 >   >(m, "AbstractVesselNetworkCalculator3")
+        .def(py::init< >())
         .def(
             "SetVesselNetwork", 
             (void(AbstractVesselNetworkCalculator3::*)(::std::shared_ptr<VesselNetwork<3> >)) &AbstractVesselNetworkCalculator3::SetVesselNetwork, 

@@ -1,5 +1,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include "VesselNode.hpp"
+#include "Vessel.hpp"
 #include <set>
 #include <vector>
 #include <string>
@@ -8,8 +10,6 @@
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
 #include "vtkPolyData.h"
-#include "VesselNode.hpp"
-#include "Vessel.hpp"
 #include "VesselSegment.hpp"
 
 #include "VesselSegment2.cppwg.hpp"
@@ -17,14 +17,14 @@
 namespace py = pybind11;
 typedef VesselSegment<2 > VesselSegment2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
-typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double;
+typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_map_lt_std_basic_string_lt_char_gt__double_std_less_lt_std_basic_string_lt_char_gt__gt__std_allocator_lt_std_pair_lt_conststd_basic_string_lt_char_gt__double_gt__gt__gt_;
 
 class VesselSegment2_Overloads : public VesselSegment2{
     public:
     using VesselSegment2::VesselSegment;
     ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > GetOutputData() override {
         PYBIND11_OVERLOAD(
-            _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double,
+            _std_map_lt_std_basic_string_lt_char_gt__double_std_less_lt_std_basic_string_lt_char_gt__gt__std_allocator_lt_std_pair_lt_conststd_basic_string_lt_char_gt__double_gt__gt__gt_,
             VesselSegment2,
             GetOutputData,
             );
@@ -32,7 +32,7 @@ class VesselSegment2_Overloads : public VesselSegment2{
 
 };
 void register_VesselSegment2_class(py::module &m){
-py::class_<VesselSegment2 , VesselSegment2_Overloads , std::shared_ptr<VesselSegment2 >   >(m, "VesselSegment2")
+py::class_<VesselSegment2 , VesselSegment2_Overloads , std::shared_ptr<VesselSegment2 >  , AbstractVesselNetworkComponent<2>  >(m, "VesselSegment2")
         .def_static(
             "Create", 
             (::std::shared_ptr<VesselSegment<2> >(*)(::std::shared_ptr<VesselNode<2> >, ::std::shared_ptr<VesselNode<2> >)) &VesselSegment2::Create, 

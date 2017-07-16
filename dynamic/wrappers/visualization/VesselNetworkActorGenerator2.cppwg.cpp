@@ -29,7 +29,7 @@ class VesselNetworkActorGenerator2_Overloads : public VesselNetworkActorGenerato
 
 };
 void register_VesselNetworkActorGenerator2_class(py::module &m){
-py::class_<VesselNetworkActorGenerator2 , VesselNetworkActorGenerator2_Overloads , std::shared_ptr<VesselNetworkActorGenerator2 >   >(m, "VesselNetworkActorGenerator2")
+py::class_<VesselNetworkActorGenerator2 , VesselNetworkActorGenerator2_Overloads , std::shared_ptr<VesselNetworkActorGenerator2 >  , AbstractActorGenerator<2>  >(m, "VesselNetworkActorGenerator2")
         .def(py::init< >())
         .def(
             "AddActor", 

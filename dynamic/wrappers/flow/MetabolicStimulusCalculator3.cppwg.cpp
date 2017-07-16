@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef MetabolicStimulusCalculator<3 > MetabolicStimulusCalculator3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class MetabolicStimulusCalculator3_Overloads : public MetabolicStimulusCalculator3{
     public:
@@ -29,7 +29,7 @@ class MetabolicStimulusCalculator3_Overloads : public MetabolicStimulusCalculato
 
 };
 void register_MetabolicStimulusCalculator3_class(py::module &m){
-py::class_<MetabolicStimulusCalculator3 , MetabolicStimulusCalculator3_Overloads   >(m, "MetabolicStimulusCalculator3")
+py::class_<MetabolicStimulusCalculator3 , MetabolicStimulusCalculator3_Overloads , std::shared_ptr<MetabolicStimulusCalculator3 >  , AbstractVesselNetworkCalculator<3>  >(m, "MetabolicStimulusCalculator3")
         .def(py::init< >())
         .def_static(
             "Create", 

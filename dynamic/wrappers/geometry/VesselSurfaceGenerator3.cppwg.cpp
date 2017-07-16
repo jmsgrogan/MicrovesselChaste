@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef VesselSurfaceGenerator<3 > VesselSurfaceGenerator3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_VesselSurfaceGenerator3_class(py::module &m){
-py::class_<VesselSurfaceGenerator3    >(m, "VesselSurfaceGenerator3")
+py::class_<VesselSurfaceGenerator3  , std::shared_ptr<VesselSurfaceGenerator3 >   >(m, "VesselSurfaceGenerator3")
         .def(py::init<::std::shared_ptr<VesselNetwork<3> > >(), py::arg("pVesselNetwork"))
         .def(
             "GetSurface", 

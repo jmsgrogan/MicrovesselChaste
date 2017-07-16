@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef SimpleNonLinearEllipticFiniteElementSolver<3 > SimpleNonLinearEllipticFiniteElementSolver3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class SimpleNonLinearEllipticFiniteElementSolver3_Overloads : public SimpleNonLinearEllipticFiniteElementSolver3{
     public:
@@ -29,7 +29,7 @@ class SimpleNonLinearEllipticFiniteElementSolver3_Overloads : public SimpleNonLi
 
 };
 void register_SimpleNonLinearEllipticFiniteElementSolver3_class(py::module &m){
-py::class_<SimpleNonLinearEllipticFiniteElementSolver3 , SimpleNonLinearEllipticFiniteElementSolver3_Overloads   >(m, "SimpleNonLinearEllipticFiniteElementSolver3")
+py::class_<SimpleNonLinearEllipticFiniteElementSolver3 , SimpleNonLinearEllipticFiniteElementSolver3_Overloads , std::shared_ptr<SimpleNonLinearEllipticFiniteElementSolver3 >  , AbstractFiniteElementSolverBase<3>  >(m, "SimpleNonLinearEllipticFiniteElementSolver3")
         .def(py::init< >())
         .def_static(
             "Create", 

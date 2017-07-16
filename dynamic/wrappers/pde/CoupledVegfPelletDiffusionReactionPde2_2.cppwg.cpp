@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef CoupledVegfPelletDiffusionReactionPde<2,2 > CoupledVegfPelletDiffusionReactionPde2_2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::QConcentrationFlowRate _QConcentrationFlowRate;
 typedef ::QRate _QRate;
 
@@ -63,7 +63,7 @@ u);
 
 };
 void register_CoupledVegfPelletDiffusionReactionPde2_2_class(py::module &m){
-py::class_<CoupledVegfPelletDiffusionReactionPde2_2 , CoupledVegfPelletDiffusionReactionPde2_2_Overloads   >(m, "CoupledVegfPelletDiffusionReactionPde2_2")
+py::class_<CoupledVegfPelletDiffusionReactionPde2_2 , CoupledVegfPelletDiffusionReactionPde2_2_Overloads , std::shared_ptr<CoupledVegfPelletDiffusionReactionPde2_2 >  , AbstractDiscreteContinuumParabolicPde<2, 2>  >(m, "CoupledVegfPelletDiffusionReactionPde2_2")
         .def(py::init< >())
         .def_static(
             "Create", 

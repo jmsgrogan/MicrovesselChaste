@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef MeshReader MeshReader;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_MeshReader_class(py::module &m){
-py::class_<MeshReader    >(m, "MeshReader")
+py::class_<MeshReader  , std::shared_ptr<MeshReader >   >(m, "MeshReader")
         .def(py::init< >())
         .def_static(
             "Create", 

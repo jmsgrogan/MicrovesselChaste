@@ -14,9 +14,11 @@
 
 namespace py = pybind11;
 typedef GeometryFormat GeometryFormat;
-;
-
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 void register_GeometryFormat_class(py::module &m){
-py::class_<GeometryFormat    >(m, "GeometryFormat")
-    ;
+    py::class_<GeometryFormat> myclass(m, "GeometryFormat");
+    py::enum_<GeometryFormat::Value>(myclass, "Value")
+        .value("VTP", GeometryFormat::Value::VTP)
+        .value("STL", GeometryFormat::Value::STL)
+    .export_values();
 }

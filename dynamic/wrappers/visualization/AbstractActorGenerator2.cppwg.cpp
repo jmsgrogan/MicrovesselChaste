@@ -30,6 +30,7 @@ class AbstractActorGenerator2_Overloads : public AbstractActorGenerator2{
 };
 void register_AbstractActorGenerator2_class(py::module &m){
 py::class_<AbstractActorGenerator2 , AbstractActorGenerator2_Overloads , std::shared_ptr<AbstractActorGenerator2 >   >(m, "AbstractActorGenerator2")
+        .def(py::init< >())
         .def(
             "AddActor", 
             (void(AbstractActorGenerator2::*)(::vtkSmartPointer<vtkRenderer>)) &AbstractActorGenerator2::AddActor, 

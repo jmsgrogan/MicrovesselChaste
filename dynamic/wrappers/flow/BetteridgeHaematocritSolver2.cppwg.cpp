@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef BetteridgeHaematocritSolver<2 > BetteridgeHaematocritSolver2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class BetteridgeHaematocritSolver2_Overloads : public BetteridgeHaematocritSolver2{
     public:
@@ -29,7 +29,7 @@ class BetteridgeHaematocritSolver2_Overloads : public BetteridgeHaematocritSolve
 
 };
 void register_BetteridgeHaematocritSolver2_class(py::module &m){
-py::class_<BetteridgeHaematocritSolver2 , BetteridgeHaematocritSolver2_Overloads   >(m, "BetteridgeHaematocritSolver2")
+py::class_<BetteridgeHaematocritSolver2 , BetteridgeHaematocritSolver2_Overloads , std::shared_ptr<BetteridgeHaematocritSolver2 >  , AbstractHaematocritSolver<2>  >(m, "BetteridgeHaematocritSolver2")
         .def(py::init< >())
         .def_static(
             "Create", 

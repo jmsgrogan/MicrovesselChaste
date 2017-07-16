@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef DensityMap<2 > DensityMap2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_DensityMap2_class(py::module &m){
-py::class_<DensityMap2    >(m, "DensityMap2")
+py::class_<DensityMap2  , std::shared_ptr<DensityMap2 >   >(m, "DensityMap2")
         .def(py::init< >())
         .def_static(
             "Create", 
@@ -42,7 +42,7 @@ py::class_<DensityMap2    >(m, "DensityMap2")
         .def(
             "rGetVesselSurfaceAreaDensity", 
             (::std::vector<double, std::allocator<double> > const &(DensityMap2::*)(bool)) &DensityMap2::rGetVesselSurfaceAreaDensity, 
-            " " , py::arg("update") = true )
+            " " , py::arg("update") = true , py::return_value_policy::reference_internal)
         .def(
             "rGetVesselLineDensity", 
             (::std::vector<double, std::allocator<double> >(DensityMap2::*)(bool)) &DensityMap2::rGetVesselLineDensity, 
@@ -50,31 +50,31 @@ py::class_<DensityMap2    >(m, "DensityMap2")
         .def(
             "rGetPerfusedVesselSurfaceAreaDensity", 
             (::std::vector<double, std::allocator<double> > const &(DensityMap2::*)(bool)) &DensityMap2::rGetPerfusedVesselSurfaceAreaDensity, 
-            " " , py::arg("update") = true )
+            " " , py::arg("update") = true , py::return_value_policy::reference_internal)
         .def(
             "rGetPerfusedVesselLineDensity", 
             (::std::vector<double, std::allocator<double> > const &(DensityMap2::*)(bool)) &DensityMap2::rGetPerfusedVesselLineDensity, 
-            " " , py::arg("update") = true )
+            " " , py::arg("update") = true , py::return_value_policy::reference_internal)
         .def(
             "rGetVesselTipDensity", 
             (::std::vector<double, std::allocator<double> > const &(DensityMap2::*)(bool)) &DensityMap2::rGetVesselTipDensity, 
-            " " , py::arg("update") = true )
+            " " , py::arg("update") = true , py::return_value_policy::reference_internal)
         .def(
             "rGetVesselBranchDensity", 
             (::std::vector<double, std::allocator<double> > const &(DensityMap2::*)(bool)) &DensityMap2::rGetVesselBranchDensity, 
-            " " , py::arg("update") = true )
+            " " , py::arg("update") = true , py::return_value_policy::reference_internal)
         .def(
             "rGetVesselQuantityDensity", 
             (::std::vector<double, std::allocator<double> > const &(DensityMap2::*)(::std::string const &, bool)) &DensityMap2::rGetVesselQuantityDensity, 
-            " " , py::arg("rQuantity"), py::arg("update") = true )
+            " " , py::arg("rQuantity"), py::arg("update") = true , py::return_value_policy::reference_internal)
         .def(
             "rGetCellDensity", 
             (::std::vector<double, std::allocator<double> > const &(DensityMap2::*)(bool)) &DensityMap2::rGetCellDensity, 
-            " " , py::arg("update") = true )
+            " " , py::arg("update") = true , py::return_value_policy::reference_internal)
         .def(
             "rGetCellDensity", 
             (::std::vector<double, std::allocator<double> > const &(DensityMap2::*)(::boost::shared_ptr<AbstractCellMutationState>, bool)) &DensityMap2::rGetCellDensity, 
-            " " , py::arg("pMutationState"), py::arg("update") = true )
+            " " , py::arg("pMutationState"), py::arg("update") = true , py::return_value_policy::reference_internal)
         .def(
             "IsPointInCell", 
             (bool(DensityMap2::*)(::vtkSmartPointer<vtkCellLocator>, ::boost::numeric::ublas::c_vector<double, 2>, unsigned int)) &DensityMap2::IsPointInCell, 

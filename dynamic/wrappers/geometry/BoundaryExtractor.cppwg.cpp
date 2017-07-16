@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef BoundaryExtractor BoundaryExtractor;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_BoundaryExtractor_class(py::module &m){
-py::class_<BoundaryExtractor    >(m, "BoundaryExtractor")
+py::class_<BoundaryExtractor  , std::shared_ptr<BoundaryExtractor >   >(m, "BoundaryExtractor")
         .def(py::init< >())
         .def_static(
             "Create", 

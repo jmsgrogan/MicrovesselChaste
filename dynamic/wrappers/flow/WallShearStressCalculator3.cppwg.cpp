@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef WallShearStressCalculator<3 > WallShearStressCalculator3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class WallShearStressCalculator3_Overloads : public WallShearStressCalculator3{
     public:
@@ -29,7 +29,7 @@ class WallShearStressCalculator3_Overloads : public WallShearStressCalculator3{
 
 };
 void register_WallShearStressCalculator3_class(py::module &m){
-py::class_<WallShearStressCalculator3 , WallShearStressCalculator3_Overloads   >(m, "WallShearStressCalculator3")
+py::class_<WallShearStressCalculator3 , WallShearStressCalculator3_Overloads , std::shared_ptr<WallShearStressCalculator3 >  , AbstractVesselNetworkCalculator<3>  >(m, "WallShearStressCalculator3")
         .def(py::init< >())
         .def_static(
             "Create", 

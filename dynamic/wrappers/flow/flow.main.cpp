@@ -36,14 +36,12 @@ PYBIND11_MODULE(_chaste_project_MicrovesselChaste_flow, m)
 {
     register_FlowSolver2_class(m);
     register_FlowSolver3_class(m);
+    register_AbstractVesselNetworkCalculator2_class(m);
+    register_AbstractVesselNetworkCalculator3_class(m);
     register_WallShearStressCalculator2_class(m);
     register_WallShearStressCalculator3_class(m);
     register_VesselImpedanceCalculator2_class(m);
     register_VesselImpedanceCalculator3_class(m);
-    register_BetteridgeHaematocritSolver2_class(m);
-    register_BetteridgeHaematocritSolver3_class(m);
-    register_AbstractVesselNetworkCalculator2_class(m);
-    register_AbstractVesselNetworkCalculator3_class(m);
     register_MechanicalStimulusCalculator2_class(m);
     register_MechanicalStimulusCalculator3_class(m);
     register_MetabolicStimulusCalculator2_class(m);
@@ -64,4 +62,6 @@ PYBIND11_MODULE(_chaste_project_MicrovesselChaste_flow, m)
     register_AlarconHaematocritSolver3_class(m);
     register_ConstantHaematocritSolver2_class(m);
     register_ConstantHaematocritSolver3_class(m);
+    register_BetteridgeHaematocritSolver2_class(m);
+    register_BetteridgeHaematocritSolver3_class(m);
 }

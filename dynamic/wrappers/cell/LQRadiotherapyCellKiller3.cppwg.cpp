@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef LQRadiotherapyCellKiller<3 > LQRadiotherapyCellKiller3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class LQRadiotherapyCellKiller3_Overloads : public LQRadiotherapyCellKiller3{
     public:
@@ -36,7 +36,7 @@ class LQRadiotherapyCellKiller3_Overloads : public LQRadiotherapyCellKiller3{
 
 };
 void register_LQRadiotherapyCellKiller3_class(py::module &m){
-py::class_<LQRadiotherapyCellKiller3 , LQRadiotherapyCellKiller3_Overloads   >(m, "LQRadiotherapyCellKiller3")
+py::class_<LQRadiotherapyCellKiller3 , LQRadiotherapyCellKiller3_Overloads , std::shared_ptr<LQRadiotherapyCellKiller3 >   >(m, "LQRadiotherapyCellKiller3")
         .def(py::init<::AbstractCellPopulation<3, 3> * >(), py::arg("pCellPopulation"))
         .def(
             "AddTimeOfRadiation", 

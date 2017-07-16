@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef Owen11CaUpdateRule<3 > Owen11CaUpdateRule3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class Owen11CaUpdateRule3_Overloads : public Owen11CaUpdateRule3{
     public:
@@ -41,7 +41,7 @@ cell);
 
 };
 void register_Owen11CaUpdateRule3_class(py::module &m){
-py::class_<Owen11CaUpdateRule3 , Owen11CaUpdateRule3_Overloads   >(m, "Owen11CaUpdateRule3")
+py::class_<Owen11CaUpdateRule3 , Owen11CaUpdateRule3_Overloads , std::shared_ptr<Owen11CaUpdateRule3 >   >(m, "Owen11CaUpdateRule3")
         .def(py::init< >())
         .def(
             "EvaluateProbability", 

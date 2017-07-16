@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef MappableGridGenerator<2 > MappableGridGenerator2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_MappableGridGenerator2_class(py::module &m){
-py::class_<MappableGridGenerator2    >(m, "MappableGridGenerator2")
+py::class_<MappableGridGenerator2  , std::shared_ptr<MappableGridGenerator2 >   >(m, "MappableGridGenerator2")
         .def(py::init< >())
         .def_static(
             "Create", 

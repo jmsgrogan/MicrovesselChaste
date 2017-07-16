@@ -14,16 +14,16 @@
 
 namespace py = pybind11;
 typedef Owen2011MigrationRule<3 > Owen2011MigrationRule3;
-;
-typedef ::std::vector<int, std::allocator<int> > _std_vectorint_std_allocatorint;
-typedef ::std::vector<double, std::allocator<double> > _std_vectordouble_std_allocatordouble;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::std::vector<int, std::allocator<int> > _std_vector_lt_int_std_allocator_lt_int_gt__gt_;
+typedef ::std::vector<double, std::allocator<double> > _std_vector_lt_double_std_allocator_lt_double_gt__gt_;
 
 class Owen2011MigrationRule3_Overloads : public Owen2011MigrationRule3{
     public:
     using Owen2011MigrationRule3::Owen2011MigrationRule;
     ::std::vector<int, std::allocator<int> > GetIndices(::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > const & rNodes) override {
         PYBIND11_OVERLOAD(
-            _std_vectorint_std_allocatorint,
+            _std_vector_lt_int_std_allocator_lt_int_gt__gt_,
             Owen2011MigrationRule3,
             GetIndices,
             rNodes);
@@ -31,7 +31,7 @@ class Owen2011MigrationRule3_Overloads : public Owen2011MigrationRule3{
 
 };
 void register_Owen2011MigrationRule3_class(py::module &m){
-py::class_<Owen2011MigrationRule3 , Owen2011MigrationRule3_Overloads   >(m, "Owen2011MigrationRule3")
+py::class_<Owen2011MigrationRule3 , Owen2011MigrationRule3_Overloads , std::shared_ptr<Owen2011MigrationRule3 >  , LatticeBasedMigrationRule<3>  >(m, "Owen2011MigrationRule3")
         .def(py::init< >())
         .def_static(
             "Create", 

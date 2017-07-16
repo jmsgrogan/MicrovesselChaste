@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef StructuralAdaptationSolver<2 > StructuralAdaptationSolver2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class StructuralAdaptationSolver2_Overloads : public StructuralAdaptationSolver2{
     public:
@@ -29,7 +29,7 @@ class StructuralAdaptationSolver2_Overloads : public StructuralAdaptationSolver2
 
 };
 void register_StructuralAdaptationSolver2_class(py::module &m){
-py::class_<StructuralAdaptationSolver2 , StructuralAdaptationSolver2_Overloads   >(m, "StructuralAdaptationSolver2")
+py::class_<StructuralAdaptationSolver2 , StructuralAdaptationSolver2_Overloads , std::shared_ptr<StructuralAdaptationSolver2 >  , AbstractStructuralAdaptationSolver<2>  >(m, "StructuralAdaptationSolver2")
         .def(py::init< >())
         .def_static(
             "Create", 

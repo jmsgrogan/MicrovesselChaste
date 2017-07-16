@@ -1,6 +1,7 @@
 import unittest
 import chaste
-import microvessel_chaste
+chaste.init()
+import microvessel_chaste.geometry
 import microvessel_chaste.population.vessel
 from microvessel_chaste.utility import *
 import microvessel_chaste.visualization
@@ -14,13 +15,13 @@ class TestVtkScene(unittest.TestCase):
         file_handler = chaste.core.OutputFileHandler("Python/TestMicrovesselVtkScene/TestGrid2d");
 
         grid = microvessel_chaste.mesh.RegularGrid2()
-        grid.SetDimensions([20, 20, 1]);
-        grid.SetSpacing(20.e-6* metre());
+        grid.SetDimensions(20, 20, 1);
+        grid.SetSpacing(20.e-6* metres);
 
         grid_values = []
         for idx in range(grid.GetNumberOfPoints()):
             grid_values.append(float(idx)*10.0 + 100.0)
-        grid.SetPointValues(grid_values)
+        grid.AddPointData(grid_values)
 
         scene = microvessel_chaste.visualization.MicrovesselVtkScene2()
         scene.SetRegularGrid(grid)
@@ -42,13 +43,13 @@ class TestVtkScene(unittest.TestCase):
         file_handler = chaste.core.OutputFileHandler("Python/TestMicrovesselVtkScene/TestGrid3d");
 
         grid = microvessel_chaste.mesh.RegularGrid3()
-        grid.SetDimensions([20, 20, 5]);
-        grid.SetSpacing(20.e-6* metre());
+        grid.SetDimensions(20, 20, 5);
+        grid.SetSpacing(20.e-6* metres);
 
         grid_values = []
         for idx in range(grid.GetNumberOfPoints()):
             grid_values.append(float(idx)*10.0 + 100.0)
-        grid.SetPointValues(grid_values)
+        grid.AddPointData(grid_values)
 
         scene = microvessel_chaste.visualization.MicrovesselVtkScene3()
         scene.SetRegularGrid(grid)

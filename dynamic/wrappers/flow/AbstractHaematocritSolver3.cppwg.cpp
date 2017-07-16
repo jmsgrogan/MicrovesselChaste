@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef AbstractHaematocritSolver<3 > AbstractHaematocritSolver3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class AbstractHaematocritSolver3_Overloads : public AbstractHaematocritSolver3{
     public:
@@ -29,7 +29,7 @@ class AbstractHaematocritSolver3_Overloads : public AbstractHaematocritSolver3{
 
 };
 void register_AbstractHaematocritSolver3_class(py::module &m){
-py::class_<AbstractHaematocritSolver3 , AbstractHaematocritSolver3_Overloads   >(m, "AbstractHaematocritSolver3")
+py::class_<AbstractHaematocritSolver3 , AbstractHaematocritSolver3_Overloads , std::shared_ptr<AbstractHaematocritSolver3 >  , AbstractVesselNetworkCalculator<3>  >(m, "AbstractHaematocritSolver3")
         .def(
             "Calculate", 
             (void(AbstractHaematocritSolver3::*)()) &AbstractHaematocritSolver3::Calculate, 

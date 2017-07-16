@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef Owen11CellPopulationGenerator<3 > Owen11CellPopulationGenerator3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_Owen11CellPopulationGenerator3_class(py::module &m){
-py::class_<Owen11CellPopulationGenerator3    >(m, "Owen11CellPopulationGenerator3")
+py::class_<Owen11CellPopulationGenerator3  , std::shared_ptr<Owen11CellPopulationGenerator3 >   >(m, "Owen11CellPopulationGenerator3")
         .def(py::init< >())
         .def_static(
             "Create", 

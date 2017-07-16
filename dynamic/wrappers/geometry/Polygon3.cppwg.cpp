@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef Polygon<3 > Polygon3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_Polygon3_class(py::module &m){
-py::class_<Polygon3    >(m, "Polygon3")
+py::class_<Polygon3  , std::shared_ptr<Polygon3 >   >(m, "Polygon3")
         .def(py::init<::std::vector<std::shared_ptr<Vertex<3> >, std::allocator<std::shared_ptr<Vertex<3> > > > const & >(), py::arg("vertices"))
         .def(py::init<::std::shared_ptr<Vertex<3> > >(), py::arg("pVertex"))
         .def_static(
@@ -83,7 +83,7 @@ py::class_<Polygon3    >(m, "Polygon3")
         .def(
             "rGetVertices", 
             (::std::vector<std::shared_ptr<Vertex<3> >, std::allocator<std::shared_ptr<Vertex<3> > > > const &(Polygon3::*)() const ) &Polygon3::rGetVertices, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "GetVtkPolygon", 
             (::vtkSmartPointer<vtkPolygon>(Polygon3::*)()) &Polygon3::GetVtkPolygon, 
@@ -91,11 +91,11 @@ py::class_<Polygon3    >(m, "Polygon3")
         .def(
             "rGetEdgeAttributes", 
             (::std::vector<std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > >, std::allocator<std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > > > const &(Polygon3::*)()) &Polygon3::rGetEdgeAttributes, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "rGetAttributes", 
             (::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > const &(Polygon3::*)()) &Polygon3::rGetAttributes, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "GetVtkVertices", 
             (::std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> >(Polygon3::*)()) &Polygon3::GetVtkVertices, 

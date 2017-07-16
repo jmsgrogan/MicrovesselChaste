@@ -21,7 +21,7 @@ py::class_<ParameterCollection  , std::shared_ptr<ParameterCollection >   >(m, "
         .def_static(
             "Instance", 
             (::ParameterCollection *(*)()) &ParameterCollection::Instance, 
-            " "  )
+            " "  , py::return_value_policy::reference)
         .def_static(
             "SharedInstance", 
             (::std::shared_ptr<ParameterCollection>(*)()) &ParameterCollection::SharedInstance, 

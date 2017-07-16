@@ -14,15 +14,15 @@
 
 namespace py = pybind11;
 typedef AbstractSproutingRule<2 > AbstractSproutingRule2;
-;
-typedef ::std::vector<std::shared_ptr<VesselNode<2> >, std::allocator<std::shared_ptr<VesselNode<2> > > > _std_vectorstd_shared_ptrVesselNode2_std_allocatorstd_shared_ptrVesselNode2;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::std::vector<std::shared_ptr<VesselNode<2> >, std::allocator<std::shared_ptr<VesselNode<2> > > > _std_vector_lt_std_shared_ptr_lt_VesselNode_lt_2_gt__gt__std_allocator_lt_std_shared_ptr_lt_VesselNode_lt_2_gt__gt__gt__gt_;
 
 class AbstractSproutingRule2_Overloads : public AbstractSproutingRule2{
     public:
     using AbstractSproutingRule2::AbstractSproutingRule;
     ::std::vector<std::shared_ptr<VesselNode<2> >, std::allocator<std::shared_ptr<VesselNode<2> > > > GetSprouts(::std::vector<std::shared_ptr<VesselNode<2> >, std::allocator<std::shared_ptr<VesselNode<2> > > > const & rNodes) override {
         PYBIND11_OVERLOAD(
-            _std_vectorstd_shared_ptrVesselNode2_std_allocatorstd_shared_ptrVesselNode2,
+            _std_vector_lt_std_shared_ptr_lt_VesselNode_lt_2_gt__gt__std_allocator_lt_std_shared_ptr_lt_VesselNode_lt_2_gt__gt__gt__gt_,
             AbstractSproutingRule2,
             GetSprouts,
             rNodes);
@@ -37,7 +37,7 @@ class AbstractSproutingRule2_Overloads : public AbstractSproutingRule2{
 
 };
 void register_AbstractSproutingRule2_class(py::module &m){
-py::class_<AbstractSproutingRule2 , AbstractSproutingRule2_Overloads   >(m, "AbstractSproutingRule2")
+py::class_<AbstractSproutingRule2 , AbstractSproutingRule2_Overloads , std::shared_ptr<AbstractSproutingRule2 >   >(m, "AbstractSproutingRule2")
         .def(py::init< >())
         .def(
             "SetOnlySproutIfPerfused", 

@@ -1,5 +1,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include "DiscreteContinuumMesh.hpp"
 #include <set>
 #include <vector>
 #include <string>
@@ -8,17 +9,16 @@
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
 #include "vtkPolyData.h"
-#include "DiscreteContinuumMesh.hpp"
 #include "DiscreteContinuumMeshGenerator.hpp"
 
 #include "DiscreteContinuumMeshGenerator3_3.cppwg.hpp"
 
 namespace py = pybind11;
 typedef DiscreteContinuumMeshGenerator<3,3 > DiscreteContinuumMeshGenerator3_3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_DiscreteContinuumMeshGenerator3_3_class(py::module &m){
-py::class_<DiscreteContinuumMeshGenerator3_3    >(m, "DiscreteContinuumMeshGenerator3_3")
+py::class_<DiscreteContinuumMeshGenerator3_3  , std::shared_ptr<DiscreteContinuumMeshGenerator3_3 >   >(m, "DiscreteContinuumMeshGenerator3_3")
         .def(py::init< >())
         .def_static(
             "Create", 

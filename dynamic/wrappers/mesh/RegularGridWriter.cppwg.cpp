@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef RegularGridWriter RegularGridWriter;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_RegularGridWriter_class(py::module &m){
-py::class_<RegularGridWriter    >(m, "RegularGridWriter")
+py::class_<RegularGridWriter  , std::shared_ptr<RegularGridWriter >   >(m, "RegularGridWriter")
         .def(py::init< >())
         .def_static(
             "Create", 

@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef Facet<2 > Facet2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_Facet2_class(py::module &m){
-py::class_<Facet2    >(m, "Facet2")
+py::class_<Facet2  , std::shared_ptr<Facet2 >   >(m, "Facet2")
         .def(py::init<::std::vector<std::shared_ptr<Polygon<2> >, std::allocator<std::shared_ptr<Polygon<2> > > > >(), py::arg("polygons"))
         .def(py::init<::std::shared_ptr<Polygon<2> > >(), py::arg("pPolygon"))
         .def_static(
@@ -67,7 +67,7 @@ py::class_<Facet2    >(m, "Facet2")
         .def(
             "rGetVertices", 
             (::std::vector<std::shared_ptr<Vertex<2> >, std::allocator<std::shared_ptr<Vertex<2> > > > const &(Facet2::*)()) &Facet2::rGetVertices, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "GetVtkVertices", 
             (::std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> >(Facet2::*)()) &Facet2::GetVtkVertices, 

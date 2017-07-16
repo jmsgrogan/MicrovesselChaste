@@ -14,9 +14,9 @@
 
 namespace py = pybind11;
 typedef RegularGrid<3 > RegularGrid3;
-;
-typedef ::Vertex<3> _Vertex3;
-typedef ::std::vector<double, std::allocator<double> > const & _std_vectordouble_std_allocatordoubleRef;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::Vertex<3> _Vertex_lt_3_gt_;
+typedef ::std::vector<double, std::allocator<double> > const & _std_vector_lt_double_std_allocator_lt_double_gt__gt_constRef;
 
 class RegularGrid3_Overloads : public RegularGrid3{
     public:
@@ -30,14 +30,14 @@ class RegularGrid3_Overloads : public RegularGrid3{
     }
     ::Vertex<3> GetGlobalCellLocation(unsigned int index) override {
         PYBIND11_OVERLOAD(
-            _Vertex3,
+            _Vertex_lt_3_gt_,
             RegularGrid3,
             GetGlobalCellLocation,
             index);
     }
     ::std::vector<double, std::allocator<double> > const & rGetCellVolumes(bool update, bool jiggle) override {
         PYBIND11_OVERLOAD(
-            _std_vectordouble_std_allocatordoubleRef,
+            _std_vector_lt_double_std_allocator_lt_double_gt__gt_constRef,
             RegularGrid3,
             rGetCellVolumes,
             update, 
@@ -60,7 +60,7 @@ jiggle);
 
 };
 void register_RegularGrid3_class(py::module &m){
-py::class_<RegularGrid3 , RegularGrid3_Overloads   >(m, "RegularGrid3")
+py::class_<RegularGrid3 , RegularGrid3_Overloads , std::shared_ptr<RegularGrid3 >  , AbstractDiscreteContinuumGrid<3, 3>  >(m, "RegularGrid3")
         .def(py::init< >())
         .def_static(
             "Create", 
@@ -101,11 +101,11 @@ py::class_<RegularGrid3 , RegularGrid3_Overloads   >(m, "RegularGrid3")
         .def(
             "rGetNeighbourData", 
             (::std::vector<std::vector<unsigned int, std::allocator<unsigned int> >, std::allocator<std::vector<unsigned int, std::allocator<unsigned int> > > > const &(RegularGrid3::*)()) &RegularGrid3::rGetNeighbourData, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "rGetMooreNeighbourData", 
             (::std::vector<std::vector<unsigned int, std::allocator<unsigned int> >, std::allocator<std::vector<unsigned int, std::allocator<unsigned int> > > > const &(RegularGrid3::*)()) &RegularGrid3::rGetMooreNeighbourData, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "GetDimensions", 
             (::boost::numeric::ublas::c_vector<unsigned int, 3>(RegularGrid3::*)()) &RegularGrid3::GetDimensions, 
@@ -137,7 +137,7 @@ py::class_<RegularGrid3 , RegularGrid3_Overloads   >(m, "RegularGrid3")
         .def(
             "rGetCellVolumes", 
             (::std::vector<double, std::allocator<double> > const &(RegularGrid3::*)(bool, bool)) &RegularGrid3::rGetCellVolumes, 
-            " " , py::arg("update") = false, py::arg("jiggle") = false )
+            " " , py::arg("update") = false, py::arg("jiggle") = false , py::return_value_policy::reference_internal)
         .def(
             "IsOnBoundary", 
             (bool(RegularGrid3::*)(unsigned int)) &RegularGrid3::IsOnBoundary, 

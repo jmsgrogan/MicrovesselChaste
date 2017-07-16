@@ -38,14 +38,14 @@ if(VTK_MAJOR_VERSION EQUAL 5)
             vtkRenderingFreeType vtkRenderingFreeTypeOpenGL vtkRenderingCore
             vtkRenderingOpenGL vtkInteractionStyle vtkImagingGeneral REQUIRED)
 elseif( (VTK_MAJOR_VERSION EQUAL 6) AND (VTK_MINOR_VERSION LESS 3) )
-    find_package(VTK COMPONENTS vtkParallelCore vtkParallelMPI vtkIOMovie vtkRenderingAnnotation
+    find_package(VTK COMPONENTS vtkWrappingPythonCore vtkParallelCore vtkParallelMPI vtkIOMovie vtkRenderingAnnotation
             vtkRenderingFreeType vtkRenderingFreeTypeOpenGL vtkFiltersVerdict vtkRenderingCore
             vtkRenderingOpenGL vtkFiltersProgrammable vtkInteractionStyle vtkIOImage vtkImagingGeneral REQUIRED)
 elseif( (VTK_MAJOR_VERSION EQUAL 7))
-    find_package(VTK COMPONENTS vtkParallelCore vtkParallelMPI vtkIOImage vtkIOMovie vtkRenderingAnnotation
+    find_package(VTK COMPONENTS vtkWrappingPythonCore vtkParallelCore vtkParallelMPI vtkIOImage vtkIOMovie vtkRenderingAnnotation
             vtkRenderingFreeType vtkImagingGeneral vtkRenderingOpenGL2 vtkRenderingCore vtkFiltersProgrammable vtkFiltersVerdict vtkInteractionStyle REQUIRED)
 else()
-    find_package(VTK COMPONENTS vtkParallelCore vtkParallelMPI vtkIOImage vtkIOMovie vtkRenderingAnnotation
+    find_package(VTK COMPONENTS vtkWrappingPythonCore vtkParallelCore vtkParallelMPI vtkIOImage vtkIOMovie vtkRenderingAnnotation
             vtkRenderingFreeType vtkImagingGeneral vtkRenderingOpenGL vtkRenderingCore vtkFiltersProgrammable vtkFiltersVerdict vtkInteractionStyle REQUIRED)
 endif()
 

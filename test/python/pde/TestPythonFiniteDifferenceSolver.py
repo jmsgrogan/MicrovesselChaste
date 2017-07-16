@@ -1,5 +1,5 @@
 
-"""Copyright (c) 2005-2016, University of Oxford.
+"""Copyright (c) 2005-2017, University of Oxford.
  All rights reserved.
 
  University of Oxford means the Chancellor, Masters and Scholars of the
@@ -50,19 +50,18 @@ class TestFiniteDifferenceSolver(unittest.TestCase):
         file_handler = chaste.core.OutputFileHandler("Python/TestFiniteDifferenceSolver/test_fixed_outer_boundary")
         
         domain = microvessel_chaste.geometry.Part3()
-        length_scale = 1.e-6*metre()
-        origin = microvessel_chaste.mesh.Vertex3((0.0, 0.0, 0.0), length_scale)
-        domain.AddCuboid(100.e-6*metre(), 100.e-6*metre(), 100.e-6*metre(), origin)
+        length_scale = 1.e-6*metres
+        domain.AddCuboid(100.e-6*metres, 100.e-6*metres, 100.e-6*metres)
         
         grid = microvessel_chaste.mesh.RegularGrid3()
-        grid.GenerateFromPart(domain, 10.e-6*metre())
+        grid.GenerateFromPart(domain, 10.e-6*metres)
         
         pde = microvessel_chaste.pde.DiscreteContinuumLinearEllipticPde3_3()
-        pde.SetIsotropicDiffusionConstant(0.003*metre_squared_per_second())
-        pde.SetContinuumLinearInUTerm(-1.0*per_second())
+        pde.SetIsotropicDiffusionConstant(0.003*metre_squared_per_second)
+        pde.SetContinuumLinearInUTerm(-1.0*per_second)
         
         bc = microvessel_chaste.pde.DiscreteContinuumBoundaryCondition3()
-        bc.SetValue(30.0*mole_per_metre_cubed())
+        bc.SetValue(30.0*mole_per_metre_cubed)
         
         solver = microvessel_chaste.pde.SimpleLinearEllipticFiniteDifferenceSolver3()
         solver.SetGrid(grid)

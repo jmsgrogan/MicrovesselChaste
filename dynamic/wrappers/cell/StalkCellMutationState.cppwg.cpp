@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef StalkCellMutationState StalkCellMutationState;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_StalkCellMutationState_class(py::module &m){
-py::class_<StalkCellMutationState   , AbstractCellMutationState  >(m, "StalkCellMutationState")
+py::class_<StalkCellMutationState  , std::shared_ptr<StalkCellMutationState >   >(m, "StalkCellMutationState")
         .def(py::init< >())
     ;
 }

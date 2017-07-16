@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef CoupledLumpedSystemFiniteDifferenceSolver<2 > CoupledLumpedSystemFiniteDifferenceSolver2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class CoupledLumpedSystemFiniteDifferenceSolver2_Overloads : public CoupledLumpedSystemFiniteDifferenceSolver2{
     public:
@@ -43,7 +43,7 @@ class CoupledLumpedSystemFiniteDifferenceSolver2_Overloads : public CoupledLumpe
 
 };
 void register_CoupledLumpedSystemFiniteDifferenceSolver2_class(py::module &m){
-py::class_<CoupledLumpedSystemFiniteDifferenceSolver2 , CoupledLumpedSystemFiniteDifferenceSolver2_Overloads   >(m, "CoupledLumpedSystemFiniteDifferenceSolver2")
+py::class_<CoupledLumpedSystemFiniteDifferenceSolver2 , CoupledLumpedSystemFiniteDifferenceSolver2_Overloads , std::shared_ptr<CoupledLumpedSystemFiniteDifferenceSolver2 >  , SimpleParabolicFiniteDifferenceSolver<2>  >(m, "CoupledLumpedSystemFiniteDifferenceSolver2")
         .def(py::init< >())
         .def_static(
             "Create", 

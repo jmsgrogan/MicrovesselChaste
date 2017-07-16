@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef NetworkToSurface<3 > NetworkToSurface3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_NetworkToSurface3_class(py::module &m){
-py::class_<NetworkToSurface3    >(m, "NetworkToSurface3")
+py::class_<NetworkToSurface3  , std::shared_ptr<NetworkToSurface3 >   >(m, "NetworkToSurface3")
         .def(py::init< >())
         .def_static(
             "Create", 

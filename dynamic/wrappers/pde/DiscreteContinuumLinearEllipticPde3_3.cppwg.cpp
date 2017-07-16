@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef DiscreteContinuumLinearEllipticPde<3,3 > DiscreteContinuumLinearEllipticPde3_3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::QConcentrationFlowRate _QConcentrationFlowRate;
 typedef ::QConcentrationFlowRate _QConcentrationFlowRate;
 typedef ::QRate _QRate;
@@ -70,7 +70,7 @@ pElement);
 
 };
 void register_DiscreteContinuumLinearEllipticPde3_3_class(py::module &m){
-py::class_<DiscreteContinuumLinearEllipticPde3_3 , DiscreteContinuumLinearEllipticPde3_3_Overloads   >(m, "DiscreteContinuumLinearEllipticPde3_3")
+py::class_<DiscreteContinuumLinearEllipticPde3_3 , DiscreteContinuumLinearEllipticPde3_3_Overloads , std::shared_ptr<DiscreteContinuumLinearEllipticPde3_3 >  , AbstractDiscreteContinuumLinearEllipticPde<3, 3>  >(m, "DiscreteContinuumLinearEllipticPde3_3")
         .def(py::init< >())
         .def_static(
             "Create", 

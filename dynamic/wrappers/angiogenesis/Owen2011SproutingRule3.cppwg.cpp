@@ -14,15 +14,15 @@
 
 namespace py = pybind11;
 typedef Owen2011SproutingRule<3 > Owen2011SproutingRule3;
-;
-typedef ::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > _std_vectorstd_shared_ptrVesselNode3_std_allocatorstd_shared_ptrVesselNode3;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > _std_vector_lt_std_shared_ptr_lt_VesselNode_lt_3_gt__gt__std_allocator_lt_std_shared_ptr_lt_VesselNode_lt_3_gt__gt__gt__gt_;
 
 class Owen2011SproutingRule3_Overloads : public Owen2011SproutingRule3{
     public:
     using Owen2011SproutingRule3::Owen2011SproutingRule;
     ::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > GetSprouts(::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > const & rNodes) override {
         PYBIND11_OVERLOAD(
-            _std_vectorstd_shared_ptrVesselNode3_std_allocatorstd_shared_ptrVesselNode3,
+            _std_vector_lt_std_shared_ptr_lt_VesselNode_lt_3_gt__gt__std_allocator_lt_std_shared_ptr_lt_VesselNode_lt_3_gt__gt__gt__gt_,
             Owen2011SproutingRule3,
             GetSprouts,
             rNodes);
@@ -30,7 +30,7 @@ class Owen2011SproutingRule3_Overloads : public Owen2011SproutingRule3{
 
 };
 void register_Owen2011SproutingRule3_class(py::module &m){
-py::class_<Owen2011SproutingRule3 , Owen2011SproutingRule3_Overloads   >(m, "Owen2011SproutingRule3")
+py::class_<Owen2011SproutingRule3 , Owen2011SproutingRule3_Overloads , std::shared_ptr<Owen2011SproutingRule3 >  , LatticeBasedSproutingRule<3>  >(m, "Owen2011SproutingRule3")
         .def(py::init< >())
         .def_static(
             "Create", 

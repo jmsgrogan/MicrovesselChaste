@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef RadiusCalculator<3 > RadiusCalculator3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class RadiusCalculator3_Overloads : public RadiusCalculator3{
     public:
@@ -29,7 +29,7 @@ class RadiusCalculator3_Overloads : public RadiusCalculator3{
 
 };
 void register_RadiusCalculator3_class(py::module &m){
-py::class_<RadiusCalculator3 , RadiusCalculator3_Overloads   >(m, "RadiusCalculator3")
+py::class_<RadiusCalculator3 , RadiusCalculator3_Overloads , std::shared_ptr<RadiusCalculator3 >  , AbstractVesselNetworkCalculator<3>  >(m, "RadiusCalculator3")
         .def(py::init< >())
         .def(
             "SetMinRadius", 

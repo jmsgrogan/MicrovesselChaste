@@ -44,24 +44,24 @@ import microvessel_chaste.simulation
 class TestStraightVesselFlow(unittest.TestCase):
     
     def setup_network(self):
-        length = 100.0
-        radius = 10.e-6*metre()
-        viscosity = 4.e-3*poiseuille()
+        length = 100.0e-6*metres
+        radius = 10.e-6*metres
+        viscosity = 4.e-3*poiseuille
         
-        n1 = microvessel_chaste.population.vessel.VesselNode3(0.0, 0.0, 0.0)
-        n2 = microvessel_chaste.population.vessel.VesselNode3(length, 0.0, 0.0)
+        n1 = microvessel_chaste.population.vessel.VesselNode3.Create(0.0*length)
+        n2 = microvessel_chaste.population.vessel.VesselNode3.Create(length)
         
         n1.GetFlowProperties().SetIsInputNode(True)
         n2.GetFlowProperties().SetIsOutputNode(True)
         
-        v1 = microvessel_chaste.population.vessel.Vessel3([n1 ,n2])
-        network = microvessel_chaste.population.vessel.VesselNetwork3()
+        v1 = microvessel_chaste.population.vessel.Vessel3.Create([n1 ,n2])
+        network = microvessel_chaste.population.vessel.VesselNetwork3.Create()
         network.AddVessel(v1)
         
         for eachVessel in network.GetVessels():
             for eachSegment in eachVessel.GetSegments():
                 eachSegment.GetFlowProperties().SetViscosity(viscosity)
-        network.SetSegmentRadii(radius)
+        microvessel_chaste.population.vessel.VesselNetworkPropertyManager3.SetSegmentRadii(network, radius)
         
         return network
     
@@ -80,6 +80,3 @@ class TestStraightVesselFlow(unittest.TestCase):
         
 if __name__ == '__main__':
     unittest.main()
-        
-        
-        

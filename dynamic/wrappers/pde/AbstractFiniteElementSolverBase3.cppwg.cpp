@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef AbstractFiniteElementSolverBase<3 > AbstractFiniteElementSolverBase3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class AbstractFiniteElementSolverBase3_Overloads : public AbstractFiniteElementSolverBase3{
     public:
@@ -43,7 +43,7 @@ class AbstractFiniteElementSolverBase3_Overloads : public AbstractFiniteElementS
 
 };
 void register_AbstractFiniteElementSolverBase3_class(py::module &m){
-py::class_<AbstractFiniteElementSolverBase3 , AbstractFiniteElementSolverBase3_Overloads   >(m, "AbstractFiniteElementSolverBase3")
+py::class_<AbstractFiniteElementSolverBase3 , AbstractFiniteElementSolverBase3_Overloads , std::shared_ptr<AbstractFiniteElementSolverBase3 >  , AbstractUnstructuredGridDiscreteContinuumSolver<3>  >(m, "AbstractFiniteElementSolverBase3")
         .def(py::init< >())
         .def_static(
             "Create", 

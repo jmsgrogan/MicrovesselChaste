@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef MultiFormatMeshWriter<2 > MultiFormatMeshWriter2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_MultiFormatMeshWriter2_class(py::module &m){
-py::class_<MultiFormatMeshWriter2    >(m, "MultiFormatMeshWriter2")
+py::class_<MultiFormatMeshWriter2  , std::shared_ptr<MultiFormatMeshWriter2 >   >(m, "MultiFormatMeshWriter2")
         .def(py::init< >())
         .def_static(
             "Create", 

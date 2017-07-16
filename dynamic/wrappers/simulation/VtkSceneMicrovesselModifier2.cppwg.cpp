@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef VtkSceneMicrovesselModifier<2 > VtkSceneMicrovesselModifier2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class VtkSceneMicrovesselModifier2_Overloads : public VtkSceneMicrovesselModifier2{
     public:
@@ -36,7 +36,7 @@ class VtkSceneMicrovesselModifier2_Overloads : public VtkSceneMicrovesselModifie
 
 };
 void register_VtkSceneMicrovesselModifier2_class(py::module &m){
-py::class_<VtkSceneMicrovesselModifier2 , VtkSceneMicrovesselModifier2_Overloads   >(m, "VtkSceneMicrovesselModifier2")
+py::class_<VtkSceneMicrovesselModifier2 , VtkSceneMicrovesselModifier2_Overloads , std::shared_ptr<VtkSceneMicrovesselModifier2 >  , AbstractMicrovesselModifier<2>  >(m, "VtkSceneMicrovesselModifier2")
         .def(py::init< >())
         .def(
             "GetVtkScene", 

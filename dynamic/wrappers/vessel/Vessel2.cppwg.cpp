@@ -16,7 +16,7 @@ namespace py = pybind11;
 typedef Vessel<2 > Vessel2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::QLength _QLength;
-typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double;
+typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_map_lt_std_basic_string_lt_char_gt__double_std_less_lt_std_basic_string_lt_char_gt__gt__std_allocator_lt_std_pair_lt_conststd_basic_string_lt_char_gt__double_gt__gt__gt_;
 
 class Vessel2_Overloads : public Vessel2{
     public:
@@ -30,7 +30,7 @@ class Vessel2_Overloads : public Vessel2{
     }
     ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > GetOutputData() override {
         PYBIND11_OVERLOAD(
-            _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double,
+            _std_map_lt_std_basic_string_lt_char_gt__double_std_less_lt_std_basic_string_lt_char_gt__gt__std_allocator_lt_std_pair_lt_conststd_basic_string_lt_char_gt__double_gt__gt__gt_,
             Vessel2,
             GetOutputData,
             );
@@ -45,7 +45,7 @@ class Vessel2_Overloads : public Vessel2{
 
 };
 void register_Vessel2_class(py::module &m){
-py::class_<Vessel2 , Vessel2_Overloads , std::shared_ptr<Vessel2 >   >(m, "Vessel2")
+py::class_<Vessel2 , Vessel2_Overloads , std::shared_ptr<Vessel2 >  , AbstractVesselNetworkComponent<2>  >(m, "Vessel2")
         .def_static(
             "Create", 
             (::std::shared_ptr<Vessel<2> >(*)(::std::shared_ptr<VesselSegment<2> >)) &Vessel2::Create, 
@@ -125,7 +125,7 @@ py::class_<Vessel2 , Vessel2_Overloads , std::shared_ptr<Vessel2 >   >(m, "Vesse
         .def(
             "rGetNodes", 
             (::std::vector<std::shared_ptr<VesselNode<2> >, std::allocator<std::shared_ptr<VesselNode<2> > > > const &(Vessel2::*)()) &Vessel2::rGetNodes, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "GetNumberOfNodes", 
             (unsigned int(Vessel2::*)()) &Vessel2::GetNumberOfNodes, 

@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef MicrovesselSimulationModifier<3 > MicrovesselSimulationModifier3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class MicrovesselSimulationModifier3_Overloads : public MicrovesselSimulationModifier3{
     public:
@@ -44,7 +44,7 @@ outputDirectory);
 
 };
 void register_MicrovesselSimulationModifier3_class(py::module &m){
-py::class_<MicrovesselSimulationModifier3 , MicrovesselSimulationModifier3_Overloads   >(m, "MicrovesselSimulationModifier3")
+py::class_<MicrovesselSimulationModifier3 , MicrovesselSimulationModifier3_Overloads , std::shared_ptr<MicrovesselSimulationModifier3 >   >(m, "MicrovesselSimulationModifier3")
         .def(py::init< >())
         .def_static(
             "Create", 

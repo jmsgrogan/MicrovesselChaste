@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef TipCellMutationState TipCellMutationState;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_TipCellMutationState_class(py::module &m){
-py::class_<TipCellMutationState   , AbstractCellMutationState  >(m, "TipCellMutationState")
+py::class_<TipCellMutationState  , std::shared_ptr<TipCellMutationState >   >(m, "TipCellMutationState")
         .def(py::init< >())
     ;
 }

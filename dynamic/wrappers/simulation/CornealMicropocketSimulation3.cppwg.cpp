@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef CornealMicropocketSimulation<3 > CornealMicropocketSimulation3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_CornealMicropocketSimulation3_class(py::module &m){
-py::class_<CornealMicropocketSimulation3    >(m, "CornealMicropocketSimulation3")
+py::class_<CornealMicropocketSimulation3  , std::shared_ptr<CornealMicropocketSimulation3 >   >(m, "CornealMicropocketSimulation3")
         .def(py::init< >())
         .def_static(
             "Create", 

@@ -21,7 +21,7 @@ py::class_<BaseUnits  , std::shared_ptr<BaseUnits >   >(m, "BaseUnits")
         .def_static(
             "Instance", 
             (::BaseUnits *(*)()) &BaseUnits::Instance, 
-            " "  )
+            " "  , py::return_value_policy::reference)
         .def_static(
             "SharedInstance", 
             (::std::shared_ptr<BaseUnits>(*)()) &BaseUnits::SharedInstance, 

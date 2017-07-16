@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef ViscosityCalculator<3 > ViscosityCalculator3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class ViscosityCalculator3_Overloads : public ViscosityCalculator3{
     public:
@@ -29,7 +29,7 @@ class ViscosityCalculator3_Overloads : public ViscosityCalculator3{
 
 };
 void register_ViscosityCalculator3_class(py::module &m){
-py::class_<ViscosityCalculator3 , ViscosityCalculator3_Overloads   >(m, "ViscosityCalculator3")
+py::class_<ViscosityCalculator3 , ViscosityCalculator3_Overloads , std::shared_ptr<ViscosityCalculator3 >  , AbstractVesselNetworkCalculator<3>  >(m, "ViscosityCalculator3")
         .def(py::init< >())
         .def_static(
             "Create", 

@@ -14,9 +14,12 @@
 
 namespace py = pybind11;
 typedef MeshFormat MeshFormat;
-;
-
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 void register_MeshFormat_class(py::module &m){
-py::class_<MeshFormat    >(m, "MeshFormat")
-    ;
+    py::class_<MeshFormat> myclass(m, "MeshFormat");
+    py::enum_<MeshFormat::Value>(myclass, "Value")
+        .value("VTU", MeshFormat::Value::VTU)
+        .value("DOLFIN", MeshFormat::Value::DOLFIN)
+        .value("STL", MeshFormat::Value::STL)
+    .export_values();
 }

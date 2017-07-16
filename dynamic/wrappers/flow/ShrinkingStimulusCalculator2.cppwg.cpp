@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef ShrinkingStimulusCalculator<2 > ShrinkingStimulusCalculator2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class ShrinkingStimulusCalculator2_Overloads : public ShrinkingStimulusCalculator2{
     public:
@@ -29,7 +29,7 @@ class ShrinkingStimulusCalculator2_Overloads : public ShrinkingStimulusCalculato
 
 };
 void register_ShrinkingStimulusCalculator2_class(py::module &m){
-py::class_<ShrinkingStimulusCalculator2 , ShrinkingStimulusCalculator2_Overloads   >(m, "ShrinkingStimulusCalculator2")
+py::class_<ShrinkingStimulusCalculator2 , ShrinkingStimulusCalculator2_Overloads , std::shared_ptr<ShrinkingStimulusCalculator2 >  , AbstractVesselNetworkCalculator<2>  >(m, "ShrinkingStimulusCalculator2")
         .def(py::init< >())
         .def_static(
             "Create", 

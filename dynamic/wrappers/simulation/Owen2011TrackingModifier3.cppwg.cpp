@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef Owen2011TrackingModifier<3 > Owen2011TrackingModifier3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class Owen2011TrackingModifier3_Overloads : public Owen2011TrackingModifier3{
     public:
@@ -44,7 +44,7 @@ outputDirectory);
 
 };
 void register_Owen2011TrackingModifier3_class(py::module &m){
-py::class_<Owen2011TrackingModifier3 , Owen2011TrackingModifier3_Overloads   >(m, "Owen2011TrackingModifier3")
+py::class_<Owen2011TrackingModifier3 , Owen2011TrackingModifier3_Overloads , std::shared_ptr<Owen2011TrackingModifier3 >   >(m, "Owen2011TrackingModifier3")
         .def(py::init< >())
         .def(
             "UpdateAtEndOfTimeStep", 

@@ -29,7 +29,7 @@ class AbstractVesselNetworkComponentChemicalProperties2_Overloads : public Abstr
 
 };
 void register_AbstractVesselNetworkComponentChemicalProperties2_class(py::module &m){
-py::class_<AbstractVesselNetworkComponentChemicalProperties2 , AbstractVesselNetworkComponentChemicalProperties2_Overloads , std::shared_ptr<AbstractVesselNetworkComponentChemicalProperties2 >   >(m, "AbstractVesselNetworkComponentChemicalProperties2")
+py::class_<AbstractVesselNetworkComponentChemicalProperties2 , AbstractVesselNetworkComponentChemicalProperties2_Overloads , std::shared_ptr<AbstractVesselNetworkComponentChemicalProperties2 >  , AbstractVesselNetworkComponentProperties<2>  >(m, "AbstractVesselNetworkComponentChemicalProperties2")
         .def(
             "GetPermeability", 
             (::QMembranePermeability(AbstractVesselNetworkComponentChemicalProperties2::*)() const ) &AbstractVesselNetworkComponentChemicalProperties2::GetPermeability, 

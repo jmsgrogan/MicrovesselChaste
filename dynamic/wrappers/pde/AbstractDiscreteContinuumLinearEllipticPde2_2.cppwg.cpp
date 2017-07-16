@@ -14,8 +14,8 @@
 
 namespace py = pybind11;
 typedef AbstractDiscreteContinuumLinearEllipticPde<2,2 > AbstractDiscreteContinuumLinearEllipticPde2_2;
-;
-typedef ::boost::numeric::ublas::c_matrix<double, 2, 2> _boost_numeric_ublas_c_matrixdouble_2_2;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::boost::numeric::ublas::c_matrix<double, 2, 2> _boost_numeric_ublas_c_matrix_lt_double_2_2_gt_;
 typedef ::QConcentrationFlowRate _QConcentrationFlowRate;
 typedef ::QConcentrationFlowRate _QConcentrationFlowRate;
 typedef ::QRate _QRate;
@@ -26,7 +26,7 @@ class AbstractDiscreteContinuumLinearEllipticPde2_2_Overloads : public AbstractD
     using AbstractDiscreteContinuumLinearEllipticPde2_2::AbstractDiscreteContinuumLinearEllipticPde;
     ::boost::numeric::ublas::c_matrix<double, 2, 2> ComputeDiffusionTerm(::ChastePoint<2> const & arg0) override {
         PYBIND11_OVERLOAD(
-            _boost_numeric_ublas_c_matrixdouble_2_2,
+            _boost_numeric_ublas_c_matrix_lt_double_2_2_gt_,
             AbstractDiscreteContinuumLinearEllipticPde2_2,
             ComputeDiffusionTerm,
             arg0);
@@ -69,7 +69,7 @@ class AbstractDiscreteContinuumLinearEllipticPde2_2_Overloads : public AbstractD
 
 };
 void register_AbstractDiscreteContinuumLinearEllipticPde2_2_class(py::module &m){
-py::class_<AbstractDiscreteContinuumLinearEllipticPde2_2 , AbstractDiscreteContinuumLinearEllipticPde2_2_Overloads   >(m, "AbstractDiscreteContinuumLinearEllipticPde2_2")
+py::class_<AbstractDiscreteContinuumLinearEllipticPde2_2 , AbstractDiscreteContinuumLinearEllipticPde2_2_Overloads , std::shared_ptr<AbstractDiscreteContinuumLinearEllipticPde2_2 >  , AbstractDiscreteContinuumPde<2, 2>  >(m, "AbstractDiscreteContinuumLinearEllipticPde2_2")
         .def(
             "ComputeDiffusionTerm", 
             (::boost::numeric::ublas::c_matrix<double, 2, 2>(AbstractDiscreteContinuumLinearEllipticPde2_2::*)(::ChastePoint<2> const &)) &AbstractDiscreteContinuumLinearEllipticPde2_2::ComputeDiffusionTerm, 

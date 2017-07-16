@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef AngiogenesisSolver<2 > AngiogenesisSolver2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class AngiogenesisSolver2_Overloads : public AngiogenesisSolver2{
     public:
@@ -50,7 +50,7 @@ class AngiogenesisSolver2_Overloads : public AngiogenesisSolver2{
 
 };
 void register_AngiogenesisSolver2_class(py::module &m){
-py::class_<AngiogenesisSolver2 , AngiogenesisSolver2_Overloads   >(m, "AngiogenesisSolver2")
+py::class_<AngiogenesisSolver2 , AngiogenesisSolver2_Overloads , std::shared_ptr<AngiogenesisSolver2 >   >(m, "AngiogenesisSolver2")
         .def(py::init< >())
         .def_static(
             "Create", 

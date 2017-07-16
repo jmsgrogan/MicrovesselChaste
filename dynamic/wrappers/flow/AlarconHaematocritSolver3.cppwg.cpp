@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef AlarconHaematocritSolver<3 > AlarconHaematocritSolver3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class AlarconHaematocritSolver3_Overloads : public AlarconHaematocritSolver3{
     public:
@@ -29,7 +29,7 @@ class AlarconHaematocritSolver3_Overloads : public AlarconHaematocritSolver3{
 
 };
 void register_AlarconHaematocritSolver3_class(py::module &m){
-py::class_<AlarconHaematocritSolver3 , AlarconHaematocritSolver3_Overloads   >(m, "AlarconHaematocritSolver3")
+py::class_<AlarconHaematocritSolver3 , AlarconHaematocritSolver3_Overloads , std::shared_ptr<AlarconHaematocritSolver3 >  , AbstractHaematocritSolver<3>  >(m, "AlarconHaematocritSolver3")
         .def(py::init< >())
         .def_static(
             "Create", 

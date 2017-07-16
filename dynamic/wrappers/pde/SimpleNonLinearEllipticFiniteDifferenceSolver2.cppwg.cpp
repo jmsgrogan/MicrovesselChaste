@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef SimpleNonLinearEllipticFiniteDifferenceSolver<2 > SimpleNonLinearEllipticFiniteDifferenceSolver2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class SimpleNonLinearEllipticFiniteDifferenceSolver2_Overloads : public SimpleNonLinearEllipticFiniteDifferenceSolver2{
     public:
@@ -43,7 +43,7 @@ class SimpleNonLinearEllipticFiniteDifferenceSolver2_Overloads : public SimpleNo
 
 };
 void register_SimpleNonLinearEllipticFiniteDifferenceSolver2_class(py::module &m){
-py::class_<SimpleNonLinearEllipticFiniteDifferenceSolver2 , SimpleNonLinearEllipticFiniteDifferenceSolver2_Overloads   >(m, "SimpleNonLinearEllipticFiniteDifferenceSolver2")
+py::class_<SimpleNonLinearEllipticFiniteDifferenceSolver2 , SimpleNonLinearEllipticFiniteDifferenceSolver2_Overloads , std::shared_ptr<SimpleNonLinearEllipticFiniteDifferenceSolver2 >  , AbstractFiniteDifferenceSolverBase<2>  >(m, "SimpleNonLinearEllipticFiniteDifferenceSolver2")
         .def(py::init< >())
         .def_static(
             "Create", 

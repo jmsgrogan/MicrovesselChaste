@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef Part<3 > Part3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_Part3_class(py::module &m){
-py::class_<Part3    >(m, "Part3")
+py::class_<Part3  , std::shared_ptr<Part3 >   >(m, "Part3")
         .def(py::init< >())
         .def_static(
             "Create", 

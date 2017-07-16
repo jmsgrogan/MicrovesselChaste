@@ -106,16 +106,12 @@ PYBIND11_MODULE(_chaste_project_MicrovesselChaste_pde, m)
     register_AbstractMixedGridDiscreteContinuumSolver3_class(m);
     register_AbstractFiniteDifferenceSolverBase2_class(m);
     register_AbstractFiniteDifferenceSolverBase3_class(m);
-    register_CoupledLumpedSystemFiniteDifferenceSolver2_class(m);
-    register_CoupledLumpedSystemFiniteDifferenceSolver3_class(m);
     register_SimpleLinearEllipticFiniteDifferenceSolver2_class(m);
     register_SimpleLinearEllipticFiniteDifferenceSolver3_class(m);
     register_SimpleNonLinearEllipticFiniteDifferenceSolver2_class(m);
     register_SimpleNonLinearEllipticFiniteDifferenceSolver3_class(m);
     register_AbstractFiniteElementSolverBase2_class(m);
     register_AbstractFiniteElementSolverBase3_class(m);
-    register_CoupledLumpedSystemFiniteElementSolver2_class(m);
-    register_CoupledLumpedSystemFiniteElementSolver3_class(m);
     register_SimpleLinearEllipticFiniteElementSolver2_class(m);
     register_SimpleLinearEllipticFiniteElementSolver3_class(m);
     register_SimpleNonLinearEllipticFiniteElementSolver2_class(m);
@@ -124,6 +120,10 @@ PYBIND11_MODULE(_chaste_project_MicrovesselChaste_pde, m)
     register_SimpleParabolicFiniteElementSolver3_class(m);
     register_SimpleParabolicFiniteDifferenceSolver2_class(m);
     register_SimpleParabolicFiniteDifferenceSolver3_class(m);
+    register_CoupledLumpedSystemFiniteElementSolver2_class(m);
+    register_CoupledLumpedSystemFiniteElementSolver3_class(m);
+    register_CoupledLumpedSystemFiniteDifferenceSolver2_class(m);
+    register_CoupledLumpedSystemFiniteDifferenceSolver3_class(m);
     register_FunctionMap2_class(m);
     register_FunctionMap3_class(m);
     register_DensityMap2_class(m);

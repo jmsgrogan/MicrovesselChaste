@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef MichaelisMentenSteadyStateDiffusionReactionPde<2,2 > MichaelisMentenSteadyStateDiffusionReactionPde2_2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::QConcentrationFlowRate _QConcentrationFlowRate;
 typedef ::QRate _QRate;
 
@@ -63,7 +63,7 @@ u);
 
 };
 void register_MichaelisMentenSteadyStateDiffusionReactionPde2_2_class(py::module &m){
-py::class_<MichaelisMentenSteadyStateDiffusionReactionPde2_2 , MichaelisMentenSteadyStateDiffusionReactionPde2_2_Overloads   >(m, "MichaelisMentenSteadyStateDiffusionReactionPde2_2")
+py::class_<MichaelisMentenSteadyStateDiffusionReactionPde2_2 , MichaelisMentenSteadyStateDiffusionReactionPde2_2_Overloads , std::shared_ptr<MichaelisMentenSteadyStateDiffusionReactionPde2_2 >  , AbstractDiscreteContinuumNonLinearEllipticPde<2, 2>  >(m, "MichaelisMentenSteadyStateDiffusionReactionPde2_2")
         .def(py::init< >())
         .def_static(
             "Create", 

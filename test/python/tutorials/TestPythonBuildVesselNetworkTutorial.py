@@ -45,7 +45,7 @@
 
 import unittest # Testing framework
 import chaste # Core Chaste functionality
-import microvessel_chaste # Core Microvessel Chaste functionality
+import microvessel_chaste.geometry # Core Microvessel Chaste functionality
 import microvessel_chaste.population.vessel # Vessel tools
 import microvessel_chaste.visualization # Visualization
 from microvessel_chaste.utility import * # Dimensional analysis: bring in all units for convenience
@@ -66,20 +66,19 @@ class TestPythonBuildVesselNetworkLiteratePaper(unittest.TestCase):
         ## are being explicit regarding units, setting a length scale of 1 micron.
         
         file_handler = chaste.core.OutputFileHandler("Python/TestPythonBuildVesselNetworkLiteratePaper", True)
-        length_scale = 1.e-6*metre()
-        length = 100.0
-        n1 = microvessel_chaste.population.vessel.VesselNode3(0.0, 0.0 ,0.0, length_scale)
-        n2 = microvessel_chaste.population.vessel.VesselNode3(length, 0.0, 0.0, length_scale)
-        n3 = microvessel_chaste.population.vessel.VesselNode3(2.0 * length, length, 0.0, length_scale)
-        n4 = microvessel_chaste.population.vessel.VesselNode3(2.0 * length, -length, 0.0, length_scale)
+        length = 100.0e-6*metres
+        n1 = microvessel_chaste.population.vessel.VesselNode3.Create(0.0*length)
+        n2 = microvessel_chaste.population.vessel.VesselNode3.Create(length)
+        n3 = microvessel_chaste.population.vessel.VesselNode3.Create(2.0 * length, length)
+        n4 = microvessel_chaste.population.vessel.VesselNode3.Create(2.0 * length, -1.0*length)
         
         ## Next we make vessel segments and vessels. Vessel segments are straight-line features 
         ## which contain a vascular node at each end. Vessels can be constructed from multiple vessel segments, 
         ## but in this case each vessel just has a single segment.
         
-        v1 = microvessel_chaste.population.vessel.Vessel3([n1 ,n2])
-        v2 = microvessel_chaste.population.vessel.Vessel3([n2, n3])
-        v3 = microvessel_chaste.population.vessel.Vessel3([n2, n4])
+        v1 = microvessel_chaste.population.vessel.Vessel3.Create([n1 ,n2])
+        v2 = microvessel_chaste.population.vessel.Vessel3.Create([n2, n3])
+        v3 = microvessel_chaste.population.vessel.Vessel3.Create([n2, n4])
         
         ## Now we can add our vessels to a vessel network.
         
@@ -87,8 +86,10 @@ class TestPythonBuildVesselNetworkLiteratePaper(unittest.TestCase):
         network.AddVessel(v1)
         network.AddVessel(v2)
         network.AddVessel(v3)
-        network.SetSegmentRadii(10.0*length_scale)
-        network.SetNodeRadii(10.0*length_scale)
+        
+        property_manager = microvessel_chaste.population.vessel.VesselNetworkPropertyManager3()
+        property_manager.SetSegmentRadii(network, 10.0e-6*metres)
+        property_manager.SetNodeRadii(network, 10.0e-6*metres)
         
         ## We can visualize the network
         
@@ -118,7 +119,7 @@ class TestPythonBuildVesselNetworkLiteratePaper(unittest.TestCase):
         ## by now using a fictitious 'cell width' reference length unit instead of microns.
         
         file_handler = chaste.core.OutputFileHandler("Python/TestPythonBuildVesselNetworkLiteratePaperGenerator", True)
-        cell_width = 25.e-6 * metre()
+        cell_width = 25.e-6 * metres
         BaseUnits.Instance().SetReferenceLengthScale(cell_width)
     
         target_width = 60.0 * cell_width
@@ -139,7 +140,7 @@ class TestPythonBuildVesselNetworkLiteratePaper(unittest.TestCase):
         writer = microvessel_chaste.population.vessel.VesselNetworkWriter3()
         writer.SetFileName(file_handler.GetOutputDirectoryFullPath() + "hexagonal_network.vtp")
         writer.SetVesselNetwork(network)
-        micron_length_scale = 1.e-6 * metre()
+        micron_length_scale = 1.e-6 * metres
         writer.SetReferenceLengthScale(micron_length_scale)
         writer.Write()
         

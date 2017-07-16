@@ -61,8 +61,7 @@ Grids and PDEs.
 ```cpp
 #include "DiscreteContinuumMesh.hpp"
 #include "VtkMeshWriter.hpp"
-#include "FiniteElementSolver.hpp"
-#include "FiniteDifferenceSolver.hpp"
+#include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
 #include "DiscreteSource.hpp"
 #include "VesselBasedDiscreteSource.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
@@ -86,37 +85,38 @@ PDE with finite differences.
 ```cpp
     void TestLinearReactionDiffusionPdeWithFiniteDifferences() throw(Exception)
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestSolvingPdesLiteratePaper/TestLinearReactionDiffusionPdeWithFiniteDifferences"));
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestSolvingPdesLiteratePaper/TestLinearReactionDiffusionPdeWithFiniteDifferences");
 ```
 
 We will work in microns
 
 ```cpp
-        QLength reference_length(1.0 * unit::microns);
+        QLength reference_length(1_um);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
 ```
 
 Set up a simulation domain, which will be a cuboid.
 
 ```cpp
-        QLength domain_width(100.0 * 1.e-6 * unit::microns);
-        QLength domain_height(100.0 * 1.e-6 * unit::microns);
-        QLength domain_depth(20.0 * 1.e-6 * unit::microns);
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(domain_width, domain_height, domain_depth, Vertex<3>(0.0, 0.0, 0.0));
+        QLength domain_width(100_um);
+        QLength domain_height(100_um);
+        QLength domain_depth(20_um);
+        auto p_domain = Part<3>::Create();
+        p_domain->AddCuboid(domain_width, domain_height, domain_depth);
 ```
 
 Make a regular grid on the domain
 
 ```cpp
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        auto p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 10.0*reference_length);
 ```
 
 Set up a PDE, we will model oxygen diffusion.
 
 ```cpp
-        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
+        auto p_oxygen_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         QDiffusivity oxygen_diffusivity(1.e-6*unit::metre_squared_per_second);
         p_oxygen_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity);
 ```
@@ -131,20 +131,19 @@ Add continuum sink term for cells
 Add a Dirichlet boundary condition on the left face of the domain.
 
 ```cpp
-        p_domain->GetFacet(Vertex<3>(0.0,
-                                                     domain_height/(2.0*reference_length),
-                                                     domain_depth/(2.0*reference_length)))->SetLabel("boundary_1");
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_left_face_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
-        p_left_face_boundary->SetType(BoundaryConditionType::FACET);
+        p_domain->AddAttributeToPolygonIfFound(Vertex<3>(0.0_um, domain_height/2.0, domain_depth/2.0), "boundary_1", 1.0);
+
+        auto p_left_face_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
+        p_left_face_boundary->SetType(BoundaryConditionType::POLYGON);
         p_left_face_boundary->SetDomain(p_domain);
-        p_left_face_boundary->SetValue(10.0*unit::mole_per_metre_cubed);
-        p_left_face_boundary->SetLabelName("boundary_1");
+        p_left_face_boundary->SetValue(10e-3_M);
+        p_left_face_boundary->SetLabel("boundary_1");
 ```
 
 Set up the PDE solvers for the oxygen problem
 
 ```cpp
-        boost::shared_ptr<FiniteDifferenceSolver<3> > p_oxygen_solver = FiniteDifferenceSolver<3>::Create();
+        auto p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<3>::Create();
         p_oxygen_solver->SetPde(p_oxygen_pde);
         p_oxygen_solver->SetGrid(p_grid);
         p_oxygen_solver->AddBoundaryCondition(p_left_face_boundary);
@@ -184,8 +183,7 @@ The full code is given below
 #include "VesselNetworkGenerator.hpp"
 #include "DiscreteContinuumMesh.hpp"
 #include "VtkMeshWriter.hpp"
-#include "FiniteElementSolver.hpp"
-#include "FiniteDifferenceSolver.hpp"
+#include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
 #include "DiscreteSource.hpp"
 #include "VesselBasedDiscreteSource.hpp"
 #include "DiscreteContinuumBoundaryCondition.hpp"
@@ -197,30 +195,30 @@ class TestSolvingPdesLiteratePaper : public AbstractCellBasedWithTimingsTestSuit
 public:
     void TestLinearReactionDiffusionPdeWithFiniteDifferences() throw(Exception)
     {
-        MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestSolvingPdesLiteratePaper/TestLinearReactionDiffusionPdeWithFiniteDifferences"));
-        QLength reference_length(1.0 * unit::microns);
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestSolvingPdesLiteratePaper/TestLinearReactionDiffusionPdeWithFiniteDifferences");
+        QLength reference_length(1_um);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
-        QLength domain_width(100.0 * 1.e-6 * unit::microns);
-        QLength domain_height(100.0 * 1.e-6 * unit::microns);
-        QLength domain_depth(20.0 * 1.e-6 * unit::microns);
-        boost::shared_ptr<Part<3> > p_domain = Part<3>::Create();
-        p_domain->AddCuboid(domain_width, domain_height, domain_depth, Vertex<3>(0.0, 0.0, 0.0));
-        boost::shared_ptr<RegularGrid<3> > p_grid = RegularGrid<3>::Create();
+        QLength domain_width(100_um);
+        QLength domain_height(100_um);
+        QLength domain_depth(20_um);
+        auto p_domain = Part<3>::Create();
+        p_domain->AddCuboid(domain_width, domain_height, domain_depth);
+        auto p_grid = RegularGrid<3>::Create();
         p_grid->GenerateFromPart(p_domain, 10.0*reference_length);
-        boost::shared_ptr<DiscreteContinuumLinearEllipticPde<3> > p_oxygen_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
+        auto p_oxygen_pde = DiscreteContinuumLinearEllipticPde<3>::Create();
         QDiffusivity oxygen_diffusivity(1.e-6*unit::metre_squared_per_second);
         p_oxygen_pde->SetIsotropicDiffusionConstant(oxygen_diffusivity);
         QRate oxygen_consumption_rate(1.e-6*unit::per_second);
         p_oxygen_pde->SetContinuumLinearInUTerm(-oxygen_consumption_rate);
-        p_domain->GetFacet(Vertex<3>(0.0,
-                                                     domain_height/(2.0*reference_length),
-                                                     domain_depth/(2.0*reference_length)))->SetLabel("boundary_1");
-        boost::shared_ptr<DiscreteContinuumBoundaryCondition<3> > p_left_face_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
-        p_left_face_boundary->SetType(BoundaryConditionType::FACET);
+        p_domain->AddAttributeToPolygonIfFound(Vertex<3>(0.0_um, domain_height/2.0, domain_depth/2.0), "boundary_1", 1.0);
+
+        auto p_left_face_boundary = DiscreteContinuumBoundaryCondition<3>::Create();
+        p_left_face_boundary->SetType(BoundaryConditionType::POLYGON);
         p_left_face_boundary->SetDomain(p_domain);
-        p_left_face_boundary->SetValue(10.0*unit::mole_per_metre_cubed);
-        p_left_face_boundary->SetLabelName("boundary_1");
-        boost::shared_ptr<FiniteDifferenceSolver<3> > p_oxygen_solver = FiniteDifferenceSolver<3>::Create();
+        p_left_face_boundary->SetValue(10e-3_M);
+        p_left_face_boundary->SetLabel("boundary_1");
+        auto p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<3>::Create();
         p_oxygen_solver->SetPde(p_oxygen_pde);
         p_oxygen_solver->SetGrid(p_grid);
         p_oxygen_solver->AddBoundaryCondition(p_left_face_boundary);

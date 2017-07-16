@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef AbstractStructuralAdaptationSolver<2 > AbstractStructuralAdaptationSolver2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class AbstractStructuralAdaptationSolver2_Overloads : public AbstractStructuralAdaptationSolver2{
     public:
@@ -36,7 +36,8 @@ class AbstractStructuralAdaptationSolver2_Overloads : public AbstractStructuralA
 
 };
 void register_AbstractStructuralAdaptationSolver2_class(py::module &m){
-py::class_<AbstractStructuralAdaptationSolver2 , AbstractStructuralAdaptationSolver2_Overloads   >(m, "AbstractStructuralAdaptationSolver2")
+py::class_<AbstractStructuralAdaptationSolver2 , AbstractStructuralAdaptationSolver2_Overloads , std::shared_ptr<AbstractStructuralAdaptationSolver2 >   >(m, "AbstractStructuralAdaptationSolver2")
+        .def(py::init< >())
         .def(
             "GetTolerance", 
             (double(AbstractStructuralAdaptationSolver2::*)() const ) &AbstractStructuralAdaptationSolver2::GetTolerance, 

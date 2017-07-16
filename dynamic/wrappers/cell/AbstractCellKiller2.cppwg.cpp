@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef AbstractCellKiller<2 > AbstractCellKiller2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class AbstractCellKiller2_Overloads : public AbstractCellKiller2{
     public:
@@ -36,7 +36,8 @@ class AbstractCellKiller2_Overloads : public AbstractCellKiller2{
 
 };
 void register_AbstractCellKiller2_class(py::module &m){
-py::class_<AbstractCellKiller2 , AbstractCellKiller2_Overloads   >(m, "AbstractCellKiller2")
+py::class_<AbstractCellKiller2 , AbstractCellKiller2_Overloads , std::shared_ptr<AbstractCellKiller2 >   >(m, "AbstractCellKiller2")
+        .def(py::init<::AbstractCellPopulation<2, 2> * >(), py::arg("pCellPopulation"))
         .def(
             "CheckAndLabelCellsForApoptosisOrDeath", 
             (void(AbstractCellKiller2::*)()) &AbstractCellKiller2::CheckAndLabelCellsForApoptosisOrDeath, 
@@ -44,7 +45,7 @@ py::class_<AbstractCellKiller2 , AbstractCellKiller2_Overloads   >(m, "AbstractC
         .def(
             "GetCellPopulation", 
             (::AbstractCellPopulation<2, 2> const *(AbstractCellKiller2::*)() const ) &AbstractCellKiller2::GetCellPopulation, 
-            " "  )
+            " "  , py::return_value_policy::reference)
         .def(
             "OutputCellKillerInfo", 
             (void(AbstractCellKiller2::*)(::out_stream &)) &AbstractCellKiller2::OutputCellKillerInfo, 

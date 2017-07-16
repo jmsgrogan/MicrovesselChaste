@@ -14,15 +14,15 @@
 
 namespace py = pybind11;
 typedef OffLatticeMigrationRule<2 > OffLatticeMigrationRule2;
-;
-typedef ::std::vector<Vertex<2>, std::allocator<Vertex<2> > > _std_vectorVertex2_std_allocatorVertex2;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::std::vector<Vertex<2>, std::allocator<Vertex<2> > > _std_vector_lt_Vertex_lt_2_gt__std_allocator_lt_Vertex_lt_2_gt__gt__gt_;
 
 class OffLatticeMigrationRule2_Overloads : public OffLatticeMigrationRule2{
     public:
     using OffLatticeMigrationRule2::OffLatticeMigrationRule;
     ::std::vector<Vertex<2>, std::allocator<Vertex<2> > > GetDirections(::std::vector<std::shared_ptr<VesselNode<2> >, std::allocator<std::shared_ptr<VesselNode<2> > > > const & rNodes) override {
         PYBIND11_OVERLOAD(
-            _std_vectorVertex2_std_allocatorVertex2,
+            _std_vector_lt_Vertex_lt_2_gt__std_allocator_lt_Vertex_lt_2_gt__gt__gt_,
             OffLatticeMigrationRule2,
             GetDirections,
             rNodes);
@@ -30,7 +30,7 @@ class OffLatticeMigrationRule2_Overloads : public OffLatticeMigrationRule2{
 
 };
 void register_OffLatticeMigrationRule2_class(py::module &m){
-py::class_<OffLatticeMigrationRule2 , OffLatticeMigrationRule2_Overloads   >(m, "OffLatticeMigrationRule2")
+py::class_<OffLatticeMigrationRule2 , OffLatticeMigrationRule2_Overloads , std::shared_ptr<OffLatticeMigrationRule2 >  , AbstractMigrationRule<2>  >(m, "OffLatticeMigrationRule2")
         .def(py::init< >())
         .def(
             "CalculateDomainDistanceMap", 

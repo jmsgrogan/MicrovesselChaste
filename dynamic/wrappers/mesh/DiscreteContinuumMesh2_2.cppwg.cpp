@@ -14,23 +14,23 @@
 
 namespace py = pybind11;
 typedef DiscreteContinuumMesh<2,2 > DiscreteContinuumMesh2_2;
-;
-typedef ::Vertex<2> _Vertex2;
-typedef ::std::vector<double, std::allocator<double> > const & _std_vectordouble_std_allocatordoubleRef;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::Vertex<2> _Vertex_lt_2_gt_;
+typedef ::std::vector<double, std::allocator<double> > const & _std_vector_lt_double_std_allocator_lt_double_gt__gt_constRef;
 
 class DiscreteContinuumMesh2_2_Overloads : public DiscreteContinuumMesh2_2{
     public:
     using DiscreteContinuumMesh2_2::DiscreteContinuumMesh;
     ::Vertex<2> GetGlobalCellLocation(unsigned int index) override {
         PYBIND11_OVERLOAD(
-            _Vertex2,
+            _Vertex_lt_2_gt_,
             DiscreteContinuumMesh2_2,
             GetGlobalCellLocation,
             index);
     }
     ::std::vector<double, std::allocator<double> > const & rGetCellVolumes(bool update, bool jiggle) override {
         PYBIND11_OVERLOAD(
-            _std_vectordouble_std_allocatordoubleRef,
+            _std_vector_lt_double_std_allocator_lt_double_gt__gt_constRef,
             DiscreteContinuumMesh2_2,
             rGetCellVolumes,
             update, 
@@ -46,7 +46,7 @@ jiggle);
 
 };
 void register_DiscreteContinuumMesh2_2_class(py::module &m){
-py::class_<DiscreteContinuumMesh2_2 , DiscreteContinuumMesh2_2_Overloads   >(m, "DiscreteContinuumMesh2_2")
+py::class_<DiscreteContinuumMesh2_2 , DiscreteContinuumMesh2_2_Overloads , std::shared_ptr<DiscreteContinuumMesh2_2 >  , TetrahedralMesh<2, 2> , AbstractDiscreteContinuumGrid<2, 2>  >(m, "DiscreteContinuumMesh2_2")
         .def(py::init< >())
         .def_static(
             "Create", 
@@ -67,7 +67,7 @@ py::class_<DiscreteContinuumMesh2_2 , DiscreteContinuumMesh2_2_Overloads   >(m, 
         .def(
             "rGetCellVolumes", 
             (::std::vector<double, std::allocator<double> > const &(DiscreteContinuumMesh2_2::*)(bool, bool)) &DiscreteContinuumMesh2_2::rGetCellVolumes, 
-            " " , py::arg("update") = false, py::arg("jiggle") = false )
+            " " , py::arg("update") = false, py::arg("jiggle") = false , py::return_value_policy::reference_internal)
         .def(
             "GetElementPartitioning", 
             (::std::vector<unsigned int, std::allocator<unsigned int> >(DiscreteContinuumMesh2_2::*)()) &DiscreteContinuumMesh2_2::GetElementPartitioning, 

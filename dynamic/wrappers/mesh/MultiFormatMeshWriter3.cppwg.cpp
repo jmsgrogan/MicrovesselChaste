@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef MultiFormatMeshWriter<3 > MultiFormatMeshWriter3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_MultiFormatMeshWriter3_class(py::module &m){
-py::class_<MultiFormatMeshWriter3    >(m, "MultiFormatMeshWriter3")
+py::class_<MultiFormatMeshWriter3  , std::shared_ptr<MultiFormatMeshWriter3 >   >(m, "MultiFormatMeshWriter3")
         .def(py::init< >())
         .def_static(
             "Create", 

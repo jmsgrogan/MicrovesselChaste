@@ -15,14 +15,14 @@
 namespace py = pybind11;
 typedef SegmentFlowProperties<3 > SegmentFlowProperties3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
-typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double;
+typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_map_lt_std_basic_string_lt_char_gt__double_std_less_lt_std_basic_string_lt_char_gt__gt__std_allocator_lt_std_pair_lt_conststd_basic_string_lt_char_gt__double_gt__gt__gt_;
 
 class SegmentFlowProperties3_Overloads : public SegmentFlowProperties3{
     public:
     using SegmentFlowProperties3::SegmentFlowProperties;
     ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > GetOutputData() const  override {
         PYBIND11_OVERLOAD(
-            _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double,
+            _std_map_lt_std_basic_string_lt_char_gt__double_std_less_lt_std_basic_string_lt_char_gt__gt__std_allocator_lt_std_pair_lt_conststd_basic_string_lt_char_gt__double_gt__gt__gt_,
             SegmentFlowProperties3,
             GetOutputData,
             );
@@ -30,7 +30,7 @@ class SegmentFlowProperties3_Overloads : public SegmentFlowProperties3{
 
 };
 void register_SegmentFlowProperties3_class(py::module &m){
-py::class_<SegmentFlowProperties3 , SegmentFlowProperties3_Overloads , std::shared_ptr<SegmentFlowProperties3 >   >(m, "SegmentFlowProperties3")
+py::class_<SegmentFlowProperties3 , SegmentFlowProperties3_Overloads , std::shared_ptr<SegmentFlowProperties3 >  , AbstractVesselNetworkComponentFlowProperties<3>  >(m, "SegmentFlowProperties3")
         .def(py::init< >())
         .def(
             "GetAntiAngiogenicDrugConcentration", 

@@ -29,7 +29,7 @@ class DiscreteContinuumMeshActorGenerator2_Overloads : public DiscreteContinuumM
 
 };
 void register_DiscreteContinuumMeshActorGenerator2_class(py::module &m){
-py::class_<DiscreteContinuumMeshActorGenerator2 , DiscreteContinuumMeshActorGenerator2_Overloads , std::shared_ptr<DiscreteContinuumMeshActorGenerator2 >   >(m, "DiscreteContinuumMeshActorGenerator2")
+py::class_<DiscreteContinuumMeshActorGenerator2 , DiscreteContinuumMeshActorGenerator2_Overloads , std::shared_ptr<DiscreteContinuumMeshActorGenerator2 >  , AbstractActorGenerator<2>  >(m, "DiscreteContinuumMeshActorGenerator2")
         .def(py::init< >())
         .def(
             "AddActor", 

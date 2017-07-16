@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef AbstractFiniteDifferenceSolverBase<3 > AbstractFiniteDifferenceSolverBase3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class AbstractFiniteDifferenceSolverBase3_Overloads : public AbstractFiniteDifferenceSolverBase3{
     public:
@@ -71,7 +71,7 @@ class AbstractFiniteDifferenceSolverBase3_Overloads : public AbstractFiniteDiffe
 
 };
 void register_AbstractFiniteDifferenceSolverBase3_class(py::module &m){
-py::class_<AbstractFiniteDifferenceSolverBase3 , AbstractFiniteDifferenceSolverBase3_Overloads   >(m, "AbstractFiniteDifferenceSolverBase3")
+py::class_<AbstractFiniteDifferenceSolverBase3 , AbstractFiniteDifferenceSolverBase3_Overloads , std::shared_ptr<AbstractFiniteDifferenceSolverBase3 >  , AbstractRegularGridDiscreteContinuumSolver<3>  >(m, "AbstractFiniteDifferenceSolverBase3")
         .def(
             "AddDiscreteTermsToMatrix", 
             (void(AbstractFiniteDifferenceSolverBase3::*)()) &AbstractFiniteDifferenceSolverBase3::AddDiscreteTermsToMatrix, 

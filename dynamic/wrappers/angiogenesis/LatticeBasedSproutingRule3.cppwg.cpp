@@ -14,15 +14,15 @@
 
 namespace py = pybind11;
 typedef LatticeBasedSproutingRule<3 > LatticeBasedSproutingRule3;
-;
-typedef ::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > _std_vectorstd_shared_ptrVesselNode3_std_allocatorstd_shared_ptrVesselNode3;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > _std_vector_lt_std_shared_ptr_lt_VesselNode_lt_3_gt__gt__std_allocator_lt_std_shared_ptr_lt_VesselNode_lt_3_gt__gt__gt__gt_;
 
 class LatticeBasedSproutingRule3_Overloads : public LatticeBasedSproutingRule3{
     public:
     using LatticeBasedSproutingRule3::LatticeBasedSproutingRule;
     ::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > GetSprouts(::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > const & rNodes) override {
         PYBIND11_OVERLOAD(
-            _std_vectorstd_shared_ptrVesselNode3_std_allocatorstd_shared_ptrVesselNode3,
+            _std_vector_lt_std_shared_ptr_lt_VesselNode_lt_3_gt__gt__std_allocator_lt_std_shared_ptr_lt_VesselNode_lt_3_gt__gt__gt__gt_,
             LatticeBasedSproutingRule3,
             GetSprouts,
             rNodes);
@@ -37,7 +37,7 @@ class LatticeBasedSproutingRule3_Overloads : public LatticeBasedSproutingRule3{
 
 };
 void register_LatticeBasedSproutingRule3_class(py::module &m){
-py::class_<LatticeBasedSproutingRule3 , LatticeBasedSproutingRule3_Overloads   >(m, "LatticeBasedSproutingRule3")
+py::class_<LatticeBasedSproutingRule3 , LatticeBasedSproutingRule3_Overloads , std::shared_ptr<LatticeBasedSproutingRule3 >  , AbstractSproutingRule<3>  >(m, "LatticeBasedSproutingRule3")
         .def(py::init< >())
         .def_static(
             "Create", 

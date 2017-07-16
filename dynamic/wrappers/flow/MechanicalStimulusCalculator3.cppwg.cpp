@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef MechanicalStimulusCalculator<3 > MechanicalStimulusCalculator3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class MechanicalStimulusCalculator3_Overloads : public MechanicalStimulusCalculator3{
     public:
@@ -29,7 +29,7 @@ class MechanicalStimulusCalculator3_Overloads : public MechanicalStimulusCalcula
 
 };
 void register_MechanicalStimulusCalculator3_class(py::module &m){
-py::class_<MechanicalStimulusCalculator3 , MechanicalStimulusCalculator3_Overloads   >(m, "MechanicalStimulusCalculator3")
+py::class_<MechanicalStimulusCalculator3 , MechanicalStimulusCalculator3_Overloads , std::shared_ptr<MechanicalStimulusCalculator3 >  , AbstractVesselNetworkCalculator<3>  >(m, "MechanicalStimulusCalculator3")
         .def(py::init< >())
         .def_static(
             "Create", 

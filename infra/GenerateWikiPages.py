@@ -55,7 +55,7 @@ if __name__ == '__main__':
                     if not fnmatch.fnmatch(file, '*.pyc'):
                         tutorial_files.append([eachSearchPath, file])
                         
-    output_format = "markdown"
+    output_format = "jupyter"
     
     if output_format == "markdown":           
         # Generate the markdown for each

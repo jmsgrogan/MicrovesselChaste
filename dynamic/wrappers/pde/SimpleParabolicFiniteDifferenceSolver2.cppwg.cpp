@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef SimpleParabolicFiniteDifferenceSolver<2 > SimpleParabolicFiniteDifferenceSolver2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class SimpleParabolicFiniteDifferenceSolver2_Overloads : public SimpleParabolicFiniteDifferenceSolver2{
     public:
@@ -43,7 +43,7 @@ class SimpleParabolicFiniteDifferenceSolver2_Overloads : public SimpleParabolicF
 
 };
 void register_SimpleParabolicFiniteDifferenceSolver2_class(py::module &m){
-py::class_<SimpleParabolicFiniteDifferenceSolver2 , SimpleParabolicFiniteDifferenceSolver2_Overloads   >(m, "SimpleParabolicFiniteDifferenceSolver2")
+py::class_<SimpleParabolicFiniteDifferenceSolver2 , SimpleParabolicFiniteDifferenceSolver2_Overloads , std::shared_ptr<SimpleParabolicFiniteDifferenceSolver2 >  , AbstractFiniteDifferenceSolverBase<2>  >(m, "SimpleParabolicFiniteDifferenceSolver2")
         .def(py::init< >())
         .def_static(
             "Create", 
@@ -60,7 +60,7 @@ py::class_<SimpleParabolicFiniteDifferenceSolver2 , SimpleParabolicFiniteDiffere
         .def(
             "rGetIntermediateSolutions", 
             (::std::vector<std::pair<std::vector<double, std::allocator<double> >, double>, std::allocator<std::pair<std::vector<double, std::allocator<double> >, double> > > const &(SimpleParabolicFiniteDifferenceSolver2::*)()) &SimpleParabolicFiniteDifferenceSolver2::rGetIntermediateSolutions, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "SetTargetTimeIncrement", 
             (void(SimpleParabolicFiniteDifferenceSolver2::*)(double)) &SimpleParabolicFiniteDifferenceSolver2::SetTargetTimeIncrement, 

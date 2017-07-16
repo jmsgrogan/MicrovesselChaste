@@ -14,8 +14,8 @@
 
 namespace py = pybind11;
 typedef AbstractDiscreteContinuumParabolicPde<3,3 > AbstractDiscreteContinuumParabolicPde3_3;
-;
-typedef ::boost::numeric::ublas::c_matrix<double, 3, 3> _boost_numeric_ublas_c_matrixdouble_3_3;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::boost::numeric::ublas::c_matrix<double, 3, 3> _boost_numeric_ublas_c_matrix_lt_double_3_3_gt_;
 typedef ::QConcentrationFlowRate _QConcentrationFlowRate;
 typedef ::QRate _QRate;
 
@@ -24,7 +24,7 @@ class AbstractDiscreteContinuumParabolicPde3_3_Overloads : public AbstractDiscre
     using AbstractDiscreteContinuumParabolicPde3_3::AbstractDiscreteContinuumParabolicPde;
     ::boost::numeric::ublas::c_matrix<double, 3, 3> ComputeDiffusionTerm(::ChastePoint<3> const & rX, ::Element<3, 3> * pElement) override {
         PYBIND11_OVERLOAD(
-            _boost_numeric_ublas_c_matrixdouble_3_3,
+            _boost_numeric_ublas_c_matrix_lt_double_3_3_gt_,
             AbstractDiscreteContinuumParabolicPde3_3,
             ComputeDiffusionTerm,
             rX, 
@@ -63,7 +63,7 @@ u);
 
 };
 void register_AbstractDiscreteContinuumParabolicPde3_3_class(py::module &m){
-py::class_<AbstractDiscreteContinuumParabolicPde3_3 , AbstractDiscreteContinuumParabolicPde3_3_Overloads   >(m, "AbstractDiscreteContinuumParabolicPde3_3")
+py::class_<AbstractDiscreteContinuumParabolicPde3_3 , AbstractDiscreteContinuumParabolicPde3_3_Overloads , std::shared_ptr<AbstractDiscreteContinuumParabolicPde3_3 >  , AbstractDiscreteContinuumPde<3, 3>  >(m, "AbstractDiscreteContinuumParabolicPde3_3")
         .def(
             "ComputeDiffusionTerm", 
             (::boost::numeric::ublas::c_matrix<double, 3, 3>(AbstractDiscreteContinuumParabolicPde3_3::*)(::ChastePoint<3> const &, ::Element<3, 3> *)) &AbstractDiscreteContinuumParabolicPde3_3::ComputeDiffusionTerm, 

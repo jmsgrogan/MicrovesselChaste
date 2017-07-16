@@ -43,13 +43,11 @@ class TestVesselNodePython(unittest.TestCase):
     
     def test_BuildNetworkManually(self):
         
-        length_scale = 1.e-6*metre()
-        length = 100.0
-        n1 = microvessel_chaste.population.vessel.VesselNode2(0.0, 0.0 ,0.0, length_scale)
-        n2 = microvessel_chaste.population.vessel.VesselNode2(length, 0.0, 0.0, length_scale)
-        n3 = microvessel_chaste.population.vessel.VesselNode2(2.0 * length, length, 0.0, length_scale)
-        n4 = microvessel_chaste.population.vessel.VesselNode2(2.0 * length, -length, 0.0, length_scale)
+        length_scale = 1.e-6*metres
+        n1 = microvessel_chaste.population.vessel.VesselNode2(0.0*length_scale)
+        n2 = microvessel_chaste.population.vessel.VesselNode2(length_scale)
+        n3 = microvessel_chaste.population.vessel.VesselNode2(2.0 * length_scale, length_scale)
+        n4 = microvessel_chaste.population.vessel.VesselNode2(2.0 * length_scale, -1.0*length_scale)
 
-        
 if __name__ == '__main__':
     unittest.main()

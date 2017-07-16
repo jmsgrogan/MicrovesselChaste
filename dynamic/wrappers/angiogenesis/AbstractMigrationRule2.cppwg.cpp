@@ -14,23 +14,23 @@
 
 namespace py = pybind11;
 typedef AbstractMigrationRule<2 > AbstractMigrationRule2;
-;
-typedef ::std::vector<Vertex<2>, std::allocator<Vertex<2> > > _std_vectorVertex2_std_allocatorVertex2;
-typedef ::std::vector<int, std::allocator<int> > _std_vectorint_std_allocatorint;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::std::vector<Vertex<2>, std::allocator<Vertex<2> > > _std_vector_lt_Vertex_lt_2_gt__std_allocator_lt_Vertex_lt_2_gt__gt__gt_;
+typedef ::std::vector<int, std::allocator<int> > _std_vector_lt_int_std_allocator_lt_int_gt__gt_;
 
 class AbstractMigrationRule2_Overloads : public AbstractMigrationRule2{
     public:
     using AbstractMigrationRule2::AbstractMigrationRule;
     ::std::vector<Vertex<2>, std::allocator<Vertex<2> > > GetDirections(::std::vector<std::shared_ptr<VesselNode<2> >, std::allocator<std::shared_ptr<VesselNode<2> > > > const & rNodes) override {
         PYBIND11_OVERLOAD(
-            _std_vectorVertex2_std_allocatorVertex2,
+            _std_vector_lt_Vertex_lt_2_gt__std_allocator_lt_Vertex_lt_2_gt__gt__gt_,
             AbstractMigrationRule2,
             GetDirections,
             rNodes);
     }
     ::std::vector<int, std::allocator<int> > GetIndices(::std::vector<std::shared_ptr<VesselNode<2> >, std::allocator<std::shared_ptr<VesselNode<2> > > > const & rNodes) override {
         PYBIND11_OVERLOAD(
-            _std_vectorint_std_allocatorint,
+            _std_vector_lt_int_std_allocator_lt_int_gt__gt_,
             AbstractMigrationRule2,
             GetIndices,
             rNodes);
@@ -38,7 +38,7 @@ class AbstractMigrationRule2_Overloads : public AbstractMigrationRule2{
 
 };
 void register_AbstractMigrationRule2_class(py::module &m){
-py::class_<AbstractMigrationRule2 , AbstractMigrationRule2_Overloads   >(m, "AbstractMigrationRule2")
+py::class_<AbstractMigrationRule2 , AbstractMigrationRule2_Overloads , std::shared_ptr<AbstractMigrationRule2 >   >(m, "AbstractMigrationRule2")
         .def(py::init< >())
         .def_static(
             "Create", 

@@ -29,7 +29,7 @@ class PartActorGenerator3_Overloads : public PartActorGenerator3{
 
 };
 void register_PartActorGenerator3_class(py::module &m){
-py::class_<PartActorGenerator3 , PartActorGenerator3_Overloads , std::shared_ptr<PartActorGenerator3 >   >(m, "PartActorGenerator3")
+py::class_<PartActorGenerator3 , PartActorGenerator3_Overloads , std::shared_ptr<PartActorGenerator3 >  , AbstractActorGenerator<3>  >(m, "PartActorGenerator3")
         .def(py::init< >())
         .def(
             "AddActor", 

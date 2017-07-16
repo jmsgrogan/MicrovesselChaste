@@ -1,7 +1,4 @@
 #include <pybind11/pybind11.h>
-#include "AbstractCellKiller2.cppwg.hpp"
-#include "AbstractCellKiller3.cppwg.hpp"
-#include "AbstractCellMutationState.cppwg.hpp"
 #include "CancerCellMutationState.cppwg.hpp"
 #include "QuiescentCancerCellMutationState.cppwg.hpp"
 #include "StalkCellMutationState.cppwg.hpp"
@@ -24,9 +21,6 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(_chaste_project_MicrovesselChaste_cell, m)
 {
-    register_AbstractCellKiller2_class(m);
-    register_AbstractCellKiller3_class(m);
-    register_AbstractCellMutationState_class(m);
     register_CancerCellMutationState_class(m);
     register_QuiescentCancerCellMutationState_class(m);
     register_StalkCellMutationState_class(m);

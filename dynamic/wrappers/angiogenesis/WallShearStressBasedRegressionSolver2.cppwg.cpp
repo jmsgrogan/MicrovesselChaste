@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef WallShearStressBasedRegressionSolver<2 > WallShearStressBasedRegressionSolver2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class WallShearStressBasedRegressionSolver2_Overloads : public WallShearStressBasedRegressionSolver2{
     public:
@@ -29,7 +29,7 @@ class WallShearStressBasedRegressionSolver2_Overloads : public WallShearStressBa
 
 };
 void register_WallShearStressBasedRegressionSolver2_class(py::module &m){
-py::class_<WallShearStressBasedRegressionSolver2 , WallShearStressBasedRegressionSolver2_Overloads   >(m, "WallShearStressBasedRegressionSolver2")
+py::class_<WallShearStressBasedRegressionSolver2 , WallShearStressBasedRegressionSolver2_Overloads , std::shared_ptr<WallShearStressBasedRegressionSolver2 >  , RegressionSolver<2>  >(m, "WallShearStressBasedRegressionSolver2")
         .def(py::init< >())
         .def_static(
             "Create", 

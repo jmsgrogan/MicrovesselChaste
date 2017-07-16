@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef TetrahedralMesh<2,2 > TetrahedralMesh2_2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef unsigned int unsignedint;
 typedef unsigned int unsignedint;
 typedef unsigned int unsignedint;
@@ -125,7 +125,7 @@ rJacobianDeterminant);
 
 };
 void register_TetrahedralMesh2_2_class(py::module &m){
-py::class_<TetrahedralMesh2_2 , TetrahedralMesh2_2_Overloads   >(m, "TetrahedralMesh2_2")
+py::class_<TetrahedralMesh2_2 , TetrahedralMesh2_2_Overloads , std::shared_ptr<TetrahedralMesh2_2 >  , AbstractTetrahedralMesh<2, 2>  >(m, "TetrahedralMesh2_2")
         .def(py::init< >())
         .def(
             "ConstructFromMeshReader", 

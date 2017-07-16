@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef VesselCellMutationState VesselCellMutationState;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_VesselCellMutationState_class(py::module &m){
-py::class_<VesselCellMutationState   , AbstractCellMutationState  >(m, "VesselCellMutationState")
+py::class_<VesselCellMutationState  , std::shared_ptr<VesselCellMutationState >   >(m, "VesselCellMutationState")
         .def(py::init< >())
     ;
 }

@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef AbstractRegularGridDiscreteContinuumSolver<3 > AbstractRegularGridDiscreteContinuumSolver3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class AbstractRegularGridDiscreteContinuumSolver3_Overloads : public AbstractRegularGridDiscreteContinuumSolver3{
     public:
@@ -71,7 +71,7 @@ class AbstractRegularGridDiscreteContinuumSolver3_Overloads : public AbstractReg
 
 };
 void register_AbstractRegularGridDiscreteContinuumSolver3_class(py::module &m){
-py::class_<AbstractRegularGridDiscreteContinuumSolver3 , AbstractRegularGridDiscreteContinuumSolver3_Overloads   >(m, "AbstractRegularGridDiscreteContinuumSolver3")
+py::class_<AbstractRegularGridDiscreteContinuumSolver3 , AbstractRegularGridDiscreteContinuumSolver3_Overloads , std::shared_ptr<AbstractRegularGridDiscreteContinuumSolver3 >  , AbstractDiscreteContinuumSolver<3>  >(m, "AbstractRegularGridDiscreteContinuumSolver3")
         .def(
             "Setup", 
             (void(AbstractRegularGridDiscreteContinuumSolver3::*)()) &AbstractRegularGridDiscreteContinuumSolver3::Setup, 

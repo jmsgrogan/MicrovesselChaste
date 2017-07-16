@@ -19,11 +19,10 @@ class TestPart(unittest.TestCase):
         file_handler = chaste.core.OutputFileHandler("Python/TestPart", True)
         
         # Make a composite Part, a circle in a square
-        length_scale = 1.e-6*metre()
+        length_scale = 1.e-6*metres
         part = microvessel_chaste.geometry.Part3()
-        centre = microvessel_chaste.mesh.Vertex3((0.0, 0.0, 0.0), length_scale)
-        part.AddRectangle(1.0 * length_scale, 1.0 * length_scale, centre)
-        part.AddCircle(0.33 * length_scale, centre, 24)
+        part.AddRectangle(1.0 * length_scale, 1.0 * length_scale)
+        part.AddCircle(0.33 * length_scale)
         
         # Get the VTK Representation
         part.Write(file_handler.GetOutputDirectoryFullPath() + "original_part.vtp", 

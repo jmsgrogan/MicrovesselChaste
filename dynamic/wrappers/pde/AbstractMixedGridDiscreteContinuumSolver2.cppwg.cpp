@@ -14,15 +14,15 @@
 
 namespace py = pybind11;
 typedef AbstractMixedGridDiscreteContinuumSolver<2 > AbstractMixedGridDiscreteContinuumSolver2;
-;
-typedef ::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > _std_vectorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1_std_allocatorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > _std_vector_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__std_allocator_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__gt__gt_;
 
 class AbstractMixedGridDiscreteContinuumSolver2_Overloads : public AbstractMixedGridDiscreteContinuumSolver2{
     public:
     using AbstractMixedGridDiscreteContinuumSolver2::AbstractMixedGridDiscreteContinuumSolver;
     ::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > GetConcentrationsAtCentroids() override {
         PYBIND11_OVERLOAD(
-            _std_vectorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1_std_allocatorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1,
+            _std_vector_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__std_allocator_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__gt__gt_,
             AbstractMixedGridDiscreteContinuumSolver2,
             GetConcentrationsAtCentroids,
             );
@@ -86,7 +86,7 @@ class AbstractMixedGridDiscreteContinuumSolver2_Overloads : public AbstractMixed
 
 };
 void register_AbstractMixedGridDiscreteContinuumSolver2_class(py::module &m){
-py::class_<AbstractMixedGridDiscreteContinuumSolver2 , AbstractMixedGridDiscreteContinuumSolver2_Overloads   >(m, "AbstractMixedGridDiscreteContinuumSolver2")
+py::class_<AbstractMixedGridDiscreteContinuumSolver2 , AbstractMixedGridDiscreteContinuumSolver2_Overloads , std::shared_ptr<AbstractMixedGridDiscreteContinuumSolver2 >  , AbstractDiscreteContinuumSolver<2>  >(m, "AbstractMixedGridDiscreteContinuumSolver2")
         .def(
             "GetConcentrationsAtCentroids", 
             (::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > >(AbstractMixedGridDiscreteContinuumSolver2::*)()) &AbstractMixedGridDiscreteContinuumSolver2::GetConcentrationsAtCentroids, 

@@ -15,14 +15,14 @@
 namespace py = pybind11;
 typedef VesselFlowProperties<2 > VesselFlowProperties2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
-typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double;
+typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_map_lt_std_basic_string_lt_char_gt__double_std_less_lt_std_basic_string_lt_char_gt__gt__std_allocator_lt_std_pair_lt_conststd_basic_string_lt_char_gt__double_gt__gt__gt_;
 
 class VesselFlowProperties2_Overloads : public VesselFlowProperties2{
     public:
     using VesselFlowProperties2::VesselFlowProperties;
     ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > GetOutputData() const  override {
         PYBIND11_OVERLOAD(
-            _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double,
+            _std_map_lt_std_basic_string_lt_char_gt__double_std_less_lt_std_basic_string_lt_char_gt__gt__std_allocator_lt_std_pair_lt_conststd_basic_string_lt_char_gt__double_gt__gt__gt_,
             VesselFlowProperties2,
             GetOutputData,
             );
@@ -30,7 +30,7 @@ class VesselFlowProperties2_Overloads : public VesselFlowProperties2{
 
 };
 void register_VesselFlowProperties2_class(py::module &m){
-py::class_<VesselFlowProperties2 , VesselFlowProperties2_Overloads , std::shared_ptr<VesselFlowProperties2 >   >(m, "VesselFlowProperties2")
+py::class_<VesselFlowProperties2 , VesselFlowProperties2_Overloads , std::shared_ptr<VesselFlowProperties2 >  , AbstractVesselNetworkComponentFlowProperties<2>  >(m, "VesselFlowProperties2")
         .def(py::init< >())
         .def(
             "CheckSegments", 

@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef Owen11CaBasedDivisionRule<3 > Owen11CaBasedDivisionRule3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef unsigned int unsignedint;
 
 class Owen11CaBasedDivisionRule3_Overloads : public Owen11CaBasedDivisionRule3{
@@ -40,7 +40,7 @@ rCellPopulation);
 
 };
 void register_Owen11CaBasedDivisionRule3_class(py::module &m){
-py::class_<Owen11CaBasedDivisionRule3 , Owen11CaBasedDivisionRule3_Overloads   >(m, "Owen11CaBasedDivisionRule3")
+py::class_<Owen11CaBasedDivisionRule3 , Owen11CaBasedDivisionRule3_Overloads , std::shared_ptr<Owen11CaBasedDivisionRule3 >   >(m, "Owen11CaBasedDivisionRule3")
         .def(py::init< >())
         .def(
             "IsRoomToDivide", 

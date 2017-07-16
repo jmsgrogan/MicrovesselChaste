@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef MicrovesselSolver<3 > MicrovesselSolver3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_MicrovesselSolver3_class(py::module &m){
-py::class_<MicrovesselSolver3    >(m, "MicrovesselSolver3")
+py::class_<MicrovesselSolver3  , std::shared_ptr<MicrovesselSolver3 >   >(m, "MicrovesselSolver3")
         .def(py::init< >())
         .def_static(
             "Create", 

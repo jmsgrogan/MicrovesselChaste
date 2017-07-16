@@ -29,7 +29,7 @@ class RegularGridActorGenerator2_Overloads : public RegularGridActorGenerator2{
 
 };
 void register_RegularGridActorGenerator2_class(py::module &m){
-py::class_<RegularGridActorGenerator2 , RegularGridActorGenerator2_Overloads , std::shared_ptr<RegularGridActorGenerator2 >   >(m, "RegularGridActorGenerator2")
+py::class_<RegularGridActorGenerator2 , RegularGridActorGenerator2_Overloads , std::shared_ptr<RegularGridActorGenerator2 >  , AbstractActorGenerator<2>  >(m, "RegularGridActorGenerator2")
         .def(py::init< >())
         .def(
             "AddActor", 

@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef AbstractTetrahedralMesh<3,3 > AbstractTetrahedralMesh3_3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef unsigned int unsignedint;
 typedef unsigned int unsignedint;
 typedef unsigned int unsignedint;
@@ -22,7 +22,7 @@ typedef unsigned int unsignedint;
 typedef unsigned int unsignedint;
 typedef unsigned int unsignedint;
 typedef unsigned int unsignedint;
-typedef ::boost::numeric::ublas::c_vector<double, 2> _boost_numeric_ublas_c_vectordouble_2;
+typedef ::boost::numeric::ublas::c_vector<double, 2> _boost_numeric_ublas_c_vector_lt_double_2_gt_;
 typedef unsigned int unsignedint;
 typedef unsigned int unsignedint;
 
@@ -152,7 +152,7 @@ depth);
     }
     ::boost::numeric::ublas::c_vector<double, 2> CalculateMinMaxEdgeLengths() override {
         PYBIND11_OVERLOAD(
-            _boost_numeric_ublas_c_vectordouble_2,
+            _boost_numeric_ublas_c_vector_lt_double_2_gt_,
             AbstractTetrahedralMesh3_3,
             CalculateMinMaxEdgeLengths,
             );
@@ -167,7 +167,7 @@ depth);
 
 };
 void register_AbstractTetrahedralMesh3_3_class(py::module &m){
-py::class_<AbstractTetrahedralMesh3_3 , AbstractTetrahedralMesh3_3_Overloads   >(m, "AbstractTetrahedralMesh3_3")
+py::class_<AbstractTetrahedralMesh3_3 , AbstractTetrahedralMesh3_3_Overloads , std::shared_ptr<AbstractTetrahedralMesh3_3 >  , AbstractMesh<3, 3>  >(m, "AbstractTetrahedralMesh3_3")
         .def(
             "GetElementIteratorBegin", 
             (::AbstractTetrahedralMesh<3, 3>::ElementIterator(AbstractTetrahedralMesh3_3::*)(bool)) &AbstractTetrahedralMesh3_3::GetElementIteratorBegin, 
@@ -215,11 +215,11 @@ py::class_<AbstractTetrahedralMesh3_3 , AbstractTetrahedralMesh3_3_Overloads   >
         .def(
             "GetElement", 
             (::Element<3, 3> *(AbstractTetrahedralMesh3_3::*)(unsigned int) const ) &AbstractTetrahedralMesh3_3::GetElement, 
-            " " , py::arg("index") )
+            " " , py::arg("index") , py::return_value_policy::reference)
         .def(
             "GetBoundaryElement", 
             (::BoundaryElement<2, 3> *(AbstractTetrahedralMesh3_3::*)(unsigned int) const ) &AbstractTetrahedralMesh3_3::GetBoundaryElement, 
-            " " , py::arg("index") )
+            " " , py::arg("index") , py::return_value_policy::reference)
         .def(
             "ConstructFromMeshReader", 
             (void(AbstractTetrahedralMesh3_3::*)(::AbstractMeshReader<3, 3> &)) &AbstractTetrahedralMesh3_3::ConstructFromMeshReader, 

@@ -14,23 +14,23 @@
 
 namespace py = pybind11;
 typedef CellPopulationMigrationRule<2 > CellPopulationMigrationRule2;
-;
-typedef ::std::vector<int, std::allocator<int> > _std_vectorint_std_allocatorint;
-typedef ::std::vector<double, std::allocator<double> > _std_vectordouble_std_allocatordouble;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::std::vector<int, std::allocator<int> > _std_vector_lt_int_std_allocator_lt_int_gt__gt_;
+typedef ::std::vector<double, std::allocator<double> > _std_vector_lt_double_std_allocator_lt_double_gt__gt_;
 
 class CellPopulationMigrationRule2_Overloads : public CellPopulationMigrationRule2{
     public:
     using CellPopulationMigrationRule2::CellPopulationMigrationRule;
     ::std::vector<int, std::allocator<int> > GetIndices(::std::vector<std::shared_ptr<VesselNode<2> >, std::allocator<std::shared_ptr<VesselNode<2> > > > const & rNodes) override {
         PYBIND11_OVERLOAD(
-            _std_vectorint_std_allocatorint,
+            _std_vector_lt_int_std_allocator_lt_int_gt__gt_,
             CellPopulationMigrationRule2,
             GetIndices,
             rNodes);
     }
     ::std::vector<double, std::allocator<double> > GetNeighbourMovementProbabilities(::std::shared_ptr<VesselNode<2> > pNode, ::std::vector<unsigned int, std::allocator<unsigned int> > neighbourIndices, unsigned int gridIndex) override {
         PYBIND11_OVERLOAD(
-            _std_vectordouble_std_allocatordouble,
+            _std_vector_lt_double_std_allocator_lt_double_gt__gt_,
             CellPopulationMigrationRule2,
             GetNeighbourMovementProbabilities,
             pNode, 
@@ -40,7 +40,7 @@ gridIndex);
 
 };
 void register_CellPopulationMigrationRule2_class(py::module &m){
-py::class_<CellPopulationMigrationRule2 , CellPopulationMigrationRule2_Overloads   >(m, "CellPopulationMigrationRule2")
+py::class_<CellPopulationMigrationRule2 , CellPopulationMigrationRule2_Overloads , std::shared_ptr<CellPopulationMigrationRule2 >  , LatticeBasedMigrationRule<2>  >(m, "CellPopulationMigrationRule2")
         .def(py::init< >())
         .def_static(
             "Create", 

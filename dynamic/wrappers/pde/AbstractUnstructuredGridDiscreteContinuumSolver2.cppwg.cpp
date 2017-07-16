@@ -14,15 +14,15 @@
 
 namespace py = pybind11;
 typedef AbstractUnstructuredGridDiscreteContinuumSolver<2 > AbstractUnstructuredGridDiscreteContinuumSolver2;
-;
-typedef ::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > _std_vectorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1_std_allocatorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > _std_vector_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__std_allocator_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__gt__gt_;
 
 class AbstractUnstructuredGridDiscreteContinuumSolver2_Overloads : public AbstractUnstructuredGridDiscreteContinuumSolver2{
     public:
     using AbstractUnstructuredGridDiscreteContinuumSolver2::AbstractUnstructuredGridDiscreteContinuumSolver;
     ::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > GetConcentrationsAtCentroids() override {
         PYBIND11_OVERLOAD(
-            _std_vectorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1_std_allocatorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1,
+            _std_vector_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__std_allocator_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__gt__gt_,
             AbstractUnstructuredGridDiscreteContinuumSolver2,
             GetConcentrationsAtCentroids,
             );
@@ -86,7 +86,7 @@ class AbstractUnstructuredGridDiscreteContinuumSolver2_Overloads : public Abstra
 
 };
 void register_AbstractUnstructuredGridDiscreteContinuumSolver2_class(py::module &m){
-py::class_<AbstractUnstructuredGridDiscreteContinuumSolver2 , AbstractUnstructuredGridDiscreteContinuumSolver2_Overloads   >(m, "AbstractUnstructuredGridDiscreteContinuumSolver2")
+py::class_<AbstractUnstructuredGridDiscreteContinuumSolver2 , AbstractUnstructuredGridDiscreteContinuumSolver2_Overloads , std::shared_ptr<AbstractUnstructuredGridDiscreteContinuumSolver2 >  , AbstractDiscreteContinuumSolver<2>  >(m, "AbstractUnstructuredGridDiscreteContinuumSolver2")
         .def(
             "GetConcentrationsAtCentroids", 
             (::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > >(AbstractUnstructuredGridDiscreteContinuumSolver2::*)()) &AbstractUnstructuredGridDiscreteContinuumSolver2::GetConcentrationsAtCentroids, 

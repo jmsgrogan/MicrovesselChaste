@@ -108,24 +108,15 @@ to a different reference length, a cell width. Note that the syntax `reference_l
 `reference_length = 1.0 * unit::microns` is used when instantiating quantities.
 
 ```cpp
-        QLength reference_length(1.0 * unit::microns);
-        Vertex<2> my_point(25.0, 50.0, 0.0, reference_length);
+        QLength reference_length(1_um);
+        Vertex<2> my_point(25.0_um, 50.0_um);
 ```
 
 We can use the unit test framework to check our coordinate values are assigned as expected.
 
 ```cpp
-        TS_ASSERT_DELTA(my_point.GetLocation(reference_length)[0], 25.0, 1.e-6);
-        TS_ASSERT_DELTA(my_point.GetLocation(reference_length)[1], 50.0, 1.e-6);
-```
-
-If we want our coordinates in terms of a fictitious cell width unit we just have to rescale the reference length.
-
-```cpp
-        QLength cell_width(25.0 * unit::microns);
-        my_point.SetReferenceLengthScale(cell_width);
-        TS_ASSERT_DELTA(my_point.GetLocation(cell_width)[0], 1.0, 1.e-6);
-        TS_ASSERT_DELTA(my_point.GetLocation(cell_width)[1], 2.0, 1.e-6);
+        TS_ASSERT_DELTA(my_point.Convert(reference_length)[0], 25.0, 1.e-6);
+        TS_ASSERT_DELTA(my_point.Convert(reference_length)[1], 50.0, 1.e-6);
 ```
 
 It is tedious to keep supplying a reference length, mass, time when setting up simulations. To avoid this a `BaseUnits` singleton is
@@ -135,7 +126,7 @@ if needed.
 
 ```cpp
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
-        BaseUnits::Instance()->SetReferenceTimeScale(60.0 * unit::seconds);
+        BaseUnits::Instance()->SetReferenceTimeScale(60.0_s);
 ```
 
 All geometric features, `VesselNodes`, `Parts`, `RegularGrids` use the `Vertex` as their base representation of spatial
@@ -146,29 +137,29 @@ a `Vertex`, but use a convenience `Create` factory method to get a shared pointe
 Again, we will avoid the tedium of manual network creation in later examples.
 
 ```cpp
-        double vessel_length = 100.0;
-        boost::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0.0, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(vessel_length, 0.0, 0.0, reference_length);
-        boost::shared_ptr<VesselNode<2> > p_node_3 = VesselNode<2>::Create(2.0*vessel_length, vessel_length);
-        boost::shared_ptr<VesselNode<2> > p_node_4 = VesselNode<2>::Create(2.0*vessel_length, -vessel_length);
+        QLength vessel_length = 100_um;
+        std::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0.0_m);
+        std::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(vessel_length);
+        std::shared_ptr<VesselNode<2> > p_node_3 = VesselNode<2>::Create(2.0*vessel_length, vessel_length);
+        std::shared_ptr<VesselNode<2> > p_node_4 = VesselNode<2>::Create(2.0*vessel_length, -vessel_length);
 ```
 
 Next make vessel segments and vessels. Vessel segments are straight-line features which contain a `VesselNode` at each end. Vessels
 can be constructed from multiple vessel segments by adding them in order, but in this case each vessel just has a single segment.
 
 ```cpp
-        boost::shared_ptr<VesselSegment<2> > p_segment_1 = VesselSegment<2>::Create(p_node_1, p_node_2);
-        boost::shared_ptr<Vessel<2> > p_vessel_1 = Vessel<2>::Create(p_segment_1);
-        boost::shared_ptr<VesselSegment<2> > p_segment_2 = VesselSegment<2>::Create(p_node_2, p_node_3);
-        boost::shared_ptr<Vessel<2> > p_vessel_2 = Vessel<2>::Create(p_segment_2);
-        boost::shared_ptr<VesselSegment<2> > p_segment_3 = VesselSegment<2>::Create(p_node_2, p_node_4);
-        boost::shared_ptr<Vessel<2> > p_vessel_3 = Vessel<2>::Create(p_segment_3);
+        std::shared_ptr<VesselSegment<2> > p_segment_1 = VesselSegment<2>::Create(p_node_1, p_node_2);
+        std::shared_ptr<Vessel<2> > p_vessel_1 = Vessel<2>::Create(p_segment_1);
+        std::shared_ptr<VesselSegment<2> > p_segment_2 = VesselSegment<2>::Create(p_node_2, p_node_3);
+        std::shared_ptr<Vessel<2> > p_vessel_2 = Vessel<2>::Create(p_segment_2);
+        std::shared_ptr<VesselSegment<2> > p_segment_3 = VesselSegment<2>::Create(p_node_2, p_node_4);
+        std::shared_ptr<Vessel<2> > p_vessel_3 = Vessel<2>::Create(p_segment_3);
 ```
 
 Now add the vessels to a vessel network.
 
 ```cpp
-        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel_1);
         p_network->AddVessel(p_vessel_2);
         p_network->AddVessel(p_vessel_3);
@@ -196,7 +187,7 @@ which will have a .vtp extension.
 We can also view the network
 
 ```cpp
-        boost::shared_ptr<MicrovesselVtkScene<2> > p_scene = boost::shared_ptr<MicrovesselVtkScene<2> >(new MicrovesselVtkScene<2> );
+        std::shared_ptr<MicrovesselVtkScene<2> > p_scene = std::shared_ptr<MicrovesselVtkScene<2> >(new MicrovesselVtkScene<2> );
         p_scene->SetVesselNetwork(p_network);
         p_scene->SetSaveAsImages(true);
         p_scene->SetOutputFilePath(p_handler->GetOutputDirectoryFullPath() + "network");
@@ -235,7 +226,7 @@ are stored with the same reference length scale. This is helpful when combining 
 
 ```cpp
         VesselNetworkGenerator<3> network_generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
+        std::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
                                                                                                     target_height,
                                                                                                     vessel_length);
 ```
@@ -263,13 +254,13 @@ we need to tell the reader this so that locations are suitably stored.
         VesselNetworkReader<3> network_reader;
         network_reader.SetReferenceLengthScale(micron_length_scale);
         network_reader.SetFileName(p_handler->GetOutputDirectoryFullPath() + "hexagonal_network.vtp");
-        boost::shared_ptr<VesselNetwork<3> > p_network_from_file = network_reader.Read();
+        std::shared_ptr<VesselNetwork<3> > p_network_from_file = network_reader.Read();
 ```
 
 We can also view the network
 
 ```cpp
-        boost::shared_ptr<MicrovesselVtkScene<3> > p_scene = boost::shared_ptr<MicrovesselVtkScene<3> >(new MicrovesselVtkScene<3>);
+        std::shared_ptr<MicrovesselVtkScene<3> > p_scene = std::shared_ptr<MicrovesselVtkScene<3> >(new MicrovesselVtkScene<3>);
         p_scene->SetVesselNetwork(p_network_from_file);
         p_scene->SetSaveAsImages(true);
         p_scene->SetOutputFilePath(p_handler->GetOutputDirectoryFullPath() + "hexagonal_network");
@@ -314,28 +305,24 @@ class TestBuildVesselNetworkLiteratePaper : public AbstractCellBasedWithTimingsT
 public:
     void TestBuildNetworkManually() throw (Exception)
     {
-        QLength reference_length(1.0 * unit::microns);
-        Vertex<2> my_point(25.0, 50.0, 0.0, reference_length);
-        TS_ASSERT_DELTA(my_point.GetLocation(reference_length)[0], 25.0, 1.e-6);
-        TS_ASSERT_DELTA(my_point.GetLocation(reference_length)[1], 50.0, 1.e-6);
-        QLength cell_width(25.0 * unit::microns);
-        my_point.SetReferenceLengthScale(cell_width);
-        TS_ASSERT_DELTA(my_point.GetLocation(cell_width)[0], 1.0, 1.e-6);
-        TS_ASSERT_DELTA(my_point.GetLocation(cell_width)[1], 2.0, 1.e-6);
+        QLength reference_length(1_um);
+        Vertex<2> my_point(25.0_um, 50.0_um);
+        TS_ASSERT_DELTA(my_point.Convert(reference_length)[0], 25.0, 1.e-6);
+        TS_ASSERT_DELTA(my_point.Convert(reference_length)[1], 50.0, 1.e-6);
         BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
-        BaseUnits::Instance()->SetReferenceTimeScale(60.0 * unit::seconds);
-        double vessel_length = 100.0;
-        boost::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0.0, 0.0);
-        boost::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(vessel_length, 0.0, 0.0, reference_length);
-        boost::shared_ptr<VesselNode<2> > p_node_3 = VesselNode<2>::Create(2.0*vessel_length, vessel_length);
-        boost::shared_ptr<VesselNode<2> > p_node_4 = VesselNode<2>::Create(2.0*vessel_length, -vessel_length);
-        boost::shared_ptr<VesselSegment<2> > p_segment_1 = VesselSegment<2>::Create(p_node_1, p_node_2);
-        boost::shared_ptr<Vessel<2> > p_vessel_1 = Vessel<2>::Create(p_segment_1);
-        boost::shared_ptr<VesselSegment<2> > p_segment_2 = VesselSegment<2>::Create(p_node_2, p_node_3);
-        boost::shared_ptr<Vessel<2> > p_vessel_2 = Vessel<2>::Create(p_segment_2);
-        boost::shared_ptr<VesselSegment<2> > p_segment_3 = VesselSegment<2>::Create(p_node_2, p_node_4);
-        boost::shared_ptr<Vessel<2> > p_vessel_3 = Vessel<2>::Create(p_segment_3);
-        boost::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        BaseUnits::Instance()->SetReferenceTimeScale(60.0_s);
+        QLength vessel_length = 100_um;
+        std::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0.0_m);
+        std::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(vessel_length);
+        std::shared_ptr<VesselNode<2> > p_node_3 = VesselNode<2>::Create(2.0*vessel_length, vessel_length);
+        std::shared_ptr<VesselNode<2> > p_node_4 = VesselNode<2>::Create(2.0*vessel_length, -vessel_length);
+        std::shared_ptr<VesselSegment<2> > p_segment_1 = VesselSegment<2>::Create(p_node_1, p_node_2);
+        std::shared_ptr<Vessel<2> > p_vessel_1 = Vessel<2>::Create(p_segment_1);
+        std::shared_ptr<VesselSegment<2> > p_segment_2 = VesselSegment<2>::Create(p_node_2, p_node_3);
+        std::shared_ptr<Vessel<2> > p_vessel_2 = Vessel<2>::Create(p_segment_2);
+        std::shared_ptr<VesselSegment<2> > p_segment_3 = VesselSegment<2>::Create(p_node_2, p_node_4);
+        std::shared_ptr<Vessel<2> > p_vessel_3 = Vessel<2>::Create(p_segment_3);
+        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel_1);
         p_network->AddVessel(p_vessel_2);
         p_network->AddVessel(p_vessel_3);
@@ -346,7 +333,7 @@ public:
         writer.SetFileName(p_handler->GetOutputDirectoryFullPath() + "bifurcating_network.vtp");
         writer.SetVesselNetwork(p_network);
         writer.Write();
-        boost::shared_ptr<MicrovesselVtkScene<2> > p_scene = boost::shared_ptr<MicrovesselVtkScene<2> >(new MicrovesselVtkScene<2> );
+        std::shared_ptr<MicrovesselVtkScene<2> > p_scene = std::shared_ptr<MicrovesselVtkScene<2> >(new MicrovesselVtkScene<2> );
         p_scene->SetVesselNetwork(p_network);
         p_scene->SetSaveAsImages(true);
         p_scene->SetOutputFilePath(p_handler->GetOutputDirectoryFullPath() + "network");
@@ -362,7 +349,7 @@ public:
         QLength target_height = 30.0 * cell_width;
         QLength vessel_length = 4.0 * cell_width;
         VesselNetworkGenerator<3> network_generator;
-        boost::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
+        std::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(target_width,
                                                                                                     target_height,
                                                                                                     vessel_length);
         unsigned number_of_nodes = p_network->GetNumberOfNodes();
@@ -377,8 +364,8 @@ public:
         VesselNetworkReader<3> network_reader;
         network_reader.SetReferenceLengthScale(micron_length_scale);
         network_reader.SetFileName(p_handler->GetOutputDirectoryFullPath() + "hexagonal_network.vtp");
-        boost::shared_ptr<VesselNetwork<3> > p_network_from_file = network_reader.Read();
-        boost::shared_ptr<MicrovesselVtkScene<3> > p_scene = boost::shared_ptr<MicrovesselVtkScene<3> >(new MicrovesselVtkScene<3>);
+        std::shared_ptr<VesselNetwork<3> > p_network_from_file = network_reader.Read();
+        std::shared_ptr<MicrovesselVtkScene<3> > p_scene = std::shared_ptr<MicrovesselVtkScene<3> >(new MicrovesselVtkScene<3>);
         p_scene->SetVesselNetwork(p_network_from_file);
         p_scene->SetSaveAsImages(true);
         p_scene->SetOutputFilePath(p_handler->GetOutputDirectoryFullPath() + "hexagonal_network");

@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef SimpleParabolicFiniteElementSolver<2 > SimpleParabolicFiniteElementSolver2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class SimpleParabolicFiniteElementSolver2_Overloads : public SimpleParabolicFiniteElementSolver2{
     public:
@@ -29,7 +29,7 @@ class SimpleParabolicFiniteElementSolver2_Overloads : public SimpleParabolicFini
 
 };
 void register_SimpleParabolicFiniteElementSolver2_class(py::module &m){
-py::class_<SimpleParabolicFiniteElementSolver2 , SimpleParabolicFiniteElementSolver2_Overloads   >(m, "SimpleParabolicFiniteElementSolver2")
+py::class_<SimpleParabolicFiniteElementSolver2 , SimpleParabolicFiniteElementSolver2_Overloads , std::shared_ptr<SimpleParabolicFiniteElementSolver2 >  , AbstractFiniteElementSolverBase<2>  >(m, "SimpleParabolicFiniteElementSolver2")
         .def(py::init< >())
         .def_static(
             "Create", 
@@ -38,7 +38,7 @@ py::class_<SimpleParabolicFiniteElementSolver2 , SimpleParabolicFiniteElementSol
         .def(
             "rGetIntermediateSolutions", 
             (::std::vector<std::pair<std::vector<double, std::allocator<double> >, double>, std::allocator<std::pair<std::vector<double, std::allocator<double> >, double> > > const &(SimpleParabolicFiniteElementSolver2::*)()) &SimpleParabolicFiniteElementSolver2::rGetIntermediateSolutions, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "SetTargetTimeIncrement", 
             (void(SimpleParabolicFiniteElementSolver2::*)(double)) &SimpleParabolicFiniteElementSolver2::SetTargetTimeIncrement, 

@@ -14,9 +14,9 @@
 
 namespace py = pybind11;
 typedef RegularGrid<2 > RegularGrid2;
-;
-typedef ::Vertex<2> _Vertex2;
-typedef ::std::vector<double, std::allocator<double> > const & _std_vectordouble_std_allocatordoubleRef;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::Vertex<2> _Vertex_lt_2_gt_;
+typedef ::std::vector<double, std::allocator<double> > const & _std_vector_lt_double_std_allocator_lt_double_gt__gt_constRef;
 
 class RegularGrid2_Overloads : public RegularGrid2{
     public:
@@ -30,14 +30,14 @@ class RegularGrid2_Overloads : public RegularGrid2{
     }
     ::Vertex<2> GetGlobalCellLocation(unsigned int index) override {
         PYBIND11_OVERLOAD(
-            _Vertex2,
+            _Vertex_lt_2_gt_,
             RegularGrid2,
             GetGlobalCellLocation,
             index);
     }
     ::std::vector<double, std::allocator<double> > const & rGetCellVolumes(bool update, bool jiggle) override {
         PYBIND11_OVERLOAD(
-            _std_vectordouble_std_allocatordoubleRef,
+            _std_vector_lt_double_std_allocator_lt_double_gt__gt_constRef,
             RegularGrid2,
             rGetCellVolumes,
             update, 
@@ -60,7 +60,7 @@ jiggle);
 
 };
 void register_RegularGrid2_class(py::module &m){
-py::class_<RegularGrid2 , RegularGrid2_Overloads   >(m, "RegularGrid2")
+py::class_<RegularGrid2 , RegularGrid2_Overloads , std::shared_ptr<RegularGrid2 >  , AbstractDiscreteContinuumGrid<2, 2>  >(m, "RegularGrid2")
         .def(py::init< >())
         .def_static(
             "Create", 
@@ -101,11 +101,11 @@ py::class_<RegularGrid2 , RegularGrid2_Overloads   >(m, "RegularGrid2")
         .def(
             "rGetNeighbourData", 
             (::std::vector<std::vector<unsigned int, std::allocator<unsigned int> >, std::allocator<std::vector<unsigned int, std::allocator<unsigned int> > > > const &(RegularGrid2::*)()) &RegularGrid2::rGetNeighbourData, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "rGetMooreNeighbourData", 
             (::std::vector<std::vector<unsigned int, std::allocator<unsigned int> >, std::allocator<std::vector<unsigned int, std::allocator<unsigned int> > > > const &(RegularGrid2::*)()) &RegularGrid2::rGetMooreNeighbourData, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "GetDimensions", 
             (::boost::numeric::ublas::c_vector<unsigned int, 3>(RegularGrid2::*)()) &RegularGrid2::GetDimensions, 
@@ -137,7 +137,7 @@ py::class_<RegularGrid2 , RegularGrid2_Overloads   >(m, "RegularGrid2")
         .def(
             "rGetCellVolumes", 
             (::std::vector<double, std::allocator<double> > const &(RegularGrid2::*)(bool, bool)) &RegularGrid2::rGetCellVolumes, 
-            " " , py::arg("update") = false, py::arg("jiggle") = false )
+            " " , py::arg("update") = false, py::arg("jiggle") = false , py::return_value_policy::reference_internal)
         .def(
             "IsOnBoundary", 
             (bool(RegularGrid2::*)(unsigned int)) &RegularGrid2::IsOnBoundary, 

@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef RegressionSolver<3 > RegressionSolver3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class RegressionSolver3_Overloads : public RegressionSolver3{
     public:
@@ -29,7 +29,7 @@ class RegressionSolver3_Overloads : public RegressionSolver3{
 
 };
 void register_RegressionSolver3_class(py::module &m){
-py::class_<RegressionSolver3 , RegressionSolver3_Overloads   >(m, "RegressionSolver3")
+py::class_<RegressionSolver3 , RegressionSolver3_Overloads , std::shared_ptr<RegressionSolver3 >   >(m, "RegressionSolver3")
         .def(py::init< >())
         .def(
             "SetVesselNetwork", 

@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef GridCalculator<2 > GridCalculator2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_GridCalculator2_class(py::module &m){
-py::class_<GridCalculator2    >(m, "GridCalculator2")
+py::class_<GridCalculator2  , std::shared_ptr<GridCalculator2 >   >(m, "GridCalculator2")
         .def(py::init< >())
         .def_static(
             "Create", 
@@ -38,7 +38,7 @@ py::class_<GridCalculator2    >(m, "GridCalculator2")
         .def(
             "rGetCellMap", 
             (::std::vector<std::vector<boost::shared_ptr<Cell>, std::allocator<boost::shared_ptr<Cell> > >, std::allocator<std::vector<boost::shared_ptr<Cell>, std::allocator<boost::shared_ptr<Cell> > > > > const &(GridCalculator2::*)(bool)) &GridCalculator2::rGetCellMap, 
-            " " , py::arg("update") = true )
+            " " , py::arg("update") = true , py::return_value_policy::reference_internal)
         .def(
             "GetVesselNetwork", 
             (::std::shared_ptr<VesselNetwork<2> >(GridCalculator2::*)()) &GridCalculator2::GetVesselNetwork, 
@@ -46,11 +46,11 @@ py::class_<GridCalculator2    >(m, "GridCalculator2")
         .def(
             "rGetVesselNodeMap", 
             (::std::vector<std::vector<std::shared_ptr<VesselNode<2> >, std::allocator<std::shared_ptr<VesselNode<2> > > >, std::allocator<std::vector<std::shared_ptr<VesselNode<2> >, std::allocator<std::shared_ptr<VesselNode<2> > > > > > const &(GridCalculator2::*)(bool)) &GridCalculator2::rGetVesselNodeMap, 
-            " " , py::arg("update") = true )
+            " " , py::arg("update") = true , py::return_value_policy::reference_internal)
         .def(
             "rGetSegmentMap", 
             (::std::vector<std::vector<std::shared_ptr<VesselSegment<2> >, std::allocator<std::shared_ptr<VesselSegment<2> > > >, std::allocator<std::vector<std::shared_ptr<VesselSegment<2> >, std::allocator<std::shared_ptr<VesselSegment<2> > > > > > const &(GridCalculator2::*)(bool, bool)) &GridCalculator2::rGetSegmentMap, 
-            " " , py::arg("update") = true, py::arg("useVesselSurface") = false )
+            " " , py::arg("update") = true, py::arg("useVesselSurface") = false , py::return_value_policy::reference_internal)
         .def(
             "GetGrid", 
             (::std::shared_ptr<AbstractDiscreteContinuumGrid<2, 2> >(GridCalculator2::*)()) &GridCalculator2::GetGrid, 

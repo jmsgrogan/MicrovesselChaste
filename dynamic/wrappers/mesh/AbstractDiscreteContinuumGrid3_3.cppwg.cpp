@@ -14,18 +14,18 @@
 
 namespace py = pybind11;
 typedef AbstractDiscreteContinuumGrid<3,3 > AbstractDiscreteContinuumGrid3_3;
-;
-typedef ::vtkSmartPointer<vtkPolyData> _vtkSmartPointervtkPolyData;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::vtkSmartPointer<vtkPolyData> _vtkSmartPointer_lt_vtkPolyData_gt_;
 typedef unsigned int unsignedint;
-typedef ::Vertex<3> _Vertex3;
-typedef ::Vertex<3> _Vertex3;
-typedef ::Vertex<3> _Vertex3;
-typedef ::Vertex<3> _Vertex3;
-typedef ::std::vector<double, std::allocator<double> > const & _std_vectordouble_std_allocatordoubleRef;
-typedef ::vtkSmartPointer<vtkDataSet> _vtkSmartPointervtkDataSet;
-typedef ::vtkSmartPointer<vtkDataSet> _vtkSmartPointervtkDataSet;
-typedef ::vtkSmartPointer<vtkPoints> _vtkSmartPointervtkPoints;
-typedef ::vtkSmartPointer<vtkCellLocator> _vtkSmartPointervtkCellLocator;
+typedef ::Vertex<3> _Vertex_lt_3_gt_;
+typedef ::Vertex<3> _Vertex_lt_3_gt_;
+typedef ::Vertex<3> _Vertex_lt_3_gt_;
+typedef ::Vertex<3> _Vertex_lt_3_gt_;
+typedef ::std::vector<double, std::allocator<double> > const & _std_vector_lt_double_std_allocator_lt_double_gt__gt_constRef;
+typedef ::vtkSmartPointer<vtkDataSet> _vtkSmartPointer_lt_vtkDataSet_gt_;
+typedef ::vtkSmartPointer<vtkDataSet> _vtkSmartPointer_lt_vtkDataSet_gt_;
+typedef ::vtkSmartPointer<vtkPoints> _vtkSmartPointer_lt_vtkPoints_gt_;
+typedef ::vtkSmartPointer<vtkCellLocator> _vtkSmartPointer_lt_vtkCellLocator_gt_;
 
 class AbstractDiscreteContinuumGrid3_3_Overloads : public AbstractDiscreteContinuumGrid3_3{
     public:
@@ -48,7 +48,7 @@ rName);
     }
     ::vtkSmartPointer<vtkPolyData> GetBoundingGeometry() override {
         PYBIND11_OVERLOAD(
-            _vtkSmartPointervtkPolyData,
+            _vtkSmartPointer_lt_vtkPolyData_gt_,
             AbstractDiscreteContinuumGrid3_3,
             GetBoundingGeometry,
             );
@@ -69,35 +69,35 @@ rName);
     }
     ::Vertex<3> GetGlobalPoint(unsigned int index) override {
         PYBIND11_OVERLOAD(
-            _Vertex3,
+            _Vertex_lt_3_gt_,
             AbstractDiscreteContinuumGrid3_3,
             GetGlobalPoint,
             index);
     }
     ::Vertex<3> GetPoint(unsigned int index) override {
         PYBIND11_OVERLOAD(
-            _Vertex3,
+            _Vertex_lt_3_gt_,
             AbstractDiscreteContinuumGrid3_3,
             GetPoint,
             index);
     }
     ::Vertex<3> GetGlobalCellLocation(unsigned int index) override {
         PYBIND11_OVERLOAD_PURE(
-            _Vertex3,
+            _Vertex_lt_3_gt_,
             AbstractDiscreteContinuumGrid3_3,
             GetGlobalCellLocation,
             index);
     }
     ::Vertex<3> GetCellLocation(unsigned int index) override {
         PYBIND11_OVERLOAD(
-            _Vertex3,
+            _Vertex_lt_3_gt_,
             AbstractDiscreteContinuumGrid3_3,
             GetCellLocation,
             index);
     }
     ::std::vector<double, std::allocator<double> > const & rGetCellVolumes(bool update, bool jiggle) override {
         PYBIND11_OVERLOAD_PURE(
-            _std_vectordouble_std_allocatordoubleRef,
+            _std_vector_lt_double_std_allocator_lt_double_gt__gt_constRef,
             AbstractDiscreteContinuumGrid3_3,
             rGetCellVolumes,
             update, 
@@ -105,14 +105,14 @@ jiggle);
     }
     ::vtkSmartPointer<vtkDataSet> GetGlobalVtkGrid() override {
         PYBIND11_OVERLOAD(
-            _vtkSmartPointervtkDataSet,
+            _vtkSmartPointer_lt_vtkDataSet_gt_,
             AbstractDiscreteContinuumGrid3_3,
             GetGlobalVtkGrid,
             );
     }
     ::vtkSmartPointer<vtkDataSet> GetVtkGrid() override {
         PYBIND11_OVERLOAD(
-            _vtkSmartPointervtkDataSet,
+            _vtkSmartPointer_lt_vtkDataSet_gt_,
             AbstractDiscreteContinuumGrid3_3,
             GetVtkGrid,
             );
@@ -175,14 +175,14 @@ jiggle);
     }
     ::vtkSmartPointer<vtkPoints> GetPoints() override {
         PYBIND11_OVERLOAD(
-            _vtkSmartPointervtkPoints,
+            _vtkSmartPointer_lt_vtkPoints_gt_,
             AbstractDiscreteContinuumGrid3_3,
             GetPoints,
             );
     }
     ::vtkSmartPointer<vtkCellLocator> GetVtkCellLocator() override {
         PYBIND11_OVERLOAD(
-            _vtkSmartPointervtkCellLocator,
+            _vtkSmartPointer_lt_vtkCellLocator_gt_,
             AbstractDiscreteContinuumGrid3_3,
             GetVtkCellLocator,
             );
@@ -204,7 +204,8 @@ jiggle);
 
 };
 void register_AbstractDiscreteContinuumGrid3_3_class(py::module &m){
-py::class_<AbstractDiscreteContinuumGrid3_3 , AbstractDiscreteContinuumGrid3_3_Overloads   >(m, "AbstractDiscreteContinuumGrid3_3")
+py::class_<AbstractDiscreteContinuumGrid3_3 , AbstractDiscreteContinuumGrid3_3_Overloads , std::shared_ptr<AbstractDiscreteContinuumGrid3_3 >   >(m, "AbstractDiscreteContinuumGrid3_3")
+        .def(py::init< >())
         .def(
             "AddPointAttributes", 
             (void(AbstractDiscreteContinuumGrid3_3::*)(::std::vector<unsigned int, std::allocator<unsigned int> > const &, ::std::string const &)) &AbstractDiscreteContinuumGrid3_3::AddPointAttributes, 
@@ -268,7 +269,7 @@ py::class_<AbstractDiscreteContinuumGrid3_3 , AbstractDiscreteContinuumGrid3_3_O
         .def(
             "rGetCellVolumes", 
             (::std::vector<double, std::allocator<double> > const &(AbstractDiscreteContinuumGrid3_3::*)(bool, bool)) &AbstractDiscreteContinuumGrid3_3::rGetCellVolumes, 
-            " " , py::arg("update") = false, py::arg("jiggle") = false )
+            " " , py::arg("update") = false, py::arg("jiggle") = false , py::return_value_policy::reference_internal)
         .def(
             "GetGlobalVtkGrid", 
             (::vtkSmartPointer<vtkDataSet>(AbstractDiscreteContinuumGrid3_3::*)()) &AbstractDiscreteContinuumGrid3_3::GetGlobalVtkGrid, 

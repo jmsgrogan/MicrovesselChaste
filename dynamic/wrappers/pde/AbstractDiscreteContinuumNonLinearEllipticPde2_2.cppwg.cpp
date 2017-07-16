@@ -14,9 +14,9 @@
 
 namespace py = pybind11;
 typedef AbstractDiscreteContinuumNonLinearEllipticPde<2,2 > AbstractDiscreteContinuumNonLinearEllipticPde2_2;
-;
-typedef ::boost::numeric::ublas::c_matrix<double, 2, 2> _boost_numeric_ublas_c_matrixdouble_2_2;
-typedef ::boost::numeric::ublas::c_matrix<double, 2, 2> _boost_numeric_ublas_c_matrixdouble_2_2;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::boost::numeric::ublas::c_matrix<double, 2, 2> _boost_numeric_ublas_c_matrix_lt_double_2_2_gt_;
+typedef ::boost::numeric::ublas::c_matrix<double, 2, 2> _boost_numeric_ublas_c_matrix_lt_double_2_2_gt_;
 typedef ::QConcentrationFlowRate _QConcentrationFlowRate;
 typedef ::QConcentrationFlowRate _QConcentrationFlowRate;
 typedef ::QRate _QRate;
@@ -26,7 +26,7 @@ class AbstractDiscreteContinuumNonLinearEllipticPde2_2_Overloads : public Abstra
     using AbstractDiscreteContinuumNonLinearEllipticPde2_2::AbstractDiscreteContinuumNonLinearEllipticPde;
     ::boost::numeric::ublas::c_matrix<double, 2, 2> ComputeDiffusionTerm(::ChastePoint<2> const & rX, double u) override {
         PYBIND11_OVERLOAD(
-            _boost_numeric_ublas_c_matrixdouble_2_2,
+            _boost_numeric_ublas_c_matrix_lt_double_2_2_gt_,
             AbstractDiscreteContinuumNonLinearEllipticPde2_2,
             ComputeDiffusionTerm,
             rX, 
@@ -34,7 +34,7 @@ u);
     }
     ::boost::numeric::ublas::c_matrix<double, 2, 2> ComputeDiffusionTermPrime(::ChastePoint<2> const & rX, double u) override {
         PYBIND11_OVERLOAD(
-            _boost_numeric_ublas_c_matrixdouble_2_2,
+            _boost_numeric_ublas_c_matrix_lt_double_2_2_gt_,
             AbstractDiscreteContinuumNonLinearEllipticPde2_2,
             ComputeDiffusionTermPrime,
             rX, 
@@ -73,7 +73,7 @@ u);
 
 };
 void register_AbstractDiscreteContinuumNonLinearEllipticPde2_2_class(py::module &m){
-py::class_<AbstractDiscreteContinuumNonLinearEllipticPde2_2 , AbstractDiscreteContinuumNonLinearEllipticPde2_2_Overloads   >(m, "AbstractDiscreteContinuumNonLinearEllipticPde2_2")
+py::class_<AbstractDiscreteContinuumNonLinearEllipticPde2_2 , AbstractDiscreteContinuumNonLinearEllipticPde2_2_Overloads , std::shared_ptr<AbstractDiscreteContinuumNonLinearEllipticPde2_2 >  , AbstractDiscreteContinuumPde<2, 2>  >(m, "AbstractDiscreteContinuumNonLinearEllipticPde2_2")
         .def(
             "ComputeDiffusionTerm", 
             (::boost::numeric::ublas::c_matrix<double, 2, 2>(AbstractDiscreteContinuumNonLinearEllipticPde2_2::*)(::ChastePoint<2> const &, double)) &AbstractDiscreteContinuumNonLinearEllipticPde2_2::ComputeDiffusionTerm, 

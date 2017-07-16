@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef ConstantHaematocritSolver<2 > ConstantHaematocritSolver2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class ConstantHaematocritSolver2_Overloads : public ConstantHaematocritSolver2{
     public:
@@ -29,7 +29,7 @@ class ConstantHaematocritSolver2_Overloads : public ConstantHaematocritSolver2{
 
 };
 void register_ConstantHaematocritSolver2_class(py::module &m){
-py::class_<ConstantHaematocritSolver2 , ConstantHaematocritSolver2_Overloads   >(m, "ConstantHaematocritSolver2")
+py::class_<ConstantHaematocritSolver2 , ConstantHaematocritSolver2_Overloads , std::shared_ptr<ConstantHaematocritSolver2 >  , AbstractHaematocritSolver<2>  >(m, "ConstantHaematocritSolver2")
         .def(py::init< >())
         .def_static(
             "Create", 

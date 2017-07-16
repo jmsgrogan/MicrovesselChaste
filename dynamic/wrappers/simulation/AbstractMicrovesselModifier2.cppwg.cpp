@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef AbstractMicrovesselModifier<2 > AbstractMicrovesselModifier2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class AbstractMicrovesselModifier2_Overloads : public AbstractMicrovesselModifier2{
     public:
@@ -36,7 +36,8 @@ class AbstractMicrovesselModifier2_Overloads : public AbstractMicrovesselModifie
 
 };
 void register_AbstractMicrovesselModifier2_class(py::module &m){
-py::class_<AbstractMicrovesselModifier2 , AbstractMicrovesselModifier2_Overloads   >(m, "AbstractMicrovesselModifier2")
+py::class_<AbstractMicrovesselModifier2 , AbstractMicrovesselModifier2_Overloads , std::shared_ptr<AbstractMicrovesselModifier2 >   >(m, "AbstractMicrovesselModifier2")
+        .def(py::init< >())
         .def(
             "AddDiscreteContinuumSolver", 
             (void(AbstractMicrovesselModifier2::*)(::std::shared_ptr<AbstractDiscreteContinuumSolver<2> >)) &AbstractMicrovesselModifier2::AddDiscreteContinuumSolver, 

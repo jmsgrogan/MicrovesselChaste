@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef ParabolicDiffusionReactionPde<2,2 > ParabolicDiffusionReactionPde2_2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::QConcentrationFlowRate _QConcentrationFlowRate;
 typedef ::QRate _QRate;
 
@@ -56,7 +56,7 @@ u);
 
 };
 void register_ParabolicDiffusionReactionPde2_2_class(py::module &m){
-py::class_<ParabolicDiffusionReactionPde2_2 , ParabolicDiffusionReactionPde2_2_Overloads   >(m, "ParabolicDiffusionReactionPde2_2")
+py::class_<ParabolicDiffusionReactionPde2_2 , ParabolicDiffusionReactionPde2_2_Overloads , std::shared_ptr<ParabolicDiffusionReactionPde2_2 >  , AbstractDiscreteContinuumParabolicPde<2, 2>  >(m, "ParabolicDiffusionReactionPde2_2")
         .def(py::init< >())
         .def_static(
             "Create", 

@@ -29,7 +29,7 @@ class AbstractVesselNetworkComponentFlowProperties2_Overloads : public AbstractV
 
 };
 void register_AbstractVesselNetworkComponentFlowProperties2_class(py::module &m){
-py::class_<AbstractVesselNetworkComponentFlowProperties2 , AbstractVesselNetworkComponentFlowProperties2_Overloads , std::shared_ptr<AbstractVesselNetworkComponentFlowProperties2 >   >(m, "AbstractVesselNetworkComponentFlowProperties2")
+py::class_<AbstractVesselNetworkComponentFlowProperties2 , AbstractVesselNetworkComponentFlowProperties2_Overloads , std::shared_ptr<AbstractVesselNetworkComponentFlowProperties2 >  , AbstractVesselNetworkComponentProperties<2>  >(m, "AbstractVesselNetworkComponentFlowProperties2")
         .def(
             "GetPressure", 
             (::QPressure(AbstractVesselNetworkComponentFlowProperties2::*)() const ) &AbstractVesselNetworkComponentFlowProperties2::GetPressure, 

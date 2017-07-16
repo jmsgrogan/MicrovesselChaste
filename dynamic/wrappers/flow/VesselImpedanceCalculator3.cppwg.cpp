@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef VesselImpedanceCalculator<3 > VesselImpedanceCalculator3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class VesselImpedanceCalculator3_Overloads : public VesselImpedanceCalculator3{
     public:
@@ -29,7 +29,7 @@ class VesselImpedanceCalculator3_Overloads : public VesselImpedanceCalculator3{
 
 };
 void register_VesselImpedanceCalculator3_class(py::module &m){
-py::class_<VesselImpedanceCalculator3 , VesselImpedanceCalculator3_Overloads   >(m, "VesselImpedanceCalculator3")
+py::class_<VesselImpedanceCalculator3 , VesselImpedanceCalculator3_Overloads , std::shared_ptr<VesselImpedanceCalculator3 >  , AbstractVesselNetworkCalculator<3>  >(m, "VesselImpedanceCalculator3")
         .def(py::init< >())
         .def_static(
             "Create", 

@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef DiscreteContinuumBoundaryCondition<2 > DiscreteContinuumBoundaryCondition2;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_DiscreteContinuumBoundaryCondition2_class(py::module &m){
-py::class_<DiscreteContinuumBoundaryCondition2    >(m, "DiscreteContinuumBoundaryCondition2")
+py::class_<DiscreteContinuumBoundaryCondition2  , std::shared_ptr<DiscreteContinuumBoundaryCondition2 >   >(m, "DiscreteContinuumBoundaryCondition2")
         .def(py::init< >())
         .def_static(
             "Create", 

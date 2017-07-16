@@ -1,5 +1,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include "PythonObjectConverters.hpp"
 #include <set>
 #include <vector>
 #include <string>
@@ -15,6 +16,8 @@
 namespace py = pybind11;
 typedef MicrovesselVtkScene<3 > MicrovesselVtkScene3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+PYBIND11_VTK_TYPECASTER(vtkRenderer);
+PYBIND11_VTK_TYPECASTER(vtkUnsignedCharArray);
 
 void register_MicrovesselVtkScene3_class(py::module &m){
 py::class_<MicrovesselVtkScene3  , std::shared_ptr<MicrovesselVtkScene3 >   >(m, "MicrovesselVtkScene3")

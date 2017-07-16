@@ -14,10 +14,10 @@
 
 namespace py = pybind11;
 typedef SurfaceCleaner SurfaceCleaner;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 void register_SurfaceCleaner_class(py::module &m){
-py::class_<SurfaceCleaner    >(m, "SurfaceCleaner")
+py::class_<SurfaceCleaner  , std::shared_ptr<SurfaceCleaner >   >(m, "SurfaceCleaner")
         .def(py::init< >())
         .def_static(
             "Create", 

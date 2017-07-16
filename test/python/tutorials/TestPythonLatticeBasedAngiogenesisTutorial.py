@@ -73,8 +73,8 @@ class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite)
         ## allow non-dimensionalisation when sending quantities to external solvers and re-dimensionalisation of
         ## results. For our purposes microns for length and hours for time are suitable base units.
         
-        reference_length = 1.e-6 * metre()
-        reference_time = 3600.0 * second()
+        reference_length = 1.e-6 * metres
+        reference_time = 3600.0 * seconds
         BaseUnits.Instance().SetReferenceLengthScale(reference_length)
         BaseUnits.Instance().SetReferenceTimeScale(reference_time)
         
@@ -86,9 +86,9 @@ class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite)
         ## as will be shown below.
         
         grid = microvessel_chaste.mesh.RegularGrid2()
-        grid_spacing = Owen11Parameters.mpLatticeSpacing.GetValue("User")
+        grid_spacing = 20.0e-6*metres
         grid.SetSpacing(grid_spacing)
-        grid.SetExtents([51, 51, 1])
+        grid.SetDimensions(51, 51, 1)
         
         ## We can write and visualize the grid.
         
@@ -102,18 +102,18 @@ class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite)
         ## Next, set up the vessel network, this will initially consist of two, large counter-flowing vessels. Also set the inlet
         ## and outlet pressures and flags.
         
-        node1 = microvessel_chaste.population.vessel.VesselNode2.Create(0.0, 400.0, 0.0, reference_length)
-        node2 = microvessel_chaste.population.vessel.VesselNode2.Create(2000.0, 400.0, 0.0, reference_length)
+        node1 = microvessel_chaste.population.vessel.VesselNode2.Create(0.0*reference_length, 400.0*reference_length)
+        node2 = microvessel_chaste.population.vessel.VesselNode2.Create(2000.0*reference_length, 400.0*reference_length)
         node1.GetFlowProperties().SetIsInputNode(True)
-        node1.GetFlowProperties().SetPressure(Owen11Parameters.mpInletPressure.GetValue("User"))
+        #node1.GetFlowProperties().SetPressure(Owen11Parameters.mpInletPressure.GetValue("User"))
         node2.GetFlowProperties().SetIsOutputNode(True);
-        node2.GetFlowProperties().SetPressure(Owen11Parameters.mpOutletPressure.GetValue("User"))
-        node3 = microvessel_chaste.population.vessel.VesselNode2.Create(2000.0, 1600.0, 0.0, reference_length)
-        node4 = microvessel_chaste.population.vessel.VesselNode2.Create(0.0, 1600.0, 0.0, reference_length)
+        #node2.GetFlowProperties().SetPressure(Owen11Parameters.mpOutletPressure.GetValue("User"))
+        node3 = microvessel_chaste.population.vessel.VesselNode2.Create(2000.0*reference_length, 1600.0*reference_length)
+        node4 = microvessel_chaste.population.vessel.VesselNode2.Create(0.0*reference_length, 1600.0*reference_length)
         node3.GetFlowProperties().SetIsInputNode(True)
-        node3.GetFlowProperties().SetPressure(Owen11Parameters.mpInletPressure.GetValue("User"))
+        #node3.GetFlowProperties().SetPressure(Owen11Parameters.mpInletPressure.GetValue("User"))
         node4.GetFlowProperties().SetIsOutputNode(True)
-        node4.GetFlowProperties().SetPressure(Owen11Parameters.mpOutletPressure.GetValue("User"))
+        #node4.GetFlowProperties().SetPressure(Owen11Parameters.mpOutletPressure.GetValue("User"))
         vessel1 = microvessel_chaste.population.vessel.Vessel2.Create(node1, node2)
         vessel2 = microvessel_chaste.population.vessel.Vessel2.Create(node3, node4)
         network = microvessel_chaste.population.vessel.VesselNetwork2.Create()
@@ -135,7 +135,7 @@ class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite)
         cell_population_genenerator = microvessel_chaste.population.cell.Owen11CellPopulationGenerator2()
         cell_population_genenerator.SetRegularGrid(grid)
         cell_population_genenerator.SetVesselNetwork(network)
-        tumour_radius = 300.0 * 1.e-6 * metre()
+        tumour_radius = 300.0 * 1.e-6 * metres
         cell_population_genenerator.SetTumourRadius(tumour_radius)
         cell_population = cell_population_genenerator.Update()
         
@@ -162,7 +162,7 @@ class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite)
         vessel_oxygen_source = microvessel_chaste.pde.VesselBasedDiscreteSource2()
         #oxygen_solubility_at_stp = Secomb04Parameters.mpOxygenVolumetricSolubility.GetValue("User") * GenericParameters.mpGasConcentrationAtStp.GetValue("User")
         #vessel_oxygen_concentration = oxygen_solubility_at_stp * Owen11Parameters.mpReferencePartialPressure.GetValue("User")
-        vessel_oxygen_concentration = 0.02768 * mole_per_metre_cubed()
+        vessel_oxygen_concentration = 0.02768 * mole_per_metre_cubed
         vessel_oxygen_source.SetReferenceConcentration(vessel_oxygen_concentration)
         vessel_oxygen_source.SetVesselPermeability(Owen11Parameters.mpVesselOxygenPermeability.GetValue("User"))
         vessel_oxygen_source.SetReferenceHaematocrit(Owen11Parameters.mpInflowHaematocrit.GetValue("User"))
@@ -192,9 +192,9 @@ class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite)
         normal_cell_state = chaste.cell_based.WildTypeCellMutationState()
 
         normal_and_quiescent_cell_rates[normal_cell_state.GetColour()] = Owen11Parameters.mpCellVegfSecretionRate.GetValue("User")
-        normal_and_quiescent_cell_rate_thresholds[normal_cell_state.GetColour()] = 0.27*mole_per_metre_cubed()
+        normal_and_quiescent_cell_rate_thresholds[normal_cell_state.GetColour()] = 0.27*mole_per_metre_cubed
         normal_and_quiescent_cell_rates[quiescent_cancer_state.GetColour()] = Owen11Parameters.mpCellVegfSecretionRate.GetValue("User")
-        normal_and_quiescent_cell_rate_thresholds[quiescent_cancer_state.GetColour()] = 0.0*mole_per_metre_cubed()
+        normal_and_quiescent_cell_rate_thresholds[quiescent_cancer_state.GetColour()] = 0.0*mole_per_metre_cubed
         normal_and_quiescent_cell_source.SetStateRateMap(normal_and_quiescent_cell_rates)
         normal_and_quiescent_cell_source.SetLabelName("VEGF")
         normal_and_quiescent_cell_source.SetStateRateThresholdMap(normal_and_quiescent_cell_rate_thresholds)
@@ -203,7 +203,7 @@ class TestLatticeBasedAngiogenesis(chaste.cell_based.AbstractCellBasedTestSuite)
         ## Add a vessel related VEGF sink
          
         vessel_vegf_sink = microvessel_chaste.pde.VesselBasedDiscreteSource2()
-        vessel_vegf_sink.SetReferenceConcentration(0.0*mole_per_metre_cubed())
+        vessel_vegf_sink.SetReferenceConcentration(0.0*mole_per_metre_cubed)
         vessel_vegf_sink.SetVesselPermeability(Owen11Parameters.mpVesselVegfPermeability.GetValue("User"))
         vegf_pde.AddDiscreteSource(vessel_vegf_sink)
         

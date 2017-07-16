@@ -14,15 +14,15 @@
 
 namespace py = pybind11;
 typedef CaBasedCellPopulation<3 > CaBasedCellPopulation3;
-;
-typedef ::TetrahedralMesh<3, 3> * _TetrahedralMesh3_3Ptr;
-typedef ::Node<3> * _Node3Ptr;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::TetrahedralMesh<3, 3> * _TetrahedralMesh_lt_3_3_gt_Ptr;
+typedef ::Node<3> * _Node_lt_3_gt_Ptr;
 typedef unsigned int unsignedint;
-typedef ::std::set<unsigned int, std::less<unsigned int>, std::allocator<unsigned int> > _std_setunsignedint_std_lessunsignedint_std_allocatorunsignedint;
-typedef ::boost::numeric::ublas::c_vector<double, 3> _boost_numeric_ublas_c_vectordouble_3;
+typedef ::std::set<unsigned int, std::less<unsigned int>, std::allocator<unsigned int> > _std_set_lt_unsignedint_std_less_lt_unsignedint_gt__std_allocator_lt_unsignedint_gt__gt_;
+typedef ::boost::numeric::ublas::c_vector<double, 3> _boost_numeric_ublas_c_vector_lt_double_3_gt_;
 typedef ::CellPtr _CellPtr;
 typedef unsigned int unsignedint;
-typedef ::std::vector<boost::shared_ptr<AbstractUpdateRule<3> >, std::allocator<boost::shared_ptr<AbstractUpdateRule<3> > > > const _std_vectorboost_shared_ptrAbstractUpdateRule3_std_allocatorboost_shared_ptrAbstractUpdateRule3;
+typedef ::std::vector<boost::shared_ptr<AbstractUpdateRule<3> >, std::allocator<boost::shared_ptr<AbstractUpdateRule<3> > > > const _std_vector_lt_boost_shared_ptr_lt_AbstractUpdateRule_lt_3_gt__gt__std_allocator_lt_boost_shared_ptr_lt_AbstractUpdateRule_lt_3_gt__gt__gt__gt_const;
 
 class CaBasedCellPopulation3_Overloads : public CaBasedCellPopulation3{
     public:
@@ -37,14 +37,14 @@ pCell);
     }
     ::TetrahedralMesh<3, 3> * GetTetrahedralMeshForPdeModifier() override {
         PYBIND11_OVERLOAD(
-            _TetrahedralMesh3_3Ptr,
+            _TetrahedralMesh_lt_3_3_gt_Ptr,
             CaBasedCellPopulation3,
             GetTetrahedralMeshForPdeModifier,
             );
     }
     ::Node<3> * GetNode(unsigned int index) override {
         PYBIND11_OVERLOAD(
-            _Node3Ptr,
+            _Node_lt_3_gt_Ptr,
             CaBasedCellPopulation3,
             GetNode,
             index);
@@ -58,14 +58,14 @@ pCell);
     }
     ::std::set<unsigned int, std::less<unsigned int>, std::allocator<unsigned int> > GetNeighbouringLocationIndices(::CellPtr pCell) override {
         PYBIND11_OVERLOAD(
-            _std_setunsignedint_std_lessunsignedint_std_allocatorunsignedint,
+            _std_set_lt_unsignedint_std_less_lt_unsignedint_gt__std_allocator_lt_unsignedint_gt__gt_,
             CaBasedCellPopulation3,
             GetNeighbouringLocationIndices,
             pCell);
     }
     ::boost::numeric::ublas::c_vector<double, 3> GetLocationOfCellCentre(::CellPtr pCell) override {
         PYBIND11_OVERLOAD(
-            _boost_numeric_ublas_c_vectordouble_3,
+            _boost_numeric_ublas_c_vector_lt_double_3_gt_,
             CaBasedCellPopulation3,
             GetLocationOfCellCentre,
             pCell);
@@ -204,7 +204,7 @@ pCell);
     }
     ::std::vector<boost::shared_ptr<AbstractUpdateRule<3> >, std::allocator<boost::shared_ptr<AbstractUpdateRule<3> > > > const GetUpdateRuleCollection() const  override {
         PYBIND11_OVERLOAD(
-            _std_vectorboost_shared_ptrAbstractUpdateRule3_std_allocatorboost_shared_ptrAbstractUpdateRule3,
+            _std_vector_lt_boost_shared_ptr_lt_AbstractUpdateRule_lt_3_gt__gt__std_allocator_lt_boost_shared_ptr_lt_AbstractUpdateRule_lt_3_gt__gt__gt__gt_const,
             CaBasedCellPopulation3,
             GetUpdateRuleCollection,
             );
@@ -229,13 +229,13 @@ dirichletBoundaryValue);
 
 };
 void register_CaBasedCellPopulation3_class(py::module &m){
-py::class_<CaBasedCellPopulation3 , CaBasedCellPopulation3_Overloads   >(m, "CaBasedCellPopulation3")
+py::class_<CaBasedCellPopulation3 , CaBasedCellPopulation3_Overloads , std::shared_ptr<CaBasedCellPopulation3 >   >(m, "CaBasedCellPopulation3")
         .def(py::init<::PottsMesh<3> &, ::std::vector<boost::shared_ptr<Cell>, std::allocator<boost::shared_ptr<Cell> > > &, ::std::vector<unsigned int, std::allocator<unsigned int> > const, unsigned int, bool, bool >(), py::arg("rMesh"), py::arg("rCells"), py::arg("locationIndices"), py::arg("latticeCarryingCapacity") = 1U, py::arg("deleteMesh") = false, py::arg("validate") = false)
         .def(py::init<::PottsMesh<3> & >(), py::arg("rMesh"))
         .def(
             "rGetAvailableSpaces", 
             (::std::vector<unsigned int, std::allocator<unsigned int> > &(CaBasedCellPopulation3::*)()) &CaBasedCellPopulation3::rGetAvailableSpaces, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "IsSiteAvailable", 
             (bool(CaBasedCellPopulation3::*)(unsigned int, ::CellPtr)) &CaBasedCellPopulation3::IsSiteAvailable, 
@@ -243,19 +243,19 @@ py::class_<CaBasedCellPopulation3 , CaBasedCellPopulation3_Overloads   >(m, "CaB
         .def(
             "rGetMesh", 
             (::PottsMesh<3> &(CaBasedCellPopulation3::*)()) &CaBasedCellPopulation3::rGetMesh, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "rGetMesh", 
             (::PottsMesh<3> const &(CaBasedCellPopulation3::*)() const ) &CaBasedCellPopulation3::rGetMesh, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "GetTetrahedralMeshForPdeModifier", 
             (::TetrahedralMesh<3, 3> *(CaBasedCellPopulation3::*)()) &CaBasedCellPopulation3::GetTetrahedralMeshForPdeModifier, 
-            " "  )
+            " "  , py::return_value_policy::reference)
         .def(
             "GetNode", 
             (::Node<3> *(CaBasedCellPopulation3::*)(unsigned int)) &CaBasedCellPopulation3::GetNode, 
-            " " , py::arg("index") )
+            " " , py::arg("index") , py::return_value_policy::reference)
         .def(
             "GetNumNodes", 
             (unsigned int(CaBasedCellPopulation3::*)()) &CaBasedCellPopulation3::GetNumNodes, 
@@ -279,7 +279,7 @@ py::class_<CaBasedCellPopulation3 , CaBasedCellPopulation3_Overloads   >(m, "CaB
         .def(
             "GetNodeCorrespondingToCell", 
             (::Node<3> *(CaBasedCellPopulation3::*)(::CellPtr)) &CaBasedCellPopulation3::GetNodeCorrespondingToCell, 
-            " " , py::arg("pCell") )
+            " " , py::arg("pCell") , py::return_value_policy::reference)
         .def(
             "AddCell", 
             (::CellPtr(CaBasedCellPopulation3::*)(::CellPtr, ::CellPtr)) &CaBasedCellPopulation3::AddCell, 

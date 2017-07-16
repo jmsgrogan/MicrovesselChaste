@@ -1,5 +1,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include "AbstractDiscreteContinuumPde.hpp"
 #include <set>
 #include <vector>
 #include <string>
@@ -8,86 +9,85 @@
 #include "UblasIncludes.hpp"
 #include "UnitCollection.hpp"
 #include "vtkPolyData.h"
-#include "AbstractDiscreteContinuumPde.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
 
 #include "AbstractDiscreteContinuumSolver3.cppwg.hpp"
 
 namespace py = pybind11;
 typedef AbstractDiscreteContinuumSolver<3 > AbstractDiscreteContinuumSolver3;
-;
-typedef ::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > _std_vectorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1_std_allocatorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1;
-typedef ::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > _std_vectorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1_std_allocatorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1;
-typedef ::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > _std_vectorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1_std_allocatorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1;
-typedef ::std::vector<double, std::allocator<double> > _std_vectordouble_std_allocatordouble;
-typedef ::std::vector<double, std::allocator<double> > _std_vectordouble_std_allocatordouble;
-typedef ::std::vector<boost::numeric::ublas::c_vector<double, 3>, std::allocator<boost::numeric::ublas::c_vector<double, 3> > > _std_vectorboost_numeric_ublas_c_vectordouble_3_std_allocatorboost_numeric_ublas_c_vectordouble_3;
-typedef ::std::vector<double, std::allocator<double> > _std_vectordouble_std_allocatordouble;
-typedef ::std::vector<double, std::allocator<double> > _std_vectordouble_std_allocatordouble;
-typedef ::vtkSmartPointer<vtkDataSet> _vtkSmartPointervtkDataSet;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > _std_vector_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__std_allocator_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__gt__gt_;
+typedef ::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > _std_vector_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__std_allocator_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__gt__gt_;
+typedef ::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > _std_vector_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__std_allocator_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__gt__gt_;
+typedef ::std::vector<double, std::allocator<double> > _std_vector_lt_double_std_allocator_lt_double_gt__gt_;
+typedef ::std::vector<double, std::allocator<double> > _std_vector_lt_double_std_allocator_lt_double_gt__gt_;
+typedef ::std::vector<boost::numeric::ublas::c_vector<double, 3>, std::allocator<boost::numeric::ublas::c_vector<double, 3> > > _std_vector_lt_boost_numeric_ublas_c_vector_lt_double_3_gt__std_allocator_lt_boost_numeric_ublas_c_vector_lt_double_3_gt__gt__gt_;
+typedef ::std::vector<double, std::allocator<double> > _std_vector_lt_double_std_allocator_lt_double_gt__gt_;
+typedef ::std::vector<double, std::allocator<double> > _std_vector_lt_double_std_allocator_lt_double_gt__gt_;
+typedef ::vtkSmartPointer<vtkDataSet> _vtkSmartPointer_lt_vtkDataSet_gt_;
 
 class AbstractDiscreteContinuumSolver3_Overloads : public AbstractDiscreteContinuumSolver3{
     public:
     using AbstractDiscreteContinuumSolver3::AbstractDiscreteContinuumSolver;
     ::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > GetConcentrations() override {
         PYBIND11_OVERLOAD(
-            _std_vectorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1_std_allocatorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1,
+            _std_vector_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__std_allocator_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__gt__gt_,
             AbstractDiscreteContinuumSolver3,
             GetConcentrations,
             );
     }
     ::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > GetConcentrations(::std::shared_ptr<AbstractDiscreteContinuumGrid<3, 3> > pGrid) override {
         PYBIND11_OVERLOAD(
-            _std_vectorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1_std_allocatorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1,
+            _std_vector_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__std_allocator_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__gt__gt_,
             AbstractDiscreteContinuumSolver3,
             GetConcentrations,
             pGrid);
     }
     ::std::vector<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> >, std::allocator<RQuantity<std::ratio<0, 1>, std::ratio<-3, 1>, std::ratio<0, 1>, std::ratio<1, 1>, std::ratio<0, 1> > > > GetConcentrations(::vtkSmartPointer<vtkPoints> pSamplePoints) override {
         PYBIND11_OVERLOAD(
-            _std_vectorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1_std_allocatorRQuantitystd_ratio0_1_std_rationeg3_1_std_ratio0_1_std_ratio1_1_std_ratio0_1,
+            _std_vector_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__std_allocator_lt_RQuantity_lt_std_ratio_lt_0_1_gt__std_ratio_lt_neg3_1_gt__std_ratio_lt_0_1_gt__std_ratio_lt_1_1_gt__std_ratio_lt_0_1_gt__gt__gt__gt_,
             AbstractDiscreteContinuumSolver3,
             GetConcentrations,
             pSamplePoints);
     }
     ::std::vector<double, std::allocator<double> > GetSolution() override {
         PYBIND11_OVERLOAD(
-            _std_vectordouble_std_allocatordouble,
+            _std_vector_lt_double_std_allocator_lt_double_gt__gt_,
             AbstractDiscreteContinuumSolver3,
             GetSolution,
             );
     }
     ::std::vector<double, std::allocator<double> > GetSolution(::vtkSmartPointer<vtkPoints> pSamplePoints) override {
         PYBIND11_OVERLOAD(
-            _std_vectordouble_std_allocatordouble,
+            _std_vector_lt_double_std_allocator_lt_double_gt__gt_,
             AbstractDiscreteContinuumSolver3,
             GetSolution,
             pSamplePoints);
     }
     ::std::vector<boost::numeric::ublas::c_vector<double, 3>, std::allocator<boost::numeric::ublas::c_vector<double, 3> > > GetSolutionGradients(::vtkSmartPointer<vtkPoints> pSamplePoints) override {
         PYBIND11_OVERLOAD(
-            _std_vectorboost_numeric_ublas_c_vectordouble_3_std_allocatorboost_numeric_ublas_c_vectordouble_3,
+            _std_vector_lt_boost_numeric_ublas_c_vector_lt_double_3_gt__std_allocator_lt_boost_numeric_ublas_c_vector_lt_double_3_gt__gt__gt_,
             AbstractDiscreteContinuumSolver3,
             GetSolutionGradients,
             pSamplePoints);
     }
     ::std::vector<double, std::allocator<double> > GetSolutionP(::vtkPoints * pSamplePoints) override {
         PYBIND11_OVERLOAD(
-            _std_vectordouble_std_allocatordouble,
+            _std_vector_lt_double_std_allocator_lt_double_gt__gt_,
             AbstractDiscreteContinuumSolver3,
             GetSolutionP,
             pSamplePoints);
     }
     ::std::vector<double, std::allocator<double> > GetSolution(::std::shared_ptr<AbstractDiscreteContinuumGrid<3, 3> > pGrid) override {
         PYBIND11_OVERLOAD(
-            _std_vectordouble_std_allocatordouble,
+            _std_vector_lt_double_std_allocator_lt_double_gt__gt_,
             AbstractDiscreteContinuumSolver3,
             GetSolution,
             pGrid);
     }
     ::vtkSmartPointer<vtkDataSet> GetVtkSolution() override {
         PYBIND11_OVERLOAD(
-            _vtkSmartPointervtkDataSet,
+            _vtkSmartPointer_lt_vtkDataSet_gt_,
             AbstractDiscreteContinuumSolver3,
             GetVtkSolution,
             );
@@ -144,7 +144,8 @@ class AbstractDiscreteContinuumSolver3_Overloads : public AbstractDiscreteContin
 
 };
 void register_AbstractDiscreteContinuumSolver3_class(py::module &m){
-py::class_<AbstractDiscreteContinuumSolver3 , AbstractDiscreteContinuumSolver3_Overloads   >(m, "AbstractDiscreteContinuumSolver3")
+py::class_<AbstractDiscreteContinuumSolver3 , AbstractDiscreteContinuumSolver3_Overloads , std::shared_ptr<AbstractDiscreteContinuumSolver3 >   >(m, "AbstractDiscreteContinuumSolver3")
+        .def(py::init< >())
         .def(
             "AddBoundaryCondition", 
             (void(AbstractDiscreteContinuumSolver3::*)(::std::shared_ptr<DiscreteContinuumBoundaryCondition<3> >)) &AbstractDiscreteContinuumSolver3::AddBoundaryCondition, 
@@ -168,7 +169,7 @@ py::class_<AbstractDiscreteContinuumSolver3 , AbstractDiscreteContinuumSolver3_O
         .def(
             "GetLabel", 
             (::std::string const &(AbstractDiscreteContinuumSolver3::*)()) &AbstractDiscreteContinuumSolver3::GetLabel, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "GetPde", 
             (::std::shared_ptr<AbstractDiscreteContinuumPde<3, 3> >(AbstractDiscreteContinuumSolver3::*)()) &AbstractDiscreteContinuumSolver3::GetPde, 

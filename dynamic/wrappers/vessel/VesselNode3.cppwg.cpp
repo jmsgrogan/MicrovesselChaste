@@ -15,14 +15,14 @@
 namespace py = pybind11;
 typedef VesselNode<3 > VesselNode3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
-typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double;
+typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_map_lt_std_basic_string_lt_char_gt__double_std_less_lt_std_basic_string_lt_char_gt__gt__std_allocator_lt_std_pair_lt_conststd_basic_string_lt_char_gt__double_gt__gt__gt_;
 
 class VesselNode3_Overloads : public VesselNode3{
     public:
     using VesselNode3::VesselNode;
     ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > GetOutputData() override {
         PYBIND11_OVERLOAD(
-            _std_mapstd_basic_stringchar_double_std_lessstd_basic_stringchar_std_allocatorstd_pairstd_basic_stringchar_double,
+            _std_map_lt_std_basic_string_lt_char_gt__double_std_less_lt_std_basic_string_lt_char_gt__gt__std_allocator_lt_std_pair_lt_conststd_basic_string_lt_char_gt__double_gt__gt__gt_,
             VesselNode3,
             GetOutputData,
             );
@@ -30,7 +30,7 @@ class VesselNode3_Overloads : public VesselNode3{
 
 };
 void register_VesselNode3_class(py::module &m){
-py::class_<VesselNode3 , VesselNode3_Overloads , std::shared_ptr<VesselNode3 >   >(m, "VesselNode3")
+py::class_<VesselNode3 , VesselNode3_Overloads , std::shared_ptr<VesselNode3 >  , AbstractVesselNetworkComponent<3>  >(m, "VesselNode3")
         .def(py::init<::QLength, ::QLength, ::QLength >(), py::arg("v1") = 0_m, py::arg("v2") = 0_m, py::arg("v3") = 0_m)
         .def(py::init<::Vertex<3> const & >(), py::arg("rLocation"))
         .def_static(
@@ -64,7 +64,7 @@ py::class_<VesselNode3 , VesselNode3_Overloads , std::shared_ptr<VesselNode3 >  
         .def(
             "rGetLocation", 
             (::Vertex<3> const &(VesselNode3::*)() const ) &VesselNode3::rGetLocation, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "GetNumberOfSegments", 
             (unsigned int(VesselNode3::*)() const ) &VesselNode3::GetNumberOfSegments, 

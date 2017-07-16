@@ -14,8 +14,8 @@
 
 namespace py = pybind11;
 typedef SimpleLinearEllipticFiniteDifferenceSolver<2 > SimpleLinearEllipticFiniteDifferenceSolver2;
-;
-typedef ::std::shared_ptr<LinearSystem> _std_shared_ptrLinearSystem;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+typedef ::std::shared_ptr<LinearSystem> _std_shared_ptr_lt_LinearSystem_gt_;
 
 class SimpleLinearEllipticFiniteDifferenceSolver2_Overloads : public SimpleLinearEllipticFiniteDifferenceSolver2{
     public:
@@ -50,7 +50,7 @@ class SimpleLinearEllipticFiniteDifferenceSolver2_Overloads : public SimpleLinea
     }
     ::std::shared_ptr<LinearSystem> GetLinearSystem() override {
         PYBIND11_OVERLOAD(
-            _std_shared_ptrLinearSystem,
+            _std_shared_ptr_lt_LinearSystem_gt_,
             SimpleLinearEllipticFiniteDifferenceSolver2,
             GetLinearSystem,
             );
@@ -79,7 +79,7 @@ class SimpleLinearEllipticFiniteDifferenceSolver2_Overloads : public SimpleLinea
 
 };
 void register_SimpleLinearEllipticFiniteDifferenceSolver2_class(py::module &m){
-py::class_<SimpleLinearEllipticFiniteDifferenceSolver2 , SimpleLinearEllipticFiniteDifferenceSolver2_Overloads   >(m, "SimpleLinearEllipticFiniteDifferenceSolver2")
+py::class_<SimpleLinearEllipticFiniteDifferenceSolver2 , SimpleLinearEllipticFiniteDifferenceSolver2_Overloads , std::shared_ptr<SimpleLinearEllipticFiniteDifferenceSolver2 >  , AbstractFiniteDifferenceSolverBase<2>  >(m, "SimpleLinearEllipticFiniteDifferenceSolver2")
         .def(py::init< >())
         .def_static(
             "Create", 

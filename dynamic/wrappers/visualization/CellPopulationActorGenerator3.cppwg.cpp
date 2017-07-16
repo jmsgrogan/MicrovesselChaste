@@ -29,7 +29,7 @@ class CellPopulationActorGenerator3_Overloads : public CellPopulationActorGenera
 
 };
 void register_CellPopulationActorGenerator3_class(py::module &m){
-py::class_<CellPopulationActorGenerator3 , CellPopulationActorGenerator3_Overloads , std::shared_ptr<CellPopulationActorGenerator3 >   >(m, "CellPopulationActorGenerator3")
+py::class_<CellPopulationActorGenerator3 , CellPopulationActorGenerator3_Overloads , std::shared_ptr<CellPopulationActorGenerator3 >  , AbstractActorGenerator<3>  >(m, "CellPopulationActorGenerator3")
         .def(py::init< >())
         .def(
             "AddActor", 

@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 typedef CoupledLumpedSystemFiniteElementSolver<3 > CoupledLumpedSystemFiniteElementSolver3;
-;
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class CoupledLumpedSystemFiniteElementSolver3_Overloads : public CoupledLumpedSystemFiniteElementSolver3{
     public:
@@ -29,7 +29,7 @@ class CoupledLumpedSystemFiniteElementSolver3_Overloads : public CoupledLumpedSy
 
 };
 void register_CoupledLumpedSystemFiniteElementSolver3_class(py::module &m){
-py::class_<CoupledLumpedSystemFiniteElementSolver3 , CoupledLumpedSystemFiniteElementSolver3_Overloads   >(m, "CoupledLumpedSystemFiniteElementSolver3")
+py::class_<CoupledLumpedSystemFiniteElementSolver3 , CoupledLumpedSystemFiniteElementSolver3_Overloads , std::shared_ptr<CoupledLumpedSystemFiniteElementSolver3 >  , AbstractFiniteElementSolverBase<3>  >(m, "CoupledLumpedSystemFiniteElementSolver3")
         .def(py::init< >())
         .def_static(
             "Create", 
@@ -38,7 +38,7 @@ py::class_<CoupledLumpedSystemFiniteElementSolver3 , CoupledLumpedSystemFiniteEl
         .def(
             "rGetIntermediateSolutions", 
             (::std::vector<std::pair<std::vector<double, std::allocator<double> >, double>, std::allocator<std::pair<std::vector<double, std::allocator<double> >, double> > > const &(CoupledLumpedSystemFiniteElementSolver3::*)()) &CoupledLumpedSystemFiniteElementSolver3::rGetIntermediateSolutions, 
-            " "  )
+            " "  , py::return_value_policy::reference_internal)
         .def(
             "SetTargetTimeIncrement", 
             (void(CoupledLumpedSystemFiniteElementSolver3::*)(double)) &CoupledLumpedSystemFiniteElementSolver3::SetTargetTimeIncrement, 
