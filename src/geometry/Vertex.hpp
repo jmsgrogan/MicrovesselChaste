@@ -36,6 +36,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef Vertex_HPP_
 #define Vertex_HPP_
 
+#include <memory>
 #include <vector>
 #include <map>
 #include <string>
