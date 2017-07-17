@@ -32,7 +32,7 @@
 add_compile_options(-Wno-unused-local-typedefs)
 # Build the Python bindings
 add_definitions(-DCHASTE_MicrovesselChaste_PYTHON)
-find_package(Boost COMPONENTS python REQUIRED)
+#find_package(Boost COMPONENTS python REQUIRED)
 find_package(PythonLibs REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIRS})
 
