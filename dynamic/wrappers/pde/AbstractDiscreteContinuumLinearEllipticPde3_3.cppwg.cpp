@@ -70,7 +70,8 @@ class AbstractDiscreteContinuumLinearEllipticPde3_3_Overloads : public AbstractD
 };
 void register_AbstractDiscreteContinuumLinearEllipticPde3_3_class(py::module &m){
 py::class_<AbstractDiscreteContinuumLinearEllipticPde3_3 , AbstractDiscreteContinuumLinearEllipticPde3_3_Overloads , std::shared_ptr<AbstractDiscreteContinuumLinearEllipticPde3_3 >  , AbstractDiscreteContinuumPde<3, 3>  >(m, "AbstractDiscreteContinuumLinearEllipticPde3_3")
-        .def(
+         //.def(py::init_alias< >())
+         .def(
             "ComputeDiffusionTerm", 
             (::boost::numeric::ublas::c_matrix<double, 3, 3>(AbstractDiscreteContinuumLinearEllipticPde3_3::*)(::ChastePoint<3> const &)) &AbstractDiscreteContinuumLinearEllipticPde3_3::ComputeDiffusionTerm, 
             " " , py::arg("arg0") )

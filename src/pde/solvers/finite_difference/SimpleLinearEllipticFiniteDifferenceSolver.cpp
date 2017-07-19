@@ -71,8 +71,14 @@ std::shared_ptr<LinearSystem> SimpleLinearEllipticFiniteDifferenceSolver<DIM>::G
 template<unsigned DIM>
 void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToMatrix()
 {
-    std::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
-                std::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
+    if(!this->mpPde)
+    {
+        EXCEPTION("PDE not set");
+    }
+
+    auto p_linear_pde = std::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
+
+    std::cout << typeid(this->mpPde).name() << std::endl;
     if(!p_linear_pde)
     {
         EXCEPTION("PDE not recognized");
@@ -127,8 +133,13 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToRhs()
 template<unsigned DIM>
 void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
 {
-    std::shared_ptr<DiscreteContinuumLinearEllipticPde<DIM, DIM> > p_linear_pde =
-                std::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
+    if(!this->mpPde)
+    {
+        EXCEPTION("PDE not set");
+    }
+
+    auto p_linear_pde = std::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
+    std::cout << typeid(this->mpPde).name() << std::endl;
 
     if(!p_linear_pde)
     {

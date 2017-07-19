@@ -34,6 +34,7 @@
 import unittest
 import math
 import os
+import vtk
 import numpy as np
 import chaste
 import chaste.core
@@ -47,6 +48,10 @@ from microvessel_chaste.utility import * # bring in all units for convenience
 class TestFiniteDifferenceSolver(unittest.TestCase):
           
     def test_fixed_outer_boundary(self):
+        
+        cont = vtk.vtkMPIController()
+        cont.Initialize()
+        
         file_handler = chaste.core.OutputFileHandler("Python/TestFiniteDifferenceSolver/test_fixed_outer_boundary")
         
         domain = microvessel_chaste.geometry.Part3()
@@ -60,6 +65,9 @@ class TestFiniteDifferenceSolver(unittest.TestCase):
         pde.SetIsotropicDiffusionConstant(0.003*metre_squared_per_second)
         pde.SetContinuumLinearInUTerm(-1.0*per_second)
         
+        print pde.GetDiscreteSources()
+        print pde
+        
         bc = microvessel_chaste.pde.DiscreteContinuumBoundaryCondition3()
         bc.SetValue(30.0*mole_per_metre_cubed)
         
@@ -71,6 +79,7 @@ class TestFiniteDifferenceSolver(unittest.TestCase):
         solver.SetWriteSolution(True)
         solver.Solve()
         
+        cont.Finalize(1)
 #     def test_fixed_left_boundary(self):
 #         file_handler = chaste.core.OutputFileHandler("Python/TestFiniteDifferenceSolver/test_fixed_left_boundary")
 #         
