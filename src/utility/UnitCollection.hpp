@@ -335,6 +335,7 @@ constexpr QLength millimetres = metres / 1.e3;
 constexpr QLength microns = metres / 1.e6;
 constexpr QArea metres_squared = metres*metres;
 constexpr QVolume metres_cubed = metres*metres_squared;
+constexpr QVolume microns_cubed = 1.e-18*metres_cubed;
 
 constexpr QPerLength per_metre(1.0);
 constexpr QPerArea per_metre_squared = per_metre*per_metre;
@@ -347,6 +348,7 @@ constexpr QMassFlux kg_per_metre_squred_per_second(1.0);
 // Amount
 constexpr QAmount moles(1.0);
 constexpr QMolarFlowRate mole_per_second(1.0);
+constexpr QMolarFlowRate nanomole_per_hour = (1.e-9/3600.0)*mole_per_second;
 constexpr QConcentrationFlowRate mole_per_metre_cubed_per_second(1.0);
 constexpr QMolarFlux mole_per_metre_squared_per_second(1.0);
 constexpr QConcentrationFlux mole_per_metre_pow5_per_second(1.0);
@@ -360,6 +362,7 @@ constexpr QNumberDensity per_metre_cubed(1.0);
 
 // Velocity
 constexpr QVelocity metres_per_second(1.0);
+constexpr QVelocity microns_per_hour = (1.e-6/3600.0)*metres_per_second;
 
 // Force, pressure, stress
 constexpr QForce newtons(1.0);
@@ -373,6 +376,7 @@ constexpr QFlowImpedance pascal_second_per_metre_cubed(1.0);
 
 // Diffusivity, Solubility, Permeability
 constexpr QDiffusivity metre_squared_per_second(1.0);
+constexpr QDiffusivity micron_squared_per_hour = (1.e-12/3600.0)*metre_squared_per_second;
 constexpr QDiffusivityPerConcentration metre_pow5_per_second_per_mole(1.0);
 constexpr QSolubility mole_per_metre_cubed_per_pascal(1.0);
 constexpr QVolumetricSolubility per_pascal(1.0);

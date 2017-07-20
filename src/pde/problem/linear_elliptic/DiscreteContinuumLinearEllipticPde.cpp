@@ -41,7 +41,7 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 DiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::DiscreteContinuumLinearEllipticPde() :
     AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, ELEMENT_DIM>()
 {
-    std::cout << "top:" << this->mDiscreteSources.size() << std::endl;
+
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

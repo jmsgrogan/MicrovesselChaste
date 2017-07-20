@@ -46,7 +46,7 @@ AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::AbstractDiscreteContinuumP
             mReferenceLengthScale(BaseUnits::Instance()->GetReferenceLengthScale()),
             mReferenceTimeScale(BaseUnits::Instance()->GetReferenceTimeScale())
 {
-    std::cout << "base:" << this->mDiscreteSources.size() << std::endl;;
+
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -70,7 +70,7 @@ QDiffusivity AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::ComputeIsotro
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 std::vector<std::shared_ptr<DiscreteSource<SPACE_DIM> > > AbstractDiscreteContinuumPde<ELEMENT_DIM, SPACE_DIM>::GetDiscreteSources()
 {
-    return std::vector<std::shared_ptr<DiscreteSource<SPACE_DIM> > >();
+    return mDiscreteSources;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

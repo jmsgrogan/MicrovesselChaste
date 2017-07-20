@@ -35,5 +35,5 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 import chaste.cell_based
-from cell import *
+#from cell import *
 from vessel import *

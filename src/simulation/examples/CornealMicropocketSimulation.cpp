@@ -33,7 +33,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include <boost/lexical_cast.hpp>
+#include <string>
 #include "UblasIncludes.hpp"
 #include "VesselSegment.hpp"
 #include "VesselNode.hpp"
@@ -55,39 +55,40 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "AngiogenesisSolver.hpp"
 #include "CoupledLumpedSystemFiniteElementSolver.hpp"
 #include "Timer.hpp"
+#include "Debug.hpp"
 
 template<unsigned DIM>
 CornealMicropocketSimulation<DIM>::CornealMicropocketSimulation() :
     mDomainType(DomainType::PLANAR_2D),
     mCorneaRadius(1.3_mm),
-    mCorneaThickness(100.0_um),
-    mPelletHeight(1.0_mm),
+    mCorneaThickness(100_um),
+    mPelletHeight(1_mm),
     mPelletThickness(40_um),
     mPelletRadius(200_um),
-    mLimbalOffset(100.0_um),
-    mGridSpacing(40.0_um),
-    mElementArea2d(1e3*(1.e-18*unit::metres_cubed)),
-    mElementArea3d(1e4*(1.e-18*unit::metres_cubed)),
-    mNodeSpacing(40.0_um),
-    mDensityGridSpacing(40.0_um),
+    mLimbalOffset(100_um),
+    mGridSpacing(40_um),
+    mElementArea2d(1e3*unit::microns_cubed),
+    mElementArea3d(1e4*unit::microns_cubed),
+    mNodeSpacing(40_um),
+    mDensityGridSpacing(40_um),
     mSampleSpacingX(60_um),
     mSampleSpacingY(60_um),
     mSampleSpacingZ(33_um),
     mUsePellet(true),
     mFinitePelletWidth(false),
-    mSproutingProbability(0.5 /(1_h)),
+    mSproutingProbability(0.5*unit::per_hour),
     mAttractionStrength(0.0),
     mChemotacticStrength(0.5),
     mPersistenceAngle(5.0),
-    mTipExclusionRadius(40.0_um),
+    mTipExclusionRadius(40_um),
     mDoAnastamosis(true),
-    mPelletConcentration(0.3*unit::mole_per_metre_cubed),
-    mVegfDiffusivity(6.94e-11*unit::metre_squared_per_second),
-    mVegfDecayRate((-0.8/3600.0) * unit::per_second),
+    mPelletConcentration(3.0e5_nM),
+    mVegfDiffusivity(24984.0*unit::micron_squared_per_hour),
+    mVegfDecayRate(-0.8*unit::per_hour),
     mVegfBindingConstant(100.0),
-    mVegfBloodConcentration(0.0*unit::mole_per_metre_cubed),
-    mVegfPermeability((3.e-4/3600.0)*unit::metre_per_second),
-    mUptakeRatePerCell((4.e-18/3600.0)*unit::mole_per_second),
+    mVegfBloodConcentration(0_M),
+    mVegfPermeability(300.0*unit::microns_per_hour),
+    mUptakeRatePerCell(4.e-9*unit::nanomole_per_hour),
     mPdeTimeIncrement(0.01),
     mIncludeVesselSink(true),
     mUseFixedGradient(false),
@@ -109,7 +110,7 @@ CornealMicropocketSimulation<DIM>::CornealMicropocketSimulation() :
     mOnlyPerfusedSprout(false),
     mSampleFrequency(5),
     mStoredSample(),
-    mSproutVelocity(20.0 *(1.e-6/3600.0) * unit::metre_per_second)
+    mSproutVelocity(20.0*unit::microns_per_hour)
 {
 
 }
@@ -194,16 +195,16 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
         else
         {
             std::vector<VertexPtr<DIM> > points;
-            points.push_back(Vertex<DIM>::Create(0_m, 0_m, 0_m));
-            points.push_back(Vertex<DIM>::Create(domain_width, 0_m, 0_m));
-            points.push_back(Vertex<DIM>::Create(domain_width, domain_height, 0_m));
-            points.push_back(Vertex<DIM>::Create((domain_width+domain_height)/2.0, domain_height, 0_m));
-            points.push_back(Vertex<DIM>::Create((domain_width-domain_height)/2.0, domain_height, 0_m));
-            points.push_back(Vertex<DIM>::Create(0_m, domain_height, 0_m));
+            points.push_back(Vertex<DIM>::Create(0_m));
+            points.push_back(Vertex<DIM>::Create(domain_width));
+            points.push_back(Vertex<DIM>::Create(domain_width, domain_height));
+            points.push_back(Vertex<DIM>::Create((domain_width+domain_height)/2.0, domain_height));
+            points.push_back(Vertex<DIM>::Create((domain_width-domain_height)/2.0, domain_height));
+            points.push_back(Vertex<DIM>::Create(0_m, domain_height));
 
-            PolygonPtr<DIM> p_polygon = Polygon<DIM>::Create(points);
+            auto p_polygon = Polygon<DIM>::Create(points);
             mpDomain->AddPolygon(p_polygon);
-            mpDomain->AddAttributeToEdgeIfFound(Vertex<DIM>(domain_width/2.0, domain_height, 0_m), "Pellet Interface", 1.0);
+            mpDomain->AddAttributeToEdgeIfFound(Vertex<DIM>(domain_width/2.0, domain_height), "Pellet Interface", 1.0);
         }
     }
     else if(mDomainType == DomainType::PLANAR_3D)
@@ -214,13 +215,13 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
         {
             mpDomain->AddCuboid(domain_width, domain_height, mCorneaThickness);
             std::vector<FacetPtr<DIM>> facets = mpDomain->GetFacets();
-            for(unsigned idx=0;idx<facets.size();idx++)
+            Vertex<DIM> probe_loc(domain_width/2.0, domain_height, mCorneaThickness/2.0);
+            for(auto& facet:mpDomain->GetFacets())
             {
-                Vertex<DIM> probe_loc(domain_width/2.0, domain_height, mCorneaThickness/2.0);
-                QLength distance = facets[idx]->GetCentroid().GetDistance(probe_loc);
+                QLength distance = facet->GetCentroid().GetDistance(probe_loc);
                 if (double(distance/reference_length) < 1e-3)
                 {
-                    facets[idx]->GetPolygons()[0]->AddAttribute("Pellet Interface", 1.0);
+                    facet->GetPolygons()[0]->AddAttribute("Pellet Interface", 1.0);
                 }
             }
         }
@@ -237,16 +238,15 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
             points.push_back(Vertex<DIM>::Create(right_side, domain_height, mCorneaThickness-gap));
             points.push_back(Vertex<DIM>::Create(left_side, domain_height, mCorneaThickness-gap));
 
-            PolygonPtr<DIM> p_polygon = Polygon<DIM>::Create(points);
+            auto p_polygon = Polygon<DIM>::Create(points);
             p_polygon->AddAttribute("Pellet Interface", 1.0);
-            std::vector<FacetPtr<DIM>> facets = mpDomain->GetFacets();
-            for(unsigned idx=0;idx<facets.size();idx++)
+            Vertex<DIM> probe_loc(domain_width/2.0, domain_height, mCorneaThickness/2.0);
+            for(auto& facet:mpDomain->GetFacets())
             {
-                Vertex<DIM> probe_loc(domain_width/2.0, domain_height, mCorneaThickness/2.0);
-                QLength distance = facets[idx]->GetCentroid().GetDistance(probe_loc);
+                QLength distance = facet->GetCentroid().GetDistance(probe_loc);
                 if (double(distance/reference_length) < 1e-3)
                 {
-                    mpDomain->AddPolygon(p_polygon, false, facets[idx]);
+                    mpDomain->AddPolygon(p_polygon, false, facet);
                 }
             }
         }
@@ -257,10 +257,10 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
         mpDomain->AddCircle(mCorneaRadius, Vertex<DIM>(), 24);
         if (mUsePellet)
         {
-            PolygonPtr<DIM> p_polygon = mpDomain->AddCircle(mPelletRadius, Vertex<DIM>(0_m, -1.0*delta, 0_m), 24);
+            PolygonPtr<DIM> p_polygon = mpDomain->AddCircle(mPelletRadius, Vertex<DIM>(0_m, -1.0*delta), 24);
             p_polygon->AddAttributeToAllEdges("Pellet Interface", 1.0);
-            mpDomain->AddHoleMarker(Vertex<DIM>(0_m, -1.0*delta, 0_m));
-            mHoles.push_back(Vertex<DIM>(0_m, -1.0*delta, 0_m));
+            mpDomain->AddHoleMarker(Vertex<DIM>(0_m, -1.0*delta));
+            mHoles.push_back(Vertex<DIM>(0_m, -1.0*delta));
         }
     }
     else if(mDomainType == DomainType::CIRCLE_3D)
@@ -274,7 +274,7 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
             QLength gap = (mCorneaThickness - mPelletThickness)/2.0;
 
             auto p_pellet = Part<DIM>::Create();
-            p_circle = p_pellet->AddCircle(mPelletRadius, Vertex<DIM>(0_m, -1.0*delta, 0_m), 24);
+            p_circle = p_pellet->AddCircle(mPelletRadius, Vertex<DIM>(0_m, -1.0*delta), 24);
             p_pellet->Extrude(p_circle, mPelletThickness);
             p_pellet->Translate(Vertex<DIM>(0_m, 0_m, gap));
             std::vector<PolygonPtr<DIM> >polygons = p_pellet->GetPolygons();
@@ -283,27 +283,27 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
             mpDomain->AddHoleMarker(Vertex<DIM>(0_m, -1.0*delta, half_height));
             mHoles.push_back(Vertex<DIM>(0_m, -1.0*delta, half_height));
             mpDomain->AppendPart(p_pellet);
-            for(unsigned idx=0;idx<polygons.size();idx++)
+            for(auto& polygon:polygons)
             {
-                polygons[idx]->AddAttribute("Pellet Interface", 1.0);
+                polygon->AddAttribute("Pellet Interface", 1.0);
             }
         }
     }
     else if(mDomainType == DomainType::HEMISPHERE)
     {
-        std::shared_ptr<MappableGridGenerator<DIM> > p_generator = MappableGridGenerator<DIM>::Create();
+        auto p_generator = MappableGridGenerator<DIM>::Create();
 
         unsigned num_divisions_x = 20;
         unsigned num_divisions_y = 20;
         double azimuth_angle = 1.0 * M_PI;
         double polar_angle = 0.999 * M_PI;
 
-        mpDomain = p_generator->GenerateHemisphere(mCorneaRadius,
-                mCorneaThickness, num_divisions_x, num_divisions_y, azimuth_angle, polar_angle);
+        mpDomain = p_generator->GenerateHemisphere(mCorneaRadius, mCorneaThickness,
+                num_divisions_x, num_divisions_y, azimuth_angle, polar_angle);
 
         if(mUsePellet)
         {
-            PartPtr<DIM> p_pellet_domain = Part<DIM>::Create();
+            auto p_pellet_domain = Part<DIM>::Create();
             QLength gap = (mCorneaThickness - mPelletThickness)/(2.0)/4.0;
             QLength base = mCorneaRadius + gap - mCorneaThickness;
 
@@ -323,10 +323,9 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
 
             mpDomain->AppendPart(p_pellet_domain);
             mpDomain->AddHoleMarker(pellet_centre);
-
-            for(unsigned idx=0;idx<polygons.size();idx++)
+            for(auto& polygon:polygons)
             {
-                polygons[idx]->AddAttribute("Pellet Interface", 1.0);
+                polygon->AddAttribute("Pellet Interface", 1.0);
             }
         }
     }
@@ -453,10 +452,9 @@ std::shared_ptr<VesselNetwork<DIM> > CornealMicropocketSimulation<DIM>::SetUpVes
         mpNetwork = generator.GenerateSingleVessel(domain_length,
                                                  Vertex<DIM>(0_m, mLimbalOffset, midpoint).rGetLocation(),
                                                  divisions, alignment_axis);
-        std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
-        for(unsigned idx=0;idx<nodes.size();idx++)
+        for(auto& node:mpNetwork->GetNodes())
         {
-            nodes[idx]->GetFlowProperties()->SetPressure(1_Pa);
+            node->GetFlowProperties()->SetPressure(1_Pa);
         }
     }
     else if(mDomainType == DomainType::CIRCLE_2D or mDomainType == DomainType::CIRCLE_3D)
@@ -482,9 +480,9 @@ std::shared_ptr<VesselNetwork<DIM> > CornealMicropocketSimulation<DIM>::SetUpVes
             mpNetwork->AddVessel(Vessel<DIM>::Create(nodes[idx-1], nodes[idx]));
         }
         mpNetwork->AddVessel(Vessel<DIM>::Create(nodes[nodes.size()-1], nodes[0]));
-        for(unsigned idx=0;idx<nodes.size();idx++)
+        for(auto& node:nodes)
         {
-            nodes[idx]->GetFlowProperties()->SetPressure(1_Pa);
+            node->GetFlowProperties()->SetPressure(1_Pa);
         }
     }
 
@@ -519,16 +517,15 @@ std::shared_ptr<VesselNetwork<DIM> > CornealMicropocketSimulation<DIM>::SetUpVes
 template<unsigned DIM>
 void CornealMicropocketSimulation<DIM>::SetUpSolver()
 {
+
     QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
     QConcentration reference_concentration =
             BaseUnits::Instance()->GetReferenceConcentrationScale();
-    std::shared_ptr<OutputFileHandler> file_handler =
-            std::shared_ptr<OutputFileHandler>(new OutputFileHandler(mWorkDirectory, false));
+    auto file_handler = std::make_shared<OutputFileHandler>(mWorkDirectory, false);
 
     if(!mUseFixedGradient)
     {
-        std::shared_ptr<CoupledVegfPelletDiffusionReactionPde<DIM, DIM> > p_pde =
-                CoupledVegfPelletDiffusionReactionPde<DIM, DIM>::Create();
+        auto p_pde = CoupledVegfPelletDiffusionReactionPde<DIM, DIM>::Create();
         p_pde->SetIsotropicDiffusionConstant(mVegfDiffusivity);
         p_pde->SetContinuumLinearInUTerm(mVegfDecayRate);
         p_pde->SetCurrentVegfInPellet(mPelletConcentration);
@@ -542,8 +539,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
 
         if(mIncludeVesselSink and !mUsePdeOnly)
         {
-            std::shared_ptr<VesselBasedDiscreteSource<DIM> > p_sink =
-                    VesselBasedDiscreteSource<DIM>::Create();
+            auto p_sink = VesselBasedDiscreteSource<DIM>::Create();
             p_sink->SetReferenceConcentration(mVegfBloodConcentration);
             p_sink->SetVesselPermeability(mVegfPermeability);
             p_sink->SetReferenceHaematocrit(0.45);
@@ -559,11 +555,11 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
                 mpSolver->SetGrid(mpGrid);
                 mpSolver->SetPde(p_pde);
                 mpSolver->SetLabel("vegf");
+
             }
             else
             {
-                std::shared_ptr<DiscreteContinuumBoundaryCondition<DIM> > p_boundary_condition =
-                        DiscreteContinuumBoundaryCondition<DIM>::Create();
+                auto p_boundary_condition = DiscreteContinuumBoundaryCondition<DIM>::Create();
                 p_boundary_condition->SetValue(mPelletConcentration);
                 if(mDomainType == DomainType::PLANAR_2D)
                 {
@@ -582,12 +578,12 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
                 mpSolver->SetPde(p_pde);
                 mpSolver->SetLabel("vegf");
                 mpSolver->AddBoundaryCondition(p_boundary_condition);
+
             }
         }
         else if(mDomainType == DomainType::CIRCLE_2D)
         {
-            std::shared_ptr<DiscreteContinuumBoundaryCondition<DIM> > p_boundary_condition =
-                     DiscreteContinuumBoundaryCondition<DIM>::Create();
+            auto p_boundary_condition = DiscreteContinuumBoundaryCondition<DIM>::Create();
              p_boundary_condition->SetValue(mPelletConcentration);
              p_boundary_condition->SetType(BoundaryConditionType::EDGE);
              p_boundary_condition->SetIsRobin(true);
@@ -601,8 +597,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
         }
         else if(mDomainType == DomainType::CIRCLE_3D or mDomainType == DomainType::HEMISPHERE)
         {
-            std::shared_ptr<DiscreteContinuumBoundaryCondition<DIM> > p_boundary_condition =
-                     DiscreteContinuumBoundaryCondition<DIM>::Create();
+            auto p_boundary_condition = DiscreteContinuumBoundaryCondition<DIM>::Create();
              p_boundary_condition->SetValue(mPelletConcentration);
              p_boundary_condition->SetType(BoundaryConditionType::POLYGON);
              p_boundary_condition->SetIsRobin(true);
@@ -618,11 +613,21 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
         mpSolver->SetFileHandler(file_handler);
         mpSolver->SetWriteSolution(true);
 
-        std::shared_ptr<CoupledLumpedSystemFiniteElementSolver<DIM> > p_fe_solver =
+        auto p_fe_solver =
                     std::dynamic_pointer_cast<CoupledLumpedSystemFiniteElementSolver<DIM> >(this->mpSolver);
+        if(p_fe_solver)
+        {
+            p_fe_solver->SetTargetTimeIncrement(mPdeTimeIncrement);
+            p_fe_solver->SetUseCoupling(true);
+        }
 
-        p_fe_solver->SetTargetTimeIncrement(mPdeTimeIncrement);
-        p_fe_solver->SetUseCoupling(true);
+        auto p_fd_solver =
+                    std::dynamic_pointer_cast<CoupledLumpedSystemFiniteDifferenceSolver<DIM> >(this->mpSolver);
+        if(p_fd_solver)
+        {
+            p_fd_solver->SetTargetTimeIncrement(mPdeTimeIncrement);
+            p_fd_solver->SetUseCoupling(true);
+        }
 
         if(p_pde->GetDiscreteSources().size()>0)
         {
@@ -645,9 +650,9 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
             for(unsigned idx=0;idx<mpGrid->GetNumberOfPoints();idx++)
             {
                 double y_loc = mpGrid->GetPoint(idx).Convert(reference_length)[1];
-                double dimless_pellet_height = (mPelletHeight/reference_length);
-                double normalized_distance = y_loc/dimless_pellet_height;
-                vegf_field.push_back(normalized_distance*(mPelletConcentration/reference_concentration));
+                double dimless_height = (mPelletHeight+mLimbalOffset)/reference_length;
+                double frac = y_loc/dimless_height;
+                vegf_field.push_back(frac*(mPelletConcentration/reference_concentration));
             }
             mpSolver->SetLabel("vegf");
             mpSolver->UpdateSolution(vegf_field);
@@ -663,9 +668,9 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
                 double x_loc = mpGrid->GetPoint(idx).Convert(reference_length)[0];
                 double y_loc = mpGrid->GetPoint(idx).Convert(reference_length)[1];
                 double radius = std::sqrt(x_loc*x_loc + y_loc*y_loc);
-                double dimless_pellet_height = (mCorneaRadius/reference_length);
-                double normalized_distance = double(radius/dimless_pellet_height);
-                vegf_field.push_back((1.0-normalized_distance)*double(mPelletConcentration/reference_concentration));
+                double dimless_cornea_radius = mCorneaRadius/reference_length;
+                double frac = (1.0 - double(radius/dimless_cornea_radius))/(1.0-double(mPelletRadius/mCorneaRadius));
+                vegf_field.push_back(frac*double(mPelletConcentration/reference_concentration));
             }
             mpSolver->SetLabel("vegf");
             mpSolver->UpdateSolution(vegf_field);
@@ -676,6 +681,8 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
             mpSolver->SetGrid(mpGrid);
 
             std::vector<double> vegf_field;
+
+            double pellet_angle = std::atan(double(mCorneaRadius/mPelletRadius));
             for(unsigned idx=0;idx<mpGrid->GetNumberOfPoints();idx++)
             {
                 double x_loc = mpGrid->GetPoint(idx).Convert(reference_length)[0];
@@ -683,7 +690,11 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
                 double z_loc = mpGrid->GetPoint(idx).Convert(reference_length)[2];
                 double radius = std::sqrt(x_loc*x_loc + y_loc*y_loc);
                 double angle = std::atan(z_loc/radius);
-                double frac = angle/(M_PI/2.0);
+                double frac = angle/pellet_angle;
+                if(frac>1.0)
+                {
+                    frac = 1.0;
+                }
                 vegf_field.push_back(frac*double(mPelletConcentration/reference_concentration));
             }
             mpSolver->SetLabel("vegf");
@@ -1069,7 +1080,6 @@ void CornealMicropocketSimulation<DIM>::DoSampling(std::ofstream& rStream,
             }
         }
     }
-
     rStream << "\n";
     rStream.flush();
 }
@@ -1077,10 +1087,10 @@ void CornealMicropocketSimulation<DIM>::DoSampling(std::ofstream& rStream,
 template<unsigned DIM>
 void CornealMicropocketSimulation<DIM>::Run()
 {
+
     SimulationTime::Instance()->SetStartTime(0.0);
     RandomNumberGenerator::Instance()->Reseed(mRandomSeed);
-    std::shared_ptr<OutputFileHandler> p_file_handler =
-            std::shared_ptr<OutputFileHandler>(new OutputFileHandler(mWorkDirectory, true));
+    auto p_file_handler = std::make_shared<OutputFileHandler>(mWorkDirectory, true);
 
     // self.parameter_collection.save(file_handler.GetOutputDirectoryFullPath() + "/adopted_parameter_collection.p")
     std::cout << "Running Simulation in: " << p_file_handler->GetOutputDirectoryFullPath() << std::endl;
@@ -1091,8 +1101,8 @@ void CornealMicropocketSimulation<DIM>::Run()
 
     // Initialize length scales
     QLength reference_length = 1_um;
-    QTime reference_time = 3600.0*unit::seconds;
-    QConcentration reference_concentration = 1.e-6*unit::mole_per_metre_cubed;
+    QTime reference_time = 1_h;
+    QConcentration reference_concentration = 1_nM;
     BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
     BaseUnits::Instance()->SetReferenceTimeScale(reference_time);
     BaseUnits::Instance()->SetReferenceConcentrationScale(reference_concentration);
@@ -1100,18 +1110,18 @@ void CornealMicropocketSimulation<DIM>::Run()
     // Set up domain, grid, vessel network and pde solver
     SetUpDomain();
     SetUpGrid();
+
     if(!mUsePdeOnly)
     {
         SetUpVesselNetwork();
     }
     SetUpSolver();
-    std::shared_ptr<AngiogenesisSolver<DIM> > p_angiogenesis_solver =
-            AngiogenesisSolver<DIM>::Create();
+
+    auto p_angiogenesis_solver = AngiogenesisSolver<DIM>::Create();
 
     if(!mUsePdeOnly)
     {
-        std::shared_ptr<OffLatticeMigrationRule<DIM> > p_migration_rule =
-                OffLatticeMigrationRule<DIM>::Create();
+        auto p_migration_rule = OffLatticeMigrationRule<DIM>::Create();
         p_migration_rule->SetDiscreteContinuumSolver(mpSolver);
         p_migration_rule->SetNetwork(mpNetwork);
         p_migration_rule->SetAttractionStrength(mAttractionStrength);
@@ -1119,8 +1129,7 @@ void CornealMicropocketSimulation<DIM>::Run()
         p_migration_rule->SetPersistenceAngleSdv((mPersistenceAngle/180.0)*M_PI);
         p_migration_rule->SetSproutingVelocity(mSproutVelocity);
 
-        std::shared_ptr<OffLatticeSproutingRule<DIM> > p_sprouting_rule =
-                OffLatticeSproutingRule<DIM>::Create();
+        auto p_sprouting_rule = OffLatticeSproutingRule<DIM>::Create();
         p_sprouting_rule->SetDiscreteContinuumSolver(mpSolver);
         p_sprouting_rule->SetVesselNetwork(mpNetwork);
         p_sprouting_rule->SetSproutingProbability(mSproutingProbability);
@@ -1152,8 +1161,7 @@ void CornealMicropocketSimulation<DIM>::Run()
     {
         for(unsigned idx=0;idx<output_density_quantities.size();idx++)
         {
-            std::shared_ptr<std::ofstream > p_output_file =
-                    std::shared_ptr<std::ofstream >(new std::ofstream);
+            auto p_output_file = std::make_shared<std::ofstream >();
             std::string file_path = p_file_handler->GetOutputDirectoryFullPath()+"Sampled_" +
                     output_density_quantities[idx] + "_density.txt";
             p_output_file->open(file_path.c_str());
@@ -1217,19 +1225,35 @@ void CornealMicropocketSimulation<DIM>::Run()
 
         if(!mUseFixedGradient)
         {
-            std::shared_ptr<CoupledLumpedSystemFiniteElementSolver<DIM> > p_fe_solver =
+            auto p_fe_solver =
                         std::dynamic_pointer_cast<CoupledLumpedSystemFiniteElementSolver<DIM> >(this->mpSolver);
-
-            p_fe_solver->SetStartTime(old_time);
-            if(time==old_time)
+            if(p_fe_solver)
             {
-                p_fe_solver->SetEndTime(time+mPdeTimeIncrement);
+                p_fe_solver->SetStartTime(old_time);
+                if(time==old_time)
+                {
+                    p_fe_solver->SetEndTime(time+mPdeTimeIncrement);
+                }
+                else
+                {
+                    p_fe_solver->SetEndTime(time);
+                }
             }
-            else
+            auto p_fd_solver =
+                        std::dynamic_pointer_cast<CoupledLumpedSystemFiniteDifferenceSolver<DIM> >(this->mpSolver);
+            if(p_fd_solver)
             {
-                p_fe_solver->SetEndTime(time);
+                p_fd_solver->SetStartTime(old_time);
+                if(time==old_time)
+                {
+                    p_fd_solver->SetEndTime(time+mPdeTimeIncrement);
+                }
+                else
+                {
+                    p_fd_solver->SetEndTime(time);
+                }
             }
-            mpSolver->SetFileName("Vegf_Solution" + boost::lexical_cast<std::string>(elapsed_time));
+            mpSolver->SetFileName("Vegf_Solution" + std::to_string(int(elapsed_time)));
             mpSolver->Solve();
         }
 
@@ -1245,7 +1269,7 @@ void CornealMicropocketSimulation<DIM>::Run()
                 DensityMap<DIM> density_map;
                 density_map.SetGrid(mpSamplingGrid);
                 density_map.SetVesselNetwork(mpNetwork);
-                std::shared_ptr<FunctionMap<DIM> > p_density_map_result = FunctionMap<DIM>::Create();
+                auto p_density_map_result = FunctionMap<DIM>::Create();
                 p_density_map_result->SetGrid(mpSamplingGrid);
                 p_density_map_result->SetVesselNetwork(mpNetwork);
                 p_density_map_result->SetFileHandler(p_file_handler);
@@ -1253,7 +1277,7 @@ void CornealMicropocketSimulation<DIM>::Run()
                 for(unsigned idx=0;idx<output_density_quantities.size();idx++)
                 {
                     p_density_map_result->SetFileName("/" + output_density_quantities[idx] + "_Density" +
-                            boost::lexical_cast<std::string>(elapsed_time));
+                            std::to_string(int(elapsed_time)));
                     if(output_density_quantities[idx]=="Line")
                     {
                         if(mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D)
@@ -1293,7 +1317,7 @@ void CornealMicropocketSimulation<DIM>::Run()
             }
             network_writer.SetFileName(
                     p_file_handler->GetOutputDirectoryFullPath() + "/vessel_network_" +
-                    boost::lexical_cast<std::string>(elapsed_time) + ".vtp");
+                    std::to_string(int(elapsed_time)) + ".vtp");
             network_writer.SetVesselNetwork(mpNetwork);
             network_writer.Write();
             p_angiogenesis_solver->Increment();

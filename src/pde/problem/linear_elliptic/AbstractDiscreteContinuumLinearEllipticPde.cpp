@@ -46,7 +46,7 @@ AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::AbstractDisc
             mDiscreteConstantSourceStrengths(),
             mDiscreteLinearSourceStrengths()
 {
-    std::cout << "middle:" << this->mDiscreteSources.size() << std::endl;
+
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
