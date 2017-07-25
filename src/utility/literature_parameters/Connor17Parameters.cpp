@@ -105,7 +105,7 @@ const std::shared_ptr<ParameterInstance<QMolarFlowRate> > Connor17Parameters::mp
                                                                                    connor_bib_info));
 
 const std::shared_ptr<ParameterInstance<QConcentration> > Connor17Parameters::mpVegfAtHalfReceptorOccupancy =
-        std::shared_ptr<ParameterInstance<QConcentration> >(new ParameterInstance<QConcentration> ((6.5e-10*unit::mole_per_metre_cubed),
+        std::shared_ptr<ParameterInstance<QConcentration> >(new ParameterInstance<QConcentration> ((6.5e-7*unit::mole_per_metre_cubed),
                                                                                    "Connor17_VegfAtHalfReceptorOccupancy;",
                                                                                    "VEGF at half receptor occupancy",
                                                                                    "$v_{50}$",

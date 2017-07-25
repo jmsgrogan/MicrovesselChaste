@@ -161,20 +161,20 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
     // Move any nodes marked as migrating, either new sprouts or tips
     std::vector<VesselNodePtr<DIM> > nodes = mpNetwork->GetNodes();
     std::vector<VesselNodePtr<DIM> > tips;
-    for (unsigned idx = 0; idx < nodes.size(); idx++)
+    for(auto& node:nodes)
     {
         if (sprouting)
         {
-            if (nodes[idx]->IsMigrating() && nodes[idx]->GetNumberOfSegments() == 2)
+            if (node->IsMigrating() && node->GetNumberOfSegments() == 2)
             {
-                tips.push_back(nodes[idx]);
+                tips.push_back(node);
             }
         }
         else
         {
-            if (nodes[idx]->IsMigrating() && nodes[idx]->GetNumberOfSegments() == 1)
+            if (node->IsMigrating() && node->GetNumberOfSegments() == 1)
             {
-                tips.push_back(nodes[idx]);
+                tips.push_back(node);
             }
         }
     }
@@ -233,7 +233,7 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
         std::vector<bool> candidate_tips_inside_domain(tips.size(), true);
         for (unsigned idx = 0; idx < tips.size(); idx++)
         {
-            c_vector<double, 3> loc = (tips[idx]->rGetLocation() + movement_vectors[idx]).Convert(mReferenceLength);
+            c_vector<double, 3> loc = (tips[idx]->rGetLocation() + movement_vectors[idx]).Convert3(mReferenceLength);
             candidate_tip_locations->InsertNextPoint(&loc[0]);
         }
         if (mpBoundingDomain)
@@ -261,7 +261,7 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
                     }
                     else
                     {
-                        VesselNodePtr<DIM> p_new_node = VesselNode<DIM>::Create(tips[idx]);
+                        auto p_new_node = VesselNode<DIM>::Create(tips[idx]);
                         p_new_node->SetLocation(dimensional_loc);
                         mpNetwork->ExtendVessel(tips[idx]->GetSegment(0)->GetVessel(), tips[idx], p_new_node);
                         tips[idx]->SetIsMigrating(false);

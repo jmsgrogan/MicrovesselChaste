@@ -297,14 +297,13 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
         unsigned num_divisions_y = 20;
         double azimuth_angle = 1.0 * M_PI;
         double polar_angle = 0.999 * M_PI;
-
         mpDomain = p_generator->GenerateHemisphere(mCorneaRadius, mCorneaThickness,
                 num_divisions_x, num_divisions_y, azimuth_angle, polar_angle);
 
         if(mUsePellet)
         {
             auto p_pellet_domain = Part<DIM>::Create();
-            QLength gap = (mCorneaThickness - mPelletThickness)/(2.0)/4.0;
+            QLength gap = (mCorneaThickness - mPelletThickness)/8.0;
             QLength base = mCorneaRadius + gap - mCorneaThickness;
 
             p_pellet_domain->AddCylinder(mPelletRadius, mPelletThickness, Vertex<DIM>(0_m, 0_m, base));
@@ -312,7 +311,6 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
 
             double height_fraction = double((mPelletHeight+mPelletRadius+ mLimbalOffset)/mCorneaRadius);
             double rotation_angle = std::acos(std::ceil(height_fraction - 0.5));
-
             Vertex<DIM> pellet_centre(0_m, 0_m, base + mPelletThickness/2.0);
             c_vector<double, 3> axis;
             axis[0] = 0.0;
@@ -343,7 +341,7 @@ std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulatio
             {
                 mpSamplingGrid = RegularGrid<DIM>::Create();
                 auto p_regular_grid = std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpSamplingGrid);
-                p_regular_grid->GenerateFromPart(mpDomain, mGridSpacing*3.0);
+                p_regular_grid->GenerateFromPart(mpDomain, mCorneaThickness);
             }
             else
             {
@@ -360,7 +358,7 @@ std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulatio
             {
                 if(mSampling)
                 {
-                    generator.SetMaxElementArea(mElementArea2d*3.0);
+                    generator.SetMaxElementArea(mElementArea2d*12.0); // was 3
                 }
                 else
                 {
@@ -371,7 +369,7 @@ std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulatio
             {
                 if(mSampling)
                 {
-                    generator.SetMaxElementArea(mElementArea3d*40.0);
+                    generator.SetMaxElementArea(mElementArea3d*300.0);
                 }
                 else
                 {
@@ -389,7 +387,8 @@ std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulatio
             }
         }
     }
-    else if(mDomainType == DomainType::CIRCLE_2D or mDomainType == DomainType::CIRCLE_3D or
+    else if(mDomainType == DomainType::CIRCLE_2D or
+            mDomainType == DomainType::CIRCLE_3D or
             mDomainType == DomainType::HEMISPHERE)
     {
         DiscreteContinuumMeshGenerator<DIM, DIM> generator;
@@ -398,7 +397,7 @@ std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulatio
         {
             if(mSampling)
             {
-                generator.SetMaxElementArea(mElementArea2d*3.0);
+                generator.SetMaxElementArea(mElementArea2d*12.0);
             }
             else
             {
@@ -409,7 +408,7 @@ std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulatio
         {
             if(mSampling)
             {
-                generator.SetMaxElementArea(mElementArea3d*40.0);
+                generator.SetMaxElementArea(mElementArea3d*300.0);
             }
             else
             {
@@ -681,7 +680,6 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
             mpSolver->SetGrid(mpGrid);
 
             std::vector<double> vegf_field;
-
             double pellet_angle = std::atan(double(mCorneaRadius/mPelletRadius));
             for(unsigned idx=0;idx<mpGrid->GetNumberOfPoints();idx++)
             {
@@ -811,7 +809,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
         double pellet_angle = std::asin(double(mPelletHeight/mCorneaRadius));
         double offset_angle = std::asin(double(mLimbalOffset/mCorneaRadius));
 
-        QLength y_extent = mCorneaRadius*(pellet_angle-offset_angle);
+        QLength y_extent = mCorneaRadius*(pellet_angle);
         mNumSampleY = int(float(y_extent/mSampleSpacingY)) + 1;
         mNumSampleZ = int(float(mCorneaThickness/mSampleSpacingZ)) + 1;
 
@@ -820,8 +818,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
             for(unsigned idx=0;idx<mNumSampleY;idx++)
             {
                 vtkSmartPointer<vtkPoints> p_sample_points = vtkSmartPointer<vtkPoints>::New();
-                double current_angle = offset_angle +
-                        double(idx)*(pellet_angle-offset_angle)/double(mNumSampleY);
+                double current_angle = offset_angle + double(idx)*pellet_angle/double(mNumSampleY);
                 QLength sample_offset_from_outside = double(kdx)*mSampleSpacingZ;
                 QLength current_radius =
                         (mCorneaRadius-sample_offset_from_outside)*std::cos(current_angle);
@@ -1177,7 +1174,7 @@ void CornealMicropocketSimulation<DIM>::Run()
                 else if(mDomainType == DomainType::HEMISPHERE)
                 {
                     z_coord = mSampleLines[jdx]->GetPoint(0)[2];
-                    y_coord = (mCorneaRadius/reference_length)*std::atan(z_coord*reference_length/mCorneaRadius);
+                    y_coord = (mCorneaRadius/reference_length)*std::asin(z_coord*reference_length/mCorneaRadius);
                 }
                 else
                 {
@@ -1205,7 +1202,7 @@ void CornealMicropocketSimulation<DIM>::Run()
         else if(mDomainType == DomainType::HEMISPHERE)
         {
             z_coord = mSampleLines[jdx]->GetPoint(0)[2];
-            y_coord = (mCorneaRadius/reference_length)*std::atan(z_coord*reference_length/mCorneaRadius);
+            y_coord = (mCorneaRadius/reference_length)*std::asin(z_coord*reference_length/mCorneaRadius);
         }
         else
         {
@@ -1302,13 +1299,23 @@ void CornealMicropocketSimulation<DIM>::Run()
                     }
                     if(output_density_quantities[idx]=="Branch")
                     {
+                        std::vector<double> line_density = density_map.rGetVesselLineDensity();
+                        std::vector<double> branch_density = density_map.rGetVesselBranchDensity();
+                        std::vector<double> norm_branch_density(branch_density.size(), 0.0);
+                        for(unsigned idx=0;idx<branch_density.size();idx++)
+                        {
+                            if(line_density[idx]>1.e-4)
+                            {
+                                norm_branch_density[idx] = branch_density[idx]/line_density[idx];
+                            }
+                        }
                         if(mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D)
                         {
-                            p_density_map_result->UpdateSolution(density_map.rGetVesselBranchDensity());
+                            p_density_map_result->UpdateSolution(norm_branch_density);
                         }
                         else
                         {
-                            p_density_map_result->UpdateElementSolution(density_map.rGetVesselBranchDensity());
+                            p_density_map_result->UpdateElementSolution(norm_branch_density);
                         }
                     }
                     p_density_map_result->Write();

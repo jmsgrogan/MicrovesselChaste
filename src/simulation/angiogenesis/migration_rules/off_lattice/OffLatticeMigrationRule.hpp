@@ -92,11 +92,6 @@ class OffLatticeMigrationRule : public AbstractMigrationRule<DIM>
     double mAttractionStrength;
 
     /**
-     * Length of probe into solution
-     */
-    QLength mProbeLength;
-
-    /**
      * Length beyond which there is no mutual attraction
      */
     QLength mCriticalMutualAttractionLength;

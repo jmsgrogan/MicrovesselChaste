@@ -39,19 +39,19 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "UblasIncludes.hpp"
 #include "UblasCustomFunctions.hpp"
 #include "BaseUnits.hpp"
-#include "Owen11Parameters.hpp"
+#include "Connor17Parameters.hpp"
 
 template<unsigned DIM>
 OffLatticeSproutingRule<DIM>::OffLatticeSproutingRule()
     : AbstractSproutingRule<DIM>(),
       mTipExclusionRadius(80_um),
-      mHalfMaxVegf(Owen11Parameters::mpVegfConventrationAtHalfMaxProbSprouting->GetValue("Owen2011SproutingRule")),
+      mHalfMaxVegf(Connor17Parameters::mpVegfAtHalfReceptorOccupancy->GetValue("OffLatticeSproutingRule")),
       mVegfField()
 {
     // Owen11 equation is dimensionally inconsistent as it includes an extra vessel surface area term. In order to
     // have a similar magnitude multiply this value by a typical vessel surface area = 2*pi*R*L
     // = 2*pi*15*40
-    this->mSproutingProbability = Owen11Parameters::mpMaximumSproutingRate->GetValue("Owen2011SproutingRule")*2.0*M_PI*15.0*40.0;
+    this->mSproutingProbability = Owen11Parameters::mpMaximumSproutingRate->GetValue("OffLatticeSproutingRule")*2.0*M_PI*15.0*40.0;
     this->mTipExclusionRadius = 80_um;
 }
 
@@ -180,5 +180,5 @@ void OffLatticeSproutingRule<DIM>::SetTipExclusionRadius(QLength exclusionRadius
 }
 
 // Explicit instantiation
-template class OffLatticeSproutingRule<2> ;
-template class OffLatticeSproutingRule<3> ;
+template class OffLatticeSproutingRule<2>;
+template class OffLatticeSproutingRule<3>;

@@ -53,11 +53,10 @@ OffLatticeMigrationRule<DIM>::OffLatticeMigrationRule()
       mGlobalZ(unit_vector<double>(3,2)),
       mMeanAngles(std::vector<QAngle >(3, 0.0*unit::radians)),
       mSdvAngles(std::vector<QAngle >(3, M_PI/6.0*unit::radians)), //formerly pi/18
-      mVelocity(20.0 *(1.e-6/3600.0) * unit::metre_per_second),
+      mVelocity(20.0 * unit::microns_per_hour),
       mChemotacticStrength(0.6),
       mAttractionStrength(0.0), // was 1.0
-      mProbeLength(5.0 * 1_um),
-      mCriticalMutualAttractionLength(100.0_um),
+      mCriticalMutualAttractionLength(100_um),
       mSurfaceRepulsion(true),
       mNumGradientEvaluationDivisions(8),
       mpDomainDistanceMap()
@@ -479,20 +478,12 @@ std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(
     std::vector<c_vector<double, 3> > solution_gradients(rNodes.size(), zero_vector<double>(3));
     vtkSmartPointer<vtkPoints> p_probe_locations = vtkSmartPointer<vtkPoints>::New();
 
-    c_vector<double, DIM> current_loc;
     c_vector<double, DIM> current_dir;
     Vertex<DIM> currentDirection;
-    for(unsigned idx=0; idx<rNodes.size(); idx++)
+    for(auto& node:rNodes)
     {
-        current_loc = rNodes[idx]->rGetLocation().Convert(reference_length);
-        if(DIM==3)
-        {
-            p_probe_locations->InsertNextPoint(&current_loc[0]);
-        }
-        else
-        {
-            p_probe_locations->InsertNextPoint(current_loc[0], current_loc[1], 0.0);
-        }
+        c_vector<double, 3> current_loc = node->rGetLocation().Convert3(reference_length);
+        p_probe_locations->InsertNextPoint(&current_loc[0]);
     }
     if(this->mpSolver)
     {
@@ -502,24 +493,16 @@ std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(
             solution_gradients = this->mpSolver->GetSolutionGradients(p_probe_locations);
         }
     }
-    std::vector<bool> candidate_locations_inside_domain(rNodes.size(), true);
-    if(this->mpSolver)
-    {
-        if (this->mpBoundingDomain)
-        {
-            candidate_locations_inside_domain = this->mpBoundingDomain->IsPointInPart(p_probe_locations);
-        }
-    }
 
     // Decide on the sprout directions
-    for(unsigned idx=0; idx<rNodes.size(); idx++)
+    unsigned counter=0;
+    for(auto& node:rNodes)
     {
-        current_loc = rNodes[idx]->rGetLocation().Convert(reference_length);
         c_vector<double, DIM> new_direction = zero_vector<double>(DIM);
 
         // Get the segment tangent
-        c_vector<double, DIM> dir1 = rNodes[idx]->GetSegment(0)->GetUnitTangent();
-        c_vector<double, DIM> dir2 = rNodes[idx]->GetSegment(1)->GetUnitTangent();
+        c_vector<double, DIM> dir1 = node->GetSegment(0)->GetUnitTangent();
+        c_vector<double, DIM> dir2 = node->GetSegment(1)->GetUnitTangent();
 
         c_vector<double, DIM> av_tangent = (dir1+dir2);
         if(norm_2(av_tangent)==0.0)
@@ -529,7 +512,7 @@ std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(
         av_tangent/=norm_2(av_tangent);
         if(this->mpSolver)
         {
-            c_vector<double, 3> gradient = solution_gradients[idx];
+            c_vector<double, 3> gradient = solution_gradients[counter];
             gradient/=norm_2(gradient);
             if(DIM==3)
             {
@@ -570,8 +553,8 @@ std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(
             else
             {
                 c_vector<double, 2> gradient_2d;
-                gradient_2d[0] = solution_gradients[idx][0];
-                gradient_2d[1] = solution_gradients[idx][1];
+                gradient_2d[0] = solution_gradients[counter][0];
+                gradient_2d[1] = solution_gradients[counter][1];
                 gradient_2d/=norm_2(gradient_2d);
                 double angle = std::acos(inner_prod(av_tangent, gradient_2d));
                 double rot_angle = M_PI/2.0;
@@ -615,6 +598,7 @@ std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(
         QTime time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
         QLength increment_length = time_increment* mVelocity;
         movement_vectors.push_back(OffsetAlongVector<DIM>(new_direction, increment_length, reference_length));
+        counter++;
     }
 
     return movement_vectors;
