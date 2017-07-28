@@ -47,8 +47,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Timer.hpp"
 #include "VesselNetworkGeometryCalculator.hpp"
 
-#include "Debug.hpp"
-
 template<unsigned DIM>
 AngiogenesisSolver<DIM>::AngiogenesisSolver() :
         mReferenceLength(BaseUnits::Instance()->GetReferenceLengthScale()),
@@ -138,7 +136,7 @@ void AngiogenesisSolver<DIM>::SetVesselGridCalculator(std::shared_ptr<GridCalcul
 }
 
 template<unsigned DIM>
-void AngiogenesisSolver<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void AngiogenesisSolver<DIM>::SetVesselNetwork(VesselNetworkPtr<DIM> pNetwork)
 {
     mpNetwork = pNetwork;
 }
@@ -204,7 +202,7 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
                 }
                 else
                 {
-                    VesselNodePtr<DIM> p_new_node = VesselNode<DIM>::Create(tips[idx]);
+                    auto p_new_node = VesselNode<DIM>::Create(tips[idx]);
                     p_new_node->SetLocation(mpGridCalculator->GetGrid()->GetGlobalCellLocation(indices[idx]));
                     mpNetwork->ExtendVessel(tips[idx]->GetSegment(0)->GetVessel(), tips[idx], p_new_node);
                     tips[idx]->SetIsMigrating(false);
@@ -228,6 +226,7 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
             mpMigrationRule->SetBoundingDomain(mpBoundingDomain);
         }
         mpMigrationRule->SetIsSprouting(sprouting);
+
         std::vector<Vertex<DIM> > movement_vectors = mpMigrationRule->GetDirections(tips);
         vtkSmartPointer<vtkPoints> candidate_tip_locations = vtkSmartPointer<vtkPoints>::New();
         std::vector<bool> candidate_tips_inside_domain(tips.size(), true);
@@ -247,7 +246,8 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
                 tips[idx]->SetIsMigrating(false);
                 continue;
             }
-            if (movement_vectors[idx].GetNorm2() > 0_m)
+            QLength movement_length = movement_vectors[idx].GetNorm2();
+            if (movement_length > 0_m)
             {
                 if (candidate_tips_inside_domain[idx])
                 {
@@ -261,11 +261,19 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
                     }
                     else
                     {
-                        auto p_new_node = VesselNode<DIM>::Create(tips[idx]);
-                        p_new_node->SetLocation(dimensional_loc);
-                        mpNetwork->ExtendVessel(tips[idx]->GetSegment(0)->GetVessel(), tips[idx], p_new_node);
-                        tips[idx]->SetIsMigrating(false);
-                        p_new_node->SetIsMigrating(true);
+                        QLength cell_length = tips[idx]->GetSegment(0)->GetCellularProperties()->GetAverageCellLengthLongitudinal();
+                        if (tips[idx]->GetSegment(0)->GetLength()+movement_length<cell_length)
+                        {
+                            tips[idx]->SetLocation(tips[idx]->rGetLocation() + movement_vectors[idx]);
+                        }
+                        else
+                        {
+                            auto p_new_node = VesselNode<DIM>::Create(tips[idx]);
+                            p_new_node->SetLocation(dimensional_loc);
+                            mpNetwork->ExtendVessel(tips[idx]->GetSegment(0)->GetVessel(), tips[idx], p_new_node);
+                            tips[idx]->SetIsMigrating(false);
+                            p_new_node->SetIsMigrating(true);
+                        }
                     }
                 }
             }

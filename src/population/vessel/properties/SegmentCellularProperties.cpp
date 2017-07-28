@@ -33,65 +33,28 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef OFFLATTICESPROUTINGRULE_HPP_
-#define OFFLATTICESPROUTINGRULE_HPP_
+#include "SegmentCellularProperties.hpp"
 
-#include <memory>
-#include <vector>
-#include <string>
-#include "AbstractSproutingRule.hpp"
-#include "VesselNode.hpp"
-
-/**
- * A simple lattice free sprouting rule based on a biased random
- * walk with weightings for tip attraction, chemotaxis and boundary
- * repulsion.
- */
 template<unsigned DIM>
-class OffLatticeSproutingRule : public AbstractSproutingRule<DIM>
+SegmentCellularProperties<DIM>::SegmentCellularProperties()
+    : AbstractVesselNetworkComponentCellularProperties<DIM>()
 {
-    /**
-     * The VEGF are which the sprouting rate per cell
-     * is half maximal
-     */
-    QConcentration mHalfMaxVegf;
+}
 
-    /**
-     * The vegf field sampled at the vessels
-     */
-    std::vector<QConcentration> mVegfField;
+template<unsigned DIM>
+SegmentCellularProperties<DIM>::~SegmentCellularProperties()
+{
+}
 
-public:
+template<unsigned DIM>
+std::map<std::string, double> SegmentCellularProperties<DIM>::GetOutputData() const
+{
+    std::map<std::string, double> output_data;
+    output_data["Segment Average Cell Length Longitudinal"] = this->GetAverageCellLengthLongitudinal()/1_m;
+    output_data["Segment Average Cell Length Circumferential"] = this->GetAverageCellLengthCircumferential()/1_m;
+    return output_data;
+}
 
-    /**
-     * Constructor.
-     */
-    OffLatticeSproutingRule();
-
-    /**
-     * Destructor.
-     */
-    virtual ~OffLatticeSproutingRule();
-
-    /**
-     * Construct a new instance of the class and return a shared pointer to it.
-     * @return a pointer to a new instance of the class
-     */
-    static std::shared_ptr<OffLatticeSproutingRule<DIM> > Create();
-
-    /**
-     * Overridden method to return nodes which may sprout
-     * @param rNodes nodes to check for sprouting
-     * @return a vector of nodes which may sprout
-     */
-    virtual std::vector<VesselNodePtr<DIM> > GetSprouts(const std::vector<VesselNodePtr<DIM> >& rNodes);
-
-    /**
-     * Set the vegf at which the sprouting rate is half maximal
-     * @param  halfMaxVegf the vegf at which the sprouting rate is half maximal
-     */
-    void SetHalfMaxVegf(QConcentration halfMaxVegf);
-
-};
-
-#endif /* OFFLATTICERANDOMNORMALSPROUTINGRULE_HPP_ */
+// Explicit instantiation
+template class SegmentCellularProperties<2>;
+template class SegmentCellularProperties<3>;

@@ -122,6 +122,11 @@ public:
     std::vector<unsigned> GetElementPartitioning();
 
     /**
+     * Overridden method to get an average node spacing
+     */
+    QLength GetSpacing();
+
+    /**
      * Set the internal vtk representation of the grid
      */
     void SetUpVtkGrid();

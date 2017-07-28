@@ -33,15 +33,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef ABSTRACTMIGRATIONRULE_HPP_
 #define ABSTRACTMIGRATIONRULE_HPP_
 
+#include <memory>
 #include <vector>
 #include <string>
 #include "VesselNode.hpp"
-#include "SmartPointers.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
 #include "AbstractCellPopulation.hpp"
 #include "GridCalculator.hpp"
@@ -66,7 +64,7 @@ protected:
     /**
      * The vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
+    VesselNetworkPtr<DIM> mpVesselNetwork;
 
     /**
      * Distinguish between sprouting and migrating events
@@ -116,14 +114,14 @@ public:
      * @param rNodes candidate sprout nodes
      * @return the sprout directions
      */
-    virtual std::vector<Vertex<DIM> > GetDirections(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
+    virtual std::vector<Vertex<DIM> > GetDirections(const std::vector<VesselNodePtr<DIM> >& rNodes);
 
     /**
      * Get the sprout indices
      * @param rNodes candidate sprout nodes
      * @return the sprout indices
      */
-    virtual std::vector<int> GetIndices(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
+    virtual std::vector<int> GetIndices(const std::vector<VesselNodePtr<DIM > >& rNodes);
 
     /**
      * Set whether this is a sprouting event
@@ -141,7 +139,7 @@ public:
      * Set the vessel network
      * @param pNetwork the vessel network
      */
-    void SetNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetNetwork(VesselNetworkPtr<DIM> pNetwork);
 
     /**
      * Set the bounding domain

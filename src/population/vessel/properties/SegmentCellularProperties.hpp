@@ -33,65 +33,44 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef OFFLATTICESPROUTINGRULE_HPP_
-#define OFFLATTICESPROUTINGRULE_HPP_
+#ifndef SEGMENTCELLULARPROPERTIES_HPP_
+#define SEGMENTCELLULARPROPERTIES_HPP_
 
-#include <memory>
-#include <vector>
 #include <string>
-#include "AbstractSproutingRule.hpp"
-#include "VesselNode.hpp"
+#include <map>
+#include <boost/enable_shared_from_this.hpp>
+#include <boost/serialization/base_object.hpp>
+#include "ChasteSerialization.hpp"
+#include "UnitCollection.hpp"
+#include "Exception.hpp"
+#include "AbstractVesselNetworkComponentCellularProperties.hpp"
 
 /**
- * A simple lattice free sprouting rule based on a biased random
- * walk with weightings for tip attraction, chemotaxis and boundary
- * repulsion.
+ * This is a class for vessel segment cellular properties.
  */
 template<unsigned DIM>
-class OffLatticeSproutingRule : public AbstractSproutingRule<DIM>
+class SegmentCellularProperties : public std::enable_shared_from_this<SegmentCellularProperties<DIM> >, public AbstractVesselNetworkComponentCellularProperties<DIM>
 {
-    /**
-     * The VEGF are which the sprouting rate per cell
-     * is half maximal
-     */
-    QConcentration mHalfMaxVegf;
-
-    /**
-     * The vegf field sampled at the vessels
-     */
-    std::vector<QConcentration> mVegfField;
 
 public:
 
     /**
-     * Constructor.
+     * Constructor
      */
-    OffLatticeSproutingRule();
+    SegmentCellularProperties();
 
     /**
-     * Destructor.
+     * Destructor
      */
-    virtual ~OffLatticeSproutingRule();
+    ~SegmentCellularProperties();
 
     /**
-     * Construct a new instance of the class and return a shared pointer to it.
-     * @return a pointer to a new instance of the class
+     * Return a map of segment data for use by the vtk writer
+     *
+     * @return a map of segment data for use by the vtk writer
      */
-    static std::shared_ptr<OffLatticeSproutingRule<DIM> > Create();
-
-    /**
-     * Overridden method to return nodes which may sprout
-     * @param rNodes nodes to check for sprouting
-     * @return a vector of nodes which may sprout
-     */
-    virtual std::vector<VesselNodePtr<DIM> > GetSprouts(const std::vector<VesselNodePtr<DIM> >& rNodes);
-
-    /**
-     * Set the vegf at which the sprouting rate is half maximal
-     * @param  halfMaxVegf the vegf at which the sprouting rate is half maximal
-     */
-    void SetHalfMaxVegf(QConcentration halfMaxVegf);
+    std::map<std::string, double> GetOutputData() const;
 
 };
 
-#endif /* OFFLATTICERANDOMNORMALSPROUTINGRULE_HPP_ */
+#endif /* SEGMENTCELLULARPROPERTIES_HPP_ */

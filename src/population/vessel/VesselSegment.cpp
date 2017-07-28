@@ -46,6 +46,7 @@ VesselSegment<DIM>::VesselSegment() :
         mNodes(),
         mVessel(std::weak_ptr<Vessel<DIM> >()),
         mpFlowProperties(std::make_shared<SegmentFlowProperties<DIM> >()),
+        mpCellularProperties(std::make_shared<SegmentCellularProperties<DIM> >()),
         mMaturity(1.0),
         mGlobalIndex(0),
         mLocalIndex(0),
@@ -64,6 +65,7 @@ VesselSegment<DIM>::VesselSegment(std::shared_ptr<VesselNode<DIM> > pNode1, std:
         mNodes(std::pair<std::shared_ptr<VesselNode<DIM> >, std::shared_ptr<VesselNode<DIM> > >(pNode1, pNode2)),
         mVessel(std::weak_ptr<Vessel<DIM> >()),
         mpFlowProperties(std::make_shared<SegmentFlowProperties<DIM> >()),
+        mpCellularProperties(std::make_shared<SegmentCellularProperties<DIM> >()),
         mMaturity(1.0),
         mGlobalIndex(0),
         mLocalIndex(0),
@@ -81,6 +83,7 @@ VesselSegment<DIM>::VesselSegment(const VesselSegment<DIM>& rSegment) :
     mNodes(rSegment.GetNodes()),
     mVessel(std::weak_ptr<Vessel<DIM> >()),
     mpFlowProperties(std::make_shared<SegmentFlowProperties<DIM> >()),
+    mpCellularProperties(std::make_shared<SegmentCellularProperties<DIM> >()),
     mMaturity(1.0),
     mGlobalIndex(0),
     mLocalIndex(0),
@@ -91,6 +94,7 @@ VesselSegment<DIM>::VesselSegment(const VesselSegment<DIM>& rSegment) :
     mOtherProcessorLocalIndex(0)
 {
     this->SetFlowProperties(*(rSegment.GetFlowProperties()));
+    this->SetCellularProperties(*(rSegment.GetCellularProperties()));
 }
 
 template<unsigned DIM>
@@ -143,6 +147,7 @@ void VesselSegment<DIM>::CopyDataFromExistingSegment(const std::shared_ptr<Vesse
     this->mOutputData = pTargetSegment->GetOutputData();
     this->SetRadius(pTargetSegment->GetRadius());
     this->SetFlowProperties(*(pTargetSegment->GetFlowProperties()));
+    this->SetCellularProperties(*(pTargetSegment->GetCellularProperties()));
 }
 
 template<unsigned DIM>
@@ -155,6 +160,12 @@ template<unsigned DIM>
 std::shared_ptr<SegmentFlowProperties<DIM> > VesselSegment<DIM>::GetFlowProperties() const
 {
     return this->mpFlowProperties;
+}
+
+template<unsigned DIM>
+std::shared_ptr<SegmentCellularProperties<DIM> > VesselSegment<DIM>::GetCellularProperties() const
+{
+    return this->mpCellularProperties;
 }
 
 template<unsigned DIM>
@@ -407,6 +418,12 @@ template<unsigned DIM>
 void VesselSegment<DIM>::SetFlowProperties(const SegmentFlowProperties<DIM> & rFlowProperties)
 {
     this->mpFlowProperties = std::shared_ptr<SegmentFlowProperties<DIM> >(new SegmentFlowProperties<DIM> (rFlowProperties));
+}
+
+template<unsigned DIM>
+void VesselSegment<DIM>::SetCellularProperties(const SegmentCellularProperties<DIM> & rProperties)
+{
+    this->mpCellularProperties = std::shared_ptr<SegmentCellularProperties<DIM> >(new SegmentCellularProperties<DIM> (rProperties));
 }
 
 template<unsigned DIM>

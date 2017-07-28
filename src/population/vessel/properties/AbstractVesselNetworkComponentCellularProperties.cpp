@@ -33,65 +33,44 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef OFFLATTICESPROUTINGRULE_HPP_
-#define OFFLATTICESPROUTINGRULE_HPP_
+#include "AbstractVesselNetworkComponentCellularProperties.hpp"
 
-#include <memory>
-#include <vector>
-#include <string>
-#include "AbstractSproutingRule.hpp"
-#include "VesselNode.hpp"
-
-/**
- * A simple lattice free sprouting rule based on a biased random
- * walk with weightings for tip attraction, chemotaxis and boundary
- * repulsion.
- */
 template<unsigned DIM>
-class OffLatticeSproutingRule : public AbstractSproutingRule<DIM>
+AbstractVesselNetworkComponentCellularProperties<DIM>::AbstractVesselNetworkComponentCellularProperties() : AbstractVesselNetworkComponentProperties<DIM>(),
+    mAverageCellLengthLongitudinal(20_um),
+    mAverageCellLengthCircumferential(2.0*M_PI*5_um)
 {
-    /**
-     * The VEGF are which the sprouting rate per cell
-     * is half maximal
-     */
-    QConcentration mHalfMaxVegf;
+}
 
-    /**
-     * The vegf field sampled at the vessels
-     */
-    std::vector<QConcentration> mVegfField;
+template<unsigned DIM>
+AbstractVesselNetworkComponentCellularProperties<DIM>::~AbstractVesselNetworkComponentCellularProperties()
+{
+}
 
-public:
+template<unsigned DIM>
+QLength AbstractVesselNetworkComponentCellularProperties<DIM>::GetAverageCellLengthLongitudinal() const
+{
+    return mAverageCellLengthLongitudinal;
+}
 
-    /**
-     * Constructor.
-     */
-    OffLatticeSproutingRule();
+template<unsigned DIM>
+QLength AbstractVesselNetworkComponentCellularProperties<DIM>::GetAverageCellLengthCircumferential() const
+{
+    return mAverageCellLengthCircumferential;
+}
 
-    /**
-     * Destructor.
-     */
-    virtual ~OffLatticeSproutingRule();
+template<unsigned DIM>
+void AbstractVesselNetworkComponentCellularProperties<DIM>::SetAverageCellLengthLongitudinal(QLength cellLength)
+{
+    mAverageCellLengthLongitudinal = cellLength;
+}
 
-    /**
-     * Construct a new instance of the class and return a shared pointer to it.
-     * @return a pointer to a new instance of the class
-     */
-    static std::shared_ptr<OffLatticeSproutingRule<DIM> > Create();
+template<unsigned DIM>
+void AbstractVesselNetworkComponentCellularProperties<DIM>::SetAverageCellLengthCircumferential(QLength cellLength)
+{
+    mAverageCellLengthCircumferential = cellLength;
+}
 
-    /**
-     * Overridden method to return nodes which may sprout
-     * @param rNodes nodes to check for sprouting
-     * @return a vector of nodes which may sprout
-     */
-    virtual std::vector<VesselNodePtr<DIM> > GetSprouts(const std::vector<VesselNodePtr<DIM> >& rNodes);
-
-    /**
-     * Set the vegf at which the sprouting rate is half maximal
-     * @param  halfMaxVegf the vegf at which the sprouting rate is half maximal
-     */
-    void SetHalfMaxVegf(QConcentration halfMaxVegf);
-
-};
-
-#endif /* OFFLATTICERANDOMNORMALSPROUTINGRULE_HPP_ */
+// Explicit instantiation
+template class AbstractVesselNetworkComponentCellularProperties<2>;
+template class AbstractVesselNetworkComponentCellularProperties<3>;

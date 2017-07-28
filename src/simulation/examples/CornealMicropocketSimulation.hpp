@@ -178,7 +178,7 @@ class CornealMicropocketSimulation
     /**
      * The tip exclusion radius
      */
-    QLength mTipExclusionRadius;
+    bool mUseTipExclusion;
 
     /**
      * Whether to do anastomosis
@@ -250,6 +250,10 @@ class CornealMicropocketSimulation
      */
     QTime mTimeStepSize;
 
+    QLength mAnastamosisRadius;
+
+    QLength mCellLength;
+
     /**
      * The run number
      */
@@ -304,6 +308,14 @@ public:
      * @return a shared pointer to a new solver
      */
     static std::shared_ptr<CornealMicropocketSimulation> Create();
+
+    void SetAnastamosisRadius(QLength radius);
+
+    QLength GetAnastamosisRadius();
+
+    void SetCellLength(QLength length);
+
+    QLength GetCellLength();
 
     void SetTipVelocity(QVelocity velocity);
 
@@ -411,7 +423,7 @@ public:
 
     void SetTimeStepSize(QTime timeStepSize);
 
-    void SetTipExclusionRadius(QLength tipExclusionRadius);
+    void SetUseTipExclusion(bool usetipexclusion);
 
     void SetTotalTime(QTime totalTime);
 

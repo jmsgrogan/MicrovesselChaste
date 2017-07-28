@@ -33,7 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
 #include "AbstractSproutingRule.hpp"
 #include "RandomNumberGenerator.hpp"
 #include "VesselSegment.hpp"
@@ -42,9 +41,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 AbstractSproutingRule<DIM>::AbstractSproutingRule()
     :mpSolver(),
-     mSproutingProbability(0.00025 /(60.0*unit::seconds)),
+     mSproutingProbabilityPerCell(0.00025 *unit::per_minute),
      mpVesselNetwork(),
-     mVesselEndCutoff(0.0 * unit::metres),
+     mUseLateralInhibition(false),
+     mUseVesselEndCutoff(false),
      mOnlySproutIfPerfused(false)
 {
 
@@ -54,6 +54,12 @@ template<unsigned DIM>
 AbstractSproutingRule<DIM>::~AbstractSproutingRule()
 {
 
+}
+
+template<unsigned DIM>
+QRate AbstractSproutingRule<DIM>::GetSproutingProbability()
+{
+    return mSproutingProbabilityPerCell;
 }
 
 template<unsigned DIM>
@@ -71,39 +77,33 @@ void AbstractSproutingRule<DIM>::SetOnlySproutIfPerfused(bool onlySproutIfPerfus
 template<unsigned DIM>
 void AbstractSproutingRule<DIM>::SetSproutingProbability(QRate probability)
 {
-    mSproutingProbability = probability;
+    mSproutingProbabilityPerCell = probability;
 }
 
 template<unsigned DIM>
-void AbstractSproutingRule<DIM>::SetVesselEndCutoff(QLength cutoff)
+void AbstractSproutingRule<DIM>::SetUseVesselEndCutoff(bool cutoff)
 {
-    mVesselEndCutoff = cutoff;
+    mUseVesselEndCutoff = cutoff;
 }
 
 template<unsigned DIM>
-QRate AbstractSproutingRule<DIM>::GetSproutingProbability()
+void AbstractSproutingRule<DIM>::SetUseLateralInhibition(bool useInhibition)
 {
-    return mSproutingProbability;
+    mUseLateralInhibition = useInhibition;
 }
 
 template<unsigned DIM>
-void AbstractSproutingRule<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork)
+void AbstractSproutingRule<DIM>::SetVesselNetwork(VesselNetworkPtr<DIM> pVesselNetwork)
 {
     mpVesselNetwork = pVesselNetwork;
 }
 
 template<unsigned DIM>
-std::vector<std::shared_ptr<VesselNode<DIM> > > AbstractSproutingRule<DIM>::GetSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
-{
-    return std::vector<std::shared_ptr<VesselNode<DIM> > >();
-}
-
-template<unsigned DIM>
 void AbstractSproutingRule<DIM>::SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGrid)
 {
-
+    // Don't do anything here, this is actually set in some child classes.
 }
 
 // Explicit instantiation
-template class AbstractSproutingRule<2> ;
-template class AbstractSproutingRule<3> ;
+template class AbstractSproutingRule<2>;
+template class AbstractSproutingRule<3>;

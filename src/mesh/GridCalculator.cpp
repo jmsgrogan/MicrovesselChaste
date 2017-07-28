@@ -40,7 +40,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkSelectEnclosedPoints.h>
 #include <vtkPoints.h>
 #include <vtkCellLocator.h>
-#include <boost/lexical_cast.hpp>
 #include "PetscTools.hpp"
 #include "Exception.hpp"
 #include "GridCalculator.hpp"
@@ -91,7 +90,7 @@ std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > GridCalculator<DIM>::GetGri
 }
 
 template<unsigned DIM>
-std::shared_ptr<VesselNetwork<DIM> > GridCalculator<DIM>::GetVesselNetwork()
+VesselNetworkPtr<DIM> GridCalculator<DIM>::GetVesselNetwork()
 {
     if(!mpNetwork)
     {
@@ -129,7 +128,7 @@ std::vector<std::vector<unsigned> > GridCalculator<DIM>::GetPointMap(const std::
 }
 
 template<unsigned DIM>
-const std::vector<std::vector<std::shared_ptr<VesselNode<DIM> > > >& GridCalculator<DIM>::rGetVesselNodeMap(bool update)
+const std::vector<std::vector<VesselNodePtr<DIM> > >& GridCalculator<DIM>::rGetVesselNodeMap(bool update)
 {
     if (!update)
     {
@@ -141,18 +140,16 @@ const std::vector<std::vector<std::shared_ptr<VesselNode<DIM> > > >& GridCalcula
         EXCEPTION("A vessel network has not been set. Can not create a point node map.");
     }
 
-    std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = mpNetwork->GetNodes();
     QLength grid_length = mpGrid->GetReferenceLengthScale();
     mVesselNodeMap.clear();
-    mVesselNodeMap = std::vector<std::vector<std::shared_ptr<VesselNode<DIM> > > >(mpGrid->GetNumberOfCells());
-
-    for(unsigned idx=0;idx<nodes.size();idx++)
+    mVesselNodeMap = std::vector<std::vector<VesselNodePtr<DIM> > >(mpGrid->GetNumberOfCells());
+    for(auto& node:mpNetwork->GetNodes())
     {
-        c_vector<double, 3> loc = nodes[idx]->rGetLocation().Convert3(grid_length);
+        c_vector<double, 3> loc = node->rGetLocation().Convert3(grid_length);
         int cell_id = mpGrid->GetVtkCellLocator()->FindCell(&loc[0]);
         if(cell_id>=0)
         {
-            mVesselNodeMap[cell_id].push_back(nodes[idx]);
+            mVesselNodeMap[cell_id].push_back(node);
         }
     }
     return mVesselNodeMap;
@@ -230,16 +227,15 @@ bool GridCalculator<DIM>::IsSegmentAtLocation(unsigned index, bool update)
 
     if(index>=mSegmentMap.size())
     {
-        std::string request_index = boost::lexical_cast<std::string>(index);
-        std::string grid_size = boost::lexical_cast<std::string>(mSegmentMap.size());
+        std::string request_index = std::to_string(index);
+        std::string grid_size = std::to_string(mSegmentMap.size());
         EXCEPTION("The requested grid index " + request_index + "  is greater than the segment map size " + grid_size);
     }
-
     return mSegmentMap[index].size()>0;
 }
 
 template<unsigned DIM>
-const std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > >& GridCalculator<DIM>::rGetSegmentMap(
+const std::vector<std::vector<VesselSegmentPtr<DIM> > >& GridCalculator<DIM>::rGetSegmentMap(
         bool update, bool useVesselSurface)
 {
     if (!update)
@@ -255,19 +251,18 @@ const std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > >& GridCalc
     mpGrid->GetGlobalVtkGrid();
 
     mSegmentMap.clear();
-    mSegmentMap = std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > >(mpGrid->GetNumberOfCells());
+    mSegmentMap = std::vector<std::vector<VesselSegmentPtr<DIM> > >(mpGrid->GetNumberOfCells());
     QLength grid_length = mpGrid->GetReferenceLengthScale();
 
-    std::vector<std::shared_ptr<VesselSegment<DIM> > > segments = mpNetwork->GetVesselSegments();
-    for (unsigned jdx = 0; jdx < segments.size(); jdx++)
+    std::vector<VesselSegmentPtr<DIM> > segments = mpNetwork->GetVesselSegments();
+    for (auto& segment:segments)
     {
-        c_vector<double, 3> loc1 = segments[jdx]->GetNode(0)->rGetLocation().Convert3(grid_length);
-        c_vector<double, 3> loc2 = segments[jdx]->GetNode(1)->rGetLocation().Convert3(grid_length);
-
+        c_vector<double, 3> loc1 = segment->GetNode(0)->rGetLocation().Convert3(grid_length);
+        c_vector<double, 3> loc2 = segment->GetNode(1)->rGetLocation().Convert3(grid_length);
         vtkSmartPointer<vtkIdList> p_id_list = vtkSmartPointer<vtkIdList>::New();
         if(useVesselSurface)
         {
-            double dimensionless_radius = segments[jdx]->GetRadius()/grid_length;
+            double dimensionless_radius = segment->GetRadius()/grid_length;
             vtkSmartPointer<vtkLineSource> p_line_source = vtkSmartPointer<vtkLineSource>::New();
             p_line_source->SetPoint1(&loc1[0]);
             p_line_source->SetPoint2(&loc2[0]);
@@ -291,7 +286,7 @@ const std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > >& GridCalc
             {
                 if(p_select_encolsed->IsInside(idx))
                 {
-                    mSegmentMap[idx].push_back(segments[jdx]);
+                    mSegmentMap[idx].push_back(segment);
                 }
             }
         }
@@ -301,7 +296,7 @@ const std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > >& GridCalc
             unsigned num_intersections = p_id_list->GetNumberOfIds();
             for(unsigned idx=0; idx<num_intersections; idx++)
             {
-                mSegmentMap[p_id_list->GetId(idx)].push_back(segments[jdx]);
+                mSegmentMap[p_id_list->GetId(idx)].push_back(segment);
             }
         }
     }
@@ -327,11 +322,11 @@ void GridCalculator<DIM>::SetGrid(std::shared_ptr<AbstractDiscreteContinuumGrid<
 }
 
 template<unsigned DIM>
-void GridCalculator<DIM>::SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void GridCalculator<DIM>::SetVesselNetwork(VesselNetworkPtr<DIM> pNetwork)
 {
     mpNetwork = pNetwork;
 }
 
 // Explicit instantiation
-template class GridCalculator<2> ;
-template class GridCalculator<3> ;
+template class GridCalculator<2>;
+template class GridCalculator<3>;

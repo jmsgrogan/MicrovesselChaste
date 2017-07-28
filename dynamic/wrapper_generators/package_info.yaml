@@ -10,8 +10,6 @@ source_includes:
   - vtkPolyData.h
 smart_ptr_type: std::shared_ptr
 calldef_excludes:
-  - ::Vec
-  - ::Mat
   - double const [3] &
   - double [3] &
 common_include_file: OFF
@@ -30,186 +28,186 @@ pointer_call_policy: reference
 reference_call_policy: reference_internal 
     
 modules:
-#- name: geometry
-#  source_locations:
-#  - projects/MicrovesselChaste/src/geometry
-#  classes:
-#  - name: Vertex
-#    constructor_arg_type_excludes:
-#      - double const [3] &
-#      - double [3] &  
-#  - name: Polygon
-#  - name: Facet
-#  - name: GeometryFormat
-#    source_file: GeometryWriter.hpp  
-#  - name: Part
-#  - name: MappableGridGenerator
-#  - name: NetworkToSurface
-#  - name: VesselSurfaceGenerator
-#  - name: BoundaryExtractor
-#  - name: SurfaceCleaner 
-#- name: mesh
-#  source_locations:
-#  - projects/MicrovesselChaste/src/mesh
-#  classes:
-#  - name: AbstractMesh
-#  - name: AbstractTetrahedralMesh
-#  - name: AbstractOdeSystem
-#  - name: TetrahedralMesh
-#    excluded_methods: 
-#    - FreeTriangulateIo
-#    - InitialiseTriangulateIo
-#  - name: AbstractDiscreteContinuumGrid
-#  - name: DiscreteContinuumMesh
-#  - name: DiscreteContinuumMeshGenerator
-#    source_includes:
-#    - DiscreteContinuumMesh.hpp
-#  - name: GridCalculator
-#  - name: MeshReader
-#  - name: MeshFormat
-#  - name: MultiFormatMeshWriter
-#  - name: RegularGrid
-#  - name: RegularGridWriter
-#- name: cell
-#  source_locations:
-#  - projects/MicrovesselChaste/src/population/cell
-#  classes:
-#  - name: CancerCellMutationState
-#  - name: QuiescentCancerCellMutationState
-#  - name: StalkCellMutationState
-#  - name: TipCellMutationState
-#  - name: VesselCellMutationState
-#  - name: MacrophageMutationState
-#  - name: Owen2011OxygenBasedCellCycleModel
-#  - name: Owen11CellPopulationGenerator
-#  - name: CaBasedCellPopulation
-#  - name: LQRadiotherapyCellKiller
-#  - name: Owen11CaBasedDivisionRule
-#  - name: Owen11CaUpdateRule
-#- name: angiogenesis
-#  source_locations:
-#  - projects/MicrovesselChaste/src/simualtion/angiogenesis
-#  classes:
-#  - name: AbstractMigrationRule
-#  - name: AbstractSproutingRule  
-#  - name: AngiogenesisSolver
-#  - name: OffLatticeMigrationRule
-#  - name: OffLatticeSproutingRule
-#  - name: LatticeBasedMigrationRule
-#  - name: LatticeBasedSproutingRule
-#  - name: TipAttractionLatticeBasedMigrationRule
-#  - name: Owen2011MigrationRule
-#  - name: Owen2011SproutingRule
-#  - name: CellPopulationMigrationRule
-#  - name: RegressionSolver
-#  - name: WallShearStressBasedRegressionSolver
-#- name: flow
-#  source_locations:
-#  - projects/MicrovesselChaste/src/simualtion/flow
-#  classes:
-#  - name: FlowSolver
-#  - name: AbstractVesselNetworkCalculator
-#  - name: WallShearStressCalculator
-#  - name: VesselImpedanceCalculator
-#  - name: MechanicalStimulusCalculator
-#  - name: MetabolicStimulusCalculator
-#  - name: RadiusCalculator
-#  - name: ShrinkingStimulusCalculator
-#  - name: ViscosityCalculator
-#  - name: AbstractStructuralAdaptationSolver
-#  - name: StructuralAdaptationSolver
-#  - name: AbstractHaematocritSolver
-#  - name: AlarconHaematocritSolver
-#  - name: ConstantHaematocritSolver
-#  - name: BetteridgeHaematocritSolver
-#- name: pde
-#  source_locations:
-#  - projects/MicrovesselChaste/src/pde
-#  classes:
-#  - name: DiscreteContinuumBoundaryCondition
-#    excluded_methods:
-#    - UpdateBoundaryConditions
-#    - GetValue
-#  - name: BoundaryConditionType
-#  - name: BoundaryConditionSource
-#  - name: DiscreteSource
-#  - name: CellStateDependentDiscreteSource
-#  - name: CellBasedDiscreteSource
-#  - name: SolutionDependentDiscreteSource
-#  - name: VesselBasedDiscreteSource
-#  - name: AbstractDiscreteContinuumPde
-#  - name: AbstractDiscreteContinuumLinearEllipticPde
-#  - name: DiscreteContinuumLinearEllipticPde
-#  - name: AbstractDiscreteContinuumNonLinearEllipticPde
-#  - name: MichaelisMentenSteadyStateDiffusionReactionPde
-#  - name: AbstractDiscreteContinuumParabolicPde
-#  - name: ParabolicDiffusionReactionPde
-#  - name: CoupledVegfPelletDiffusionReactionPde
-#  - name: AbstractDiscreteContinuumSolver
-#    source_includes:
-#    - AbstractDiscreteContinuumPde.hpp
-#  - name: AbstractRegularGridDiscreteContinuumSolver
-#  - name: AbstractUnstructuredGridDiscreteContinuumSolver
-#  - name: AbstractMixedGridDiscreteContinuumSolver
-#  - name: AbstractFiniteDifferenceSolverBase
-#    excluded_methods:
-#    - GetRGBoundaryConditions
-#  - name: SimpleLinearEllipticFiniteDifferenceSolver
-#  - name: SimpleNonLinearEllipticFiniteDifferenceSolver
-#  - name: AbstractFiniteElementSolverBase
-#  - name: SimpleLinearEllipticFiniteElementSolver
-#  - name: SimpleNonLinearEllipticFiniteElementSolver
-#  - name: SimpleParabolicFiniteElementSolver
-#  - name: SimpleParabolicFiniteDifferenceSolver
-#  - name: CoupledLumpedSystemFiniteElementSolver
-#  - name: CoupledLumpedSystemFiniteDifferenceSolver
-#  - name: FunctionMap
-#  - name: DensityMap
-#- name: simulation
-#  source_locations:
-#  - projects/MicrovesselChaste/src/simulation
-#  classes:  
-#  - name: DomainType
-#  - name: MicrovesselSolver
-#  - name: MicrovesselSimulationModifier
-#  - name: AbstractMicrovesselModifier
-#  - name: VtkSceneMicrovesselModifier
-#  - name: Owen2011TrackingModifier
-#  - name: CornealMicropocketSimulation
-#- name: vessel
-#  source_locations:
-#  - projects/MicrovesselChaste/src/population/vessel
-#  classes:  
-#  - name: AbstractVesselNetworkComponentProperties
-#  - name: AbstractVesselNetworkComponentFlowProperties
-#  - name: AbstractVesselNetworkComponentChemicalProperties
-#  - name: AbstractVesselNetworkComponent
-#  - name: NodeFlowProperties
-#  - name: SegmentFlowProperties
-#  - name: VesselFlowProperties
-#  - name: VesselNode
-#    constructor_arg_type_excludes:  
-#    - VesselNode<2> const & 
-#    - VesselNode<3> const & 
-#  - name: VesselSegment
-#    source_includes:
-#    - VesselNode.hpp
-#    - Vessel.hpp
-#    constructor_arg_type_excludes:
-#    - VesselSegment<2> const & 
-#    - VesselSegment<3> const & 
-#  - name: Vessel
-#  - name: VesselNetwork
-#  - name: VesselNetworkVtkConverter
-#  - name: VesselNetworkPropertyManager
-#  - name: VesselNetworkPartitioner
-#  - name: VesselNetworkGenerator
-#  - name: VesselNetworkReader
-#  - name: VesselNetworkCellPopulationInteractor
-#  - name: VesselNetworkWriter
-#  - name: DistanceMap
-#  - name: VesselNetworkGeometryCalculator
-#  - name: VesselNetworkGraphCalculator
+- name: geometry
+  source_locations:
+  - projects/MicrovesselChaste/src/geometry
+  classes:
+  - name: Vertex
+    constructor_arg_type_excludes:
+      - double const [3] &
+      - double [3] &  
+  - name: Polygon
+  - name: Facet
+  - name: GeometryFormat
+    source_file: GeometryWriter.hpp  
+  - name: Part
+  - name: MappableGridGenerator
+  - name: NetworkToSurface
+  - name: VesselSurfaceGenerator
+  - name: BoundaryExtractor
+  - name: SurfaceCleaner 
+- name: mesh
+  source_locations:
+  - projects/MicrovesselChaste/src/mesh
+  classes:
+  - name: AbstractMesh
+  - name: AbstractTetrahedralMesh
+  - name: AbstractOdeSystem
+  - name: TetrahedralMesh
+    excluded_methods: 
+    - FreeTriangulateIo
+    - InitialiseTriangulateIo
+  - name: AbstractDiscreteContinuumGrid
+  - name: DiscreteContinuumMesh
+  - name: DiscreteContinuumMeshGenerator
+    source_includes:
+    - DiscreteContinuumMesh.hpp
+  - name: GridCalculator
+  - name: MeshReader
+  - name: MeshFormat
+  - name: MultiFormatMeshWriter
+  - name: RegularGrid
+  - name: RegularGridWriter
+- name: cell
+  source_locations:
+  - projects/MicrovesselChaste/src/population/cell
+  classes:
+  - name: CancerCellMutationState
+  - name: QuiescentCancerCellMutationState
+  - name: StalkCellMutationState
+  - name: TipCellMutationState
+  - name: VesselCellMutationState
+  - name: MacrophageMutationState
+  - name: Owen2011OxygenBasedCellCycleModel
+  - name: Owen11CellPopulationGenerator
+  - name: CaBasedCellPopulation
+  - name: LQRadiotherapyCellKiller
+  - name: Owen11CaBasedDivisionRule
+  - name: Owen11CaUpdateRule
+- name: angiogenesis
+  source_locations:
+  - projects/MicrovesselChaste/src/simualtion/angiogenesis
+  classes:
+  - name: AbstractMigrationRule
+  - name: AbstractSproutingRule  
+  - name: AngiogenesisSolver
+  - name: OffLatticeMigrationRule
+  - name: OffLatticeSproutingRule
+  - name: LatticeBasedMigrationRule
+  - name: LatticeBasedSproutingRule
+  - name: TipAttractionLatticeBasedMigrationRule
+  - name: Owen2011MigrationRule
+  - name: Owen2011SproutingRule
+  - name: CellPopulationMigrationRule
+  - name: RegressionSolver
+  - name: WallShearStressBasedRegressionSolver
+- name: flow
+  source_locations:
+  - projects/MicrovesselChaste/src/simualtion/flow
+  classes:
+  - name: FlowSolver
+  - name: AbstractVesselNetworkCalculator
+  - name: WallShearStressCalculator
+  - name: VesselImpedanceCalculator
+  - name: MechanicalStimulusCalculator
+  - name: MetabolicStimulusCalculator
+  - name: RadiusCalculator
+  - name: ShrinkingStimulusCalculator
+  - name: ViscosityCalculator
+  - name: AbstractStructuralAdaptationSolver
+  - name: StructuralAdaptationSolver
+  - name: AbstractHaematocritSolver
+  - name: AlarconHaematocritSolver
+  - name: ConstantHaematocritSolver
+  - name: BetteridgeHaematocritSolver
+- name: pde
+  source_locations:
+  - projects/MicrovesselChaste/src/pde
+  classes:
+  - name: DiscreteContinuumBoundaryCondition
+    excluded_methods:
+    - UpdateBoundaryConditions
+    - GetValue
+  - name: BoundaryConditionType
+  - name: BoundaryConditionSource
+  - name: DiscreteSource
+  - name: CellStateDependentDiscreteSource
+  - name: CellBasedDiscreteSource
+  - name: SolutionDependentDiscreteSource
+  - name: VesselBasedDiscreteSource
+  - name: AbstractDiscreteContinuumPde
+  - name: AbstractDiscreteContinuumLinearEllipticPde
+  - name: DiscreteContinuumLinearEllipticPde
+  - name: AbstractDiscreteContinuumNonLinearEllipticPde
+  - name: MichaelisMentenSteadyStateDiffusionReactionPde
+  - name: AbstractDiscreteContinuumParabolicPde
+  - name: ParabolicDiffusionReactionPde
+  - name: CoupledVegfPelletDiffusionReactionPde
+  - name: AbstractDiscreteContinuumSolver
+    source_includes:
+    - AbstractDiscreteContinuumPde.hpp
+  - name: AbstractRegularGridDiscreteContinuumSolver
+  - name: AbstractUnstructuredGridDiscreteContinuumSolver
+  - name: AbstractMixedGridDiscreteContinuumSolver
+  - name: AbstractFiniteDifferenceSolverBase
+    excluded_methods:
+    - GetRGBoundaryConditions
+  - name: SimpleLinearEllipticFiniteDifferenceSolver
+  - name: SimpleNonLinearEllipticFiniteDifferenceSolver
+  - name: AbstractFiniteElementSolverBase
+  - name: SimpleLinearEllipticFiniteElementSolver
+  - name: SimpleNonLinearEllipticFiniteElementSolver
+  - name: SimpleParabolicFiniteElementSolver
+  - name: SimpleParabolicFiniteDifferenceSolver
+  - name: CoupledLumpedSystemFiniteElementSolver
+  - name: CoupledLumpedSystemFiniteDifferenceSolver
+  - name: FunctionMap
+  - name: DensityMap
+- name: simulation
+  source_locations:
+  - projects/MicrovesselChaste/src/simulation
+  classes:  
+  - name: DomainType
+  - name: MicrovesselSolver
+  - name: MicrovesselSimulationModifier
+  - name: AbstractMicrovesselModifier
+  - name: VtkSceneMicrovesselModifier
+  - name: Owen2011TrackingModifier
+  - name: CornealMicropocketSimulation
+- name: vessel
+  source_locations:
+  - projects/MicrovesselChaste/src/population/vessel
+  classes:  
+  - name: AbstractVesselNetworkComponentProperties
+  - name: AbstractVesselNetworkComponentFlowProperties
+  - name: AbstractVesselNetworkComponentChemicalProperties
+  - name: AbstractVesselNetworkComponent
+  - name: NodeFlowProperties
+  - name: SegmentFlowProperties
+  - name: VesselFlowProperties
+  - name: VesselNode
+    constructor_arg_type_excludes:  
+    - VesselNode<2> const & 
+    - VesselNode<3> const & 
+  - name: VesselSegment
+    source_includes:
+    - VesselNode.hpp
+    - Vessel.hpp
+    constructor_arg_type_excludes:
+    - VesselSegment<2> const & 
+    - VesselSegment<3> const & 
+  - name: Vessel
+  - name: VesselNetwork
+  - name: VesselNetworkVtkConverter
+  - name: VesselNetworkPropertyManager
+  - name: VesselNetworkPartitioner
+  - name: VesselNetworkGenerator
+  - name: VesselNetworkReader
+  - name: VesselNetworkCellPopulationInteractor
+  - name: VesselNetworkWriter
+  - name: DistanceMap
+  - name: VesselNetworkGeometryCalculator
+  - name: VesselNetworkGraphCalculator
 - name: visualization
   source_locations:
   - projects/MicrovesselChaste/src/visualization
@@ -226,26 +224,26 @@ modules:
   - name: PartActorGenerator
   - name: RegularGridActorGenerator
   - name: VesselNetworkActorGenerator
-#- name: image
-#  source_locations:
-#  - projects/MicrovesselChaste/src/image
-#  classes:  
-#  - name: ImageReader
-#  - name: ImageToMesh
-#  - name: ImageToSurface
-#  - name: NetworkToImage
-#- name: utility
-#  source_locations:
-#  - projects/MicrovesselChaste/src/utility
-#  custom_generator: CPPWG_SOURCEROOT/projects/MicrovesselChaste/dynamic/wrapper_generators/Utilities_custom.py
-#  classes:  
-##  - name: ParameterInstance
-#  - name: BaseUnits
-##  - name: UnitCollection
-#  - name: ParameterCollection
-##  - name: BaseParameterInstance
-#  - name: Owen11Parameters
-#  - name: Connor17Parameters
-#  - name: Secomb04Parameters
-#  - name: GenericParameters
-#    source_file: UnitCollection.hpp  
+- name: image
+  source_locations:
+  - projects/MicrovesselChaste/src/image
+  classes:  
+  - name: ImageReader
+  - name: ImageToMesh
+  - name: ImageToSurface
+  - name: NetworkToImage
+- name: utility
+  source_locations:
+  - projects/MicrovesselChaste/src/utility
+  custom_generator: CPPWG_SOURCEROOT/projects/MicrovesselChaste/dynamic/wrapper_generators/Utilities_custom.py
+  classes:  
+#  - name: ParameterInstance
+  - name: BaseUnits
+#  - name: UnitCollection
+  - name: ParameterCollection
+#  - name: BaseParameterInstance
+  - name: Owen11Parameters
+  - name: Connor17Parameters
+  - name: Secomb04Parameters
+  - name: GenericParameters
+    source_file: UnitCollection.hpp  

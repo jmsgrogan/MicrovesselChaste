@@ -33,16 +33,14 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef LATTICEBASEDMIGRATIONRULE_HPP_
 #define LATTICEBASEDMIGRATIONRULE_HPP_
 
+#include <memory>
 #include <vector>
 #include <string>
 #include "AbstractMigrationRule.hpp"
 #include "VesselNode.hpp"
-#include "SmartPointers.hpp"
 
 /**
  * A simple random direction lattice based migration rule. Not physical, but useful for code testing.

@@ -33,8 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #include "AbstractMigrationRule.hpp"
 
 template<unsigned DIM>
@@ -70,13 +68,13 @@ void AbstractMigrationRule<DIM>::SetUseMooreNeighbourhood(bool useMooreNeighbour
 }
 
 template <unsigned DIM>
-std::vector<Vertex<DIM> > AbstractMigrationRule<DIM>::GetDirections(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<Vertex<DIM> > AbstractMigrationRule<DIM>::GetDirections(const std::vector<VesselNodePtr<DIM> >& rNodes)
 {
     return std::vector<Vertex<DIM> >();
 }
 
 template <unsigned DIM>
-std::vector<int> AbstractMigrationRule<DIM>::GetIndices(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<int> AbstractMigrationRule<DIM>::GetIndices(const std::vector<VesselNodePtr<DIM> >& rNodes)
 {
     return std::vector<int>();
 }
@@ -106,7 +104,7 @@ void AbstractMigrationRule<DIM>::SetDiscreteContinuumSolver(std::shared_ptr<Abst
 }
 
 template<unsigned DIM>
-void AbstractMigrationRule<DIM>::SetNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork)
+void AbstractMigrationRule<DIM>::SetNetwork(VesselNetworkPtr<DIM> pNetwork)
 {
     mpVesselNetwork = pNetwork;
 }
@@ -118,5 +116,5 @@ void AbstractMigrationRule<DIM>::SetCellPopulation(std::shared_ptr<AbstractCellP
 }
 
 // Explicit instantiation
-template class AbstractMigrationRule<2> ;
-template class AbstractMigrationRule<3> ;
+template class AbstractMigrationRule<2>;
+template class AbstractMigrationRule<3>;

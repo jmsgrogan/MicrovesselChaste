@@ -36,11 +36,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef GRIDCALCULATOR_HPP_
 #define GRIDCALCULATOR_HPP_
 
+#include <memory>
 #include <vector>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
 #include <vtkSmartPointer.h>
 #include "UblasIncludes.hpp"
-#include "SmartPointers.hpp"
 #include "VesselNetwork.hpp"
 #include "VesselSegment.hpp"
 #include "VesselNode.hpp"
@@ -68,7 +68,7 @@ class GridCalculator
     /**
      * The vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > mpNetwork;
+    VesselNetworkPtr<DIM> mpNetwork;
 
     /**
      * The cell population.
@@ -93,12 +93,12 @@ class GridCalculator
     /**
      * A map of vessel nodes corresponding to points or elements
      */
-    std::vector<std::vector<std::shared_ptr<VesselNode<DIM> > > > mVesselNodeMap;
+    std::vector<std::vector<VesselNodePtr<DIM> > > mVesselNodeMap;
 
     /**
      * A map of vessel segments corresponding to a points or elements
      */
-    std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > > mSegmentMap;
+    std::vector<std::vector<VesselSegmentPtr<DIM> > > mSegmentMap;
 
     /**
      * The grid
@@ -164,14 +164,14 @@ public:
      * Return the vessel network
      * @return the vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > GetVesselNetwork();
+    VesselNetworkPtr<DIM> GetVesselNetwork();
 
     /**
      * Return the vessel node map
      * @param update update the vessel node map
      * @return the vessel node map
      */
-    const std::vector<std::vector<std::shared_ptr<VesselNode<DIM> > > >& rGetVesselNodeMap(bool update = true);
+    const std::vector<std::vector<VesselNodePtr<DIM> > >& rGetVesselNodeMap(bool update = true);
 
     /**
      * Return the segments map
@@ -179,7 +179,7 @@ public:
      * @param useVesselSurface use the vessel surface for distance calculations
      * @return the segment map
      */
-    const std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > >& rGetSegmentMap(bool update = true,
+    const std::vector<std::vector<VesselSegmentPtr<DIM> > >& rGetSegmentMap(bool update = true,
             bool useVesselSurface = false);
 
     /**
@@ -228,7 +228,7 @@ public:
      * Set the vessel network
      * @param pNetwork the vessel network
      */
-    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetVesselNetwork(VesselNetworkPtr<DIM> pNetwork);
 
     /**
      * Set the grid

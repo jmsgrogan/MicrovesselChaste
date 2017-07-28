@@ -80,7 +80,7 @@ CornealMicropocketSimulation<DIM>::CornealMicropocketSimulation() :
     mAttractionStrength(0.0),
     mChemotacticStrength(0.5),
     mPersistenceAngle(5.0),
-    mTipExclusionRadius(40_um),
+    mUseTipExclusion(true),
     mDoAnastamosis(true),
     mPelletConcentration(3.0e5_nM),
     mVegfDiffusivity(24984.0*unit::micron_squared_per_hour),
@@ -95,6 +95,8 @@ CornealMicropocketSimulation<DIM>::CornealMicropocketSimulation() :
     mUsePdeOnly(false),
     mTotalTime(24_h),
     mTimeStepSize(0.5_h),
+    mAnastamosisRadius(5_um),
+    mCellLength(20_um),
     mRunNumber(0),
     mRandomSeed(0),
     mpDomain(),
@@ -126,6 +128,30 @@ std::shared_ptr<CornealMicropocketSimulation<DIM> > CornealMicropocketSimulation
 {
     return std::make_shared<CornealMicropocketSimulation<DIM> >();
 
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetAnastamosisRadius(QLength radius)
+{
+    mAnastamosisRadius = radius;
+}
+
+template<unsigned DIM>
+QLength CornealMicropocketSimulation<DIM>::GetAnastamosisRadius()
+{
+    return mAnastamosisRadius;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetCellLength(QLength length)
+{
+    mCellLength = length;
+}
+
+template<unsigned DIM>
+QLength CornealMicropocketSimulation<DIM>::GetCellLength()
+{
+    return mCellLength;
 }
 
 template<unsigned DIM>
@@ -451,10 +477,6 @@ std::shared_ptr<VesselNetwork<DIM> > CornealMicropocketSimulation<DIM>::SetUpVes
         mpNetwork = generator.GenerateSingleVessel(domain_length,
                                                  Vertex<DIM>(0_m, mLimbalOffset, midpoint).rGetLocation(),
                                                  divisions, alignment_axis);
-        for(auto& node:mpNetwork->GetNodes())
-        {
-            node->GetFlowProperties()->SetPressure(1_Pa);
-        }
     }
     else if(mDomainType == DomainType::CIRCLE_2D or mDomainType == DomainType::CIRCLE_3D)
     {
@@ -479,10 +501,6 @@ std::shared_ptr<VesselNetwork<DIM> > CornealMicropocketSimulation<DIM>::SetUpVes
             mpNetwork->AddVessel(Vessel<DIM>::Create(nodes[idx-1], nodes[idx]));
         }
         mpNetwork->AddVessel(Vessel<DIM>::Create(nodes[nodes.size()-1], nodes[0]));
-        for(auto& node:nodes)
-        {
-            node->GetFlowProperties()->SetPressure(1_Pa);
-        }
     }
 
     else if(mDomainType == DomainType::HEMISPHERE)
@@ -504,11 +522,16 @@ std::shared_ptr<VesselNetwork<DIM> > CornealMicropocketSimulation<DIM>::SetUpVes
         {
             mpNetwork->AddVessel(Vessel<DIM>::Create(nodes[idx-1], nodes[idx]));
         }
-        mpNetwork->AddVessel(Vessel<DIM>::Create(nodes[nodes.size()-1], nodes[0]));
-        for(unsigned idx=0;idx<nodes.size();idx++)
-        {
-            nodes[idx]->GetFlowProperties()->SetPressure(1_Pa);
-        }
+    }
+    for(auto& node:mpNetwork->GetNodes())
+    {
+        node->GetFlowProperties()->SetPressure(1_Pa);
+        node->SetRadius(5_um);
+    }
+    for(auto& segment:mpNetwork->GetVesselSegments())
+    {
+        segment->SetRadius(5_um);
+        segment->GetCellularProperties()->SetAverageCellLengthLongitudinal(mCellLength);
     }
     return mpNetwork;
 }
@@ -968,9 +991,9 @@ void CornealMicropocketSimulation<DIM>::SetTimeStepSize(QTime timeStepSize)
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetTipExclusionRadius(QLength tipExclusionRadius)
+void CornealMicropocketSimulation<DIM>::SetUseTipExclusion(bool exclude)
 {
-    mTipExclusionRadius = tipExclusionRadius;
+    mUseTipExclusion = exclude;
 }
 
 template<unsigned DIM>
@@ -1115,7 +1138,6 @@ void CornealMicropocketSimulation<DIM>::Run()
     SetUpSolver();
 
     auto p_angiogenesis_solver = AngiogenesisSolver<DIM>::Create();
-
     if(!mUsePdeOnly)
     {
         auto p_migration_rule = OffLatticeMigrationRule<DIM>::Create();
@@ -1131,7 +1153,7 @@ void CornealMicropocketSimulation<DIM>::Run()
         p_sprouting_rule->SetVesselNetwork(mpNetwork);
         p_sprouting_rule->SetSproutingProbability(mSproutingProbability);
         p_sprouting_rule->SetOnlySproutIfPerfused(mOnlyPerfusedSprout);
-        p_sprouting_rule->SetTipExclusionRadius(mTipExclusionRadius);
+        p_sprouting_rule->SetUseLateralInhibition(true);
 
         p_angiogenesis_solver->SetVesselNetwork(mpNetwork);
         p_angiogenesis_solver->SetMigrationRule(p_migration_rule);
@@ -1139,6 +1161,8 @@ void CornealMicropocketSimulation<DIM>::Run()
         p_angiogenesis_solver->SetOutputFileHandler(p_file_handler);
         p_angiogenesis_solver->SetBoundingDomain(mpDomain);
         p_angiogenesis_solver->SetDoAnastomosis(mDoAnastamosis);
+        p_angiogenesis_solver->SetAnastamosisRadius(mAnastamosisRadius);
+
     }
 
     unsigned num_steps = unsigned(mTotalTime/mTimeStepSize);

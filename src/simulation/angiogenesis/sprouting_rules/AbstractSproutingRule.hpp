@@ -36,11 +36,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef ABSTRACTSPROUTINGRULE_HPP_
 #define ABSTRACTSPROUTINGRULE_HPP_
 
+#include <memory>
 #include <vector>
 #include <string>
 #include "VesselNetwork.hpp"
 #include "VesselNode.hpp"
-#include "SmartPointers.hpp"
 #include "GridCalculator.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
 #include "UnitCollection.hpp"
@@ -61,20 +61,28 @@ protected:
     std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > mpSolver;
 
     /**
-     * The probability that a sprout will form per unit time
+     * The probability that ONE CELL will form a sprout per unit time
      */
-    QRate mSproutingProbability;
+    QRate mSproutingProbabilityPerCell;
 
     /**
      * Vessel network, useful if sprouting depends on neighbouring nodes
      */
-    std::shared_ptr<VesselNetwork<DIM> > mpVesselNetwork;
+    VesselNetworkPtr<DIM> mpVesselNetwork;
 
     /**
-     * How far from vessel ends can sprouts form
+     * Whether to use lateral inhibition in the sprouting rule.
      */
-    QLength mVesselEndCutoff;
+    bool mUseLateralInhibition;
 
+    /**
+     * Prevents sprouting too close to branches and existing tips.
+     */
+    bool mUseVesselEndCutoff;
+
+    /**
+     * Only perfused vessels can sprout if true
+     */
     bool mOnlySproutIfPerfused;
 
 public:
@@ -89,7 +97,18 @@ public:
      */
     virtual ~AbstractSproutingRule();
 
-    void SetOnlySproutIfPerfused(bool onlySproutIfPerfused);
+    /**
+     * Return the sprouting probability per cell
+     * @return the sprouting probability per cell
+     */
+    QRate GetSproutingProbability();
+
+    /**
+     * Return the nodes which may form sprouts
+     * @param rNodes nodes to check for sprouting
+     * @return a vector of nodes which may sprout
+     */
+    virtual std::vector<VesselNodePtr<DIM> > GetSprouts(const std::vector<VesselNodePtr<DIM> >& rNodes)=0;
 
     /**
      * Set the DiscreteContinuum solver containing the VEGF field
@@ -98,37 +117,41 @@ public:
     void SetDiscreteContinuumSolver(std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver);
 
     /**
-     * Set the vessel network
-     * @param pVesselNetwork pointer to a new method for the class
-     */
-    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork);
-
-    /**
-     * Set the sprouting probability
-     * @param probability probability of sprouting per unit time
-     */
-    void SetSproutingProbability(QRate probability);
-
-    QRate GetSproutingProbability();
-
-    /**
-     * Set the minimum distance to a vessel end at which sprouting can occur
-     * @param cutoff the vessel end cutoff
-     */
-    void SetVesselEndCutoff(QLength cutoff);
-
-    /**
-     * Return the nodes which may form sprouts
-     * @param rNodes nodes to check for sprouting
-     * @return a vector of nodes which may sprout
-     */
-    virtual std::vector<std::shared_ptr<VesselNode<DIM> > > GetSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
-
-    /**
      * Set a grid for the vessel network, implemented in some, but not all, child classes.
      * @param pGrid the grid for the vessel network
      */
     virtual void SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGrid);
+
+    /**
+     * Set whether only perfused vessels can sprout
+     * @param onlySproutIfPerfused only perfused vessels can sprout if true
+     */
+    void SetOnlySproutIfPerfused(bool onlySproutIfPerfused);
+
+    /**
+     * Set the sprouting probability per cell
+     * @param probability probability of sprouting per cell per unit time
+     */
+    void SetSproutingProbability(QRate probability);
+
+    /**
+     * Set the vessel network
+     * @param pVesselNetwork pointer to a new method for the class
+     */
+    void SetVesselNetwork(VesselNetworkPtr<DIM> pVesselNetwork);
+
+    /**
+     * Set whether to use a vessel-end cutoff
+     * @param useCutoff whether to use a vessel-end cutoff
+     */
+    void SetUseVesselEndCutoff(bool useCutoff);
+
+    /**
+     * Set whether to use lateral inhibition
+     * @param useInhibition whether to use lateral inhibition
+     */
+    void SetUseLateralInhibition(bool useInhibition);
+
 };
 
 #endif /* ABSTRACTSPROUTINGRULE_HPP_ */

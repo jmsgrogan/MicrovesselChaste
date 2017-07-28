@@ -45,12 +45,9 @@ Owen2011SproutingRule<DIM>::Owen2011SproutingRule()
       mHalfMaxVegf(Owen11Parameters::mpVegfConventrationAtHalfMaxProbSprouting->GetValue("Owen2011SproutingRule")),
       mVegfField()
 {
-    // Owen11 equation is dimensionally inconsistent as it includes an extra vessel surface area term. In order to
-    // have a similar magnitude multiply this value by a typical vessel surface area = 2*pi*R*L
-    // = 2*pi*15*40
-    this->mSproutingProbability = Owen11Parameters::mpMaximumSproutingRate->GetValue("Owen2011SproutingRule")*2.0*M_PI*15.0*40.0;
-    this->mTipExclusionRadius = 80.0*1_um;
-    this->mVesselEndCutoff = 80.0*1_um;
+    this->mSproutingProbabilityPerCell = Owen11Parameters::mpMaximumSproutingRate->GetValue("Owen2011SproutingRule");
+    this->mUseLateralInhibition = true;
+    this->mUseVesselEndCutoff = true;
 }
 
 template <unsigned DIM>
@@ -73,52 +70,64 @@ void Owen2011SproutingRule<DIM>::SetHalfMaxVegf(QConcentration halfMaxVegf)
 }
 
 template<unsigned DIM>
-std::vector<std::shared_ptr<VesselNode<DIM> > > Owen2011SproutingRule<DIM>::GetSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<VesselNodePtr<DIM> > Owen2011SproutingRule<DIM>::GetSprouts(const std::vector<VesselNodePtr<DIM> >& rNodes)
 {
+    if(!this->mpVesselNetwork)
+    {
+        EXCEPTION("A vessel network is required for this type of sprouting rule.");
+    }
+
     if(!this->mpGridCalculator)
+    {
+        EXCEPTION("A grid calculator is required for this type of sprouting rule.");
+    }
+
+    if(!this->mpGridCalculator->HasStructuredGrid())
     {
         EXCEPTION("A regular grid is required for this type of sprouting rule.");
     }
 
-    if(!this->mpVesselNetwork)
+    if(!this->mpSolver)
     {
-        EXCEPTION("A vessel network is required for this type of sprouting rule.");
+        EXCEPTION("A concentration field is required for this sprouting rule.");
     }
 
     // Get the VEGF field
     this->mVegfField = this->mpSolver->GetConcentrations(this->mpGridCalculator->GetGrid());
 
     // Set up the output sprouts vector
-    std::vector<std::shared_ptr<VesselNode<DIM> > > sprouts;
+    std::vector<VesselNodePtr<DIM> > sprouts;
+    QLength grid_spacing = this->mpGridCalculator->GetGrid()->GetSpacing();
+    QTime reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
 
     // Loop over all nodes and randomly select sprouts
-    for(unsigned idx = 0; idx < rNodes.size(); idx++)
+    for(auto& node:rNodes)
     {
-        if(rNodes[idx]->GetNumberOfSegments() != 2)
+        if(node->GetNumberOfSegments() != 2)
         {
             continue;
         }
 
         // Check we are not too close to the end of the vessel
-        if(this->mVesselEndCutoff > 0.0 * unit::metres)
+        if(this->mUseVesselEndCutoff)
         {
-            if(rNodes[idx]->GetSegment(0)->GetVessel()->GetClosestEndNodeDistance(rNodes[idx]->rGetLocation())< this->mVesselEndCutoff)
+            if(node->GetSegment(0)->GetVessel()->GetClosestEndNodeDistance(node->rGetLocation())< grid_spacing)
             {
                 continue;
             }
-            if(rNodes[idx]->GetSegment(1)->GetVessel()->GetClosestEndNodeDistance(rNodes[idx]->rGetLocation())< this->mVesselEndCutoff)
+            if(node->GetSegment(1)->GetVessel()->GetClosestEndNodeDistance(node->rGetLocation())< grid_spacing)
             {
                 continue;
             }
         }
 
         // Check we are not too close to an existing candidate
-        if(this->mTipExclusionRadius>0.0 * unit::metres)
+        if(this->mUseLateralInhibition)
         {
             bool too_close = false;
-            for(unsigned jdx=0; jdx<sprouts.size(); jdx++)
+            for(auto& sprout:sprouts)
             {
-                if(rNodes[idx]->GetDistance(sprouts[jdx]->rGetLocation()) < this->mTipExclusionRadius)
+                if(node->GetDistance(sprout->rGetLocation()) < grid_spacing)
                 {
                     too_close = true;
                 }
@@ -130,21 +139,29 @@ std::vector<std::shared_ptr<VesselNode<DIM> > > Owen2011SproutingRule<DIM>::GetS
         }
 
         // Get the grid index of the node
-        unsigned grid_index = this->mpGridCalculator->GetGrid()->GetNearestCellIndex(rNodes[idx]->rGetLocation());
+        unsigned grid_index = this->mpGridCalculator->GetGrid()->GetNearestCellIndex(node->rGetLocation());
+
+        QLength cell_length1 = (node->GetSegment(0)->GetCellularProperties()->GetAverageCellLengthLongitudinal() +
+                node->GetSegment(1)->GetCellularProperties()->GetAverageCellLengthLongitudinal())/2.0;
+        QLength cell_length2 = (node->GetSegment(0)->GetCellularProperties()->GetAverageCellLengthCircumferential() +
+                node->GetSegment(1)->GetCellularProperties()->GetAverageCellLengthCircumferential())/2.0;
+        QArea cell_area = cell_length1*cell_length2;
+        QLength segment_length = (node->GetSegment(0)->GetLength() + node->GetSegment(1)->GetLength())/2.0;
+        QLength segment_radius = (node->GetSegment(0)->GetRadius() + node->GetSegment(1)->GetRadius())/2.0;
+        double num_cells = std::round(2.0*M_PI*segment_radius*segment_length/cell_area);
 
         QConcentration vegf_conc = this->mVegfField[grid_index];
         double vegf_fraction = vegf_conc/(vegf_conc + mHalfMaxVegf);
-        double max_prob_per_time_step = this->mSproutingProbability*SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
-        double prob_tip_selection = max_prob_per_time_step*vegf_fraction;
-
+        QTime time_step = SimulationTime::Instance()->GetTimeStep()*reference_time;
+        double prob_tip_selection = this->mSproutingProbabilityPerCell*num_cells*time_step*vegf_fraction;
         if (RandomNumberGenerator::Instance()->ranf() < prob_tip_selection)
         {
-            sprouts.push_back(rNodes[idx]);
+            sprouts.push_back(node);
         }
     }
     return sprouts;
 }
 
 // Explicit instantiation
-template class Owen2011SproutingRule<2> ;
-template class Owen2011SproutingRule<3> ;
+template class Owen2011SproutingRule<2>;
+template class Owen2011SproutingRule<3>;

@@ -33,7 +33,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "OffLatticeSproutingRule.hpp"
 #include "RandomNumberGenerator.hpp"
 #include "GeometryTools.hpp"
 #include "UblasIncludes.hpp"
@@ -41,19 +40,17 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "BaseUnits.hpp"
 #include "Connor17Parameters.hpp"
 #include "Owen11Parameters.hpp"
+#include "OffLatticeSproutingRule.hpp"
 
 template<unsigned DIM>
 OffLatticeSproutingRule<DIM>::OffLatticeSproutingRule()
     : AbstractSproutingRule<DIM>(),
-      mTipExclusionRadius(80_um),
       mHalfMaxVegf(Connor17Parameters::mpVegfAtHalfReceptorOccupancy->GetValue("OffLatticeSproutingRule")),
       mVegfField()
 {
-    // Owen11 equation is dimensionally inconsistent as it includes an extra vessel surface area term. In order to
-    // have a similar magnitude multiply this value by a typical vessel surface area = 2*pi*R*L
-    // = 2*pi*15*40
-    this->mSproutingProbability = Owen11Parameters::mpMaximumSproutingRate->GetValue("OffLatticeSproutingRule")*2.0*M_PI*15.0*40.0;
-    this->mTipExclusionRadius = 80_um;
+    this->mSproutingProbabilityPerCell = Owen11Parameters::mpMaximumSproutingRate->GetValue("OffLatticeSproutingRule");
+    this->mUseLateralInhibition = true;
+    this->mUseVesselEndCutoff = true;
 }
 
 template<unsigned DIM>
@@ -70,22 +67,22 @@ std::shared_ptr<OffLatticeSproutingRule<DIM> > OffLatticeSproutingRule<DIM>::Cre
 }
 
 template<unsigned DIM>
-std::vector<std::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::GetSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<VesselNodePtr<DIM> > OffLatticeSproutingRule<DIM>::GetSprouts(const std::vector<VesselNodePtr<DIM> >& rNodes)
 {
     if(!this->mpVesselNetwork)
     {
         EXCEPTION("A vessel network is required for this type of sprouting rule.");
     }
 
-    std::vector<QConcentration > probed_solutions(rNodes.size(), 0.0*unit::mole_per_metre_cubed);
+    std::vector<QConcentration> probed_solutions(rNodes.size(), 0_M);
     vtkSmartPointer<vtkPoints> p_probe_locations = vtkSmartPointer<vtkPoints>::New();
     QLength reference_length = this->mpSolver->GetReferenceLength();
 
     if(this->mpSolver)
     {
-        for(unsigned idx=0; idx<rNodes.size(); idx++)
+        for(auto& node:rNodes)
         {
-            c_vector<double, 3> loc = rNodes[idx]->rGetLocation().Convert3(reference_length);
+            c_vector<double, 3> loc = node->rGetLocation().Convert3(reference_length);
             p_probe_locations->InsertNextPoint(&loc[0]);
         }
         if(p_probe_locations->GetNumberOfPoints()>0)
@@ -96,52 +93,53 @@ std::vector<std::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::Ge
 
     // Set up the output sprouts vector
     std::vector<VesselNodePtr<DIM> > sprouts;
-
-    // Loop over all nodes and randomly select sprouts
-    for(unsigned idx = 0; idx < rNodes.size(); idx++)
+    QTime reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
+    unsigned counter = 0;
+    for(auto& node:rNodes)
     {
-        if(this->mOnlySproutIfPerfused)
-        {
-            if(rNodes[idx]->GetFlowProperties()->GetPressure()==0_Pa)
-            {
-                continue;
-            }
-        }
-
         // Only nodes with two segments can sprout
-        if(rNodes[idx]->GetNumberOfSegments() != 2)
+        if(node->GetNumberOfSegments() != 2)
         {
             continue;
         }
 
-        // Apply a vessel end cutoff if there is one
-        if(this->mVesselEndCutoff > 0_m)
+        // Check perfusion if needed
+        if(this->mOnlySproutIfPerfused and node->GetFlowProperties()->GetPressure()==0_Pa)
         {
-            if(rNodes[idx]->GetSegment(0)->GetVessel()->GetClosestEndNodeDistance(rNodes[idx]->rGetLocation())< this->mVesselEndCutoff)
+            continue;
+        }
+
+        // Apply a vessel end cutoff if needed
+        QLength cell_length1 = (node->GetSegment(0)->GetCellularProperties()->GetAverageCellLengthLongitudinal() +
+                node->GetSegment(1)->GetCellularProperties()->GetAverageCellLengthLongitudinal())/2.0;
+        if(this->mUseVesselEndCutoff)
+        {
+            if(node->GetSegment(0)->GetVessel()->GetClosestEndNodeDistance(node->rGetLocation())< cell_length1)
             {
                 continue;
             }
-            if(rNodes[idx]->GetSegment(1)->GetVessel()->GetClosestEndNodeDistance(rNodes[idx]->rGetLocation())< this->mVesselEndCutoff)
+            if(node->GetSegment(1)->GetVessel()->GetClosestEndNodeDistance(node->rGetLocation())< cell_length1)
             {
                 continue;
             }
         }
 
-        // Check we are not too close to an existing candidate
-        if(mTipExclusionRadius>0_m)
+        // Check we are not too close to an existing candidate. This is different
+        // from the vessel end cut-off as it relates to candidate tip cells.
+        if(this->mUseLateralInhibition)
         {
             bool too_close = false;
-            for(unsigned jdx=0; jdx<sprouts.size(); jdx++)
+            for(auto& sprout:sprouts)
             {
                 // Any vessels same
-                bool sv0_nv0_same = (sprouts[jdx]->GetSegment(0)->GetVessel() == rNodes[idx]->GetSegment(0)->GetVessel());
-                bool sv1_nv0_same = (sprouts[jdx]->GetSegment(1)->GetVessel() == rNodes[idx]->GetSegment(0)->GetVessel());
-                bool sv0_nv1_same = (sprouts[jdx]->GetSegment(0)->GetVessel() == rNodes[idx]->GetSegment(1)->GetVessel());
-                bool sv1_nv1_same = (sprouts[jdx]->GetSegment(1)->GetVessel() == rNodes[idx]->GetSegment(1)->GetVessel());
+                bool sv0_nv0_same = (sprout->GetSegment(0)->GetVessel() == node->GetSegment(0)->GetVessel());
+                bool sv1_nv0_same = (sprout->GetSegment(1)->GetVessel() == node->GetSegment(0)->GetVessel());
+                bool sv0_nv1_same = (sprout->GetSegment(0)->GetVessel() == node->GetSegment(1)->GetVessel());
+                bool sv1_nv1_same = (sprout->GetSegment(1)->GetVessel() == node->GetSegment(1)->GetVessel());
                 bool any_same = (sv0_nv0_same or sv1_nv0_same or sv0_nv1_same or sv1_nv1_same);
                 if(any_same)
                 {
-                    if(rNodes[idx]->GetDistance(sprouts[jdx]->rGetLocation()) < mTipExclusionRadius)
+                    if(node->GetDistance(sprout->rGetLocation()) < cell_length1)
                     {
                         too_close = true;
                     }
@@ -152,32 +150,31 @@ std::vector<std::shared_ptr<VesselNode<DIM> > > OffLatticeSproutingRule<DIM>::Ge
                 continue;
             }
         }
-        QConcentration vegf_conc = 0.0*unit::mole_per_metre_cubed;
+
+        // If there is a vegf solution get P sprout
+        QConcentration vegf_conc = 0_M;
         if(this->mpSolver)
         {
-            vegf_conc = probed_solutions[idx];
+            vegf_conc = probed_solutions[counter];
         }
 
-        QLength reference_length_for_sprouting = 40_um;
-        QLength node_length = (rNodes[idx]->GetSegment(0)->GetLength()+ rNodes[idx]->GetSegment(1)->GetLength())/2.0;
-        double length_factor = node_length/reference_length_for_sprouting;
+        QLength cell_length2 = (node->GetSegment(0)->GetCellularProperties()->GetAverageCellLengthCircumferential() +
+                node->GetSegment(1)->GetCellularProperties()->GetAverageCellLengthCircumferential())/2.0;
+        QArea cell_area = cell_length1*cell_length2;
+        QLength segment_length = (node->GetSegment(0)->GetLength() + node->GetSegment(1)->GetLength())/2.0;
+        QLength segment_radius = (node->GetSegment(0)->GetRadius() + node->GetSegment(1)->GetRadius())/2.0;
+        double num_cells = std::round(2.0*M_PI*segment_radius*segment_length/cell_area);
 
         double vegf_fraction = vegf_conc/(vegf_conc + mHalfMaxVegf);
-        double max_prob_per_time_step = this->mSproutingProbability*SimulationTime::Instance()->GetTimeStep()*
-                BaseUnits::Instance()->GetReferenceTimeScale()*length_factor;
-        double prob_tip_selection = max_prob_per_time_step*vegf_fraction;
-        if (RandomNumberGenerator::Instance()->ranf() < prob_tip_selection)
+        QTime time_step = this->mSproutingProbabilityPerCell*SimulationTime::Instance()->GetTimeStep()*reference_time;
+        double prob_per_time_step = this->mSproutingProbabilityPerCell*time_step*num_cells*vegf_fraction;
+        if (RandomNumberGenerator::Instance()->ranf() < prob_per_time_step)
         {
-            sprouts.push_back(rNodes[idx]);
+            sprouts.push_back(node);
         }
+        counter++;
     }
     return sprouts;
-}
-
-template <unsigned DIM>
-void OffLatticeSproutingRule<DIM>::SetTipExclusionRadius(QLength exclusionRadius)
-{
-    this->mTipExclusionRadius = exclusionRadius;
 }
 
 // Explicit instantiation

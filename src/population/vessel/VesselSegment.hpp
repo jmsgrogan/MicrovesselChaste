@@ -41,6 +41,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include "ChasteSerialization.hpp"
 #include "SegmentFlowProperties.hpp"
+#include "SegmentCellularProperties.hpp"
 #include "UblasVectorInclude.hpp"
 #include "ChastePoint.hpp"
 #include "UnitCollection.hpp"
@@ -107,6 +108,11 @@ private:
      * A flow property collection for the segment
      */
     std::shared_ptr<SegmentFlowProperties<DIM> > mpFlowProperties;
+
+    /**
+     * A cellular property collection for the segment
+     */
+    std::shared_ptr<SegmentCellularProperties<DIM> > mpCellularProperties;
 
     /**
      * A measure of vessel maturity
@@ -226,6 +232,13 @@ public:
      * @return the flow properties of the component
      */
     std::shared_ptr<SegmentFlowProperties<DIM> > GetFlowProperties() const;
+
+    /**
+     * Return the cellular properties of the component
+     *
+     * @return the cellular properties of the component
+     */
+    std::shared_ptr<SegmentCellularProperties<DIM> > GetCellularProperties() const;
 
     /**
      * Return the dimensional length
@@ -372,6 +385,13 @@ public:
     void SetFlowProperties(const SegmentFlowProperties<DIM>& rFlowProperties);
 
     /**
+     * Set the cellular properties of the segment
+     *
+     * @param rCellularProperties the cellular properties to be set
+     */
+    void SetCellularProperties(const SegmentCellularProperties<DIM>& rCellularProperties);
+
+    /**
      * Set the maturity
      * @param maturity the maturity
      */
@@ -418,7 +438,6 @@ public:
      * @param otherIndex the index of the other segment on the other processor
      */
     void SetOtherProcessorLocalIndex(unsigned otherIndex);
-
 
 private:
 

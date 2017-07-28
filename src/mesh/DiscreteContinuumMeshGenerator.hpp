@@ -144,7 +144,7 @@ public:
      * Set the domain for meshing
      * @param pDomain the domain for meshing
      */
-    void SetDomain(std::shared_ptr<Part<SPACE_DIM> > pDomain);
+    void SetDomain(PartPtr<SPACE_DIM> pDomain);
 
     /**
      * Set the domain for meshing

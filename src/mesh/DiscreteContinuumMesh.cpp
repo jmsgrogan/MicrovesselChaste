@@ -87,6 +87,22 @@ DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::~DiscreteContinuumMesh()
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+QLength DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetSpacing()
+{
+    double dimless_spacing = 0.0;
+    if(SPACE_DIM==2)
+    {
+        dimless_spacing = std::sqrt(this->GetNumNodes()/(this->GetWidth(0)*this->GetWidth(1)));
+    }
+    else
+    {
+        dimless_spacing = std::cbrt(this->GetNumNodes()/(this->GetWidth(0)*this->GetWidth(1)*this->GetWidth(2)));
+    }
+    return dimless_spacing*this->mReferenceLength;
+}
+
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 std::vector<unsigned> DiscreteContinuumMesh<ELEMENT_DIM, SPACE_DIM>::GetElementPartitioning()
 {
     if(PetscTools::IsSequential())

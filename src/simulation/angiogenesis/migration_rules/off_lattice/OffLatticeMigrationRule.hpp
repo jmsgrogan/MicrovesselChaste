@@ -36,6 +36,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef OFFLATTICEMIGRATIONRULE_HPP_
 #define OFFLATTICEMIGRATIONRULE_HPP_
 
+#include <memory>
 #include <vector>
 #include <string>
 #define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
@@ -43,7 +44,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vtkPolyData.h>
 #include "AbstractMigrationRule.hpp"
 #include "VesselNode.hpp"
-#include "SmartPointers.hpp"
 
 /**
  * An off-lattice migration rule for tip cells
@@ -69,12 +69,12 @@ class OffLatticeMigrationRule : public AbstractMigrationRule<DIM>
     /**
      * Mean angle between current and new directions about global axes
      */
-    std::vector<QAngle > mMeanAngles;
+    std::vector<QAngle> mMeanAngles;
 
     /**
      * Deviation in angle between current and new directions about global axes
      */
-    std::vector<QAngle > mSdvAngles;
+    std::vector<QAngle> mSdvAngles;
 
     /**
      * Tip cell velocity
@@ -146,14 +146,14 @@ public:
      * @param rNodes nodes to calculate indices
      * @return a vector of movement vectors
      */
-    std::vector<Vertex<DIM> > GetDirections(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
+    std::vector<Vertex<DIM> > GetDirections(const std::vector<VesselNodePtr<DIM> >& rNodes);
 
     /**
      * Get the sprout directions
      * @param rNodes nodes to calculate directions
      * @return a vector of movement vectors
      */
-    std::vector<Vertex<DIM> > GetDirectionsForSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
+    std::vector<Vertex<DIM> > GetDirectionsForSprouts(const std::vector<VesselNodePtr<DIM> >& rNodes);
 
     /**
      * Set the sprout velocity

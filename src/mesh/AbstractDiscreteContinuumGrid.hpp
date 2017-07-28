@@ -204,7 +204,11 @@ public:
      */
     vtkSmartPointer<vtkCellData> GetCellData();
 
-    vtkSmartPointer<vtkDataSet> CalculateDistanceMap(std::shared_ptr<Part<SPACE_DIM> > pSamplePart);
+    /**
+     * Return the distance map to the part boundaries
+     * @return pSamplePart the part for the distance map
+     */
+    vtkSmartPointer<vtkDataSet> CalculateDistanceMap(PartPtr<SPACE_DIM> pSamplePart);
 
     /**
      * Return the location of the supplied GLOBAL index
@@ -229,6 +233,12 @@ public:
      * @return the location of the supplied LOCAL index
      */
     virtual Vertex<SPACE_DIM> GetCellLocation(unsigned index);
+
+    /**
+     * Return a typical distance between grid points
+     * @return a typical distance between grid points
+     */
+    virtual QLength GetSpacing()=0;
 
     /**
      * Return the LOCAL point or element dimensionless volumes

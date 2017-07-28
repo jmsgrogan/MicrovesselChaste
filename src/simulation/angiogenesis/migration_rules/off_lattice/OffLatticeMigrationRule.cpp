@@ -51,8 +51,8 @@ OffLatticeMigrationRule<DIM>::OffLatticeMigrationRule()
       mGlobalX(unit_vector<double>(3,0)),
       mGlobalY(unit_vector<double>(3,1)),
       mGlobalZ(unit_vector<double>(3,2)),
-      mMeanAngles(std::vector<QAngle >(3, 0.0*unit::radians)),
-      mSdvAngles(std::vector<QAngle >(3, M_PI/6.0*unit::radians)), //formerly pi/18
+      mMeanAngles(std::vector<QAngle >(3, 0_rad)),
+      mSdvAngles(std::vector<QAngle >(3, (M_PI/6.0)*unit::radians)), //formerly pi/18
       mVelocity(20.0 * unit::microns_per_hour),
       mChemotacticStrength(0.6),
       mAttractionStrength(0.0), // was 1.0
@@ -90,12 +90,12 @@ void OffLatticeMigrationRule<DIM>::CalculateDomainDistanceMap()
     std::array<QLength, 6> bbox = this->mpBoundingDomain->GetBoundingBox();
     vtkSmartPointer<vtkImageData> p_image = vtkSmartPointer<vtkImageData>::New();
 
-    double spacing = (bbox[1] - bbox[0])/(20.0*reference_length);
-    unsigned num_x = unsigned((bbox[1] - bbox[0])/(reference_length*spacing)) + 1;
-    unsigned num_y = unsigned((bbox[3] - bbox[2])/(reference_length*spacing)) + 1;
-    unsigned num_z = unsigned((bbox[5] - bbox[4])/(reference_length*spacing)) + 1;
+    QLength spacing = (bbox[1] - bbox[0])/(20.0);
+    unsigned num_x = unsigned((bbox[1] - bbox[0])/spacing) + 1;
+    unsigned num_y = unsigned((bbox[3] - bbox[2])/spacing) + 1;
+    unsigned num_z = unsigned((bbox[5] - bbox[4])/spacing) + 1;
     p_image->SetOrigin(bbox[0]/reference_length, bbox[2]/reference_length, bbox[4]/reference_length);
-    p_image->SetSpacing(spacing, spacing, spacing);
+    p_image->SetSpacing(spacing/reference_length, spacing/reference_length, spacing/reference_length);
     p_image->SetDimensions(num_x, num_y, num_z);
 
     vtkSmartPointer<vtkImageEuclideanDistance> p_distance = vtkSmartPointer<vtkImageEuclideanDistance>::New();
@@ -174,7 +174,7 @@ void OffLatticeMigrationRule<DIM>::SetNumGradientEvaluationDivisions(unsigned nu
 }
 
 template<unsigned DIM>
-std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std::vector<VesselNodePtr<DIM> >& rNodes)
 {
     if (this->mIsSprouting)
     {
@@ -202,20 +202,13 @@ std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std:
         std::vector<c_vector<double, 3> > solution_gradients(rNodes.size(), zero_vector<double>(3));
         vtkSmartPointer<vtkPoints> p_probe_locations = vtkSmartPointer<vtkPoints>::New();
 
-        c_vector<double, DIM> current_loc;
+        c_vector<double, 3> current_loc;
         c_vector<double, DIM> current_dir;
         Vertex<DIM> currentDirection;
-        for(unsigned idx=0; idx<rNodes.size(); idx++)
+        for(auto& node:rNodes)
         {
-            current_loc = rNodes[idx]->rGetLocation().Convert(reference_length);
-            if(DIM==3)
-            {
-                p_probe_locations->InsertNextPoint(&current_loc[0]);
-            }
-            else
-            {
-                p_probe_locations->InsertNextPoint(current_loc[0], current_loc[1], 0.0);
-            }
+            current_loc = node->rGetLocation().Convert3(reference_length);
+            p_probe_locations->InsertNextPoint(&current_loc[0]);
         }
         if(this->mpSolver)
         {
@@ -275,10 +268,15 @@ std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std:
             }
         }
 
-        for(unsigned idx=0; idx<rNodes.size(); idx++)
+        unsigned counter=0;
+        QTime reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
+        QTime time_increment = SimulationTime::Instance()->GetTimeStep()*reference_time;
+        QRate rate_of_angular_change = 1.0*unit::per_hour;
+        double angle_fraction = rate_of_angular_change*time_increment;
+
+        for(auto& node:rNodes)
         {
-            QTime time_increment = SimulationTime::Instance()->GetTimeStep()*BaseUnits::Instance()->GetReferenceTimeScale();
-            currentDirection = rNodes[idx]->rGetLocation()-rNodes[idx]->GetSegments()[0]->GetOppositeNode(rNodes[idx])->rGetLocation();
+            currentDirection = node->rGetLocation()-node->GetSegments()[0]->GetOppositeNode(node)->rGetLocation();
             current_dir = currentDirection.GetUnitVector();
 
             c_vector<double, DIM> new_direction = zero_vector<double>(DIM);
@@ -288,25 +286,22 @@ std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std:
             c_vector<double, DIM> attraction_direction = zero_vector<double>(DIM);
 
             // Persistent random walk
-            QRate rate_of_angular_change = 1.0/(0.5*3600.0*unit::seconds);
-            double angle_fraction = rate_of_angular_change*time_increment;
-
             QAngle angle_x = mMeanAngles[0];
-            if(mSdvAngles[0]>0.0*unit::radians)
+            if(mSdvAngles[0]>0_rad)
             {
                 angle_x =RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[0]/unit::radians,
                         mSdvAngles[0]/unit::radians)*unit::radians*angle_fraction;
 
             }
             QAngle angle_y = mMeanAngles[1];
-            if(mSdvAngles[1]>0.0*unit::radians)
+            if(mSdvAngles[1]>0_rad)
             {
                 angle_y = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[1]/unit::radians,
                         mSdvAngles[1]/unit::radians)*unit::radians*angle_fraction;
 
             }
             QAngle angle_z = mMeanAngles[2];
-            if(mSdvAngles[2]>0.0*unit::radians)
+            if(mSdvAngles[2]>0_rad)
             {
                 angle_z = RandomNumberGenerator::Instance()->NormalRandomDeviate(mMeanAngles[2]/unit::radians,
                         mSdvAngles[2]/unit::radians)*unit::radians*angle_fraction;
@@ -329,7 +324,7 @@ std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std:
             if(this->mpSolver and mChemotacticStrength>0.0)
             {
                 // Get the gradients
-                c_vector<double, 3> gradient = solution_gradients[idx];
+                c_vector<double, 3> gradient = solution_gradients[counter];
                 if (norm_2(gradient)>0.0)
                 {
                     gradient/=norm_2(gradient);
@@ -351,19 +346,19 @@ std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std:
             if(mAttractionStrength>0.0)
             {
                 // Mutual Attraction
-                std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = this->mpVesselNetwork->GetNodes();
+                std::vector<VesselNodePtr<DIM> > nodes = this->mpVesselNetwork->GetNodes();
                 QLength min_distance = 1.e12*unit::metres;
                 c_vector<double, DIM> min_direction = zero_vector<double>(DIM);
-                for(unsigned jdx=0; jdx<nodes.size(); jdx++)
+                for(auto& nbr_node:nodes)
                 {
                     Vertex<DIM> base(currentDirection.Convert(reference_length) * double(mCriticalMutualAttractionLength/reference_length), reference_length);
-                    if(IsPointInCone<DIM>(nodes[jdx]->rGetLocation(), rNodes[idx]->rGetLocation(), rNodes[idx]->rGetLocation() + base, M_PI/3.0))
+                    if(IsPointInCone<DIM>(nbr_node->rGetLocation(), node->rGetLocation(), node->rGetLocation() + base, M_PI/3.0))
                     {
-                        QLength distance = rNodes[idx]->rGetLocation().GetDistance(nodes[jdx]->rGetLocation());
+                        QLength distance = node->rGetLocation().GetDistance(nbr_node->rGetLocation());
                         if(distance < min_distance)
                         {
                             min_distance = distance;
-                            Vertex<DIM> dim_min_direction = nodes[jdx]->rGetLocation() - rNodes[idx]->rGetLocation();
+                            Vertex<DIM> dim_min_direction = nbr_node->rGetLocation() - node->rGetLocation();
                             min_direction = dim_min_direction.GetUnitVector();
                         }
                     }
@@ -385,13 +380,13 @@ std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std:
                 double max_repulsion_strength = 5.0;
                 if(this->mpBoundingDomain or this->mpSolver)
                 {
-                    double current_distance = distance_map_values[idx];
-                    current_loc = rNodes[idx]->rGetLocation().Convert(reference_length);
+                    double current_distance = distance_map_values[counter];
+                    current_loc = node->rGetLocation().Convert(reference_length);
                     if(current_distance<critical_repulsion_distance)
                     {
                         if(current_distance>=0.0)
                         {
-                            c_vector<double, 3> distance_gradient = distance_map_gradients[idx];
+                            c_vector<double, 3> distance_gradient = distance_map_gradients[counter];
                             distance_gradient/=norm_2(distance_gradient);
 
                             double value = 1.0-(2.0*current_distance/(critical_repulsion_distance+current_distance));
@@ -437,7 +432,6 @@ std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std:
                                         arb_normal*=-1.0;
                                     }
                                     repulsion_direction = repulsion_strength * (arb_normal + 0.1*dist_grad_2d);
-
                                 }
                             }
                         }
@@ -462,13 +456,14 @@ std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirections(const std:
             // Get the movement increment
             QLength increment_length = time_increment* mVelocity;
             movement_vectors.push_back(OffsetAlongVector<DIM>(new_direction, increment_length, reference_length));
+            counter++;
         }
         return movement_vectors;
     }
 }
 
 template<unsigned DIM>
-std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes)
+std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(const std::vector<VesselNodePtr<DIM> >& rNodes)
 {
     std::vector<Vertex<DIM> > movement_vectors;
     QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();

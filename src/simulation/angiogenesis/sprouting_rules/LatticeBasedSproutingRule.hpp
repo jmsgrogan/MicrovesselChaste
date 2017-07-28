@@ -33,15 +33,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-
 #ifndef LATTICEBASEDSPROUTINGRULE_HPP_
 #define LATTICEBASEDSPROUTINGRULE_HPP_
 
 #include <vector>
 #include <string>
 #include "VesselNode.hpp"
-#include "SmartPointers.hpp"
 #include "AbstractSproutingRule.hpp"
 #include "GridCalculator.hpp"
 #include "AbstractRegularGridDiscreteContinuumSolver.hpp"
@@ -52,18 +49,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 template<unsigned DIM>
 class LatticeBasedSproutingRule : public AbstractSproutingRule<DIM>
 {
-
 protected:
 
-    /**
-     * The lattice/grid for the vessel simulation
-     */
     std::shared_ptr<GridCalculator<DIM> > mpGridCalculator;
-
-    /**
-     * Tip exclusion radius
-     */
-    QLength mTipExclusionRadius;
 
 public:
 
@@ -88,19 +76,13 @@ public:
      * @param rNodes nodes to check for sprouting
      * @return a vector of nodes which may sprout
      */
-    virtual std::vector<std::shared_ptr<VesselNode<DIM> > > GetSprouts(const std::vector<std::shared_ptr<VesselNode<DIM> > >& rNodes);
+    virtual std::vector<VesselNodePtr<DIM> > GetSprouts(const std::vector<VesselNodePtr<DIM> >& rNodes);
 
     /**
-     * Set the lattice/grid for the vessel network
+     * Overridden method to set the lattice/grid for the vessel network
      * @param pGrid the grid for the vessel network
      */
     void SetGridCalculator(std::shared_ptr<GridCalculator<DIM> > pGrid);
-
-    /**
-     * Set the minimum distance from an existing tip that a sprout can form
-     * @param tipExclusionRadius the minimum distance from an existing tip that a sprout can form
-     */
-    void SetTipExclusionRadius(QLength tipExclusionRadius);
 };
 
 #endif /* LATTICEBASEDSPROUTINGRULE_HPP_ */

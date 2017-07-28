@@ -61,7 +61,7 @@ class AngiogenesisSolver
     /**
      * The vessel network
      */
-    std::shared_ptr<VesselNetwork<DIM> > mpNetwork;
+    VesselNetworkPtr<DIM> mpNetwork;
 
     /**
      * The radius in which anastamosis is allowed in angiogenesis simulations
@@ -111,7 +111,7 @@ class AngiogenesisSolver
     /**
      * Cell node map for discrete cell angiogenesis models
      */
-    std::map<std::shared_ptr<Cell> , std::shared_ptr<VesselNode<DIM> > > mCellNodeMap;
+    std::map<std::shared_ptr<Cell> , VesselNodePtr<DIM> > mCellNodeMap;
 
     /**
      * Whether to do anastamosis
@@ -147,6 +147,10 @@ public:
      */
     bool IsSproutingRuleSet();
 
+    /**
+     * Whether to do anastomosis
+     * @return doAnastomosis whether to do anastomosis
+     */
     void SetDoAnastomosis(bool doAnastomosis);
 
     /**
@@ -172,7 +176,8 @@ public:
      * @param pCellPopulation the cell population for discrete cell solves
      * @param cellPopulationReferenceLength the cell population reference length
      */
-    void SetCellPopulation(std::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation, QLength cellPopulationReferenceLength);
+    void SetCellPopulation(std::shared_ptr<AbstractCellPopulation<DIM> > pCellPopulation,
+            QLength cellPopulationReferenceLength);
 
     /**
      * Add a migration rule for tip cells
@@ -202,7 +207,7 @@ public:
      * Set the vessel network
      * @param pNetwork the vessel network
      */
-    void SetVesselNetwork(std::shared_ptr<VesselNetwork<DIM> > pNetwork);
+    void SetVesselNetwork(VesselNetworkPtr<DIM> pNetwork);
 
 protected:
 
